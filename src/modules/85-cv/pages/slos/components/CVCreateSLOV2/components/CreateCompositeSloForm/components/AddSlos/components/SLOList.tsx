@@ -5,8 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useMemo } from 'react'
-import { isNumber } from 'highcharts'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import type QueryString from 'qs'
 import { useParams } from 'react-router-dom'
 import type { Column, Row } from 'react-table'
@@ -31,10 +30,7 @@ import {
   getColumsForProjectAndAccountLevel
 } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/CreateCompositeSloForm.utils'
 import { SLOObjective, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
-import {
-  getSLORefIdWithOrgAndProject,
-  getSLOIdentifierWithOrgAndProject
-} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
+
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   useGetSLOHealthListViewV2,
@@ -47,6 +43,8 @@ import { useStrings } from 'framework/strings'
 import {
   getIsIntermediate,
   getIsSelectAllChecked,
+  getSelectedSLOsHaveRefIds,
+  getSelectedSLOsHavingSLOIdentifier,
   getUpdatedSLOObjectives,
   RenderCheckBoxes,
   RenderMonitoredService,
@@ -57,6 +55,7 @@ import {
   RenderUserJourney
 } from './SLOList.utils'
 import { MinNumberOfSLO, MaxNumberOfSLO } from '../../../CreateCompositeSloForm.constant'
+import { INITIAL_PAGE_NUMBER } from './SLOList.constants'
 
 interface SLODashboardWidgetsParams {
   queryParams: GetSLOHealthListViewQueryParams
@@ -76,7 +75,7 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
   const { getString } = useStrings()
   const [pageNumber, setPageNumber] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
-  const [initializedPageNumbers, setInitializedPageNumbers] = useState<number[]>([])
+  const initializedOnce = useRef(false)
   const [selectedSlos, setSelectedSlos] = useState<SLOHealthListView[]>([])
 
   const childResource = isAccountLevel ? { childResource: true } : {}
@@ -97,55 +96,37 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
     body: { ...filter, searchFilter: searchTerm, ...childResource }
   })
 
-  const { content, totalItems = 0, totalPages = 0, pageIndex = 0, pageSize = 10 } = dashboardWidgetsResponse?.data ?? {}
+  const {
+    content,
+    totalItems = 0,
+    totalPages = 0,
+    pageIndex = INITIAL_PAGE_NUMBER,
+    pageSize = 10
+  } = dashboardWidgetsResponse?.data ?? {}
   const isDisabled = selectedSlos?.length < MinNumberOfSLO || selectedSlos?.length > MaxNumberOfSLO
   useEffect(() => {
     // load selected SLOs when we get data from API
-    if (dashboardWidgetsResponse?.data?.content) {
-      if (isNumber(pageIndex) && !initializedPageNumbers.includes(pageIndex) && serviceLevelObjectivesDetails.length) {
-        const selectedSlosOnPage =
-          (isAccountLevel
-            ? content?.filter(item =>
-                serviceLevelObjectivesDetails
-                  ?.map(details => getSLORefIdWithOrgAndProject(details))
-                  .includes(getSLOIdentifierWithOrgAndProject(item))
-              )
-            : content?.filter(item =>
-                serviceLevelObjectivesDetails
-                  ?.map(details => details.serviceLevelObjectiveRef)
-                  .includes(item.sloIdentifier)
-              )) || []
-        const selectedSlosNotOnPage = isAccountLevel
-          ? serviceLevelObjectivesDetails.filter(
-              item =>
-                !selectedSlosOnPage
-                  .map(slos => getSLOIdentifierWithOrgAndProject(slos))
-                  .includes(getSLORefIdWithOrgAndProject(item))
-            )
-          : serviceLevelObjectivesDetails.filter(
-              item => !selectedSlosOnPage.map(slos => slos.sloIdentifier).includes(item.sloIdentifier || '')
-            )
+    if (content) {
+      if (pageIndex === INITIAL_PAGE_NUMBER && !initializedOnce.current && serviceLevelObjectivesDetails.length) {
+        const { selectedSlosOnPage, selectedSlosNotOnPage } = getSelectedSLOsHaveRefIds(
+          isAccountLevel,
+          content,
+          serviceLevelObjectivesDetails
+        )
         setSelectedSlos([...selectedSlosOnPage, ...selectedSlosNotOnPage] as SLOHealthListView[])
-        setInitializedPageNumbers(prv => [...prv, pageIndex])
+        initializedOnce.current = true
       } else {
         setSelectedSlos(prvSelected => {
-          const listOfSloIdsOnPage = isAccountLevel
-            ? content?.map(item => getSLOIdentifierWithOrgAndProject(item))
-            : content?.map(item => item.sloIdentifier)
-          const selectedSlosNotOnPage = prvSelected.filter(
-            item =>
-              !listOfSloIdsOnPage?.includes(
-                isAccountLevel ? getSLOIdentifierWithOrgAndProject(item) : item.sloIdentifier
-              )
-          )
-          const selectedSlosOnPage = prvSelected.filter(item =>
-            listOfSloIdsOnPage?.includes(isAccountLevel ? getSLOIdentifierWithOrgAndProject(item) : item.sloIdentifier)
+          const { selectedSlosNotOnPage, selectedSlosOnPage } = getSelectedSLOsHavingSLOIdentifier(
+            isAccountLevel,
+            content,
+            prvSelected
           )
           return [...selectedSlosNotOnPage, ...selectedSlosOnPage]
         })
       }
     }
-  }, [dashboardWidgetsResponse?.data?.content])
+  }, [content])
 
   const addSLos = (): void => {
     const updatedSLOObjective = getUpdatedSLOObjectives(selectedSlos, accountId, orgIdentifier, projectIdentifier)

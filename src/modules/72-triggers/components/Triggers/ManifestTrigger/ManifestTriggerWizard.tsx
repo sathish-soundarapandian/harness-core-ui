@@ -102,6 +102,7 @@ import {
 } from './ManifestWizardPageUtils'
 import type { TriggerProps } from '../Trigger'
 import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
+import { isNewTrigger } from '../utils'
 import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
@@ -154,8 +155,8 @@ export default function ManifestTriggerWizard(
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
       branch
-    } as GetTriggerQueryParams
-    // lazy: true
+    } as GetTriggerQueryParams,
+    lazy: isNewTrigger(triggerIdentifier)
   })
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
     pipelineIdentifier,

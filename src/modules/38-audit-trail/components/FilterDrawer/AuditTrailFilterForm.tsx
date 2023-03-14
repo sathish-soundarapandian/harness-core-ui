@@ -19,7 +19,7 @@ import UserTagRenderer from '@common/components/UserTagRenderer/UserTagRenderer'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import { sortByName } from '@common/utils/sortUtils'
+import { SortMethod } from '@common/utils/sortUtils'
 import type { AuditTrailFormType } from './FilterDrawer'
 
 interface AuditTrailFormProps {
@@ -35,7 +35,7 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
   const { getString } = useStrings()
 
   const { data: userData } = useMutateAsGet(useGetUsers, {
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier, sortOrders: [sortByName[0].value] },
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier, sortOrders: [SortMethod.NameAsc] },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     body: {
       searchTerm: userQuery
@@ -47,7 +47,7 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
     queryParams: {
       accountIdentifier: accountId,
       searchTerm: orgQuery,
-      sortOrders: [sortByName[0].value as string],
+      sortOrders: [SortMethod.NameAsc],
       pageSize: 100
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
@@ -78,7 +78,7 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
       searchTerm: projectsQuery,
       orgIdentifiers: getOrgs(),
       pageSize: 100,
-      sortOrders: [sortByName[0].value as string]
+      sortOrders: [SortMethod.NameAsc]
     },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
@@ -112,6 +112,7 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
         label={getString('common.userLabel')}
         multiSelectProps={{
           allowCreatingNewItems: true,
+          allowCommaSeparatedList: true,
           onQueryChange: setUserQuery,
           tagRenderer: (item: MultiSelectOption) => <UserTagRenderer key={item.value.toString()} item={item} />,
           itemRender: (item, { handleClick }) => (

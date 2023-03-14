@@ -38,6 +38,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { SecretConfigureOptions } from '@secrets/components/SecretConfigureOptions/SecretConfigureOptions'
 import type { CustomVariableEditableProps, CustomVariablesData } from './CustomVariableEditable'
 import { VariableType, labelStringMap } from './CustomVariableUtils'
 import AddEditCustomVariable, { VariableState } from './AddEditCustomVariable'
@@ -191,7 +192,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                         )}
 
                         <div className={css.valueColumn} data-type={getMultiTypeFromValue(variable.value as string)}>
-                          {(variable.type as CustomDeploymentNGVariable) === VariableType.Connector ? (
+                          {(variable.type as CustomDeploymentNGVariable['type']) === VariableType.Connector ? (
                             <FormMultiTypeConnectorField
                               name={`variables[${index}].value`}
                               label=""
@@ -227,22 +228,38 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                               }}
                             />
                           )}
-                          {getMultiTypeFromValue(variable.value as string) === MultiTypeInputType.RUNTIME ? (
-                            <ConfigureOptions
-                              value={variable.value as string}
-                              defaultValue={variable.default}
-                              type={variable.type || /* istanbul ignore next */ 'String'}
-                              variableName={variable.name || /* istanbul ignore next */ ''}
-                              onChange={(value, defaultValue) => {
-                                setFieldValue(`variables[${index}].value`, value)
-                                setFieldValue(`variables[${index}].default`, defaultValue)
-                              }}
-                              isReadonly={readonly}
-                              allowedValuesType={
-                                variable.type === VariableType.Number ? ALLOWED_VALUES_TYPE.NUMBER : undefined
-                              }
-                            />
-                          ) : null}
+                          {getMultiTypeFromValue(variable.value as string) === MultiTypeInputType.RUNTIME &&
+                            (variable.type === VariableType.Secret ? (
+                              <SecretConfigureOptions
+                                value={variable.value as string}
+                                defaultValue={variable.default}
+                                type={variable.type || /* istanbul ignore next */ 'String'}
+                                variableName={variable.name || /* istanbul ignore next */ ''}
+                                onChange={(value, defaultValue) => {
+                                  setFieldValue(`variables[${index}].value`, value)
+                                  setFieldValue(`variables[${index}].default`, defaultValue)
+                                }}
+                                isReadonly={readonly}
+                                secretInputProps={{
+                                  disabled: readonly
+                                }}
+                              />
+                            ) : (
+                              <ConfigureOptions
+                                value={variable.value as string}
+                                defaultValue={variable.default}
+                                type={variable.type || /* istanbul ignore next */ 'String'}
+                                variableName={variable.name || /* istanbul ignore next */ ''}
+                                onChange={(value, defaultValue) => {
+                                  setFieldValue(`variables[${index}].value`, value)
+                                  setFieldValue(`variables[${index}].default`, defaultValue)
+                                }}
+                                isReadonly={readonly}
+                                allowedValuesType={
+                                  variable.type === VariableType.Number ? ALLOWED_VALUES_TYPE.NUMBER : undefined
+                                }
+                              />
+                            ))}
                           <div className={css.actionButtons}>
                             {initialValues.canAddVariable && !readonly ? (
                               <React.Fragment>

@@ -25,9 +25,6 @@ declare const styles: {
   readonly modal: string
   readonly noWrap: string
   readonly paddingVertical: string
-  readonly primaryArtifactList: string
-  readonly primaryArtifactRefRuntimeValue: string
-  readonly primaryArtifactTemplateList: string
   readonly rowItem: string
   readonly sideCarBtn: string
   readonly sidecarList: string

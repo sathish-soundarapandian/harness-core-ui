@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { useFormikContext } from 'formik'
-import { filter, get } from 'lodash-es'
+import { get } from 'lodash-es'
 import { AllowedTypes, Container, ExpressionAndRuntimeType, MultiTypeInputType } from '@harness/uicore'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import multiBtnCss from '@common/components/MultiTypeTextArea/MultiTypeTextArea.module.scss'
@@ -43,10 +43,6 @@ export function MultiTypeExecutionCondition(props: MultiTypeExecutionConditionPr
   const formik = useFormikContext()
 
   const conditionValue = get(formik.values, path)
-  const allowableTypesExceptExpression = filter(
-    allowableTypes,
-    type => type !== MultiTypeInputType.EXPRESSION
-  ) as AllowedTypes
 
   return (
     <Container className={cx(css.conditionInputContainer)}>
@@ -60,7 +56,7 @@ export function MultiTypeExecutionCondition(props: MultiTypeExecutionConditionPr
         }}
         fixedTypeComponent={MultiTypeMonacoTextFieldFixedTypeComponent}
         style={{ flexGrow: 1 }}
-        allowableTypes={allowableTypesExceptExpression}
+        allowableTypes={allowableTypes}
         onChange={val => formik?.setFieldValue(path, val)}
         onTypeChange={setMultiType}
         btnClassName={multiType === MultiTypeInputType.FIXED ? multiBtnCss.multiButtonForFixedType : ''}

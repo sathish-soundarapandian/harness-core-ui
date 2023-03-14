@@ -36,8 +36,21 @@ useGetStreamingDestinationsCardsQueryMock.mockImplementation(() => {
   return { data: mockStreamingDestinationCards, error: false, isFetching: false, refetch: mockCardsPromise }
 })
 
+jest.mock('@harness/uicore', () => {
+  return {
+    ...jest.requireActual('@harness/uicore'),
+    DateRangePickerButton: (props: any) => {
+      return (
+        <div data-testid="datefilter">
+          {props.renderButtonText([{ toLocaleDateString: () => 'startDate' }, { toLocaleDateString: () => 'endDate' }])}
+        </div>
+      )
+    }
+  }
+})
+
 describe('Audit trail Page', () => {
-  test('render', () => {
+  test('render', async () => {
     jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
       PL_AUDIT_LOG_STREAMING_ENABLED: true
     })

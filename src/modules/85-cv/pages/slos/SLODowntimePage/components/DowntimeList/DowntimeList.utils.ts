@@ -12,7 +12,6 @@ import { getFormattedTime } from '@cv/pages/slos/components/CVCreateDowntime/CVC
 import type { UseStringsReturn } from 'framework/strings'
 import type {
   DowntimeDuration,
-  DowntimeHistoryView,
   DowntimeListView,
   DowntimeRecurrence,
   DowntimeStatusDetails,
@@ -26,11 +25,6 @@ import { DowntimeStatus } from '../../SLODowntimePage.types'
 export const getIsSetPreviousPage = (pageIndex: number, pageItemCount: number): boolean => {
   return Boolean(pageIndex) && pageItemCount === 1
 }
-
-export const shouldRenderFilters = (
-  appliedSearchAndFilter: boolean,
-  content?: DowntimeListView[] | DowntimeHistoryView[]
-): boolean => !!content?.length || (content?.length === 0 && appliedSearchAndFilter)
 
 export const getDowntimeWindowInfo = (downtime: DowntimeListView, getString: UseStringsReturn['getString']) => {
   const { type = DowntimeWindowToggleViews.ONE_TIME } = downtime?.spec || {}

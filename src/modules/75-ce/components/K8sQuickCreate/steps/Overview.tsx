@@ -19,7 +19,8 @@ import { validateKubernetesYamlPromise } from 'services/portal'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { delegateNameRegex } from '@delegates/components/CreateDelegate/K8sDelegate/DelegateSetupStep/DelegateSetupStep.constants'
 import { quickCreateDelegateParams } from '@ce/utils/cloudIntegrationUtils'
-
+import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
+import { CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import css from '../K8sQuickCreateModal.module.scss'
 
 interface OverviewProps {
@@ -30,6 +31,8 @@ const Overview: React.FC<OverviewProps & StepProps<ConnectorConfigDTO>> = ({ nex
   const { getString } = useStrings()
   const { accountId } = useParams<{ accountId: string }>()
   const [loading, setLoading] = useState(false)
+
+  useStepLoadTelemetry(CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS.LOAD_OVERVIEW_STEP)
 
   const handleSubmit = async (
     formData: ConnectorConfigDTO,

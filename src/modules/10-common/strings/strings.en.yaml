@@ -143,6 +143,7 @@ switchAccountError: Unable to switch accounts. Please try again.
 logs:
   noLogsText: 'No logs found'
   delegateSelectionLogs: Delegate selection logs
+  delegateTaskLogs: Delegate Tasks Logs
 execute: Execute
 commentModal:
   addCommentPlaceholder: Add a comment
@@ -329,6 +330,7 @@ purpose:
     tests: '{{$.tests}}'
   errorTracking:
     title: Error Tracking
+    longTitle: Continuous Error Tracking
   code:
     name: Code
   chaos:
@@ -419,7 +421,7 @@ git:
   bitbucketRepoPlaceholderSSH: 'git@bitbucket.org/repo'
   azureReposUrlPlaceholder: 'https://dev.azure.com/<organizationName>/<projectName>'
   azureReposUrlPlaceholderRepoHttp: 'https://dev.azure.com/<organizationName>/<projectName>/_git/<repositoryName>'
-  azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organizationName>'
+  azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organizationName>/<projectName>'
   azureReposPlaceholderRepoSSH: 'git@ssh.dev.azure.com:v3/<organizationName>/<projectName>/<repositoryName>'
   enableAPIAccess: 'Enable API access (recommended)'
   APIAccessDescription: 'API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses'
@@ -487,6 +489,7 @@ newLines: 'New lines'
 unsavedChanges: You may have unsaved changes
 unsavedChangesLong: You have unsaved changes that will be lost. Are you sure you want to leave this page?
 readonlyPermissions: You have read-only permissions
+readonlyPermissionsForFile: You have read-only permissions for this file
 viewAndExecutePermissions: You have View and Execute permission only
 newVersion: There is a new version of this branch
 confictOccured: '{{name}} has committed since you started editing.'
@@ -541,6 +544,7 @@ subscriptions:
     services: Active Services
     srvcInst: Active Service Instances
     serviceLicenses: Service Licenses
+    serviceInstances: Service Instances
     cdUsers: Active CD Users
     cdSITooltip: Service Instances represent the dynamic instantiation of a service you deploy via Harness. For a service representing a Docker image, Service Instances are the number of pods running with the docker image. For a service that deploys .NET web app, Service Instances are the number of VMs running the web app.
     cdServiceTooltip: A Service is an independent unit of software you deploy through Harness CD pipelines. An Active Service is a service deployed in the last 30 days.
@@ -1220,6 +1224,9 @@ viewAll: View all
 lastUpdatedAt: Last updated at
 tryAgain: Try Again
 reload: Reload
+plugins: Plugins
+noPluginInputsRequired: No inputs are required for this plugin.
+seeDocumentation: See Documentation
 recents: Recents
 favorites: Favorites
 noRecentProjects: No Recent Projects
@@ -1352,16 +1359,35 @@ artifacts:
     sourceDirectoryPlaceholder: Enter Source Directory
 updated: Updated
 python: Python
+successfullyAdded: Successfully added
+successfullyUpdated: Successfully updated
+errorOccured: 'Error occured while {{verb}} {{entity}}'
+seeAdvancedOptions: See Advanced Options
+addedEntityLabel: 'Added {{entity}}'
 bucketName: Bucket Name
+validationInProgress: Validation in progress
+checkYourNetwork: check your network.
+Stepper:
+  StepError: Required fields are missing or incorrect data
 
 # SSCA module
-ssca: SSCA
+ssca: Supply Chain Assurance
 sscaText: Software Supply Chain Assurance
 tickets:
   selectConnector: '[Select] Ticket Provider Connector'
   selectProjectName: '[Select] Project Name'
   connector: 'Ticket Provider Connector'
   defaultProjectName: 'Default Project Name'
-  tickets: 'Tickets'
+  externalTickets: 'External Tickets'
   ticketComment: 'Append comment to ticket when Security Issue changes are detected (coming soon)'
   ticketExemption: 'Create a ticket when an Exemption is created (coming soon)'
+downloadYaml: 'Download YAML'
+previewYAML: Preview YAML
+individualExpression: 'Individual Expression'
+combinedExpression: 'Combined Expression'
+OverUse: 'Over Use'
+yearlyPeak: 'Yearly Peak'
+monthlyPeak: 'Monthly Peak'
+single: 'Single'
+individual: 'Individual'
+combined: 'Combined'

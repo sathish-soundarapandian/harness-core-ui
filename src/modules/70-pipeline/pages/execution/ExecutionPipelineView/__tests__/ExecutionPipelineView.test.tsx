@@ -7,9 +7,12 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import mockImport from 'framework/utils/mockImport'
 import { getMockFor_useGetPipeline } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
 
 import { TestWrapper } from '@common/utils/testUtils'
+import { executionPathProps, modulePathProps } from '@common/utils/routeUtils'
+import routes from '@common/RouteDefinitions'
 
 import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
 import ExecutionPipelineView from '../ExecutionPipelineView'
@@ -57,5 +60,29 @@ describe('<ExecutionPipelineView /> tests', () => {
     )
 
     expect(getByTestId('view').innerHTML).toBe('ExecutionGraphView')
+  })
+
+  test('renders log view with correct params by default, with FF CI_YAML_VERSIONING ON for CI module', () => {
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CI_YAML_VERSIONING: true })
+    })
+    const { getByTestId } = render(
+      <TestWrapper
+        path={routes.toExecutionPipelineView({ ...executionPathProps, ...modulePathProps })}
+        pathParams={{
+          accountId: 'acc',
+          orgIdentifier: 'org',
+          projectIdentifier: 'project',
+          pipelineIdentifier: 'pipeline',
+          executionIdentifier: 'execution',
+          source: 'deployments',
+          module: 'ci'
+        }}
+      >
+        <ExecutionPipelineView />
+      </TestWrapper>
+    )
+
+    expect(getByTestId('view').innerHTML).toBe('ExecutionLogView')
   })
 })

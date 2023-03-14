@@ -221,3 +221,5 @@ export const TriggerGitEventTypes: Readonly<string[]> = [
   TriggerGitEvent.MR_COMMENT,
   TriggerGitEvent.PR_COMMENT
 ]
+
+export const isNewTrigger = (triggerIdentifier: string): boolean => triggerIdentifier === 'new'

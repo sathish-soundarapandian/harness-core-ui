@@ -34,12 +34,16 @@ import {
   isRetryPipelineAllowed
 } from '@pipeline/utils/statusHelpers'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
+import { isSimplifiedYAMLEnabledForCI } from '@pipeline/utils/CIUtils'
 import { useStrings } from 'framework/strings'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import type { StringKeys } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
 import { killEvent } from '@common/utils/eventUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RetryPipeline from '../RetryPipeline/RetryPipeline'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
@@ -76,7 +80,7 @@ export interface ExecutionActionsProps {
   source: ExecutionPathProps['source']
   onViewCompiledYaml?: () => void
   onCompareExecutions?: () => void
-  onReRunInDebugMode?: () => void
+  onReRunInDebugMode?: (() => void) | undefined
   menuOnlyActions?: boolean
   isExecutionListView?: boolean
 }
@@ -201,6 +205,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
       }
     }
   })
+  const { CI_YAML_VERSIONING, PIE_DEPRECATE_PAUSE_INTERRUPT_NG } = useFeatureFlags()
 
   const { canAbort, canPause, canRerun, canResume } = getValidExecutionActions(canExecute, executionStatus)
   const { abortText, pauseText, rerunText, resumeText } = getActionTexts(stageId)
@@ -221,7 +226,9 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   }
 
   const executionDetailsView = routes.toExecutionPipelineView({ ...commonRouteProps, source, executionIdentifier })
-  const pipelineDetailsView = routes.toPipelineStudio(commonRouteProps)
+  const pipelineDetailsView = isSimplifiedYAMLEnabledForCI(module, CI_YAML_VERSIONING)
+    ? routes.toPipelineStudioV1(commonRouteProps)
+    : routes.toPipelineStudio(commonRouteProps)
 
   async function executeAction(interruptType: HandleInterruptQueryParams['interruptType']): Promise<void> {
     clear()
@@ -295,9 +302,10 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   /*--------------------------------------Retry Pipeline---------------------------------------------*/
 
   /*--------------------------------------Run Pipeline---------------------------------------------*/
-
   const reRunPipeline = (): void => {
-    openRunPipelineModal()
+    CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+      ? openRunPipelineModalV1()
+      : openRunPipelineModal()
   }
 
   const { openRunPipelineModal } = useRunPipelineModal({
@@ -309,6 +317,14 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     storeType,
     stagesExecuted
   })
+  const { openRunPipelineModalV1 } = useRunPipelineModalV1({
+    pipelineIdentifier,
+    executionId: executionIdentifier,
+    repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
+    branch,
+    connectorRef,
+    storeType
+  })
 
   /*--------------------------------------Run Pipeline---------------------------------------------*/
 
@@ -316,7 +332,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     <Layout.Horizontal onClick={killEvent}>
       {!menuOnlyActions && (
         <>
-          {canResume && (
+          {!PIE_DEPRECATE_PAUSE_INTERRUPT_NG && canResume && (
             <Button
               size={ButtonSize.SMALL}
               icon="play"
@@ -338,7 +354,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
             />
           )}
 
-          {canPause && (
+          {!PIE_DEPRECATE_PAUSE_INTERRUPT_NG && canPause && (
             <Button
               size={ButtonSize.SMALL}
               icon="pause"
@@ -404,8 +420,13 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
               />
             )}
             <MenuItem text={getString(abortText)} onClick={openAbortDialog} disabled={!canAbort} />
-            <MenuItem text={getString(pauseText)} onClick={pausePipeline} disabled={!canPause} />
-            <MenuItem text={getString(resumeText)} onClick={resumePipeline} disabled={!canResume} />
+            {PIE_DEPRECATE_PAUSE_INTERRUPT_NG ? null : (
+              <MenuItem text={getString(pauseText)} onClick={pausePipeline} disabled={!canPause} />
+            )}
+            {PIE_DEPRECATE_PAUSE_INTERRUPT_NG ? null : (
+              <MenuItem text={getString(resumeText)} onClick={resumePipeline} disabled={!canResume} />
+            )}
+
             {onViewCompiledYaml ? (
               <MenuItem text={getString('pipeline.execution.actions.viewCompiledYaml')} onClick={onViewCompiledYaml} />
             ) : null}

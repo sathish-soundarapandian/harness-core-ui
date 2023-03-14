@@ -251,4 +251,48 @@ describe('Create AWS connector Wizard', () => {
       { queryParams: {} }
     )
   })
+
+  test('Should reset connectivity mode of HarnessPlatform when switching from Access Key to IRSA ', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateAWSConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={hostedMockConnector.data.connector as any}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Manager}
+        />
+      </TestWrapper>
+    )
+    // editing connector name
+    const updatedName = 'connector with IRSA'
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="name"]')!, {
+        target: { value: updatedName }
+      })
+    })
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    // step 2
+    fireEvent.click(queryByText(container, 'connectors.aws.useIRSA')!)
+
+    //connectivity mode step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    // Step 3
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    // Validation for reset connectivityMode and harness platform option not being visible
+    expect(getByText('connectors.connectivityMode.validation')).toBeInTheDocument()
+    expect(container.querySelector('.FormError--error')).toBeInTheDocument()
+    expect(queryByText(container, 'common.connectThroughPlatform')!).not.toBeInTheDocument()
+    expect(queryByText(container, 'common.connectThroughPlatformInfo')!).not.toBeInTheDocument()
+    fireEvent.click(getByText('common.connectThroughDelegate')!)
+  })
 })

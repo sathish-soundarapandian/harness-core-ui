@@ -10,14 +10,7 @@ import { projectPathProps } from '@common/utils/routeUtils'
 import type { TestWrapperProps } from '@common/utils/testUtils'
 import { cvModuleParams } from '@cv/RouteDestinations'
 import type { ServiceLevelIndicatorDTO } from 'services/cv'
-import {
-  Comparators,
-  SLIEventTypes,
-  SLIMetricTypes,
-  SLIMissingDataTypes,
-  SLITypes,
-  SLOV2Form
-} from '../CVCreateSLOV2.types'
+import { Comparators, SLIEventTypes, SLIMetricTypes, SLIMissingDataTypes, SLOV2Form } from '../CVCreateSLOV2.types'
 import { getSLOV2InitialFormData } from '../CVCreateSLOV2.utils'
 
 export const errorMessage = 'TEST ERROR MESSAGE'
@@ -118,7 +111,6 @@ export const serviceLevelIndicator: ServiceLevelIndicatorDTO = {
   name: 'SLO-5-updated',
   identifier: 'SLO5',
   healthSourceRef: 'Test_gcp',
-  type: SLITypes.LATENCY,
   sliMissingDataType: SLIMissingDataTypes.GOOD,
   spec: {
     type: SLIMetricTypes.RATIO,
@@ -182,7 +174,6 @@ export const simpleSLOData = {
           {
             name: 'SLO1_appdMetric_c7cml5choco',
             identifier: 'SLO1_appdMetric_c7cml5choco',
-            type: 'Availability',
             spec: { type: 'Threshold', spec: { metric1: 'appdMetric_1', thresholdValue: 80, thresholdType: '<' } },
             sliMissingDataType: 'Good'
           }

@@ -94,7 +94,8 @@ const defaultProps = {
   },
   path: 'stages[0].stage.spec.infrastructure.infrastructureDefinition.provisioner.steps[0].step',
   readonly: false,
-  allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
+  allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+  fieldPath: 'configuration'
 }
 
 const repoMock = {

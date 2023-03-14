@@ -9,7 +9,9 @@
 declare const styles: {
   readonly count: string
   readonly envIcon: string
+  readonly envName: string
   readonly environments: string
+  readonly executionItemDetails: string
   readonly main: string
   readonly serviceName: string
   readonly serviceWrapper: string

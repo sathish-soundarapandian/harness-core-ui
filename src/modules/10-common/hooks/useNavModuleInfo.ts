@@ -28,6 +28,7 @@ export type NavModuleName =
   | ModuleName.IACM
   | ModuleName.SSCA
   | ModuleName.IDP
+  | ModuleName.ET
 
 // Default order of modules on side nav, please add modules to this list accordingly.
 // For any module to be visible on side nav, it has to be added in this list
@@ -42,7 +43,8 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.CHAOS,
   ModuleName.IACM,
   ModuleName.SSCA,
-  ModuleName.IDP
+  ModuleName.IDP,
+  ModuleName.ET
 ]
 
 export interface useNavModuleInfoReturnType {
@@ -69,7 +71,6 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     icon: 'cd-main',
     label: 'common.cdAndGitops',
     getHomePageUrl: (accountId: string) => routes.toCD({ accountId }),
-    featureFlagName: FeatureFlag.CDNG_ENABLED,
     color: '--cd-border',
     backgroundColor: '--cd-background'
   },
@@ -144,8 +145,15 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.IDP]: {
     icon: 'idp',
     label: 'common.purpose.idp.fullName',
-    getHomePageUrl: (accountId: string) => routes.toIDP({ accountId }),
+    getHomePageUrl: (accountId: string) => routes.toIDPDefaultPath({ accountId }),
     featureFlagName: FeatureFlag.IDP_ENABLED,
+    color: '--default-module-border'
+  },
+  [ModuleName.ET]: {
+    icon: 'cet',
+    label: 'common.purpose.errorTracking.longTitle',
+    getHomePageUrl: (accountId: string) => routes.toETHome({ accountId }),
+    featureFlagName: FeatureFlag.CET_ENABLED,
     color: '--default-module-border'
   }
 }
@@ -167,7 +175,7 @@ export const moduleGroupConfig: GroupConfig[] = [
   },
   {
     label: 'common.moduleList.manageImpact',
-    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCA]
+    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCA, ModuleName.ET]
   },
   {
     label: 'common.moduleList.optimizeProcesses',

@@ -21,8 +21,10 @@ import {
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
+  MultiSelectOption,
   MultiTypeInputType,
   PageSpinner,
+  SelectOption,
   Text
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
@@ -64,9 +66,9 @@ import type {
   JiraFieldNGWithValue
 } from './types'
 import {
+  addSelectedOptionalFields,
   getInitialValueForSelectedField,
   getKVFieldsToBeAddedInForm,
-  getSelectedFieldsToBeAddedInForm,
   isRuntimeOrExpressionType,
   processFormData,
   resetForm
@@ -230,7 +232,7 @@ function FormContent({
     // If issuetype changes in form, set status and field list
     if (issueTypeFixedValue && issueMetadata?.issuetypes[issueTypeFixedValue]?.fields) {
       const issueTypeData = issueMetadata?.issuetypes[issueTypeFixedValue]
-      const fieldKeys = Object.keys(issueTypeData?.fields || {})
+      const fieldKeys = Object.keys(issueTypeData?.fields || {}).sort()
       const formikOptionalFields: JiraFieldNGWithValue[] = []
       const formikRequiredFields: JiraFieldNGWithValue[] = []
       fieldKeys.forEach(fieldKey => {
@@ -252,13 +254,30 @@ function FormContent({
       })
       formik.setFieldValue('spec.selectedRequiredFields', formikRequiredFields)
       formik.setFieldValue('spec.selectedOptionalFields', formikOptionalFields)
+      const toBeUpdatedNonKVFields: JiraCreateFieldType[] = []
+      const nonKVFields = [...formikOptionalFields, ...formikRequiredFields]
+
+      nonKVFields.forEach(field =>
+        toBeUpdatedNonKVFields.push({
+          name: field.name,
+          value:
+            field?.schema?.type === 'option'
+              ? field?.schema?.array
+                ? (field.value as MultiSelectOption[])?.map(i => i?.value).toString()
+                : (field.value as SelectOption)?.value?.toString()
+              : field?.value?.toString()
+        })
+      )
+
       const toBeUpdatedKVFields = getKVFieldsToBeAddedInForm(
         formik.values.spec.fields,
         [],
         formikOptionalFields,
         formikRequiredFields
       )
-      formik.setFieldValue('spec.fields', toBeUpdatedKVFields)
+      const allfields = [...toBeUpdatedNonKVFields, ...toBeUpdatedKVFields]
+
+      formik.setFieldValue('spec.fields', allfields)
     } else if (issueTypeFixedValue !== undefined || isRuntimeOrExpressionType(issueValueType)) {
       // Undefined check is needed so that form is not set to dirty as soon as we open
       // This means we've cleared the value or marked runtime/expression
@@ -313,14 +332,7 @@ function FormContent({
           projectOptions={projectOptions}
           selectedFields={formik.values.spec.selectedOptionalFields}
           addSelectedFields={(fieldsToBeAdded: JiraFieldNG[]) => {
-            formik.setFieldValue(
-              'spec.selectedOptionalFields',
-              getSelectedFieldsToBeAddedInForm(
-                fieldsToBeAdded,
-                formik.values.spec.selectedOptionalFields,
-                formik.values.spec.fields
-              )
-            )
+            addSelectedOptionalFields(fieldsToBeAdded, formik)
             hideDynamicFieldsModal()
           }}
           provideFieldList={(fields: JiraCreateFieldType[]) => {
@@ -587,21 +599,41 @@ function FormContent({
                     <FieldArray
                       name="spec.fields"
                       render={({ remove }) => {
+                        const idxArray: number[] = []
+                        const handleRemove = (kVIndex: number, currIndex: number): void => {
+                          const _fields = formik.values.spec.fields?.filter((_unused, idx: number) => idx !== currIndex)
+                          remove(kVIndex)
+                          formik.setFieldValue('spec.fields', _fields)
+                        }
+
+                        /* Filtering only key value fields from required and optional fields */
+                        const kVFields = formik.values.spec.fields?.filter((field, idx) => {
+                          const isKVField =
+                            !formik.values.spec.selectedRequiredFields?.some(
+                              reqfield => reqfield?.name === field?.name
+                            ) &&
+                            !formik.values.spec.selectedOptionalFields?.some(optfield => optfield?.name === field?.name)
+                          if (isKVField) idxArray.push(idx)
+                          return isKVField
+                        })
+
                         return (
                           <div>
-                            <div className={css.headerRow}>
-                              <String className={css.label} stringID="keyLabel" />
-                              <String className={css.label} stringID="valueLabel" />
-                            </div>
-                            {formik.values.spec.fields?.map((_unused: JiraCreateFieldType, i: number) => (
+                            {kVFields && kVFields?.length > 0 && (
+                              <div className={css.headerRow}>
+                                <String className={css.label} stringID="keyLabel" />
+                                <String className={css.label} stringID="valueLabel" />
+                              </div>
+                            )}
+                            {kVFields?.map((_unused: JiraCreateFieldType, i: number) => (
                               <div className={css.headerRow} key={i}>
                                 <FormInput.Text
-                                  name={`spec.fields[${i}].name`}
+                                  name={`spec.fields[${idxArray[i]}].name`}
                                   disabled={isApprovalStepFieldDisabled(readonly)}
                                   placeholder={getString('pipeline.keyPlaceholder')}
                                 />
                                 <FormInput.MultiTextInput
-                                  name={`spec.fields[${i}].value`}
+                                  name={`spec.fields[${idxArray[i]}].value`}
                                   label=""
                                   placeholder={getString('common.valuePlaceholder')}
                                   disabled={isApprovalStepFieldDisabled(readonly)}
@@ -617,7 +649,7 @@ function FormContent({
                                   icon="main-trash"
                                   disabled={isApprovalStepFieldDisabled(readonly)}
                                   data-testid={`remove-fieldList-${i}`}
-                                  onClick={() => remove(i)}
+                                  onClick={() => handleRemove(i, idxArray[i])}
                                 />
                               </div>
                             ))}

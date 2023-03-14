@@ -45,6 +45,7 @@ export interface ServiceLicenseTableProps {
     serviceId: SelectOption | undefined
   ) => void
   servicesLoading: boolean
+  licenseType: string
 }
 
 export function ServiceLicenseTable({
@@ -53,7 +54,8 @@ export function ServiceLicenseTable({
   sortBy,
   setSortBy,
   updateFilters,
-  servicesLoading
+  servicesLoading,
+  licenseType
 }: ServiceLicenseTableProps): React.ReactElement {
   const { getString } = useStrings()
   const {
@@ -129,13 +131,17 @@ export function ServiceLicenseTable({
         Cell: LastDeployedCell,
         serverSortProps: getServerSortProps('common.lastDeployed')
       },
-      {
-        Header: NameHeader('common.licensesConsumed'),
-        accessor: 'licensesConsumed',
-        width: '15%',
-        Cell: LicenseConsumedCell,
-        serverSortProps: getServerSortProps('licensesConsumed')
-      }
+      ...(licenseType === 'SERVICES'
+        ? [
+            {
+              Header: NameHeader('common.licensesConsumed'),
+              accessor: 'licensesConsumed',
+              width: '15%',
+              Cell: LicenseConsumedCell,
+              serverSortProps: getServerSortProps('licensesConsumed')
+            }
+          ]
+        : [])
     ] as unknown as Column<LicenseUsageDTO>[]
   }, [currentOrder, currentSort])
   const { accountId } = useParams<AccountPathProps>()
@@ -165,6 +171,7 @@ export function ServiceLicenseTable({
   useEffect(() => {
     refetch()
   }, [refetch])
+  const formattedTime = moment(timeValue).format('MMM DD YYYY hh:mm:ss')
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
@@ -183,20 +190,28 @@ export function ServiceLicenseTable({
           </Layout.Vertical>
           <div>
             {' '}
-            <a href={`data:text/csv;charset=utf-8,${escape(initialContent || '')}`} download="serviceLicensesData.csv">
+            <a
+              href={`data:text/csv;charset=utf-8,${escape(initialContent || '')}`}
+              download="serviceLicensesData.csv"
+              className={pageCss.exportButton}
+            >
               {'Export CSV'}
             </a>
           </div>
         </Layout.Horizontal>
-        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-          <Layout.Vertical className={pageCss.badgesContainer}>
-            <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
-              <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
-              <String stringID={'common.subscriptions.usage.services'} />
-              <Text>&nbsp;{getString('common.updated')} -</Text>
-              <Text className={pageCss.badgeText}>{timeValue}</Text>
-            </div>
-          </Layout.Vertical>
+        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-end' }} width={'100%'}>
+          {licenseType === 'SERVICES' ? (
+            <Layout.Vertical className={pageCss.badgesContainer}>
+              <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
+                <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
+                <String stringID={'common.subscriptions.usage.services'} />
+                <Text>(</Text>
+                <Text>{getString('common.lastUpdatedAt')} -</Text>
+                <Text className={pageCss.badgeText}>{formattedTime}</Text>
+                <Text>)</Text>
+              </div>
+            </Layout.Vertical>
+          ) : null}
           <Layout.Vertical>
             <OrgDropdown
               value={selectedOrg}
@@ -206,6 +221,7 @@ export function ServiceLicenseTable({
               }}
             />
           </Layout.Vertical>
+          <div></div>
           <ProjectDropdown
             value={selectedProj}
             className={pageCss.orgDropdown}
@@ -224,12 +240,11 @@ export function ServiceLicenseTable({
             className={pageCss.fetchButton}
             font={{ variation: FontVariation.LEAD }}
             color={Color.PRIMARY_7}
-            lineClamp={1}
             onClick={() => {
               updateFilters(selectedOrg, selectedProj, selectedService)
             }}
           >
-            Fetch
+            Update
           </Text>
         </Layout.Horizontal>
         {servicesLoading && <PageSpinner />}

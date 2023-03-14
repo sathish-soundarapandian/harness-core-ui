@@ -29,7 +29,8 @@ const StepsMap: Record<string, StepType> = {
   ServerlessAwsLambda: StepType.ServerlessAwsLambda,
   AzureWebApp: StepType.AzureWebAppServiceSpec,
   ECS: StepType.EcsService,
-  GoogleCloudFunctions: StepType.GoogleCloudFunctionsService
+  GoogleCloudFunctions: StepType.GoogleCloudFunctionsService,
+  AwsLambda: StepType.AwsLambdaService
 }
 
 export interface ServiceCardProps {

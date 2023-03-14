@@ -89,3 +89,14 @@ export const getSLOMetricOptions = (SLOMetricList?: MetricDTO[]): SelectOption[]
 export const getHealthSourceToEdit = (healthSources: HealthSource[], formikProps: any): HealthSource | undefined => {
   return healthSources?.find(healthSource => healthSource?.identifier === formikProps?.values?.healthSourceRef)
 }
+
+export const getSLIChartContainerProps = (
+  showSLIMetricChart: boolean
+): {
+  chartPositionProp?: { [key: string]: any }
+  chartContainerBorder?: { [key: string]: any }
+} => {
+  const chartContainerBorder = { border: { left: true } }
+  const chartPositionProp = !showSLIMetricChart ? { flex: { alignItems: 'center' as any } } : undefined
+  return { chartPositionProp, chartContainerBorder }
+}

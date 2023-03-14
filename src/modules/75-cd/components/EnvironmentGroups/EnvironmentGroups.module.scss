@@ -6,12 +6,25 @@
  */
 
 .dialogStyles {
-  padding-top: 36px !important;
-  width: 800px !important;
-
   > div[class*='bp3-dialog-header'] {
     margin: 0px 0px 6px !important;
   }
+  :global {
+    .ModalDialog--body {
+      padding: 0 !important;
+
+      &::before,
+      &::after {
+        margin: 0 !important;
+      }
+    }
+
+    .ModalDialog--bodyContent {
+      padding: 0 !important;
+    }
+  }
+
+  overflow: hidden;
 }
 
 .tagsPopover {

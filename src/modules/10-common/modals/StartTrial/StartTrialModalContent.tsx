@@ -14,7 +14,6 @@ import { useQueryParams } from '@common/hooks'
 import type { StringsMap } from 'stringTypes'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import ModuleInfoCards, { ModuleInfoCard, getInfoCardsProps } from '@common/components/ModuleInfoCards/ModuleInfoCards'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useUpdateAccountDefaultExperienceNG } from 'services/cd-ng'
 import { Experiences } from '@common/constants/Utils'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
@@ -29,7 +28,6 @@ const StartTrialModalContent: React.FC<StartTrialModalContentProps> = props => {
   const { handleStartTrial, module } = props
 
   const { getString } = useStrings()
-  const { CDNG_ENABLED } = useFeatureFlags()
   const { accountId } = useParams<{
     accountId: string
   }>()
@@ -37,7 +35,7 @@ const StartTrialModalContent: React.FC<StartTrialModalContentProps> = props => {
   const { mutate: updateDefaultExperience } = useUpdateAccountDefaultExperienceNG({
     accountIdentifier: accountId
   })
-  const moduleInfoCards = getInfoCardsProps(accountId, CDNG_ENABLED)[module]
+  const moduleInfoCards = getInfoCardsProps(accountId, true)[module]
   const initialSelectedInfoCard = moduleInfoCards ? moduleInfoCards[0] : undefined
   const [selectedInfoCard, setSelectedInfoCard] = useState<ModuleInfoCard | undefined>(initialSelectedInfoCard)
   const { licenseInformation } = useLicenseStore()

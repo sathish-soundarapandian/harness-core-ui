@@ -103,6 +103,7 @@ import {
   getTriggerArtifactInitialSource
 } from './TriggersWizardPageUtils'
 import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
+import { isNewTrigger } from '../utils'
 import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
@@ -152,8 +153,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
       branch
-    } as GetTriggerQueryParams
-    // lazy: true
+    } as GetTriggerQueryParams,
+    lazy: isNewTrigger(triggerIdentifier)
   })
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
     pipelineIdentifier,

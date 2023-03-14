@@ -82,6 +82,7 @@ export interface PromiseExtraArgs {
   comment?: string
   storeMetadata?: StoreMetadata
   disableCreatingNewBranch?: boolean
+  saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
 }
 
 export enum Intent {
@@ -102,7 +103,7 @@ export interface ModalProps {
   lastPublishedVersion?: string
   disableCreatingNewBranch?: boolean
   onFailure?: (error: any, latestTemplate: NGTemplateInfoConfig) => void
-  saveAsType?: string
+  saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
 }
 
 export interface TemplateConfigValues extends NGTemplateInfoConfigWithGitDetails {
@@ -170,6 +171,7 @@ const BasicTemplateDetails = (
   const scope = getScopeFromDTO(pathParams)
   const [selectedScope, setSelectedScope] = React.useState<Scope>(scope)
   const allowedScopes = templateFactory.getTemplateAllowedScopes(initialValues.type)
+  const isInlineRemoteSelectionApplicable = templateFactory.getTemplateIsRemoteEnabled(initialValues.type)
   const formikRef = useRef<FormikProps<TemplateConfigValues>>()
   const scopeOptions = React.useMemo(
     () =>
@@ -181,11 +183,8 @@ const BasicTemplateDetails = (
   )
 
   const cardDisabledStatus = React.useMemo(
-    () =>
-      intent === Intent.EDIT ||
-      !!disabledFields?.includes(Fields.StoreType) ||
-      !templateFactory.getTemplateIsRemoteEnabled(initialValues.type),
-    [initialValues.type, intent, disabledFields]
+    () => intent === Intent.EDIT || !!disabledFields?.includes(Fields.StoreType),
+    [intent, disabledFields]
   )
 
   const gitDisabledFields = pick(
@@ -283,6 +282,7 @@ const BasicTemplateDetails = (
 
       promise(updateTemplate, {
         isEdit: intent === Intent.EDIT,
+        saveAsType,
         disableCreatingNewBranch,
         ...(!isEmpty(values.repo) && {
           updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
@@ -303,7 +303,7 @@ const BasicTemplateDetails = (
           onFailure?.(error, updateTemplate)
         })
     },
-    [setLoading, promise, gitDetails, onClose]
+    [setLoading, promise, gitDetails, onClose, saveAsType]
   )
 
   const onScopeChange = ({ value }: SelectOption) => {
@@ -556,7 +556,7 @@ const BasicTemplateDetails = (
                           )}
                       </Layout.Vertical>
                     </Container>
-                    {supportingTemplatesGitx && (
+                    {supportingTemplatesGitx && isInlineRemoteSelectionApplicable && (
                       <>
                         <Divider />
                         <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>

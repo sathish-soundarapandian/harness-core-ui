@@ -18,7 +18,7 @@ import {
 import emptyData from '@cv/assets/emptyData.svg'
 import DowntimeFilters from '../DowntimeFilters/DowntimeFilters'
 import { FiltersContext } from '../../FiltersContext'
-import { getDuration, shouldRenderFilters } from '../DowntimeList/DowntimeList.utils'
+import { getDuration } from '../DowntimeList/DowntimeList.utils'
 import { RenderServices } from '../DowntimeList/DowntimeList'
 import css from '../DowntimeList/DowntimeList.module.scss'
 
@@ -168,7 +168,7 @@ const DowntimeHistory = ({
 
   return (
     <Container margin={'xlarge'} padding={{ left: 'small', right: 'small' }}>
-      {shouldRenderFilters(appliedSearchAndFilter, content) && <DowntimeFilters />}
+      <DowntimeFilters />
       <Page.Body
         loading={downtimeHistoryLoading}
         retryOnError={() => refetchHistoryData({ ...pathParams, queryParams })}
@@ -176,7 +176,7 @@ const DowntimeHistory = ({
         className={css.downtimeList}
       >
         {content?.length ? (
-          <Container margin={{ top: 'medium' }}>
+          <Container margin={{ top: 'large' }}>
             <TableV2
               sortable={false}
               columns={columns}

@@ -3810,6 +3810,28 @@ export interface PipelineInfoConfig {
   variables?: NGVariable[]
 }
 
+export interface PipelineV1InfoConfig {
+  allowStageExecutions?: boolean
+  delegateSelectors?: string[]
+  description?: string
+  flowControl?: FlowControlConfig
+  identifier?: string
+  name: string
+  notificationRules?: NotificationRules[]
+  orgIdentifier?: string
+  projectIdentifier?: string
+  inputs?: JsonNode
+  repository?: JsonNode
+  stages?: JsonNode[]
+  tags?: {
+    [key: string]: string
+  }
+  template?: TemplateLinkConfig
+  timeout?: string
+  variables?: NGVariable[]
+  version: number
+}
+
 export interface PipelineInputResponse {
   errorInfo?: PreFlightEntityErrorInfo
   fqn?: string
@@ -4331,6 +4353,16 @@ export interface ResponseInputSetYamlDiff {
   data?: InputSetYamlDiff
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInputs {
+  inputs?: { [key: string]: any }
+  repository?: {
+    reference?: {
+      type?: { [key: string]: any }
+      value?: { [key: string]: any }
+    }
+  }
 }
 
 export interface ResponseJsonNode {
@@ -15135,6 +15167,82 @@ export const updateTriggerStatusPromise = (
     UpdateTriggerStatusPathParams
   >('PUT', getConfig('pipeline/api'), `/triggers/${triggerIdentifier}/status`, props, signal)
 
+export interface GetPipelineInputsQueryParams {
+  /**
+   * Name of the branch (for Git Experience)
+   */
+  branch_name?: string
+  /**
+   * Name of the repository (for Git Experience)
+   */
+  repo_name?: string
+  /**
+   * Identifier of the Harness Connector used for CRUD operations on the Entity (for Git Experience).
+   */
+  connector_ref?: string
+}
+
+export interface GetPipelineInputsPathParams {
+  org: string
+  project: string
+  pipeline: string
+}
+
+export type GetPipelineInputsProps = Omit<
+  GetProps<ResponseInputs, Failure | Error, GetPipelineInputsQueryParams, GetPipelineInputsPathParams>,
+  'path'
+> &
+  GetPipelineInputsPathParams
+
+/**
+ * Get Pipeline Inputs
+ */
+export const GetPipelineInputs = ({ org, project, pipeline, ...props }: GetPipelineInputsProps) => (
+  <Get<ResponseInputs, Failure | Error, GetPipelineInputsQueryParams, GetPipelineInputsPathParams>
+    path={`/v1/orgs/${org}/projects/${project}/pipelines/${pipeline}/inputs`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetPipelineInputsProps = Omit<
+  UseGetProps<ResponseInputs, Failure | Error, GetPipelineInputsQueryParams, GetPipelineInputsPathParams>,
+  'path'
+> &
+  GetPipelineInputsPathParams
+
+/**
+ * Get Pipeline Inputs
+ */
+export const useGetPipelineInputs = ({ org, project, pipeline, ...props }: UseGetPipelineInputsProps) =>
+  useGet<ResponseInputs, Failure | Error, GetPipelineInputsQueryParams, GetPipelineInputsPathParams>(
+    (paramsInPath: GetPipelineInputsPathParams) =>
+      `/v1/orgs/${paramsInPath.org}/projects/${paramsInPath.project}/pipelines/${paramsInPath.pipeline}/inputs`,
+    { base: getConfig('pipeline/api'), pathParams: { org, project, pipeline }, ...props }
+  )
+
+/**
+ * Get Pipeline Inputs
+ */
+export const getPipelineInputsPromise = (
+  {
+    org,
+    project,
+    pipeline,
+    ...props
+  }: GetUsingFetchProps<ResponseInputs, Failure | Error, GetPipelineInputsQueryParams, GetPipelineInputsPathParams> & {
+    org: string
+    project: string
+    pipeline: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseInputs, Failure | Error, GetPipelineInputsQueryParams, GetPipelineInputsPathParams>(
+    getConfig('pipeline/api'),
+    `/v1/orgs/${org}/projects/${project}/pipelines/${pipeline}/inputs`,
+    props,
+    signal
+  )
 export interface ExecutionDetailsQueryParams {
   accountIdentifier: string
   orgIdentifier: string

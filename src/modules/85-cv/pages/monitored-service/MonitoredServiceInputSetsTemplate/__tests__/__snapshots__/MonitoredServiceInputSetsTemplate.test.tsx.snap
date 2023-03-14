@@ -463,7 +463,7 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                   class="Tooltip--acenter"
                   data-tooltip-id="MonitoredServiceForm_sources.healthSources.0.spec.applicationName"
                 >
-                  cv.monitoringSources.appD.applicationName
+                  pipeline.applicationName
                 </span>
                  
                 <span
@@ -690,7 +690,7 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                   class="Tooltip--acenter"
                   data-tooltip-id="MonitoredServiceForm_sources.healthSources.1.spec.applicationName"
                 >
-                  cv.monitoringSources.appD.applicationName
+                  pipeline.applicationName
                 </span>
                  
                 <span
@@ -1962,7 +1962,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                   class="Tooltip--acenter"
                   data-tooltip-id="MonitoredServiceForm_sources.healthSources.0.spec.applicationName"
                 >
-                  cv.monitoringSources.appD.applicationName
+                  pipeline.applicationName
                 </span>
                  
                 <span
@@ -2168,7 +2168,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                   class="Tooltip--acenter"
                   data-tooltip-id="MonitoredServiceForm_sources.healthSources.1.spec.applicationName"
                 >
-                  cv.monitoringSources.appD.applicationName
+                  pipeline.applicationName
                 </span>
                  
                 <span

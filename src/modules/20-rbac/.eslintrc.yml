@@ -14,7 +14,6 @@ rules:
         - group:
             - modules/23-default-settings/*
             - modules/25-governance/*
-            - modules/28-et/*
             - modules/30-delegates/*
             - modules/30-secrets/*
             - modules/31-filestore/*
@@ -27,6 +26,7 @@ rules:
             - modules/45-dashboards/*
             - modules/45-projects-orgs/*
             - modules/60-code/*
+            - modules/60-et/*
             - modules/70-pipeline/*
             - modules/72-freeze-windows/*
             - modules/72-templates-library/*
@@ -44,7 +44,6 @@ rules:
             - modules/90-gitops/*
             - '@default-settings/*'
             - '@governance/*'
-            - '@et/*'
             - '@delegates/*'
             - '@secrets/*'
             - '@filestore/*'
@@ -57,6 +56,7 @@ rules:
             - '@dashboards/*'
             - '@projects-orgs/*'
             - '@code/*'
+            - '@et/*'
             - '@pipeline/*'
             - '@freeze-windows/*'
             - '@templates-library/*'

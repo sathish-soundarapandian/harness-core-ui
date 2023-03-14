@@ -177,7 +177,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
         </div>
         <div
           class="Layout--vertical StyledProps--main StyledProps--margin-xlarge"
-          data-testid="CVStepper_main"
+          data-testid="Stepper_main"
         >
           <div
             class="StyledProps--font StyledProps--main stepContainer"
@@ -191,26 +191,26 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                 style="cursor: pointer;"
               >
                 <span
-                  class="bp3-icon bp3-icon-error StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-error"
-                  icon="error"
+                  class="bp3-icon bp3-icon-warning-sign StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-error"
+                  icon="warning-sign"
                 >
                   <svg
-                    data-icon="error"
+                    data-icon="warning-sign"
                     height="20"
                     viewBox="0 0 20 20"
                     width="20"
                   >
                     <desc>
-                      error
+                      warning-sign
                     </desc>
                     <path
-                      d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm1 16H9v-2h2v2zm0-3H9V4h2v9z"
+                      d="M19.86 17.52l.01-.01-9-16-.01.01C10.69 1.21 10.37 1 10 1s-.69.21-.86.52l-.01-.01-9 16 .01.01c-.08.14-.14.3-.14.48 0 .55.45 1 1 1h18c.55 0 1-.45 1-1 0-.18-.06-.34-.14-.48zM11 17H9v-2h2v2zm0-3H9V6h2v8z"
                       fill-rule="evenodd"
                     />
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-error"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
                 >
                   cv.CompositeSLO.DefineSLO
                    

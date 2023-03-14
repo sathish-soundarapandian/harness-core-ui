@@ -15,11 +15,8 @@ import { replaceDefaultValues } from '../templateUtils'
 
 jest.mock('uuid')
 
-const mockAccountTemplateYaml =
-  'template:\n  name: testTemplate123\n  icon: icon-url\n  identifier: testTemplate123\n  versionLabel: v1\n  type: Stage\n  projectIdentifier: dummyProject\n  orgIdentifier: default\n  tags: {}\n  spec:\n    type: Custom\n    spec:\n      execution:\n        steps:\n          - step:\n              name: vcxvv\n              identifier: vcxvv\n              template:\n                templateRef: account.RemoteStep1\n                versionLabel: v1\n                templateInputs:\n                  type: ShellScript\n                  spec:\n                    source:\n                      type: Inline\n                      spec:\n                        script: <+input>\n          - step:\n              name: s\n              identifier: s\n              template:\n                templateRef: account.Step12Oct\n                versionLabel: v1\n                templateInputs:\n                  type: ShellScript\n                  spec:\n                    source:\n                      type: Inline\n                      spec:\n                        script: <+input>\n'
-
-const mockProjectTemplateYaml =
-  'template:\n  name: testTemplate123\n  icon: icon-url-project\n  identifier: testTemplate123\n  versionLabel: v1\n  type: Stage\n  projectIdentifier: dummyProject\n  orgIdentifier: default\n  tags: {}\n  spec:\n    type: Custom-Project\n    spec:\n      execution:\n        steps:\n          - step:\n              name: vcxvv\n              identifier: vcxvv\n              template:\n                templateRef: account.RemoteStep1\n                versionLabel: v1\n                templateInputs:\n                  type: ShellScript\n                  spec:\n                    source:\n                      type: Inline\n                      spec:\n                        script: <+input>\n          - step:\n              name: s\n              identifier: s\n              template:\n                templateRef: account.Step12Oct\n                versionLabel: v1\n                templateInputs:\n                  type: ShellScript\n                  spec:\n                    source:\n                      type: Inline\n                      spec:\n                        script: <+input>\n'
+const mockYaml =
+  'template:\n  name: testTemplate123\n  icon: icon-url\n  identifier: testTemplate123\n  versionLabel: v1\n  type: Stage\n  projectIdentifier: Depanshu_gitx\n  orgIdentifier: default\n  tags: {}\n  spec:\n    type: Custom\n    spec:\n      execution:\n        steps:\n          - step:\n              name: vcxvv\n              identifier: vcxvv\n              template:\n                templateRef: account.RemoteStep1\n                versionLabel: v1\n                templateInputs:\n                  type: ShellScript\n                  spec:\n                    source:\n                      type: Inline\n                      spec:\n                        script: <+input>\n          - step:\n              name: s\n              identifier: s\n              template:\n                templateRef: account.Step12Oct\n                versionLabel: v1\n                templateInputs:\n                  type: ShellScript\n                  spec:\n                    source:\n                      type: Inline\n                      spec:\n                        script: <+input>\n'
 
 jest.mock('services/template-ng', () => {
   return {
@@ -31,21 +28,21 @@ jest.mock('services/template-ng', () => {
           content: [
             {
               identifier: 'testTemplate123',
-              yaml: mockAccountTemplateYaml
+              yaml: mockYaml
             }
           ]
         }
       })
     ),
-    getTemplatePromise: jest.fn().mockImplementation(({ queryParams: { projectIdentifier } }) => {
-      return Promise.resolve({
+    getTemplatePromise: jest.fn().mockImplementation(() =>
+      Promise.resolve({
         status: 'SUCCESS',
         data: {
           identifier: 'testTemplate123',
-          yaml: projectIdentifier ? mockProjectTemplateYaml : mockAccountTemplateYaml
+          yaml: mockYaml
         }
       })
-    })
+    )
   }
 })
 
@@ -255,20 +252,18 @@ describe('templateUtils', () => {
     expect(
       await utils.getTemplateTypesByRef(
         {
-          accountIdentifier: '123',
-          orgIdentifier: 'default',
-          projectIdentifier: 'dummyProject'
+          accountIdentifier: '123'
         },
-        ['account.testTemplate123', 'testTemplate123', 'testTemplate123', 'testTemplate123'],
+        ['account.testTemplate123'],
         {
           storeType: 'REMOTE'
         },
         true
       )
     ).toStrictEqual({
-      templateTypes: { account: { testTemplate123: 'Custom' }, testTemplate123: 'Custom-Project' },
+      templateTypes: { account: { testTemplate123: 'Custom' } },
       templateServiceData: {},
-      templateIcons: { account: { testTemplate123: 'icon-url' }, testTemplate123: 'icon-url-project' }
+      templateIcons: { account: { testTemplate123: 'icon-url' } }
     })
   })
 
@@ -305,9 +300,7 @@ describe('templateUtils', () => {
         ['account.testTemplate123']
       )
     ).toStrictEqual({
-      templateDetailsByRef: {
-        account: { testTemplate123: { identifier: 'testTemplate123', yaml: mockAccountTemplateYaml } }
-      }
+      templateDetailsByRef: { account: { testTemplate123: { identifier: 'testTemplate123', yaml: mockYaml } } }
     })
   })
 })

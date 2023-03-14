@@ -9,8 +9,8 @@ import css from './ListHeader.module.scss'
 interface ListHeaderProps {
   totalCount?: number
   sortOptions: SelectOption[]
-  onChange(option: SelectOption): void
-  value: string
+  onSortMethodChange(option: SelectOption): void
+  selectedSortMethod: string
   className?: string
 }
 
@@ -29,8 +29,8 @@ export default function ListHeader(props: ListHeaderProps): JSX.Element {
       <DropDown
         icon={'main-sort'}
         items={props.sortOptions}
-        onChange={props.onChange}
-        value={props.value}
+        onChange={props.onSortMethodChange}
+        value={props.selectedSortMethod}
         filterable={false}
       />
     </Layout.Horizontal>

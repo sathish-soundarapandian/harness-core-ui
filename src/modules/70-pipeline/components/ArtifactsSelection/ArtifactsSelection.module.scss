@@ -23,7 +23,6 @@
   .connectorNameField {
     display: flex;
     align-items: center;
-    margin-right: var(--spacing-medium);
 
     .connectorName {
       display: inline-flex;
@@ -97,20 +96,6 @@
     padding-bottom: var(--spacing-medium);
     text-transform: uppercase;
   }
-}
-.primaryArtifactList {
-  grid-template-columns: 200px 140px 240px 150px minmax(120px, 1fr) 80px;
-  grid-gap: var(--spacing-small);
-}
-
-.primaryArtifactTemplateList {
-  display: grid !important;
-  grid-template-columns: 200px 550px minmax(120px, 1fr) 80px;
-  grid-gap: var(--spacing-small);
-}
-.primaryArtifactRefRuntimeValue {
-  width: 200px;
-  word-break: break-word;
 }
 .sidecarList {
   width: 100%;

@@ -48,6 +48,7 @@ import type { Module } from '@common/interfaces/RouteInterfaces'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
 import { ActionReturnType, TemplateContextActions } from './TemplateActions'
 
@@ -866,7 +867,7 @@ export const TemplateProvider: React.FC<{
   const { repoIdentifier, branch } = queryParams
   const { supportingTemplatesGitx } = useAppStore()
   const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED, PIE_NG_GITX_CACHING } = useFeatureFlags()
+  const { CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
@@ -901,7 +902,7 @@ export const TemplateProvider: React.FC<{
       branch
     },
     templateType,
-    isGitCacheEnabled: !!PIE_NG_GITX_CACHING
+    isGitCacheEnabled: true
   })
 
   const fetchTemplateV2 = _fetchTemplateV2.bind(null, {
@@ -913,7 +914,7 @@ export const TemplateProvider: React.FC<{
       branch
     },
     templateType,
-    isGitCacheEnabled: !!PIE_NG_GITX_CACHING
+    isGitCacheEnabled: true
   })
 
   const fetchTemplate = supportingTemplatesGitx ? fetchTemplateV2 : fetchTemplateV1
@@ -991,13 +992,14 @@ export const TemplateProvider: React.FC<{
   const setIntermittentLoading = React.useCallback((isIntermittentLoading: boolean) => {
     dispatch(TemplateContextActions.setIntermittentLoading({ isIntermittentLoading }))
   }, [])
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   const renderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>) =>
     getPipelineStages({
       args,
       getString,
       module,
       isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
-      isCDEnabled: licenseInformation['CD'] && CDNG_ENABLED,
+      isCDEnabled: shouldVisible,
       isCFEnabled: licenseInformation['CF'] && CFNG_ENABLED,
       isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
       isApprovalStageEnabled: true

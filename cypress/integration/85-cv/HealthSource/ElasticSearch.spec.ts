@@ -17,7 +17,8 @@ import {
 import { errorResponse } from '../../../support/85-cv/slos/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
-describe('Health Source - Google Cloud Operations', () => {
+// Skiping it since old ELK UI is obsolete. This testcase will be removed as part of removal of old ELK UI.
+describe.skip('Health Source - ELK', () => {
   beforeEach(() => {
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)

@@ -19,6 +19,7 @@ declare const styles: {
   readonly footer: string
   readonly formInModal: string
   readonly gitContextForm: string
+  readonly gitRemoteDetails: string
   readonly gitRemoteDetailsForm: string
   readonly inModal: string
   readonly inputSetForm: string

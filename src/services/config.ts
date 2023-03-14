@@ -8,7 +8,7 @@
 import SessionToken from 'framework/utils/SessionToken'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { mapKeys } from 'lodash-es'
-import qs from 'qs'
+import qs, { IStringifyOptions } from 'qs'
 
 export const getConfig = (str: string): string => {
   if (window.browserRouterEnabled) {
@@ -28,6 +28,7 @@ export interface GetUsingFetchProps<
   }
 > {
   queryParams?: TQueryParams
+  queryParamStringifyOptions?: IStringifyOptions
   pathParams?: TPathParams
   requestOptions?: RequestInit
   mock?: _TData
@@ -45,13 +46,13 @@ export const getUsingFetch = <
 >(
   base: string,
   path: string,
-  props: { queryParams?: TQueryParams; pathParams?: TPathParams; requestOptions?: RequestInit; mock?: TData },
+  props: GetUsingFetchProps<TData, _TError, TQueryParams, TPathParams>,
   signal?: RequestInit['signal']
 ): Promise<TData> => {
   if (props.mock) return Promise.resolve(props.mock)
   let url = base + path
   if (props.queryParams && Object.keys(props.queryParams).length) {
-    url += `?${qs.stringify(props.queryParams)}`
+    url += `?${qs.stringify(props.queryParams, props.queryParamStringifyOptions)}`
   }
   return fetch(url, {
     signal,

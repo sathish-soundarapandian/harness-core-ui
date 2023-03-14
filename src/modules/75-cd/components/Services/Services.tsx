@@ -19,6 +19,7 @@ import {
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { useLocalStorage } from '@common/hooks'
 import { convertStringToDateTimeRange } from '@cd/pages/dashboard/dashboardUtils'
+import { BannerEOL } from '@pipeline/components/BannerEOL/BannerEOL'
 import { DeploymentsTimeRangeContext, ServiceStoreContext, useServiceStore } from './common'
 
 import { ServicesListPage } from './ServicesListPage/ServicesListPage'
@@ -30,6 +31,7 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
   const { view, setView, fetchDeploymentList } = useServiceStore()
   const { getString } = useStrings()
   const isCommunity = useGetCommunity()
+  const [showBanner, setShowBanner] = React.useState<boolean>(false)
 
   const [timeRange, setTimeRange] = useLocalStorage<TimeRangeSelectorProps>(
     'serviceTimeRange',
@@ -50,6 +52,7 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
         fetchDeploymentList
       }}
     >
+      <BannerEOL isVisible={showBanner} />
       <Page.Header
         title={getString('services')}
         breadcrumbs={<NGBreadcrumbs />}
@@ -60,7 +63,11 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
         }
       />
       {isCommunity || !showServicesDashboard ? (
-        <ServicesListPage />
+        <ServicesListPage
+          setShowBanner={status => {
+            setShowBanner(status)
+          }}
+        />
       ) : (
         <DeploymentsTimeRangeContext.Provider value={{ timeRange: resultTimeFilterRange, setTimeRange }}>
           <div className={css.tabs}>
@@ -76,7 +83,13 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
                 {
                   id: 'manageServices',
                   title: getString('cd.serviceDashboard.manageServiceLabel'),
-                  panel: <ServicesListPage />
+                  panel: (
+                    <ServicesListPage
+                      setShowBanner={status => {
+                        setShowBanner(status)
+                      }}
+                    />
+                  )
                 }
               ]}
             />

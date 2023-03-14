@@ -34,13 +34,7 @@ import {
   getFormattedTime
 } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
 import DowntimeActions from './components/DowntimeActions/DowntimeActions'
-import {
-  getDowntimeStatusLabel,
-  getDowntimeWindowInfo,
-  getDuration,
-  getIsSetPreviousPage,
-  shouldRenderFilters
-} from './DowntimeList.utils'
+import { getDowntimeStatusLabel, getDowntimeWindowInfo, getDuration, getIsSetPreviousPage } from './DowntimeList.utils'
 import { DowntimeStatus } from '../../SLODowntimePage.types'
 import { FiltersContext } from '../../FiltersContext'
 import DowntimeFilters from '../DowntimeFilters/DowntimeFilters'
@@ -358,7 +352,7 @@ const DowntimeList = ({
   return (
     <>
       <Container margin={'xlarge'} padding={{ left: 'small', right: 'small' }}>
-        {shouldRenderFilters(appliedSearchAndFilter, content) && <DowntimeFilters listView />}
+        <DowntimeFilters listView />
         <Page.Body
           loading={deleteDowntimeLoading || toggleDowntimeLoading || downtimeDataLoading}
           error={downtimeError}
@@ -366,7 +360,7 @@ const DowntimeList = ({
           className={css.downtimeList}
         >
           {content?.length ? (
-            <Container margin={{ top: 'medium' }}>
+            <Container margin={{ top: 'large' }}>
               <TableV2
                 sortable={false}
                 columns={columns}

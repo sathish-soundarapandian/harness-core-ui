@@ -9,8 +9,10 @@ import React from 'react'
 import { Text, Icon, StepWizard, StepProps, AllowedTypes } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
+
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfigWrapper } from 'services/cd-ng'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ManifestRepoTypes } from '../ManifestWizardSteps/ManifestRepoTypes'
 import ManifestStore from '../ManifestWizardSteps/ManifestStore'
@@ -42,6 +44,7 @@ interface ManifestWizardStepsProps<T, U> {
   types: ManifestTypes[]
   listOfDisabledManifestTypes?: ManifestTypes[]
   existingManifestOverrides?: ManifestConfigWrapper[]
+  isEditMode?: boolean
 }
 
 const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null): boolean => {
@@ -79,9 +82,12 @@ export function ManifestWizard<T, U>({
   iconsProps,
   isReadonly,
   listOfDisabledManifestTypes,
-  existingManifestOverrides
+  existingManifestOverrides,
+  isEditMode = false
 }: ManifestWizardStepsProps<T, U>): React.ReactElement {
   const { getString } = useStrings()
+  const { CDS_MANIFEST_LAST_STEP } = useFeatureFlags()
+
   const onStepChange = (arg: StepChangeData<any>): void => {
     if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
       handleConnectorViewChange(false)
@@ -115,12 +121,21 @@ export function ManifestWizard<T, U>({
     return <></>
   }
 
+  const getInitialStepNumber = (): number | undefined => {
+    if (isEditMode && CDS_MANIFEST_LAST_STEP) {
+      return 3
+    }
+    if (showManifestStoreStepDirectly(selectedManifest)) {
+      return 2
+    }
+  }
+
   return (
     <StepWizard
       className={css.manifestWizard}
       subtitle={renderSubtitle()}
       onStepChange={onStepChange}
-      initialStep={showManifestStoreStepDirectly(selectedManifest) ? 2 : undefined}
+      initialStep={getInitialStepNumber()}
     >
       <ManifestRepoTypes
         manifestTypes={types}

@@ -22,7 +22,8 @@ describe('API ERROR', () => {
       attachRefToLastElement: jest.fn(),
       hasMore: { current: false },
       loadItems: jest.fn(),
-      offsetToFetch: { current: 0 }
+      offsetToFetch: { current: 0 },
+      reset: jest.fn()
     })
     const { queryByText } = render(<TemplateActivityLog template={mockTemplates?.data?.content?.[0] || {}} />)
 
@@ -39,7 +40,8 @@ describe('API FETCHING', () => {
       attachRefToLastElement: jest.fn(),
       hasMore: { current: false },
       loadItems: jest.fn(),
-      offsetToFetch: { current: 0 }
+      offsetToFetch: { current: 0 },
+      reset: jest.fn()
     })
     const { queryByText } = render(
       <TestWrapper>
@@ -60,7 +62,8 @@ describe('API SUCCESS', () => {
       attachRefToLastElement: jest.fn(),
       hasMore: { current: false },
       loadItems: jest.fn(),
-      offsetToFetch: { current: 0 }
+      offsetToFetch: { current: 0 },
+      reset: jest.fn()
     })
 
     const { container } = render(
@@ -80,7 +83,8 @@ describe('API SUCCESS', () => {
       attachRefToLastElement: jest.fn(),
       hasMore: { current: false },
       loadItems: jest.fn(),
-      offsetToFetch: { current: 1 }
+      offsetToFetch: { current: 1 },
+      reset: jest.fn()
     })
 
     const { queryByText } = render(
@@ -100,7 +104,8 @@ describe('API SUCCESS', () => {
       attachRefToLastElement: jest.fn(),
       hasMore: { current: false },
       loadItems: jest.fn(),
-      offsetToFetch: { current: 0 }
+      offsetToFetch: { current: 0 },
+      reset: jest.fn()
     })
 
     const { queryByText } = render(

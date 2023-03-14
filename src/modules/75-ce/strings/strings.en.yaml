@@ -62,7 +62,6 @@ co:
   rules: 'rules'
   activeMode: 'ACTIVE MODE'
   dryRunMode: 'DRY RUN MODE'
-  dryRunLabel: 'Dry Run'
   activeModeLabel: 'ACTIVE RULES'
   dryRunModeLabel: 'DRY RUN RULES'
   noDataForDryRunMsg: 'There are no AutoStopping Rules in Dry Run mode.'
@@ -164,7 +163,6 @@ co:
           minTaskCount: 'Desired task count must be greater than or equal to 1'
       step4:
         setup: 'Set up'
-        advancedConfiguration: 'Advanced Configuration'
         tabs:
           deps:
             title: '{{$.pipelines-studio.dependenciesGroupTitle}}'
@@ -728,7 +726,6 @@ recommendation:
     memoryLabel: 'MEMORY'
     limitLabel: 'LIMIT'
     memoryLabelRegular: 'Memory'
-    limitLabelRegular: 'Limit'
     and: '{{ $.common.and }}'
     request: '{{ $.common.request }}'
     memoryUsagePlaceholder: 'Memory usage(GBs)'
@@ -1308,7 +1305,7 @@ cloudIntegration:
     installComponents:
       title: Install Components
       desc: 'In order to get AutoStopping working, you will have to install a few components on the cluster. This is done by applying a YAML file. The YAML file contains:'
-      previewYaml: Preview YAML
+      previewYaml: '{{ $.common.previewYAML }}'
       step1: Download the YAML file
       step2: 'Apply the YAML using the command:'
     testComponents:

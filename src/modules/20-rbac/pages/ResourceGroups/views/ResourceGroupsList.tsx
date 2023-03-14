@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { Layout, ExpandingSearchInput, ButtonVariation, PageHeader, PageBody } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -25,13 +25,16 @@ import { rbacQueryParamOptions } from '@rbac/utils/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByLastModified, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
 const ResourceGroupsList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
-  const [sort, setSort] = useState<string>(sortByLastModified[0].value as string)
+  const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod | undefined>(PreferenceScope.USER, `sort-${PAGE_NAME.ResourceGroups}`)
   useDocumentTitle(getString('resourceGroups'))
 
   const {
@@ -49,7 +52,7 @@ const ResourceGroupsList: React.FC = () => {
       pageIndex,
       pageSize,
       searchTerm,
-      sortOrders: [sort]
+      sortOrders: [sortPreference]
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
@@ -123,9 +126,11 @@ const ResourceGroupsList: React.FC = () => {
         error={error ? getRBACErrorMessage(error as RBACError) : ''}
       >
         <ListHeader
-          value={sort}
+          selectedSortMethod={sortPreference}
           sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
-          onChange={option => setSort(option.value as string)}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
           totalCount={data?.data?.totalItems}
         />
         <ResourceGroupListView data={data?.data} reload={refetch} openResourceGroupModal={openResourceGroupModal} />

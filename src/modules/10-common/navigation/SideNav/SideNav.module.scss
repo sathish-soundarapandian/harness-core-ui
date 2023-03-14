@@ -64,6 +64,7 @@
       overflow: hidden;
       height: 300px;
       width: 192px;
+      pointer-events: none;
 
       .icon {
         position: absolute;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyrig as MultiInputht 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -284,6 +284,7 @@ export default function TerragruntEditView(
           setSelectedConnector={setSelectedConnector}
           isTerragruntPlan={false}
           isTerragrunt
+          fieldPath="configuration"
         />
         {connectorView ? getNewConnectorSteps() : null}
 
@@ -293,8 +294,9 @@ export default function TerragruntEditView(
           isTerragruntPlan={false}
           isReadonly={readonly}
           allowableTypes={allowableTypes}
+          fieldPath="configuration"
           onSubmitCallBack={(data: any, prevStepData: any) => {
-            const path = getPath(false, false, isBackendConfig)
+            const path = getPath(false, false, isBackendConfig, 'configuration')
             const configObject = get(data, path) || {
               store: {}
             }

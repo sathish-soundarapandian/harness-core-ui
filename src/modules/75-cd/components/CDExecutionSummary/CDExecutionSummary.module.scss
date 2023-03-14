@@ -29,10 +29,14 @@
     }
   }
 
-  .serviceName {
-    font-size: var(--font-size-small);
-    color: var(--grey-800);
-    cursor: pointer;
+  .serviceName,
+  .envName {
+    max-width: 250px;
+    a {
+      color: var(--grey-800) !important;
+      font-size: var(--font-size-small);
+      cursor: pointer;
+    }
   }
 
   .count {
@@ -60,4 +64,8 @@
 
 .servicesTable {
   font-size: var(--font-size-small) !important;
+}
+
+.executionItemDetails {
+  max-width: 250px;
 }

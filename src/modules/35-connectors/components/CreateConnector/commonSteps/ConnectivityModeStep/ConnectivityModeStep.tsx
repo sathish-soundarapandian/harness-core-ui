@@ -203,6 +203,7 @@ const ConnectivityModeStep: React.FC<StepProps<ConnectorConfigDTO> & Connectivit
                     connectorLabel={ConnectorLabels[props.type as ConnectorInfoDTO['type']]}
                     delegateImage={delegateImage}
                     platformImage={platformImage}
+                    delegateType={prevStepData?.delegateType}
                   />
                 </Layout.Vertical>
                 <Layout.Horizontal padding={{ top: 'medium' }} margin={{ top: 'xxxlarge' }} spacing="medium">

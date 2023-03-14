@@ -32,6 +32,8 @@ export interface GitQueryParams {
 export interface InputSetGitQueryParams extends GitQueryParams {
   inputSetBranch?: EntityGitDetails['branch']
   inputSetRepoIdentifier?: EntityGitDetails['repoIdentifier']
+  inputSetRepoName?: EntityGitDetails['repoName']
+  inputSetConnectorRef?: StoreMetadata['connectorRef']
 }
 export interface PipelineStudioQueryParams extends GitQueryParams, RunPipelineQueryParams {
   stageId?: string

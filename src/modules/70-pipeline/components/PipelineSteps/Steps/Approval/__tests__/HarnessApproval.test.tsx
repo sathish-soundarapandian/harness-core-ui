@@ -10,6 +10,7 @@ import { render, act, fireEvent, queryByAttribute, waitFor } from '@testing-libr
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+
 import { TestStepWidget, factory } from '../../__tests__/StepTestUtil'
 import { HarnessApproval } from '../HarnessApproval'
 import {

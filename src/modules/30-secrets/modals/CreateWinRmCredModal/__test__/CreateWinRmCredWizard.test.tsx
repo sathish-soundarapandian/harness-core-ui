@@ -111,6 +111,8 @@ describe('Create WinRm Cred Wizard', () => {
         name: 'dummy name',
         identifier: 'dummy_name',
         description: 'dummy description',
+        orgIdentifier: undefined,
+        projectIdentifier: undefined,
         tags: {},
         spec: {
           auth: {
@@ -124,6 +126,7 @@ describe('Create WinRm Cred Wizard', () => {
             },
             type: 'NTLM'
           },
+          parameters: [],
           port: 5985
         }
       }

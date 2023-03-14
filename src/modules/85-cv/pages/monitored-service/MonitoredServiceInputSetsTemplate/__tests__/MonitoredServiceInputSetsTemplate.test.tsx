@@ -232,7 +232,7 @@ describe('Test MonitoredServiceInputSetsTemplate', () => {
   })
 
   test('should validate getLabelByName', () => {
-    expect(getLabelByName('applicationName', str => str)).toEqual('cv.monitoringSources.appD.applicationName')
+    expect(getLabelByName('applicationName', str => str)).toEqual('pipeline.applicationName')
     expect(getLabelByName('category', str => str)).toEqual('Category for cv.monitoringSources.riskCategoryLabel')
     expect(getLabelByName('', str => str)).toEqual('')
   })

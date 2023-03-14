@@ -56,11 +56,7 @@ const TestComponent = (): null => {
 describe('Switch Account', () => {
   test('render', async () => {
     const { getByText } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          PL_ENABLE_SWITCH_ACCOUNT_PAGINATION: true
-        }}
-      >
+      <TestWrapper>
         <TestComponent />
       </TestWrapper>
     )
@@ -72,11 +68,7 @@ describe('Switch Account', () => {
 
   test('set as default', async () => {
     const { getByText } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          PL_ENABLE_SWITCH_ACCOUNT_PAGINATION: true
-        }}
-      >
+      <TestWrapper>
         <TestComponent />
       </TestWrapper>
     )
@@ -103,11 +95,7 @@ describe('Switch Account', () => {
 
   test('switch account', async () => {
     const { getByText } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          PL_ENABLE_SWITCH_ACCOUNT_PAGINATION: true
-        }}
-      >
+      <TestWrapper>
         <TestComponent />
       </TestWrapper>
     )

@@ -34,6 +34,7 @@ import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
 import { stageTypeToIconMap } from '@pipeline/utils/constants'
+import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import { StageInputSetForm } from './StageInputSetForm'
 import { StageAdvancedInputSetForm } from './StageAdvancedInputSetForm'
 import { CICodebaseInputSetForm } from './CICodebaseInputSetForm'
@@ -75,6 +76,7 @@ export interface PipelineInputSetFormProps {
   selectedStageData?: StageSelectionData
   disableRuntimeInputConfigureOptions?: boolean
   childPipelineMetadata?: ChildPipelineMetadataType
+  chainedPipelineStagePath?: string
 }
 
 export function StageFormInternal({
@@ -272,7 +274,6 @@ export function ChainedPipelineInputSetForm(props: ChainedPipelineInputSetFormPr
     executionIdentifier,
     maybeContainerClass,
     viewTypeMetadata,
-    selectedStageData,
     disableRuntimeInputConfigureOptions
   } = props
   const originalPipeline = (allValues?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
@@ -330,9 +331,9 @@ export function ChainedPipelineInputSetForm(props: ChainedPipelineInputSetFormPr
         executionIdentifier={executionIdentifier}
         viewTypeMetadata={viewTypeMetadata}
         allowableTypes={allowableTypes}
-        selectedStageData={selectedStageData}
         disableRuntimeInputConfigureOptions={disableRuntimeInputConfigureOptions}
         childPipelineMetadata={childPipelineMetadata}
+        chainedPipelineStagePath={stagePath}
       />
     </>
   )
@@ -351,7 +352,8 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     allowableTypes,
     selectedStageData,
     disableRuntimeInputConfigureOptions: disableConfigureOptions,
-    childPipelineMetadata
+    childPipelineMetadata,
+    chainedPipelineStagePath
   } = props
   const { getString } = useStrings()
   const isTemplatePipeline = !!template?.template
@@ -375,6 +377,9 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     }
     return readonly as boolean
   }
+
+  const isCloneCodebaseEnabledAtLeastAtOneChildPipelineStage =
+    childPipelineMetadata && isCloneCodebaseEnabledAtLeastOneStage(originalPipeline)
 
   return (
     <Layout.Vertical
@@ -440,15 +445,18 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
           />
         </>
       )}
-      <CICodebaseInputSetForm
-        path={finalPath}
-        readonly={readonly}
-        originalPipeline={props.originalPipeline}
-        template={template}
-        viewType={viewType}
-        viewTypeMetadata={viewTypeMetadata}
-        selectedStageData={selectedStageData}
-      />
+      {(!childPipelineMetadata || isCloneCodebaseEnabledAtLeastAtOneChildPipelineStage) && (
+        <CICodebaseInputSetForm
+          path={finalPath}
+          readonly={readonly}
+          originalPipeline={props.originalPipeline}
+          template={template}
+          viewType={viewType}
+          viewTypeMetadata={viewTypeMetadata}
+          selectedStageData={selectedStageData}
+          chainedPipelineStagePath={chainedPipelineStagePath}
+        />
+      )}
       {
         <>
           {finalTemplate?.stages?.map((stageObj, index) => {
@@ -472,7 +480,6 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                         executionIdentifier={executionIdentifier}
                         maybeContainerClass={maybeContainerClass}
                         viewTypeMetadata={viewTypeMetadata}
-                        selectedStageData={selectedStageData}
                         disableRuntimeInputConfigureOptions={disableConfigureOptions}
                       />
                     </>
@@ -510,7 +517,6 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                           executionIdentifier={executionIdentifier}
                           maybeContainerClass={maybeContainerClass}
                           viewTypeMetadata={viewTypeMetadata}
-                          selectedStageData={selectedStageData}
                           disableRuntimeInputConfigureOptions={disableConfigureOptions}
                         />
                       </>

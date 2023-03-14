@@ -177,7 +177,7 @@ describe('Create Composite SLO', () => {
     cy.contains('p', 'Weekly').click({ force: true })
     cy.get('input[name="dayOfWeek"]').click()
     cy.contains('p', 'Monday').click({ force: true })
-    cy.get('[data-testid="steptitle_Add_SLOs"] [icon="error"]').should('be.visible')
+    cy.get('[data-testid="steptitle_Add_SLOs"] [icon="warning-sign"]').should('be.visible')
     cy.contains('span', 'Next').click({ force: true })
 
     cy.contains('span', 'Add SLOs').click()

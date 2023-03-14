@@ -218,6 +218,7 @@ describe('ArtifactsSelection tests', () => {
         type: 'DockerRegistry' as 'DockerRegistry' | 'Gcr' | 'Ecr'
       },
       sideCarArtifact: [],
+      stage: pipelineContextMock.state.pipeline.stages[0] as any,
       addNewArtifact: jest.fn(),
       editArtifact: jest.fn(),
       removePrimary: jest.fn(),
@@ -225,7 +226,8 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: undefined,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false
+      isReadonly: false,
+      deploymentType: 'Kubernetes'
     }
 
     const { container } = render(
@@ -243,6 +245,7 @@ describe('ArtifactsSelection tests', () => {
         type: 'Gcr' as 'DockerRegistry' | 'Gcr' | 'Ecr'
       },
       sideCarArtifact: [],
+      stage: pipelineContextMock.state.pipeline.stages[0] as any,
       addNewArtifact: jest.fn(),
       editArtifact: jest.fn(),
       removePrimary: jest.fn(),
@@ -250,7 +253,8 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false
+      isReadonly: false,
+      deploymentType: 'Kubernetes'
     }
     const { container } = render(
       <TestWrapper>
@@ -284,6 +288,7 @@ describe('ArtifactsSelection tests', () => {
           }
         }
       ],
+      stage: pipelineContextMock.state.pipeline.stages[0] as any,
       addNewArtifact: jest.fn(),
       editArtifact: jest.fn(),
       removePrimary: jest.fn(),
@@ -291,7 +296,8 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false
+      isReadonly: false,
+      deploymentType: 'Kubernetes'
     }
     const { container } = render(
       <TestWrapper>
@@ -315,6 +321,7 @@ describe('ArtifactsSelection tests', () => {
         type: 'Gcr' as 'DockerRegistry' | 'Gcr' | 'Ecr'
       },
       sideCarArtifact: [],
+      stage: pipelineContextMock.state.pipeline.stages[0] as any,
       addNewArtifact: jest.fn(),
       editArtifact: jest.fn(),
       removePrimary: jest.fn(),
@@ -322,7 +329,8 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false
+      isReadonly: false,
+      deploymentType: 'Kubernetes'
     }
     const { container } = render(
       <TestWrapper>
@@ -346,6 +354,7 @@ describe('ArtifactsSelection tests', () => {
         type: 'Gcr' as 'DockerRegistry' | 'Gcr' | 'Ecr'
       },
       sideCarArtifact: [],
+      stage: pipelineContextMock.state.pipeline.stages[0] as any,
       addNewArtifact: jest.fn(),
       editArtifact: jest.fn(),
       removePrimary: jest.fn(),
@@ -353,7 +362,8 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false
+      isReadonly: false,
+      deploymentType: 'Kubernetes'
     }
     const { container } = render(
       <TestWrapper>

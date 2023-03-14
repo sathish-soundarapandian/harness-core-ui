@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   Layout,
   Text,
@@ -15,14 +15,16 @@ import {
   Button,
   ButtonSize,
   ButtonVariation,
-  Container
+  Container,
+  getMultiTypeFromValue,
+  MultiTypeInputType
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
-import { get, isEmpty, noop } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 import type { IconProps } from '@harness/icons'
 import { useStrings } from 'framework/strings'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
@@ -48,6 +50,9 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ManifestActions } from '@common/constants/TrackingConstants'
+import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { ManifestWizard } from '../ManifestWizard/ManifestWizard'
@@ -77,7 +82,27 @@ import type {
   ManifestListViewProps,
   ManifestLastStepProps,
   ManifestStores,
-  PrimaryManifestType
+  PrimaryManifestType,
+  ServerlessLambdaManifestLastStepPrevStepData,
+  ServerlessLambdaWithS3ManifestLastStepPrevStepData,
+  HelmWithGITManifestLastStepPrevStepData,
+  HelmWithHTTPManifestLastStepPrevStepData,
+  HelmWithOCIManifestLastStepPrevStepData,
+  HelmWithS3ManifestLastStepPrevStepData,
+  ECSWithS3ManifestLastStepPrevStepData,
+  HelmWithGcsManifestLastStepPrevStepData,
+  HelmWithHarnessStoreManifestLastStepPrevStepData,
+  OpenShiftTemplateGITManifestLastStepPrevStepData,
+  KustomizeWithGITManifestLastStepPrevStepData,
+  KustomizeWithHarnessStoreManifestLastStepPrevStepData,
+  OpenShiftParamManifestLastStepPrevStepData,
+  KustomizePatchManifestLastStepPrevStepData,
+  InheritFromManifestLastStepPrevStepData,
+  TASWithHarnessStoreManifestLastStepPrevStepData,
+  HarnessFileStoreManifestLastStepPrevStepData,
+  CustomRemoteManifestManifestLastStepPrevStepData,
+  CommonManifestLastStepPrevStepData,
+  TASManifestLastStepPrevStepData
 } from '../ManifestInterface'
 import K8sValuesManifest from '../ManifestWizardSteps/K8sValuesManifest/K8sValuesManifest'
 import HelmWithGIT from '../ManifestWizardSteps/HelmWithGIT/HelmWithGIT'
@@ -149,11 +174,17 @@ function ManifestListView({
   const [manifestStore, setManifestStore] = useState('')
   const [isEditMode, setIsEditMode] = useState(false)
   const [manifestIndex, setEditIndex] = useState(0)
+  const [isManifestEditMode, setIsManifestEditMode] = useState(manifestIndex < listOfManifests.length)
   const { trackEvent } = useTelemetry()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { CDS_MANIFEST_LAST_STEP } = useFeatureFlags()
+
+  useEffect(() => {
+    setIsManifestEditMode(manifestIndex < listOfManifests.length)
+  }, [listOfManifests, listOfManifests.length, manifestIndex])
 
   const addNewManifest = (): void => {
     setEditIndex(listOfManifests.length)
@@ -223,8 +254,8 @@ function ManifestListView({
     setManifestStore('')
   }
 
-  const changeManifestType = (selected: ManifestTypes | null): void => {
-    setSelectedManifest(selected)
+  const changeManifestType = (selectedManifestType: ManifestTypes | null): void => {
+    setSelectedManifest(selectedManifestType)
   }
   const handleConnectorViewChange = (isConnectorView: boolean): void => {
     setConnectorView(isConnectorView)
@@ -234,6 +265,43 @@ function ManifestListView({
     setManifestStore(store || '')
   }
 
+  const initialValues = getLastStepInitialData()
+  const selected = defaultTo(getConnectorPath(initialValues?.spec?.store?.type, initialValues), undefined) as any
+
+  const [selectedValue, setSelectedValue] = React.useState(selected)
+
+  useEffect(() => {
+    setSelectedValue(selected)
+  }, [selected])
+
+  const selectedRef = React.useMemo(() => {
+    return typeof selected === 'string' ? getIdentifierFromValue(selected || '') : selectedValue?.connector?.identifier
+  }, [selected, selectedValue])
+
+  const connectorData = React.useMemo(
+    () => connectors?.content?.find(currConnector => currConnector.connector?.identifier === selectedRef),
+    [selectedRef, connectors]
+  )
+
+  React.useEffect(() => {
+    if (typeof selected === 'string' && getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED) {
+      if (connectorData && connectorData?.connector?.name) {
+        const scope = getScopeFromValue(selected || '')
+        const value = {
+          label: connectorData?.connector?.name,
+          value:
+            scope === Scope.ORG || scope === Scope.ACCOUNT
+              ? `${scope}.${connectorData?.connector?.identifier}`
+              : connectorData?.connector?.identifier,
+          scope: scope,
+          live: connectorData?.status?.status === 'SUCCESS',
+          connector: connectorData?.connector
+        }
+        setSelectedValue(value)
+      }
+    }
+  }, [connectorData, selected])
+
   const lastStepProps = useCallback((): ManifestLastStepProps => {
     const manifestDetailsProps: ManifestLastStepProps = {
       key: getString('pipeline.manifestType.manifestDetails'),
@@ -241,7 +309,7 @@ function ManifestListView({
       expressions,
       allowableTypes,
       stepName: getString('pipeline.manifestType.manifestDetails'),
-      initialValues: getLastStepInitialData(),
+      initialValues,
       handleSubmit: handleSubmit,
       selectedManifest,
       manifestIdsList: listOfManifests.map((item: ManifestConfigWrapper) => item.manifest?.identifier as string),
@@ -253,6 +321,17 @@ function ManifestListView({
     return manifestDetailsProps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedManifest, manifestStore, getLastStepInitialData])
+
+  const prevStepProps = useCallback((): { editManifestModePrevStepData: ConnectorConfigDTO } => {
+    return {
+      editManifestModePrevStepData: {
+        ...initialValues?.spec.store.spec,
+        selectedManifest: initialValues?.type,
+        store: initialValues?.spec.store.type,
+        connectorRef: selectedValue
+      }
+    }
+  }, [initialValues, selectedValue])
 
   const getLabels = (): ConnectorRefLabelType => {
     return {
@@ -281,64 +360,157 @@ function ManifestListView({
     return iconProps
   }
 
-  const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
+  const shouldPassPrevStepData = () => {
+    return isManifestEditMode && selectedValue && CDS_MANIFEST_LAST_STEP
+  }
+
+  const lastSteps = React.useMemo((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
     const arr: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> = []
     let manifestDetailStep = null
     const isGitTypeStores = isGitTypeManifestStore(manifestStore as ManifestStores)
 
     switch (true) {
       case selectedManifest === ManifestDataType.HelmChart && isGitTypeStores:
-        manifestDetailStep = <HelmWithGIT {...lastStepProps()} />
+        manifestDetailStep = (
+          <HelmWithGIT
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HelmWithGITManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Http:
-        manifestDetailStep = <HelmWithHttp {...lastStepProps()} />
+        manifestDetailStep = (
+          <HelmWithHttp
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HelmWithHTTPManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.OciHelmChart:
-        manifestDetailStep = <HelmWithOCI {...lastStepProps()} />
+        manifestDetailStep = (
+          <HelmWithOCI
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HelmWithOCIManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.S3:
-        manifestDetailStep = <HelmWithS3 {...lastStepProps()} />
+        manifestDetailStep = (
+          <HelmWithS3
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HelmWithS3ManifestLastStepPrevStepData)}
+          />
+        )
         break
       case isECSTypeManifest(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.S3:
-        manifestDetailStep = <ECSWithS3 {...lastStepProps()} />
+        manifestDetailStep = (
+          <ECSWithS3
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as ECSWithS3ManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Gcs:
-        manifestDetailStep = <HelmWithGcs {...lastStepProps()} />
+        manifestDetailStep = (
+          <HelmWithGcs
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HelmWithGcsManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Harness:
-        manifestDetailStep = <HelmWithHarnessStore {...lastStepProps()} />
+        manifestDetailStep = (
+          <HelmWithHarnessStore
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HelmWithHarnessStoreManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.OpenshiftTemplate && isGitTypeStores:
-        manifestDetailStep = <OpenShiftTemplateWithGit {...lastStepProps()} />
+        manifestDetailStep = (
+          <OpenShiftTemplateWithGit
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as OpenShiftTemplateGITManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.Kustomize && isGitTypeStores:
-        manifestDetailStep = <KustomizeWithGIT {...lastStepProps()} />
+        manifestDetailStep = (
+          <KustomizeWithGIT
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as KustomizeWithGITManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.Kustomize && manifestStore === ManifestStoreMap.Harness:
-        manifestDetailStep = <KustomizeWithHarnessStore {...lastStepProps()} />
+        manifestDetailStep = (
+          <KustomizeWithHarnessStore
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData()
+              ? prevStepProps()
+              : {}) as KustomizeWithHarnessStoreManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.OpenshiftParam && isGitTypeStores:
-        manifestDetailStep = <OpenShiftParamWithGit {...lastStepProps()} />
+        manifestDetailStep = (
+          <OpenShiftParamWithGit
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as OpenShiftParamManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.KustomizePatches && isGitTypeStores:
-        manifestDetailStep = <KustomizePatchDetails {...lastStepProps()} />
+        manifestDetailStep = (
+          <KustomizePatchDetails
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as KustomizePatchManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.ServerlessAwsLambda && isGitTypeStores:
-        manifestDetailStep = <ServerlessAwsLambdaManifest {...lastStepProps()} />
+        manifestDetailStep = (
+          <ServerlessAwsLambdaManifest
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as ServerlessLambdaManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.ServerlessAwsLambda && manifestStore === ManifestStoreMap.S3:
-        manifestDetailStep = <ServerlessLambdaWithS3 {...lastStepProps()} />
+        manifestDetailStep = (
+          <ServerlessLambdaWithS3
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData()
+              ? prevStepProps()
+              : {}) as ServerlessLambdaWithS3ManifestLastStepPrevStepData)}
+          />
+        )
         break
       case [ManifestDataType.Values, ManifestDataType.OpenshiftParam, ManifestDataType.KustomizePatches].includes(
         selectedManifest as ManifestTypes
       ) && manifestStore === ManifestStoreMap.InheritFromManifest:
-        manifestDetailStep = <InheritFromManifest {...lastStepProps()} />
+        manifestDetailStep = (
+          <InheritFromManifest
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as InheritFromManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.TasManifest && manifestStore === ManifestStoreMap.Harness:
-        manifestDetailStep = <TASWithHarnessStore {...lastStepProps()} />
+        manifestDetailStep = (
+          <TASWithHarnessStore
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as TASWithHarnessStoreManifestLastStepPrevStepData)}
+          />
+        )
         break
       case manifestStore === ManifestStoreMap.Harness:
-        manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
+        manifestDetailStep = (
+          <HarnessFileStore
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessFileStoreManifestLastStepPrevStepData)}
+          />
+        )
         break
       case [
         ManifestDataType.K8sManifest,
@@ -350,23 +522,45 @@ function ManifestListView({
         ManifestDataType.TasVars,
         ManifestDataType.TasAutoScaler
       ].includes(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.CustomRemote:
-        manifestDetailStep = <CustomRemoteManifest {...lastStepProps()} />
+        manifestDetailStep = (
+          <CustomRemoteManifest
+            {...lastStepProps()}
+            {...((isManifestEditMode && CDS_MANIFEST_LAST_STEP
+              ? prevStepProps()
+              : {}) as CustomRemoteManifestManifestLastStepPrevStepData)}
+          />
+        )
         break
       case [ManifestDataType.K8sManifest, ManifestDataType.Values].includes(selectedManifest as ManifestTypes) &&
         isGitTypeStores:
-        manifestDetailStep = <K8sValuesManifest {...lastStepProps()} />
+        manifestDetailStep = (
+          <K8sValuesManifest
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as CommonManifestLastStepPrevStepData)}
+          />
+        )
         break
       case selectedManifest === ManifestDataType.TasManifest:
-        manifestDetailStep = <TasManifest {...lastStepProps()} />
+        manifestDetailStep = (
+          <TasManifest
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as TASManifestLastStepPrevStepData)}
+          />
+        )
         break
       default:
-        manifestDetailStep = <CommonManifestDetails {...lastStepProps()} />
+        manifestDetailStep = (
+          <CommonManifestDetails
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as CommonManifestLastStepPrevStepData)}
+          />
+        )
         break
     }
 
     arr.push(manifestDetailStep)
     return arr
-  }, [manifestStore, selectedManifest, lastStepProps])
+  }, [manifestStore, selectedManifest, lastStepProps, prevStepProps, isManifestEditMode, CDS_MANIFEST_LAST_STEP])
 
   const connectorDetailStepProps = {
     type: ManifestToConnectorMap[manifestStore],
@@ -489,10 +683,11 @@ function ManifestListView({
             handleStoreChange={handleStoreChange}
             initialValues={getInitialValues()}
             newConnectorSteps={getNewConnectorSteps()}
-            lastSteps={getLastSteps()}
+            lastSteps={lastSteps}
             iconsProps={getIconProps()}
             isReadonly={isReadonly}
             listOfDisabledManifestTypes={getListOfDisabledManifestTypes(listOfManifests)}
+            isEditMode={isManifestEditMode}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
@@ -506,7 +701,8 @@ function ManifestListView({
     expressions.length,
     expressions,
     allowableTypes,
-    isEditMode
+    isManifestEditMode,
+    lastSteps
   ])
 
   const renderConnectorField = useCallback(

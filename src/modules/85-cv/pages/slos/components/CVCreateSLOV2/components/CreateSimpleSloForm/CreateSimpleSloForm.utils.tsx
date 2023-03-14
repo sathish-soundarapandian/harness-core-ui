@@ -7,6 +7,7 @@
 
 import { isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
+import type { GetMetricOnboardingGraphPathParams, GetMetricOnboardingGraphQueryParams } from 'services/cv'
 import { SLIMetricTypes, SLOV2Form, SLOV2FormFields } from '../../CVCreateSLOV2.types'
 import {
   validateErrorBudgetPolicy,
@@ -126,5 +127,65 @@ export const getErrorMessageByTabId = (
       return []
     default:
       return []
+  }
+}
+
+export const shouldFetchMetricGraph = ({
+  eventType,
+  isRatioBased,
+  validRequestMetric,
+  goodRequestMetric
+}: {
+  isRatioBased: boolean
+  validRequestMetric?: string
+  goodRequestMetric?: string
+  eventType?: GetMetricOnboardingGraphQueryParams['ratioSLIMetricEventType']
+}): boolean => {
+  return isRatioBased
+    ? (Boolean(validRequestMetric) || Boolean(goodRequestMetric)) &&
+        validRequestMetric !== goodRequestMetric &&
+        Boolean(eventType)
+    : Boolean(validRequestMetric)
+}
+
+export const createMetricGraphPayload = ({
+  eventType,
+  isRatioBased,
+  accountId,
+  orgIdentifier,
+  projectIdentifier,
+  healthSourceRef,
+  validRequestMetric,
+  goodRequestMetric,
+  monitoredServiceIdentifier
+}: {
+  isRatioBased: boolean
+  eventType?: GetMetricOnboardingGraphQueryParams['ratioSLIMetricEventType']
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  healthSourceRef: string
+  validRequestMetric?: string
+  goodRequestMetric?: string
+  monitoredServiceIdentifier: string
+}): {
+  queryParams: GetMetricOnboardingGraphQueryParams
+  pathParams: GetMetricOnboardingGraphPathParams
+  body: string[]
+} => {
+  const eventTypeParam = isRatioBased ? { ratioSLIMetricEventType: eventType } : {}
+  const selectedMetricList = isRatioBased ? [validRequestMetric, goodRequestMetric] : [validRequestMetric]
+  return {
+    queryParams: {
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      healthSourceRef,
+      ...eventTypeParam
+    },
+    pathParams: {
+      monitoredServiceIdentifier
+    },
+    body: selectedMetricList.filter(i => Boolean(i)) as string[]
   }
 }

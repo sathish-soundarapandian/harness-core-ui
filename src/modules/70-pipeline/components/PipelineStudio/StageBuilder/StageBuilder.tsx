@@ -39,7 +39,6 @@ import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNo
 import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
 import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
-import type { DeploymentStageConfig } from 'services/cd-ng'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { Event } from '@pipeline/components/PipelineDiagram/Constants'
@@ -57,7 +56,7 @@ import {
   MoveDirection,
   MoveStageDetailsType,
   moveStage,
-  getFlattenedStages,
+  getPropagatingStagesFromStage,
   Listeners
 } from './StageBuilderUtil'
 import { StageList } from './views/StageList'
@@ -241,14 +240,9 @@ function StageBuilder(): JSX.Element {
   })} `
 
   if (deleteId) {
-    const propagatingStages = getFlattenedStages(pipeline)
-      .stages?.filter(
-        currentStage =>
-          (currentStage.stage?.spec as DeploymentStageConfig)?.serviceConfig?.useFromStage?.stage === deleteId
-      )
-      ?.reduce((prev, next) => {
-        return prev ? `${prev}, ${next.stage?.name}` : next.stage?.name || ''
-      }, '')
+    const propagatingStages = getPropagatingStagesFromStage(deleteId, pipeline)?.reduce((prev, next) => {
+      return prev ? `${prev}, ${next.stage?.name}` : next.stage?.name || ''
+    }, '')
 
     if (propagatingStages)
       deletionContentText = getString('pipeline.parentStageDeleteWarning', {

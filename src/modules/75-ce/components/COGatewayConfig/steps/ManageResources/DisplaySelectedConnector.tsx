@@ -12,8 +12,8 @@ import { Icon, Layout, Table, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import type { ConnectorInfoDTO, ConnectorResponse } from 'services/cd-ng'
-import { DelegateTypes } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { TagsPopover } from '@common/components'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 
 interface DisplaySelectedConnectorProps {
   data: ConnectorResponse[]

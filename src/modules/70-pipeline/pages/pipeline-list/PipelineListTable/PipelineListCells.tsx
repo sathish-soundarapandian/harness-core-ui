@@ -38,6 +38,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { ResourceType as GitResourceType } from '@common/interfaces/GitSyncInterface'
 import type { PipelineStageInfo, PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
@@ -50,6 +51,8 @@ import { killEvent } from '@common/utils/eventUtils'
 import RbacButton from '@rbac/components/Button/Button'
 import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getChildExecutionPipelineViewLink } from '@pipeline/pages/execution-list/ExecutionListTable/ExecutionListCells'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import { getRouteProps } from '../PipelineListUtils'
@@ -316,10 +319,11 @@ export const MenuCell: CellType = ({ row, column }) => {
   const data = row.original
   const pathParams = useParams<PipelineListPagePathParams>()
   const { getString } = useStrings()
-  const { projectIdentifier, orgIdentifier, accountId } = useParams<{
+  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
     accountId: string
+    module: string
   }>()
 
   const { confirmDelete } = useDeleteConfirmationDialog(data, 'pipeline', commitMsg =>
@@ -347,11 +351,21 @@ export const MenuCell: CellType = ({ row, column }) => {
     [data.identifier]
   )
 
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const runPipeline = (): void => {
-    openRunPipelineModal()
+    CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+      ? openRunPipelineModalV1()
+      : openRunPipelineModal()
   }
-
   const { openRunPipelineModal } = useRunPipelineModal({
+    pipelineIdentifier: (data.identifier || '') as string,
+    repoIdentifier: isGitSyncEnabled ? data.gitDetails?.repoIdentifier : data.gitDetails?.repoName,
+    branch: data.gitDetails?.branch,
+    connectorRef: data.connectorRef,
+    storeType: data.storeType as StoreType
+  })
+
+  const { openRunPipelineModalV1 } = useRunPipelineModalV1({
     pipelineIdentifier: (data.identifier || '') as string,
     repoIdentifier: isGitSyncEnabled ? data.gitDetails?.repoIdentifier : data.gitDetails?.repoName,
     branch: data.gitDetails?.branch,

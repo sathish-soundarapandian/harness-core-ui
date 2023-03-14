@@ -17,12 +17,13 @@ import {
   NotificationRuleResponse,
   ServiceLevelIndicatorDTO,
   useGetAllMonitoredServicesWithTimeSeriesHealthSources,
+  useGetMetricOnboardingGraph,
   useGetNotificationRuleData,
   useGetSliOnboardingGraphs
 } from 'services/cv'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { CVStepper } from '@cv/components/CVStepper/CVStepper'
+import { Stepper } from '@common/components/Stepper/Stepper'
 import SLOName from '@cv/pages/slos/common/SLOName/SLOName'
 import SLI from '@cv/pages/slos/common/SLI/SLI'
 import SLOTargetAndBudgetPolicy from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy'
@@ -33,7 +34,12 @@ import {
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import SLOTargetNotifications from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
 import { SLOV2Form, SLIMetricTypes } from '../../CVCreateSLOV2.types'
-import { getErrorMessageByTabId, isFormDataValid } from './CreateSimpleSloForm.utils'
+import {
+  createMetricGraphPayload,
+  getErrorMessageByTabId,
+  isFormDataValid,
+  shouldFetchMetricGraph
+} from './CreateSimpleSloForm.utils'
 import useCreateCompositeSloWarningModal from '../CreateCompositeSloForm/useCreateCompositeSloWarningModal'
 import { CreateSimpleSLOSteps } from './CreateSimpleSloForm.types'
 import { CompositeSLOContext } from '../CreateCompositeSloForm/CompositeSLOContext'
@@ -156,6 +162,13 @@ export default function CreateSimpleSLOForm({
     error: sliGraphError
   } = useMutateAsGet(useGetSliOnboardingGraphs, { lazy: true })
 
+  const {
+    data: sliMetricGraphData,
+    refetch: fetchSliMetricGraphData,
+    loading: sliMetricGraphLoading,
+    error: sliMetricGraphError
+  } = useMutateAsGet(useGetMetricOnboardingGraph, { lazy: true })
+
   const retryfetchSliGraphData = (
     serviceLevelIndicator: ServiceLevelIndicatorDTO,
     monitoredServiceIdentifier?: string
@@ -200,12 +213,12 @@ export default function CreateSimpleSLOForm({
   } = formikProps.values
 
   const isRatioBased = SLIMetricType === SLIMetricTypes.RATIO
-  const metricList = isRatioBased ? [eventType, validRequestMetric, goodRequestMetric] : [validRequestMetric]
+  const metricsByType = isRatioBased ? [eventType, validRequestMetric, goodRequestMetric] : [validRequestMetric]
 
   const valuesToDetermineReload = [
     healthSourceRef,
     SLIMetricType,
-    ...metricList,
+    ...metricsByType,
     objectiveValue,
     objectiveComparator,
     SLIMissingDataType,
@@ -232,6 +245,36 @@ export default function CreateSimpleSLOForm({
     }
   }, [showChart, valuesToDetermineReload.join('')])
 
+  const getSliMetricGraphData = (): void => {
+    const fetchMetricGraph = shouldFetchMetricGraph({ isRatioBased, validRequestMetric, goodRequestMetric, eventType })
+    if (healthSourceRef && fetchMetricGraph) {
+      const metricPayload = createMetricGraphPayload({
+        eventType,
+        isRatioBased,
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        healthSourceRef,
+        validRequestMetric,
+        goodRequestMetric,
+        monitoredServiceIdentifier: formikProps.values.monitoredServiceRef || ''
+      })
+      fetchSliMetricGraphData(metricPayload)
+    }
+  }
+
+  useEffect(() => {
+    getSliMetricGraphData()
+  }, [
+    healthSourceRef,
+    eventType,
+    validRequestMetric,
+    goodRequestMetric,
+    isRatioBased,
+    formikProps.values.monitoredServiceRef
+  ])
+
+  const sliAreaGraphData = showChart ? sliGraphData?.resource?.sliGraph : undefined
   return (
     <>
       <Page.Body loading={loading} error={error} retryOnError={() => retryOnError()}>
@@ -249,7 +292,7 @@ export default function CreateSimpleSLOForm({
         )}
         {!loading && (
           <>
-            <CVStepper
+            <Stepper
               id="createSLOTabs"
               isStepValid={isStepValid}
               runValidationOnMount={validateAllSteps}
@@ -285,11 +328,15 @@ export default function CreateSimpleSLOForm({
                     <SLI
                       formikProps={formikProps}
                       sliGraphData={sliGraphData?.resource?.sliGraph}
-                      metricGraphData={sliGraphData?.resource?.metricGraphs}
                       loading={sliGraphLoading}
                       error={getErrorMessage(sliGraphError)}
                       retryOnError={retryfetchSliGraphData}
-                      showChart={showChart}
+                      metricChart={{
+                        loading: sliMetricGraphLoading,
+                        retryOnError: getSliMetricGraphData,
+                        error: getErrorMessage(sliMetricGraphError),
+                        data: sliMetricGraphData?.resource
+                      }}
                       showMetricChart
                     />
                   ),
@@ -314,7 +361,7 @@ export default function CreateSimpleSLOForm({
                       loading={sliGraphLoading}
                       error={getErrorMessage(sliGraphError)}
                       retryOnError={retryfetchSliGraphData}
-                      sliGraphData={sliGraphData?.resource?.sliGraph}
+                      sliGraphData={sliAreaGraphData}
                       showMetricChart={false}
                     />
                   ),

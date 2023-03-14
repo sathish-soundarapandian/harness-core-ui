@@ -6,17 +6,15 @@
  */
 
 import React, { useCallback } from 'react'
-import { Button, getMultiTypeFromValue, Icon, Layout, MultiTypeInputType, Popover, Text, Toggle } from '@harness/uicore'
-import { Classes, Position, PopoverInteractionKind } from '@blueprintjs/core'
+import { Button, getMultiTypeFromValue, Icon, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import type { ArtifactSource, PageConnectorResponse, PrimaryArtifact } from 'services/cd-ng'
+import type { PageConnectorResponse, PrimaryArtifact } from 'services/cd-ng'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import { isValueRuntimeInput } from '@common/utils/utils'
 import { ArtifactIconByType, ArtifactTitleIdByType, ENABLED_ARTIFACT_TYPES, ModalViewFor } from '../../ArtifactHelper'
 import ArtifactRepositoryTooltip from '../ArtifactRepositoryTooltip'
 import type { ArtifactType } from '../../ArtifactInterface'
@@ -24,32 +22,28 @@ import { getArtifactLocation, showConnectorStep } from '../../ArtifactUtils'
 import css from '../../ArtifactsSelection.module.scss'
 
 interface PrimaryArtifactViewProps {
-  primaryArtifact: PrimaryArtifact | ArtifactSource
+  primaryArtifact: PrimaryArtifact
   isReadonly: boolean
   accountId: string
   fetchedConnectorResponse: PageConnectorResponse | undefined
   editArtifact: (view: ModalViewFor, type?: ArtifactType, index?: number) => void
   removePrimary?: () => void
   identifierElement?: JSX.Element
-  primaryArtifactRef?: string
-  setPrimaryArtifactRef?: (primaryArtifactRefValue: string) => void
-  isSingleArtifact?: boolean
 }
 
 interface ArtifactSourceTemplateViewProps {
   artifactSourceTemplateData: TemplateStepNode
-  primaryArtifactActions: React.ReactElement | null
-  templateContainerClass?: string
+  templateActionBtns: React.ReactElement | null
 }
 
-export function ArtifactSourceTemplateView(props: ArtifactSourceTemplateViewProps): React.ReactElement {
-  const { artifactSourceTemplateData, primaryArtifactActions, templateContainerClass } = props
+export function ArtifactSourceTemplateView(props: ArtifactSourceTemplateViewProps) {
+  const { artifactSourceTemplateData, templateActionBtns } = props
   const { name, template } = artifactSourceTemplateData
 
   return (
     <section className={cx(css.rowItem, css.artifactSourceTemplateContainer, css.artifactRow)} key={'Dockerhub'}>
       <Layout.Horizontal
-        className={cx(css.templateEditWrapper, templateContainerClass)}
+        className={css.templateEditWrapper}
         flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
       >
         {name && (
@@ -59,8 +53,8 @@ export function ArtifactSourceTemplateView(props: ArtifactSourceTemplateViewProp
         )}
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }} style={{ flexGrow: 1 }}>
           <TemplateBar className={css.minimalTemplateBar} templateLinkConfig={template} isReadonly={true} />
+          {templateActionBtns}
         </Layout.Horizontal>
-        {primaryArtifactActions}
       </Layout.Horizontal>
     </section>
   )
@@ -73,10 +67,7 @@ function PrimaryArtifactView({
   fetchedConnectorResponse,
   editArtifact,
   removePrimary,
-  identifierElement,
-  primaryArtifactRef,
-  setPrimaryArtifactRef,
-  isSingleArtifact
+  identifierElement
 }: PrimaryArtifactViewProps): React.ReactElement | null {
   const { getString } = useStrings()
 
@@ -88,10 +79,6 @@ function PrimaryArtifactView({
     accountId
   )
   const primaryConnectorName = getConnectorNameFromValue(primaryArtifact?.spec?.connectorRef, fetchedConnectorResponse)
-
-  const showPrimaryArtifactSelection = primaryArtifactRef !== undefined && setPrimaryArtifactRef !== undefined
-  const artifactIdentifier = showPrimaryArtifactSelection ? (primaryArtifact as ArtifactSource)?.identifier : ''
-  const isPrimaryArtifactRefRuntime = isValueRuntimeInput(primaryArtifactRef)
 
   const getPrimaryArtifactRepository = useCallback(
     (artifactType: ArtifactType): string => {
@@ -108,66 +95,20 @@ function PrimaryArtifactView({
     return null
   }
 
-  const primaryArtifactActions = isReadonly ? null : (
-    <>
-      {showPrimaryArtifactSelection && (
-        <Popover interactionKind={PopoverInteractionKind.HOVER} position={Position.TOP} className={Classes.DARK}>
-          <Toggle
-            checked={primaryArtifactRef === artifactIdentifier}
-            onChange={() => {
-              if (typeof setPrimaryArtifactRef === 'function') {
-                setPrimaryArtifactRef(artifactIdentifier)
-              }
-            }}
-            disabled={isPrimaryArtifactRefRuntime || isSingleArtifact}
-          ></Toggle>
-          {isSingleArtifact && !isPrimaryArtifactRefRuntime && (
-            <Text color={Color.WHITE} padding="medium">
-              {getString('pipeline.artifactsSelection.canNotDisablePrimaryArtifact')}
-            </Text>
-          )}
-        </Popover>
-      )}
-      <Layout.Horizontal>
-        <Button
-          icon="Edit"
-          minimal
-          iconProps={{ size: 18 }}
-          onClick={() => editArtifact(ModalViewFor.PRIMARY, primaryArtifact?.type)}
-        />
-        <Popover interactionKind={PopoverInteractionKind.HOVER} position={Position.TOP} className={Classes.DARK}>
-          <Button
-            iconProps={{ size: 18 }}
-            minimal
-            icon="main-trash"
-            onClick={removePrimary}
-            disabled={showPrimaryArtifactSelection && primaryArtifactRef === artifactIdentifier}
-          />
-          {showPrimaryArtifactSelection && primaryArtifactRef === artifactIdentifier && (
-            <Text color={Color.WHITE} padding="medium">
-              <div>{getString('pipeline.artifactsSelection.canNotDeletePrimaryArtifact')}</div>
-              <div>{getString('pipeline.artifactsSelection.selectOtherArtifactPrimary')}</div>
-            </Text>
-          )}
-        </Popover>
-      </Layout.Horizontal>
-    </>
+  const templateActionBtns = isReadonly ? null : (
+    <Layout.Horizontal>
+      <Button icon="Edit" minimal iconProps={{ size: 18 }} onClick={() => editArtifact(ModalViewFor.PRIMARY)} />
+      <Button iconProps={{ size: 18 }} minimal icon="main-trash" onClick={removePrimary} />
+    </Layout.Horizontal>
   )
 
-  const isArtifactSourceTemplate = !isEmpty(artifactSourceTemplate)
-
-  return isArtifactSourceTemplate ? (
+  return !isEmpty(artifactSourceTemplate) ? (
     <ArtifactSourceTemplateView
       artifactSourceTemplateData={primaryArtifact as TemplateStepNode}
-      primaryArtifactActions={primaryArtifactActions}
-      templateContainerClass={showPrimaryArtifactSelection ? css.primaryArtifactTemplateList : ''}
+      templateActionBtns={templateActionBtns}
     />
   ) : (
-    <section
-      className={cx(css.artifactList, css.rowItem, css.artifactRow, {
-        [css.primaryArtifactList]: showPrimaryArtifactSelection
-      })}
-    >
+    <section className={cx(css.artifactList, css.rowItem, css.artifactRow)}>
       {identifierElement ? (
         identifierElement
       ) : (
@@ -210,7 +151,17 @@ function PrimaryArtifactView({
           <span className={css.noWrap}>{getArtifactLocation(primaryArtifact)}</span>
         </Text>
       </div>
-      {primaryArtifactActions}
+      {!isReadonly && (
+        <Layout.Horizontal>
+          <Button
+            icon="Edit"
+            minimal
+            iconProps={{ size: 18 }}
+            onClick={() => editArtifact(ModalViewFor.PRIMARY, primaryArtifact.type)}
+          />
+          <Button iconProps={{ size: 18 }} minimal icon="main-trash" onClick={removePrimary} />
+        </Layout.Horizontal>
+      )}
     </section>
   )
 }

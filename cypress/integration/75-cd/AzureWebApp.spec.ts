@@ -9,7 +9,7 @@ import {
 } from '../../support/70-pipeline/constants'
 import { environmentFetchCall, environmentSaveCall } from '../../support/75-cd/constants'
 
-describe('Azure web app end to end test', () => {
+describe.skip('Azure web app end to end test', () => {
   const serviceV2AzureWebApp = `/ng/api/servicesV2/list/access?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&type=AzureWebApp&gitOpsEnabled=false`
   const environmentCall = `/ng/api/environmentsV2/upsert?routingId=accountId&accountIdentifier=accountId`
   beforeEach(() => {

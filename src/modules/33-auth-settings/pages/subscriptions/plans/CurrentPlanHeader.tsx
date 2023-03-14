@@ -27,14 +27,16 @@ const fillMap: Record<string, string> = {
   cd: css.cdFill,
   ce: css.ccmFill,
   cf: css.ffFill,
-  ci: css.ciFill
+  ci: css.ciFill,
+  chaos: css.chaosFill
 }
 
 const bgColorMap: Record<string, string> = {
   cd: css.cdBgColor,
   ce: css.ccmBgColor,
   cf: css.ffBgColor,
-  ci: css.ciBgColor
+  ci: css.ciBgColor,
+  chaos: css.chaosBgColor
 }
 
 const CurrentPlanHeader = ({

@@ -6,10 +6,12 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Container, Heading, Layout, Select, SelectOption, Text, Icon } from '@harness/uicore'
+import { useHistory, useLocation } from 'react-router-dom'
+import { Container, Heading, Layout, Select, SelectOption, Text, Icon, useToaster } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import Card from '@cv/components/Card/Card'
 import { useStrings } from 'framework/strings'
+import { useQueryParams } from '@common/hooks/useQueryParams'
 import ChangeTimeline from '@cv/components/ChangeTimeline/ChangeTimeline'
 import TimelineSlider from '@cv/components/ChangeTimeline/components/TimelineSlider/TimelineSlider'
 import type { RiskData } from 'services/cv'
@@ -25,7 +27,8 @@ import {
   getTimeFormat,
   getTimePeriods,
   getTimestampsForPeriod,
-  limitMaxSliderWidth
+  limitMaxSliderWidth,
+  updateFilterByNotificationTime
 } from './ServiceHealth.utils'
 import { DEFAULT_MAX_SLIDER_WIDTH, DEFAULT_MIN_SLIDER_WIDTH, TimePeriodEnum } from './ServiceHealth.constants'
 import type { ServiceHealthProps } from './ServiceHealth.types'
@@ -42,9 +45,15 @@ export default function ServiceHealth({
   environmentIdentifier,
   hasChangeSource
 }: ServiceHealthProps): JSX.Element {
+  const location = useLocation()
+  const history = useHistory()
+  const { showError } = useToaster()
   const { getString } = useStrings()
 
   useDocumentTitle([getString('cv.srmTitle'), getString('cv.monitoredServices.title')])
+
+  const { notificationTime } = useQueryParams<{ notificationTime?: number }>()
+  const [defaultOffset, setDefaultOffset] = useState(0)
 
   const [selectedTimePeriod, setSelectedTimePeriod] = useState<SelectOption>({
     value: TimePeriodEnum.TWENTY_FOUR_HOURS,
@@ -58,6 +67,29 @@ export default function ServiceHealth({
   const [healthScoreData, setHealthScoreData] = useState<RiskData[]>()
   const containerRef = useRef<HTMLElement>(null)
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
+
+  useEffect(() => {
+    if (notificationTime) {
+      const { defaultOffset: updatedDefaultOffset, defaultSelectedTimePeriod: updatedDefaultSelectedTimePeriod } =
+        updateFilterByNotificationTime({
+          getString,
+          notificationTime,
+          defaultOffset,
+          defaultSelectedTimePeriod: selectedTimePeriod,
+          showError,
+          location,
+          history
+        })
+
+      if (
+        defaultOffset !== updatedDefaultOffset &&
+        selectedTimePeriod.value !== updatedDefaultSelectedTimePeriod.value
+      ) {
+        setDefaultOffset(updatedDefaultOffset)
+        setSelectedTimePeriod(updatedDefaultSelectedTimePeriod)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (selectedTimePeriod?.value) {
@@ -134,6 +166,7 @@ export default function ServiceHealth({
   const resetSlider = useCallback(() => {
     setTimeRange({ startTime: 0, endTime: 0 })
     setShowTimelineSlider(false)
+    setDefaultOffset(0)
   }, [])
 
   return (
@@ -142,7 +175,10 @@ export default function ServiceHealth({
         value={selectedTimePeriod}
         items={getTimePeriods(getString)}
         className={css.timePeriods}
-        onChange={setSelectedTimePeriod}
+        onChange={option => {
+          resetSlider()
+          setSelectedTimePeriod(option)
+        }}
       />
       <Container className={css.serviceHealthCard}>
         <Card>
@@ -192,6 +228,7 @@ export default function ServiceHealth({
                 infoCard={renderInfoCard()}
                 onSliderDragEnd={onSliderDragEnd}
                 setDefaultSlider
+                defaultOffSetPercentage={isFinite(defaultOffset) ? defaultOffset : 0}
               />
               <ChangeTimeline
                 duration={selectedTimePeriod}

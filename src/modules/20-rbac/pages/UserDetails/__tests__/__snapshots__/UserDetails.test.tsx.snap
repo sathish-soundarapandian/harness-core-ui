@@ -266,7 +266,7 @@ exports[`UserDetails Test render data 1`] = `
               class="TableV2--cell"
               colspan="1"
               role="columnheader"
-              style="width: 45%;"
+              style="width: 30%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -278,7 +278,7 @@ exports[`UserDetails Test render data 1`] = `
               class="TableV2--cell"
               colspan="1"
               role="columnheader"
-              style="width: 15%;"
+              style="width: 30%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -347,7 +347,7 @@ exports[`UserDetails Test render data 1`] = `
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 45%;"
+                  style="width: 30%;"
                 >
                   <div
                     class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
@@ -381,7 +381,7 @@ exports[`UserDetails Test render data 1`] = `
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 15%;"
+                  style="width: 30%;"
                 >
                   <span
                     class="bp3-popover-wrapper bp3-dark"
@@ -474,7 +474,7 @@ exports[`UserDetails Test render data 1`] = `
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 45%;"
+                  style="width: 30%;"
                 >
                   <div
                     class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
@@ -508,7 +508,7 @@ exports[`UserDetails Test render data 1`] = `
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 15%;"
+                  style="width: 30%;"
                 >
                   <span
                     class="bp3-popover-wrapper bp3-dark"
@@ -595,7 +595,7 @@ exports[`UserDetails Test render data 1`] = `
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 45%;"
+                  style="width: 30%;"
                 >
                   <div
                     class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
@@ -667,7 +667,7 @@ exports[`UserDetails Test render data 1`] = `
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 15%;"
+                  style="width: 30%;"
                 >
                   <span
                     class="bp3-popover-wrapper bp3-dark"
@@ -754,7 +754,7 @@ exports[`UserDetails Test render data 1`] = `
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 45%;"
+                  style="width: 30%;"
                 >
                   <div
                     class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
@@ -883,7 +883,7 @@ exports[`UserDetails Test render data 1`] = `
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 15%;"
+                  style="width: 30%;"
                 >
                   <span
                     class="bp3-popover-wrapper bp3-dark"

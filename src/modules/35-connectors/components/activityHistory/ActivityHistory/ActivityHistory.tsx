@@ -136,7 +136,7 @@ const ActivityHistory: React.FC<ActivityHistoryprops> = props => {
   }
 
   return (
-    <Layout.Vertical background={Color.GREY_100} className={css.page} padding="xlarge" border={true}>
+    <Layout.Vertical className={css.page} padding={{ top: 'none', right: 'xlarge', bottom: 'xlarge', left: 'none' }}>
       <Container background={Color.WHITE}>
         <Popover
           minimal

@@ -268,6 +268,7 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
             {...(!isMatrixNodeOrChainedPipeline() && {
               collapsibleProps: { percentageNodeVisible: 0.8, bottomMarginInPixels: 120 }
             })}
+            optimizeRender={!isMatrixNodeOrChainedPipeline()}
             graphLinkClassname={css.graphLink}
             key={executionIdentifier}
           />

@@ -146,7 +146,7 @@ describe('CVCreateSloV2', () => {
       expect(screen.getAllByText('connectors.cdng.validations.monitoringServiceRequired').length).toEqual(2)
     )
     expect(
-      container.querySelector('[data-testid="steptitle_Define_SLO_Identification"] [icon="error"]')
+      container.querySelector('[data-testid="steptitle_Define_SLO_Identification"] [icon="warning-sign"]')
     ).toBeInTheDocument()
     expect(container).toMatchSnapshot()
 
@@ -195,7 +195,7 @@ describe('CVCreateSloV2', () => {
     await waitFor(() => expect(screen.getAllByText('cv.slos.validations.nameValidation').length).toEqual(2))
     await waitFor(() => expect(screen.getAllByText('cv.slos.validations.userJourneyRequired').length).toEqual(2))
     expect(
-      container.querySelector('[data-testid="steptitle_Define_SLO_Identification"] [icon="error"]')
+      container.querySelector('[data-testid="steptitle_Define_SLO_Identification"] [icon="warning-sign"]')
     ).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Set_SLO_Time_Window"] [icon="ring"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Add_SLOs"] [icon="ring"]')).toBeInTheDocument()
@@ -208,9 +208,9 @@ describe('CVCreateSloV2', () => {
     })
     await waitFor(() => {
       expect(
-        container.querySelector('[data-testid="steptitle_Set_SLO_Time_Window"] [icon="error"]')
+        container.querySelector('[data-testid="steptitle_Set_SLO_Time_Window"] [icon="warning-sign"]')
       ).toBeInTheDocument()
-      expect(container.querySelector('[data-testid="steptitle_Add_SLOs"] [icon="error"]')).toBeInTheDocument()
+      expect(container.querySelector('[data-testid="steptitle_Add_SLOs"] [icon="warning-sign"]')).toBeInTheDocument()
       expect(
         container.querySelector('[data-testid="steptitle_Set_SLO_Target"] [icon="tick-circle"]')
       ).toBeInTheDocument()

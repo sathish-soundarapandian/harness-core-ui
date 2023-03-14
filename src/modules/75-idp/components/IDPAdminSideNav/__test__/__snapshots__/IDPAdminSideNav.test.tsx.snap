@@ -6,12 +6,12 @@ exports[`IDP Sidenav render 1`] = `
     class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
   >
     <a
-      aria-current="page"
-      class="link selected"
-      href="/account/accountId/idp-admin"
+      class="link"
+      href="/account/accountId/idp-admin/get-started"
     >
       <p
         class="StyledProps--font StyledProps--main text"
+        style=""
       >
         getStarted
       </p>

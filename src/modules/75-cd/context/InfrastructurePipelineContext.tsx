@@ -188,7 +188,8 @@ export function InfrastructurePipelineProvider({
         setTemplateTypes: noop,
         setTemplateIcons: noop,
         setTemplateServiceData: noop,
-        setIntermittentLoading: noop
+        setIntermittentLoading: noop,
+        setValidationUuid: noop
       }}
     >
       {children}

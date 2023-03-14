@@ -81,6 +81,7 @@ export interface FormMultiTypeTextboxProps extends Omit<IFormGroupProps, 'label'
   setToFalseWhenEmpty?: boolean
   tooltipProps?: DataTooltipInterface
   defaultTrue?: boolean
+  checkboxStyle?: any
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
 }
@@ -97,6 +98,7 @@ export const FormMultiTypeCheckbox: React.FC<FormMultiTypeTextboxProps> = props 
     className = '',
     enableConfigureOptions = false,
     configureOptionsProps,
+    checkboxStyle = { flexGrow: 1 },
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -146,7 +148,7 @@ export const FormMultiTypeCheckbox: React.FC<FormMultiTypeTextboxProps> = props 
         <MultiTypeCheckbox
           name={name}
           textboxProps={{ name, label, disabled, ...textboxProps }}
-          style={{ flexGrow: 1 }}
+          style={checkboxStyle}
           value={value}
           disabled={disabled}
           {...restMultiProps}

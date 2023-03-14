@@ -183,7 +183,7 @@ exports[`ChaosHomePage snapshot test should move to the trial page when query pa
       </p>
       <a
         class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--color StyledProps--font StyledProps--font-size-normal Button--with-current-color Button--link"
-        href="https://docs.harness.io/category/kl0mxwpfw1-hce-category"
+        href="https://developer.harness.io/docs/chaos-engineering/overview/introduction-to-chaos-module"
         rel="noreferrer noopener"
         role="button"
         tabindex="0"

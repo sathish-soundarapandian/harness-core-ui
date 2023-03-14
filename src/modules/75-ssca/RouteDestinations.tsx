@@ -18,6 +18,7 @@ import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list
 import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
 import SSCASideNav from './components/SSCASideNav'
 import { SSCAApp } from './components/SSCAApp'
+import './components/PipelineSteps'
 
 const SSCASideNavProps: SidebarContext = {
   navComponent: SSCASideNav,

@@ -133,7 +133,7 @@ describe('Render and test InfraProvisioningWizard', () => {
     })
 
     await act(async () => {
-      fireEvent.click(getByText('ci.getStartedWithCI.starterPipeline'))
+      fireEvent.click(getByText('ci.getStartedWithCI.starterPipelineConfig'))
     })
 
     await act(async () => {
@@ -187,7 +187,7 @@ describe('Render and test InfraProvisioningWizard', () => {
     })
 
     await act(async () => {
-      fireEvent.click(getByText('ci.getStartedWithCI.chooseExistingYAML'))
+      fireEvent.click(getByText('ci.getStartedWithCI.importExistingYAML'))
     })
 
     await act(async () => {
@@ -210,7 +210,7 @@ describe('Render and test InfraProvisioningWizard', () => {
     )
 
     await act(async () => {
-      fireEvent.click(getByText('ci.getStartedWithCI.chooseExistingYAML'))
+      fireEvent.click(getByText('ci.getStartedWithCI.importExistingYAML'))
     })
 
     await act(async () => {

@@ -578,7 +578,6 @@ export const getServiceLevelObjectiveResponse = {
           {
             name: 'service_appd_env_appd_appd_SLO4_d0465971-4885-474f-be87-4a32c55d30f9}',
             identifier: 'service_appd_env_appd_appd_SLO4_cc7b5a73-4fbb-4fd4-872f-146f854d74d7',
-            type: 'Latency',
             spec: {
               type: 'Ratio',
               spec: {

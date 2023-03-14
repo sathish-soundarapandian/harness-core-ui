@@ -5,19 +5,30 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { AllowedTypes, Button, ButtonSize, ButtonVariation, Layout, StepProps, StepWizard } from '@harness/uicore'
+import {
+  AllowedTypes,
+  Button,
+  ButtonSize,
+  ButtonVariation,
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInputType,
+  PageSpinner,
+  StepProps,
+  StepWizard
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { get, noop } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ManifestWizard } from '@pipeline/components/ManifestSelection/ManifestWizard/ManifestWizard'
-import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, useGetConnector } from 'services/cd-ng'
 import {
   getBuildPayload,
   isGitTypeManifestStore,
@@ -31,7 +42,20 @@ import HarnessFileStore from '@pipeline/components/ManifestSelection/ManifestWiz
 import CustomRemoteManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CustomRemoteManifest/CustomRemoteManifest'
 import K8sValuesManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/K8sValuesManifest/K8sValuesManifest'
 import { CommonManifestDetails } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CommonManifestDetails/CommonManifestDetails'
-import type { ManifestLastStepProps, ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import type {
+  CommonManifestLastStepPrevStepData,
+  CustomRemoteManifestManifestLastStepPrevStepData,
+  HarnessFileStoreManifestLastStepPrevStepData,
+  InheritFromManifestLastStepPrevStepData,
+  KustomizePatchManifestLastStepPrevStepData,
+  ManifestLastStepProps,
+  ManifestTypes,
+  OpenShiftParamManifestLastStepPrevStepData,
+  TASManifestLastStepPrevStepData,
+  TASWithHarnessStoreManifestLastStepPrevStepData,
+  HelmRepoOverrideManifestLastStepPrevStepData,
+  ManifestStores
+} from '@pipeline/components/ManifestSelection/ManifestInterface'
 import {
   getConnectorPath,
   getListOfDisabledManifestTypes
@@ -58,6 +82,8 @@ import {
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useQueryParams } from '@common/hooks'
 import type { EnvironmentPathProps, GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
 import HelmRepoOverrideManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HelmRepoOverrideManifest/HelmRepoOverrideManifest'
 import {
@@ -103,18 +129,23 @@ function ServiceManifestOverride({
   allowableTypes,
   serviceType
 }: ManifestVariableOverrideProps): React.ReactElement {
-  const { getString } = useStrings()
   const [selectedManifest, setSelectedManifest] = useState<OverrideManifestTypes | null>(null)
   const [manifestStore, setManifestStore] = useState('')
   const [connectorView, setConnectorView] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
   const [manifestIndex, setEditIndex] = useState(0)
+  const [isManifestEditMode, setIsManifestEditMode] = useState(manifestIndex < manifestOverrides.length)
+
   const { accountId, projectIdentifier, orgIdentifier, environmentIdentifier } = useParams<
     ProjectPathProps & EnvironmentPathProps
   >()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { getString } = useStrings()
+  const { CDS_TAS_NG, CDS_MANIFEST_LAST_STEP } = useFeatureFlags()
 
-  const { CDS_TAS_NG } = useFeatureFlags()
+  useEffect(() => {
+    setIsManifestEditMode(manifestIndex < manifestOverrides.length)
+  }, [manifestOverrides, manifestOverrides.length, manifestIndex])
 
   const createNewManifestOverride = (): void => {
     setEditIndex(manifestOverrides.length)
@@ -136,8 +167,8 @@ function ServiceManifestOverride({
     setConnectorView(isConnectorView)
   }
 
-  const changeManifestType = (selected: OverrideManifestTypes | null): void => {
-    setSelectedManifest(selected)
+  const changeManifestType = (selectedManifestType: OverrideManifestTypes | null): void => {
+    setSelectedManifest(selectedManifestType)
   }
   const handleStoreChange = (store?: OverrideManifestStoresTypes): void => {
     setManifestStore(store || '')
@@ -153,7 +184,7 @@ function ServiceManifestOverride({
           return get(manifest, 'manifest.spec.store.spec')
       }
   }
-  const getStore = (manifest: ManifestConfigWrapper) => {
+  const getStore = (manifest: ManifestConfigWrapper): ManifestStores => {
     switch (manifest?.manifest?.type) {
       case OverrideManifests.HelmRepoOverride:
         return manifest?.manifest?.spec?.type
@@ -161,7 +192,7 @@ function ServiceManifestOverride({
         return manifest?.manifest?.spec?.store?.type
     }
   }
-  const getConnectorRef = (manifest: ManifestConfigWrapper) => {
+  const getConnectorRef = (manifest: ManifestConfigWrapper): string => {
     switch (manifest?.manifest?.type) {
       case OverrideManifests.HelmRepoOverride:
         return manifest?.manifest?.spec?.connectorRef
@@ -169,7 +200,7 @@ function ServiceManifestOverride({
         return getConnectorPath(manifest?.manifest?.spec?.store?.type, manifest?.manifest)
     }
   }
-  const getInitialValues = (): {
+  const getInitialValues = useCallback((): {
     store: OverrideManifestStoresTypes | string
     selectedManifest: OverrideManifestTypes | null
     connectorRef: string | undefined
@@ -190,7 +221,8 @@ function ServiceManifestOverride({
       connectorRef: undefined,
       selectedManifest: selectedManifest
     }
-  }
+  }, [manifestOverrides, manifestIndex, manifestStore, selectedManifest])
+
   const getLastStepInitialData = useCallback((): ManifestConfig => {
     const initValues = get(manifestOverrides[manifestIndex], 'manifest', null)
     if (
@@ -212,6 +244,75 @@ function ServiceManifestOverride({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [handleManifestOverrideSubmit, manifestIndex]
   )
+
+  const initialValues = getLastStepInitialData()
+  const selected = defaultTo(getConnectorRef({ manifest: initialValues }), undefined) as any
+
+  const [selectedValue, setSelectedValue] = React.useState(selected)
+
+  useEffect(() => {
+    setSelectedValue(selected)
+  }, [selected])
+
+  const scopeFromSelected =
+    typeof selectedValue === 'string' && selectedValue.length > 0
+      ? getScopeFromValue(selectedValue || '')
+      : selected?.length > 0
+      ? getScopeFromValue(selected || '')
+      : selectedValue?.scope
+
+  const selectedRef = React.useMemo(() => {
+    return typeof selected === 'string' ? getIdentifierFromValue(selected || '') : selectedValue?.connector?.identifier
+  }, [selected, selectedValue])
+
+  const {
+    data: connectorData,
+    loading,
+    refetch
+  } = useGetConnector({
+    identifier: selectedRef,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier: scopeFromSelected === Scope.ORG || scopeFromSelected === Scope.PROJECT ? orgIdentifier : undefined,
+      projectIdentifier: scopeFromSelected === Scope.PROJECT ? projectIdentifier : undefined,
+      ...(!isEmpty(repoIdentifier) && !isEmpty(branch)
+        ? {
+            repoIdentifier,
+            branch,
+            getDefaultFromOtherRepo: true
+          }
+        : {})
+    },
+    lazy: true
+  })
+
+  React.useEffect(() => {
+    if (getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED && isManifestEditMode && CDS_MANIFEST_LAST_STEP) {
+      if (typeof selected === 'string' && selected?.length > 0) {
+        refetch()
+      }
+    }
+  }, [selected, isManifestEditMode, refetch, CDS_MANIFEST_LAST_STEP])
+
+  React.useEffect(() => {
+    if (typeof selected === 'string' && getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED && !loading) {
+      if (connectorData && connectorData?.data?.connector?.name) {
+        const scope = getScopeFromValue(selected || '')
+        const value = {
+          label: connectorData?.data?.connector?.name,
+          value:
+            scope === Scope.ORG || scope === Scope.ACCOUNT
+              ? `${scope}.${connectorData?.data?.connector?.identifier}`
+              : connectorData?.data?.connector?.identifier,
+          scope: scope,
+          live: connectorData?.data?.status?.status === 'SUCCESS',
+          connector: connectorData?.data?.connector
+        }
+        setSelectedValue(value)
+      }
+    }
+  }, [connectorData, loading, selected])
+
   const lastStepProps = useCallback((): ManifestLastStepProps => {
     const manifestDetailsProps: ManifestLastStepProps = {
       key: getString('pipeline.manifestType.manifestDetails'),
@@ -229,61 +330,131 @@ function ServiceManifestOverride({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getLastStepInitialData, handleSubmit, selectedManifest, manifestOverrides])
 
+  const prevStepProps = useCallback((): { editManifestModePrevStepData: ConnectorConfigDTO } => {
+    return {
+      editManifestModePrevStepData: {
+        ...getInitialValues(),
+        connectorRef: selectedValue
+      }
+    }
+  }, [getInitialValues, selectedValue])
+
+  const shouldPassPrevStepData = () => {
+    return isManifestEditMode && selectedValue && CDS_MANIFEST_LAST_STEP
+  }
+
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
     const arr: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> = []
     let manifestDetailStep = null
     const isGitTypeStores = isGitTypeManifestStore(manifestStore as OverrideManifestStoresTypes)
 
-    switch (true) {
-      case selectedManifest === OverrideManifests.OpenshiftParam && isGitTypeStores:
-        manifestDetailStep = <OpenShiftParamWithGit {...lastStepProps()} />
-        break
-      case selectedManifest === OverrideManifests.KustomizePatches && isGitTypeStores:
-        manifestDetailStep = <KustomizePatchDetails {...lastStepProps()} />
-        break
-      case [OverrideManifests.Values, OverrideManifests.OpenshiftParam, OverrideManifests.KustomizePatches].includes(
-        selectedManifest as OverrideManifestTypes
-      ) && manifestStore === OverrideManifestStores.InheritFromManifest:
-        manifestDetailStep = <InheritFromManifest {...lastStepProps()} />
-        break
-      case [
-        OverrideManifests.Values,
-        OverrideManifests.OpenshiftParam,
-        OverrideManifests.KustomizePatches,
-        OverrideManifests.TasVars,
-        OverrideManifests.TasAutoScaler
-      ].includes(selectedManifest as OverrideManifestTypes) && manifestStore === OverrideManifestStores.Harness:
-        manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
-        break
-      case [
-        OverrideManifests.Values,
-        OverrideManifests.OpenshiftParam,
-        OverrideManifests.TasManifest,
-        OverrideManifests.TasVars,
-        OverrideManifests.TasAutoScaler
-      ].includes(selectedManifest as OverrideManifestTypes) && manifestStore === OverrideManifestStores.CustomRemote:
-        manifestDetailStep = <CustomRemoteManifest {...lastStepProps()} />
-        break
-      case selectedManifest === OverrideManifests.Values && isGitTypeStores:
-        manifestDetailStep = <K8sValuesManifest {...lastStepProps()} />
-        break
-      case selectedManifest === OverrideManifests.TasManifest && manifestStore === OverrideManifestStores.Harness:
-        manifestDetailStep = <TASWithHarnessStore {...lastStepProps()} />
-        break
+    if (isManifestEditMode && loading) {
+      manifestDetailStep = <PageSpinner />
+    } else {
+      switch (true) {
+        case selectedManifest === OverrideManifests.OpenshiftParam && isGitTypeStores:
+          manifestDetailStep = (
+            <OpenShiftParamWithGit
+              {...lastStepProps()}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as OpenShiftParamManifestLastStepPrevStepData)}
+            />
+          )
+          break
+        case selectedManifest === OverrideManifests.KustomizePatches && isGitTypeStores:
+          manifestDetailStep = (
+            <KustomizePatchDetails
+              {...lastStepProps()}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as KustomizePatchManifestLastStepPrevStepData)}
+            />
+          )
+          break
+        case [OverrideManifests.Values, OverrideManifests.OpenshiftParam, OverrideManifests.KustomizePatches].includes(
+          selectedManifest as OverrideManifestTypes
+        ) && manifestStore === OverrideManifestStores.InheritFromManifest:
+          manifestDetailStep = (
+            <InheritFromManifest
+              {...lastStepProps()}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as InheritFromManifestLastStepPrevStepData)}
+            />
+          )
+          break
+        case [
+          OverrideManifests.Values,
+          OverrideManifests.OpenshiftParam,
+          OverrideManifests.KustomizePatches,
+          OverrideManifests.TasVars,
+          OverrideManifests.TasAutoScaler
+        ].includes(selectedManifest as OverrideManifestTypes) && manifestStore === OverrideManifestStores.Harness:
+          manifestDetailStep = (
+            <HarnessFileStore
+              {...lastStepProps()}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessFileStoreManifestLastStepPrevStepData)}
+            />
+          )
+          break
+        case [
+          OverrideManifests.Values,
+          OverrideManifests.OpenshiftParam,
+          OverrideManifests.TasManifest,
+          OverrideManifests.TasVars,
+          OverrideManifests.TasAutoScaler
+        ].includes(selectedManifest as OverrideManifestTypes) && manifestStore === OverrideManifestStores.CustomRemote:
+          manifestDetailStep = (
+            <CustomRemoteManifest
+              {...lastStepProps()}
+              {...((isManifestEditMode ? prevStepProps() : {}) as CustomRemoteManifestManifestLastStepPrevStepData)}
+            />
+          )
+          break
+        case selectedManifest === OverrideManifests.Values && isGitTypeStores:
+          manifestDetailStep = (
+            <K8sValuesManifest
+              {...lastStepProps()}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as CommonManifestLastStepPrevStepData)}
+            />
+          )
+          break
+        case selectedManifest === OverrideManifests.TasManifest && manifestStore === OverrideManifestStores.Harness:
+          manifestDetailStep = (
+            <TASWithHarnessStore
+              {...lastStepProps()}
+              {...((shouldPassPrevStepData()
+                ? prevStepProps()
+                : {}) as TASWithHarnessStoreManifestLastStepPrevStepData)}
+            />
+          )
+          break
 
-      case selectedManifest === OverrideManifests.TasManifest:
-        manifestDetailStep = <TasManifest {...lastStepProps()} />
-        break
-      case selectedManifest === OverrideManifests.HelmRepoOverride:
-        manifestDetailStep = <HelmRepoOverrideManifest {...lastStepProps()} />
-        break
-      default:
-        manifestDetailStep = <CommonManifestDetails {...lastStepProps()} />
-        break
+        case selectedManifest === OverrideManifests.TasManifest:
+          manifestDetailStep = (
+            <TasManifest
+              {...lastStepProps()}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as TASManifestLastStepPrevStepData)}
+            />
+          )
+          break
+        case selectedManifest === OverrideManifests.HelmRepoOverride:
+          manifestDetailStep = (
+            <HelmRepoOverrideManifest
+              {...lastStepProps()}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HelmRepoOverrideManifestLastStepPrevStepData)}
+            />
+          )
+          break
+        default:
+          manifestDetailStep = (
+            <CommonManifestDetails
+              {...lastStepProps()}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as CommonManifestLastStepPrevStepData)}
+            />
+          )
+          break
+      }
     }
+
     arr.push(manifestDetailStep)
     return arr
-  }, [manifestStore, selectedManifest, lastStepProps])
+  }, [manifestStore, selectedManifest, lastStepProps, prevStepProps, selectedValue, isManifestEditMode, loading])
 
   const getLabels = (): { firstStepName: string; secondStepName: string } => {
     return {
@@ -430,12 +601,24 @@ function ServiceManifestOverride({
             isReadonly={isReadonly}
             listOfDisabledManifestTypes={getListOfDisabledManifestTypes(manifestOverrides)}
             existingManifestOverrides={manifestOverrides}
+            isEditMode={isManifestEditMode}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
       </Dialog>
     )
-  }, [selectedManifest, manifestIndex, manifestStore, expressions.length, expressions, allowableTypes, connectorView])
+  }, [
+    selectedManifest,
+    manifestIndex,
+    manifestStore,
+    expressions.length,
+    expressions,
+    allowableTypes,
+    connectorView,
+    isManifestEditMode,
+    getLastSteps,
+    getInitialValues
+  ])
 
   const addBtnCommonProps = {
     size: ButtonSize.SMALL,

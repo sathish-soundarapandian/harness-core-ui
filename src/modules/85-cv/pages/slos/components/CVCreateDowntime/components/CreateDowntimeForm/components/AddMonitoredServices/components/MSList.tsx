@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Column, Row } from 'react-table'
 import {
@@ -25,7 +25,6 @@ import {
   Label
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { isNumber } from 'lodash-es'
 import { getErrorMessage, prepareFilterInfo } from '@cv/utils/CommonUtils'
 import noServiceAvailableImage from '@cv/assets/noMonitoredServices.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -65,7 +64,7 @@ const MSList = ({ onAddMS, hideDrawer, msList }: MSListProps): JSX.Element => {
   const { getString } = useStrings()
   const [pageNumber, setPageNumber] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
-  const [initializedPageNumbers, setInitializedPageNumbers] = useState<number[]>([])
+  const initializedOnce = useRef(false)
   const [selectedMSs, setSelectedMSs] = useState<MonitoredServiceDetail[]>([])
   const [environmentOptions, setEnvironmentOptions] = useState<MultiSelectOption[]>([])
 
@@ -104,7 +103,7 @@ const MSList = ({ onAddMS, hideDrawer, msList }: MSListProps): JSX.Element => {
 
   useEffect(() => {
     if (content) {
-      if (isNumber(pageIndex) && !initializedPageNumbers.includes(pageIndex) && msList.length) {
+      if (pageIndex === 0 && !initializedOnce.current && msList.length) {
         const selectedMSsOnPage = content
           .filter(item => msList.map(ref => ref.monitoredServiceIdentifier).includes(item.identifier))
           .map(msListItemDTO => getMonitoredServiceDetail(msListItemDTO))
@@ -112,7 +111,7 @@ const MSList = ({ onAddMS, hideDrawer, msList }: MSListProps): JSX.Element => {
           item => !selectedMSsOnPage.map(ms => ms.monitoredServiceIdentifier).includes(item.monitoredServiceIdentifier)
         )
         setSelectedMSs([...selectedMSsOnPage, ...selectedMSsNotOnPage])
-        setInitializedPageNumbers(prv => [...prv, pageIndex])
+        initializedOnce.current = true
       } else {
         setSelectedMSs(prvSelected => {
           const listOfMSIdsOnPage = content.map(item => item.identifier)

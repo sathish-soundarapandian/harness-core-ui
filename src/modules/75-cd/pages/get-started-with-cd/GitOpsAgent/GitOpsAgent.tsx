@@ -8,11 +8,12 @@
 import React from 'react'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
-import { noop } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
 import { Button, ButtonVariation, Container, HarnessDocTooltip, Layout, PageSpinner, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useAgentServiceForServerCreate, V1AgentType, useAgentServiceForServerList, V1Agent } from 'services/gitops'
 import { useCDOnboardingContext } from '@cd/pages/get-started-with-cd/CDOnboardingStore'
@@ -65,6 +66,7 @@ const AgentStaticInfo = ({ getString }: { getString: UseStringsReturn['getString
 
 export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: () => void }) => {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   // isProvisioningScreen is 2nd screen
   const [isProvisioningScreen, setIsProvisioningScreen] = React.useState(false)
   const [selectedAgent, setSelectedAgent] = React.useState<V1Agent | null>(null)
@@ -90,11 +92,15 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
       },
       accountIdentifier: accountId
     }
+    trackEvent(CDOnboardingActions.StartProvisionAgentClicked, {})
     await createAgent(payload)
       .then(agent => {
         setProvisionedAgent(agent)
+        trackEvent(CDOnboardingActions.AgentCreatedAndStartedProvisioningInBackend, {})
       })
-      .catch(noop)
+      .catch(() => {
+        trackEvent(CDOnboardingActions.AgentCreationFailedWithoutProvisioning, {})
+      })
   }
 
   const {
@@ -115,8 +121,10 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
 
   React.useEffect(() => {
     if (!loadingAgentsList && agentList?.content?.length) {
-      setSelectedAgent(agentList.content[0])
+      const agent = agentList.content[0]
+      setSelectedAgent(agent)
       setIsProvisioningScreen(true)
+      trackEvent(CDOnboardingActions.SelectedExistingAgent, { selectedAgent: agent?.name })
     }
   }, [loadingAgentsList])
 

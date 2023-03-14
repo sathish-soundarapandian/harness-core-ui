@@ -25,11 +25,11 @@ import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
-import { get, set, isEmpty } from 'lodash-es'
+import { get, set, isEmpty, defaultTo } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import type { ManifestTypes, TASManifestDataType } from '../../ManifestInterface'
+import type { ManifestTypes, TASManifestDataType, TASManifestLastStepPrevStepData } from '../../ManifestInterface'
 import {
   cfCliVersions,
   getConnectorRefOrConnectorId,
@@ -54,6 +54,7 @@ interface TasManifestPropType {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+  editManifestModePrevStepData?: TASManifestLastStepPrevStepData
 }
 
 function TasManifest({
@@ -66,22 +67,25 @@ function TasManifest({
   prevStepData,
   previousStep,
   manifestIdsList,
-  isReadonly = false
+  isReadonly = false,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & TasManifestPropType): React.ReactElement {
   const { getString } = useStrings()
 
-  const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+
+  const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
-    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-    prevStepData?.urlType === GitRepoName.Repo
+    modifiedPrevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    modifiedPrevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
   const accountUrl =
     connectionType === GitRepoName.Account
-      ? prevStepData?.connectorRef
-        ? prevStepData?.connectorRef?.connector?.spec?.url
-        : prevStepData?.url
+      ? modifiedPrevStepData?.connectorRef
+        ? modifiedPrevStepData?.connectorRef?.connector?.spec?.url
+        : modifiedPrevStepData?.url
       : null
 
   const validationSchema = Yup.object().shape({
@@ -135,7 +139,7 @@ function TasManifest({
     repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
       if (
         connectionType === GitRepoName.Repo ||
-        getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+        getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
       ) {
         return true
       }
@@ -150,7 +154,7 @@ function TasManifest({
       return {
         ...specValues,
         identifier: initialValues.identifier,
-        repoName: getRepositoryName(prevStepData, initialValues),
+        repoName: getRepositoryName(modifiedPrevStepData, initialValues),
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
@@ -182,7 +186,7 @@ function TasManifest({
       gitFetchType: 'Branch',
       cfCliVersion: 'V7',
       paths: [{ path: '', uuid: uuid('', nameSpace()) }],
-      repoName: getRepositoryName(prevStepData, initialValues)
+      repoName: getRepositoryName(modifiedPrevStepData, initialValues)
     }
   }
 
@@ -243,9 +247,9 @@ function TasManifest({
         validationSchema={validationSchema}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: getConnectorRefOrConnectorId(prevStepData as ConnectorConfigDTO)
+            connectorRef: getConnectorRefOrConnectorId(modifiedPrevStepData as ConnectorConfigDTO)
           })
         }}
       >
@@ -443,7 +447,7 @@ function TasManifest({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

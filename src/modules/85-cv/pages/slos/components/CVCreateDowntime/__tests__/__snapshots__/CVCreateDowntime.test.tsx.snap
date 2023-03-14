@@ -87,7 +87,7 @@ exports[`CVCreateDowntime should render create flow 1`] = `
       >
         <div
           class="Layout--vertical StyledProps--main StyledProps--margin-xlarge"
-          data-testid="CVStepper_main"
+          data-testid="Stepper_main"
         >
           <div
             class="StyledProps--font StyledProps--main stepContainer"
@@ -685,7 +685,7 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
       >
         <div
           class="Layout--vertical StyledProps--main StyledProps--margin-xlarge"
-          data-testid="CVStepper_main"
+          data-testid="Stepper_main"
         >
           <div
             class="StyledProps--font StyledProps--main stepContainer"

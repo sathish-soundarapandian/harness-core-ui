@@ -59,6 +59,7 @@ startedOn: Started On
 nodes: nodes
 nodesLabel: Nodes
 amiTags: AMI Tags
+advancedConfiguration: 'Advanced Configuration'
 amiFilters: AMi Filters
 poweredByHarness: powered by Harness
 linuxOnly: Supported on Linux only
@@ -96,15 +97,17 @@ terraformStep:
   provisionerIdentifier: Enter Provisioner Identifier
   workspace: Enter Workspace
   workspacePlaceholder: Select Workspace
-  workspaceName: Terraform Workspace Name
+  workspaceName: Terraform Workspace
   workspaceError: No workspaces found within given organization
   messageLabel: Run Message
   messagePlaceholder: Enter Message
   discardPendingRuns: Discard Pending Runs
+  overridePoliciesLabel: Continue on Soft Mandatory Policy evaluation result
   runTypeLabel: Run Type
   runTypePlaceholder: Select Run Type
   terraformVersion: Terraform Version
   terraformVersionPlaceholder: Enter Terraform Version
+  runOnRemote: Run on Remote Workspace
 kubernetesStep:
   workload: Enter Workload
 waitStep:
@@ -148,6 +151,7 @@ queueStep:
   queuedByResourceKey: 'Queued by Resource Key:'
   noQueuedExecutions: No queued executions
 jenkinsStep:
+  job: job
   addJobParameters: Add Job Parameter
   validations:
     jobName: Jobname is a required field
@@ -156,6 +160,26 @@ jenkinsStep:
   unstableStatusAsSuccess: Treat unstable Job status as success
   useConnectorUrlForJobExecution: Use Connector URL for job execution
   captureEnvironmentVariable: Capture environment variables from Jenkins build
+syncStep:
+  prune: Prune
+  dryRun: Dry Run
+  applyOnly: Apply Only
+  forceApply: Force Apply
+  syncOptionsLabel: Sync Options & Policy
+  skipSchemaValidation: Skip Schema Validations
+  autoCreateNamespace: Auto-Create Namespace
+  pruneResourcesAtLast: Prune Last
+  applyOutOfSyncOnly: Apply Out of Sync Only
+  replaceResources: Replace
+  prunePropagationPolicy: Prune Propagation Policy
+  pruneProgrationPolicyPlaceholder: Select Prune Propagation Policy
+  limit: Limit
+  maxBackoffDuration: Max Duration
+  increaseBackoffByFactor: Factor
+  validation:
+    limit: Limit is required
+    maxBackoffDuration: Max Duration is required
+    increaseBackoffByFactor: Factor is required
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector
@@ -226,6 +250,7 @@ approvalCriteria:
   match: Match
   approvalCriteria: Approval Criteria
   rejectionCriteria: Rejection Criteria
+  approvalWindow: Approval Window
   rejectionCriteriaOptional: Rejection Criteria (optional)
   validations:
     approvalCriteriaCondition: At least one condition is required
@@ -300,6 +325,7 @@ commonApprovalStep:
   execution:
     allConditionsMsg: 'If all of the following conditions are met:'
     anyConditionsMsg: 'If any of the following conditions is met:'
+    approvalWindowMsg: 'On Approval the execution will be performed within the specified Start and End Time'
 customApprovalStep:
   scriptTimeout: Script Timeout
   retryInterval: Retry interval
@@ -439,6 +465,8 @@ manifestTypeLabels:
   Autoscaler: AutoScaler
   GoogleCloudFunctionDefinition: Google Cloud Function Definition
   HelmRepoOverride: Helm Repo Override
+  AwsLambdaFunctionDefinition: AWS Lambda Function Definition
+  AwsLambdaFunctionAliasDefinition: AWS Lambda Function Alias Definition
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:
@@ -511,7 +539,7 @@ loopingStrategy:
     content: Are you sure you want to remove this looping strategy? {{$.pipeline.loopingStrategy.warningText}}
   toggleTypeModal:
     title: Switch looping strategy?
-    content: Are you sure you want to switch lopping strategy? {{$.pipeline.loopingStrategy.warningText}}
+    content: Are you sure you want to switch looping strategy? {{$.pipeline.loopingStrategy.warningText}}
     switch: Switch
   matrix:
     label: Matrix
@@ -543,6 +571,7 @@ execution:
   stagesExecuted: Stages executed (most recent first)
   upcomingStagesPrefix: 'Upcoming stages: '
   stepTitlePrefix: 'Step: '
+  stepGroupTitlePrefix: 'Step Group: '
   stageTitlePrefix: 'Stage: '
   noInputsText: No inputs found
   retryStepCount: 'Retry #{{ num }}'
@@ -896,6 +925,8 @@ infraSpecifications:
 imagePathLabel: Image Path
 digest: Digest
 artifactPathLabel: Artifact Path
+applicationName: Application Name
+selectApplications: Select Applications
 artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
@@ -951,9 +982,6 @@ artifactsSelection:
   googleArtifactRegistryTitle: Google Artifact Registry
   githubPackageRegistryTitle: Github Package Registry
   AmazonMachineImageTitle: Amazon Machine Image
-  canNotDeletePrimaryArtifact: You can not delete Primary Artifact.
-  selectOtherArtifactPrimary: Select other artifact as Primary or make Primary Artifact runtime.
-  canNotDisablePrimaryArtifact: You can not disable Single Primary Artifact.
   existingDocker:
     sidecarId: Sidecar Name
     sidecarIdPlaceholder: Enter Artifact Name
@@ -1109,6 +1137,7 @@ noBucketsFound: No buckets found
 noFilePathsFound: No file paths found
 noClustersFound: No clusters found
 noImagesFound: No images found
+noImages: 'No Images'
 noCloudSourceRepositoriesFound: No cloud source repositories found
 gitRepo: Git Repo
 buildRepo: Build Repo
@@ -1142,6 +1171,7 @@ stepDescription:
   RestoreCacheS3: Restore saved files and directories between builds using AWS S3.
   DockerHub: Build a Docker image from a Dockerfile and push it to a Docker registry.
   Jenkins: Jenkins Description.
+  GitOpsSync: Gitops Sync
   GCS: Upload artifacts to Google Cloud Storage (GCS).
   S3: Upload artifacts to AWS S3.
   JFrogArtifactory: Upload artifacts to JFrog Artifactory.
@@ -1192,7 +1222,6 @@ stepDescription:
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
   ElastigroupSetup: Elastigroup setup step
-
   SwapRoute: Swap between Active and InActive TAS Applications
   SwapRollback: Rollback the Swap to Active in Blue Green Deployments
   TasRollback: Rollback to previous deployment during failure
@@ -1209,8 +1238,12 @@ stepDescription:
   ElastigroupSwapRoute: Elastigroup Swap Route
   ElastigroupBGStageSetup: Elastigroup Blue/Green Step
   Container: Execute one or more commands on a container image in a CD stage.
+  AwsLambdaDeploy: Deploy an AWS Lambda function.
+  AwsLambdaDeployRollback: Roll back the AWS Lambda function.
   TerraformCloudRun: Trigger a run in a Terraform Cloud Workspace.
   TerraformCloudRollback: Trigger a rollback of the latest run on your Terraform Cloud Workspace.
+  SscaOrchestration: Orchestrate SBOM generation for your artifacts and repository
+
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -1310,6 +1343,8 @@ policyEvaluations:
   policySetName: 'Policy Set: {{name}}'
   emptyPolicySet: This policy set does not have any policies attached to it.
   policySetsApplied: '{{pipelineName}}: Policy Sets applied'
+  failureHeadingEvaluationDetail: Policy Evaluation failed.
+  warningHeadingEvaluationDetail: Policy Evaluation contains warnings.
 expressionsReplaced: 'Pipeline updated with {{count}} expression(s) replaced. Please provide the value(s) for new expression(s).'
 runstageError: '{{count}} Error(s): Unable to run stages.'
 stageDependencyError: 'Stage {{stageId}} has a ‘useFromStage’ dependency on Stage {{dependentStage}}. Please select Stage {{dependentStage}} to run Stage {{stageId}}.'
@@ -1648,3 +1683,32 @@ ServiceDetail:
 iacm:
   workflow: Workflow
   resourceStack: Resource Stack
+banner:
+  bannerText: Harness has significantly updated services and environments in CD. Please review our
+  bannerDescription: on upgrading to the newer v2 versions of these entities. Support for v1 was reduced and the entities were deprecated at the end of January 2023. Please reach out to
+  bannerDescriptionSecond: for any questions.
+  docs: docs
+validation:
+  validated: Validated
+  validating: Validating
+  validationSuccessful: Validation successful
+  validationSuccessfulText: No errors were found with your pipeline configurations. You can start running your pipeline! Click to view more.
+  validationInProgressText: Click to view details of the pipeline configuration validation progress.
+  nIssuesFound: '{{n}} issue(s) found'
+  errorText: Click to view list of issues.
+  evaluatingPolicySets: Evaluating Policy Sets
+  pipelineValidated: Pipeline validated
+  revalidate: Revalidate
+  validationResultApiError: Unable to complete validation due to [{{message}}] error.
+bamboo:
+  planName: Plan Name
+planNamePlaceholder: Enter or Select Plan
+bambooBuilds: Bamboo Builds
+selectBambooBuildsPlaceholder: Select Bamboo Build
+Bamboo: Bamboo Description
+bambooStep:
+  validations:
+    planName: Planname is a required field
+  planParameter: Plan Parameters
+  addPlanParameters: Add Plan Parameter
+  noPlans: No Plans Defined

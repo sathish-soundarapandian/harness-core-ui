@@ -46,6 +46,7 @@ export default function TfPlanInputStep(
     accountId: string
   }>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
   return (
     <FormikForm>
       {getMultiTypeFromValue(inputSetData?.template?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
@@ -109,14 +110,14 @@ export default function TfPlanInputStep(
         </div>
       )}
       <ConfigInputs {...props} />
-      {inputSetData?.template?.spec?.configuration?.varFiles &&
-      inputSetData?.template?.spec?.configuration?.varFiles?.length > 0 ? (
+      {get(inputSetData?.template?.spec, `${fieldPath}.varFiles`) &&
+      get(inputSetData?.template?.spec, `${fieldPath}.varFiles`)?.length > 0 ? (
         <TfVarFiles {...props} />
       ) : null}
       {
         /* istanbul ignore next */
         getMultiTypeFromValue(
-          (inputSetData?.template?.spec?.configuration?.backendConfig?.spec as TerraformBackendConfigSpec)?.content
+          (get(inputSetData?.template?.spec, `${fieldPath}.backendConfig.spec`) as TerraformBackendConfigSpec)?.content
         ) === MultiTypeInputType.RUNTIME && (
           <div
             className={cx(stepCss.formGroup, stepCss.md)}
@@ -128,7 +129,7 @@ export default function TfPlanInputStep(
             <MultiTypeFieldSelector
               name={`${
                 isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
-              }spec.configuration.backendConfig.spec.content`}
+              }spec.${fieldPath}.backendConfig.spec.content`}
               label={getString('cd.backEndConfig')}
               defaultValueToReset=""
               allowedTypes={allowableTypes}
@@ -143,7 +144,7 @@ export default function TfPlanInputStep(
                   <TFMonaco
                     name={`${
                       isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
-                    }spec.configuration.backendConfig.spec.content`}
+                    }spec.${fieldPath}.backendConfig.spec.content`}
                     formik={formik!}
                     expressions={expressions}
                     title={getString('tagsLabel')}
@@ -154,7 +155,7 @@ export default function TfPlanInputStep(
               <TFMonaco
                 name={`${
                   isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
-                }spec.configuration.backendConfig.spec.content`}
+                }spec.${fieldPath}.backendConfig.spec.content`}
                 formik={formik!}
                 expressions={expressions}
                 title={getString('tagsLabel')}
@@ -165,11 +166,11 @@ export default function TfPlanInputStep(
       }
       <ConfigInputs isBackendConfig={true} {...props} />
 
-      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.targets as string) ===
+      {getMultiTypeFromValue(get(inputSetData?.template?.spec, `${fieldPath}.targets`) as string) ===
         MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <List
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.targets`}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.${fieldPath}.targets`}
             label={<Text style={{ display: 'flex', alignItems: 'center' }}>{getString('pipeline.targets.title')}</Text>}
             disabled={readonly}
             style={{ marginBottom: 'var(--spacing-small)' }}

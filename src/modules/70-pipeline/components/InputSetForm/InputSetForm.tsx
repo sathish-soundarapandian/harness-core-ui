@@ -17,13 +17,15 @@ import {
   VisualYamlToggle,
   Popover,
   Button,
-  ButtonVariation
+  ButtonVariation,
+  Container
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import cx from 'classnames'
+import { flushSync } from 'react-dom'
 import type { InputSetResponse, PipelineConfig, PipelineInfoConfig } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
@@ -52,7 +54,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
 import { parse, yamlParse } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -62,6 +64,7 @@ import { hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSe
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import GitPopover from '../GitPopover/GitPopover'
 import FormikInputSetForm from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
@@ -128,6 +131,7 @@ const getInputSet = (
         projectIdentifier: parsedInputSetObj.inputSet.projectIdentifier,
         pipeline: clearRuntimeInput(parsedPipelineWithValues),
         gitDetails: defaultTo(inputSetObj.gitDetails, {}),
+        connectorRef: defaultTo(inputSetObj.connectorRef, ''),
         inputSetErrorWrapper: defaultTo(inputSetObj.inputSetErrorWrapper, {}),
         entityValidityDetails: defaultTo(inputSetObj.entityValidityDetails, {}),
         outdated: inputSetObj.outdated
@@ -142,6 +146,7 @@ const getInputSet = (
       projectIdentifier,
       pipeline: clearRuntimeInput(parsedPipelineWithValues),
       gitDetails: defaultTo(inputSetObj.gitDetails, {}),
+      connectorRef: defaultTo(inputSetObj.connectorRef, ''),
       inputSetErrorWrapper: defaultTo(inputSetObj.inputSetErrorWrapper, {}),
       entityValidityDetails: defaultTo(inputSetObj.entityValidityDetails, {}),
       outdated: inputSetObj.outdated,
@@ -162,8 +167,17 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, inputSetIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
-  const { repoIdentifier, branch, inputSetRepoIdentifier, inputSetBranch, connectorRef, repoName, storeType } =
-    useQueryParams<InputSetGitQueryParams>()
+  const {
+    repoIdentifier,
+    branch,
+    inputSetRepoIdentifier,
+    inputSetBranch,
+    connectorRef,
+    inputSetConnectorRef,
+    repoName,
+    inputSetRepoName,
+    storeType
+  } = useQueryParams<InputSetGitQueryParams>()
 
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -202,13 +216,19 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
-  const {
-    data: inputSetResponse,
-    refetch,
-    loading: loadingInputSet,
-    error: inputSetError
-  } = useGetInputSetForPipeline({
-    queryParams: {
+  const getBranchQueryParams = (isMerge?: boolean): { branch?: string; loadFromFallbackBranch?: boolean } => {
+    if (isGitSyncEnabled) {
+      return { branch: inputSetBranch }
+    } else if (repoName === inputSetRepoName) {
+      // Even for same repo, while coming from NoEntityFound InputSet and pipeline branch may be different for 1st render too
+      return isMerge ? { branch } : { branch: inputSetBranch || branch }
+    } else {
+      return inputSetBranch ? { branch: inputSetBranch } : { loadFromFallbackBranch: true }
+    }
+  }
+
+  const getInputSetDefaultQueryParam = () => {
+    return {
       accountIdentifier: accountId,
       orgIdentifier,
       pipelineIdentifier,
@@ -219,9 +239,18 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
             pipelineBranch: branch
           }
         : {}),
-      repoIdentifier: isGitSyncEnabled ? inputSetRepoIdentifier : repoName,
-      branch: isGitSyncEnabled ? inputSetBranch : branch
-    },
+      repoIdentifier: isGitSyncEnabled ? inputSetRepoIdentifier : inputSetRepoName,
+      ...getBranchQueryParams()
+    }
+  }
+
+  const {
+    data: inputSetResponse,
+    refetch,
+    loading: loadingInputSet,
+    error: inputSetError
+  } = useGetInputSetForPipeline({
+    queryParams: getInputSetDefaultQueryParam(),
     inputSetIdentifier: defaultTo(inputSetIdentifier, ''),
     lazy: true
   })
@@ -235,8 +264,8 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       pipelineIdentifier,
       pipelineRepoID: repoIdentifier,
       pipelineBranch: branch,
-      repoIdentifier: isGitSyncEnabled ? inputSetRepoIdentifier : repoName,
-      branch: isGitSyncEnabled ? inputSetBranch : branch,
+      repoIdentifier: isGitSyncEnabled ? inputSetRepoIdentifier : inputSetRepoName,
+      ...getBranchQueryParams(true),
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName
     }
@@ -383,6 +412,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       setIsEdit(false)
     }
   }, [inputSetIdentifier])
+
   React.useEffect(() => {
     if (!loadingInputSet && inputSetResponse && !isInputSetInvalid(inputSet)) {
       // Merge only if inputset is valid
@@ -455,8 +485,8 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const child = React.useCallback(
     () => (
       <PipelineVariablesContextProvider
-        pipeline={parsedPipeline}
-        enablePipelineTemplatesResolution={true}
+        pipeline={resolvedMergedPipeline}
+        enablePipelineTemplatesResolution={false}
         storeMetadata={{ storeType, connectorRef, repoName, branch, filePath }}
       >
         <FormikInputSetForm
@@ -508,12 +538,31 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
 
   if (supportingGitSimplification && !loadingInputSet && inputSetError) {
     return (
-      <NoEntityFound identifier={inputSetIdentifier} entityType={'inputSet'} errorObj={inputSetError.data as Error} />
+      <NoEntityFound
+        identifier={inputSetIdentifier}
+        entityType={'inputSet'}
+        entityConnectorRef={inputSetConnectorRef}
+        gitDetails={{ ...inputSet?.gitDetails, repoName: inputSetRepoName, branch: inputSetBranch }}
+        errorObj={inputSetError.data as Error}
+      />
     )
   }
 
   if (loadingInputSet || loadingPipeline || loadingTemplate || loadingMerge || loadingResolvedChildPipeline) {
     return <ContainerSpinner height={'100vh'} flex={{ align: 'center-center' }} />
+  }
+
+  const branchChangeHandler = (selectedBranch?: string): void => {
+    if (selectedBranch) {
+      refetch({
+        pathParams: { inputSetIdentifier: inputSetIdentifier },
+        queryParams: {
+          ...getInputSetDefaultQueryParam(),
+          loadFromFallbackBranch: false,
+          branch: selectedBranch
+        }
+      })
+    }
   }
 
   return (
@@ -529,6 +578,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
       menuOpen={menuOpen}
       handleMenu={handleMenu}
+      onBranchChange={branchChangeHandler}
     >
       {child()}
     </InputSetFormWrapper>
@@ -548,6 +598,7 @@ export interface InputSetFormWrapperProps {
   inputSetUpdateResponseHandler?: (responseData: InputSetResponse) => void
   menuOpen: boolean
   handleMenu: (state: boolean) => void
+  onBranchChange?: (branch?: string) => void
 }
 
 export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.ReactElement {
@@ -563,13 +614,15 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
     disableVisualView,
     inputSetUpdateResponseHandler,
     menuOpen,
-    handleMenu
+    handleMenu,
+    onBranchChange
   } = props
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
   const { connectorRef, repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
+  const { updateQueryParams } = useUpdateQueryParams()
 
   return (
     <React.Fragment>
@@ -588,6 +641,22 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                   data={defaultTo(inputSet.gitDetails, {})}
                   iconProps={{ margin: { left: 'small', top: 'xsmall' } }}
                 />
+              )}
+              {isEdit && inputSet?.storeType === StoreType.REMOTE && (
+                <Container className={css.gitRemoteDetails}>
+                  <GitRemoteDetails
+                    connectorRef={inputSet?.connectorRef}
+                    repoName={inputSet?.gitDetails?.repoName}
+                    branch={inputSet?.gitDetails?.branch}
+                    flags={{ borderless: false, showRepo: false, normalInputStyle: true }}
+                    onBranchChange={item => {
+                      flushSync(() => {
+                        updateQueryParams({ inputSetBranch: item?.branch })
+                      })
+                      onBranchChange?.(item?.branch)
+                    }}
+                  />
+                </Container>
               )}
               <div className={css.optionBtns}>
                 <VisualYamlToggle

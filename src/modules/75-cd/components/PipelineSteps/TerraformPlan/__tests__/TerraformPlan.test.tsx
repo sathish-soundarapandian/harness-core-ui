@@ -340,12 +340,13 @@ describe('Test TerraformPlan', () => {
               },
               configFiles: {
                 store: {
+                  type: 'Git',
                   spec: {
+                    gitFetchType: 'Branch',
                     connectorRef: {
                       label: 'test',
                       value: 'test',
-                      scope: 'account',
-                      connector: { type: 'Git' }
+                      scope: 'account'
                     }
                   }
                 }
@@ -391,11 +392,11 @@ describe('Test TerraformPlan', () => {
           },
           configFiles: {
             store: {
+              type: 'Git',
               spec: {
                 connectorRef: 'test',
                 gitFetchType: 'Branch'
-              },
-              type: 'Git'
+              }
             }
           },
           backendConfig: {

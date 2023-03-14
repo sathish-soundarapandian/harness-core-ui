@@ -322,6 +322,24 @@ export const getArtifactFormData = (
     case ENABLED_ARTIFACT_TYPES.Jenkins:
       values = initialValues
       break
+    case ENABLED_ARTIFACT_TYPES.Bamboo:
+      values = {
+        ...initialValues,
+        spec: {
+          ...specValues,
+          artifactPaths:
+            getMultiTypeFromValue(specValues.artifactPaths) === MultiTypeInputType.FIXED &&
+            specValues.artifactPaths &&
+            specValues.artifactPaths.length
+              ? specValues.artifactPaths.map((artifactPath: string) => ({
+                  label: artifactPath,
+                  value: artifactPath
+                }))
+              : specValues.artifactPaths
+        }
+      }
+      break
+
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
     case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
     case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
@@ -449,6 +467,15 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         packageType: 'maven',
         package: '',
         version: RUNTIME_INPUT_VALUE
+      }
+    case ENABLED_ARTIFACT_TYPES.Bamboo:
+      return {
+        identifier: '',
+        spec: {
+          planKey: '',
+          artifactPaths: [],
+          build: ''
+        }
       }
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
       return {

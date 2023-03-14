@@ -49,7 +49,11 @@ import {
   checkIfQueryParamsisNotEmpty,
   shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import type { ServerlessLambdaWithS3DataType, ManifestTypes } from '../../ManifestInterface'
+import type {
+  ServerlessLambdaWithS3DataType,
+  ManifestTypes,
+  ServerlessLambdaWithS3ManifestLastStepPrevStepData
+} from '../../ManifestInterface'
 import { getConnectorRefOrConnectorId, ManifestIdentifierValidation } from '../../Manifesthelper'
 import { filePathWidth } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
@@ -71,6 +75,7 @@ interface ServerlessLambdaWithS3Props {
   isReadonly?: boolean
   deploymentType?: string
   selectedManifest: ManifestTypes | null
+  editManifestModePrevStepData?: ServerlessLambdaWithS3ManifestLastStepPrevStepData
 }
 
 export function ServerlessLambdaWithS3({
@@ -83,12 +88,15 @@ export function ServerlessLambdaWithS3({
   previousStep,
   manifestIdsList,
   isReadonly = false,
-  selectedManifest
+  selectedManifest,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & ServerlessLambdaWithS3Props): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const [lastQueryData, setLastQueryData] = React.useState({ region: '' })
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   /* Code related to region */
   React.useEffect(() => {
@@ -122,7 +130,7 @@ export function ServerlessLambdaWithS3({
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      connectorRef: getConnectorRefFromPrevStep(prevStepData),
+      connectorRef: getConnectorRefFromPrevStep(modifiedPrevStepData),
       region: lastQueryData.region
     },
     lazy: true
@@ -152,26 +160,28 @@ export function ServerlessLambdaWithS3({
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
-          connectorRef: getConnectorRefFromPrevStep(prevStepData),
+          connectorRef: getConnectorRefFromPrevStep(modifiedPrevStepData),
           region: lastQueryData.region
         }
       })
     }
-  }, [lastQueryData, refetchBuckets, prevStepData])
+  }, [lastQueryData, refetchBuckets, modifiedPrevStepData])
 
   const canFetchBuckets = useCallback(
     (region: string): boolean => {
-      // prevStepData?.connectorRef is passed to shouldFetchFieldOptions when connector selection is done in prev step
-      // prevStepData is passed to shouldFetchFieldOptions required when inline connector creation has been done in prev step
+      // modifiedPrevStepData?.connectorRef is passed to shouldFetchFieldOptions when connector selection is done in prev step
+      // modifiedPrevStepData is passed to shouldFetchFieldOptions required when inline connector creation has been done in prev step
       return !!(
         lastQueryData.region !== region &&
         shouldFetchFieldOptions(
-          !isEmpty(prevStepData?.identifier) ? prevStepData : { connectorId: { ...prevStepData?.connectorRef } },
+          !isEmpty(modifiedPrevStepData?.identifier)
+            ? modifiedPrevStepData
+            : { connectorId: { ...modifiedPrevStepData?.connectorRef } },
           [region]
         )
       )
     },
-    [lastQueryData, prevStepData]
+    [lastQueryData, modifiedPrevStepData]
   )
 
   const fetchBuckets = useCallback(
@@ -204,7 +214,7 @@ export function ServerlessLambdaWithS3({
   const setBucketNameInitialValue = (values: ServerlessLambdaWithS3DataType, specValues: StoreConfig): void => {
     if (
       getMultiTypeFromValue(specValues?.bucketName) === MultiTypeInputType.FIXED &&
-      getMultiTypeFromValue(prevStepData?.connectorRef) === MultiTypeInputType.FIXED &&
+      getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) === MultiTypeInputType.FIXED &&
       getMultiTypeFromValue(specValues?.region) === MultiTypeInputType.FIXED
     ) {
       merge(values, { bucketName: { label: specValues?.bucketName, value: specValues?.bucketName } })
@@ -269,7 +279,7 @@ export function ServerlessLambdaWithS3({
   const renderS3Bucket = (formik: FormikProps<ServerlessLambdaWithS3DataType>): JSX.Element => {
     if (
       getMultiTypeFromValue(formik.values?.region) !== MultiTypeInputType.FIXED ||
-      getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+      getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
     ) {
       return (
         <div
@@ -382,9 +392,9 @@ export function ServerlessLambdaWithS3({
         })}
         onSubmit={(formData: ServerlessLambdaWithS3DataType) => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: getConnectorRefOrConnectorId(prevStepData)
+            connectorRef: getConnectorRefOrConnectorId(modifiedPrevStepData)
           })
         }}
       >
@@ -523,7 +533,7 @@ export function ServerlessLambdaWithS3({
                 variation={ButtonVariation.SECONDARY}
                 text={getString('back')}
                 icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
+                onClick={() => previousStep?.(modifiedPrevStepData)}
               />
               <Button
                 variation={ButtonVariation.PRIMARY}

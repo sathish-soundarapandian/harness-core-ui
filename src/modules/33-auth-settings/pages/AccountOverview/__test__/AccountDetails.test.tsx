@@ -71,7 +71,14 @@ beforeEach(() => {
 describe('AccountDetails', () => {
   test('should render AccountDetails page with values', () => {
     const { container, getByText } = render(
-      <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}>
+      <TestWrapper
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}
+        defaultAppStoreValues={{
+          featureFlags: {
+            PLG_ENABLE_CROSS_GENERATION_ACCESS: true
+          }
+        }}
+      >
         <AccountDetails />
       </TestWrapper>
     )

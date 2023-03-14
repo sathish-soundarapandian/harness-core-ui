@@ -26,7 +26,7 @@ import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMu
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -72,7 +72,7 @@ export function DeployServiceEntityInputStep({
   const servicesTemplate = inputSetData?.template?.services?.values
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const serviceIdentifiers: string[] = useMemo(() => {
-    if (serviceValue && getMultiTypeFromValue(serviceValue) === MultiTypeInputType.FIXED) {
+    if (serviceValue && !isValueRuntimeInput(serviceValue)) {
       return [serviceValue]
     }
 
@@ -129,6 +129,14 @@ export function DeployServiceEntityInputStep({
   }, [servicesList])
 
   useDeepCompareEffect(() => {
+    // This is specific handling for service as expression in templatized views
+    if (serviceIdentifiers.length === 1 && isValueExpression(serviceValue)) {
+      updateStageFormTemplate(undefined, `${fullPathPrefix}serviceInputs`)
+      formik.setFieldValue(`${localPathPrefix}serviceInputs`, undefined)
+
+      return
+    }
+
     // if no value is selected, clear the inputs and template
     if (serviceIdentifiers.length === 0) {
       if (isValueRuntimeInput(servicesValue as unknown as string)) {

@@ -7,7 +7,7 @@
 
 import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
-import { isEmpty } from 'lodash-es'
+import { find, isEmpty, isUndefined } from 'lodash-es'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { JiraFieldNG, JiraUserData } from 'services/cd-ng'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
@@ -205,4 +205,44 @@ export const processMultiSelectTypeInputRuntimeValues = (selectedFieldValue: str
     return splitValues.map(splitvalue => ({ label: splitvalue, value: splitvalue })) as MultiSelectOption[]
   }
   return []
+}
+
+export const addSelectedOptionalFields = (
+  fieldsToBeAdded: JiraFieldNG[],
+  formik: FormikProps<JiraCreateData>
+): void => {
+  const selectedFieldsToBeAddedInForm = getSelectedFieldsToBeAddedInForm(
+    fieldsToBeAdded,
+    formik.values.spec?.selectedOptionalFields,
+    formik.values.spec?.fields
+  )
+
+  const uncheckedOptionalFields = formik.values.spec?.selectedOptionalFields?.filter(optField =>
+    isUndefined(
+      find(fieldsToBeAdded, function (fieldToBeAdded) {
+        return fieldToBeAdded.name === optField.name
+      })
+    )
+  )
+
+  /* Removing unchecked optional fields from formik so that it doesn't move to key value */
+  if (!isUndefined(uncheckedOptionalFields) && !isEmpty(uncheckedOptionalFields)) {
+    const excludedUncheckedFields = formik.values.spec?.fields?.filter(field =>
+      isUndefined(
+        find(uncheckedOptionalFields, function (uncheckedField) {
+          return uncheckedField.name === field.name
+        })
+      )
+    )
+    formik.setFieldValue('spec.fields', excludedUncheckedFields)
+  }
+
+  /* Sorting optional fields so that after saving template or step, fields are shown in same order */
+  selectedFieldsToBeAddedInForm.sort(function (
+    selectedField1: JiraFieldNGWithValue,
+    selectedField2: JiraFieldNGWithValue
+  ) {
+    return selectedField1.name > selectedField2.name ? 1 : -1
+  })
+  formik.setFieldValue('spec.selectedOptionalFields', selectedFieldsToBeAddedInForm)
 }

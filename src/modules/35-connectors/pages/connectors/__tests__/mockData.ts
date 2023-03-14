@@ -862,3 +862,57 @@ export const connectorWithGitData = {
     filePath: 'docker.yaml'
   }
 }
+
+export const serviceNowADFS = {
+  connector: {
+    name: 'snowAdfsAlt',
+    identifier: 'snowAdfsAlt',
+    description: '',
+    orgIdentifier: 'default',
+    projectIdentifier: 'Fardeen',
+    tags: {},
+    type: 'ServiceNow',
+    spec: {
+      serviceNowUrl: 'https://ven03172.service-now.com',
+      username: null,
+      usernameRef: null,
+      passwordRef: null,
+      delegateSelectors: [],
+      auth: {
+        type: 'AdfsClientCredentialsWithCertificate',
+        spec: {
+          certificateRef: 'adfs_cert_alt',
+          privateKeyRef: 'adfs_key_alt',
+          clientIdRef: 'adfs_client_alt',
+          resourceIdRef: 'adfs_resource_alt',
+          adfsUrl: 'https://dummyadfs.com/'
+        }
+      }
+    }
+  }
+}
+
+export const jiraPAT = {
+  connector: {
+    name: 'jiraPatDemo',
+    identifier: 'jiraPatDemo',
+    description: 'Use PATs',
+    orgIdentifier: 'default',
+    projectIdentifier: 'Fardeen',
+    tags: {},
+    type: 'Jira',
+    spec: {
+      jiraUrl: 'https://jira.dev.harness.io',
+      username: null,
+      usernameRef: null,
+      passwordRef: null,
+      delegateSelectors: ['nexustest'],
+      auth: {
+        type: 'PersonalAccessToken',
+        spec: {
+          patRef: 'pat'
+        }
+      }
+    }
+  }
+}

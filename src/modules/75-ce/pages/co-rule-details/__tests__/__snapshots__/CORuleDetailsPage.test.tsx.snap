@@ -894,7 +894,7 @@ exports[`Rule details page tests should render successfully 1`] = `
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
                   >
-                    ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+                    pipeline.advancedConfiguration
                   </p>
                   <span
                     class="bp3-popover-wrapper"
@@ -938,7 +938,7 @@ exports[`Rule details page tests should render successfully 1`] = `
                         <span
                           class="Toggle--toggleIcon"
                         />
-                        ce.co.dryRunLabel
+                        pipeline.syncStep.dryRun
                       </label>
                     </span>
                   </span>
@@ -1862,7 +1862,7 @@ exports[`Rule details page tests should render successfully 2`] = `
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
                   >
-                    ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+                    pipeline.advancedConfiguration
                   </p>
                   <span
                     class="bp3-popover-wrapper"
@@ -1906,7 +1906,7 @@ exports[`Rule details page tests should render successfully 2`] = `
                         <span
                           class="Toggle--toggleIcon"
                         />
-                        ce.co.dryRunLabel
+                        pipeline.syncStep.dryRun
                       </label>
                     </span>
                   </span>

@@ -1,0 +1,60 @@
+{
+  "metaData": {},
+  "resource": {
+    "totalPages": 0,
+    "totalItems": 0,
+    "pageItemCount": 0,
+    "pageSize": 1000,
+    "content": [
+      {
+        "severity": "INFO",
+        "taskId": "KJOruTLPQfq35VaR_j5yBw",
+        "logger": "io.harness.shell.ScriptProcessExecutor",
+        "thread": "task-exec-0",
+        "message": "Done setting file permissions for script /tmp/harness-YHWo3eoOS0OkZzD7dPhKxg.sh",
+        "accountId": "kmpySmUISimoRrJL6NL73w",
+        "delegateId": "HuY7UNJ8T_WbBrh2n8OGpg",
+        "app": "delegate",
+        "source": "test-delegate-logs-ui-7cb896c77c-8ntdx",
+        "processId": "1",
+        "version": "23.02.78306-000",
+        "managerHost": "del.pr.harness.io/del-1002",
+        "isotime": "2023-02-07T22:09:46Z"
+      },
+      {
+        "severity": "ERROR",
+        "taskId": "KJOruTLPQfq35VaR_j5yBw",
+        "logger": "io.harness.shell.ScriptProcessExecutor",
+        "thread": "task-exec-0",
+        "message": "Dummy error in shell script",
+        "accountId": "kmpySmUISimoRrJL6NL73w",
+        "delegateId": "HuY7UNJ8T_WbBrh2n8OGpg",
+        "app": "delegate",
+        "source": "test-delegate-logs-ui-7cb896c77c-8ntdx",
+        "processId": "1",
+        "version": "23.02.78306-000",
+        "managerHost": "del.pr.harness.io/del-1002",
+        "isotime": "2023-02-07T22:09:46Z"
+      },
+      {
+        "severity": "INFO",
+        "taskId": "KJOruTLPQfq35VaR_j5yBw",
+        "logger": "io.harness.shell.ScriptProcessExecutor",
+        "thread": "task-exec-0",
+        "message": "Shell script task parameters: accountId - kmpySmUISimoRrJL6NL73w, appId - null, workingDir - /tmp, activityId - YHWo3eoOS0OkZzD7dPhKxg",
+        "accountId": "kmpySmUISimoRrJL6NL73w",
+        "delegateId": "HuY7UNJ8T_WbBrh2n8OGpg",
+        "app": "delegate",
+        "source": "test-delegate-logs-ui-7cb896c77c-8ntdx",
+        "processId": "1",
+        "version": "23.02.78306-000",
+        "managerHost": "del.pr.harness.io/del-1002",
+        "isotime": "2023-02-07T22:09:46Z"
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false,
+    "pageToken": "testNextPage"
+  },
+  "responseMessages": []
+}

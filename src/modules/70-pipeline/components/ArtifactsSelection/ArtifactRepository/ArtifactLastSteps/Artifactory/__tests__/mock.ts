@@ -128,3 +128,33 @@ export const dockerArtifactoryInitialValues = {
   repositoryUrl: 'url',
   repositoryFormat: 'docker'
 }
+
+export const azureWebAppDeploymentRunTimeProps = {
+  name: 'Artifact details',
+  expressions: [],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
+  context: 1,
+  handleSubmit: jest.fn(),
+  artifactIdentifiers: [],
+  selectedArtifact: 'ArtifactoryRegistry' as ArtifactType,
+  selectedDeploymentType: ServiceDeploymentType.AzureWebApp,
+  prevStepData: {
+    connectorId: {
+      value: '<+input>'
+    }
+  }
+}
+
+export const genericArtifactoryRunTimeInitialValues = {
+  identifier: 'test-generic-identifier',
+  tag: 'tag-test',
+  tagRegex: 'tag-test',
+  artifactPath: '<+input>',
+  tagType: TagTypes.Value,
+  repository: '<+input>',
+  artifactDirectory: 'test'
+}

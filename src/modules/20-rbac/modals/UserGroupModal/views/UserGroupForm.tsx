@@ -164,6 +164,7 @@ const UserGroupForm: React.FC<UserGroupModalData> = props => {
                   className={css.input}
                   multiSelectProps={{
                     allowCreatingNewItems: false,
+                    allowCommaSeparatedList: true,
                     onQueryChange: (query: string) => {
                       setSearch(query)
                     },

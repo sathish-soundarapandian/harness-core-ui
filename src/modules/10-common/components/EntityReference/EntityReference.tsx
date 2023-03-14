@@ -356,6 +356,7 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
           <Layout.Horizontal
             flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
             padding={{ left: 'xsmall', right: 'xsmall' }}
+            spacing="xsmall"
           >
             {icon && <Icon name={icon} {...iconProps} className={css.tabIcon} />}
 
@@ -366,8 +367,6 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
               <Text
                 lineClamp={1}
                 font={{ variation: FontVariation.FORM_LABEL, weight: 'light' }}
-                margin={{ right: 'small' }}
-                padding={{ left: 'xsmall' }}
                 className={css.tabValue}
               >
                 {`[${tabDesc}]`}

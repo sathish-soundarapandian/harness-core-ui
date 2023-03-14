@@ -14,14 +14,16 @@
   height: 26px;
   display: inline-block;
   border-radius: var(--spacing-xsmall);
+  flex-shrink: 0;
 }
 
 .layout {
   justify-content: flex-end;
 }
 
-.verticalCenter {
+.projectTextContainer {
   justify-content: center;
+  flex: 1 !important;
 }
 
 .project {

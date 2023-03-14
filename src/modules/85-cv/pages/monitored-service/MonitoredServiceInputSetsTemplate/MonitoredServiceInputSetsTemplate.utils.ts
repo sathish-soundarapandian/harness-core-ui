@@ -20,7 +20,7 @@ import { GcoQueryKey } from './MonitoredServiceInputSetsTemplate.constants'
 export const getLabelByName = (name: string, getString: UseStringsReturn['getString']): string => {
   switch (name) {
     case 'applicationName':
-      return getString('cv.monitoringSources.appD.applicationName')
+      return getString('pipeline.applicationName')
     case 'tierName':
       return getString('cv.monitoringSources.appD.tierName')
     case 'completeMetricPath':

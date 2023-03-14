@@ -6695,6 +6695,156 @@ export const getSegmentFlagsPromise = (
     GetSegmentFlagsPathParams
   >(getConfig('cf'), `/admin/segments/${identifier}/flags`, props, signal)
 
+export interface AllEnvironmentsFlag {
+  /**
+   * The date the flag was created in milliseconds
+   */
+  createdAt: number
+  /**
+   * A description for this Environment
+   */
+  description?: string
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+  /**
+   * The user friendly identifier for the API Key
+   */
+  name: string
+  /**
+   * The state of the flag across all environments
+   */
+  environments: {
+    [key: string]: {
+      enabled: boolean
+    }
+  }
+}
+
+export type AllEnvironmentsFlags = {
+  flags?: AllEnvironmentsFlag[]
+}
+
+/**
+ * OK
+ */
+export type AllEnvironmentsFlagsResponseResponse = Pagination & {
+  flags: AllEnvironmentsFlag[]
+  /**
+   * All environments names
+   */
+  environments: {
+    [key: string]: {
+      name: string
+    }
+  }
+}
+
+export type GetAllEnvironmentsFlagsProps = Omit<
+  GetProps<
+    AllEnvironmentsFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllEnvironmentsFlagsQueryParams,
+    GetAllEnvironmentsFlagsPathParams
+  >,
+  'path'
+> &
+  GetAllEnvironmentsFlagsPathParams
+export interface GetAllEnvironmentsFlagsPathParams {
+  /**
+   * Project identifier for the object in the API.
+   */
+  identifier: string
+}
+export interface GetAllEnvironmentsFlagsQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * Flag Name - used for search
+   */
+  name?: string
+}
+
+/**
+ * Returns flag states across all Environments for the given Project identifier
+ */
+export const GetAllEnvironmentsFlags = ({ identifier, ...props }: GetAllEnvironmentsFlagsProps) => (
+  <Get<
+    AllEnvironmentsFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllEnvironmentsFlagsQueryParams,
+    GetAllEnvironmentsFlagsPathParams
+  >
+    path={`/admin/projects/${identifier}/flags`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetAllEnvironmentsFlagsProps = Omit<
+  UseGetProps<
+    AllEnvironmentsFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllEnvironmentsFlagsQueryParams,
+    GetAllEnvironmentsFlagsPathParams
+  >,
+  'path'
+> &
+  GetProjectPathParams
+
+/**
+ * Returns All Feature Flags
+ *
+ * Returns All Feature Flags across all Environments for the given identifier
+ */
+export const useGetAllEnvironmentsFlags = ({ identifier, ...props }: UseGetAllEnvironmentsFlagsProps) =>
+  useGet<
+    AllEnvironmentsFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllEnvironmentsFlagsQueryParams,
+    GetAllEnvironmentsFlagsPathParams
+  >((paramsInPath: GetAllEnvironmentsFlagsPathParams) => `/admin/projects/${paramsInPath.identifier}/flags`, {
+    base: getConfig('cf'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Returns All Feature Flags
+ *
+ * Returns All Feature Flags across all Environments for the given identifier
+ */
+export const getAllEnvironmentsFlagsPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    AllEnvironmentsFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllEnvironmentsFlagsQueryParams,
+    GetAllEnvironmentsFlagsPathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    AllEnvironmentsFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllEnvironmentsFlagsQueryParams,
+    GetAllEnvironmentsFlagsPathParams
+  >(getConfig('cf'), `/admin/projects/${identifier}/flags`, props, signal)
+
 export interface GetAllTargetsQueryParams {
   /**
    * Account Identifier

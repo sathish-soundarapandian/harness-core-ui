@@ -9,7 +9,7 @@ import React from 'react'
 import cx from 'classnames'
 import { Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { useParams, NavLink as Link, NavLinkProps } from 'react-router-dom'
+import { useParams, NavLink as Link, NavLinkProps, useLocation } from 'react-router-dom'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { String } from 'framework/strings'
@@ -241,12 +241,15 @@ export const SSCANavItem = (): JSX.Element => {
   )
 }
 
-export const IDPNavItem = () => {
+export const IDPNavItem = (): JSX.Element => {
   const params = useParams<ProjectPathProps>()
+  const location = useLocation()
+
+  const validPath = location.pathname.match(/idp-admin|idp/g)
 
   return (
     <li className={css.navItem}>
-      <Link {...commonLinkProps} to={routes.toIDP(params)}>
+      <Link {...commonLinkProps} to={routes.toIDPDefaultPath(params)} isActive={() => validPath?.length === 1}>
         <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
           <Icon name="idp" size={30} />
           <Text
@@ -257,6 +260,29 @@ export const IDPNavItem = () => {
             className={css.text}
           >
             <String stringID="common.purpose.idp.name" />
+          </Text>
+        </Layout.Vertical>
+      </Link>
+    </li>
+  )
+}
+
+export const ETNavItem = () => {
+  const params = useParams<ProjectPathProps>()
+
+  return (
+    <li className={css.navItem}>
+      <Link {...commonLinkProps} to={routes.toET(params)}>
+        <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+          <Icon name="cet" size={30} />
+          <Text
+            font={{ weight: 'semi-bold', align: 'center' }}
+            margin="xsmall"
+            padding={{ bottom: 'xsmall' }}
+            color={Color.WHITE}
+            className={css.text}
+          >
+            <String stringID="common.purpose.errorTracking.longTitle" />
           </Text>
         </Layout.Vertical>
       </Link>

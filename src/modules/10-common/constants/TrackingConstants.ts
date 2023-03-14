@@ -119,9 +119,16 @@ export enum DelegateActions {
   DelegateCommandLineVerify = 'Delegate Command Line Verify Clicked',
   DelegateCommandLineKubernetesManifest = 'Delegate Command Line Kubernetes Manifest',
   DelegateCommandLineKubernetesManifestCommandCopy1 = 'curl -LO https://raw.githubusercontent.com/harness/delegate-kubernetes-manifest/main/harness-delegate.yaml copied',
+  DelegateCommandLineKubernetesManifestBasic = 'Kubernetes Manifest Basic button clicked',
+  DelegateCommandLineKubernetesManifestCustom = 'Kubernetes Manifest Custom button clicked',
+  DelegateCommandLineKubernetesManifestDownloadYaml = 'Kubernetes Manifest YAML Downloaded',
+  DelegateCommandLineKubernetesManifestPreviewYaml = 'Kubernetes Manifest YAML Preview',
+  DelegateCommandLineReplaceCommands = 'Kubernetes Manifest Custom replace command',
 
+  DelegateCommandLineKubernetesManifestPreviewYamlClosed = 'Kubernetes Manifest YAML Preview Closed',
   DelegateCommandLineKubernetesManifestCommandCopy2 = 'kubectl apply -f harness-delegate.yaml copy',
   DelegateCommandLineHelm = 'Delegate Command Line Helm',
+
   DelegateCommandLineHelmCommandCopy1 = 'helm repo add harness-delegate https://app.harness.io/storage/harness-download/delegate-helm-chart/ copied',
   DelegateCommandLineTroubleShoot = 'Delegate Command Line TroubleShoot',
   DelegateCommandLineTroubleShootRetryConnection = 'Delegate Command Line TroubleShoot retry connection',
@@ -134,9 +141,14 @@ export enum DelegateActions {
   DelegateCommandLineTerraformCommandCopy2 = 'terraform init copied',
   DelegateCommandLineTerraformCommandCopy3 = 'Delegate Command Line Terraform command from backend  copied',
   DelegateCommandLineTerraformDownloadCommand3 = 'Delegate Command Line Terraform command from backend download',
+  DelegateCommandLineKubernetesYamlDownloadCommand = 'Delegate Command Line Kubenetes yaml backend download from preview',
+  DelegateCommandLineKubernetesYamlDownloadCopy = 'Delegate Command Line Kubenetes yaml backend copied from preview',
+  DelegateCommandLineSizingGuideOpen = 'Delegate command line sizing guide opened',
+  DelegateCommandLineSizingGuideClosed = 'Delegate command line sizing guide closed',
   DelegateCommandLineTroubleShootProblemSolved = 'Delegate CommandLine TroubleShoot Problem Solved',
   DelegateCommandLineTroubleShootProblemNotSolved = 'Delegate CommandLine TroubleShoot Problem Not Solved',
   DelegateCommandLineTroubleShootProblemFeedBackSaved = 'Delegate CommandLine TroubleShoot FeedBack Saved',
+  DelegateCommandLineDefaultValuesYamlUsed = 'Default values.yaml used for command below clicked',
 
   DelegateCommandLineDocker = 'Delegate Command Line Docker',
   DelegateCommandLineDockerCommandCopy = 'Delegate Command Line Docker Command copied',
@@ -153,7 +165,9 @@ export enum DelegateActions {
   DelegateCommandLineTroubleShootTerraformCopyCommonCommand1 = 'terraform -version copied',
   SwitchedToOldDelegateCreationModal = 'switchedToOldDelegateCreationModal',
   DelegateCommandLineCreationOpened = 'Delegate CommandLine Creation Opened',
-  DelegateCommandLineCreationClosed = 'Delegate CommandLine Creation Closed'
+  DelegateCommandLineCreationClosed = 'Delegate CommandLine Creation Closed',
+
+  DelegateTaskLogsViewed = 'Delegate Task Logs Viewed'
 }
 
 export enum StepActions {
@@ -323,12 +337,38 @@ export enum CDOnboardingActions {
   SelectManifestType = 'Manifest type selection',
   SelectManifestStore = 'Manifest store selection',
   SelectArtifactType = 'Select artifact type',
-  MovetoConfigureEnvironment = 'Move to Configure Environment Step',
-  MovetoConfigureEnvironmentWithDelegateNotConnected = 'Move to Configure Environment Step with delegate status not successful',
   SelectDeploymentType = 'Select deployment type',
+  SelectDeploymentTypeDefault = 'Pre-Selected deployment type',
+  MoveBackToSelectDeploymentType = 'Move Back to Select deployment type',
   MoveToServiceSelection = 'Move to Service Selection Step',
+  MovetoDeployStep = 'Move to Deploy Step',
+  MovetoConnectStep = 'Move to Connect Step',
+  MoveBacktoConnectStep = 'Move Back to Connect Step',
+  MoveToConfigureStep = 'Move to Configure Step',
+  MoveBacktoConfigureStep = 'Move Back to Configure Step',
   MoveToDeploymentSelection = 'Move to Deployment type',
-  MoveToPipelineSummary = 'Move to Pipeline summary page '
+  MoveToPipelineSummary = 'Move to Pipeline summary page',
+  StartProvisionAgentClicked = 'Clicked on Start Provisioning',
+  AgentCreatedAndStartedProvisioningInBackend = 'Agent Created and started Provisioning in Backend - takes 2-5 mins',
+  AgentCreationFailedWithoutProvisioning = 'Agent Creation Failed Without Provisioning (no provisioning)',
+  AgentProvisionedSuccessfully = 'Agent Provisioned Successfully',
+  SelectedExistingAgent = 'Existing Agent is Selected',
+  SelectSourceType = 'Select source type',
+  SelectSourceTypeDefault = 'Pre-Selected source type',
+  SelectSourceRepoType = 'Select source Repo Type',
+  TestConnectionClicked = 'Clicked on Test connection for Repository',
+  RepoCreatedSuccessfully = 'Repository Created Successfully',
+  RepoCreateFailure = 'Repository Creation Failed',
+  NextStepClicked = 'Clicked on Next Step',
+  SelectClusterTypeDefault = 'Pre-Selected Cluster type',
+  SelectClusterType = 'Select Cluster Type',
+  ConnectToClusterClicked = 'Clicked on Connect To Cluster',
+  ClusterCreatedSuccessfully = 'Cluster Created Successfully',
+  ClusterCreateFailure = 'Cluster Creation Failed',
+  CreateAndSyncAppClicked = 'Clicked on Create and Sync Application',
+  AppCreatedSuccessfully = 'Application Created Successfully',
+  AppSyncedSuccessfully = 'Application Synced Successfully',
+  AppCreateOrSyncFailure = 'Application Creation/Sync Failed'
 }
 
 export enum CFOverviewActions {

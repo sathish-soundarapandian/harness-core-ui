@@ -41,7 +41,6 @@ interface FilterCRUDProps<T> extends Partial<Omit<FormikProps<T>, 'initialValues
   initialValues: FormikProps<T>['initialValues']
   onSaveOrUpdate: (isUpdate: boolean, data: T) => Promise<void>
   onDelete: (identifier: string) => Promise<void>
-  onClose: () => void
   onFilterSelect: (identifier: string) => void
   isRefreshingFilters: boolean
   dataSvcConfig?: Map<CrudOperation, (...rest: any[]) => Promise<any>>
@@ -70,7 +69,6 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
     filters,
     initialValues,
     onSaveOrUpdate,
-    onClose,
     onDelete,
     onFilterSelect,
     isRefreshingFilters,
@@ -378,14 +376,6 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
             <Icon name="ng-filter" size={25} color={Color.WHITE} />
             <span className={css.title}>Filter</span>
           </Layout.Horizontal>
-          <Button
-            icon="cross"
-            variation={ButtonVariation.ICON}
-            iconProps={{ color: Color.WHITE }}
-            onClick={onClose}
-            className={css.closeFilter}
-            withoutBoxShadow
-          />
         </Layout.Horizontal>
       </Layout.Vertical>
       {isRefreshingFilters || isLoading ? (

@@ -20,7 +20,8 @@ import {
   MultiTypeInputType,
   MultiTypeInputValue,
   RUNTIME_INPUT_VALUE,
-  SelectOption
+  SelectOption,
+  Text
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
@@ -119,6 +120,7 @@ export default function DeployInfrastructureEntityInputStep({
   }, [isMultipleInfrastructure, infrastructureValue, infrastructureValues])
 
   const [infrastructureIdentifiers, setInfrastructureIdentifiers] = useState<string[]>(getInfrastructureIdentifiers())
+  const [noInfraInputsWhenDeployingToAllInfra, setNoInfraInputsWhenDeployingToAllInfra] = useState<boolean>(false)
 
   const {
     infrastructuresList,
@@ -241,10 +243,11 @@ export default function DeployInfrastructureEntityInputStep({
     const existingTemplate = getStageFormTemplate<InfraStructureDefinitionYaml[]>(
       `${fullPathPrefix}infrastructureDefinitions`
     )
+    const clonedInfrastructuresData = cloneDeep(infrastructuresData)
     const newInfrastructuresTemplate = createInfraTemplate(
       existingTemplate as InfraStructureDefinitionYaml[],
       infrastructureIdentifiers,
-      cloneDeep(infrastructuresData)
+      clonedInfrastructuresData
     )
 
     // updated values based on selected infrastructures
@@ -252,10 +255,19 @@ export default function DeployInfrastructureEntityInputStep({
     const newInfrastructuresValues = createInfraValues(
       existingInfrastructureValues,
       infrastructureIdentifiers,
-      cloneDeep(infrastructuresData),
+      clonedInfrastructuresData,
       deployToAllInfrastructures,
       stepViewType
     )
+
+    // set noInfraInputsWhenDeployingToAllInfra to true when you are deploying to all
+    // infrastructures under an environment and the infrastructure has no inputs to be filled
+    if (
+      !clonedInfrastructuresData?.find(infraValue => !isNil(infraValue?.infrastructureInputs)) &&
+      deployToAllInfrastructures === true
+    ) {
+      setNoInfraInputsWhenDeployingToAllInfra(true)
+    }
 
     if (isMultipleInfrastructure) {
       if (areEnvironmentFiltersAdded) {
@@ -320,6 +332,7 @@ export default function DeployInfrastructureEntityInputStep({
     _?: MultiTypeInputValue,
     type?: MultiTypeInputType
   ): void {
+    setNoInfraInputsWhenDeployingToAllInfra(false)
     if (isValueRuntimeInput(item)) {
       setInfrastructuresSelectedType('runtime')
       setInfrastructureIdentifiers([])
@@ -415,7 +428,11 @@ export default function DeployInfrastructureEntityInputStep({
             }}
           />
         )}
-        {loading ? <Spinner className={css.inputSetSpinner} size={16} /> : null}
+        {loading ? (
+          <Spinner className={css.inputSetSpinner} size={16} />
+        ) : noInfraInputsWhenDeployingToAllInfra ? (
+          <Text padding={{ bottom: 'medium' }}>{getString('cd.noInfraInputsWhenDeployingToAllInfra')}</Text>
+        ) : null}
       </Layout.Horizontal>
     </>
   )

@@ -42,7 +42,7 @@ export class ServiceNowUpdate extends PipelineStep<ServiceNowUpdateData> {
   // initialValues on mount
   protected defaultValues: ServiceNowUpdateData = {
     identifier: '',
-    timeout: '1d',
+    timeout: '10m',
     name: '',
     type: StepType.ServiceNowUpdate,
     spec: {

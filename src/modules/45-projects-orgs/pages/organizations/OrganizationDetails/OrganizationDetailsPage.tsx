@@ -26,12 +26,14 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import ResourceCardList, { ResourceOption } from '@common/components/ResourceCardList/ResourceCardList'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectModal'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import css from './OrganizationDetailsPage.module.scss'
 
 const OrganizationDetailsPage: React.FC = () => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
+  const { STO_JIRA_INTEGRATION } = useFeatureFlags()
   const history = useHistory()
   const { getString } = useStrings()
   const showGovCard = useAnyEnterpriseLicense()
@@ -117,6 +119,16 @@ const OrganizationDetailsPage: React.FC = () => {
     }
   ]
 
+  const externalTicketsCard: ResourceOption[] = [
+    {
+      label: <String stringID="common.tickets.externalTickets" />,
+      icon: 'service-jira',
+      route: routes.toOrganizationTicketSettings({ accountId, orgIdentifier }),
+      colorClass: css.externalTickets
+    }
+  ]
+
+  const showExternalTicketsCard = STO_JIRA_INTEGRATION
   return (
     <>
       <Page.Header
@@ -249,6 +261,14 @@ const OrganizationDetailsPage: React.FC = () => {
               <ResourceCardList
                 items={[...(showGovCard ? govFreezeCard : []), ...(showDeploymentFreeze ? deploymentFreezeCard : [])]}
               />
+            </Layout.Vertical>
+          )}
+          {showExternalTicketsCard && (
+            <Layout.Vertical spacing="medium" padding={{ top: 'large' }}>
+              <Heading font={{ size: 'medium', weight: 'bold' }} color={Color.BLACK}>
+                {getString('common.tickets.externalTickets')}
+              </Heading>
+              <ResourceCardList items={[...externalTicketsCard]} />
             </Layout.Vertical>
           )}
         </Layout.Vertical>

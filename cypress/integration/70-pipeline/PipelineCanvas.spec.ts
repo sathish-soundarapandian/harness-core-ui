@@ -291,7 +291,9 @@ describe('Execution Stages', () => {
     // Toggle to YAML view
     cy.get('[data-name="toggle-option-two"]').click({ force: true })
     cy.wait(1000)
-    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '40%', { ensureScrollable: false })
+    cy.get('.monaco-scrollable-element.editor-scrollable').scrollTo('0%', '40%', {
+      ensureScrollable: false
+    })
     cy.contains('span', stepName).should('be.visible')
     cy.contains('span', getIdentifierFromName(stepName)).should('be.visible')
     resourceName.forEach(resource => {
@@ -354,7 +356,9 @@ describe('ServerlessAwsLambda as deployment type', () => {
     // Toggle to YAML view
     cy.get('[data-name="toggle-option-two"]').click({ force: true })
     cy.wait(1000)
-    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '25%', { ensureScrollable: false })
+    cy.get('.monaco-scrollable-element.editor-scrollable').scrollTo('0%', '25%', {
+      ensureScrollable: false
+    })
     cy.contains('span', stageName).should('be.visible')
     cy.contains('span', regionName).should('be.visible')
   }
@@ -401,7 +405,9 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.wait(1000)
     cy.get('[data-name="toggle-option-two"]').click({ force: true })
     cy.wait(1000)
-    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '25%', { ensureScrollable: false })
+    cy.get('.monaco-scrollable-element.editor-scrollable').scrollTo('0%', '25%', {
+      ensureScrollable: false
+    })
     cy.contains('span', '<+input>').should('be.visible')
   })
 
@@ -580,12 +586,12 @@ describe('Input Sets', () => {
     cy.contains('span', 'namespace').should('be.visible')
     cy.contains('span', 'default').should('be.visible')
 
-    cy.contains('span', 'Save').click()
     cy.intercept('GET', inputSetsCall, {
       fixture: 'pipeline/api/inputSet/inputSetsList'
     }).as('inputSetList')
+    cy.contains('span', 'Save').click()
     cy.wait('@inputSetList')
-    cy.wait(1000)
+    cy.wait('@fetchServiceTemplate')
 
     cy.contains('p', 'testService').should('be.visible')
     cy.contains('p', 'Id: testService').should('be.visible')

@@ -43,6 +43,8 @@ import {
   useClusterServiceListClusters
 } from 'services/gitops'
 import { useDeepCompareEffect } from '@common/hooks'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { AuthTypeForm, CREDENTIALS_TYPE } from './AuthTypeForm'
 import InfoContainer from '../InfoContainer/InfoContainer'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
@@ -58,6 +60,7 @@ export const DestinationStep = (props: any) => {
     state: { cluster: clusterData }
   } = useCDOnboardingContext()
   const toast = useToaster()
+  const { trackEvent } = useTelemetry()
   const { agent: agentIdentifier, scope } = props.prevStepData as any
   const [testConnectionStatus, setTestConnectionStatus] = useState<TestStatus>(
     connectionStatus || TestStatus.NOT_INITIATED
@@ -81,6 +84,10 @@ export const DestinationStep = (props: any) => {
   const fullAgentName = getFullAgentWithScope(agentIdentifier, scope)
   const serverId = defaultTo(selectedCluster?.identifier, '')
   const { accountId } = useParams<ProjectPathProps>()
+
+  useEffect(() => {
+    trackEvent(CDOnboardingActions.SelectClusterTypeDefault, { selectedClusterType: clustersTypes[0].label })
+  }, [])
 
   const { mutate, error } = useAgentClusterServiceCreate({
     agentIdentifier: fullAgentName,
@@ -338,6 +345,7 @@ export const DestinationStep = (props: any) => {
               style={{ marginTop: '20px', width: '250px' }}
               minimal
               onClick={() => {
+                trackEvent(CDOnboardingActions.ConnectToClusterClicked, {})
                 setTestConnectionStatus(TestStatus.IN_PROGRESS)
                 createHostedCluster()
                   .then(response => {
@@ -346,6 +354,7 @@ export const DestinationStep = (props: any) => {
                       setSelectedCluster(response)
                       saveClusterData({ ...data, ...response?.cluster, identifier: response?.identifier })
                       setTestConnectionStatus(TestStatus.SUCCESS)
+                      trackEvent(CDOnboardingActions.ClusterCreatedSuccessfully, {})
                     } else {
                       setTestConnectionStatus(TestStatus.FAILED)
                       setTestConnectionErrors([
@@ -354,11 +363,13 @@ export const DestinationStep = (props: any) => {
                           message: (response as any)?.message
                         }
                       ])
+                      trackEvent(CDOnboardingActions.ClusterCreateFailure, {})
                     }
                   })
                   .catch(err => {
                     setTestConnectionStatus(TestStatus.FAILED)
                     setTestConnectionErrors((err?.data as any)?.responseMessages)
+                    trackEvent(CDOnboardingActions.ClusterCreateFailure, {})
                   })
               }}
             >
@@ -472,6 +483,7 @@ export const DestinationStep = (props: any) => {
                   onChange={item => {
                     setTestConnectionStatus(TestStatus.NOT_INITIATED)
                     formikProps.setFieldValue('clusterType', item.value)
+                    trackEvent(CDOnboardingActions.SelectClusterType, { selectedClusterType: item.label })
                   }}
                 />
               </Container>
@@ -653,26 +665,6 @@ export const DestinationStep = (props: any) => {
                   <Layout.Vertical margin={{ top: 'large' }}>
                     <InfoContainer label="cd.getStartedWithCD.managedCluster" />
                     <div className={css.smallMarginBottomClass} />
-                    {/* <>
-                      <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
-                        {getString('cd.getStartedWithCD.clusterspec').toLocaleUpperCase()}
-                      </Text>
-                      <div className={css.installedComponent}>
-                        <div className={css.blackDot} />
-                        {getString('cd.getStartedWithCD.clusterSpec1')}
-                      </div>
-                      <div className={css.installedComponent}>
-                        <div className={css.blackDot} />
-                        {getString('cd.getStartedWithCD.clusterSpec2')}
-                      </div>
-                      <div className={css.installedComponent}>
-                        <div className={css.blackDot} />
-                        {getString('cd.getStartedWithCD.clusterSpec3')}
-                      </div>
-                    </> */}
-                    {/*<Text font="normal" className={css.smallMarginBottomClass}>*/}
-                    {/*{getString('cd.getStartedWithCD.clusterSpecInfo')}*/}
-                    {/*</Text>*/}
                     <ProvisionCluster />
                   </Layout.Vertical>
                 </Container>

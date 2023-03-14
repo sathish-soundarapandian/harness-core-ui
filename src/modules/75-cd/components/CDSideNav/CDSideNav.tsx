@@ -70,8 +70,8 @@ export default function CDSideNav(): React.ReactElement {
   const isCommunity = useGetCommunity()
   const { showGetStartedCDTabInMainMenu, setShowGetStartedCDTabInMainMenu } = useSideNavContext()
   const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
-  const isDeploymentPage = !!matchPath(location.pathname, {
-    path: routes.toDeployments({ ...params, module })
+  const isOverviewPage = !!matchPath(location.pathname, {
+    path: routes.toProjectOverview({ ...params, module })
   })
   const {
     data: fetchPipelinesData,
@@ -101,7 +101,7 @@ export default function CDSideNav(): React.ReactElement {
       setShowGetStartedCDTabInMainMenu(isGettingStartedEnabled)
       /* istanbul ignore else */
       if (isGettingStartedEnabled) {
-        isDeploymentPage && history.replace(routes.toGetStartedWithCD({ ...params, module }))
+        isOverviewPage && history.replace(routes.toGetStartedWithCD({ ...params, module }))
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -202,7 +202,7 @@ export default function CDSideNav(): React.ReactElement {
           } else if (experience) {
             // when it's on trial page, forward to get-started (behind FF)/ pipeline
             history.push({
-              pathname: routes.toGetStartedWithCD({
+              pathname: routes.toCDOnboardingWizard({
                 orgIdentifier: data.orgIdentifier || '',
                 projectIdentifier: data.identifier || '',
                 accountId,
@@ -212,7 +212,7 @@ export default function CDSideNav(): React.ReactElement {
             })
           } else {
             history.push(
-              routes.toDeployments({
+              routes.toProjectOverview({
                 projectIdentifier: data.identifier,
                 orgIdentifier: data.orgIdentifier || /* istanbul ignore next */ '',
                 accountId,
@@ -226,6 +226,9 @@ export default function CDSideNav(): React.ReactElement {
         <React.Fragment>
           {showGetStartedCDTabInMainMenu && (
             <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
+          )}
+          {!isCommunity && !showGetStartedCDTabInMainMenu && (
+            <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module })} />
           )}
           <SidebarLink label="Deployments" to={routes.toDeployments({ ...params, module })} />
           <SidebarLink label="Pipelines" to={routes.toPipelines({ ...params, module })} />

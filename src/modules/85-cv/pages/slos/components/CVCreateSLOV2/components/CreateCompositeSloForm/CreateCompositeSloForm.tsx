@@ -20,7 +20,7 @@ import {
   useGetSLOHealthListViewV2
 } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { CVStepper } from '@cv/components/CVStepper/CVStepper'
+import { Stepper } from '@common/components/Stepper/Stepper'
 import SLOName from '@cv/pages/slos/common/SLOName/SLOName'
 import SLOTargetNotifications from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
 import { CreatePreview } from '@cv/pages/slos/common/CreatePreview/CreatePreview'
@@ -178,7 +178,7 @@ export const CreateCompositeSloForm = ({
       <Page.Body loading={loading} error={error} retryOnError={() => retryOnError()}>
         {!loading && (
           <>
-            <CVStepper
+            <Stepper
               id="createSLOTabs"
               isStepValid={isStepValid}
               runValidationOnMount={validateAllSteps}

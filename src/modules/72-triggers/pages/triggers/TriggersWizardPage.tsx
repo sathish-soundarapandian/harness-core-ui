@@ -76,6 +76,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import useIsGithubWebhookAuthenticationEnabled from '@triggers/components/Triggers/WebhookTrigger/useIsGithubWebhookAuthenticationEnabled'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import { isNewTrigger } from '@triggers/components/Triggers/utils'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -184,8 +185,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
       branch
-    } as GetTriggerQueryParams
-    // lazy: true
+    } as GetTriggerQueryParams,
+    lazy: isNewTrigger(triggerIdentifier)
   })
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
     pipelineIdentifier,

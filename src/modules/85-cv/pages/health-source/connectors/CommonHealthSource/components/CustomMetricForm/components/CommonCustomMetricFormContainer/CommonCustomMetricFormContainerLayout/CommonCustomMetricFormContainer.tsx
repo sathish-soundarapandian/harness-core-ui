@@ -30,10 +30,10 @@ import LogsTableContainer from '../../LogsTable/LogsTableContainer'
 import {
   shouldAutoBuildChart,
   shouldShowChartComponent,
-  getRecordsRequestBody
+  getRecordsRequestBody,
+  getHealthsourceType
 } from './CommonCustomMetricFormContainer.utils'
 import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
-import { HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING } from './CommonCustomMetricFormContainer.constants'
 import AssignQuery from '../../Assign/AssignQuery'
 import CommonHealthSourceField from './components/CommonHealthSourceField/CommonHealthSourceField'
 
@@ -51,9 +51,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   const chartConfig = healthSourceConfig?.customMetrics?.metricsChart
   const queryField = healthSourceConfig.customMetrics?.queryAndRecords?.queryField
   const queryFieldValue = (queryField ? values[queryField.identifier] : '') as string
-  const providerType = HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING[product?.value || sourceType]
-  // TODO - this will not be needed once the backend refactoring for enumns is done.
-  const providerTypeForRecords = providerType?.toLocaleUpperCase()
+  const healthSourceType = getHealthsourceType(product, sourceType)
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
   const isLogsTableVisible = getIsLogsTableVisible(healthSourceConfig)
   const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
@@ -96,7 +94,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   }, [values?.identifier])
 
   const handleBuildChart = async (): Promise<void> => {
-    const fetchMetricsRecordsRequestBody = getRecordsRequestBody(connectorIdentifier, providerTypeForRecords, query)
+    const fetchMetricsRecordsRequestBody = getRecordsRequestBody(connectorIdentifier, healthSourceType, query)
     fetchHealthSourceTimeSeriesData(fetchMetricsRecordsRequestBody).then(data => {
       const timeSeriesData = data?.resource?.timeSeriesData || []
       setHealthSourceTimeSeriesData(timeSeriesData)
@@ -109,7 +107,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
       setIsQueryExecuted(true)
       const fetchRecordsRequestBody = getRecordsRequestBody(
         connectorIdentifier,
-        providerTypeForRecords,
+        healthSourceType,
         query,
         queryField,
         queryFieldValue
@@ -132,7 +130,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
           field={queryField}
           isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
           connectorIdentifier={connectorIdentifier}
-          providerType={providerType as HealthSourceParamValuesRequest['providerType']}
+          providerType={healthSourceType as HealthSourceParamValuesRequest['providerType']}
         />
       ) : null}
       <CommonQueryViewer
@@ -165,8 +163,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
           fieldMappings={healthSourceConfig?.customMetrics?.fieldMappings}
           selectOnlyLastKey={healthSourceConfig?.customMetrics?.logsTable?.selectOnlyLastKey}
           showExactJsonPath={healthSourceConfig?.customMetrics?.logsTable?.showExactJsonPath}
-          providerTypeForRecords={providerTypeForRecords as QueryRecordsRequest['providerType']}
-          providerType={providerType as HealthSourceParamValuesRequest['providerType']}
+          healthSourceType={healthSourceType as QueryRecordsRequest['healthSourceType']}
           connectorIdentifier={connectorIdentifier}
           sampleRecords={records}
           isRecordsLoading={fetchingSampleRecordLoading}

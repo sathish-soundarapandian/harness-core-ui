@@ -9,12 +9,13 @@ import { defaultTo, get, isEmpty } from 'lodash-es'
 import moment from 'moment'
 import { RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, Module } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
@@ -218,3 +219,9 @@ export const getIsFailureStrategyDisabled = ({
 }): boolean => stageType === StageType.BUILD && stepType === StepType.Background
 
 export const GIT_EXTENSION = '.git'
+
+export const isSimplifiedYAMLEnabledForCI = (module?: Module, isSimpliedYAMLFFEnabled?: boolean): boolean => {
+  return isSimpliedYAMLFFEnabled
+    ? module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+    : false
+}

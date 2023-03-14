@@ -12,6 +12,12 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import IDPAdminSideNav from '../IDPAdminSideNav'
 
+jest.mock('@harnessio/react-idp-service-client', () => ({
+  useGetStatusInfoByTypeQuery: jest.fn().mockImplementation(() => {
+    return { data: { status: { currentStatus: 'NOT_FOUND' } } }
+  })
+}))
+
 describe('IDP Sidenav', () => {
   test('render', () => {
     const { container, getByText } = render(

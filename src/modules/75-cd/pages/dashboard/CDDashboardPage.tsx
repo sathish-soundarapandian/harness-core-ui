@@ -253,7 +253,7 @@ export const CDDashboardPage: React.FC = () => {
     setShowOverviewDialog(!pipelineExecutionSummary?.content?.length)
   }, [pipelineExecutionSummary])
 
-  if (workloadCardLoading || pipelineLoading) {
+  if (pipelineLoading) {
     return (
       <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
         <PageSpinner />

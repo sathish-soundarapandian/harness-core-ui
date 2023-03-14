@@ -15,8 +15,13 @@ describe('Test StringUtils', () => {
   })
 
   test('Test joinAsASentence method', () => {
-    expect(joinAsASentence(['item1', 'item2', 'item3'])).toEqual('item1, item2 and item3')
-    expect(joinAsASentence(['item1', 'item2'])).toEqual('item1 and item2')
-    expect(joinAsASentence([])).toEqual('')
+    expect(joinAsASentence(['item1', 'item2', 'item3'], 'and')).toEqual('item1, item2 and item3')
+    expect(joinAsASentence(['item1', 'item2'], 'and')).toEqual('item1 and item2')
+    expect(joinAsASentence([], 'and')).toEqual('')
+    expect(joinAsASentence(['item'], 'and')).toEqual('item')
+    expect(joinAsASentence([''], 'and')).toEqual('')
+    expect(joinAsASentence(['item1', ''], 'and')).toEqual('item1')
+    expect(joinAsASentence(['item1', 'item2', ''], 'with')).toEqual('item1 with item2')
+    expect(joinAsASentence(['item1', 'item2', 'item3'], 'plus')).toEqual('item1, item2 plus item3')
   })
 })

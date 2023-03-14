@@ -134,6 +134,8 @@
 .tabsStyle {
   & > :global(.bp3-tabs > .bp3-tab-list) {
     border-bottom: 1px solid var(--grey-200);
+    padding: 0;
+    box-shadow: none;
   }
 }
 

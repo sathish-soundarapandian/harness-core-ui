@@ -13,14 +13,15 @@ import { Provider } from 'urql'
 import { fromValue } from 'wonka'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
+  buildAzureRepoPayload,
   buildBitbucketPayload,
   buildGithubPayload,
   buildGitlabPayload,
   buildGitPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { ServiceDefinition } from 'services/cd-ng'
+import { getBuildPayload } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import K8sOverrideValuesListView from '../K8sOverrideValuesListView'
-import { getBuildPayload } from '../K8shelper'
 
 const formik = {
   initialValues: {
@@ -163,5 +164,6 @@ describe('OverrideYamlValues List View tests', () => {
     expect(getBuildPayload('Gitlab')).toBe(buildGitlabPayload)
     expect(getBuildPayload('Github')).toBe(buildGithubPayload)
     expect(getBuildPayload('Bitbucket')).toBe(buildBitbucketPayload)
+    expect(getBuildPayload('AzureRepo')).toBe(buildAzureRepoPayload)
   })
 })

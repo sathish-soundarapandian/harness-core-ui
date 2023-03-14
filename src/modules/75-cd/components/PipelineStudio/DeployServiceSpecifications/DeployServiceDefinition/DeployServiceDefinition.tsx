@@ -292,20 +292,22 @@ function DeployServiceDefinition(): React.ReactElement {
         templateLinkConfig={customDeploymentData}
         addOrUpdateTemplate={isServiceEntityModalView ? undefined : addOrUpdateTemplate}
       />
-      <Layout.Horizontal>
-        <StepWidget<K8SDirectServiceStep>
-          factory={factory}
-          readonly={isReadonly}
-          initialValues={{
-            stageIndex,
-            setupModeType: setupMode.DIFFERENT,
-            deploymentType: selectedDeploymentType as ServiceDefinition['type']
-          }}
-          allowableTypes={allowableTypes}
-          type={getStepTypeByDeploymentType(defaultTo(selectedDeploymentType, ''))}
-          stepViewType={StepViewType.Edit}
-        />
-      </Layout.Horizontal>
+      {!!selectedDeploymentType && (
+        <Layout.Horizontal>
+          <StepWidget<K8SDirectServiceStep>
+            factory={factory}
+            readonly={isReadonly}
+            initialValues={{
+              stageIndex,
+              setupModeType: setupMode.DIFFERENT,
+              deploymentType: selectedDeploymentType as ServiceDefinition['type']
+            }}
+            allowableTypes={allowableTypes}
+            type={getStepTypeByDeploymentType(defaultTo(selectedDeploymentType, ''))}
+            stepViewType={StepViewType.Edit}
+          />
+        </Layout.Horizontal>
+      )}
     </div>
   )
 }

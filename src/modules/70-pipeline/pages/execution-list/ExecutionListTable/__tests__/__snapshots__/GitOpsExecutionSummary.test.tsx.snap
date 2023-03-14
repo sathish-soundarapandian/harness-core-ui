@@ -1,5 +1,59 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`GitOpsExecutionSummary render clusters 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main gitOpsExecutionSummary StyledProps--margin-left-small"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+      style="align-items: center; margin-right: 12px;"
+    >
+      <span
+        class="bp3-icon StyledProps--main"
+        data-icon="environments"
+      >
+        <svg
+          fill="none"
+          height="12"
+          viewBox="0 0 15 14"
+          width="12"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12.688 10.53a1.568 1.568 0 00-1.46 1.028h-2.2a1.893 1.893 0 00-1.263-1.262V9.07c1.767-.072 3.498-.631 3.498-1.713V1.803v-.072C11.263.541 9.226 0 7.315 0c-1.912 0-3.95.54-3.95 1.731v5.626c0 1.046 1.624 1.604 3.319 1.713v1.226a1.893 1.893 0 00-1.263 1.262h-2.38a1.569 1.569 0 100 1.082h2.38a1.875 1.875 0 003.607 0h2.2a1.569 1.569 0 101.46-2.11zM4.466 2.957c.775.325 1.839.487 2.867.487 1.027 0 2.091-.162 2.867-.487v1.497c-.127.198-1.1.667-2.867.667s-2.76-.469-2.867-.667V2.957zm0 4.364V5.716c.775.324 1.839.487 2.867.487 1.027 0 2.091-.163 2.867-.487V7.32c-.127.198-1.1.667-2.867.667s-2.76-.451-2.867-.65v-.017z"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
+      <a
+        href="/account/accountId/cd/orgs/default/projects/project1/environments/prod/details?sectionId=GITOPS"
+      >
+        <span>
+          prod
+        </span>
+      </a>
+      <span
+        class="bp3-popover-wrapper bp3-dark"
+      >
+        <span
+          class="bp3-popover-target"
+        >
+          <span
+            class="primary6"
+            style="text-decoration: underline dotted;"
+            tabindex="0"
+          >
+            +
+            1
+          </span>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`GitOpsExecutionSummary render with multiple applications 1`] = `
 <div>
   <div

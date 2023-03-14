@@ -99,6 +99,16 @@ exports[`Sidenav it should render 1`] = `
     </a>
     <a
       class="link"
+      href="/account/dummy/cf/orgs/dummy/projects/dummy/pipelines"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        pipelines
+      </p>
+    </a>
+    <a
+      class="link"
       href="/account/dummy/cf/orgs/dummy/projects/dummy/onboarding"
     >
       <p

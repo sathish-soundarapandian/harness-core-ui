@@ -76,7 +76,6 @@ interface ArtifactSourceConnectorProps {
 
 type Params = {
   CUSTOM_ARTIFACT_NG?: boolean
-  GITHUB_PACKAGES?: boolean
   AZURE_ARTIFACTS_NG?: boolean
   CD_AMI_ARTIFACTS_NG?: boolean
   AZURE_WEBAPP_NG_JENKINS_ARTIFACTS?: boolean
@@ -84,7 +83,6 @@ type Params = {
 
 const getEnabledArtifactTypesList = ({
   CUSTOM_ARTIFACT_NG,
-  GITHUB_PACKAGES,
   AZURE_ARTIFACTS_NG,
   CD_AMI_ARTIFACTS_NG,
   AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
@@ -92,10 +90,6 @@ const getEnabledArtifactTypesList = ({
   return Object.values(ENABLED_ARTIFACT_TYPES).filter((artifactType: ArtifactType) => {
     if (artifactType === ENABLED_ARTIFACT_TYPES.CustomArtifact) {
       return !!CUSTOM_ARTIFACT_NG
-    }
-
-    if (artifactType === ENABLED_ARTIFACT_TYPES.GithubPackageRegistry) {
-      return !!GITHUB_PACKAGES
     }
 
     if (artifactType === ENABLED_ARTIFACT_TYPES.AzureArtifacts) {
@@ -211,24 +205,18 @@ export function ArtifactSourceSpecifications(props: {
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
 
   const [selectedArtifactType, setSelectedArtifactType] = React.useState<ArtifactType>(formValues?.artifactType)
-  const {
-    CUSTOM_ARTIFACT_NG,
-    GITHUB_PACKAGES,
-    AZURE_ARTIFACTS_NG,
-    CD_AMI_ARTIFACTS_NG,
-    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
-  } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, AZURE_ARTIFACTS_NG, CD_AMI_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS } =
+    useFeatureFlags()
 
   const enabledArtifactTypesList = useMemo(
     () =>
       getEnabledArtifactTypesList({
         CUSTOM_ARTIFACT_NG,
-        GITHUB_PACKAGES,
         AZURE_ARTIFACTS_NG,
         CD_AMI_ARTIFACTS_NG,
         AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
       }),
-    [CUSTOM_ARTIFACT_NG, GITHUB_PACKAGES, AZURE_ARTIFACTS_NG, CD_AMI_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS]
+    [CUSTOM_ARTIFACT_NG, AZURE_ARTIFACTS_NG, CD_AMI_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS]
   )
 
   const handleArtifactTypeSelection = (artifactType: ArtifactType) => {

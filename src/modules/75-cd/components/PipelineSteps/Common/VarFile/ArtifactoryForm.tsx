@@ -37,10 +37,10 @@ import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import {
   formatInitialValues,
-  terraformArtifactorySchema,
   tfArtifactoryFormInputNames,
   getConnectorRef,
-  formatOnSubmitData
+  formatOnSubmitData,
+  terraformArtifactorySchema
 } from './helper'
 import type { PathInterface } from '../Terraform/TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -89,6 +89,7 @@ interface ArtifactoryFormProps {
   isTerragruntPlan?: boolean
   allowableTypes: AllowedTypes
   isBackendConfig?: boolean
+  fieldPath?: string
 }
 
 export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = ({
@@ -99,7 +100,8 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
   isTerraformPlan,
   isTerragruntPlan = false,
   allowableTypes,
-  isBackendConfig = false
+  isBackendConfig = false,
+  fieldPath
 }) => {
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -110,8 +112,23 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const initialValues = formatInitialValues(isConfig, isBackendConfig, prevStepData, isTerraformPlan, isTerragruntPlan)
-  const connectorRef = getConnectorRef(isConfig, isBackendConfig, isTerraformPlan, prevStepData, isTerragruntPlan)
+  const initialValues = formatInitialValues(
+    isConfig,
+    isBackendConfig,
+    prevStepData,
+    isTerraformPlan,
+    isTerragruntPlan,
+    fieldPath
+  )
+
+  const connectorRef = getConnectorRef(
+    isConfig,
+    isBackendConfig,
+    isTerraformPlan,
+    prevStepData,
+    isTerragruntPlan,
+    fieldPath
+  )
   const { expressions } = useVariablesExpression()
   const {
     data: ArtifactRepoData,
@@ -159,7 +176,7 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
         formName={'tfRemoteWizardForm'}
         initialValues={initialValues}
         enableReinitialize
-        validationSchema={terraformArtifactorySchema(isConfig, isBackendConfig, getString)}
+        validationSchema={terraformArtifactorySchema(isConfig, isBackendConfig, getString, fieldPath)}
         onSubmit={(values: any) => {
           /* istanbul ignore next */
           if (isConfig || isBackendConfig) {
@@ -189,17 +206,19 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
           let selectedArtifacts: any = []
           let repoName: string
           if (isConfig) {
-            selectedArtifacts = defaultTo(
-              formik?.values?.spec?.configuration?.configFiles?.store?.spec?.artifactPaths,
-              [{ path: '' }]
-            )
-            repoName = formik?.values?.spec?.configuration?.configFiles?.store?.spec?.repositoryName
+            selectedArtifacts = get(formik?.values?.spec, `${fieldPath}.configFiles.store.spec.artifactPaths`, [
+              { path: '' }
+            ])
+            repoName = get(formik?.values?.spec, `${fieldPath}.configFiles.store.spec.repositoryName`, '') as string
           } else if (isBackendConfig) {
-            selectedArtifacts = defaultTo(
-              get(formik?.values, 'spec.configuration.backendConfig.spec.store.spec.artifactPaths'),
-              [{ path: '' }]
-            )
-            repoName = get(formik?.values, 'spec.configuration.backendConfig.spec.store.spec.repositoryName')
+            selectedArtifacts = get(formik?.values?.spec, `${fieldPath}backendConfig.spec.store.spec.artifactPaths`, [
+              { path: '' }
+            ])
+            repoName = get(
+              formik?.values?.spec,
+              `${fieldPath}backendConfig.spec.store.spec.repositoryName`,
+              ''
+            ) as string
           } else {
             selectedArtifacts = defaultTo(formik.values?.varFile?.spec?.store?.spec?.artifactPaths, [{ path: '' }])
             repoName = formik.values?.varFile?.spec?.store?.spec?.repositoryName
@@ -235,7 +254,7 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                   {getMultiTypeFromValue(connectorRef) === MultiTypeInputType.FIXED ? (
                     <FormInput.MultiTypeInput
                       selectItems={connectorRepos ? connectorRepos : []}
-                      name={tfArtifactoryFormInputNames(isConfig, isBackendConfig).repositoryName}
+                      name={tfArtifactoryFormInputNames(isConfig, isBackendConfig, fieldPath).repositoryName}
                       label={''}
                       useValue
                       placeholder={getString(ArtifactRepoLoading ? 'common.loading' : 'cd.selectRepository')}
@@ -247,7 +266,7 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                     />
                   ) : (
                     <FormInput.MultiTextInput
-                      name={tfArtifactoryFormInputNames(isConfig, isBackendConfig).repositoryName}
+                      name={tfArtifactoryFormInputNames(isConfig, isBackendConfig, fieldPath).repositoryName}
                       label={''}
                       placeholder={getString('cd.selectRepository')}
                       multiTextInputProps={{
@@ -263,13 +282,13 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                       style={{ alignSelf: 'center' }}
                       value={repoName}
                       type="String"
-                      variableName={tfArtifactoryFormInputNames(isConfig, isBackendConfig).repositoryName}
+                      variableName={tfArtifactoryFormInputNames(isConfig, isBackendConfig, fieldPath).repositoryName}
                       showRequiredField={false}
                       showDefaultField={false}
                       onChange={value =>
                         /* istanbul ignore next */
                         formik.setFieldValue(
-                          tfArtifactoryFormInputNames(isConfig, isBackendConfig).repositoryName,
+                          tfArtifactoryFormInputNames(isConfig, isBackendConfig, fieldPath).repositoryName,
                           value
                         )
                       }
@@ -278,7 +297,7 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                 </div>
                 <div className={cx(stepCss.md)}>
                   <MultiTypeFieldSelector
-                    name={tfArtifactoryFormInputNames(isConfig, isBackendConfig).artifactPaths}
+                    name={tfArtifactoryFormInputNames(isConfig, isBackendConfig, fieldPath).artifactPaths}
                     style={{ width: 370 }}
                     allowedTypes={
                       (allowableTypes as MultiTypeInputType[]).filter(
@@ -294,7 +313,9 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                   >
                     {isConfig || isBackendConfig ? (
                       <FormInput.MultiTextInput
-                        name={`${tfArtifactoryFormInputNames(isConfig, isBackendConfig).artifactPaths}[0].path`}
+                        name={`${
+                          tfArtifactoryFormInputNames(isConfig, isBackendConfig, fieldPath).artifactPaths
+                        }[0].path`}
                         label=""
                         multiTextInputProps={{
                           expressions,
@@ -305,7 +326,7 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                       />
                     ) : (
                       <FieldArray
-                        name={tfArtifactoryFormInputNames(isConfig, isBackendConfig).artifactPaths}
+                        name={tfArtifactoryFormInputNames(isConfig, isBackendConfig, fieldPath).artifactPaths}
                         render={arrayHelpers => {
                           return (
                             <div>
@@ -333,7 +354,7 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                                     <Text width={12}>{`${index + 1}.`}</Text>
                                     <FormInput.MultiTextInput
                                       name={`${
-                                        tfArtifactoryFormInputNames(isConfig, isBackendConfig).artifactPaths
+                                        tfArtifactoryFormInputNames(isConfig, isBackendConfig, fieldPath).artifactPaths
                                       }[${index}].path`}
                                       label=""
                                       multiTextInputProps={{

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { connect, FormikContextType } from 'formik'
 import cx from 'classnames'
 import {
@@ -31,11 +31,17 @@ import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/C
 import type { SecretResponseWrapper, ResponsePageSecretResponseWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { errorCheck } from '@common/utils/formikHelpers'
-import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import {
+  getIdentifierFromValue,
+  getScopeFromDTO,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
 import { getReference } from '@common/utils/utils'
+import { InputSetFunction, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
+import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { SecretRef } from '@secrets/components/SecretReference/SecretReference'
+import { SecretConfigureOptions, SecretConfigureOptionsProps } from '../SecretConfigureOptions/SecretConfigureOptions'
 import css from './MultiTypeSecretInput.module.scss'
 
 export function getMultiTypeSecretInputType(serviceType: string): SecretResponseWrapper['secret']['type'] {
@@ -84,7 +90,11 @@ export interface MultiTypeSecretInputProps extends IFormGroupProps {
   defaultValue?: string
   tooltipProps?: DataTooltipInterface
   enableConfigureOptions?: boolean
-  configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
+  configureOptionsProps?: Omit<SecretConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
+  templateProps?: {
+    isTemplatizedView: true
+    templateValue: string | undefined
+  }
 }
 
 export interface ConnectedMultiTypeSecretInputProps extends MultiTypeSecretInputProps {
@@ -106,6 +116,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
     defaultValue,
     enableConfigureOptions = false,
     configureOptionsProps,
+    templateProps,
     ...restProps
   } = props
 
@@ -135,6 +146,16 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
 
   const value = get(formik.values, name, defaultValue)
 
+  // compute identifiersFilter from template value to send as a query param
+  const identifiersFilter: ScopeAndIdentifier[] | undefined = useMemo(() => {
+    if (!(templateProps?.isTemplatizedView && templateProps?.templateValue)) return
+
+    return parseInput(templateProps.templateValue)?.[InputSetFunction.ALLOWED_VALUES]?.values?.map(v => ({
+      scope: getScopeFromValue(v),
+      identifier: getIdentifierFromValue(v)
+    }))
+  }, [templateProps?.isTemplatizedView, templateProps?.templateValue])
+
   const { openCreateOrSelectSecretModal } = useCreateOrSelectSecretModal(
     {
       type,
@@ -145,9 +166,10 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
       },
       secretsListMockData,
       handleInlineSSHSecretCreation: (record?: SecretRef) => openCreateSSHCredModal(record),
-      handleInlineWinRmSecretCreation: (record?: SecretRef) => openCreateWinRmCredModal(record)
+      handleInlineWinRmSecretCreation: (record?: SecretRef) => openCreateWinRmCredModal(record),
+      identifiersFilter
     },
-    [name, onSuccess],
+    [name, onSuccess, value, identifiersFilter],
     value
   )
   const hasError = errorCheck(name, formik)
@@ -204,7 +226,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
           />
         )}
         {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
+          <SecretConfigureOptions
             value={value}
             type={'String'}
             variableName={name}

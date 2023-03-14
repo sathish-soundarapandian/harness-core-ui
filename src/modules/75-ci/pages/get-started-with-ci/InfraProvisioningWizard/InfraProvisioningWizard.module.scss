@@ -100,12 +100,8 @@
 }
 
 .repositories {
-  height: 60vh;
+  height: 57vh;
   width: 65%;
-}
-
-.repositoriesWithError {
-  height: 58vh;
 }
 
 .repositoryTable {
@@ -167,14 +163,6 @@
   width: fit-content !important;
   background-color: var(--green-50) !important;
   border-radius: 4px;
-}
-
-.main {
-  overflow-y: scroll;
-}
-
-.wizard {
-  height: var(--page-min-height);
 }
 
 .connectorSelect {
@@ -239,8 +227,7 @@
   &:hover {
     cursor: pointer;
   }
-  margin: var(--spacing-medium) 0 var(--spacing-medium) 0;
-  padding: var(--spacing-4) var(--spacing-xlarge) !important;
+  padding: var(--spacing-4) var(--spacing-large) var(--spacing-4) var(--spacing-4) !important;
 }
 
 .branchSelector {
@@ -287,4 +274,28 @@
 
 .infoIcon path {
   fill: #0278d5;
+}
+
+.advancedOptions {
+  padding: 0 !important;
+}
+
+.advancedOptionFormFields {
+  padding-left: var(--spacing-2) !important;
+  padding-top: var(--spacing-small) !important;
+  :global {
+    .bp3-form-group {
+      margin-bottom: var(--spacing-small);
+      width: 100%;
+    }
+  }
+}
+
+.recommendedTag {
+  border-radius: 8px;
+  background: var(--yellow-500) !important;
+  height: var(--spacing-large);
+  padding: var(--spacing-small) !important;
+  display: flex;
+  align-items: center;
 }

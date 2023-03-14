@@ -32,7 +32,8 @@ export const deploymentIconMap: Record<string, IconName> = {
   [ServiceDeploymentType.CustomDeployment]: 'CustomDeployment',
   [ServiceDeploymentType.Elastigroup]: 'elastigroup',
   [ServiceDeploymentType.Asg]: 'aws-asg',
-  [ServiceDeploymentType.GoogleCloudFunctions]: 'service-google-functions'
+  [ServiceDeploymentType.GoogleCloudFunctions]: 'service-google-functions',
+  [ServiceDeploymentType.AwsLambda]: 'service-aws-native-lambda'
 }
 
 export interface DeploymentTypeItem {
@@ -51,10 +52,19 @@ export interface GetNgSupportedDeploymentTypesProps {
   CDS_TAS_NG?: boolean
   CDS_ASG_NG?: boolean
   CDS_GOOGLE_CLOUD_FUNCTION?: boolean
+  CDS_AWS_NATIVE_LAMBDA?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, CDS_ASG_NG, CDS_GOOGLE_CLOUD_FUNCTION } = props
+  const {
+    SSH_NG,
+    NG_SVC_ENV_REDESIGN,
+    SPOT_ELASTIGROUP_NG,
+    CDS_TAS_NG,
+    CDS_ASG_NG,
+    CDS_GOOGLE_CLOUD_FUNCTION,
+    CDS_AWS_NATIVE_LAMBDA
+  } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -73,6 +83,14 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       value: ServiceDeploymentType.ServerlessAwsLambda
     }
   ]
+
+  if (NG_SVC_ENV_REDESIGN && CDS_AWS_NATIVE_LAMBDA) {
+    baseTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.awsLambda',
+      icon: deploymentIconMap[ServiceDeploymentType.AwsLambda],
+      value: ServiceDeploymentType.AwsLambda
+    })
+  }
 
   if (NG_SVC_ENV_REDESIGN && CDS_GOOGLE_CLOUD_FUNCTION) {
     baseTypes.push({

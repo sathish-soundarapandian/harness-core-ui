@@ -70,11 +70,7 @@ const stateWithECSDeploymentType = {
             type: 'Deployment',
             spec: {
               serviceConfig: {
-                service: {
-                  identifier: 'Service_1',
-                  name: 'Service 1',
-                  description: ''
-                },
+                serviceRef: 'Service_1',
                 serviceDefinition: {
                   type: ServiceDeploymentType.ECS,
                   spec: {
@@ -117,11 +113,7 @@ const stateWithECSManifests = {
             type: 'Deployment',
             spec: {
               serviceConfig: {
-                service: {
-                  identifier: 'Service_1',
-                  name: 'Service 1',
-                  description: ''
-                },
+                serviceRef: 'Service_1',
                 serviceDefinition: {
                   type: 'ECS',
                   spec: {

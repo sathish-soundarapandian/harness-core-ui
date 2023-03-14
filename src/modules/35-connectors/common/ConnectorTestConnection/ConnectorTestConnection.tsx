@@ -28,7 +28,6 @@ import { useStrings } from 'framework/strings'
 import {
   GetTestConnectionValidationTextByType,
   removeErrorCode,
-  DelegateTypes,
   showCustomErrorSuggestion,
   showEditAndViewPermission
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -38,6 +37,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { connectorsTrackEventMap } from '@connectors/utils/connectorEvents'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import Suggestions from '../ErrorSuggestions/ErrorSuggestionsCe'
 import css from './ConnectorTestConnection.module.scss'
 
@@ -142,7 +142,7 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
       case Connectors.GITLAB:
       case Connectors.GITHUB:
       case Connectors.GIT:
-        return props.prevStepData?.url
+        return props.prevStepData?.url + '/' + props.prevStepData?.validationRepo
 
       default:
         return ''
@@ -150,7 +150,6 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
   }
 
   const value = props.url || getValue()
-
   return value ? (
     <Layout.Horizontal padding={{ top: 'xsmall' }} spacing="xsmall">
       <Text color={Color.GREY_400} font={{ size: 'small' }} style={{ whiteSpace: 'nowrap' }}>

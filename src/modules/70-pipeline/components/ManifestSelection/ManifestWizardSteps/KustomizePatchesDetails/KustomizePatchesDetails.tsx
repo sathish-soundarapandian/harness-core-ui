@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React from 'react'
 import {
   Text,
   Layout,
@@ -16,13 +16,11 @@ import {
   MultiTypeInputType,
   Formik,
   ButtonVariation,
-  Icon,
   AllowedTypes,
   FormikForm
 } from '@harness/uicore'
 import * as Yup from 'yup'
-import { FieldArray, FieldArrayRenderProps } from 'formik'
-import { get, isEmpty, set } from 'lodash-es'
+import { get, isEmpty, set, defaultTo } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
@@ -30,10 +28,11 @@ import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 
-import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { isMultiTypeRuntime } from '@common/utils/utils'
-
-import type { KustomizePatchDataType, ManifestTypes } from '../../ManifestInterface'
+import type {
+  KustomizePatchDataType,
+  KustomizePatchManifestLastStepPrevStepData,
+  ManifestTypes
+} from '../../ManifestInterface'
 
 import {
   gitFetchTypeList,
@@ -45,6 +44,7 @@ import {
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import { getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
+import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 
@@ -59,6 +59,7 @@ interface KustomizePathPropTypes {
   manifestIdsList: Array<string>
   selectedManifest: ManifestTypes | null
   isReadonly?: boolean
+  editManifestModePrevStepData?: KustomizePatchManifestLastStepPrevStepData
 }
 
 const submitKustomizePatchData = (
@@ -169,41 +170,6 @@ const renderCommitId = (
   )
 }
 
-const renderPathArr = ({
-  index,
-  selectedManifest,
-  manifestPathPlaceholder,
-  pathPlaceholder,
-  expressions,
-  allowableTypes
-}: {
-  index: number
-  selectedManifest: string | null
-  manifestPathPlaceholder: string
-  pathPlaceholder: string
-  expressions: any
-  allowableTypes: AllowedTypes
-}): React.ReactElement => {
-  return (
-    <>
-      <Icon name="drag-handle-vertical" className={css.drag} />
-      <Text width={12}>{`${index + 1}.`}</Text>
-      <FormInput.MultiTextInput
-        label={''}
-        placeholder={selectedManifest === ManifestDataType.KustomizePatches ? manifestPathPlaceholder : pathPlaceholder}
-        name={`paths[${index}].path`}
-        style={{ width: 275 }}
-        multiTextInputProps={{
-          expressions,
-          allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-            allowedType => !isMultiTypeRuntime(allowedType)
-          ) as AllowedTypes
-        }}
-      />
-    </>
-  )
-}
-
 function KustomizePatchDetails({
   stepName,
   expressions,
@@ -214,60 +180,25 @@ function KustomizePatchDetails({
   previousStep,
   isReadonly = false,
   handleSubmit,
-  manifestIdsList
+  manifestIdsList,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & KustomizePathPropTypes): React.ReactElement {
   const { getString } = useStrings()
-  const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+
+  const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
-    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-    prevStepData?.urlType === GitRepoName.Repo
+    modifiedPrevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    modifiedPrevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
-  const onDragStart = useCallback((event: React.DragEvent<HTMLDivElement>, index: number) => {
-    event.dataTransfer.setData('data', index.toString())
-    event.currentTarget.classList.add(css.dragging)
-  }, [])
-
-  const onDragEnd = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    event.currentTarget.classList.remove(css.dragging)
-  }, [])
-
-  const onDragLeave = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    event.currentTarget.classList.remove(css.dragOver)
-  }, [])
-
-  const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    /* istanbul ignore else */
-    if (event.preventDefault) {
-      event.preventDefault()
-    }
-    event.currentTarget.classList.add(css.dragOver)
-    event.dataTransfer.dropEffect = 'move'
-  }, [])
-
-  const onDrop = useCallback(
-    (event: React.DragEvent<HTMLDivElement>, arrayHelpers: FieldArrayRenderProps, droppedIndex: number) => {
-      /* istanbul ignore else */
-      if (event.preventDefault) {
-        event.preventDefault()
-      }
-      const data = event.dataTransfer.getData('data')
-      /* istanbul ignore else */
-      if (data) {
-        const index = parseInt(data, 10)
-        arrayHelpers.swap(index, droppedIndex)
-      }
-      event.currentTarget.classList.remove(css.dragOver)
-    },
-    []
-  )
-
   const accountUrl =
     connectionType === GitRepoName.Account
-      ? prevStepData?.connectorRef
-        ? prevStepData?.connectorRef?.connector?.spec?.url
-        : prevStepData?.url
+      ? modifiedPrevStepData?.connectorRef
+        ? modifiedPrevStepData?.connectorRef?.connector?.spec?.url
+        : modifiedPrevStepData?.url
       : null
 
   const submitFormData = (formData: KustomizePatchDataType & { store?: string; connectorRef?: string }): void => {
@@ -282,7 +213,7 @@ function KustomizePatchDetails({
       return {
         ...specValues,
         identifier: initialValues.identifier,
-        repoName: getRepositoryName(prevStepData, initialValues),
+        repoName: getRepositoryName(modifiedPrevStepData, initialValues),
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
@@ -296,12 +227,11 @@ function KustomizePatchDetails({
       identifier: '',
       branch: undefined,
       commitId: undefined,
-      repoName: getRepositoryName(prevStepData, initialValues),
+      repoName: getRepositoryName(modifiedPrevStepData, initialValues),
       gitFetchType: 'Branch',
       paths: [{ path: '', id: uuid('', nameSpace()) }]
     }
   }
-  const defaultValueToReset = [{ path: '', uuid: uuid('', nameSpace()) }]
 
   return (
     <Layout.Vertical spacing="xxlarge" padding="small" className={css.manifestStore}>
@@ -339,7 +269,7 @@ function KustomizePatchDetails({
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
             if (
               connectionType === GitRepoName.Repo ||
-              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+              getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
             ) {
               return true
             }
@@ -348,14 +278,14 @@ function KustomizePatchDetails({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
@@ -410,68 +340,39 @@ function KustomizePatchDetails({
                     allowableTypes
                   )}
               </Layout.Horizontal>
-              <div className={css.halfWidth}>
-                <MultiTypeFieldSelector
-                  defaultValueToReset={defaultValueToReset}
-                  name={'paths'}
-                  label={
-                    <Text>
-                      {selectedManifest === ManifestDataType.KustomizePatches
-                        ? getString('fileFolderPathText')
-                        : getString('common.git.filePath')}
-                    </Text>
+              <div
+                className={cx({
+                  [helmcss.runtimeInput]: getMultiTypeFromValue(formik.values?.paths) === MultiTypeInputType.RUNTIME
+                })}
+              >
+                <DragnDropPaths
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  fieldPath="paths"
+                  pathLabel={
+                    selectedManifest === ManifestDataType.KustomizePatches
+                      ? getString('fileFolderPathText')
+                      : getString('common.git.filePath')
                   }
-                >
-                  <FieldArray
-                    name="paths"
-                    render={arrayHelpers => (
-                      <Layout.Vertical>
-                        {formik.values?.paths?.map((path: { path: string; uuid: string }, index: number) => (
-                          <Layout.Horizontal
-                            key={path.uuid}
-                            flex={{ distribution: 'space-between' }}
-                            style={{ alignItems: 'end' }}
-                          >
-                            <Layout.Horizontal
-                              spacing="medium"
-                              style={{ alignItems: 'baseline' }}
-                              draggable={true}
-                              onDragStart={event => {
-                                onDragStart(event, index)
-                              }}
-                              onDragEnd={onDragEnd}
-                              onDragOver={onDragOver}
-                              onDragLeave={onDragLeave}
-                              onDrop={event => onDrop(event, arrayHelpers, index)}
-                            >
-                              {renderPathArr({
-                                index,
-                                selectedManifest,
-                                manifestPathPlaceholder: getString('pipeline.manifestType.manifestPathPlaceholder'),
-                                pathPlaceholder: getString('pipeline.manifestType.pathPlaceholder'),
-                                expressions,
-                                allowableTypes
-                              })}
-
-                              {formik.values?.paths?.length > 1 && (
-                                <Button minimal icon="main-trash" onClick={() => arrayHelpers.remove(index)} />
-                              )}
-                            </Layout.Horizontal>
-                          </Layout.Horizontal>
-                        ))}
-                        <span>
-                          <Button
-                            icon="plus"
-                            text={getString('addFileText')}
-                            variation={ButtonVariation.LINK}
-                            className={css.addFileButton}
-                            onClick={() => arrayHelpers.push({ path: '', uuid: uuid('', nameSpace()) })}
-                          />
-                        </span>
-                      </Layout.Vertical>
-                    )}
+                  placeholder={
+                    selectedManifest === ManifestDataType.KustomizePatches
+                      ? getString('pipeline.manifestType.manifestPathPlaceholder')
+                      : getString('pipeline.manifestType.pathPlaceholder')
+                  }
+                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                />
+                {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={formik.values.paths}
+                    type={getString('string')}
+                    variableName={'paths'}
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    onChange={val => formik?.setFieldValue('paths', val)}
+                    isReadonly={isReadonly}
                   />
-                </MultiTypeFieldSelector>
+                )}
               </div>
             </div>
             <Layout.Horizontal spacing="medium">
@@ -479,7 +380,7 @@ function KustomizePatchDetails({
                 variation={ButtonVariation.SECONDARY}
                 text={getString('back')}
                 icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
+                onClick={() => previousStep?.(modifiedPrevStepData)}
               />
               <Button
                 variation={ButtonVariation.PRIMARY}

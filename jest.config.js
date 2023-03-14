@@ -21,6 +21,7 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/scripts/jest/setup-file.js', 'fake-indexeddb/auto', 'jest-canvas-mock'],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
+    '!src/static/**/**',
     '!src/framework/app/App.tsx',
     '!src/framework/strings/languageLoader.ts',
     '!src/framework/AppStore/AppStoreContext.tsx',
@@ -78,6 +79,8 @@ module.exports = {
       lines: 65
     }
   },
-  transformIgnorePatterns: ['node_modules/(?!(date-fns|lodash-es|@harnessio/react-audit-service-client|p-debounce)/)'],
-  testPathIgnorePatterns: ['<rootDir>/dist']
+  transformIgnorePatterns: [
+    'node_modules/(?!(date-fns|lodash-es|@harnessio/react-audit-service-client|@harnessio/react-idp-service-client|p-debounce)/)'
+  ],
+  testPathIgnorePatterns: ['<rootDir>/dist', '<rootDir>/src/static']
 }

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { get, isEmpty, noop, set } from 'lodash-es'
+import { get, isEmpty, isNil, noop, set } from 'lodash-es'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 
 import { Formik, FormikErrors } from 'formik'
@@ -18,6 +18,7 @@ import { getServiceListPromise } from 'services/cd-ng'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 
 import { DeployServiceEntityCustomProps, DeployServiceEntityData, ServiceRegex } from './DeployServiceEntityUtils'
@@ -134,10 +135,21 @@ export class DeployServiceEntityStep extends Step<DeployServiceEntityData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (
       isEmpty(data?.service?.serviceRef) &&
+      isEmpty(data?.service?.useFromStage) &&
       isRequired &&
       getMultiTypeFromValue(template?.service?.serviceRef) === MultiTypeInputType.RUNTIME
     ) {
       set(errors, 'service.serviceRef', getString?.('cd.pipelineSteps.serviceTab.serviceIsRequired'))
+    }
+
+    if (
+      isNil(data?.service?.serviceRef) &&
+      isEmpty(data?.service?.useFromStage?.stage) &&
+      isRequired &&
+      (isValueRuntimeInput(template?.service?.serviceRef) ||
+        isValueRuntimeInput(template?.service?.useFromStage as any))
+    ) {
+      set(errors, 'service.useFromStage.stage', getString?.('cd.pipelineSteps.serviceTab.useFromStageRequired'))
     }
     return errors
   }

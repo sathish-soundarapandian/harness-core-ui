@@ -147,6 +147,10 @@
     font-size: 13px !important;
   }
 
+  .validationContainer {
+    margin-right: 15px;
+  }
+
   .unsavedChanges {
     & > :global(.bp3-button-text) {
       color: var(--orange-600) !important;

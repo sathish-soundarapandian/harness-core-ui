@@ -30,6 +30,7 @@ const renderStepOneComponent = (data: any): void => {
         setSelectedConnector={jest.fn()}
         selectedConnector={'Git'}
         isTerraformPlan={isTerraformPlan}
+        fieldPath={'configuration'}
       />
     </TestWrapper>
   )
@@ -204,6 +205,7 @@ const renderStepTwoComponent = (data?: any): void => {
         isReadonly={false}
         allowableTypes={allowableTypes}
         onSubmitCallBack={jest.fn()}
+        fieldPath={'configuration'}
       />
     </TestWrapper>
   )

@@ -29,7 +29,8 @@ import {
   useUpsertEnvironmentV2,
   NGEnvironmentInfoConfig,
   NGEnvironmentConfig,
-  EnvironmentResponseDTO
+  EnvironmentResponseDTO,
+  EnvironmentResponse
 } from 'services/cd-ng'
 
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
@@ -48,13 +49,17 @@ export interface AddEditEnvironmentModalProps {
   onCreateOrUpdate(data: EnvironmentResponseDTO): void
   closeModal?: () => void
   isEdit: boolean
+  onCreateOrUpdateInsideGroup?: (newEnv: EnvironmentResponse) => void
+  insideGroupEnv?: boolean
 }
 
 export default function AddEditEnvironmentModal({
   data,
   onCreateOrUpdate,
   closeModal,
-  isEdit
+  isEdit,
+  onCreateOrUpdateInsideGroup,
+  insideGroupEnv
 }: AddEditEnvironmentModalProps): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
@@ -93,6 +98,9 @@ export default function AddEditEnvironmentModal({
           clear()
           showSuccess(getString(isEdit ? 'cd.environmentUpdated' : 'cd.environmentCreated'))
           onCreateOrUpdate(defaultTo(response.data?.environment, {}))
+          if (insideGroupEnv && onCreateOrUpdateInsideGroup && response?.data) {
+            onCreateOrUpdateInsideGroup(response?.data)
+          }
         }
       } catch (e: any) {
         showError(getErrorInfoFromErrorObject(e, true))

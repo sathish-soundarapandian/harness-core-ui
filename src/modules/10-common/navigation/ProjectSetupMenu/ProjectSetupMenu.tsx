@@ -39,7 +39,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     USE_OLD_GIT_SYNC,
     SRM_ET_EXPERIMENTAL,
     NEW_LEFT_NAVBAR_SETTINGS,
-    SRM_DOWNTIME
+    SRM_DOWNTIME,
+    STO_JIRA_INTEGRATION
   } = useFeatureFlags()
   const { showGetStartedTabInMainMenu, showGetStartedCDTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
@@ -53,9 +54,11 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     module
   }
   const isCD = module === 'cd'
-  const isCIorCDorSTO = module === 'ci' || isCD || module === 'sto'
-  const isCIorCD = module === 'ci' || isCD
+  const isCI = module === 'ci'
   const isCV = module === 'cv'
+  const isSTO = module === 'sto'
+  const isCIorCD = isCI || isCD
+  const isCIorCDorSTO = isCI || isCD || isSTO
   const { licenseInformation } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
   const showDeploymentFreeze = isEnterpriseEdition && isCD
@@ -125,6 +128,12 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
         )}
         {SRM_DOWNTIME && isCV && (
           <SidebarLink label={getString('common.sloDowntimeLabel')} to={routes.toCVSLODowntime({ ...params })} />
+        )}
+        {STO_JIRA_INTEGRATION && isSTO && (
+          <SidebarLink
+            label={getString('common.tickets.externalTickets')}
+            to={routes.toSTOProjectTicketSettings({ ...params })}
+          />
         )}
       </Layout.Vertical>
     </NavExpandable>

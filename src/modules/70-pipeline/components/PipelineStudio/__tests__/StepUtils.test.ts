@@ -8,6 +8,7 @@
 import { isMatch, has, get } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
+import type { StringKeys } from 'framework/strings'
 import { validateCICodebase, validatePipeline, validateStage } from '../StepUtil'
 import {
   pipelineTemplateWithRuntimeInput,
@@ -33,6 +34,10 @@ jest.mock('@common/utils/YamlUtils', () => ({
   useValidationError: () => ({ errorMap: new Map() })
 }))
 
+function getString(key: StringKeys): StringKeys {
+  return key
+}
+
 describe('Test StepUtils', () => {
   test('Test validateCICodebase method for pipeline without build info', () => {
     const errors = validateCICodebase({
@@ -50,7 +55,8 @@ describe('Test StepUtils', () => {
         selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
         selectedStageItems: [{ label: 'S1', value: 'S1' }],
         allStagesSelected: false
-      }
+      },
+      getString
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: {} } } } })).toBeTruthy()
   })
@@ -71,7 +77,8 @@ describe('Test StepUtils', () => {
         selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
         selectedStageItems: [{ label: 'S1', value: 'S1' }],
         allStagesSelected: false
-      }
+      },
+      getString
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: {} } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.type')).toBeTruthy()
@@ -89,7 +96,8 @@ describe('Test StepUtils', () => {
         selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
         selectedStageItems: [{ label: 'S1', value: 'S1' }],
         allStagesSelected: false
-      }
+      },
+      getString
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.spec.branch')).toBeTruthy()
@@ -107,7 +115,8 @@ describe('Test StepUtils', () => {
         selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
         selectedStageItems: [{ label: 'S1', value: 'S1' }],
         allStagesSelected: false
-      }
+      },
+      getString
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.spec.tag')).toBeTruthy()
@@ -120,7 +129,8 @@ describe('Test StepUtils', () => {
       // eslint-disable-next-line
       // @ts-ignore
       template: pipelineTemplateWithRuntimeInput as PipelineInfoConfig,
-      viewType: StepViewType.InputSet
+      viewType: StepViewType.InputSet,
+      getString
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.spec.number')).toBeTruthy()
@@ -133,7 +143,8 @@ describe('Test StepUtils', () => {
       // eslint-disable-next-line
       // @ts-ignore
       template: templateWithRuntimeTimeout as PipelineInfoConfig,
-      viewType: StepViewType.DeploymentForm
+      viewType: StepViewType.DeploymentForm,
+      getString
     })
     expect(isMatch(errors, { timeout: 'Invalid syntax provided' })).toBeTruthy()
   })
@@ -172,7 +183,8 @@ describe('Test StepUtils', () => {
       // @ts-ignore
       template: pipelineTemplateTemplate as PipelineInfoConfig,
       resolvedPipeline: pipelineTemplateResolvedPipeline as any,
-      viewType: StepViewType.DeploymentForm
+      viewType: StepViewType.DeploymentForm,
+      getString
     })
 
     const errorKeys = Object.keys(get(errors, 'template.templateInputs.properties.ci.codebase') || {})
@@ -213,7 +225,8 @@ describe('Test StepUtils', () => {
       // @ts-ignore
       template: pipelineTemplateTemplate as PipelineInfoConfig,
       resolvedPipeline: pipelineTemplateResolvedPipeline as any,
-      viewType: StepViewType.DeploymentForm
+      viewType: StepViewType.DeploymentForm,
+      getString
     })
 
     const errorKeys = Object.keys(get(errors, 'template.templateInputs.properties.ci.codebase') || {})
@@ -230,7 +243,8 @@ describe('Test StepUtils', () => {
       template: templatePipelineWithVariables as unknown as PipelineInfoConfig,
       resolvedPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
       viewType: StepViewType.DeploymentForm,
-      isOptionalVariableAllowed: true
+      isOptionalVariableAllowed: true,
+      getString
     })
     expect(has(errors, 'variables')).toBeFalsy()
   })
@@ -241,7 +255,8 @@ describe('Test StepUtils', () => {
       template: templatePipelineWithVariables as unknown as PipelineInfoConfig,
       resolvedPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
       viewType: StepViewType.DeploymentForm,
-      isOptionalVariableAllowed: false
+      isOptionalVariableAllowed: false,
+      getString
     })
     expect(has(errors, 'variables')).toBeTruthy()
   })
@@ -251,7 +266,8 @@ describe('Test StepUtils', () => {
       template: templateStageWithVariables as unknown as StageElementConfig,
       originalStage: originalStageWithVariables as StageElementConfig,
       viewType: StepViewType.InputSet,
-      isOptionalVariableAllowed: true
+      isOptionalVariableAllowed: true,
+      getString
     })
     expect(has(errors, 'variables')).toBeFalsy()
   })

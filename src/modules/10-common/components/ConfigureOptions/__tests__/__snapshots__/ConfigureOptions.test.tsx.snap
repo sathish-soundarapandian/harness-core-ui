@@ -958,9 +958,7 @@ exports[`Test ConfigureOptions test allowed advanced values 1`] = `
                   </div>
                 </div>
               </div>
-              <div
-                class="allowedOptions"
-              >
+              <div>
                 <div
                   class="bp3-form-group"
                   data-id="allowedValues-3"
@@ -1338,9 +1336,7 @@ exports[`Test ConfigureOptions test allowed values 1`] = `
                   </div>
                 </div>
               </div>
-              <div
-                class="allowedOptions"
-              >
+              <div>
                 <div
                   class="bp3-form-group"
                   data-id="allowedValues-4"

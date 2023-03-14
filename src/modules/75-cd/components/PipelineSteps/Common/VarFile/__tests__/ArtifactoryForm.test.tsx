@@ -16,6 +16,7 @@ const props = {
   previousStep: jest.fn(),
   isConfig: true,
   isTerraformPlan: true,
+  fieldPath: 'configuration',
   allowableTypes: [
     MultiTypeInputType.RUNTIME,
     MultiTypeInputType.EXPRESSION,
@@ -274,8 +275,6 @@ describe('Terraform artifactory tests', () => {
           store: {
             type: 'Artifactory',
             spec: {
-              repositoryName: 'generic-local',
-              artifactPaths: [{ path: 'generic-local/terraform/config' }],
               connectorRef: {
                 label: 'test',
                 value: 'test',

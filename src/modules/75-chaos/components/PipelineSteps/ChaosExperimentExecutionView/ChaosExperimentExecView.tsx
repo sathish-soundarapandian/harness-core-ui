@@ -8,7 +8,7 @@
 import React from 'react'
 import { Button, ButtonVariation, Container, Popover, useToaster } from '@harness/uicore'
 import { chunk, defaultTo } from 'lodash-es'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { IconName, Menu, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -30,6 +30,7 @@ import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import routes from '@common/RouteDefinitions'
 import type { ChaosCustomMicroFrontendProps, ChaosStepExecutionProps } from '@chaos/interfaces/Chaos.types'
 
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './ChaosExperimentExecView.module.scss'
 
 // eslint-disable-next-line import/no-unresolved
@@ -129,7 +130,8 @@ export default function ChaosExperimentExecView(props: StepDetailProps): React.R
   const failureStrategies = allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
     st => st !== Strategy.ManualIntervention
   )
-  const { orgIdentifier, projectIdentifier, accountId } = defaultTo(executionMetadata, {})
+
+  const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
 
   return (
     <Container padding="medium">

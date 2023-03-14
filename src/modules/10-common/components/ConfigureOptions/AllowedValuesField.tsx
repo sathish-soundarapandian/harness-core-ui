@@ -16,8 +16,6 @@ import { ALLOWED_VALUES_TYPE } from './constants'
 import { VALIDATORS } from './validators'
 import type { AllowedValuesCustomComponentProps, FormValues } from './ConfigureOptionsUtils'
 
-import css from './ConfigureOptions.module.scss'
-
 export interface AllowedValuesFieldsProps {
   formik: FormikContextType<FormValues>
   isReadonly: boolean
@@ -142,7 +140,7 @@ export default function AllowedValuesFields(props: AllowedValuesFieldsProps): Re
   const { isReadonly, allowedValuesType, allowedValuesValidator, formik, getAllowedValuesCustomComponent } = props
   const { getString } = useStrings()
   return (
-    <div className={css.allowedOptions}>
+    <div>
       <RenderField
         getString={getString}
         isReadonly={isReadonly}

@@ -16,6 +16,7 @@ import {
   AllowedTypes,
   Formik,
   FormikForm,
+  Text,
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
@@ -30,6 +31,8 @@ import { SelectConfigureOptions } from '@common/components/ConfigureOptions/Sele
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { FormMultiTypeCheckboxField } from '@common/components'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import type { AsgBlueGreenDeployStepInitialValues, AsgBlueGreenDeployCustomStepProps } from './AsgBlueGreenDeployStep'
 import { shouldFetchFieldData } from '../PipelineStepsUtil'
@@ -70,6 +73,7 @@ const AsgBlueGreenDeployStepEdit = (
   const [prodListenerRulesLoading, setProdListenerRulesLoading] = useState<boolean>(false)
   const [stageListenerRules, setStageListenerRules] = useState<SelectOption[]>([])
   const [stageListenerRulesLoading, setStageListenerRulesLoading] = useState<boolean>(false)
+  const { expressions } = useVariablesExpression()
 
   const environmentRef = defaultTo(
     selectedStage?.stage?.spec?.environment?.environmentRef,
@@ -363,6 +367,17 @@ const AsgBlueGreenDeployStepEdit = (
                 readonly={readonly}
                 stepViewType={stepViewType}
               />
+
+              <div className={stepCss.divider} />
+              <Text margin={{ bottom: 'medium' }}>{getString('instanceFieldOptions.instances')}</Text>
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <FormMultiTypeCheckboxField
+                  name="spec.useAlreadyRunningInstances"
+                  label={getString('cd.useAlreadyRunningInstance')}
+                  disabled={readonly}
+                  multiTypeTextbox={{ expressions, allowableTypes }}
+                />
+              </div>
 
               <div className={css.configureServiceTitle}>{getString('cd.loadBalancerConfig')}</div>
 

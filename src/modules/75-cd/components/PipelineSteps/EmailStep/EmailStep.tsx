@@ -39,7 +39,7 @@ export class EmailStep extends PipelineStep<EmailStepData> {
     identifier: '',
     name: '',
     type: StepType.Email,
-    timeout: '1d',
+    timeout: '10m',
     spec: {
       to: '',
       cc: '',

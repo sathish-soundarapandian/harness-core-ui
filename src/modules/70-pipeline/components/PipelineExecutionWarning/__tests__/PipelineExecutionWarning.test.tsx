@@ -6,16 +6,25 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, act, fireEvent } from '@testing-library/react'
 import { joinAsASentence } from '@common/utils/StringUtils'
 import { PipelineExecutionWarning } from '../PipelineExecutionWarning'
 
 describe('Pipeline Execution Warning component testing', () => {
   test('Inital render should match snapshot', () => {
+    const warningBannerText = joinAsASentence(['tag1(1.0.0)', 'tag2(1.0.1)'], 'and')
     const { container, getByText } = render(
-      <PipelineExecutionWarning warning={joinAsASentence(['tag1(1.0.0)', 'tag2(1.0.1)'])} />
+      <PipelineExecutionWarning
+        warning={joinAsASentence(['tag1(1.0.0)', 'tag2(1.0.1)'], 'and')}
+        onBannerClose={jest.fn()}
+      />
     )
-    expect(getByText('tag1(1.0.0) and tag2(1.0.1)')).toBeTruthy()
-    expect(container).toMatchSnapshot()
+    const warningBannerEl = getByText(warningBannerText)
+    expect(warningBannerEl).toBeInTheDocument()
+    const crossIcon = container.querySelector('span[icon="cross"]')
+    act(() => {
+      fireEvent.click(crossIcon!)
+    })
+    expect(warningBannerEl).not.toBeInTheDocument()
   })
 })

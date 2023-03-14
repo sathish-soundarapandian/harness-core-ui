@@ -11,7 +11,7 @@ declare const styles: {
   readonly layout: string
   readonly org: string
   readonly project: string
+  readonly projectTextContainer: string
   readonly table: string
-  readonly verticalCenter: string
 }
 export default styles

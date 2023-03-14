@@ -9,68 +9,58 @@ import React from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import type { SeriesLineOptions } from 'highcharts'
-import { Container, Icon, PageError, NoDataCard } from '@harness/uicore'
+import { Container, Icon, PageError, NoDataCard, Heading, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { DataPoints } from 'services/cv'
 import NoChartDataImage from '@cv/assets/noChartData.svg'
 import { getChartSeriesValues } from '@cv/pages/health-source/common/CommonMetricLineChart/CommonMetricLineChart.utils'
-import type { SLOTargetChartWithAPIGetSliGraphProps } from '../../SLOTargetChart.types'
 import { SLIMetricChartLegend } from './SLIMetricChartLegend'
-import { legendSliMetricChart } from './SLIMetricChartLegend.utils'
+import { legendSliSingleMetricChart, sliMetricGraphConfig } from './SLIMetricChartLegend.utils'
 import css from './SLIMetricChart.module.scss'
 
-export const SliMetricGraph: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = ({
-  serviceLevelIndicator,
-  monitoredServiceIdentifier,
-  metricGraphData,
+export interface SLIMetricChartProps {
+  title?: string
+  subTitle?: string
+  metricName: string
+  loading?: boolean
+  error?: string
+  dataPoints: (number | undefined)[][]
+  retryOnError?: () => void
+  showLegend?: boolean
+  graphColor?: string
+  legendTypePercentage?: boolean
+}
+
+export const SLIMetricChart = ({
+  title,
+  subTitle,
   loading,
   error,
+  metricName,
   retryOnError,
-  showMetricChart
-}) => {
-  const eventType = serviceLevelIndicator.spec.spec?.eventType
+  dataPoints,
+  graphColor,
+  showLegend,
+  legendTypePercentage
+}: SLIMetricChartProps): JSX.Element => {
   const { getString } = useStrings()
-  const metricColor = ['red', 'green']
-  const metricKeys = Object.keys(metricGraphData || {})
-  const hasMultipleMetric = metricKeys.length > 1
-  const dataMetricGraph = metricKeys.map((metric, index) => {
-    const dataPoints = metricGraphData?.[metric].dataPoints?.map((graphData: DataPoints) => [
-      graphData.timeStamp,
-      graphData.value
-    ])
-    const chartColor = hasMultipleMetric ? { color: metricColor[index] } : {}
-    return { name: metric, data: dataPoints, type: 'line', ...chartColor } as SeriesLineOptions
-  })
-
-  const legendData = legendSliMetricChart(metricGraphData)
-
-  const chartSeriesValues = getChartSeriesValues(dataMetricGraph, undefined, {})
-
-  const containerHeight = showMetricChart ? '250px' : '100%'
+  const containerHeight = '150px'
+  let content = null
 
   if (loading) {
-    return (
+    content = (
       <Container flex={{ justifyContent: 'center' }} height={containerHeight}>
         <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
       </Container>
     )
-  }
-
-  if (error) {
-    return (
+  } else if (error) {
+    content = (
       <Container flex={{ justifyContent: 'center' }} height={containerHeight}>
-        <PageError
-          width={400}
-          message={error}
-          onClick={() => retryOnError(serviceLevelIndicator, monitoredServiceIdentifier)}
-        />
+        <PageError width={400} message={error} onClick={() => retryOnError?.()} />
       </Container>
     )
-  }
-
-  if (metricKeys.length === 0) {
-    return (
+  } else if (!dataPoints || dataPoints?.length === 0) {
+    content = (
       <Container flex={{ justifyContent: 'center' }} width={'100%'} height={containerHeight} margin={{ top: 'large' }}>
         <NoDataCard
           image={NoChartDataImage}
@@ -79,12 +69,37 @@ export const SliMetricGraph: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = (
         />
       </Container>
     )
+  } else {
+    const sliMetricGraphSeries = [
+      {
+        name: metricName,
+        data: dataPoints,
+        type: 'line',
+        color: graphColor || Utils.getRealCSSColor(Color.PRIMARY_5)
+      } as SeriesLineOptions
+    ]
+
+    const legendData = legendSliSingleMetricChart(dataPoints)
+
+    const chartSeriesValues = getChartSeriesValues(sliMetricGraphSeries, undefined, sliMetricGraphConfig)
+
+    content = (
+      <>
+        <HighchartsReact highcharts={Highcharts} options={chartSeriesValues} />
+        {showLegend && <SLIMetricChartLegend showPercentage={legendTypePercentage} legendData={legendData} />}
+      </>
+    )
   }
 
   return (
-    <div>
-      <HighchartsReact highcharts={Highcharts} options={chartSeriesValues} />
-      <SLIMetricChartLegend hasMultipleMetric={hasMultipleMetric} eventType={eventType} legendData={legendData} />
-    </div>
+    <Container className={css.singleMetricChart} data-testid={`${metricName}_metricChart`}>
+      <Heading level={6} color={Color.PRIMARY_10}>
+        {title}
+      </Heading>
+      <Heading level={4} margin={{ bottom: 'small' }}>
+        {subTitle}
+      </Heading>
+      {content}
+    </Container>
   )
 }

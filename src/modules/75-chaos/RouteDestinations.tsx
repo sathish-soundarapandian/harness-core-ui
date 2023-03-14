@@ -213,7 +213,7 @@ export default function ChaosRoutes(): React.ReactElement {
       permissionLabels: {
         [PermissionIdentifier.VIEW_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.view" />,
         [PermissionIdentifier.EDIT_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_HUB]: <LocaleString stringID="delete" />
+        [PermissionIdentifier.DELETE_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.delete" />
       }
     })
 
@@ -224,7 +224,8 @@ export default function ChaosRoutes(): React.ReactElement {
       permissionLabels: {
         [PermissionIdentifier.VIEW_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.view" />,
         [PermissionIdentifier.EDIT_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_EXPERIMENT]: <LocaleString stringID="delete" />
+        [PermissionIdentifier.DELETE_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.delete" />,
+        [PermissionIdentifier.EXECUTE_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.execute" />
       }
     })
 
@@ -235,7 +236,7 @@ export default function ChaosRoutes(): React.ReactElement {
       permissionLabels: {
         [PermissionIdentifier.VIEW_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.view" />,
         [PermissionIdentifier.EDIT_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="delete" />
+        [PermissionIdentifier.DELETE_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.delete" />
       }
     })
 

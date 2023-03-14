@@ -49,8 +49,11 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
   const { expressions } = useVariablesExpression()
   const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType, isBackendConfig } = props
 
-  const configPath = getPath(false, false, isBackendConfig)
-  const config = inputSetData?.template?.spec?.configuration
+  const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
+
+  const configPath = getPath(false, false, isBackendConfig, fieldPath)
+
+  const config = get(inputSetData?.template?.spec, `${fieldPath}`)
   const configSpec = get(inputSetData?.template, configPath)
   const store = configSpec?.store
 

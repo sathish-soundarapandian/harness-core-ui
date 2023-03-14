@@ -27,7 +27,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 
 import { Page } from '@common/exports'
 import RbacButton from '@rbac/components/Button/Button'
-import { GetServiceListQueryParams, ServiceResponseDTO, useGetServiceList } from 'services/cd-ng'
+import { GetServiceListQueryParams, ServiceResponseDTO, useGetServiceList, ServiceResponse } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useGetCommunity } from '@common/utils/utils'
@@ -43,10 +43,16 @@ import ServicesListView from '../ServicesListView/ServicesListView'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from './ServicesListPage.module.scss'
 
-export const ServicesListPage: React.FC = () => {
+interface ServicesListPageProps {
+  setShowBanner?: (status: boolean) => void
+}
+
+export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): React.ReactElement => {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const isCommunity = useGetCommunity()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const isCdsV1EOLEnabled = useFeatureFlag(FeatureFlag.CDS_V1_EOL_BANNER)
+
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { fetchDeploymentList } = useServiceStore()
@@ -169,7 +175,8 @@ export const ServicesListPage: React.FC = () => {
     projectIdentifier,
     size: 10,
     page: page,
-    sort
+    sort,
+    includeVersionInfo: isCdsV1EOLEnabled
   }
 
   const {
@@ -180,6 +187,15 @@ export const ServicesListPage: React.FC = () => {
     queryParams,
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
+
+  useEffect(() => {
+    if (serviceList?.data?.content?.length && isCdsV1EOLEnabled) {
+      const existV1Service = !!serviceList?.data?.content.find(({ service }: ServiceResponse) => !service?.v2Service)
+      if (existV1Service && setShowBanner) {
+        setShowBanner(true)
+      }
+    }
+  }, [serviceList])
 
   useEffect(() => {
     fetchDeploymentList.current = refetch

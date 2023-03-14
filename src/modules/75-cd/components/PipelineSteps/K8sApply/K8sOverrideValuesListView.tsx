@@ -51,9 +51,11 @@ import K8sValuesManifest from '@pipeline/components/ManifestSelection/ManifestWi
 import OpenShiftParamWithGit from '@pipeline/components/ManifestSelection/ManifestWizardSteps/OpenShiftParam/OSWithGit'
 
 import InlineManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/InlineManifest/InlineManifest'
+import HarnessFileStore from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HarnessFileStore/HarnessFileStore'
+import { getBuildPayload, isGitTypeManifestStore } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import StepAzureRepoAuthentication from '@connectors/components/CreateConnector/AzureRepoConnector/StepAuth/StepAzureRepoAuthentication'
 import {
   allowedManifestTypes,
-  getBuildPayload,
   K8sManifestDataType,
   K8sManifestStoreMap,
   K8sManifestToConnectorMap,
@@ -218,36 +220,22 @@ function K8sOverrideValuesListView({
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
     const arr: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> = []
     let manifestDetailStep = null
+    const isGitTypeStores = isGitTypeManifestStore(manifestStore as K8sManifestStores)
 
     /* istanbul ignore next */
     switch (true) {
-      case selectedManifest === K8sManifestDataType.OpenshiftParam &&
-        [
-          K8sManifestStoreMap.Git,
-          K8sManifestStoreMap.Github,
-          K8sManifestStoreMap.GitLab,
-          K8sManifestStoreMap.Bitbucket
-        ].includes(manifestStore as K8sManifestStores):
+      case selectedManifest === K8sManifestDataType.OpenshiftParam && isGitTypeStores:
         manifestDetailStep = <OpenShiftParamWithGit {...lastStepProps()} />
         break
 
-      case selectedManifest === K8sManifestDataType.KustomizePatches &&
-        [
-          K8sManifestStoreMap.Git,
-          K8sManifestStoreMap.Github,
-          K8sManifestStoreMap.GitLab,
-          K8sManifestStoreMap.Bitbucket
-        ].includes(manifestStore as K8sManifestStores):
+      case selectedManifest === K8sManifestDataType.KustomizePatches && isGitTypeStores:
         manifestDetailStep = <KustomizePatchDetails {...lastStepProps()} />
         break
-      case selectedManifest === K8sManifestDataType.Values &&
-        [
-          K8sManifestStoreMap.Git,
-          K8sManifestStoreMap.Github,
-          K8sManifestStoreMap.GitLab,
-          K8sManifestStoreMap.Bitbucket
-        ].includes(manifestStore as K8sManifestStores):
+      case selectedManifest === K8sManifestDataType.Values && isGitTypeStores:
         manifestDetailStep = <K8sValuesManifest {...lastStepProps()} />
+        break
+      case manifestStore === K8sManifestStoreMap.Harness:
+        manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
         break
       default:
         manifestDetailStep = <InlineManifest {...lastStepProps()} />
@@ -260,22 +248,22 @@ function K8sOverrideValuesListView({
 
   const getNewConnectorSteps = useCallback((): JSX.Element => {
     const buildPayload = getBuildPayload(K8sManifestToConnectorMap[manifestStore])
-
+    const connectorType = K8sManifestToConnectorMap[manifestStore]
     return (
       <StepWizard title={getString('connectors.createNewConnector')}>
         <ConnectorDetailsStep
-          type={K8sManifestToConnectorMap[manifestStore]}
+          type={connectorType}
           name={getString('overview')}
           isEditMode={isEditMode}
           gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
         />
         <GitDetailsStep
-          type={K8sManifestToConnectorMap[manifestStore]}
+          type={connectorType}
           name={getString('details')}
           isEditMode={isEditMode}
           connectorInfo={undefined}
         />
-        {K8sManifestToConnectorMap[manifestStore] === Connectors.GIT ? (
+        {connectorType === Connectors.GIT ? (
           <StepGitAuthentication
             name={getString('credentials')}
             onConnectorCreated={
@@ -291,7 +279,7 @@ function K8sOverrideValuesListView({
             projectIdentifier={projectIdentifier}
           />
         ) : null}
-        {K8sManifestToConnectorMap[manifestStore] === Connectors.GITHUB ? (
+        {connectorType === Connectors.GITHUB ? (
           /* istanbul ignore next */
           <StepGithubAuthentication
             name={getString('credentials')}
@@ -306,7 +294,7 @@ function K8sOverrideValuesListView({
             projectIdentifier={projectIdentifier}
           />
         ) : null}
-        {K8sManifestToConnectorMap[manifestStore] === Connectors.BITBUCKET ? (
+        {connectorType === Connectors.BITBUCKET ? (
           /* istanbul ignore next */
           <StepBitbucketAuthentication
             name={getString('credentials')}
@@ -321,8 +309,23 @@ function K8sOverrideValuesListView({
             projectIdentifier={projectIdentifier}
           />
         ) : null}
-        {K8sManifestToConnectorMap[manifestStore] === Connectors.GITLAB ? (
+        {connectorType === Connectors.GITLAB ? (
           <StepGitlabAuthentication
+            name={getString('credentials')}
+            identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
+            onConnectorCreated={() => {
+              // Handle on success
+            }}
+            isEditMode={isEditMode}
+            setIsEditMode={setIsEditMode}
+            connectorInfo={undefined}
+            accountId={accountId}
+            orgIdentifier={orgIdentifier}
+            projectIdentifier={projectIdentifier}
+          />
+        ) : null}
+        {connectorType === Connectors.AZURE_REPO ? (
+          <StepAzureRepoAuthentication
             name={getString('credentials')}
             identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
             onConnectorCreated={() => {
@@ -348,7 +351,7 @@ function K8sOverrideValuesListView({
           connectorInfo={undefined}
           isStep={true}
           isLastStep={false}
-          type={K8sManifestToConnectorMap[manifestStore]}
+          type={connectorType}
         />
       </StepWizard>
     )

@@ -22,8 +22,6 @@ import {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetTemplate } from 'services/template-ng'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { BaseReactComponentProps, DiagramFactory, NodeType } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
@@ -47,7 +45,6 @@ export function TemplatePipelineCanvas(): React.ReactElement {
   const templateScope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
   const queryParams = useParams<ProjectPathProps>()
   const { supportingTemplatesGitx } = useAppStore()
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   const diagram = new DiagramFactory('graph')
   const CDPipelineStudioNew = diagram.render()
@@ -87,7 +84,7 @@ export function TemplatePipelineCanvas(): React.ReactElement {
         branch: gitDetails.branch
       })
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)
   })
 
@@ -109,7 +106,6 @@ export function TemplatePipelineCanvas(): React.ReactElement {
       templateRefs,
       storeMetadata,
       supportingTemplatesGitx,
-      isGitCacheEnabled,
       true
     ).then(resp => {
       setTemplateTypes(merge(templateTypes, resp.templateTypes))

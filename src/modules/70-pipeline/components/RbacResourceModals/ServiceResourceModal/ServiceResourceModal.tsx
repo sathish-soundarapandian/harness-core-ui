@@ -33,6 +33,7 @@ const RenderColumnPipeline: Renderer<CellProps<ServiceResponseDTO>> = ({ row }) 
 
 function ServiceResourceModal({
   searchTerm,
+  sortMethod,
   onSelectChange,
   selectedData,
   resourceScope
@@ -42,7 +43,16 @@ function ServiceResourceModal({
   const [page, setPage] = useState(0)
 
   const { data: servicesResponse, loading: isFetchingServices } = useGetServiceList({
-    queryParams: { accountIdentifier, orgIdentifier, projectIdentifier, searchTerm, page, size: 10 }
+    queryParams: {
+      accountIdentifier,
+      orgIdentifier,
+      projectIdentifier,
+      searchTerm,
+      page,
+      size: 10,
+      sort: [sortMethod]
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
 
   const serviceData = servicesResponse?.data?.content?.map(serviceContent => serviceContent.service)

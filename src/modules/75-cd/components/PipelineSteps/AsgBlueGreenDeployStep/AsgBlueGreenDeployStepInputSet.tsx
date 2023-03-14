@@ -27,6 +27,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { FormMultiTypeCheckboxField } from '@common/components'
 import type { AsgBlueGreenDeployStepInitialValues, AsgBlueGreenDeployCustomStepProps } from './AsgBlueGreenDeployStep'
 import { shouldFetchFieldData } from '../PipelineStepsUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -324,6 +325,20 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
               disabled: readonly
             }}
             disabled={readonly}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(template?.spec?.useAlreadyRunningInstances) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes
+            }}
+            name={`${prefix}spec.useAlreadyRunningInstances`}
+            label={getString('cd.useAlreadyRunningInstance')}
+            disabled={readonly}
+            setToFalseWhenEmpty={true}
           />
         </div>
       )}

@@ -42,7 +42,7 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import { useListAwsRegions } from 'services/portal'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import type { HelmWithGcsDataType } from '../../ManifestInterface'
+import type { HelmWithGcsDataType, HelmWithS3ManifestLastStepPrevStepData } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
 import {
@@ -65,6 +65,7 @@ interface HelmWithHttpPropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   deploymentType?: string
+  editManifestModePrevStepData?: HelmWithS3ManifestLastStepPrevStepData
 }
 
 function HelmWithS3({
@@ -77,16 +78,18 @@ function HelmWithS3({
   previousStep,
   manifestIdsList,
   isReadonly = false,
-  deploymentType
+  deploymentType,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & HelmWithHttpPropType): React.ReactElement {
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
   const { getString } = useStrings()
   const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const { getRBACErrorMessage } = useRBACError()
   const [regions, setRegions] = useState<SelectOption[]>([])
 
-  /* Code related to region */
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
+  /* Code related to region */
   const { data: regionData } = useListAwsRegions({
     queryParams: {
       accountId
@@ -108,7 +111,7 @@ function HelmWithS3({
   const fetchBucket = (regionValue: string): void => {
     refetchBuckets({
       queryParams: {
-        connectorRef: prevStepData?.connectorRef?.value,
+        connectorRef: modifiedPrevStepData?.connectorRef?.value,
         region: regionValue,
         accountIdentifier: accountId,
         projectIdentifier,
@@ -167,7 +170,7 @@ function HelmWithS3({
   ): void => {
     if (
       getMultiTypeFromValue(specValues?.bucketName) === MultiTypeInputType.FIXED &&
-      getMultiTypeFromValue(prevStepData?.connectorRef) === MultiTypeInputType.FIXED &&
+      getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) === MultiTypeInputType.FIXED &&
       getMultiTypeFromValue(specValues?.region) === MultiTypeInputType.FIXED
     ) {
       merge(values, { bucketName: { label: specValues?.bucketName, value: specValues?.bucketName } })
@@ -265,7 +268,7 @@ function HelmWithS3({
   const renderS3Bucket = (formik: FormikValues): JSX.Element => {
     if (
       getMultiTypeFromValue(formik.values?.region) !== MultiTypeInputType.FIXED ||
-      getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+      getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
     ) {
       return (
         <div
@@ -370,14 +373,14 @@ function HelmWithS3({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
@@ -574,6 +577,7 @@ function HelmWithS3({
                   pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                   defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                  allowSinglePathDeletion
                 />
               </div>
 
@@ -594,7 +598,7 @@ function HelmWithS3({
                       allowableTypes={allowableTypes}
                       helmVersion={formik.values?.helmVersion}
                       deploymentType={deploymentType as string}
-                      helmStore={defaultTo(prevStepData?.store, '')}
+                      helmStore={defaultTo(modifiedPrevStepData?.store, '')}
                     />
                   }
                 />
@@ -606,7 +610,7 @@ function HelmWithS3({
                 variation={ButtonVariation.SECONDARY}
                 text={getString('back')}
                 icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
+                onClick={() => previousStep?.(modifiedPrevStepData)}
               />
               <Button
                 variation={ButtonVariation.PRIMARY}

@@ -128,14 +128,14 @@ exports[`Project List render 1`] = `
             style="width: 30%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <div
                 class="colorbox"
                 style="background-color: rgb(230, 184, 0);"
               />
               <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main verticalCenter StyledProps--padding-left-small"
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main projectTextContainer StyledProps--padding-left-small"
               >
                 <div
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -506,14 +506,14 @@ exports[`Project List render 1`] = `
             style="width: 30%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <div
                 class="colorbox"
                 style="background-color: rgb(28, 28, 40);"
               />
               <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main verticalCenter StyledProps--padding-left-small"
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main projectTextContainer StyledProps--padding-left-small"
               >
                 <div
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -926,14 +926,14 @@ exports[`Project List render 1`] = `
             style="width: 30%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <div
                 class="colorbox"
                 style="background-color: rgb(255, 136, 0);"
               />
               <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main verticalCenter StyledProps--padding-left-small"
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main projectTextContainer StyledProps--padding-left-small"
               >
                 <div
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -1310,14 +1310,14 @@ exports[`Project List render 1`] = `
             style="width: 30%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <div
                 class="colorbox"
                 style="background-color: rgb(230, 184, 0);"
               />
               <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main verticalCenter StyledProps--padding-left-small"
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main projectTextContainer StyledProps--padding-left-small"
               >
                 <div
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -1582,14 +1582,14 @@ exports[`Project List render 1`] = `
             style="width: 30%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <div
                 class="colorbox"
                 style="background-color: rgb(0, 79, 196);"
               />
               <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main verticalCenter StyledProps--padding-left-small"
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main projectTextContainer StyledProps--padding-left-small"
               >
                 <div
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -1931,14 +1931,14 @@ exports[`Project List render 1`] = `
             style="width: 30%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <div
                 class="colorbox"
                 style="background-color: rgb(230, 122, 0);"
               />
               <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main verticalCenter StyledProps--padding-left-small"
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main projectTextContainer StyledProps--padding-left-small"
               >
                 <div
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -2460,14 +2460,14 @@ exports[`Project List render 1`] = `
             style="width: 30%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <div
                 class="colorbox"
                 style="background-color: rgb(230, 184, 0);"
               />
               <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main verticalCenter StyledProps--padding-left-small"
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main projectTextContainer StyledProps--padding-left-small"
               >
                 <div
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"

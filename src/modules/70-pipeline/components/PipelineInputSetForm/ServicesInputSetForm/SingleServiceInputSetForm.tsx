@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { defaultTo, get, isEmpty, isNil, pick, set } from 'lodash-es'
@@ -14,6 +14,7 @@ import { Container, SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import type { DeploymentStageConfig, ServiceSpec } from 'services/cd-ng'
+import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -22,7 +23,7 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { getStepTypeByDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getStepTypeByDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import {
   getFlattenedStages,
   getStageIndexFromPipeline
@@ -52,7 +53,7 @@ export default function SingleServiceInputSetForm({
   allowableTypes
 }: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'>): React.ReactElement | null {
   const {
-    state: { pipeline },
+    state: { pipeline, templateTypes },
     isReadonly
   } = usePipelineContext()
 
@@ -74,28 +75,48 @@ export default function SingleServiceInputSetForm({
   const useFromStageInputSetValue = get(deploymentStageInputSet, 'service.useFromStage.stage')
 
   const [setupModeType, setSetupMode] = useState(
-    isNil(useFromStageInputSetValue) || isEmpty(useFromStageInputSetValue) ? setupMode.DIFFERENT : setupMode.PROPAGATE
+    // Do not add isEmpty check here. This will move to DIFFERENT when propagate is selected and focus moved away
+    isNil(useFromStageInputSetValue) ? setupMode.DIFFERENT : setupMode.PROPAGATE
+  )
+
+  const getStagesAllowedforPropogate = useCallback(
+    (stageItem: StageElementWrapperConfig): boolean => {
+      if (stageItem?.stage?.template) {
+        const stageType = get(templateTypes, stageItem.stage.template.templateRef)
+        return (
+          stageType === StageType.DEPLOY &&
+          !(stageItem?.stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.service?.useFromStage
+        )
+      } else {
+        const stageType = stageItem?.stage?.type
+        return (
+          stageType === StageType.DEPLOY && !(stageItem?.stage?.spec as DeploymentStageConfig)?.service?.useFromStage
+        )
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   )
 
   const previousStageList = useMemo(() => {
     const { stages } = getFlattenedStages(pipeline)
     if (stages.length && stageIndex > 0) {
       // all stages are allowed
-      const stageswithServiceV2 = stages.slice(0, stageIndex)
+      const filteredStages = stages.slice(0, stageIndex).filter(getStagesAllowedforPropogate)
 
-      return stageswithServiceV2.map(stageItem => {
-        let label = `Stage [${stageItem.stage?.name}] - [Template]`
-
-        if (!stageItem.stage?.template) {
-          const stageServiceRef = (stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef
-          const serviceLabel = isEmpty(stageServiceRef) ? getString('services') : `Service [${stageServiceRef}]`
-
-          label = `Stage [${stageItem.stage?.name}] - ${serviceLabel}`
-        }
-
-        return {
-          label,
-          value: defaultTo(stageItem.stage?.identifier, '')
+      return filteredStages.map(stageItem => {
+        if (stageItem.stage?.template) {
+          return {
+            label: `Stage [${stageItem.stage?.name}] - Template [${stageItem.stage.template.templateRef}]`,
+            value: defaultTo(stageItem.stage?.identifier, '')
+          }
+        } else {
+          const singleServiceRef = (stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef
+          const serviceLabelVal = isEmpty(singleServiceRef) ? getString('services') : `Service [${singleServiceRef}]`
+          return {
+            label: `Stage [${stageItem.stage?.name}] - ${serviceLabelVal}`,
+            value: stageItem.stage?.identifier
+          }
         }
       })
     }
@@ -109,7 +130,7 @@ export default function SingleServiceInputSetForm({
 
   const onPropogatedStageSelect = (value: SelectOption): void => {
     setSelectedPropagatedState(value)
-    formik.setFieldValue(path, { service: { useFromStage: { stage: value.value } } })
+    formik.setFieldValue(`${path}.service`, { useFromStage: { stage: value.value } })
   }
 
   const onStageServiceChange = (mode: string): void => {
@@ -118,13 +139,11 @@ export default function SingleServiceInputSetForm({
       setSelectedPropagatedState('')
 
       if (mode === setupMode.DIFFERENT) {
-        formik.setFieldValue(path, { service: { serviceRef: '' } })
+        formik.setFieldValue(`${path}.service`, { serviceRef: '' })
       } else {
-        formik.setFieldValue(path, {
-          service: {
-            useFromStage: {
-              stage: ''
-            }
+        formik.setFieldValue(`${path}.service`, {
+          useFromStage: {
+            stage: ''
           }
         })
       }
@@ -133,7 +152,7 @@ export default function SingleServiceInputSetForm({
 
   const shouldShowPropagateFromStage =
     isPropagateFromStageEnabled &&
-    previousStageList?.length &&
+    !isEmpty(previousStageList) &&
     // using deploymentStage as deploymentStageTemplate is not reliable in case of optional fields
     (isValueRuntimeInput(deploymentStage?.service?.serviceRef) ||
       isValueRuntimeInput(deploymentStage?.service?.useFromStage as unknown as string))
@@ -151,6 +170,7 @@ export default function SingleServiceInputSetForm({
             isReadonly={!!readonly}
             onStageServiceChange={onStageServiceChange}
             onPropogatedStageSelect={onPropogatedStageSelect}
+            subscribeToForm={false}
           />
         </Container>
       )}

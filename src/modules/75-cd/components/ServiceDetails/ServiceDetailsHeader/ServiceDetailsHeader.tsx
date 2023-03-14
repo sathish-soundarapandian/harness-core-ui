@@ -7,14 +7,16 @@
 
 import React, { useImperativeHandle } from 'react'
 import { useParams } from 'react-router-dom'
+import cx from 'classnames'
+import { Classes, Position } from '@blueprintjs/core'
 import { Button, ButtonSize, Icon, Layout, Popover, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { Classes, Position } from '@blueprintjs/core'
+
+import { useStrings } from 'framework/strings'
+import { useGetServiceHeaderInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
-import { useGetServiceHeaderInfo } from 'services/cd-ng'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -66,32 +68,20 @@ export const ServiceDetailsHeader = (
           <DeploymentTypeIcons deploymentTypes={data.data.deploymentTypes || []} size={38} />
         </Layout.Horizontal>
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }} className={css.serviceDetails}>
-          <Layout.Vertical className={css.detailsSection}>
-            <Layout.Horizontal
-              margin={{ bottom: 'small' }}
-              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-            >
-              <Text
-                font={{ size: 'medium' }}
-                color={Color.BLACK}
-                margin={{ right: 'small' }}
-                className={css.textOverflow}
-              >
-                {data.data.name}
-              </Text>
-              <Text font={{ size: 'small' }} color={Color.GREY_500} className={css.textOverflow}>
-                {`${getString('common.ID')}: ${serviceId}`}
-              </Text>
-            </Layout.Horizontal>
-            <Text
-              font={{ size: 'small' }}
-              color={Color.GREY_500}
-              className={css.textOverflow}
-              margin={{ right: 'small' }}
-            >
-              {data.data.description}
+          <Layout.Vertical className={css.detailsSection} spacing={'small'}>
+            <Text font={{ size: 'medium' }} color={Color.BLACK} className={css.textOverflow}>
+              {data.data.name}
             </Text>
+            <Text font={{ size: 'small' }} color={Color.GREY_500} className={css.textOverflow}>
+              {`${getString('common.ID')}: ${serviceId}`}
+            </Text>
+            {data.data.description && (
+              <Text font={{ size: 'small' }} color={Color.GREY_500} width={800} lineClamp={1}>
+                {data.data.description}
+              </Text>
+            )}
           </Layout.Vertical>
+
           <Layout.Horizontal>
             <Layout.Vertical padding={{ right: showNotificationIcon ? 'xxlarge' : '' }}>
               <Layout.Horizontal margin={{ bottom: 'small' }}>
@@ -165,7 +155,7 @@ export const ServiceDetailsHeader = (
   return (
     <Page.Header
       title={TitleComponent}
-      className={css.header}
+      className={cx(css.header, { [css.headerWithDescShown]: data?.data?.description })}
       size="large"
       breadcrumbs={
         <NGBreadcrumbs

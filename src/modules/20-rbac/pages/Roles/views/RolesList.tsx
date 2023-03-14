@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import {
   ButtonVariation,
   Container,
@@ -35,7 +35,10 @@ import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import css from '../Roles.module.scss'
 
 const DEFAULT_ROLES_PAGE_SIZE = 12
@@ -57,7 +60,8 @@ const RolesList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
-  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.Roles}`)
   useDocumentTitle(getString('roles'))
 
   const {
@@ -75,7 +79,7 @@ const RolesList: React.FC = () => {
       pageIndex,
       pageSize,
       searchTerm,
-      sortOrders: [sort]
+      sortOrders: [sortPreference]
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
@@ -174,9 +178,11 @@ const RolesList: React.FC = () => {
         }
       >
         <ListHeader
-          value={sort}
+          selectedSortMethod={sortPreference}
           sortOptions={[...sortByCreated, ...sortByName]}
-          onChange={option => setSort(option.value as string)}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
           totalCount={data?.data?.totalItems}
         />
         <div className={css.masonry}>

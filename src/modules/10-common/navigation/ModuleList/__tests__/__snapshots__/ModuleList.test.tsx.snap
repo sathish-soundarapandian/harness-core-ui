@@ -147,7 +147,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
           </div>
         </div>
         <div
-          class="Layout--vertical Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex"
+          class="Layout--vertical Layout--layout-spacing-xxxlarge StyledProps--main groupListContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
           data-testid="grouplistContainer"
         />
       </div>

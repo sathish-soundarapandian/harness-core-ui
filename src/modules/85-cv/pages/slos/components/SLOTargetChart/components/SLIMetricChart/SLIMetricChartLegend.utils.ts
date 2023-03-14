@@ -5,35 +5,39 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SLIOnboardingGraphs } from 'services/cv'
-import type { ThresholdLegend, RatioLegend } from './SLIMetricChartLegend.types'
+import type { ThresholdLegend } from './SLIMetricChartLegend.types'
 
-export const legendSliMetricChart = (
-  metricGraphData: SLIOnboardingGraphs['metricGraphs']
-): ThresholdLegend | RatioLegend => {
-  const metricKeys = Object.keys(metricGraphData || {})
-  const validMetricMax = Math.max(...(metricGraphData?.[metricKeys[0]]?.dataPoints?.map(item => item.value || 0) || []))
-  const validMetricMin = Math.min(...(metricGraphData?.[metricKeys[0]]?.dataPoints?.map(item => item.value || 0) || []))
+export const legendSliSingleMetricChart = (dataPoints: (number | undefined)[][]): ThresholdLegend => {
+  const validMetricMax = Math.max(...(dataPoints?.map(item => item[1] || 0) || []))
+  const validMetricMin = Math.min(...(dataPoints?.map(item => item[1] || 0) || []))
+
   const validMetricTotal =
-    metricGraphData?.[metricKeys[0]]?.dataPoints?.reduce((sum, item) => {
-      return (item?.value || 0) + sum
+    dataPoints?.reduce((sum, item) => {
+      return (item[1] || 0) + sum
     }, 0) || 0
-  const validMetricTotalLength = metricGraphData?.[metricKeys[0]]?.dataPoints?.length || 1
-  const goodMetricTotal =
-    metricGraphData?.[metricKeys[1]]?.dataPoints?.reduce((sum, item) => {
-      return (item?.value || 0) + sum
-    }, 0) || 0
-  const goodMetricTotalLength = metricGraphData?.[metricKeys[0]]?.dataPoints?.length || 1
+  const validMetricTotalLength = dataPoints?.length || 1
 
   const thresholdLegendData = {
     max: validMetricMax,
     min: validMetricMin,
     avg: validMetricTotal / validMetricTotalLength
   }
-  const ratioLegendData = {
-    goodMetric: goodMetricTotal / goodMetricTotalLength,
-    validMetric: validMetricTotal / validMetricTotalLength
-  }
 
-  return metricKeys.length > 1 ? ratioLegendData : thresholdLegendData
+  return thresholdLegendData
+}
+
+export const sliMetricGraphConfig: Highcharts.Options = {
+  xAxis: {
+    gridLineWidth: 0,
+    tickAmount: undefined,
+    tickInterval: 14400000,
+    showFirstLabel: true,
+    showLastLabel: true
+  },
+  yAxis: {
+    gridLineDashStyle: 'Solid'
+  },
+  chart: {
+    height: 150
+  }
 }

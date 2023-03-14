@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { get, set, isEmpty } from 'lodash-es'
+import { get, set, isEmpty, defaultTo } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
@@ -26,7 +26,7 @@ import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import type { CommonManifestDataType, ManifestTypes } from '../../ManifestInterface'
+import type { CommonManifestDataType, CommonManifestLastStepPrevStepData, ManifestTypes } from '../../ManifestInterface'
 import {
   getConnectorRefOrConnectorId,
   GitRepoName,
@@ -49,6 +49,7 @@ interface CommonManifestDetailsProps {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   showIdentifierField?: boolean
+  editManifestModePrevStepData?: CommonManifestLastStepPrevStepData
 }
 
 const showAdvancedSection = (selectedManifest: ManifestTypes | null): boolean => {
@@ -66,14 +67,17 @@ export function CommonManifestDetails({
   previousStep,
   manifestIdsList,
   isReadonly = false,
-  showIdentifierField = true
+  showIdentifierField = true,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & CommonManifestDetailsProps): React.ReactElement {
   const { getString } = useStrings()
 
-  const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+
+  const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
-    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-    prevStepData?.urlType === GitRepoName.Repo
+    modifiedPrevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    modifiedPrevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
@@ -85,7 +89,7 @@ export function CommonManifestDetails({
         ...specValues,
         identifier: initialValues.identifier,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
-        repoName: getRepositoryName(prevStepData, initialValues),
+        repoName: getRepositoryName(modifiedPrevStepData, initialValues),
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
@@ -100,7 +104,7 @@ export function CommonManifestDetails({
       gitFetchType: 'Branch',
       paths: [{ path: '', uuid: uuid('', nameSpace()) }],
       skipResourceVersioning: false,
-      repoName: getRepositoryName(prevStepData, initialValues)
+      repoName: getRepositoryName(modifiedPrevStepData, initialValues)
     }
   }
 
@@ -183,7 +187,7 @@ export function CommonManifestDetails({
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
             if (
               connectionType === GitRepoName.Repo ||
-              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+              getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
             ) {
               return true
             }
@@ -192,9 +196,9 @@ export function CommonManifestDetails({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: getConnectorRefOrConnectorId(prevStepData)
+            connectorRef: getConnectorRefOrConnectorId(modifiedPrevStepData)
           })
         }}
       >
@@ -211,7 +215,7 @@ export function CommonManifestDetails({
                     selectedManifest={selectedManifest}
                     expressions={expressions}
                     allowableTypes={allowableTypes}
-                    prevStepData={prevStepData}
+                    prevStepData={modifiedPrevStepData}
                     isReadonly={isReadonly}
                     showIdentifierField={showIdentifierField}
                   />
@@ -232,7 +236,7 @@ export function CommonManifestDetails({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

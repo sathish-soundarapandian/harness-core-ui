@@ -106,6 +106,14 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     hasLicense: false,
     homePageUrl: '',
     color: 'green'
+  },
+  ET: {
+    shouldVisible: true,
+    icon: 'cet',
+    label: 'common.purpose.errorTracking.title',
+    hasLicense: false,
+    homePageUrl: '',
+    color: 'green'
   }
 }
 

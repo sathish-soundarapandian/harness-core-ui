@@ -103,10 +103,14 @@ export class CustomVariables extends Step<CustomVariablesData> {
     data?.variables?.forEach((variable: AllNGVariables, index: number) => {
       const currentVariableTemplate = get(template, `variables[${index}].value`, '')
 
+      const variableValidation =
+        (getMultiTypeFromValue(variable.value) === MultiTypeInputType.FIXED && isNaN(variable.value as number)) ||
+        (typeof variable.value === 'string' && isEmpty(variable.value))
+
       if (
         isRequired &&
         ((isEmpty(variable.value) && variable.type !== 'Number') ||
-          (variable.type === 'Number' && isNaN(variable.value))) &&
+          (variable.type === 'Number' && variableValidation)) &&
         getMultiTypeFromValue(currentVariableTemplate) === MultiTypeInputType.RUNTIME
       ) {
         set(errors, `variables[${index}].value`, getString?.('fieldRequired', { field: variable.name }))

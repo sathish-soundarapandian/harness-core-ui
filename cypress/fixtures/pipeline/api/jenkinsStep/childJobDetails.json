@@ -3,8 +3,8 @@
   "data": {
     "jobDetails": [
       {
-        "jobName": "AutomationQA",
-        "url": "https://jenkins.dev.harness.io/job/AutomationQA/",
+        "jobName": "alex-pipeline-test/AutomationQATest",
+        "url": "https://jenkins.dev.harness.io/job/alex-pipeline-test/AutomationQATest/",
         "parameters": [],
         "folder": false
       }

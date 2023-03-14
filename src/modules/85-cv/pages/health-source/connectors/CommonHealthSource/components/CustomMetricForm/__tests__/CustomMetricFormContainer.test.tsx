@@ -488,7 +488,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         connectorIdentifier: 'Sumo_logic',
         endTime: expect.any(Number),
         healthSourceQueryParams: { serviceInstanceField: '_sourcehost' },
-        providerType: 'SUMOLOGIC_LOG',
+        healthSourceType: 'SumologicLogs',
         query: 'select *',
         startTime: expect.any(Number)
       })

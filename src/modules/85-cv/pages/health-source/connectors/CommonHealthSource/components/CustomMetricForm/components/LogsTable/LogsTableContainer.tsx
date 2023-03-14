@@ -28,8 +28,7 @@ import CommonHealthSourceField from '../CommonCustomMetricFormContainer/CommonCu
 
 interface CommonHealthSourceLogsTable {
   connectorIdentifier: string
-  providerTypeForRecords: QueryRecordsRequest['providerType']
-  providerType: HealthSourceParamValuesRequest['providerType']
+  healthSourceType: QueryRecordsRequest['healthSourceType']
   fieldMappings?: FieldMapping[]
   queryField?: FieldMapping
   isRecordsLoading?: boolean
@@ -44,8 +43,7 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
     fieldMappings,
     queryField,
     connectorIdentifier,
-    providerType,
-    providerTypeForRecords,
+    healthSourceType,
     sampleRecords,
     disableLogFields,
     isRecordsLoading,
@@ -103,7 +101,7 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
   }, [values, isQueryRuntimeOrExpression, isConnectorRuntimeOrExpression, multiTypeRecord])
 
   const handleFetchSampleLogs = (): void => {
-    const fetchSampleLogsPayload = getRequestBodyForSampleLogs(providerTypeForRecords, {
+    const fetchSampleLogsPayload = getRequestBodyForSampleLogs(healthSourceType, {
       connectorIdentifier,
       query,
       fieldMappings,
@@ -145,7 +143,7 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
                   field={field}
                   isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                   connectorIdentifier={connectorIdentifier}
-                  providerType={providerType as HealthSourceParamValuesRequest['providerType']}
+                  providerType={healthSourceType as HealthSourceParamValuesRequest['providerType']}
                 />
               )
             })

@@ -124,8 +124,6 @@ describe('Verify step', () => {
 
     cy.url().should('include', '/pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline')
 
-    cy.findByText(/appd_dev/i).click()
-
     cy.url().should('include', '/pipelines/NG_Docker_Image/executions/')
 
     cy.findByTestId(/Logs/i).click()

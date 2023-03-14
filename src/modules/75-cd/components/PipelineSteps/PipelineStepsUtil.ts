@@ -42,7 +42,8 @@ export enum InfraDeploymentType {
   CustomDeployment = 'CustomDeployment',
   Elastigroup = 'Elastigroup',
   TAS = 'TAS',
-  GoogleCloudFunctions = 'GoogleCloudFunctions'
+  GoogleCloudFunctions = 'GoogleCloudFunctions',
+  AwsLambda = 'AwsLambda'
 }
 
 export const deploymentTypeToInfraTypeMap = {
@@ -274,6 +275,13 @@ export function getGoogleCloudFunctionInfraValidationSchema(getString: UseString
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
     project: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString('projectLabel') })),
+    region: Yup.string().required(getString('validation.regionRequired'))
+  })
+}
+
+export function getAwsLambdaInfraValidationSchema(getString: UseStringsReturn['getString']) {
+  return Yup.object().shape({
+    connectorRef: getConnectorSchema(getString),
     region: Yup.string().required(getString('validation.regionRequired'))
   })
 }

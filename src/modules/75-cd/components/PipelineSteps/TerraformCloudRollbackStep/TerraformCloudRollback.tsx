@@ -78,7 +78,7 @@ function TerraformCloudRollbackWidget(
               <div className={stepCss.formGroup}>
                 <FormMultiTypeTextAreaField
                   placeholder={getString('pipeline.terraformStep.messagePlaceholder')}
-                  name="spec.message"
+                  name="spec.runMessage"
                   label={getString('pipeline.terraformStep.messageLabel')}
                   className={css.message}
                   multiTypeTextArea={{
@@ -89,36 +89,14 @@ function TerraformCloudRollbackWidget(
                     textAreaProps: { growVertically: true }
                   }}
                 />
-                {getMultiTypeFromValue(values.spec?.message) === MultiTypeInputType.RUNTIME && (
+                {getMultiTypeFromValue(values.spec?.runMessage) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={values.spec?.message as string}
+                    value={values.spec?.runMessage as string}
                     type="String"
-                    variableName="spec.message"
+                    variableName="spec.runMessage"
                     showRequiredField={false}
                     showDefaultField={false}
-                    onChange={/* istanbul ignore next */ value => setFieldValue('spec.message', value)}
-                    isReadonly={readonly}
-                  />
-                )}
-              </div>
-              <div className={cx(stepCss.formGroup, stepCss.md)}>
-                <FormMultiTypeCheckboxField
-                  name="spec.discardPendingRuns"
-                  label={getString('pipeline.terraformStep.discardPendingRuns')}
-                  disabled={readonly}
-                  multiTypeTextbox={{ expressions, allowableTypes }}
-                  className={css.addMarginTop}
-                />
-                {getMultiTypeFromValue(values.spec?.discardPendingRuns) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={(values.spec?.discardPendingRuns || '') as string}
-                    type="String"
-                    variableName="spec.discardPendingRuns"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    onChange={value => setFieldValue('spec.discardPendingRuns', value)}
-                    style={{ alignSelf: 'center', marginTop: 11 }}
-                    className={css.addMarginTop}
+                    onChange={/* istanbul ignore next */ value => setFieldValue('spec.runMessage', value)}
                     isReadonly={readonly}
                   />
                 )}
@@ -146,6 +124,52 @@ function TerraformCloudRollbackWidget(
                         setFieldValue('spec.provisionerIdentifier', value)
                       }
                     }
+                    isReadonly={readonly}
+                  />
+                )}
+              </div>
+
+              <div className={cx(stepCss.formGroup, stepCss.md)}>
+                <FormMultiTypeCheckboxField
+                  name="spec.discardPendingRuns"
+                  label={getString('pipeline.terraformStep.discardPendingRuns')}
+                  disabled={readonly}
+                  multiTypeTextbox={{ expressions, allowableTypes }}
+                  className={css.addMarginTop}
+                />
+                {getMultiTypeFromValue(values.spec?.discardPendingRuns) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={(values.spec?.discardPendingRuns || '') as string}
+                    type="String"
+                    variableName="spec.discardPendingRuns"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    onChange={value => setFieldValue('spec.discardPendingRuns', value)}
+                    style={{ alignSelf: 'center', marginTop: 11 }}
+                    className={css.addMarginTop}
+                    isReadonly={readonly}
+                  />
+                )}
+              </div>
+
+              <div className={cx(stepCss.formGroup, stepCss.md)}>
+                <FormMultiTypeCheckboxField
+                  name="spec.overridePolicies"
+                  label={getString('pipeline.terraformStep.overridePoliciesLabel')}
+                  disabled={readonly}
+                  multiTypeTextbox={{ expressions, allowableTypes }}
+                  className={css.addMarginTop}
+                />
+                {getMultiTypeFromValue(values.spec?.overridePolicies) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={(values.spec?.overridePolicies || '') as string}
+                    type="String"
+                    variableName="spec.overridePolicies"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    onChange={value => setFieldValue('spec.overridePolicies', value)}
+                    style={{ alignSelf: 'center', marginTop: 11 }}
+                    className={css.addMarginTop}
                     isReadonly={readonly}
                   />
                 )}
@@ -188,10 +212,10 @@ const TerraformCloudRollbackInputStep: React.FC<TerraformCloudRollbackProps> = (
           className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
-      {isValueRuntimeInput(template?.spec?.message) && (
+      {isValueRuntimeInput(template?.spec?.runMessage) && (
         <FormMultiTypeTextArea
           label={getString('pipeline.terraformStep.messageLabel')}
-          name={`${prefix}spec.message`}
+          name={`${prefix}spec.runMessage`}
           disabled={readonly}
           multiTypeTextArea={{
             configureOptionsProps: {
@@ -203,20 +227,7 @@ const TerraformCloudRollbackInputStep: React.FC<TerraformCloudRollbackProps> = (
           className={css.deploymentViewMedium}
         />
       )}
-      {isValueRuntimeInput(template?.spec?.discardPendingRuns) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeCheckboxField
-            multiTypeTextbox={{
-              expressions,
-              allowableTypes
-            }}
-            name={`${prefix}spec.discardPendingRuns`}
-            label={getString('pipeline.terraformStep.discardPendingRuns')}
-            disabled={readonly}
-            setToFalseWhenEmpty={true}
-          />
-        </div>
-      )}
+
       {isValueRuntimeInput(template?.spec?.provisionerIdentifier) && (
         <TextFieldInputSetView
           name={`${prefix}spec.provisionerIdentifier`}
@@ -233,6 +244,36 @@ const TerraformCloudRollbackInputStep: React.FC<TerraformCloudRollbackProps> = (
           label={getString('pipelineSteps.provisionerIdentifier')}
           disabled={readonly}
         />
+      )}
+
+      {isValueRuntimeInput(template?.spec?.discardPendingRuns) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes
+            }}
+            name={`${prefix}spec.discardPendingRuns`}
+            label={getString('pipeline.terraformStep.discardPendingRuns')}
+            disabled={readonly}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
+      )}
+
+      {isValueRuntimeInput(template?.spec?.overridePolicies) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes
+            }}
+            name={`${prefix}spec.overridePolicies`}
+            label={getString('pipeline.terraformStep.overridePoliciesLabel')}
+            disabled={readonly}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
       )}
     </>
   )
@@ -271,7 +312,8 @@ export class TerraformCloudRollback extends PipelineStep<any> {
     spec: {
       provisionerIdentifier: '',
       discardPendingRuns: false,
-      message: ''
+      runMessage: '',
+      overridePolicies: false
     }
   }
   protected stepIcon: IconName = 'terraform-cloud-rollback'

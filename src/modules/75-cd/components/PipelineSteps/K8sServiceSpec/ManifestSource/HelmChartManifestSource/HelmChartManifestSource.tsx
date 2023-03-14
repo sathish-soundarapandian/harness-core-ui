@@ -482,22 +482,22 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       </div>
       <div className={css.inputFieldLayout}>
         {isFieldFixedType(`${manifestPath}.spec.store.spec.connectorRef`, initialValues) &&
-        isFieldFixedType(`${manifestPath}.spec.store.spec.region`, initialValues) ? (
-          renderBucketListforS3Gcs()
-        ) : (
-          <div className={css.verticalSpacingInput}>
-            <FormInput.MultiTextInput
-              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.bucketName`)}
-              name={`${path}.${manifestPath}.spec.store.spec.bucketName`}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              label={getString('pipeline.manifestType.bucketName')}
-              placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
-            />
-          </div>
-        )}
+        isFieldFixedType(`${manifestPath}.spec.store.spec.region`, initialValues)
+          ? renderBucketListforS3Gcs()
+          : isFieldRuntime(`${manifestPath}.spec.store.spec.bucketName`, template) && (
+              <div className={css.verticalSpacingInput}>
+                <FormInput.MultiTextInput
+                  disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.bucketName`)}
+                  name={`${path}.${manifestPath}.spec.store.spec.bucketName`}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes
+                  }}
+                  label={getString('pipeline.manifestType.bucketName')}
+                  placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
+                />
+              </div>
+            )}
         {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.bucketName`)) ===
           MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -617,11 +617,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                   formik={formik}
                   name={`${path}.${manifestPath}.spec.chartVersion`}
                   disabled={isFieldDisabled(fromTrigger ? 'chartVersion' : `${manifestPath}.spec.chartVersion`)}
-                  placeholder={
-                    loadingChartVersions
-                      ? getString('pipeline.manifestType.http.loadingChartVersion')
-                      : getString('pipeline.manifestType.http.chartVersionPlaceHolder')
-                  }
+                  placeholder={getString('pipeline.manifestType.http.chartVersionPlaceHolder')}
                   multiTypeInputProps={{
                     onFocus: () => {
                       if (!chartVersions?.length) {
@@ -635,7 +631,11 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                       ...(fromTrigger && { value: TriggerDefaultFieldList.chartVersion }),
                       items: chartVersions,
                       noResults: (
-                        <Text padding={'small'}>{getString('pipeline.manifestType.http.noResultsChartVersion')}</Text>
+                        <Text padding={'small'}>
+                          {loadingChartVersions
+                            ? getString('pipeline.manifestType.http.loadingChartVersion')
+                            : getString('pipeline.manifestType.http.noResultsChartVersion')}
+                        </Text>
                       )
                     },
                     expressions,

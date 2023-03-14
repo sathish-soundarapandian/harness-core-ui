@@ -24,7 +24,7 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import { get, isEmpty, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
@@ -33,7 +33,7 @@ import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from '
 import { shouldHideHeaderAndNavBtns } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
-import type { HelmWithGITDataType } from '../../ManifestInterface'
+import type { HelmWithGITDataType, HelmWithGITManifestLastStepPrevStepData } from '../../ManifestInterface'
 import {
   getSkipResourceVersioningBasedOnDeclarativeRollback,
   gitFetchTypeList,
@@ -65,6 +65,7 @@ interface HelmWithGITPropType {
   isReadonly?: boolean
   deploymentType?: string
   context?: ModalViewFor
+  editManifestModePrevStepData?: HelmWithGITManifestLastStepPrevStepData
 }
 
 function HelmWithGIT({
@@ -78,24 +79,28 @@ function HelmWithGIT({
   manifestIdsList,
   isReadonly = false,
   deploymentType,
-  context
+  context,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & HelmWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
   const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const hideHeaderAndNavBtns = context ? shouldHideHeaderAndNavBtns(context) : false
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
-  const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+
+  const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
-    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-    prevStepData?.urlType === GitRepoName.Repo
+    modifiedPrevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    modifiedPrevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
   const accountUrl =
     connectionType === GitRepoName.Account
-      ? prevStepData?.connectorRef
-        ? prevStepData?.connectorRef?.connector?.spec?.url
-        : prevStepData?.url
+      ? modifiedPrevStepData?.connectorRef
+        ? modifiedPrevStepData?.connectorRef?.connector?.spec?.url
+        : modifiedPrevStepData?.url
       : null
 
   const getInitialValues = (): HelmWithGITDataType => {
@@ -106,7 +111,7 @@ function HelmWithGIT({
         ...specValues,
         identifier: initialValues.identifier,
         folderPath: specValues.folderPath,
-        repoName: getRepositoryName(prevStepData, initialValues),
+        repoName: getRepositoryName(modifiedPrevStepData, initialValues),
         helmVersion: initialValues.spec?.helmVersion,
         subChartName: initialValues.spec?.subChartName,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
@@ -136,7 +141,7 @@ function HelmWithGIT({
       skipResourceVersioning: false,
       enableDeclarativeRollback: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
-      repoName: getRepositoryName(prevStepData, initialValues)
+      repoName: getRepositoryName(modifiedPrevStepData, initialValues)
     }
   }
 
@@ -187,14 +192,14 @@ function HelmWithGIT({
   const handleValidate = (formData: HelmWithGITDataType) => {
     if (hideHeaderAndNavBtns) {
       submitFormData({
-        ...prevStepData,
+        ...modifiedPrevStepData,
         ...formData,
-        connectorRef: prevStepData?.connectorRef
-          ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-            ? prevStepData?.connectorRef
-            : prevStepData?.connectorRef?.value
-          : prevStepData?.identifier
-          ? prevStepData?.identifier
+        connectorRef: modifiedPrevStepData?.connectorRef
+          ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+            ? modifiedPrevStepData?.connectorRef
+            : modifiedPrevStepData?.connectorRef?.value
+          : modifiedPrevStepData?.identifier
+          ? modifiedPrevStepData?.identifier
           : ''
       })
     }
@@ -228,7 +233,7 @@ function HelmWithGIT({
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
             if (
               connectionType === GitRepoName.Repo ||
-              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+              getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
             ) {
               return true
             }
@@ -247,14 +252,14 @@ function HelmWithGIT({
         validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
@@ -420,6 +425,7 @@ function HelmWithGIT({
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                   defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                   dragDropFieldWidth={filePathWidth}
+                  allowSinglePathDeletion
                 />
                 {getMultiTypeFromValue(formik.values.valuesPaths) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
@@ -451,7 +457,7 @@ function HelmWithGIT({
                       isReadonly={isReadonly}
                       helmVersion={formik.values?.helmVersion}
                       deploymentType={deploymentType as string}
-                      helmStore={prevStepData?.store ?? ''}
+                      helmStore={modifiedPrevStepData?.store ?? ''}
                     />
                   }
                 />
@@ -463,7 +469,7 @@ function HelmWithGIT({
                   text={getString('back')}
                   icon="chevron-left"
                   variation={ButtonVariation.SECONDARY}
-                  onClick={() => previousStep?.(prevStepData)}
+                  onClick={() => previousStep?.(modifiedPrevStepData)}
                 />
                 <Button
                   variation={ButtonVariation.PRIMARY}

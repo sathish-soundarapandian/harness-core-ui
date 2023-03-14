@@ -18,7 +18,7 @@ import { VariablesListTable } from '@pipeline/components/VariablesListTable/Vari
 import { TerraformCloudRunEditRef } from './TerraformCloudRunEdit'
 import { processFormData, processInitialValues, getSanitizedflatObjectForVariablesView } from './helper'
 import { validateGenericFields } from '../Common/GenericExecutionStep/utils'
-import type { TerraformCloudRunData, TerraformCloudRunFormData, TerraformCloudRunVariablesViewProps } from './types'
+import type { TerraformCloudRunFormData, TerraformCloudRunVariablesViewProps } from './types'
 import TerraformCloudRunInputStep from './TerraformCloudRunInputStep'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 export class TerraformCloudRun extends PipelineStep<any> {
@@ -29,19 +29,15 @@ export class TerraformCloudRun extends PipelineStep<any> {
   }
   protected type = StepType.TerraformCloudRun
   protected referenceId = 'terraformCloudRunStep'
-  protected defaultValues: TerraformCloudRunData = {
+  protected defaultValues: TerraformCloudRunFormData = {
     identifier: '',
     timeout: '10m',
     name: '',
     type: StepType.TerraformCloudRun,
     spec: {
       runType: '',
-      message: '',
-      spec: {
-        connectorRef: '',
-        organization: '',
-        workspace: ''
-      }
+      runMessage: '',
+      spec: {}
     }
   }
   protected stepIcon: IconName = 'terraform-cloud-run'
@@ -70,11 +66,11 @@ export class TerraformCloudRun extends PipelineStep<any> {
   }
 
   /* istanbul ignore next */
-  processFormData(data: TerraformCloudRunFormData): TerraformCloudRunData {
+  processFormData(data: TerraformCloudRunFormData): TerraformCloudRunFormData {
     return processFormData(data)
   }
 
-  renderStep(props: StepProps<TerraformCloudRunData>): JSX.Element {
+  renderStep(props: StepProps<TerraformCloudRunFormData>): JSX.Element {
     const {
       initialValues,
       onUpdate,

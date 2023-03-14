@@ -12,7 +12,6 @@ import type {
   ConnectorInfoDTO,
   GetSecretV2QueryParams,
   ConnectorConfigDTO,
-  AwsCredential,
   ErrorDetail,
   Connector,
   AppDynamicsConnectorDTO,
@@ -35,7 +34,7 @@ import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { setSecretField } from '@secrets/utils/SecretField'
-import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
+import { ConnectivityModeType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { transformStepHeadersAndParamsForPayloadForPrometheus } from '@connectors/components/CreateConnector/PrometheusConnector/utils'
 import { transformStepHeadersAndParamsForPayload } from '@connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthHeadersAndParams/CustomHealthHeadersAndParams.utils'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
@@ -51,10 +50,6 @@ export interface DelegateCardInterface {
   disabled?: boolean
 }
 
-export interface CredentialType {
-  [key: string]: AwsCredential['type']
-}
-
 export enum AzureSecretKeyType {
   SECRET = 'Secret',
   CERT = 'Certificate'
@@ -68,12 +63,6 @@ export enum AzureManagedIdentityTypes {
 export const GCP_AUTH_TYPE = {
   DELEGATE: 'delegate',
   ENCRYPTED_KEY: 'encryptedKey'
-}
-
-export const DelegateTypes: CredentialType = {
-  DELEGATE_IN_CLUSTER: 'InheritFromDelegate',
-  DELEGATE_IN_CLUSTER_IRSA: 'Irsa',
-  DELEGATE_OUT_CLUSTER: 'ManualConfig'
 }
 
 export const DelegateInClusterType = {
@@ -1478,14 +1467,22 @@ export const buildJiraPayload = (formData: FormData) => {
       jiraUrl: formData.jiraUrl,
 
       auth: {
-        type: AuthTypes.USER_PASSWORD,
+        type: formData.authType,
         spec: {
-          username: formData.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
-          usernameRef: formData.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
-          passwordRef: formData.passwordRef.referenceString
+          username: formData?.username?.type === ValueType.TEXT ? formData?.username?.value : undefined,
+          usernameRef: formData?.username?.type === ValueType.ENCRYPTED ? formData?.username?.value : undefined,
+          passwordRef: formData?.passwordRef?.referenceString,
+          patRef: formData?.patRef?.referenceString
         }
       }
     }
+  }
+  if (formData.authType === AuthTypes.USER_PASSWORD) {
+    delete savedData.spec.auth.spec.patRef
+  } else {
+    delete savedData.spec.auth.spec.username
+    delete savedData.spec.auth.spec.usernameRef
+    delete savedData.spec.auth.spec.passwordRef
   }
   return { connector: savedData }
 }
@@ -1503,16 +1500,20 @@ export const setupJiraFormData = async (connectorInfo: ConnectorInfoDTO, account
 
     username:
       connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD &&
-      (connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef)
+      (connectorInfo.spec.auth.spec?.username || connectorInfo.spec.auth.spec?.usernameRef)
         ? {
-            value: connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef,
-            type: connectorInfo.spec.auth.spec.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+            value: connectorInfo.spec.auth.spec?.username || connectorInfo.spec.auth.spec?.usernameRef,
+            type: connectorInfo.spec.auth.spec?.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
           }
         : undefined,
 
     passwordRef:
       connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
-        ? await setSecretField(connectorInfo.spec.auth.spec.passwordRef, scopeQueryParams)
+        ? await setSecretField(connectorInfo.spec.auth.spec?.passwordRef, scopeQueryParams)
+        : undefined,
+    patRef:
+      connectorInfo.spec.auth.type === AuthTypes.PERSONAL_ACCESS_TOKEN
+        ? await setSecretField(connectorInfo.spec.auth.spec?.patRef, scopeQueryParams)
         : undefined
   }
   return formData

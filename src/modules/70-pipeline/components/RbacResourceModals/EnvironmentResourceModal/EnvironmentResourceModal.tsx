@@ -46,6 +46,7 @@ const RenderEnvType: Renderer<CellProps<EnvironmentResponseDTO>> = ({ row }) => 
 
 function EnvironmentResourceModal({
   searchTerm,
+  sortMethod,
   onSelectChange,
   selectedData,
   resourceScope
@@ -55,7 +56,16 @@ function EnvironmentResourceModal({
   const [page, setPage] = useState(0)
 
   const { data: environmentsResponse, loading: isFetchingEnvironments } = useGetEnvironmentList({
-    queryParams: { accountIdentifier, orgIdentifier, projectIdentifier, searchTerm, page, size: 10 }
+    queryParams: {
+      accountIdentifier,
+      orgIdentifier,
+      projectIdentifier,
+      searchTerm,
+      page,
+      size: 10,
+      sort: [sortMethod]
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
 
   const environmentsData = environmentsResponse?.data?.content?.map(

@@ -27,7 +27,6 @@ exports[`Create Connector Atrribute Modal Body  renders all connector attributes
                 class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkBox StyledProps--main"
               >
                 <input
-                  checked=""
                   type="checkbox"
                 />
                 <span
@@ -46,47 +45,7 @@ exports[`Create Connector Atrribute Modal Body  renders all connector attributes
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
                 >
-                  cloudProviders
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="TableV2--row TableV2--card TableV2--clickable"
-          role="row"
-        >
-          <div
-            class="TableV2--cells"
-          >
-            <div
-              class="TableV2--cell"
-              role="cell"
-              style="width: 5%;"
-            >
-              <label
-                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkBox StyledProps--main"
-              >
-                <input
-                  type="checkbox"
-                />
-                <span
-                  class="bp3-control-indicator"
-                />
-              </label>
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
-              style="width: 95%;"
-            >
-              <div
-                class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
-                >
-                  secretManagers
+                  artifactRepositories
                 </p>
               </div>
             </div>
@@ -148,6 +107,7 @@ exports[`Create Connector Atrribute Modal Body  renders all connector attributes
                 class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkBox StyledProps--main"
               >
                 <input
+                  checked=""
                   type="checkbox"
                 />
                 <span
@@ -166,7 +126,7 @@ exports[`Create Connector Atrribute Modal Body  renders all connector attributes
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
                 >
-                  artifactRepositories
+                  cloudProviders
                 </p>
               </div>
             </div>
@@ -247,6 +207,46 @@ exports[`Create Connector Atrribute Modal Body  renders all connector attributes
                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
                 >
                   monitoringAndLoggingSystems
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card TableV2--clickable"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 5%;"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkBox StyledProps--main"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+              </label>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 95%;"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                >
+                  secretManagers
                 </p>
               </div>
             </div>

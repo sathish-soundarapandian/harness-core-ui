@@ -24,10 +24,10 @@ import type {
   ServiceDefinition,
   CustomDeploymentServiceSpec
 } from 'services/cd-ng'
-import { connectorTypes } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType, connectorTypes } from '@pipeline/utils/constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline as getStageByPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import type { DependencyElement } from 'services/ci'
+import type { CIInfraDetails, DependencyElement } from 'services/ci'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 
@@ -75,7 +75,8 @@ export enum ServiceDeploymentType {
   SshWinRmAws = 'SshWinRmAws',
   SshWinRmAzure = 'SshWinRmAzure',
   Asg = 'Asg',
-  GoogleCloudFunctions = 'GoogleCloudFunctions'
+  GoogleCloudFunctions = 'GoogleCloudFunctions',
+  AwsLambda = 'AwsLambda'
 }
 
 export enum RepositoryFormatTypes {
@@ -160,6 +161,15 @@ export function hasOverviewDetail(pipelineExecution?: PipelineExecutionSummary):
 
 export function hasCIStage(pipelineExecution?: PipelineExecutionSummary): boolean {
   return pipelineExecution?.modules?.includes('ci') || !isEmpty(pipelineExecution?.moduleInfo?.ci)
+}
+
+export function pipelineHasCIStageWithK8sInfra(pipelineExecution?: PipelineExecutionSummary): boolean {
+  const infras: CIInfraDetails[] = get(pipelineExecution, 'moduleInfo.ci.infraDetailsList', [])
+  return (
+    infras.findIndex(
+      (stageInfra: CIInfraDetails) => stageInfra.infraType === CIBuildInfrastructureType.KubernetesDirect
+    ) !== -1
+  )
 }
 
 export function hasSTOStage(pipelineExecution?: PipelineExecutionSummary): boolean {
@@ -354,6 +364,10 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
     deploymentType === ServiceDeploymentType.AmazonSAM ||
     deploymentType === ServiceDeploymentType.AzureFunctions
   )
+}
+
+export const isOnlyOneManifestAllowedForDeploymentType = (deploymentType: ServiceDefinition['type']) => {
+  return isServerlessDeploymentType(deploymentType) || deploymentType === ServiceDeploymentType.AwsLambda
 }
 
 export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
@@ -673,7 +687,8 @@ export const infraDefinitionTypeMapping: { [key: string]: string } = {
   CustomDeployment: StepType.CustomDeployment,
   TAS: StepType.TasInfra,
   Asg: StepType.AsgInfraSpec,
-  GoogleCloudFunctions: StepType.GoogleCloudFunctionsInfra
+  GoogleCloudFunctions: StepType.GoogleCloudFunctionsInfra,
+  AwsLambda: StepType.AwsLambdaInfra
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
@@ -698,6 +713,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.Asg
     case ServiceDeploymentType.GoogleCloudFunctions:
       return StepType.GoogleCloudFunctionsService
+    case ServiceDeploymentType.AwsLambda:
+      return StepType.AwsLambdaService
     default:
       return StepType.K8sServiceSpec
   }

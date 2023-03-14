@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import cx from 'classnames'
 import {
@@ -42,19 +49,20 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { Pipeline } from '@pipeline/utils/types'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { CacheResponseMetadata, Error } from 'services/pipeline-ng'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useValidateTemplateInputsQuery } from 'services/pipeline-rq'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
-import { PipelineCachedCopy, PipelineCachedCopyHandle } from './PipelineCachedCopy/PipelineCachedCopy'
+import { EntityCachedCopy, EntityCachedCopyHandle } from './EntityCachedCopy/EntityCachedCopy'
 import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
+import { ValidationBadge } from '../AsyncValidation/ValidationBadge'
 import css from './PipelineCanvas.module.scss'
 
 export interface PipelineCanvasHeaderProps {
@@ -97,6 +105,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     setSelectedStageId,
     setSelectedSectionId
   } = usePipelineContext()
+  const isAsyncValidationEnabled = useFeatureFlag(FeatureFlag.PIE_ASYNC_VALIDATION)
   const { showError, showSuccess, clear } = useToaster()
   const {
     pipeline,
@@ -115,11 +124,10 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const { branch, repoName, connectorRef } = useQueryParams<GitQueryParams & RunPipelineQueryParams>()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
   const { isYamlEditable } = pipelineView
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
 
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
-  const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
+  const pipelineCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
   const { data: reconcileErrorData, refetch: reconcilePipeline } = useValidateTemplateInputsQuery(
     {
@@ -253,7 +261,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
 
   // Need to show reload option only when we are showing a cached response
   function showReloadFromGitoption(): boolean {
-    return Boolean(isPipelineRemote && isGitCacheEnabled && pipelineCacheResponse)
+    return Boolean(isPipelineRemote && pipelineCacheResponse)
   }
 
   function handleReloadFromGitClick(): void {
@@ -389,8 +397,8 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     readOnly: pipelineIdentifier === DefaultNewPipelineId
                   }}
                 />
-                {isGitCacheEnabled && !isEmpty(pipelineCacheResponse) && !remoteFetchError && (
-                  <PipelineCachedCopy
+                {!isEmpty(pipelineCacheResponse) && !remoteFetchError && (
+                  <EntityCachedCopy
                     ref={pipelineCachedCopyRef}
                     reloadContent={getString('common.pipeline')}
                     cacheResponse={pipelineCacheResponse as CacheResponseMetadata}
@@ -419,6 +427,11 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                   >
                     {getString('unsavedChanges')}
                   </Button>
+                )}
+                {isAsyncValidationEnabled && !isNewPipeline && (
+                  <div className={css.validationContainer}>
+                    <ValidationBadge />
+                  </div>
                 )}
                 <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
                 {renderDiscardUnsavedChangeButton()}

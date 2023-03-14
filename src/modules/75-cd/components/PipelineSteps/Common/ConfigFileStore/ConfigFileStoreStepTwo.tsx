@@ -43,6 +43,7 @@ interface ConfigFileStoreStepTwoProps {
   isTerraformPlan?: boolean
   isBackendConfig?: boolean
   isTerragruntPlan?: boolean
+  fieldPath: string
 }
 
 export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreStepTwoProps> = ({
@@ -54,7 +55,8 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
   name,
   isTerraformPlan = false,
   isBackendConfig = false,
-  isTerragruntPlan = false
+  isTerragruntPlan = false,
+  fieldPath
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -62,16 +64,25 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
     { label: getString('gitFetchTypes.fromBranch'), value: getString('pipelineSteps.deploy.inputSet.branch') },
     { label: getString('gitFetchTypes.fromCommit'), value: getString('pipelineSteps.commitIdValue') }
   ]
-  const validationSchema = stepTwoValidationSchema(isTerraformPlan, isTerragruntPlan, isBackendConfig, getString)
+  const validationSchema = stepTwoValidationSchema(
+    isTerraformPlan,
+    isTerragruntPlan,
+    isBackendConfig,
+    getString,
+    fieldPath
+  )
 
   const [path, setPath] = React.useState('')
 
   useEffect(() => {
-    setPath(getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig))
+    setPath(getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig, fieldPath))
   }, [isTerraformPlan, isTerragruntPlan, isBackendConfig])
 
   if (prevStepData?.selectedType === 'Harness') {
-    let values = get(prevStepData.formValues, `${getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig)}.store`)
+    let values = get(
+      prevStepData.formValues,
+      `${getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig, fieldPath)}.store`
+    )
     if (values?.type !== 'Harness') {
       values = null
     }

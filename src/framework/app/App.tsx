@@ -14,6 +14,7 @@ import { FocusStyleManager } from '@blueprintjs/core'
 import { PageSpinner, useToaster, MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY } from '@harness/uicore'
 import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
 import { HarnessReactAPIClient as AuditServiceClient } from '@harnessio/react-audit-service-client'
+import { IDPServiceAPIClient } from '@harnessio/react-idp-service-client'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import SessionToken from 'framework/utils/SessionToken'
 import { queryClient } from 'services/queryClient'
@@ -81,6 +82,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   const { accountId } = useParams<AccountPathProps>()
   const { forceLogout } = useLogout()
   const auditServiceClientObjRef = useRef<AuditServiceClient>()
+  const idpServiceClientObjRef = useRef<IDPServiceAPIClient>()
 
   const getQueryParams = React.useCallback(() => {
     return {
@@ -183,6 +185,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
 
   const updateHeadersForOpenApiClients = (headers: Record<string, any>): void => {
     auditServiceClientObjRef.current?.updateHeaders(headers)
+    idpServiceClientObjRef.current?.updateHeaders(headers)
   }
 
   useEffect(() => {
@@ -197,6 +200,19 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       },
       getRequestHeaders: () => {
         return { token: SessionToken.getToken(), 'Harness-Account': accountId }
+      }
+    })
+    idpServiceClientObjRef.current = new IDPServiceAPIClient({
+      responseInterceptor: response => {
+        globalResponseHandler(response.clone())
+        return response
+      },
+      urlInterceptor: window.getApiBaseUrl,
+      getRequestHeaders: () => {
+        return {
+          token: SessionToken.getToken(),
+          'Harness-Account': accountId
+        }
       }
     })
   }, [accountId])

@@ -160,16 +160,18 @@ function Service(
             ...formik.values?.sources,
             changeSources: data
           })
-          onSave({
-            formik: {
-              ...formik,
-              values: {
-                ...(formik?.values || {}),
-                sources: { ...(formik?.values?.sources || {}), changeSources: data }
-              }
-            },
-            onSuccess
-          })
+          if (!isTemplate) {
+            onSave({
+              formik: {
+                ...formik,
+                values: {
+                  ...(formik?.values || {}),
+                  sources: { ...(formik?.values?.sources || {}), changeSources: data }
+                }
+              },
+              onSuccess
+            })
+          }
           hideDrawer()
         }
         if (isTemplate && formik.dirty) {

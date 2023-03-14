@@ -14,8 +14,7 @@ import {
   MultiTypeIcon,
   MultiTypeIconSize,
   AllowedTypes,
-  ButtonProps,
-  PopoverProps
+  ButtonProps
 } from '@harness/uicore'
 import { Popover } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -26,7 +25,6 @@ export interface MultiTypeSelectorButtonProps extends Omit<ButtonProps, 'type' |
   onChange: (type: MultiTypeInputType) => void
   allowedTypes: AllowedTypes
   disabled?: boolean
-  popoverProps?: PopoverProps
 }
 
 const MultiTypeSelectorButton: FC<MultiTypeSelectorButtonProps> = ({
@@ -35,7 +33,6 @@ const MultiTypeSelectorButton: FC<MultiTypeSelectorButtonProps> = ({
   allowedTypes,
   disabled,
   className,
-  popoverProps,
   ...props
 }) => (
   <Popover
@@ -48,7 +45,6 @@ const MultiTypeSelectorButton: FC<MultiTypeSelectorButtonProps> = ({
     className={css.typeSelectorWrapper}
     targetClassName={css.typeSelector}
     popoverClassName={css.popover}
-    {...popoverProps}
   >
     <Button
       minimal

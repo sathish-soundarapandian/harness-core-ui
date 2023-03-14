@@ -7,7 +7,7 @@
 
 import { defaultTo } from 'lodash-es'
 import produce from 'immer'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import type { StageElementConfig } from 'services/cd-ng'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -18,6 +18,8 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 interface TemplateActionsReturnType {
   addOrUpdateTemplate: (selectedTemplate?: TemplateSummaryResponse) => Promise<void>
   removeTemplate: () => Promise<void>
+  isTemplateUpdated: boolean
+  setIsTemplateUpdated(isTemplateUpdated: boolean): void
 }
 
 export function useStageTemplateActions(): TemplateActionsReturnType {
@@ -34,6 +36,8 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
   const { stage } = getStageFromPipeline(selectedStageId)
   const { getTemplate } = useTemplateSelector()
 
+  const [isTemplateUpdated, setIsTemplateUpdated] = useState(false)
+
   const addOrUpdateTemplate = useCallback(
     async (selectedTemplate?: TemplateSummaryResponse) => {
       try {
@@ -46,6 +50,7 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
           gitDetails,
           storeMetadata
         })
+
         const node = stage?.stage
         const processNode = isCopied
           ? produce(defaultTo(parse<any>(template?.yaml || '')?.template.spec, {}) as StageElementConfig, draft => {
@@ -54,8 +59,12 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
             })
           : createTemplate(node, template)
         await updateStage(processNode)
+        setIsTemplateUpdated(true)
       } catch (_) {
-        // Do nothing.. user cancelled template selection
+        // user cancelled template selection
+        if (isTemplateUpdated) {
+          setIsTemplateUpdated(false)
+        }
       }
     },
     [getTemplate, stage?.stage, templateTypes, gitDetails, storeMetadata, updateStage]
@@ -71,5 +80,5 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
     await updateStage(processNode)
   }, [stage?.stage, templateTypes, updateStage])
 
-  return { addOrUpdateTemplate, removeTemplate }
+  return { addOrUpdateTemplate, removeTemplate, isTemplateUpdated, setIsTemplateUpdated }
 }

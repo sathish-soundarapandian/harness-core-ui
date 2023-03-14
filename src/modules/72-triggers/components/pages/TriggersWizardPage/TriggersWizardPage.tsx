@@ -33,6 +33,7 @@ import {
 } from '@triggers/components/Triggers/TriggerInterface'
 import TriggerDetailsV1 from '@triggers/pages/trigger-details/TriggerDetails'
 import TriggersWizardPageV1 from '@triggers/pages/triggers/TriggersWizardPage'
+import { isNewTrigger } from '@triggers/components/Triggers/utils'
 
 export default function TriggersWizardPage(): JSX.Element {
   const {
@@ -64,7 +65,7 @@ export default function TriggersWizardPage(): JSX.Element {
       targetIdentifier: pipelineIdentifier,
       branch
     } as GetTriggerQueryParams,
-    lazy: triggerIdentifier === 'new'
+    lazy: isNewTrigger(triggerIdentifier)
   })
 
   useEffect(() => {
@@ -111,7 +112,7 @@ export default function TriggersWizardPage(): JSX.Element {
       type={type}
       baseType={baseType}
       initialValues={{}}
-      isNewTrigger={triggerIdentifier === 'new'}
+      isNewTrigger={isNewTrigger(triggerIdentifier)}
       triggerData={triggerResponse?.data}
     />
   )

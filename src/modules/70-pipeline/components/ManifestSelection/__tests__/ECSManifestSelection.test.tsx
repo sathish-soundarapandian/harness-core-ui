@@ -55,6 +55,10 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
   expect(GitLab).not.toBeNull()
   const Bitbucket = queryByValueAttribute('Bitbucket')
   expect(Bitbucket).not.toBeNull()
+  const AzureRepo = queryByValueAttribute('AzureRepo')
+  expect(AzureRepo).not.toBeNull()
+  const Harness = queryByValueAttribute('Harness')
+  expect(Harness).not.toBeNull()
 
   userEvent.click(Git!)
   const connnectorRefInput = await findByTestId(portal, /connectorRef/)

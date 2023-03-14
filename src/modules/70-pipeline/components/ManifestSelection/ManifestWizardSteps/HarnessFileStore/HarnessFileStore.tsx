@@ -21,7 +21,7 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
-import { get, set } from 'lodash-es'
+import { defaultTo, get, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
@@ -33,7 +33,12 @@ import {
   ManifestIdentifierValidation,
   ManifestStoreMap
 } from '../../Manifesthelper'
-import type { HarnessFileStoreDataType, HarnessFileStoreFormData, ManifestTypes } from '../../ManifestInterface'
+import type {
+  HarnessFileStoreDataType,
+  HarnessFileStoreFormData,
+  HarnessFileStoreManifestLastStepPrevStepData,
+  ManifestTypes
+} from '../../ManifestInterface'
 import { ManifestDetailsAdvancedSection } from '../CommonManifestDetails/ManifestDetailsAdvancedSection'
 import { shouldAllowOnlyOneFilePath } from '../CommonManifestDetails/utils'
 import { removeEmptyFieldsFromStringArray } from '../ManifestUtils'
@@ -49,6 +54,7 @@ interface HarnessFileStorePropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   showIdentifierField?: boolean
+  editManifestModePrevStepData?: HarnessFileStoreManifestLastStepPrevStepData
 }
 
 const showValuesPaths = (selectedManifest: ManifestTypes): boolean => {
@@ -73,10 +79,13 @@ function HarnessFileStore({
   previousStep,
   manifestIdsList,
   isReadonly,
-  showIdentifierField = true
+  showIdentifierField = true,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & HarnessFileStorePropType): React.ReactElement {
   const { getString } = useStrings()
   const isOnlyFileTypeManifest = selectedManifest && [ManifestDataType.Values].includes(selectedManifest)
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   const getInitialValues = (): HarnessFileStoreDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -181,7 +190,7 @@ function HarnessFileStore({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData
           } as unknown as HarnessFileStoreFormData)
         }}
@@ -244,6 +253,7 @@ function HarnessFileStore({
                           )
                         }}
                         restrictToSingleEntry={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
+                        allowSinglePathDeletion
                       />
                     </div>
                   )}
@@ -262,6 +272,7 @@ function HarnessFileStore({
                           label: <Text>{getString('pipeline.manifestType.paramsYamlPath')}</Text>
                         }}
                         restrictToSingleEntry={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
+                        allowSinglePathDeletion
                       />
                     </div>
                   )}
@@ -282,7 +293,7 @@ function HarnessFileStore({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

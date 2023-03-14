@@ -1261,6 +1261,141 @@ exports[`Saved Connector Details render for Inline K8s schema 1`] = `
 </div>
 `;
 
+exports[`Saved Connector Details render for Jira PAT schema 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainer"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card detailsSection"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+      >
+        overview
+      </p>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          connectors.title.jira
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            jiraPatDemo
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          description
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            Use PATs
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          identifier
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            jiraPatDemo
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bp3-card bp3-elevation-0 Card--card detailsSection"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+      >
+        credentials
+      </p>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          connectors.jira.jiraUrl
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            https://jira.dev.harness.io
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          personalAccessToken
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            pat
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          connectors.delegate.delegateSelectors
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            nexustest
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Saved Connector Details render for Manual K8s schema 1`] = `
 <div>
   <div
@@ -1676,6 +1811,177 @@ exports[`Saved Connector Details render for PDC schema 1`] = `
             class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
           >
             test hostname
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Saved Connector Details render for ServiceNow ADFS schema 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainer"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card detailsSection"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+      >
+        overview
+      </p>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          connectors.title.serviceNow
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            snowAdfsAlt
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          identifier
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            snowAdfsAlt
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bp3-card bp3-elevation-0 Card--card detailsSection"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+      >
+        credentials
+      </p>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          connectors.serviceNow.serviceNowUrl
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            https://ven03172.service-now.com
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          connectors.serviceNow.resourceID
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            adfs_resource_alt
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          common.certificate
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            adfs_cert_alt
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          connectors.serviceNow.clientID
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            adfs_client_alt
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          connectors.serviceNow.privateKey
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            adfs_key_alt
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          connectors.serviceNow.adfsUrl
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            https://dummyadfs.com/
           </span>
         </div>
       </div>

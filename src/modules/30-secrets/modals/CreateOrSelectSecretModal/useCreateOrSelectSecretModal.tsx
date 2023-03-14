@@ -18,14 +18,15 @@ import CreateOrSelectSecret from '@secrets/components/CreateOrSelectSecret/Creat
 import { SecretRef, SecretTypeEnum } from '@secrets/components/SecretReference/SecretReference'
 import type { ConnectorInfoDTO, ResponsePageSecretResponseWrapper, SecretResponseWrapper } from 'services/cd-ng'
 import { ReferenceSelectDialogTitle } from '@common/components/ReferenceSelect/ReferenceSelect'
-
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { SecretFormData } from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret'
+import type { SecretMultiSelectProps } from '@secrets/utils/SecretField'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
+import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import useCreateUpdateSecretModal from '../CreateSecretModal/useCreateUpdateSecretModal'
 import css from './useCreateOrSelectSecretModal.module.scss'
 
-export interface UseCreateOrSelectSecretModalProps {
+export interface UseCreateOrSelectSecretModalProps extends SecretMultiSelectProps {
   type?: SecretResponseWrapper['secret']['type']
   onSuccess?: (secret: SecretReference) => void
   secretsListMockData?: ResponsePageSecretResponseWrapper
@@ -33,6 +34,7 @@ export interface UseCreateOrSelectSecretModalProps {
   handleInlineSSHSecretCreation?: (secret?: SecretRef) => void
   handleInlineWinRmSecretCreation?: (secret?: SecretRef) => void
   scope?: ScopedObjectDTO
+  identifiersFilter?: ScopeAndIdentifier[]
 }
 
 export interface UseCreateOrSelectSecretModalReturn {
@@ -45,6 +47,7 @@ const useCreateOrSelectSecretModal = (
   inputs?: any[],
   selectedSecret?: string
 ): UseCreateOrSelectSecretModalReturn => {
+  const { isMultiSelect = false, selectedSecrets = [], onMultiSelect, identifiersFilter } = props
   const { getString } = useStrings()
 
   const secretTypeOptions: SelectOption[] = [
@@ -68,10 +71,13 @@ const useCreateOrSelectSecretModal = (
 
   const { openCreateSecretModal } = useCreateUpdateSecretModal({
     onSuccess: data => {
+      if (isMultiSelect) return
+
       const secret = {
         ...data,
         scope: getScopeFromDTO<SecretFormData>(data)
       }
+
       /* istanbul ignore next */
       props.onSuccess?.({
         ...pick(secret, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'type']),
@@ -120,7 +126,8 @@ const useCreateOrSelectSecretModal = (
                   : SecretTypeEnum.SECRET_FILE
               )
             }
-          }
+          },
+          ...(isMultiSelect && { title: getString('secrets.selectSecrets'), isNewConnectorLabelVisible: false })
         })}
         className={cx(css.createSelectSecret, css.dialog)}
       >
@@ -149,10 +156,17 @@ const useCreateOrSelectSecretModal = (
           setSecretType={setSecretType}
           scope={props.scope}
           selectedSecret={selectedSecret}
+          isMultiSelect={isMultiSelect}
+          selectedSecrets={selectedSecrets}
+          onMultiSelect={(...args) => {
+            onMultiSelect?.(...args)
+            hideModal()
+          }}
+          identifiersFilter={identifiersFilter}
         />
       </Dialog>
     )
-  }, inputDependencies)
+  }, [...inputDependencies, selectedSecret])
 
   return {
     openCreateOrSelectSecretModal: () => {

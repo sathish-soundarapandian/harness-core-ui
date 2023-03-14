@@ -51,6 +51,7 @@ import { RepositoryFormatTypes, getAllowedRepoOptions } from '@pipeline/utils/st
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { isValueFixed } from '@common/utils/utils'
 import { ArtifactIdentifierValidation, ModalViewFor, repositoryPortOrServer } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
@@ -511,6 +512,10 @@ export function Nexus3Artifact({
                         packageName: ''
                       })
                     }
+
+                    if (isValueFixed(formik.values.repository)) {
+                      formik.setFieldValue('repository', '')
+                    }
                   }}
                 />
               </div>
@@ -573,7 +578,7 @@ export function Nexus3Artifact({
                   </div>
                 )}
               </div>
-              {formik.values?.repositoryFormat === RepositoryFormatTypes.Maven ? (
+              {formik.values?.repositoryFormat === RepositoryFormatTypes.Maven && (
                 <>
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTextInput
@@ -668,7 +673,8 @@ export function Nexus3Artifact({
                     )}
                   </div>
                 </>
-              ) : formik.values?.repositoryFormat === RepositoryFormatTypes.Docker ? (
+              )}
+              {formik.values?.repositoryFormat === RepositoryFormatTypes.Docker && (
                 <>
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTextInput
@@ -764,7 +770,8 @@ export function Nexus3Artifact({
                     </div>
                   )}
                 </>
-              ) : formik.values?.repositoryFormat === RepositoryFormatTypes.Raw ? (
+              )}
+              {formik.values?.repositoryFormat === RepositoryFormatTypes.Raw && (
                 <div className={css.imagePathContainer}>
                   <FormInput.MultiTextInput
                     label={getString('rbac.group')}
@@ -788,7 +795,9 @@ export function Nexus3Artifact({
                     </div>
                   )}
                 </div>
-              ) : (
+              )}
+              {(formik.values?.repositoryFormat === RepositoryFormatTypes.NPM ||
+                formik.values?.repositoryFormat === RepositoryFormatTypes.NuGet) && (
                 <div className={css.imagePathContainer}>
                   <FormInput.MultiTextInput
                     label={getString('pipeline.artifactsSelection.packageName')}

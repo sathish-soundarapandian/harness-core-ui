@@ -9,19 +9,28 @@ import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import React, { FormEvent } from 'react'
-import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType, Formik, FormInput, Text } from '@harness/uicore'
+import {
+  AllowedTypes,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  Formik,
+  FormInput,
+  Text,
+  SelectOption
+} from '@harness/uicore'
 import { toString } from 'lodash-es'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/MultiTypeKVTagInput'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import type { TasCanaryAppSetupData } from './TasCanaryAppSetup'
 import { InstancesType, ResizeStrategyType } from '../TASBasicAppSetupStep/TASBasicAppSetupTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -35,6 +44,17 @@ interface TasCanaryAppSetupWidgetProps {
   stepViewType?: StepViewType
   isNewStep?: boolean
 }
+
+export const getResizeStrategies = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  {
+    label: getString('cd.steps.tas.upscaleNewFirstLabel'),
+    value: ResizeStrategyType.UpScaleNewFirst
+  },
+  {
+    label: getString('cd.steps.tas.downScaleOldFirstLabel'),
+    value: ResizeStrategyType.DownScaleOldFirst
+  }
+]
 
 export function TasCanaryAppSetupWidget(
   {
@@ -88,7 +108,10 @@ export function TasCanaryAppSetupWidget(
           }
           return commonValidation.call(this, value, getString('version'))
         }
-      })
+      }),
+      resizeStrategy: Yup.string().required(
+        getString('fieldRequired', { field: getString('cd.steps.tas.resizeStrategy') })
+      )
     })
   })
 
@@ -158,21 +181,33 @@ export function TasCanaryAppSetupWidget(
               }}
             />
             <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormInput.Select
-                items={[
-                  {
-                    label: getString('cd.steps.tas.upscaleNewFirstLabel'),
-                    value: ResizeStrategyType.UpScaleNewFirst
-                  },
-                  {
-                    label: getString('cd.steps.tas.downScaleOldFirstLabel'),
-                    value: ResizeStrategyType.DownScaleOldFirst
-                  }
-                ]}
+              <FormInput.MultiTypeInput
                 name="spec.resizeStrategy"
-                label={'Resize Strategy'}
+                selectItems={getResizeStrategies(getString)}
+                useValue
+                multiTypeInputProps={{
+                  expressions,
+                  allowableTypes,
+                  selectProps: {
+                    items: getResizeStrategies(getString)
+                  }
+                }}
+                label={getString('cd.steps.tas.resizeStrategy')}
+                placeholder={getString('common.selectName', { name: getString('cd.steps.tas.resizeStrategy') })}
                 disabled={readonly}
               />
+              {getMultiTypeFromValue(formValues.spec.resizeStrategy) === MultiTypeInputType.RUNTIME && (
+                <SelectConfigureOptions
+                  options={getResizeStrategies(getString)}
+                  value={toString(formValues.spec.resizeStrategy)}
+                  type="String"
+                  variableName="spec.resizeStrategy"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  onChange={/* istanbul ignore next */ value => setFieldValue('spec.resizeStrategy', value)}
+                  isReadonly={readonly}
+                />
+              )}
             </div>
             <div className={stepCss.divider} />
             <div className={cx(stepCss.formGroup, stepCss.lg)}>
@@ -206,6 +241,7 @@ export function TasCanaryAppSetupWidget(
                 name="spec.additionalRoutes"
                 tagsProps={{ placeholder: getString('cd.steps.tas.typeAndEnterForRouteAdd') }}
                 multiTypeProps={{
+                  expressions,
                   allowableTypes
                 }}
                 type={getString('tagLabel')}

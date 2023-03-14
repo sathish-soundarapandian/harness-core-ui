@@ -96,7 +96,6 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
       if (_winrmData) {
         setView(Views.EDIT)
         setLoading(true)
-
         const response = await getSecretReferencesForWinRm(_winrmData, params)
         setwinrmData({
           detailsData: {
@@ -125,7 +124,8 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
                 .spec as TGTGenerationSpecDTO
             )?.keyPath,
             port: (_winrmData.spec as WinRmCredentialsSpecDTO).port || 5985,
-            password: response.passwordSecret
+            password: response.passwordSecret,
+            parameters: (_winrmData.spec as WinRmCredentialsSpecDTO)?.parameters || []
           }
         })
         setLoading(false)

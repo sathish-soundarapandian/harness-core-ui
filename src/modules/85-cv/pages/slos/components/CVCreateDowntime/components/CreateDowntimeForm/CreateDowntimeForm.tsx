@@ -11,7 +11,7 @@ import { Layout, Page, Button, ButtonVariation } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { CVStepper } from '@cv/components/CVStepper/CVStepper'
+import { Stepper } from '@common/components/Stepper/Stepper'
 import { useGetAssociatedMonitoredServices } from 'services/cv'
 import { CreateDowntimeFormInterface, CreateDowntimeSteps } from './CreateDowntimeForm.types'
 import { DowntimeForm, DowntimeFormFields } from '../../CVCreateDowntime.types'
@@ -66,7 +66,7 @@ export const CreateDowntimeForm = ({
 
   return (
     <>
-      <CVStepper
+      <Stepper
         id="createDowntimeTabs"
         isStepValid={isStepValid}
         runValidationOnMount={validateAllSteps}

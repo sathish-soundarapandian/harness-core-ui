@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { FormInput } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils'
@@ -74,5 +74,20 @@ describe('Test Filter component', () => {
     userEvent.click(screen.getByLabelText('save'))
 
     expect(await screen.findByText('filters.invalidCriteria')).toBeInTheDocument()
+  })
+
+  test('should close the filter drawer when close button gets clicked', async () => {
+    const onClose = jest.fn()
+    render(
+      <TestWrapper>
+        <Filter {...props} onClose={onClose}>
+          <ConnectorFormFields />
+        </Filter>
+      </TestWrapper>
+    )
+    expect(await screen.findByLabelText('filters.newFilter')).toBeInTheDocument()
+
+    userEvent.click(screen.getByTestId('filter-drawer-close'))
+    await waitFor(() => expect(screen.queryByLabelText('filters.newFilter')).not.toBeInTheDocument())
   })
 })

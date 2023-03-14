@@ -42,7 +42,13 @@ export const actionToLabelMap: Record<AuditEventDTO['action'], StringKeys> = {
   LOGIN: 'auditTrail.actions.login',
   LOGIN2FA: 'auditTrail.actions.login2fa',
   UNSUCCESSFUL_LOGIN: 'auditTrail.actions.unsuccessfullLogin',
-  ERROR_BUDGET_RESET: 'cv.resetErrorBudget'
+  ERROR_BUDGET_RESET: 'cv.resetErrorBudget',
+  START: 'start',
+  END: 'auditTrail.actions.end',
+  PAUSE: 'auditTrail.actions.pause',
+  RESUME: 'auditTrail.actions.resume',
+  ABORT: 'abort',
+  TIMEOUT: 'pipelineSteps.timeoutLabel'
 }
 
 export const moduleToLabelMap: Record<AuditEventDTO['module'], StringKeys> = {

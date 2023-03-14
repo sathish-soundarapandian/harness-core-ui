@@ -16,6 +16,7 @@ import {
   ExpandingSearchInputHandle,
   Icon,
   Tab,
+  Text,
   Tabs
 } from '@harness/uicore'
 import type { GroupedVirtuosoHandle, VirtuosoHandle } from 'react-virtuoso'
@@ -34,7 +35,7 @@ import type {
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import type { ModulePathParams, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
-import { isExecutionComplete, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
+import { ExecutionStatus, isExecutionComplete, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import { useLogsContent } from './useLogsContent'
@@ -43,6 +44,7 @@ import { SingleSectionLogsWithRef as SingleSectionLogs } from './components/Sing
 import type { UseActionCreatorReturn } from './LogsState/actions'
 import { useLogSettings } from './useLogsSettings'
 import { InputOutputTab } from '../execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
+import ExecutionStatusLabel from '../ExecutionStatusLabel/ExecutionStatusLabel'
 import css from './LogsContent.module.scss'
 
 enum ConsoleDetailTab {
@@ -365,7 +367,7 @@ export class LogsContentWithErrorBoundary extends React.Component<LogsContentPro
 }
 
 export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps): React.ReactElement {
-  const { errorMessage, isSkipped, renderLogs, step, isStageExecutionInputConfigured } = props
+  const { errorMessage, isSkipped, renderLogs, step, isStageExecutionInputConfigured, stageErrorMessage } = props
   const { identifier, stepParameters, baseFqn, outcomes, status, stepType } = defaultTo(step, {})
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(ConsoleDetailTab.CONSOLE_LOGS)
@@ -425,6 +427,15 @@ export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps)
               />
             }
           />
+        )}
+        {stageErrorMessage && (
+          <div className={css.errorMsgWrapper}>
+            <ExecutionStatusLabel status={'Failed' as ExecutionStatus} />
+            <div className={css.errorMsg}>
+              <StrTemplate className={css.errorTitle} stringID="errorSummaryText" tagName="div" />
+              <Text lineClamp={1}>{stageErrorMessage}</Text>
+            </div>
+          </div>
         )}
       </Tabs>
     </div>

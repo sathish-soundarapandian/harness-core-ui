@@ -22,6 +22,7 @@ import type { CDModuleLicenseDTO } from 'services/portal'
 import SubscriptionDetailsCard from './SubscriptionDetailsCard'
 import SubscriptionUsageCard from './SubscriptionUsageCard'
 import { ServiceLicenseTable } from './ServiceLicenseTable'
+import { ServiceLicenseGraphs } from './ServiceLicenseGraphs'
 import type { TrialInformation } from '../SubscriptionsPage'
 interface SubscriptionOverviewProps {
   accountName?: string
@@ -100,7 +101,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
       {enabled && licenseData && module !== ModuleName.CHAOS && (
         <SubscriptionUsageCard module={module} licenseData={licenseData} />
       )}
-      {module === 'CD' && (licenseData as CDModuleLicenseDTO)?.cdLicenseType === 'SERVICES' ? (
+      {module === 'CD' ? (
         <ServiceLicenseTable
           gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
           data={activeServiceList?.data || {}}
@@ -111,7 +112,15 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
           sortBy={sort}
           updateFilters={updateFilters}
           servicesLoading={loading}
+          licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType || ''}
         />
+      ) : null}
+      {module === 'CD' ? (
+        <ServiceLicenseGraphs
+          accountId={accountId}
+          licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType}
+          licenseData={licenseData}
+        ></ServiceLicenseGraphs>
       ) : null}
     </Layout.Vertical>
   )

@@ -41,7 +41,7 @@ exports[`ChaosExperiment Step Edit View edit mode works 1`] = `
     >
       <div>
         <div
-          class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+          class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
           style="width: 75%;"
         >
           <div
@@ -246,7 +246,7 @@ exports[`ChaosExperiment Step Edit View edit mode works 1`] = `
                 class="Accordion--accordion"
               >
                 <div
-                  class="Accordion--panel"
+                  class="Accordion--panel optionalConfigPanel"
                   data-open="true"
                   data-testid="optional-config-panel"
                 >
@@ -382,7 +382,7 @@ exports[`ChaosExperiment Step Edit View should render properly 1`] = `
     >
       <div>
         <div
-          class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+          class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
           style="width: 75%;"
         >
           <div
@@ -593,7 +593,7 @@ exports[`ChaosExperiment Step Edit View should render properly 1`] = `
                 class="Accordion--accordion"
               >
                 <div
-                  class="Accordion--panel"
+                  class="Accordion--panel optionalConfigPanel"
                   data-open="false"
                   data-testid="optional-config-panel"
                 >

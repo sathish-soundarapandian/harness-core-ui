@@ -26,7 +26,6 @@ import DynatraceHealthSourceContainer from '@cv/pages/health-source/connectors/D
 import CustomHealthLogSource from '@cv/pages/health-source/connectors/CustomHealthLogSource/CustomHealthLogSource'
 import { CustomHealthProduct } from '@cv/pages/health-source/connectors/CustomHealthSource/CustomHealthSource.constants'
 import { SplunkMetricsHealthSource } from '@cv/pages/health-source/connectors/SplunkMetricsHealthSourceV2/SplunkMetricsHealthSource'
-import ElkHealthSource from '@cv/pages/health-source/connectors/ElkHealthSource/ElkHealthSource'
 import CloudWatch from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch'
 import CommonHealthSourceContainer from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.container'
 import { healthSourcesConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/HealthSourceConfigs/HealthSourceConfigs'
@@ -57,7 +56,6 @@ export const LoadSourceByType = ({
 }): JSX.Element | null => {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
-  const isELKEnabled = useFeatureFlag(FeatureFlag.SRM_ELK_LOGS_V2)
   const selectedProduct = data?.product?.value || data?.existingMetricDetails?.type
   const healthSourceConfig = healthSourcesConfig[selectedProduct]
 
@@ -173,19 +171,15 @@ export const LoadSourceByType = ({
         />
       )
     case HealthSourceTypes.Elk:
-      if (!isELKEnabled) {
-        return <ElkHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
-      } else {
-        return (
-          <CommonHealthSourceContainer
-            data={data}
-            healthSourceConfig={healthSourceConfig}
-            isTemplate={isTemplate}
-            expressions={expressions}
-            onSubmit={onSubmit}
-          />
-        )
-      }
+      return (
+        <CommonHealthSourceContainer
+          data={data}
+          healthSourceConfig={healthSourceConfig}
+          isTemplate={isTemplate}
+          expressions={expressions}
+          onSubmit={onSubmit}
+        />
+      )
     default:
       return null
   }

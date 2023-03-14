@@ -8,7 +8,7 @@
 import React from 'react'
 import { isEmpty, noop } from 'lodash-es'
 import { Button, ButtonVariation, Formik, FormikForm, FormInput, Layout, StepProps, Text } from '@harness/uicore'
-import { Color, Intent } from '@harness/design-system'
+import { Color, FontVariation, Intent } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { FreezeNotificationRules, FreezeEvent } from '@freeze-windows/types'
 import css from '@pipeline/components/Notifications/useNotificationModal.module.scss'
@@ -32,12 +32,13 @@ const getEventItems = (getString: UseStringsReturn['getString']) => [
 interface EventsFormData {
   types: { [key: string]: any }
   [key: string]: any
+  customizedMessage?: string
 }
 
 export const FreezeEvents = ({ nextStep, prevStepData }: StepProps<FreezeNotificationRules>) => {
   const { getString } = useStrings()
   const [eventItems] = React.useState(getEventItems(getString))
-  const initialValues: EventsFormData = { types: {} }
+  const initialValues: EventsFormData = { types: {}, customizedMessage: prevStepData?.customizedMessage }
   const types: Required<EventsFormData>['types'] = {}
 
   prevStepData?.events?.map(event => {
@@ -65,7 +66,10 @@ export const FreezeEvents = ({ nextStep, prevStepData }: StepProps<FreezeNotific
               const dataToSubmit: FreezeEvent = { type: value as EventType }
               return dataToSubmit
             })
-          nextStep?.({ ...prevStepData, events })
+          const customizedMessage = {
+            customizedMessage: !isEmpty(values.customizedMessage) ? values.customizedMessage : undefined
+          }
+          nextStep?.({ ...prevStepData, events, ...customizedMessage })
         }}
       >
         {formikProps => {
@@ -93,6 +97,23 @@ export const FreezeEvents = ({ nextStep, prevStepData }: StepProps<FreezeNotific
                     </Layout.Vertical>
                   )
                 })}
+                <Layout.Vertical>
+                  <Text
+                    margin={{ top: 'medium', bottom: 'large' }}
+                    font={{ variation: FontVariation.BODY }}
+                    color={Color.BLACK}
+                  >
+                    {getString('freezeWindows.freezeNotifications.customMessageTitle')}
+                  </Text>
+                  <FormInput.TextArea
+                    data-name="customizedMessage"
+                    name="customizedMessage"
+                    placeholder={getString('freezeWindows.freezeNotifications.customizedMessagePlaceholder')}
+                    textArea={{
+                      style: { minHeight: 120 }
+                    }}
+                  />
+                </Layout.Vertical>
               </Layout.Vertical>
               <Button
                 type="submit"

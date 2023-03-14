@@ -74,6 +74,7 @@ export interface ConsoleViewStepDetailProps {
   loading?: boolean
   renderLogs?: (props: RenderLogsInterface) => React.ReactNode
   isStageExecutionInputConfigured?: boolean
+  stageErrorMessage?: string
 }
 
 export interface ConsoleViewStepDetailsRegister {

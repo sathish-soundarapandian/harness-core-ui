@@ -6,58 +6,57 @@
  */
 
 import React from 'react'
+import { get } from 'lodash-es'
 import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import type { RemoteTerraformVarFileSpec } from 'services/cd-ng'
+import type { RemoteTerraformVarFileSpec, TerraformVarFileWrapper } from 'services/cd-ng'
 
 import type { TerraformData, TerraformVariableStepProps } from '../TerraformInterfaces'
 import css from '@cd/components/PipelineSteps/Common/Terraform/TerraformStep.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 export function ConfigVariables(props: TerraformVariableStepProps): React.ReactElement {
-  const { variablesData = {} as TerraformData, metadataMap, initialValues } = props
+  const { variablesData = {} as TerraformData, metadataMap, initialValues, fieldPath } = props
   const { getString } = useStrings()
-
+  const initialValuesSpec = get(initialValues?.spec, `${fieldPath}`)
+  const variablesDataSpec = get(variablesData?.spec, `${fieldPath}`)
   return (
     <>
       <VariablesListTable
-        data={variablesData?.spec?.configuration?.spec}
-        originalData={initialValues.spec?.configuration?.spec}
+        data={variablesDataSpec?.spec}
+        originalData={initialValuesSpec?.spec}
         metadataMap={metadataMap}
         className={pipelineVariableCss.variablePaddingL3}
       />
-      {variablesData?.spec?.configuration?.spec?.configFiles?.store?.spec && (
+      {variablesDataSpec?.spec?.configFiles?.store?.spec && (
         <>
           <Text className={css.stepTitle}>{getString('pipelineSteps.configFiles')}</Text>
           <VariablesListTable
-            data={variablesData?.spec?.configuration?.spec?.configFiles?.store?.spec}
-            originalData={initialValues.spec?.configuration?.spec?.configFiles?.store?.spec}
+            data={variablesDataSpec?.spec?.configFiles?.store?.spec}
+            originalData={initialValuesSpec?.spec?.configFiles?.store?.spec}
             metadataMap={metadataMap}
             className={pipelineVariableCss.variablePaddingL3}
           />
         </>
       )}
-      {variablesData?.spec?.configuration?.spec?.varFiles?.length && (
+      {variablesDataSpec?.spec?.varFiles?.length && (
         <>
           <Text className={css.stepTitle}>{getString('cd.terraformVarFiles')}</Text>
-          {variablesData?.spec?.configuration?.spec?.varFiles?.map((varFile, index) => {
+          {variablesDataSpec?.spec?.varFiles?.map((varFile: TerraformVarFileWrapper, index: number) => {
             if (varFile?.varFile?.type === 'Inline') {
               return (
                 <VariablesListTable
                   key={index}
-                  data={variablesData?.spec?.configuration?.spec?.varFiles?.[index]?.varFile?.spec}
-                  originalData={
-                    initialValues?.spec?.configuration?.spec?.varFiles?.[index]?.varFile?.spec || ({} as any)
-                  }
+                  data={variablesDataSpec?.spec?.varFiles?.[index]?.varFile?.spec}
+                  originalData={initialValuesSpec?.spec?.varFiles?.[index]?.varFile?.spec || ({} as any)}
                   metadataMap={metadataMap}
                   className={pipelineVariableCss.variablePaddingL4}
                 />
               )
             } else if (varFile?.varFile?.type === 'Remote') {
-              const remoteSpec = variablesData?.spec?.configuration?.spec?.varFiles?.[index]?.varFile
-                ?.spec as RemoteTerraformVarFileSpec
-              const initVarSpec = initialValues?.spec?.configuration?.spec?.varFiles?.[index]?.varFile
+              const remoteSpec = variablesDataSpec?.spec?.varFiles?.[index]?.varFile?.spec as RemoteTerraformVarFileSpec
+              const initVarSpec = initialValuesSpec?.spec?.varFiles?.[index]?.varFile
                 ?.spec as RemoteTerraformVarFileSpec
               return (
                 <VariablesListTable

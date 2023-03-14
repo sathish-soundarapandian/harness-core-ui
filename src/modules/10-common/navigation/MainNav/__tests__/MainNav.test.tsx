@@ -73,7 +73,8 @@ describe('main nav tests', () => {
   test('when modules are enabled', () => {
     const { queryByText } = render(
       <TestWrapper
-        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>
@@ -87,7 +88,6 @@ describe('main nav tests', () => {
     const { queryByText } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: true,
           CHAOS_ENABLED: true,
@@ -105,7 +105,6 @@ describe('main nav tests', () => {
     const { container } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: true,
           CHAOS_ENABLED: true,
@@ -136,12 +135,12 @@ describe('main nav tests', () => {
     const { queryByText } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: true,
           CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>
@@ -169,12 +168,12 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: false,
           CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>
@@ -201,7 +200,6 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: false,
           CHAOS_ENABLED: true,
@@ -236,12 +234,12 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: true,
           CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>

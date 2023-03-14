@@ -131,6 +131,7 @@ function FormContent({
       refetchProjectMetadata({
         queryParams: {
           ...commonParams,
+          expand: 'projects.issuetypes',
           connectorRef: connectorRefFixedValue.toString(),
           projectKey: projectKeyFixedValue.toString(),
           fetchStatus: true
@@ -144,6 +145,7 @@ function FormContent({
       refetchIssueMetadata({
         queryParams: {
           ...commonParams,
+          expand: 'projects.issuetypes.fields',
           connectorRef: connectorRefFixedValue.toString(),
           projectKey: projectKeyFixedValue.toString(),
           issueType: issueTypeFixedValue.toString(),
@@ -496,6 +498,7 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
     lazy: true,
     queryParams: {
       ...commonParams,
+      expand: '',
       connectorRef: '',
       projectKey: '',
       fetchStatus: true
@@ -510,6 +513,7 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
     lazy: true,
     queryParams: {
       ...commonParams,
+      expand: '',
       connectorRef: '',
       projectKey: '',
       issueType: '',

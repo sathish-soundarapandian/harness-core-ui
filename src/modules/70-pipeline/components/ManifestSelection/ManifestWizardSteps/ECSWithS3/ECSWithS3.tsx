@@ -48,7 +48,7 @@ import {
   checkIfQueryParamsisNotEmpty,
   shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import type { ECSWithS3DataType, ManifestTypes } from '../../ManifestInterface'
+import type { ECSWithS3DataType, ECSWithS3ManifestLastStepPrevStepData, ManifestTypes } from '../../ManifestInterface'
 import { getConnectorRefOrConnectorId, ManifestIdentifierValidation } from '../../Manifesthelper'
 import { filePathWidth } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
@@ -72,6 +72,7 @@ interface ECSWithS3PropsType {
   deploymentType?: string
   selectedManifest: ManifestTypes | null
   showIdentifierField?: boolean
+  editManifestModePrevStepData?: ECSWithS3ManifestLastStepPrevStepData
 }
 
 export function ECSWithS3({
@@ -85,12 +86,15 @@ export function ECSWithS3({
   manifestIdsList,
   isReadonly = false,
   selectedManifest,
-  showIdentifierField = true
+  showIdentifierField = true,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & ECSWithS3PropsType): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const [lastQueryData, setLastQueryData] = React.useState({ region: '' })
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   /* Code related to region */
   React.useEffect(() => {
@@ -124,7 +128,7 @@ export function ECSWithS3({
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      connectorRef: getConnectorRefFromPrevStep(prevStepData),
+      connectorRef: getConnectorRefFromPrevStep(modifiedPrevStepData),
       region: lastQueryData.region
     },
     lazy: true
@@ -154,26 +158,28 @@ export function ECSWithS3({
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
-          connectorRef: getConnectorRefFromPrevStep(prevStepData),
+          connectorRef: getConnectorRefFromPrevStep(modifiedPrevStepData),
           region: lastQueryData.region
         }
       })
     }
-  }, [lastQueryData, refetchBuckets, prevStepData])
+  }, [lastQueryData, refetchBuckets, modifiedPrevStepData])
 
   const canFetchBuckets = useCallback(
     (region: string): boolean => {
-      // prevStepData?.connectorRef is passed to shouldFetchFieldOptions when connector selection is done in prev step
-      // prevStepData is passed to shouldFetchFieldOptions required when inline connector creation has been done in prev step
+      // modifiedPrevStepData?.connectorRef is passed to shouldFetchFieldOptions when connector selection is done in prev step
+      // modifiedPrevStepData is passed to shouldFetchFieldOptions required when inline connector creation has been done in prev step
       return !!(
         lastQueryData.region !== region &&
         shouldFetchFieldOptions(
-          !isEmpty(prevStepData?.identifier) ? prevStepData : { connectorId: { ...prevStepData?.connectorRef } },
+          !isEmpty(modifiedPrevStepData?.identifier)
+            ? modifiedPrevStepData
+            : { connectorId: { ...modifiedPrevStepData?.connectorRef } },
           [region]
         )
       )
     },
-    [lastQueryData, prevStepData]
+    [lastQueryData, modifiedPrevStepData]
   )
 
   const fetchBuckets = useCallback(
@@ -215,7 +221,7 @@ export function ECSWithS3({
   const setBucketNameInitialValue = (values: ECSWithS3DataType, specValues: StoreConfig): void => {
     if (
       getMultiTypeFromValue(specValues?.bucketName) === MultiTypeInputType.FIXED &&
-      getMultiTypeFromValue(prevStepData?.connectorRef) === MultiTypeInputType.FIXED &&
+      getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) === MultiTypeInputType.FIXED &&
       getMultiTypeFromValue(specValues?.region) === MultiTypeInputType.FIXED
     ) {
       merge(values, { bucketName: { label: specValues?.bucketName, value: specValues?.bucketName } })
@@ -278,7 +284,7 @@ export function ECSWithS3({
   const renderS3Bucket = (formik: FormikProps<ECSWithS3DataType>): JSX.Element => {
     if (
       getMultiTypeFromValue(formik.values?.region) !== MultiTypeInputType.FIXED ||
-      getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+      getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
     ) {
       return (
         <div
@@ -392,9 +398,9 @@ export function ECSWithS3({
         })}
         onSubmit={(formData: ECSWithS3DataType) => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: getConnectorRefOrConnectorId(prevStepData)
+            connectorRef: getConnectorRefOrConnectorId(modifiedPrevStepData)
           })
         }}
       >
@@ -499,7 +505,7 @@ export function ECSWithS3({
                 variation={ButtonVariation.SECONDARY}
                 text={getString('back')}
                 icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
+                onClick={() => previousStep?.(modifiedPrevStepData)}
               />
               <Button
                 variation={ButtonVariation.PRIMARY}

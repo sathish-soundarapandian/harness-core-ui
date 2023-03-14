@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useRef, useState, useCallback, ReactElement } from 'react'
+import React, { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import {
   Button,
@@ -15,13 +15,13 @@ import {
   Heading,
   Layout,
   Pagination,
-  Text,
-  Utils,
+  Popover,
   TableV2,
-  Popover
+  Text,
+  Utils
 } from '@harness/uicore'
-import { noop } from 'lodash-es'
-import { Classes, Position, Switch, PopoverInteractionKind } from '@blueprintjs/core'
+import { defer, noop } from 'lodash-es'
+import { Classes, PopoverInteractionKind, Position, Switch } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import type { Cell, CellProps, Column, Renderer } from 'react-table'
 import type { MutateMethod } from 'restful-react'
@@ -37,7 +37,7 @@ import {
   useDeleteFeatureFlag,
   useGetAllFeatures
 } from 'services/cf'
-import { useStrings, String } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
@@ -63,13 +63,14 @@ import FlagDialog from '@cf/components/CreateFlagDialog/FlagDialog'
 import SaveFlagToGitModal from '@cf/components/SaveFlagToGitModal/SaveFlagToGitModal'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import GitSyncActions from '@cf/components/GitSyncActions/GitSyncActions'
-import { GitDetails, GitSyncFormValues, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
+import { GIT_SYNC_ERROR_CODE, GitDetails, GitSyncFormValues, UseGitSync } from '@cf/hooks/useGitSync'
 import { useGovernance, UseGovernancePayload } from '@cf/hooks/useGovernance'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import FlagOptionsMenuButton from '@cf/components/FlagOptionsMenuButton/FlagOptionsMenuButton'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useFeature } from '@common/hooks/useFeatures'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
@@ -418,9 +419,11 @@ const FeatureFlagsPage: React.FC = () => {
   const history = useHistory()
   const { activeEnvironment: environmentIdentifier, withActiveEnvironment } = useActiveEnvironment()
   const searchRef = React.useRef<ExpandingSearchInputHandle>({} as ExpandingSearchInputHandle)
-  const [pageNumber, setPageNumber] = useState(0)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [flagFilter, setFlagFilter] = useState<Optional<FilterProps>>({})
+
+  const [pageNumber, setPageNumber] = useQueryParamsState('page', 0)
+  const [searchTerm, setSearchTerm] = useQueryParamsState('search', '')
+  const [flagFilter, setFlagFilter] = useQueryParamsState<Optional<FilterProps>>('filter', {})
+
   const enableMetricsEndpoint = useFeatureFlag(FeatureFlag.FFM_6610_ENABLE_METRICS_ENDPOINT)
 
   const queryParams = useMemo<GetAllFeaturesQueryParams>(() => {
@@ -614,8 +617,8 @@ const FeatureFlagsPage: React.FC = () => {
 
   const onSearchInputChanged = useCallback(
     name => {
-      setSearchTerm(name)
-      setPageNumber(0)
+      defer(() => setSearchTerm(name))
+      defer(() => setPageNumber(0))
     },
     [setSearchTerm, setPageNumber]
   )
@@ -627,7 +630,9 @@ const FeatureFlagsPage: React.FC = () => {
   const FILTER_FEATURE_FLAGS = useFeatureFlag(FeatureFlag.STALE_FLAGS_FFM_1510)
   const showFilterCards = FILTER_FEATURE_FLAGS && hasFeatureFlags && environmentIdentifier
 
-  const onClearFilter = (): void => setFlagFilter({})
+  const onClearFilter = (): void => {
+    defer(() => setFlagFilter({}))
+  }
   const onClearSearch = (): void => searchRef.current.clear()
 
   return (
@@ -648,6 +653,7 @@ const FeatureFlagsPage: React.FC = () => {
               name="findFlag"
               placeholder={getString('search')}
               onChange={onSearchInputChanged}
+              defaultValue={searchTerm}
             />
           </>
         )
@@ -678,8 +684,8 @@ const FeatureFlagsPage: React.FC = () => {
             features={features}
             currentFilter={flagFilter}
             updateTableFilter={currentFilter => {
-              setPageNumber(0)
-              setFlagFilter(currentFilter)
+              defer(() => setPageNumber(0))
+              defer(() => setFlagFilter(currentFilter))
             }}
           />
         </Container>

@@ -251,7 +251,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
-                allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+                allowableTypes,
                 expressions
               }}
               type={ArtifactToConnectorMap[defaultTo(artifact?.type, '')]}

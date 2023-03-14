@@ -2674,6 +2674,7 @@ type Pricing {
   ffPlans: [ComponentPricingPagePlansZone]
   ccPlans: [ComponentPricingPagePlansZone]
   srmPlans: [ComponentPricingPagePlansZone]
+  cePlans: [ComponentPricingPagePlansZone]
   caseStudies: [ComponentPageCaseStudyZone]
   ciSaasPlans: [ComponentPricingPagePlansZone]
   ciFeatureGroup: [ComponentPricingPageFeatureGroup]
@@ -2687,11 +2688,14 @@ type Pricing {
   ciSaasFeatureCaption: [ComponentPricingPageFeatureCaption]
   ciSaasFeatureGroup: [ComponentPricingPageFeatureGroup]
   srmFeatureCaption: [ComponentPricingPageFeatureCaption]
+  ceFeatureGroup: [ComponentPricingPageFeatureGroup]
+  ceFeatureCaption: [ComponentPricingPageFeatureCaption]
   srmFeatureGroup: [ComponentPricingPageFeatureGroup]
   cdFaq: [ComponentPricingPageFaq]
   ciFaq: [ComponentPricingPageFaq]
   ffFaq: [ComponentPricingPageFaq]
   ccFaq: [ComponentPricingPageFaq]
+  ceFaq: [ComponentPricingPageFaq]
   openSource: ComponentPricingPageCallOut
   tooltips: [ComponentPricingPageTooltipsZone]
   published_at: DateTime

@@ -89,6 +89,7 @@ import SaveAsInputSet from './SaveAsInputSet'
 import ReplacedExpressionInputForm from './ReplacedExpressionInputForm'
 import {
   KVPair,
+  LexicalContext,
   PipelineVariablesContextProvider,
   usePipelineVariables
 } from '../PipelineVariablesContext/PipelineVariablesContext'
@@ -144,8 +145,7 @@ function RunPipelineFormBasic({
   executionIdentifier,
   isDebugMode
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
-  const { PIE_NG_GITX_CACHING: isGitCacheEnabled, FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } =
-    useFeatureFlags()
+  const { FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } = useFeatureFlags()
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState<boolean>(false)
@@ -229,7 +229,7 @@ function RunPipelineFormBasic({
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const pipeline: PipelineInfoConfig | undefined = React.useMemo(
@@ -495,7 +495,7 @@ function RunPipelineFormBasic({
         />
       </Dialog>
     )
-  }, [notifyOnlyMe, selectedStageData, stageIdentifiers])
+  }, [notifyOnlyMe, selectedStageData, stageIdentifiers, formErrors])
 
   const isExecutingPipeline =
     runPipelineLoading || reRunPipelineLoading || runStagesLoading || reRunStagesLoading || reRunDebugModeLoading
@@ -1008,7 +1008,10 @@ export function RunPipelineForm(props: RunPipelineFormProps & InputSetGitQueryPa
       {props.executionView ? (
         <RunPipelineFormBasic {...props} />
       ) : (
-        <PipelineVariablesContextProvider storeMetadata={props.storeMetadata}>
+        <PipelineVariablesContextProvider
+          storeMetadata={props.storeMetadata}
+          lexicalContext={LexicalContext.RunPipelineForm}
+        >
           <RunPipelineFormBasic {...props} />
         </PipelineVariablesContextProvider>
       )}

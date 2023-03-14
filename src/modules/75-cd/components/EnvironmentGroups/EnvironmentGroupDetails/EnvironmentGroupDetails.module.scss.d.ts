@@ -9,8 +9,10 @@
 declare const styles: {
   readonly configCard: string
   readonly dialogStyles: string
+  readonly envListWrapper: string
   readonly environmentGroupDetailsBody: string
   readonly environmentGroupDetailsHeader: string
+  readonly newEnvModal: string
   readonly tagsPopover: string
 }
 export default styles

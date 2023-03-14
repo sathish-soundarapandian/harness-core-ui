@@ -6,7 +6,6 @@
  */
 
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
-
 import { ZeroNorthStep } from './ZeroNorthStep/ZeroNorthStep'
 import { AquatrivyStep } from './AquatrivyStep/AquatrivyStep'
 import { BanditStep } from './BanditStep/BanditStep'
@@ -18,6 +17,7 @@ import { ZapStep } from './ZapStep/ZapStep'
 import { PrismaCloudStep } from './PrismaCloudStep/PrismaCloudStep'
 import { CheckmarxStep } from './CheckmarxStep/CheckmarxStep'
 import { MendStep } from './MendStep/MendStep'
+import { CustomIngestionStep } from './CustomIngestionStep/CustomIngestionStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new AquatrivyStep())
@@ -30,3 +30,4 @@ factory.registerStep(new ZapStep())
 factory.registerStep(new PrismaCloudStep())
 factory.registerStep(new CheckmarxStep())
 factory.registerStep(new MendStep())
+factory.registerStep(new CustomIngestionStep())

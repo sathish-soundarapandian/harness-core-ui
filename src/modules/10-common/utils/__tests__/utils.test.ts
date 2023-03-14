@@ -7,6 +7,7 @@
 
 import { MultiTypeInputType } from '@harness/uicore'
 import {
+  countAllKeysInObject,
   formatCount,
   getPREnvNameFromURL,
   isMultiTypeExpression,
@@ -75,6 +76,20 @@ describe('Test common/utils.ts', () => {
     test('if type is expression', () => {
       expect(isMultiTypeExpression(MultiTypeInputType.RUNTIME)).toBeFalsy()
       expect(isMultiTypeExpression(MultiTypeInputType.EXPRESSION)).toBeTruthy()
+    })
+
+    test('Test countAllKeysInObject method', () => {
+      expect(countAllKeysInObject({})).toBe(0)
+      expect(countAllKeysInObject({ a: 1 })).toBe(1)
+      expect(countAllKeysInObject({ a: [1, 2] })).toBe(1)
+      expect(countAllKeysInObject({ a: 1, b: [1, 2] })).toBe(2)
+      expect(countAllKeysInObject({ a: 1, b: { c: 2, d: { e: 1 } } })).toBe(5)
+      expect(countAllKeysInObject({ a: 1, b: { c: 2, d: { e: { f: 3 } } } })).toBe(6)
+      expect(countAllKeysInObject({ a: 1, b: { c: 2, d: { e: { f: 3 } }, g: 4 } })).toBe(7)
+      expect(countAllKeysInObject({ a: 1, b: { c: 2, d: { e: { f: 3 } }, g: 4 }, h: [3, 4] })).toBe(8)
+      expect(countAllKeysInObject([1, 2])).toBe(2)
+      expect(countAllKeysInObject([1])).toBe(1)
+      expect(countAllKeysInObject([1, { a: 1, b: 2 }, 3, { f: 4 }])).toBe(7)
     })
   })
 })

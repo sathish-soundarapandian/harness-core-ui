@@ -22,7 +22,7 @@ import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 
 import { SecretRequestWrapper, usePostSecret, usePutSecret, SecretDTOV2, WinRmAuthDTO } from 'services/cd-ng'
-import type { KerberosConfigDTO, SSHKeySpecDTO } from 'services/cd-ng'
+import type { KerberosConfigDTO, SSHKeySpecDTO, WinRmCommandParameter } from 'services/cd-ng'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import { buildAuthConfig } from '@secrets/utils/WinRmAuthUtils'
 import { useToaster } from '@common/exports'
@@ -45,6 +45,7 @@ export interface WinRmConfigFormData {
   useSSL: boolean
   skipCertChecks: boolean
   useNoProfile: boolean
+  parameters?: WinRmCommandParameter[]
 }
 
 interface StepAuthenticationProps {
@@ -96,7 +97,8 @@ const StepAuthentication: React.FC<StepProps<WinRmCredSharedObj> & StepAuthentic
               type: formData.authScheme,
               spec: authConfig
             },
-            port: formData.port
+            port: formData.port,
+            parameters: formData.parameters
           } as SSHKeySpecDTO
         }
       }
@@ -138,6 +140,33 @@ const StepAuthentication: React.FC<StepProps<WinRmCredSharedObj> & StepAuthentic
     keyPath: Yup.string().when(['authScheme', 'tgtGenerationMethod'], {
       is: (authScheme, tgtGenerationMethod) => authScheme === 'Kerberos' && tgtGenerationMethod == 'KeyTabFilePath',
       then: Yup.string().trim().required(getString('secrets.createSSHCredWizard.validateKeypath'))
+    }),
+
+    parameters: Yup.lazy((parameters: any): Yup.Schema<unknown> => {
+      return Yup.array().of(
+        Yup.mixed().test({
+          test(currentParams: WinRmCommandParameter): boolean | Yup.ValidationError {
+            const currentIndex = +this.path.slice(11, this.path.length - 1)
+
+            if (!currentParams?.parameter) {
+              return this.createError({
+                message: `${getString('secrets.winRmAuthFormFields.parameterError')}`
+              })
+            }
+            if (
+              parameters.find(
+                (params: WinRmCommandParameter, i: number) =>
+                  params.parameter === currentParams.parameter && i !== currentIndex
+              )
+            ) {
+              return this.createError({
+                message: `${getString('secrets.winRmAuthFormFields.parameterDuplicatedError')}`
+              })
+            }
+            return true
+          }
+        })
+      )
     })
   })
 
@@ -167,6 +196,7 @@ const StepAuthentication: React.FC<StepProps<WinRmCredSharedObj> & StepAuthentic
             username: '',
             keyPath: '',
             port: 5985,
+            parameters: [],
             ...prevStepData?.authData
           }}
         >

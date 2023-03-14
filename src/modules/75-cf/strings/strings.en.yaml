@@ -238,7 +238,7 @@ featureFlagDetail:
   serviceDescription: Services this flag is associated with
   serviceUpdateSuccess: Services updated
   noServices: 'No Monitored Service available'
-  searchService: 'Search for Service name'
+  searchService: 'Search for Monitored Service name'
   jiraIssuesTitle: Jira Issues
   jiraIssuesDescription: Jira Issues associated with this Flag
 flagFilters:
@@ -390,11 +390,12 @@ auditLogs:
     updateDefaultServe:
       bucketBy: Default serve updated for bucket by '{{bucketBy}}'
       variation: Default serve updated with variation '{{variation}}'
-    addTargetsToVariationTargetMap: Target '{{target}}' was added for Variation '{{variation}}'
+    targetAddedForVariation: Target '{{target}}' was added for Variation '{{variation}}'
     updateDescription: Description updated to '{{description}}'
     updateName: Name updated to '{{name}}'
     updatePermanent: Permanent set to '{{permanent}}'
-    addRule: A rule was added with clauses '{{clauses}}'
+    addRule: Target Group '{{targetGroup}}' was added for Variation '{{variation}}'
+    addPercentageRollout: Target Group '{{targetGroup}}' was added with percentage rollout
     updateRule: Rule updated
     removeRule: Rule removed
     addVariation: Variation '{{variation}}' added

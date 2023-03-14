@@ -11,6 +11,7 @@ declare const styles: {
   readonly blue: string
   readonly clickable: string
   readonly configScreenWithoutReorder: string
+  readonly groupListContainer: string
   readonly infoTooltipText: string
   readonly link: string
   readonly modulesList: string

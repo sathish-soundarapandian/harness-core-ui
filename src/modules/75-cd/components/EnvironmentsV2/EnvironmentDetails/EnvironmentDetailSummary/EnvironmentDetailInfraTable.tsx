@@ -91,8 +91,8 @@ export const getSummaryViewTableData = (
       lastDeployedAt: lastDeployedAt,
       envId: defaultTo(envFilter, ''),
       serviceFilter: defaultTo(serviceFilter, ''),
-      artifactVersion: defaultTo(artifactVersion, ''),
-      artifactPath: defaultTo(artifactPath, ''),
+      artifactVersion,
+      artifactPath,
       lastPipelineExecutionId: defaultTo(pipelineExecutionId, ''),
       lastPipelineExecutionName: defaultTo(pipelineExecution, ''),
       tableType: tableView
@@ -140,8 +140,8 @@ export const getFullViewTableData = (
           infraName: defaultTo(infraName, ''),
           envId: defaultTo(envFilter, ''),
           serviceFilter: defaultTo(serviceFilter, ''),
-          artifactVersion: defaultTo(artifactVersion, ''),
-          artifactPath: defaultTo(artifactPath, ''),
+          artifactVersion,
+          artifactPath,
           lastPipelineExecutionId: defaultTo(pipelineExecutionId, ''),
           lastPipelineExecutionName: defaultTo(pipelineExecution, ''),
           tableType: tableView
@@ -207,7 +207,7 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
               margin={{ left: 'xsmall', right: 'xsmall', top: 'xsmall', bottom: 'xsmall' }}
             />
             <ActiveServiceInstancePopover
-              buildId={!buildId ? undefined : buildId}
+              buildId={buildId}
               envId={envId}
               instanceNum={index}
               serviceIdentifier={serviceFilter}

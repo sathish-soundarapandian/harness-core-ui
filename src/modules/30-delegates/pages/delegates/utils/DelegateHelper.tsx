@@ -53,8 +53,8 @@ export const getInstanceStatus = (delegate: DelegateGroupDetails): string => {
 
 export const getAutoUpgradeTextColor = (autoUpgradeCondition: string | undefined): string[] => {
   switch (autoUpgradeCondition) {
-    case 'SYNCHRONIZING':
-      return [Color.ORANGE_400, 'SYNCHRONIZING']
+    case 'DETECTING':
+      return [Color.ORANGE_400, 'DETECTING']
     case 'ON':
       return [Color.GREEN_600, 'AUTO UPGRADE: ON']
     default:

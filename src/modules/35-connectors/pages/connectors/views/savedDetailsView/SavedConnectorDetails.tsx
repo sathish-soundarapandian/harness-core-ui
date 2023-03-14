@@ -25,8 +25,9 @@ import type { StringKeys } from 'framework/strings'
 import { HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import { accessTypeOptionsMap } from '@connectors/components/CreateConnector/HashiCorpVault/views/VaultConnectorFormFields'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { getLabelForAuthType, GitAuthTypes } from '../../utils/ConnectorHelper'
-import { AzureSecretKeyType, DelegateTypes } from '../../utils/ConnectorUtils'
+import { AzureSecretKeyType } from '../../utils/ConnectorUtils'
 import css from './SavedConnectorDetails.module.scss'
 
 interface SavedConnectorDetailsProps {
@@ -433,11 +434,15 @@ const getJiraSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInt
 
     {
       label: 'username',
-      value: connector?.spec?.username || connector?.spec?.usernameRef
+      value: connector?.spec?.username || connector?.spec?.usernameRef || connector?.spec?.auth?.spec?.username
     },
     {
       label: 'password',
-      value: connector?.spec?.passwordRef
+      value: connector?.spec?.passwordRef || connector?.spec?.auth?.spec?.passwordRef
+    },
+    {
+      label: 'personalAccessToken',
+      value: connector?.spec?.auth?.spec?.patRef
     }
   ]
 }
@@ -872,11 +877,31 @@ const getServiceNowSchema = (connector: ConnectorInfoDTO): Array<ActivityDetails
 
     {
       label: 'username',
-      value: connector?.spec?.username || connector?.spec?.usernameRef
+      value: connector?.spec?.username || connector?.spec?.usernameRef || connector?.spec?.auth?.spec?.username
     },
     {
       label: 'password',
-      value: connector?.spec?.passwordRef
+      value: connector?.spec?.passwordRef || connector?.spec?.auth?.spec?.passwordRef
+    },
+    {
+      label: 'connectors.serviceNow.resourceID',
+      value: connector?.spec?.auth?.spec?.resourceIdRef
+    },
+    {
+      label: 'common.certificate',
+      value: connector?.spec?.auth?.spec?.certificateRef
+    },
+    {
+      label: 'connectors.serviceNow.clientID',
+      value: connector?.spec?.auth?.spec?.clientIdRef
+    },
+    {
+      label: 'connectors.serviceNow.privateKey',
+      value: connector?.spec?.auth?.spec?.privateKeyRef
+    },
+    {
+      label: 'connectors.serviceNow.adfsUrl',
+      value: connector?.spec?.auth?.spec?.adfsUrl
     }
   ]
 }

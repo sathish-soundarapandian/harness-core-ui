@@ -19,6 +19,7 @@ import {
   mockPipelineTemplateYaml
 } from '@pipeline/components/PipelineStudio/PipelineCanvas/__tests__/PipelineCanvasTestHelper'
 import mockImport from 'framework/utils/mockImport'
+import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { PipelineCanvasV1, PipelineCanvasProps } from '../PipelineCanvasV1'
 import { PipelineContextV1 } from '../../PipelineStudioV1/PipelineContextV1/PipelineContextV1'
 const getProps = (): PipelineCanvasProps => ({
@@ -29,7 +30,7 @@ const getProps = (): PipelineCanvasProps => ({
 })
 
 /* Mocks */
-jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+jest.mock('@common/components/MonacoEditor/MonacoEditor', () => MonacoEditor)
 jest.mock('@common/utils/YamlUtils', () => ({
   validateJSONWithSchema: jest.fn().mockReturnValue({ error: { size: 2 } })
 }))
@@ -216,7 +217,7 @@ describe('Pipeline Canvas V1 - new pipeline', () => {
 
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false, isUpdated: true })
-    const { getByText, getByRole } = render(
+    const { queryByText } = render(
       <TestWrapper {...testWrapperProps}>
         <PipelineContextV1.Provider
           value={{
@@ -236,22 +237,8 @@ describe('Pipeline Canvas V1 - new pipeline', () => {
       </TestWrapper>
     )
 
-    // Click on Edit YAML
-    act(() => {
-      fireEvent.click(getByText('common.editYaml'))
-    })
-    // Edit mode option on modal
-    expect(getByText('pipeline.alwaysEditModeYAML')).toBeTruthy()
-    const enableEditModeCheckbox = getByRole('checkbox', { name: 'pipeline.alwaysEditModeYAML' })
-    act(() => {
-      fireEvent.click(enableEditModeCheckbox)
-    })
-    // warning text on selection
-    expect(getByText('pipeline.warningForInvalidYAMLDiscard')).toBeTruthy()
-    expect(getByText('enable')).toBeTruthy()
-    await act(() => {
-      fireEvent.click(getByText('enable'))
-    })
+    const readOnlyCalloutLabel = queryByText('common.readonlyPermissionsForFile')!
+    expect(readOnlyCalloutLabel).not.toBeInTheDocument()
     await waitFor(() => expect(contextValue.updatePipelineView).toBeCalled())
   })
 

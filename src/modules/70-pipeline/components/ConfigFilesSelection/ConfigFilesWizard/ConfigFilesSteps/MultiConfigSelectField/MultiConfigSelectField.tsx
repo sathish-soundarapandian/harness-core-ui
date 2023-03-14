@@ -68,6 +68,7 @@ export interface MultiTypeMapProps {
   isAttachment?: boolean
   deploymentType?: string
   stepViewType?: StepViewType
+  allowSinglePathDeletion?: boolean
 }
 
 export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactElement {
@@ -92,6 +93,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
     isAttachment = false,
     deploymentType,
     stepViewType,
+    allowSinglePathDeletion,
     ...restProps
   } = props
 
@@ -273,7 +275,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                             minimal
                                             data-testid={`remove-${name}-[${index}]`}
                                             onClick={() => remove(index)}
-                                            disabled={disabled || value.length <= 1}
+                                            disabled={disabled || (!allowSinglePathDeletion && value.length <= 1)}
                                           />
                                         </div>
                                       </div>

@@ -186,8 +186,8 @@ export function MultiEnvironmentsInputSetForm({
                 showInfrastructuresSelectionInputField ||
                 showInfrastructuresInputSetForm
 
-              const areEnvironmentFiltersAdded = !isEmpty(environmentInDeploymentStage.filters)
-              const areEnvironmentFiltersRuntime = !isEmpty(environmentTemplate.filters)
+              const areEnvironmentFiltersAdded = !isEmpty(environmentInDeploymentStage?.filters)
+              const areEnvironmentFiltersRuntime = !isEmpty(environmentTemplate?.filters)
 
               const envGroupScope = envGroupRef ? getScopeFromValue(envGroupRef) : null
               const scopePrefix = envGroupScope && envGroupScope !== Scope.PROJECT ? `${envGroupScope}.` : ''

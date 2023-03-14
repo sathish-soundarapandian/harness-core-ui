@@ -13,7 +13,7 @@ jest.mock('clipboard-copy', () => jest.fn())
 global.URL.createObjectURL = jest.fn()
 describe('CommandBlock', () => {
   test('test command block', async () => {
-    const { container } = render(
+    const { container, getByText } = render(
       <TestWrapper>
         <CommandBlock allowCopy={true} commandSnippet={'test'} allowDownload={true} />
       </TestWrapper>
@@ -25,16 +25,16 @@ describe('CommandBlock', () => {
       fireEvent.click(container.querySelector('button[aria-label="common.copied"]') as HTMLElement)
     })
     await waitFor(() => {
-      expect(container.querySelector('span[data-icon="main-download"]')).toBeDefined()
+      expect(getByText('common.download')).toBeDefined()
     })
     await act(async () => {
-      fireEvent.click(container.querySelector('span[data-icon="main-download"]') as HTMLElement)
+      fireEvent.click(getByText('common.download'))
     })
     expect(container).toMatchSnapshot()
   })
 
   test('test command block telemetry and other options', async () => {
-    const { container } = render(
+    const { container, getByText } = render(
       <TestWrapper>
         <CommandBlock
           allowCopy={true}
@@ -62,10 +62,10 @@ describe('CommandBlock', () => {
       fireEvent.click(container.querySelector('button[aria-label="common.copied"]') as HTMLElement)
     })
     await waitFor(() => {
-      expect(container.querySelector('span[data-icon="main-download"]')).toBeDefined()
+      expect(getByText('common.download')).toBeDefined()
     })
     await act(async () => {
-      fireEvent.click(container.querySelector('span[data-icon="main-download"]') as HTMLElement)
+      fireEvent.click(getByText('common.download'))
     })
     expect(container).toMatchSnapshot()
   })

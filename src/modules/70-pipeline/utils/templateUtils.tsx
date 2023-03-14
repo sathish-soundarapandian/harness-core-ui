@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, get, isEmpty, isEqual, set, trim, unset, map, omit, uniq } from 'lodash-es'
+import { defaultTo, get, isEmpty, isEqual, set, trim, unset, map, omit } from 'lodash-es'
 import produce from 'immer'
 import type { GetDataError } from 'restful-react'
 import React from 'react'
@@ -173,7 +173,6 @@ const getPromisesForTemplateGet = (
   params: GetTemplateQueryParams,
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
-  isPipelineGitCacheEnabled?: boolean,
   loadFromCache?: boolean
 ): Promise<ResponseTemplateResponse>[] => {
   const promises: Promise<ResponseTemplateResponse>[] = []
@@ -200,7 +199,7 @@ const getPromisesForTemplateGet = (
         },
         requestOptions: {
           headers: {
-            ...(isPipelineGitCacheEnabled && loadFromCache ? { 'Load-From-Cache': 'true' } : {})
+            ...(loadFromCache ? { 'Load-From-Cache': 'true' } : {})
           }
         }
       })
@@ -242,7 +241,6 @@ export const getTemplateTypesByRef = (
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
   supportingTemplatesGitx?: boolean,
-  isPipelineGitCacheEnabled?: boolean,
   loadFromCache?: boolean
 ): Promise<{
   templateTypes: { [key: string]: string }
@@ -250,7 +248,7 @@ export const getTemplateTypesByRef = (
   templateIcons: TemplateIcons
 }> => {
   return supportingTemplatesGitx
-    ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata, isPipelineGitCacheEnabled, loadFromCache)
+    ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata, loadFromCache)
     : getTemplateTypesByRefV1(params as GetTemplateListQueryParams, templateRefs)
 }
 
@@ -300,57 +298,37 @@ export const getTemplateTypesByRefV1 = (
     })
 }
 
-export const getTemplateTypesByRefV2 = async (
+export const getTemplateTypesByRefV2 = (
   params: GetTemplateQueryParams,
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
-  isPipelineGitCacheEnabled?: boolean,
   loadFromCache?: boolean
 ): Promise<{
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
   templateIcons: TemplateIcons
 }> => {
-  const uniqueTemplateRefs = uniq(templateRefs)
   const promises = getPromisesForTemplateGet(
     omit(params, 'templateListType'),
-    uniqueTemplateRefs,
+    templateRefs,
     storeMetadata,
-    isPipelineGitCacheEnabled,
     loadFromCache
   )
-
-  const results = await Promise.allSettled(promises)
-
-  const templateServiceData = {}
-  const templateTypes = {}
-  const templateIcons = {}
-
-  results.forEach((result, index) => {
-    const templateRef = uniqueTemplateRefs[index]
-
-    if (result.status === 'rejected') {
-      set(templateTypes, templateRef, {})
-      set(templateServiceData, templateRef, {})
-    } else {
-      const resultData = result?.value.data
-      const templateData = parse<any>(resultData?.yaml || '').template
-
-      set(templateTypes, templateRef, templateData.spec.type)
-      set(templateIcons, templateRef, resultData?.icon || templateData.icon)
-
-      const serviceData = defaultTo(
-        templateData.spec.spec?.serviceConfig?.serviceDefinition?.type,
-        templateData.spec.spec?.deploymentType
-      )
-
-      if (templateData.type === Category.STAGE && serviceData) {
-        set(templateServiceData, templateRef, serviceData)
-      }
-    }
-  })
-
-  return Promise.resolve({ templateTypes, templateServiceData, templateIcons })
+  return Promise.all(promises)
+    .then(responses => {
+      const templateServiceData = {}
+      const templateTypes = {}
+      const templateIcons = {}
+      responses.forEach(response => {
+        if (response?.data) {
+          setTemplateProperties(templateTypes, templateServiceData, templateIcons, response.data)
+        }
+      })
+      return { templateTypes, templateServiceData, templateIcons }
+    })
+    .catch(_ => {
+      return { templateTypes: {}, templateServiceData: {}, templateIcons: {} }
+    })
 }
 
 export const getResolvedTemplateDetailsByRef = (

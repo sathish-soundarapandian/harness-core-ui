@@ -20,6 +20,7 @@ import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import type { MonitoredServiceDTO } from 'services/cv'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   useGetHarnessServices,
   useGetHarnessEnvironments,
@@ -38,6 +39,7 @@ import {
   serviceOnSelect
 } from './MonitoredServiceOverview.utils'
 import type { MonitoredServiceOverviewProps } from './MonitoredSourceOverview.types'
+import OrgAccountLevelServiceEnvField from './component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField'
 import css from './MonitoredServiceOverview.module.scss'
 
 export default function MonitoredServiceOverview(props: MonitoredServiceOverviewProps): JSX.Element {
@@ -49,6 +51,7 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
   const { environmentOptions, setEnvironmentOptions } = useGetHarnessEnvironments()
   const values = formikProps.values || {}
   const keys = useMemo(() => [Utils.randomId(), Utils.randomId()], [values.serviceRef, values.environmentRef])
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const { openDialog } = useConfirmationDialog({
     contentText: getString('cv.monitoredServices.changeMonitoredServiceTypeMessage'),
@@ -62,8 +65,13 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
       }
     }
   })
-  const onSelect = useCallback(
+  const onEnvSelect = useCallback(
     environment => updatedMonitoredServiceNameForEnv(formikProps, environment, formikProps.values?.type),
+    [formikProps.values]
+  )
+
+  const onServiceSelect = useCallback(
+    service => serviceOnSelect(isTemplate, service, formikProps),
     [formikProps.values]
   )
 
@@ -98,59 +106,71 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
                 }
               }}
             />
-            <HarnessServiceAsFormField
-              key={keys[0]}
-              customRenderProps={{
-                name: 'serviceRef',
-                label: getString('cv.healthSource.serviceLabel')
-              }}
-              serviceProps={{
-                className: css.dropdown,
-                disabled: isEdit,
-                isMultiType: isTemplate,
-                allowableTypes: multiTypeByScope,
-                item: serviceOptions.find(item => item?.value === values.serviceRef) || values.serviceRef,
-                options: serviceOptions,
-                onSelect: (selectedService: SelectOption) => serviceOnSelect(isTemplate, selectedService, formikProps),
-                onNewCreated: newOption => {
-                  if (newOption?.identifier && newOption.name) {
-                    const newServiceOption = { label: newOption.name, value: newOption.identifier }
-                    setServiceOptions([newServiceOption, ...serviceOptions])
-                    updateMonitoredServiceNameForService(formikProps, newServiceOption)
-                  }
-                }
-              }}
-            />
-            <HarnessEnvironmentAsFormField
-              key={keys[1]}
-              customRenderProps={{
-                name: 'environmentRef',
-                label: getString('cv.healthSource.environmentLabel')
-              }}
-              isMultiSelectField={formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE}
-              environmentProps={
-                {
-                  className: css.dropdown,
-                  disabled: isEdit,
-                  isMultiType: isTemplate,
-                  allowableTypes: multiTypeByScope,
-                  popOverClassName: css.popOverClassName,
-                  item:
-                    formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE
-                      ? environmentOptions.filter(it => values.environmentRef?.includes(it.value as string))
-                      : environmentOptions.find(item => item?.value === values.environmentRef) || values.environmentRef,
-                  onSelect,
-                  options: environmentOptions,
-                  onNewCreated: newOption => {
-                    if (newOption?.identifier && newOption.name) {
-                      const newEnvOption = { label: newOption.name, value: newOption.identifier }
-                      setEnvironmentOptions([newEnvOption, ...environmentOptions])
-                      updatedMonitoredServiceNameForEnv(formikProps, newEnvOption, formikProps.values?.type)
+            {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+              <OrgAccountLevelServiceEnvField
+                isTemplate={isTemplate}
+                environmentOnSelect={onEnvSelect}
+                serviceOnSelect={onServiceSelect}
+              />
+            ) : (
+              <>
+                <HarnessServiceAsFormField
+                  key={keys[0]}
+                  customRenderProps={{
+                    name: 'serviceRef',
+                    label: getString('cv.healthSource.serviceLabel')
+                  }}
+                  serviceProps={{
+                    className: css.dropdown,
+                    disabled: isEdit,
+                    isMultiType: isTemplate,
+                    allowableTypes: multiTypeByScope,
+                    item: serviceOptions.find(item => item?.value === values.serviceRef) || values.serviceRef,
+                    options: serviceOptions,
+                    onSelect: (selectedService: SelectOption) =>
+                      serviceOnSelect(isTemplate, selectedService, formikProps),
+                    onNewCreated: newOption => {
+                      if (newOption?.identifier && newOption.name) {
+                        const newServiceOption = { label: newOption.name, value: newOption.identifier }
+                        setServiceOptions([newServiceOption, ...serviceOptions])
+                        updateMonitoredServiceNameForService(formikProps, newServiceOption)
+                      }
                     }
+                  }}
+                />
+                <HarnessEnvironmentAsFormField
+                  key={keys[1]}
+                  customRenderProps={{
+                    name: 'environmentRef',
+                    label: getString('cv.healthSource.environmentLabel')
+                  }}
+                  isMultiSelectField={formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE}
+                  environmentProps={
+                    {
+                      className: css.dropdown,
+                      disabled: isEdit,
+                      isMultiType: isTemplate,
+                      allowableTypes: multiTypeByScope,
+                      popOverClassName: css.popOverClassName,
+                      item:
+                        formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE
+                          ? environmentOptions.filter(it => values.environmentRef?.includes(it.value as string))
+                          : environmentOptions.find(item => item?.value === values.environmentRef) ||
+                            values.environmentRef,
+                      onSelect: onEnvSelect,
+                      options: environmentOptions,
+                      onNewCreated: newOption => {
+                        if (newOption?.identifier && newOption.name) {
+                          const newEnvOption = { label: newOption.name, value: newOption.identifier }
+                          setEnvironmentOptions([newEnvOption, ...environmentOptions])
+                          updatedMonitoredServiceNameForEnv(formikProps, newEnvOption, formikProps.values?.type)
+                        }
+                      }
+                    } as EnvironmentMultiSelectOrCreateProps | EnvironmentSelectOrCreateProps
                   }
-                } as EnvironmentMultiSelectOrCreateProps | EnvironmentSelectOrCreateProps
-              }
-            />
+                />
+              </>
+            )}
           </Layout.Horizontal>
           {!isTemplate && <hr className={css.divider} />}
         </>

@@ -5,13 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
-import { Icon, Text, Container, Layout, Heading, timeToDisplayText, HarnessDocTooltip } from '@harness/uicore'
+import React from 'react'
+import { Icon, Text, Container, Layout, Heading, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { Duration } from '@common/exports'
-import { renderFailureRate } from './TestsUtils'
+import { getTimeSavedToDisplay, renderFailureRate } from './TestsUtils'
 import css from './BuildTests.module.scss'
 
 interface TestsOverviewProps {
@@ -39,24 +39,6 @@ export function TestsOverview({
   const failureRate = failedTests && failedTests / (totalTests || 1)
   const failureRateDisplay =
     typeof failureRate !== 'undefined' ? (failureRate && renderFailureRate(failureRate)) + `%` : undefined
-
-  const timeSavedToDisplay: string = useMemo(() => {
-    if (!timeSavedMS) {
-      return '0'
-    }
-
-    const timeToDisplay = timeToDisplayText(timeSavedMS)
-
-    // Checking if the value contains hours, if yes, then we need to remove ms and s. If no, then only ms
-    if (/(\d+h)/.test(timeToDisplay)) {
-      return timeToDisplay
-        .replace(/(\d+ms)$/, '')
-        .trim()
-        .replace(/(\d+s)$/, '')
-    } else {
-      return timeToDisplay.replace(/(\d+ms)$/, '')
-    }
-  }, [timeSavedMS])
 
   return (
     <div className={cx(css.widgetWrapper, css.overview)}>
@@ -169,7 +151,7 @@ export function TestsOverview({
               <Text className={cx(css.statsTitle)} color={Color.WHITE} margin={{ bottom: 'large' }}>
                 {getString('pipeline.testsReports.timeSaved')}
               </Text>
-              <span className={cx(css.statsNumber)}>{timeSavedToDisplay}</span>
+              <span className={cx(css.statsNumber)}>{getTimeSavedToDisplay(timeSavedMS)}</span>
             </Text>
           )}
         </Layout.Horizontal>

@@ -58,6 +58,7 @@ import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStor
 import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { ModuleName } from 'framework/types/ModuleName'
 import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
+import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/ExternalTicketSettings'
 
 const STOSideNavProps: SidebarContext = {
   navComponent: STOSideNav,
@@ -222,7 +223,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_ISSUE, {
 })
 RbacFactory.registerResourceTypeHandler(ResourceType.TICKET, {
   icon: 'sto-color-filled',
-  label: 'common.tickets.tickets',
+  label: 'common.tickets.externalTickets',
   labelSingular: 'common.singularLabels.ticket',
   category: ResourceCategory.STO,
   permissionLabels: {
@@ -340,6 +341,15 @@ const RouteDestinations: React.FC = () => {
         path={[routes.toSTOProjectTicketSummary({ ...accountPathProps, ...projectPathProps, issueId: ':issueId' })]}
       >
         <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel }} />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        exact
+        sidebarProps={STOSideNavProps}
+        licenseRedirectData={licenseRedirectData}
+        path={[routes.toSTOProjectTicketSettings({ ...accountPathProps, ...projectPathProps })]}
+      >
+        <ExternalTicketSettings />
       </RouteWithLayout>
 
       <Route path="/account/:accountId/:module(sto)">

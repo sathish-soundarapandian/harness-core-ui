@@ -119,11 +119,11 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
       )}
-      {isValueRuntimeInput(template?.spec?.message) && (
+      {isValueRuntimeInput(template?.spec?.runMessage) && (
         <FormMultiTypeTextArea
           className={css.deploymentViewMedium}
           label={getString('pipeline.terraformStep.messageLabel')}
-          name={`${prefix}spec.message`}
+          name={`${prefix}spec.runMessage`}
           disabled={readonly}
           multiTypeTextArea={{
             configureOptionsProps: {
@@ -286,6 +286,19 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
           <FormMultiTypeCheckboxField
             name={`${prefix}spec.spec.discardPendingRuns`}
             label={getString('pipeline.terraformStep.discardPendingRuns')}
+            multiTypeTextbox={{ expressions, allowableTypes }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+          />
+        </div>
+      )}
+      {isValueRuntimeInput(inputSet?.overridePolicies) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            name={`${prefix}spec.spec.overridePolicies`}
+            label={getString('pipeline.terraformStep.overridePoliciesLabel')}
             multiTypeTextbox={{ expressions, allowableTypes }}
             enableConfigureOptions={true}
             configureOptionsProps={{

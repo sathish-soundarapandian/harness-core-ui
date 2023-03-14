@@ -30,13 +30,14 @@ interface CreateStreamingDestinationProps {
   data?: StreamingDestinationAggregateDto
 }
 
-const createConnectorRef = (connector?: ConnectorTypeFromAuditService): string => {
+const createConnectorRef = (connector?: ConnectorTypeFromAuditService): string | undefined => {
   if (connector?.org && connector?.project) {
     return connector.identifier
   } else if (connector?.org) {
     return `${Scope.ORG}.${connector.identifier}`
   }
-  return `${Scope.ACCOUNT}.${connector?.identifier}`
+  // the check below handles the use case: when connector was force-deleted
+  return connector?.identifier ? `${Scope.ACCOUNT}.${connector?.identifier}` : undefined
 }
 
 const mapSDAggregateToStreamingDestinationForm = <T extends StreamingDestinationAggregateDto>(

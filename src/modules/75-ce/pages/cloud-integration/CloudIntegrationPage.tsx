@@ -72,6 +72,7 @@ const CreateConnectorPopover = ({
   openQuicK8sCreateModal
 }: CreateConnectorPopoverProps): JSX.Element => {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
 
   return (
     <Container className={css.newConnectorPopover}>
@@ -88,13 +89,33 @@ const CreateConnectorPopover = ({
             {getString('pipelineSteps.kubernetesInfraStep.kubernetesConnector')}
           </Text>
           <div className={css.k8SCardCtn}>
-            <Card onClick={openQuicK8sCreateModal} interactive className={css.k8SCard}>
+            <Card
+              onClick={() => {
+                trackEvent(USER_JOURNEY_EVENTS.ONBOARDING_CONNECTOR_CLICK, {
+                  connector_type: Connectors.CE_KUBERNETES,
+                  is_quick_create: true
+                })
+                openQuicK8sCreateModal()
+              }}
+              interactive
+              className={css.k8SCard}
+            >
               <img src={QuickK8sIcon} />
               <Text className={css.recommended} color={Color.PRIMARY_7}>
                 {getString('common.recommended')}
               </Text>
             </Card>
-            <Card onClick={openAdvancedK8sModal} interactive className={css.k8SCard}>
+            <Card
+              onClick={() => {
+                trackEvent(USER_JOURNEY_EVENTS.ONBOARDING_CONNECTOR_CLICK, {
+                  connector_type: Connectors.CE_KUBERNETES,
+                  is_quick_create: false
+                })
+                openAdvancedK8sModal()
+              }}
+              interactive
+              className={css.k8SCard}
+            >
               <Icon name={'app-kubernetes'} size={34} />
             </Card>
           </div>
@@ -199,7 +220,9 @@ const CloudIntegrationPage: React.FC = () => {
   })
 
   const [openQuicK8sCreateModal] = useK8sQuickCreateModal({
-    onClose: refetchMetadataAndK8sConnectors
+    onSuccess: /* istanbul ignore next */ () => {
+      refetchMetadataAndK8sConnectors()
+    }
   })
 
   const handleConnectorCreation = /* istanbul ignore next */ (selectedProvider: string): void => {
@@ -216,17 +239,16 @@ const CloudIntegrationPage: React.FC = () => {
         break
       case 'Kubernetes':
       case 'kubernetesText':
-        connectorType = Connectors.KUBERNETES_CLUSTER
+        connectorType = Connectors.CE_KUBERNETES
         break
     }
 
     if (connectorType) {
-      trackEvent(USER_JOURNEY_EVENTS.ONBOARDING_CONNECTOR_CLICK, { connector: connectorType })
-      if (connectorType === Connectors.KUBERNETES_CLUSTER) {
+      if (connectorType === Connectors.CE_KUBERNETES) {
         setK8sSelected(true)
         return
       }
-
+      trackEvent(USER_JOURNEY_EVENTS.ONBOARDING_CONNECTOR_CLICK, { connector_type: connectorType })
       openConnectorModal(false, connectorType)
     }
   }
@@ -242,7 +264,7 @@ const CloudIntegrationPage: React.FC = () => {
             setK8sSelected={setK8sSelected}
             k8sSelected={k8sSelected}
             handleConnectorCreation={handleConnectorCreation}
-            openAdvancedK8sModal={() => openConnectorModal(false, Connectors.KUBERNETES_CLUSTER)}
+            openAdvancedK8sModal={() => openConnectorModal(false, Connectors.CE_KUBERNETES)}
             openQuicK8sCreateModal={openQuicK8sCreateModal}
           />
         ) : (
@@ -263,7 +285,7 @@ const CloudIntegrationPage: React.FC = () => {
                     handleConnectorCreation={handleConnectorCreation}
                     k8sSelected={k8sSelected}
                     setK8sSelected={setK8sSelected}
-                    openAdvancedK8sModal={() => openConnectorModal(false, Connectors.KUBERNETES_CLUSTER)}
+                    openAdvancedK8sModal={() => openConnectorModal(false, Connectors.CE_KUBERNETES)}
                     openQuicK8sCreateModal={openQuicK8sCreateModal}
                   />
                 }

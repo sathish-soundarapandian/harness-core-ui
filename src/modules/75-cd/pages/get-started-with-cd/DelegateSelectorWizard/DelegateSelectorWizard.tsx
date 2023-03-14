@@ -7,9 +7,8 @@
 
 import React, { useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, ButtonSize, Container, HarnessDocTooltip, Layout, Text, useToaster } from '@harness/uicore'
+import { Container, HarnessDocTooltip, Layout, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import cx from 'classnames'
 import produce from 'immer'
 import { capitalize, defaultTo, get, isEmpty, noop, set } from 'lodash-es'
 import { HelpPanel } from '@harness/help-panel'
@@ -27,10 +26,10 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
 import { buildKubPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { DelegateTypes, KubernetesType } from '@delegates/constants'
+import { DelegateTypes } from '@delegates/constants'
 import { StringUtils } from '@common/exports'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { CDOnboardingActions, DelegateActions } from '@common/constants/TrackingConstants'
+import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/CreateDockerDelegate'
 import {
   cleanEnvironmentDataUtil,
@@ -92,11 +91,7 @@ const DelegateSelectorWizardRef = (
   const successRefHandler = useRef<(() => void) | null>(null)
   const delegateName = useRef<string>()
   const isEditMode = !isEmpty(delegateData?.delegateIdentifier)
-
-  const [delegateType, setDelegateType] = React.useState<string | undefined>(
-    delegateData?.delegateType || DelegateTypes.KUBERNETES_CLUSTER
-  )
-  const [kubernetesType, setkubernetesType] = React.useState<KubernetesType | undefined>(KubernetesType.HELM_CHART)
+  const delegateType = delegateData?.delegateType || DelegateTypes.KUBERNETES_CLUSTER
   const [disableBtn, setDisableBtn] = React.useState<boolean>(true)
   const [isDelegateInstalled, setIsDelegateInstalled] = React.useState<boolean>(
     defaultTo(delegateData?.delegateInstalled, false)
@@ -373,25 +368,6 @@ const DelegateSelectorWizardRef = (
     )
   }, [environmentEntities, getString])
 
-  const resetContextDelegateData = (type: string): void => {
-    const updatedContextDelegate = produce(newDelegateState.delegate, draft => {
-      set(draft, 'delegateType', type)
-    })
-    saveDelegateData(updatedContextDelegate)
-  }
-
-  const handleDelegateTypeChange = (type: string): void => {
-    if (type !== delegateType) {
-      setDelegateType(type)
-      setHelpPanelVisible(false)
-      disableNextBtn()
-      // reset context data and environmentEntities
-      resetContextDelegateData(type)
-      setEnvironmentEntities({})
-      delegateName.current = undefined
-    }
-  }
-
   return (
     <Layout.Vertical width={'100%'} margin={{ left: 'small' }}>
       <Layout.Horizontal>
@@ -407,54 +383,7 @@ const DelegateSelectorWizardRef = (
               <HarnessDocTooltip tooltipId="cdOnboardingEnvironment" useStandAlone={true} />
             </Text>
             <InfoContainer label="cd.getStartedWithCD.delegateDescription" />
-            <div className={css.borderBottomClass} />
-            <Text
-              font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
-              margin={{ bottom: 'small' }}
-              color={Color.GREY_600}
-              data-tooltip-id="cdOnboardingInstallDelegate"
-            >
-              {getString('cd.runDelegate')}
-              <HarnessDocTooltip tooltipId="cdOnboardingInstallDelegate" useStandAlone={true} />
-            </Text>
-            <Text font="normal" className={css.marginBottomClass}>
-              {getString('cd.getStartedWithCD.runDelegateSubtitle')}
-            </Text>
-            <Button
-              className={cx(css.kubernetes, delegateType === DelegateTypes.KUBERNETES_CLUSTER ? css.active : undefined)}
-              onClick={() => {
-                handleDelegateTypeChange(DelegateTypes.KUBERNETES_CLUSTER)
-                trackEvent(DelegateActions.DelegateCommandLineKubernetes, {})
-              }}
-              text={getString('kubernetesText')}
-              round
-              intent={delegateType === DelegateTypes.KUBERNETES_CLUSTER ? 'primary' : 'none'}
-            ></Button>
 
-            <div className={css.borderBottomClass} />
-            {delegateType && (
-              <Text
-                font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
-                color={Color.GREY_600}
-                className={css.marginBottomClass}
-                data-tooltip-id="cdOnboardingInstallDelegate"
-              >
-                {getString('delegates.commandLineCreation.installYourDelegate')}
-              </Text>
-            )}
-
-            <Layout.Horizontal spacing="none" margin={{ bottom: 'xlarge', top: 'none' }}>
-              <Button
-                size={ButtonSize.SMALL}
-                round
-                onClick={() => {
-                  setkubernetesType(KubernetesType.HELM_CHART)
-                  trackEvent(DelegateActions.DelegateCommandLineHelm, {})
-                }}
-                text={getString('common.HelmChartLabel')}
-                intent={kubernetesType === KubernetesType.HELM_CHART ? 'primary' : 'none'}
-              ></Button>
-            </Layout.Horizontal>
             <div className={css.marginTopClass} />
           </Container>
           <Layout.Vertical>

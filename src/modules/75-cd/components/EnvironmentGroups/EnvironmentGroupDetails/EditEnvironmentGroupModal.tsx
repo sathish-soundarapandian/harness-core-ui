@@ -26,6 +26,7 @@ export default function EditEnvironmentGroupModal({
 }) {
   const [newEnvs, setNewEnvs] = useState<EnvironmentResponse[]>(selectedEnvs)
   const [searchTerm, setSearchTerm] = useState('')
+  const [newEnvOpen, setNewEnvOpen] = useState(false)
 
   const { getString } = useStrings()
 
@@ -67,11 +68,18 @@ export default function EditEnvironmentGroupModal({
         }}
       >
         <Layout.Vertical className={css.modalEnvironmentList} width={'50%'} border={{ right: true }}>
-          <ModalEnvironmentList
-            searchTerm={searchTerm}
-            selectedEnvironments={newEnvs}
-            onSelectedEnvironmentChange={onSelectedEnvironmentChange}
-          />
+          <Container height={320} style={{ overflow: 'scroll' }} margin={{ bottom: 'small' }}>
+            <ModalEnvironmentList
+              searchTerm={searchTerm}
+              selectedEnvironments={newEnvs}
+              onSelectedEnvironmentChange={onSelectedEnvironmentChange}
+              newEnvOpen={newEnvOpen}
+              handleNewEnvModal={status => setNewEnvOpen(status)}
+            />
+          </Container>
+          <Button onClick={() => setNewEnvOpen(true)} variation={ButtonVariation.LINK} width={200} icon="plus">
+            {getString('newEnvironment')}
+          </Button>
         </Layout.Vertical>
         <Layout.Vertical
           flex={{ justifyContent: 'center', alignItems: 'flex-start' }}

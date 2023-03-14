@@ -1027,7 +1027,7 @@ exports[`Email Step Test should render edit view as new step with empty initial 
                     name="timeout"
                     placeholder="Enter w/d/h/m/s/ms"
                     type="text"
-                    value="1d"
+                    value="10m"
                   />
                 </div>
                 <span

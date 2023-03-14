@@ -113,7 +113,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { CVNG_ENABLED, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, TERRAFORM_CLOUD } = useFeatureFlags()
+  const { CVNG_ENABLED, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, CDS_TERRAFORM_CLOUD } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -214,7 +214,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     case Connectors.TAS:
       return CDS_TAS_NG ? <TASConnector {...commonProps} /> : null
     case Connectors.TERRAFORM_CLOUD:
-      return TERRAFORM_CLOUD ? <TerraformCloudConnector {...commonProps} /> : null
+      return CDS_TERRAFORM_CLOUD ? <TerraformCloudConnector {...commonProps} /> : null
     default:
       return null
   }
