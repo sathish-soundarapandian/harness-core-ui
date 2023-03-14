@@ -106,12 +106,9 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       const yamlData = await downloadKubernetesYaml({
         name: DelegateDefaultName.KUBERNETES,
         delegateType: CommandType.KUBERNETES,
-        k8sConfigDetails: { k8sPermissionType: 'CLUSTER_ADMIN' },
         orgIdentifier: orgIdentifier,
         projectIdentifier: projectIdentifier,
-        runAsRoot: true,
-        size: 'LAPTOP',
-        tokenName: 'default_token'
+        runAsRoot: true
       })
       setKubernetesYamlOriginal(yamlData as any)
       setKubernetesYamlUpdatedValue(yamlData as any)
