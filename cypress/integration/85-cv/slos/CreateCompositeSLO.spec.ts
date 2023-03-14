@@ -86,7 +86,6 @@ describe('Create Composite SLO', () => {
     cy.contains('span', 'Save').click({ force: true })
     cy.wait('@saveSLO').then(data => {
       // match the payload to verify we submit correct payload
-      cy.debug()
       expect(JSON.stringify({ ...data.request.body })).equal(
         JSON.stringify({ ...createProjectLevelCompositeSLOPayload })
       )
@@ -205,7 +204,7 @@ describe('Create account level SLO', () => {
   })
   it('should be able to create SLO by filling all the details.', () => {
     cy.intercept('POST', accountLevelListSLOsCall, accountLevelSLOListResponse).as('sloListPostResponseRolling7Days')
-    cy.intercept('POST', createSloV2).as('saveSLO')
+    cy.intercept('POST', createSloV2).as('AccSaveSLO')
     cy.contains('p', 'SLOs').click()
     cy.contains('span', 'Create Composite SLO').click()
     // Filling details Under Name tab for SLO creation
@@ -257,9 +256,8 @@ describe('Create account level SLO', () => {
     cy.contains('span', 'Next').click({ force: true })
     cy.contains('span', 'Save').click({ force: true })
 
-    cy.wait('@saveSLO').then(data => {
+    cy.wait('@AccSaveSLO').then(data => {
       // match the payload to verify we submit correct payload
-      cy.debug()
       expect(JSON.stringify({ ...data.request.body })).equal(JSON.stringify({ ...createCompositeSLOPayload }))
     })
   })
