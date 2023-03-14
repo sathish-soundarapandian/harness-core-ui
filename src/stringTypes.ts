@@ -1092,6 +1092,7 @@ export interface StringsMap {
   'common.subscriptions.title': string
   'common.subscriptions.trial': string
   'common.subscriptions.usage.activeDevelopers': string
+  'common.subscriptions.usage.allCredits': string
   'common.subscriptions.usage.ccmTooltip': string
   'common.subscriptions.usage.ccmUsers': string
   'common.subscriptions.usage.cdSITooltip': string

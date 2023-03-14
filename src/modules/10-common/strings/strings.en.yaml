@@ -566,6 +566,7 @@ subscriptions:
     stoScansTooltip: A Security Scan is a pipeline execution that involves a security step.
     monthlyUsers: Monthly Active Users
     activeDevelopers: Active Developers
+    allCredits: All Credits
     developers: Developers
     developer: Developer
     cloudSpend: Total Cloud Spend
