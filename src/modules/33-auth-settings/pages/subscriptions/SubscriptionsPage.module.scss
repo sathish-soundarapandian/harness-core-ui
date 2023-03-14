@@ -54,6 +54,9 @@
 }
 .moduleSelectCards {
   margin-bottom: 25px !important;
+  overflow-x: scroll !important;
+  width: 1200px !important;
+  height: 150px !important;
   .moduleSelectCard {
     padding: var(--spacing-small) !important;
     cursor: pointer;
