@@ -85,6 +85,7 @@ declare interface Window {
   }
   noAuthHeader: boolean
   MonacoEnvironment: any
+  featureFlagsToken: string
 }
 
 declare interface WindowEventMap {

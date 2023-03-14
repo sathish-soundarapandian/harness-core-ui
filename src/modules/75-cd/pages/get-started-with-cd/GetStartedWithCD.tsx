@@ -5,10 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Text, Icon, Layout, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
+import React, { useEffect } from 'react'
+import { Text, Icon, Layout, ButtonVariation, Container, ButtonSize, PageSpinner } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { useHistory, useParams } from 'react-router-dom'
+import { FFContextProvider, useFeatureFlag } from '@harnessio/ff-react-client-sdk'
+import { Redirect, useHistory, useParams } from 'react-router-dom'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -19,8 +21,19 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import cdOnboardingSteps from '../home/images/cd-onboarding-steps.svg'
 import css from './GetStartedWithCD.module.scss'
+enum FLAGS {
+  TRACK_EXPOSURE = 'TRACK_EXPOSURE',
+  CD_ONBOARDING_FLOW_TYPE = 'CD_ONBOARDING_FLOW_TYPE'
+}
+enum EXPERIMENTS {
+  CD_ONBOARDING = 'CD_ONBOARDING'
+}
+enum FLAG_VARIANTS {
+  GET_STARTED = 'GET_STARTED',
+  CD_ONBOARDING_WIZARD = 'CD_ONBOARDING_WIZARD'
+}
 
-export default function GetStartedWithCD(): React.ReactElement {
+export function GetStartedWithCD(): React.ReactElement {
   const { getString } = useStrings()
   const history = useHistory()
   const { trackEvent } = useTelemetry()
@@ -28,9 +41,18 @@ export default function GetStartedWithCD(): React.ReactElement {
 
   const getStartedClickHandler = (): void => {
     trackEvent(CDOnboardingActions.GetStartedClicked, {})
-    history.push(routes.toCDOnboardingWizard({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
+    history.push(routes.toGetStartedWithCD({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
   }
-  return (
+  const TRACK_EXPOSURE = useFeatureFlag(FLAGS.TRACK_EXPOSURE)
+  const CD_ONBOARDING_FLOW_TYPE = useFeatureFlag(FLAGS.CD_ONBOARDING_FLOW_TYPE)
+
+  useEffect(() => {
+    TRACK_EXPOSURE &&
+      trackEvent('$exposure', { flag_key: FLAGS.CD_ONBOARDING_FLOW_TYPE, variant: CD_ONBOARDING_FLOW_TYPE })
+  }, [])
+  return CD_ONBOARDING_FLOW_TYPE === FLAG_VARIANTS.CD_ONBOARDING_WIZARD ? (
+    <Redirect to={routes.toCDOnboardingWizard({ accountId, orgIdentifier, projectIdentifier, module: 'cd' })} />
+  ) : (
     <Layout.Vertical flex>
       <Container className={css.topPage}>
         <Layout.Horizontal flex margin="auto">
@@ -67,5 +89,22 @@ export default function GetStartedWithCD(): React.ReactElement {
         </Layout.Horizontal>
       </Container>
     </Layout.Vertical>
+  )
+}
+export default function GetStartedWithCDWithFF(): React.ReactElement {
+  const { currentUserInfo } = useAppStore()
+  return (
+    <FFContextProvider
+      target={{
+        identifier: currentUserInfo.email || '',
+        attributes: {
+          experiment: EXPERIMENTS.CD_ONBOARDING
+        }
+      }}
+      fallback={<PageSpinner />}
+      apiKey={window.featureFlagsToken}
+    >
+      <GetStartedWithCD />
+    </FFContextProvider>
   )
 }

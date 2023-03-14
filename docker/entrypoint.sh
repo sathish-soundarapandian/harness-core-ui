@@ -20,7 +20,8 @@ sed -i "s|HARNESS_ENABLE_APPDY_EUM_PLACEHOLDER|$HARNESS_ENABLE_APPDY_EUM_PLACEHO
 sed -i "s|HARNESS_ENABLE_CDN_PLACEHOLDER|$HARNESS_ENABLE_CDN_PLACEHOLDER|" index.html
 sed -i "s|BROWSER_ROUTER_ENABLED_PLACEHOLDER|$BROWSER_ROUTER_ENABLED_PLACEHOLDER|" index.html
 sed -i "s|HARNESS_ENABLE_SABER_PLACEHOLDER|$HARNESS_ENABLE_SABER_PLACEHOLDER|" index.html
-sed -i "s|<\!-- segmentToken -->|<script>window.segmentToken = '$SEGMENT_TOKEN'</script>|" index.html
+sed -i "s|<\!-- segmentToken -->|<script>window.segmentToken = '$SEGMENT_TOKEN_TEST_PR'</script>|" index.html
+
 sed -i "s|<\!-- bugsnagToken -->|<script>window.bugsnagToken = '$BUGSNAG_TOKEN'</script>|" index.html
 sed -i "s|<\!-- appDyEUMToken -->|<script>window.appDyEUMToken = '$APPDY_EUM_TOKEN'</script>|" index.html
 sed -i "s|<\!-- deploymentType -->|<script>window.deploymentType = '$DEPLOYMENT_TYPE'</script>|" index.html
@@ -36,6 +37,7 @@ sed -i "s|<\!-- newNavContentfulEnvironment -->|<script>window.newNavContentfulE
 sed -i "s|<\!-- harnessNameSpacePlaceHolder -->|<script>window.harnessNameSpace = '$HARNESS_NAME_SPACE'</script>|" index.html
 sed -i "s|<\!-- harnessClusterURLPlaceHolder -->|<script>window.harnessClusterURL = '$HARNESS_CLUSTER_URL'</script>|" index.html
 sed -i "s|<\!-- stripeApiKey -->|<script>window.stripeApiKey = '$STRIPE_API_KEY'</script>|" index.html
+sed -i "s|<\!-- featureFlagsToken -->|<script>window.featureFlagsToken = '$EXPERIMENT_FF_SDK_KEY'</script>|" index.html
 
 sed -i "s|USE_LEGACY_FEATURE_FLAGS_PLACEHOLDER|$USE_LEGACY_FEATURE_FLAGS|" index.html
 sed -i "s|HARNESS_FF_SDK_BASE_URL_PLACEHOLDER|$HARNESS_FF_SDK_BASE_URL|" index.html

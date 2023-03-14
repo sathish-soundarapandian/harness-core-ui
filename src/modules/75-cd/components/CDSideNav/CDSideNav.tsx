@@ -202,7 +202,7 @@ export default function CDSideNav(): React.ReactElement {
           } else if (experience) {
             // when it's on trial page, forward to get-started (behind FF)/ pipeline
             history.push({
-              pathname: routes.toCDOnboardingWizard({
+              pathname: routes.toGetStartedWithCD({
                 orgIdentifier: data.orgIdentifier || '',
                 projectIdentifier: data.identifier || '',
                 accountId,

@@ -28,7 +28,7 @@ jest.mock('nanoid', () => ({
   }
 }))
 
-const PATH = routes.toCDOnboardingWizard({ ...projectPathProps, ...modulePathProps, ...pipelinePathProps })
+const PATH = routes.toGetStartedWithCD({ ...projectPathProps, ...modulePathProps, ...pipelinePathProps })
 const PATH_PARAMS = {
   accountId: 'testAccountId',
   orgIdentifier: 'testOrg',

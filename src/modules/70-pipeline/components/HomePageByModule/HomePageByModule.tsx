@@ -171,7 +171,7 @@ function HomePageByModule({ moduleName, bgImageURL, useTrialModal }: HomePageMod
       closeProjectModal()
       if (modal === ModuleLicenseType.FREE && experience === ModuleLicenseType.FREE && module === 'cd') {
         history.push(
-          routes.toCDOnboardingWizard({
+          routes.toGetStartedWithCD({
             accountId,
             module,
             orgIdentifier: projectData?.orgIdentifier || '',
