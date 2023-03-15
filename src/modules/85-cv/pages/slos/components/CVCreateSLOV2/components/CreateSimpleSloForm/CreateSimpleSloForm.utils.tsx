@@ -174,7 +174,7 @@ export const createMetricGraphPayload = ({
   body: string[]
 } => {
   const eventTypeParam = isRatioBased ? { ratioSLIMetricEventType: eventType } : {}
-  const selectedMetricList = isRatioBased ? [validRequestMetric, goodRequestMetric] : [validRequestMetric]
+  const selectedMetricList = isRatioBased ? [goodRequestMetric, validRequestMetric] : [validRequestMetric]
   return {
     queryParams: {
       accountId,
