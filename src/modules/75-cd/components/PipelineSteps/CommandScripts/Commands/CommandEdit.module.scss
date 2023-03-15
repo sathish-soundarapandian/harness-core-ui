@@ -53,3 +53,45 @@
   padding-top: 20px !important;
   position: sticky;
 }
+
+.headerRow,
+.responseMappingRow {
+  margin-bottom: var(--spacing-small);
+  display: flex;
+  position: relative;
+  :global(.bp3-form-group) {
+    margin: 0;
+    width: 220px !important;
+  }
+  :global(.bp3-input) {
+    margin: 0;
+    width: 220px !important;
+  }
+
+  .label {
+    color: var(--grey-400);
+  }
+
+  :global(.bp3-icon-trash) {
+    color: var(--grey-400) !important;
+  }
+  .keyField {
+    margin-right: var(--spacing-small);
+  }
+  .deleteBtn {
+    position: absolute;
+    right: -35px;
+    top: 20px;
+  }
+}
+.requestBody {
+  :global {
+    textarea {
+      min-height: 75px;
+      max-height: 120px;
+    }
+  }
+}
+.addButton {
+  padding-left: 0 !important;
+}

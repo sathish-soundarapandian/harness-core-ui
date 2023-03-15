@@ -7,12 +7,19 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addButton: string
   readonly commandUnitForm: string
+  readonly deleteBtn: string
   readonly destinationPath: string
   readonly destinationPathLabel: string
   readonly fieldWrapper: string
   readonly footerContainer: string
+  readonly headerRow: string
+  readonly keyField: string
+  readonly label: string
   readonly minConfigBtn: string
+  readonly requestBody: string
+  readonly responseMappingRow: string
   readonly scriptField: string
 }
 export default styles

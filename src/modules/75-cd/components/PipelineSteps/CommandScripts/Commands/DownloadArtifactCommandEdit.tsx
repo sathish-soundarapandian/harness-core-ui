@@ -6,24 +6,32 @@
  */
 
 import React from 'react'
-import { Container, AllowedTypes, Text } from '@harness/uicore'
+import { Container, AllowedTypes, Text, Accordion } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import OptionalConfiguration from './OptionalConfiguration'
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+
 import css from './CommandEdit.module.scss'
 
 interface DownloadArtifactCommandEditProps {
   allowableTypes: AllowedTypes
   readonly?: boolean
+  formik: any
 }
 
 export function DownloadArtifactCommandEdit(props: DownloadArtifactCommandEditProps): React.ReactElement {
-  const { readonly, allowableTypes } = props
+  const { readonly, allowableTypes, formik } = props
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+
+  React.useEffect(() => {
+    console.log('formik', formik)
+  }, [formik])
 
   return (
     <>
@@ -48,6 +56,13 @@ export function DownloadArtifactCommandEdit(props: DownloadArtifactCommandEditPr
             placeholder: getString('cd.steps.commands.destinationPathPlaceholder')
           }}
         />
+        <Accordion activeId="step-1" className={stepCss.accordion}>
+          <Accordion.Panel
+            id="optional-config"
+            summary={getString('common.optionalConfig')}
+            details={<OptionalConfiguration formik={formik} readonly={false} allowableTypes={allowableTypes} />}
+          />
+        </Accordion>
       </Container>
     </>
   )

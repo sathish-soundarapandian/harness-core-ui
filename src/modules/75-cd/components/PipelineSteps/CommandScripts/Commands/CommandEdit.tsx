@@ -8,6 +8,7 @@
 import React from 'react'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
+import { isArray } from 'lodash-es'
 import {
   AllowedTypes,
   Button,
@@ -57,7 +58,14 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
         return Yup.object().shape({
           destinationPath: Yup.string()
             .trim()
-            .required(getString('cd.steps.commands.validation.destinationPathRequired'))
+            .required(getString('cd.steps.commands.validation.destinationPathRequired')),
+
+          parameters: Yup.array().of(
+            Yup.object().shape({
+              key: Yup.string().required(getString('common.validation.keyIsRequired')),
+              value: Yup.string().required(getString('common.validation.valueIsRequired'))
+            })
+          )
         })
       } else if (type === CommandType.Script) {
         return Yup.object().shape({
@@ -105,7 +113,9 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
 
   return (
     <Formik<CommandUnitType>
-      initialValues={initialValues}
+      initialValues={{
+        ...initialValues
+      }}
       formName="commandUnit"
       validationSchema={validationSchema}
       onSubmit={onAddEditCommand}
@@ -143,7 +153,7 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
             )}
 
             {formik.values.type === CommandType.DownloadArtifact && (
-              <DownloadArtifactCommandEdit allowableTypes={allowableTypes} />
+              <DownloadArtifactCommandEdit allowableTypes={allowableTypes} formik={formik} />
             )}
 
             {formik.values.type === CommandType.Script && (

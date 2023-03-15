@@ -72,7 +72,8 @@ export default function useCommands(props: UseCommandProps): UseCommandReturnTyp
       return {
         ...downloadArtifactCommandData,
         spec: {
-          destinationPath: downloadArtifactCommandData.spec.destinationPath
+          destinationPath: downloadArtifactCommandData.spec.destinationPath,
+          parameters: downloadArtifactCommandData.spec.parameters
         }
       }
     }
