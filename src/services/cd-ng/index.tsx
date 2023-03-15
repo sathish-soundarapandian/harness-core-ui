@@ -886,7 +886,6 @@ export interface Application {
   healthStatus?: string
   identifier?: string
   name?: string
-  syncErrorMessage?: string
   syncStatus?: string
   url?: string
 }
@@ -10023,12 +10022,6 @@ export interface NGTag {
   value: string
 }
 
-export type NGTemplateReference = EntityReference & {
-  isDefault?: boolean
-  scope?: 'account' | 'org' | 'project' | 'unknown'
-  versionLabel?: string
-}
-
 export interface NGVariable {
   description?: string
   metadata?: string
@@ -16454,17 +16447,17 @@ export interface SvcEnvMigrationResponseDto {
 export interface SyncOptions {
   applyOutOfSyncOnly?: boolean
   autoCreateNamespace?: boolean
-  prunePropagationPolicy?: 'foreground' | 'background' | 'orphan'
+  prunePropagationPolicy?: string
   pruneResourcesAtLast?: boolean
   replaceResources?: boolean
   skipSchemaValidation?: boolean
 }
 
 export interface SyncRetryStrategy {
-  baseBackoffDuration?: string
-  increaseBackoffByFactor?: number
   limit?: number
-  maxBackoffDuration?: string
+  maxRetryBackoffDuration?: string
+  retryBackoffBaseDuration?: string
+  waitAfterRetryFactor?: number
 }
 
 export type SyncStepInfo = StepSpecType & {
@@ -37430,64 +37423,6 @@ export const getEnvironmentAccessListPromise = (
     signal
   )
 
-export interface GetEnvironmentListFilteredQueryParams {
-  page?: number
-  size?: number
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  envIdentifiers?: string[]
-}
-
-export type GetEnvironmentListFilteredProps = Omit<
-  GetProps<ResponsePageEnvironmentResponse, Failure | Error, GetEnvironmentListFilteredQueryParams, void>,
-  'path'
->
-
-/**
- * Gets environment list filtered by scoped env refs
- */
-export const GetEnvironmentListFiltered = (props: GetEnvironmentListFilteredProps) => (
-  <Get<ResponsePageEnvironmentResponse, Failure | Error, GetEnvironmentListFilteredQueryParams, void>
-    path={`/environmentsV2/list/scoped`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetEnvironmentListFilteredProps = Omit<
-  UseGetProps<ResponsePageEnvironmentResponse, Failure | Error, GetEnvironmentListFilteredQueryParams, void>,
-  'path'
->
-
-/**
- * Gets environment list filtered by scoped env refs
- */
-export const useGetEnvironmentListFiltered = (props: UseGetEnvironmentListFilteredProps) =>
-  useGet<ResponsePageEnvironmentResponse, Failure | Error, GetEnvironmentListFilteredQueryParams, void>(
-    `/environmentsV2/list/scoped`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Gets environment list filtered by scoped env refs
- */
-export const getEnvironmentListFilteredPromise = (
-  props: GetUsingFetchProps<
-    ResponsePageEnvironmentResponse,
-    Failure | Error,
-    GetEnvironmentListFilteredQueryParams,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponsePageEnvironmentResponse, Failure | Error, GetEnvironmentListFilteredQueryParams, void>(
-    getConfig('ng/api'),
-    `/environmentsV2/list/scoped`,
-    props,
-    signal
-  )
-
 export interface GetEnvironmentListV2QueryParams {
   page?: number
   size?: number
@@ -54316,59 +54251,6 @@ export const getServiceAccessListPromise = (
     signal
   )
 
-export interface GetServiceListFilteredQueryParams {
-  page?: number
-  size?: number
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  serviceIdentifiers?: string[]
-}
-
-export type GetServiceListFilteredProps = Omit<
-  GetProps<ResponsePageServiceResponse, Failure | Error, GetServiceListFilteredQueryParams, void>,
-  'path'
->
-
-/**
- * Gets Service list filtered by service refs
- */
-export const GetServiceListFiltered = (props: GetServiceListFilteredProps) => (
-  <Get<ResponsePageServiceResponse, Failure | Error, GetServiceListFilteredQueryParams, void>
-    path={`/servicesV2/list/scoped`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetServiceListFilteredProps = Omit<
-  UseGetProps<ResponsePageServiceResponse, Failure | Error, GetServiceListFilteredQueryParams, void>,
-  'path'
->
-
-/**
- * Gets Service list filtered by service refs
- */
-export const useGetServiceListFiltered = (props: UseGetServiceListFilteredProps) =>
-  useGet<ResponsePageServiceResponse, Failure | Error, GetServiceListFilteredQueryParams, void>(
-    `/servicesV2/list/scoped`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Gets Service list filtered by service refs
- */
-export const getServiceListFilteredPromise = (
-  props: GetUsingFetchProps<ResponsePageServiceResponse, Failure | Error, GetServiceListFilteredQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponsePageServiceResponse, Failure | Error, GetServiceListFilteredQueryParams, void>(
-    getConfig('ng/api'),
-    `/servicesV2/list/scoped`,
-    props,
-    signal
-  )
-
 export interface MergeServiceInputsQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -62607,60 +62489,6 @@ export const getVariablePromise = (
   getUsingFetch<ResponseVariableResponseDTO, Failure | Error, GetVariableQueryParams, GetVariablePathParams>(
     getConfig('ng/api'),
     `/variables/${identifier}`,
-    props,
-    signal
-  )
-
-export interface OverrideDelegateImageTagQueryParams {
-  accountIdentifier?: string
-  delegateTag?: string
-  validTillNextRelease?: boolean
-  validForDays?: number
-}
-
-export type OverrideDelegateImageTagProps = Omit<
-  MutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
-  'path' | 'verb'
->
-
-/**
- * Overrides delegate image tag for account
- */
-export const OverrideDelegateImageTag = (props: OverrideDelegateImageTagProps) => (
-  <Mutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>
-    verb="PUT"
-    path={`/version-override/delegate-tag`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseOverrideDelegateImageTagProps = Omit<
-  UseMutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
-  'path' | 'verb'
->
-
-/**
- * Overrides delegate image tag for account
- */
-export const useOverrideDelegateImageTag = (props: UseOverrideDelegateImageTagProps) =>
-  useMutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
-    'PUT',
-    `/version-override/delegate-tag`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Overrides delegate image tag for account
- */
-export const overrideDelegateImageTagPromise = (
-  props: MutateUsingFetchProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
-    'PUT',
-    getConfig('ng/api'),
-    `/version-override/delegate-tag`,
     props,
     signal
   )
