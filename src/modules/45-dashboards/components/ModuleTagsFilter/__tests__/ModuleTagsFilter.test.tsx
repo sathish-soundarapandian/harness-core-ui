@@ -75,7 +75,7 @@ describe('ModuleTagsFilter', () => {
     expect(screen.getByText('dashboards.modules.harness')).toBeInTheDocument()
     expect(screen.getByText('common.purpose.ce.cloudCost')).toBeInTheDocument()
     expect(screen.getByText('buildsText')).toBeInTheDocument()
-    expect(screen.queryByText('deploymentsText')).not.toBeInTheDocument()
+    expect(screen.queryByText('deploymentsText')).toBeInTheDocument()
     expect(screen.queryByText('common.purpose.cf.continuous')).not.toBeInTheDocument()
     expect(screen.queryByText('common.purpose.sto.continuous')).not.toBeInTheDocument()
   })
