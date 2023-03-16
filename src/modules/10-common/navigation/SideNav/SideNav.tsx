@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import cx from 'classnames'
 import { NavLink as Link, NavLinkProps, useParams } from 'react-router-dom'
 import { Text, Layout, IconName, Icon, Container, TextProps, Popover } from '@harness/uicore'
@@ -37,6 +37,14 @@ const SideNavCollapseButton: React.FC<{ isExpanded: boolean; onClick: () => void
         [css.expand]: !isExpanded
       })}
       onClick={onClick}
+      onMouseEnter={e => {
+        e.preventDefault()
+        e.stopPropagation()
+      }}
+      onMouseLeave={e => {
+        e.preventDefault()
+        e.stopPropagation()
+      }}
     >
       <Popover
         content={
@@ -55,6 +63,7 @@ const SideNavCollapseButton: React.FC<{ isExpanded: boolean; onClick: () => void
   )
 }
 
+export const SIDE_NAV_EXPAND_TIMER = 500
 export default function SideNav(props: React.PropsWithChildren<SideNavProps>): ReactElement {
   const { collapseByDefault = false } = props
   const { getString } = useStrings()
@@ -62,9 +71,11 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
   const params = useParams<ProjectPathProps>()
   const { accountId } = useParams<AccountPathProps>()
   const [sideNavExpanded, setSideNavExpanded] = useState<boolean>(!collapseByDefault)
+  const [sideNavHovered, setSideNavhovered] = useState<boolean>(false)
   const launchButtonRedirectUrl = props.launchButtonRedirectUrl
     ? props.launchButtonRedirectUrl?.replace('{replaceAccountId}', params.accountId)
     : ''
+
   const { data } = useGetAccountNG({ accountIdentifier: accountId, queryParams: { accountIdentifier: accountId } })
   const account = data?.data
   let newNavFlag = true
@@ -75,11 +86,30 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
       newNavFlag = account?.crossGenerationAccessEnabled
     }
   }
+
+  useEffect(() => {
+    const timer =
+      sideNavHovered &&
+      setTimeout(() => {
+        setSideNavExpanded(true)
+      }, SIDE_NAV_EXPAND_TIMER)
+
+    return () => {
+      timer && clearTimeout(timer)
+    }
+  }, [sideNavHovered])
+
   return (
     <div
       className={cx(css.main, {
         [css.sideNavExpanded]: sideNavExpanded
       })}
+      onMouseEnter={() => {
+        !sideNavExpanded && setSideNavhovered(true)
+      }}
+      onMouseLeave={() => {
+        !sideNavExpanded && setSideNavhovered(false)
+      }}
     >
       <>
         <div>{props.children}</div>
