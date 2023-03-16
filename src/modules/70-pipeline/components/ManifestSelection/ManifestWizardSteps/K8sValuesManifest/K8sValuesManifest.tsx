@@ -24,15 +24,21 @@ import type { FormikProps } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
 
-import { get, set, isEmpty } from 'lodash-es'
+import { get, set, isEmpty, defaultTo } from 'lodash-es'
 
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import type { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { shouldHideHeaderAndNavBtns } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import type { CommonManifestDataType, ManifestTypes } from '../../ManifestInterface'
-import { GitRepoName, ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import type { CommonManifestDataType, CommonManifestLastStepPrevStepData, ManifestTypes } from '../../ManifestInterface'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  GitRepoName,
+  ManifestDataType,
+  ManifestIdentifierValidation,
+  ManifestStoreMap
+} from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import { ManifestDetailsCoreSection } from '../CommonManifestDetails/ManifestDetailsCoreSection'
@@ -49,6 +55,7 @@ interface K8sValuesManifestPropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   context?: ModalViewFor
+  editManifestModePrevStepData?: CommonManifestLastStepPrevStepData
 }
 
 const showAdvancedSection = (selectedManifest: ManifestTypes | null): boolean => {
@@ -66,14 +73,18 @@ function K8sValuesManifest({
   previousStep,
   manifestIdsList,
   context,
-  isReadonly = false
+  isReadonly = false,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & K8sValuesManifestPropType): React.ReactElement {
   const { getString } = useStrings()
   const hideHeaderAndNavBtns = context ? shouldHideHeaderAndNavBtns(context) : false
-  const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+
+  const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
-    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-    prevStepData?.urlType === GitRepoName.Repo
+    modifiedPrevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    modifiedPrevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
@@ -85,7 +96,8 @@ function K8sValuesManifest({
         ...specValues,
         identifier: initialValues.identifier,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
-        repoName: getRepositoryName(prevStepData, initialValues),
+        enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
+        repoName: getRepositoryName(modifiedPrevStepData, initialValues),
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
@@ -109,7 +121,8 @@ function K8sValuesManifest({
       gitFetchType: 'Branch',
       paths: [{ path: '', uuid: uuid('', nameSpace()) }],
       skipResourceVersioning: false,
-      repoName: getRepositoryName(prevStepData, initialValues)
+      enableDeclarativeRollback: false,
+      repoName: getRepositoryName(modifiedPrevStepData, initialValues)
     }
   }
 
@@ -133,7 +146,7 @@ function K8sValuesManifest({
           valuesPaths:
             typeof formData?.valuesPaths === 'string'
               ? formData?.valuesPaths
-              : formData?.valuesPaths?.map((path: { path: string }) => path.path)
+              : removeEmptyFieldsFromStringArray(formData?.valuesPaths?.map((path: { path: string }) => path.path))
         }
       }
     }
@@ -150,7 +163,15 @@ function K8sValuesManifest({
     }
 
     if (selectedManifest === ManifestDataType.K8sManifest) {
-      set(manifestObj, 'manifest.spec.skipResourceVersioning', formData?.skipResourceVersioning)
+      set(
+        manifestObj,
+        'manifest.spec.skipResourceVersioning',
+        getSkipResourceVersioningBasedOnDeclarativeRollback(
+          formData?.skipResourceVersioning,
+          formData?.enableDeclarativeRollback
+        )
+      )
+      set(manifestObj, 'manifest.spec.enableDeclarativeRollback', formData?.enableDeclarativeRollback)
     }
     handleSubmit(manifestObj)
   }
@@ -158,14 +179,14 @@ function K8sValuesManifest({
   const handleValidate = (formData: CommonManifestDataType): void => {
     if (hideHeaderAndNavBtns) {
       submitFormData({
-        ...prevStepData,
+        ...modifiedPrevStepData,
         ...formData,
-        connectorRef: prevStepData?.connectorRef
-          ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-            ? prevStepData?.connectorRef
-            : prevStepData?.connectorRef?.value
-          : prevStepData?.identifier
-          ? prevStepData?.identifier
+        connectorRef: modifiedPrevStepData?.connectorRef
+          ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+            ? modifiedPrevStepData?.connectorRef
+            : modifiedPrevStepData?.connectorRef?.value
+          : modifiedPrevStepData?.identifier
+          ? modifiedPrevStepData?.identifier
           : ''
       })
     }
@@ -210,7 +231,7 @@ function K8sValuesManifest({
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
             if (
               connectionType === GitRepoName.Repo ||
-              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+              getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
             ) {
               return true
             }
@@ -220,14 +241,14 @@ function K8sValuesManifest({
         validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
@@ -245,7 +266,7 @@ function K8sValuesManifest({
                     selectedManifest={selectedManifest}
                     expressions={expressions}
                     allowableTypes={allowableTypes}
-                    prevStepData={prevStepData}
+                    prevStepData={modifiedPrevStepData}
                     isReadonly={isReadonly}
                   />
 
@@ -265,6 +286,7 @@ function K8sValuesManifest({
                         placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                         defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                         dragDropFieldWidth={filePathWidth}
+                        allowSinglePathDeletion
                       />
                       {getMultiTypeFromValue(formik.values.valuesPaths) === MultiTypeInputType.RUNTIME && (
                         <ConfigureOptions
@@ -273,7 +295,6 @@ function K8sValuesManifest({
                           variableName={'valuesPaths'}
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={val => formik?.setFieldValue('valuesPaths', val)}
                           isReadonly={isReadonly}
                         />
@@ -288,6 +309,7 @@ function K8sValuesManifest({
                       allowableTypes={allowableTypes}
                       initialValues={initialValues}
                       isReadonly={isReadonly}
+                      selectedManifest={selectedManifest}
                     />
                   )}
                 </div>
@@ -297,7 +319,7 @@ function K8sValuesManifest({
                       variation={ButtonVariation.SECONDARY}
                       text={getString('back')}
                       icon="chevron-left"
-                      onClick={() => previousStep?.(prevStepData)}
+                      onClick={() => previousStep?.(modifiedPrevStepData)}
                     />
                     <Button
                       variation={ButtonVariation.PRIMARY}

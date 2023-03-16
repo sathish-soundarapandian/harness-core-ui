@@ -59,6 +59,7 @@ startedOn: Started On
 nodes: nodes
 nodesLabel: Nodes
 amiTags: AMI Tags
+advancedConfiguration: 'Advanced Configuration'
 amiFilters: AMi Filters
 poweredByHarness: powered by Harness
 linuxOnly: Supported on Linux only
@@ -95,6 +96,18 @@ utilitiesStep:
 terraformStep:
   provisionerIdentifier: Enter Provisioner Identifier
   workspace: Enter Workspace
+  workspacePlaceholder: Select Workspace
+  workspaceName: Terraform Workspace Name
+  workspaceError: No workspaces found within given organization
+  messageLabel: Run Message
+  messagePlaceholder: Enter Message
+  discardPendingRuns: Discard Pending Runs
+  overridePolicies: Override Policies
+  runTypeLabel: Run Type
+  runTypePlaceholder: Select Run Type
+  terraformVersion: Terraform Version
+  terraformVersionPlaceholder: Enter Terraform Version
+  runOnRemote: Run on Remote Workspace
 kubernetesStep:
   workload: Enter Workload
 waitStep:
@@ -106,7 +119,7 @@ approvalStep:
   ensureUserGroups: To use Harness Approvals, please make sure your project has user groups.
   approversWithColon: '{{$.pipeline.approvalStep.approvers}}:'
   approverInputs: 'Inputs to be provided by approver'
-  includePipelineExecutionHistory: 'Include pipeline execution history in approval details'
+  includeStageExecutionDetails: 'Include stage execution details in approval'
   addUserGroups: Enter User Group
   fetchingUserGroups: Select User Group
   fetchUserGroupsFailed: Failed to fetch User Groups
@@ -138,6 +151,7 @@ queueStep:
   queuedByResourceKey: 'Queued by Resource Key:'
   noQueuedExecutions: No queued executions
 jenkinsStep:
+  job: job
   addJobParameters: Add Job Parameter
   validations:
     jobName: Jobname is a required field
@@ -146,6 +160,26 @@ jenkinsStep:
   unstableStatusAsSuccess: Treat unstable Job status as success
   useConnectorUrlForJobExecution: Use Connector URL for job execution
   captureEnvironmentVariable: Capture environment variables from Jenkins build
+syncStep:
+  prune: Prune
+  dryRun: Dry Run
+  applyOnly: Apply Only
+  forceApply: Force Apply
+  syncOptionsLabel: Sync Options & Policy
+  skipSchemaValidation: Skip Schema Validations
+  autoCreateNamespace: Auto-Create Namespace
+  pruneResourcesAtLast: Prune Last
+  applyOutOfSyncOnly: Apply Out of Sync Only
+  replaceResources: Replace
+  prunePropagationPolicy: Prune Propagation Policy
+  pruneProgrationPolicyPlaceholder: Select Prune Propagation Policy
+  limit: Limit
+  maxBackoffDuration: Max Duration
+  increaseBackoffByFactor: Factor
+  validation:
+    limit: Limit is required
+    maxBackoffDuration: Max Duration is required
+    increaseBackoffByFactor: Factor is required
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector
@@ -216,6 +250,7 @@ approvalCriteria:
   match: Match
   approvalCriteria: Approval Criteria
   rejectionCriteria: Rejection Criteria
+  approvalWindow: Approval Window
   rejectionCriteriaOptional: Rejection Criteria (optional)
   validations:
     approvalCriteriaCondition: At least one condition is required
@@ -290,6 +325,7 @@ commonApprovalStep:
   execution:
     allConditionsMsg: 'If all of the following conditions are met:'
     anyConditionsMsg: 'If any of the following conditions is met:'
+    approvalWindowMsg: 'On Approval the execution will be performed within the specified Start and End Time'
 customApprovalStep:
   scriptTimeout: Script Timeout
   retryInterval: Retry interval
@@ -356,7 +392,9 @@ manifestType:
   pathPlaceholder: Enter File Path
   folderPathPlaceholder: Enter Folder Path
   chartPathPlaceholder: Enter Chart Path
-  bucketName: Bucket Name
+  subChart: Sub-Chart Name
+  subChartPlaceholder: Enter Sub Chart Name
+  bucketName: '{{$.common.bucketName}}'
   gitFetchTypeLabel: Git Fetch Type
   commitId: Commit Id / Git Tag
   branchPlaceholder: Enter Branch Name
@@ -380,7 +418,7 @@ manifestType:
   customRemoteExtractionScript: Custom Remote Manifest Extraction Script
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
-  paramsYamlPath: Openshift Parameters
+  paramsYamlPath: OpenShift Parameters
   helmRepoOverride:
     locationText: Chart Location Referenced From Service
     allowedLimitForEnvironment: You cannot configure multiple Helm Repo Overrides at the Environment Level.
@@ -400,6 +438,7 @@ manifestType:
   optimizedKustomizeManifestCollection: Optimized Kustomize Manifest Collection
   kustomizeYamlFolderPath: Kustomize YAML Folder Path
   kustomizeYamlFolderPathRequired: Kustomize YAML Folder Path is required
+  enableDeclarativeRollback: Enable Declarative Rollback
 manifestTypeLabels:
   K8sManifest: K8s Manifest
   ValuesYaml: Values YAML
@@ -426,6 +465,8 @@ manifestTypeLabels:
   Autoscaler: AutoScaler
   GoogleCloudFunctionDefinition: Google Cloud Function Definition
   HelmRepoOverride: Helm Repo Override
+  AwsLambdaFunctionDefinition: AWS Lambda Function Definition
+  AwsLambdaFunctionAliasDefinition: AWS Lambda Function Alias Definition
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:
@@ -433,7 +474,7 @@ failureStrategies:
   title: Failure Strategy
   learnMoreLink: https://docs.harness.io/article/0zvnn5s1ph
   helpText: |
-    Define one or more failure strategies to control the behavior of your pipeline when your step execution encounters an error.
+    Define one or more failure strategies. These will be used to control the behavior of your pipeline when there is an error in execution.
   addedAllStrategies: You have added all possible failure strategies. There are no more options to add.
   tabHasErrors: The current settings have errors. Please review the error messages displayed and resolve the issues.
   onFailureOfType: On failure of type
@@ -455,6 +496,7 @@ failureStrategies:
     PipelineRollback: Rollback Pipeline
     ProceedWithDefaultValues: Proceed with Default Values
     StepGroupRollback: Rollback Step Group
+    MarkAsFailure: Mark As Failure
   errorTypeLabels:
     Authentication: Authentication Errors
     Authorization: Authorization Errors
@@ -467,7 +509,7 @@ failureStrategies:
     ApprovalRejection: Approval Rejection
     DelegateRestart: Delegate Restart
   validation:
-    arrayOrUndefined: Value must be an array if defined.
+    arrayOrRuntime: Value must be an array or runtime input.
     strategyRequired: 'At least 1 strategy is required'
     strategiesRequired: 'At least {{n}} strategies are required'
     errorsRequired: At least one failure type is required
@@ -497,7 +539,7 @@ loopingStrategy:
     content: Are you sure you want to remove this looping strategy? {{$.pipeline.loopingStrategy.warningText}}
   toggleTypeModal:
     title: Switch looping strategy?
-    content: Are you sure you want to switch lopping strategy? {{$.pipeline.loopingStrategy.warningText}}
+    content: Are you sure you want to switch looping strategy? {{$.pipeline.loopingStrategy.warningText}}
     switch: Switch
   matrix:
     label: Matrix
@@ -529,6 +571,7 @@ execution:
   stagesExecuted: Stages executed (most recent first)
   upcomingStagesPrefix: 'Upcoming stages: '
   stepTitlePrefix: 'Step: '
+  stepGroupTitlePrefix: 'Step Group: '
   stageTitlePrefix: 'Stage: '
   noInputsText: No inputs found
   retryStepCount: 'Retry #{{ num }}'
@@ -851,6 +894,8 @@ pipelineChaining:
   selectPipeline: Select Pipeline
   noProjectSelected: Project is not selected
   noPipelineSelected: Pipeline is not selected
+  noPipelinesInSelectedScope: There are no pipelines in the selected scope
+  noPipelinesInSearchCriteria: No pipelines match your search criteria
   pipelineOutputs: Pipeline Outputs
   outputTabSummaryDetail: Define outputs from child pipeline that you can use in other stages in parent pipeline.
   newOutput: New Output
@@ -880,6 +925,8 @@ infraSpecifications:
 imagePathLabel: Image Path
 digest: Digest
 artifactPathLabel: Artifact Path
+applicationName: Application Name
+selectApplications: Select Applications
 artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
@@ -1090,6 +1137,7 @@ noBucketsFound: No buckets found
 noFilePathsFound: No file paths found
 noClustersFound: No clusters found
 noImagesFound: No images found
+noImages: 'No Images'
 noCloudSourceRepositoriesFound: No cloud source repositories found
 gitRepo: Git Repo
 buildRepo: Build Repo
@@ -1123,6 +1171,7 @@ stepDescription:
   RestoreCacheS3: Restore saved files and directories between builds using AWS S3.
   DockerHub: Build a Docker image from a Dockerfile and push it to a Docker registry.
   Jenkins: Jenkins Description.
+  GitOpsSync: Gitops Sync
   GCS: Upload artifacts to Google Cloud Storage (GCS).
   S3: Upload artifacts to AWS S3.
   JFrogArtifactory: Upload artifacts to JFrog Artifactory.
@@ -1189,6 +1238,12 @@ stepDescription:
   ElastigroupSwapRoute: Elastigroup Swap Route
   ElastigroupBGStageSetup: Elastigroup Blue/Green Step
   Container: Execute one or more commands on a container image in a CD stage.
+  AwsLambdaDeploy: Deploy an AWS Lambda function.
+  AwsLambdaDeployRollback: Roll back the AWS Lambda function.
+  TerraformCloudRun: Trigger a run in a Terraform Cloud Workspace.
+  TerraformCloudRollback: Trigger a rollback of the latest run on your Terraform Cloud Workspace.
+  SscaOrchestration: Orchestrate SBOM generation for your artifacts and repository
+
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -1288,6 +1343,8 @@ policyEvaluations:
   policySetName: 'Policy Set: {{name}}'
   emptyPolicySet: This policy set does not have any policies attached to it.
   policySetsApplied: '{{pipelineName}}: Policy Sets applied'
+  failureHeadingEvaluationDetail: Policy Evaluation failed.
+  warningHeadingEvaluationDetail: Policy Evaluation contains warnings.
 expressionsReplaced: 'Pipeline updated with {{count}} expression(s) replaced. Please provide the value(s) for new expression(s).'
 runstageError: '{{count}} Error(s): Unable to run stages.'
 stageDependencyError: 'Stage {{stageId}} has a ‘useFromStage’ dependency on Stage {{dependentStage}}. Please select Stage {{dependentStage}} to run Stage {{stageId}}.'
@@ -1298,6 +1355,7 @@ numOfEnvs: '{{numOfEnvironments}} Environments'
 numOfApps: '{{numOfApps}} Applications'
 numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironments}} Environment(s)'
 requiredToFetch: '{{requiredField}} is required to fetch {{dependentField}}'
+multiRequiredToFetch: '{{requiredField}} are required to fetch {{dependentField}}'
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   servicesDeployed: 'Services deployed'
@@ -1426,8 +1484,6 @@ reconcileDialog:
   subtitle: Error Trace
   unsyncedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from unsynced entities.
   updatedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from updated entities.
-  originalYamlLabel: Original
-  refreshedYamlLabel: Refreshed
   updateAllLabel: Update all unsynced entities
   updateEntityLabel: 'Update {{entity}}'
 inputSetErrorStrip:
@@ -1551,6 +1607,10 @@ phasesForm:
     website: 'IIS Website'
     virtualDir: 'IIS Virtual directory'
 draft: 'Draft'
+logLevelSettings: 'Show Log Level'
+logDateTimeSettings: 'Show Date and Time Information'
+configureLogSettings: 'Configure Logs Settings'
+logSettingsHeader: 'Configure the following Logs Settings at the User Scope'
 duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
 warningForInvalidYAMLDiscard: Enabling this option lets you edit and save changes to the YAML code of the pipelines you are viewing. You can toggle this setting on or off in any pipeline.
@@ -1615,3 +1675,40 @@ commitsTab:
   youWillSeeYourCommitsHere: You will see your commits here
 commitsOn: 'Commits on'
 vmLabel: VM
+emptyExecutionListMsg: 'There are no executions for this given criteria.'
+lastDeployed: 'Last deployed'
+prTitle: PR Title
+ServiceDetail:
+  envCardEmptyStateMsg: 'There are no environments with instances in this service.'
+iacm:
+  workflow: Workflow
+  resourceStack: Resource Stack
+banner:
+  bannerText: Harness has significantly updated services and environments in CD. Please review our
+  bannerDescription: on upgrading to the newer v2 versions of these entities. Support for v1 was reduced and the entities were deprecated at the end of January 2023. Please reach out to
+  bannerDescriptionSecond: for any questions.
+  docs: docs
+validation:
+  validated: Validated
+  validating: Validating
+  validationSuccessful: Validation successful
+  validationSuccessfulText: No errors were found with your pipeline configurations. You can start running your pipeline! Click to view more.
+  validationInProgressText: Click to view details of the pipeline configuration validation progress.
+  nIssuesFound: '{{n}} issue(s) found'
+  errorText: Click to view list of issues.
+  evaluatingPolicySets: Evaluating Policy Sets
+  pipelineValidated: Pipeline validated
+  revalidate: Revalidate
+  validationResultApiError: Unable to complete validation due to [{{message}}] error.
+bamboo:
+  planName: Plan Name
+planNamePlaceholder: Enter or Select Plan
+bambooBuilds: Bamboo Builds
+selectBambooBuildsPlaceholder: Select Bamboo Build
+Bamboo: Bamboo Description
+bambooStep:
+  validations:
+    planName: Planname is a required field
+  planParameter: Plan Parameters
+  addPlanParameters: Add Plan Parameter
+  noPlans: No Plans Defined

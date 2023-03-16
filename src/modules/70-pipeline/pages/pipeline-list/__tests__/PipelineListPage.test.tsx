@@ -338,6 +338,26 @@ describe('CD Pipeline List Page', () => {
       }
     )
   })
+
+  test('renders error toast when trying to save a filter with empty filter fields', async () => {
+    const { baseElement } = renderPipelinesListPage()
+    const filtersButton = await waitFor(() => {
+      const element = baseElement.querySelector('[id="ngfilterbtn"]')
+      expect(element).toBeInTheDocument()
+      return element
+    })
+    userEvent.click(filtersButton!)
+
+    const newFilterButton = await screen.findByLabelText('filters.newFilter')
+    userEvent.click(newFilterButton)
+
+    const filterNameInput = await screen.findByPlaceholderText('filters.typeFilterName')
+    userEvent.clear(filterNameInput)
+    userEvent.type(filterNameInput, 'foo')
+    userEvent.click(screen.getByLabelText('save'))
+
+    expect(await screen.findByText('filters.invalidCriteria')).toBeInTheDocument()
+  })
 })
 
 describe('CI Pipeline List Page', () => {

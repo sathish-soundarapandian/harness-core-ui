@@ -39,7 +39,8 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
     fetchDigest,
     fetchDigestError,
     stageIdentifier,
-    digestData
+    digestData,
+    template
   } = props
 
   const { getString } = useStrings()
@@ -122,8 +123,8 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
         }}
         label={getString('pipeline.digest')}
         name={`${path}.artifacts.${artifactPath}.spec.digest`}
-        fieldPath={''}
-        template={undefined}
+        fieldPath={`artifacts.${artifactPath}.spec.digest`}
+        template={template}
       />
     </div>
   )

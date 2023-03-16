@@ -79,6 +79,8 @@ import type {
   TriggerGitQueryParams
 } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import {
   clearNullUndefined,
   displayPipelineIntegrityResponse,
@@ -100,6 +102,7 @@ import {
 } from './ManifestWizardPageUtils'
 import type { TriggerProps } from '../Trigger'
 import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
+import { isNewTrigger } from '../utils'
 import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
@@ -128,6 +131,7 @@ export default function ManifestTriggerWizard(
   } = useQueryParams<TriggerGitQueryParams>()
   const history = useHistory()
   const { getString } = useStrings()
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const { data: template, loading: fetchingTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
       accountIdentifier: accountId,
@@ -151,8 +155,8 @@ export default function ManifestTriggerWizard(
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
       branch
-    } as GetTriggerQueryParams
-    // lazy: true
+    } as GetTriggerQueryParams,
+    lazy: isNewTrigger(triggerIdentifier)
   })
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
     pipelineIdentifier,
@@ -325,7 +329,12 @@ export default function ManifestTriggerWizard(
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
   const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
-    { accountId, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    {
+      accountId,
+      repoIdentifier: defaultTo(pipelineRepoName, repoIdentifier),
+      branch,
+      connectorRef: pipelineConnectorRef
+    },
     originalPipeline,
     resolvedPipeline
   )
@@ -548,7 +557,8 @@ export default function ManifestTriggerWizard(
                 resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
-                viewTypeMetadata: { isTrigger: true }
+                viewTypeMetadata: { isTrigger: true },
+                isOptionalVariableAllowed
               }) as any) || formErrors
             resolve(validatedErrors)
           } catch (e) {
@@ -1069,7 +1079,7 @@ export default function ManifestTriggerWizard(
       <Wizard
         key={wizardKey} // re-renders with yaml to visual initialValues
         formikInitialProps={{
-          initialValues,
+          initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidArtifactFormikValuesInterface) => handleArtifactSubmit(val),
           validationSchema: getValidationSchema(getString),
           validate: validateTriggerPipeline,

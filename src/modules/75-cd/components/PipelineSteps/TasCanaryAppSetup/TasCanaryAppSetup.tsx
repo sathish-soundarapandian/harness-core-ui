@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { defaultTo, set } from 'lodash-es'
+import { defaultTo, isEmpty, set } from 'lodash-es'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
@@ -158,6 +158,15 @@ export class TasCanaryAppSetupStep extends PipelineStep<TasCanaryAppSetupData> {
           Object.assign(errors, err)
         }
       }
+    }
+
+    /* istanbul ignore else */
+    if (
+      getMultiTypeFromValue(template?.spec?.resizeStrategy) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.resizeStrategy)
+    ) {
+      set(errors, 'spec.resizeStrategy', getString?.('fieldRequired', { field: 'Resize Strategy' }))
     }
 
     /* istanbul ignore else */

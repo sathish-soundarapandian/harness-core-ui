@@ -11,7 +11,6 @@ import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { orgPathProps } from '@common/utils/routeUtils'
 import * as Licenses from '@common/hooks/useModuleLicenses'
-import mockImport from 'framework/utils/mockImport'
 import OrganizationDetailsPage from '../OrganizationDetails/OrganizationDetailsPage'
 import {
   getOrgAggregateMockData as getOrgMockData,
@@ -129,23 +128,7 @@ describe('Organization Details', () => {
     expect(form).toBeTruthy()
   })
 
-  test('Governance should be visible when pipeline governance enabled', async () => {
-    mockImport('@common/hooks/useFeatureFlag', {
-      useFeatureFlags: () => ({ OPA_PIPELINE_GOVERNANCE: true, OPA_FF_GOVERNANCE: false })
-    })
-
-    jest.spyOn(Licenses, 'useAnyEnterpriseLicense').mockReturnValue(true)
-
-    renderComponent()
-
-    expect(screen.getByText('common.governance')).toBeTruthy()
-  })
-
   test('Governance should be visible when ff governance enabled', async () => {
-    mockImport('@common/hooks/useFeatureFlag', {
-      useFeatureFlags: () => ({ OPA_PIPELINE_GOVERNANCE: false, OPA_FF_GOVERNANCE: true })
-    })
-
     jest.spyOn(Licenses, 'useAnyEnterpriseLicense').mockReturnValue(true)
 
     renderComponent()

@@ -6,11 +6,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Checkbox, Classes } from '@blueprintjs/core'
+import { Classes } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
+import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text, Checkbox } from '@harness/uicore'
 import { get, isEmpty, defaultTo } from 'lodash-es'
-import React, { useRef } from 'react'
+import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type {
   Cell,
@@ -33,22 +33,26 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { killEvent } from '@common/utils/eventUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
-import { PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED, AUTO_TRIGGERS } from '@pipeline/utils/constants'
+import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToIconAndExecutionText, mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
-import type { PipelineExecutionSummary, PipelineStageInfo } from 'services/pipeline-ng'
+import type { PipelineExecutionSummary, PipelineStageInfo, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
+import type { PipelineListPagePathParams } from '@pipeline/pages/pipeline-list/types'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
@@ -81,18 +85,26 @@ export const getExecutionPipelineViewLink = (
   })
 }
 
-export const getChildExecutionPipelineViewLink = (
-  data: PipelineExecutionSummary,
-  pathParams: PipelineType<PipelinePathProps>,
+export function getChildExecutionPipelineViewLink<T>(
+  data: T,
+  pathParams: PipelineType<PipelinePathProps | PipelineListPagePathParams>,
   queryParams: GitQueryParams
-): string => {
+): string {
   const {
     executionid,
     identifier: pipelineIdentifier,
     orgid,
     projectid,
     stagenodeid
-  } = get(data, 'parentStageInfo', {} as PipelineStageInfo)
+  } = get(
+    data,
+    'parentStageInfo',
+    get(
+      (data as unknown as PMSPipelineSummaryResponse)?.recentExecutionsInfo,
+      [0, 'parentStageInfo'],
+      {} as PipelineStageInfo
+    )
+  )
   const { accountId, module } = pathParams
   const { branch, repoIdentifier, repoName, connectorRef, storeType } = queryParams
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
@@ -106,10 +118,13 @@ export const getChildExecutionPipelineViewLink = (
     module,
     source,
     stage: stagenodeid,
-    connectorRef: data.connectorRef ?? connectorRef,
-    repoName: defaultTo(data.gitDetails?.repoName ?? repoName, data.gitDetails?.repoIdentifier ?? repoIdentifier),
-    branch: data.gitDetails?.branch ?? branch,
-    storeType: data.storeType ?? storeType
+    connectorRef: get(data, 'connectorRef', connectorRef),
+    repoName: defaultTo(
+      get(data, ['gitDetails', 'repoName'], repoName),
+      get(data, ['gitDetails', 'repoIdentifier'], repoIdentifier)
+    ),
+    branch: get(data, ['gitDetails', 'branch'], branch),
+    storeType: get(data, 'storeType', storeType)
   })
 }
 
@@ -128,7 +143,6 @@ export interface CellTypeRegister {
 
 export const RowSelectCell: CellType = ({ row }) => {
   const data = row.original
-  const checkboxRef = useRef<HTMLDivElement>(null)
   const { compareItems, addToCompare, removeFromCompare } = useExecutionCompareContext()
 
   const isCompareItem =
@@ -143,7 +157,7 @@ export const RowSelectCell: CellType = ({ row }) => {
   }
 
   return (
-    <div ref={checkboxRef} className={css.checkbox} onClick={killEvent}>
+    <div className={css.checkbox} onClick={killEvent}>
       <Checkbox
         size={12}
         checked={isCompareItem}
@@ -231,7 +245,11 @@ export const ExecutionCell: CellType = ({ row }) => {
     {} as PipelineStageInfo
   )
 
-  const toChildExecutionPipelineView = getChildExecutionPipelineViewLink(data, pathParams, queryParams)
+  const toChildExecutionPipelineView = getChildExecutionPipelineViewLink<PipelineExecutionSummary>(
+    data,
+    pathParams,
+    queryParams
+  )
 
   const triggerType = data.executionTriggerInfo?.triggerType
 
@@ -345,6 +363,17 @@ export const MenuCell: CellType = ({ row, column }) => {
     isDebugMode: hasCI
   })
 
+  const { CI_YAML_VERSIONING, CI_REMOTE_DEBUG } = useFeatureFlags()
+
+  const { openRunPipelineModalV1 } = useRunPipelineModalV1({
+    pipelineIdentifier: data.pipelineIdentifier || pipelineIdentifier,
+    executionId: defaultTo(data.planExecutionId, ''),
+    repoIdentifier: isGitSyncEnabled ? data.gitDetails?.repoIdentifier : data.gitDetails?.repoName,
+    branch: data.gitDetails?.branch,
+    connectorRef: data.connectorRef,
+    storeType: data.storeType as StoreType,
+    isDebugMode: hasCI
+  })
   const [canEdit, canExecute] = usePermission(
     {
       resourceScope: {
@@ -384,8 +413,10 @@ export const MenuCell: CellType = ({ row, column }) => {
         onViewCompiledYaml={() => onViewCompiledYaml(data)}
         onCompareExecutions={() => addToCompare(data)}
         onReRunInDebugMode={
-          hasCI && PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED.includes(accountId)
-            ? () => openRunPipelineModal()
+          hasCI && CI_REMOTE_DEBUG
+            ? CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+              ? openRunPipelineModalV1
+              : openRunPipelineModal
             : undefined
         }
         source={source}
@@ -412,7 +443,11 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
     {} as PipelineStageInfo
   )
 
-  const toChildExecutionPipelineView = getChildExecutionPipelineViewLink(data, pathParams, queryParams)
+  const toChildExecutionPipelineView = getChildExecutionPipelineViewLink<PipelineExecutionSummary>(
+    data,
+    pathParams,
+    queryParams
+  )
   const showCI = hasCIStage(data)
   const ciData = defaultTo(data?.moduleInfo?.ci, {})
   const prOrCommitTitle =

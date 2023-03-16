@@ -785,7 +785,7 @@ exports[`CI enabled CI with ConnectorRef as runtime input: CI stage expects Conn
                               <span
                                 class="placeholder"
                               >
-                                connectors.selectConnector
+                                common.entityPlaceholderText
                               </span>
                             </span>
                             <span

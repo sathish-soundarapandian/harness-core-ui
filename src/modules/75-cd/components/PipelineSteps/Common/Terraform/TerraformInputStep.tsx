@@ -8,14 +8,12 @@
 import React from 'react'
 import cx from 'classnames'
 import { get, isEmpty } from 'lodash-es'
-
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text, Container, Label } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text, Label } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikContextType } from 'formik'
+import type { TerraformVarFileWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'
-import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
-import { isValueRuntimeInput } from '@common/utils/utils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -25,7 +23,7 @@ import { TerraformData, TerraformProps, TerraformStoreTypes } from './TerraformI
 import ConfigInputs from './InputSteps/ConfigSection'
 import TFRemoteSection from './InputSteps/TFRemoteSection'
 import { TFMonaco } from './Editview/TFMonacoEditor'
-
+import InlineVarFileInputSet from '../VarFile/InlineVarFileInputSet'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function TerraformInputStep<T extends TerraformData = TerraformData>(
@@ -42,6 +40,8 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
   const onChangeRef = (arg: TerraformData): void => {
     onChange?.(arg as T)
   }
+  const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
+  const inputSetDataSpec = get(inputSetData?.template?.spec, `${fieldPath}`)
   return (
     <FormikForm>
       {getMultiTypeFromValue((inputSetData?.template as TerraformData)?.spec?.provisionerIdentifier) ===
@@ -82,67 +82,21 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
         />
       )}
       <ConfigInputs {...props} onUpdate={onUpdateRef} onChange={onChangeRef} />
-      {inputSetData?.template?.spec?.configuration?.spec?.varFiles?.length && (
+      {inputSetDataSpec?.spec?.varFiles?.length && (
         <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
           {getString('cd.terraformVarFiles')}
         </Label>
       )}
-      {inputSetData?.template?.spec?.configuration?.spec?.varFiles?.map((varFile: any, index) => {
+      {inputSetDataSpec?.spec?.varFiles?.map((varFile: TerraformVarFileWrapper, index: number) => {
         if (varFile?.varFile?.type === TerraformStoreTypes.Inline) {
           return (
-            <React.Fragment key={`${path}.spec.configuration.spec.varFiles[${index}]`}>
-              <Container flex width={120} padding={{ bottom: 'small' }}>
-                <Text font={{ weight: 'bold' }}>{getString('cd.varFile')}:</Text>
-                {varFile?.varFile?.identifier}
-              </Container>
-
-              {isValueRuntimeInput(get(varFile.varFile, 'spec.content')) && (
-                <div
-                  className={cx(stepCss.formGroup, stepCss.md)}
-                  // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
-                  onKeyDown={
-                    /* istanbul ignore next */ e => {
-                      e.stopPropagation()
-                    }
-                  }
-                >
-                  <MultiTypeFieldSelector
-                    name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.content`}
-                    label={getString('pipelineSteps.content')}
-                    defaultValueToReset=""
-                    allowedTypes={allowableTypes}
-                    skipRenderValueInExpressionLabel
-                    disabled={readonly}
-                    configureOptionsProps={{
-                      isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                    }}
-                    expressionRender={
-                      /* istanbul ignore next */ () => {
-                        return (
-                          <MonacoTextField
-                            name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.content`}
-                            expressions={expressions}
-                            height={200}
-                            disabled={readonly}
-                            fullScreenAllowed
-                            fullScreenTitle={getString('pipelineSteps.content')}
-                          />
-                        )
-                      }
-                    }
-                  >
-                    <MonacoTextField
-                      name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.content`}
-                      expressions={expressions}
-                      height={200}
-                      disabled={readonly}
-                      fullScreenAllowed
-                      fullScreenTitle={getString('pipelineSteps.content')}
-                    />
-                  </MultiTypeFieldSelector>
-                </div>
-              )}
-            </React.Fragment>
+            <InlineVarFileInputSet<TerraformVarFileWrapper>
+              readonly={readonly}
+              stepViewType={stepViewType}
+              allowableTypes={allowableTypes}
+              varFilePath={`${path}.spec.${fieldPath}.spec.varFiles[${index}]`}
+              inlineVarFile={varFile}
+            />
           )
         } else if (varFile.varFile?.type === TerraformStoreTypes.Remote) {
           return (
@@ -158,8 +112,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
         return <></>
       })}
 
-      {getMultiTypeFromValue(get(inputSetData?.template, 'spec.configuration.spec.backendConfig.spec.content')) ===
-        MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(inputSetDataSpec?.spec?.backendConfig?.spec?.content) === MultiTypeInputType.RUNTIME && (
         <div
           className={cx(stepCss.formGroup, stepCss.md)}
           // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
@@ -168,7 +121,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
           }}
         >
           <MultiTypeFieldSelector
-            name={`${path}.spec.configuration.backendConfig.spec.content`}
+            name={`${path}.spec.${fieldPath}.backendConfig.spec.content`}
             label={getString('cd.backEndConfig')}
             defaultValueToReset=""
             allowedTypes={allowableTypes}
@@ -178,7 +131,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
               /* istanbul ignore next */
               return (
                 <TFMonaco
-                  name={`${path}.spec.configuration.backendConfig.spec.content`}
+                  name={`${path}.spec.${fieldPath}.backendConfig.spec.content`}
                   formik={formik!}
                   expressions={expressions}
                   title={getString('tagsLabel')}
@@ -187,7 +140,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
             }}
           >
             <TFMonaco
-              name={`${path}.spec.configuration.backendConfig.spec.content`}
+              name={`${path}.spec.${fieldPath}.backendConfig.spec.content`}
               formik={formik!}
               expressions={expressions}
               title={getString('tagsLabel')}
@@ -198,11 +151,10 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
 
       <ConfigInputs {...props} isBackendConfig={true} onUpdate={onUpdateRef} onChange={onChangeRef} />
 
-      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.spec?.targets as string) ===
-        MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(inputSetDataSpec?.spec?.targets as string) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <List
-            name={`${path}.spec.configuration.spec.targets`}
+            name={`${path}.spec.${fieldPath}.spec.targets`}
             label={<Text style={{ display: 'flex', alignItems: 'center' }}>{getString('pipeline.targets.title')}</Text>}
             disabled={readonly}
             style={{ marginBottom: 'var(--spacing-small)' }}

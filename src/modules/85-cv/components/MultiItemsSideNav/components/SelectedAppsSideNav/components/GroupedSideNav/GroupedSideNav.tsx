@@ -25,14 +25,12 @@ interface GroupedSideNavInterface {
   selectedItem?: string
   onRemoveItem?: (removedItem: string, index: number) => void
   groupedSelectedAppsList: [string, GroupedMetric[]][]
-  isMetricThresholdEnabled?: boolean
 }
 export default function GroupedSideNav({
   groupedSelectedAppsList,
   selectedItem,
   onRemoveItem,
-  onSelect,
-  isMetricThresholdEnabled
+  onSelect
 }: GroupedSideNavInterface): JSX.Element {
   const { getString } = useStrings()
 
@@ -41,7 +39,6 @@ export default function GroupedSideNav({
   const getShowPromptOnDelete = (metricName?: string): boolean => {
     return Boolean(
       metricName &&
-        isMetricThresholdEnabled &&
         isGivenMetricNameContainsThresholds(
           formValues as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
           metricName

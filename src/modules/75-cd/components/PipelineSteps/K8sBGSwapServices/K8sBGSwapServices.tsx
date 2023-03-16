@@ -162,7 +162,7 @@ const K8sBGSwapInputStep: React.FC<K8sBGSwapProps> = ({ inputSetData, allowableT
           disabled={inputSetData?.readonly}
           fieldPath={'timeout'}
           template={inputSetData?.template}
-          className={cx(stepCss.formGroup, stepCss.sm)}
+          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
     </>

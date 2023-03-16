@@ -24,6 +24,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 
   .refreshButton {
     margin-right: var(--spacing-medium) !important;

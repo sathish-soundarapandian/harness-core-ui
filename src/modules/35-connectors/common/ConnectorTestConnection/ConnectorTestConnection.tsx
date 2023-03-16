@@ -28,7 +28,6 @@ import { useStrings } from 'framework/strings'
 import {
   GetTestConnectionValidationTextByType,
   removeErrorCode,
-  DelegateTypes,
   showCustomErrorSuggestion,
   showEditAndViewPermission
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -38,6 +37,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { connectorsTrackEventMap } from '@connectors/utils/connectorEvents'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import Suggestions from '../ErrorSuggestions/ErrorSuggestionsCe'
 import css from './ConnectorTestConnection.module.scss'
 
@@ -142,7 +142,7 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
       case Connectors.GITLAB:
       case Connectors.GITHUB:
       case Connectors.GIT:
-        return props.prevStepData?.url
+        return props.prevStepData?.url + '/' + props.prevStepData?.validationRepo
 
       default:
         return ''
@@ -150,7 +150,6 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
   }
 
   const value = props.url || getValue()
-
   return value ? (
     <Layout.Horizontal padding={{ top: 'xsmall' }} spacing="xsmall">
       <Text color={Color.GREY_400} font={{ size: 'small' }} style={{ whiteSpace: 'nowrap' }}>
@@ -254,6 +253,8 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
         case Connectors.SPOT:
           return '' //TODO
         case Connectors.TAS:
+          return '' //TODO
+        case Connectors.TERRAFORM_CLOUD:
           return '' //TODO
         default:
           return ''
@@ -497,8 +498,17 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
           </Container>
         </Layout.Vertical>
         {props.isStep ? (
-          isLastStep ? (
-            <Layout.Horizontal spacing="large" className={css.btnWrapper}>
+          <Layout.Horizontal spacing="large" className={css.btnWrapper}>
+            {stepDetails.status !== 'DONE' && (
+              <Button
+                text={getString('back')}
+                icon="chevron-left"
+                onClick={() => props?.previousStep?.(props?.prevStepData)}
+                data-name="connectionTestBackButton"
+                variation={ButtonVariation.SECONDARY}
+              />
+            )}
+            {isLastStep ? (
               <Button
                 intent="primary"
                 onClick={() => {
@@ -510,9 +520,7 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
                 text={getString('finish')}
                 variation={ButtonVariation.SECONDARY}
               />
-            </Layout.Horizontal>
-          ) : (
-            <Layout.Horizontal spacing="large" className={css.btnWrapper}>
+            ) : (
               <Button
                 variation={ButtonVariation.PRIMARY}
                 onClick={() => {
@@ -520,8 +528,8 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
                 }}
                 text={getString('continue')}
               />
-            </Layout.Horizontal>
-          )
+            )}
+          </Layout.Horizontal>
         ) : null}
       </Layout.Vertical>
     )

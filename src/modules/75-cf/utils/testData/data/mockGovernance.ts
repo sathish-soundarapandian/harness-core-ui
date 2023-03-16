@@ -8,7 +8,6 @@
 import type { UseGovernancePayload } from '@cf/hooks/useGovernance'
 
 const mockGovernance: UseGovernancePayload = {
-  isGovernanceEnabled: true,
   governanceError: null,
   handleError: jest.fn(),
   isGovernanceError: jest.fn()

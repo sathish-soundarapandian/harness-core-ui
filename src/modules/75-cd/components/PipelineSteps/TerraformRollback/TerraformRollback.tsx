@@ -153,7 +153,6 @@ function TerraformRollbackWidget(
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       /* istanbul ignore next */
                       setFieldValue('spec.provisionerIdentifier', value)

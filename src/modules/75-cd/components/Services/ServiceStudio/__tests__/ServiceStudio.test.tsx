@@ -14,26 +14,14 @@ import ServiceStudio from '@cd/components/Services/ServiceStudio/ServiceStudio'
 jest.mock('highcharts-react-official', () => () => <></>)
 jest.mock('@common/utils/YamlUtils', () => ({}))
 
-jest.spyOn(cdngServices, 'useGetActiveServiceInstanceSummary').mockImplementation(() => {
+jest.spyOn(cdngServices, 'useGetActiveServiceInstanceSummaryV2').mockImplementation(() => {
   return { loading: false, error: false, data: [], refetch: jest.fn() } as any
 })
 jest.spyOn(cdngServices, 'useGetServiceV2').mockImplementation(() => {
   return { loading: false, error: false, data: [], refetch: jest.fn() } as any
 })
 
-jest.spyOn(cdngServices, 'useGetEnvBuildInstanceCount').mockImplementation(() => {
-  return {
-    mutate: () => Promise.resolve({ loading: true, data: [] })
-  } as any
-})
-
-jest.spyOn(cdngServices, 'useGetEnvArtifactDetailsByServiceId').mockImplementation(() => {
-  return {
-    mutate: () => Promise.resolve({ loading: false, data: [] })
-  } as any
-})
-
-jest.spyOn(cdngServices, 'useGetServiceDeploymentsInfo').mockImplementation(() => {
+jest.spyOn(cdngServices, 'useGetServiceDeploymentsInfoV2').mockImplementation(() => {
   return { loading: false, error: false, data: [], refetch: jest.fn() } as any
 })
 
@@ -50,6 +38,14 @@ jest.spyOn(cdngServices, 'useGetDeploymentsByServiceId').mockImplementation(() =
 })
 
 jest.spyOn(cdngServices, 'useGetServiceHeaderInfo').mockImplementation(() => {
+  return { loading: false, error: false, data: [], refetch: jest.fn() } as any
+})
+
+jest.spyOn(cdngServices, 'useGetActiveServiceInstances').mockImplementation(() => {
+  return { loading: false, error: false, data: [], refetch: jest.fn() } as any
+})
+
+jest.spyOn(cdngServices, 'useGetActiveServiceDeployments').mockImplementation(() => {
   return { loading: false, error: false, data: [], refetch: jest.fn() } as any
 })
 

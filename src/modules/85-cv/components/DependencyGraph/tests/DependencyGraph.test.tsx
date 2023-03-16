@@ -123,8 +123,9 @@ describe('Unit tests for DependencyGraph', () => {
     expect(getIconDetails(infrastructureIcon)).toEqual(infrastructureIconDetails)
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('Ensure default options returns correctly', () => {
-    expect(JSON.stringify(dependencyGraphOptions({ data: graphData, nodes }))).toEqual(JSON.stringify(defaultOptions))
+  test('Ensure default options data returns correctly', () => {
+    expect(JSON.stringify((dependencyGraphOptions({ data: graphData, nodes })?.series?.[0] as any)?.data)).toEqual(
+      JSON.stringify(defaultOptions.series[0].data)
+    )
   })
 })

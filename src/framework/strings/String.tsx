@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import { render } from 'mustache'
 import { get } from 'lodash-es'
 
@@ -17,13 +17,12 @@ export interface UseStringsReturn {
 }
 
 export function useStrings(): UseStringsReturn {
-  const { data: strings, getString } = useStringsContext()
+  const { data: strings, getString: getStringFromContext } = useStringsContext()
 
-  return {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getString(key: StringKeys, vars: Record<string, any> = {}) {
-      if (typeof getString === 'function') {
-        return getString(key, vars)
+  const getString: UseStringsReturn['getString'] = useCallback(
+    (key: StringKeys, vars: Record<string, unknown> = {}) => {
+      if (getStringFromContext) {
+        return getStringFromContext(key, vars)
       }
 
       const template = get(strings, key)
@@ -33,7 +32,12 @@ export function useStrings(): UseStringsReturn {
       }
 
       return render(template, { ...vars, $: strings })
-    }
+    },
+    [getStringFromContext, strings]
+  )
+
+  return {
+    getString
   }
 }
 

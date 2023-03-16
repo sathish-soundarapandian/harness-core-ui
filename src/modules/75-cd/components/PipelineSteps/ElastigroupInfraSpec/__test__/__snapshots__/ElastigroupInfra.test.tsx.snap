@@ -48,7 +48,7 @@ exports[`Elastigroup - inputSet/runtime view Runtime view to render - with initi
                     <span
                       class="placeholder"
                     >
-                      connectors.selectConnector
+                      common.entityPlaceholderText
                     </span>
                   </span>
                   <span

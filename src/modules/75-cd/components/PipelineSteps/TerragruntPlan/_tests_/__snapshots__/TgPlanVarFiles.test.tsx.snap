@@ -9,7 +9,7 @@ exports[`<TgVarFile /> tests snapshot test for tg var files 1`] = `
   </label>
   <div
     class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--padding-bottom-small"
-    style="width: 150px;"
+    style="width: 120px;"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"

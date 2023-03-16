@@ -34,6 +34,7 @@ export interface DragnDropPathsProps<T = unknown> {
   placeholder: string
   defaultValue: T
   allowOnlyOneFilePath?: boolean
+  allowSinglePathDeletion?: boolean
   dragDropFieldWidth?: number
 }
 
@@ -46,7 +47,8 @@ function DragnDropPaths({
   placeholder,
   defaultValue,
   allowOnlyOneFilePath,
-  dragDropFieldWidth: dialogWidth
+  dragDropFieldWidth: dialogWidth,
+  allowSinglePathDeletion
 }: DragnDropPathsProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -109,7 +111,7 @@ function DragnDropPaths({
                                 }}
                               />
 
-                              {formik.values[fieldPath]?.length > 1 && (
+                              {(formik.values[fieldPath]?.length > 1 || allowSinglePathDeletion) && (
                                 <Button minimal icon="main-trash" onClick={() => arrayHelpers.remove(index)} />
                               )}
                             </Layout.Horizontal>

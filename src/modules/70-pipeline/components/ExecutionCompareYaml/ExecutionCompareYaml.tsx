@@ -16,7 +16,6 @@ import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEdit
 import { PipelineExecutionSummary, useGetExecutionData } from 'services/pipeline-ng'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { String } from 'framework/strings'
-
 import css from './ExecutionCompareYaml.module.scss'
 
 interface ExecutionCompareYamlProps {
@@ -68,15 +67,13 @@ export function ExecutionCompareYaml({ compareItems, onClose }: ExecutionCompare
         <PageSpinner />
       ) : (
         <>
-          <Layout.Horizontal>
+          <div className={css.compareHeader}>
             {compareItems?.map(compareItem => {
               return (
                 <Layout.Horizontal
                   key={compareItem.planExecutionId}
                   spacing="large"
-                  padding="xlarge"
                   flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-                  className={css.grow}
                 >
                   <Icon name="pipeline-advanced" color={Color.PRIMARY_7} size={24} />
                   <Layout.Horizontal spacing="small" flex={{ alignItems: 'baseline' }}>
@@ -95,7 +92,7 @@ export function ExecutionCompareYaml({ compareItems, onClose }: ExecutionCompare
                 </Layout.Horizontal>
               )
             })}
-          </Layout.Horizontal>
+          </div>
           <MonacoDiffEditor
             data-testid="execution-compare-yaml-viewer"
             width="100%"

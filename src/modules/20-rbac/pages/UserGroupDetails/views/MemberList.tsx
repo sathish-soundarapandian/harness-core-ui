@@ -31,6 +31,10 @@ import { AuthenticationMechanisms, getUserGroupQueryParams } from '@rbac/utils/u
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { sortByEmail, sortByName, SortMethod } from '@common/utils/sortUtils'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import css from '../UserGroupDetails.module.scss'
 
 interface MemberListProps {
@@ -198,6 +202,8 @@ const MemberList: React.FC<MemberListProps> = ({
     ProjectPathProps & UserGroupPathProps
   >()
   const { parentScope } = useQueryParams<{ parentScope: PrincipalScope }>()
+  const { preference: sortPreference = SortMethod.NameAsc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.UserGroupDetails}`)
 
   const { data, refetch } = useMutateAsGet(useGetUsersInUserGroup, {
     body: {},
@@ -205,7 +211,8 @@ const MemberList: React.FC<MemberListProps> = ({
     queryParams: {
       ...getUserGroupQueryParams(accountId, orgIdentifier, projectIdentifier, parentScope),
       pageIndex: page,
-      pageSize: 10
+      pageSize: 10,
+      sortOrders: sortPreference
     }
   })
 
@@ -245,6 +252,15 @@ const MemberList: React.FC<MemberListProps> = ({
   if (users?.length)
     return (
       <Container className={css.memberList}>
+        <ListHeader
+          selectedSortMethod={sortPreference}
+          sortOptions={[...sortByName, ...sortByEmail]}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
+          totalCount={data?.data?.totalItems}
+          className={css.listHeader}
+        />
         <TableV2<UserInfo>
           data={users}
           columns={columns}

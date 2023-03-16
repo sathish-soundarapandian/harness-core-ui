@@ -426,10 +426,12 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
                   >
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-primary7"
+                      data-testid="sloDashboardWidgetServiceName"
                     >
                       Service 1
                       <span
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--padding-left-xsmall"
+                        data-testid="sloDashboardWidgetEnvironmentName"
                       >
                         /
                         Environment 1
@@ -442,11 +444,13 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+                    data-testid="cv.slos.sliType"
                   >
                     cv.slos.sliType
                   </p>
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+                    data-testid="cv.slos.sliType_value"
                   >
                     cv.slos.slis.type.latency
                   </p>
@@ -456,11 +460,13 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+                    data-testid="pipeline.verification.healthSourceLabel"
                   >
                     pipeline.verification.healthSourceLabel
                   </p>
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+                    data-testid="pipeline.verification.healthSourceLabel_value"
                   >
                     AppDynamics
                   </p>
@@ -470,11 +476,13 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+                    data-testid="cv.slos.sloTargetAndBudget.periodType"
                   >
                     cv.slos.sloTargetAndBudget.periodType
                   </p>
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+                    data-testid="cv.slos.sloTargetAndBudget.periodType_value"
                   >
                     cv.slos.sloTargetAndBudget.periodTypeOptions.calendar
                   </p>
@@ -490,6 +498,7 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
                   </p>
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+                    data-testid="periodLength"
                   >
                     7
                      
@@ -517,6 +526,7 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
                   </p>
                   <h2
                     class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-variation-h4"
+                    data-testid="errorBudgetRemainingPercentage"
                     level="2"
                   >
                     -1112.87
@@ -534,6 +544,7 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
                   </p>
                   <h2
                     class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey800 StyledProps--font-variation-h4"
+                    data-testid="timeRemainingDaysValue"
                     level="2"
                   >
                     2
@@ -541,6 +552,7 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
                    
                   <span
                     class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-help"
+                    data-testid="timeRemainingDaysLabel"
                   >
                     cv.days
                   </span>

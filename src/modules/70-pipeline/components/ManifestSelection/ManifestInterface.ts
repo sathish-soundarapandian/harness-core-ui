@@ -16,6 +16,7 @@ import type {
   ServiceDefinition,
   TasManifest
 } from 'services/cd-ng'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 
 export type ManifestTypes =
   | 'K8sManifest'
@@ -39,6 +40,8 @@ export type ManifestTypes =
   | 'AsgScheduledUpdateGroupAction'
   | 'GoogleCloudFunctionDefinition'
   | 'HelmRepoOverride'
+  | 'AwsLambdaFunctionDefinition'
+  | 'AwsLambdaFunctionAliasDefinition'
 
 export type PrimaryManifestType =
   | 'K8sManifest'
@@ -113,6 +116,7 @@ export interface CommonManifestDataType {
   gitFetchType: 'Branch' | 'Commit'
   paths: any
   skipResourceVersioning?: boolean
+  enableDeclarativeRollback?: boolean
   repoName?: string
   valuesPaths?: any
 }
@@ -146,17 +150,21 @@ export interface HelmWithGITDataType {
   repoName?: string
   gitFetchType: 'Branch' | 'Commit'
   folderPath: string
+  subChartName?: string
   helmVersion: HelmVersionOptions
   valuesPaths?: any
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
   commandFlags: Array<CommandFlags>
 }
 export interface HelmWithHTTPDataType {
   identifier: string
   helmVersion: HelmVersionOptions
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
   chartName: string
   chartVersion: string
+  subChartName?: string
   valuesPaths?: any
   commandFlags: Array<CommandFlags>
 }
@@ -165,9 +173,11 @@ export interface HelmWithOCIDataType {
   identifier: string
   helmVersion: HelmOCIVersionOptions
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
   basePath: string
   chartName: string
   chartVersion: string
+  subChartName?: string
   valuesPaths?: any
   commandFlags: Array<CommandFlags>
 }
@@ -187,6 +197,18 @@ export interface HelmWithGcsDataType extends HelmWithHTTPDataType {
   bucketName: SelectOption | string
   folderPath: string
 }
+export interface HelmWithS3DataType extends HelmWithGcsDataType {
+  region: SelectOption | string
+}
+export interface HelmWithHarnessStoreDataType {
+  identifier: string
+  files: string[]
+  valuesPaths: string[]
+  skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
+  helmVersion: HelmVersionOptions
+  commandFlags: Array<CommandFlags>
+}
 export interface OpenShiftTemplateGITDataType {
   identifier: string
   branch: string | undefined
@@ -196,6 +218,7 @@ export interface OpenShiftTemplateGITDataType {
   path: string
   paramsPaths?: any
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
 }
 
 export interface KustomizePatchDataType {
@@ -213,6 +236,7 @@ export interface KustomizeWithGITDataType {
   repoName?: string
   gitFetchType: 'Branch' | 'Commit'
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
   folderPath: string
   pluginPath: string
   patchesPaths?: any
@@ -250,11 +274,13 @@ export interface HarnessFileStoreDataType {
   valuesPaths: string[]
   paramsPaths: string[]
   skipResourceVersioning?: boolean
+  enableDeclarativeRollback?: boolean
 }
 export interface HarnessFileStoreFormData {
   identifier: string
   files: string | string[]
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
   valuesPaths?: string | string[]
   paramsPaths?: string | string[]
 }
@@ -282,6 +308,7 @@ export interface CustomManifestManifestDataType {
   autoScalerPath?: Array<{ path: string }> | string
   cfCliVersion?: CLIVersionOptions
   skipResourceVersioning?: boolean
+  enableDeclarativeRollback?: boolean
   helmVersion: HelmVersionOptions
   commandFlags: Array<CommandFlags>
 }
@@ -305,3 +332,67 @@ export interface TASWithHarnessStorePropType extends Omit<HarnessFileStoreFormDa
   autoScalerPath?: string[] | string
   cfCliVersion?: CLIVersionOptions
 }
+
+export interface ManifestConnectorRefType {
+  label: string
+  value: string
+  scope: Scope
+  live: boolean
+  connector: ConnectorConfigDTO
+}
+export interface ManifestLastStepPrevStepData {
+  selectedManifest: ManifestTypes | null
+  store: ManifestStores
+  connectorRef: ManifestConnectorRefType
+}
+
+export type CommonManifestLastStepPrevStepData = CommonManifestDataType & ManifestLastStepPrevStepData
+
+export type HelmRepoOverrideManifestLastStepPrevStepData = HelmRepoOverrideManifestDataType &
+  ManifestLastStepPrevStepData
+
+export type HelmWithGITManifestLastStepPrevStepData = HelmWithGITDataType & ManifestLastStepPrevStepData
+
+export type HelmWithHTTPManifestLastStepPrevStepData = HelmWithHTTPDataType & ManifestLastStepPrevStepData
+
+export type HelmWithOCIManifestLastStepPrevStepData = HelmWithOCIDataType & ManifestLastStepPrevStepData
+
+export type HelmWithS3ManifestLastStepPrevStepData = HelmWithS3DataType & ManifestLastStepPrevStepData
+
+export type HelmWithHarnessStoreManifestLastStepPrevStepData = HelmWithHarnessStoreDataType &
+  ManifestLastStepPrevStepData
+
+export type TASManifestLastStepPrevStepData = TASManifestDataType & ManifestLastStepPrevStepData
+
+export type HelmWithGcsManifestLastStepPrevStepData = HelmWithGcsDataType & ManifestLastStepPrevStepData
+
+export type OpenShiftTemplateGITManifestLastStepPrevStepData = OpenShiftTemplateGITDataType &
+  ManifestLastStepPrevStepData
+
+export type KustomizePatchManifestLastStepPrevStepData = KustomizePatchDataType & ManifestLastStepPrevStepData
+
+export type KustomizeWithGITManifestLastStepPrevStepData = KustomizeWithGITDataType & ManifestLastStepPrevStepData
+
+export type OpenShiftParamManifestLastStepPrevStepData = OpenShiftParamDataType & ManifestLastStepPrevStepData
+
+export type ServerlessLambdaManifestLastStepPrevStepData = ServerlessManifestDataType & ManifestLastStepPrevStepData
+
+export type HelmHarnessFileStoreManifestLastStepPrevStepData = HelmHarnessFileStoreFormData &
+  ManifestLastStepPrevStepData
+
+export type KustomizeWithHarnessStoreManifestLastStepPrevStepData = KustomizeWithHarnessStorePropTypeDataType &
+  ManifestLastStepPrevStepData
+
+export type InheritFromManifestLastStepPrevStepData = InheritFromManifestDataType & ManifestLastStepPrevStepData
+
+export type HarnessFileStoreManifestLastStepPrevStepData = HarnessFileStoreDataType & ManifestLastStepPrevStepData
+
+export type CustomRemoteManifestManifestLastStepPrevStepData = CustomManifestManifestDataType &
+  ManifestLastStepPrevStepData
+
+export type ECSWithS3ManifestLastStepPrevStepData = ECSWithS3DataType & ManifestLastStepPrevStepData
+
+export type ServerlessLambdaWithS3ManifestLastStepPrevStepData = ServerlessLambdaWithS3DataType &
+  ManifestLastStepPrevStepData
+
+export type TASWithHarnessStoreManifestLastStepPrevStepData = TASWithHarnessStorePropType & ManifestLastStepPrevStepData

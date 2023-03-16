@@ -198,7 +198,11 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                   defaultValueToReset={defaultValueToReset}
                   name={'spec.filePaths'}
                   label={getString('common.git.filePath')}
-                  allowedTypes={allowableTypes}
+                  allowedTypes={
+                    (allowableTypes as MultiTypeInputType[]).filter(
+                      allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                    ) as AllowedTypes
+                  }
                 >
                   <FieldArray
                     name="spec.filePaths"
@@ -301,7 +305,7 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
           disabled={readonly}
           fieldPath={'timeout'}
           template={inputSetData?.template}
-          className={cx(stepCss.formGroup, stepCss.sm)}
+          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 
@@ -331,7 +335,6 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
             }}
             disabled={readonly}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipDryRun`}
-            className={stepCss.checkbox}
             label={getString('pipelineSteps.skipDryRun')}
             setToFalseWhenEmpty={true}
           />
@@ -351,7 +354,6 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
             }}
             disabled={readonly}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipSteadyStateCheck`}
-            className={stepCss.checkbox}
             label={getString('pipelineSteps.skipSteadyStateCheck')}
             setToFalseWhenEmpty={true}
           />
@@ -371,7 +373,6 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
             }}
             disabled={readonly}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipRendering`}
-            className={stepCss.checkbox}
             label={getString('cd.skipRendering')}
             setToFalseWhenEmpty={true}
           />

@@ -50,3 +50,13 @@
   margin: auto;
   height: 100vh;
 }
+
+.filterDrawerCloseButton {
+  position: absolute;
+  inset: 0 100% auto auto;
+  opacity: 0.5;
+  border-radius: 4px 0 0 4px !important;
+  padding: 0 !important;
+  background: var(--primary-5) !important;
+  color: var(--white) !important;
+}

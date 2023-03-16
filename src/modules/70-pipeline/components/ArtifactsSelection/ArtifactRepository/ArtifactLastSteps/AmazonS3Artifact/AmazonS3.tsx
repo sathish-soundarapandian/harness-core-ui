@@ -377,7 +377,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                 variableName="bucketName"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('bucketName', value)}
                 isReadonly={isReadonly}
               />
@@ -405,7 +404,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             },
             selectProps: {
               noResults: (
-                <Text lineClamp={1} width={400} padding="small">
+                <Text lineClamp={1} width={384} margin="small">
                   {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBucketsFound')}
                 </Text>
               ),
@@ -436,7 +435,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
               variableName="bucketName"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('bucketName', value)}
               isReadonly={isReadonly}
             />
@@ -473,7 +471,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                 variableName="filePath"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('filePath', value)
                 }}
@@ -498,7 +495,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             allowableTypes,
             selectProps: {
               noResults: (
-                <Text lineClamp={1} width={400} padding="small">
+                <Text lineClamp={1} width={384} margin="small">
                   {getRBACErrorMessage(filePathError as RBACError) || getString('pipeline.noFilePathsFound')}
                 </Text>
               ),
@@ -530,7 +527,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
               variableName="filePath"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => {
                 formik.setFieldValue('filePath', value)
               }}
@@ -582,7 +578,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                     selectProps: {
                       items: regions,
                       noResults: (
-                        <Text lineClamp={1} width={400} height={100}>
+                        <Text lineClamp={1} width={384} margin="small">
                           {getRBACErrorMessage(errorRegions as RBACError) || getString('pipeline.noRegions')}
                         </Text>
                       )
@@ -594,14 +590,15 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
                 {getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.RUNTIME && (
                   <div className={css.configureOptions}>
-                    <ConfigureOptions
+                    <SelectConfigureOptions
+                      options={regions}
+                      loading={loadingRegions}
                       style={{ alignSelf: 'center' }}
                       value={formik.values?.region as string}
                       type="String"
                       variableName="region"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('region', value)
                       }}
@@ -660,7 +657,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                         variableName="filePathRegex"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => {
                           formik.setFieldValue('filePathRegex', value)
                         }}

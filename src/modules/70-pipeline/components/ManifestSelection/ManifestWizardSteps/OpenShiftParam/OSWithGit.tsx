@@ -24,13 +24,13 @@ import { FontVariation } from '@harness/design-system'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
 
-import { get, isEmpty, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
 
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 
-import type { OpenShiftParamDataType } from '../../ManifestInterface'
+import type { OpenShiftParamDataType, OpenShiftParamManifestLastStepPrevStepData } from '../../ManifestInterface'
 import {
   gitFetchTypeList,
   GitFetchTypes,
@@ -55,6 +55,7 @@ interface OpenshiftTemplateWithGITPropType {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+  editManifestModePrevStepData?: OpenShiftParamManifestLastStepPrevStepData
 }
 
 function OpenShiftParamWithGit({
@@ -66,21 +67,25 @@ function OpenShiftParamWithGit({
   prevStepData,
   previousStep,
   manifestIdsList,
-  isReadonly = false
+  isReadonly = false,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & OpenshiftTemplateWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
-  const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+
+  const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
-    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-    prevStepData?.urlType === GitRepoName.Repo
+    modifiedPrevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    modifiedPrevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
   const accountUrl =
     connectionType === GitRepoName.Account
-      ? prevStepData?.connectorRef
-        ? prevStepData?.connectorRef?.connector?.spec?.url
-        : prevStepData?.url
+      ? modifiedPrevStepData?.connectorRef
+        ? modifiedPrevStepData?.connectorRef?.connector?.spec?.url
+        : modifiedPrevStepData?.url
       : null
 
   const getInitialValues = (): OpenShiftParamDataType => {
@@ -93,11 +98,11 @@ function OpenShiftParamWithGit({
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
-            : removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
+            : removeEmptyFieldsFromStringArray(specValues.paths, true)?.map((path: string) => ({
                 path,
                 uuid: uuid(path, nameSpace())
               })),
-        repoName: getRepositoryName(prevStepData, initialValues)
+        repoName: getRepositoryName(modifiedPrevStepData, initialValues)
       }
       return values
     }
@@ -107,7 +112,7 @@ function OpenShiftParamWithGit({
       commitId: undefined,
       gitFetchType: 'Branch',
       paths: [{ path: '', uuid: uuid('', nameSpace()) }],
-      repoName: getRepositoryName(prevStepData, initialValues)
+      repoName: getRepositoryName(modifiedPrevStepData, initialValues)
     }
   }
 
@@ -125,7 +130,7 @@ function OpenShiftParamWithGit({
               paths:
                 typeof formData?.paths === 'string'
                   ? formData?.paths
-                  : formData?.paths?.map((path: { path: string }) => path.path)
+                  : removeEmptyFieldsFromStringArray(formData?.paths?.map((path: { path: string }) => path.path))
             }
           }
         }
@@ -172,23 +177,33 @@ function OpenShiftParamWithGit({
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
             if (
               connectionType === GitRepoName.Repo ||
-              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+              getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
             ) {
               return true
             }
             return !isEmpty(value) && value?.length > 0
+          }),
+          paths: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(
+                Yup.object().shape({
+                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+                })
+              )
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
           })
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
@@ -202,8 +217,7 @@ function OpenShiftParamWithGit({
                 placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                 className={templateCss.halfWidth}
               />
-
-              {!!(connectionType === GitRepoName.Account && accountUrl) && (
+              {!!(connectionType === GitRepoName.Account || accountUrl) && (
                 <GitRepositoryName
                   accountUrl={accountUrl}
                   expressions={expressions}
@@ -213,7 +227,6 @@ function OpenShiftParamWithGit({
                   isReadonly={isReadonly}
                 />
               )}
-
               <Layout.Horizontal flex spacing="huge" margin={{ top: 'small', bottom: 'small' }}>
                 <div className={templateCss.halfWidth}>
                   <FormInput.Select
@@ -243,7 +256,6 @@ function OpenShiftParamWithGit({
                         variableName="branch"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('branch', value)}
                         isReadonly={isReadonly}
                       />
@@ -271,7 +283,6 @@ function OpenShiftParamWithGit({
                         variableName="commitId"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('commitId', value)}
                         isReadonly={isReadonly}
                       />
@@ -302,7 +313,6 @@ function OpenShiftParamWithGit({
                     variableName={'paths'}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={val => formik?.setFieldValue('paths', val)}
                     isReadonly={isReadonly}
                   />
@@ -315,7 +325,7 @@ function OpenShiftParamWithGit({
                 variation={ButtonVariation.SECONDARY}
                 text={getString('back')}
                 icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
+                onClick={() => previousStep?.(modifiedPrevStepData)}
               />
               <Button
                 variation={ButtonVariation.PRIMARY}

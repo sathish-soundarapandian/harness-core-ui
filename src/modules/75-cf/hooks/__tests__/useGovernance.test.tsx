@@ -9,7 +9,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 import React, { FC } from 'react'
 import { ModalProvider } from '@harness/use-modal'
-import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import { useGovernance } from '../useGovernance'
 
 jest.mock('services/cf')
@@ -29,20 +28,6 @@ describe('useGovernance', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
-
-  test.each([
-    [true, true],
-    [false, false]
-  ])(
-    'it should return %p for isGovernanceEnabled if OPA_FF_GOVERNANCE = %p',
-    async (expectedResult, OPA_FF_GOVERNANCE) => {
-      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(OPA_FF_GOVERNANCE)
-
-      const { result } = renderHook(() => useGovernance())
-
-      expect(result.current.isGovernanceEnabled).toBe(expectedResult)
-    }
-  )
 
   test('it should set error correctly', async () => {
     const { result } = renderHookUnderTest()

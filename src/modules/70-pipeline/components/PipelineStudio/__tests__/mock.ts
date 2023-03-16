@@ -600,3 +600,262 @@ export const pipelineTemplateResolvedPipeline = {
   projectIdentifier: 'projectIdentifier',
   orgIdentifier: 'default'
 }
+
+export const pipelineWithVariables = {
+  identifier: 'optionalVarPip',
+  stages: [
+    {
+      stage: {
+        identifier: 'stage',
+        type: 'Custom',
+        spec: {
+          execution: {
+            steps: [
+              {
+                step: {
+                  identifier: 'ShellScript_1',
+                  type: 'ShellScript',
+                  spec: {
+                    source: {
+                      type: 'Inline',
+                      spec: {
+                        script: ''
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        variables: [
+          {
+            name: 'v1',
+            type: 'String',
+            value: ''
+          }
+        ]
+      }
+    }
+  ],
+  variables: [
+    {
+      name: 'pipVar',
+      type: 'String',
+      value: ''
+    }
+  ]
+}
+
+export const templatePipelineWithVariables = {
+  identifier: 'optionalVarPip',
+  stages: [
+    {
+      stage: {
+        identifier: 'stage',
+        type: 'Custom',
+        spec: {
+          execution: {
+            steps: [
+              {
+                step: {
+                  identifier: 'ShellScript_1',
+                  type: 'ShellScript',
+                  spec: {
+                    source: {
+                      type: 'Inline',
+                      spec: {
+                        script: '<+input>'
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        variables: [
+          {
+            name: 'v1',
+            type: 'String',
+            value: '<+input>'
+          }
+        ]
+      }
+    }
+  ],
+  variables: [
+    {
+      name: 'pipVar',
+      type: 'String',
+      value: '<+input>'
+    }
+  ]
+}
+
+export const resolvedPipelineWithVariables = {
+  name: 'optionalVarPip',
+  identifier: 'optionalVarPip',
+  projectIdentifier: 'Fardeen',
+  orgIdentifier: 'default',
+  tags: {},
+  stages: [
+    {
+      stage: {
+        name: 'stage',
+        identifier: 'stage',
+        description: '',
+        type: 'Custom',
+        spec: {
+          execution: {
+            steps: [
+              {
+                step: {
+                  type: 'ShellScript',
+                  name: 'Shell Script_1',
+                  identifier: 'ShellScript_1',
+                  spec: {
+                    shell: 'Bash',
+                    onDelegate: true,
+                    source: {
+                      type: 'Inline',
+                      spec: {
+                        script: '<+input>'
+                      }
+                    },
+                    environmentVariables: [],
+                    outputVariables: []
+                  },
+                  timeout: '10m'
+                }
+              }
+            ]
+          }
+        },
+        tags: {},
+        variables: [
+          {
+            name: 'v1',
+            type: 'String',
+            description: '',
+            value: '<+input>'
+          }
+        ]
+      }
+    }
+  ],
+  variables: [
+    {
+      name: 'pipVar',
+      type: 'String',
+      description: '',
+      value: '<+input>'
+    }
+  ]
+}
+
+export const stageWithVariables = {
+  identifier: 'stage',
+  type: 'Custom',
+  spec: {
+    execution: {
+      steps: [
+        {
+          step: {
+            identifier: 'ShellScript_1',
+            type: 'ShellScript',
+            spec: {
+              source: {
+                type: 'Inline',
+                spec: {
+                  script: ''
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  variables: [
+    {
+      name: 'v1',
+      type: 'String',
+      value: ''
+    }
+  ]
+}
+
+export const templateStageWithVariables = {
+  identifier: 'stage',
+  type: 'Custom',
+  spec: {
+    execution: {
+      steps: [
+        {
+          step: {
+            identifier: 'ShellScript_1',
+            type: 'ShellScript',
+            spec: {
+              source: {
+                type: 'Inline',
+                spec: {
+                  script: '<+input>'
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  variables: [
+    {
+      name: 'v1',
+      type: 'String',
+      value: '<+input>'
+    }
+  ]
+}
+
+export const originalStageWithVariables = {
+  name: 'stage',
+  identifier: 'stage',
+  description: '',
+  type: 'Custom',
+  spec: {
+    execution: {
+      steps: [
+        {
+          step: {
+            type: 'ShellScript',
+            name: 'Shell Script_1',
+            identifier: 'ShellScript_1',
+            spec: {
+              shell: 'Bash',
+              onDelegate: true,
+              source: {
+                type: 'Inline',
+                spec: {
+                  script: '<+input>'
+                }
+              },
+              environmentVariables: [],
+              outputVariables: []
+            },
+            timeout: '10m'
+          }
+        }
+      ]
+    }
+  },
+  tags: {},
+  variables: [
+    {
+      name: 'v1',
+      type: 'String',
+      description: '',
+      value: '<+input>'
+    }
+  ]
+}

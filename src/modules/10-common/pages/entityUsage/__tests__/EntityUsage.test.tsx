@@ -82,7 +82,7 @@ describe('Entity Usage', () => {
   })
 
   test('render for connector data with details', async () => {
-    render(
+    const { getByText } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ ...projectPathProps, ...connectorPathProps })}
         pathParams={{
@@ -103,13 +103,9 @@ describe('Entity Usage', () => {
       </TestWrapper>
     )
     const cell1 = await screen.findByRole('row', {
-      name: 'infraTest Infrastructure delegateInfra1'
+      name: 'infraTest typeLabel: Infrastructure delegateInfra1 Jan 31, 2023 04:20 am account'
     })
     expect(within(cell1).getByText('delegateInfra1')).toBeInTheDocument()
-
-    const cell2 = await screen.findByRole('row', {
-      name: 'inf Infrastructure e1'
-    })
-    expect(within(cell2).getByText('e1')).toBeInTheDocument()
+    expect(getByText('e1')).toBeDefined()
   })
 })

@@ -31,7 +31,8 @@ import type {
   GithubPackagesSpec,
   GarSpec,
   AzureArtifactsRegistrySpec,
-  AMIRegistrySpec
+  AMIRegistrySpec,
+  GoolgeCloudStorageRegistrySpec
 } from 'services/pipeline-ng'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -2092,7 +2093,9 @@ export const getTriggerArtifactInitialSpec = (
         repositoryFormat: 'docker',
         repository: '',
         repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl,
-        tag
+        tag,
+        repositoryUrl: '',
+        artifactPath: ''
       } as NexusRegistrySpec
     }
     case 'Jenkins': {
@@ -2155,6 +2158,15 @@ export const getTriggerArtifactInitialSpec = (
         region: '',
         version
       } as AMIRegistrySpec
+    }
+    case 'GoogleCloudStorage': {
+      return {
+        eventConditions,
+        connectorRef,
+        project: '',
+        bucket: '',
+        artifactPath: tag
+      } as GoolgeCloudStorageRegistrySpec
     }
   }
 }

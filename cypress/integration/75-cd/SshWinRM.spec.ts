@@ -47,11 +47,6 @@ describe.skip('Ssh/WinRM -E2E flow', () => {
   const awsTagsCall = `/ng/api/aws/aws-helper/tags?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&region=us-east-1&awsConnectorRef=testAWSConnector`
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
       cy.intercept('GET', featureFlagsCall, {
         ...featureFlagsData,

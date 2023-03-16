@@ -8,7 +8,8 @@
 import React from 'react'
 import { Formik } from 'formik'
 import { noop } from 'lodash-es'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { act, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvServices from 'services/cv'
 import PagerDutyChangeSource from '../PagerDutyChangeSource'
@@ -71,7 +72,9 @@ describe('Test PagerDuty Change Source', () => {
       />
     )
 
-    fireEvent.click(container.querySelector(`.bp3-input-action [data-icon="chevron-down"]`)!)
+    act(() => {
+      userEvent.click(container.querySelector(`[name="spec.pagerDutyServiceId"]`)!)
+    })
     const menuItemLabels = container.querySelectorAll('[class*="menuItemLabel"]')
     expect(menuItemLabels.length).toEqual(0)
 
@@ -148,7 +151,7 @@ describe('Test PagerDuty Change Source', () => {
 
     // renders both service value in dropdown
     act(() => {
-      fireEvent.click(container.querySelector(`.bp3-input-action [data-icon="chevron-down"]`)!)
+      userEvent.click(container.querySelector(`[name="spec.pagerDutyServiceId"]`)!)
     })
     const menuItemLabels = container.querySelectorAll('[class*="menuItemLabel"]')
     await waitFor(() => expect(menuItemLabels.length).toEqual(2))

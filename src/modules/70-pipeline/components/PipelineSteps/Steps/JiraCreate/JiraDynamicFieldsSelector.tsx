@@ -83,6 +83,7 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
       refetchProjectMetadata({
         queryParams: {
           ...commonParams,
+          expand: 'projects.issuetypes',
           connectorRef,
           projectKey: selectedProjectKey
         }
@@ -95,6 +96,7 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
       refetchIssueMetadata({
         queryParams: {
           ...commonParams,
+          expand: 'projects.issuetypes.fields',
           connectorRef,
           projectKey: selectedProjectKey,
           issueType: selectedIssueTypeKey
@@ -336,6 +338,7 @@ export function JiraDynamicFieldsSelector(props: JiraDynamicFieldsSelectorInterf
     lazy: true,
     queryParams: {
       ...commonParams,
+      expand: '',
       connectorRef: '',
       projectKey: ''
     }
@@ -350,6 +353,7 @@ export function JiraDynamicFieldsSelector(props: JiraDynamicFieldsSelectorInterf
     lazy: true,
     queryParams: {
       ...commonParams,
+      expand: '',
       connectorRef: '',
       projectKey: '',
       issueType: ''

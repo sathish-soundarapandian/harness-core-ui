@@ -106,7 +106,7 @@ const ChaosTrialHomePage: React.FC = () => {
     description: getString('chaos.homepage.slogan'),
     learnMore: {
       description: getString('chaos.homepage.learnMore'),
-      url: 'https://docs.harness.io/category/kl0mxwpfw1-hce-category'
+      url: 'https://developer.harness.io/docs/chaos-engineering/overview/introduction-to-chaos-module'
     },
     startBtn: {
       description: startBtnDescription,

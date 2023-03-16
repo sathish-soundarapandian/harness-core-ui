@@ -41,6 +41,33 @@ jest.mock('services/template-ng', () => ({
   })
 }))
 
+jest.mock('services/cd-ng', () => ({
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: jest.fn() }
+  }),
+  useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useGetFileByBranch: () => ({
+    data: {},
+    mutate: jest.fn(),
+    refetch: jest.fn()
+  }),
+  useCreatePR: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  }),
+  useCreatePRV2: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  }),
+  useCheckIfTemplateUsingV1Stage: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  })
+}))
+
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
   useMutateAsGet: jest.fn(() => ({}))

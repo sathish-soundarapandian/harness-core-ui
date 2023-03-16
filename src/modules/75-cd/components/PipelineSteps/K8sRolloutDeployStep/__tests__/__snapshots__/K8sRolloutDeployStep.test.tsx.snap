@@ -12,7 +12,7 @@ exports[`Test K8sRolloutDeployStep inputSet 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="fieldAndOptions formGroup sm"
+      class="fieldAndOptions formGroup md"
     >
       <div
         class="bp3-form-group"
@@ -88,7 +88,7 @@ exports[`Test K8sRolloutDeployStep inputSet 1`] = `
       </div>
     </div>
     <div
-      class="formGroup sm"
+      class="formGroup md"
     >
       <div
         class="bp3-form-group multiTypeCheckbox"
@@ -464,7 +464,7 @@ exports[`Test K8sRolloutDeployStep should render edit view 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="fieldAndOptions formGroup sm"
+      class="fieldAndOptions formGroup md"
     >
       <div
         class="bp3-form-group"
@@ -540,7 +540,7 @@ exports[`Test K8sRolloutDeployStep should render edit view 1`] = `
       </div>
     </div>
     <div
-      class="formGroup sm"
+      class="formGroup md"
     >
       <div
         class="bp3-form-group multiTypeCheckbox"

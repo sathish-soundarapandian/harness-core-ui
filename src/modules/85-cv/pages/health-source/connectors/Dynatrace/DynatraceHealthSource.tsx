@@ -52,8 +52,6 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
   const [showCustomMetric, setShowCustomMetric] = useState<boolean>(!!dynatraceMetricData.customMetrics.size)
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
 
-  const isMetricThresholdEnabled = !isTemplate
-
   const {
     createdMetrics,
     mappedMetrics,
@@ -84,9 +82,8 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
 
   const filterRemovedMetricNameThresholds = useCallback(
     (deletedMetricName: string) => {
-      if (isMetricThresholdEnabled && deletedMetricName) {
+      if (deletedMetricName) {
         const updatedNonCustomFields = getMetricNameFilteredNonCustomFields<DynatraceFormDataInterface>(
-          isMetricThresholdEnabled,
           dynatraceMetricData,
           deletedMetricName
         )
@@ -94,7 +91,7 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
         setDynatraceMetricData(updatedNonCustomFields)
       }
     },
-    [dynatraceMetricData, isMetricThresholdEnabled]
+    [dynatraceMetricData]
   )
 
   useEffect(() => {
@@ -123,8 +120,7 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
             groupedCreatedMetricsList,
             groupedCreatedMetricsList.indexOf(selectedMetric),
             getString,
-            mappedMetrics,
-            isMetricThresholdEnabled
+            mappedMetrics
           )
         ).length === 0
       }
@@ -134,8 +130,7 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
           groupedCreatedMetricsList,
           groupedCreatedMetricsList.indexOf(selectedMetric),
           getString,
-          mappedMetrics,
-          isMetricThresholdEnabled
+          mappedMetrics
         )
       }}
       initialValues={dynatraceMetricFormData}
@@ -170,7 +165,6 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
               metricErrors={formik.errors}
               isTemplate={isTemplate}
               expressions={expressions}
-              isMetricThresholdEnabled={isMetricThresholdEnabled}
             />
             {showCustomMetric ? (
               <CustomMetric
@@ -188,7 +182,6 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
                 addFieldLabel={getString('cv.monitoringSources.addMetric')}
                 initCustomForm={defaultDynatraceCustomMetric(getString)}
                 shouldBeAbleToDeleteLastMetric
-                isMetricThresholdEnabled={isMetricThresholdEnabled}
                 filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
               >
                 <DynatraceCustomMetrics
@@ -223,15 +216,14 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
                 </CardWithOuterTitle>
               )
             )}
-            {isMetricThresholdEnabled &&
-              getIsMetricThresholdCanBeShown(formik.values.metricData, groupedCreatedMetrics) && (
-                <MetricThresholdProvider
-                  groupedCreatedMetrics={groupedCreatedMetrics}
-                  formikValues={formik.values}
-                  metricPacks={(metricPackResponse.data?.resource || []) as TimeSeriesMetricPackDTO[]}
-                  setThresholdState={setDynatraceMetricData}
-                />
-              )}
+            {getIsMetricThresholdCanBeShown(formik.values.metricData, groupedCreatedMetrics) && (
+              <MetricThresholdProvider
+                groupedCreatedMetrics={groupedCreatedMetrics}
+                formikValues={formik.values}
+                metricPacks={(metricPackResponse.data?.resource || []) as TimeSeriesMetricPackDTO[]}
+                setThresholdState={setDynatraceMetricData}
+              />
+            )}
             <Container style={{ marginBottom: '120px' }} />
             <DrawerFooter
               isSubmit

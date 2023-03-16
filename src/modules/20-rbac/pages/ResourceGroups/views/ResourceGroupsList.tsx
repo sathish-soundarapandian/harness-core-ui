@@ -17,19 +17,26 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { rbacQueryParamOptions } from '@rbac/utils/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
 const ResourceGroupsList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
+  const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod | undefined>(PreferenceScope.USER, `sort-${PAGE_NAME.ResourceGroups}`)
   useDocumentTitle(getString('resourceGroups'))
+
   const {
     search: searchTerm,
     page: pageIndex,
@@ -44,8 +51,10 @@ const ResourceGroupsList: React.FC = () => {
       projectIdentifier,
       pageIndex,
       pageSize,
-      searchTerm
+      searchTerm,
+      sortOrders: [sortPreference]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -111,7 +120,19 @@ const ResourceGroupsList: React.FC = () => {
           </Layout.Horizontal>
         }
       />
-      <PageBody loading={loading} retryOnError={() => refetch()} error={error ? getRBACErrorMessage(error) : ''}>
+      <PageBody
+        loading={loading}
+        retryOnError={() => refetch()}
+        error={error ? getRBACErrorMessage(error as RBACError) : ''}
+      >
+        <ListHeader
+          selectedSortMethod={sortPreference}
+          sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
+          totalCount={data?.data?.totalItems}
+        />
         <ResourceGroupListView data={data?.data} reload={refetch} openResourceGroupModal={openResourceGroupModal} />
       </PageBody>
     </>

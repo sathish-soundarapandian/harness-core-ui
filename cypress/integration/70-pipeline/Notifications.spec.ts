@@ -13,11 +13,6 @@ describe('PIPELINE NOTIFICATIONS FLOW', () => {
     '/pipeline/api/pipelines/variables?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.login('test', 'test')
 

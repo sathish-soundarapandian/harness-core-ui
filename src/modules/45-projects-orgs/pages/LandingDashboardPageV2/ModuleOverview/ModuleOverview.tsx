@@ -90,12 +90,16 @@ const moduleLabelMap: Record<NavModuleName, IModuleOverviewMap> = {
     label: 'iacm.stageTitle',
     Component: () => null
   },
-  [ModuleName.SSCS]: {
-    label: 'common.sscs',
+  [ModuleName.SSCA]: {
+    label: 'common.ssca',
     Component: () => null
   },
   [ModuleName.IDP]: {
     label: 'common.purpose.idp.name',
+    Component: () => null
+  },
+  [ModuleName.ET]: {
+    label: 'common.purpose.errorTracking.title',
     Component: () => null
   }
 }

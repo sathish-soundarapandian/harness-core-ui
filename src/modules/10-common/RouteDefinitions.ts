@@ -150,7 +150,7 @@ const routes = {
   toAuthenticationSettings: withAccountId(() => '/settings/authentication'),
   toAccountConfiguration: withAccountId(() => '/settings/authentication/configuration'),
   toAccountActivityLog: withAccountId(() => '/settings/authentication/activity-log'),
-  toTicketSettings: withAccountId(() => `/settings/tickets`),
+  toAccountTicketSettings: withAccountId(() => `/settings/tickets`),
 
   // Governance
   toGovernance: withAccountId(({ orgIdentifier, projectIdentifier, module }: GovernancePathProps) =>
@@ -688,6 +688,9 @@ const routes = {
   toOrganizations: withAccountId(() => `/settings/organizations`),
   toOrganizationDetails: withAccountId(
     ({ orgIdentifier }: OrgPathProps) => `/settings/organizations/${orgIdentifier}/details`
+  ),
+  toOrganizationTicketSettings: withAccountId(
+    ({ orgIdentifier }: OrgPathProps) => `/settings/organizations/${orgIdentifier}/setup/tickets`
   ),
   toCreateSecretFromYaml: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
@@ -1466,6 +1469,15 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, segmentIdentifier }: ProjectPathProps & SegmentPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/target-management/target-groups/${segmentIdentifier}`
   ),
+  toCFSegmentDetailsWithEnv: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      segmentIdentifier,
+      environmentIdentifier
+    }: ProjectPathProps & SegmentPathProps & EnvironmentPathProps) =>
+      `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/target-management/target-groups/${segmentIdentifier}?activeEnvironment=${environmentIdentifier}`
+  ),
   toCFTargetDetails: withAccountId(
     ({ orgIdentifier, projectIdentifier, targetIdentifier }: ProjectPathProps & TargetPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/target-management/targets/${targetIdentifier}`
@@ -1939,6 +1951,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, issueId }: ProjectPathProps & { issueId: string }) =>
       `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/ticket-summary/${issueId}`
   ),
+  toSTOProjectTicketSettings: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/tickets`
+  ),
   /********************************************************************************************************************/
   toOldCustomDashboard: withAccountId(() => '/home/dashboards*'),
   toCustomDashboard: withAccountId(() => '/dashboards'),
@@ -1968,11 +1984,11 @@ const routes = {
   ),
   toChaosExperiment: withAccountId(
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/${identifier}`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/${identifier}/chaos-studio`
   ),
   toNewChaosExperiment: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/new`
+    ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/new/${identifier}/chaos-studio`
   ),
   toChaosExperimentRun: withAccountId(
     ({
@@ -2036,9 +2052,9 @@ const routes = {
       return `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/resources`
     }
   ),
-  // SSCS
-  toSSCS: withAccountId(() => '/sscs'),
-  toSSCSOverview: withAccountId(() => '/sscs/overview'),
+  // SSCA
+  toSSCA: withAccountId(() => '/ssca'),
+  toSSCAOverview: withAccountId(() => '/ssca/overview'),
   toAllowDenyList: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
       const path = `allow-deny-list`
@@ -2052,9 +2068,24 @@ const routes = {
       })
     }
   ),
-  toSSCSGettingStarted: withAccountId(() => '/sscs/getting-started'),
+  toSSCAGettingStarted: withAccountId(() => '/ssca/getting-started'),
+  // IDP
+  toIDPDefaultPath: withAccountId(() => '/idp-default'),
   toIDP: withAccountId(() => '/idp'),
-  toIDPAdmin: withAccountId(() => '/idp-admin')
+  toIDPAdmin: withAccountId(() => '/idp-admin'),
+  toGetStartedWithIDP: withAccountId(() => '/idp-admin/get-started'),
+  toAdminHome: withAccountId(() => '/idp-admin/home'),
+  toPluginsPage: withAccountId(() => '/idp-admin/plugins'),
+  toLayoutConfig: withAccountId(() => '/idp-admin/layout'),
+  toIDPAccessControl: withAccountId(() => '/idp-admin/access-control'),
+
+  // Error Tracking
+  toET: withAccountId(() => '/et'),
+  toETHome: withAccountId(() => '/et/home'),
+  toETPlaceholder: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
+  )
 }
 
 export default routes

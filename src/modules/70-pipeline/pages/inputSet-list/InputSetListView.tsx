@@ -30,6 +30,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
+import { CodeSourceCell } from '@pipeline/pages/pipeline-list/PipelineListTable/PipelineListCells'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
@@ -41,7 +42,6 @@ import css from './InputSetList.module.scss'
 interface InputSetListViewProps {
   data?: PageInputSetSummaryResponse
   goToInputSetDetail?: (inputSet?: InputSetSummaryResponse) => void
-  cloneInputSet?: (identifier?: string) => void
   refetchInputSet?: () => void
   gotoPage: (pageNumber: number) => void
   canUpdate?: boolean
@@ -62,7 +62,6 @@ export interface InputSetLocal extends InputSetSummaryResponse {
 
 type CustomColumn<T extends Record<string, any>> = Column<T> & {
   goToInputSetDetail?: (inputSet?: InputSetSummaryResponse) => void
-  cloneInputSet?: (identifier?: string) => void
   refetchInputSet?: () => void
   onDeleteInputSet?: (commitMsg: string) => Promise<void>
   onDelete?: (inputSet: InputSetSummaryResponse) => void
@@ -198,20 +197,6 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
             }}
             disabled={!(column as any).canUpdate || isPipelineInvalid}
           />
-          <Menu.Item
-            icon="duplicate"
-            disabled
-            text={getString('projectCard.clone')}
-            onClick={
-              /* istanbul ignore next */
-              (e: React.MouseEvent) => {
-                e.stopPropagation()
-                ;(column as any).cloneInputSet?.(data.identifier)
-                setMenuOpen(false)
-              }
-            }
-          />
-          <Menu.Divider />
           {showMoveToGitOption(pipelineStoreType, data.storeType) ? (
             <Menu.Item
               icon="git-merge"
@@ -340,7 +325,6 @@ export function InputSetListView({
   gotoPage,
   goToInputSetDetail,
   refetchInputSet,
-  cloneInputSet,
   canUpdate = true,
   pipelineHasRuntimeInputs,
   isPipelineInvalid,
@@ -361,13 +345,20 @@ export function InputSetListView({
       {
         Header: getString('pipeline.inputSets.inputSetNameLabel').toUpperCase(),
         accessor: 'name',
-        width: isGitSyncEnabled ? '25%' : '30%',
+        width: '25%',
         Cell: RenderColumnInputSet
+      },
+      {
+        Header: getString('pipeline.codeSource'),
+        accessor: 'storeType',
+        width: '15%',
+        disableSortBy: true,
+        Cell: CodeSourceCell
       },
       {
         Header: getString('description').toUpperCase(),
         accessor: 'description',
-        width: isGitSyncEnabled ? '30%' : '35%',
+        width: '30%',
         Cell: RenderColumnDescription,
         disableSortBy: true
       },
@@ -402,18 +393,19 @@ export function InputSetListView({
         pipelineStoreType,
         goToInputSetDetail,
         refetchInputSet,
-        cloneInputSet,
         canUpdate,
         onDeleteInputSet,
         onDelete
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [goToInputSetDetail, refetchInputSet, cloneInputSet, pipelineStoreType, pipelineHasRuntimeInputs, data]
+    [goToInputSetDetail, refetchInputSet, pipelineStoreType, pipelineHasRuntimeInputs, data]
   )
 
   if (!isGitSyncEnabled) {
-    columns.splice(2, 1)
+    columns.splice(3, 1)
+  } else {
+    columns.splice(1, 1)
   }
 
   return (

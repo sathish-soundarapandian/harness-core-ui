@@ -90,7 +90,6 @@ export default function ElastigroupSetupSource(props: {
             variableName="spec.name"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={/* istanbul ignore next */ value => setFieldValue('spec.name', value)}
             isReadonly={readonly}
             allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -135,7 +134,6 @@ export default function ElastigroupSetupSource(props: {
                 variableName="spec.instances.spec.min"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={/* istanbul ignore next */ value => setFieldValue('spec.instances.spec.min', value)}
                 isReadonly={readonly}
                 allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}
@@ -157,7 +155,6 @@ export default function ElastigroupSetupSource(props: {
                 variableName="spec.instances.spec.max"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={/* istanbul ignore next */ value => setFieldValue('spec.instances.spec.max', value)}
                 isReadonly={readonly}
                 allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}
@@ -179,7 +176,6 @@ export default function ElastigroupSetupSource(props: {
                 variableName="spec.instances.spec.desired"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={/* istanbul ignore next */ value => setFieldValue('spec.instances.spec.desired', value)}
                 isReadonly={readonly}
                 allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}

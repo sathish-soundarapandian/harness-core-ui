@@ -16,19 +16,26 @@ import {
   useCreateEnvironment as useCDCreateEnvironment
 } from 'services/cd-ng'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { useConfirmAction, useQueryParams } from '@common/hooks'
+import { useConfirmAction, useLocalStorage, useQueryParams } from '@common/hooks'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
+import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
+import { EvaluationModal } from '@governance/EvaluationModal'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import routes from '@common/RouteDefinitions'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
+import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import * as trackingConstants from '@common/constants/TrackingConstants'
+import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
+import { StepStatus } from '@common/constants/StepStatusTypes'
+import { MarkdownViewer } from '@common/components/MarkdownViewer/MarkdownViewer'
 
 // eslint-disable-next-line import/no-unresolved
 const FFUIMFEApp = lazy(() => import('ffui/MicroFrontendApp'))
@@ -38,24 +45,35 @@ const FFUIApp: FC = () => (
     ChildApp={FFUIMFEApp}
     ffServices={{
       ...ffServices,
-      useCDGetEnvironmentListForProject,
-      useCDGetEnvironment,
+      useCDCreateEnvironment,
       useCDDeleteEnvironment,
-      useCDCreateEnvironment
+      useCDGetEnvironment,
+      useCDGetEnvironmentListForProject
     }}
     customHooks={{
-      useConfirmAction,
       useActiveEnvironment,
+      useConfirmAction,
       useLicenseStore,
+      useLocalStorage,
       useQueryParams,
       useQueryParamsState,
       useSyncedEnvironment,
       usePreferenceStore
     }}
-    customComponents={{ RbacOptionsMenuButton, ContainerSpinner, Description }}
+    customComponents={{
+      ContainerSpinner,
+      Description,
+      EvaluationModal,
+      FeatureWarningTooltip,
+      GitSyncForm,
+      MarkdownViewer,
+      MonacoDiffEditor,
+      RbacOptionsMenuButton,
+      RBACTooltip
+    }}
     customRoutes={routes}
-    customUtils={{ NameSchema, getIdentifierFromName, IdentifierSchema }}
-    customEnums={{ FeatureIdentifier, PreferenceScope, trackingConstants }}
+    customUtils={{ getIdentifierFromName, IdentifierSchema, NameSchema }}
+    customEnums={{ FeatureIdentifier, PreferenceScope, StepStatus, trackingConstants }}
   />
 )
 

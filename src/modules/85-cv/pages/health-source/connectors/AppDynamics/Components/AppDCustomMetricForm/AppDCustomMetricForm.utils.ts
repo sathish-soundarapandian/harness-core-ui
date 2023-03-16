@@ -43,12 +43,32 @@ export const checkRuntimeFields = (formikValues: AppDynamicsFomikFormInterface, 
   appdMultiType !== MultiTypeInputType.FIXED ||
   getMultiTypeFromValue(formikValues.completeMetricPath) !== MultiTypeInputType.FIXED
 
+const getDerivedCompleteMetricPathValue = ({
+  baseFolder,
+  appDTier,
+  metricPath
+}: {
+  baseFolder?: string
+  appDTier?: string
+  metricPath?: string
+}): string => {
+  const trimmedBaseFolderValue = baseFolder?.trim?.() || ''
+  const trimmedAppDTierValue = appDTier?.trim?.() || ''
+  const trimmedMetricPathValue = metricPath?.trim?.() || ''
+
+  return `${trimmedBaseFolderValue}|${trimmedAppDTierValue}|${trimmedMetricPathValue}`
+}
+
 export const getDerivedCompleteMetricPath = (formikValues: AppDynamicsFomikFormInterface) => {
   const baseFolder = getBasePathValue(formikValues?.basePath)
   const metricPath = getMetricPathValue(formikValues?.metricPath)
   let derivedCompleteMetricPath = ''
   if (formikValues?.pathType === PATHTYPE.DropdownPath && baseFolder && formikValues.appDTier && metricPath) {
-    derivedCompleteMetricPath = `${baseFolder?.trim()}|${formikValues?.appDTier?.trim()}|${metricPath?.trim()}`
+    derivedCompleteMetricPath = getDerivedCompleteMetricPathValue({
+      baseFolder,
+      appDTier: formikValues?.appDTier,
+      metricPath
+    })
   } else if (formikValues?.pathType === PATHTYPE.CompleteMetricPath) {
     derivedCompleteMetricPath = defaultTo(formikValues.completeMetricPath, '')
   }

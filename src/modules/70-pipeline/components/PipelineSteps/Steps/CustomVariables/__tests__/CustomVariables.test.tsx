@@ -13,9 +13,12 @@ import {
   act,
   waitFor,
   findByText as findByTextGlobal,
-  findAllByText as findAllByTextGlobal
+  findAllByText as findAllByTextGlobal,
+  screen,
+  within
 } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -25,6 +28,10 @@ import { CustomVariables } from '../CustomVariables'
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng')
+
+const mockLongName_130 =
+  'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz'
+const mockName_78 = 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz'
 
 describe('Custom Variables', () => {
   beforeAll(() => {
@@ -80,6 +87,31 @@ describe('Custom Variables', () => {
     })
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('can add a variable of length - (0,128]', async () => {
+    render(
+      <TestStepWidget
+        initialValues={{ variables: [], canAddVariable: true }}
+        type={StepType.CustomVariable}
+        stepViewType={StepViewType.Edit}
+      />
+    )
+
+    const addBtn = await screen.findByText('common.addVariable')
+    userEvent.click(addBtn)
+    await screen.findByRole('heading', { name: 'variables.newVariable' })
+    const view = screen.getByTestId('add-edit-variable')
+    const saveVariableBtn = within(view).getByText('save')
+    const variableNameTextBox = screen.getByPlaceholderText('pipeline.variable.variableNamePlaceholder')
+
+    userEvent.type(variableNameTextBox, mockLongName_130)
+    userEvent.click(saveVariableBtn)
+    expect(await within(view).findByText('common.validation.fieldCannotbeLongerThanN')).toBeInTheDocument()
+
+    userEvent.clear(variableNameTextBox)
+    userEvent.type(variableNameTextBox, mockName_78)
+    await waitFor(() => expect(within(view).queryByText('common.validation.fieldCannotbeLongerThanN')).toBeFalsy())
   })
 
   test('should render variables', () => {

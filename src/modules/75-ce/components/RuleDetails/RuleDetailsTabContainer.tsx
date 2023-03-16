@@ -434,9 +434,7 @@ const AdvancedConfigurationRow: React.FC<AdvancedConfigurationRowProps> = ({ ser
 
   return (
     <Layout.Vertical spacing={'medium'} margin={{ top: 'xlarge' }} className={css.tabRowContainer}>
-      <Text font={{ variation: FontVariation.H5 }}>
-        {getString('ce.co.autoStoppingRule.configuration.step4.advancedConfiguration')}
-      </Text>
+      <Text font={{ variation: FontVariation.H5 }}>{getString('pipeline.advancedConfiguration')}</Text>
       <RbacToggle
         checked={hideProgressPage}
         disabled={service.disabled}
@@ -454,7 +452,7 @@ const AdvancedConfigurationRow: React.FC<AdvancedConfigurationRowProps> = ({ ser
       <RbacToggle
         checked={dryRunMode}
         disabled={service.disabled}
-        label={getString('ce.co.dryRunLabel')}
+        label={getString('pipeline.syncStep.dryRun')}
         onToggle={handleDryRunModeToggle}
         data-testid={'dryRunToggle'}
         className={css.toggleInput}

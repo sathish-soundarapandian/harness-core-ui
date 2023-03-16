@@ -284,7 +284,13 @@ export const CreateDockerDelegate = ({
               <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.delegateConnectionWait')}
               </Text>
-              <StepProcessing name={delegateName} delegateType={delegateType} replicas={1} successRef={successRef} />
+              <StepProcessing
+                name={delegateName}
+                delegateType={delegateType}
+                replicas={1}
+                successRef={successRef}
+                onSuccessHandler={onSuccessHandler}
+              />
             </Layout.Vertical>
           </li>
         </ul>

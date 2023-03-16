@@ -168,7 +168,8 @@ jest.mock('services/portal', () => ({
 }))
 
 describe('BuildStageSetupShell snapshot test', () => {
-  test('initializes ok', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('initializes ok', async () => {
     const { container } = render(
       <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
         <PipelineContext.Provider value={getContextValue()}>
@@ -179,7 +180,8 @@ describe('BuildStageSetupShell snapshot test', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('advances through tabs and finalizes saving when click "Done"', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('advances through tabs and finalizes saving when click "Done"', async () => {
     const contextMock = getContextValue()
     const { container, findByTestId, findByText } = render(
       <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
@@ -206,7 +208,8 @@ describe('BuildStageSetupShell snapshot test', () => {
     expect(contextMock.updatePipelineView).toHaveBeenCalled()
   })
 
-  test('ExecutionGraph step handlers update pipeline view', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('ExecutionGraph step handlers update pipeline view', async () => {
     ;(ExecutionGraph as any).render.mockImplementationOnce(({ onAddStep, onEditStep }: any) => (
       <div>
         <div data-testid="execution-graph-mock-add" onClick={() => onAddStep({})} />

@@ -526,7 +526,7 @@ exports[`test cases for Recommendation details Page should be able to render the
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-green500"
                     >
-                      ce.recommendation.recommendationChart.limitLabelRegular
+                      pipeline.syncStep.limit
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi"
@@ -1351,7 +1351,7 @@ exports[`test cases for Recommendation details Page should be able to render the
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-green500"
                     >
-                      ce.recommendation.recommendationChart.limitLabelRegular
+                      pipeline.syncStep.limit
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi"

@@ -811,7 +811,7 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
                     >
                       <div
                         class="accordionSummary"
-                        id="Stage.undefined.Service"
+                        id="Stage..Service"
                       >
                         <div
                           class="inputheader"
@@ -824,7 +824,7 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
                       </div>
                       <div
                         class="accordionSummary"
-                        id="Stage.undefined.Infrastructure"
+                        id="Stage..Infrastructure"
                       >
                         <div
                           class="inputheader"
@@ -838,7 +838,7 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
                           class="nestedAccordions"
                         >
                           <div
-                            class="Layout--vertical Layout--layout-spacing-small StyledProps--main containerPadding StyledProps--padding-medium"
+                            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                           >
                             <div
                               class="fieldAndOptions formGroup md"
@@ -1280,7 +1280,7 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
                           class="nestedAccordions"
                         >
                           <div
-                            class="Layout--vertical Layout--layout-spacing-small StyledProps--main containerPadding StyledProps--padding-medium"
+                            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                           >
                             <div
                               class="fieldAndOptions formGroup md"

@@ -36,11 +36,12 @@ export interface TemplateCardProps {
   onOpenEdit?: (template: NGTemplateInfoConfig | TemplateSummaryResponse) => void
   onOpenSettings?: (templateIdentifier: string) => void
   onDelete?: (template: TemplateSummaryResponse) => void
+  onOpenMoveResource?: (template: TemplateSummaryResponse) => void
 }
 
 export function TemplateCard(props: TemplateCardProps): JSX.Element {
   const { getString } = useStrings()
-  const { template, onSelect, isSelected, onPreview, onOpenEdit, onOpenSettings, onDelete } = props
+  const { template, onSelect, isSelected, onPreview, onOpenEdit, onOpenSettings, onDelete, onOpenMoveResource } = props
   const { gitSyncRepos, loadingRepos } = useGitSyncStore()
   const isTemplateRemote = (template as NGTemplateInfoConfigWithGitDetails)?.storeType === StoreType.REMOTE
 
@@ -79,6 +80,7 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
             onOpenEdit={onOpenEdit || noop}
             onOpenSettings={onOpenSettings || noop}
             onDelete={onDelete || noop}
+            onOpenMoveResource={onOpenMoveResource || noop}
             className={css.actionButton}
             position={Position.RIGHT_TOP}
           />

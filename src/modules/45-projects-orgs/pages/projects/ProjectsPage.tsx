@@ -33,14 +33,22 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { projectsPageQueryParamOptions, ProjectsPageQueryParams } from '@projects-orgs/utils/utils'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import ProjectsListView from './views/ProjectListView/ProjectListView'
 import ProjectsGridView from './views/ProjectGridView/ProjectGridView'
 import ProjectsEmptyState from './projects-empty-state.png'
+
 import css from './ProjectsPage.module.scss'
 
 const ProjectsListPage: React.FC = () => {
   const { getString } = useStrings()
   useDocumentTitle(getString('projectsText'))
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.ProjectListing}`)
+
   const { accountId } = useParams<AccountPathProps>()
   const {
     verify,
@@ -79,8 +87,10 @@ const ProjectsListPage: React.FC = () => {
       orgIdentifier: orgFilter,
       searchTerm: searchParam,
       pageIndex,
-      pageSize
+      pageSize,
+      sortOrders: [sortPreference]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -180,6 +190,15 @@ const ProjectsListPage: React.FC = () => {
               }
         }
       >
+        <ListHeader
+          selectedSortMethod={sortPreference}
+          sortOptions={[...sortByName, ...sortByCreated, ...sortByLastModified]}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
+          totalCount={data?.data?.totalItems}
+          className={css.listHeader}
+        />
         {view === Views.GRID ? (
           <ProjectsGridView
             data={data}

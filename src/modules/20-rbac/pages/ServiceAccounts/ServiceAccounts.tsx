@@ -24,6 +24,11 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import { rbacQueryParamOptions } from '@rbac/utils/utils'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByEmail, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import ServiceAccountsEmptyState from './service-accounts-empty-state.png'
 import css from './ServiceAccounts.module.scss'
 
@@ -31,6 +36,8 @@ const ServiceAccountsPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
   useDocumentTitle(getString('rbac.serviceAccounts.label'))
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.ServiceAccountsPage}`)
 
   const {
     search: searchTerm,
@@ -46,8 +53,10 @@ const ServiceAccountsPage: React.FC = () => {
       projectIdentifier,
       searchTerm,
       pageIndex,
-      pageSize
+      pageSize,
+      sortOrders: [sortPreference]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -121,6 +130,14 @@ const ServiceAccountsPage: React.FC = () => {
           ) : undefined
         }}
       >
+        <ListHeader
+          selectedSortMethod={sortPreference}
+          sortOptions={[...sortByCreated, ...sortByName, ...sortByEmail]}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
+          totalCount={data?.data?.totalItems}
+        />
         <ServiceAccountsListView
           data={data?.data}
           reload={refetch}

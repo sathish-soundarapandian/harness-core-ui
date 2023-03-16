@@ -16,7 +16,7 @@ import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSe
 import {
   getSelectedDeploymentType,
   getVariablesHeaderTooltipId,
-  isServerlessDeploymentType
+  isOnlyOneManifestAllowedForDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import {
   DeployTabs,
@@ -88,7 +88,7 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
               deploymentType={selectedDeploymentType}
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={!!readonly}
-              allowOnlyOneManifest={isServerlessDeploymentType(selectedDeploymentType)}
+              allowOnlyOneManifest={isOnlyOneManifestAllowedForDeploymentType(selectedDeploymentType)}
               availableManifestTypes={allowedManifestTypes[selectedDeploymentType]}
             />
           </Card>

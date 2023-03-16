@@ -29,8 +29,8 @@ export enum TableType {
 
 export interface InfraViewFilters {
   artifactFilter: {
-    artifactVersion: string
-    artifactPath: string
+    artifactVersion?: string
+    artifactPath?: string
   }
   serviceFilter: string
 }
@@ -78,7 +78,7 @@ export const getFullViewTableData = (
           let artifactPath: string | undefined
           const infraList: string[] = []
           /* istanbul ignore else */
-          if (artifact.artifactVersion && artifact.instanceGroupedByEnvironmentList) {
+          if (artifact.instanceGroupedByEnvironmentList) {
             artifactVersion ??= artifact.artifactVersion
             artifactPath ??= artifact.artifactPath
             artifact.instanceGroupedByEnvironmentList?.forEach(env => {
@@ -122,9 +122,9 @@ export const getFullViewTableData = (
             tableData.push({
               serviceId: serviceId,
               serviceName: serviceName,
-              artifactVersion: artifactVersion,
+              artifactVersion,
               latest: artifact.latest,
-              artifactPath: defaultTo(artifactPath, ''),
+              artifactPath,
               showService: serviceShow,
               totalInfras: totalInfras,
               instanceCount: totalInstances,
@@ -217,7 +217,7 @@ export const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
       {popoverTable}
     </Popover>
   ) : (
-    <></>
+    <span className={css.dashCtn}>{'-'}</span>
   )
 }
 
@@ -236,7 +236,7 @@ const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
 }) => {
   return instanceCount ? (
     <Container>
-      <Text font={{ size: 'small', weight: 'bold' }} color={Color.PRIMARY_7} className={css.overflow}>
+      <Text font={{ size: 'small' }} color={Color.GREY_600} className={css.overflow}>
         {numberFormatter(instanceCount)}
       </Text>
     </Container>
@@ -430,11 +430,11 @@ export const EnvironmentDetailTable = (
     )
   }
 
-  if (isUndefined(selectedRow) && tableType === TableType.FULL) {
+  if (isUndefined(selectedRow) && tableType === TableType.FULL && tableData.length) {
     setRowClickFilter({
       artifactFilter: {
-        artifactVersion: defaultTo(tableData[0].artifactVersion, ''),
-        artifactPath: defaultTo(tableData[0].artifactPath, '')
+        artifactVersion: tableData[0].artifactVersion,
+        artifactPath: tableData[0].artifactPath
       },
       serviceFilter: defaultTo(tableData[0].serviceId, '')
     })
@@ -454,8 +454,8 @@ export const EnvironmentDetailTable = (
           ? row => {
               setRowClickFilter({
                 artifactFilter: {
-                  artifactVersion: defaultTo(row.artifactVersion, ''),
-                  artifactPath: defaultTo(row.artifactPath, '')
+                  artifactVersion: row.artifactVersion,
+                  artifactPath: row.artifactPath
                 },
                 serviceFilter: defaultTo(row.serviceId, '')
               })

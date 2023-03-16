@@ -14,7 +14,7 @@ import { Connectors } from '@connectors/constants'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { String, StringKeys } from 'framework/strings'
 import { CredTypeValues } from '@connectors/interfaces/ConnectorInterface'
-import { DelegateTypes } from './ConnectorUtils'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import css from '../views/ConnectorsListView.module.scss'
 
 const textRenderer = (value: string): JSX.Element => {
@@ -173,6 +173,8 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
         'UrlLabel',
         linkAsTextRenderer(connector?.spec?.credential?.spec?.endpointUrl)
       )
+    case Connectors.TERRAFORM_CLOUD:
+      return getConnectorDisplaySummaryLabel('UrlLabel', linkAsTextRenderer(connector?.spec?.terraformCloudUrl))
     default:
       return ''
   }

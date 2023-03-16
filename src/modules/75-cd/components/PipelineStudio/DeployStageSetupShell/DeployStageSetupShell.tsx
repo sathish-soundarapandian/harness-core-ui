@@ -131,18 +131,24 @@ export default function DeployStageSetupShell(): JSX.Element {
     )
   }, [getStageFromPipeline, NG_SVC_ENV_REDESIGN, selectedStage, templateServiceData])
 
+  // ? This function should ideally not be present here. Needs refactoring
   const setDefaultServiceSchema = useCallback((): Promise<void> => {
     const stageData = produce(selectedStage, draft => {
       if (draft) {
         if (isNewService) {
-          isEmpty(get(draft, 'stage.spec.service.serviceRef')) &&
+          if (
+            isEmpty(get(draft, 'stage.spec.service.serviceRef')) &&
             isEmpty(get(draft, 'stage.spec.services.values')) &&
             isEmpty(get(draft, 'stage.spec.service.useFromStage')) &&
+            // deploy type check - fixes weird issue which updates any other stage / stage template on unmount.
+            draft.stage?.type === StageType.DEPLOY
+          ) {
             set(draft, 'stage.spec.service', {
               serviceRef: scope === Scope.PROJECT && !isContextTypeTemplateType(contextType) ? '' : RUNTIME_INPUT_VALUE,
               serviceInputs:
                 scope === Scope.PROJECT && !isContextTypeTemplateType(contextType) ? undefined : RUNTIME_INPUT_VALUE
             })
+          }
         } else {
           set(draft, 'stage.spec.serviceConfig', {
             serviceRef: scope === Scope.PROJECT && !isContextTypeTemplateType(contextType) ? '' : RUNTIME_INPUT_VALUE,

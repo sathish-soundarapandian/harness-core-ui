@@ -199,6 +199,12 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
     secondaryIconStyle: runningIconStyle
   } = getStatusProps(ExecutionStatusEnum.Running as ExecutionStatus, ExecutionPipelineNodeType.NORMAL)
 
+  const stageTypeIconProps = {
+    color: Color.WHITE,
+    className: css.primaryIcon,
+    inverse: true
+  }
+
   return (
     <div style={{ position: 'relative' }}>
       <div
@@ -283,8 +289,12 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
             }}
           >
             <div className={css.iconGroup}>
-              {nodesInfo?.[0]?.icon && nodesInfo[0].icon && <Icon size={28} name={nodesInfo[0].icon} />}
-              {nodesInfo?.[1]?.icon && nodesInfo[1].icon && <Icon size={28} name={nodesInfo[1].icon} />}
+              {nodesInfo?.[0]?.icon && nodesInfo[0].icon && (
+                <Icon size={28} name={nodesInfo[0].icon} {...(selected && stageTypeIconProps)} />
+              )}
+              {nodesInfo?.[1]?.icon && nodesInfo[1].icon && (
+                <Icon size={28} name={nodesInfo[1].icon} {...(selected && stageTypeIconProps)} />
+              )}
             </div>
           </div>
         </Container>

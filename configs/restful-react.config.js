@@ -228,5 +228,14 @@ module.exports = {
     customProps: {
       base: `{getConfig("pm/api/v1")}`
     }
+  },
+  ssca: {
+    output: 'src/services/ssca/index.tsx',
+    file: 'src/services/ssca/swagger.json',
+    transformer: 'scripts/swagger-transform.js',
+    customImport: `import { getConfig } from "../config";`,
+    customProps: {
+      base: `{getConfig("ssca/api/v1")}`
+    }
   }
 }

@@ -25,11 +25,6 @@ describe('Connectors list', () => {
   }
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
 
     cy.intercept('GET', gitSyncEnabledCall, {
@@ -68,7 +63,7 @@ describe('Connectors list', () => {
     cy.contains('p', 'testConnector2').click()
     cy.contains('span', 'Apply Selected').click()
     cy.get('input[name="spec.jobName"]').click()
-    cy.contains('p', 'AutomationQA').click()
+    cy.contains('p', 'alex-pipeline-test/AutomationQATest').click()
     cy.contains('span', 'Apply Changes').click()
     cy.wait(1000)
     cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/jenkinsStep/pipelineDetailsAfterSave.json' }).as(
@@ -86,7 +81,9 @@ describe('Connectors list', () => {
     cy.contains('span', 'Apply Selected').click()
     cy.get('input[name="spec.jobName"]').click()
     cy.contains('div', 'alex-pipeline-test').click()
-    cy.contains('p', 'AutomationQA').click()
+    cy.get('.bp3-input').eq(3).click()
+
+    cy.contains('p', 'alex-pipeline-test/AutomationQATest').click()
     cy.contains('span', 'Apply Changes').click()
     cy.wait(1000)
     cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/jenkinsStep/pipelineDetailsAfterSave.json' }).as(
@@ -119,9 +116,10 @@ describe('Connectors list', () => {
     cy.wait(1000)
     cy.get('input[name="stages[0].stage.spec.execution.steps[0].step.spec.jobName"]').click()
     cy.contains('div', 'alex-pipeline-test').click()
-    cy.contains('p', 'AutomationQA').click()
+    cy.get('.bp3-input').eq(1).click()
+    cy.contains('p', 'alex-pipeline-test/AutomationQATest').click()
     // check if selected jobname is visible
-    cy.contains('p', 'AutomationQA').should('be.visible')
+    cy.contains('p', 'alex-pipeline-test/AutomationQATest').should('be.visible')
   })
 
   it('jenkins step addition, with jobName and connector as runtime values', () => {
@@ -155,8 +153,9 @@ describe('Connectors list', () => {
     cy.contains('span', 'Apply Selected').click()
     cy.get('input[name="stages[0].stage.spec.execution.steps[0].step.spec.jobName"]').click()
     cy.contains('div', 'alex-pipeline-test').click()
-    cy.contains('p', 'AutomationQA').click()
+    cy.get('.bp3-input').eq(1).click()
+    cy.contains('p', 'alex-pipeline-test/AutomationQATest').click()
     // check if selected jobname is visible
-    cy.contains('p', 'AutomationQA').should('be.visible')
+    cy.contains('p', 'alex-pipeline-test/AutomationQATest').should('be.visible')
   })
 })

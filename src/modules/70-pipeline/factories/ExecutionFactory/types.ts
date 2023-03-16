@@ -73,6 +73,8 @@ export interface ConsoleViewStepDetailProps {
   isSkipped?: boolean
   loading?: boolean
   renderLogs?: (props: RenderLogsInterface) => React.ReactNode
+  isStageExecutionInputConfigured?: boolean
+  stageErrorMessage?: string
 }
 
 export interface ConsoleViewStepDetailsRegister {

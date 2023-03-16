@@ -24,11 +24,8 @@ import { FontVariation, Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorConfigDTO } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import {
-  DelegateTypes,
-  setupKubFormData,
-  DelegateCardInterface
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { setupKubFormData, DelegateCardInterface } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
@@ -39,7 +36,6 @@ import TextReference, { ValueType, TextReferenceInterface } from '@secrets/compo
 import { URLValidationSchema } from '@common/utils/Validation'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
-import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './Stepk8ClusterDetails.module.scss'
 
 interface Stepk8ClusterDetailsProps extends ConnectorInfoDTO {
@@ -297,7 +293,7 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
         is: delegateType => delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER,
         then: Yup.string().required(getString('validation.authType'))
       }),
-    username: Yup.string()
+    usernametextField: Yup.string()
       .nullable()
       .when('authType', {
         is: authType => authType === AuthTypes.USER_PASSWORD,
@@ -459,11 +455,15 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
                     >
                       {getString('authentication')}
                     </Text>
-                    <FormInput.Select
+                    <FormInput.DropDown
                       name="authType"
                       items={authOptions}
                       disabled={false}
-                      className={commonStyles.authTypeSelect}
+                      dropDownProps={{
+                        isLabel: true,
+                        filterable: false,
+                        minWidth: 'unset'
+                      }}
                     />
                   </Container>
 

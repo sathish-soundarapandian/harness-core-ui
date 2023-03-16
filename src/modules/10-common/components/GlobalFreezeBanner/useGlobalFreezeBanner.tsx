@@ -8,20 +8,16 @@
 import { useParams } from 'react-router-dom'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetGlobalFreezeWithBannerDetails } from 'services/cd-ng'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 
 export const useGlobalFreezeBanner = () => {
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
-  const isNgDeploymentFreezeEnabled = useFeatureFlag(FeatureFlag.NG_DEPLOYMENT_FREEZE)
 
   const { data, refetch } = useGetGlobalFreezeWithBannerDetails({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
-    },
-    lazy: !isNgDeploymentFreezeEnabled
+    }
   })
 
   return { globalFreezes: data?.data?.activeOrUpcomingGlobalFreezes, refetch }

@@ -32,7 +32,6 @@ import {
 
 describe('CVSLOsListingPage', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => false)
     cy.login('test', 'test')
 
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
@@ -61,7 +60,7 @@ describe('CVSLOsListingPage', () => {
     cy.contains('p', 'SLOs').click()
     cy.contains('p', 'SLO-1').should('be.visible')
 
-    cy.get('[data-icon="main-trash"]').click()
+    cy.get('[data-icon="main-trash"]').should('be.visible').click({ force: true })
     cy.contains('p', 'Delete SLO-1?').should('be.visible')
     cy.contains('p', 'Are you sure you want to delete SLO: SLO-1?').should('be.visible')
 

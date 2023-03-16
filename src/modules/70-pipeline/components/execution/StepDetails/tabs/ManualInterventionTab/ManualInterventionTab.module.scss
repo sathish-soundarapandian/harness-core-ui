@@ -29,6 +29,14 @@
 
       :global(.bp3-icon) {
         --intent-color: var(--primary-7);
+
+        &[data-icon='main-resume'] path {
+          fill: var(--primary-7) !important;
+        }
+        &[data-icon='mark-as-failure'] svg {
+          width: 38px;
+          height: 38px;
+        }
       }
     }
 

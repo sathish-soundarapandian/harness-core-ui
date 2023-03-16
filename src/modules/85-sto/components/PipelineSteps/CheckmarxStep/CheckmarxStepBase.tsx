@@ -36,7 +36,8 @@ import {
   ORCHESTRATION_SCAN_MODE,
   EXTRACTION_SCAN_MODE,
   REPOSITORY_TARGET_TYPE,
-  dividerBottomMargin
+  dividerBottomMargin,
+  tooltipIds
 } from '../constants'
 import SecurityField from '../SecurityField'
 
@@ -150,11 +151,13 @@ export const CheckmarxStepBase = (
                     },
                     'spec.tool.team_name': {
                       label: 'sto.stepField.tool.teamName',
-                      optional: true
+                      optional: true,
+                      tooltipId: tooltipIds.toolTeamName
                     },
                     'spec.tool.project_name': {
                       label: 'projectCard.projectName',
-                      optional: true
+                      optional: true,
+                      tooltipId: tooltipIds.toolProjectName
                     }
                   }}
                 />

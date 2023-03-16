@@ -85,7 +85,6 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
             variableName="spec.to"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={/* istanbul ignore next */ value => setFieldValue('spec.to', value)}
             isReadonly={readonly}
             allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -107,7 +106,6 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
             variableName="spec.cc"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={/* istanbul ignore next */ value => setFieldValue('spec.cc', value)}
             isReadonly={readonly}
             allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -120,7 +118,13 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
           name="spec.subject"
           label={getString('common.smtp.labelSubject')}
           className={css.subject}
-          multiTypeTextArea={{ enableConfigureOptions: false, expressions, disabled: readonly, allowableTypes }}
+          multiTypeTextArea={{
+            enableConfigureOptions: false,
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            textAreaProps: { growVertically: true }
+          }}
         />
         {getMultiTypeFromValue(formValues.spec.subject) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -129,7 +133,6 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
             variableName="spec.subject"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={/* istanbul ignore next */ value => setFieldValue('spec.subject', value)}
             isReadonly={readonly}
           />
@@ -141,7 +144,13 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
           name="spec.body"
           label={getString('common.smtp.labelBody')}
           className={css.body}
-          multiTypeTextArea={{ enableConfigureOptions: false, expressions, disabled: readonly, allowableTypes }}
+          multiTypeTextArea={{
+            enableConfigureOptions: false,
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            textAreaProps: { growVertically: true }
+          }}
         />
         {getMultiTypeFromValue(formValues.spec.body) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -150,7 +159,6 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
             variableName="spec.body"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={/* istanbul ignore next */ value => setFieldValue('spec.body', value)}
             isReadonly={readonly}
           />

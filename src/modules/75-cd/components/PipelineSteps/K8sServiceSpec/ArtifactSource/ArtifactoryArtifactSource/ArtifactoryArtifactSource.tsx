@@ -703,7 +703,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
-                allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+                allowableTypes,
                 expressions
               }}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
@@ -718,34 +718,17 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repositoryUrl`, template) && (
             <div className={css.inputFieldLayout}>
-              <FormInput.MultiTextInput
+              <TextFieldInputSetView
                 label={getString('repositoryUrlLabel')}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repositoryUrl`)}
-                isOptional
                 multiTextInputProps={{
                   expressions,
                   allowableTypes
                 }}
                 name={`${path}.artifacts.${artifactPath}.spec.repositoryUrl`}
+                fieldPath={`artifacts.${artifactPath}.spec.repositoryUrl`}
+                template={template}
               />
-              {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.repositoryUrl`)) ===
-                MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  className={css.configureOptions}
-                  style={{ alignSelf: 'center' }}
-                  value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.repositoryUrl`)}
-                  type="String"
-                  variableName="repositoryUrl"
-                  showRequiredField={false}
-                  isReadonly={readonly}
-                  showDefaultField={true}
-                  isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                  showAdvanced={true}
-                  onChange={value => {
-                    formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.repositoryUrl`, value)
-                  }}
-                />
-              )}
             </div>
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
@@ -844,7 +827,6 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                   isReadonly={readonly}
                   showDefaultField={true}
                   isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                  showAdvanced={true}
                   onChange={value => {
                     formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.artifactPath`, value)
                   }}

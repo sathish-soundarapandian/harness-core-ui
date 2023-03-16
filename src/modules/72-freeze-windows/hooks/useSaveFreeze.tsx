@@ -8,6 +8,8 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { getErrorInfoFromErrorObject, useToaster } from '@harness/uicore'
+import { capitalize, defaultTo, isEmpty } from 'lodash-es'
+import type { FormikErrors } from 'formik'
 import { useCreateFreeze, useUpdateFreeze } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -17,6 +19,8 @@ import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
 import type { WindowPathProps } from '@freeze-windows/types'
+import type { FreezeWindowFormData } from '@freeze-windows/components/ScheduleFreezeForm/ScheduleFreezeForm'
+import { flattenObject } from '@common/components/Filter/utils/FilterUtils'
 
 export const useSaveFreeze = () => {
   const { getString } = useStrings()
@@ -25,7 +29,8 @@ export const useSaveFreeze = () => {
   const [isMounted, setIsMounted] = React.useState<boolean>(false)
   const {
     state: { freezeObj, isUpdated },
-    refetchFreezeObj
+    refetchFreezeObj,
+    freezeFormError
   } = React.useContext(FreezeWindowContext)
   const {
     accountId: accountIdentifier,
@@ -99,9 +104,25 @@ export const useSaveFreeze = () => {
     }
   }, [loading])
 
+  const getErrorMessage = (formikFormErrors: FormikErrors<FreezeWindowFormData>): string => {
+    //flattening the object so that we get every error message at first level
+    const formError = flattenObject(formikFormErrors)
+    const errorMessage = []
+    for (const [key, value] of Object.entries(formError)) {
+      errorMessage.push(`${capitalize(key)}: ${value}`)
+    }
+
+    return errorMessage.join(', ')
+  }
+
   const onSave = () => {
     try {
       // check errors
+      if (!isEmpty(freezeFormError)) {
+        const formError = defaultTo(freezeFormError, {})
+        showError(getErrorMessage(formError))
+        return
+      }
       const params = yamlStringify({ freeze: freezeObj })
       const headers = { headers: { 'content-type': 'application/json' } }
       isCreateMode ? createFreeze(params, headers) : updateFreeze(params, headers)

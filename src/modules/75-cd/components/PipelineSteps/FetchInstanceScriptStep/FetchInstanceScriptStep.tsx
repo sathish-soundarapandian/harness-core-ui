@@ -38,7 +38,7 @@ import {
   FetchInstanceScriptVariableViewProps
 } from './FetchInstanceScriptVariableView'
 import { FetchInstanceScriptInputStep } from './FetchInstanceScriptInputStep'
-import { validateStepForm } from '../DeployInfrastructureStep/utils'
+import { validateGitOpsExecutionStepForm } from '../PipelineStepsUtil'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -200,7 +200,7 @@ export class FetchInstanceScript extends PipelineStep<StepElementConfig> {
     getString,
     viewType
   }: ValidateInputSetProps<StepElementConfig>): FormikErrors<StepElementConfig> {
-    return validateStepForm({ data, template, getString, viewType })
+    return validateGitOpsExecutionStepForm({ data, template, getString, viewType })
   }
 
   protected defaultValues: StepElementConfig = {

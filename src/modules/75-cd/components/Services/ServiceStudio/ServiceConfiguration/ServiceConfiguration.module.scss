@@ -7,17 +7,18 @@
 
 .serviceEntity {
   overflow: hidden auto;
-  height: 80vh;
+
   .optionBtns {
     display: flex;
-    margin-top: var(--spacing-medium);
-    margin-bottom: var(--spacing-medium);
+    margin-top: var(--spacing-large);
     align-items: center;
     justify-content: center;
   }
 
   .serviceStepBasicInfo {
     background-color: var(--form-bg);
+    margin-bottom: var(--spacing-medium);
+
     .section-card {
       width: 1024px;
       padding: var(--spacing-7) !important;
@@ -45,17 +46,11 @@
     }
   }
 }
-.serviceModal {
-  margin-bottom: var(--spacing-7);
-}
-.nonModalView {
-  margin: var(--spacing-large) 0 var(--spacing-medium) var(--spacing-large);
-}
 
 .tabHeading {
   font-size: 16px;
   color: var(--black);
-  margin-top: var(--spacing-7);
+  margin-top: var(--spacing-5);
   font-weight: 600;
   line-height: var(--spacing-7);
   margin-bottom: var(--spacing-small);

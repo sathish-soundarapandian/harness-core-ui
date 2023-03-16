@@ -8,16 +8,16 @@
 import React from 'react'
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import { ManifestContent } from '../ManifestSourceRuntimeFields/ManifestContent'
 
 export class ValuesYamlManifestSource extends ManifestSourceBase<ManifestSourceRenderProps> {
   protected manifestType = ManifestDataType.Values
-
   renderContent(props: ManifestSourceRenderProps): JSX.Element | null {
     if (!props.isManifestsRuntime) {
       return null
     }
 
-    return <ManifestContent {...props} pathFieldlabel="common.git.filePath" />
+    return <ManifestContent {...props} pathFieldlabel="common.git.filePath" fileUsage={FileUsage.MANIFEST_FILE} />
   }
 }

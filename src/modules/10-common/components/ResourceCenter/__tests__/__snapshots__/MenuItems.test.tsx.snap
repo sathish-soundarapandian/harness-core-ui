@@ -75,7 +75,44 @@ exports[`MenuItems SAAS Plan 1`] = `
     class="Layout--vertical StyledProps--main middleregion StyledProps--padding-xlarge"
   >
     <div
-      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      class="Layout--horizontal StyledProps--main menuItem StyledProps--padding-bottom-medium"
+    >
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-h4 StyledProps--padding-bottom-xsmall StyledProps--color StyledProps--color-grey0"
+        >
+          common.resourceCenter.feedback.submit
+        </p>
+      </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+      >
+        <span
+          class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--color StyledProps--color-grey0"
+          data-testid="feedback"
+          icon="chevron-right"
+        >
+          <svg
+            data-icon="chevron-right"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              chevron-right
+            </desc>
+            <path
+              d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium StyledProps--flex StyledProps--flex-justifyContent-space-between"
     >
       <div
         class="Layout--horizontal StyledProps--main menuItem"
@@ -168,7 +205,7 @@ exports[`MenuItems SAAS Plan 1`] = `
 </div>
 `;
 
-exports[`MenuItems has Feedback when SHOW_NG_REFINER_FEEDBACK is true 1`] = `
+exports[`MenuItems has Feedback  1`] = `
 <div>
   <div
     class="Layout--vertical StyledProps--main middleregion StyledProps--padding-xlarge"

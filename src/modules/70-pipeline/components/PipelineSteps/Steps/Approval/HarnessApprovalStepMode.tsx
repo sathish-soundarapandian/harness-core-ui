@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { produce } from 'immer'
-import { isEmpty, compact, isArray } from 'lodash-es'
+import { isEmpty, compact, isArray, has } from 'lodash-es'
 import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
@@ -36,6 +36,7 @@ import { FormMultiTypeUserGroupInput } from '@rbac/components/UserGroupsInput/Fo
 import { regexPositiveNumbers } from '@common/utils/StringUtils'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { UserGroupConfigureOptions } from '@rbac/components/UserGroupConfigureOptions/UserGroupConfigureOptions'
+
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type {
   ApproverInputsSubmitCallInterface,
@@ -102,7 +103,6 @@ function FormContent({
             variableName="spec.approvalMessage"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.approvalMessage', value)}
             isReadonly={readonly}
           />
@@ -110,7 +110,7 @@ function FormContent({
       </div>
       <FormInput.CheckBox
         name="spec.includePipelineExecutionHistory"
-        label={getString('pipeline.approvalStep.includePipelineExecutionHistory')}
+        label={getString('pipeline.approvalStep.includeStageExecutionDetails')}
         disabled={isApprovalStepFieldDisabled(readonly)}
       />
 
@@ -133,7 +133,6 @@ function FormContent({
               variableName="spec.approvers.userGroups"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.approvers.userGroups', value)}
               isReadonly={readonly}
               userGroupsInputProps={{
@@ -165,7 +164,6 @@ function FormContent({
             variableName="spec.approvers.minimumCount"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.approvers.minimumCount', value)}
             isReadonly={readonly}
             allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}
@@ -274,6 +272,9 @@ function HarnessApprovalStepMode(
 
         if (isArray(userGroupValues) && userGroupValues.length > 0) {
           draft.spec.approvers.userGroups = compact(userGroupValues as string[])
+        }
+        if (has(draft, 'userGroupExpression')) {
+          delete draft['userGroupExpression']
         }
       })
     )

@@ -28,7 +28,7 @@ import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
-import { BuildDetails, ConnectorConfigDTO, useListVersionsForAMIArtifact, useTags } from 'services/cd-ng'
+import { AMITagObject, BuildDetails, ConnectorConfigDTO, useListVersionsForAMIArtifact } from 'services/cd-ng'
 import {
   getConnectorIdValue,
   getArtifactFormData,
@@ -43,12 +43,14 @@ import {
   TagTypes,
   VariableInterface
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { useMutateAsGet } from '@common/hooks'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { useListTagsForAmiArtifactMutation } from 'services/cd-ng-rq'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -72,7 +74,7 @@ function FormComponent({
 
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
-  const { data: regionData } = useListAwsRegions({
+  const { data: regionData, loading: fetchingRegions } = useListAwsRegions({
     queryParams: {
       accountId
     }
@@ -82,18 +84,18 @@ function FormComponent({
 
   const {
     data: tagsData,
-    loading: isTagsLoading,
-    refetch: refetchTags,
+    isLoading: isTagsLoading,
+    mutate: refetchTags,
     error: tagsError
-  } = useTags({
+  } = useListTagsForAmiArtifactMutation({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
       region: get(formik, 'values.spec.region'),
-      awsConnectorRef: connectorRefValue || ''
+      connectorRef: connectorRefValue || ''
     },
-    lazy: true
+    body: ''
   })
 
   const {
@@ -147,12 +149,15 @@ function FormComponent({
   }
 
   useEffect(() => {
-    const tagOption = get(tagsData, 'data', []).map((tagItem: string) => ({
-      value: tagItem,
-      label: tagItem
-    }))
-    setTags(tagOption)
-  }, [tagsData])
+    if (!isTagsLoading && tagsData?.data) {
+      const tagOption = get(tagsData, 'data', []).map((tag: AMITagObject) => {
+        const tagName = tag?.tagName as string
+        return { label: tagName, value: tagName }
+      })
+
+      setTags(tagOption)
+    }
+  }, [tagsData?.data, isTagsLoading])
 
   useEffect(() => {
     if (
@@ -164,12 +169,14 @@ function FormComponent({
   }, [formik.values?.spec?.region])
 
   useEffect(() => {
-    const regionValues = defaultTo(regionData?.resource, []).map(region => ({
-      value: region.value,
-      label: region.name
-    }))
-    setRegions(regionValues as SelectOption[])
-  }, [regionData?.resource])
+    if (!fetchingRegions && regionData?.resource) {
+      const regionValues = defaultTo(regionData?.resource, []).map(region => ({
+        value: region.value,
+        label: region.name
+      }))
+      setRegions(regionValues as SelectOption[])
+    }
+  }, [regionData?.resource, fetchingRegions])
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
@@ -209,14 +216,15 @@ function FormComponent({
 
           {getMultiTypeFromValue(formik.values?.spec?.region) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={regions}
+                loading={fetchingRegions}
                 style={{ alignSelf: 'center' }}
                 value={formik.values?.spec?.region as string}
                 type="String"
                 variableName="spec.region"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('spec.region', value)
                 }}
@@ -230,9 +238,9 @@ function FormComponent({
             name="spec.tags"
             className="tags-select"
             expressions={expressions}
-            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
             tags={tags}
-            label={'AMI Tags'}
+            label={getString('pipeline.amiTags')}
             isLoadingTags={isTagsLoading}
             initialTags={formik?.initialValues?.spec?.tags || {}}
             errorMessage={get(tagsError, 'data.message', '')}
@@ -246,7 +254,6 @@ function FormComponent({
                 variableName="spec.tags"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('spec.tags', value)
                 }}
@@ -260,9 +267,9 @@ function FormComponent({
             name="spec.filters"
             className="tags-select"
             expressions={expressions}
-            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
             tags={amiFilters}
-            label={'AMI Filters'}
+            label={getString('pipeline.amiFilters')}
             initialTags={formik?.initialValues?.spec?.filters || {}}
             errorMessage={get(tagsError, 'data.message', '')}
           />
@@ -275,7 +282,6 @@ function FormComponent({
                 variableName="spec.filters"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('spec.filters', value)
                 }}
@@ -339,14 +345,15 @@ function FormComponent({
               }}
             />
             {getMultiTypeFromValue(formik.values.spec?.version) === MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={getVersions()}
+                loading={isVersionLoading}
                 style={{ marginTop: 22 }}
                 value={defaultTo(formik.values.spec?.version, '')}
                 type="String"
                 variableName="spec.version"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.version', value)}
                 isReadonly={isReadonly}
               />
@@ -372,9 +379,9 @@ function FormComponent({
                 variableName="spec.versionRegex"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.versionRegex', value)}
                 isReadonly={isReadonly}
+                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
               />
             )}
           </div>
@@ -453,8 +460,8 @@ export function AmazonMachineImage(
       spec: {
         connectorRef: connectorId,
         region: formData.spec?.region,
-        tags: getInSelectOptionForm(formData.spec.tags as { [key: string]: any }),
-        filters: getInSelectOptionForm(formData.spec?.filters as { [key: string]: any }),
+        tags: getInSelectOptionForm(formData.spec.tags as { [key: string]: any } | string),
+        filters: getInSelectOptionForm(formData.spec?.filters as { [key: string]: any } | string),
         ...versionData
       }
     })

@@ -288,7 +288,7 @@ exports[`open and close Harness Environment Modal Rendering should open and clos
         >
           <button
             aria-label="save"
-            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-right-medium Button--with-current-color"
             data-id="environment-save"
             type="button"
           >
@@ -298,7 +298,6 @@ exports[`open and close Harness Environment Modal Rendering should open and clos
               save
             </span>
           </button>
-             
           <button
             aria-label="cancel"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"

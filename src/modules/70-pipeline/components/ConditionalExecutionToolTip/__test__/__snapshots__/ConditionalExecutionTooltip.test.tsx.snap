@@ -65,11 +65,16 @@ exports[`ConditionalExecutionToolTip matches snapshot 1`] = `
         style="line-height: 16px;"
       >
         pipeline.conditionalExecution.statusOption.success
-        <span
-          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-black StyledProps--font-size-xsmall StyledProps--font-weight-semi-bold StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--background-grey100 StyledProps--border StyledProps--border-color-grey100"
-        >
-          pipeline.and
-        </span>
+      </p>
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-black StyledProps--font-size-xsmall StyledProps--font-weight-semi-bold StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--background-grey100 StyledProps--border StyledProps--border-color-grey100"
+      >
+        pipeline.and
+      </span>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--padding-top-xsmall StyledProps--padding-bottom-xsmall StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey900"
+        style="line-height: 16px;"
+      >
         pipeline.conditionalExecution.belowExpression
       </p>
       <div

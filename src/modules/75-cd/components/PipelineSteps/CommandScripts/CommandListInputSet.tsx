@@ -76,6 +76,9 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                             disabled: readonly,
                             placeholder: getString('cd.steps.commands.destinationPathPlaceholder')
                           }}
+                          configureOptionsProps={{
+                            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                          }}
                           fieldPath={`spec.commandUnits[${i}].spec.destinationPath`}
                           template={template}
                         />
@@ -113,7 +116,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
 
                     {getMultiTypeFromValue((command as CustomScriptCommandUnit)?.spec?.source?.spec?.script) ===
                     MultiTypeInputType.RUNTIME ? (
-                      <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
+                      <div className={cx(stepCss.formGroup, stepCss.alignStart)}>
                         <MultiTypeFieldSelector
                           name={`${prefix}spec.commandUnits[${i}].spec.source.spec.script`}
                           label={getString('common.script')}
@@ -121,6 +124,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                           disabled={readonly}
                           allowedTypes={allowableTypes}
                           disableTypeSelection={readonly}
+                          enableConfigureOptions={true}
                           skipRenderValueInExpressionLabel
                           expressionRender={() => {
                             return (

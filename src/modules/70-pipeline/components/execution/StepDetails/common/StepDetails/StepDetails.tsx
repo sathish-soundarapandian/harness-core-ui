@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout, Icon } from '@harness/uicore'
+import { Text, Layout, Icon, useToggleOpen, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Link } from 'react-router-dom'
 import { defaultTo, isArray, isEmpty, isNil } from 'lodash-es'
@@ -21,7 +21,12 @@ import {
   isExecutionComplete,
   isExecutionCompletedWithBadState
 } from '@pipeline/utils/statusHelpers'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { DelegateTaskLogsModal, TaskContext } from '@common/components/DelegateTaskLogs/DelegateTaskLogs'
+import { isOnPrem } from '@common/utils/utils'
 import { encodeURIWithReservedChars } from './utils'
+
 import css from './StepDetails.module.scss'
 
 export interface StepLabels {
@@ -46,6 +51,8 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
   const progressPercentage = step?.progressData?.progressPercentage
   const timeout = step?.stepParameters?.timeout as any
   const [taskList, setTaskList] = React.useState<Array<ExecutableResponse>>([])
+  const { isOpen, open: openDelegateTaskLogsModal, close: closeDelegateTaskLogsModal } = useToggleOpen(false)
+  const DELEGATE_TASK_LOGS_ENABLED = useFeatureFlag(FeatureFlag.DEL_FETCH_TASK_LOG_API)
   const { openDelegateSelectionLogsModal } = useDelegateSelectionLogsModal()
 
   React.useEffect(() => {
@@ -116,7 +123,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
               {`${getString('delegate.delegates')}:`}
             </th>
             <td>
-              <Layout.Vertical spacing="xsmall">
+              <Layout.Vertical spacing="small">
                 {step.delegateInfoList &&
                   step.delegateInfoList.length > 0 &&
                   step.delegateInfoList.map((item, index) => (
@@ -212,6 +219,31 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                       </div>
                     )
                   )}
+                {DELEGATE_TASK_LOGS_ENABLED &&
+                !isOnPrem() &&
+                step.startTs &&
+                step.delegateInfoList &&
+                step.delegateInfoList.length > 0 ? (
+                  <>
+                    <Button
+                      variation={ButtonVariation.SECONDARY}
+                      size={ButtonSize.SMALL}
+                      onClick={openDelegateTaskLogsModal}
+                      width={210}
+                    >
+                      {getString('common.viewText')} {getString('common.logs.delegateTaskLogs')}
+                    </Button>
+                    <DelegateTaskLogsModal
+                      isOpen={isOpen}
+                      close={closeDelegateTaskLogsModal}
+                      step={step}
+                      telemetry={{
+                        taskContext: TaskContext.PipelineStep,
+                        hasError: isExecutionCompletedWithBadState(step.status)
+                      }}
+                    />
+                  </>
+                ) : null}
               </Layout.Vertical>
             </td>
           </tr>

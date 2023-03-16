@@ -75,6 +75,8 @@ export const yamlFileExtension = '.yaml'
 
 export const yamlPathRegex = /.*\.ya?ml$/
 
+export const fullYamlPathRegex = /^[\w\d./][\w\d\s\-_./]*\.{1}ya?ml$/
+
 export const carriageReturnRegex = /(?:\\[rn])+/g
 
 export const cpuLimitRegex = /^\d+(\.\d+)?$|^\d+m$|^$/
@@ -110,13 +112,13 @@ export const serviceDependencyIdRegex = /^[a-zA-Z][a-zA-Z0-9_]*$/
 
 export const portNumberRegex = /^[0-9]*$/
 
-export const joinAsASentence = (items: string[]): string => {
+export const joinAsASentence = (items: string[], connectingPhrase: string): string => {
   if (!items.length) {
     return ''
   }
-  const itemsClone = [...items]
-  const last = itemsClone.pop()
-  return `${itemsClone.join(', ')} and ${last}`
+  const itemsClone = items.slice(0).filter((item: string) => !!item)
+  const last = itemsClone.pop() || ''
+  return itemsClone.length > 0 ? `${itemsClone.join(', ')} ${connectingPhrase} ${last}` : last
 }
 
 export const getScopeAppendedToIdentifier = (identifier: string, scope: string): string => {

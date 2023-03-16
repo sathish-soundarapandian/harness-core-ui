@@ -11,6 +11,11 @@
   border-radius: 5px;
 }
 
+.borderWithPluginsPanel {
+  background-color: var(--white);
+  border-right: 3px solid var(--grey-100);
+}
+
 .filePath {
   margin: 0 var(--spacing-small) 0 var(--spacing-large);
   height: 50px;
@@ -60,11 +65,11 @@
 }
 
 .darkBg {
-  background-color: #4f5162;
+  background-color: var(--grey-600);
 }
 
 .lightBg {
-  color: #b8bfca;
+  color: var(--grey-100);
 }
 
 .errorSummary {
@@ -98,4 +103,16 @@
 .splitPanel {
   position: relative !important;
   border-radius: 10px;
+}
+
+.pluginDecorator {
+  background: var(--primary-1);
+}
+
+.resizeIcon {
+  cursor: pointer;
+}
+
+.headerBorder {
+  border-bottom: 1px solid var(--grey-100);
 }

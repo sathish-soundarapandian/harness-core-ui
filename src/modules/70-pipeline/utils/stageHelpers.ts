@@ -24,14 +24,17 @@ import type {
   ServiceDefinition,
   CustomDeploymentServiceSpec
 } from 'services/cd-ng'
-import { connectorTypes } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType, connectorTypes } from '@pipeline/utils/constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline as getStageByPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import type { DependencyElement } from 'services/ci'
+import type { CIInfraDetails, DependencyElement } from 'services/ci'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
+import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+
 import type { InputSetDTO } from './types'
 import type { DeploymentStageElementConfig, PipelineStageWrapper, StageElementWrapper } from './pipelineTypes'
 import type { TemplateServiceDataType } from './templateUtils'
+import type { ExecutionStatus } from './statusHelpers'
 
 export enum StageType {
   DEPLOY = 'Deployment',
@@ -72,7 +75,8 @@ export enum ServiceDeploymentType {
   SshWinRmAws = 'SshWinRmAws',
   SshWinRmAzure = 'SshWinRmAzure',
   Asg = 'Asg',
-  GoogleCloudFunctions = 'GoogleCloudFunctions'
+  GoogleCloudFunctions = 'GoogleCloudFunctions',
+  AwsLambda = 'AwsLambda'
 }
 
 export enum RepositoryFormatTypes {
@@ -84,12 +88,17 @@ export enum RepositoryFormatTypes {
   Raw = 'raw'
 }
 
-export const nexus2RepositoryFormatTypes = [
+const commonRepoFormatTypes = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },
   { label: 'NPM', value: RepositoryFormatTypes.NPM },
   { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
-  // { label: 'Raw', value: RepositoryFormatTypes.Raw }
 ]
+
+export const nexus2RepositoryFormatTypes = [...commonRepoFormatTypes]
+
+export const rawRepoFormat = [{ label: 'Raw', value: RepositoryFormatTypes.Raw }]
+
+export const nexus3RepositoryFormatTypes = [...commonRepoFormatTypes, ...rawRepoFormat]
 
 export const k8sRepositoryFormatTypes = [{ label: 'Docker', value: RepositoryFormatTypes.Docker }]
 
@@ -152,6 +161,15 @@ export function hasOverviewDetail(pipelineExecution?: PipelineExecutionSummary):
 
 export function hasCIStage(pipelineExecution?: PipelineExecutionSummary): boolean {
   return pipelineExecution?.modules?.includes('ci') || !isEmpty(pipelineExecution?.moduleInfo?.ci)
+}
+
+export function pipelineHasCIStageWithK8sInfra(pipelineExecution?: PipelineExecutionSummary): boolean {
+  const infras: CIInfraDetails[] = get(pipelineExecution, 'moduleInfo.ci.infraDetailsList', [])
+  return (
+    infras.findIndex(
+      (stageInfra: CIInfraDetails) => stageInfra.infraType === CIBuildInfrastructureType.KubernetesDirect
+    ) !== -1
+  )
 }
 
 export function hasSTOStage(pipelineExecution?: PipelineExecutionSummary): boolean {
@@ -346,6 +364,10 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
     deploymentType === ServiceDeploymentType.AmazonSAM ||
     deploymentType === ServiceDeploymentType.AzureFunctions
   )
+}
+
+export const isOnlyOneManifestAllowedForDeploymentType = (deploymentType: ServiceDefinition['type']) => {
+  return isServerlessDeploymentType(deploymentType) || deploymentType === ServiceDeploymentType.AwsLambda
 }
 
 export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
@@ -665,7 +687,8 @@ export const infraDefinitionTypeMapping: { [key: string]: string } = {
   CustomDeployment: StepType.CustomDeployment,
   TAS: StepType.TasInfra,
   Asg: StepType.AsgInfraSpec,
-  GoogleCloudFunctions: StepType.GoogleCloudFunctionsInfra
+  GoogleCloudFunctions: StepType.GoogleCloudFunctionsInfra,
+  AwsLambda: StepType.AwsLambdaInfra
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
@@ -690,6 +713,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.Asg
     case ServiceDeploymentType.GoogleCloudFunctions:
       return StepType.GoogleCloudFunctionsService
+    case ServiceDeploymentType.AwsLambda:
+      return StepType.AwsLambdaService
     default:
       return StepType.K8sServiceSpec
   }
@@ -728,8 +753,13 @@ export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefin
 export const getAllowedRepoOptions = (
   deploymentType: string,
   azureFlag?: boolean,
-  isTemplateContext?: boolean
+
+  isTemplateContext?: boolean,
+  selectedArtifact?: ArtifactType | null
 ): SelectOption[] => {
+  if (selectedArtifact === 'Nexus3Registry') {
+    return [...k8sRepositoryFormatTypes, ...nexus3RepositoryFormatTypes]
+  }
   return !!isTemplateContext ||
     isSSHWinRMDeploymentType(deploymentType) ||
     isTASDeploymentType(deploymentType) ||
@@ -767,4 +797,33 @@ export function hasChainedPipelineStage(stages?: StageElementWrapperConfig[]): b
     }
   }
   return containsChainedPipelineStage
+}
+
+export const PriorityByStageStatus: Record<ExecutionStatus, number> = {
+  Success: 1,
+  Running: 2,
+  AsyncWaiting: 2,
+  TaskWaiting: 2,
+  TimedWaiting: 2,
+  Failed: 20,
+  Errored: 20,
+  IgnoreFailed: 20,
+  Expired: 18,
+  Aborted: 19,
+  AbortedByFreeze: 19,
+  Discontinuing: 19,
+  Suspended: 17,
+  Queued: 0,
+  NotStarted: 0,
+  Paused: 24,
+  ResourceWaiting: 25,
+  Skipped: 15,
+  ApprovalRejected: 22,
+  ApprovalWaiting: 26,
+  InterventionWaiting: 27,
+  Pausing: 23,
+  InputWaiting: 0,
+  WaitStepRunning: 2,
+  QueuedLicenseLimitReached: 0,
+  QueuedExecutionConcurrencyReached: 0
 }

@@ -8,21 +8,28 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly accordionSummary: string
+  readonly childPipelineLink: string
+  readonly childPipelineStageIcon: string
+  readonly childPipelineStageName: string
   readonly conditionalExecutionTitle: string
   readonly container: string
   readonly editor: string
+  readonly failureStrategiesTitle: string
   readonly header: string
   readonly infraSection: string
   readonly inputWidth: string
   readonly inputheader: string
+  readonly middleStageIcon: string
   readonly nestedAccordions: string
   readonly noMarginLeft: string
   readonly pipelineStageForm: string
+  readonly popoverContent: string
   readonly runTimeWidth: string
   readonly stagesTreeBulletCircle: string
   readonly stagesTreeBulletSquare: string
   readonly strategyContainer: string
   readonly tabSubHeading: string
+  readonly titleWrapper: string
   readonly topAccordion: string
 }
 export default styles

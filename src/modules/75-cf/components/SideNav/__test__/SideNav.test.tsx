@@ -51,18 +51,6 @@ describe('Sidenav', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('it should only display the pipelines link when FF_PIPELINE is true', async () => {
-    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlags')
-    useFeatureFlags.mockReturnValue({ FF_PIPELINE: false })
-
-    const { rerender } = render(<Subject />)
-    expect(screen.queryByText('pipelines')).not.toBeInTheDocument()
-
-    useFeatureFlags.mockReturnValue({ FF_PIPELINE: true })
-    rerender(<Subject />)
-    expect(screen.queryByText('pipelines')).toBeInTheDocument()
-  })
-
   test('it should hide the Git Experience links when FF_GITSYNC is FALSE', async () => {
     jest.spyOn(hooks, 'useFeatureFlags').mockImplementation(() => ({ FF_GITSYNC: false }))
 

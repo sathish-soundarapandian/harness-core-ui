@@ -126,7 +126,6 @@ export default function BaseCustomApproval(props: {
             className={css.minConfigBtn}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => setFieldValue('spec.source.spec.script', value)}
             isReadonly={readonly}
           />

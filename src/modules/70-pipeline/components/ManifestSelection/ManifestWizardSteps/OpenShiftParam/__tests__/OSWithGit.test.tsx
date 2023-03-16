@@ -77,6 +77,7 @@ describe('Open shift params with git tests', () => {
       fireEvent.change(queryByNameAttribute('gitFetchType')!, { target: { value: 'Branch' } })
       fireEvent.change(queryByNameAttribute('branch')!, { target: { value: 'testBranch' } })
       fireEvent.change(queryByNameAttribute('repoName')!, { target: { value: 'repo-name' } })
+      fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: 'pathName' } })
     })
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     await waitFor(() => {
@@ -90,7 +91,7 @@ describe('Open shift params with git tests', () => {
                 branch: 'testBranch',
                 connectorRef: undefined,
                 gitFetchType: 'Branch',
-                paths: [''],
+                paths: ['pathName'],
                 repoName: 'repo-name'
               },
               type: 'Git'

@@ -140,7 +140,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
               error={get(formik, 'errors.connectorRef', undefined)}
               name={`${path}.${getString('cd.connectorRefText')}`}
               label={getString('connector')}
-              placeholder={getString('connectors.selectConnector')}
+              placeholder={getString('common.entityPlaceholderText')}
               disabled={readonly}
               accountIdentifier={accountId}
               projectIdentifier={projectIdentifier}

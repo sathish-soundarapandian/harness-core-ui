@@ -142,9 +142,10 @@ export default function AddEditServiceOverride({
   })
 
   const handleServiceChange = (item: SelectOption): void => {
-    const serviceOverride = serviceOverrides?.find(svcOverride => svcOverride.serviceRef === item.value)
+    const selectedServiceItemValue = defaultTo(item, item.value)
+    const serviceOverride = serviceOverrides?.find(svcOverride => svcOverride.serviceRef === selectedServiceItemValue)
 
-    setServiceType(getServiceType(item?.value as string))
+    setServiceType(getServiceType(selectedServiceItemValue as string | null))
     setSelectedTab(defaultTo(defaultTab, ServiceOverrideTab.VARIABLE))
 
     const selectedSvcVariable = !isEmpty(serviceOverride) ? getOverrideObject('variables', serviceOverride) : []

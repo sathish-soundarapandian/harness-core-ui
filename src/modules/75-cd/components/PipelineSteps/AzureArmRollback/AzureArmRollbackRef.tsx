@@ -112,7 +112,6 @@ export const RollbackStack = (
                   variableName="spec.provisionerIdentifier"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   isReadonly={readonly}
                   onChange={value => {
                     formik.setFieldValue('spec.provisionerIdentifier', value)

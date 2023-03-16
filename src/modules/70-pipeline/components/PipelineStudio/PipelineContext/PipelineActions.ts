@@ -45,7 +45,8 @@ export enum PipelineActions {
   PipelineSaved = 'PipelineSaved',
   UpdateSchemaErrorsFlag = 'UpdateSchemaErrorsFlag',
   Success = 'Success',
-  Error = 'Error'
+  Error = 'Error',
+  SetValidationUuid = 'SetValidationUuid'
 }
 export const DefaultNewPipelineId = '-1'
 
@@ -158,6 +159,7 @@ export interface PipelineReducerState {
   remoteFetchError?: GetDataError<Failure | Error> | null
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
   cacheResponse?: CacheResponseMetadata
+  validationUuid?: string
 }
 
 export const DefaultPipeline: PipelineInfoConfig = {
@@ -192,6 +194,7 @@ export interface ActionResponse {
   remoteFetchError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
+  validationUuid?: string
 }
 
 export interface ActionReturnType {
@@ -244,6 +247,10 @@ const setIntermittentLoading = (response: ActionResponse): ActionReturnType => (
   type: PipelineActions.IntermittentLoading,
   response
 })
+const setValidationUuid = (response: ActionResponse): ActionReturnType => ({
+  type: PipelineActions.SetValidationUuid,
+  response
+})
 const pipelineSavedAction = (response: ActionResponse): ActionReturnType => ({
   type: PipelineActions.PipelineSaved,
   response
@@ -277,7 +284,8 @@ export const PipelineContextActions = {
   error,
   updateSchemaErrorsFlag,
   updateSelectionState,
-  setIntermittentLoading
+  setIntermittentLoading,
+  setValidationUuid
 }
 
 export const initialState: PipelineReducerState = {
@@ -409,6 +417,11 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
       return {
         ...state,
         isIntermittentLoading: !!response?.isIntermittentLoading
+      }
+    case PipelineActions.SetValidationUuid:
+      return {
+        ...state,
+        validationUuid: response?.validationUuid
       }
     default:
       return state

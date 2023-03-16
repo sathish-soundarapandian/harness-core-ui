@@ -185,9 +185,9 @@ export async function validateMetrics(
       let status
       if (data?.some(val => val.overallStatus === StatusState.FAILED)) {
         status = StatusOfValidation.ERROR
-      } else if (data?.some(val => val.overallStatus === StatusState.NO_DATA)) {
+      } else if (data?.every(val => val.overallStatus === StatusState.NO_DATA)) {
         status = StatusOfValidation.NO_DATA
-      } else if (data?.every(val => val.overallStatus === StatusState.SUCCESS)) {
+      } else if (data?.some(val => val.overallStatus === StatusState.SUCCESS)) {
         status = StatusOfValidation.SUCCESS
       }
       return { validationStatus: status, validationResult: data }
@@ -238,13 +238,11 @@ export const getFilteredThresholdsWithCallback = <T extends Record<ThresholdsPro
 }
 
 export const getUpdatedNonCustomFields = <T extends CommonNonCustomMetricFieldsType>(
-  isMetricThresholdEnabled: boolean,
   nonCustomFeilds: T,
   metricPackIdentifier: string,
   updatedValue: boolean
 ): T => {
   const isRemovedMetricPackContainsMetricThresholds = getIsRemovedMetricPackContainsMetricThresholds(
-    isMetricThresholdEnabled,
     nonCustomFeilds,
     metricPackIdentifier,
     updatedValue
@@ -273,12 +271,10 @@ export const getUpdatedNonCustomFields = <T extends CommonNonCustomMetricFieldsT
 }
 
 export const getMetricNameFilteredNonCustomFields = <T extends Record<ThresholdsPropertyNames, MetricThresholdType[]>>(
-  isMetricThresholdEnabled: boolean,
   nonCustomFeilds: T,
   metricName: string
 ): T => {
   const isRemovedMetricNameContainsMetricThresholds = getIsRemovedMetricNameContainsMetricThresholds(
-    isMetricThresholdEnabled,
     nonCustomFeilds,
     metricName
   )
@@ -305,11 +301,9 @@ export const getMetricNameFilteredNonCustomFields = <T extends Record<Thresholds
 export const getMetricNameFilteredMetricThresholds = <
   T extends Record<ThresholdsPropertyNames, MetricThresholdType[]>
 >({
-  isMetricThresholdEnabled,
   metricThresholds,
   metricName
 }: {
-  isMetricThresholdEnabled: boolean
   metricThresholds: T
   metricName: string
-}): T => getMetricNameFilteredNonCustomFields(isMetricThresholdEnabled, metricThresholds, metricName)
+}): T => getMetricNameFilteredNonCustomFields(metricThresholds, metricName)

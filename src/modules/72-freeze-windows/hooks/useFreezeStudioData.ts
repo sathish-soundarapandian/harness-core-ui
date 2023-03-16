@@ -169,6 +169,57 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     })
   }, 300)
 
+  const fetchProject = (query: string, orgId?: string): void => {
+    if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
+      if (!orgId) return
+      refetchProjects({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier: orgId,
+          pageSize: 200,
+          searchTerm: (query || '').trim()
+        }
+      })
+    } else if (freezeWindowLevel === FreezeWindowLevels.ORG) {
+      refetchProjects({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          pageSize: 200,
+          searchTerm: (query || '').trim()
+        }
+      })
+    }
+  }
+  const fetchProjectsByQuery = debounce((query: string, orgId?: string) => {
+    fetchProject(query, orgId)
+  }, 500)
+
+  //additional debounce when we have to reset the options, so that user have enough time to select multiple from current search result.
+  const fetchProjectsResetQuery = debounce((orgId?: string) => {
+    fetchProject('', orgId)
+  }, 5000)
+
+  const fetchOrgs = (query: string): void => {
+    if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
+      refetchOrgs({
+        queryParams: {
+          accountIdentifier: accountId,
+          pageSize: 200,
+          searchTerm: (query || '').trim()
+        }
+      })
+    }
+  }
+  const fetchOrgByQuery = debounce((query: string) => {
+    fetchOrgs(query)
+  }, 500)
+
+  //additional debounce when we have to reset the options, so that user have enough time to select multiple from current search result.
+  const fetchOrgResetQuery = debounce(() => {
+    fetchOrgs('')
+  }, 5000)
+
   return {
     orgs,
     orgsMap,
@@ -178,6 +229,12 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     servicesMap,
     freezeWindowLevel,
     projectsByOrgId,
-    fetchProjectsForOrgId
+    fetchProjectsForOrgId,
+    fetchProjectsByQuery,
+    fetchOrgByQuery,
+    loadingOrgs,
+    loadingProjects,
+    fetchOrgResetQuery,
+    fetchProjectsResetQuery
   }
 }

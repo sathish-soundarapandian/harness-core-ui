@@ -23,6 +23,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
+import { isSimplifiedYAMLEnabledForCI } from '@pipeline/utils/CIUtils'
 import css from './ExecutionTabs.module.scss'
 
 const TAB_ID_MAP = {
@@ -45,16 +46,19 @@ interface ExecutionTabsProps {
 }
 
 export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactElement {
+  const { module } = useParams<PipelineType<ExecutionPathProps>>()
   const [selectedTabId, setSelectedTabId] = React.useState('')
   const { children, savedExecutionView, setSavedExecutionView } = props
   const { getString } = useStrings()
   const { pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
-  const initialSelectedView = savedExecutionView || SavedExecutionViewTypes.GRAPH
+  const isSimplifiedYAMLEnabled = useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
+  const initialSelectedView = isSimplifiedYAMLEnabledForCI(module, isSimplifiedYAMLEnabled)
+    ? SavedExecutionViewTypes.LOG
+    : savedExecutionView || SavedExecutionViewTypes.GRAPH
   const params = useParams<PipelineType<ExecutionPathProps>>()
   const location = useLocation()
   const { view } = useQueryParams<ExecutionQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams<ExecutionQueryParams>()
-  const opaBasedGovernanceEnabled = useFeatureFlag(FeatureFlag.OPA_PIPELINE_GOVERNANCE)
   const { licenseInformation } = useLicenseStore()
   const isSecurityEnabled = licenseInformation['STO']?.status === 'ACTIVE'
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
@@ -185,7 +189,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (canUsePolicyEngine && opaBasedGovernanceEnabled) {
+  if (canUsePolicyEngine) {
     tabList.push({
       id: TAB_ID_MAP.POLICY_EVALUATIONS,
       title: (

@@ -263,6 +263,7 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
     getFileStoreNodesOnPathPromise({
       queryParams: {
         ...queryParams,
+        fileUsage,
         path: queryParams?.path as string
       }
     }).then(res => {

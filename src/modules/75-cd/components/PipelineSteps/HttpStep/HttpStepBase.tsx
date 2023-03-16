@@ -94,7 +94,6 @@ export default function HttpStepBase(props: {
             variableName="spec.url"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => setFieldValue('spec.url', value)}
             isReadonly={readonly}
             allowedValuesType={ALLOWED_VALUES_TYPE.URL}
@@ -118,7 +117,6 @@ export default function HttpStepBase(props: {
             variableName="spec.method"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => setFieldValue('spec.method', value)}
             isReadonly={readonly}
           />
@@ -139,7 +137,6 @@ export default function HttpStepBase(props: {
             variableName="spec.requestBody"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => setFieldValue('spec.requestBody', value)}
             isReadonly={readonly}
           />

@@ -79,7 +79,9 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
       return (
         <ShellScriptInputSetStep
           initialValues={this.getInitialValues(initialValues)}
-          onUpdate={data => onUpdate?.(this.processFormData(data))}
+          onUpdate={data => {
+            onUpdate?.(this.processFormData(data))
+          }}
           stepViewType={stepViewType}
           readonly={!!inputSetData?.readonly}
           template={inputSetData?.template}

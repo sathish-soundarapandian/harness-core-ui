@@ -7,10 +7,10 @@
 
 import React, { FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, noop } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 
-import { Checkbox, Container, Heading, Layout, Text } from '@harness/uicore'
+import { Checkbox, Container, Heading, Layout, Text, ModalDialog } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { EnvironmentResponse, getEnvironmentListPromise } from 'services/cd-ng'
 
@@ -18,14 +18,18 @@ import { useInfiniteScroll } from '@common/hooks/useInfiniteScroll'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import { EnvironmentGroupName } from './EnvironmentGroupsList/EnvironmentGroupsListColumns'
+import AddEditEnvironmentModal from '../PipelineSteps/DeployEnvironmentEntityStep/AddEditEnvironmentModal'
 
 import EmptyEnvironmentGroup from './images/EmptyEnvironmentGroup.svg'
+import css from './EnvironmentGroups.module.scss'
 
 export default function ModalEnvironmentList({
   searchTerm,
   setIsFetchingEnvironments,
   selectedEnvironments,
-  onSelectedEnvironmentChange
+  onSelectedEnvironmentChange,
+  newEnvOpen = false,
+  handleNewEnvModal
 }: {
   searchTerm: string
   setIsFetchingEnvironments?: (isFetchingEnvironments: boolean) => void
@@ -35,6 +39,8 @@ export default function ModalEnvironmentList({
     selectedEnvironments: (string | EnvironmentResponse)[],
     item: EnvironmentResponse
   ) => void
+  newEnvOpen?: boolean
+  handleNewEnvModal: (status: boolean) => void
 }): React.ReactElement {
   const { getString } = useStrings()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps & ModulePathParams>()
@@ -60,7 +66,8 @@ export default function ModalEnvironmentList({
     error: fetchEnvironmentsError,
     fetching: fetchingEnvironments,
     attachRefToLastElement,
-    offsetToFetch
+    offsetToFetch,
+    reset
   } = useInfiniteScroll({
     getItems: options => {
       return getEnvironmentListPromise({
@@ -128,6 +135,7 @@ export default function ModalEnvironmentList({
                   onSelectedEnvironmentChange((e.target as any).checked, selectedEnvironments, item)
                 }}
               />
+
               <Layout.Vertical>
                 <EnvironmentGroupName name={name} identifier={identifier} tags={tags} />
               </Layout.Vertical>
@@ -143,6 +151,35 @@ export default function ModalEnvironmentList({
           </Text>
         </Container>
       )}
+      <ModalDialog
+        isOpen={newEnvOpen}
+        onClose={() => {
+          handleNewEnvModal(false)
+        }}
+        title={getString('newEnvironment')}
+        canEscapeKeyClose={false}
+        canOutsideClickClose={false}
+        enforceFocus={false}
+        lazy
+        width={1128}
+        height={840}
+        className={css.dialogStyles}
+      >
+        <AddEditEnvironmentModal
+          data={{}}
+          onCreateOrUpdate={noop}
+          onCreateOrUpdateInsideGroup={newEnv => {
+            handleNewEnvModal(false)
+            onSelectedEnvironmentChange(true, selectedEnvironments, newEnv)
+            reset()
+          }}
+          closeModal={() => {
+            handleNewEnvModal(false)
+          }}
+          isEdit={false}
+          insideGroupEnv={true}
+        />
+      </ModalDialog>
     </>
   )
 }

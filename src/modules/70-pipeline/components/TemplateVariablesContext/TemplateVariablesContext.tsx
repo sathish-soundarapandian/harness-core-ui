@@ -24,8 +24,6 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 import type { ServiceExpressionProperties } from 'services/pipeline-ng'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
 const templateTypeYamlKeyMap: { [key: string]: string } = {
   monitoredservice: 'monitoredService',
@@ -86,14 +84,14 @@ export function TemplateVariablesContextProvider(
   const params = useParams<TemplateStudioPathProps>()
   const { accountId, orgIdentifier, projectIdentifier } = params
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const [resolvedTemplate, setResolvedTemplate] = React.useState<NGTemplateInfoConfig>(originalTemplate)
 
   const { data, error, initLoading, loading } = useMutateAsGet(useCreateVariablesV2, {
     body: yamlStringify({ template: resolvedTemplate }) as unknown as void,
     requestOptions: {
       headers: {
-        'content-type': 'application/yaml'
+        'content-type': 'application/yaml',
+        'Load-From-Cache': 'true'
       }
     },
     queryParams: {
@@ -117,7 +115,7 @@ export function TemplateVariablesContextProvider(
       projectIdentifier,
       ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     body: {
       originalEntityYaml: yamlStringify(originalTemplate)
     }

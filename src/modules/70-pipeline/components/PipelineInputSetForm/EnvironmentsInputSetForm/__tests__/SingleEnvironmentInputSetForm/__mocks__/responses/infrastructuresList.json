@@ -1,0 +1,32 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 1,
+    "pageItemCount": 1,
+    "pageSize": 100,
+    "content": [
+      {
+        "infrastructure": {
+          "accountId": "dummyAcc",
+          "identifier": "Infra_4",
+          "orgIdentifier": "dummyOrg",
+          "projectIdentifier": "dummyProj",
+          "environmentRef": "env_with_both_inputs",
+          "name": "Infra 4",
+          "description": "",
+          "tags": {},
+          "type": "KubernetesDirect",
+          "deploymentType": "Kubernetes",
+          "yaml": "infrastructureDefinition:\n  name: Infra 4\n  identifier: Infra_4\n  description: \"\"\n  tags: {}\n  orgIdentifier: dummyOrg\n  projectIdentifier: dummyProj\n  environmentRef: env_with_both_inputs\n  deploymentType: Kubernetes\n  type: KubernetesDirect\n  spec:\n    connectorRef: account.testapps\n    namespace: <+input>\n    releaseName: release-<+INFRA_KEY>\n  allowSimultaneousDeployments: false\n"
+        },
+        "createdAt": 1676259118938,
+        "lastModifiedAt": 1676259118938
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "7ab4ad7b-709f-4c5d-8264-2bfe2aca8e38"
+}

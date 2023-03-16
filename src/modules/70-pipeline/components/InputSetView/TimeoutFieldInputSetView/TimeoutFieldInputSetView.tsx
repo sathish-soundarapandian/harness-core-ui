@@ -57,7 +57,6 @@ export function TimeoutFieldInputSetView(props: TimeoutFieldInputSetViewProps): 
               variableName={name}
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={val => formik?.setFieldValue(name, val)}
               allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
               style={label ? { marginTop: 'var(--spacing-6)' } : undefined}

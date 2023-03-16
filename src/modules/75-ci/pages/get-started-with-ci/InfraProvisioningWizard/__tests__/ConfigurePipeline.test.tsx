@@ -29,7 +29,7 @@ describe('Test ConfigurePipeline component', () => {
       userEvent.click(getByText('ci.getStartedWithCI.createPipeline'))
     })
     await act(async () => {
-      userEvent.click(getByText('ci.getStartedWithCI.starterPipeline'))
+      userEvent.click(getByText('ci.getStartedWithCI.starterPipelineConfig'))
     })
     expect(container.querySelectorAll('.bp3-card')[0]).toHaveClass('Card--selected')
   })
@@ -67,7 +67,6 @@ describe('Test ConfigurePipeline component', () => {
     expect(starterConfigCards[1]).toHaveClass('Card--selected')
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
   test('Select Starter configuration option should show expected validation error message', async () => {
     const props = {
       repoName: 'test-repo',
@@ -93,7 +92,7 @@ describe('Test ConfigurePipeline component', () => {
       </TestWrapper>
     )
     await act(async () => {
-      userEvent.click(getByText('ci.getStartedWithCI.chooseExistingYAML'))
+      userEvent.click(getByText('ci.getStartedWithCI.importExistingYAML'))
     })
     expect(getByText('gitsync.selectBranchTitle')).toBeInTheDocument()
     expect(getByText('gitsync.gitSyncForm.yamlPathLabel')).toBeInTheDocument()
@@ -103,7 +102,7 @@ describe('Test ConfigurePipeline component', () => {
       </TestWrapper>
     )
     await act(async () => {
-      userEvent.click(getByText('ci.getStartedWithCI.chooseExistingYAML'))
+      userEvent.click(getByText('ci.getStartedWithCI.importExistingYAML'))
     })
     const yamlPathValidationError = container.querySelector('div[class*="FormError--errorDiv"][data-name="yamlPath"]')
     expect(yamlPathValidationError).toBeInTheDocument()
@@ -122,10 +121,10 @@ describe('Test ConfigurePipeline component', () => {
       </TestWrapper>
     )
     try {
-      getByText('ci.getStartedWithCI.chooseExistingYAML')
+      getByText('ci.getStartedWithCI.importExistingYAML')
     } catch (error) {
       expect((error as any)?.message as string).toContain(
-        'Unable to find an element with the text: ci.getStartedWithCI.chooseExistingYAML'
+        'Unable to find an element with the text: ci.getStartedWithCI.importExistingYAML'
       )
     }
   })

@@ -9,6 +9,7 @@ import type { SelectOption } from '@harness/uicore'
 import type { PipelineInfrastructure } from 'services/cd-ng'
 
 export enum StepType {
+  GitOpsSync = 'GitOpsSync',
   StageRuntimeInput = 'StageRuntimeInput',
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
@@ -177,7 +178,15 @@ export enum StepType {
   Mend = 'Mend',
   AsgBlueGreenRollback = 'AsgBlueGreenRollback',
   AsgBlueGreenSwapService = 'AsgBlueGreenSwapService',
-  AsgBlueGreenDeploy = 'AsgBlueGreenDeploy'
+  AsgBlueGreenDeploy = 'AsgBlueGreenDeploy',
+  AwsLambdaService = 'AwsLambdaService',
+  AwsLambdaInfra = 'AwsLambdaInfra',
+  AwsLambdaDeploy = 'AwsLambdaDeploy',
+  AwsLambdaRollback = 'AwsLambdaRollback',
+  TerraformCloudRun = 'TerraformCloudRun',
+  TerraformCloudRollback = 'TerraformCloudRollback',
+  SscaOrchestration = 'SscaOrchestration',
+  CustomIngestion = 'CustomIngestion'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

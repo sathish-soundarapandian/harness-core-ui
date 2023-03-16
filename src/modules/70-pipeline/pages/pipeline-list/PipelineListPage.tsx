@@ -16,8 +16,9 @@ import {
   useToggleOpen
 } from '@harness/uicore'
 import { defaultTo, isEmpty, pick } from 'lodash-es'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { flushSync } from 'react-dom'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
 import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -84,6 +85,7 @@ function _PipelineListPage(): React.ReactElement {
   useDocumentTitle([getString('pipelines')])
 
   const clonePipelineModalToggle = useToggleOpen()
+  const openClonePipelineModal = clonePipelineModalToggle.open
 
   const repoListQuery = useGetRepositoryList({
     queryParams: {
@@ -118,8 +120,22 @@ function _PipelineListPage(): React.ReactElement {
           branch
         })
     },
-    queryParamStringifyOptions: { arrayFormat: 'comma' }
+    queryParamStringifyOptions: { arrayFormat: 'comma' },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    }
   })
+
+  const pipelineListRefetchRef = useRef(pipelinesQuery.refetch)
+  const memoizedPipelinesRefetch = useCallback(() => {
+    pipelineListRefetchRef.current()
+  }, [])
+
+  useEffect(() => {
+    pipelineListRefetchRef.current = pipelinesQuery.refetch
+  }, [pipelinesQuery.refetch])
 
   const { mutate: deletePipeline, loading: isDeletingPipeline } = useSoftDeletePipeline({
     queryParams: {
@@ -142,45 +158,60 @@ function _PipelineListPage(): React.ReactElement {
   }
 
   const resetFilter = (): void => {
-    searchRef.current.clear()
+    flushSync(searchRef.current.clear)
     replaceQueryParams({})
   }
 
-  const onClonePipeline = (originalPipeline: PMSPipelineSummaryResponse): void => {
-    setPipelineToClone(originalPipeline)
-    clonePipelineModalToggle.open()
-  }
+  const onClonePipeline = useCallback(
+    (originalPipeline: PMSPipelineSummaryResponse): void => {
+      setPipelineToClone(originalPipeline)
+      openClonePipelineModal()
+    },
+    [openClonePipelineModal]
+  )
 
-  const onDeletePipeline = async (commitMsg: string, pipeline: PMSPipelineSummaryResponse): Promise<void> => {
-    try {
-      const gitParams = pipeline.gitDetails?.objectId
-        ? {
-            ...pick(pipeline.gitDetails, ['branch', 'repoIdentifier', 'filePath', 'rootFolder']),
-            commitMsg,
-            lastObjectId: pipeline.gitDetails?.objectId
-          }
-        : {}
+  const onDeletePipeline = useCallback(
+    async (commitMsg: string, pipeline: PMSPipelineSummaryResponse): Promise<void> => {
+      try {
+        const gitParams = pipeline.gitDetails?.objectId
+          ? {
+              ...pick(pipeline.gitDetails, ['branch', 'repoIdentifier', 'filePath', 'rootFolder']),
+              commitMsg,
+              lastObjectId: pipeline.gitDetails?.objectId
+            }
+          : {}
 
-      const { status } = await deletePipeline(defaultTo(pipeline.identifier, ''), {
-        queryParams: {
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier,
-          ...gitParams
-        },
-        headers: { 'content-type': 'application/json' }
-      })
+        const { status } = await deletePipeline(defaultTo(pipeline.identifier, ''), {
+          queryParams: {
+            accountIdentifier: accountId,
+            orgIdentifier,
+            projectIdentifier,
+            ...gitParams
+          },
+          headers: { 'content-type': 'application/json' }
+        })
 
-      if (status === 'SUCCESS') {
-        showSuccess(getString('pipeline-list.pipelineDeleted', { name: pipeline.name }))
-      } else {
-        throw getString('somethingWentWrong')
+        if (status === 'SUCCESS') {
+          showSuccess(getString('pipeline-list.pipelineDeleted', { name: pipeline.name }))
+        } else {
+          throw getString('somethingWentWrong')
+        }
+        pipelineListRefetchRef.current()
+      } catch (err) {
+        showError(getRBACErrorMessage(err), undefined, 'pipeline.delete.pipeline.error')
       }
-      pipelinesQuery.refetch()
-    } catch (err) {
-      showError(getRBACErrorMessage(err), undefined, 'pipeline.delete.pipeline.error')
-    }
-  }
+    },
+    [
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      deletePipeline,
+      getRBACErrorMessage,
+      getString,
+      showError,
+      showSuccess
+    ]
+  )
 
   const hasFilter = !!(filterIdentifier || searchTerm || filters)
 
@@ -281,7 +312,7 @@ function _PipelineListPage(): React.ReactElement {
               data={pipelinesQuery.data.data}
               onDeletePipeline={onDeletePipeline}
               onClonePipeline={onClonePipeline}
-              refetchList={() => pipelinesQuery.refetch()}
+              refetchList={memoizedPipelinesRefetch}
               setSortBy={sortArray => {
                 setSortingPreference(JSON.stringify(sortArray))
                 updateQueryParams({ sort: sortArray })

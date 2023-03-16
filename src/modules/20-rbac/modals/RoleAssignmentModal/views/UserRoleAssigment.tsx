@@ -270,6 +270,7 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
               }}
               multiSelectProps={{
                 allowCreatingNewItems: true,
+                allowCommaSeparatedList: true,
                 onQueryChange: val => {
                   setQuery(val)
                   refetchUsers()

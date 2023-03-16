@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-import { cloneDeep, defaultTo, get, isEqual } from 'lodash-es'
+import React, { useEffect, useState, useRef } from 'react'
+import { cloneDeep, defaultTo, get, isEqual, memoize } from 'lodash-es'
 
 import {
   FormInput,
@@ -17,7 +17,9 @@ import {
   SelectOption
 } from '@harness/uicore'
 import type { SubmenuSelectOption } from '@harness/uicore/dist/components/SelectWithSubmenu/SelectWithSubmenuV2'
-import { PopoverInteractionKind } from '@blueprintjs/core'
+import type { IconName } from '@blueprintjs/core'
+import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { useMutateAsGet } from '@common/hooks'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import {
@@ -40,6 +42,9 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { ConnectorRefType, getScopedConnectorValue } from '@pipeline/utils/stepUtils'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -80,13 +85,17 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     serviceIdentifier,
     stepViewType,
     artifacts,
+    pipelineIdentifier,
     useArtifactV1Data = false
   } = props
 
   const { getString } = useStrings()
-  const [lastOpenedJob, setLastOpenedJob] = useState<string | undefined>()
   const { expressions } = useVariablesExpression()
   const [jobDetails, setJobDetails] = useState<SubmenuSelectOption[]>([])
+  const [showChildJobField, setShowChildJobField] = useState<boolean>(false)
+  const [lastOpenedJob, setLastOpenedJob] = useState<string | undefined>()
+  const recentParentJob = useRef<any>(null)
+  const [childJob, setChildJob] = useState<SelectWithBiLevelOption>({} as SelectWithBiLevelOption)
   const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
   const [build, setJenkinsBuilds] = useState<SelectOption[]>([])
   const commonParams = {
@@ -94,7 +103,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     projectIdentifier,
     orgIdentifier,
     repoIdentifier,
-    branch
+    branch,
+    pipelineIdentifier
   }
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
@@ -165,7 +175,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       ...commonParams,
       connectorRef: connectorRefValue?.toString(),
       serviceId,
-      parentJobName: lastOpenedJob,
+      parentJobName: recentParentJob?.current,
       fqnPath: getFqnPath(
         path as string,
         !!isPropagatedStage,
@@ -210,7 +220,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString(),
-      jobName: jobNameValue ? getEncodedValue(jobNameValue) : undefined,
+      jobName: jobNameValue,
       serviceId,
       fqnPath: getFqnPath(
         path as string,
@@ -325,7 +335,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         label: job.jobName || '',
         value: job.url || '',
         submenuItems: [],
-        hasSubItems: job.folder
+        hasSubmenuItems: job.folder
       }
     })
   }
@@ -337,10 +347,11 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   }, [lastOpenedJob])
 
   useEffect(() => {
-    if (lastOpenedJob) {
+    if (lastOpenedJob || recentParentJob?.current) {
       setJobDetails((prevState: SubmenuSelectOption[]) => {
         const clonedJobDetails = cloneDeep(prevState)
-        const parentJob = clonedJobDetails.find(obj => obj.label === lastOpenedJob)
+        const probableParentName = jobsResponse?.data?.jobDetails?.[0]?.jobName?.split('/')?.[0]
+        const parentJob = clonedJobDetails.find(obj => obj.label === probableParentName)
         if (parentJob) {
           parentJob.submenuItems = [...getJobItems(jobsResponse?.data?.jobDetails || [])]
         }
@@ -353,7 +364,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           label: job.jobName || '',
           value: job.url || '',
           submenuItems: [],
-          hasSubItems: job.folder
+          hasSubmenuItems: job.folder
         }
       })
       if (!isEqual(jobs, jobDetails)) {
@@ -361,6 +372,30 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       }
     }
   }, [jobsResponse])
+
+  useEffect(() => {
+    const jobName =
+      get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName.label`) ||
+      get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)
+    if (
+      jobName?.split('/').length > 1 &&
+      jobDetails.length &&
+      getMultiTypeFromValue(get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)) ===
+        MultiTypeInputType.FIXED
+    ) {
+      setShowChildJobField(true)
+      const parentJobName = jobName?.split('/')[0]
+      recentParentJob.current = parentJobName
+      setLastOpenedJob(parentJobName)
+      const parentJob = jobDetails?.find(job => job.label === parentJobName)
+      if (!parentJob?.submenuItems?.length) {
+        refetchJobs()
+      } else {
+        const targetChildJob = parentJob.submenuItems?.find(job => job.label === jobName)
+        setChildJob(targetChildJob as SelectWithBiLevelOption)
+      }
+    }
+  }, [jobDetails])
 
   const isFieldDisabled = (fieldName: string, isTag = false): boolean => {
     /* instanbul ignore else */
@@ -382,26 +417,41 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     return false
   }
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
-  const getJobDetailsValue = React.useCallback((): SubmenuSelectOption | undefined => {
-    if (jobNameValue && getMultiTypeFromValue(jobNameValue) === MultiTypeInputType.FIXED) {
-      if (jobNameValue && jobNameValue?.split('/')?.length > 1) {
-        const parentJobName = jobNameValue?.split('/')[0]
-        const parentJob = jobDetails?.find(job => job.label === parentJobName)
-        if (parentJob?.submenuItems?.length) {
-          const targetChildJob = parentJob.submenuItems?.find(job => job.label === jobNameValue)
-          return targetChildJob as SubmenuSelectOption
-        }
-      }
-      const existingJob = jobDetails.find(
-        job => job.label === get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)
-      ) as SubmenuSelectOption
-      if (existingJob) return existingJob
-      return {
-        label: jobNameValue,
-        value: jobNameValue
-      } as SubmenuSelectOption
+
+  const childJobDetails = () => {
+    if (showChildJobField && recentParentJob?.current) {
+      const childJobs: SelectWithBiLevelOption[] =
+        jobDetails.find(item => item.label === recentParentJob?.current)?.submenuItems || []
+      return childJobs
     }
-  }, [jobNameValue])
+    return []
+  }
+
+  const getJobnameValue = () => {
+    const jobName = get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)
+    if (getMultiTypeFromValue(jobName) !== MultiTypeInputType.FIXED) return jobName
+    if (showChildJobField) {
+      const parentJob = jobDetails.find(job => job.label === recentParentJob?.current)
+      if (parentJob) return parentJob
+    }
+    const jobDetail = jobDetails.find(job => job.label === jobName)
+    if (jobDetail) return jobDetail
+    return {
+      label: jobName,
+      value: jobName,
+      submenuItems: [],
+      hasSubmenuItems: false
+    } as SelectWithBiLevelOption
+  }
+
+  const jobNameRenderer = memoize((item: SelectWithBiLevelOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem
+      item={item}
+      itemProps={itemProps}
+      disabled={fetchingJobs}
+      icon={item?.hasSubmenuItems ? 'folder-open' : ('file' as IconName)}
+    />
+  ))
 
   return (
     <>
@@ -428,13 +478,19 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 if (value) {
                   const { record } = value as unknown as { record: ConnectorReferenceDTO }
                   if (record) {
-                    setConnectorRefValue(record?.identifier)
+                    const connectorValue = getScopedConnectorValue(value as unknown as ConnectorRefType)
+                    setConnectorRefValue(connectorValue)
                   } else {
                     setConnectorRefValue(value as string)
                   }
                 } else {
                   setConnectorRefValue(undefined)
                 }
+                formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.jobName`, '')
+                setLastOpenedJob(undefined)
+                recentParentJob.current = undefined
+                setShowChildJobField(false)
+                setChildJob({} as SelectWithBiLevelOption)
                 setJobDetails([])
                 setArtifactPaths([])
                 setJenkinsBuilds([])
@@ -449,70 +505,117 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.jobName`, template) && (
-            <FormInput.SelectWithSubmenuTypeInputV2
-              label={'Job Name'}
-              name={`${path}.artifacts.${artifactPath}.spec.jobName`}
-              placeholder={
-                connectorRefValue && getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED
-                  ? fetchingJobs
-                    ? 'Fetching jobs...'
-                    : fetchingJobsError?.message
-                    ? fetchingJobsError?.message
+            <>
+              <FormInput.MultiTypeBiLevelInput
+                label={getString('connectors.jenkins.jobNameLabel')}
+                name={`${path}.artifacts.${artifactPath}.spec.jobName`}
+                value={getJobnameValue()}
+                placeholder={
+                  connectorRefValue && getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED
+                    ? fetchingJobs
+                      ? getString('common.loadingFieldOptions', { fieldName: getString('pipeline.jenkinsStep.job') })
+                      : fetchingJobsError?.message
+                      ? fetchingJobsError?.message
+                      : getString('select')
                     : getString('select')
-                  : getString('select')
-              }
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.jobName`)}
-              value={getJobDetailsValue()}
-              selectItems={jobDetails}
-              selectWithSubmenuTypeInputProps={{
-                allowableTypes,
-                expressions,
-                width: 400,
-                selectWithSubmenuProps: {
-                  loading: fetchingJobs,
-                  items: jobDetails,
-                  interactionKind: PopoverInteractionKind.CLICK,
-                  allowCreatingNewItems: true,
-                  addClearBtn: !readonly,
-                  className: css.runtimeSelectWithSubmenu,
-                  onChange: (primaryValue, secondaryValue) => {
-                    const primaryJobName = typeof primaryValue === 'string' ? primaryValue : primaryValue?.label
-
-                    const secondaryJobName =
-                      (secondaryValue as any) === 'STRING'
-                        ? undefined
-                        : typeof secondaryValue === 'string'
-                        ? secondaryValue
-                        : secondaryValue?.label
-
+                }
+                multiTypeInputProps={{
+                  width: 400,
+                  onChange: (primaryValue: any) => {
+                    if (primaryValue?.hasSubmenuItems) {
+                      setShowChildJobField(true)
+                      setLastOpenedJob(primaryValue?.label)
+                      recentParentJob.current = primaryValue?.label
+                      const parentJob = jobDetails?.find(job => job.label === primaryValue?.label)
+                      if (!parentJob?.submenuItems?.length) {
+                        refetchJobs()
+                      }
+                    } else {
+                      setArtifactPaths([])
+                      setJenkinsBuilds([])
+                      setShowChildJobField(false)
+                    }
+                    setJobNameValue(typeof primaryValue === 'string' ? primaryValue : primaryValue?.label)
+                    setChildJob({} as SelectWithBiLevelOption)
                     formik.setFieldValue(
                       `${path}.artifacts.${artifactPath}.spec.jobName`,
-                      secondaryJobName ? secondaryJobName : primaryJobName
+                      getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED
+                        ? primaryValue.label
+                        : primaryValue
                     )
-                    if (secondaryJobName) {
-                      setJobNameValue(secondaryJobName as string)
-                    } else {
-                      setJobNameValue(primaryJobName as string)
-                    }
-
-                    setArtifactPaths([])
-                    setJenkinsBuilds([])
                   },
-                  onOpening: (item: SelectOption) => {
-                    setLastOpenedJob(item.label)
-                    // TODO: To scroll the jobDetails component to its original height
-                    // const indexOfParent = jobDetails.findIndex(obj => obj.value === item.value)
-                    // const parentNode = document.getElementsByClassName('Select--menuItem')?.[indexOfParent]
-                    // if (parentNode) {
-                    //   parentJobY.current = parentNode.getBoundingClientRect()?.y
-                    // }
+
+                  onTypeChange: (type: MultiTypeInputType) =>
+                    formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.jobName`, type),
+                  expressions,
+                  selectProps: {
+                    allowCreatingNewItems: true,
+                    items: jobDetails,
+                    addClearBtn: true,
+                    itemRenderer: jobNameRenderer
+                  },
+                  allowableTypes
+                }}
+                selectItems={jobDetails || []}
+              />
+              {showChildJobField && (
+                <FormInput.MultiTypeBiLevelInput
+                  label={`${recentParentJob?.current || getString('connectors.jenkins.child')} ${getString(
+                    'connectors.jenkins.jobs'
+                  )}`}
+                  name={`${path}.artifacts.${artifactPath}.spec.jobName`}
+                  value={childJob}
+                  placeholder={
+                    connectorRefValue && getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED
+                      ? fetchingJobs
+                        ? getString('common.loadingFieldOptions', { fieldName: getString('pipeline.jenkinsStep.job') })
+                        : fetchingJobsError?.message
+                        ? fetchingJobsError?.message
+                        : getString('select')
+                      : getString('select')
                   }
-                }
-              }}
-            />
+                  multiTypeInputProps={{
+                    width: 400,
+                    onChange: (primaryValue: any) => {
+                      if (primaryValue?.hasSubmenuItems) {
+                        setLastOpenedJob(primaryValue?.label)
+                        recentParentJob.current = primaryValue?.label
+                        const parentJob = jobDetails?.find(job => job.label === primaryValue?.label)
+                        if (!parentJob?.submenuItems?.length) {
+                          refetchJobs()
+                        }
+                      } else {
+                        setArtifactPaths([])
+                        setJenkinsBuilds([])
+                      }
+                      setChildJob(primaryValue)
+                      formik.setFieldValue(
+                        `${path}.artifacts.${artifactPath}.spec.jobName`,
+                        getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED
+                          ? primaryValue.label
+                          : primaryValue
+                      )
+                    },
+                    onTypeChange: (type: MultiTypeInputType) =>
+                      formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.jobName`, type),
+                    expressions,
+                    selectProps: {
+                      allowCreatingNewItems: false,
+                      items: childJobDetails(),
+                      addClearBtn: false,
+                      itemRenderer: jobNameRenderer
+                    },
+                    allowableTypes: [MultiTypeInputType.FIXED]
+                  }}
+                  selectItems={childJobDetails() || []}
+                />
+              )}
+            </>
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactPath`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.artifactPath`}
+              template={template}
               label={getString('pipeline.artifactPathLabel')}
               name={`${path}.artifacts.${artifactPath}.spec.artifactPath`}
               useValue
@@ -549,7 +652,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.build`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.build`}
+              template={template}
               label={getString('pipeline.jenkinsBuild')}
               name={`${path}.artifacts.${artifactPath}.spec.build`}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.build`)}

@@ -14,13 +14,17 @@ import {
 } from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { StringKeys } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { MonitoredServiceDTO } from 'services/cv'
 import type {
   ContinousVerificationData,
   MonitoredServiceTemplateVariable,
   spec,
   VerifyStepMonitoredService
 } from '../../types'
-import { isAnExpression } from './components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
+import {
+  isAnExpression,
+  isFirstTimeOpenForDefaultMonitoredSvc
+} from './components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
 import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import {
   METRIC_DEFINITIONS,
@@ -123,11 +127,12 @@ export function validateMonitoredService(
   getString: (key: StringKeys) => string,
   monitoredServiceTemplateRef: string,
   templateInputsToValidate: unknown,
-  templateInputs: unknown
+  templateInputs: unknown,
+  isMultiServiesOrEnvs: boolean
 ): FormikErrors<ContinousVerificationData> {
   let spec = {}
   // no validation for default monitored service when stepViewType is Template
-  if (type === MONITORED_SERVICE_TYPE.DEFAULT && stepViewType !== 'Template') {
+  if (type === MONITORED_SERVICE_TYPE.DEFAULT && stepViewType !== 'Template' && !isMultiServiesOrEnvs) {
     spec = monitoredServiceRefValidation(monitoredServiceRef, spec, errors)
     spec = healthSourcesValidation(monitoredServiceRef, healthSources, spec, getString, errors)
   } else if (type === MONITORED_SERVICE_TYPE.CONFIGURED) {
@@ -264,23 +269,6 @@ export function shouldValidateTemplateInputs(templateInputsToValidate: any, key:
   return templateInputsToValidate[key] !== 'object' && !templateInputs[key]
 }
 
-export function resetFormik(
-  formValues: ContinousVerificationData,
-  newSpecs: {
-    monitoredServiceRef?: string | undefined
-    monitoredServiceName?: string | undefined
-    type?: string | undefined
-    healthSources?: { identifier: string }[] | undefined
-    spec?: spec | undefined
-    monitoredService: VerifyStepMonitoredService
-    initialMonitoredService?: VerifyStepMonitoredService | undefined
-  },
-  formik: FormikProps<ContinousVerificationData>
-): void {
-  const formNewValues = { ...formValues, spec: newSpecs }
-  formik.resetForm({ values: formNewValues })
-}
-
 export function getMetricDefinitionsKey(healthSource: any): string {
   let metricDefinitionsKey = METRIC_DEFINITIONS
   if (!isEmpty(healthSource?.spec[QUERY_DEFINITIONS])) {
@@ -291,4 +279,72 @@ export function getMetricDefinitionsKey(healthSource: any): string {
     metricDefinitionsKey = NEWRELIC_METRIC_DEFINITIONS
   }
   return metricDefinitionsKey
+}
+
+export function resetFormik(
+  formValues: ContinousVerificationData,
+  newSpecs: {
+    monitoredServiceRef?: string | undefined
+    monitoredServiceName?: string | undefined
+    type?: string | undefined
+    healthSources?: { identifier: string }[] | undefined
+    spec?: spec | undefined
+    monitoredService: VerifyStepMonitoredService
+    initialMonitoredService?: VerifyStepMonitoredService | undefined
+    isMultiServicesOrEnvs: boolean
+  },
+  formik: FormikProps<ContinousVerificationData>
+): void {
+  const formNewValues = { ...formValues, spec: newSpecs }
+  formik.resetForm({ values: formNewValues })
+}
+
+export function resetFormikIfNeededForDefaultMonitoredService({
+  formValues,
+  monitoredServiceData,
+  newSpecs,
+  formik
+}: {
+  formValues: ContinousVerificationData
+  monitoredServiceData: MonitoredServiceDTO | undefined
+  newSpecs: {
+    monitoredServiceRef?: string
+    monitoredServiceName?: string
+    type?: string
+    healthSources?: { identifier: string }[]
+    spec?: spec
+    monitoredService: VerifyStepMonitoredService
+    initialMonitoredService?: VerifyStepMonitoredService
+    isMultiServicesOrEnvs: boolean
+  }
+  formik: FormikProps<ContinousVerificationData>
+}): void {
+  if (
+    isFirstTimeOpenForDefaultMonitoredSvc(formValues, monitoredServiceData) &&
+    isMonitoredServiceTypeSame(formValues)
+  ) {
+    resetFormik(formValues, newSpecs, formik)
+  }
+}
+
+export function resetFormikWhenNoChange(
+  formValues: ContinousVerificationData,
+  newSpecs: {
+    monitoredServiceRef?: string
+    monitoredServiceName?: string
+    type?: string
+    healthSources?: { identifier: string }[]
+    spec?: spec
+    monitoredService: VerifyStepMonitoredService
+    initialMonitoredService?: VerifyStepMonitoredService
+    isMultiServicesOrEnvs: boolean
+  },
+  formik: FormikProps<ContinousVerificationData>
+): void {
+  if (isMonitoredServiceTypeSame(formValues)) {
+    resetFormik(formValues, newSpecs, formik)
+  }
+}
+export function isMonitoredServiceTypeSame(formValues: ContinousVerificationData): boolean {
+  return formValues?.spec?.initialMonitoredService?.type === formValues?.spec?.monitoredService?.type
 }

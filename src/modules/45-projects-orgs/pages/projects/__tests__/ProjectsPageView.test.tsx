@@ -136,6 +136,11 @@ describe('Project Page List', () => {
         path={routes.toProjects({ ...accountPathProps })}
         pathParams={{ accountId: 'testAcc' }}
         defaultAppStoreValues={defaultAppStoreValues}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
       >
         <ProjectsListPage />
       </TestWrapper>
@@ -217,6 +222,9 @@ describe('Project Page List', () => {
         await waitFor(() => getByText(document.body, 'projectCard.confirmDeleteTitle'))
         const form = findDialogContainer()
         expect(form).toBeTruthy()
+        const chckBox = queryByText(form as HTMLElement, 'projectsOrgs.yesIamSure')
+        fireEvent.click(chckBox!)
+        await waitFor(() => expect(queryByText(form as HTMLElement, 'delete')).not.toBeDisabled())
         const deleteBtn = queryByText(form as HTMLElement, 'delete')
         fireEvent.click(deleteBtn!)
         expect(deleteProject).toBeCalled()

@@ -28,7 +28,7 @@ const RecentProjects: React.FC = () => {
   const { getString } = useStrings()
 
   const { preference: recentProjects = [] } = usePreferenceStore<SavedProjectDetails[]>(
-    PreferenceScope.USER,
+    PreferenceScope.ACCOUNT,
     'recentProjects'
   )
 

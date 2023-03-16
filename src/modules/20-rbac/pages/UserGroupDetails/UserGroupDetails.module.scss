@@ -39,6 +39,11 @@
   padding-top: var(--spacing-medium) !important;
 }
 
+.listHeader {
+  margin: 0 !important;
+  margin-bottom: var(--spacing-medium) !important;
+}
+
 .truncatedText {
   :global {
     .bp3-popover-wrapper {

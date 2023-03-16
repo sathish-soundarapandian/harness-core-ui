@@ -57,8 +57,5 @@ describe('SelectDeployment Type Onboarding Wizard Step 1', () => {
     expect(k8sCard).toBeDefined()
     expect(k8sCard).toHaveClass('Card--selected')
     expect(getByText('cd.getStartedWithCD.selectDeploymentType')).toBeInTheDocument()
-
-    const chooseOtherDeploymentTypes = getByText('cd.getStartedWithCD.clickForOtherDeploymentTypes')!
-    expect(chooseOtherDeploymentTypes).toBeInTheDocument()
   })
 })

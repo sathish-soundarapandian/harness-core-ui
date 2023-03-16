@@ -6,7 +6,6 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
 import {
   Text,
   Layout,
@@ -26,13 +25,13 @@ import produce from 'immer'
 import * as Yup from 'yup'
 import { HelpPanel } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
+import type { StringKeys } from 'framework/strings/StringsContext'
 import { deploymentIconMap, DeploymentTypeItem } from '@cd/utils/deploymentUtils'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { getServiceDeploymentTypeSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { ServiceDefinition } from 'services/cd-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import routes from '@common/RouteDefinitions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { deploymentTypes } from '../DeployProvisioningWizard/Constants'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
@@ -43,7 +42,7 @@ export interface SelectDeploymentTypeRefInstance {
   submitForm?: FormikProps<SelectDeploymentTypeInterface>['submitForm']
 }
 export interface SelectDeploymentTypeInterface {
-  selectedDeploymentType: DeploymentTypeItem[]
+  selectedDeploymentType: string
 }
 interface SelectDeploymentTypeProps {
   disableNextBtn: () => void
@@ -62,9 +61,8 @@ const SelectDeploymentTypeRef = (
 ): React.ReactElement => {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { disableNextBtn, enableNextBtn, onSuccess } = props
-
+  const { GITOPS_HOSTED } = useFeatureFlags()
   const {
     state: { service: serviceData },
     saveServiceData
@@ -86,12 +84,16 @@ const SelectDeploymentTypeRef = (
       value: ServiceDeploymentType.Kubernetes,
       disabled: false
     }
-    // {
-    //   label: 'pipeline.serviceDeploymentTypes.kubernetesWithGitops',
-    //   icon: deploymentIconMap[ServiceDeploymentType.KubernetesGitops],
-    //   value: ServiceDeploymentType.KubernetesGitops
-    // }
   ]
+
+  if (GITOPS_HOSTED) {
+    ngSupportedDeploymentTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.kubernetesWithGitops',
+      icon: deploymentIconMap[ServiceDeploymentType.KubernetesGitops],
+      value: ServiceDeploymentType.KubernetesGitops,
+      disabled: false
+    })
+  }
 
   useEffect(() => {
     if (formikRef?.current?.values?.selectedDeploymentType) {
@@ -113,6 +115,17 @@ const SelectDeploymentTypeRef = (
     }
   }))
 
+  React.useEffect(() => {
+    // Track event -- preselected deployment type
+    const initialSelectedDeploymentType = defaultTo(
+      get(serviceData, 'serviceDefinition.type'),
+      ServiceDeploymentType.Kubernetes
+    )
+    trackEvent(CDOnboardingActions.SelectDeploymentTypeDefault, {
+      selectedDeploymentType: initialSelectedDeploymentType
+    })
+  }, [])
+
   const handleSubmit = (): void => {
     const updatedContextService = produce(newServiceState, draft => {
       set(draft, 'serviceDefinition.type', selectedDeploymentType?.value as unknown as ServiceDefinition['type'])
@@ -127,7 +140,7 @@ const SelectDeploymentTypeRef = (
         <Text
           font={{ variation: FontVariation.H3 }}
           padding={{ bottom: 'large' }}
-          color={Color.GREY_600}
+          color={Color.GREY_800}
           data-tooltip-id="cdOnboardingDeploymentType"
         >
           {getString('cd.getStartedWithCD.selectDeploymentType')}
@@ -152,29 +165,36 @@ const SelectDeploymentTypeRef = (
               <FormikForm>
                 <Layout.Horizontal>
                   <Container padding={{ bottom: 'xxlarge' }}>
-                    <Container padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
+                    <Container padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'large' }}>
                       <CardSelect
                         data={ngSupportedDeploymentTypes as DeploymentTypeItem[]}
                         cornerSelected={true}
                         className={css.icons}
                         cardClassName={css.serviceDeploymentTypeCard}
-                        renderItem={(item: DeploymentTypeItem) => (
-                          <>
-                            <Layout.Vertical flex>
-                              <Icon name={item.icon} size={48} flex className={css.serviceDeploymentTypeIcon} />
-                              <Text font={{ variation: FontVariation.CARD_TITLE }} className={css.text1}>
-                                {getString(item.label)}
-                              </Text>
-                            </Layout.Vertical>
-                          </>
-                        )}
+                        renderItem={(item: DeploymentTypeItem) => {
+                          const isSelected = item.value === formikProps.values.selectedDeploymentType
+                          return (
+                            <>
+                              <Layout.Vertical flex>
+                                <Icon name={item.icon} size={48} flex className={css.serviceDeploymentTypeIcon} />
+                                <Text
+                                  font={{ variation: FontVariation.CARD_TITLE }}
+                                  className={css.text1}
+                                  color={isSelected ? Color.GREY_1000 : Color.GREY_600}
+                                >
+                                  {getString(item.label as StringKeys)}
+                                </Text>
+                              </Layout.Vertical>
+                            </>
+                          )
+                        }}
                         selected={selectedDeploymentType}
                         onChange={
                           /* istanbul ignore next */ (item: DeploymentTypeItem) => {
                             formikProps.setFieldValue('selectedDeploymentType', item.value)
                             setSelectedDeploymentType(item)
                             trackEvent(CDOnboardingActions.SelectDeploymentType, {
-                              selectedDeploymentType
+                              selectedDeploymentType: item.value
                             })
                           }
                         }
@@ -188,17 +208,6 @@ const SelectDeploymentTypeRef = (
                         />
                       ) : null}
                     </Container>
-                    <Link to={routes.toPipelines({ orgIdentifier, projectIdentifier, accountId, module: 'cd' })}>
-                      <Text
-                        color={Color.PRIMARY_7}
-                        font={{ variation: FontVariation.BODY2 }}
-                        margin={{ top: 'huge' }}
-                        data-tooltip-id="cdOnboardingOtherDeploymentTypes"
-                      >
-                        {getString('cd.getStartedWithCD.clickForOtherDeploymentTypes')}
-                        <HarnessDocTooltip tooltipId="cdOnboardingOtherDeploymentTypes" useStandAlone={true} />
-                      </Text>
-                    </Link>
                   </Container>
                 </Layout.Horizontal>
               </FormikForm>

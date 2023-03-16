@@ -49,15 +49,18 @@ export const ConnectorLabelMap: Record<ConnectorTypes, StringKeys> = {
   Harness: 'harness'
 }
 
-export const getPath = (isTerraformPlan: boolean, isTerragruntPlan: boolean, isBackendConfig?: boolean): string => {
+export const getPath = (
+  isTerraformPlan: boolean,
+  isTerragruntPlan: boolean,
+  isBackendConfig?: boolean,
+  fieldPath?: string
+): string => {
   if (isBackendConfig) {
     return isTerraformPlan || isTerragruntPlan
-      ? 'spec.configuration.backendConfig.spec'
-      : 'spec.configuration.spec.backendConfig.spec'
+      ? `spec.${fieldPath}.backendConfig.spec`
+      : `spec.${fieldPath}.spec.backendConfig.spec`
   } else {
-    return isTerraformPlan || isTerragruntPlan
-      ? 'spec.configuration.configFiles'
-      : 'spec.configuration.spec.configFiles'
+    return isTerraformPlan || isTerragruntPlan ? `spec.${fieldPath}.configFiles` : `spec.${fieldPath}.spec.configFiles`
   }
 }
 export const getConfigFilePath = (configFile: any): string | undefined => {
@@ -126,7 +129,8 @@ export const stepTwoValidationSchema = (
   isTerraformPlan: boolean,
   isTerragruntPlan: boolean,
   isBackendConfig: boolean,
-  getString: any
+  getString: any,
+  fieldPath?: string
 ) => {
   if (isBackendConfig) {
     const configSetup = {
@@ -153,14 +157,14 @@ export const stepTwoValidationSchema = (
     return isTerraformPlan || isTerragruntPlan
       ? Yup.object().shape({
           spec: Yup.object().shape({
-            configuration: Yup.object().shape({
+            [`${fieldPath}`]: Yup.object().shape({
               ...configSetup
             })
           })
         })
       : Yup.object().shape({
           spec: Yup.object().shape({
-            configuration: Yup.object().shape({
+            [`${fieldPath}`]: Yup.object().shape({
               spec: Yup.object().shape({
                 ...configSetup
               })
@@ -190,14 +194,14 @@ export const stepTwoValidationSchema = (
     return isTerraformPlan || isTerragruntPlan
       ? Yup.object().shape({
           spec: Yup.object().shape({
-            configuration: Yup.object().shape({
+            [`${fieldPath}`]: Yup.object().shape({
               ...configSetup
             })
           })
         })
       : Yup.object().shape({
           spec: Yup.object().shape({
-            configuration: Yup.object().shape({
+            [`${fieldPath}`]: Yup.object().shape({
               spec: Yup.object().shape({
                 ...configSetup
               })

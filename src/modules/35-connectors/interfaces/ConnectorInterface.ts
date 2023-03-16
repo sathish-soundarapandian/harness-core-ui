@@ -13,11 +13,13 @@ import type {
   ConnectorInfoDTO,
   ConnectorRequestBody,
   JsonNode,
-  VaultMetadataRequestSpecDTO
+  VaultMetadataRequestSpecDTO,
+  ConnectorConnectivityDetails
 } from 'services/cd-ng'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { ModalViewFor } from '@connectors/components/CreateConnector/CreateConnectorUtils'
+import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
 
 export interface KubFormData {
   name?: string
@@ -170,4 +172,10 @@ export interface CustomSMFormInterface {
   onDelegate: boolean
   executionTarget: ExecutionTarget
   templateJson: JsonNode
+}
+
+export interface ConnectorModaldata {
+  connectorInfo?: ConnectorInfoDTO
+  gitDetails?: IGitContextFormProps
+  status?: ConnectorConnectivityDetails
 }

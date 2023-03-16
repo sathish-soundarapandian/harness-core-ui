@@ -16,7 +16,6 @@ import { FormConnectorReferenceField } from '@connectors/components/ConnectorRef
 import { getLabelByName } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import { spacingMedium } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.constants'
-import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import {
   enrichHealthSourceWithVersionForHealthsourceType,
   getMetricDefinitionData,
@@ -61,44 +60,42 @@ export default function HealthSourceInputsetForm({
         <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
           {getString('cv.healthSource.nameLabel')}: {healthSource?.name}
         </Text>
-        {runtimeInputs?.length || areMetricDefinitionsPresent ? (
-          runtimeInputs.reverse().map(input => {
-            if (input.name === 'connectorRef' && !isReadOnlyInputSet) {
-              return (
-                <FormConnectorReferenceField
-                  width={400}
-                  type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
-                  name={input.path}
-                  label={
-                    <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
-                      {getString('connectors.selectConnector')}
-                    </Text>
-                  }
-                  accountIdentifier={accountId}
-                  projectIdentifier={projectIdentifier}
-                  orgIdentifier={orgIdentifier}
-                  placeholder={getString('cv.healthSource.connectors.selectConnector', {
-                    sourceType: getSourceTypeForConnector(healthSource)
-                  })}
-                  tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}
-                />
-              )
-            } else {
-              return (
-                <>
-                  <FormInput.MultiTextInput
-                    key={input.name}
+        {runtimeInputs?.length || areMetricDefinitionsPresent
+          ? runtimeInputs.reverse().map(input => {
+              if (input.name === 'connectorRef' && !isReadOnlyInputSet) {
+                return (
+                  <FormConnectorReferenceField
+                    width={400}
+                    type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
                     name={input.path}
-                    label={getLabelByName(input.name, getString)}
-                    multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
+                    label={
+                      <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
+                        {getString('connectors.selectConnector')}
+                      </Text>
+                    }
+                    accountIdentifier={accountId}
+                    projectIdentifier={projectIdentifier}
+                    orgIdentifier={orgIdentifier}
+                    placeholder={getString('cv.healthSource.connectors.selectConnector', {
+                      sourceType: getSourceTypeForConnector(healthSource)
+                    })}
+                    tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}
                   />
-                </>
-              )
-            }
-          })
-        ) : (
-          <NoResultsView minimal={true} text={getString('templatesLibrary.noInputsRequired')} />
-        )}
+                )
+              } else {
+                return (
+                  <>
+                    <FormInput.MultiTextInput
+                      key={input.name}
+                      name={input.path}
+                      label={getLabelByName(input.name, getString)}
+                      multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
+                    />
+                  </>
+                )
+              }
+            })
+          : null}
         {Boolean(areMetricDefinitionsPresent) && (
           <MetricDefinitionInptsetForm path={metricDefinitionInptsetFormPath} metricDefinitions={metricDefinitions} />
         )}

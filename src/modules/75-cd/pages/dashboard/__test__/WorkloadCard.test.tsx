@@ -63,7 +63,10 @@ const props: WorkloadCardProps = {
   ],
   serviceId: 'serviceID',
   percentSuccess: 10,
-  rateSuccess: 20,
+  rateSuccess: {
+    percentChange: 20,
+    trend: 'UP_TREND'
+  },
   totalDeployments: 3
 }
 

@@ -28,7 +28,8 @@ const StepsMap: Record<string, StepType> = {
   KubernetesDirect: StepType.KubernetesDirect,
   ServerlessAwsLambda: StepType.ServerlessAwsInfra,
   ECS: StepType.EcsInfra,
-  GoogleCloudFunctions: StepType.GoogleCloudFunctionsInfra
+  GoogleCloudFunctions: StepType.GoogleCloudFunctionsInfra,
+  AwsLambda: StepType.AwsLambdaInfra
 }
 
 export interface InfrastructureCardProps {

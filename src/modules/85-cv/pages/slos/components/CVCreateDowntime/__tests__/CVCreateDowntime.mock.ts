@@ -5,13 +5,81 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const emptyDowntimeResponse = {
+export const downtimeAssociatedMSs = {
   metaData: {},
-  resource: {
-    downtime: {},
-    createdAt: 1666181322626,
-    lastModifiedAt: 1666181322626
-  },
+  resource: [
+    {
+      createdAt: 1667974886637,
+      lastModifiedAt: 1667974886637,
+      monitoredService: {
+        orgIdentifier: 'default',
+        projectIdentifier: 'demokaran',
+        identifier: 'newone_datadog',
+        name: 'newone_datadog',
+        type: 'Application',
+        serviceRef: 'newone',
+        environmentRef: 'datadog',
+        serviceName: 'newone',
+        environmentName: 'datadog',
+        environmentRefList: ['datadog'],
+        tags: {},
+        sources: {
+          healthSources: [],
+          changeSources: [
+            {
+              name: 'Harness CD Next Gen',
+              identifier: 'harness_cd_next_gen',
+              type: 'HarnessCDNextGen',
+              enabled: true,
+              spec: {},
+              category: 'Deployment'
+            }
+          ]
+        },
+        dependencies: [],
+        notificationRuleRefs: [],
+        template: {
+          templateRef: 'account.new_demo',
+          versionLabel: 'v1'
+        },
+        enabled: false
+      }
+    },
+    {
+      createdAt: 1671628160339,
+      lastModifiedAt: 1671628160339,
+      monitoredService: {
+        orgIdentifier: 'default',
+        projectIdentifier: 'demokaran',
+        identifier: 'newone_gcpl',
+        name: 'newone_gcpl',
+        type: 'Application',
+        description: '',
+        serviceRef: 'newone',
+        environmentRef: 'gcpl',
+        serviceName: 'newone',
+        environmentName: 'gcp-l',
+        environmentRefList: ['gcpl'],
+        tags: {},
+        sources: {
+          healthSources: [],
+          changeSources: [
+            {
+              name: 'Harness CD Next Gen',
+              identifier: 'harness_cd_next_gen',
+              type: 'HarnessCDNextGen',
+              enabled: true,
+              spec: {},
+              category: 'Deployment'
+            }
+          ]
+        },
+        dependencies: [],
+        notificationRuleRefs: [],
+        enabled: false
+      }
+    }
+  ],
   responseMessages: []
 }
 
@@ -27,20 +95,24 @@ export const oneTimeEndTimeBasedDowntimeResponse = {
       category: 'Deployment',
       scope: 'Project',
       enabled: true,
-      entityRefs: [
-        {
-          entityRef: 'test_run',
-          enabled: true
-        }
-      ],
+      entitiesRule: {
+        type: 'Identifiers',
+        entityIdentifiers: [
+          {
+            entityRef: 'test_run',
+            enabled: true
+          }
+        ],
+        affectedEntity: null
+      },
       spec: {
         type: 'Onetime',
         spec: {
           timezone: 'Asia/Calcutta',
-          startTime: 1691747256,
+          startTime: 1900747256,
           type: 'EndTime',
           spec: {
-            endTime: 1690757256
+            endTime: 1900748256
           }
         }
       }
@@ -63,17 +135,21 @@ export const oneTimeDurationBasedDowntimeResponse = {
       scope: 'Project',
       category: 'Deployment',
       enabled: true,
-      entityRefs: [
-        {
-          entityRef: 'test_run',
-          enabled: true
-        }
-      ],
+      entitiesRule: {
+        type: 'Identifiers',
+        entityIdentifiers: [
+          {
+            entityRef: 'test_run',
+            enabled: true
+          }
+        ],
+        affectedEntity: null
+      },
       spec: {
         type: 'Onetime',
         spec: {
           timezone: 'Asia/Calcutta',
-          startTime: 1691747256,
+          startTime: 1900747256,
           type: 'Duration',
           spec: {
             downtimeDuration: {
@@ -105,8 +181,9 @@ export const recurrenceBasedDowntimeResponse = {
       spec: {
         type: 'Recurring',
         spec: {
-          startTime: 1691747256,
-          recurrenceEndTime: 1741847256,
+          timezone: 'Asia/Bangkok',
+          startTime: 1900747256,
+          recurrenceEndTime: 1960748256,
           downtimeDuration: {
             durationType: 'Minutes',
             durationValue: 30
@@ -117,12 +194,16 @@ export const recurrenceBasedDowntimeResponse = {
           }
         }
       },
-      entityRefs: [
-        {
-          entityRef: 'test_run',
-          enabled: true
-        }
-      ],
+      entitiesRule: {
+        type: 'Identifiers',
+        entityIdentifiers: [
+          {
+            entityRef: 'test_run',
+            enabled: true
+          }
+        ],
+        affectedEntity: null
+      },
       enabled: true
     },
     createdAt: 1675159069035,

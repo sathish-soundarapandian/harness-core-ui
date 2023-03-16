@@ -12,7 +12,6 @@ import type {
   ConnectorInfoDTO,
   GetSecretV2QueryParams,
   ConnectorConfigDTO,
-  AwsCredential,
   ErrorDetail,
   Connector,
   AppDynamicsConnectorDTO,
@@ -27,28 +26,28 @@ import type {
   GcpKmsConnectorDTO,
   ErrorTrackingConnectorDTO,
   ELKConnectorDTO,
-  TasConnector
+  TasConnector,
+  TerraformCloudConnector
 } from 'services/cd-ng'
 import { FormData, CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { setSecretField } from '@secrets/utils/SecretField'
-import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
+import { ConnectivityModeType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { transformStepHeadersAndParamsForPayloadForPrometheus } from '@connectors/components/CreateConnector/PrometheusConnector/utils'
 import { transformStepHeadersAndParamsForPayload } from '@connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthHeadersAndParams/CustomHealthHeadersAndParams.utils'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import type { BambooFormInterface } from '@connectors/components/CreateConnector/BambooConnector/StepAuth/StepBambooAuthentication'
+
 import { AuthTypes, GitAuthTypes, GitAPIAuthTypes } from './ConnectorHelper'
 import { useConnectorWizard } from '../../../components/CreateConnectorWizard/ConnectorWizardContext'
+
 export interface DelegateCardInterface {
   type: string
   info: string
   icon?: IconName
   disabled?: boolean
-}
-
-export interface CredentialType {
-  [key: string]: AwsCredential['type']
 }
 
 export enum AzureSecretKeyType {
@@ -64,12 +63,6 @@ export enum AzureManagedIdentityTypes {
 export const GCP_AUTH_TYPE = {
   DELEGATE: 'delegate',
   ENCRYPTED_KEY: 'encryptedKey'
-}
-
-export const DelegateTypes: CredentialType = {
-  DELEGATE_IN_CLUSTER: 'InheritFromDelegate',
-  DELEGATE_IN_CLUSTER_IRSA: 'Irsa',
-  DELEGATE_OUT_CLUSTER: 'ManualConfig'
 }
 
 export const DelegateInClusterType = {
@@ -126,8 +119,8 @@ const buildAuthTypePayload = (formData: FormData) => {
   switch (authType) {
     case AuthTypes.USER_PASSWORD:
       return {
-        username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-        usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+        username: formData.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
+        usernameRef: formData.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
         passwordRef: formData.password.referenceString
       }
     case AuthTypes.SERVICE_ACCOUNT:
@@ -244,14 +237,14 @@ const getGitAuthSpec = (formData: FormData) => {
   switch (authType) {
     case GitAuthTypes.USER_PASSWORD:
       return {
-        username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-        usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+        username: formData.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
+        usernameRef: formData.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
         passwordRef: formData.password.referenceString
       }
     case GitAuthTypes.USER_TOKEN:
       return {
-        username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-        usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+        username: formData.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
+        usernameRef: formData.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
         tokenRef: formData.accessToken.referenceString
       }
     case GitAuthTypes.KERBEROS:
@@ -325,7 +318,7 @@ export const buildTasPayload = (formData: FormData): ConnectorRequestBody => {
         type: CredTypeValues.ManualConfig,
         spec: {
           endpointUrl: formData.endpointUrl.trim(),
-          [formData.username.type === ValueType.TEXT ? 'username' : 'usernameRef']: formData.username.value,
+          [formData.username?.type === ValueType.TEXT ? 'username' : 'usernameRef']: formData.username?.value,
           passwordRef: formData.passwordRef.referenceString
         }
       }
@@ -514,6 +507,31 @@ export const buildAzureRepoPayload = (formData: FormData) => {
     }
   } else {
     delete savedData.spec.apiAccess
+  }
+
+  return { connector: savedData }
+}
+
+export const buildTerraformCloudPayload = (formData: FormData): ConnectorRequestBody => {
+  const savedData: ConnectorInfoDTO = {
+    name: formData.name,
+    description: formData?.description,
+    projectIdentifier: formData?.projectIdentifier,
+    orgIdentifier: formData?.orgIdentifier,
+    identifier: formData.identifier,
+    tags: formData?.tags,
+    type: Connectors.TERRAFORM_CLOUD,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
+      terraformCloudUrl: formData.terraformCloudUrl.trim(),
+      credential: {
+        type: AuthTypes.API_TOKEN,
+        spec: {
+          apiToken: formData.apiToken.referenceString
+        }
+      }
+    } as TerraformCloudConnector
   }
 
   return { connector: savedData }
@@ -850,6 +868,34 @@ export const setupJenkinsFormData = async (connectorInfo: ConnectorInfoDTO, acco
   }
   return formData
 }
+
+export const setupBambooFormData = async (
+  connectorInfo: ConnectorInfoDTO,
+  accountId: string
+): Promise<BambooFormInterface> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo.projectIdentifier,
+    orgIdentifier: connectorInfo.orgIdentifier
+  }
+
+  const formData = {
+    bambooUrl: connectorInfo.spec.bambooUrl,
+    username:
+      connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef
+        ? {
+            value: connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef,
+            type: connectorInfo.spec.auth.spec.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+          }
+        : undefined,
+
+    password:
+      connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
+        ? await setSecretField(connectorInfo.spec.auth.spec.passwordRef, scopeQueryParams)
+        : undefined
+  }
+  return formData
+}
 export const setupAzureArtifactsFormData = async (
   connectorInfo: ConnectorInfoDTO,
   accountId: string
@@ -1078,6 +1124,27 @@ export const setupGcpKmsFormData = async (connectorInfo: ConnectorInfoDTO, accou
   }
 }
 
+export const setupTerraformCloudFormData = async (
+  connectorInfo: ConnectorInfoDTO,
+  accountId: string
+): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo?.projectIdentifier,
+    orgIdentifier: connectorInfo?.orgIdentifier
+  }
+  const data = connectorInfo?.spec
+  const formData = {
+    terraformCloudUrl: data?.terraformCloudUrl,
+    type: data?.credential?.type,
+    apiToken: await setSecretField(data?.credential?.spec?.apiToken, scopeQueryParams),
+    connectivityMode: getConnectivityMode(data?.executeOnDelegate),
+    delegate: data?.delegateSelectors
+  }
+
+  return formData
+}
+
 export const buildAWSPayload = (formData: FormData) => {
   const savedData = {
     name: formData.name,
@@ -1295,8 +1362,8 @@ export const buildDockerPayload = (formData: FormData) => {
           ? {
               type: formData.authType,
               spec: {
-                username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-                usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+                username: formData.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
+                usernameRef: formData.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
                 passwordRef: formData.password.referenceString
               }
             }
@@ -1325,8 +1392,8 @@ export const buildJenkinsPayload = (formData: FormData) => {
           ? {
               type: formData.authType,
               spec: {
-                username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-                usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+                username: formData.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
+                usernameRef: formData.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
                 passwordRef: formData.password.referenceString
               }
             }
@@ -1336,6 +1403,31 @@ export const buildJenkinsPayload = (formData: FormData) => {
                 tokenRef: formData.bearerToken.referenceString
               }
             }
+    }
+  }
+  return { connector: savedData }
+}
+
+export const buildBambooPayload = (formData: FormData) => {
+  const savedData = {
+    name: formData.name,
+    description: formData.description,
+    projectIdentifier: formData.projectIdentifier,
+    identifier: formData.identifier,
+    orgIdentifier: formData.orgIdentifier,
+    tags: formData.tags,
+    type: Connectors.Bamboo,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      bambooUrl: formData.bambooUrl.trim(),
+      auth: {
+        type: 'UsernamePassword',
+        spec: {
+          username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
+          usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+          passwordRef: formData.password.referenceString
+        }
+      }
     }
   }
   return { connector: savedData }
@@ -1368,21 +1460,29 @@ export const buildAzureArtifactsPayload = (formData: FormData) => {
 
 export const buildJiraPayload = (formData: FormData) => {
   const savedData = {
-    name: formData.name,
-    description: formData.description,
-    identifier: formData.identifier,
-    projectIdentifier: formData.projectIdentifier,
-    orgIdentifier: formData.orgIdentifier,
-    tags: formData.tags,
+    ...pick(formData, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'description', 'tags']),
     type: Connectors.Jira,
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
       jiraUrl: formData.jiraUrl,
 
-      username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-      usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
-      passwordRef: formData.passwordRef.referenceString
+      auth: {
+        type: formData.authType,
+        spec: {
+          username: formData?.username?.type === ValueType.TEXT ? formData?.username?.value : undefined,
+          usernameRef: formData?.username?.type === ValueType.ENCRYPTED ? formData?.username?.value : undefined,
+          passwordRef: formData?.passwordRef?.referenceString,
+          patRef: formData?.patRef?.referenceString
+        }
+      }
     }
+  }
+  if (formData.authType === AuthTypes.USER_PASSWORD) {
+    delete savedData.spec.auth.spec.patRef
+  } else {
+    delete savedData.spec.auth.spec.username
+    delete savedData.spec.auth.spec.usernameRef
+    delete savedData.spec.auth.spec.passwordRef
   }
   return { connector: savedData }
 }
@@ -1396,16 +1496,25 @@ export const setupJiraFormData = async (connectorInfo: ConnectorInfoDTO, account
 
   const formData = {
     jiraUrl: connectorInfo.spec.jiraUrl,
+    authType: connectorInfo.spec.auth.type,
 
     username:
-      connectorInfo.spec.username || connectorInfo.spec.usernameRef
+      connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD &&
+      (connectorInfo.spec.auth.spec?.username || connectorInfo.spec.auth.spec?.usernameRef)
         ? {
-            value: connectorInfo.spec.username || connectorInfo.spec.usernameRef,
-            type: connectorInfo.spec.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+            value: connectorInfo.spec.auth.spec?.username || connectorInfo.spec.auth.spec?.usernameRef,
+            type: connectorInfo.spec.auth.spec?.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
           }
         : undefined,
 
-    passwordRef: await setSecretField(connectorInfo.spec.passwordRef, scopeQueryParams)
+    passwordRef:
+      connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
+        ? await setSecretField(connectorInfo.spec.auth.spec?.passwordRef, scopeQueryParams)
+        : undefined,
+    patRef:
+      connectorInfo.spec.auth.type === AuthTypes.PERSONAL_ACCESS_TOKEN
+        ? await setSecretField(connectorInfo.spec.auth.spec?.patRef, scopeQueryParams)
+        : undefined
   }
   return formData
 }
@@ -1427,8 +1536,8 @@ export const buildHelmPayload = (formData: FormData) => {
           ? {
               type: formData.authType,
               spec: {
-                username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-                usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+                username: formData.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
+                usernameRef: formData.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
                 passwordRef: formData.password.referenceString
               }
             }
@@ -1457,8 +1566,8 @@ export const buildOCIHelmPayload = (formData: FormData) => {
           ? {
               type: formData.authType,
               spec: {
-                username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-                usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+                username: formData.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
+                usernameRef: formData.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
                 passwordRef: formData.password.referenceString
               }
             }
@@ -1690,8 +1799,8 @@ export const buildGitPayload = (formData: FormData) => {
         formData.connectionType === GitConnectionType.SSH
           ? { sshKeyRef: formData.sshKey.referenceString }
           : {
-              username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-              usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+              username: formData.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
+              usernameRef: formData.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
               passwordRef: formData.password.referenceString
             }
 
@@ -1737,8 +1846,8 @@ export const buildNexusPayload = (formData: FormData) => {
         spec:
           formData.authType === AuthTypes.USER_PASSWORD
             ? {
-                username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-                usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+                username: formData.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
+                usernameRef: formData.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
                 passwordRef: formData.password.referenceString
               }
             : null
@@ -1762,8 +1871,8 @@ export const buildArtifactoryPayload = (formData: FormData) => {
         spec:
           formData.authType === AuthTypes.USER_PASSWORD
             ? {
-                username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-                usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+                username: formData.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
+                usernameRef: formData.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
                 passwordRef: formData.password.referenceString
               }
             : null
@@ -2080,8 +2189,8 @@ export const buildServiceNowPayload = (formData: FormData) => {
       auth: {
         type: formData.authType,
         spec: {
-          username: formData?.username?.type === ValueType.TEXT ? formData.username.value : undefined,
-          usernameRef: formData?.username?.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+          username: formData?.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
+          usernameRef: formData?.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
           passwordRef: formData?.passwordRef?.referenceString,
           resourceIdRef: formData?.resourceIdRef?.referenceString,
           clientIdRef: formData?.clientIdRef?.referenceString,
@@ -2304,6 +2413,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'microsoft-azure'
     case Connectors.JENKINS:
       return 'service-jenkins'
+    case Connectors.Bamboo:
+      return 'service-bamboo'
     case Connectors.AZURE_ARTIFACTS:
       return 'service-azure-artifact-connector'
     case Connectors.CUSTOM_SECRET_MANAGER:
@@ -2314,6 +2425,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'spot'
     case Connectors.TAS:
       return 'tas'
+    case Connectors.TERRAFORM_CLOUD:
+      return 'terraform-cloud'
     default:
       return 'cog'
   }
@@ -2397,6 +2510,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Azure Artifacts'
     case Connectors.TAS:
       return 'Tanzu Application Service'
+    case Connectors.TERRAFORM_CLOUD:
+      return 'Terraform Cloud'
     default:
       return ''
   }
@@ -2504,6 +2619,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.spot')
     case Connectors.TAS:
       return getString('connectors.testConnectionStep.validationText.tas')
+    case Connectors.TERRAFORM_CLOUD:
+      return getString('connectors.testConnectionStep.validationText.terraform')
     default:
       return ''
   }

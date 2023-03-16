@@ -14,7 +14,7 @@ import routes from '@common/RouteDefinitions'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type {
-  GitQueryParams,
+  InputSetGitQueryParams,
   PipelineType,
   TemplateStudioPathProps,
   TemplateStudioQueryParams
@@ -36,26 +36,37 @@ export enum ErrorPlacement {
 }
 interface NoEntityFoundProps {
   identifier: string
-  entityType: 'pipeline' | 'inputSet' | 'template'
+  entityType: 'pipeline' | 'inputSet' | 'template' | 'overlayInputSet'
   errorObj?: Error | TemplateError
   gitDetails?: GitRemoteDetailsProps
+  entityConnectorRef?: string
   errorPlacement?: ErrorPlacement
+  onBranchChange?: (branch: string) => void
 }
 
 const entityTypeLabelMapping = {
   pipeline: 'pipeline',
   inputSet: 'input set',
+  overlayInputSet: 'overlay input set',
   template: 'template'
 }
 
 function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
-  const { identifier, entityType, errorObj, gitDetails, errorPlacement = ErrorPlacement.TOP } = props
+  const {
+    identifier,
+    entityType,
+    errorObj,
+    gitDetails,
+    errorPlacement = ErrorPlacement.TOP,
+    entityConnectorRef,
+    onBranchChange
+  } = props
   const { repoIdentifier, branch, versionLabel, connectorRef, storeType, repoName } =
     useQueryParams<TemplateStudioQueryParams>()
   const { getString } = useStrings()
   const history = useHistory()
   const { supportingGitSimplification } = useAppStore()
-  const { replaceQueryParams } = useUpdateQueryParams<GitQueryParams>()
+  const { replaceQueryParams, updateQueryParams } = useUpdateQueryParams<Partial<InputSetGitQueryParams>>()
   const { fetchPipeline } = usePipelineContext()
 
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
@@ -77,7 +88,7 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
         // For GitX, if branch is not given BranchSelectV2 will internally select default and
         // notify parent with this callback. For that we do not want to reload the page.
         // For old GitSync branch is always availble so this check for internally selecting default branch will not matter.
-        if (!defaultSelected && branch !== selectedFilter.branch) {
+        if (!defaultSelected && (branch !== selectedFilter.branch || entityType !== 'pipeline')) {
           if (entityType === 'pipeline') {
             history.push(
               routes.toPipelineStudio({
@@ -104,22 +115,28 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
               branch: selectedFilter.branch
             })
           } else if (entityType === 'inputSet') {
-            replaceQueryParams(
-              {
-                branch: selectedFilter.branch,
-                repoIdentifier: selectedFilter.repo,
-                ...(isPipelineRemote
-                  ? {
-                      repoName,
-                      connectorRef,
-                      storeType
-                    }
-                  : {})
-              },
-              { skipNulls: true },
-              true
-            )
+            if (gitDetails?.repoName) {
+              updateQueryParams({ inputSetBranch: selectedFilter.branch })
+            } else {
+              replaceQueryParams(
+                {
+                  branch: selectedFilter.branch,
+                  repoIdentifier: selectedFilter.repo,
+                  ...(isPipelineRemote
+                    ? {
+                        repoName,
+                        connectorRef: entityConnectorRef || connectorRef,
+                        storeType
+                      }
+                    : {})
+                },
+                { skipNulls: true },
+                true
+              )
+            }
             location.reload()
+          } else if (entityType === 'overlayInputSet') {
+            onBranchChange?.(defaultTo(selectedFilter.branch, ''))
           } else {
             history.push(
               routes.toTemplateStudio({
@@ -137,6 +154,7 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
           }
         }
       },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [repoIdentifier, branch, identifier, orgIdentifier, projectIdentifier, accountId, module]
   )
 
@@ -160,7 +178,7 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
         </Text>
         {supportingGitSimplification ? (
           <GitRemoteDetails
-            connectorRef={gitDetails?.connectorRef || connectorRef}
+            connectorRef={gitDetails?.connectorRef || entityConnectorRef || connectorRef}
             repoName={gitDetails?.repoName || repoName}
             branch={gitDetails?.branch || branch}
             flags={{ borderless: false, showRepo: false, normalInputStyle: true }}

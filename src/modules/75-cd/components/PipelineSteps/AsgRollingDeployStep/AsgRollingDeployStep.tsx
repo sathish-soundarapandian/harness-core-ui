@@ -42,6 +42,7 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { instanceWarmupSchema, minimumHealthyPercentageSchema } from './utils'
+import css from './AsgRollingDeployStep.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -167,7 +168,6 @@ function AsgRollingDeployWidget(
                             variableName="spec.minimumHealthyPercentage"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={
                               /* istanbul ignore next */ value => setFieldValue('spec.minimumHealthyPercentage', value)
                             }
@@ -196,7 +196,6 @@ function AsgRollingDeployWidget(
                             variableName="spec.instanceWarmup"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={/* istanbul ignore next */ value => setFieldValue('spec.instanceWarmup', value)}
                             isReadonly={readonly}
                             allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}
@@ -236,7 +235,7 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
   return (
     <>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeDurationField
             multiTypeDurationProps={{
               configureOptionsProps: {
@@ -253,7 +252,7 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
         </div>
       ) : null}
       {getMultiTypeFromValue(template?.spec?.useAlreadyRunningInstances) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeCheckboxField
             multiTypeTextbox={{
               expressions,
@@ -279,6 +278,7 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
             label="Minimum Healthy Percentage"
             disabled={readonly}
             template={template}
+            className={css.fieldInputSetView}
             fieldPath={`spec.minimumHealthyPercentage`}
           />
         </div>
@@ -297,11 +297,12 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
             disabled={readonly}
             template={template}
             fieldPath={`spec.instanceWarmup`}
+            className={css.fieldInputSetView}
           />
         </div>
       )}
       {getMultiTypeFromValue(template?.spec?.skipMatching) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeCheckboxField
             multiTypeTextbox={{
               expressions,

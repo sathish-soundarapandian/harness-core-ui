@@ -21,6 +21,7 @@ import { Ecr } from '@triggers/components/Triggers/ArtifactTrigger/Ecr/Ecr'
 import { Gcr } from '@triggers/components/Triggers/ArtifactTrigger/Gcr/Gcr'
 import { Jenkins } from '@triggers/components/Triggers/ArtifactTrigger/Jenkins/Jenkins'
 import { Nexus3Registry } from '@triggers/components/Triggers/ArtifactTrigger/Nexus3Registry/Nexus3Registry'
+import { GoogleCloudStorage } from '@triggers/components/Triggers/ArtifactTrigger/GoogleCloudStorage/GoogleCloudStorage'
 
 // Scheduled Triggers
 import { Cron } from '@triggers/components/Triggers/ScheduledTrigger/Cron/Cron'
@@ -64,6 +65,7 @@ TriggerFactory.registerTrigger(new GithubPackageRegistry())
 TriggerFactory.registerTrigger(new GoogleArtifactRegistry())
 TriggerFactory.registerTrigger(new AmazonMachineImage())
 TriggerFactory.registerTrigger(new Custom())
+TriggerFactory.registerTrigger(new GoogleCloudStorage())
 // Manifest Triggers
 TriggerFactory.registerTrigger(new HelmChart())
 

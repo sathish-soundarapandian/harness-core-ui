@@ -6,6 +6,7 @@
  */
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 
 export const spec = {
   applicationName: '<+input>',
@@ -114,4 +115,97 @@ export const templateYamlDataGCO = {
   },
   metaData: null,
   correlationId: '458ea1a0-c04d-4180-8e22-5fa4a2511cb8'
+}
+
+export const payloadParameter = {
+  type: 'Application',
+  serviceRef: 'app_service_uf2e4s3KFc',
+  environmentRef: 'prod',
+  sources: {
+    healthSources: [
+      {
+        identifier: 'testGCP',
+        type: 'Stackdriver',
+        spec: {
+          metricDefinitions: [
+            {
+              identifier: 'logging.googleapis.com/user/service_startup_time',
+              jsonMetricDefinitionString: '{"a": 1, "b": 2}'
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+export const expectedOutput = {
+  sources: {
+    healthSources: [
+      {
+        identifier: 'testGCP',
+        spec: {
+          metricDefinitions: [
+            {
+              identifier: 'logging.googleapis.com/user/service_startup_time',
+              jsonMetricDefinitionString: '{"a": 1, "b": 2}'
+            }
+          ]
+        },
+        type: 'Stackdriver'
+      }
+    ]
+  }
+}
+
+export const useGetTemplateOrgResult = {
+  queryParams: {
+    accountIdentifier: 'accountId',
+    getDefaultFromOtherRepo: true,
+    orgIdentifier: 'orgIdentifier',
+    versionLabel: '1'
+  },
+  templateIdentifier: 'AppD_default_metrics_runtime_connector'
+}
+
+export const useGetTemplateProjectResult = {
+  ...useGetTemplateOrgResult,
+  queryParams: {
+    ...useGetTemplateOrgResult.queryParams,
+    projectIdentifier: 'projectIdentifier'
+  }
+}
+
+export const useGetTemplateInputSetYamlOrgResult = {
+  lazy: true,
+  queryParams: {
+    accountIdentifier: 'accountId',
+    getDefaultFromOtherRepo: true,
+    orgIdentifier: 'orgIdentifier',
+    versionLabel: '1'
+  },
+  requestOptions: { headers: { 'Load-From-Cache': 'true' } },
+  templateIdentifier: 'AppD_default_metrics_runtime_connector'
+}
+
+export const useGetTemplateInputSetYamlProjectResult = {
+  ...useGetTemplateInputSetYamlOrgResult,
+  queryParams: {
+    ...useGetTemplateInputSetYamlOrgResult.queryParams,
+    projectIdentifier: 'projectIdentifier'
+  }
+}
+
+export const orgProps = {
+  identifier: 'AppD_default_metrics_runtime_connector',
+  accountId: 'accountId',
+  orgIdentifier: 'orgIdentifier',
+  projectIdentifier: 'projectIdentifier',
+  versionLabel: '1',
+  templateScope: 'org' as TemplateSummaryResponse['templateScope']
+}
+
+export const projectProps = {
+  ...orgProps,
+  templateScope: 'project' as TemplateSummaryResponse['templateScope']
 }

@@ -30,7 +30,8 @@ import type { EntityGitDetails, Failure, NGTemplateInfoConfig, TemplateSummaryRe
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
 import useCommentModal from '@common/hooks/CommentModal/useCommentModal'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType, SaveTemplateAsType } from '@common/constants/GitSyncTypes'
+
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
@@ -139,7 +140,8 @@ function SaveTemplatePopover(
   const nextCallback = async (
     latestTemplate: TemplateSummaryResponse,
     updatedGitDetails?: SaveToGitFormInterface,
-    updatedStoreMetadata?: StoreMetadata
+    updatedStoreMetadata?: StoreMetadata,
+    saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
   ) => {
     const isInlineTemplate = isEmpty(updatedGitDetails) && updatedStoreMetadata?.storeType !== StoreType.REMOTE
     if (isInlineTemplate) {
@@ -149,8 +151,15 @@ function SaveTemplatePopover(
         await customDeleteTemplateCache()
         navigateToLocation(latestTemplate, updatedGitDetails)
       } else {
+        // This block handles template update scenario for an inline template
         showSuccess(getString('common.template.updateTemplate.templateUpdated'))
-        await fetchTemplate({ forceFetch: true, forceUpdate: true })
+        if (saveAsType === SaveTemplateAsType.NEW_LABEL_VERSION || saveAsType === SaveTemplateAsType.NEW_TEMPALTE) {
+          // Navigates the user to newly created template or newly created version label of the same template
+          navigateToLocation(latestTemplate, updatedGitDetails)
+        } else {
+          // Reloads the updated template to show latest values
+          await fetchTemplate({ forceFetch: true, forceUpdate: true })
+        }
       }
     } else {
       // If new template creation
@@ -311,7 +320,8 @@ function SaveTemplatePopover(
         intent: Intent.SAVE,
         disabledFields: [Fields.Name, Fields.Identifier, Fields.StoreType],
         lastPublishedVersion,
-        onFailure: onSaveAsNewFailure
+        onFailure: onSaveAsNewFailure,
+        saveAsType: SaveTemplateAsType.NEW_LABEL_VERSION
       })
       showConfigModal()
     } catch (error) {
@@ -334,7 +344,8 @@ function SaveTemplatePopover(
         title: getString('common.template.saveAsNewTemplateHeading'),
         intent: Intent.SAVE,
         allowScopeChange: true,
-        onFailure: onSaveAsNewFailure
+        onFailure: onSaveAsNewFailure,
+        saveAsType: SaveTemplateAsType.NEW_TEMPALTE
       })
       showConfigModal()
     } catch (error) {

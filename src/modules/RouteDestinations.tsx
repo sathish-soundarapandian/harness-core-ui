@@ -25,7 +25,7 @@ import userProfileRoutes from '@user-profile/RouteDestinations'
 import '@pipeline/RouteDestinations'
 import CDRoutes from '@cd/RouteDestinations'
 import CIRoutes from '@ci/RouteDestinations'
-import SSCSRoutes from '@sscs/RouteDestinations'
+import SSCARoutes from '@ssca/RouteDestinations'
 import CVRoutes from '@cv/RouteDestinations'
 import CFRoutes from '@cf/RouteDestinations'
 import CERoutes from '@ce/RouteDestinations'
@@ -42,6 +42,7 @@ import DefaultSettingsRoutes from '@default-settings/RouteDestinations'
 import CODERouteDestinations from '@code/RouteDestinations'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
+import ETRoutes from '@et/RouteDestinations'
 
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
@@ -51,7 +52,6 @@ export const AccountSideNavProps: SidebarContext = {
 
 export default function RouteDestinations(): React.ReactElement {
   const {
-    CDNG_ENABLED,
     CVNG_ENABLED,
     CING_ENABLED,
     CENG_ENABLED,
@@ -60,8 +60,9 @@ export default function RouteDestinations(): React.ReactElement {
     NG_SETTINGS,
     CODE_ENABLED,
     IACM_ENABLED,
-    SSCS_ENABLED,
-    IDP_ENABLED
+    SSCA_ENABLED,
+    IDP_ENABLED,
+    CET_ENABLED
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
@@ -90,7 +91,7 @@ export default function RouteDestinations(): React.ReactElement {
       {userProfileRoutes.props.children}
       {CHAOS_ENABLED ? ChaosRoutes().props.children : null}
       {CING_ENABLED ? CIRoutes.props.children : null}
-      {CDNG_ENABLED ? CDRoutes.props.children : null}
+      {licenseInformation['CD']?.status === 'ACTIVE' ? CDRoutes.props.children : null}
       {isCVModuleEnabled ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
       {IDP_ENABLED ? IDPRoutes.props.children : null}
@@ -109,7 +110,8 @@ export default function RouteDestinations(): React.ReactElement {
       ) : null}
       {CFNG_ENABLED ? CFRoutes({})?.props.children : null}
       {IACM_ENABLED ? IACMRoutes().props.children : null}
-      {SSCS_ENABLED ? SSCSRoutes.props.children : null}
+      {SSCA_ENABLED ? SSCARoutes.props.children : null}
+      {CET_ENABLED ? ETRoutes({})?.props.children : null}
       <Route path="*">
         <NotFoundPage />
       </Route>

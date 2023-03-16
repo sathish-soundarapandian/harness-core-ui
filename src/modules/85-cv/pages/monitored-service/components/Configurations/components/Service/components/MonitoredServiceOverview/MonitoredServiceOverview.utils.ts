@@ -9,6 +9,9 @@ import type { FormikProps } from 'formik'
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { MonitoredServiceForm } from '../../Service.types'
 
+export const orgSuffix = 'org.'
+export const accountSuffix = 'account.'
+
 export function generateMonitoredServiceName(serviceIdentifier?: string, envIdentifier?: string): string {
   let name = ''
   if (serviceIdentifier?.length) {
@@ -16,6 +19,10 @@ export function generateMonitoredServiceName(serviceIdentifier?: string, envIden
   }
   if (envIdentifier?.length) {
     name += name?.length ? `_${envIdentifier}` : envIdentifier
+  }
+
+  if (name.includes(orgSuffix) || name.includes(accountSuffix)) {
+    name = name.replace(/orgSuffix/g, 'ORG_').replace(/accountSuffix/g, 'ACCOUNT_')
   }
 
   return name

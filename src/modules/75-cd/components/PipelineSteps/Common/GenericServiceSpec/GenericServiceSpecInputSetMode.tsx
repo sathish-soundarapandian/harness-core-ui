@@ -7,24 +7,27 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { AllowedTypes, Layout } from '@harness/uicore'
 import cx from 'classnames'
+import { defaultTo, get } from 'lodash-es'
+import { AllowedTypes, Layout } from '@harness/uicore'
 
-import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ApplicationSettingsConfiguration, ConnectionStringsConfiguration, ServiceSpec } from 'services/cd-ng'
-import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { CustomVariablesData } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import type { CustomVariableInputSetExtraProps } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { AllNGVariables } from '@pipeline/utils/types'
-import applicationConfigBaseFactory from '@cd/factory/ApplicationConfigFactory/ApplicationConfigFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { RuntimeApplicationConfig } from '@pipeline/components/RuntimeApplicationConfig/RuntimeApplicationConfig'
+import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
+import applicationConfigBaseFactory from '@cd/factory/ApplicationConfigFactory/ApplicationConfigFactory'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
-import { RuntimeApplicationConfig } from '@pipeline/components/RuntimeApplicationConfig/RuntimeApplicationConfig'
 import type { K8SDirectServiceStep } from '../../K8sServiceSpec/K8sServiceSpecInterface'
 import { KubernetesArtifacts } from '../../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from '../../K8sServiceSpec/KubernetesManifests/KubernetesManifests'
@@ -69,6 +72,7 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
     allowableTypes
   } = props
   const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
   const commonProps = {
     stepViewType,
     formik,
@@ -97,6 +101,22 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
           stageIdentifier={stageIdentifier}
           template={template as ServiceSpec}
           {...commonProps}
+        />
+      )}
+
+      {isValueRuntimeInput(get(template, `ecsTaskDefinitionArn`)) && (
+        <TextFieldInputSetView
+          name={`${path}.ecsTaskDefinitionArn`}
+          label={getString('cd.serviceDashboard.taskDefinitionArn')}
+          placeholder={getString('cd.pipelineSteps.serviceTab.manifest.taskDefinitionARNPlaceholder')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          fieldPath={`ecsTaskDefinitionArn`}
+          template={template}
+          className={css.inputFieldLayout}
         />
       )}
 

@@ -84,6 +84,7 @@ declare interface Window {
     async: boolean
   }
   noAuthHeader: boolean
+  MonacoEnvironment: any
 }
 
 declare interface WindowEventMap {
@@ -205,12 +206,17 @@ declare module 'iacm/IACMStage' {
   export default ChildApp
 }
 
+declare module 'iacm/IACMStageInputSet' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'iacm/IACMPipelineResources' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
-declare module 'sscs/MicroFrontendApp' {
+declare module 'ssca/MicroFrontendApp' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }

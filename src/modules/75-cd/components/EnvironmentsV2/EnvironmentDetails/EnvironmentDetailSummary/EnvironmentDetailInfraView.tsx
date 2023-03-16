@@ -17,8 +17,8 @@ import { DialogEmptyState } from './EnvironmentDetailsUtils'
 import css from './EnvironmentDetailSummary.module.scss'
 
 interface EnvironmentDetailInfraViewProps {
-  artifactVersion: string
-  artifactPath: string
+  artifactVersion?: string
+  artifactPath?: string
   serviceFilter: string
   envFilter: string
   data: InstanceGroupedByInfrastructureV2[][]
@@ -87,7 +87,7 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
         {capitalize(getString('cd.serviceDashboard.artifact')) + ':'}
       </Text>
       <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
-        {artifactVersion}
+        {artifactVersion ? artifactVersion : '-'}
       </Text>
     </Layout.Horizontal>
   )

@@ -97,7 +97,6 @@ export function ShellScriptProvisionConfig(props: MultiTypeMapProps): React.Reac
           variableName={name}
           showRequiredField={false}
           showDefaultField={false}
-          showAdvanced={true}
           onChange={/* istanbul ignore next */ val => formik?.setFieldValue(name, val)}
           {...configureOptionsProps}
           isReadonly={props.disabled}

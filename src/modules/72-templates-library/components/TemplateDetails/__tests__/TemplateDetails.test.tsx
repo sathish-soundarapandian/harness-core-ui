@@ -13,6 +13,7 @@ import produce from 'immer'
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockTemplates, mockTemplatesSuccessResponse } from '@templates-library/TemplatesTestHelper'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { mockTemplatesInputYaml } from '@pipeline/components/PipelineStudio/PipelineStudioTestHelper'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import { templatePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
@@ -20,9 +21,6 @@ import { mockBranches } from '@gitsync/components/GitSyncForm/__tests__/mockdata
 import { TemplateDetails, TemplateDetailsProps } from '../TemplateDetails'
 
 const gitAppStoreValues = {
-  featureFlags: {
-    PIE_NG_GITX_CACHING: true
-  },
   isGitSyncEnabled: false,
   isGitSimplificationEnabled: true,
   supportingGitSimplification: true,
@@ -59,6 +57,14 @@ jest.mock('services/template-ng', () => ({
   useGetTemplate: jest.fn().mockImplementation((...args) => {
     useGetTemplateMock(...args)
     return {}
+  }),
+  useGetTemplateInputSetYaml: jest
+    .fn()
+    .mockImplementation(() => ({ data: mockTemplatesInputYaml, refetch: jest.fn(), error: null, loading: false })),
+  useListTemplateUsage: () => ({
+    loading: false,
+    data: {},
+    refetch: jest.fn()
   })
 }))
 

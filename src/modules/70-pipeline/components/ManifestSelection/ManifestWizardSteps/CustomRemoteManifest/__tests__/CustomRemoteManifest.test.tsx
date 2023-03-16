@@ -138,6 +138,7 @@ describe('Custom remote tests', () => {
           type: 'K8sManifest',
           spec: {
             skipResourceVersioning: true,
+            enableDeclarativeRollback: false,
             valuesPaths: ['test-path'],
             store: {
               spec: {

@@ -50,8 +50,9 @@ export function ChangeSourceDrawer({
   const isCustomChangeSourceEnabled = useFeatureFlag(FeatureFlag.SRM_CUSTOM_CHANGE_SOURCE)
 
   const onSuccessWrapper = (data: UpdatedChangeSourceDTO): void => {
+    const isCustom = CustomChangeSourceList.includes(data?.type as ChangeSourceTypes)
     // for PagerDuty
-    if (data.type === ChangeSourceTypes.PagerDuty) {
+    if (data.type === ChangeSourceTypes.PagerDuty || isCustom) {
       data.enabled = true
     }
     data['spec'] = updateSpecByType(data)
@@ -129,7 +130,7 @@ export function ChangeSourceDrawer({
   return (
     <Formik
       formName={'changeSourceaForm'}
-      initialValues={rowdata?.category ? rowdata : buildInitialData(categoryOptions)}
+      initialValues={rowdata?.category ? rowdata : buildInitialData(categoryOptions, isCustomChangeSourceEnabled)}
       onSubmit={onSuccessWrapper}
       validate={values => validateChangeSource(values, tableData, isEdit, getString)}
       enableReinitialize
@@ -144,7 +145,8 @@ export function ChangeSourceDrawer({
               <Container
                 margin={{ bottom: 'large' }}
                 className={cx({
-                  [style.removeEditButton]: createCardOptions(formik.values?.category, getString).length === 1
+                  [style.removeEditButton]:
+                    createCardOptions(formik.values?.category, getString, isCustomChangeSourceEnabled).length === 1
                 })}
                 width="300px"
               >

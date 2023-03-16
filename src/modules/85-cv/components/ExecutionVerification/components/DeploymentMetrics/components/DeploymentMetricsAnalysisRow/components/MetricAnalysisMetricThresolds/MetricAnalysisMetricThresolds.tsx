@@ -78,7 +78,7 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
     if (action) {
       return (
         <Text className={css.label} lineClamp={1}>
-          {getActionText(action?.toLocaleUpperCase(), criteria?.actionableCount)}
+          {getActionText(action?.toLocaleUpperCase(), getString, criteria?.actionableCount)}
         </Text>
       )
     } else return <></>
@@ -117,19 +117,19 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
       {
         Header: getString('cv.metricsAnalysis.metricThresholds.criteria'),
         accessor: row => row?.criteria?.measurementType,
-        width: '22.5%',
+        width: '21.5%',
         Cell: RenderCriteria
       },
       {
         Header: getString('cv.metricsAnalysis.metricThresholds.value'),
         accessor: row => row?.criteria,
-        width: '22.5%',
+        width: '20%',
         Cell: RenderValue
       },
       {
         Header: getString('cf.auditLogs.action'),
         accessor: 'action',
-        width: '22.5%',
+        width: '26%',
         Cell: RenderAction
       },
       {

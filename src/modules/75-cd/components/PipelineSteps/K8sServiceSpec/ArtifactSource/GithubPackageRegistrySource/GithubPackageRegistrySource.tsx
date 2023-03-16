@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
 
-import { FormInput, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { FormInput, Layout, Text } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -29,6 +29,8 @@ import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRe
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getFqnPath,
@@ -37,7 +39,7 @@ import {
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity
 } from '../artifactSourceUtils'
-import css from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
+import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
@@ -321,7 +323,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
-                allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+                allowableTypes,
                 expressions
               }}
               type={ArtifactToConnectorMap[defaultTo(artifact?.type, '')]}
@@ -333,10 +335,11 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.org`, template) && (
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.org`}
+              template={template}
               name={`${path}.artifacts.${artifactPath}.spec.org`}
               label={getString('projectsOrgs.orgName')}
-              isOptional={true}
               onChange={() => {
                 if (isFieldRuntime(`artifacts.${artifactPath}.spec.packageName`, template))
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.packageName`, '')
@@ -351,7 +354,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.packageName`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.packageName`}
+              template={template}
               selectItems={getPackages()}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.packageName`)}
               name={`${path}.artifacts.${artifactPath}.spec.packageName`}
@@ -387,7 +392,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.version`}
+              template={template}
               name={`${path}.artifacts.${artifactPath}.spec.version`}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
@@ -436,7 +443,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.versionRegex`, template) && (
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.versionRegex`}
+              template={template}
               name={`${path}.artifacts.${artifactPath}.spec.versionRegex`}
               label={getString('pipeline.artifactsSelection.versionRegex')}
               placeholder={getString('pipeline.artifactsSelection.versionRegexPlaceholder')}

@@ -38,13 +38,19 @@ import {
   useGetBucketListForS3
 } from 'services/cd-ng'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { HelmWithGcsDataType } from '../../ManifestInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type { HelmWithGcsDataType, HelmWithS3ManifestLastStepPrevStepData } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
-import { helmVersions, ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  helmVersions,
+  ManifestDataType,
+  ManifestIdentifierValidation
+} from '../../Manifesthelper'
 import { handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
@@ -59,6 +65,7 @@ interface HelmWithHttpPropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   deploymentType?: string
+  editManifestModePrevStepData?: HelmWithS3ManifestLastStepPrevStepData
 }
 
 function HelmWithS3({
@@ -71,15 +78,18 @@ function HelmWithS3({
   previousStep,
   manifestIdsList,
   isReadonly = false,
-  deploymentType
+  deploymentType,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & HelmWithHttpPropType): React.ReactElement {
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
   const { getString } = useStrings()
+  const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const { getRBACErrorMessage } = useRBACError()
   const [regions, setRegions] = useState<SelectOption[]>([])
 
-  /* Code related to region */
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
+  /* Code related to region */
   const { data: regionData } = useListAwsRegions({
     queryParams: {
       accountId
@@ -101,7 +111,7 @@ function HelmWithS3({
   const fetchBucket = (regionValue: string): void => {
     refetchBuckets({
       queryParams: {
-        connectorRef: prevStepData?.connectorRef?.value,
+        connectorRef: modifiedPrevStepData?.connectorRef?.value,
         region: regionValue,
         accountIdentifier: accountId,
         projectIdentifier,
@@ -152,7 +162,7 @@ function HelmWithS3({
     initialValues?.spec?.skipResourceVersioning,
     initialValues?.spec?.commandFlags
   )
-  const [selectedHelmVersion, setHelmVersion] = useState(defaultTo(initialValues?.spec?.helmVersion, 'V2'))
+  const [selectedHelmVersion, setHelmVersion] = useState(defaultTo(initialValues?.spec?.helmVersion, 'V3'))
 
   const setBucketNameInitialValue = (
     values: HelmWithGcsDataType & { region: SelectOption | string },
@@ -160,7 +170,7 @@ function HelmWithS3({
   ): void => {
     if (
       getMultiTypeFromValue(specValues?.bucketName) === MultiTypeInputType.FIXED &&
-      getMultiTypeFromValue(prevStepData?.connectorRef) === MultiTypeInputType.FIXED &&
+      getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) === MultiTypeInputType.FIXED &&
       getMultiTypeFromValue(specValues?.region) === MultiTypeInputType.FIXED
     ) {
       merge(values, { bucketName: { label: specValues?.bucketName, value: specValues?.bucketName } })
@@ -180,7 +190,9 @@ function HelmWithS3({
         helmVersion: initialValues.spec?.helmVersion,
         chartName: initialValues.spec?.chartName,
         chartVersion: initialValues.spec?.chartVersion,
+        subChartName: initialValues.spec?.subChartName,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
@@ -205,10 +217,12 @@ function HelmWithS3({
       bucketName: '',
       region: '',
       folderPath: '/',
-      helmVersion: 'V2',
+      helmVersion: 'V3',
       chartName: '',
       chartVersion: '',
+      subChartName: '',
       skipResourceVersioning: false,
+      enableDeclarativeRollback: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
   }
@@ -233,11 +247,16 @@ function HelmWithS3({
           valuesPaths:
             typeof formData?.valuesPaths === 'string'
               ? formData?.valuesPaths
-              : formData?.valuesPaths?.map((path: { path: string }) => path.path),
+              : removeEmptyFieldsFromStringArray(formData?.valuesPaths?.map((path: { path: string }) => path.path)),
           chartName: formData?.chartName,
           chartVersion: formData?.chartVersion,
+          subChartName: formData?.subChartName,
           helmVersion: formData?.helmVersion,
-          skipResourceVersioning: formData?.skipResourceVersioning
+          skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
+            formData?.skipResourceVersioning,
+            formData?.enableDeclarativeRollback
+          ),
+          enableDeclarativeRollback: formData?.enableDeclarativeRollback
         }
       }
     }
@@ -249,7 +268,7 @@ function HelmWithS3({
   const renderS3Bucket = (formik: FormikValues): JSX.Element => {
     if (
       getMultiTypeFromValue(formik.values?.region) !== MultiTypeInputType.FIXED ||
-      getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+      getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
     ) {
       return (
         <div
@@ -271,7 +290,6 @@ function HelmWithS3({
               variableName="bucketName"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('bucketName', value)}
               isReadonly={isReadonly}
             />
@@ -316,7 +334,6 @@ function HelmWithS3({
             variableName="bucketName"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('bucketName', value)}
             isReadonly={isReadonly}
           />
@@ -348,7 +365,7 @@ function HelmWithS3({
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {
-                is: val => !isEmpty(val?.value),
+                is: val => !isEmpty(val),
                 then: Yup.string().required(getString('pipeline.manifestType.commandFlagRequired'))
               })
             })
@@ -356,14 +373,14 @@ function HelmWithS3({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
@@ -412,7 +429,6 @@ function HelmWithS3({
                       variableName="region"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('region', value)
                       }}
@@ -444,7 +460,6 @@ function HelmWithS3({
                       variableName="folderPath"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('folderPath', value)}
                       isReadonly={isReadonly}
                     />
@@ -471,7 +486,6 @@ function HelmWithS3({
                       variableName="chartName"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('chartName', value)}
                       isReadonly={isReadonly}
                     />
@@ -501,7 +515,6 @@ function HelmWithS3({
                       variableName="chartVersion"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('chartVersion', value)}
                       isReadonly={isReadonly}
                     />
@@ -524,6 +537,37 @@ function HelmWithS3({
                   />
                 </div>
               </Layout.Horizontal>
+              {NG_CDS_HELM_SUB_CHARTS && (
+                <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
+                  <div
+                    className={cx(helmcss.halfWidth, {
+                      [helmcss.runtimeInput]:
+                        getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
+                    <FormInput.MultiTextInput
+                      label={getString('pipeline.manifestType.subChart')}
+                      placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
+                      name="subChartName"
+                      multiTextInputProps={{ expressions, allowableTypes }}
+                      isOptional
+                    />
+                    {getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        style={{ alignSelf: 'center', marginBottom: 5 }}
+                        value={formik.values?.subChartName as string}
+                        type="String"
+                        variableName="subChartName"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        onChange={value => formik.setFieldValue('subChartName', value)}
+                        isReadonly={isReadonly}
+                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                      />
+                    )}
+                  </div>
+                </Layout.Horizontal>
+              )}
               <div className={helmcss.halfWidth}>
                 <DragnDropPaths
                   formik={formik}
@@ -533,6 +577,7 @@ function HelmWithS3({
                   pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                   defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                  allowSinglePathDeletion
                 />
               </div>
 
@@ -553,7 +598,7 @@ function HelmWithS3({
                       allowableTypes={allowableTypes}
                       helmVersion={formik.values?.helmVersion}
                       deploymentType={deploymentType as string}
-                      helmStore={defaultTo(prevStepData?.store, '')}
+                      helmStore={defaultTo(modifiedPrevStepData?.store, '')}
                     />
                   }
                 />
@@ -565,7 +610,7 @@ function HelmWithS3({
                 variation={ButtonVariation.SECONDARY}
                 text={getString('back')}
                 icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
+                onClick={() => previousStep?.(modifiedPrevStepData)}
               />
               <Button
                 variation={ButtonVariation.PRIMARY}

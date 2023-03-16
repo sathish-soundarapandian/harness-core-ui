@@ -15,10 +15,11 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
     loading,
     onClickExpand,
     isDialogOpen,
-    textAreaName,
     isTemplate,
     expressions,
-    isConnectorRuntimeOrExpression
+    isConnectorRuntimeOrExpression,
+    isQueryButtonDisabled,
+    runQueryBtnTooltip
   } = props
   const { getString } = useStrings()
 
@@ -27,7 +28,7 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
       {isTemplate ? (
         <>
           <CVMultiTypeQuery
-            name={textAreaName || CustomMetricFormFieldNames.QUERY}
+            name={CustomMetricFormFieldNames.QUERY}
             expressions={defaultTo(expressions, [])}
             fetchRecords={handleFetchRecords}
             disableFetchButton={isEmpty(query) || isConnectorRuntimeOrExpression || loading}
@@ -36,6 +37,7 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
                 ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
                 : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
             }
+            runQueryBtnTooltip={runQueryBtnTooltip}
           />
         </>
       ) : (
@@ -51,7 +53,7 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
             )}
           </Layout.Horizontal>
           <FormInput.TextArea
-            name={textAreaName || CustomMetricFormFieldNames.QUERY}
+            name={CustomMetricFormFieldNames.QUERY}
             className={cx(css.formQueryBox)}
             placeholder={getString('cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords')}
           />
@@ -60,7 +62,8 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
               variation={ButtonVariation.SECONDARY}
               text={getString('cv.monitoringSources.commonHealthSource.runQuery')}
               onClick={handleFetchRecords}
-              disabled={isEmpty(query) || loading}
+              disabled={isQueryButtonDisabled}
+              tooltip={runQueryBtnTooltip}
             />
           </Layout.Horizontal>
         </>

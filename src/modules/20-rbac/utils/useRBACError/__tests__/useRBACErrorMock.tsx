@@ -52,6 +52,31 @@ export const projectRbacError: ErrorHandlerProps = {
   }
 }
 
+export const mulitpleErrors: ErrorHandlerProps = {
+  data: {
+    status: 'ERROR',
+    code: 'NG_ACCESS_DENIED',
+    message: 'Missing permission core_project_edit',
+    failedPermissionChecks: [
+      {
+        resourceScope: { accountIdentifier: 'testAcc', orgIdentifier: 'testOrg' },
+        resourceType: 'CONNECTOR',
+        permission: 'core_connector_view'
+      },
+      {
+        resourceScope: { accountIdentifier: 'testAcc', orgIdentifier: 'testOrg2', projectIdentifier: 'proj123' },
+        resourceType: 'CONNECTOR',
+        permission: 'core_connector_edit'
+      },
+      {
+        resourceScope: { accountIdentifier: 'testAcc', orgIdentifier: 'testOrg3' },
+        resourceType: 'CONNECTOR',
+        permission: 'core_connector_delete'
+      }
+    ]
+  }
+}
+
 export const defaultError: ErrorHandlerProps = {
   data: {
     status: 'ERROR',

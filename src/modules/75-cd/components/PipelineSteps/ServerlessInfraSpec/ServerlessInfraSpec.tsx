@@ -122,7 +122,7 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                 <FormMultiTypeConnectorField
                   name="connectorRef"
                   label={getString('connector')}
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   tooltipProps={{
@@ -150,7 +150,6 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                     variableName="connectorRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('connectorRef', value)
                     }}
@@ -192,7 +191,6 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                       variableName="region"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('region', value)
                       }}
@@ -221,7 +219,6 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                     variableName="stage"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('stage', value)
                     }}
@@ -285,7 +282,7 @@ export const ServerlessInputForm: React.FC<ServerlessSpecEditableProps & { path:
             name={`${path}.connectorRef`}
             label={getString('connector')}
             enableConfigureOptions={false}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
             type={formInfo?.type}

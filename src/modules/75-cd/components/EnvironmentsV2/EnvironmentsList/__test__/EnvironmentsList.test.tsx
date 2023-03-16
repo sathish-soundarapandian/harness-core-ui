@@ -71,7 +71,7 @@ describe('EnvironmentsList', () => {
     await waitFor(() => getByTestId('location'))
 
     expect(getByTestId('location')).toHaveTextContent(
-      '/account/dummy/cd/orgs/dummy/projects/dummy/environments/gjhjghjhg/details?sectionId=CONFIGURATION'
+      '/account/dummy/cd/orgs/dummy/projects/dummy/environments/gjhjghjhg/details?sectionId=SUMMARY'
     )
   })
 

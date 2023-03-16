@@ -235,7 +235,7 @@ exports[`Monitored Service Summary Card Service data available 1`] = `
           class="bp3-popover-target"
         >
           <span
-            class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-green500"
+            class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-green700"
             data-icon="polygon"
             tabindex="0"
           >

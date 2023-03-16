@@ -284,27 +284,21 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                                 class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                                 tabindex="0"
                               >
-                                <p
-                                  class="StyledProps--font StyledProps--main StyledProps--margin-left-xsmall"
-                                >
-                                  700
-                                  %
-                                </p>
                                 <span
-                                  class="bp3-icon bp3-icon-caret-up StyledProps--main"
-                                  icon="caret-up"
+                                  class="bp3-icon bp3-icon-caret-right StyledProps--main"
+                                  icon="caret-right"
                                 >
                                   <svg
-                                    data-icon="caret-up"
+                                    data-icon="caret-right"
                                     height="14"
                                     viewBox="0 0 16 16"
                                     width="14"
                                   >
                                     <desc>
-                                      caret-up
+                                      caret-right
                                     </desc>
                                     <path
-                                      d="M11.87 9.17s.01 0 0 0l-3.5-4C8.28 5.07 8.15 5 8 5s-.28.07-.37.17l-3.5 4a.495.495 0 00.37.83h7a.495.495 0 00.37-.83z"
+                                      d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 006 4.5v7a.495.495 0 00.83.37l4-3.5c.1-.09.17-.22.17-.37z"
                                       fill-rule="evenodd"
                                     />
                                   </svg>
@@ -380,11 +374,6 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                                     />
                                   </svg>
                                 </span>
-                                <p
-                                  class="StyledProps--font StyledProps--main"
-                                >
-                                  0%
-                                </p>
                               </div>
                             </span>
                           </span>
@@ -543,7 +532,9 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main title"
                 style="--text-line-clamp: 1;"
-              />
+              >
+                k8s-service
+              </p>
               <div
                 class="StyledProps--font StyledProps--main mainContent"
               >
@@ -565,14 +556,16 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main statContent"
-                    />
+                    >
+                      11
+                    </p>
                     <div
                       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end"
                     >
                       <p
                         class="StyledProps--font StyledProps--main statContent statWrap"
                       >
-                        0
+                        36.36
                         %
                       </p>
                       <span
@@ -626,7 +619,60 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
             >
               <div
                 class="Layout--horizontal Layout--layout-spacing-small StyledProps--main avatarWrapper"
-              />
+              >
+                <div
+                  class="wrapper"
+                >
+                  <span
+                    class="bp3-popover-wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <div
+                        class="userLabel userLabel"
+                        tabindex="0"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey900"
+                          data-icon="nav-user-profile"
+                        >
+                          <svg
+                            height="18"
+                            viewBox="0 0 24 24"
+                            width="18"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M11.5 2C5.701 2 1 6.701 1 12.5S5.701 23 11.5 23 22 18.299 22 12.5 17.299 2 11.5 2zm0 3.151a3.152 3.152 0 11-3.152 3.152A3.144 3.144 0 0111.5 5.151zm0 14.936a7.558 7.558 0 01-6.296-3.383c0-2.09 4.197-3.233 6.296-3.233s6.266 1.142 6.296 3.233a7.558 7.558 0 01-6.296 3.354z"
+                              fill="#747d88"
+                            />
+                          </svg>
+                        </span>
+                        <div
+                          class="userDetails"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-tiny"
+                            style="--text-line-clamp: 1;"
+                          >
+                            automationPipelinesNg automation
+                          </p>
+                        </div>
+                      </div>
+                    </span>
+                  </span>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny"
+                >
+                  <span
+                    class="message"
+                  >
+                    execution.triggerType.MANUAL
+                  </span>
+                </p>
+              </div>
               <div
                 class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main times StyledProps--flex StyledProps--flex-justifyContent-end"
               >
@@ -688,7 +734,7 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                     </svg>
                   </span>
                    
-                  9m 59s
+                  32s
                 </span>
               </div>
             </div>

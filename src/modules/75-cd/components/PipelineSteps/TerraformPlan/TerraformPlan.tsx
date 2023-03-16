@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Accordion,
   Button,
@@ -21,17 +21,16 @@ import {
   MultiTypeInputType,
   Text,
   StepWizard,
-  AllowedTypes
+  AllowedTypes,
+  Checkbox
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, Dialog, IOptionProps, IDialogProps } from '@blueprintjs/core'
 import * as Yup from 'yup'
-import { v4 as uuid } from 'uuid'
-
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 
-import { cloneDeep, isEmpty, set, unset, get } from 'lodash-es'
+import { cloneDeep, isEmpty, set, unset, get, isUndefined } from 'lodash-es'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -63,7 +62,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import type { StringNGVariable } from 'services/cd-ng'
+import type { TerraformVarFileWrapper } from 'services/cd-ng'
 
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
@@ -80,22 +79,19 @@ import StepArtifactoryAuthentication from '@connectors/components/CreateConnecto
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   BackendConfigurationTypes,
   CommandTypes,
+  getTFPlanInitialValues,
   onSubmitTFPlanData,
+  provisionerIdentifierValidation,
   TerraformPlanProps,
   TerraformPlanVariableStepProps,
   TFPlanFormData
 } from '../Common/Terraform/TerraformInterfaces'
-import TfVarFileList from './TfPlanVarFileList'
-
 import TerraformInputStep from './TfPlanInputStep'
 import { TerraformVariableStep } from './TfPlanVariableView'
-import { TFArtifactoryForm } from '../Common/Terraform/Editview/TerraformArtifactoryForm'
-import { formatArtifactoryData } from '../Common/Terraform/Editview/TerraformArtifactoryFormHelper'
 import { TFMonaco } from '../Common/Terraform/Editview/TFMonacoEditor'
 import {
   ConnectorMap,
@@ -106,12 +102,12 @@ import {
 } from '../Common/ConfigFileStore/ConfigFileStoreHelper'
 import { ConfigFileStoreStepTwo } from '../Common/ConfigFileStore/ConfigFileStoreStepTwo'
 import { ConfigFileStoreStepOne } from '../Common/ConfigFileStore/ConfigFileStoreStepOne'
+import { ArtifactoryForm } from '../Common/VarFile/ArtifactoryForm'
+import { formatArtifactoryData } from '../Common/VarFile/helper'
+import VarFileList from '../Common/VarFile/VarFileList'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import css from '../Common/Terraform/Editview/TerraformVarfile.module.scss'
+import css from '../Common/Terraform/TerraformStep.module.scss'
 
-const setInitialValues = (data: TFPlanFormData): TFPlanFormData => {
-  return data
-}
 interface StepChangeData<SharedObject> {
   prevStep?: number
   nextStep?: number
@@ -124,11 +120,11 @@ function TerraformPlanWidget(
 ): React.ReactElement {
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep, readonly = false, stepViewType } = props
   const { getString } = useStrings()
-  const { TERRAFORM_REMOTE_BACKEND_CONFIG } = useFeatureFlags()
+  const { TERRAFORM_REMOTE_BACKEND_CONFIG, CD_TERRAFORM_CLOUD_CLI_NG } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
-
+  const formikRefValues = React.useRef<FormikProps<unknown> | null>(null)
   const commandTypeOptions: IOptionProps[] = [
     { label: getString('filters.apply'), value: CommandTypes.Apply },
     { label: getString('pipelineSteps.destroy'), value: CommandTypes.Destroy }
@@ -286,9 +282,10 @@ function TerraformPlanWidget(
 
   const onSelectChange = (
     e: React.ChangeEvent<HTMLSelectElement>,
-    setFieldValue: (field: string, value: any) => void
+    setFieldValue: (field: string, value: any) => void,
+    fieldPath: string
   ): void => {
-    const fieldName = 'spec.configuration.backendConfig'
+    const fieldName = `spec.${fieldPath}.backendConfig`
     if (e.target.value === BackendConfigurationTypes.Inline) {
       setFieldValue(fieldName, {
         type: BackendConfigurationTypes.Inline,
@@ -314,7 +311,7 @@ function TerraformPlanWidget(
 
   const getTitle = (isBackendConfig: boolean): React.ReactElement => (
     <Layout.Vertical flex style={{ justifyContent: 'center', alignItems: 'center' }} margin={{ bottom: 'xlarge' }}>
-      <Icon name="service-terraform" className={css.remoteIcon} size={50} padding={{ bottom: 'large' }} />
+      <Icon name="service-terraform" size={50} padding={{ bottom: 'large' }} />
       <Text color={Color.WHITE}>
         {isBackendConfig ? getString('cd.backendConfigFileStoreTitle') : getString('cd.configFileStoreTitle')}
       </Text>
@@ -325,7 +322,8 @@ function TerraformPlanWidget(
     formik: any,
     isConfig: boolean,
     isBackendConfig: boolean,
-    isTerraformPlan: boolean
+    isTerraformPlan: boolean,
+    fieldPath: string
   ) => {
     return (
       <StepWizard title={getTitle(isBackendConfig)} className={css.configWizard} onStepChange={onStepChange}>
@@ -341,18 +339,20 @@ function TerraformPlanWidget(
           selectedConnector={selectedConnector}
           setSelectedConnector={setSelectedConnector}
           isTerragrunt={false}
+          fieldPath={fieldPath}
         />
         {connectorView ? getNewConnectorSteps() : null}
         {
           /* istanbul ignore next */ selectedConnector === Connectors.ARTIFACTORY ? (
-            <TFArtifactoryForm
+            <ArtifactoryForm
               isConfig={isConfig}
               isTerraformPlan
               isBackendConfig={isBackendConfig}
               allowableTypes={allowableTypes}
+              fieldPath={fieldPath}
               name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
               onSubmitCallBack={(data: any, prevStepData: any) => {
-                const path = getPath(isTerraformPlan, false, isBackendConfig)
+                const path = getPath(isTerraformPlan, false, isBackendConfig, fieldPath)
                 const configObject = get(prevStepData?.formValues, path)
 
                 const valObj = formatArtifactoryData(
@@ -360,7 +360,7 @@ function TerraformPlanWidget(
                   data,
                   configObject,
                   formik,
-                  isBackendConfig ? 'spec.configuration.backendConfig.spec' : 'spec.configuration.configFiles'
+                  isBackendConfig ? `spec.${fieldPath}.backendConfig.spec` : `spec.${fieldPath}.configFiles`
                 )
                 set(valObj, path, { ...configObject })
                 formik.setValues(valObj)
@@ -376,8 +376,9 @@ function TerraformPlanWidget(
               isBackendConfig={isBackendConfig}
               isReadonly={readonly}
               allowableTypes={allowableTypes}
+              fieldPath={fieldPath}
               onSubmitCallBack={(data: any, prevStepData: any) => {
-                const path = getPath(isTerraformPlan, false, isBackendConfig)
+                const path = getPath(isTerraformPlan, false, isBackendConfig, fieldPath)
                 const configObject = get(data, path) || {
                   store: {}
                 }
@@ -385,8 +386,8 @@ function TerraformPlanWidget(
                   configObject.store = data?.store
                 } else {
                   configObject.moduleSource = isTerraformPlan
-                    ? data.spec?.configuration?.configFiles?.moduleSource
-                    : data.spec?.configuration?.spec?.configFiles?.moduleSource
+                    ? get(data.spec, `${fieldPath}.configFiles.moduleSource`)
+                    : get(data.spec, `${fieldPath}.spec.configFiles.moduleSource`)
 
                   if (prevStepData.identifier && prevStepData.identifier !== data?.identifier) {
                     configObject.store.spec.connectorRef = prevStepData?.identifier
@@ -422,10 +423,10 @@ function TerraformPlanWidget(
     )
   }
 
-  const inlineBackendConfig = (formik: FormikProps<TFPlanFormData>): React.ReactElement => (
+  const inlineBackendConfig = (formik: FormikProps<TFPlanFormData>, fieldPath: string): React.ReactElement => (
     <div className={cx(stepCss.formGroup, css.addMarginBottom)}>
       <MultiTypeFieldSelector
-        name="spec.configuration.backendConfig.spec.content"
+        name={`spec.${fieldPath}.backendConfig.spec.content`}
         label={
           <Text style={{ color: 'rgb(11, 11, 13)' }}>
             {getString('optionalField', { name: getString('cd.backEndConfig') })}
@@ -438,7 +439,7 @@ function TerraformPlanWidget(
         expressionRender={() => {
           return (
             <TFMonaco
-              name="spec.configuration.backendConfig.spec.content"
+              name={`spec.${fieldPath}.backendConfig.spec.content`}
               formik={formik as FormikProps<unknown>}
               expressions={expressions}
               title={getString('cd.backEndConfig')}
@@ -447,28 +448,41 @@ function TerraformPlanWidget(
         }}
       >
         <TFMonaco
-          name="spec.configuration.backendConfig.spec.content"
+          name={`spec.${fieldPath}.backendConfig.spec.content`}
           formik={formik as FormikProps<unknown>}
           expressions={expressions}
           title={getString('cd.backEndConfig')}
         />
       </MultiTypeFieldSelector>
-      {getMultiTypeFromValue(formik.values.spec?.configuration?.backendConfig?.spec?.content) ===
+      {getMultiTypeFromValue(get(formik.values?.spec, `${fieldPath}.backendConfig.spec.content`)) ===
         MultiTypeInputType.RUNTIME && (
         <ConfigureOptions
-          value={formik.values.spec?.configuration?.backendConfig?.spec?.content as string}
+          value={get(formik.values?.spec, `${fieldPath}.backendConfig.spec.content`) as string}
           type="String"
-          variableName="spec.configuration.backendConfig.spec.content"
+          variableName={`spec.${fieldPath}.backendConfig.spec.content`}
           showRequiredField={false}
           showDefaultField={false}
-          showAdvanced={true}
-          onChange={value => formik.setFieldValue('spec.configuration.backendConfig.spec.content', value)}
+          onChange={value => formik.setFieldValue(`spec.${fieldPath}.backendConfig.spec.content`, value)}
           isReadonly={readonly}
         />
       )}
     </div>
   )
+  const [enableCloudCli, setEnableCloudCli] = React.useState<boolean | undefined>(undefined)
 
+  useEffect(() => {
+    setEnableCloudCli(prevEnableCloudCli => {
+      if (isUndefined(prevEnableCloudCli)) {
+        return (
+          !isEmpty((formikRefValues?.current?.values as TFPlanFormData)?.spec?.cloudCliConfiguration) &&
+          !isUndefined((formikRefValues?.current?.values as TFPlanFormData)?.spec?.cloudCliConfiguration)
+        )
+      }
+      return prevEnableCloudCli
+    })
+  }, [])
+
+  const fieldPath = enableCloudCli ? 'cloudCliConfiguration' : 'configuration'
   return (
     <Formik<TFPlanFormData>
       onSubmit={values => {
@@ -477,38 +491,40 @@ function TerraformPlanWidget(
       validate={values => {
         onChange?.(values)
       }}
-      initialValues={setInitialValues(initialValues)}
+      formName={`terraformPlanEditView-tfPlan-${sectionId}`}
+      initialValues={initialValues}
       validationSchema={Yup.object().shape({
         ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
-        spec: Yup.object().shape({
-          provisionerIdentifier: Yup.lazy((value): Yup.Schema<unknown> => {
-            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-              return IdentifierSchemaWithOutName(getString, {
-                requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
-                regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
+        spec: !enableCloudCli
+          ? Yup.object().shape({
+              provisionerIdentifier: provisionerIdentifierValidation(getString),
+              configuration: Yup.object().shape({
+                command: Yup.string().required(getString('pipelineSteps.commandRequired')),
+                secretManagerRef: Yup.string().required(getString('cd.secretManagerRequired')).nullable()
               })
-            }
-            return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
-          }),
-          configuration: Yup.object().shape({
-            command: Yup.string().required(getString('pipelineSteps.commandRequired')),
-            secretManagerRef: Yup.string().required(getString('cd.secretManagerRequired')).nullable()
-          })
-        })
+            })
+          : Yup.object().shape({
+              provisionerIdentifier: provisionerIdentifierValidation(getString),
+              cloudCliConfiguration: Yup.object().shape({
+                command: Yup.string().required(getString('pipelineSteps.commandRequired'))
+              })
+            })
       })}
-      formName={`terraformPlanEditView-tfPlan-${sectionId}`}
     >
       {(formik: FormikProps<TFPlanFormData>) => {
         const { values, setFieldValue } = formik
+        formikRefValues.current = formik as FormikProps<unknown> | null
         setFormikRef(formikRef, formik)
-        const configFile = values?.spec?.configuration?.configFiles
+
+        const configFile = get(values.spec, `${fieldPath}.configFiles`)
         const configFilePath = getConfigFilePath(configFile)
         const backendConfigFile =
-          formik.values?.spec?.configuration?.backendConfig?.type === BackendConfigurationTypes.Remote
-            ? values?.spec?.configuration?.backendConfig
+          get(values.spec, `${fieldPath}.backendConfig.type`) === BackendConfigurationTypes.Remote
+            ? get(values.spec, `${fieldPath}.backendConfig`)
             : undefined
         const backendConfigFilePath = getConfigFilePath(backendConfigFile?.spec)
+
         return (
           <>
             <>
@@ -535,15 +551,27 @@ function TerraformPlanWidget(
               </div>
 
               <div className={css.divider} />
-
+              {CD_TERRAFORM_CLOUD_CLI_NG && (
+                <div className={cx(stepCss.formGroup, css.addMarginTop)}>
+                  <Checkbox
+                    label={getString('pipeline.terraformStep.runOnRemote')}
+                    checked={enableCloudCli}
+                    onChange={e => {
+                      setEnableCloudCli((e.target as any).checked)
+                      unset(values, (e.target as any).checked ? 'spec.configuration' : 'spec.cloudCliConfiguration')
+                    }}
+                  />
+                </div>
+              )}
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormInput.RadioGroup
-                  name="spec.configuration.command"
+                  name={`spec.${fieldPath}.command`}
                   label={getString('commandLabel')}
                   radioGroup={{ inline: true }}
                   items={commandTypeOptions}
                   className={css.radioBtns}
                   disabled={readonly}
+                  key={fieldPath}
                 />
               </div>
               <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -562,7 +590,6 @@ function TerraformPlanWidget(
                     showRequiredField={false}
                     showDefaultField={false}
                     allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         setFieldValue('spec.provisionerIdentifier', value)
@@ -572,24 +599,25 @@ function TerraformPlanWidget(
                   />
                 )}
               </div>
-
-              <div className={cx(stepCss.formGroup, stepCss.md)}>
-                <FormMultiTypeConnectorField
-                  label={getString('connectors.title.secretManager')}
-                  category={'SECRET_MANAGER'}
-                  setRefValue
-                  width={280}
-                  name="spec.configuration.secretManagerRef"
-                  placeholder={getString('select')}
-                  accountIdentifier={accountId}
-                  projectIdentifier={projectIdentifier}
-                  orgIdentifier={orgIdentifier}
-                  style={{ marginBottom: 10 }}
-                  multiTypeProps={{ expressions, allowableTypes }}
-                  gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-                  disabled={readonly}
-                />
-              </div>
+              {!enableCloudCli && (
+                <div className={cx(stepCss.formGroup, stepCss.md)}>
+                  <FormMultiTypeConnectorField
+                    label={getString('connectors.title.secretManager')}
+                    category={'SECRET_MANAGER'}
+                    setRefValue
+                    width={280}
+                    name="spec.configuration.secretManagerRef"
+                    placeholder={getString('select')}
+                    accountIdentifier={accountId}
+                    projectIdentifier={projectIdentifier}
+                    orgIdentifier={orgIdentifier}
+                    style={{ marginBottom: 10 }}
+                    multiTypeProps={{ expressions, allowableTypes }}
+                    gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                    disabled={readonly}
+                  />
+                </div>
+              )}
 
               <Layout.Vertical>
                 <Label
@@ -638,47 +666,53 @@ function TerraformPlanWidget(
                   summary={getString('common.optionalConfig')}
                   details={
                     <>
-                      <div className={cx(stepCss.formGroup, stepCss.md)}>
-                        <FormInput.MultiTextInput
-                          name="spec.configuration.workspace"
-                          placeholder={getString('pipeline.terraformStep.workspace')}
-                          label={getString('pipelineSteps.workspace')}
-                          multiTextInputProps={{ expressions, allowableTypes }}
-                          isOptional={true}
-                          disabled={readonly}
-                        />
-                        {getMultiTypeFromValue(formik.values.spec?.configuration?.workspace) ===
-                          MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            value={formik.values?.spec?.configuration?.workspace as string}
-                            type="String"
-                            variableName="spec.configuration.workspace"
-                            showRequiredField={false}
-                            showDefaultField={false}
-                            allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                            showAdvanced={true}
-                            onChange={value => {
-                              /* istanbul ignore else */
-                              formik.setFieldValue('spec.configuration.workspace', value)
-                            }}
-                            isReadonly={readonly}
-                          />
-                        )}
-                      </div>
-                      <div className={css.divider} />
-                      <TfVarFileList
+                      {!enableCloudCli && (
+                        <>
+                          <div className={cx(stepCss.formGroup, stepCss.md)}>
+                            <FormInput.MultiTextInput
+                              name={`spec.${fieldPath}.workspace`}
+                              placeholder={getString('pipeline.terraformStep.workspace')}
+                              label={getString('pipelineSteps.workspace')}
+                              multiTextInputProps={{ expressions, allowableTypes }}
+                              isOptional={true}
+                              disabled={readonly}
+                            />
+                            {getMultiTypeFromValue(formik.values.spec?.configuration?.workspace) ===
+                              MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                value={formik.values?.spec?.configuration?.workspace as string}
+                                type="String"
+                                variableName={`spec.${fieldPath}.workspace`}
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                                onChange={value => {
+                                  /* istanbul ignore else */
+                                  formik.setFieldValue(`spec.${fieldPath}.workspace`, value)
+                                }}
+                                isReadonly={readonly}
+                              />
+                            )}
+                          </div>
+                          <div className={css.divider} />
+                        </>
+                      )}
+                      <VarFileList<TFPlanFormData, TerraformVarFileWrapper>
                         formik={formik}
                         isReadonly={readonly}
                         allowableTypes={allowableTypes}
                         selectedConnector={selectedConnector}
                         setSelectedConnector={setSelectedConnector}
                         getNewConnectorSteps={getNewConnectorSteps}
+                        varFilePath={`spec.${fieldPath}.varFiles`}
+                        isTerraformPlan
                       />
+
                       <div className={cx(css.divider, css.addMarginBottom)} />
                       {TERRAFORM_REMOTE_BACKEND_CONFIG ? (
                         <>
                           <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
-                            {formik.values?.spec?.configuration?.backendConfig?.type ===
+                            {get(values.spec, `${fieldPath}.backendConfig.type`) ===
                               BackendConfigurationTypes.Remote && (
                               <Layout.Vertical>
                                 <Label
@@ -697,15 +731,15 @@ function TerraformPlanWidget(
                             <div className={css.fileSelect}>
                               <select
                                 className={css.fileDropdown}
-                                name="spec.configuration.backendConfig.type"
+                                name={`spec.${fieldPath}.backendConfig.type`}
                                 disabled={readonly}
                                 value={
-                                  formik.values?.spec?.configuration?.backendConfig?.type ||
+                                  get(values.spec, `${fieldPath}.backendConfig.type`) ||
                                   BackendConfigurationTypes.Inline
                                 }
                                 onChange={e => {
                                   /* istanbul ignore next */
-                                  onSelectChange(e, setFieldValue)
+                                  onSelectChange(e, setFieldValue, fieldPath)
                                 }}
                                 data-testid="backendConfigurationOptions"
                               >
@@ -714,8 +748,7 @@ function TerraformPlanWidget(
                               </select>
                             </div>
                           </Layout.Horizontal>
-                          {formik.values?.spec?.configuration?.backendConfig?.type ===
-                          BackendConfigurationTypes.Remote ? (
+                          {get(values.spec, `${fieldPath}.backendConfig.type`) === BackendConfigurationTypes.Remote ? (
                             <div
                               className={cx(css.configFile, css.configField, css.addMarginTop, css.addMarginBottom)}
                               onClick={() => {
@@ -751,15 +784,15 @@ function TerraformPlanWidget(
                               </>
                             </div>
                           ) : (
-                            inlineBackendConfig(formik)
+                            inlineBackendConfig(formik, fieldPath)
                           )}
                         </>
                       ) : (
-                        inlineBackendConfig(formik)
+                        inlineBackendConfig(formik, fieldPath)
                       )}
                       <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
                         <MultiTypeList
-                          name="spec.configuration.targets"
+                          name={`spec.${fieldPath}.targets`}
                           placeholder={getString('cd.enterTragets')}
                           multiTextInputProps={{
                             expressions,
@@ -781,7 +814,7 @@ function TerraformPlanWidget(
                       <div className={css.divider} />
                       <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
                         <MultiTypeMap
-                          name="spec.configuration.environmentVariables"
+                          name={`spec.${fieldPath}.environmentVariables`}
                           valueMultiTextInputProps={{
                             expressions,
                             allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
@@ -799,60 +832,64 @@ function TerraformPlanWidget(
                           disabled={readonly}
                         />
                       </div>
-                      <div className={cx(stepCss.formGroup, css.addMarginTop)}>
-                        <FormMultiTypeCheckboxField
-                          formik={formik as FormikProps<unknown>}
-                          name={'spec.configuration.exportTerraformPlanJson'}
-                          label={getString('cd.exportTerraformPlanJson')}
-                          multiTypeTextbox={{ expressions, allowableTypes }}
-                          disabled={readonly}
-                        />
-                        {getMultiTypeFromValue(formik.values?.spec?.configuration?.exportTerraformPlanJson) ===
-                          MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            value={(formik.values?.spec?.configuration?.exportTerraformPlanJson || '') as string}
-                            type="String"
-                            variableName="spec?.configuration?.exportTerraformPlanJson"
-                            showRequiredField={false}
-                            showDefaultField={false}
-                            showAdvanced={true}
-                            onChange={
-                              /* istanbul ignore next */ value =>
-                                formik.setFieldValue('spec?.configuration?.exportTerraformPlanJson', value)
-                            }
-                            style={{ alignSelf: 'center' }}
-                            isReadonly={readonly}
-                          />
-                        )}
-                      </div>
-                      <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
-                        <FormMultiTypeCheckboxField
-                          formik={formik as FormikProps<unknown>}
-                          name={'spec.configuration.exportTerraformHumanReadablePlan'}
-                          label={getString('cd.exportTerraformHumanReadablePlan')}
-                          multiTypeTextbox={{ expressions, allowableTypes }}
-                          disabled={readonly}
-                        />
-                        {getMultiTypeFromValue(formik.values?.spec?.configuration?.exportTerraformHumanReadablePlan) ===
-                          MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            value={
-                              (formik.values?.spec?.configuration?.exportTerraformHumanReadablePlan || '') as string
-                            }
-                            type="String"
-                            variableName="spec?.configuration?.exportTerraformHumanReadablePlan"
-                            showRequiredField={false}
-                            showDefaultField={false}
-                            showAdvanced={true}
-                            onChange={
-                              /* istanbul ignore next */ value =>
-                                formik.setFieldValue('spec?.configuration?.exportTerraformHumanReadablePlan', value)
-                            }
-                            style={{ alignSelf: 'center' }}
-                            isReadonly={readonly}
-                          />
-                        )}
-                      </div>
+                      {!enableCloudCli && (
+                        <>
+                          <div className={cx(stepCss.formGroup, css.addMarginTop)}>
+                            <FormMultiTypeCheckboxField
+                              formik={formik as FormikProps<unknown>}
+                              name={'spec.configuration.exportTerraformPlanJson'}
+                              label={getString('cd.exportTerraformPlanJson')}
+                              multiTypeTextbox={{ expressions, allowableTypes }}
+                              disabled={readonly}
+                            />
+                            {getMultiTypeFromValue(formik.values?.spec?.configuration?.exportTerraformPlanJson) ===
+                              MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                value={(formik.values?.spec?.configuration?.exportTerraformPlanJson || '') as string}
+                                type="String"
+                                variableName="spec.configuration.exportTerraformPlanJson"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={
+                                  /* istanul ignore next */
+                                  value => formik.setFieldValue('spec.configuration.exportTerraformPlanJson', value)
+                                }
+                                style={{ alignSelf: 'center' }}
+                                isReadonly={readonly}
+                              />
+                            )}
+                          </div>
+                          <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
+                            <FormMultiTypeCheckboxField
+                              formik={formik as FormikProps<unknown>}
+                              name={'spec.configuration.exportTerraformHumanReadablePlan'}
+                              label={getString('cd.exportTerraformHumanReadablePlan')}
+                              multiTypeTextbox={{ expressions, allowableTypes }}
+                              disabled={readonly}
+                            />
+                            {getMultiTypeFromValue(
+                              formik.values?.spec?.configuration?.exportTerraformHumanReadablePlan
+                            ) === MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                value={
+                                  (formik.values?.spec?.configuration?.exportTerraformHumanReadablePlan || '') as string
+                                }
+                                type="String"
+                                variableName="spec.configuration.exportTerraformHumanReadablePlan"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={
+                                  /* istnbul ignore next */
+                                  value =>
+                                    formik.setFieldValue('spec.configuration.exportTerraformHumanReadablePlan', value)
+                                }
+                                style={{ alignSelf: 'center' }}
+                                isReadonly={readonly}
+                              />
+                            )}
+                          </div>
+                        </>
+                      )}
                     </>
                   }
                 />
@@ -869,7 +906,7 @@ function TerraformPlanWidget(
                 }}
                 className={cx(css.modal, Classes.DIALOG)}
               >
-                <div className={css.createTfWizard}>{newConfigFileComponent(formik, true, false, true)}</div>
+                <div className={css.createTfWizard}>{newConfigFileComponent(formik, true, false, true, fieldPath)}</div>
                 <Button
                   variation={ButtonVariation.ICON}
                   icon="cross"
@@ -891,7 +928,7 @@ function TerraformPlanWidget(
                 }}
                 className={cx(css.modal, Classes.DIALOG)}
               >
-                <div className={css.createTfWizard}>{newConfigFileComponent(formik, false, true, true)}</div>
+                <div className={css.createTfWizard}>{newConfigFileComponent(formik, false, true, true, fieldPath)}</div>
                 <Button
                   variation={ButtonVariation.ICON}
                   icon="cross"
@@ -908,6 +945,7 @@ function TerraformPlanWidget(
     </Formik>
   )
 }
+
 const TerraformPlanWidgetWithRef = React.forwardRef(TerraformPlanWidget)
 export class TerraformPlan extends PipelineStep<TFPlanFormData> {
   constructor() {
@@ -922,21 +960,17 @@ export class TerraformPlan extends PipelineStep<TFPlanFormData> {
     name: '',
     type: StepType.TerraformPlan,
     spec: {
+      provisionerIdentifier: '',
       configuration: {
         command: 'Apply',
         configFiles: {
           store: {
             type: 'Git',
-            spec: {
-              gitFetchType: 'Branch'
-            }
+            spec: {}
           }
         },
-        secretManagerRef: '',
-        exportTerraformPlanJson: false,
-        exportTerraformHumanReadablePlan: false
-      },
-      provisionerIdentifier: ''
+        secretManagerRef: ''
+      }
     }
   }
   protected stepIcon: IconName = 'terraform-plan'
@@ -982,45 +1016,6 @@ export class TerraformPlan extends PipelineStep<TFPlanFormData> {
     return errors
   }
 
-  private getInitialValues(data: TFPlanFormData): TFPlanFormData {
-    const envVars = data.spec?.configuration?.environmentVariables as StringNGVariable[]
-    const isEnvRunTime =
-      getMultiTypeFromValue(data.spec?.configuration?.environmentVariables as any) === MultiTypeInputType.RUNTIME
-    const isTargetRunTime =
-      getMultiTypeFromValue(data.spec?.configuration?.targets as any) === MultiTypeInputType.RUNTIME
-    return {
-      ...data,
-      spec: {
-        ...data.spec,
-        configuration: {
-          ...data.spec?.configuration,
-          secretManagerRef: data.spec?.configuration?.secretManagerRef || '',
-          configFiles: data.spec?.configuration?.configFiles || ({} as any),
-          command: data.spec?.configuration?.command || 'Apply',
-          targets: !isTargetRunTime
-            ? Array.isArray(data.spec?.configuration?.targets)
-              ? (data.spec?.configuration?.targets as string[]).map((target: string) => ({
-                  value: target,
-                  id: uuid()
-                }))
-              : [{ value: '', id: uuid() }]
-            : data?.spec?.configuration?.targets,
-          environmentVariables: !isEnvRunTime
-            ? Array.isArray(envVars)
-              ? envVars.map(variable => ({
-                  key: variable.name || '',
-                  value: variable?.value,
-                  id: uuid()
-                }))
-              : [{ key: '', value: '', id: uuid() }]
-            : data?.spec?.configuration?.environmentVariables,
-          exportTerraformPlanJson: data?.spec?.configuration?.exportTerraformPlanJson,
-          exportTerraformHumanReadablePlan: data?.spec?.configuration?.exportTerraformHumanReadablePlan
-        }
-      }
-    }
-  }
-
   processFormData(data: any): TFPlanFormData {
     return onSubmitTFPlanData(data)
   }
@@ -1041,7 +1036,7 @@ export class TerraformPlan extends PipelineStep<TFPlanFormData> {
     if (this.isTemplatizedView(stepViewType)) {
       return (
         <TerraformInputStep
-          initialValues={this.getInitialValues(initialValues)}
+          initialValues={getTFPlanInitialValues(initialValues)}
           onUpdate={data => onUpdate?.(this.processFormData(data))}
           onChange={data => onChange?.(this.processFormData(data))}
           allowableTypes={allowableTypes}
@@ -1056,14 +1051,17 @@ export class TerraformPlan extends PipelineStep<TFPlanFormData> {
       return (
         <TerraformVariableStep
           {...(customStepProps as TerraformPlanVariableStepProps)}
-          initialValues={this.getInitialValues(initialValues)}
+          initialValues={getTFPlanInitialValues(initialValues)}
           onUpdate={(data: any) => onUpdate?.(this.processFormData(data))}
+          fieldPath={
+            customStepProps?.variablesData?.spec?.cloudCliConfiguration ? 'cloudCliConfiguration' : 'configuration'
+          }
         />
       )
     }
     return (
       <TerraformPlanWidgetWithRef
-        initialValues={this.getInitialValues(initialValues)}
+        initialValues={getTFPlanInitialValues(initialValues)}
         onUpdate={data => onUpdate?.(this.processFormData(data))}
         onChange={data => onChange?.(this.processFormData(data))}
         allowableTypes={allowableTypes}

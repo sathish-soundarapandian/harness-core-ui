@@ -441,7 +441,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view for inputset 1`] = 
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="fieldAndOptions formGroup sm"
+      class="fieldAndOptions formGroup md"
     >
       <div
         class="bp3-form-group"

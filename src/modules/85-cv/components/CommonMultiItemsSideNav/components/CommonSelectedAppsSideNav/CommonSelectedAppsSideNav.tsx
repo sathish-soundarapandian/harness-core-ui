@@ -19,7 +19,6 @@ export interface CommonSelectedAppsSideNavProps {
   onRemoveItem?: (removedItem: string, index: number) => void
   onSelect?: (selectedMetric: string, index: number) => void
   groupedSelectedApps?: GroupedCreatedMetrics
-  isMetricThresholdEnabled?: boolean
   openEditMetricModal: () => void
   hideDeleteIcon?: boolean
 }
@@ -33,7 +32,6 @@ export function CommonSelectedAppsSideNav(props: CommonSelectedAppsSideNavProps)
     onRemoveItem,
     openEditMetricModal,
     groupedSelectedApps,
-    isMetricThresholdEnabled,
     hideDeleteIcon
   } = props
 
@@ -49,7 +47,6 @@ export function CommonSelectedAppsSideNav(props: CommonSelectedAppsSideNavProps)
           selectedItem={selectedItem}
           onRemoveItem={onRemoveItem}
           groupedSelectedAppsList={groupedSelectedAppsList}
-          isMetricThresholdEnabled={isMetricThresholdEnabled}
           openEditMetricModal={openEditMetricModal}
           hideDeleteIcon={hideDeleteIcon}
         />

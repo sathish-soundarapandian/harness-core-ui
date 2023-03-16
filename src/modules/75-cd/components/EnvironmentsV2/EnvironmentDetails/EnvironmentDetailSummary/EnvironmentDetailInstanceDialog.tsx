@@ -137,8 +137,9 @@ export default function EnvironmentDetailInstanceDialog(
           service.instanceGroupedByArtifactList.forEach(artifact => {
             if (
               rowClickFilter.artifactFilter &&
-              artifact.artifactVersion === rowClickFilter.artifactFilter.artifactVersion &&
-              artifact.artifactPath === rowClickFilter.artifactFilter.artifactPath
+              ((!artifact.artifactVersion && !rowClickFilter.artifactFilter.artifactVersion) ||
+                (artifact.artifactVersion === rowClickFilter.artifactFilter.artifactVersion &&
+                  artifact.artifactPath === rowClickFilter.artifactFilter.artifactPath))
             ) {
               /* istanbul ignore else */
               if (artifact.instanceGroupedByEnvironmentList) {

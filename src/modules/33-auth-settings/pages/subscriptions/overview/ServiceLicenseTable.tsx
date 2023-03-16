@@ -5,18 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import type { Column } from 'react-table'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Text, TableV2, Layout, Card, Heading, NoDataCard, DropDown, SelectOption, PageSpinner } from '@harness/uicore'
+import { Text, TableV2, Layout, Card, Heading, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { String, useStrings, StringKeys } from 'framework/strings'
-import { PageActiveServiceDTO, LicenseUsageDTO, useGetProjectList, useGetOrganizationList } from 'services/cd-ng'
-import type { SortBy } from './types'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { PageActiveServiceDTO, LicenseUsageDTO, useDownloadActiveServiceCSVReport } from 'services/cd-ng'
+import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
+import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'
+import ServiceDropdown from '@common/ServiceDropdown/ServiceDropdown'
 
+import type { SortBy } from './types'
 import {
   ServiceNameCell,
   OrganizationCell,
@@ -29,9 +32,6 @@ import {
 import { getInfoIcon } from './UsageInfoCard'
 import pageCss from '../SubscriptionsPage.module.scss'
 
-enum OrgFilter {
-  ALL = '$$ALL$$'
-}
 const DEFAULT_PAGE_INDEX = 0
 const DEFAULT_PAGE_SIZE = 30
 export interface ServiceLicenseTableProps {
@@ -39,8 +39,13 @@ export interface ServiceLicenseTableProps {
   gotoPage: (pageNumber: number) => void
   setSortBy: (sortBy: string[]) => void
   sortBy: string[]
-  updateFilters: (orgId: string, projId: string) => void
+  updateFilters: (
+    orgId: SelectOption | undefined,
+    projId: SelectOption | undefined,
+    serviceId: SelectOption | undefined
+  ) => void
   servicesLoading: boolean
+  licenseType: string
 }
 
 export function ServiceLicenseTable({
@@ -49,7 +54,8 @@ export function ServiceLicenseTable({
   sortBy,
   setSortBy,
   updateFilters,
-  servicesLoading
+  servicesLoading,
+  licenseType
 }: ServiceLicenseTableProps): React.ReactElement {
   const { getString } = useStrings()
   const {
@@ -125,61 +131,47 @@ export function ServiceLicenseTable({
         Cell: LastDeployedCell,
         serverSortProps: getServerSortProps('common.lastDeployed')
       },
-      {
-        Header: NameHeader('common.licensesConsumed'),
-        accessor: 'licensesConsumed',
-        width: '15%',
-        Cell: LicenseConsumedCell,
-        serverSortProps: getServerSortProps('licensesConsumed')
-      }
+      ...(licenseType === 'SERVICES'
+        ? [
+            {
+              Header: NameHeader('common.licensesConsumed'),
+              accessor: 'licensesConsumed',
+              width: '15%',
+              Cell: LicenseConsumedCell,
+              serverSortProps: getServerSortProps('licensesConsumed')
+            }
+          ]
+        : [])
     ] as unknown as Column<LicenseUsageDTO>[]
   }, [currentOrder, currentSort])
   const { accountId } = useParams<AccountPathProps>()
-  const [orgName, setOrgName] = useState<string>('')
-  const [projName, setProjName] = useState<string>('')
+  const [selectedOrg, setSelectedOrg] = useState<SelectOption | undefined>()
+  const [selectedProj, setSelectedProj] = useState<SelectOption | undefined>()
+  const [selectedService, setSelectedService] = useState<SelectOption | undefined>()
   const activeServiceText = `${totalElements}`
+  const [initialContent, setInitialContent] = useState<string>('')
   const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
-  const { data: projectListData, loading: projLoading } = useGetProjectList({
+  const { data: dataInCsv, refetch } = useDownloadActiveServiceCSVReport({
     queryParams: {
       accountIdentifier: accountId
-    }
+    },
+    lazy: true
   })
+  useEffect(() => {
+    if (dataInCsv) {
+      ;(dataInCsv as unknown as Response)
+        .clone()
+        .text()
+        .then((cont: string) => {
+          setInitialContent(cont)
+        })
+    }
+  }, [dataInCsv])
 
-  const allOrgsSelectOption: SelectOption = useMemo(
-    () => ({
-      label: getString('all'),
-      value: OrgFilter.ALL
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
-  const { data: orgsData, loading: orgLoading } = useGetOrganizationList({
-    queryParams: {
-      accountIdentifier: accountId
-    }
-  })
-  const projectsMapped: SelectOption[] = useMemo(() => {
-    return [
-      allOrgsSelectOption,
-      ...(projectListData?.data?.content?.map(proj => {
-        return {
-          label: proj.project.name,
-          value: proj.project.identifier
-        }
-      }) || [])
-    ]
-  }, [projectListData?.data?.content, allOrgsSelectOption])
-  const organizations: SelectOption[] = useMemo(() => {
-    return [
-      allOrgsSelectOption,
-      ...(orgsData?.data?.content?.map(org => {
-        return {
-          label: org.organization.name,
-          value: org.organization.identifier
-        }
-      }) || [])
-    ]
-  }, [orgsData?.data?.content, allOrgsSelectOption])
+  useEffect(() => {
+    refetch()
+  }, [refetch])
+  const formattedTime = moment(timeValue).format('MMM DD YYYY hh:mm:ss')
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
@@ -196,58 +188,63 @@ export function ServiceLicenseTable({
               {getString('common.whatIsActiveService')}
             </Text>
           </Layout.Vertical>
+          <div>
+            {' '}
+            <a
+              href={`data:text/csv;charset=utf-8,${escape(initialContent || '')}`}
+              download="serviceLicensesData.csv"
+              className={pageCss.exportButton}
+            >
+              {'Export CSV'}
+            </a>
+          </div>
         </Layout.Horizontal>
-        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-          <Layout.Vertical className={pageCss.badgesContainer}>
-            <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
-              <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
-              <String stringID={'common.subscriptions.usage.services'} />
-              <Text>&nbsp;{getString('common.updated')} -</Text>
-              <Text className={pageCss.badgeText}>{timeValue}</Text>
-            </div>
-          </Layout.Vertical>
+        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-end' }} width={'100%'}>
+          {licenseType === 'SERVICES' ? (
+            <Layout.Vertical className={pageCss.badgesContainer}>
+              <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
+                <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
+                <String stringID={'common.subscriptions.usage.services'} />
+                <Text>(</Text>
+                <Text>{getString('common.lastUpdatedAt')} -</Text>
+                <Text className={pageCss.badgeText}>{formattedTime}</Text>
+                <Text>)</Text>
+              </div>
+            </Layout.Vertical>
+          ) : null}
           <Layout.Vertical>
-            <DropDown
-              disabled={orgLoading}
-              filterable={false}
+            <OrgDropdown
+              value={selectedOrg}
               className={pageCss.orgDropdown}
-              items={organizations}
-              value={orgName || OrgFilter.ALL}
-              onChange={item => {
-                if (item.value === OrgFilter.ALL) {
-                  setOrgName(OrgFilter.ALL)
-                } else {
-                  setOrgName(item.value as string)
-                }
+              onChange={org => {
+                setSelectedOrg(org)
               }}
-              getCustomLabel={item => getString('common.tabOrgs', { name: item.label })}
             />
           </Layout.Vertical>
-          <DropDown
-            disabled={projLoading}
-            filterable={false}
+          <div></div>
+          <ProjectDropdown
+            value={selectedProj}
             className={pageCss.orgDropdown}
-            items={projectsMapped}
-            value={projName || OrgFilter.ALL}
-            onChange={item => {
-              if (item.value === OrgFilter.ALL) {
-                setProjName(OrgFilter.ALL)
-              } else {
-                setProjName(item.value as string)
-              }
+            onChange={proj => {
+              setSelectedProj(proj)
             }}
-            getCustomLabel={item => getString('common.tabProjects', { name: item.label })}
+          />
+          <ServiceDropdown
+            value={selectedService}
+            className={pageCss.orgDropdown}
+            onChange={service => {
+              setSelectedService(service)
+            }}
           />
           <Text
             className={pageCss.fetchButton}
             font={{ variation: FontVariation.LEAD }}
             color={Color.PRIMARY_7}
-            lineClamp={1}
             onClick={() => {
-              updateFilters(orgName, projName)
+              updateFilters(selectedOrg, selectedProj, selectedService)
             }}
           >
-            Fetch
+            Update
           </Text>
         </Layout.Horizontal>
         {servicesLoading && <PageSpinner />}

@@ -47,6 +47,7 @@ describe('helm with http tests', () => {
       skipResourceVersioning: false,
       bucketName: '',
       folderPath: '',
+      subChartName: '',
       commandFlags: [{ commandType: undefined, flag: undefined, id: 'id1' }]
     }
     const { container } = render(
@@ -68,6 +69,7 @@ describe('helm with http tests', () => {
       skipResourceVersioning: false,
       bucketName: '',
       folderPath: '',
+      subChartName: '',
       commandFlags: [{ commandType: undefined, flag: undefined, id: 'id1' }]
     }
     const { container, getByText } = render(
@@ -97,6 +99,7 @@ describe('helm with http tests', () => {
           folderPath: ''
         }
       },
+      subChartName: '',
       commandFlags: [{ commandType: undefined, flag: undefined, id: 'id2' }]
     }
 

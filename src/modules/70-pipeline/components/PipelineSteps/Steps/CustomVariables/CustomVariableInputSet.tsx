@@ -130,11 +130,11 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
             <Text>{`${variableNamePrefix}${variable.name}`}</Text>
             <Text>{variable.type}</Text>
             <div className={css.valueRow}>
-              {(variable.type as CustomDeploymentNGVariable) === VariableType.Connector ? (
+              {(variable.type as CustomDeploymentNGVariable['type']) === VariableType.Connector ? (
                 <FormMultiTypeConnectorField
                   name={`${basePath}[${index}].value`}
                   label=""
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={inputSetData?.readonly}
                   accountIdentifier={accountId}
                   multiTypeProps={{ expressions, disabled: inputSetData?.readonly, allowableTypes }}
@@ -154,6 +154,10 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                   name={`${basePath}[${index}].value`}
                   disabled={inputSetData?.readonly}
                   label=""
+                  templateProps={{
+                    isTemplatizedView: true,
+                    templateValue: get(template, `variables[${index}].value`)
+                  }}
                 />
               ) : (
                 <>

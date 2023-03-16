@@ -139,7 +139,7 @@ export function PipelineListTable({
         disableSortBy: true
       }
     ].filter(Boolean) as unknown as Column<PMSPipelineSummaryResponse>[]
-  }, [currentOrder, currentSort, minimal])
+  }, [currentOrder, currentSort, minimal, getString, onClonePipeline, onDeletePipeline, refetchList])
 
   const paginationProps = useDefaultPaginationProps({
     itemCount: totalElements,

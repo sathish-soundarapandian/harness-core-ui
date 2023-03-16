@@ -18,6 +18,7 @@ declare const styles: {
   readonly connectorMargin: string
   readonly customVariables: string
   readonly disabled: string
+  readonly fieldContainerWithCog: string
   readonly header: string
   readonly icon: string
   readonly inputFieldLayout: string
@@ -31,6 +32,7 @@ declare const styles: {
   readonly manifestStepNumberContainer: string
   readonly manifestStepTitle: string
   readonly manifestVariablesTable: string
+  readonly marginBottomLarge: string
   readonly mtop: string
   readonly nestedAccordions: string
   readonly nestedSectionCard: string
@@ -49,6 +51,7 @@ declare const styles: {
   readonly subheading: string
   readonly tabHeading: string
   readonly tabSubHeading: string
+  readonly taskDefinitionTypeCardWrapper: string
   readonly verticalSpacingInput: string
   readonly width25: string
   readonly width400: string

@@ -25,11 +25,30 @@ exports[`<CDExecutionSummary /> tests render environmentList 1`] = `
           />
         </svg>
       </span>
-      <p
-        class="StyledProps--font StyledProps--main"
+      <div
+        class="StyledProps--font StyledProps--main StyledProps--flex"
       >
-        demo1, demo2
-      </p>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main envName StyledProps--margin-right-small"
+          style="--text-line-clamp: 1;"
+        >
+          <a
+            href="/account/undefined/environments/demo1/details"
+          >
+            demo1
+          </a>
+        </p>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main envName StyledProps--margin-right-small"
+          style="--text-line-clamp: 1;"
+        >
+          <a
+            href="/account/undefined/environments/demo2/details"
+          >
+            demo2
+          </a>
+        </p>
+      </div>
     </div>
     , 
     <div
@@ -38,7 +57,10 @@ exports[`<CDExecutionSummary /> tests render environmentList 1`] = `
       <div
         class="bp3-popover-target"
       >
-        <div>
+        <div
+          class="serviceName count"
+          tabindex="0"
+        >
           common.plusNumberNoSpace
         </div>
       </div>
@@ -79,12 +101,36 @@ exports[`<CDExecutionSummary /> tests render serviceList 1`] = `
         <div
           class="bp3-popover-target"
         >
-          <div
-            class="serviceName"
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main serviceName StyledProps--color StyledProps--color-grey800"
+            style="--text-line-clamp: 1;"
             tabindex="0"
           >
-            todolist
-          </div>
+            <a
+              href="/account/undefined/services/nginx"
+            >
+              todolist
+            </a>
+          </p>
+        </div>
+      </div>
+      <div
+        class="bp3-popover-wrapper serviceWrapper"
+      >
+        <div
+          class="bp3-popover-target"
+        >
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main serviceName StyledProps--color StyledProps--color-grey800"
+            style="--text-line-clamp: 1;"
+            tabindex="0"
+          >
+            <a
+              href="/account/undefined/services/service1"
+            >
+              service1
+            </a>
+          </p>
         </div>
       </div>
       <div
@@ -94,20 +140,9 @@ exports[`<CDExecutionSummary /> tests render serviceList 1`] = `
           class="bp3-popover-target"
         >
           <div
-            class="serviceName"
+            class="serviceName count"
             tabindex="0"
           >
-            service1
-          </div>
-        </div>
-      </div>
-      <div
-        class="bp3-popover-wrapper serviceWrapper"
-      >
-        <div
-          class="bp3-popover-target"
-        >
-          <div>
             common.plusNumberNoSpace
           </div>
         </div>
@@ -245,12 +280,17 @@ exports[`<CDExecutionSummary /> tests snapshot test 1`] = `
           <div
             class="bp3-popover-target"
           >
-            <div
-              class="serviceName"
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main serviceName StyledProps--color StyledProps--color-grey800"
+              style="--text-line-clamp: 1;"
               tabindex="0"
             >
-              service1
-            </div>
+              <a
+                href="/account/undefined/services/service1"
+              >
+                service1
+              </a>
+            </p>
           </div>
         </div>
         <div
@@ -259,12 +299,17 @@ exports[`<CDExecutionSummary /> tests snapshot test 1`] = `
           <div
             class="bp3-popover-target"
           >
-            <div
-              class="serviceName"
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main serviceName StyledProps--color StyledProps--color-grey800"
+              style="--text-line-clamp: 1;"
               tabindex="0"
             >
-              todolist
-            </div>
+              <a
+                href="/account/undefined/services/nginx"
+              >
+                todolist
+              </a>
+            </p>
           </div>
         </div>
       </div>
@@ -292,11 +337,20 @@ exports[`<CDExecutionSummary /> tests snapshot test 1`] = `
             />
           </svg>
         </span>
-        <p
-          class="StyledProps--font StyledProps--main"
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--flex"
         >
-          UAT
-        </p>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main envName StyledProps--margin-right-small"
+            style="--text-line-clamp: 1;"
+          >
+            <a
+              href="/account/undefined/environments/UAT/details"
+            >
+              UAT
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   </div>

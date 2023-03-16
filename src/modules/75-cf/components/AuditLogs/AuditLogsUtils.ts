@@ -28,7 +28,6 @@ export function translateEvents(
       case 'addClause':
         message = getString('cf.auditLogs.events.addClause')
         break
-
       case 'addToIncludeList':
         message = getString('cf.auditLogs.events.addToIncludeList', { target })
         break
@@ -46,10 +45,19 @@ export function translateEvents(
         break
 
       case 'addRule':
-        message = getString('cf.auditLogs.events.addRule', {
-          clauses: Parameters?.clauses?.map((clause: Record<string, string>) => clause?.attribute || '').join(', ')
-        })
+        message = Parameters.variation
+          ? getString('cf.auditLogs.events.addRule', {
+              targetGroup: Parameters?.clauses
+                ?.map((clause: Record<string, string>) => clause?.values || '')
+                .join(', '),
+              variation: Parameters.variation
+            })
+          : getString('cf.auditLogs.events.addPercentageRollout', {
+              targetGroup: Parameters?.clauses?.map((clause: Record<string, string>) => clause?.values || '').join(', ')
+            })
+
         break
+
       case 'updateRule':
         message = getString('cf.auditLogs.events.updateRule')
         break
@@ -67,9 +75,17 @@ export function translateEvents(
         break
 
       case 'addTargetsToVariationTargetMap':
-        message = getString('cf.auditLogs.events.addTargetsToVariationTargetMap', {
+        message = getString('cf.auditLogs.events.targetAddedForVariation', {
           target: Parameters.targets?.toString(),
           variation: Parameters.variation
+        })
+        break
+      case 'addTargetToFlagsVariationTargetMap':
+        message = getString('cf.auditLogs.events.targetAddedForVariation', {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          target: Parameters.features?.map((feature: any) => feature.targets || '').join(', '),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          variation: Parameters.features?.map((feature: any) => feature.variation || '').join(', ')
         })
         break
 

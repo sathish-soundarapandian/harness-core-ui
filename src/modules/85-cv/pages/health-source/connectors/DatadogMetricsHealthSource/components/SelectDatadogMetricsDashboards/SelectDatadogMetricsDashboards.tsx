@@ -35,7 +35,7 @@ export function SelectDatadogMetricsDashboards({
   const selectedDashboards = useMemo(() => {
     return (
       sourceData.selectedDashboards ||
-      mapDatadogMetricHealthSourceToDatadogMetricSetupSource(sourceData, false).selectedDashboards
+      mapDatadogMetricHealthSourceToDatadogMetricSetupSource(sourceData).selectedDashboards
     )
   }, [sourceData])
   return (

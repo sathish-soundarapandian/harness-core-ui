@@ -168,7 +168,6 @@ export const MultiTypeCustomMap = (props: MultiTypeCustomMapProps): React.ReactE
             variableName={name}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={val => formik?.setFieldValue(name, val)}
             {...configureOptionsProps}
             isReadonly={props.disabled}

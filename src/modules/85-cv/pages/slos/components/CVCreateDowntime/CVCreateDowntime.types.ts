@@ -7,6 +7,7 @@
 
 import type {
   DowntimeDTO,
+  MonitoredServiceDetail,
   OnetimeDowntimeSpec,
   OnetimeDurationBasedSpec,
   OnetimeEndTimeBasedSpec,
@@ -28,7 +29,9 @@ export const enum DowntimeFormFields {
   END_TIME = 'endTime',
   RECURRENCE_VALUE = 'recurrenceValue',
   RECURRENCE_TYPE = 'recurrenceType',
-  RECURRENCE_END_TIME = 'recurrenceEndTime'
+  RECURRENCE_END_TIME = 'recurrenceEndTime',
+  ENTITIES_RULE_TYPE = 'entitiesRuleType',
+  MS_LIST = 'msList'
 }
 
 export enum DowntimeCategory {
@@ -40,6 +43,11 @@ export enum DowntimeCategory {
 export enum EndTimeMode {
   DURATION = 'Duration',
   END_TIME = 'EndTime'
+}
+
+export enum EntitiesRuleType {
+  ALL = 'All',
+  IDENTIFIERS = 'Identifiers'
 }
 
 export interface DowntimeForm {
@@ -58,4 +66,6 @@ export interface DowntimeForm {
   [DowntimeFormFields.RECURRENCE_VALUE]?: RecurringDowntimeSpec['downtimeRecurrence']['recurrenceValue']
   [DowntimeFormFields.RECURRENCE_TYPE]?: RecurringDowntimeSpec['downtimeRecurrence']['recurrenceType']
   [DowntimeFormFields.RECURRENCE_END_TIME]?: RecurringDowntimeSpec['recurrenceEndTime'] | string
+  [DowntimeFormFields.ENTITIES_RULE_TYPE]: DowntimeDTO['entitiesRule']['type']
+  [DowntimeFormFields.MS_LIST]: MonitoredServiceDetail[]
 }

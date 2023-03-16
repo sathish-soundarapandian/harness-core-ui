@@ -7,7 +7,7 @@
 
 import type { SetStateAction, Dispatch } from 'react'
 import type { GetDataError } from 'restful-react'
-import type { SelectOption } from '@harness/uicore'
+import { SelectOption, timeToDisplayText } from '@harness/uicore'
 import { uniqWith, isEqual, orderBy } from 'lodash-es'
 import type { StepInfo, Error } from 'services/ti-service'
 import type { GraphLayoutNode, ExecutionNode } from 'services/pipeline-ng'
@@ -329,3 +329,26 @@ export const getError = ({
   (testInfoData && testInfoData?.length > 0 && testOverviewError) ||
   reportInfoError ||
   testInfoError
+
+export const getTimeSavedToDisplay = (timeSavedMS?: number): string => {
+  if (!timeSavedMS || timeSavedMS < 0) {
+    return '0'
+  }
+
+  const timeToDisplay = timeToDisplayText(timeSavedMS)
+
+  // if the value contains hours, remove both 's' and 'ms'
+  if (/(\d+h)/.test(timeToDisplay)) {
+    return timeToDisplay
+      .replace(/(\d+ms)$/, '')
+      .trim()
+      .replace(/(\d+s)$/, '')
+      .trim()
+  } // match timestring such as "1m 2s ..." etc.
+  else if (/^((([0]?|[1-5]{1})[0-9])[m+s])/.test(timeToDisplay)) {
+    // remove 'ms' if timestring is contains minutes or hours
+    return timeToDisplay.replace(/(\d+ms)$/, '').trim()
+  } else {
+    return timeToDisplay
+  }
+}

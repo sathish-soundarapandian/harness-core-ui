@@ -9,20 +9,15 @@ import type { StepWhenCondition } from 'services/cd-ng'
 
 export type WhenConditionStatus = StepWhenCondition['stageStatus']
 
-// TODO: fix casing for this
-export const PipelineOrStageStatus: Record<string, WhenConditionStatus> = {
-  SUCCESS: 'Success',
-  ALL: 'All',
-  FAILURE: 'Failure'
+export enum PipelineOrStageStatus {
+  SUCCESS = 'Success',
+  ALL = 'All',
+  FAILURE = 'Failure'
 }
 
 export interface ConditionalExecutionConfig {
   status: WhenConditionStatus
   condition: string
-}
-
-export interface ConditionalExecutionOption extends ConditionalExecutionConfig {
-  enableJEXL: boolean
 }
 
 export const ModeEntityNameMap = {

@@ -210,7 +210,7 @@ describe('Release repo list view ', () => {
 
   test('deployment Repo Manifest - should show addDeploymenteRepo button', () => {
     const { container, getByText } = render(
-      <TestWrapper defaultFeatureFlagValues={{ GITOPS_FETCH_LINKED_APPS: true }}>
+      <TestWrapper>
         <ReleaseRepoListView {...props} listOfManifests={[]} />
       </TestWrapper>
     )
@@ -220,7 +220,7 @@ describe('Release repo list view ', () => {
   })
   test('deployment Repo Manifest - should not show addDeploymenteRepo button when deploymentRepo manifest is present', () => {
     const { queryByText, container } = render(
-      <TestWrapper defaultFeatureFlagValues={{ GITOPS_FETCH_LINKED_APPS: true }}>
+      <TestWrapper>
         <ReleaseRepoListView
           {...props}
           listOfManifests={[
@@ -254,7 +254,7 @@ describe('Release repo list view ', () => {
   })
   test('release Repo Manifest - should not show addReleaseRepo button when releaseRepo manifest is present', () => {
     const { queryByText, container } = render(
-      <TestWrapper defaultFeatureFlagValues={{ GITOPS_FETCH_LINKED_APPS: true }}>
+      <TestWrapper>
         <ReleaseRepoListView
           {...props}
           listOfManifests={[

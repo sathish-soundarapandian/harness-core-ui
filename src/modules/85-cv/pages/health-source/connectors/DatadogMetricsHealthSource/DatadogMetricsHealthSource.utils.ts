@@ -57,10 +57,7 @@ export const DatadogProduct = {
   CLOUD_LOGS: 'Datadog Cloud Logs'
 }
 
-export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(
-  sourceData: any,
-  isMetricThresholdEnabled: boolean
-): DatadogMetricSetupSource {
+export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(sourceData: any): DatadogMetricSetupSource {
   const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
   )
@@ -135,17 +132,15 @@ export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(
     })
   }
 
-  if (isMetricThresholdEnabled) {
-    setupSource.ignoreThresholds = getFilteredMetricThresholdValues(
-      MetricThresholdTypes.IgnoreThreshold,
-      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
-    )
+  setupSource.ignoreThresholds = getFilteredMetricThresholdValues(
+    MetricThresholdTypes.IgnoreThreshold,
+    (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+  )
 
-    setupSource.failFastThresholds = getFilteredMetricThresholdValues(
-      MetricThresholdTypes.FailImmediately,
-      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
-    )
-  }
+  setupSource.failFastThresholds = getFilteredMetricThresholdValues(
+    MetricThresholdTypes.FailImmediately,
+    (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+  )
 
   return setupSource
 }
@@ -159,8 +154,7 @@ export const getServiceInstanceByValueType = (metricInfo: {
 }
 
 export function mapDatadogMetricSetupSourceToDatadogHealthSource(
-  setupSource: DatadogMetricSetupSource,
-  isMetricThresholdEnabled: boolean
+  setupSource: DatadogMetricSetupSource
 ): UpdatedHealthSource {
   const healthSource: UpdatedHealthSource = {
     type: HealthSourceTypes.DatadogMetrics as UpdatedHealthSource['type'],
@@ -217,13 +211,11 @@ export function mapDatadogMetricSetupSourceToDatadogHealthSource(
     } as DatadogMetricHealthDefinition)
   }
 
-  if (isMetricThresholdEnabled) {
-    // Needs to be updated with Datadog's spec once the swagger is ready
-    ;(healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks?.push({
-      identifier: MetricTypeValues.Custom,
-      metricThresholds: [...setupSource.ignoreThresholds, ...setupSource.failFastThresholds]
-    })
-  }
+  // Needs to be updated with Datadog's spec once the swagger is ready
+  ;(healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks?.push({
+    identifier: MetricTypeValues.Custom,
+    metricThresholds: [...setupSource.ignoreThresholds, ...setupSource.failFastThresholds]
+  })
 
   return healthSource
 }
@@ -343,14 +335,11 @@ const validateMetricThresholds = (
 export function validate(
   values: DatadogMetricInfo,
   selectedMetrics: Map<string, DatadogMetricInfo>,
-  getString: (key: StringKeys) => string,
-  isMetricThresholdEnabled: boolean
+  getString: (key: StringKeys) => string
 ): { [key: string]: string } | undefined {
   const errors = validateFormMappings(values, selectedMetrics, getString)
 
-  if (isMetricThresholdEnabled) {
-    validateMetricThresholds(errors, values, getString)
-  }
+  validateMetricThresholds(errors, values, getString)
 
   if (selectedMetrics.size === 1) {
     return errors

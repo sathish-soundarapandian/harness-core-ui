@@ -107,7 +107,7 @@
   display: grid !important;
   grid-template-columns: 1fr 1fr 1fr 1fr;
 
-  :nth-child(1) {
+  > :nth-child(1) {
     margin-left: var(--layout-spacing) !important;
   }
 }
@@ -251,11 +251,6 @@
       color: var(--grey-600) !important;
     }
   }
-}
-
-.executionListEmpty {
-  height: 400px !important;
-  margin: 18px !important;
 }
 
 .serviceColumnStyle {
@@ -410,4 +405,16 @@
 
 .marginBottom1 {
   margin-bottom: 1px !important;
+}
+
+.serviceDetailDialogEmptyState {
+  height: 730px;
+
+  img {
+    margin-top: 250px;
+  }
+}
+
+.dashCtn {
+  margin-left: 20px !important;
 }

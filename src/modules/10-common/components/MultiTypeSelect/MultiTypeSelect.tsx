@@ -81,7 +81,6 @@ export function MultiTypeSelect(props: MultiTypeSelectProps): React.ReactElement
             variableName={name}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={val => formik?.setFieldValue(name, val)}
             style={{ marginLeft: 'var(--spacing-medium)', marginBottom: 12 }}
             {...configureOptionsProps}

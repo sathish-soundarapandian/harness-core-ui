@@ -31,7 +31,7 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
 
   const { inputSetData, readonly, initialValues, path, allowableTypes, stepViewType, isBackendConfig, formik } = props
   const template = inputSetData?.template
-  const configPath = getPath(false, true, isBackendConfig)
+  const configPath = getPath(false, true, isBackendConfig, 'configuration')
   const configSpec = get(template, `${configPath}.store`)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()

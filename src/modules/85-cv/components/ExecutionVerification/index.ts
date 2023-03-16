@@ -7,11 +7,11 @@
 
 import factory from '@pipeline/factories/ExecutionFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { ExecutionVerificationSummary } from './components/ExecutionVerificationSummary/ExecutionVerificationSummary'
 import { ExecutionVerificationView } from './ExecutionVerificationView'
+import ExecutionVerificationStepShortView from './components/ExecutionVerificationStepShortView/ExecutionVerificationStepShortView'
 
 factory.registerStepDetails(StepType.Verify, {
-  component: ExecutionVerificationSummary
+  component: ExecutionVerificationStepShortView
 })
 
 factory.registerConsoleViewStepDetails(StepType.Verify, {

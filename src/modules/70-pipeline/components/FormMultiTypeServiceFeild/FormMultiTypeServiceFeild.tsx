@@ -233,6 +233,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
           }}
           value={Array.isArray(selectedValue) ? '' : selectedValue}
           multitypeInputValue={multitypeInputValue}
+          resetExpressionOnFixedTypeChange
           {...multiTypeProps}
         />
       </FormGroup>

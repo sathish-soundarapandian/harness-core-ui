@@ -41,7 +41,7 @@ exports[`ServiceInstancesWidget render 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-bottom-xsmall"
           >
-            cd.serviceDashboard.serviceInstances
+            common.subscriptions.usage.serviceInstances
           </p>
           <div
             class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-distribution-space-between"

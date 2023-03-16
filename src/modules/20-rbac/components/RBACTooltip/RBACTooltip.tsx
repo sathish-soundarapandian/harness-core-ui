@@ -9,6 +9,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -75,7 +76,7 @@ const RBACTooltip: React.FC<RBACTooltipProps> = ({
   }
 
   return (
-    <Layout.Vertical padding="small" spacing="small" className={className}>
+    <Layout.Vertical padding="small" spacing="small" className={cx(css.minWidth, { className: !!className })}>
       <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_800}>
         {`${getString('rbac.youAreNotAuthorizedTo')} `}
         <span className={css.textToLowercase}>{resourceTypeHandler?.permissionLabels?.[permission] || permission}</span>

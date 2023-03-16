@@ -44,7 +44,13 @@ import {
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import RbacButton from '@rbac/components/Button/Button'
-import { getErrorMessage, getRiskColorLogo, getRiskColorValue, getSearchString } from '@cv/utils/CommonUtils'
+import {
+  getErrorMessage,
+  getRiskColorLogo,
+  getRiskColorValue,
+  getSearchString,
+  getSecondaryRiskColorValue
+} from '@cv/utils/CommonUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import SLOCardSelect from './components/SLOCardSelect/SLOCardSelect'
 import type { CVSLOsListingPageProps, RiskTypes, SLORiskFilter } from './CVSLOsListingPage.types'
@@ -283,14 +289,22 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         })
     const queryParams = getSearchString({ sloType })
     return (
-      <Link to={`${path}${queryParams}`}>
-        <Text color={Color.PRIMARY_7} title={name} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
-          {name} {sloType === SLOType.COMPOSITE && <Tag intent={Intent.PRIMARY}>{sloType}</Tag>}
-        </Text>
-        <Text title={name} font={{ align: 'left', size: 'small' }}>
-          {description}
-        </Text>
-      </Link>
+      <>
+        <Link to={`${path}${queryParams}`}>
+          <Text color={Color.PRIMARY_7} title={name} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+            {name} {sloType === SLOType.COMPOSITE && <Tag intent={Intent.PRIMARY}>{sloType}</Tag>}
+          </Text>
+          <Text
+            tooltipProps={{ disabled: true }}
+            lineClamp={1}
+            title={description}
+            color={Color.GREY_700}
+            font={{ align: 'left', size: 'small' }}
+          >
+            {description}
+          </Text>
+        </Link>
+      </>
     )
   }
 
@@ -327,7 +341,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             module: 'cv'
           })}
         >
-          <Text color={Color.PRIMARY_7} title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
+          <Text color={Color.PRIMARY_7} title={environmentIdentifier} font={{ align: 'left', size: 'small' }}>
             {environmentIdentifier}
           </Text>
         </Link>
@@ -344,7 +358,8 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       <Text
         className={css.titleInSloTable}
         title={`${noOfActiveAlerts}`}
-        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+        font={{ align: 'left', size: 'normal', weight: 'light' }}
+        color={Color.GREY_900}
       >
         {`${noOfActiveAlerts}`}
       </Text>
@@ -358,7 +373,8 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       <Text
         className={css.titleInSloTable}
         title={`${defaultTo(Number(burnRate), 0).toFixed(2)}%`}
-        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+        font={{ align: 'left', size: 'normal', weight: 'light' }}
+        color={Color.GREY_900}
       >
         {defaultTo(Number(burnRate), 0).toFixed(2)}%
       </Text>
@@ -372,7 +388,8 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       <Text
         className={css.titleInSloTable}
         title={userJourneyName}
-        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+        font={{ align: 'left', size: 'normal', weight: 'light' }}
+        color={Color.GREY_900}
       >
         {userJourneyName}
       </Text>
@@ -385,7 +402,8 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       <Text
         className={css.titleInSloTable}
         title={` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
-        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+        font={{ align: 'left', size: 'normal', weight: 'light' }}
+        color={Color.GREY_900}
       >
         {` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
       </Text>
@@ -401,9 +419,9 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       <Text
         className={css.errorBudgetRisk}
         title={errorBudgetRisk}
-        style={{ backgroundColor: getRiskColorValue(errorBudgetRisk), color: Color.WHITE }}
-        font={{ align: 'left', size: 'normal' }}
-        iconProps={{ color: Color.WHITE, padding: { right: 'small' } }}
+        style={{ color: getRiskColorValue(errorBudgetRisk), background: getSecondaryRiskColorValue(errorBudgetRisk) }}
+        font={{ align: 'left' }}
+        iconProps={{ color: getRiskColorValue(errorBudgetRisk, false), margin: { right: 'xxsmall' }, size: 14 }}
         icon={riskCategory}
       >
         {errorBudgetRisk}
@@ -414,18 +432,26 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   const RenderRemainingErrorBudget: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row?.original
     const { errorBudgetRemainingPercentage = '', errorBudgetRemaining = '' } = slo || {}
+
     return (
-      <Layout.Horizontal>
+      <Layout.Horizontal className={css.errorBudgetParent}>
         <Text
           className={css.titleInSloTable}
           title={` ${Number(errorBudgetRemainingPercentage || 0).toFixed(2)}%`}
-          font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+          font={{ align: 'left', size: 'normal', weight: 'light' }}
           padding={{ right: 'small' }}
+          color={Color.GREY_900}
         >
           {` ${Number(errorBudgetRemainingPercentage || 0).toFixed(2)}%`}
         </Text>
         <Container className={css.errorBudgetRemainingContainer}>
-          <Text font={{ variation: FontVariation.SMALL }} className={css.errorBudgetRemaining}>
+          <Text
+            font={{ variation: FontVariation.SMALL }}
+            lineClamp={1}
+            title={`${errorBudgetRemaining} m`}
+            color={Color.GREY_700}
+            className={css.errorBudgetRemaining}
+          >
             {`${errorBudgetRemaining} m`}
           </Text>
         </Container>
@@ -455,12 +481,12 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     },
     {
       Header: getString('cv.slos.monitoredService').toUpperCase(),
-      width: '12%',
+      width: '19%',
       Cell: RenderMonitoredService
     },
     {
       Header: getString('cv.slos.status').toUpperCase(),
-      width: '13%',
+      width: '12%',
       Cell: RenderSLOStatus
     },
     {
@@ -470,7 +496,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     },
     {
       Header: getString('cv.slos.target').toUpperCase(),
-      width: '10%',
+      width: '6%',
       Cell: RenderTarget
     },
     {
@@ -480,7 +506,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     },
     {
       Header: getString('ce.budgets.listPage.tableHeaders.alerts').toUpperCase(),
-      width: '8%',
+      width: '6%',
       Cell: RenderAlerts
     },
     {
@@ -507,6 +533,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         <>
           <Page.Header
             breadcrumbs={<NGBreadcrumbs />}
+            className={css.sloListingPageHeader}
             title={
               <Layout.Vertical>
                 <Text font={{ variation: FontVariation.H4 }} tooltipProps={{ dataTooltipId: 'sloHeader' }}>

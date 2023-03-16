@@ -1,0 +1,17 @@
+{
+  "rootNodeId": "N0",
+  "nodeMap": {
+    "N0": {
+      "uuid": "N0",
+      "stepType": "CUSTOM_STAGE",
+      "status": "NotStarted",
+      "executionInputConfigured": true
+    }
+  },
+  "nodeAdjacencyListMap": {
+    "N0": {
+      "children": [],
+      "nextIds": []
+    }
+  }
+}

@@ -91,7 +91,6 @@ function QueueWidget(props: QueueProps, formikRef: StepFormikFowardRef<QueueData
                     variableName="spec.key"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => formik.setFieldValue('spec.key', value)}
                     isReadonly={readonly}
                   />

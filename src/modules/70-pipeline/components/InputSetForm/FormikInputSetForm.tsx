@@ -27,6 +27,10 @@ import type {
   EntityGitDetails,
   ResponseInputSetTemplateWithReplacedExpressionsResponse
 } from 'services/pipeline-ng'
+import { useGetSettingValue } from 'services/cd-ng'
+import { useToaster } from '@common/exports'
+import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { InputSetGitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { NameIdDescriptionTags } from '@common/components'
@@ -50,7 +54,14 @@ import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { hasStoreTypeMismatch } from '@pipeline/utils/inputSetUtils'
+import {
+  hasStoreTypeMismatch,
+  getInputSetGitDetails,
+  shouldDisableGitDetailsFields
+} from '@pipeline/utils/inputSetUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import factory from '../PipelineSteps/PipelineStepFactory'
@@ -142,6 +153,7 @@ function useValidateValues({
   validateValues: (values: InputSetDTO & GitContextProps & StoreMetadata) => Promise<FormikErrors<InputSetDTO>>
 } {
   const { getString } = useStrings()
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const NameIdSchema = Yup.object({
     name: NameSchema(getString),
     identifier: IdentifierSchema(getString)
@@ -166,7 +178,8 @@ function useValidateValues({
           getString,
           viewType: StepViewType.InputSet,
           viewTypeMetadata: { isInputSet: true },
-          resolvedPipeline
+          resolvedPipeline,
+          isOptionalVariableAllowed
         }) as any
 
         /* istanbul ignore else */ if (isEmpty(errors.pipeline)) {
@@ -203,7 +216,9 @@ const onSubmitClick = (
           repoName: formikProps.values.repo
         },
         {
-          connectorRef: formikProps.values.connectorRef,
+          connectorRef:
+            (formikProps.values.connectorRef as unknown as ConnectorSelectedValue)?.value ||
+            formikProps.values.connectorRef,
           repoName: formikProps.values.repo,
           branch: formikProps.values.branch,
           filePath: formikProps.values.filePath,
@@ -239,7 +254,15 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
-  const { repoIdentifier, branch, connectorRef, storeType, repoName } = useQueryParams<InputSetGitQueryParams>()
+  const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
+  const queryParams = useQueryParams<InputSetGitQueryParams>()
+  const repoIdentifier = queryParams.repoIdentifier
+  const { branch, connectorRef, storeType, repoName } = getInputSetGitDetails(queryParams, {
+    ...inputSet?.gitDetails,
+    connectorRef: inputSet?.connectorRef
+  })
+
   const inputSetStoreType = isGitSyncEnabled ? undefined : inputSet.storeType
   const history = useHistory()
 
@@ -252,6 +275,19 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
       })
     }
   }, [inputSet?.outdated])
+
+  const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
+  const { data: allowDifferentRepoSettings, error: allowDifferentRepoSettingsError } = useGetSettingValue({
+    identifier: SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS,
+    queryParams: { accountIdentifier: accountId },
+    lazy: !isSettingEnabled
+  })
+
+  React.useEffect(() => {
+    if (allowDifferentRepoSettingsError) {
+      showError(getRBACErrorMessage(allowDifferentRepoSettingsError))
+    }
+  }, [allowDifferentRepoSettingsError, getRBACErrorMessage, showError])
 
   useEffect(() => {
     // only do this for CI
@@ -415,7 +451,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                                   isEdit={isEdit}
                                   initialValues={storeMetadata}
                                   disableFields={
-                                    !isEdit
+                                    shouldDisableGitDetailsFields(isEdit, allowDifferentRepoSettings?.data?.value)
                                       ? {
                                           connectorRef: true,
                                           repoName: true,

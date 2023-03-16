@@ -6,11 +6,6 @@ import {
 
 describe('Delegate Selection on Execution View', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.intercept('GET', delegateSelectionExecutionAPI, {
       fixture: '/pipeline/api/pipelines/execution/delegate-executionId'

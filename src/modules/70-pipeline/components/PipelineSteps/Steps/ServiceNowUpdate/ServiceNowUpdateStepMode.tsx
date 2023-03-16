@@ -364,7 +364,6 @@ function FormContent({
             variableName="spec.connectorRef"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
             connectorReferenceFieldProps={{
@@ -447,7 +446,6 @@ function FormContent({
               variableName="spec.ticketNumber"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.ticketNumber', value)}
               isReadonly={readonly}
             />
@@ -503,7 +501,6 @@ function FormContent({
                       variableName="spec.description"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('spec.description', value)}
                       isReadonly={readonly}
                     />
@@ -524,7 +521,6 @@ function FormContent({
                       variableName="spec.shortDescription"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('spec.shortDescription', value)}
                       isReadonly={readonly}
                     />
@@ -627,7 +623,6 @@ function FormContent({
                       variableName="spec.templateName"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('spec.templateName', value)}
                       isReadonly={readonly}
                     />

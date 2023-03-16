@@ -39,7 +39,7 @@ import {
   GithubPackageRegistryInitialValuesType,
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import {
   BuildDetails,
   ConnectorConfigDTO,
@@ -51,6 +51,7 @@ import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraAp
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -236,9 +237,9 @@ function FormComponent({
               variableName="org"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.org', value)}
               isReadonly={isReadonly}
+              allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
             />
           )}
         </div>
@@ -294,14 +295,15 @@ function FormComponent({
             }}
           />
           {getMultiTypeFromValue(formik.values?.spec?.packageName) === MultiTypeInputType.RUNTIME && (
-            <ConfigureOptions
+            <SelectConfigureOptions
+              options={getPackages()}
+              loading={fetchingPackages}
               style={{ marginTop: 22 }}
               value={formik.values?.spec?.packageName || ''}
               type="String"
               variableName="packageName"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.packageName', value)}
               isReadonly={isReadonly}
             />
@@ -352,14 +354,15 @@ function FormComponent({
               }}
             />
             {getMultiTypeFromValue(formik.values?.spec?.version) === MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={getVersions()}
+                loading={fetchingVersion}
                 style={{ marginTop: 22 }}
                 value={formik.values?.spec?.version || ''}
                 type="String"
                 variableName="version"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.version', value)}
                 isReadonly={isReadonly}
               />
@@ -385,9 +388,9 @@ function FormComponent({
                 variableName="versionRegex"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.versionRegex', value)}
                 isReadonly={isReadonly}
+                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
               />
             )}
           </div>

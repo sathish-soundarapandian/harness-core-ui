@@ -180,8 +180,11 @@ describe('helm with GIT tests', () => {
               },
               type: 'Git'
             },
-            helmVersion: 'V2',
-            skipResourceVersioning: false
+            subChartName: '',
+            valuesPaths: undefined,
+            helmVersion: 'V3',
+            skipResourceVersioning: false,
+            enableDeclarativeRollback: false
           }
         }
       })

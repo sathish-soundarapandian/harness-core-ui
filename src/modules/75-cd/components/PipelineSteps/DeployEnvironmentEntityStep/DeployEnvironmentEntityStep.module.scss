@@ -59,3 +59,11 @@
 .inputSetSpinner {
   margin-bottom: var(--spacing-6);
 }
+
+.modalFooter {
+  position: sticky;
+  bottom: 0;
+  background-color: var(--white) !important;
+  z-index: 11;
+  border-radius: 6px !important;
+}

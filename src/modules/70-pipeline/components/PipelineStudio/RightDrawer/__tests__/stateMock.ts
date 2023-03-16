@@ -248,7 +248,8 @@ const pipelineContextMock: PipelineContextInterface = {
   setTemplateTypes: jest.fn(),
   setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
-  setIntermittentLoading: jest.fn()
+  setIntermittentLoading: jest.fn(),
+  setValidationUuid: jest.fn()
 }
 
 export const updateStageFnArg1 = {

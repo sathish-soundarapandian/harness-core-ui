@@ -135,7 +135,7 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
                   tooltipProps={{
                     dataTooltipId: 'k8InfraConnector'
                   }}
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
@@ -160,7 +160,6 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
                     variableName="connectorRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('connectorRef', value)
                     }}
@@ -199,7 +198,6 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
                     variableName="namespace"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('namespace', value)
                     }}
@@ -237,7 +235,6 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
                           variableName="releaseName"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('releaseName', value)
                           }}
@@ -285,7 +282,7 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
   return (
-    <Layout.Vertical className={css.containerPadding} padding="medium" spacing="small">
+    <Layout.Vertical spacing="small">
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField
@@ -299,7 +296,7 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
             name={`${path}.connectorRef`}
             label={getString('connector')}
             gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
             setRefValue
             className={css.connectorMargin}

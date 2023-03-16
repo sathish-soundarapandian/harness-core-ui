@@ -8,7 +8,6 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { debounce, get, isEmpty, isUndefined, set, omit } from 'lodash-es'
-import produce from 'immer'
 import {
   FormInput,
   MultiTypeInputType,
@@ -59,10 +58,12 @@ import {
   isRuntimeInput
 } from '@pipeline/utils/CIUtils'
 import type { StageSelectionData } from '@pipeline/utils/runPipelineUtils'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { getSelectedStagesFromPipeline } from '../PipelineStudio/CommonUtils/CommonUtils'
 import { StepViewType } from '../AbstractSteps/Step'
 import css from './CICodebaseInputSetForm.module.scss'
 import pipelineInputSetCss from './PipelineInputSetForm.module.scss'
+
 export interface CICodebaseInputSetFormProps {
   path: string
   readonly?: boolean
@@ -72,9 +73,10 @@ export interface CICodebaseInputSetFormProps {
   viewType: StepViewType
   viewTypeMetadata?: Record<string, boolean>
   selectedStageData?: StageSelectionData | undefined
+  chainedPipelineStagePath?: string
 }
 
-type AcceptableValue = boolean | string | number | SelectOption | string[] | MultiSelectOption[]
+export type AcceptableValue = boolean | string | number | SelectOption | string[] | MultiSelectOption[]
 
 const TriggerTypes = {
   SCHEDULED: 'Scheduled'
@@ -93,7 +95,7 @@ export const buildTypeInputNames: Record<string, string> = {
   PR: 'number'
 }
 
-const defaultValues = {
+export const defaultValues = {
   branch: '<+trigger.branch>',
   tag: '<+trigger.tag>',
   PR: '<+trigger.prNumber>'
@@ -248,7 +250,8 @@ function CICodebaseInputSetFormInternal({
   originalPipeline,
   viewType,
   viewTypeMetadata,
-  selectedStageData
+  selectedStageData,
+  chainedPipelineStagePath
 }: CICodebaseInputSetFormProps): JSX.Element {
   const { triggerIdentifier, accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
   const [isInputTouched, setIsInputTouched] = useState(false)
@@ -397,11 +400,7 @@ function CICodebaseInputSetFormInternal({
               .then((result: ResponseGitBranchesResponseDTO) => {
                 setIsFetchingBranches(false)
                 const branchName = result.data?.defaultBranch?.name || ''
-                formik?.setValues(
-                  produce(formik?.values, (draft: PipelineInfoConfig) => {
-                    set(set(draft, codeBaseTypePath, codeBaseType), codeBaseInputFieldFormName.branch, branchName)
-                  })
-                )
+                formik.setFieldValue(codeBaseInputFieldFormName.branch, branchName)
                 savedValues.current.branch = branchName as string
 
                 if (result.data?.defaultBranch?.name) {
@@ -417,14 +416,14 @@ function CICodebaseInputSetFormInternal({
         }
       }
     },
-    [shouldAllowRepoFetch, originalPipeline, codeBaseType]
+    [shouldAllowRepoFetch, originalPipeline]
   )
 
   useEffect(() => {
     if (codebaseConnector) {
       const codebaseConnectorConnectionType = get(codebaseConnector, 'spec.type')
       if (codebaseConnectorConnectionType === ConnectionType.Repo) {
-        fetchBranchesForRepo(getCodebaseRepoNameFromConnector(codebaseConnector, getString))
+        fetchBranchesForRepo(getCodebaseRepoNameFromConnector(codebaseConnector))
       } else if (
         codebaseConnectorConnectionType === ConnectionType.Account &&
         get(originalPipeline, 'properties.ci.codebase.repoName', '') !== RUNTIME_INPUT_VALUE
@@ -469,7 +468,7 @@ function CICodebaseInputSetFormInternal({
   }, [connectorId])
 
   useEffect(() => {
-    if (!loadingConnectorDetails && !isUndefined(connectorDetails)) {
+    if (!loadingConnectorDetails && connectorDetails) {
       setCodebaseConnector(connectorDetails?.data?.connector)
       setConnectorType(get(connectorDetails, 'data.connector.type', '') as ConnectorInfoDTO['type'])
     }
@@ -545,7 +544,8 @@ function CICodebaseInputSetFormInternal({
     if (
       pipelineHasCodebaseSection &&
       ((viewType === StepViewType.InputSet && formik?.values?.pipeline?.identifier) ||
-        (viewType === StepViewType.DeploymentForm && formik?.values?.identifier))
+        (viewType === StepViewType.DeploymentForm && formik?.values?.identifier)) &&
+      (!chainedPipelineStagePath || get(formik?.values, `${chainedPipelineStagePath}.type`) === StageType.PIPELINE)
     ) {
       const newInitialValues = { ...formik.values }
       // TriggerForm does not instantiate each runtime input with empty string yet but we want default values there
@@ -575,7 +575,11 @@ function CICodebaseInputSetFormInternal({
 
   useEffect(() => {
     // OnEdit Case, persists saved ciCodebase build spec
-    if (pipelineHasCodebaseSection && codeBaseType) {
+    if (
+      pipelineHasCodebaseSection &&
+      codeBaseType &&
+      (!chainedPipelineStagePath || get(formik?.values, `${chainedPipelineStagePath}.type`) === StageType.PIPELINE)
+    ) {
       savedValues.current = Object.assign(savedValues.current, {
         [codeBaseType]: get(
           formik?.values,
@@ -630,6 +634,12 @@ function CICodebaseInputSetFormInternal({
       ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED]
       : [MultiTypeInputType.FIXED]
   }, [viewTypeMetadata?.isTemplateBuilder])
+
+  const AllowableTypesForCodebaseRepoName = useMemo((): AllowedTypesWithRunTime[] => {
+    return viewTypeMetadata?.isTemplateBuilder || viewTypeMetadata?.isTemplateDetailDrawer
+      ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+      : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+  }, [viewTypeMetadata?.isTemplateBuilder, viewTypeMetadata?.isTemplateDetailDrawer])
 
   const disableBuildRadioBtnSelection = useMemo(() => {
     return readonly || (codeBaseType === CodebaseTypes.BRANCH && isFetchingBranches)
@@ -691,7 +701,7 @@ function CICodebaseInputSetFormInternal({
                         ]}
                         label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('connector')}</Text>}
                         placeholder={
-                          loadingConnectorDetails ? getString('loading') : getString('connectors.selectConnector')
+                          loadingConnectorDetails ? getString('loading') : getString('common.entityPlaceholderText')
                         }
                         accountIdentifier={accountId}
                         projectIdentifier={projectIdentifier}
@@ -752,7 +762,7 @@ function CICodebaseInputSetFormInternal({
                             multiTextInputProps={{
                               multiTextInputProps: {
                                 expressions,
-                                allowableTypes: AllowableTypesForCodebaseProperties
+                                allowableTypes: AllowableTypesForCodebaseRepoName
                               },
                               disabled: readonly || isFetchingBranches,
                               onChange: debouncedFetchBranchesForRepo

@@ -32,14 +32,6 @@ export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDe
   )
 }
 
-export const isAllowedGithubPackageRegistryDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
-  return (
-    deploymentType === ServiceDeploymentType.Kubernetes ||
-    deploymentType === ServiceDeploymentType.TAS ||
-    deploymentType === ServiceDeploymentType.CustomDeployment
-  )
-}
-
 export const isAllowedAzureArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
   deploymentType === ServiceDeploymentType.CustomDeployment
 
@@ -57,16 +49,29 @@ export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isRe
       deploymentType === ServiceDeploymentType.CustomDeployment ||
       deploymentType === ServiceDeploymentType.TAS ||
       deploymentType === ServiceDeploymentType.Asg ||
-      deploymentType === ServiceDeploymentType.GoogleCloudFunctions
+      deploymentType === ServiceDeploymentType.GoogleCloudFunctions ||
+      deploymentType === ServiceDeploymentType.AwsLambda
     )
   )
 }
 
+export const isOnlyOneArtifactSourceAllowed = (deploymentType: ServiceDefinition['type']): boolean => {
+  return deploymentType === ServiceDeploymentType.AwsLambda
+}
+
 export const isPrimaryAdditionAllowed = (
+  deploymentType: ServiceDefinition['type'],
   primaryArtifact: ArtifactSource[] | PrimaryArtifact,
   isMultiArtifactSource?: boolean
 ): boolean => {
   if (isMultiArtifactSource) {
+    if (
+      isOnlyOneArtifactSourceAllowed(deploymentType) &&
+      primaryArtifact &&
+      (primaryArtifact as ArtifactSource[]).length >= 1
+    ) {
+      return false
+    }
     return true
   }
   return isEmpty(primaryArtifact)
@@ -88,7 +93,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   AzureArtifacts: 'service-azure-artifacts',
   AmazonMachineImage: 'service-ami',
   GoogleCloudStorage: 'artifact-google-cloud-storage',
-  GoogleCloudSource: 'artifact-google-cloud-source-repo'
+  GoogleCloudSource: 'artifact-google-cloud-source-repo',
+  Bamboo: 'service-bamboo'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -107,7 +113,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   AzureArtifacts: 'connectors.title.azureArtifacts',
   AmazonMachineImage: 'pipeline.artifactsSelection.AmazonMachineImageTitle',
   GoogleCloudStorage: 'common.artifacts.googleCloudStorage.title',
-  GoogleCloudSource: 'common.artifacts.googleCloudSourceRepositories.title'
+  GoogleCloudSource: 'common.artifacts.googleCloudSourceRepositories.title',
+  Bamboo: 'connectors.bamboo.bamboo'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -119,6 +126,7 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   ArtifactoryRegistry: 'ArtifactoryRegistry',
   CustomArtifact: 'CustomArtifact',
   Acr: 'Acr',
+  Bamboo: 'Bamboo',
   Jenkins: 'Jenkins',
   AmazonS3: 'AmazonS3',
   GoogleArtifactRegistry: 'GoogleArtifactRegistry',
@@ -138,6 +146,7 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   ArtifactoryRegistry: Connectors.ARTIFACTORY,
   Acr: Connectors.AZURE,
   Jenkins: Connectors.JENKINS,
+  Bamboo: Connectors.Bamboo,
   AmazonS3: Connectors.AWS,
   GoogleArtifactRegistry: Connectors.GCP,
   GithubPackageRegistry: Connectors.GITHUB,
@@ -156,6 +165,7 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   ArtifactoryRegistry: 'Artifactory',
   Acr: 'Azure',
   Jenkins: 'Jenkins',
+  Bamboo: 'Bamboo',
   AmazonS3: 'AWS',
   GoogleArtifactRegistry: 'GCP',
   GithubPackageRegistry: 'Github',
@@ -173,7 +183,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Acr,
-    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
+    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
   ],
   NativeHelm: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
@@ -191,11 +202,16 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
   Ssh: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Jenkins,
+    ENABLED_ARTIFACT_TYPES.Bamboo,
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.AmazonS3,
     ENABLED_ARTIFACT_TYPES.Nexus2Registry,
-    ENABLED_ARTIFACT_TYPES.AzureArtifacts
+    ENABLED_ARTIFACT_TYPES.AzureArtifacts,
+    ENABLED_ARTIFACT_TYPES.Gcr,
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.Ecr
   ],
   WinRm: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -204,7 +220,11 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.AmazonS3,
     ENABLED_ARTIFACT_TYPES.Nexus2Registry,
-    ENABLED_ARTIFACT_TYPES.AzureArtifacts
+    ENABLED_ARTIFACT_TYPES.AzureArtifacts,
+    ENABLED_ARTIFACT_TYPES.Gcr,
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.Ecr
   ],
   AzureWebApp: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
@@ -237,7 +257,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Acr,
-    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
+    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
   ],
   TAS: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -248,9 +269,12 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Acr,
-    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
+    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
   ],
-  GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage]
+  GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage],
+  AwsLambda: [ENABLED_ARTIFACT_TYPES.AmazonS3, ENABLED_ARTIFACT_TYPES.Ecr],
+  AWS_SAM: []
 }
 
 export const tagOptions: IOptionProps[] = [
@@ -304,4 +328,8 @@ export const ArtifactIdentifierValidation = (
 
 export const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
   return `${selectedDeploymentType}DeploymentTypeArtifacts`
+}
+
+export const showArtifactStoreStepDirectly = (selectedArtifact: ArtifactType | null): boolean => {
+  return !!(selectedArtifact && [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage].includes(selectedArtifact))
 }

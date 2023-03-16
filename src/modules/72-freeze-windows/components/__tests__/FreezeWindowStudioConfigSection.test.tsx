@@ -7,13 +7,16 @@
  */
 
 import React from 'react'
-import { render, waitForElementToBeRemoved, screen } from '@testing-library/react'
+import { render, waitForElementToBeRemoved, screen, fireEvent } from '@testing-library/react'
 import userEvent, { TargetElement } from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { getOrganizationAggregateDTOListMockData } from '@projects-orgs/pages/organizations/__tests__/OrganizationsMockData'
 import serviceData from '@common/modals/HarnessServiceModal/__tests__/serviceMock'
+import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import FreezeWindowStudioPage from '../../pages/FreezeWindowStudioPage'
+import { FreezeWindowScheduleSection } from '../FreezeWindowScheduleSection/FreezeWindowScheduleSection'
+import { defaultContext } from './helper'
 
 export const accountId = 'accountId'
 export const projectIdentifier = 'project1'
@@ -200,5 +203,42 @@ describe('Freeze Window Studio Config Section', () => {
     userEvent.click(continueButton)
 
     expect(await screen.findByText('common.coverage')).toBeInTheDocument()
+  })
+
+  test('test ScheduleSection invalid duration - error toaster ', async () => {
+    jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
+    const { container, getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
+      >
+        <FreezeWindowContext.Provider
+          value={{
+            ...defaultContext,
+            state: {
+              ...defaultContext.state,
+              isUpdated: true
+            },
+            freezeFormError: {
+              duration: 'Value must be greater than or equal to "30m"'
+            }
+          }}
+        >
+          <FreezeWindowScheduleSection isReadOnly={false} onBack={jest.fn()} />
+        </FreezeWindowContext.Provider>
+      </TestWrapper>
+    )
+
+    //insert invalid value
+    fireEvent.change(container.querySelector('input[name="duration"]')!, { target: { value: '29m' } })
+    expect(container.querySelector('input[name="duration"]')).toHaveValue('29m')
+
+    const submitBtn = container.querySelector('button[type="submit"]')
+    expect(submitBtn).toBeDefined()
+    fireEvent.click(submitBtn!)
+
+    //error toaster
+    expect(document.getElementsByClassName('bp3-toast-message')).toBeDefined()
+    expect(getByText('Duration: Value must be greater than or equal to "30m"')).toBeInTheDocument()
   })
 })

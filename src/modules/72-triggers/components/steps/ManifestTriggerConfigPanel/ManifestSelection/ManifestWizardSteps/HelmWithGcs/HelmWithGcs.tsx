@@ -84,7 +84,7 @@ function HelmWithGcs({
       folderPath: storeSpec?.folderPath ?? '/',
       bucketName: storeSpec?.bucketName ?? '',
       chartName: spec.chartName ?? '',
-      helmVersion: spec.helmVersion ?? 'V2'
+      helmVersion: spec.helmVersion ?? 'V3'
     }
   }
   const submitFormData = (formData: HelmManifestSpec): void => {

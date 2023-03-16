@@ -13,6 +13,8 @@ import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { gitConfigs, sourceCodeManagers, branchStatusMock } from '@connectors/mocks/mock'
 import { gitHubMock } from '@gitsync/components/gitSyncRepoForm/__tests__/mockData'
+import routes from '@common/RouteDefinitions'
+import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
 import PipelineCreate from '../CreateModal/PipelineCreate'
 import type { PipelineCreateProps } from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
@@ -83,7 +85,63 @@ const getEditProps = (
   isReadonly: false
 })
 
+const remoteTestPath = routes.toPipelineStudio({
+  ...projectPathProps,
+  ...pipelinePathProps,
+  ...modulePathProps
+})
+
+const pathParams = {
+  accountId: 'dummy',
+  orgIdentifier: 'default',
+  projectIdentifier: 'dummyProject',
+  module: 'cd',
+  pipelineIdentifier: '-1'
+}
+
+const remoteQueryParams = {
+  storeType: 'REMOTE',
+  connectorRef: 'testConnector',
+  repoName: 'sunnykesh-gitSync',
+  branch: 'master'
+}
+
+const getEditPropsForRemotePipeline = (
+  identifier = 'test',
+  description = 'desc',
+  name = 'pipeline',
+  repo = 'sunnykesh-gitSync',
+  branch = 'master'
+): PipelineCreateProps => ({
+  afterSave,
+  initialValues: {
+    identifier,
+    description,
+    name,
+    repo,
+    branch,
+    connectorRef: 'testConnector',
+    filePath: './test.yaml',
+    storeType: 'REMOTE',
+    stages: []
+  },
+  gitDetails: {
+    branch: 'master',
+    filePath: '.harness/awsasas.yaml',
+    remoteFetchFailed: false,
+    repoName: 'sunnykesh-gitSync',
+    getDefaultFromOtherRepo: false
+  },
+  closeModal,
+  primaryButtonText: 'continue',
+  isReadonly: false
+})
+
 describe('PipelineCreate test', () => {
+  afterEach(() => {
+    afterSave.mockReset()
+    closeModal.mockReset()
+  })
   test('initializes ok for CI module', async () => {
     const { container } = render(
       <TestWrapper
@@ -173,6 +231,38 @@ describe('PipelineCreate test', () => {
       },
       { connectorRef: undefined, storeType: undefined },
       undefined,
+      undefined
+    )
+    const closeBtn = getByText('cancel')
+    fireEvent.click(closeBtn!)
+    await waitFor(() => expect(closeModal).toBeCalledTimes(1))
+    expect(closeModal).toBeCalled()
+  })
+  test('Editing should prefill and retain data while creating remote pipeline', async () => {
+    const { container, getByText } = render(
+      <TestWrapper
+        path={remoteTestPath}
+        pathParams={pathParams}
+        queryParams={remoteQueryParams}
+        defaultAppStoreValues={{ isGitSyncEnabled: false, supportingGitSimplification: true }}
+      >
+        <PipelineCreate {...getEditPropsForRemotePipeline()} />
+      </TestWrapper>
+    )
+    await waitFor(() => getByText('continue'))
+    expect(container).toMatchSnapshot()
+    const continueBtn = getByText('continue')
+    fireEvent.click(continueBtn)
+    await waitFor(() => expect(afterSave).toBeCalledTimes(1))
+    expect(afterSave).toBeCalledWith(
+      {
+        description: 'desc',
+        identifier: 'test',
+        name: 'pipeline',
+        stages: []
+      },
+      { connectorRef: 'testConnector', storeType: 'REMOTE' },
+      { repoName: 'sunnykesh-gitSync', branch: 'master', filePath: './test.yaml' },
       undefined
     )
     const closeBtn = getByText('cancel')

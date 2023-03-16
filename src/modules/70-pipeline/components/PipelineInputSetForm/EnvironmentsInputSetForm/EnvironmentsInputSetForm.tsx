@@ -29,21 +29,23 @@ export default function EnvironmentsInputSetForm({
   viewType,
   stageIdentifier,
   allowableTypes
-}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier'>): React.ReactElement {
+}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'>): React.ReactElement {
   const { getString } = useStrings()
   const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled } = useFeatureFlags()
 
   return (
     <>
-      <SingleEnvironmentInputSetForm
-        deploymentStage={deploymentStage}
-        deploymentStageTemplate={deploymentStageTemplate}
-        allowableTypes={allowableTypes}
-        path={path}
-        viewType={viewType}
-        readonly={readonly}
-        stageIdentifier={stageIdentifier}
-      />
+      {isSvcEnvEntityEnabled && deploymentStageTemplate.environment && (
+        <SingleEnvironmentInputSetForm
+          deploymentStage={deploymentStage}
+          deploymentStageTemplate={deploymentStageTemplate}
+          allowableTypes={allowableTypes}
+          path={path}
+          viewType={viewType}
+          readonly={readonly}
+          stageIdentifier={stageIdentifier}
+        />
+      )}
 
       {isSvcEnvEntityEnabled && deploymentStageTemplate.environments && (
         <div id={`Stage.${stageIdentifier}.Environments`} className={cx(css.accordionSummary)}>
@@ -64,15 +66,17 @@ export default function EnvironmentsInputSetForm({
         </div>
       )}
 
-      <EnvironmentGroupInputSetForm
-        deploymentStage={deploymentStage}
-        deploymentStageTemplate={deploymentStageTemplate}
-        allowableTypes={allowableTypes}
-        path={path}
-        viewType={viewType}
-        readonly={readonly}
-        stageIdentifier={stageIdentifier}
-      />
+      {isSvcEnvEntityEnabled && deploymentStageTemplate.environmentGroup && (
+        <EnvironmentGroupInputSetForm
+          deploymentStage={deploymentStage}
+          deploymentStageTemplate={deploymentStageTemplate}
+          allowableTypes={allowableTypes}
+          path={path}
+          viewType={viewType}
+          readonly={readonly}
+          stageIdentifier={stageIdentifier}
+        />
+      )}
     </>
   )
 }

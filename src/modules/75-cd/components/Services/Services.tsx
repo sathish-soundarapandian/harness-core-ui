@@ -8,8 +8,6 @@
 import React from 'react'
 import { Tabs } from '@harness/uicore'
 import moment from 'moment'
-import { isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
@@ -21,8 +19,7 @@ import {
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { useLocalStorage } from '@common/hooks'
 import { convertStringToDateTimeRange } from '@cd/pages/dashboard/dashboardUtils'
-import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import EndOfLifeBanner from '@pipeline/components/PipelineStudio/PipelineCanvas/EndOfLifeBanner'
+import { BannerEOL } from '@pipeline/components/BannerEOL/BannerEOL'
 import { DeploymentsTimeRangeContext, ServiceStoreContext, useServiceStore } from './common'
 
 import { ServicesListPage } from './ServicesListPage/ServicesListPage'
@@ -34,6 +31,7 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
   const { view, setView, fetchDeploymentList } = useServiceStore()
   const { getString } = useStrings()
   const isCommunity = useGetCommunity()
+  const [showBanner, setShowBanner] = React.useState<boolean>(false)
 
   const [timeRange, setTimeRange] = useLocalStorage<TimeRangeSelectorProps>(
     'serviceTimeRange',
@@ -45,8 +43,6 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
   )
 
   const resultTimeFilterRange = convertStringToDateTimeRange(timeRange)
-  const { module, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
-  const showBanner = !isEmpty(projectIdentifier) && module === 'cd'
 
   return (
     <ServiceStoreContext.Provider
@@ -56,7 +52,7 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
         fetchDeploymentList
       }}
     >
-      {showBanner && <EndOfLifeBanner isSvcOrEnv />}
+      <BannerEOL isVisible={showBanner} />
       <Page.Header
         title={getString('services')}
         breadcrumbs={<NGBreadcrumbs />}
@@ -67,7 +63,11 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
         }
       />
       {isCommunity || !showServicesDashboard ? (
-        <ServicesListPage />
+        <ServicesListPage
+          setShowBanner={status => {
+            setShowBanner(status)
+          }}
+        />
       ) : (
         <DeploymentsTimeRangeContext.Provider value={{ timeRange: resultTimeFilterRange, setTimeRange }}>
           <div className={css.tabs}>
@@ -83,7 +83,13 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
                 {
                   id: 'manageServices',
                   title: getString('cd.serviceDashboard.manageServiceLabel'),
-                  panel: <ServicesListPage />
+                  panel: (
+                    <ServicesListPage
+                      setShowBanner={status => {
+                        setShowBanner(status)
+                      }}
+                    />
+                  )
                 }
               ]}
             />

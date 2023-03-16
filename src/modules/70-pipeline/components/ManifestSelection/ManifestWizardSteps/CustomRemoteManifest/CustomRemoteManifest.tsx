@@ -25,7 +25,7 @@ import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { defaultTo, get, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
@@ -34,8 +34,17 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { CustomManifestManifestDataType, ManifestTypes } from '../../ManifestInterface'
-import { ManifestDataType, ManifestIdentifierValidation, cfCliVersions } from '../../Manifesthelper'
+import type {
+  CustomManifestManifestDataType,
+  CustomRemoteManifestManifestLastStepPrevStepData,
+  ManifestTypes
+} from '../../ManifestInterface'
+import {
+  ManifestDataType,
+  ManifestIdentifierValidation,
+  cfCliVersions,
+  getSkipResourceVersioningBasedOnDeclarativeRollback
+} from '../../Manifesthelper'
 import CustomRemoteAdvancedStepSection from './CustomRemoteAdvancedStepSection'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth, handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
@@ -51,6 +60,7 @@ interface CustomRemoteManifestPropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   deploymentType?: string
+  editManifestModePrevStepData?: CustomRemoteManifestManifestLastStepPrevStepData
 }
 
 const showValuesPaths = (selectedManifest: ManifestTypes): boolean => {
@@ -87,10 +97,13 @@ function CustomRemoteManifest({
   previousStep,
   manifestIdsList,
   isReadonly,
-  deploymentType
+  deploymentType,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & CustomRemoteManifestPropType): React.ReactElement {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   const getInitialValues = (): CustomManifestManifestDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -103,6 +116,7 @@ function CustomRemoteManifest({
         ...specValues,
         identifier: initialValues.identifier,
         skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
+        enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         helmVersion: get(initialValues, 'spec.helmVersion'),
         valuesPaths:
           typeof valuesPaths === 'string'
@@ -147,9 +161,10 @@ function CustomRemoteManifest({
       filePath: '',
       extractionScript: '',
       skipResourceVersioning: false,
+      enableDeclarativeRollback: false,
       valuesPaths: [{ path: '', uuid: uuid('', nameSpace()) } as PathsInterface],
       paramsPaths: [{ path: '', uuid: uuid('', nameSpace()) } as PathsInterface],
-      helmVersion: 'V2',
+      helmVersion: 'V3',
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
       delegateSelectors: [],
       ...(showTASAdditionalPaths(selectedManifest as ManifestTypes) && { cfCliVersion: 'V7' })
@@ -176,7 +191,15 @@ function CustomRemoteManifest({
         }
       }
       if (showSkipResourceVersion(selectedManifest as ManifestTypes)) {
-        set(manifestObj, 'manifest.spec.skipResourceVersioning', formData?.skipResourceVersioning)
+        set(
+          manifestObj,
+          'manifest.spec.skipResourceVersioning',
+          getSkipResourceVersioningBasedOnDeclarativeRollback(
+            formData?.skipResourceVersioning,
+            formData?.enableDeclarativeRollback
+          )
+        )
+        set(manifestObj, 'manifest.spec.enableDeclarativeRollback', formData?.enableDeclarativeRollback)
       }
       if (showHelmVersion(selectedManifest as ManifestTypes)) {
         set(manifestObj, 'manifest.spec.helmVersion', formData?.helmVersion)
@@ -187,7 +210,11 @@ function CustomRemoteManifest({
           'manifest.spec.valuesPaths',
           typeof formData.valuesPaths === 'string'
             ? formData.valuesPaths
-            : defaultTo(formData.valuesPaths as Array<{ path: string }>, []).map((path: { path: string }) => path.path)
+            : removeEmptyFieldsFromStringArray(
+                defaultTo(formData.valuesPaths as Array<{ path: string }>, []).map(
+                  (path: { path: string }) => path.path
+                )
+              )
         )
       }
       if (showParamsPaths(selectedManifest as ManifestTypes)) {
@@ -196,7 +223,11 @@ function CustomRemoteManifest({
           'manifest.spec.paramsPaths',
           typeof formData.paramsPaths === 'string'
             ? formData.paramsPaths
-            : defaultTo(formData.paramsPaths as Array<{ path: string }>, []).map((path: { path: string }) => path.path)
+            : removeEmptyFieldsFromStringArray(
+                defaultTo(formData.paramsPaths as Array<{ path: string }>, []).map(
+                  (path: { path: string }) => path.path
+                )
+              )
         )
       }
       handleCommandFlagsSubmitData(manifestObj, formData)
@@ -262,11 +293,19 @@ function CustomRemoteManifest({
               )
             }
             return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
-          })
+          }),
+          commandFlags: Yup.array().of(
+            Yup.object().shape({
+              flag: Yup.string().when('commandType', {
+                is: val => !isEmpty(val),
+                then: Yup.string().required(getString('pipeline.manifestType.commandFlagRequired'))
+              })
+            })
+          )
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData
           })
         }}
@@ -334,7 +373,6 @@ function CustomRemoteManifest({
                         variableName="extractionScript"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={/* istanbul ignore next */ value => formik.setFieldValue('filePath', value)}
                         isReadonly={isReadonly}
                       />
@@ -359,7 +397,6 @@ function CustomRemoteManifest({
                         variableName="filePath"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={/* istanbul ignore next */ value => formik.setFieldValue('filePath', value)}
                         isReadonly={isReadonly}
                       />
@@ -391,7 +428,6 @@ function CustomRemoteManifest({
                             variableName={'varsPaths'}
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={/* istanbul ignore next */ val => formik?.setFieldValue('varsPaths', val)}
                             isReadonly={isReadonly}
                           />
@@ -423,7 +459,6 @@ function CustomRemoteManifest({
                             variableName={'autoScalerPath'}
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={/* istanbul ignore next */ val => formik?.setFieldValue('autoScalerPath', val)}
                             isReadonly={isReadonly}
                           />
@@ -457,6 +492,7 @@ function CustomRemoteManifest({
                         placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                         defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                         dragDropFieldWidth={filePathWidth}
+                        allowSinglePathDeletion
                       />
                       {getMultiTypeFromValue(formik.values.valuesPaths as string) === MultiTypeInputType.RUNTIME && (
                         <ConfigureOptions
@@ -465,7 +501,6 @@ function CustomRemoteManifest({
                           variableName={'valuesPaths'}
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={val => formik?.setFieldValue('valuesPaths', val)}
                           isReadonly={isReadonly}
                         />
@@ -488,6 +523,7 @@ function CustomRemoteManifest({
                         placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                         defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                         dragDropFieldWidth={filePathWidth}
+                        allowSinglePathDeletion
                       />
                       {getMultiTypeFromValue(formik.values.paramsPaths as string) === MultiTypeInputType.RUNTIME && (
                         <ConfigureOptions
@@ -496,7 +532,6 @@ function CustomRemoteManifest({
                           variableName={'paramsPaths'}
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={val => formik?.setFieldValue('paramsPaths', val)}
                           isReadonly={isReadonly}
                         />
@@ -519,7 +554,7 @@ function CustomRemoteManifest({
                             allowableTypes={allowableTypes}
                             helmVersion={formik.values?.helmVersion}
                             deploymentType={deploymentType as string}
-                            helmStore={prevStepData?.store ?? ''}
+                            helmStore={modifiedPrevStepData?.store ?? ''}
                             initialValues={initialValues}
                             selectedManifest={selectedManifest}
                           />
@@ -534,7 +569,7 @@ function CustomRemoteManifest({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

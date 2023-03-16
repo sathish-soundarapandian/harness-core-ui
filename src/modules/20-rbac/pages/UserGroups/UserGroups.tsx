@@ -24,6 +24,11 @@ import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/Ent
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByEmail, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import UserGroupEmptyState from './user-group-empty-state.png'
 import css from './UserGroups.module.scss'
 
@@ -40,6 +45,8 @@ const UserGroupsPage: React.FC = () => {
   })
   const { getString } = useStrings()
   useDocumentTitle(getString('common.userGroups'))
+  const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod | undefined>(PreferenceScope.USER, `sort-${PAGE_NAME.UserGroups}`)
 
   const {
     search: searchTerm,
@@ -55,8 +62,10 @@ const UserGroupsPage: React.FC = () => {
       pageIndex,
       pageSize,
       searchTerm,
-      filterType: 'INCLUDE_INHERITED_GROUPS'
+      filterType: 'INCLUDE_INHERITED_GROUPS',
+      sortOrders: [sortPreference]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -143,6 +152,14 @@ const UserGroupsPage: React.FC = () => {
           imageClassName: css.userGroupsEmptyState
         }}
       >
+        <ListHeader
+          selectedSortMethod={sortPreference}
+          sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName, ...sortByEmail]}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
+          totalCount={data?.data?.totalItems}
+        />
         <UserGroupsListView
           data={data}
           openRoleAssignmentModal={openRoleAssignmentModal}

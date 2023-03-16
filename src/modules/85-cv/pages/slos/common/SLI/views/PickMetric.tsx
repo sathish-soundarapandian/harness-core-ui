@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { FormEvent, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Container, FormInput, Layout, Text, useToaster, SelectOption, ButtonVariation, Card } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -40,7 +40,7 @@ export interface PickMetricProps
 }
 
 const PickMetric: React.FC<PickMetricProps> = props => {
-  const { formikProps, onAddNewMetric, monitoredServiceData } = props
+  const { formikProps, onAddNewMetric, monitoredServiceData, metricsNames, setMetricsNames } = props
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & { identifier?: string }>()
@@ -89,6 +89,13 @@ const PickMetric: React.FC<PickMetricProps> = props => {
     [SLOMetricOptions, validRequestMetric]
   )
 
+  useEffect(() => {
+    const { activeValidMetric: validMetricName, activeGoodMetric: goodMetricName } = metricsNames || {}
+    if (activeValidMetric.label !== validMetricName?.label || activeGoodMetric.label !== goodMetricName?.label) {
+      setMetricsNames?.({ activeValidMetric, activeGoodMetric })
+    }
+  }, [activeValidMetric.label, activeGoodMetric.label])
+
   const radioItems: Pick<RadioButtonProps, 'label' | 'value'>[] = useMemo(() => {
     const { THRESHOLD, RATIO } = SLIMetricTypes
     return [
@@ -133,6 +140,10 @@ const PickMetric: React.FC<PickMetricProps> = props => {
               name={SLOV2FormFields.SLI_METRIC_TYPE}
               className={css.radioGroup}
               items={radioItems}
+              onChange={(e: FormEvent<HTMLInputElement>) => {
+                formikProps.setFieldValue(SLOV2FormFields.SLI_METRIC_TYPE, e.currentTarget.value)
+                formikProps.setFieldValue(SLOV2FormFields.OBJECTIVE_VALUE, undefined)
+              }}
             />
           </Card>
         </Layout.Vertical>

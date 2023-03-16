@@ -17,10 +17,10 @@ import type { StringKeys } from 'framework/strings'
 export interface SetUpYourCodeViewProps {
   language: PlatformEntry
   apiKey: ApiKey
-  flagName: string
+  flagIdentifier: string
 }
 
-export const SetUpYourCodeView: React.FC<SetUpYourCodeViewProps> = ({ language, apiKey, flagName }) => {
+export const SetUpYourCodeView: React.FC<SetUpYourCodeViewProps> = ({ language, apiKey, flagIdentifier }) => {
   const { getString } = useStrings()
   const [currentReadme, setCurrentReadme] = useState<StringKeys>(language.readmeStringId)
   const [xamarinOption, setXamarinOption] = useState<StringKeys | undefined>(
@@ -67,7 +67,7 @@ export const SetUpYourCodeView: React.FC<SetUpYourCodeViewProps> = ({ language, 
         vars={{
           ...apiKey,
           apiKey: apiKey.apiKey,
-          flagName: flagName
+          flagIdentifier
         }}
       />
     </>

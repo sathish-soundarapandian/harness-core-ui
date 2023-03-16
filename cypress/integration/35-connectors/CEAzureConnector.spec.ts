@@ -7,11 +7,6 @@ import { pageHeaderClassName } from '../../support/70-pipeline/constants'
 
 describe('CE Azure Connector', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.visit(accountResourceConnectors, {
       timeout: 30000

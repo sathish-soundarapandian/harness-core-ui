@@ -12,7 +12,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, orgPathProps } from '@common/utils/routeUtils'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
-import AuditTrailsListView from '../AuditTrailsListView'
+import AuditLogsListView from '../AuditLogsListView'
 import { data } from './mockData'
 
 AuditTrailFactory.registerResourceHandler('CONNECTOR', {
@@ -30,7 +30,7 @@ describe('Audit trail list view', () => {
   test('render', () => {
     const renderObj = render(
       <TestWrapper path={routes.toAuditTrail({ ...accountPathProps })} pathParams={{ accountId: 'testAcc' }}>
-        <AuditTrailsListView data={data.data as any} setPage={jest.fn} />
+        <AuditLogsListView data={data.data as any} setPage={jest.fn} />
       </TestWrapper>
     )
     expect(renderObj.container).toMatchSnapshot()
@@ -42,7 +42,7 @@ describe('Audit trail list view', () => {
         path={routes.toAuditTrail({ ...orgPathProps })}
         pathParams={{ accountId: 'testAcc', orgIdentifier: 'orgdummy' }}
       >
-        <AuditTrailsListView data={data.data as any} setPage={jest.fn} />
+        <AuditLogsListView data={data.data as any} setPage={jest.fn} />
       </TestWrapper>
     )
     expect(renderObj.container).toMatchSnapshot()
@@ -51,7 +51,7 @@ describe('Audit trail list view', () => {
   test('test event summary click', () => {
     render(
       <TestWrapper path={routes.toAuditTrail({ ...accountPathProps })} pathParams={{ accountId: 'testAcc' }}>
-        <AuditTrailsListView data={data.data as any} setPage={jest.fn} />
+        <AuditLogsListView data={data.data as any} setPage={jest.fn} />
       </TestWrapper>
     )
     const notesIcon = document.body.querySelector('.notesIcon')

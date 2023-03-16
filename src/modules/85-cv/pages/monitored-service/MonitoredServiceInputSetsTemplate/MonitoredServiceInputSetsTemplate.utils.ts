@@ -14,16 +14,13 @@ import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { MonitoredServiceDTO } from 'services/cv'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getValidationLabelByNameForTemplateInputs } from '../CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
-import type {
-  MonitoredServiceInputSetInterface,
-  TemplateDataInterface
-} from './MonitoredServiceInputSetsTemplate.types'
+import type { MonitoredServiceInputSetInterface } from './MonitoredServiceInputSetsTemplate.types'
 import { GcoQueryKey } from './MonitoredServiceInputSetsTemplate.constants'
 
 export const getLabelByName = (name: string, getString: UseStringsReturn['getString']): string => {
   switch (name) {
     case 'applicationName':
-      return getString('cv.monitoringSources.appD.applicationName')
+      return getString('pipeline.applicationName')
     case 'tierName':
       return getString('cv.monitoringSources.appD.tierName')
     case 'completeMetricPath':
@@ -39,18 +36,21 @@ export const getLabelByName = (name: string, getString: UseStringsReturn['getStr
     case 'query':
     case 'nrql':
     case 'jsonMetricDefinition':
+    case 'jsonMetricDefinitionString':
       return getString('cv.query')
     case 'category':
       return `Category for ${getString('cv.monitoringSources.riskCategoryLabel')}`
     case 'metricType':
       return `Metric type for ${getString('cv.monitoringSources.riskCategoryLabel')}`
     case 'indexes':
+    case 'index':
       return getString('cv.monitoringSources.datadogLogs.logIndexesLabel')
     case 'messageIdentifier':
       return getString('cv.monitoringSources.gcoLogs.messageIdentifierTitle')
     case 'metricValueJsonPath':
       return getString('cv.healthSource.connectors.NewRelic.metricFields.metricValueJsonPath.label')
     case 'timestampJsonPath':
+    case 'timeStampIdentifier':
       return getString('cv.healthSource.connectors.NewRelic.metricFields.timestampJsonPath.label')
     default:
       return name
@@ -178,30 +178,12 @@ export const getPopulateSource = (
   const clonedSource = cloneDeep(value.sources)
   const populateSource = clonedSource ? { sources: clonedSource } : {}
   const valueList = getPathForKey(populateSource, [], '', GcoQueryKey)
+
   if (valueList.length) {
     valueList.forEach(item => {
-      let stringToObjectValue = {}
-      try {
-        stringToObjectValue = JSON.parse(get(populateSource, item.path))
-      } catch (_) {
-        stringToObjectValue = get(populateSource, item.path)
-      }
+      const stringToObjectValue = get(populateSource, item.path)
       set(populateSource, item.path, stringToObjectValue)
     })
   }
   return populateSource
-}
-
-export const getQueryParamsForTemplateInputSetYaml = (
-  templateQuery: TemplateDataInterface
-): { accountIdentifier: string; orgIdentifier?: string; projectIdentifier?: string } => {
-  const { accountId, orgIdentifier, projectIdentifier } = templateQuery
-  const accountIdQuery = { accountIdentifier: accountId }
-  const orgIdentifierQuery = orgIdentifier ? { orgIdentifier } : {}
-  const projectIdentifierQuery = projectIdentifier ? { projectIdentifier } : {}
-  return {
-    ...accountIdQuery,
-    ...orgIdentifierQuery,
-    ...projectIdentifierQuery
-  }
 }

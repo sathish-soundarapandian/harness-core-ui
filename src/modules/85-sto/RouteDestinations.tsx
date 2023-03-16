@@ -15,7 +15,6 @@ import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { TemplateRouteDestinations } from '@templates-library/RouteDestinations'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
-import CIPipelineDeploymentList from '@ci/pages/pipeline-deployment-list/CIPipelineDeploymentList'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
@@ -58,6 +57,8 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { ModuleName } from 'framework/types/ModuleName'
+import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
+import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/ExternalTicketSettings'
 
 const STOSideNavProps: SidebarContext = {
   navComponent: STOSideNav,
@@ -222,7 +223,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_ISSUE, {
 })
 RbacFactory.registerResourceTypeHandler(ResourceType.TICKET, {
   icon: 'sto-color-filled',
-  label: 'common.tickets.tickets',
+  label: 'common.tickets.externalTickets',
   labelSingular: 'common.singularLabels.ticket',
   category: ResourceCategory.STO,
   permissionLabels: {
@@ -344,10 +345,19 @@ const RouteDestinations: React.FC = () => {
         <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel }} />
       </RouteWithLayout>
 
+      <RouteWithLayout
+        exact
+        sidebarProps={STOSideNavProps}
+        licenseRedirectData={licenseRedirectData}
+        path={[routes.toSTOProjectTicketSettings({ ...accountPathProps, ...projectPathProps })]}
+      >
+        <ExternalTicketSettings />
+      </RouteWithLayout>
+
       <Route path="/account/:accountId/:module(sto)">
         <PipelineRouteDestinations
           pipelineStudioComponent={PipelineStudio}
-          pipelineDeploymentListComponent={CIPipelineDeploymentList}
+          pipelineDeploymentListComponent={PipelineDeploymentList}
           moduleParams={moduleParams}
           licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}

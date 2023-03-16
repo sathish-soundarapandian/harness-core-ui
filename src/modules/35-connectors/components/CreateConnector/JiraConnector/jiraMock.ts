@@ -30,8 +30,13 @@ export const backButtonMock: ConnectorInfoDTO = {
   type: 'Jira',
   spec: {
     jiraUrl: 'https://jira.dev.harness.io/',
-    username: 'harnessadmin',
-    passwordRef: 'jira_secret'
+    auth: {
+      type: 'UsernamePassword',
+      spec: {
+        username: 'harnessadmin',
+        passwordRef: 'jira_secret'
+      }
+    }
   }
 }
 

@@ -6,12 +6,12 @@
  */
 
 import React, { useContext } from 'react'
-import { debounce, defaultTo, isEmpty, isEqual, noop, set } from 'lodash-es'
+import { debounce, defaultTo, isEmpty, isEqual, isNil, noop, set } from 'lodash-es'
 import { Card, Container, Formik, FormikForm, Heading, Layout, PageError } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import type { FormikProps } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik'
 import { produce } from 'immer'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { Error, StageElementConfig } from 'services/cd-ng'
@@ -38,8 +38,7 @@ import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/Tem
 import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './TemplateStageSpecifications.module.scss'
 
 declare global {
@@ -63,11 +62,13 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   const { stage } = getStageFromPipeline(selectedStageId)
   const queryParams = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+  const { FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } = useFeatureFlags()
   const templateRef = getIdentifierFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
   const templateVersionLabel = getIdentifierFromValue(defaultTo(stage?.stage?.template?.versionLabel, ''))
   const templateScope = getScopeFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
-  const [formValues, setFormValues] = React.useState<StageElementConfig | undefined>(stage?.stage)
+  const [formValues, setFormValues] = React.useState<StageElementConfig | undefined>(
+    defaultTo(stage?.stage, stage?.stage?.template?.templateInputs as StageElementConfig)
+  )
   const [allValues, setAllValues] = React.useState<StageElementConfig>()
   const [templateInputs, setTemplateInputs] = React.useState<StageElementConfig>()
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
@@ -75,6 +76,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { getString } = useStrings()
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
+
+  const { addOrUpdateTemplate, removeTemplate, isTemplateUpdated, setIsTemplateUpdated } = useStageTemplateActions()
 
   const onChange = React.useCallback(
     debounce(async (values: StageElementConfig): Promise<void> => {
@@ -95,7 +98,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
       versionLabel: templateVersionLabel,
       ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   React.useEffect(() => {
@@ -103,6 +106,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
       ...parse<{ template: { spec: StageElementConfig } }>(defaultTo(templateResponse?.data?.yaml, ''))?.template.spec,
       identifier: defaultTo(stage?.stage?.identifier, '')
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [templateResponse?.data?.yaml])
 
   const {
@@ -117,10 +121,10 @@ export const TemplateStageSpecifications = (): JSX.Element => {
       versionLabel: defaultTo(stage?.stage?.template?.versionLabel, ''),
       ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
-  const updateFormValues = (newTemplateInputs?: StageElementConfig) => {
+  const updateFormValues = (newTemplateInputs?: StageElementConfig): void => {
     const updatedStage = produce(stage?.stage as StageElementConfig, draft => {
       set(
         draft,
@@ -132,7 +136,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     updateStage(updatedStage)
   }
 
-  const retainInputsAndUpdateFormValues = (newTemplateInputs?: StageElementConfig) => {
+  const retainInputsAndUpdateFormValues = (newTemplateInputs?: StageElementConfig): void => {
     if (isEmpty(newTemplateInputs)) {
       updateFormValues(newTemplateInputs)
     } else {
@@ -159,6 +163,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
         updateFormValues(newTemplateInputs)
       }
     }
+
+    setIsTemplateUpdated(false)
   }
 
   React.useEffect(() => {
@@ -168,8 +174,20 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     } else {
       const newTemplateInputs = parse<StageElementConfig>(defaultTo(templateInputSetYaml?.data, ''))
       setTemplateInputs(newTemplateInputs)
-      retainInputsAndUpdateFormValues(newTemplateInputs)
+
+      // istanbul ignore else
+      if (isTemplateUpdated) {
+        retainInputsAndUpdateFormValues(newTemplateInputs)
+      } else if (isNil(formValues?.template?.templateInputs) && !isNil(newTemplateInputs)) {
+        // The above condition is required when a stage template is first linked
+        const updatedStage = produce(stage?.stage as StageElementConfig, draft => {
+          set(draft, 'template.templateInputs', newTemplateInputs)
+        })
+        setFormValues(updatedStage)
+        updateStage(updatedStage)
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [templateInputSetLoading])
 
   React.useEffect(() => {
@@ -181,7 +199,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     submitFormsForTab(TemplateTabs.OVERVIEW)
   })
 
-  const validateForm = (values: StageElementConfig) => {
+  const validateForm = (values: StageElementConfig): FormikErrors<StageElementConfig> => {
     if (
       isEqual(values.template?.templateRef, stage?.stage?.template?.templateRef) &&
       isEqual(values.template?.versionLabel, stage?.stage?.template?.versionLabel)
@@ -192,7 +210,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
         template: templateInputs,
         originalStage: stage?.stage?.template?.templateInputs as StageElementConfig,
         getString,
-        viewType: StepViewType.DeploymentForm
+        viewType: StepViewType.DeploymentForm,
+        isOptionalVariableAllowed
       })
       return set({}, TEMPLATE_INPUT_PATH, errorsResponse)
     } else {
@@ -200,12 +219,10 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     }
   }
 
-  const refetch = () => {
+  const refetch = (): void => {
     refetchTemplate()
     refetchTemplateInputSet()
   }
-
-  const { addOrUpdateTemplate, removeTemplate } = useStageTemplateActions()
 
   const formRefDom = React.useRef<HTMLElement | undefined>()
 

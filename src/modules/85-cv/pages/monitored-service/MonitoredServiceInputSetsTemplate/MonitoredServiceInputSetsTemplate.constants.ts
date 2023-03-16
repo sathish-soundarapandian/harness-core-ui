@@ -6,4 +6,4 @@
  */
 
 export const spacingMedium = 'var(--spacing-medium)'
-export const GcoQueryKey = 'jsonMetricDefinition'
+export const GcoQueryKey = 'jsonMetricDefinitionString'

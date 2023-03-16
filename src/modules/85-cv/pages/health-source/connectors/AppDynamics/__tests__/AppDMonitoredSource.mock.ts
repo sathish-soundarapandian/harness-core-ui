@@ -1508,20 +1508,11 @@ export const onSubmitPayloadTemplate = {
     applicationName: '<+input>',
     connectorRef: '<+input>',
     feature: 'Application Monitoring',
-    metricData: {
-      Errors: true,
-      Performance: true
-    },
+    metricData: { Errors: true, Performance: true },
     metricDefinitions: [],
     metricPacks: [
-      {
-        identifier: 'Errors',
-        metricThresholds: undefined
-      },
-      {
-        identifier: 'Performance',
-        metricThresholds: undefined
-      }
+      { identifier: 'Errors', metricThresholds: [] },
+      { identifier: 'Performance', metricThresholds: [] }
     ],
     tierName: '<+input>'
   },

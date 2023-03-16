@@ -62,16 +62,13 @@ export function validateMappings(
   getString: UseStringsReturn['getString'],
   createdMetrics: string[],
   selectedMetricIndex: number,
-  values: MapCustomHealthToService,
-  isMetricThresholdEnabled?: boolean
+  values: MapCustomHealthToService
 ): { [fieldName: string]: string } {
   let errors = {}
 
   errors = validateCustomMetricFields(values, createdMetrics, selectedMetricIndex, {}, getString)
 
-  if (isMetricThresholdEnabled) {
-    validateMetricThresholds(errors, values, getString)
-  }
+  validateMetricThresholds(errors, values, getString)
 
   return errors
 }
@@ -208,10 +205,7 @@ const validateAssignComponent = (
   return _error
 }
 
-export function transformCustomHealthSourceToSetupSource(
-  sourceData: any,
-  isMetricThresholdEnabled: boolean
-): CustomHealthSourceSetupSource {
+export function transformCustomHealthSourceToSetupSource(sourceData: any): CustomHealthSourceSetupSource {
   const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
   )
@@ -313,24 +307,21 @@ export function transformCustomHealthSourceToSetupSource(
   }
 
   // Update PrometheusHealthSourceSpec to CustomHealthSpec once after updating the swagger
-  if (isMetricThresholdEnabled) {
-    setupSource.ignoreThresholds = getFilteredMetricThresholdValues(
-      MetricThresholdTypes.IgnoreThreshold,
-      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
-    )
+  setupSource.ignoreThresholds = getFilteredMetricThresholdValues(
+    MetricThresholdTypes.IgnoreThreshold,
+    (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+  )
 
-    setupSource.failFastThresholds = getFilteredMetricThresholdValues(
-      MetricThresholdTypes.FailImmediately,
-      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
-    )
-  }
+  setupSource.failFastThresholds = getFilteredMetricThresholdValues(
+    MetricThresholdTypes.FailImmediately,
+    (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+  )
 
   return setupSource
 }
 
 export function transformCustomSetupSourceToHealthSource(
-  setupSource: CustomHealthSourceSetupSource,
-  isMetricThresholdEnabled: boolean
+  setupSource: CustomHealthSourceSetupSource
 ): UpdatedHealthSource {
   const spec: CustomHealthSourceMetricSpec & { metricPacks: TimeSeriesMetricPackDTO[] } = {
     connectorRef: setupSource?.connectorRef,
@@ -410,11 +401,7 @@ export function transformCustomSetupSourceToHealthSource(
     })
   }
 
-  if (
-    isMetricThresholdEnabled &&
-    Array.isArray(setupSource?.ignoreThresholds) &&
-    Array.isArray(setupSource?.failFastThresholds)
-  ) {
+  if (Array.isArray(setupSource?.ignoreThresholds) && Array.isArray(setupSource?.failFastThresholds)) {
     // Needs to be updated with CustomHealth's spec once the swagger is ready
     ;(dsConfig.spec as PrometheusHealthSourceSpec)?.metricPacks?.push({
       identifier: MetricTypeValues.Custom,
@@ -432,7 +419,6 @@ export const onSubmitCustomHealthSource = ({
   onSubmit,
   sourceData,
   transformedSourceData,
-  isMetricThresholdEnabled,
   metricThresholds
 }: onSubmitCustomHealthSourceInterface): void => {
   const updatedMetric = formikProps.values
@@ -441,14 +427,11 @@ export const onSubmitCustomHealthSource = ({
   }
   onSubmit(
     sourceData,
-    transformCustomSetupSourceToHealthSource(
-      {
-        ...transformedSourceData,
-        mappedServicesAndEnvs: mappedMetrics,
-        ...metricThresholds
-      } as CustomHealthSourceSetupSource,
-      isMetricThresholdEnabled
-    )
+    transformCustomSetupSourceToHealthSource({
+      ...transformedSourceData,
+      mappedServicesAndEnvs: mappedMetrics,
+      ...metricThresholds
+    } as CustomHealthSourceSetupSource)
   )
 }
 

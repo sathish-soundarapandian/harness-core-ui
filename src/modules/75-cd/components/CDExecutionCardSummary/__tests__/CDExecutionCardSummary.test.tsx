@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import { TestWrapper } from '@common/utils/testUtils'
 
 import { CDExecutionCardSummary } from '../CDExecutionCardSummary'
 
@@ -14,7 +15,11 @@ import props from './props.json'
 
 describe('<CDExecutionCardSummary /> tests', () => {
   test('snapshot test', () => {
-    const { container } = render(<CDExecutionCardSummary {...(props as any)} />)
+    const { container } = render(
+      <TestWrapper>
+        <CDExecutionCardSummary {...(props as any)} />
+      </TestWrapper>
+    )
     expect(container).toMatchSnapshot()
   })
 })

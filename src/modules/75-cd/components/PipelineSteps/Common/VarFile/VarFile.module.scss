@@ -1,0 +1,178 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.tfContainer {
+  display: flex;
+  background: none !important;
+}
+
+.branch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5px !important;
+}
+
+.dialog {
+  border-radius: 11px;
+  position: relative;
+  width: 1000px;
+  padding: 10px;
+}
+
+.configField {
+  display: flex;
+  justify-content: space-between;
+  width: 100% !important;
+  height: 32px;
+  background: var(--grey-0);
+  border: 1px solid rgb(228, 228, 235);
+  align-items: center;
+  padding: 10px;
+  margin-top: 10px !important;
+}
+
+.tfMenu {
+  padding: 16px;
+  background-color: var(--white) !important;
+}
+
+.manifestWizard {
+  width: 100%;
+
+  [class*='stepDetails'] {
+    background-color: var(--white) !important;
+  }
+  [class*='navBarList'] {
+    grid-template-rows: repeat(auto-fill, var(--spacing-xxxlarge)) !important;
+  }
+
+  div[class*='nestedStep']:nth-of-type(2) {
+    margin-top: var(--spacing-medium) !important;
+  }
+}
+
+.createTfWizard {
+  flex-grow: 1;
+  display: flex;
+}
+
+.optionsViewContainer {
+  position: relative;
+  height: 100%;
+  margin-left: 20px !important;
+  margin-top: 10px !important;
+}
+.headerContainer {
+  min-height: 400px;
+}
+.squareCardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 85px;
+  margin-right: var(--spacing-small);
+}
+.manifestIcon {
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+  margin-bottom: var(--spacing-small);
+}
+
+.tfVarStore {
+  height: 100%;
+  position: relative;
+  div[class*='OverlaySpinner'] {
+    height: 100%;
+  }
+  :global(.bp3-collapse-body > div) {
+    background-color: var(--white) !important;
+  }
+
+  .formContainerStepOne {
+    margin-top: 20px !important;
+    height: 80%;
+    min-height: 280px;
+  }
+
+  .tfRemoteForm {
+    height: 100%;
+    min-height: 400px;
+  }
+  .modal {
+    [class*='bp3-dialog-header'] button {
+      z-index: 2;
+    }
+  }
+}
+
+.formComponent {
+  height: 100%;
+  padding-bottom: var(--spacing-10);
+}
+
+.crossIcon {
+  position: absolute;
+  right: var(--spacing-large);
+  top: var(--spacing-large);
+}
+
+.addTfVarFile {
+  margin-top: 16px !important;
+  padding: 0 !important;
+}
+
+.dragging {
+  background-color: var(--yellow-450) !important;
+}
+
+.dragOver {
+  border-top: 2px solid var(--primary-7);
+}
+
+.drag {
+  cursor: move;
+}
+
+.iconPosition {
+  position: relative;
+  top: 2px;
+  right: 5px;
+}
+
+.tfVarLabel {
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  line-height: 16px !important;
+  color: var(--grey-1000) !important;
+  font-family: sans-serif, inter !important;
+  margin-top: var(--spacing-medium) !important;
+  margin-bottom: var(--spacing-small) !important;
+}
+
+.tfVarMargin {
+  margin-bottom: 10px;
+}
+
+.iconMargin {
+  margin-right: var(--spacing-small) !important;
+}
+
+.newConnectorButton {
+  margin-top: 40px !important;
+}
+
+.tooltipProps {
+  font-size: small;
+}
+
+.tfArtifactoryStepTwo {
+  min-height: 440px;
+}
+
+.addMarginTop {
+  margin-top: var(--spacing-medium) !important;
+}

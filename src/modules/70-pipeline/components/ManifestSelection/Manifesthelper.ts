@@ -7,6 +7,7 @@
 
 import type { Schema } from 'yup'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import { isBoolean } from 'lodash-es'
 import { Connectors } from '@connectors/constants'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
@@ -75,7 +76,9 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   AsgScalingPolicy: 'AsgScalingPolicy',
   AsgScheduledUpdateGroupAction: 'AsgScheduledUpdateGroupAction',
   GoogleCloudFunctionDefinition: 'GoogleCloudFunctionDefinition',
-  HelmRepoOverride: 'HelmRepoOverride'
+  HelmRepoOverride: 'HelmRepoOverride',
+  AwsLambdaFunctionDefinition: 'AwsLambdaFunctionDefinition',
+  AwsLambdaFunctionAliasDefinition: 'AwsLambdaFunctionAliasDefinition'
 }
 
 export const TASManifestTypes = [ManifestDataType.TasManifest, ManifestDataType.TasVars, ManifestDataType.TasAutoScaler]
@@ -84,7 +87,7 @@ export const TASManifestAllowedPaths = [ManifestDataType.TasVars, ManifestDataTy
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
   K8sManifest: 'Values',
   HelmChart: 'Values',
-  OpenshiftTemplate: 'OpenshiftParam',
+  OpenshiftTemplate: 'OpenShift Params',
   Kustomize: 'KustomizePatches',
   TasVars: 'Vars',
   TasAutoScaler: 'AutoScaler'
@@ -152,7 +155,9 @@ export const allowedManifestTypes: Record<ServiceDefinition['type'], Array<Manif
   ],
   CustomDeployment: [],
   Elastigroup: [],
-  GoogleCloudFunctions: [ManifestDataType.GoogleCloudFunctionDefinition]
+  GoogleCloudFunctions: [ManifestDataType.GoogleCloudFunctionDefinition],
+  AwsLambda: [ManifestDataType.AwsLambdaFunctionDefinition, ManifestDataType.AwsLambdaFunctionAliasDefinition],
+  AWS_SAM: []
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [
@@ -198,11 +203,11 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
     ManifestStoreMap.InheritFromManifest,
     ManifestStoreMap.Harness
   ],
-  ServerlessAwsLambda: [...gitStoreTypes, ManifestStoreMap.S3],
-  EcsTaskDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
-  EcsServiceDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
-  EcsScalingPolicyDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
-  EcsScalableTargetDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
+  ServerlessAwsLambda: [...gitStoreTypes, ManifestStoreMap.AzureRepo, ManifestStoreMap.S3],
+  EcsTaskDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.AzureRepo, ManifestStoreMap.S3],
+  EcsServiceDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.AzureRepo, ManifestStoreMap.S3],
+  EcsScalingPolicyDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.AzureRepo, ManifestStoreMap.S3],
+  EcsScalableTargetDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.AzureRepo, ManifestStoreMap.S3],
   TasManifest: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
   TasVars: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
   TasAutoScaler: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
@@ -211,7 +216,9 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   AsgScalingPolicy: gitStoreTypesWithHarnessStoreType,
   AsgScheduledUpdateGroupAction: gitStoreTypesWithHarnessStoreType,
   GoogleCloudFunctionDefinition: gitStoreTypesWithHarnessStoreType,
-  HelmRepoOverride: [ManifestStoreMap.Http, ManifestStoreMap.OciHelmChart, ManifestStoreMap.S3, ManifestStoreMap.Gcs]
+  HelmRepoOverride: [ManifestStoreMap.Http, ManifestStoreMap.OciHelmChart, ManifestStoreMap.S3, ManifestStoreMap.Gcs],
+  AwsLambdaFunctionDefinition: [...gitStoreTypes, ManifestStoreMap.Harness],
+  AwsLambdaFunctionAliasDefinition: [...gitStoreTypes, ManifestStoreMap.Harness]
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -235,7 +242,9 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   AsgScalingPolicy: 'aws-asg',
   AsgScheduledUpdateGroupAction: 'aws-asg',
   GoogleCloudFunctionDefinition: 'service-google-functions',
-  HelmRepoOverride: 'service-helm'
+  HelmRepoOverride: 'service-helm',
+  AwsLambdaFunctionDefinition: 'service-aws-native-lambda',
+  AwsLambdaFunctionAliasDefinition: 'service-aws-native-lambda'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -259,7 +268,9 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   AsgScalingPolicy: 'pipeline.manifestTypeLabels.AsgScalingPolicy',
   AsgScheduledUpdateGroupAction: 'pipeline.manifestTypeLabels.AsgScheduledUpdateGroupAction',
   GoogleCloudFunctionDefinition: 'pipeline.manifestTypeLabels.GoogleCloudFunctionDefinition',
-  HelmRepoOverride: 'pipeline.manifestTypeLabels.HelmRepoOverride'
+  HelmRepoOverride: 'pipeline.manifestTypeLabels.HelmRepoOverride',
+  AwsLambdaFunctionDefinition: 'pipeline.manifestTypeLabels.AwsLambdaFunctionDefinition',
+  AwsLambdaFunctionAliasDefinition: 'pipeline.manifestTypeLabels.AwsLambdaFunctionAliasDefinition'
 }
 
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [
@@ -275,7 +286,7 @@ export const ManifestIconByType: Record<ManifestStores, IconName> = {
   Git: 'service-github',
   Github: 'github',
   GitLab: 'service-gotlab',
-  Bitbucket: 'bitbucket',
+  Bitbucket: 'bitbucket-selected',
   Http: 'service-helm',
   OciHelmChart: 'helm-oci',
   S3: 'service-service-s3',
@@ -386,6 +397,7 @@ export const isECSTypeManifest = (selectedManifest: ManifestTypes): boolean =>
     ManifestDataType.EcsScalingPolicyDefinition,
     ManifestDataType.EcsScalableTargetDefinition
   ].includes(selectedManifest)
+
 export function getManifestLocation(manifestType: ManifestTypes, manifestStore: ManifestStores): string {
   switch (true) {
     case manifestStore === ManifestStoreMap.Harness:
@@ -407,7 +419,12 @@ export function getManifestLocation(manifestType: ManifestTypes, manifestStore: 
       ManifestDataType.AsgConfiguration,
       ManifestDataType.AsgScalingPolicy,
       ManifestDataType.AsgScheduledUpdateGroupAction,
-      ManifestDataType.GoogleCloudFunctionDefinition
+      ManifestDataType.TasManifest,
+      ManifestDataType.TasAutoScaler,
+      ManifestDataType.TasVars,
+      ManifestDataType.GoogleCloudFunctionDefinition,
+      ManifestDataType.AwsLambdaFunctionDefinition,
+      ManifestDataType.AwsLambdaFunctionAliasDefinition
     ].includes(manifestType):
       return 'store.spec.paths'
     case manifestType === ManifestDataType.Kustomize:
@@ -467,3 +484,15 @@ export const getConnectorRefOrConnectorId = (prevStepData?: ConnectorConfigDTO):
 export const allowedOverrideManfests: Record<keyof Pick<typeof ManifestDataType, 'HelmRepoOverride'>, number> = {
   HelmRepoOverride: 1
 }
+
+export const getSkipResourceVersioningBasedOnDeclarativeRollback = (
+  skipResourceVersioning?: boolean,
+  enableDeclarativeRollback?: boolean
+): boolean | undefined => {
+  return !(isBoolean(enableDeclarativeRollback) && enableDeclarativeRollback) ? skipResourceVersioning : false
+}
+
+export const allowedManifestForDeclarativeRollback = (selectedManifest?: ManifestTypes | null): boolean =>
+  [ManifestDataType.K8sManifest, ManifestDataType.HelmChart, ManifestDataType.OpenshiftTemplate].includes(
+    selectedManifest as ManifestTypes
+  )

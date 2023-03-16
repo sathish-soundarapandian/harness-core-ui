@@ -14,6 +14,7 @@ exports[`Test ChangeSourceCard should render with above 100 positive change 1`] 
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="Changes"
         >
           60k
         </p>
@@ -71,6 +72,7 @@ exports[`Test ChangeSourceCard should render with above 100 positive change 1`] 
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="Deployment"
         >
           15k
         </p>
@@ -128,6 +130,7 @@ exports[`Test ChangeSourceCard should render with above 100 positive change 1`] 
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="Infrastructure"
         >
           15k
         </p>
@@ -185,6 +188,7 @@ exports[`Test ChangeSourceCard should render with above 100 positive change 1`] 
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="FeatureFlag"
         >
           15k
         </p>
@@ -242,6 +246,7 @@ exports[`Test ChangeSourceCard should render with above 100 positive change 1`] 
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="Alert"
         >
           15k
         </p>
@@ -308,6 +313,7 @@ exports[`Test ChangeSourceCard should render with negative change 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="Changes"
         >
           40
         </p>
@@ -365,6 +371,7 @@ exports[`Test ChangeSourceCard should render with negative change 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="Deployment"
         >
           10
         </p>
@@ -422,6 +429,7 @@ exports[`Test ChangeSourceCard should render with negative change 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="Infrastructure"
         >
           10
         </p>
@@ -479,6 +487,7 @@ exports[`Test ChangeSourceCard should render with negative change 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="FeatureFlag"
         >
           10
         </p>
@@ -536,6 +545,7 @@ exports[`Test ChangeSourceCard should render with negative change 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="Alert"
         >
           10
         </p>
@@ -602,6 +612,7 @@ exports[`Test ChangeSourceCard should render with positive change 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="Changes"
         >
           60
         </p>
@@ -659,6 +670,7 @@ exports[`Test ChangeSourceCard should render with positive change 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="Deployment"
         >
           15
         </p>
@@ -716,6 +728,7 @@ exports[`Test ChangeSourceCard should render with positive change 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="Infrastructure"
         >
           15
         </p>
@@ -773,6 +786,7 @@ exports[`Test ChangeSourceCard should render with positive change 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="FeatureFlag"
         >
           15
         </p>
@@ -830,6 +844,7 @@ exports[`Test ChangeSourceCard should render with positive change 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+          data-testid="Alert"
         >
           15
         </p>

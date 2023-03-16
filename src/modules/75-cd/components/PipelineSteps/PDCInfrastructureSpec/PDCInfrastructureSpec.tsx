@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useEffect, useMemo, useState } from 'react'
+import React, { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import {
   AllowedTypes,
   Button,
@@ -298,14 +298,61 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     getData()
   }
 
-  const onCheckboxSelect = (event: FormEvent<HTMLInputElement>, item: HostValidationDTO) => {
+  const onCheckboxSelect = useCallback((event: FormEvent<HTMLInputElement>, item: HostValidationDTO) => {
     const identifier = item.host
     if ((event.target as any).checked && identifier) {
-      setHostsToTest([...defaultTo(hostsToTest, []), item])
+      setHostsToTest(prevHosts => [...defaultTo(prevHosts, []), item])
     } else {
-      setHostsToTest([...hostsToTest.filter((selectedHost: HostValidationDTO) => selectedHost.host !== identifier)])
+      setHostsToTest(prevHosts =>
+        prevHosts.filter((selectedHost: HostValidationDTO) => selectedHost.host !== identifier)
+      )
     }
-  }
+  }, [])
+
+  const testConnection = useCallback(async () => {
+    setErrors([])
+    try {
+      const hostResults = await validateHosts(
+        {
+          hosts: hostsToTest.map(host => get(host, 'host', '')),
+          tags: get(formikRef, 'current.values.delegateSelectors', [])
+        },
+        {
+          queryParams: {
+            accountIdentifier: accountId,
+            projectIdentifier,
+            orgIdentifier,
+            identifier: get(formikRef, 'current.values.credentialsRef', '')
+          }
+        }
+      )
+      if (hostResults.status === 'SUCCESS') {
+        const tempMap: any = {}
+        detailHosts.forEach(hostItem => {
+          tempMap[get(hostItem, 'parsedHost', '')] = hostItem
+        }, {})
+
+        get(hostResults, 'data', []).forEach((hostRes: HostValidationDTO) => {
+          tempMap[get(hostRes, 'host', '')] = {
+            ...tempMap[get(hostRes, 'host', '')],
+            ...hostRes
+          }
+        })
+
+        setDetailHosts(Object.values(tempMap) as [])
+      } else {
+        /* istanbul ignore next */
+        setErrors(get(hostResults, 'responseMessages', []))
+      }
+    } catch (e: any) {
+      /* istanbul ignore next */
+      if (e.data?.responseMessages) {
+        setErrors(e.data?.responseMessages)
+      } else {
+        showError(e.data?.message || e.message)
+      }
+    }
+  }, [accountId, orgIdentifier, projectIdentifier, detailHosts, hostsToTest, showError, validateHosts])
 
   const columns: Column<HostValidationDTO>[] = useMemo(
     () => [
@@ -386,53 +433,8 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
         width: '20%'
       }
     ],
-    [getString]
+    [detailHosts, hostsToTest, errors, getString, onCheckboxSelect, testConnection]
   )
-
-  const testConnection = async () => {
-    setErrors([])
-    try {
-      const hostResults = await validateHosts(
-        {
-          hosts: hostsToTest.map(host => get(host, 'host', '')),
-          tags: get(formikRef, 'current.values.delegateSelectors', [])
-        },
-        {
-          queryParams: {
-            accountIdentifier: accountId,
-            projectIdentifier,
-            orgIdentifier,
-            identifier: get(formikRef, 'current.values.credentialsRef', '')
-          }
-        }
-      )
-      if (hostResults.status === 'SUCCESS') {
-        const tempMap: any = {}
-        detailHosts.forEach(hostItem => {
-          tempMap[get(hostItem, 'parsedHost', '')] = hostItem
-        }, {})
-
-        get(hostResults, 'data', []).forEach((hostRes: HostValidationDTO) => {
-          tempMap[get(hostRes, 'host', '')] = {
-            ...hostRes,
-            host: tempMap[get(hostRes, 'host', '')].host
-          }
-        })
-
-        setDetailHosts(Object.values(tempMap) as [])
-      } else {
-        /* istanbul ignore next */
-        setErrors(get(hostResults, 'responseMessages', []))
-      }
-    } catch (e: any) {
-      /* istanbul ignore next */
-      if (e.data?.responseMessages) {
-        setErrors(e.data?.responseMessages)
-      } else {
-        showError(e.data?.message || e.message)
-      }
-    }
-  }
 
   const isPreviewDisable = (value: PDCInfrastructureUI): boolean => {
     if (isEmpty(value)) return false
@@ -585,7 +587,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                           name="connectorRef"
                           className={css.connectorRef}
                           label={getString('connector')}
-                          placeholder={getString('connectors.selectConnector')}
+                          placeholder={getString('common.entityPlaceholderText')}
                           disabled={readonly}
                           accountIdentifier={accountId}
                           projectIdentifier={projectIdentifier}

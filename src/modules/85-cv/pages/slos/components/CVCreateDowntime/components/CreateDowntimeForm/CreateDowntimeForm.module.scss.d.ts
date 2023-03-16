@@ -7,12 +7,24 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addMonitoredServices: string
   readonly cardTitle: string
+  readonly checkbox: string
+  readonly disabled: string
+  readonly disabledText: string
   readonly downtimeWindow: string
   readonly endTime: string
   readonly footer: string
+  readonly label: string
+  readonly minHeight: string
   readonly picker: string
   readonly pillToggle: string
+  readonly previewLabelAndValue: string
+  readonly radioGroup: string
+  readonly selectMsButton: string
+  readonly serviceName: string
+  readonly tagBox: string
   readonly text: string
+  readonly value: string
 }
 export default styles

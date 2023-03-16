@@ -51,7 +51,6 @@ export interface CustomMetricsV2HelperContextType {
 }
 
 export interface FilterMetricThresholdsParamsType {
-  isMetricThresholdEnabled: boolean
   customMetricNameToRemove: string
   metricThresholdsToFilter: MetricThresholdType[]
 }

@@ -12,7 +12,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import ReconcileInfraDialogWrapper from '../ReconcileInfraDialogWrapper'
 import { originalYaml, refreshedYaml } from './mock'
-import { YamlDiffView } from '../YamlDiffView'
+import { InfraYamlDiffViewWrapper } from '../InfraYamlDiffViewWrapper'
 
 const showError = jest.fn()
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -88,7 +88,7 @@ describe('YamlDiffView render error on diffUpdate', () => {
   test('render YamlDiffView error message', async () => {
     const { getByText } = render(
       <TestWrapper>
-        <YamlDiffView
+        <InfraYamlDiffViewWrapper
           getUpdatedYaml={jest.fn(() =>
             Promise.resolve({
               status: 'ERROR',

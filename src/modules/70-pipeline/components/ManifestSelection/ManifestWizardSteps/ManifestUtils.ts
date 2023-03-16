@@ -65,7 +65,7 @@ export const getRepositoryName = (prevStepData: any, initialValues: ManifestConf
       : GitRepoName.Account
 
   if (getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED) {
-    return prevStepData.connectorRef
+    return prevStepData.repoName
   } else {
     if (connectionType === GitRepoName.Repo) {
       return prevStepData.connectorRef?.connector?.spec.url
@@ -82,15 +82,16 @@ export const handleCommandFlagsSubmitData = (
   }
 ): void => {
   if (formData?.commandFlags.length && formData?.commandFlags[0].commandType) {
-    ;(manifestObj.manifest as ManifestConfig).spec.commandFlags = formData?.commandFlags.map(
-      (commandFlag: CommandFlags) =>
+    ;(manifestObj.manifest as ManifestConfig).spec.commandFlags = formData?.commandFlags
+      .map((commandFlag: CommandFlags) =>
         commandFlag.commandType && commandFlag.flag
           ? {
               commandType: commandFlag.commandType,
               flag: commandFlag.flag
             }
           : {}
-    )
+      )
+      .filter(item => !isEmpty(item))
     const filteredCommandFlags = manifestObj?.manifest?.spec?.commandFlags.filter(
       (currFlag: CommandFlags) => !isEmpty(currFlag)
     )
@@ -100,8 +101,13 @@ export const handleCommandFlagsSubmitData = (
   }
 }
 
-export const removeEmptyFieldsFromStringArray = (inputArray: string[] | undefined): string[] | undefined => {
-  return inputArray?.filter((path: string) => !!path)
+export const removeEmptyFieldsFromStringArray = (
+  inputArray: string[] | undefined,
+  defaultValue?: boolean
+): string[] | undefined => {
+  const filteredValue = inputArray?.filter((path: string) => !!path)
+
+  return isEmpty(filteredValue) && defaultValue ? [''] : filteredValue
 }
 
 export const getConnectorPath = (type: string, data: any): string => {

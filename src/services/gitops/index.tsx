@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { UseGetProps, useMutate, UseMutateProps, useGet } from 'restful-react'
+import React from 'react'
+import { UseGetProps, useMutate, UseMutateProps, useGet, GetProps, Get } from 'restful-react'
 
 export interface V1Time {
   /**
@@ -132,6 +133,65 @@ export interface GatewayruntimeError {
   error?: string
   message?: string
 }
+
+export interface AgentServiceForServerGetQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  name?: string
+  type?: 'AGENT_TYPE_UNSET' | 'CONNECTED_ARGO_PROVIDER' | 'MANAGED_ARGO_PROVIDER' | 'HOSTED_ARGO_PROVIDER'
+  tags?: string[]
+  searchTerm?: string
+  pageSize?: number
+  pageIndex?: number
+  scope?: 'AGENT_SCOPE_UNSET' | 'ACCOUNT' | 'ORG' | 'PROJECT'
+  drIdentifier?: string
+}
+
+export interface AgentServiceForServerGetPathParams {
+  identifier: string
+}
+
+export type AgentServiceForServerGetProps = Omit<
+  GetProps<V1Agent, GatewayruntimeError, AgentServiceForServerGetQueryParams, AgentServiceForServerGetPathParams>,
+  'path'
+> &
+  AgentServiceForServerGetPathParams
+
+/**
+ * Get agents.
+ */
+export const AgentServiceForServerGet = ({ identifier, ...props }: AgentServiceForServerGetProps) => (
+  <Get<V1Agent, GatewayruntimeError, AgentServiceForServerGetQueryParams, AgentServiceForServerGetPathParams>
+    path={`/api/v1/agents/${identifier}`}
+    base={window.getApiBaseUrl('gitops')}
+    {...props}
+  />
+)
+
+export type UseAgentServiceForServerGetProps = Omit<
+  UseGetProps<V1Agent, GatewayruntimeError, AgentServiceForServerGetQueryParams, AgentServiceForServerGetPathParams>,
+  'path'
+> &
+  AgentServiceForServerGetPathParams
+
+/**
+ * Get agents.
+ */
+export const useAgentServiceForServerGet = ({ identifier, ...props }: UseAgentServiceForServerGetProps) =>
+  useGet<V1Agent, GatewayruntimeError, AgentServiceForServerGetQueryParams, AgentServiceForServerGetPathParams>(
+    (paramsInPath: AgentServiceForServerGetPathParams) => `/api/v1/agents/${paramsInPath.identifier}`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { identifier }, ...props }
+  )
 
 export interface ProtobufAny {
   /**
@@ -899,6 +959,60 @@ export interface Servicev1Application {
   stale?: boolean
 }
 
+export interface V1Repositorylist {
+  content?: Servicev1Repository[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface V1RepositoryQuery {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier?: string
+  /**
+   * Filters for Repositories. Eg. "identifier": { "$in": ["id1", "id2"]
+   */
+  filter?: { [key: string]: any }
+  identifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  pageIndex?: number
+  pageSize?: number
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  repoCredsId?: string
+  searchTerm?: string
+}
+
+export type UseRepositoryServiceListRepositoriesProps = Omit<
+  UseMutateProps<V1Repositorylist, GatewayruntimeError, void, V1RepositoryQuery, void>,
+  'path' | 'verb'
+>
+
+/**
+ * List returns list of Repositories
+ *
+ * List returns list of Repositories
+ */
+export const useRepositoryServiceListRepositories = (props: UseRepositoryServiceListRepositoriesProps) =>
+  useMutate<V1Repositorylist, GatewayruntimeError, void, V1RepositoryQuery, void>('POST', `/api/v1/repositories`, {
+    base: window.getApiBaseUrl('gitops'),
+    ...props
+  })
+
 export interface AgentApplicationServiceCreatePathParams {
   /**
    * Agent identifier for entity.
@@ -1229,7 +1343,7 @@ export interface AgentServiceForServerListQueryParams {
   orgIdentifier?: string
   identifier?: string
   name?: string
-  type?: 'AGENT_TYPE_UNSET' | 'CONNECTED_ARGO_PROVIDER' | 'MANAGED_ARGO_PROVIDER'
+  type?: 'AGENT_TYPE_UNSET' | 'CONNECTED_ARGO_PROVIDER' | 'MANAGED_ARGO_PROVIDER' | 'HOSTED_ARGO_PROVIDER'
   tags?: string[]
   searchTerm?: string
   pageSize?: number
@@ -1261,3 +1375,524 @@ export const useAgentServiceForServerList = (props: UseAgentServiceForServerList
     base: window.getApiBaseUrl('gitops'),
     ...props
   })
+
+export interface AgentRepositoryServiceGetQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  /**
+   * Repo URL for query.
+   */
+  'query.repo'?: string
+  /**
+   * Whether to force a cache refresh on repo's connection state.
+   */
+  'query.forceRefresh'?: boolean
+  /**
+   * The associated project project.
+   */
+  'query.project'?: string
+}
+
+export interface AgentRepositoryServiceGetPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+  identifier: string
+}
+
+export type UseAgentRepositoryServiceGetProps = Omit<
+  UseGetProps<
+    Servicev1Repository,
+    GatewayruntimeError,
+    AgentRepositoryServiceGetQueryParams,
+    AgentRepositoryServiceGetPathParams
+  >,
+  'path'
+> &
+  AgentRepositoryServiceGetPathParams
+
+/**
+ * Get returns a repository or its credentials
+ *
+ * Get returns a repository or its credentials.
+ */
+export const useAgentRepositoryServiceGet = ({
+  agentIdentifier,
+  identifier,
+  ...props
+}: UseAgentRepositoryServiceGetProps) =>
+  useGet<
+    Servicev1Repository,
+    GatewayruntimeError,
+    AgentRepositoryServiceGetQueryParams,
+    AgentRepositoryServiceGetPathParams
+  >(
+    (paramsInPath: AgentRepositoryServiceGetPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/repositories/${paramsInPath.identifier}`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, identifier }, ...props }
+  )
+
+export interface V1Clusterlist {
+  content?: Servicev1Cluster[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface Servicev1ClusterQuery {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier?: string
+  /**
+   * Filters for Clusters. Eg. "identifier": { "$in": ["id1", "id2"]
+   */
+  filter?: { [key: string]: any }
+  identifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  pageIndex?: number
+  pageSize?: number
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  searchTerm?: string
+}
+
+export type UseClusterServiceListClustersProps = Omit<
+  UseMutateProps<V1Clusterlist, GatewayruntimeError, void, Servicev1ClusterQuery, void>,
+  'path' | 'verb'
+>
+
+/**
+ * List returns list of Clusters
+ *
+ * List returns list of Clusters
+ */
+export const useClusterServiceListClusters = (props: UseClusterServiceListClustersProps) =>
+  useMutate<V1Clusterlist, GatewayruntimeError, void, Servicev1ClusterQuery, void>('POST', `/api/v1/clusters`, {
+    base: window.getApiBaseUrl('gitops'),
+    ...props
+  })
+
+export interface AgentClusterServiceGetQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  'query.server'?: string
+  'query.name'?: string
+  /**
+   * type is the type of the specified cluster identifier ( "server" - default, "name" ).
+   */
+  'query.id.type'?: string
+  /**
+   * value holds the cluster server URL or cluster name.
+   */
+  'query.id.value'?: string
+  'query.project'?: string
+}
+
+export interface AgentClusterServiceGetPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+  identifier: string
+}
+
+export type UseAgentClusterServiceGetProps = Omit<
+  UseGetProps<
+    Servicev1Cluster,
+    GatewayruntimeError,
+    AgentClusterServiceGetQueryParams,
+    AgentClusterServiceGetPathParams
+  >,
+  'path'
+> &
+  AgentClusterServiceGetPathParams
+
+/**
+ * Get returns a cluster by identifier
+ *
+ * Get cluster.
+ */
+export const useAgentClusterServiceGet = ({ agentIdentifier, identifier, ...props }: UseAgentClusterServiceGetProps) =>
+  useGet<Servicev1Cluster, GatewayruntimeError, AgentClusterServiceGetQueryParams, AgentClusterServiceGetPathParams>(
+    (paramsInPath: AgentClusterServiceGetPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/clusters/${paramsInPath.identifier}`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, identifier }, ...props }
+  )
+
+export interface AgentApplicationServiceSyncQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+}
+
+export interface ApplicationsSyncOptions {
+  items?: string[]
+}
+
+export interface ApplicationsApplicationSyncRequest {
+  dryRun?: boolean
+  infos?: ApplicationsInfo[]
+  manifests?: string[]
+  name?: string
+  prune?: boolean
+  resources?: ApplicationsSyncOperationResource[]
+  retryStrategy?: ApplicationsRetryStrategy
+  revision?: string
+  strategy?: ApplicationsSyncStrategy
+  syncOptions?: ApplicationsSyncOptions
+}
+
+export interface AgentApplicationServiceSyncPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+  requestName: string
+}
+
+export type UseAgentApplicationServiceSyncProps = Omit<
+  UseMutateProps<
+    Servicev1Application,
+    GatewayruntimeError,
+    AgentApplicationServiceSyncQueryParams,
+    ApplicationsApplicationSyncRequest,
+    AgentApplicationServiceSyncPathParams
+  >,
+  'path' | 'verb'
+> &
+  AgentApplicationServiceSyncPathParams
+
+/**
+ * Sync syncs an application to its target state
+ * Harness Event type (deploy)
+ *
+ * Delete deletes an application.
+ */
+export const useAgentApplicationServiceSync = ({
+  agentIdentifier,
+  requestName,
+  ...props
+}: UseAgentApplicationServiceSyncProps) =>
+  useMutate<
+    Servicev1Application,
+    GatewayruntimeError,
+    AgentApplicationServiceSyncQueryParams,
+    ApplicationsApplicationSyncRequest,
+    AgentApplicationServiceSyncPathParams
+  >(
+    'POST',
+    (paramsInPath: AgentApplicationServiceSyncPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/applications/${paramsInPath.requestName}/sync`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, requestName }, ...props }
+  )
+
+export interface AgentClusterServiceCreateHostedPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+}
+
+export type UseAgentClusterServiceCreateHostedProps = Omit<
+  UseMutateProps<Servicev1Cluster, GatewayruntimeError, void, void, AgentClusterServiceCreateHostedPathParams>,
+  'path' | 'verb'
+> &
+  AgentClusterServiceCreateHostedPathParams
+
+/**
+ * CreateHosted creates a harness hosted cluster
+ *
+ * Creates Harness hosted cluster.
+ */
+export const useAgentClusterServiceCreateHosted = ({
+  agentIdentifier,
+  ...props
+}: UseAgentClusterServiceCreateHostedProps) =>
+  useMutate<Servicev1Cluster, GatewayruntimeError, void, void, AgentClusterServiceCreateHostedPathParams>(
+    'POST',
+    (paramsInPath: AgentClusterServiceCreateHostedPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/hosted/cluster`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier }, ...props }
+  )
+
+export interface AgentRepositoryServiceGetAppDetailsQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  /**
+   * RepoURL is the URL to the repository (Git or Helm) that contains the application manifests.
+   */
+  'query.source.repoURL'?: string
+  /**
+   * Path is a directory path within the Git repository, and is only valid for applications sourced from Git.
+   */
+  'query.source.path'?: string
+  /**
+   * TargetRevision defines the revision of the source to sync the application to.
+   * In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
+   * In case of Helm, this is a semver tag for the Chart's version.
+   */
+  'query.source.targetRevision'?: string
+  /**
+   * ValuesFiles is a list of Helm value files to use when generating a template.
+   */
+  'query.source.helm.valueFiles'?: string[]
+  /**
+   * ReleaseName is the Helm release name to use. If omitted it will use the application name.
+   */
+  'query.source.helm.releaseName'?: string
+  /**
+   * Values specifies Helm values to be passed to helm template, typically defined as a block.
+   */
+  'query.source.helm.values'?: string
+  /**
+   * Version is the Helm version to use for templating (either "2" or "3").
+   */
+  'query.source.helm.version'?: string
+  /**
+   * PassCredentials pass credentials to all domains (Helm's --pass-credentials).
+   */
+  'query.source.helm.passCredentials'?: boolean
+  /**
+   * NamePrefix is a prefix appended to resources for Kustomize apps.
+   */
+  'query.source.kustomize.namePrefix'?: string
+  /**
+   * NameSuffix is a suffix appended to resources for Kustomize apps.
+   */
+  'query.source.kustomize.nameSuffix'?: string
+  /**
+   * Images is a list of Kustomize image override specifications.
+   */
+  'query.source.kustomize.images'?: string[]
+  /**
+   * Version controls which version of Kustomize to use for rendering manifests.
+   */
+  'query.source.kustomize.version'?: string
+  /**
+   * ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps.
+   */
+  'query.source.kustomize.forceCommonLabels'?: boolean
+  /**
+   * ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps.
+   */
+  'query.source.kustomize.forceCommonAnnotations'?: boolean
+  /**
+   * Environment is a ksonnet application environment name.
+   */
+  'query.source.ksonnet.environment'?: string
+  /**
+   * Recurse specifies whether to scan a directory recursively for manifests.
+   */
+  'query.source.directory.recurse'?: boolean
+  /**
+   * Additional library search dirs.
+   */
+  'query.source.directory.jsonnet.libs'?: string[]
+  /**
+   * Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation.
+   */
+  'query.source.directory.exclude'?: string
+  /**
+   * Include contains a glob pattern to match paths against that should be explicitly included during manifest generation.
+   */
+  'query.source.directory.include'?: string
+  'query.source.plugin.name'?: string
+  /**
+   * Chart is a Helm chart name, and must be specified for applications sourced from a Helm repo.
+   */
+  'query.source.chart'?: string
+  'query.appName'?: string
+  'query.appProject'?: string
+}
+
+export interface RepositoriesDirectoryAppSpec {
+  [key: string]: any
+}
+
+export interface RepositoriesHelmAppSpec {
+  fileParameters?: ApplicationsHelmFileParameter[]
+  name?: string
+  parameters?: ApplicationsHelmParameter[]
+  valueFiles?: string[]
+  values?: string
+}
+
+export interface RepositoriesKsonnetEnvironmentDestination {
+  namespace?: string
+  /**
+   * Server is the Kubernetes server that the cluster is running on.
+   */
+  server?: string
+}
+
+export interface RepositoriesKsonnetEnvironment {
+  destination?: RepositoriesKsonnetEnvironmentDestination
+  /**
+   * KubernetesVersion is the kubernetes version the targeted cluster is running on.
+   */
+  k8sVersion?: string
+  name?: string
+}
+
+export interface RepositoriesKsonnetAppSpec {
+  environments?: {
+    [key: string]: RepositoriesKsonnetEnvironment
+  }
+  name?: string
+  parameters?: ApplicationsKsonnetParameter[]
+}
+
+export interface RepositoriesKustomizeAppSpec {
+  /**
+   * images is a list of available images.
+   */
+  images?: string[]
+}
+
+export interface RepositoriesRepoAppDetailsResponse {
+  directory?: RepositoriesDirectoryAppSpec
+  helm?: RepositoriesHelmAppSpec
+  ksonnet?: RepositoriesKsonnetAppSpec
+  kustomize?: RepositoriesKustomizeAppSpec
+  type?: string
+}
+
+export interface AgentRepositoryServiceGetAppDetailsPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+  identifier: string
+}
+
+export type UseAgentRepositoryServiceGetAppDetailsProps = Omit<
+  UseGetProps<
+    RepositoriesRepoAppDetailsResponse,
+    GatewayruntimeError,
+    AgentRepositoryServiceGetAppDetailsQueryParams,
+    AgentRepositoryServiceGetAppDetailsPathParams
+  >,
+  'path'
+> &
+  AgentRepositoryServiceGetAppDetailsPathParams
+
+/**
+ * GetAppDetails returns application details by given path
+ *
+ * GetAppDetails returns application details by given path.
+ */
+export const useAgentRepositoryServiceGetAppDetails = ({
+  agentIdentifier,
+  identifier,
+  ...props
+}: UseAgentRepositoryServiceGetAppDetailsProps) =>
+  useGet<
+    RepositoriesRepoAppDetailsResponse,
+    GatewayruntimeError,
+    AgentRepositoryServiceGetAppDetailsQueryParams,
+    AgentRepositoryServiceGetAppDetailsPathParams
+  >(
+    (paramsInPath: AgentRepositoryServiceGetAppDetailsPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/repositories/${paramsInPath.identifier}/appdetails`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, identifier }, ...props }
+  )
+
+export interface Servicev1Applicationlist {
+  content?: Servicev1Application[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface Servicev1ApplicationQuery {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Filters for Application. Eg. "app.status.sync.status": "Synced" or "app.status.sync.status": { "$in": ["Synced", "NotSynced"]
+   */
+  filter?: { [key: string]: any }
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  pageIndex?: number
+  pageSize?: number
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  searchTerm?: string
+}
+
+export type UseApplicationServiceListAppsProps = Omit<
+  UseMutateProps<Servicev1Applicationlist, GatewayruntimeError, void, Servicev1ApplicationQuery, void>,
+  'path' | 'verb'
+>
+
+/**
+ * List returns list of apps
+ */
+export const useApplicationServiceListApps = (props: UseApplicationServiceListAppsProps) =>
+  useMutate<Servicev1Applicationlist, GatewayruntimeError, void, Servicev1ApplicationQuery, void>(
+    'POST',
+    `/api/v1/applications`,
+    { base: window.getApiBaseUrl('gitops'), ...props }
+  )

@@ -5,9 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { set } from 'lodash-es'
 import type { IconName } from '@harness/uicore'
-import type { BitbucketPRSpec, GithubPRSpec, GitlabPRSpec, PipelineConfig } from 'services/pipeline-ng'
+import type { BitbucketPRSpec, GithubPRSpec, GitlabPRSpec } from 'services/pipeline-ng'
 import type { ConnectorInfoDTO, SecretDTOV2 } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 import { Connectors } from '@connectors/constants'
@@ -204,13 +203,13 @@ export const ACCOUNT_SCOPE_PREFIX = 'account.'
 
 export const ORG_SCOPE_PREFIX = 'org.'
 
-const DEFAULT_STAGE_ID = 'Build'
+export const DEFAULT_STAGE_ID = 'Build'
 
-const DOCKER_REGISTRY_CONNECTOR_REF = 'harnessImage'
+export const DOCKER_REGISTRY_CONNECTOR_REF = 'harnessImage'
 
 export const KUBERNETES_HOSTED_INFRA_ID = 'k8s-hosted-infra'
 
-const CodebaseProperties = {
+export const CodebaseProperties = {
   ci: {
     codebase: {
       connectorRef: 'connectorRef',
@@ -218,80 +217,6 @@ const CodebaseProperties = {
       build: '<+input>'
     }
   }
-}
-
-export const getPipelinePayloadWithoutCodebase = (): Record<string, any> => {
-  return {
-    pipeline: {
-      name: '',
-      identifier: '',
-      projectIdentifier: '',
-      orgIdentifier: '',
-      stages: [
-        {
-          stage: {
-            name: DEFAULT_STAGE_ID,
-            identifier: DEFAULT_STAGE_ID,
-            type: 'CI',
-            spec: {
-              cloneCodebase: false,
-              infrastructure: {
-                type: 'KubernetesHosted',
-                spec: {
-                  identifier: KUBERNETES_HOSTED_INFRA_ID
-                }
-              },
-              execution: {
-                steps: [
-                  {
-                    step: {
-                      type: 'Run',
-                      name: 'Echo Welcome Message',
-                      identifier: 'Echo_Welcome_Message',
-                      spec: {
-                        connectorRef: ACCOUNT_SCOPE_PREFIX.concat(DOCKER_REGISTRY_CONNECTOR_REF),
-                        image: 'alpine',
-                        shell: 'Sh',
-                        command: 'echo "Welcome to Harness CI"'
-                      }
-                    }
-                  }
-                ]
-              }
-            }
-          }
-        }
-      ]
-    }
-  }
-}
-
-export const getPipelinePayloadWithCodebase = (): Record<string, any> => {
-  const originalPipeline = getPipelinePayloadWithoutCodebase()
-  return set(
-    set(originalPipeline, 'pipeline.properties', CodebaseProperties),
-    'pipeline.stages.0.stage.spec.cloneCodebase',
-    true
-  )
-}
-
-export const getCloudPipelinePayloadWithoutCodebase = (): PipelineConfig => {
-  const originalPipeline = getPipelinePayloadWithoutCodebase()
-  set(originalPipeline, 'pipeline.stages.0.stage.spec.infrastructure', undefined)
-  set(originalPipeline, 'pipeline.stages.0.stage.spec.execution.steps.0.step.spec.image', undefined)
-  set(originalPipeline, 'pipeline.stages.0.stage.spec.execution.steps.0.step.spec.connectorRef', undefined)
-  set(originalPipeline, 'pipeline.stages.0.stage.spec.platform', { os: 'Linux', arch: 'Amd64' })
-  set(originalPipeline, 'pipeline.stages.0.stage.spec.runtime', { type: 'Cloud', spec: {} })
-  return originalPipeline
-}
-
-export const getCloudPipelinePayloadWithCodebase = (): PipelineConfig => {
-  const originalPipeline = getCloudPipelinePayloadWithoutCodebase()
-  return set(
-    set(originalPipeline, 'pipeline.properties', CodebaseProperties),
-    'pipeline.stages.0.stage.spec.cloneCodebase',
-    true
-  )
 }
 
 export const DELEGATE_INSTALLATION_REFETCH_DELAY = 20 * 1000 // 20 secs

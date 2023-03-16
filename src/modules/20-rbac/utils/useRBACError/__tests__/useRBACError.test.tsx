@@ -13,7 +13,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { defaultError, orgRbacError, pipelineRbacError, projectRbacError } from './useRBACErrorMock'
+import { defaultError, orgRbacError, pipelineRbacError, projectRbacError, mulitpleErrors } from './useRBACErrorMock'
 import useRBACError from '../useRBACError'
 
 jest.mock('@rbac/factories/RbacFactory', () => ({
@@ -53,6 +53,32 @@ describe('useRbacError', () => {
     const error = result.current.getRBACErrorMessage(err)
     expect(error).toMatchSnapshot()
   })
+
+  test('testRBACError with multiple errors', () => {
+    const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
+      <TestWrapper
+        path={routes.toPipelineStudio({
+          ...projectPathProps,
+          ...pipelinePathProps,
+          ...modulePathProps
+        })}
+        pathParams={{
+          accountId: 'testAcc',
+          orgIdentifier: 'testOrg',
+          projectIdentifier: 'test',
+          pipelineIdentifier: '-1',
+          module: 'cd'
+        }}
+        defaultAppStoreValues={defaultAppStoreValues}
+      >
+        {children}
+      </TestWrapper>
+    )
+    const { result } = renderHook(() => useRBACError(), { wrapper })
+    const error = result.current.getRBACErrorMessage(mulitpleErrors, true)
+    expect(error).toMatchSnapshot()
+  })
+
   test('testRBACError without rbac errors', () => {
     const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper

@@ -6,14 +6,12 @@
  */
 
 import React, { useState, useContext, useMemo } from 'react'
-import { Container, Formik, FormikForm, Layout, SelectOption, Utils, Accordion } from '@harness/uicore'
-import { useParams } from 'react-router-dom'
+import { Container, Formik, FormikForm, Layout, SelectOption, Accordion } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
-import { StackdriverDefinition, useGetLabelNames, useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
+import type { StackdriverDefinition } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import GroupName from '@cv/components/GroupName/GroupName'
@@ -43,8 +41,6 @@ export interface SplunkMetricsHealthSourceProps {
 export function SplunkMetricsHealthSource(props: SplunkMetricsHealthSourceProps): JSX.Element {
   const { data: sourceData, onSubmit } = props
 
-  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps & { identifier: string }>()
-
   const {
     onPrevious,
     sourceData: { existingMetricDetails }
@@ -53,15 +49,6 @@ export function SplunkMetricsHealthSource(props: SplunkMetricsHealthSourceProps)
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
 
   const { getString } = useStrings()
-
-  const connectorIdentifier = sourceData?.connectorRef || ''
-  const [labelNameTracingId] = useMemo(() => [Utils.randomId(), Utils.randomId()], [])
-
-  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
-
-  const labelNamesResponse = useGetLabelNames({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, connectorIdentifier, tracingId: labelNameTracingId }
-  })
 
   const transformedSourceData = useMemo(
     () => transformPrometheusHealthSourceToSetupSource(sourceData, getString),
@@ -198,8 +185,6 @@ export function SplunkMetricsHealthSource(props: SplunkMetricsHealthSourceProps)
                           hideSLIAndHealthScore
                           hideServiceIdentifier
                           showOnlySLI
-                          riskProfileResponse={riskProfileResponse}
-                          labelNamesResponse={labelNamesResponse}
                         />
                       }
                     />

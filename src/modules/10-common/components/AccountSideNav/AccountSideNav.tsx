@@ -22,17 +22,11 @@ import { useGetAccountNG } from 'services/cd-ng'
 export default function AccountSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const {
-    NG_LICENSES_ENABLED,
-    OPA_PIPELINE_GOVERNANCE,
-    OPA_FF_GOVERNANCE,
-    NG_DEPLOYMENT_FREEZE,
-    STO_JIRA_INTEGRATION
-  } = useFeatureFlags()
+  const { NG_LICENSES_ENABLED, STO_JIRA_INTEGRATION } = useFeatureFlags()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
   const { licenseInformation } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
-  const showDeploymentFreeze = isEnterpriseEdition && NG_DEPLOYMENT_FREEZE
+  const showDeploymentFreeze = isEnterpriseEdition
   const { data: accountData } = useGetAccountNG({
     accountIdentifier: accountId,
     queryParams: { accountIdentifier: accountId }
@@ -42,7 +36,7 @@ export default function AccountSideNav(): React.ReactElement {
       <SidebarLink exact label={getString('overview')} to={routes.toAccountSettingsOverview({ accountId })} />
       <SidebarLink label={getString('authentication')} to={routes.toAuthenticationSettings({ accountId })} />
       <SidebarLink label={getString('common.accountResources')} to={routes.toAccountResources({ accountId })} />
-      {canUsePolicyEngine && (OPA_PIPELINE_GOVERNANCE || OPA_FF_GOVERNANCE) && (
+      {canUsePolicyEngine && (
         <SidebarLink label={getString('common.governance')} to={routes.toGovernance({ accountId })} />
       )}
       {showDeploymentFreeze ? (
@@ -58,7 +52,10 @@ export default function AccountSideNav(): React.ReactElement {
       <SidebarLink label={getString('common.auditTrail')} to={routes.toAuditTrail({ accountId })} />
       <SidebarLink label={getString('orgsText')} to={routes.toOrganizations({ accountId })} />
       {STO_JIRA_INTEGRATION && (
-        <SidebarLink label={getString('common.tickets.tickets')} to={routes.toTicketSettings({ accountId })} />
+        <SidebarLink
+          label={getString('common.tickets.externalTickets')}
+          to={routes.toAccountTicketSettings({ accountId })}
+        />
       )}
     </Layout.Vertical>
   )

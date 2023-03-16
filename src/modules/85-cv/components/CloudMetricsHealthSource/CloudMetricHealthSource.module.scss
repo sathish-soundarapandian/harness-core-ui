@@ -32,6 +32,7 @@
   .metricsMappingContent {
     display: flex;
     align-items: start;
+    padding-left: var(--spacing-large) !important;
 
     .metricsQueryBuilderContainer {
       display: flex;

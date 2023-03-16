@@ -11,6 +11,7 @@ declare const styles: {
   readonly auditTrail: string
   readonly cardTags: string
   readonly enabledModules: string
+  readonly externalTickets: string
   readonly freezeWindows: string
   readonly governance: string
   readonly pageHeight: string

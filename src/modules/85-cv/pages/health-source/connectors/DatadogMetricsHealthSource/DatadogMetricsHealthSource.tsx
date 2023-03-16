@@ -71,12 +71,7 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
   const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
 
-  const isMetricThresholdEnabled = !isTemplate
-
-  const transformedData = useMemo(
-    () => mapDatadogMetricHealthSourceToDatadogMetricSetupSource(data, isMetricThresholdEnabled),
-    [data, isMetricThresholdEnabled]
-  )
+  const transformedData = useMemo(() => mapDatadogMetricHealthSourceToDatadogMetricSetupSource(data), [data])
 
   const [metricHealthDetailsData, setMetricHealthDetailsData] = useState(transformedData.metricDefinition)
   const [activeMetricsTracingId, metricTagsTracingId] = useMemo(() => [Utils.randomId(), Utils.randomId()], [])
@@ -298,15 +293,12 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
 
     await props.onSubmit(
       data,
-      mapDatadogMetricSetupSourceToDatadogHealthSource(
-        {
-          ...transformedData,
-          metricDefinition: filteredData,
-          ...metricThresholds,
-          ...filteredCVDisabledMetricThresholds
-        },
-        isMetricThresholdEnabled
-      )
+      mapDatadogMetricSetupSourceToDatadogHealthSource({
+        ...transformedData,
+        metricDefinition: filteredData,
+        ...metricThresholds,
+        ...filteredCVDisabledMetricThresholds
+      })
     )
   }
   const dashboardRequest = useGetDatadogDashboardDetails({ lazy: true })
@@ -344,7 +336,7 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
         if (selectedMetricId) {
           newMap.set(selectedMetricId, { ...values })
         }
-        return validate(values, newMap, getString, isMetricThresholdEnabled)
+        return validate(values, newMap, getString)
       }}
     >
       {formikProps => {
@@ -413,7 +405,7 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
               }
               showMetricDetailsContent={Boolean(metricHealthDetailsData?.size)}
             />
-            {isMetricThresholdEnabled && Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
+            {Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
               <MetricThresholdProvider
                 formikValues={formikProps.values}
                 setThresholdState={setMetricThresholds}

@@ -24,6 +24,22 @@ jest.mock('@projects-orgs/components/ProjectSelector/ProjectSelector', () => ({
   }
 }))
 
+jest.mock('@pipeline/hooks/useGetPipelines', () => ({
+  useGetPipelines: () => {
+    return {
+      data: {
+        data: {
+          content: [],
+          totalElements: 0
+        },
+        status: 'SUCCESS'
+      },
+      loading: false,
+      refetch: jest.fn()
+    }
+  }
+}))
+
 describe('Sidenav', () => {
   test('render', () => {
     jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
@@ -59,7 +75,7 @@ describe('Sidenav', () => {
       <div
         data-testid="location"
       >
-        /account/dummy/cd/orgs/org/projects/project/pipelines/-1/pipeline-studio/?modal=TRIAL
+        /account/dummy/cd/orgs/org/projects/project/cd-onboarding?modal=TRIAL
       </div>
     `)
   })
@@ -90,6 +106,34 @@ describe('Sidenav', () => {
         data-testid="location"
       >
         /account/accountId/cd/orgs/org/projects/project/setup/resources/templates
+      </div>
+    `)
+  })
+
+  test('should go to onboarding page when project is selected with no pipeline', async () => {
+    const testPath = routes.toProjectOverview({
+      accountId: ':accountId',
+      orgIdentifier: ':orgIdentifier',
+      projectIdentifier: ':projectIdentifier',
+      module: ':module'
+    })
+    const testParams = {
+      accountId: 'accountId',
+      orgIdentifier: 'orgIdentifier',
+      projectIdentifier: 'projectIdentifier',
+      module: 'cd'
+    }
+
+    const { getByTestId } = render(
+      <TestWrapper path={testPath} pathParams={testParams}>
+        <CDSideNav />
+      </TestWrapper>
+    )
+    expect(getByTestId('location')).toMatchInlineSnapshot(`
+      <div
+        data-testid="location"
+      >
+        /account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/get-started
       </div>
     `)
   })

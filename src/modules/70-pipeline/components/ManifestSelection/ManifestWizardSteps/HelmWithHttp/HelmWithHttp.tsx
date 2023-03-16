@@ -23,16 +23,21 @@ import {
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-
-import type { HelmWithHTTPDataType } from '../../ManifestInterface'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type { HelmWithHTTPDataType, HelmWithHTTPManifestLastStepPrevStepData } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
-import { helmVersions, ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  helmVersions,
+  ManifestDataType,
+  ManifestIdentifierValidation
+} from '../../Manifesthelper'
 import { filePathWidth, handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
@@ -47,6 +52,7 @@ interface HelmWithHttpPropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   deploymentType?: string
+  editManifestModePrevStepData?: HelmWithHTTPManifestLastStepPrevStepData
 }
 
 function HelmWithHttp({
@@ -59,12 +65,16 @@ function HelmWithHttp({
   previousStep,
   manifestIdsList,
   isReadonly = false,
-  deploymentType
+  deploymentType,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & HelmWithHttpPropType): React.ReactElement {
   const { getString } = useStrings()
+  const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
 
-  const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V2')
+  const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V3')
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   const getInitialValues = (): HelmWithHTTPDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -76,7 +86,9 @@ function HelmWithHttp({
         helmVersion: initialValues.spec?.helmVersion,
         chartName: initialValues.spec?.chartName,
         chartVersion: initialValues.spec?.chartVersion,
+        subChartName: initialValues.spec?.subChartName,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
@@ -93,10 +105,12 @@ function HelmWithHttp({
     }
     return {
       identifier: '',
-      helmVersion: 'V2',
+      helmVersion: 'V3',
       chartName: '',
       chartVersion: '',
+      subChartName: '',
       skipResourceVersioning: false,
+      enableDeclarativeRollback: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
   }
@@ -115,11 +129,16 @@ function HelmWithHttp({
           valuesPaths:
             typeof formData?.valuesPaths === 'string'
               ? formData?.valuesPaths
-              : formData?.valuesPaths?.map((path: { path: string }) => path.path),
+              : removeEmptyFieldsFromStringArray(formData?.valuesPaths?.map((path: { path: string }) => path.path)),
           chartName: formData?.chartName,
           chartVersion: formData?.chartVersion,
+          subChartName: formData?.subChartName,
           helmVersion: formData?.helmVersion,
-          skipResourceVersioning: formData?.skipResourceVersioning
+          skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
+            formData?.skipResourceVersioning,
+            formData?.enableDeclarativeRollback
+          ),
+          enableDeclarativeRollback: formData?.enableDeclarativeRollback
         }
       }
     }
@@ -142,7 +161,7 @@ function HelmWithHttp({
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {
-                is: val => !isEmpty(val?.value),
+                is: val => !isEmpty(val),
                 then: Yup.string().required(getString('pipeline.manifestType.commandFlagRequired'))
               })
             })
@@ -156,14 +175,14 @@ function HelmWithHttp({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
@@ -198,7 +217,6 @@ function HelmWithHttp({
                       variableName="chartName"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('chartName', value)}
                       isReadonly={isReadonly}
                     />
@@ -227,7 +245,6 @@ function HelmWithHttp({
                       variableName="chartVersion"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('chartVersion', value)}
                       isReadonly={isReadonly}
                     />
@@ -250,6 +267,37 @@ function HelmWithHttp({
                   />
                 </div>
               </Layout.Horizontal>
+              {NG_CDS_HELM_SUB_CHARTS && (
+                <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
+                  <div
+                    className={cx(helmcss.halfWidth, {
+                      [helmcss.runtimeInput]:
+                        getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
+                    <FormInput.MultiTextInput
+                      label={getString('pipeline.manifestType.subChart')}
+                      placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
+                      name="subChartName"
+                      multiTextInputProps={{ expressions, allowableTypes }}
+                      isOptional
+                    />
+                    {getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        style={{ alignSelf: 'center', marginBottom: 5 }}
+                        value={formik.values?.subChartName as string}
+                        type="String"
+                        variableName="subChartName"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        onChange={value => formik.setFieldValue('subChartName', value)}
+                        isReadonly={isReadonly}
+                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                      />
+                    )}
+                  </div>
+                </Layout.Horizontal>
+              )}
               <div
                 className={cx({
                   [helmcss.runtimeInput]:
@@ -265,6 +313,7 @@ function HelmWithHttp({
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                   defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                   dragDropFieldWidth={filePathWidth}
+                  allowSinglePathDeletion
                 />
                 {getMultiTypeFromValue(formik.values.valuesPaths) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
@@ -273,7 +322,6 @@ function HelmWithHttp({
                     variableName={'valuesPaths'}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={val => formik?.setFieldValue('valuesPaths', val)}
                     isReadonly={isReadonly}
                   />
@@ -297,7 +345,7 @@ function HelmWithHttp({
                       allowableTypes={allowableTypes}
                       helmVersion={formik.values?.helmVersion}
                       deploymentType={deploymentType as string}
-                      helmStore={prevStepData?.store ?? ''}
+                      helmStore={modifiedPrevStepData?.store ?? ''}
                     />
                   }
                 />
@@ -309,7 +357,7 @@ function HelmWithHttp({
                 text={getString('back')}
                 icon="chevron-left"
                 variation={ButtonVariation.SECONDARY}
-                onClick={() => previousStep?.(prevStepData)}
+                onClick={() => previousStep?.(modifiedPrevStepData)}
               />
               <Button
                 variation={ButtonVariation.PRIMARY}

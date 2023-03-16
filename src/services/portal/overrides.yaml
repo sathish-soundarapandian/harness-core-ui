@@ -58,6 +58,7 @@ allowpaths:
   - '/awshelper/aws-regions'
   - '/sso/ldap/iterations'
   - '/users/userAccounts'
+  - '/delegate/taskslog'
   - '/delegate-feedbacks'
 operationIdOverrides:
   /setup/delegates.get: getDelegates

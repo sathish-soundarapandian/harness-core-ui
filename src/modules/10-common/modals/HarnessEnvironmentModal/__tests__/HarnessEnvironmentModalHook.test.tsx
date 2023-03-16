@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, act } from '@testing-library/react'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { useHarnessEnvironmentModal } from '../HarnessEnvironmentModal'
 
@@ -36,10 +36,20 @@ describe('open and close Harness Environment Modal', () => {
           <TestComponent />
         </TestWrapper>
       )
-      fireEvent.click(container.querySelector('.open')!)
+
+      act(() => {
+        fireEvent.click(container.querySelector('.open')!)
+      })
 
       const dialog = findDialogContainer() as HTMLElement
       expect(dialog).toMatchSnapshot()
+
+      act(() => {
+        fireEvent.click(container.querySelector('.close')!)
+      })
+
+      const dialogAssert = findDialogContainer() as HTMLElement
+      expect(dialogAssert).toBeNull()
     })
   })
 })

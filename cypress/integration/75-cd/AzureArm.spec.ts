@@ -17,11 +17,6 @@ describe('Azure Arm Steps', () => {
   }
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' })
     cy.intercept('POST', stepLibrary, { fixture: 'ng/api/stepLibrary' }).as('stepLibrary')
@@ -52,8 +47,8 @@ describe('Azure Arm Steps', () => {
   it('azure rollback step addition, with all fixed values', () => {
     openExecutionScreen('Rollback Azure ARM Resources')
     // select azure arm rollback step
-    cy.contains('section', 'Rollback Azure ARM Resources').should('be.visible')
-    cy.contains('section', 'Rollback Azure ARM Resources').click({ force: true })
+    cy.contains('section', 'AzureARMRollback_1').should('be.visible')
+    cy.contains('section', 'AzureARMRollback_1').click({ force: true })
     cy.wait(500)
     cy.contains('span', 'Apply Changes').click({ force: true })
     // show validation errors
@@ -67,8 +62,8 @@ describe('Azure Arm Steps', () => {
   it('azure rollback step addition, with runtime values', () => {
     openExecutionScreen('Rollback Azure ARM Resources')
     // select azure arm rollback step
-    cy.contains('section', 'Rollback Azure ARM Resources').should('be.visible')
-    cy.contains('section', 'Rollback Azure ARM Resources').click({ force: true })
+    cy.contains('section', 'AzureARMRollback_1').should('be.visible')
+    cy.contains('section', 'AzureARMRollback_1').click({ force: true })
     cy.wait(500)
     // timeout
     cy.get('.MultiTypeInput--btn').eq(0).click()
@@ -83,8 +78,8 @@ describe('Azure Arm Steps', () => {
   it('azure blueprint step addition, with all fixed values', () => {
     openExecutionScreen('Create Azure BP Resources')
     // select azure blueprint step
-    cy.contains('section', 'Create Azure BP Resources').should('be.visible')
-    cy.contains('section', 'Create Azure BP Resources').click({ force: true })
+    cy.contains('section', 'AzureCreateBPResource_1').should('be.visible')
+    cy.contains('section', 'AzureCreateBPResource_1').click({ force: true })
     cy.contains('span', 'Apply Changes').click({ force: true })
     cy.wait(500)
 
@@ -122,8 +117,8 @@ describe('Azure Arm Steps', () => {
   it('azure blueprint step, with runtime values', () => {
     openExecutionScreen('Create Azure BP Resources')
     // select azure blueprint step
-    cy.contains('section', 'Create Azure BP Resources').should('be.visible')
-    cy.contains('section', 'Create Azure BP Resources').click({ force: true })
+    cy.contains('section', 'AzureCreateBPResource_1').should('be.visible')
+    cy.contains('section', 'AzureCreateBPResource_1').click({ force: true })
     cy.wait(500)
 
     // timeout
@@ -160,8 +155,8 @@ describe('Azure Arm Steps', () => {
   it('azure arm step addition, with all fixed values', () => {
     openExecutionScreen('Create Azure ARM Resources')
     // select azure arm rollback step
-    cy.contains('section', 'Create Azure ARM Resources').should('be.visible')
-    cy.contains('section', 'Create Azure ARM Resources').click({ force: true })
+    cy.contains('section', 'AzureCreateARMResource_1').should('be.visible')
+    cy.contains('section', 'AzureCreateARMResource_1').click({ force: true })
     cy.wait(500)
     cy.contains('span', 'Apply Changes').click({ force: true })
     // show validation errors
@@ -205,8 +200,8 @@ describe('Azure Arm Steps', () => {
   it('azure arm step addition, with all runtime values', () => {
     openExecutionScreen('Create Azure ARM Resources')
     // select azure arm rollback step
-    cy.contains('section', 'Create Azure ARM Resources').should('be.visible')
-    cy.contains('section', 'Create Azure ARM Resources').click({ force: true })
+    cy.contains('section', 'AzureCreateARMResource_1').should('be.visible')
+    cy.contains('section', 'AzureCreateARMResource_1').click({ force: true })
     cy.wait(500)
     // timeout
     cy.get('.MultiTypeInput--btn').eq(0).click()

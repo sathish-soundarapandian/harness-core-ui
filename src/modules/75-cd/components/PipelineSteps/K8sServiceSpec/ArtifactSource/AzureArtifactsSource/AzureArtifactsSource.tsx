@@ -29,8 +29,10 @@ import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRe
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import {
   getDefaultQueryParam,
+  getFinalQueryParamValue,
   getFqnPath,
   getImagePath,
   getValidInitialValuePath,
@@ -83,10 +85,12 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const connectorRefValue = defaultTo(
+  const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
+
+  const connectorRefQueryParamValue = getFinalQueryParamValue(connectorRefValue)
 
   const projectValue = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.project`),
@@ -135,7 +139,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     ...requestBody,
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue,
+      connectorRef: connectorRefQueryParamValue,
       org: 'automation-cdc',
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
@@ -175,7 +179,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     ...requestBody,
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue,
+      connectorRef: connectorRefQueryParamValue,
       project: projectValue,
       org: '',
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
@@ -216,7 +220,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     ...requestBody,
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue,
+      connectorRef: connectorRefQueryParamValue,
       org: '',
       packageType: packageTypeValue,
       project: projectValue,
@@ -273,7 +277,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     ...requestBody,
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue,
+      connectorRef: connectorRefQueryParamValue,
       org: '',
       packageType: packageTypeValue,
       feed: feedValue,
@@ -360,13 +364,15 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.project`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
               selectItems={getItems(fetchingProjects, 'Projects', projectItems)}
               // disabled={isFeedDisabled()}
               name={`${path}.artifacts.${artifactPath}.spec.project`}
               label={getString('projectLabel')}
               placeholder={getString('pipeline.artifactsSelection.projectPlaceholder')}
               useValue
+              fieldPath={`artifacts.${artifactPath}.spec.project`}
+              template={template}
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
@@ -388,13 +394,15 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.feed`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
               selectItems={getItems(fetchingFeeds, 'Feeds', feedItems)}
               //   disabled={isFeedDisabled()}
               name={`${path}.artifacts.${artifactPath}.spec.feed`}
               label={getString('pipeline.artifactsSelection.feed')}
               placeholder={getString('pipeline.artifactsSelection.feedPlaceholder')}
               useValue
+              fieldPath={`artifacts.${artifactPath}.spec.feed`}
+              template={template}
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
@@ -423,13 +431,15 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.package`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
               selectItems={getItems(fetchingPackages, 'Packages', packageItems)}
               // disabled={isFeedDisabled()}
               name={`${path}.artifacts.${artifactPath}.spec.package`}
               label={getString('pipeline.artifactsSelection.packageName')}
               placeholder={getString('pipeline.artifactsSelection.packageNamePlaceholder')}
               useValue
+              fieldPath={`artifacts.${artifactPath}.spec.package`}
+              template={template}
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
@@ -458,13 +468,15 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
               selectItems={getItems(fetchingVersions, 'Versions', versionItems)}
               // disabled={isFeedDisabled()}
               name={`${path}.artifacts.${artifactPath}.spec.version`}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               useValue
+              fieldPath={`artifacts.${artifactPath}.spec.version`}
+              template={template}
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,

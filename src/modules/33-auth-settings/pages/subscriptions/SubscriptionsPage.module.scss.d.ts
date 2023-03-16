@@ -13,6 +13,7 @@ declare const styles: {
   readonly badgesContainer: string
   readonly banner: string
   readonly bannerIcon: string
+  readonly cardTitle: string
   readonly cd: string
   readonly ce: string
   readonly cf: string
@@ -20,8 +21,11 @@ declare const styles: {
   readonly cv: string
   readonly expired: string
   readonly expiryCountdown: string
+  readonly exportButton: string
   readonly failed24HrsExecutionsBadge: string
   readonly fetchButton: string
+  readonly frequencyContainer: string
+  readonly frequencyCount: string
   readonly moduleIcons: string
   readonly moduleSelectCard: string
   readonly moduleSelectCards: string
@@ -29,11 +33,16 @@ declare const styles: {
   readonly noDataCardContainer: string
   readonly orgDropdown: string
   readonly outterCard: string
+  readonly overUseClass: string
+  readonly peakClass: string
   readonly runningExecutions: string
   readonly selected: string
   readonly sto: string
+  readonly subClass: string
   readonly subscriptionTabButton: string
   readonly subscriptionTabButtons: string
+  readonly summaryCard: string
+  readonly summaryCardsContainer: string
   readonly table: string
 }
 export default styles

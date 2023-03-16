@@ -17,6 +17,7 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { EmailStepData } from './emailStepTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from './EmailStep.module.scss'
 
 export interface EmailStepInputSetProps {
   initialValues: EmailStepData
@@ -89,11 +90,13 @@ export default function EmailStepInputSet(props: EmailStepInputSetProps): React.
             placeholder={getString('pipeline.utilitiesStep.subject')}
             label={getString('common.smtp.labelSubject')}
             name={`${prefix}spec.subject`}
+            className={css.subject}
             multiTypeTextArea={{
               enableConfigureOptions: false,
               expressions,
               disabled: readonly,
-              allowableTypes
+              allowableTypes,
+              textAreaProps: { growVertically: true }
             }}
             disabled={readonly}
           />
@@ -105,11 +108,13 @@ export default function EmailStepInputSet(props: EmailStepInputSetProps): React.
             placeholder={getString('pipeline.utilitiesStep.requestBody')}
             label={getString('common.smtp.labelBody')}
             name={`${prefix}spec.body`}
+            className={css.body}
             multiTypeTextArea={{
               enableConfigureOptions: false,
               expressions,
               disabled: readonly,
-              allowableTypes
+              allowableTypes,
+              textAreaProps: { growVertically: true }
             }}
             disabled={readonly}
           />

@@ -76,6 +76,8 @@ import {
 } from '@triggers/components/steps/SchedulePanel/components/utils'
 import { scheduledTypes } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import { flattenKeys, getModifiedTemplateValues } from '../WebhookTrigger/utils'
 import type { TriggerProps } from '../Trigger'
@@ -110,6 +112,7 @@ export default function ScheduledTriggerWizard(
 
   const history = useHistory()
   const { getString } = useStrings()
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const { showSuccess, showError, clear } = useToaster()
 
   const {
@@ -288,7 +291,12 @@ export default function ScheduledTriggerWizard(
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
   const { resolvedMergedPipeline } = useGetResolvedChildPipeline(
-    { accountId: accountIdentifier, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    {
+      accountId: accountIdentifier,
+      repoIdentifier: defaultTo(pipelineRepoName, repoIdentifier),
+      branch,
+      connectorRef: pipelineConnectorRef
+    },
     originalPipeline,
     resolvedPipeline
   )
@@ -695,7 +703,8 @@ export default function ScheduledTriggerWizard(
                 resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
-                viewTypeMetadata: { isTrigger: true }
+                viewTypeMetadata: { isTrigger: true },
+                isOptionalVariableAllowed
               }) as any) || formErrors
             resolve(validatedErrors)
           } catch (e) {
@@ -946,7 +955,7 @@ export default function ScheduledTriggerWizard(
       key={wizardKey} // re-renders with yaml to visual initialValues
       wizardType="scheduled"
       formikInitialProps={{
-        initialValues,
+        initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
         onSubmit: onSubmit,
         validationSchema: getValidationSchema(getString),
         validate: validateTriggerPipeline,

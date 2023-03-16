@@ -5,8 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { MultiTypeInputType } from '@harness/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { StageElementWrapperConfig } from 'services/pipeline-ng'
+import {
+  ciPipelineExecutionSummaryWithK8sInfra,
+  ciPipelineExecutionSummaryWithHostedVMsInfra
+} from '@pipeline/pages/execution/ExecutionLandingPage/__tests__/execution-summary-mock'
+import type { PipelineExecutionSummary, StageElementWrapperConfig } from 'services/pipeline-ng'
 import type { DeploymentStageElementConfig } from '../pipelineTypes'
 import {
   changeEmptyValuesToRunTimeInput,
@@ -37,7 +42,20 @@ import {
   isAzureWebAppOrSshWinrmGenericDeploymentType,
   isCustomDTGenericDeploymentType,
   isTasGenericDeploymentType,
-  hasChainedPipelineStage
+  hasChainedPipelineStage,
+  isFixedNonEmptyValue,
+  withoutSideCar,
+  hasStageData,
+  getAllowedRepoOptions,
+  deleteStageInfo,
+  isServiceEntityPresent,
+  isEnvironmentGroupPresent,
+  isEnvironmentPresent,
+  isExecutionFieldPresent,
+  getVariablesHeaderTooltipId,
+  isSshOrWinrmDeploymentType,
+  isGoogleCloudFuctionsDeploymentType,
+  pipelineHasCIStageWithK8sInfra
 } from '../stageHelpers'
 import inputSetPipeline from './inputset-pipeline.json'
 import chainedPipeline from './mockJson/chainedPipeline.json'
@@ -128,6 +146,46 @@ test('isInfraDefinitionPresent', () => {
   ).toBe(true)
 })
 
+test('deleteStageInfo', () => {
+  const deploymentConfig = {
+    identifier: '1',
+    name: 'test',
+    spec: {
+      service: {},
+      environment: {},
+
+      execution: {
+        steps: [],
+        rollbackSteps: [
+          {
+            name: 'step1'
+          }
+        ]
+      },
+      infrastructure: {
+        allowSimultaneousDeployments: false,
+        infrastructureDefinition: {
+          type: 'Pdc',
+          spec: {}
+        }
+      },
+      serviceConfig: {
+        serviceDefinition: {
+          spec: {
+            artifacts: ['test'],
+            manifests: ['test']
+          }
+        }
+      }
+    }
+  }
+  deleteStageInfo(deploymentConfig as unknown as DeploymentStageElementConfig)
+  expect(deleteStageData(undefined)).toBe(undefined)
+  expect(deploymentConfig.spec?.execution?.rollbackSteps).toBeUndefined()
+  expect(deploymentConfig.spec?.execution?.steps).toHaveLength(0)
+  expect(deploymentConfig.spec?.service).toBeUndefined()
+  expect(deploymentConfig.spec?.environment).toBeUndefined()
+})
 test('deleteStageData', () => {
   const deploymentConfig = {
     identifier: '1',
@@ -174,6 +232,19 @@ test('deleteStageData', () => {
 test('getStepTypeByDeploymentType', () => {
   expect(getStepTypeByDeploymentType(ServiceDeploymentType.ServerlessAwsLambda)).toBe(StepType.ServerlessAwsLambda)
   expect(getStepTypeByDeploymentType(ServiceDeploymentType.Kubernetes)).toBe(StepType.K8sServiceSpec)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.Ssh)).toBe(StepType.SshServiceSpec)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.WinRm)).toBe(StepType.WinRmServiceSpec)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.ECS)).toBe(StepType.EcsService)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.CustomDeployment)).toBe(StepType.CustomDeploymentServiceSpec)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.Elastigroup)).toBe(StepType.ElastigroupService)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.TAS)).toBe(StepType.TasService)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.Asg)).toBe(StepType.Asg)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.GoogleCloudFunctions)).toBe(
+    StepType.GoogleCloudFunctionsService
+  )
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.AzureWebApp)).toBe(StepType.AzureWebAppServiceSpec)
+  expect(getStepTypeByDeploymentType('')).toBe(StepType.K8sServiceSpec)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.AwsLambda)).toBe(StepType.AwsLambdaService)
 })
 
 test('isServerlessDeploymentType', () => {
@@ -227,10 +298,39 @@ test('isAzureWebAppGenericDeploymentType', () => {
   )
 })
 
+test('isFixedNonEmptyValue', () => {
+  expect(isFixedNonEmptyValue('<+input>')).toBe(false)
+  expect(isFixedNonEmptyValue(MultiTypeInputType.FIXED)).toBe(true)
+  expect(isFixedNonEmptyValue('123')).toBe(true)
+  expect(isFixedNonEmptyValue('')).toBe(false)
+})
+
+test('getAllowedRepoOptions', () => {
+  expect(getAllowedRepoOptions(ServiceDeploymentType.WinRm, true, true, 'Acr')).toHaveLength(4)
+
+  expect(getAllowedRepoOptions(ServiceDeploymentType.AzureWebApp, true, true, 'Acr')).toHaveLength(4)
+
+  expect(getAllowedRepoOptions(ServiceDeploymentType.Kubernetes, true, true, 'Nexus3Registry')).toHaveLength(5)
+})
+
 test('isAzureWebAppOrSshWinrmGenericDeploymentType', () => {
   expect(
     isAzureWebAppOrSshWinrmGenericDeploymentType(ServiceDeploymentType.AzureWebApp, RepositoryFormatTypes.Generic)
   ).toBe(true)
+})
+
+test('isGoogleCloudFuctionsDeploymentType', () => {
+  expect(isGoogleCloudFuctionsDeploymentType(ServiceDeploymentType.GoogleCloudFunctions)).toBe(true)
+})
+
+test('isSshOrWinrmDeploymentType', () => {
+  expect(isSshOrWinrmDeploymentType(ServiceDeploymentType.Ssh)).toBe(true)
+  expect(isSshOrWinrmDeploymentType(ServiceDeploymentType.Kubernetes)).toBe(false)
+  expect(isSshOrWinrmDeploymentType(ServiceDeploymentType.WinRm)).toBe(true)
+})
+
+test('withoutSideCar', () => {
+  expect(withoutSideCar(ServiceDeploymentType.Ssh)).toBe(true)
 })
 
 test('isCustomDTGenericDeploymentType', () => {
@@ -244,9 +344,19 @@ test('isTasGenericDeploymentType', () => {
   expect(isTasGenericDeploymentType(ServiceDeploymentType.TAS, RepositoryFormatTypes.Generic)).toBe(true)
 })
 
+test('isTasGenericDeploymentType should return false for nongeneric repo type', () => {
+  expect(isTasGenericDeploymentType(ServiceDeploymentType.TAS, RepositoryFormatTypes.Docker)).toBe(false)
+})
+
 test('isTASDeploymentType', () => {
   expect(isTASDeploymentType(ServiceDeploymentType.TAS)).toBe(true)
   expect(isTASDeploymentType(ServiceDeploymentType.Elastigroup)).toBe(false)
+})
+
+test('getVariablesHeaderTooltipId', () => {
+  expect(getVariablesHeaderTooltipId(ServiceDeploymentType.Kubernetes)).toBe(
+    `${ServiceDeploymentType.Kubernetes}DeploymentTypeVariables`
+  )
 })
 
 test('getHelpeTextForTags', () => {
@@ -265,6 +375,114 @@ test('getHelpeTextForTags', () => {
   expect(
     getHelpeTextForTags({ imagePath: '/image', artifactPath: '', connectorRef: 'RUNTIME' }, (str: string) => str, true)
   ).toBe('pipeline.artifactsSelection.artifactDirectory  is  pipeline.artifactPathDependencyRequired')
+
+  expect(
+    getHelpeTextForTags({ imagePath: '/image', artifactPath: '', connectorRef: 'RUNTIME' }, (str: string) => str, true)
+  ).toBe('pipeline.artifactsSelection.artifactDirectory  is  pipeline.artifactPathDependencyRequired')
+
+  expect(
+    getHelpeTextForTags(
+      {
+        imagePath: '/image',
+        artifactPath: '',
+        connectorRef: 'sdfds',
+        feed: 'test',
+        repositoryName: '',
+        artifactArrayPath: '',
+        artifactDirectory: 'test-dir',
+        versionPath: 'RUNTIME'
+      },
+      (str: string) => str,
+      true
+    )
+  ).toBe(
+    'common.repositoryName, pipeline.artifactsSelection.artifactsArrayPath  are  pipeline.artifactPathDependencyRequired'
+  )
+
+  // expect(
+  //   getHelpeTextForTags(
+  //     {
+  //       imagePath: '/image',
+  //       artifactPath: '',
+  //       connectorRef: 'sdfds',
+  //       feed: '',
+  //       repositoryName: '',
+  //       artifactArrayPath: '',
+  //       versionPath: '',
+  //       packageName: 'RUNTIME'
+  //     },
+  //     (str: string) => str,
+  //     true
+  //   )
+  // ).toBe('pipeline.testsReports.callgraphField.package')
+
+  // expect(
+  //   getHelpeTextForTags(
+  //     {
+  //       imagePath: '/image',
+  //       artifactPath: '',
+  //       connectorRef: 'sdfds',
+  //       feed: '',
+  //       repositoryName: '',
+  //       artifactArrayPath: '',
+  //       versionPath: '',
+  //       package: 'RUNTIME'
+  //     },
+  //     (str: string) => str,
+  //     true
+  //   )
+  // ).toBe('pipeline.testsReports.callgraphField.package')
+
+  // expect(
+  //   getHelpeTextForTags(
+  //     {
+  //       imagePath: '/image',
+  //       artifactPath: '',
+  //       connectorRef: 'sdfds',
+  //       feed: '',
+  //       repositoryName: '',
+  //       artifactArrayPath: '',
+  //       versionPath: '',
+  //       project: 'RUNTIME'
+  //     },
+  //     (str: string) => str,
+  //     true
+  //   )
+  // ).toBe('projectLabel')
+
+  // expect(
+  //   getHelpeTextForTags(
+  //     {
+  //       imagePath: '/image',
+  //       artifactPath: '',
+  //       connectorRef: 'sdfds',
+  //       feed: '',
+  //       repositoryName: '',
+  //       artifactArrayPath: '',
+  //       versionPath: '',
+  //       region: 'RUNTIME'
+  //     },
+  //     (str: string) => str,
+  //     true
+  //   )
+  // ).toBe('regionLabel')
+
+  // expect(
+  //   getHelpeTextForTags(
+  //     {
+  //       imagePath: '/image',
+  //       artifactPath: '',
+  //       connectorRef: 'sdfds',
+  //       feed: '',
+  //       repositoryName: '',
+  //       artifactArrayPath: '',
+  //       versionPath: '',
+  //       registryHostname: 'RUNTIME'
+  //     },
+  //     (str: string) => str,
+  //     true
+  //   )
+  // ).toBe('connectors.GCR.registryHostname')
 })
 
 test('getCustomStepProps', () => {
@@ -313,4 +531,156 @@ test('getCustomStepProps', () => {
 test('hasChainedPipelineStage', () => {
   expect(hasChainedPipelineStage([])).toBe(false)
   expect(hasChainedPipelineStage(chainedPipeline.pipeline.stages as StageElementWrapperConfig[])).toBe(true)
+})
+
+test('hasStageData', () => {
+  expect(hasStageData()).toBe(false)
+  expect(
+    hasStageData({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        service: {
+          serviceRef: 'test'
+        },
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(true)
+  expect(
+    hasStageData({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        environment: {
+          environmentRef: 'test'
+        },
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(true)
+  expect(
+    hasStageData({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(false)
+})
+
+test('isServiceEntityPresent', () => {
+  expect(
+    isServiceEntityPresent({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        service: {
+          serviceRef: 'test'
+        },
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(true)
+  expect(
+    isServiceEntityPresent({
+      identifier: 'test',
+      name: 'test',
+      spec: {
+        execution: {
+          steps: []
+        }
+      }
+    })
+  ).toBe(false)
+})
+
+test('isEnvironmentGroupPresent', () => {
+  expect(
+    isEnvironmentGroupPresent({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        environmentGroup: {
+          envGroupRef: 'test'
+        },
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(true)
+  expect(
+    isEnvironmentGroupPresent({
+      identifier: 'test',
+      name: 'test',
+      spec: {
+        execution: {
+          steps: []
+        }
+      }
+    })
+  ).toBe(false)
+})
+
+test('isEnvironmentPresent', () => {
+  expect(
+    isEnvironmentPresent({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        environment: {
+          environmentRef: 'test'
+        },
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(true)
+  expect(
+    isEnvironmentPresent({
+      identifier: 'test',
+      name: 'test',
+      spec: {
+        execution: {
+          steps: []
+        }
+      }
+    })
+  ).toBe(false)
+})
+
+test('isExecutionFieldPresent', () => {
+  expect(
+    isExecutionFieldPresent({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(false)
+  expect(
+    isExecutionFieldPresent({
+      identifier: 'test',
+      name: 'test',
+      spec: {
+        execution: {
+          steps: []
+        }
+      }
+    })
+  ).toBe(false)
+})
+
+test('Test pipelineHasCIStageWithK8sInfra method', () => {
+  expect(pipelineHasCIStageWithK8sInfra()).toBe(false)
+  expect(
+    pipelineHasCIStageWithK8sInfra(
+      ciPipelineExecutionSummaryWithHostedVMsInfra.data.pipelineExecutionSummary as PipelineExecutionSummary
+    )
+  ).toBe(false)
+  expect(
+    pipelineHasCIStageWithK8sInfra(
+      ciPipelineExecutionSummaryWithK8sInfra.data.pipelineExecutionSummary as PipelineExecutionSummary
+    )
+  ).toBe(true)
 })

@@ -13,13 +13,14 @@ import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
 import {
+  NotificationRuleResponse,
   SLOTargetFilterDTO,
   useGetNotificationRuleData,
   useGetOnboardingGraph,
   useGetSLOHealthListViewV2
 } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { CVStepper } from '@cv/components/CVStepper/CVStepper'
+import { Stepper } from '@common/components/Stepper/Stepper'
 import SLOName from '@cv/pages/slos/common/SLOName/SLOName'
 import SLOTargetNotifications from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
 import { CreatePreview } from '@cv/pages/slos/common/CreatePreview/CreatePreview'
@@ -51,6 +52,7 @@ export const CreateCompositeSloForm = ({
   const { getString } = useStrings()
   const formikProps = useFormikContext<SLOV2Form>()
   const [notificationPage, setNotificationPage] = useState(0)
+  const [notificationsInTable, setNotificationsInTable] = useState<NotificationRuleResponse[]>([])
   const isStepValid = useCallback(
     (stepId: string) => isFormDataValid(formikProps, stepId as CreateCompositeSLOSteps),
     [formikProps.values, formikProps.errors]
@@ -176,7 +178,7 @@ export const CreateCompositeSloForm = ({
       <Page.Body loading={loading} error={error} retryOnError={() => retryOnError()}>
         {!loading && (
           <>
-            <CVStepper
+            <Stepper
               id="createSLOTabs"
               isStepValid={isStepValid}
               runValidationOnMount={validateAllSteps}
@@ -256,6 +258,8 @@ export const CreateCompositeSloForm = ({
                         loading={notificationLoading}
                         error={notificationError}
                         getNotifications={getNotifications}
+                        notificationsInTable={notificationsInTable}
+                        setNotificationsInTable={setNotificationsInTable}
                       />
                     </CompositeSLOContext.Provider>
                   ),

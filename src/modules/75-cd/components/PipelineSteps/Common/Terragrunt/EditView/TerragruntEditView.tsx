@@ -28,9 +28,9 @@ import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { cloneDeep, set, unset, get } from 'lodash-es'
-
 import type { FormikProps } from 'formik'
 import { Classes, Dialog } from '@blueprintjs/core'
+import type { TerragruntVarFileWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
@@ -70,9 +70,9 @@ import { BackendConfigurationTypes, ConfigurationTypes } from '../../Terraform/T
 import type { TerragruntData, TerragruntProps } from '../TerragruntInterface'
 import { ConfigFileStoreStepOne } from '../../ConfigFileStore/ConfigFileStoreStepOne'
 import { ConfigFileStoreStepTwo } from '../../ConfigFileStore/ConfigFileStoreStepTwo'
-import TgVarFileList from './TGVarFileList'
 import { DIALOG_PROPS } from '../TerragruntHelper'
-import css from '../../Terraform/Editview/TerraformVarfile.module.scss'
+import VarFileList from '../../VarFile/VarFileList'
+import css from '../../Terraform/TerraformStep.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface StepChangeData<SharedObject> {
@@ -244,7 +244,6 @@ export default function TerragruntEditView(
     <Layout.Vertical flex style={{ justifyContent: 'center', alignItems: 'center' }} margin={{ bottom: 'xlarge' }}>
       <Icon
         name={isBackendConfig ? 'service-terraform' : 'service-terragrunt'}
-        className={css.remoteIcon}
         size={50}
         padding={{ bottom: 'large' }}
       />
@@ -285,6 +284,7 @@ export default function TerragruntEditView(
           setSelectedConnector={setSelectedConnector}
           isTerragruntPlan={false}
           isTerragrunt
+          fieldPath="configuration"
         />
         {connectorView ? getNewConnectorSteps() : null}
 
@@ -294,8 +294,9 @@ export default function TerragruntEditView(
           isTerragruntPlan={false}
           isReadonly={readonly}
           allowableTypes={allowableTypes}
+          fieldPath="configuration"
           onSubmitCallBack={(data: any, prevStepData: any) => {
-            const path = getPath(false, false, isBackendConfig)
+            const path = getPath(false, false, isBackendConfig, 'configuration')
             const configObject = get(data, path) || {
               store: {}
             }
@@ -381,7 +382,6 @@ export default function TerragruntEditView(
           variableName="spec.configuration.spec.backendConfig.spec.content"
           showRequiredField={false}
           showDefaultField={false}
-          showAdvanced={true}
           onChange={value => formik.setFieldValue('spec.configuration.spec.backendConfig.spec.content', value)}
           isReadonly={readonly}
         />
@@ -497,7 +497,6 @@ export default function TerragruntEditView(
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced
                     onChange={value => {
                       setFieldValue('spec.provisionerIdentifier', value)
                     }}
@@ -578,7 +577,6 @@ export default function TerragruntEditView(
                           variableName="spec.configuration.spec.moduleConfig.path"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced
                           onChange={value => {
                             setFieldValue('spec.configuration.spec.moduleConfig.path', value)
                           }}
@@ -613,7 +611,6 @@ export default function TerragruntEditView(
                                   variableName="spec.configuration.spec.workspace"
                                   showRequiredField={false}
                                   showDefaultField={false}
-                                  showAdvanced={true}
                                   onChange={value => {
                                     formik.setFieldValue('spec.configuration.spec.workspace', value)
                                   }}
@@ -624,14 +621,17 @@ export default function TerragruntEditView(
                             </div>
                           )}
                           <div className={cx(css.divider, css.addMarginBottom)} />
-                          <TgVarFileList
-                            formik={formik as FormikProps<TerragruntData>}
+                          <VarFileList<TerragruntData, TerragruntVarFileWrapper>
+                            formik={formik}
                             isReadonly={readonly}
                             allowableTypes={allowableTypes}
                             setSelectedConnector={setSelectedConnector}
                             getNewConnectorSteps={getNewConnectorSteps}
                             selectedConnector={selectedConnector}
+                            varFilePath={'spec.configuration.spec.varFiles'}
+                            isTerragrunt
                           />
+
                           <div className={css.divider} />
                           <>
                             <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>

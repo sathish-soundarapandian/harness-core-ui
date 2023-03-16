@@ -6,7 +6,6 @@
  */
 
 import { waitFor } from '@testing-library/react'
-import mockImport from 'framework/utils/mockImport'
 import * as pipelineNg from 'services/pipeline-ng'
 import { findAllByKey, savePipeline } from '../PipelineContextV1/PipelineContextV1'
 
@@ -23,55 +22,11 @@ describe('Test PipelineContextV1', () => {
     expect(findAllByKey('stage', { identifier: 'pipeline_id', name: 'pipeline name' }).length).toBe(0)
   })
 
-  test('Test savePipeline method for pipeline create with OPA_PIPELINE_GOVERNANCE off', async () => {
-    savePipeline(
-      { accountIdentifier: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' },
-      { identifier: 'pipeline_id', name: 'Sample Pipeline' }
-    )
-    await waitFor(() => expect(pipelineNg.createPipelinePromise).toHaveBeenCalled())
-    await waitFor(() =>
-      expect(pipelineNg.createPipelinePromise).toHaveBeenCalledWith({
-        body: 'identifier: pipeline_id\nname: Sample Pipeline\n',
-        queryParams: {
-          accountIdentifier: 'accountId',
-          orgIdentifier: 'orgId',
-          projectIdentifier: 'projectId'
-        },
-        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      })
-    )
-  })
-
-  test('Test savePipeline method for pipeline update with OPA_PIPELINE_GOVERNANCE off', async () => {
+  test('Test savePipeline method for pipeline create', async () => {
     savePipeline(
       { accountIdentifier: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' },
       { identifier: 'pipeline_id', name: 'Sample Pipeline' },
-      true
-    )
-    await waitFor(() => expect(pipelineNg.putPipelinePromise).toHaveBeenCalled())
-    await waitFor(() =>
-      expect(pipelineNg.putPipelinePromise).toHaveBeenCalledWith({
-        pipelineIdentifier: 'pipeline_id',
-        queryParams: {
-          accountIdentifier: 'accountId',
-          orgIdentifier: 'orgId',
-          projectIdentifier: 'projectId'
-        },
-        body: 'identifier: pipeline_id\nname: Sample Pipeline\n',
-        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      })
-    )
-  })
-
-  test('Test savePipeline method for pipeline create with OPA_PIPELINE_GOVERNANCE on', async () => {
-    mockImport('@common/hooks/useFeatureFlag', {
-      useFeatureFlags: () => ({ OPA_PIPELINE_GOVERNANCE: true })
-    })
-    savePipeline(
-      { accountIdentifier: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' },
-      { identifier: 'pipeline_id', name: 'Sample Pipeline' },
-      false,
-      true
+      false
     )
     await waitFor(() => expect(pipelineNg.createPipelineV2Promise).toHaveBeenCalled())
     await waitFor(() =>
@@ -87,14 +42,10 @@ describe('Test PipelineContextV1', () => {
     )
   })
 
-  test('Test savePipeline method for pipeline update with OPA_PIPELINE_GOVERNANCE on', async () => {
-    mockImport('@common/hooks/useFeatureFlag', {
-      useFeatureFlags: () => ({ OPA_PIPELINE_GOVERNANCE: true })
-    })
+  test('Test savePipeline method for pipeline update', async () => {
     savePipeline(
       { accountIdentifier: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' },
       { identifier: 'pipeline_id', name: 'Sample Pipeline' },
-      true,
       true
     )
     await waitFor(() => expect(pipelineNg.putPipelineV2Promise).toHaveBeenCalled())

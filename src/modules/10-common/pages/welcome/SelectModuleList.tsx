@@ -51,7 +51,7 @@ interface SelectModuleListProps {
 }
 
 const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, moduleList }) => {
-  const [selected, setSelected] = useState<Module>()
+  const [selected, setSelected] = useState<Module>('cd')
   const { CREATE_DEFAULT_PROJECT, AUTO_FREE_MODULE_LICENSE } = useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { getString } = useStrings()

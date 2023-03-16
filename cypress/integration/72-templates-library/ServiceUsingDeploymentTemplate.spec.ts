@@ -28,12 +28,6 @@ import {
 
 describe('ServiceV2 - Deployment Template', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
-
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
 
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {

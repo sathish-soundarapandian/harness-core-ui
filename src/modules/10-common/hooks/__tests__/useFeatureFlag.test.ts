@@ -42,7 +42,7 @@ describe('useFeatureFlags', () => {
   test('it should return the flags', async () => {
     const flags: Partial<Record<FeatureFlag, boolean>> = {
       CFNG_ENABLED: true,
-      FF_PIPELINE: false
+      ACCOUNT_BASIC_ROLE: false
     }
 
     const { result } = renderHook(() => useFeatureFlags(), {

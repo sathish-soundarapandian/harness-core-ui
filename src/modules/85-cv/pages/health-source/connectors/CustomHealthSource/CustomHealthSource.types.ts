@@ -62,7 +62,6 @@ export interface onSubmitCustomHealthSourceInterface {
   onSubmit: (formdata: CustomHealthSourceSetupSource, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
   sourceData: any
   transformedSourceData: CustomHealthSourceSetupSource
-  isMetricThresholdEnabled: boolean
   metricThresholds: MetricThresholdsState
 }
 export interface InitCustomHealthSourceInterface {

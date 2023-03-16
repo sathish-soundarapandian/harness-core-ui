@@ -84,6 +84,7 @@ successfullUpdate: '{{entity}} {{name}} updated successfully'
 dataSubmitSuccess: 'Data has been submitted successfully'
 entityType: Entity Type
 cantDeleteEntity: Can't delete {{entity}}
+entityPlaceholderText: '- Select -' #used at placeholder places to select Svc, Infra, Env, Connector
 approve: Approve
 reject: Reject
 disable: Disable
@@ -96,6 +97,7 @@ hideAll: Hide All
 moreInfo: More Info
 moreOptions: More options
 viewText: View
+history: History
 PermissibleActions: Permissible Actions
 My: My
 ok: OK
@@ -141,6 +143,7 @@ switchAccountError: Unable to switch accounts. Please try again.
 logs:
   noLogsText: 'No logs found'
   delegateSelectionLogs: Delegate selection logs
+  delegateTaskLogs: Delegate Tasks Logs
 execute: Execute
 commentModal:
   addCommentPlaceholder: Add a comment
@@ -166,6 +169,8 @@ configureOptions:
     minOneAllowedValue: 'Minimum one allowed value'
   notValidExpression: 'Not a valid input Expression'
   advancedHelp: 'With the advanced option, <br> you can type in JEXL expressions to return a list of values. <br> <a target="_blank">More information</a> <br> E.g. ${env.type} == “prod” ? aws1, aws2 : aws3, aws4'
+addNewRepo: + New Repository
+addNewCluster: + New Cluster
 namespace: Namespace
 cluster: Cluster
 clusterName: Cluster Name
@@ -185,7 +190,7 @@ datePickerShortcuts:
 validation:
   connectorRef: Connector is a required field
   namePatternIsNotValid: 'Name can only contain alphanumerics, . _ and -'
-  provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier should not contain special characters and spaces'
+  provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier must start with a letter or _ and can then be followed by alphanumerics, _, or $'
   provisionerIdentifierIsRequired: 'Provisioner Identifier is required'
   harnessFolderNamePatternIsNotValid: 'Harness Folder name can only contain alphanumerics, underscore, hyphen or a whitespace'
   nameIsRequired: '{{$.validation.nameRequired}}'
@@ -283,7 +288,7 @@ purpose:
     subtitle: Deploy in peace - verify activities that take place in your system. Identify risk early.
     description: 'Measure overall service health with always-on change impact analysis.'
     continuous: '{{ $.common.serviceReliabilityManagement }}'
-    moduleSelectionSubHeading: Take your software build verification  process to the next level usng our Change Intelligence
+    moduleSelectionSubHeading: Take your software build verification  process to the next level using our Change Intelligence
 
   ci:
     continuousLabel: Continuous
@@ -325,6 +330,7 @@ purpose:
     tests: '{{$.tests}}'
   errorTracking:
     title: Error Tracking
+    longTitle: Continuous Error Tracking
   code:
     name: Code
   chaos:
@@ -403,13 +409,19 @@ git:
   azureReposRepoUrl: 'Azure Repos Repository URL'
   gitHubUrlPlaceholder: 'https://github.com/account/'
   gitHubUrlPlaceholderSSH: 'git@github.com:account/'
+  gitHubRepoUrlPlaceholder: 'https://github.com/account/repo'
+  gitHubRepoUrlPlaceholderSSH: 'git@github.com:account/repo'
+  gitLabRepoUrlPlaceholder: 'https://gitlab.com/account/repo'
+  gitLabRepoUrlPlaceholderSSH: 'git@gitlab.com:account/repo'
   gitLabUrlPlaceholder: 'https://gitlab.com/account/'
   gitLabUrlPlaceholderSSH: 'git@gitlab.com:account/'
   bitbucketUrlPlaceholder: 'https://bitbucket.org/'
-  bitbucketPlaceholderSSH: 'git@bitbucket.org'
+  bitbucketPlaceholderSSH: 'git@bitbucket.org/'
+  bitbucketRepoUrlPlaceholder: 'https://bitbucket.org/repo'
+  bitbucketRepoPlaceholderSSH: 'git@bitbucket.org/repo'
   azureReposUrlPlaceholder: 'https://dev.azure.com/<organizationName>/<projectName>'
   azureReposUrlPlaceholderRepoHttp: 'https://dev.azure.com/<organizationName>/<projectName>/_git/<repositoryName>'
-  azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organizationName>'
+  azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organizationName>/<projectName>'
   azureReposPlaceholderRepoSSH: 'git@ssh.dev.azure.com:v3/<organizationName>/<projectName>/<repositoryName>'
   enableAPIAccess: 'Enable API access (recommended)'
   APIAccessDescription: 'API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses'
@@ -477,6 +489,7 @@ newLines: 'New lines'
 unsavedChanges: You may have unsaved changes
 unsavedChangesLong: You have unsaved changes that will be lost. Are you sure you want to leave this page?
 readonlyPermissions: You have read-only permissions
+readonlyPermissionsForFile: You have read-only permissions for this file
 viewAndExecutePermissions: You have View and Execute permission only
 newVersion: There is a new version of this branch
 confictOccured: '{{name}} has committed since you started editing.'
@@ -531,6 +544,7 @@ subscriptions:
     services: Active Services
     srvcInst: Active Service Instances
     serviceLicenses: Service Licenses
+    serviceInstances: Service Instances
     cdUsers: Active CD Users
     cdSITooltip: Service Instances represent the dynamic instantiation of a service you deploy via Harness. For a service representing a Docker image, Service Instances are the number of pods running with the docker image. For a service that deploys .NET web app, Service Instances are the number of VMs running the web app.
     cdServiceTooltip: A Service is an independent unit of software you deploy through Harness CD pipelines. An Active Service is a service deployed in the last 30 days.
@@ -620,6 +634,7 @@ filters:
   noMatchingFilterData: No results found matching the filter criteria
   noResultsFound: No results found
   clearFilters: Clear Filters
+  clearFilter: Clear Filter
   noFilterSaved: No Filter Saved
 in: in
 on: on
@@ -633,6 +648,7 @@ accountDetails: Account Details
 addAccountName: Add Account Name
 accountId: Account Id
 harnessClusterHostingAccount: Harness Cluster Hosting Account
+allowFirstGenAccess: Allow First Gen Access
 defaultExperience: Default Experience
 selectDefaultExperience: Select the default experience to launch after Sign-in
 harnessFirstGeneration: Harness First Generation
@@ -790,6 +806,7 @@ module:
   templateService: TEMPLATESERVICE
   sto: STO
   governance: POLICY ENGINE
+  code: CODE
 templateServiceLabel: Template Service
 customPricing: for Custom Pricing
 specified: Specified
@@ -1042,6 +1059,9 @@ configureModuleList: Configure Module List
 codeErrorsSettings: Code Error Settings
 cdAndGitops: Continuous Delivery & GitOps
 stoText: Security Testing Orchestration
+yamlDiffView:
+  originalYamlLabel: Original
+  refreshedYamlLabel: Refreshed
 
 # IACM Module
 iacm: IACM
@@ -1107,6 +1127,7 @@ infrastructures: Infrastructures
 infrastructureInputs: Infrastructure inputs
 environmentPrefix: 'Environment: {{ name }}'
 infrastructurePrefix: 'Infrastructure: {{ name }}'
+serviceOverridePrefix: 'Service Override: {{ name }}'
 schedulePanel:
   currentUTCTime: '{{$.common.currentUTCTime}}'
   minutesLabel: 'Minutes'
@@ -1203,6 +1224,9 @@ viewAll: View all
 lastUpdatedAt: Last updated at
 tryAgain: Try Again
 reload: Reload
+plugins: Plugins
+noPluginInputsRequired: No inputs are required for this plugin.
+seeDocumentation: See Documentation
 recents: Recents
 favorites: Favorites
 noRecentProjects: No Recent Projects
@@ -1318,8 +1342,6 @@ openInNewTab: Open in new tab
 stayOnThisPage: 'Stay on this Page'
 leaveThisPage: 'Leave this Page'
 matchType: Match type
-svcEnv2Banner: 'Harness has made a significant update to the services and environments in CD. Services and Environments now have definitions that are associated with the respective object and can be managed independent of the pipeline. This change is a forward looking change that won’t impact your existing pipelines. However, we do plan on reducing our support on the service v1 and environments v1 and plan to deprecate by end of January. We have an automated migration tool to support our users. Please contact <a href= {{support}} target="_blank" rel="noreferrer"> <b>&nbsp;support.harness.io&nbsp;</b> </a> for further questions.'
-svcEnvV2Truncated: 'Harness has made a significant update to the services and environments in CD. Services and Environments now have definitions that are associated with the respective object and can be managed ...'
 ifNotPresent: 'If Not Present'
 collapse: Collapse
 expand: Expand
@@ -1337,15 +1359,35 @@ artifacts:
     sourceDirectoryPlaceholder: Enter Source Directory
 updated: Updated
 python: Python
+successfullyAdded: Successfully added
+successfullyUpdated: Successfully updated
+errorOccured: 'Error occured while {{verb}} {{entity}}'
+seeAdvancedOptions: See Advanced Options
+addedEntityLabel: 'Added {{entity}}'
+bucketName: Bucket Name
+validationInProgress: Validation in progress
+checkYourNetwork: check your network.
+Stepper:
+  StepError: Required fields are missing or incorrect data
 
-# SSCS module
-sscs: SSCS
-sscsText: Software Supply Chain Security
+# SSCA module
+ssca: Supply Chain Assurance
+sscaText: Software Supply Chain Assurance
 tickets:
   selectConnector: '[Select] Ticket Provider Connector'
   selectProjectName: '[Select] Project Name'
   connector: 'Ticket Provider Connector'
   defaultProjectName: 'Default Project Name'
-  tickets: 'Tickets'
+  externalTickets: 'External Tickets'
   ticketComment: 'Append comment to ticket when Security Issue changes are detected (coming soon)'
   ticketExemption: 'Create a ticket when an Exemption is created (coming soon)'
+downloadYaml: 'Download YAML'
+previewYAML: Preview YAML
+individualExpression: 'Individual Expression'
+combinedExpression: 'Combined Expression'
+OverUse: 'Over Use'
+yearlyPeak: 'Yearly Peak'
+monthlyPeak: 'Monthly Peak'
+single: 'Single'
+individual: 'Individual'
+combined: 'Combined'

@@ -11,6 +11,7 @@ import { PageError, Pagination } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import { ApiKey, useGetAllAPIKeys } from 'services/cf'
 import { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
@@ -26,7 +27,7 @@ const EnvironmentDetails: React.FC = () => {
   const { getString } = useStrings()
   const { projectIdentifier, environmentIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
   const { withActiveEnvironment } = useActiveEnvironment()
-  const [page, setPage] = useState<number>(0)
+  const [page, setPage] = useQueryParamsState<number>('page', 0)
   const [recents, setRecents] = useState<ApiKey[]>([])
 
   const updateApiKeyList = (key: ApiKey): void => {

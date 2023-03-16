@@ -8,6 +8,14 @@
 import type { MultiSelectOption } from '@harness/uicore'
 import { uniqBy } from 'lodash-es'
 import type { IconProps } from '@harness/icons'
+import type {
+  StreamingDestinationDto,
+  UpdateStreamingDestinationProps,
+  AwsS3StreamingDestinationSpecDto,
+  CreateStreamingDestinationsRequestBody
+} from '@harnessio/react-audit-service-client'
+import type { IStreamingDestinationForm } from '@audit-trail/interfaces/LogStreamingInterface'
+import { StreamingDestinationSpecDTOTypeMap } from '@audit-trail/interfaces/LogStreamingInterface'
 import type { AuditTrailFormType, ProjectSelectOption } from '@audit-trail/components/FilterDrawer/FilterDrawer'
 import type { AuditEventDTO, AuditFilterProperties, ResourceScopeDTO } from 'services/audit'
 import type { StringKeys } from 'framework/strings'
@@ -34,7 +42,13 @@ export const actionToLabelMap: Record<AuditEventDTO['action'], StringKeys> = {
   LOGIN: 'auditTrail.actions.login',
   LOGIN2FA: 'auditTrail.actions.login2fa',
   UNSUCCESSFUL_LOGIN: 'auditTrail.actions.unsuccessfullLogin',
-  ERROR_BUDGET_RESET: 'cv.resetErrorBudget'
+  ERROR_BUDGET_RESET: 'cv.resetErrorBudget',
+  START: 'start',
+  END: 'auditTrail.actions.end',
+  PAUSE: 'auditTrail.actions.pause',
+  RESUME: 'auditTrail.actions.resume',
+  ABORT: 'abort',
+  TIMEOUT: 'pipelineSteps.timeoutLabel'
 }
 
 export const moduleToLabelMap: Record<AuditEventDTO['module'], StringKeys> = {
@@ -48,7 +62,10 @@ export const moduleToLabelMap: Record<AuditEventDTO['module'], StringKeys> = {
   PMS: 'common.module.pms',
   TEMPLATESERVICE: 'common.module.templateService',
   STO: 'common.module.sto',
-  GOVERNANCE: 'common.module.governance'
+  GOVERNANCE: 'common.module.governance',
+  IACM: 'common.iacm',
+  SRM: 'cv.srmTitle',
+  CODE: 'common.purpose.code.name'
 }
 
 export const getModuleNameFromAuditModule = (auditModule: AuditEventDTO['module']): Module | undefined => {
@@ -118,6 +135,18 @@ export const moduleInfoMap: Record<AuditEventDTO['module'], ModuleInfo> = {
   CHAOS: {
     moduleLabel: 'common.module.chaos',
     icon: { name: 'chaos-main' }
+  },
+  IACM: {
+    moduleLabel: 'common.iacm',
+    icon: { name: 'iacm' }
+  },
+  SRM: {
+    moduleLabel: 'cv.srmTitle',
+    icon: { name: 'cv-main' }
+  },
+  CODE: {
+    moduleLabel: 'common.purpose.code.name',
+    icon: { name: 'code' }
   }
 }
 
@@ -276,4 +305,51 @@ export const getStringFromSubtitleMap = (map: Record<string, string | undefined>
     return map[key] ? [...finalArr, `${key}: ${map[key]}`] : finalArr
   }, [])
   return arr.reduce((str, text) => `${str} ${SEPARATOR} ${text}`)
+}
+
+export const buildUpdateSDPayload = (
+  sd: StreamingDestinationDto,
+  overrideFields?: any
+): UpdateStreamingDestinationProps => {
+  const payload: UpdateStreamingDestinationProps = {
+    body: {
+      connector_ref: sd.connector_ref || '',
+      identifier: sd.identifier || '',
+      name: sd.name || '',
+      spec: sd.spec,
+      status: sd.status,
+      ...overrideFields
+    },
+    'streaming-destination': sd.identifier || ''
+  }
+  return payload
+}
+
+export const buildStreamingDestinationSpecByType = (data: any): StreamingDestinationDto['spec'] => {
+  const specObj: StreamingDestinationDto['spec'] = { type: data?.type }
+  switch (data?.type) {
+    case StreamingDestinationSpecDTOTypeMap.AWS_S3: {
+      ;(specObj as AwsS3StreamingDestinationSpecDto).bucket = data?.bucket
+      break
+    }
+    default:
+      break
+  }
+  return specObj
+}
+
+export const buildCreateStreamingDestinationPayload = (
+  data: IStreamingDestinationForm
+): CreateStreamingDestinationsRequestBody => {
+  const payload: CreateStreamingDestinationsRequestBody = {
+    connector_ref: data?.connector_ref,
+    description: data?.description,
+    identifier: data?.streamingDestinationIdentifier,
+    name: data?.name,
+    status: data?.status || 'INACTIVE',
+    tags: data?.tags,
+    spec: buildStreamingDestinationSpecByType(data)
+  }
+
+  return payload
 }

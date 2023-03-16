@@ -17,6 +17,7 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import List from '@common/components/List/List'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
@@ -25,8 +26,18 @@ import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourc
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
-  const { template, path, manifestPath, manifest, fromTrigger, allowableTypes, readonly, formik, stageIdentifier } =
-    props
+  const {
+    template,
+    path,
+    manifestPath,
+    manifest,
+    fromTrigger,
+    allowableTypes,
+    readonly,
+    formik,
+    stageIdentifier,
+    fileUsage = FileUsage.MANIFEST_FILE
+  } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -53,7 +64,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       className={cx(css.inputWidth, css.layoutVerticalSpacing)}
     >
       <ManifestGitStoreRuntimeFields {...props} />
-      <ManifestCommonRuntimeFields {...props} />
+      <ManifestCommonRuntimeFields {...props} fileUsage={fileUsage} />
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.folderPath`, template) && (
           <div className={css.verticalSpacingInput}>
@@ -83,7 +94,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.folderPath`, value)
             }}
@@ -115,7 +125,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.pluginPath`, value)
             }}
@@ -147,7 +156,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.overlayConfiguration`, value)
             }}
@@ -180,7 +188,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.patchesPaths`, value)
             }}
@@ -213,13 +220,46 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.overlayConfiguration.kustomizeYamlFolderPath`, value)
             }}
           />
         )}
       </div>
+
+      <div className={css.inputFieldLayout}>
+        {isFieldRuntime(`${manifestPath}.spec.enableDeclarativeRollback`, template) && (
+          <div className={css.verticalSpacingInput}>
+            <FormMultiTypeCheckboxField
+              disabled={isFieldDisabled(`${manifestPath}.spec.enableDeclarativeRollback`)}
+              name={`${path}.${manifestPath}.spec.enableDeclarativeRollback`}
+              label={getString('pipeline.manifestType.enableDeclarativeRollback')}
+              setToFalseWhenEmpty={true}
+              multiTypeTextbox={{
+                expressions,
+                allowableTypes
+              }}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.enableDeclarativeRollback`)) ===
+          MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            className={css.configureOptions}
+            style={{ alignSelf: 'center' }}
+            value={get(formik?.values, `${path}.${manifestPath}.spec.enableDeclarativeRollback`)}
+            type="String"
+            variableName="enableDeclarativeRollback"
+            showRequiredField={false}
+            showDefaultField={true}
+            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
+            onChange={value => {
+              formik.setFieldValue(`${path}.${manifestPath}.spec.enableDeclarativeRollback`, value)
+            }}
+          />
+        )}
+      </div>
+
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.skipResourceVersioning`, template) && (
           <div className={css.verticalSpacingInput}>
@@ -246,7 +286,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.skipResourceVersioning`, value)
             }}

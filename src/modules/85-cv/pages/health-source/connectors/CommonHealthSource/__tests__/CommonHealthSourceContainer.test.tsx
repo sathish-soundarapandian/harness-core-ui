@@ -93,14 +93,14 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       failFastThresholds: []
     }
 
-    expect(createHealthSourcePayload(mockedDefineHealthSourcedata, consfigureHealthSourceData, false)).toEqual(
+    expect(createHealthSourcePayload(mockedDefineHealthSourcedata, consfigureHealthSourceData)).toEqual(
       metricThresholdDisabledPayloadResult
     )
   })
 
   test('should validate createHealthSourcePayload with metric thresholds enabled', () => {
     expect(
-      createHealthSourcePayload(mockedDefineHealthSourcedata, consfigureHealthSourceDataWithMetricThresholds, false)
+      createHealthSourcePayload(mockedDefineHealthSourcedata, consfigureHealthSourceDataWithMetricThresholds)
     ).toEqual(payloadMockWithMetricThresholdsMock)
   })
 
@@ -119,7 +119,7 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       metricName: 'M1',
       query: '*',
       riskCategory: 'Errors',
-      serviceInstance: undefined,
+      serviceInstanceField: undefined,
       sli: false
     })
 
@@ -146,7 +146,7 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       metricName: 'M1',
       query: '*',
       riskCategory: 'Errors',
-      serviceInstance: 'test',
+      serviceInstanceField: 'test',
       sli: false
     })
 

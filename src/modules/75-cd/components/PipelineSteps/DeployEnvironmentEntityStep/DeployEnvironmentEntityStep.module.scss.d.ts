@@ -10,6 +10,7 @@ declare const styles: {
   readonly environmentEntityWidget: string
   readonly inputSetSpinner: string
   readonly inputWidth: string
+  readonly modalFooter: string
   readonly radioGroup: string
   readonly toggle: string
 }

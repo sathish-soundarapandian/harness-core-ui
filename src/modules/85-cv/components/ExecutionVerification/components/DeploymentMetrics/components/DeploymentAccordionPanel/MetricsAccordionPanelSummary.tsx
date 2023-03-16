@@ -23,20 +23,30 @@ const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> 
   return (
     <>
       {deeplinkURL ? (
-        <Container padding={{ right: 'small', left: 'small' }}>
+        <Container padding={{ right: 'medium', left: 'small' }}>
           <a href={deeplinkURL} target="_blank" rel="noreferrer">
-            {metricName}
-            <span>
-              <Icon name="share" size={12} padding={{ left: 'small', bottom: 'xsmall' }} color={Color.PRIMARY_7} />
-            </span>
+            <Container flex={{ justifyContent: 'flex-start' }}>
+              <Text lineClamp={1} color={Color.PRIMARY_7}>
+                {metricName}
+              </Text>
+              <span>
+                <Icon name="share" size={12} padding={{ left: 'small', bottom: 'xsmall' }} color={Color.PRIMARY_7} />
+              </span>
+            </Container>
           </a>
         </Container>
       ) : (
-        <Text className={css.metricPanelLabels} tooltip={metricName} margin={{ left: 'small' }}>
+        <Text
+          lineClamp={1}
+          className={css.metricPanelLabels}
+          tooltip={metricName}
+          margin={{ left: 'small' }}
+          padding={{ right: 'small' }}
+        >
           {metricName}
         </Text>
       )}
-      <Text className={css.metricPanelLabels} tooltip={transactionName}>
+      <Text lineClamp={1} className={css.metricPanelLabels} tooltip={transactionName} padding={{ right: 'small' }}>
         {transactionName}
       </Text>
       <Text lineClamp={1} tooltip={name} className={css.metricPanelLabels} padding={{ right: 'small' }}>

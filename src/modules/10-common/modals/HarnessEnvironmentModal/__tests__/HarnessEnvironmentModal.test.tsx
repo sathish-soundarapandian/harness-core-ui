@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
-import { render, waitFor, fireEvent, act } from '@testing-library/react'
+import { render, waitFor, fireEvent, act, screen } from '@testing-library/react'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as services from 'services/cd-ng'
 import { HarnessEnvironmentModal } from '../HarnessEnvironmentModal'
 import environments from './mock.json'
 import inputSetEnvironments from './envMock'
@@ -194,5 +195,37 @@ describe('test', () => {
     await waitFor(() => expect(onClose).toHaveBeenCalled())
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('should show spinner UI when useCreateEnvironmentV2 call is loading', () => {
+    jest.spyOn(services, 'useCreateEnvironmentV2').mockReturnValue({
+      cancel: jest.fn(),
+      loading: true,
+      error: null,
+      mutate: jest.fn()
+    })
+    render(
+      <TestWrapper>
+        <HarnessEnvironmentModal {...props} />
+      </TestWrapper>
+    )
+
+    expect(screen.getByTestId(/page-spinner/)).toBeInTheDocument()
+  })
+
+  test('should show spinner UI when useUpsertEnvironmentV2 call is loading', () => {
+    jest.spyOn(services, 'useUpsertEnvironmentV2').mockReturnValue({
+      cancel: jest.fn(),
+      loading: true,
+      error: null,
+      mutate: jest.fn()
+    })
+    render(
+      <TestWrapper>
+        <HarnessEnvironmentModal {...props} />
+      </TestWrapper>
+    )
+
+    expect(screen.getByTestId(/page-spinner/)).toBeInTheDocument()
   })
 })

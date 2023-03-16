@@ -164,7 +164,7 @@ const SwapRouteInputStep: React.FC<SwapRouteProps> = ({ inputSetData, allowableT
           disabled={inputSetData?.readonly}
           fieldPath={'timeout'}
           template={inputSetData?.template}
-          className={cx(stepCss.formGroup, stepCss.sm)}
+          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
       {

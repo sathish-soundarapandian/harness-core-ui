@@ -3,16 +3,17 @@ import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/
 import type { GetMultiTypeRecordInitialValueParams } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/CustomMetricForm.types'
 
 export const getMultiTypeRecordInitialValueMockValue: GetMultiTypeRecordInitialValueParams = {
-  filteredFieldsMapping: [
+  jsonSelectorFields: [
     {
       type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
       label: 'Identifier service path',
-      identifier: 'serviceInstance' as keyof CommonCustomMetricFormikInterface,
-      defaultValue: '_sourcehost'
+      identifier: 'serviceInstanceField' as keyof CommonCustomMetricFormikInterface,
+      defaultValue: '_sourcehost',
+      isTemplateSupportEnabled: true
     }
   ],
   formValues: {
-    serviceInstance: 'test'
+    serviceInstanceField: 'test'
   } as unknown as CommonCustomMetricFormikInterface
 }
 
@@ -29,14 +30,14 @@ export const getMultiTypeRecordInitialValidValue: GetMultiTypeRecordInitialValue
 export const getMultiTypeRecordInitialTemplateMock: GetMultiTypeRecordInitialValueParams = {
   ...getMultiTypeRecordInitialValidValue,
   formValues: {
-    serviceInstance: '<+input>'
+    serviceInstanceField: '<+input>'
   } as unknown as CommonCustomMetricFormikInterface
 }
 
 export const getMultiTypeRecordInitialExpressionMock: GetMultiTypeRecordInitialValueParams = {
   ...getMultiTypeRecordInitialValidValue,
   formValues: {
-    serviceInstance: '<+expression>'
+    serviceInstanceField: '<+expression>'
   } as unknown as CommonCustomMetricFormikInterface
 }
 

@@ -11,10 +11,10 @@ declare const styles: {
   readonly collapseBody: string
   readonly collapseHeader: string
   readonly cursor: string
+  readonly dashCtn: string
   readonly detailSummaryView: string
   readonly dialogBase: string
   readonly dialogWrap: string
-  readonly executionListEmpty: string
   readonly fullViewTableStyle: string
   readonly hex: string
   readonly hexContainer: string
@@ -44,6 +44,7 @@ declare const styles: {
   readonly serviceCardTitle: string
   readonly serviceCards: string
   readonly serviceColumnStyle: string
+  readonly serviceDetailDialogEmptyState: string
   readonly serviceDetailEmptyState: string
   readonly slideStyle: string
   readonly summaryTableStyle: string

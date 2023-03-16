@@ -8,6 +8,7 @@
 import React from 'react'
 import { Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { orderBy } from 'lodash-es'
 import type { CellProps, Renderer } from 'react-table'
 import ResourceHandlerTable, {
   ResourceHandlerTableData
@@ -35,37 +36,39 @@ const RenderConnectorType: Renderer<CellProps<ConnectorTypeList>> = ({ row }) =>
 
 function ConnectorAttributeModalBody({ onSelectChange, selectedData }: RbacAttributeModalProps): React.ReactElement {
   const { getString } = useStrings()
-  const connectorTypeList: ConnectorTypeList[] = [
-    {
-      label: getString('cloudProviders'),
-      identifier: 'CLOUD_PROVIDER'
-    },
-    {
-      label: getString('secretManagers'),
-      identifier: 'SECRET_MANAGER'
-    },
-    {
-      label: getString('cloudCostsText'),
-      identifier: 'CLOUD_COST'
-    },
-    {
-      label: getString('artifactRepositories'),
-      identifier: 'ARTIFACTORY'
-    },
-    {
-      label: getString('codeRepositories'),
-      identifier: 'CODE_REPO'
-    },
-    {
-      label: getString('monitoringAndLoggingSystems'),
-      identifier: 'MONITORING'
-    },
-    {
-      label: getString('ticketingSystems'),
-      identifier: 'TICKETING'
-    }
-  ]
-
+  const connectorTypeList: ConnectorTypeList[] = orderBy(
+    [
+      {
+        label: getString('cloudProviders'),
+        identifier: 'CLOUD_PROVIDER'
+      },
+      {
+        label: getString('secretManagers'),
+        identifier: 'SECRET_MANAGER'
+      },
+      {
+        label: getString('cloudCostsText'),
+        identifier: 'CLOUD_COST'
+      },
+      {
+        label: getString('artifactRepositories'),
+        identifier: 'ARTIFACTORY'
+      },
+      {
+        label: getString('codeRepositories'),
+        identifier: 'CODE_REPO'
+      },
+      {
+        label: getString('monitoringAndLoggingSystems'),
+        identifier: 'MONITORING'
+      },
+      {
+        label: getString('ticketingSystems'),
+        identifier: 'TICKETING'
+      }
+    ],
+    ['label']
+  )
   return (
     <Container>
       <ResourceHandlerTable

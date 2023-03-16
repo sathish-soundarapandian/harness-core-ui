@@ -108,6 +108,9 @@ export enum PermissionIdentifier {
   VIEW_SLO_SERVICE = 'chi_slo_view',
   EDIT_SLO_SERVICE = 'chi_slo_edit',
   DELETE_SLO_SERVICE = 'chi_slo_delete',
+  VIEW_DOWNTIME = 'chi_downtime_view',
+  EDIT_DOWNTIME = 'chi_downtime_edit',
+  DELETE_DOWNTIME = 'chi_downtime_delete',
 
   // Governance Permissions
   GOV_VIEW_POLICY = 'core_governancePolicy_view',
@@ -147,6 +150,7 @@ export enum PermissionIdentifier {
   VIEW_CHAOS_EXPERIMENT = 'chaos_chaosexperiment_view',
   EDIT_CHAOS_EXPERIMENT = 'chaos_chaosexperiment_edit',
   DELETE_CHAOS_EXPERIMENT = 'chaos_chaosexperiment_delete',
+  EXECUTE_CHAOS_EXPERIMENT = 'chaos_chaosexperiment_execute',
   VIEW_CHAOS_INFRASTRUCTURE = 'chaos_chaosinfrastructure_view',
   EDIT_CHAOS_INFRASTRUCTURE = 'chaos_chaosinfrastructure_edit',
   DELETE_CHAOS_INFRASTRUCTURE = 'chaos_chaosinfrastructure_delete',
@@ -168,6 +172,7 @@ export enum PermissionIdentifier {
   // Default Settings
   VIEW_CORE_SETTING = 'core_setting_view',
   EDIT_CORE_SETTING = 'core_setting_edit',
+
   // CCM Permissions
   VIEW_CCM_OVERVIEW = 'ccm_overview_view',
   VIEW_CCM_PERSPECTIVE_FOLDERS = 'ccm_folder_view',
@@ -190,6 +195,15 @@ export enum PermissionIdentifier {
   DELETE_CCM_LOADBALANCER = 'ccm_loadBalancer_delete',
   VIEW_CCM_CURRENCYPREFERENCE = 'ccm_currencyPreference_view',
   EDIT_CCM_CURRENCYPREFERENCE = 'ccm_currencyPreference_edit',
+  VIEW_CCM_CLOUD_ASSET_GOVERNANCE_RULE = 'ccm_cloudAssetGovernanceRule_view',
+  EDIT_CCM_CLOUD_ASSET_GOVERNANCE_RULE = 'ccm_cloudAssetGovernanceRule_edit',
+  DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE = 'ccm_cloudAssetGovernanceRule_delete',
+  VIEW_CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET = 'ccm_cloudAssetGovernanceRuleSet_view',
+  EDIT_CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET = 'ccm_cloudAssetGovernanceRuleSet_edit',
+  DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET = 'ccm_cloudAssetGovernanceRuleSet_delete',
+  VIEW_CCM_CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT = 'ccm_cloudAssetGovernanceEnforcement_view',
+  EDIT_CCM_CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT = 'ccm_cloudAssetGovernanceEnforcement_edit',
+  DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT = 'ccm_cloudAssetGovernanceEnforcement_delete',
   // Billing Permissions
   EDIT_LICENSE = 'core_license_edit',
   DELETE_LICENSE = 'core_license_delete',
@@ -198,5 +212,13 @@ export enum PermissionIdentifier {
   // IACM Permissions
   IAC_VIEW_STACK = 'iac_stack_view',
   IAC_EDIT_STACK = 'iac_stack_edit',
-  IAC_DELETE_STACK = 'iac_stack_delete'
+  IAC_DELETE_STACK = 'iac_stack_delete',
+
+  // Log Streaming Permissions
+  VIEW_STREAMING_DESTINATION = 'core_streamingDestination_view',
+  CREATE_OR_EDIT_STREAMING_DESTINATION = 'core_streamingDestination_edit',
+  DELETE_STREAMING_DESTINATION = 'core_streamingDestination_delete',
+
+  //IDP Permisssions
+  IDP_SETTINGS_MANAGE = 'idp_idpsettings_manage'
 }

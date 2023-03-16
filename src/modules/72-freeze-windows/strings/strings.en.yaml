@@ -40,6 +40,8 @@ globalFreeze:
 freezeNotifications:
   windowEnabled: Freeze window is enabled
   rejectedDeployments: Deployments are rejected due to freeze window
+  customizedMessagePlaceholder: A custom message can be provided here which will be available as part of the notification message.
+  customMessageTitle: Freeze Notification Message
 
 deploymentFreeze: Deployment Freeze
 

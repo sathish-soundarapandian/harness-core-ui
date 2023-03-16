@@ -29,6 +29,8 @@ import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { AllMultiTypeInputTypesForStep, useGetPropagatedStageById } from '../CIStep/StepUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
+export const customRegexForMultiTypeMap = /^([a-zA-Z_])([0-9a-zA-Z_\-$]*)+((\.[0-9a-zA-Z_$]+)*)$/
+
 export const GHAPluginStepBase = (
   { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, onChange }: GHAPluginStepProps,
   formikRef: StepFormikFowardRef<GHAPluginStepData>
@@ -70,7 +72,9 @@ export const GHAPluginStepBase = (
             serviceDependencies: currentStage?.stage?.spec?.serviceDependencies || {},
             getString
           },
-          stepViewType
+          stepViewType,
+          undefined,
+          customRegexForMultiTypeMap
         )
       }}
       onSubmit={(_values: GHAPluginStepDataUI) => {

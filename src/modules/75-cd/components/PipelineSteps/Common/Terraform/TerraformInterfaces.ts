@@ -5,7 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { unset } from 'lodash-es'
+import { defaultTo, get, isEmpty, unset } from 'lodash-es'
+import { v4 as uuid } from 'uuid'
+import * as Yup from 'yup'
 import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
@@ -18,9 +20,9 @@ import type {
   StringNGVariable,
   TerraformApplyStepInfo,
   TerraformBackendConfig,
+  TerraformCloudCliPlanExecutionData,
   TerraformConfigFilesWrapper,
   TerraformDestroyStepInfo,
-  TerraformExecutionData,
   TerraformPlanExecutionData,
   TerraformPlanStepInfo,
   TerraformRollbackStepInfo,
@@ -28,6 +30,8 @@ import type {
   TerraformVarFileWrapper
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+import type { UseStringsReturn } from 'framework/strings'
+import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 
 export const TerraformStoreTypes = {
   Inline: 'Inline',
@@ -105,6 +109,7 @@ export interface TerraformPlanVariableStepProps {
   onUpdate?(data: TFPlanFormData): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData?: TFPlanFormData
+  fieldPath?: string
 }
 
 export interface TerraformVariableStepProps {
@@ -115,6 +120,7 @@ export interface TerraformVariableStepProps {
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData?: TerraformData
   stepType?: string
+  fieldPath?: string
 }
 
 export const ConfigurationTypes: Record<TerraformStepConfiguration['type'], TerraformStepConfiguration['type']> = {
@@ -201,8 +207,12 @@ export interface TerraformData extends StepElementConfig {
     provisionerIdentifier?: string
     configuration?: {
       type?: 'Inline' | 'InheritFromPlan' | 'InheritFromApply'
-
       spec?: TFDataSpec
+    }
+
+    cloudCliConfiguration?: Omit<TerraformCloudCliPlanExecutionData, 'environmentVariables' | 'targets'> & {
+      targets?: Array<{ id: string; value: string }> | string[] | string
+      environmentVariables?: Array<{ key: string; id: string; value: string }> | string
     }
   }
 }
@@ -264,8 +274,12 @@ export interface TFRollbackData extends StepElementConfig {
 }
 
 export interface TFPlanFormData extends StepElementConfig {
-  spec?: Omit<TerraformPlanStepInfo, 'configuration'> & {
-    configuration: Omit<TerraformPlanExecutionData, 'environmentVariables' | 'targets'> & {
+  spec?: Omit<TerraformPlanStepInfo, 'configuration' | 'cloudCliConfiguration'> & {
+    configuration?: Omit<TerraformPlanExecutionData, 'environmentVariables' | 'targets'> & {
+      targets?: Array<{ id: string; value: string }> | string[] | string
+      environmentVariables?: Array<{ key: string; id: string; value: string }> | string
+    }
+    cloudCliConfiguration?: Omit<TerraformCloudCliPlanExecutionData, 'environmentVariables' | 'targets'> & {
       targets?: Array<{ id: string; value: string }> | string[] | string
       environmentVariables?: Array<{ key: string; id: string; value: string }> | string
     }
@@ -291,9 +305,12 @@ export interface TfVar {
   paths?: string[]
 }
 
-export const onSubmitTerraformData = (values: any): TFFormData => {
-  if (values?.spec?.configuration?.type === 'Inline') {
-    const envVars = values.spec?.configuration?.spec?.environmentVariables
+export const onSubmitTerraformData = (values: any): TerraformData => {
+  const fieldPath = values.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
+  const envVars = get(values.spec, `${fieldPath}.spec.environmentVariables`)
+  const targets = get(values.spec, `${fieldPath}.spec.targets`) as MultiTypeInputType
+
+  if (values?.spec?.configuration?.type === 'Inline' || values?.spec?.cloudCliConfiguration) {
     const envMap: StringNGVariable[] = []
     if (Array.isArray(envVars)) {
       envVars.forEach(mapValue => {
@@ -307,7 +324,6 @@ export const onSubmitTerraformData = (values: any): TFFormData => {
       })
     }
 
-    const targets = values?.spec?.configuration?.spec?.targets as MultiTypeInputType
     const targetMap: ListType = []
     if (Array.isArray(targets)) {
       targets.forEach(target => {
@@ -317,54 +333,54 @@ export const onSubmitTerraformData = (values: any): TFFormData => {
       })
     }
 
-    const connectorValue = values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef as any
-    const backendConfigConnectorValue = values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec
-      ?.connectorRef as any
+    const connectorValue = get(values.spec, `${fieldPath}.spec.configFiles.store.spec.connectorRef`) as any
+    const backendConfigConnectorValue = get(
+      values.spec,
+      `${fieldPath}.spec.backendConfig.spec.store.spec.connectorRef`
+    ) as any
 
-    const configObject: TerraformExecutionData = {
+    const configObject: any = {
       workspace: values?.spec?.configuration?.spec?.workspace,
       configFiles: {} as any
     }
-    if (values?.spec?.configuration?.spec?.backendConfig?.spec?.content) {
+    if (get(values.spec, `${fieldPath}.spec.backendConfig.spec.content`)) {
       configObject['backendConfig'] = {
         type: BackendConfigurationTypes.Inline,
         spec: {
-          content: values?.spec?.configuration?.spec?.backendConfig?.spec?.content
+          content: get(values.spec, `${fieldPath}.spec.backendConfig.spec.content`)
         }
       }
-    } else if (values?.spec?.configuration?.spec?.backendConfig?.spec?.store) {
-      if (values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type === 'Harness') {
-        configObject['backendConfig'] = { ...values?.spec?.configuration?.spec?.backendConfig }
+    } else if (get(values.spec, `${fieldPath}.spec.backendConfig.spec.store`)) {
+      if (get(values.spec, `${fieldPath}.spec.backendConfig.spec.store.type`) === 'Harness') {
+        configObject['backendConfig'] = { ...get(values.spec, `${fieldPath}.spec.backendConfig`) }
       } else {
-        if (values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef) {
+        if (backendConfigConnectorValue) {
           configObject['backendConfig'] = {
             type: BackendConfigurationTypes.Remote,
-            ...values.spec?.configuration?.spec?.backendConfig,
+            ...get(values.spec, `${fieldPath}.spec.backendConfig`),
             spec: {
               store: {
-                ...values.spec?.configuration?.spec?.backendConfig?.spec?.store,
+                ...get(values.spec, `${fieldPath}.spec.backendConfig.spec.store`),
                 type:
                   backendConfigConnectorValue?.connector?.type ||
-                  values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type,
+                  get(values.spec, `${fieldPath}.spec.backendConfig.spec.store.type`),
                 spec: {
-                  ...values.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec,
-                  connectorRef: values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
-                    ? getMultiTypeFromValue(
-                        values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
-                      ) === MultiTypeInputType.RUNTIME || !backendConfigConnectorValue?.value
-                      ? values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
+                  ...get(values.spec, `${fieldPath}.spec.backendConfig.spec.store.spec`),
+                  connectorRef:
+                    getMultiTypeFromValue(backendConfigConnectorValue) === MultiTypeInputType.RUNTIME ||
+                    !backendConfigConnectorValue?.value
+                      ? backendConfigConnectorValue
                       : backendConfigConnectorValue?.value
-                    : ''
                 }
               }
             }
           }
         } else {
-          unset(values?.spec?.configuration?.spec, 'backendConfig')
+          unset(get(values.spec, `${fieldPath}.spec`), 'backendConfig')
         }
       }
     } else {
-      unset(values?.spec?.configuration?.spec, 'backendConfig')
+      unset(get(values.spec, `${fieldPath}.spec`), 'backendConfig')
     }
 
     if (envMap.length) {
@@ -373,52 +389,61 @@ export const onSubmitTerraformData = (values: any): TFFormData => {
 
     if (targetMap.length) {
       configObject['targets'] = targetMap
-    } else if (getMultiTypeFromValue(values?.spec?.configuration?.spec?.targets) === MultiTypeInputType.RUNTIME) {
-      configObject['targets'] = values?.spec?.configuration?.spec?.targets
+    } else if (getMultiTypeFromValue(targets) === MultiTypeInputType.RUNTIME) {
+      configObject['targets'] = targets
     }
 
-    if (values?.spec?.configuration?.spec?.varFiles?.length) {
-      configObject['varFiles'] = values?.spec?.configuration?.spec?.varFiles
+    if (get(values.spec, `${fieldPath}.spec?.varFiles`)?.length) {
+      configObject['varFiles'] = get(values.spec, `${fieldPath}.spec?.varFiles`)
     } else {
-      unset(values?.spec?.configuration?.spec, 'varFiles')
+      unset(get(values.spec, `${fieldPath}.spec`), 'varFiles')
     }
 
-    if (
-      connectorValue ||
-      getMultiTypeFromValue(values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef) ===
-        MultiTypeInputType.RUNTIME
-    ) {
+    if (connectorValue || getMultiTypeFromValue(connectorValue) === MultiTypeInputType.RUNTIME) {
       configObject['configFiles'] = {
-        ...values.spec?.configuration?.spec?.configFiles,
+        ...get(values.spec, `${fieldPath}.spec.configFiles`),
         store: {
-          ...values.spec?.configuration?.spec?.configFiles?.store,
-          type: values?.spec?.configuration?.spec?.configFiles?.store?.type,
+          ...get(values.spec, `${fieldPath}.spec.configFiles.store`),
+          type: get(values.spec, `${fieldPath}.spec.configFiles.store.type`),
           spec: {
-            ...values.spec?.configuration?.spec?.configFiles?.store?.spec,
-            connectorRef: values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef
-              ? getMultiTypeFromValue(values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef) ===
-                  MultiTypeInputType.RUNTIME || !connectorValue?.value
-                ? values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef
+            ...get(values.spec, `${fieldPath}.spec.configFiles.store.spec`),
+            connectorRef:
+              getMultiTypeFromValue(connectorValue) === MultiTypeInputType.RUNTIME || !connectorValue?.value
+                ? connectorValue
                 : connectorValue?.value
-              : ''
           }
         }
       }
     }
 
-    if (values?.spec?.configuration?.spec?.configFiles?.store?.type === 'Harness') {
-      configObject['configFiles'] = { ...values?.spec?.configuration?.spec?.configFiles }
+    if (get(values.spec, `${fieldPath}.spec.configFiles.store.type`) === 'Harness') {
+      configObject['configFiles'] = { ...get(values.spec, `${fieldPath}.spec.configFiles`) }
     }
 
-    return {
-      ...values,
-      spec: {
-        ...values.spec,
-        provisionerIdentifier: values.spec?.provisionerIdentifier,
-        configuration: {
-          type: values?.spec?.configuration?.type,
-          spec: {
-            ...configObject
+    if (values.spec?.configuration) {
+      delete values.spec?.cloudCliConfiguration
+      return {
+        ...values,
+        spec: {
+          ...values.spec,
+          configuration: {
+            type: values?.spec?.configuration?.type,
+            spec: {
+              ...configObject
+            }
+          }
+        }
+      }
+    } else if (values?.spec?.cloudCliConfiguration) {
+      delete values.spec?.configuration
+      return {
+        ...values,
+        spec: {
+          ...values.spec,
+          cloudCliConfiguration: {
+            spec: {
+              ...configObject
+            }
           }
         }
       }
@@ -438,7 +463,8 @@ export const onSubmitTerraformData = (values: any): TFFormData => {
 }
 
 export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
-  const envVars = values.spec?.configuration?.environmentVariables
+  const fieldPath = values.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
+  const envVars = get(values.spec, `${fieldPath}.environmentVariables`)
   const envMap: StringNGVariable[] = []
   if (Array.isArray(envVars)) {
     envVars.forEach(mapValue => {
@@ -452,7 +478,7 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
     })
   }
 
-  const targets = values?.spec?.configuration?.targets as MultiTypeInputType
+  const targets = get(values.spec, `${fieldPath}.targets`) as MultiTypeInputType
   const targetMap: ListType = []
   if (Array.isArray(targets)) {
     targets.forEach(target => {
@@ -462,104 +488,101 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
     })
   }
 
-  const connectorValue = values?.spec?.configuration?.configFiles?.store?.spec?.connectorRef
-  const backendConfigConnectorValue = values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+  const connectorValue = get(values.spec, `${fieldPath}.configFiles.store.spec.connectorRef`)
+  const backendConfigConnectorValue = get(values.spec, `${fieldPath}.backendConfig.spec.store.spec.connectorRef`)
 
-  const configObject: TerraformPlanExecutionData = {
-    command: values?.spec?.configuration?.command,
-    workspace: values?.spec?.configuration?.workspace,
-    configFiles: {} as TerraformConfigFilesWrapper,
-    secretManagerRef: ''
+  const configObject: any = {
+    command: get(values.spec, `${fieldPath}.command`),
+    configFiles: {} as TerraformConfigFilesWrapper
   }
 
-  if (values?.spec?.configuration?.backendConfig?.spec?.content) {
+  if (get(values.spec, `${fieldPath}.backendConfig.spec.content`)) {
     configObject['backendConfig'] = {
       type: BackendConfigurationTypes.Inline,
       spec: {
-        content: values?.spec?.configuration?.backendConfig?.spec?.content
+        content: get(values.spec, `${fieldPath}.backendConfig.spec.content`)
       }
     }
-  } else if (values?.spec?.configuration?.backendConfig?.spec?.store?.spec) {
-    if (values?.spec?.configuration?.backendConfig?.spec?.store?.type === 'Harness') {
-      configObject['backendConfig'] = { ...values?.spec?.configuration?.backendConfig }
+  } else if (get(values.spec, `${fieldPath}.backendConfig.spec.store`)) {
+    if (get(values.spec, `${fieldPath}.backendConfig.spec.store.type`) === 'Harness') {
+      configObject['backendConfig'] = { ...get(values.spec, `${fieldPath}.backendConfig`) }
     } else {
-      if (values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef) {
+      if (backendConfigConnectorValue) {
         configObject['backendConfig'] = {
           type: BackendConfigurationTypes.Remote,
-          ...values.spec?.configuration?.backendConfig,
+          ...get(values.spec, `${fieldPath}.backendConfig`),
           spec: {
             store: {
-              ...values.spec?.configuration?.backendConfig?.spec?.store,
+              ...get(values.spec, `${fieldPath}.backendConfig.spec.store`),
               type:
                 backendConfigConnectorValue?.connector?.type ||
-                values?.spec?.configuration?.backendConfig?.spec?.store?.type,
+                get(values.spec, `${fieldPath}.backendConfig.spec.store.type`),
               spec: {
-                ...values.spec?.configuration?.backendConfig?.spec?.store?.spec,
-                connectorRef: values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
-                  ? getMultiTypeFromValue(
-                      values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
-                    ) === MultiTypeInputType.RUNTIME || !backendConfigConnectorValue?.value
-                    ? values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+                ...get(values.spec, `${fieldPath}.backendConfig.spec.store.spec`),
+                connectorRef:
+                  getMultiTypeFromValue(backendConfigConnectorValue) === MultiTypeInputType.RUNTIME ||
+                  !backendConfigConnectorValue?.value
+                    ? backendConfigConnectorValue
                     : backendConfigConnectorValue?.value
-                  : ''
               }
             }
           }
         }
       } else {
-        unset(values?.spec?.configuration, 'backendConfig')
+        unset(get(values.spec, `${fieldPath}`), 'backendConfig')
       }
     }
   } else {
-    unset(values?.spec?.configuration, 'backendConfig')
+    unset(get(values.spec, `${fieldPath}`), 'backendConfig')
   }
 
   if (envMap.length) {
     configObject['environmentVariables'] = envMap
-  } else if (getMultiTypeFromValue(values?.spec?.configuration?.environmentVariables) === MultiTypeInputType.RUNTIME) {
-    configObject['environmentVariables'] = values?.spec?.configuration?.environmentVariables
+  } else if (
+    getMultiTypeFromValue(get(values.spec, `${fieldPath}.environmentVariables`)) === MultiTypeInputType.RUNTIME
+  ) {
+    configObject['environmentVariables'] = get(values.spec, `${fieldPath}.environmentVariables`)
   }
 
   if (targetMap.length) {
     configObject['targets'] = targetMap
-  } else if (getMultiTypeFromValue(values?.spec?.configuration?.targets) === MultiTypeInputType.RUNTIME) {
-    configObject['targets'] = values?.spec?.configuration?.targets
+  } else if (getMultiTypeFromValue(get(values.spec, `${fieldPath}.targets`)) === MultiTypeInputType.RUNTIME) {
+    configObject['targets'] = get(values.spec, `${fieldPath}.targets`)
   }
 
-  if (values?.spec?.configuration?.varFiles?.length) {
-    configObject['varFiles'] = values?.spec?.configuration?.varFiles
+  if (get(values.spec, `${fieldPath}.varFiles`)?.length) {
+    configObject['varFiles'] = get(values.spec, `${fieldPath}.varFiles`)
   }
-  if (
-    connectorValue ||
-    getMultiTypeFromValue(values?.spec?.configuration?.configFiles?.store?.spec?.connectorRef) ===
-      MultiTypeInputType.RUNTIME
-  ) {
+
+  if (connectorValue || getMultiTypeFromValue(connectorValue) === MultiTypeInputType.RUNTIME) {
     configObject['configFiles'] = {
-      ...values.spec?.configuration?.configFiles,
+      ...get(values.spec, `${fieldPath}.configFiles`),
       store: {
-        ...values.spec?.configuration?.configFiles?.store,
-        type: values?.spec?.configuration?.configFiles?.store?.type,
+        ...get(values.spec, `${fieldPath}.configFiles.store`),
+        type: get(values.spec, `${fieldPath}.configFiles.store.type`),
         spec: {
-          ...values.spec?.configuration?.configFiles?.store?.spec,
-          connectorRef: values?.spec?.configuration?.configFiles?.store?.spec?.connectorRef
-            ? getMultiTypeFromValue(values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef) ===
-                MultiTypeInputType.RUNTIME || !connectorValue?.value
-              ? values?.spec?.configuration?.configFiles?.store?.spec?.connectorRef
+          ...get(values.spec, `${fieldPath}.configFiles.store.spec`),
+          connectorRef:
+            getMultiTypeFromValue(connectorValue) === MultiTypeInputType.RUNTIME || !connectorValue?.value
+              ? connectorValue
               : connectorValue?.value
-            : ''
         }
       }
     }
   }
 
-  if (values?.spec?.configuration?.configFiles?.store?.type === 'Harness') {
-    configObject['configFiles'] = { ...values?.spec?.configuration?.configFiles }
+  if (get(values.spec, `${fieldPath}.configFiles.store.type`) === 'Harness') {
+    configObject['configFiles'] = { ...get(values.spec, `${fieldPath}.configFiles`) }
   }
 
-  if (values?.spec?.configuration?.secretManagerRef) {
+  if (values.spec?.configuration?.secretManagerRef) {
     configObject['secretManagerRef'] = values?.spec?.configuration?.secretManagerRef
       ? values?.spec?.configuration?.secretManagerRef
       : ''
+  }
+
+  if (values.spec?.configuration?.workspace) {
+    configObject['workspace'] = values?.spec?.configuration?.workspace ? values?.spec?.configuration?.workspace : ''
   }
 
   if (values?.spec?.configuration?.exportTerraformPlanJson) {
@@ -574,13 +597,26 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
       : false
   }
 
-  return {
-    ...values,
-    spec: {
-      ...values.spec,
-
-      configuration: {
-        ...configObject
+  if (values.spec?.configuration) {
+    unset(values, 'spec.cloudCliConfiguration')
+    return {
+      ...values,
+      spec: {
+        ...values.spec,
+        configuration: {
+          ...configObject
+        }
+      }
+    }
+  } else {
+    unset(values, 'spec.configuration')
+    return {
+      ...values,
+      spec: {
+        ...values.spec,
+        cloudCliConfiguration: {
+          ...configObject
+        }
       }
     }
   }
@@ -590,4 +626,103 @@ export interface InlineVar {
     identifier: string
     spec: InlineTerraformVarFileSpec
   }
+}
+
+export const getTFPlanInitialValues = (data: TFPlanFormData): TFPlanFormData => {
+  const path = data.spec?.configuration
+    ? 'spec.configuration'
+    : data.spec?.cloudCliConfiguration
+    ? 'spec.cloudCliConfiguration'
+    : ''
+  const envVars = get(data, `${path}.environmentVariables`) as StringNGVariable[]
+  const isEnvRunTime = getMultiTypeFromValue(envVars as any) === MultiTypeInputType.RUNTIME
+  const isTargetRunTime = getMultiTypeFromValue(get(data, `${path}.targets`) as any) === MultiTypeInputType.RUNTIME
+
+  const tfPlanSpec = {
+    ...get(data, path),
+    command: get(data, `${path}.command`, CommandTypes.Apply),
+    targets: !isTargetRunTime
+      ? Array.isArray(get(data, `${path}.targets`))
+        ? (get(data, `${path}.targets`) as string[]).map((target: string) => ({
+            value: target,
+            id: uuid()
+          }))
+        : [{ value: '', id: uuid() }]
+      : get(data, `${path}.targets`),
+    environmentVariables: !isEnvRunTime
+      ? Array.isArray(envVars)
+        ? envVars.map(variable => ({
+            key: variable.name || '',
+            value: variable?.value,
+            id: uuid()
+          }))
+        : [{ key: '', value: '', id: uuid() }]
+      : get(data, `${path}.environmentVariables`)
+  }
+
+  return {
+    ...data,
+    ...(!isEmpty(path) && {
+      spec: {
+        ...data.spec,
+        ...(path === 'spec.configuration'
+          ? { configuration: { ...tfPlanSpec } }
+          : { cloudCliConfiguration: { ...tfPlanSpec } })
+      }
+    })
+  }
+}
+
+export const getTerraformInitialValues = (data: any): TerraformData => {
+  const path = data.spec?.configuration
+    ? 'spec.configuration'
+    : data.spec?.cloudCliConfiguration
+    ? 'spec.cloudCliConfiguration'
+    : ''
+  const envVars = get(data, `${path}.spec.environmentVariables`) as StringNGVariable[]
+  const terraformSpec = {
+    ...get(data, `${path}.spec`),
+    targets: Array.isArray(get(data, `${path}.spec.targets`))
+      ? get(data, `${path}.spec.targets`).map((target: any) => ({
+          value: target,
+          id: uuid()
+        }))
+      : [{ value: '', id: uuid() }],
+    environmentVariables: Array.isArray(get(data, `${path}.spec.environmentVariables`))
+      ? envVars.map(variable => ({
+          key: variable.name,
+          value: variable.value,
+          id: uuid()
+        }))
+      : [{ key: '', value: '', id: uuid() }]
+  }
+
+  return {
+    ...data,
+    ...(!isEmpty(path) && {
+      spec: {
+        ...data.spec,
+        ...(path === 'spec.configuration'
+          ? {
+              configuration: {
+                type: defaultTo(data.spec?.configuration?.type, ConfigurationTypes.Inline),
+                spec: { ...terraformSpec }
+              }
+            }
+          : { cloudCliConfiguration: { spec: { ...terraformSpec } } })
+      }
+    })
+  }
+}
+
+export const provisionerIdentifierValidation = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> => {
+  return Yup.lazy((value): Yup.Schema<unknown> => {
+    if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+      return IdentifierSchemaWithOutName(getString, {
+        requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
+        regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
+      })
+    }
+    return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
+  })
 }

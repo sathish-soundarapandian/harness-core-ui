@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, isNull, isUndefined, omitBy } from 'lodash-es'
+import { cloneDeep, isNull, isUndefined, omitBy, merge } from 'lodash-es'
 import type { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { InputSetGitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { InputSetSummaryResponse } from 'services/pipeline-ng'
 import { changeEmptyValuesToRunTimeInput } from './stageHelpers'
 import type { InputSetDTO } from './types'
@@ -56,4 +57,15 @@ export const hasStoreTypeMismatch = (
   isEdit: boolean
 ): boolean => {
   return isEdit && pipelineStoreType !== inputSetStoreType
+}
+
+export const getInputSetGitDetails = (
+  pipelineGitParams: InputSetGitQueryParams,
+  inputSetGitParams: InputSetGitQueryParams
+): InputSetGitQueryParams => {
+  return merge(pipelineGitParams, inputSetGitParams)
+}
+
+export const shouldDisableGitDetailsFields = (isEdit: boolean, differentRepoAllowedSettings?: string): boolean => {
+  return !isEdit && differentRepoAllowedSettings !== 'true'
 }

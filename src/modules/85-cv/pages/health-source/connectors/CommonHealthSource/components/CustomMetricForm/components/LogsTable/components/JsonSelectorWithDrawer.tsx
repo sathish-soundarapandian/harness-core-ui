@@ -3,7 +3,6 @@ import { useFormikContext } from 'formik'
 import {
   AllowedTypes,
   Container,
-  FormError,
   Layout,
   MultiTypeInputType,
   NoDataCard,
@@ -12,6 +11,7 @@ import {
 } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
+import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import JsonSelector from '@cv/components/JsonSelector/JsonSelector'
@@ -30,6 +30,7 @@ import JsonSelectorButton from './LogsTableComponent/components/JsonSelectorButt
 import JsonDrawerMultiType from './LogsTableComponent/components/JsonDrawerMultiType'
 import type { LogFieldsMultiTypeState } from '../../../CustomMetricForm.types'
 import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
+import { getSelectedPath } from './JsonSelectorWithDrawer.utils'
 import css from './JsonSelectorWithDrawer.module.scss'
 
 interface JsonSelectorWithDrawerProps {
@@ -39,23 +40,26 @@ interface JsonSelectorWithDrawerProps {
   allowedTypes?: AllowedTypes
   multiTypeRecord: LogFieldsMultiTypeState | null
   setMultiTypeRecord: React.Dispatch<React.SetStateAction<LogFieldsMultiTypeState | null>>
+  selectOnlyLastKey?: boolean
+  showExactJsonPath?: boolean
 }
 
 export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProps): JSX.Element | null {
   const { getString } = useStrings()
-
   const { isTemplate, sourceData } = useContext(SetupSourceTabsContext)
-
-  const { values, setFieldValue, setValues, errors } = useFormikContext<CommonCustomMetricFormikInterface>()
-
+  const { values, setFieldValue, setValues } = useFormikContext<CommonCustomMetricFormikInterface>()
   const { isQueryRuntimeOrExpression } = useCommonHealthSource()
-
   const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
-
-  const { fieldMappings, disableFields, jsonData, multiTypeRecord, setMultiTypeRecord } = props
-
+  const {
+    fieldMappings,
+    disableFields,
+    jsonData,
+    multiTypeRecord,
+    setMultiTypeRecord,
+    selectOnlyLastKey,
+    showExactJsonPath
+  } = props
   const filteredFieldsMapping = fieldMappings?.filter(field => field.type === FIELD_ENUM.JSON_SELECTOR)
-
   const isDisabled = disableFields
 
   useEffect(() => {
@@ -123,7 +127,8 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
               json={jsonData || {}}
               showSelectButton
               onPathSelect={(pathSelected: JsonRawSelectedPathType) => {
-                drawerProps?.formikFieldUpdateFn(pathSelected.key)
+                const path = getSelectedPath(selectOnlyLastKey, pathSelected, showExactJsonPath)
+                drawerProps?.formikFieldUpdateFn(path)
                 hideHealthSourceDrawer()
               }}
             />
@@ -163,7 +168,7 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
         return (
           <Layout.Vertical key={field.identifier} spacing={'small'} style={{ marginBottom: 'var(--spacing-medium)' }}>
             <Text style={{ fontSize: 13, fontWeight: 'normal' }}>{field.label}</Text>
-            {isTemplate ? (
+            {isTemplate && field?.isTemplateSupportEnabled ? (
               <JsonDrawerMultiType
                 label={field.label}
                 name={field.identifier}
@@ -172,6 +177,9 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
                 value={values[field.identifier] as string}
                 key={multiTypeRecord?.[field.identifier] as string}
                 disabled={isDisabled}
+                displayTextclassName={classNames({
+                  [css.inputText]: Boolean(values[field.identifier])
+                })}
                 className={css.jsonSelectorButton}
                 multiType={multiTypeRecord?.[field.identifier] as MultiTypeInputType}
                 setMultiType={handleTemplateTypeUpdate}
@@ -179,14 +187,15 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
             ) : (
               <JsonSelectorButton
                 className={css.jsonSelectorButton}
-                displayText={(values[field.identifier] as string) || field.label}
+                displayTextclassName={classNames({
+                  [css.inputText]: Boolean(values[field.identifier])
+                })}
+                displayText={(values[field.identifier] as string) || `Select ${field.label}`}
                 onClick={() => openDrawer(field.identifier, field.label)}
                 disabled={isDisabled}
                 icon="plus"
+                name={field.identifier}
               />
-            )}
-            {errors[field.identifier] && (
-              <FormError name={field.identifier} errorMessage={getString('fieldRequired', { field: field.label })} />
             )}
           </Layout.Vertical>
         )

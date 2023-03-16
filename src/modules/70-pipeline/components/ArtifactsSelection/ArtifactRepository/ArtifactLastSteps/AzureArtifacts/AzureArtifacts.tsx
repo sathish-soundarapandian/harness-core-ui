@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import {
   Formik,
   Layout,
@@ -25,7 +25,8 @@ import { FontVariation } from '@harness/design-system'
 import { defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { useStrings } from 'framework/strings'
+import type { FormikProps } from 'formik'
+import { StringKeys, useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 
@@ -43,8 +44,6 @@ import {
 import {
   getConnectorIdValue,
   getArtifactFormData,
-  helperTextData,
-  isFieldFixedAndNonEmpty,
   shouldHideHeaderAndNavBtns,
   hasFixedDefiniteValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -54,10 +53,12 @@ import type {
   ImagePathProps
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { getHelpeTextForTags, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { isValueFixed } from '@common/utils/utils'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor, scopeOptions, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -68,21 +69,26 @@ export const packageTypeOptions: SelectOption[] = [
   { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
 ]
 
-function FormComponent({
-  context,
-  expressions,
-  allowableTypes,
-  prevStepData,
-  selectedArtifact,
-  previousStep,
-  isReadonly = false,
-  formik,
-  isMultiArtifactSource,
-  formClassName = ''
-}: any): React.ReactElement {
+function FormComponent(
+  props: StepProps<ConnectorConfigDTO> & ImagePathProps<AzureArtifactsInitialValues> & { formik: FormikProps<any> }
+): React.ReactElement {
+  const {
+    context,
+    expressions,
+    allowableTypes,
+    prevStepData,
+    previousStep,
+    isReadonly = false,
+    formik,
+    isMultiArtifactSource,
+    formClassName = ''
+  } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const [feedsData, setFeedsData] = React.useState<SelectOption[]>([])
+  const [packageData, setPackageData] = React.useState<SelectOption[]>([])
+  const [versionData, setVersionData] = React.useState<SelectOption[]>([])
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -91,20 +97,17 @@ function FormComponent({
     branch
   }
 
-  const connectorRefValue = defaultTo(getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier), '')
+  const connectorRefValue = getConnectorIdValue(prevStepData)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const projectValue = defaultTo(getGenuineValue(formik.values.project), '')
   const feedValue = defaultTo(getGenuineValue(formik.values.feed), '')
   const packageValue = defaultTo(getGenuineValue(formik.values.package), '')
   const packageTypeValue = defaultTo(getGenuineValue(formik.values.packageType), '')
 
-  const getConnectorRefQueryData = (): string => {
-    return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
-  }
-
-  const getItems = (isFetching: boolean, label: string, items: SelectOption[]): SelectOption[] => {
+  const getItems = (isFetching: boolean, label: StringKeys, items: SelectOption[]): SelectOption[] => {
     if (isFetching) {
-      return [{ label: `Loading ${label}...`, value: `Loading ${label}...` }]
+      const labelStr = getString('common.loadingFieldOptions', { fieldName: getString(label) })
+      return [{ label: labelStr, value: labelStr }]
     }
     return defaultTo(items, [])
   }
@@ -124,7 +127,7 @@ function FormComponent({
 
   const projectItems: SelectOption[] = useMemo(() => {
     return (
-      projectsResponse?.data?.map(
+      /* istanbul ignore next */ projectsResponse?.data?.map(
         (project: AzureDevopsProject) =>
           ({
             value: defaultTo(project.name, ''),
@@ -151,7 +154,7 @@ function FormComponent({
 
   const feedItems: SelectOption[] = useMemo(() => {
     return (
-      feedsResponse?.data?.map(
+      /* istanbul ignore next */ feedsResponse?.data?.map(
         (feed: AzureArtifactsFeed) =>
           ({
             value: defaultTo(feed.name, ''),
@@ -160,6 +163,12 @@ function FormComponent({
       ) || []
     )
   }, [feedsResponse?.data])
+
+  useEffect(() => {
+    if (feedItems && feedItems.length) {
+      setFeedsData(feedItems)
+    }
+  }, [feedsResponse?.data, feedItems])
 
   const {
     refetch: refetchPackages,
@@ -179,7 +188,7 @@ function FormComponent({
 
   const packageItems: SelectOption[] = useMemo(() => {
     return (
-      packagesResponse?.data?.map(
+      /* istanbul ignore next */ packagesResponse?.data?.map(
         (packageItem: AzureArtifactsPackage) =>
           ({
             value: defaultTo(packageItem.name, ''),
@@ -188,6 +197,12 @@ function FormComponent({
       ) || []
     )
   }, [packagesResponse?.data])
+
+  React.useEffect(() => {
+    if (packageItems && packagesResponse?.data) {
+      setPackageData(packageItems)
+    }
+  }, [packagesResponse?.data, packageItems])
 
   const {
     refetch: refetchVersions,
@@ -208,7 +223,7 @@ function FormComponent({
 
   const versionItems: SelectOption[] = useMemo(() => {
     return (
-      versionResponse?.data?.map(
+      /* istanbul ignore next */ versionResponse?.data?.map(
         (buildItem: BuildDetails) =>
           ({
             value: defaultTo(buildItem.number, ''),
@@ -217,6 +232,12 @@ function FormComponent({
       ) || []
     )
   }, [versionResponse?.data])
+
+  React.useEffect(() => {
+    if (versionResponse?.data && versionItems) {
+      setVersionData(versionItems)
+    }
+  }, [versionResponse?.data, versionItems])
 
   const versionItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingVersions} />
@@ -230,28 +251,6 @@ function FormComponent({
   const projectItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingProjects} />
   ))
-
-  const isFeedDisabled = (): boolean => {
-    if (formik.values?.scope === 'org') {
-      return false
-    }
-    return !isFieldFixedAndNonEmpty(formik.values?.project)
-  }
-
-  const isVersionFieldDisabled = (): boolean => {
-    return !isFieldFixedAndNonEmpty(formik.values?.feed) || !isFieldFixedAndNonEmpty(formik.values?.package)
-  }
-
-  const getVersionFieldHelperText = () => {
-    return (
-      getMultiTypeFromValue(formik.values.version) === MultiTypeInputType.FIXED &&
-      getHelpeTextForTags(
-        helperTextData(selectedArtifact as ArtifactType, formik, getConnectorRefQueryData()),
-        getString,
-        false
-      )
-    )
-  }
 
   const canFetchProject = hasFixedDefiniteValue(connectorRefValue)
   const isProjectFixed = () => {
@@ -271,6 +270,12 @@ function FormComponent({
     hasFixedDefiniteValue(feedValue) ||
     hasFixedDefiniteValue(packageValue)
 
+  const resetFormFields = (): void => {
+    setFeedsData([])
+    setPackageData([])
+    setVersionData([])
+  }
+
   return (
     <FormikForm>
       <div className={cx(css.artifactForm, formClassName)}>
@@ -281,15 +286,17 @@ function FormComponent({
             name="scope"
             label={getString('common.scopeLabel')}
             items={scopeOptions}
-            onChange={() => {
-              formik.setFieldValue('project', undefined)
-            }}
+            onChange={
+              /* istanbul ignore next */ () => {
+                formik.setFieldValue('project', undefined)
+              }
+            }
           />
         </div>
         {formik.values?.scope === 'project' && (
           <div className={css.imagePathContainer}>
             <FormInput.MultiTypeInput
-              selectItems={getItems(fetchingProjects, 'Projects', projectItems)}
+              selectItems={getItems(fetchingProjects, 'projectLabel', projectItems)}
               label={getString('projectLabel')}
               placeholder={getString('pipeline.artifactsSelection.projectPlaceholder')}
               name="project"
@@ -299,7 +306,7 @@ function FormComponent({
                 allowableTypes,
                 selectProps: {
                   itemRenderer: projectItemRenderer,
-                  items: getItems(fetchingProjects, 'Projects', projectItems),
+                  items: getItems(fetchingProjects, 'projectLabel', projectItems),
                   allowCreatingNewItems: true,
                   addClearBtn: true
                 },
@@ -319,32 +326,31 @@ function FormComponent({
                     }
                   })
                 },
-                onChange: (e: any) => {
-                  formik.setValues({
-                    ...formik.values,
-                    feed:
-                      getMultiTypeFromValue(formik?.values?.feed) === MultiTypeInputType.FIXED
-                        ? ''
-                        : formik?.values?.feed,
-                    package:
-                      getMultiTypeFromValue(formik?.values?.feed) === MultiTypeInputType.FIXED
-                        ? ''
-                        : formik?.values?.package
-                  })
-
-                  formik.setFieldValue('project', e?.value)
+                onChange: (value: any) => {
+                  const updatedValue = (value?.value ?? value) as string
+                  if (formik.values.project !== updatedValue) {
+                    formik.setValues({
+                      ...formik.values,
+                      project: updatedValue,
+                      ...(isValueFixed(formik.values?.feed) && { feed: '' }),
+                      ...(isValueFixed(formik.values?.package) && { package: '' }),
+                      ...(isValueFixed(formik.values?.version) && { version: '' })
+                    })
+                    resetFormFields()
+                  }
                 }
               }}
             />
             {getMultiTypeFromValue(formik.values.project) === MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={getItems(fetchingProjects, 'projectLabel', projectItems)}
+                loading={fetchingProjects}
                 style={{ marginTop: 22 }}
                 value={defaultTo(formik.values.project, '')}
                 type="String"
                 variableName="project"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('project', value)}
                 isReadonly={isReadonly}
               />
@@ -353,8 +359,8 @@ function FormComponent({
         )}
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
-            selectItems={getItems(fetchingFeeds, 'Feeds', feedItems)}
-            disabled={isFeedDisabled()}
+            selectItems={getItems(fetchingFeeds, 'pipeline.artifactsSelection.feed', feedItems)}
+            disabled={isReadonly}
             label={getString('pipeline.artifactsSelection.feed')}
             placeholder={getString('pipeline.artifactsSelection.feedPlaceholder')}
             name="feed"
@@ -371,7 +377,7 @@ function FormComponent({
                   />
                 ),
                 itemRenderer: feedItemRenderer,
-                items: getItems(fetchingFeeds, 'Feeds', feedItems),
+                items: getItems(fetchingFeeds, 'pipeline.artifactsSelection.feed', feedsData),
                 allowCreatingNewItems: true,
                 addClearBtn: true
               },
@@ -392,32 +398,31 @@ function FormComponent({
                   }
                 })
               },
-              onChange: (e: any) => {
-                formik.setValues({
-                  ...formik.values,
-                  version:
-                    getMultiTypeFromValue(formik?.values?.version) === MultiTypeInputType.FIXED
-                      ? ''
-                      : formik?.values?.version,
-                  package:
-                    getMultiTypeFromValue(formik?.values?.package) === MultiTypeInputType.FIXED
-                      ? ''
-                      : formik?.values?.package
-                })
-
-                formik.setFieldValue('feed', e?.value)
+              onChange: (value: any) => {
+                const updatedValue = (value?.value ?? value) as string
+                if (formik.values.feed !== updatedValue) {
+                  formik.setValues({
+                    ...formik.values,
+                    feed: updatedValue,
+                    ...(isValueFixed(formik.values?.package) && { package: '' }),
+                    ...(isValueFixed(formik.values?.version) && { version: '' })
+                  })
+                  setPackageData([])
+                  setVersionData([])
+                }
               }
             }}
           />
           {getMultiTypeFromValue(formik.values.feed) === MultiTypeInputType.RUNTIME && (
-            <ConfigureOptions
+            <SelectConfigureOptions
+              options={getItems(fetchingFeeds, 'pipeline.artifactsSelection.feed', feedItems)}
+              loading={fetchingFeeds}
               style={{ marginTop: 22 }}
               value={defaultTo(formik.values.feed, '')}
               type="String"
               variableName="feed"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('feed', value)}
               isReadonly={isReadonly}
             />
@@ -439,8 +444,8 @@ function FormComponent({
         </div>
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
-            selectItems={getItems(fetchingPackages, 'Packages', packageItems)}
-            disabled={!isFieldFixedAndNonEmpty(formik.values?.feed)}
+            selectItems={getItems(fetchingPackages, 'pipeline.testsReports.callgraphField.package', packageItems)}
+            disabled={isReadonly}
             label={getString('pipeline.artifactsSelection.packageName')}
             placeholder={getString('pipeline.artifactsSelection.packageNamePlaceholder')}
             name="package"
@@ -457,7 +462,7 @@ function FormComponent({
                   />
                 ),
                 itemRenderer: packageItemRenderer,
-                items: getItems(fetchingPackages, 'Packages', packageItems),
+                items: getItems(fetchingPackages, 'pipeline.testsReports.callgraphField.package', packageData),
                 allowCreatingNewItems: true,
                 addClearBtn: true
               },
@@ -479,18 +484,30 @@ function FormComponent({
                     feed: feedValue || ''
                   }
                 })
+              },
+              onChange: (value: any) => {
+                const updatedValue = (value?.value ?? value) as string
+                if (formik.values.package !== updatedValue) {
+                  formik.setValues({
+                    ...formik.values,
+                    package: updatedValue,
+                    ...(isValueFixed(formik.values?.version) && { version: '' })
+                  })
+                  setVersionData([])
+                }
               }
             }}
           />
           {getMultiTypeFromValue(formik.values.package) === MultiTypeInputType.RUNTIME && (
-            <ConfigureOptions
+            <SelectConfigureOptions
+              options={getItems(fetchingPackages, 'pipeline.testsReports.callgraphField.package', packageItems)}
+              loading={fetchingPackages}
               style={{ marginTop: 22 }}
               value={defaultTo(formik.values.package, '')}
               type="String"
               variableName="package"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('package', value)}
               isReadonly={isReadonly}
             />
@@ -508,13 +525,12 @@ function FormComponent({
         {formik.values.versionType === 'value' ? (
           <div className={css.imagePathContainer}>
             <FormInput.MultiTypeInput
-              selectItems={getItems(fetchingVersions, 'Versions', versionItems)}
-              disabled={isVersionFieldDisabled()}
+              selectItems={getItems(fetchingVersions, 'version', versionItems)}
+              disabled={isReadonly}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               name="version"
               useValue
-              helperText={getVersionFieldHelperText()}
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
@@ -527,7 +543,7 @@ function FormComponent({
                     />
                   ),
                   itemRenderer: versionItemRenderer,
-                  items: getItems(fetchingVersions, 'Versions', versionItems),
+                  items: getItems(fetchingVersions, 'version', versionData),
                   allowCreatingNewItems: true,
                   addClearBtn: true
                 },
@@ -553,14 +569,15 @@ function FormComponent({
               }}
             />
             {getMultiTypeFromValue(formik.values.version) === MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={getItems(fetchingVersions, 'version', versionItems)}
+                loading={fetchingVersions}
                 style={{ marginTop: 22 }}
                 value={defaultTo(formik.values.version, '')}
                 type="String"
                 variableName="version"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('version', value)}
                 isReadonly={isReadonly}
               />
@@ -586,9 +603,9 @@ function FormComponent({
                 variableName="versionRegex"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('versionRegex', value)}
                 isReadonly={isReadonly}
+                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
               />
             )}
           </div>
@@ -670,7 +687,7 @@ export function AzureArtifacts(
   const schemaObject = {
     scope: Yup.string().required(getString('fieldRequired', { field: getString('common.scopeLabel') })),
     project: Yup.string().when('scope', {
-      is: val => val === 'project',
+      is: 'project',
       then: Yup.string()
         .trim()
         .required(getString('fieldRequired', { field: getString('projectLabel') }))

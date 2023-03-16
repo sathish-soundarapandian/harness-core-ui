@@ -245,7 +245,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                 <FormMultiTypeConnectorField
                   name="connectorRef"
                   label={getString('connector')}
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   multiTypeProps={{ expressions, allowableTypes }}
@@ -279,7 +279,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                     variableName="connectorRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         formik.setFieldValue('connectorRef', value)
@@ -358,7 +357,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       variableName="subscriptionId"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={
                         /* istanbul ignore next */ value => {
                           formik.setFieldValue('subscriptionId', value)
@@ -425,7 +423,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       variableName="resourceGroup"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={
                         /* istanbul ignore next */ value => {
                           formik.setFieldValue('resourceGroup', value)

@@ -156,8 +156,7 @@ export const validateMapping = ({
   createdMetrics,
   selectedMetricIndex,
   getString,
-  mappedMetrics,
-  isMetricThresholdEnabled
+  mappedMetrics
 }: ValidateMappingInterface): Record<keyof AppDynamicsFomikFormInterface | string, string> => {
   let errors = {} as Record<keyof AppDynamicsFomikFormInterface | string, string>
 
@@ -194,9 +193,7 @@ export const validateMapping = ({
     )
   }
 
-  if (isMetricThresholdEnabled) {
-    validateMetricThresholds(errors, values, getString)
-  }
+  validateMetricThresholds(errors, values, getString)
 
   return errors
 }
@@ -429,10 +426,7 @@ export const convertFullPathToBaseAndMetric = (
   return { derivedBasePath, derivedMetricPath }
 }
 
-export const createAppDynamicsPayload = (
-  formData: any,
-  isMetricThresholdEnabled: boolean
-): UpdatedHealthSource | null => {
+export const createAppDynamicsPayload = (formData: any): UpdatedHealthSource | null => {
   const specPayload = {
     applicationName: (formData?.appdApplication?.label as string) || (formData.appdApplication as string),
     tierName: (formData?.appDTier?.label as string) || (formData.appDTier as string),
@@ -500,7 +494,7 @@ export const createAppDynamicsPayload = (
       ...specPayload,
       feature: 'Application Monitoring' as string,
       connectorRef: (formData?.connectorRef?.value as string) || (formData.connectorRef as string),
-      metricPacks: getMetricPacksForPayload(formData, isMetricThresholdEnabled)
+      metricPacks: getMetricPacksForPayload(formData)
     }
   }
 }
@@ -595,17 +589,13 @@ export const createAppDFormData = (
   }
 }
 
-export const initializeNonCustomFields = (
-  appDynamicsData: AppDynamicsData,
-  isMetricThresholdEnabled: boolean
-): NonCustomFeildsInterface => {
-  const ignoreThresholds = isMetricThresholdEnabled
-    ? getFilteredMetricThresholdValues(ThresholdTypes.IgnoreThreshold, appDynamicsData.metricPacks)
-    : []
+export const initializeNonCustomFields = (appDynamicsData: AppDynamicsData): NonCustomFeildsInterface => {
+  const ignoreThresholds = getFilteredMetricThresholdValues(ThresholdTypes.IgnoreThreshold, appDynamicsData.metricPacks)
 
-  const failFastThresholds = isMetricThresholdEnabled
-    ? getFilteredMetricThresholdValues(ThresholdTypes.FailImmediately, appDynamicsData.metricPacks)
-    : []
+  const failFastThresholds = getFilteredMetricThresholdValues(
+    ThresholdTypes.FailImmediately,
+    appDynamicsData.metricPacks
+  )
 
   return {
     appdApplication: appDynamicsData.applicationName || '',

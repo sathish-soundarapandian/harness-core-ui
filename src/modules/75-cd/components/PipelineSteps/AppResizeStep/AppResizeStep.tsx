@@ -6,7 +6,18 @@
  */
 
 import React from 'react'
-import { IconName, Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
+import {
+  IconName,
+  Formik,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes,
+  Container,
+  Icon,
+  Text
+} from '@harness/uicore'
+import { Intent, FontVariation, Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
@@ -24,7 +35,7 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -59,6 +70,21 @@ interface AppResizeProps {
   path?: string
 }
 
+const showOldInstancesZeroValueWarning = (getString: UseStringsReturn['getString']): JSX.Element => (
+  /* istanbul ignore next */ <div className={cx(stepCss.formGroup)}>
+    <Container
+      id="warning-zero-oldInstances"
+      intent="warning"
+      padding={{ left: 'small' }}
+      flex={{ justifyContent: 'flex-start' }}
+    >
+      <Icon name="warning-icon" intent={Intent.WARNING} margin={{ right: 'small' }} />
+      <Text font={{ variation: FontVariation.FORM_HELP }} color={Color.ORANGE_900}>
+        {getString('cd.steps.tas.zeroOldInstancesWarning')}
+      </Text>
+    </Container>
+  </div>
+)
 function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<AppResizeData>): React.ReactElement {
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, stepViewType, onChange } = props
   const { getString } = useStrings()
@@ -145,7 +171,6 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
                     variableName={getString('cd.steps.tas.totalInstances')}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         setFieldValue('newAppInstances', value)
@@ -172,7 +197,6 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
                     variableName={getString('cd.steps.tas.oldAppInstances')}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         setFieldValue('oldAppInstances', value)
@@ -182,6 +206,7 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
                   />
                 )}
               </div>
+              {formik?.values?.spec?.oldAppInstances?.spec?.value === 0 && showOldInstancesZeroValueWarning(getString)}
             </>
           )
         }}
@@ -190,14 +215,22 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
   )
 }
 
-const AppResizeInputStep: React.FC<AppResizeProps> = ({ template, readonly, path, allowableTypes, stepViewType }) => {
+const AppResizeInputStep: React.FC<AppResizeProps> = ({
+  template,
+  readonly,
+  path,
+  allowableTypes,
+  stepViewType,
+  initialValues
+}) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
+  const isTemplateUsageView = stepViewType === StepViewType.TemplateUsage
   return (
     <>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeDurationField
             multiTypeDurationProps={{
               configureOptionsProps: {
@@ -214,7 +247,7 @@ const AppResizeInputStep: React.FC<AppResizeProps> = ({ template, readonly, path
         </div>
       ) : null}
       {getMultiTypeFromValue(template?.spec?.newAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup)}>
+        <div className={cx(stepCss.formGroup, { [stepCss.md]: !isTemplateUsageView })}>
           <FormInstanceDropdown
             expressions={expressions}
             label={getString('cd.steps.tas.totalInstances')}
@@ -231,7 +264,7 @@ const AppResizeInputStep: React.FC<AppResizeProps> = ({ template, readonly, path
       )}
 
       {getMultiTypeFromValue(template?.spec?.oldAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup)}>
+        <div className={cx(stepCss.formGroup, { [stepCss.md]: !isTemplateUsageView })}>
           <FormInstanceDropdown
             expressions={expressions}
             label={getString('cd.steps.tas.oldAppInstances')}
@@ -246,6 +279,8 @@ const AppResizeInputStep: React.FC<AppResizeProps> = ({ template, readonly, path
           />
         </div>
       )}
+
+      {initialValues?.spec?.oldAppInstances?.spec?.value === 0 && showOldInstancesZeroValueWarning(getString)}
     </>
   )
 }

@@ -14,7 +14,8 @@ import {
   Text,
   useConfirmationDialog,
   useToaster,
-  Dialog
+  Dialog,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -61,6 +62,8 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
   const history = useHistory()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
+  const [hideReferencedByButton, setHideReferencedByButton] = useState(false)
+  const [customErrorMessage, setCustomErrorMessage] = useState<string | undefined>()
 
   const { mutate: deleteService } = useDeleteServiceV2({})
 
@@ -114,6 +117,11 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
       }
     } catch (err: any) {
       if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+        setCustomErrorMessage(undefined)
+        openReferenceErrorDialog()
+      } else if (err?.data?.code === 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION') {
+        setCustomErrorMessage(getErrorInfoFromErrorObject(err))
+        setHideReferencedByButton(true)
         openReferenceErrorDialog()
       } else {
         showError(getRBACErrorMessage(err))
@@ -139,6 +147,8 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
       type: ResourceType.SERVICE,
       name: defaultTo(service?.name, '')
     },
+    hideReferencedByButton,
+    customErrorMessage,
     redirectToReferencedBy,
     forceDeleteCallback: isForceDeletedAllowed ? () => deleteHandler(true) : undefined
   })

@@ -192,7 +192,6 @@ function FormContent({
             variableName="spec.connectorRef"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={/* istanbul ignore next */ value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
             connectorReferenceFieldProps={{

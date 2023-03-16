@@ -179,3 +179,91 @@ exports[`useRbacError testRBACError rbac errors 3`] = `
   </m>
 </Layout.Vertical>
 `;
+
+exports[`useRbacError testRBACError with multiple errors 1`] = `
+<Layout.Vertical>
+  <m
+    color="grey800"
+    font={
+      Object {
+        "size": "small",
+        "weight": "semi-bold",
+      }
+    }
+  >
+    rbac.unauthorizedText 
+  </m>
+  <Layout.Vertical
+    className="main"
+    padding="small"
+    spacing="small"
+  >
+    <m
+      color="grey800"
+      font={
+        Object {
+          "size": "small",
+        }
+      }
+    >
+      1. "core_connector_view" rbac.permissionOn 
+      <span
+        className="textToLowercase"
+      >
+         pipelines
+      </span>
+      <span>
+         rbac.in rbac.org "testOrg"
+      </span>
+    </m>
+  </Layout.Vertical>
+  <Layout.Vertical
+    className="main"
+    padding="small"
+    spacing="small"
+  >
+    <m
+      color="grey800"
+      font={
+        Object {
+          "size": "small",
+        }
+      }
+    >
+      2. "core_connector_edit" rbac.permissionOn 
+      <span
+        className="textToLowercase"
+      >
+         pipelines
+      </span>
+      <span>
+         rbac.in rbac.project "proj123"
+      </span>
+    </m>
+  </Layout.Vertical>
+  <Layout.Vertical
+    className="main"
+    padding="small"
+    spacing="small"
+  >
+    <m
+      color="grey800"
+      font={
+        Object {
+          "size": "small",
+        }
+      }
+    >
+      3. "core_connector_delete" rbac.permissionOn 
+      <span
+        className="textToLowercase"
+      >
+         pipelines
+      </span>
+      <span>
+         rbac.in rbac.org "testOrg3"
+      </span>
+    </m>
+  </Layout.Vertical>
+</Layout.Vertical>
+`;

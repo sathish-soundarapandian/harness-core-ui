@@ -12,7 +12,7 @@ import { defaultTo } from 'lodash-es'
 import { Container, Layout, useToaster } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { EnvironmentResponse, useDeleteEnvironmentV2 } from 'services/cd-ng'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -32,7 +32,6 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
-  const { CDC_ENVIRONMENT_DASHBOARD_NG } = useFeatureFlags()
   const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
   const [curEnvId, setCurEnvId] = useState('')
 
@@ -105,10 +104,7 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
         projectIdentifier,
         module,
         environmentIdentifier: defaultTo(id, ''),
-        sectionId:
-          CDC_ENVIRONMENT_DASHBOARD_NG && projectIdentifier
-            ? EnvironmentDetailsTab.SUMMARY
-            : EnvironmentDetailsTab.CONFIGURATION
+        sectionId: projectIdentifier ? EnvironmentDetailsTab.SUMMARY : EnvironmentDetailsTab.CONFIGURATION
       })
     )
   }

@@ -68,6 +68,8 @@ export interface PipelineCreateProps {
   isReadonly: boolean
 }
 
+const defaultStoreType = StoreType.INLINE
+
 export default function CreatePipelines({
   afterSave,
   initialValues = {
@@ -77,7 +79,7 @@ export default function CreatePipelines({
     tags: {},
     repo: '',
     branch: '',
-    storeType: StoreType.INLINE,
+    storeType: defaultStoreType,
     stages: [],
     connectorRef: ''
   },
@@ -132,10 +134,15 @@ export default function CreatePipelines({
   }, [initialValues.identifier, supportingGitSimplification, pipelineIdentifier, isReadonly])
 
   useEffect(() => {
-    !isEdit &&
+    if (!isEdit) {
+      // Intitially setting INLINE storeType in queryParam forGitX
+      if (supportingGitSimplification && initialValues?.identifier === DefaultNewPipelineId) {
+        updateQueryParams({ storeType: defaultStoreType })
+      }
       trackEvent(PipelineActions.LoadCreateNewPipeline, {
         category: Category.PIPELINE
       })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit])
 

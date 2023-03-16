@@ -31,7 +31,7 @@ import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
-import { getScope } from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { ManifestStoreMap, ManifestToPathLabelMap, ManifestToPathMap } from '../Manifesthelper'
@@ -39,6 +39,8 @@ import type { ManifestStores, PrimaryManifestType } from '../ManifestInterface'
 import DragnDropPaths from '../DragnDropPaths'
 import { removeEmptyFieldsFromStringArray } from '../ManifestWizardSteps/ManifestUtils'
 import { shouldAllowOnlyOneFilePath } from '../ManifestWizardSteps/CommonManifestDetails/utils'
+import { LocationValue } from '../../ConfigFilesSelection/ConfigFilesListView/LocationValue'
+
 import css from '../ManifestSelection.module.scss'
 
 interface AttachPathYamlFlowType {
@@ -82,7 +84,7 @@ function AttachPathYamlFlow({
     valuesPaths: typeof valuesPaths === 'string' ? valuesPaths : getValuesPathInitialValue()
   })
 
-  const FileStoreModal = useFileStoreModal({ isReadonly: true })
+  const FileStoreModal = useFileStoreModal({ isReadonly: true, fileUsage: FileUsage.MANIFEST_FILE })
 
   const getFinalPathYamlData = (formData: ConnectorConfigDTO): ConnectorConfigDTO => {
     if (manifestStore === ManifestStoreMap.Harness) {
@@ -167,6 +169,7 @@ function AttachPathYamlFlow({
                         name="valuesPaths"
                         allowableTypes={allowableTypes}
                         fileType={FILE_TYPE_VALUES.FILE_STORE}
+                        fileUsage={FileUsage.MANIFEST_FILE}
                         formik={formik}
                         expressions={expressions}
                         values={(formik.values.valuesPaths as string | string[]) || ['']}
@@ -192,6 +195,18 @@ function AttachPathYamlFlow({
   )
   const hideAddManifest = (allowOnlyOneFilePath && valuesPaths?.length === 1) || isReadonly
   const valuesPathsIcon = defaultTo(valuesIcon, 'valuesFIle')
+  const editDeleteButtons = (index: number): JSX.Element => {
+    return (
+      <>
+        {!isReadonly && (
+          <Layout.Horizontal inline>
+            <Button icon="Edit" iconProps={{ size: 14 }} onClick={showModal} minimal />
+            <Button iconProps={{ size: 14 }} icon="main-trash" onClick={() => removeValuesYaml(index)} minimal />
+          </Layout.Horizontal>
+        )}
+      </>
+    )
+  }
 
   return (
     <section className={css.valuesList}>
@@ -204,41 +219,27 @@ function AttachPathYamlFlow({
                   {index + 1}.
                 </Text>
                 <Icon name={valuesPathsIcon} inline padding={{ right: 'medium' }} size={24} />
-                {manifestStore === ManifestStoreMap.Harness ? (
-                  <div
-                    className={css.pathLink}
-                    onClick={() => {
-                      const { scope, path } = getScope(valuesPathValue)
-                      FileStoreModal.openFileStoreModal(path, scope)
-                    }}
-                  >
-                    <Text lineClamp={1}>{valuesPathValue}</Text>
-                  </div>
-                ) : (
-                  <Text lineClamp={1}>{valuesPathValue}</Text>
-                )}
+                <LocationValue
+                  onClick={(path: string, scope: string) => FileStoreModal.openFileStoreModal(path, scope)}
+                  isHarnessStore={manifestStore === ManifestStoreMap.Harness}
+                  isTooltip={false}
+                  locations={[valuesPathValue]}
+                />
               </Layout.Horizontal>
               {renderConnectorField}
-              {!isReadonly && (
-                <span>
-                  <Layout.Horizontal>
-                    <Button icon="Edit" iconProps={{ size: 14 }} onClick={showModal} minimal />
-                    <Button
-                      iconProps={{ size: 14 }}
-                      icon="main-trash"
-                      onClick={() => removeValuesYaml(index)}
-                      minimal
-                    />
-                  </Layout.Horizontal>
-                </span>
-              )}
+              {editDeleteButtons(index)}
             </div>
           </section>
         ))
       ) : (
-        <div className={css.valuesPathList}>
-          {`${ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])}: ${valuesPaths}`}
-        </div>
+        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
+          <Text inline>
+            {`${
+              ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])
+            }: ${valuesPaths}`}
+          </Text>
+          {editDeleteButtons(0)}
+        </Layout.Horizontal>
       )}
       {!hideAddManifest && (
         <Button

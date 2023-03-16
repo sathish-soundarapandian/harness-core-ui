@@ -40,6 +40,13 @@ export const CE_K8S_CONNECTOR_CREATION_EVENTS = {
   LOAD_CONNECTION_TEST: PREFIX_CCM_EVENTS + 'k8s_connection_test'
 }
 
+export const CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS = {
+  LOAD_OVERVIEW_STEP: PREFIX_CCM_EVENTS + 'quick_k8s_overview_step',
+  LOAD_DOWNLOAD_YAML: PREFIX_CCM_EVENTS + 'quick_k8s_download_and_apply_yaml_step',
+  DOWNLOAD_YAML: PREFIX_CCM_EVENTS + 'quick_k8s_download_yaml_click',
+  LOAD_CONNECTION_TEST: PREFIX_CCM_EVENTS + 'quick_k8s_connection_test_step'
+}
+
 export const CCM_CONNECTOR_SAVE_EVENT = PREFIX_CCM_EVENTS + 'connector_save'
 export const CCM_CONNECTOR_SAVE_SUCCESS = PREFIX_CCM_EVENTS + 'connector_save_success'
 export const CE_CONNECTOR_CLICK = PREFIX_CCM_EVENTS + 'connector_click'

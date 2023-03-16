@@ -23,22 +23,27 @@ import {
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { get } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { FileUsage } from '@filestore/interfaces/FileStore'
-import { helmVersions, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  helmVersions,
+  ManifestIdentifierValidation,
+  ManifestStoreMap
+} from '../../Manifesthelper'
 import type {
-  CommandFlags,
   HelmHarnessFileStoreFormData,
-  HelmVersionOptions,
+  HelmWithHarnessStoreDataType,
+  HelmWithHarnessStoreManifestLastStepPrevStepData,
   ManifestTypes
 } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
-import { handleCommandFlagsSubmitData } from '../ManifestUtils'
+import { handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 
@@ -52,15 +57,9 @@ interface HelmWithHarnessStorePropType {
   manifestIdsList: Array<string>
   deploymentType?: string
   isReadonly?: boolean
+  editManifestModePrevStepData?: HelmWithHarnessStoreManifestLastStepPrevStepData
 }
-interface HelmWithHarnessStoreDataType {
-  identifier: string
-  files: string[]
-  valuesPaths: string[]
-  skipResourceVersioning: boolean
-  helmVersion: HelmVersionOptions
-  commandFlags: Array<CommandFlags>
-}
+
 function HelmWithHarnessStore({
   stepName,
   selectedManifest,
@@ -71,11 +70,14 @@ function HelmWithHarnessStore({
   handleSubmit,
   prevStepData,
   previousStep,
-  manifestIdsList
+  manifestIdsList,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & HelmWithHarnessStorePropType): React.ReactElement {
   const { getString } = useStrings()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
-  const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V2')
+  const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V3')
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   const getInitialValues = (): HelmWithHarnessStoreDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -85,8 +87,10 @@ function HelmWithHarnessStore({
         ...specValues,
         identifier: initialValues.identifier,
         helmVersion: initialValues.spec?.helmVersion,
-        valuesPaths,
+        valuesPaths:
+          typeof valuesPaths === 'string' ? valuesPaths : removeEmptyFieldsFromStringArray(valuesPaths, true),
         skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
+        enableDeclarativeRollback: get(initialValues, 'spec.enableDeclarativeRollback'),
         commandFlags: initialValues.spec?.commandFlags?.map((commandFlag: { commandType: string; flag: string }) => ({
           commandType: commandFlag.commandType,
           flag: commandFlag.flag
@@ -98,7 +102,8 @@ function HelmWithHarnessStore({
       files: [''],
       valuesPaths: [''],
       skipResourceVersioning: false,
-      helmVersion: 'V2',
+      enableDeclarativeRollback: false,
+      helmVersion: 'V3',
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
   }
@@ -117,9 +122,17 @@ function HelmWithHarnessStore({
                 files: formData.files
               }
             },
-            valuesPaths: formData.valuesPaths,
+            valuesPaths:
+              typeof formData?.valuesPaths === 'string'
+                ? formData?.valuesPaths
+                : removeEmptyFieldsFromStringArray(formData.valuesPaths),
+            // formData.valuesPaths,
             helmVersion: formData?.helmVersion,
-            skipResourceVersioning: formData.skipResourceVersioning
+            skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
+              formData?.skipResourceVersioning,
+              formData?.enableDeclarativeRollback
+            ),
+            enableDeclarativeRollback: formData?.enableDeclarativeRollback
           }
         }
       }
@@ -153,7 +166,7 @@ function HelmWithHarnessStore({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData
           } as unknown as HelmHarnessFileStoreFormData)
         }}
@@ -216,6 +229,7 @@ function HelmWithHarnessStore({
                         disableTypeSelection: false,
                         label: <Text>{getString('pipeline.manifestType.valuesYamlPath')}</Text>
                       }}
+                      allowSinglePathDeletion
                     />
                   </div>
                   <Accordion
@@ -235,7 +249,7 @@ function HelmWithHarnessStore({
                           allowableTypes={allowableTypes}
                           helmVersion={formik.values?.helmVersion}
                           deploymentType={deploymentType as string}
-                          helmStore={prevStepData?.store ?? ''}
+                          helmStore={modifiedPrevStepData?.store ?? ''}
                         />
                       }
                     />
@@ -247,7 +261,7 @@ function HelmWithHarnessStore({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

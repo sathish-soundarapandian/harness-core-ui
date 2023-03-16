@@ -376,7 +376,7 @@ const RecommendationHistogram: React.FC<RecommendationChartProps> = props => {
                 {getString('ce.recommendation.recommendationChart.and')}
               </Text>
               <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREEN_500}>
-                {getString('ce.recommendation.recommendationChart.limitLabelRegular')}
+                {getString('pipeline.syncStep.limit')}
               </Text>
             </>
           }

@@ -317,7 +317,7 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
             }}
             label={getString('connector')}
             enableConfigureOptions={false}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
             configureOptionsProps={{
@@ -828,7 +828,7 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                 <FormMultiTypeConnectorField
                   name="connectorRef"
                   label={getString('connector')}
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   multiTypeProps={{ expressions, allowableTypes }}
@@ -869,7 +869,6 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                     variableName="connectorRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         formik.setFieldValue('connectorRef', value)
@@ -939,7 +938,6 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                       variableName="subscriptionId"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={
                         /* istanbul ignore next */ value => {
                           formik.setFieldValue('subscriptionId', value)
@@ -1011,7 +1009,6 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                       variableName="resourceGroup"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={
                         /* istanbul ignore next */ value => {
                           formik.setFieldValue('resourceGroup', value)
@@ -1080,7 +1077,6 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                     variableName="cluster"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         formik.setFieldValue('cluster', value)
@@ -1109,7 +1105,6 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                     variableName="namespace"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       /* istanbul ignore next */
                       formik.setFieldValue('namespace', value)
@@ -1146,7 +1141,6 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                           variableName="releaseName"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             /* istanbul ignore next */
                             formik.setFieldValue('releaseName', value)

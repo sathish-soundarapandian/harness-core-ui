@@ -300,20 +300,6 @@ describe('Unit tests for createAppd monitoring source', () => {
       expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
     })
 
-    test('should not render metric thresholds if it is a template', () => {
-      const submitData = jest.fn()
-      render(
-        <TestWrapper {...createModeProps}>
-          <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
-            <AppDMonitoredSource isTemplate data={appDynamicsDataFull} onSubmit={submitData} onPrevious={jest.fn()} />
-          </SetupSourceTabs>
-        </TestWrapper>
-      )
-
-      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
-      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
-    })
-
     test('should show prompt if metric pack containing metric thresholds is being removed', async () => {
       const submitData = jest.fn()
       const { container } = render(

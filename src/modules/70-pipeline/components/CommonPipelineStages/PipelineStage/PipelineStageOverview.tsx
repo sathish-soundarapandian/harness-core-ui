@@ -5,19 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useRef, useContext, useEffect } from 'react'
+import React, { useRef, useContext, useEffect, useMemo } from 'react'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { Formik, FormikProps } from 'formik'
-import { cloneDeep, debounce, noop, get } from 'lodash-es'
+import { debounce, noop, get } from 'lodash-es'
 import { Accordion, Card, Container, Text, FormikForm, HarnessDocTooltip, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Link, useParams } from 'react-router-dom'
+import produce from 'immer'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import type { StageElementConfig, StringNGVariable } from 'services/cd-ng'
+import type { StringNGVariable } from 'services/cd-ng'
 import type { PipelineStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
@@ -55,8 +56,7 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
   const { accountId, module } = useParams<AccountPathProps & ModulePathParams>()
   const { stage } = getStageFromPipeline<PipelineStageElementConfig>(selectedStageId || '')
   const { variablesPipeline, metadataMap } = usePipelineVariables()
-  const cloneOriginalData = cloneDeep(stage)
-  const allNGVariables = (cloneOriginalData?.stage?.variables || []) as AllNGVariables[]
+  const allNGVariables = (stage?.stage?.variables || []) as AllNGVariables[]
   const { getString } = useStrings()
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const formikRef = useRef<FormikProps<unknown> | null>(null)
@@ -66,13 +66,7 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
   const projectIdentifier = get(stage?.stage as PipelineStageElementConfig, 'spec.project', '')
   const orgIdentifier = get(stage?.stage as PipelineStageElementConfig, 'spec.org', '')
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const updateStageDebounced = useCallback(
-    debounce((values: StageElementConfig): void => {
-      updateStage({ ...stage?.stage, ...values })
-    }, 300),
-    [stage?.stage, updateStage]
-  )
+  const updateStageDebounced = useMemo(() => debounce(updateStage, 300), [updateStage])
 
   useEffect(() => {
     subscribeForm({ tab: PipelineStageTabs.OVERVIEW, form: formikRef })
@@ -88,12 +82,11 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
         </Text>
         <Container id="stageOverview">
           <Formik
-            enableReinitialize
             initialValues={{
-              identifier: get(cloneOriginalData, 'stage.identifier'),
-              name: get(cloneOriginalData, 'stage.name'),
-              description: get(cloneOriginalData, 'stage.description'),
-              tags: get(cloneOriginalData, 'stage.tags', {})
+              identifier: get(stage, 'stage.identifier'),
+              name: get(stage, 'stage.name'),
+              description: get(stage, 'stage.description'),
+              tags: get(stage, 'stage.tags', {})
             }}
             validationSchema={Yup.object().shape(getNameAndIdentifierSchema(getString, contextType))}
             validate={values => {
@@ -101,15 +94,17 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
               if (isDuplicateStageId(get(values, 'identifier', ''), stages, true)) {
                 errors.name = getString('validation.identifierDuplicate')
               }
-              if (cloneOriginalData) {
-                updateStageDebounced({
-                  ...(cloneOriginalData.stage as PipelineStageElementConfig),
-                  name: get(values, 'name', ''),
-                  identifier: get(values, 'identifier', ''),
-                  description: get(values, 'description', ''),
-                  tags: get(values, 'tags', {})
-                })
+              if (stage?.stage) {
+                updateStageDebounced(
+                  produce(stage?.stage, draft => {
+                    ;(draft.name = get(values, 'name', '')),
+                      (draft.identifier = get(values, 'identifier', '')),
+                      (draft.description = get(values, 'description', '')),
+                      (draft.tags = get(values, 'tags', {}))
+                  })
+                )
               }
+
               return errors
             }}
             onSubmit={noop}
@@ -190,17 +185,21 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
                   stepViewType={StepViewType.StageVariable}
                   allowableTypes={allowableTypes}
                   onUpdate={({ variables }: CustomVariablesData) => {
-                    updateStageDebounced({
-                      ...(cloneOriginalData?.stage as PipelineStageElementConfig),
-                      variables
-                    })
+                    if (!stage?.stage) {
+                      return
+                    }
+                    updateStageDebounced(
+                      produce(stage.stage, draft => {
+                        draft.variables = variables
+                      })
+                    )
                   }}
                   customStepProps={{
                     tabName: PipelineStageTabs.OVERVIEW,
                     formName: 'addEditStageCustomVariableForm',
                     yamlProperties:
                       getStageFromPipeline(
-                        cloneOriginalData?.stage?.identifier || '',
+                        stage?.stage?.identifier || '',
                         variablesPipeline
                       )?.stage?.stage?.variables?.map?.(
                         variable => metadataMap[(variable as StringNGVariable).value || '']?.yamlProperties || {}

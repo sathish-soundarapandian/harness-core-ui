@@ -84,7 +84,7 @@ export const ContainerStepBase = (
               <FormMultiTypeConnectorField
                 name="spec.connectorRef"
                 label={getString('pipelineSteps.connectorLabel')}
-                type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER, Connectors.AZURE]}
+                type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
                 placeholder={getString('select')}
                 disabled={readonly}
                 accountIdentifier={accountId}
@@ -104,7 +104,6 @@ export const ContainerStepBase = (
                   variableName="spec.connectorRef"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => {
                     formik.setFieldValue('spec.connectorRef', value)
                   }}
@@ -135,7 +134,6 @@ export const ContainerStepBase = (
                   variableName="spec.image"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => {
                     formik.setFieldValue('spec.image', value)
                   }}
@@ -168,7 +166,6 @@ export const ContainerStepBase = (
                   variableName="spec.shell"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => formik.setFieldValue('spec.shell', value)}
                   isReadonly={readonly}
                   style={{ marginBottom: 5 }}
@@ -214,7 +211,6 @@ export const ContainerStepBase = (
                   variableName="spec.command"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => formik?.setFieldValue('spec.command', value)}
                   isReadonly={readonly}
                 />
@@ -226,7 +222,7 @@ export const ContainerStepBase = (
                 <FormMultiTypeConnectorField
                   name="spec.infrastructure.spec.connectorRef"
                   label={getString('connector')}
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
@@ -252,7 +248,6 @@ export const ContainerStepBase = (
                       variableName="spec.infrastructure.spec.connectorRef"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('spec.infrastructure.spec.connectorRef', value)
                       }}
@@ -289,7 +284,6 @@ export const ContainerStepBase = (
                       variableName="spec.infrastructure.spec.namespace"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('spec.infrastructure.spec.namespace', value)
                       }}
@@ -323,7 +317,6 @@ export const ContainerStepBase = (
                         variableName="spec.infrastructure.spec.resources.limits.memory"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => {
                           formik.setFieldValue('spec.infrastructure.spec.resources.limits.memory', value)
                         }}
@@ -350,7 +343,6 @@ export const ContainerStepBase = (
                         variableName="spec.infrastructure.spec.resources.limits.cpu"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => {
                           formik.setFieldValue('spec.infrastructure.spec.resources.limits.cpu', value)
                         }}

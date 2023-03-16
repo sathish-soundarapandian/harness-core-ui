@@ -9,7 +9,7 @@
         "folder": true
       },
       {
-        "jobName": "automationNew",
+        "jobName": "alex-pipeline-test/AutomationQATest",
         "url": "https://jenkins.dev.harness.io/job/automationNew/",
         "parameters": [],
         "folder": false

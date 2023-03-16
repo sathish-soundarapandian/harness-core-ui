@@ -12,7 +12,7 @@ import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, clickSubmit, fillAtForm } from '@common/utils/JestFormHelper'
 
-import { GitConnectionType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { GitConnectionType, GitUrlType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import routes from '@common/RouteDefinitions'
 import CreateGitlabConnector from '../CreateGitlabConnector'
@@ -307,6 +307,69 @@ describe('Create Gitlab connector Wizard', () => {
       },
       { queryParams: {} }
     )
+  })
+
+  test('Validating Account & Repo level connector placeholders', async () => {
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateGitlabConnector
+          {...commonProps}
+          isEditMode={false}
+          connectorInfo={undefined}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
+        />
+      </TestWrapper>
+    )
+
+    // fill step 1
+    const nameInput = queryByAttribute('name', container, 'name')
+    expect(nameInput).toBeTruthy()
+    if (nameInput) fireEvent.change(nameInput, { target: { value: 'dummy name' } })
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    expect(queryByAttribute('placeholder', container, 'common.git.gitLabUrlPlaceholder')).toBeInTheDocument()
+
+    fillAtForm([
+      {
+        container,
+        fieldId: 'connectionType',
+        type: InputTypes.RADIOS,
+        value: GitConnectionType.SSH
+      }
+    ])
+
+    expect(queryByAttribute('placeholder', container, 'common.git.gitLabUrlPlaceholderSSH')).toBeInTheDocument()
+
+    fillAtForm([
+      {
+        container,
+        fieldId: 'connectionType',
+        type: InputTypes.RADIOS,
+        value: GitConnectionType.HTTP
+      },
+      {
+        container,
+        fieldId: 'urlType',
+        type: InputTypes.RADIOS,
+        value: GitUrlType.REPO
+      }
+    ])
+
+    expect(queryByAttribute('placeholder', container, 'common.git.gitLabRepoUrlPlaceholder')).toBeInTheDocument()
+
+    fillAtForm([
+      {
+        container,
+        fieldId: 'connectionType',
+        type: InputTypes.RADIOS,
+        value: GitConnectionType.SSH
+      }
+    ])
+
+    expect(queryByAttribute('placeholder', container, 'common.git.gitLabRepoUrlPlaceholderSSH')).toBeInTheDocument()
   })
 
   backButtonTest({

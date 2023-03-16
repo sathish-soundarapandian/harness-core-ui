@@ -26,9 +26,6 @@ import { Connectors } from '../../../utils/connctors-utils'
 
 describe('Health Source - Prometheus', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      return false
-    })
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
       cy.intercept('GET', featureFlagsCall, {
         ...featureFlagsData,
@@ -117,13 +114,15 @@ describe('Health Source - Prometheus', () => {
     cy.contains('span', 'Deviation Compared to Baseline is required.').should('not.exist')
 
     cy.get('input[name="serviceInstance"]').click()
-    cy.contains('p', '__name__').click()
+    cy.contains('p', '__name__').scrollIntoView().click({ force: true })
 
     cy.findByRole('button', { name: /Add Metric/i }).click()
 
     cy.contains('div', 'Map Metric(s) to Harness Services').click()
 
     cy.fillField('metricName', 'Prometheus Metric')
+
+    cy.get('input[name="metricName"]').blur()
 
     cy.contains('span', 'Metric name must be unique.').should('be.visible')
     cy.fillField('metricName', 'Prometheus Metric 123')

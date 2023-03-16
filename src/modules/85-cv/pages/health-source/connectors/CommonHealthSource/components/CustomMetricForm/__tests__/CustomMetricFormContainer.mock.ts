@@ -12,7 +12,6 @@ export const mockedCustomMetricFormContainerData = {
   mappedMetrics: new Map(),
   selectedMetric: 'HealthSource Metric',
   connectorIdentifier: 'Sumo_logic',
-  isMetricThresholdEnabled: false,
   nonCustomFeilds: {
     appdApplication: '',
     appDTier: '',
@@ -72,7 +71,6 @@ export const mockedCustomMetricsFormForLogsTable = {
   mappedMetrics,
   selectedMetric: 'dasdaa',
   connectorIdentifier: 'Sumo_logic',
-  isMetricThresholdEnabled: true,
   createdMetrics: [],
   isTemplate: false,
   expressions: [],
@@ -87,8 +85,9 @@ export const mockedCustomMetricsFormForLogsTable = {
         {
           type: 'JsonSelector',
           label: 'Identifier service path',
-          identifier: 'serviceInstance',
-          defaultValue: '_sourcehost'
+          identifier: 'serviceInstanceField',
+          defaultValue: '_sourcehost',
+          isTemplateSupportEnabled: true
         }
       ],
       queryAndRecords: {
@@ -153,7 +152,7 @@ export const logsTablePayloadMock = {
   connectorIdentifier: 'Sumo_logic',
   endTime: expect.any(Number),
   healthSourceQueryParams: { serviceInstanceField: '_sourcehost' },
-  providerType: 'SUMOLOGIC_LOG',
+  healthSourceType: 'SumologicLogs',
   query: 'select *',
   startTime: expect.any(Number)
 }
@@ -163,28 +162,28 @@ export const sampleDataResponse = [
     message: `glide.quota.manager SYSTEM URL= /incident_list.do?
       sysparm_userpref_module=b55fbec4c0a800090088e83d7ff500de&active=true&sysparm_query=active=true^EQ,
       THREAD= http-bio-8080-exec-3, FG= true, TYPE= 1, STATE= 2, USER= null, TIME= 8,807, MEM= 0, ATTRIBUTES= {}`,
-    serviceInstance: 'sdfs df sdf sdf sdfsdfsdfsdfsf',
+    serviceInstanceField: 'sdfs df sdf sdf sdfsdfsdfsdfsf',
     timestamp: Date.now()
   },
   {
     message: `glide.quota.manager SYSTEM URL= /incident_list.do?
       sysparm_userpref_module=b55fbec4c0a800090088e83d7ff500de&active=true&sysparm_query=active=true^EQ,
       THREAD= http-bio-8080-exec-3, FG= true, TYPE= 1, STATE= 2, USER= null, TIME= 8,807, MEM= 0, ATTRIBUTES= {}`,
-    serviceInstance: 'sdfs df sdf sdf sdfsdfsdfsdfsf',
+    serviceInstanceField: 'sdfs df sdf sdf sdfsdfsdfsdfsf',
     timestamp: Date.now()
   },
   {
     message: `glide.quota.manager SYSTEM URL= /incident_list.do?
       sysparm_userpref_module=b55fbec4c0a800090088e83d7ff500de&active=true&sysparm_query=active=true^EQ,
       THREAD= http-bio-8080-exec-3, FG= true, TYPE= 1, STATE= 2, USER= null, TIME= 8,807, MEM= 0, ATTRIBUTES= {}`,
-    serviceInstance: 'sdfs df sdf sdf sdfsdfsdfsdfsf',
+    serviceInstanceField: 'sdfs df sdf sdf sdfsdfsdfsdfsf',
     timestamp: Date.now()
   },
   {
     message: `glide.quota.manager SYSTEM URL= /incident_list.do?
       sysparm_userpref_module=b55fbec4c0a800090088e83d7ff500de&active=true&sysparm_query=active=true^EQ,
       THREAD= http-bio-8080-exec-3, FG= true, TYPE= 1, STATE= 2, USER= null, TIME= 8,807, MEM= 0, ATTRIBUTES= {}`,
-    serviceInstance: 'sdfs df sdf sdf sdfsdfsdfsdfsf',
+    serviceInstanceField: 'sdfs df sdf sdf sdfsdfsdfsdfsf',
     timestamp: Date.now()
   }
 ]

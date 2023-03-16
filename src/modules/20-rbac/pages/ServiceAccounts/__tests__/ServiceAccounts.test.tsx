@@ -110,7 +110,10 @@ describe('ServiceAccountsPage Test', () => {
       fireEvent.click(newUG)
       const form = findDialogContainer()
       expect(form).toBeTruthy()
-      fillAtForm([{ container: form!, type: InputTypes.TEXTFIELD, fieldId: 'name', value: 'dummy name' }])
+      fillAtForm([
+        { container: form!, type: InputTypes.TEXTFIELD, fieldId: 'name', value: 'dummy name' },
+        { container: form!, type: InputTypes.TEXTFIELD, fieldId: 'email', value: 'dummy@email.com' }
+      ])
 
       await act(async () => {
         clickSubmit(form!)

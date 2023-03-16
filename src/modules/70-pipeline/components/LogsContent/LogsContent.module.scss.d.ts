@@ -10,8 +10,11 @@ declare const styles: {
   readonly container: string
   readonly errorContainer: string
   readonly errorIcon: string
+  readonly errorMsg: string
   readonly errorMsgContainer: string
+  readonly errorMsgWrapper: string
   readonly errorMsgs: string
+  readonly errorTitle: string
   readonly fullScreen: string
   readonly hasErrorMessage: string
   readonly header: string
@@ -25,6 +28,7 @@ declare const styles: {
   readonly search: string
   readonly selectedSearchResult: string
   readonly singleSectionScrollBtn: string
+  readonly tabs: string
   readonly toConsoleView: string
   readonly txt: string
 }

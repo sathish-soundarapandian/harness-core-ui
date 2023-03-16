@@ -119,31 +119,12 @@
         "createdAt": 1657698870088
       }
     ],
-    "pageable": {
-      "sort": {
-        "sorted": true,
-        "unsorted": false,
-        "empty": false
-      },
-      "pageSize": 4,
-      "pageNumber": 0,
-      "offset": 0,
-      "paged": true,
-      "unpaged": false
-    },
-    "last": true,
-    "totalElements": 3,
-    "totalPages": 1,
-    "sort": {
-      "sorted": true,
-      "unsorted": false,
-      "empty": false
-    },
-    "first": true,
-    "number": 0,
-    "numberOfElements": 3,
-    "size": 4,
-    "empty": false
+    "empty": false,
+    "pageIndex": 0,
+    "pageItemCount": 3,
+    "pageSize": 4,
+    "totalItems": 3,
+    "totalPages": 1
   },
   "metaData": null,
   "correlationId": "411d10af-52ef-429c-bd3e-36c4f7715a94"

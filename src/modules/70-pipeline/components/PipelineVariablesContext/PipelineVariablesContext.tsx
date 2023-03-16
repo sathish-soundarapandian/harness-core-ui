@@ -24,8 +24,6 @@ import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useGetYamlWithTemplateRefsResolved } from 'services/template-ng'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { getRegexForSearch } from '../LogsContent/LogsState/utils'
 import type { InputSetValue } from '../InputSetSelector/utils'
 
@@ -114,7 +112,6 @@ export function PipelineVariablesContextProvider(
   }>
 ): React.ReactElement {
   const { pipeline: pipelineFromProps, enablePipelineTemplatesResolution, storeMetadata = {} } = props
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const [originalPipeline, setOriginalPipeline] = React.useState<PipelineInfoConfig>(
     defaultTo(pipelineFromProps, {} as PipelineInfoConfig)
   )
@@ -156,7 +153,8 @@ export function PipelineVariablesContextProvider(
     body: yamlStringify({ pipeline: originalPipeline }) as unknown as void,
     requestOptions: {
       headers: {
-        'content-type': 'application/yaml'
+        'content-type': 'application/yaml',
+        'Load-From-Cache': 'true'
       }
     },
     queryParams: {
@@ -183,7 +181,7 @@ export function PipelineVariablesContextProvider(
       projectIdentifier,
       ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     body: {
       originalEntityYaml: enablePipelineTemplatesResolution ? yamlStringify({ pipeline: originalPipeline }) : ''
     },

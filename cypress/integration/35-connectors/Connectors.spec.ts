@@ -20,11 +20,6 @@ import { pageHeaderClassName } from '../../support/70-pipeline/constants'
 
 describe('Connectors list', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.visit(connectorsRoute, {
       timeout: 30000
@@ -126,11 +121,6 @@ describe('Connectors list', () => {
 
 describe('Project level jenkins connector', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.intercept('POST', connectorsListAPI, { fixture: 'pipeline/api/connector/connectorList.json' }).as(
       'connectorsListCall'
@@ -267,11 +257,6 @@ describe('Project level jenkins connector', () => {
 
 describe('Account level jenkins connector', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.intercept('POST', accountConnectorsListAPI, { fixture: 'pipeline/api/connector/accountConnectotList.json' }).as(
       'connectorsListCall'

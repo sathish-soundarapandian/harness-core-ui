@@ -12,6 +12,9 @@ console.log('\nProxy env vars')
 console.table({ baseUrl, targetLocalHost })
 
 module.exports = {
+  '/v1': {
+    target: `${baseUrl}` // localhost is not supported for OpenAPI yet
+  },
   '/ng/api': {
     pathRewrite: { '^/ng/api': '' },
     target: targetLocalHost ? 'https://localhost:7090' : `${baseUrl}/ng/api`
@@ -170,12 +173,20 @@ module.exports = {
     pathRewrite: { '^/tiui': '' },
     target: process.env.TI_UI_URL || 'https://localhost:9200'
   },
+  '/iacm/api': {
+    pathRewrite: { '^/iacm': '' },
+    target: targetLocalHost ? process.env.IAC_API_URL || 'https://localhost:8185' : `${baseUrl}/iacm`
+  },
   '/iacm': {
     pathRewrite: { '^/iacm': '' },
     target: process.env.IAC_UI_URL || 'https://localhost:8185'
   },
-  '/sscs': {
-    pathRewrite: { '^/sscs': '' },
-    target: process.env.SSCS_UI_URL || 'https://localhost:8186'
+  '/ssca': {
+    pathRewrite: { '^/ssca': '' },
+    target: process.env.SSCA_UI_URL || 'https://localhost:8186'
+  },
+  '/ssca/api': {
+    pathRewrite: { '^/ssca/api': '/api' },
+    target: process.env.SSCA_API_URL || 'https://localhost:8186'
   }
 }

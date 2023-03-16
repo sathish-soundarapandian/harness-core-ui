@@ -3,16 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Language" content="en" />
-    <!-- externalFontsForSaaS -->
+    <title>Harness</title>
+    <!-- externalFilesForSaaS -->
     <% if (__DEV__) { %>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
     <% } %>
-    <title>Harness</title>
-    <link rel="icon" type="image/x-icon" href="https://static.harness.io/ng-static/images/favicon.ico" />
-    <link rel="icon" type="image/png" href="https://static.harness.io/ng-static/images/favicon.png" />
-    <link rel="apple-touch-icon" href="https://static.harness.io/ng-static/images/favicon.png" />
     <style>
       .pre-loader-wrapper {
         position: fixed;
@@ -33,34 +33,7 @@
       }
     </style>
     <!-- apiurl -->
-
-    <% if (!__DEV__) { %>
-    <script type="text/javascript">
-      window.browserRouterEnabled =
-        'HARNESS_BROWSER_ROUTER_ENABLED' === 'true' ||
-        window.location.href.toString().includes('browserRouterEnabled=true')
-    </script>
-    <% } %> <% if (__DEV__) { %>
-    <script type="text/javascript">
-      window.browserRouterEnabled = true
-    </script>
-    <% } %>
-    <script type="text/javascript">
-      window.noAuthHeader = window.location.href.toString().includes('noAuthHeader=true')
-      const addRoutingIdParam = () => {
-        const matches = window.location.href.match(/\/account\/(.+?)\//)
-        return matches && matches.length > 1 ? `&routingId=${matches[1]}` : ''
-      }
-      window.getApiBaseUrl = str => {
-        let url = window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
-
-        if (window.browserRouterEnabled) {
-          url = `${window.apiUrl || ''}/${str}`
-        }
-
-        return url.includes('remoteEntry.js') ? `${url}?timestamp=${Date.now()}${addRoutingIdParam()}` : url
-      }
-    </script>
+    <!-- IDPUrl -->
     <!-- segmentToken -->
     <!-- bugsnagToken -->
     <!-- appDyEUMToken -->
@@ -75,10 +48,84 @@
     <!-- newNavContetfulSpace -->
     <!-- newNavContentfulEnvironment -->
     <!-- harnessNameSpacePlaceHolder -->
+    <!-- harnessClusterURLPlaceHolder -->
     <!-- adding bugsnag for SAAS build -->
+
+    <% if (!__DEV__) { %>
+    <script type="text/javascript">
+      window.browserRouterEnabled =
+        'HARNESS_BROWSER_ROUTER_ENABLED' === 'true' ||
+        window.location.href.toString().includes('browserRouterEnabled=true')
+    </script>
+    <% } %> <% if (__DEV__) { %>
+    <script type="text/javascript">
+      window.browserRouterEnabled = true
+    </script>
+    <% } %>
+    <script type="text/javascript">
+      window.noAuthHeader = window.location.href.toString().includes('noAuthHeader=true')
+      window.addDateIfRemoteEntry = path => (path.includes('remoteEntry.js') ? `${path}?timestamp=${Date.now()}` : path)
+      // returns a cluster based url
+      window.getClusterBasedUrl = path => {
+        // add / if not present
+        if (!path.startsWith('/')) {
+          path = `/${path}`
+        }
+        if (window.harnessClusterURL) {
+          const harnessClusterURLLocal = window.harnessClusterURL
+          // add / at end if it does not exisits
+          if (!harnessClusterURLLocal.endsWith('/')) {
+            harnessClusterURLLocal = `${harnessClusterURLLocal}/`
+          }
+          // remove / in starting if it exists
+          if (harnessClusterURLLocal.startsWith('/')) {
+            harnessClusterURLLocal = harnessClusterURLLocal.substring(1)
+          }
+          path = `/${harnessClusterURLLocal}${path}`
+        }
+
+        if (window.harnessNameSpace) {
+          path = `/${window.harnessNameSpace}${path}`
+        }
+        path = window.addDateIfRemoteEntry(path)
+        return path
+      }
+
+      const getAccountId = () => {
+        const matches = window.location.href.match(/\/account\/(.+?)\//)
+        return matches && matches.length > 1 ? `${matches[1]}` : ''
+      }
+      const accountId = getAccountId()
+
+      const addRoutingIdParam = () => {
+        return accountId ? `&routingId=${accountId}` : ''
+      }
+
+      window.getApiBaseUrl = pathSuffix => {
+        if (window.browserRouterEnabled && pathSuffix.includes('remoteEntry.js')) {
+          return window.getClusterBasedUrl(pathSuffix)
+        }
+        let str = pathSuffix
+        if (str.startsWith('/')) {
+          str = str.substring(1)
+        }
+        let url = window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+
+        if (window.browserRouterEnabled) {
+          url = `${window.apiUrl || ''}/${str}`
+        }
+        return url.includes('remoteEntry.js') ? `${url}?timestamp=${Date.now()}${addRoutingIdParam()}` : url
+      }
+
+      window.getIDPBaseUrl = str => {
+        return window.IDPUrl && accountId
+          ? `${window.IDPUrl}/${accountId}/${str}?${addRoutingIdParam()}`
+          : window.getApiBaseUrl(str)
+      }
+    </script>
     <% if (!__DEV__) { %>
     <script>
-      window.NON_CDN_BASE_PATH = `${window.harnessNameSpace}/ng/static/`
+      window.NON_CDN_BASE_PATH = `${window.harnessNameSpace ? '/' + window.harnessNameSpace : ''}/ng/static/`
       if (window.deploymentType === 'SAAS') {
         var e = document.createElement('script')
         e.setAttribute('type', 'text/javascript')
@@ -209,7 +256,10 @@
     <div id="react-root">
       <div class="pre-loader-wrapper">
         <div>
-          <img src="https://static.harness.io/ng-static/images/loader.gif" alt="Loading..." />
+          <!-- externalLoaderForSaaS -->
+          <% if (__DEV__) { %>
+          <img src="/loader.gif" alt="Loading..." />
+          <% } %>
           <div class="pre-loader-text">Loading, please wait...</div>
         </div>
       </div>

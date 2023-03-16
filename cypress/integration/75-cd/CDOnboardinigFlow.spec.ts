@@ -34,24 +34,8 @@ const fillManifestDetails = (): void => {
 
 describe.skip('CD Onboarding Flow', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
-      cy.intercept('GET', featureFlagsCall, {
-        ...featureFlagsData,
-        resource: [
-          ...featureFlagsData.resource,
-          {
-            uuid: null,
-            name: 'CD_ONBOARDING_ENABLED',
-            enabled: true,
-            lastUpdatedAt: 0
-          }
-        ]
-      })
+      cy.intercept('GET', featureFlagsCall, featureFlagsData)
     })
 
     cy.intercept('POST', fetchPipelineRoute, { fixture: 'pipeline/api/cdOnboarding/emptyPipelinesList' }).as(

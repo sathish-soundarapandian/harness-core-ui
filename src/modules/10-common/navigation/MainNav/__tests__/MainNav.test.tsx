@@ -25,6 +25,35 @@ jest.mock('framework/PreferenceStore/PreferenceStoreContext')
   }
 })
 
+jest.mock('services/cd-ng', () => ({
+  useGetAccountNGMock: jest.fn().mockImplementation(() => {
+    return {
+      data: {
+        data: {
+          name: 'account name',
+          identifier: 'id1',
+          cluster: 'free',
+          defaultExperience: 'NG'
+        }
+      },
+      refetch: jest.fn()
+    }
+  }),
+  useGetAccountNG: jest.fn().mockImplementation(() => {
+    return {
+      data: {
+        data: {
+          name: 'account name',
+          identifier: 'id1',
+          cluster: 'free',
+          defaultExperience: 'NG'
+        }
+      },
+      refetch: jest.fn()
+    }
+  })
+}))
+
 const setModuleConfigPreference = jest.fn()
 
 describe('main nav tests', () => {
@@ -34,7 +63,7 @@ describe('main nav tests', () => {
         <MainNav />
       </TestWrapper>
     )
-    expect(container.querySelectorAll('[class*="navItem"]').length).toBe(3)
+    expect(container.querySelectorAll('[class*="navItem"]').length).toBe(4)
     expect(queryByText('common.home')).not.toBeNull()
     expect(queryByText('common.accountSettings')).not.toBeNull()
     expect(queryByText('common.myProfile')).not.toBeNull()
@@ -44,7 +73,8 @@ describe('main nav tests', () => {
   test('when modules are enabled', () => {
     const { queryByText } = render(
       <TestWrapper
-        defaultFeatureFlagValues={{ CDNG_ENABLED: true, CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>
@@ -58,7 +88,6 @@ describe('main nav tests', () => {
     const { queryByText } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: true,
           CHAOS_ENABLED: true,
@@ -76,7 +105,6 @@ describe('main nav tests', () => {
     const { container } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: true,
           CHAOS_ENABLED: true,
@@ -88,7 +116,7 @@ describe('main nav tests', () => {
     )
 
     screen.debug(container, 1000000)
-    expect(container.querySelectorAll('[class*="navItem"]').length).toBe(4)
+    expect(container.querySelectorAll('[class*="navItem"]').length).toBe(5)
   })
 
   test('when new nav bar is enabled and preference store has modules', () => {
@@ -107,12 +135,12 @@ describe('main nav tests', () => {
     const { queryByText } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: true,
           CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>
@@ -140,12 +168,12 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: false,
           CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>
@@ -172,7 +200,6 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: false,
           CHAOS_ENABLED: true,
@@ -207,12 +234,12 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: true,
           CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>

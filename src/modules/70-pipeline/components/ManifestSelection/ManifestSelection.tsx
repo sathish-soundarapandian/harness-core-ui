@@ -18,6 +18,7 @@ import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useDeepCompareEffect } from '@common/hooks'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import type { ManifestSelectionProps, PrimaryManifestType } from './ManifestInterface'
 import ManifestListView from './ManifestListView/ManifestListView'
 import { getConnectorPath } from './ManifestWizardSteps/ManifestUtils'
@@ -190,7 +191,11 @@ export default function ManifestSelection({
       const manifestData = listOfManifests?.find(
         (manifestObj: ManifestConfigWrapper) => manifestObj.manifest?.identifier === manifestId
       )
-      manifestData?.manifest?.spec[ManifestToPathKeyMap[manifestType]].splice(valuesYamlIndex, 1)
+      if (isValueRuntimeInput(manifestData?.manifest?.spec[ManifestToPathKeyMap[manifestType]])) {
+        delete manifestData?.manifest?.spec[ManifestToPathKeyMap[manifestType]]
+      } else {
+        manifestData?.manifest?.spec[ManifestToPathKeyMap[manifestType]].splice(valuesYamlIndex, 1)
+      }
       updateStageData()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

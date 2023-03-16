@@ -22,7 +22,7 @@ import {
 import { FontVariation, Color } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Menu, Classes, Position, Intent, TextArea, Tooltip } from '@blueprintjs/core'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import classNames from 'classnames'
 import { pick, defaultTo } from 'lodash-es'
@@ -40,11 +40,12 @@ import {
 import type { UseCreateConnectorModalReturn } from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { usePermission } from '@rbac/hooks/usePermission'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import routes from '@common/RouteDefinitions'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
+import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
+import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { getIconByType, isSMConnector } from '../utils/ConnectorUtils'
 import { getConnectorDisplaySummary } from '../utils/ConnectorListViewUtils'
 import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
@@ -184,16 +185,29 @@ const RenderColumnStatus: Renderer<CellProps<ConnectorResponse>> = ({ row }) => 
   const data = row.original
   return <ConnectivityStatus data={data} />
 }
+interface ConnectorMenuItemProps {
+  connector: ConnectorResponse
+  onSuccessfulDelete: () => void
+  forceDeleteSupported: boolean
+  switchToRefernceTab?: () => void
+  openConnectorModal: UseCreateConnectorModalReturn['openConnectorModal']
+}
 
-const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column }) => {
+export const ConnectorMenuItem: React.FC<ConnectorMenuItemProps> = ({
+  connector,
+  onSuccessfulDelete,
+  forceDeleteSupported,
+  switchToRefernceTab,
+  openConnectorModal
+}) => {
   const history = useHistory()
   const params = useParams<PipelineType<ProjectPathProps>>()
-  const data = row.original
+  const data = connector
   const gitDetails = data?.gitDetails ?? {}
   const isHarnessManaged = data.harnessManaged
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled =
-    isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF && !isSMConnector(row.original.connector?.type)
+    isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF && !isSMConnector(connector.connector?.type)
 
   const [menuOpen, setMenuOpen] = useState(false)
   const { showSuccess, showError } = useToaster()
@@ -218,17 +232,6 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
       ...gitParams
     }
   })
-
-  const [canUpdate, canDelete] = usePermission(
-    {
-      resource: {
-        resourceType: ResourceType.CONNECTOR,
-        resourceIdentifier: data.connector?.identifier || ''
-      },
-      permissions: [PermissionIdentifier.UPDATE_CONNECTOR, PermissionIdentifier.DELETE_CONNECTOR]
-    },
-    []
-  )
 
   const getConfirmationDialogContent = (): JSX.Element => {
     return (
@@ -260,29 +263,36 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
 
       if (deleted) {
         showSuccess(getString('connectors.deletedSuccssMessage', { name: data.connector?.name }))
+
+        onSuccessfulDelete()
       }
-      ;(column as any).reload?.()
     } catch (err) {
       handleConnectorDeleteError(err?.data.code, defaultTo(err?.data?.message, err?.message))
     }
   }
+  const isListPage = useRouteMatch(routes.toConnectors({ accountId, projectIdentifier, orgIdentifier }))
 
-  const redirectToReferencedBy = (): void =>
-    history.push({
-      pathname: routes.toConnectorDetails({
-        ...params,
-        connectorId: data.connector?.identifier
-      }),
-      search: `?view=${ConnectorDetailsView.referencedBy}`
-    })
-
-  const { openDialog: openReferenceErrorDialog } = useEntityDeleteErrorHandlerDialog({
+  const redirectToReferencedBy = (): void => {
+    if (isListPage?.isExact) {
+      history.push({
+        pathname: routes.toConnectorDetails({
+          ...params,
+          connectorId: data.connector?.identifier
+        }),
+        search: `?view=${ConnectorDetailsView.referencedBy}`
+      })
+    } else {
+      closeDialog()
+      switchToRefernceTab?.()
+    }
+  }
+  const { openDialog: openReferenceErrorDialog, closeDialog } = useEntityDeleteErrorHandlerDialog({
     entity: {
       type: ResourceType.CONNECTOR,
       name: defaultTo(data.connector?.name, '')
     },
     redirectToReferencedBy: redirectToReferencedBy,
-    forceDeleteCallback: (column as CustomColumn).forceDeleteSupported ? () => deleteHandler(true) : undefined
+    forceDeleteCallback: forceDeleteSupported ? () => deleteHandler(true) : undefined
   })
 
   const handleConnectorDeleteError = (code: string, message: string): void => {
@@ -324,50 +334,83 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
       return
     }
     if (!isEntityInvalid) {
-      ;(column as any).openConnectorModal(true, row?.original?.connector?.type as ConnectorInfoDTO['type'], {
-        connectorInfo: row.original.connector,
-        gitDetails: row.original?.gitDetails,
-        status: row.original?.status
+      openConnectorModal(true, connector?.connector?.type as ConnectorInfoDTO['type'], {
+        connectorInfo: connector?.connector,
+        gitDetails: connector?.gitDetails as IGitContextFormProps,
+        status: connector?.status
       })
     } else {
       const url = routes.toConnectorDetails({ ...params, connectorId: data.connector?.identifier })
-      history.push(connectorDetailsUrlWithGit(url, row.original?.gitDetails))
+      history.push(connectorDetailsUrlWithGit(url, connector?.gitDetails))
     }
   }
 
-  return (
-    !isHarnessManaged && // if isGitSyncEnabled then gitobjectId should also be there to support edit/delete
-    !isGitSyncEnabled === !gitDetails?.objectId && (
-      <Layout.Horizontal className={css.layout}>
-        <Popover
-          isOpen={menuOpen}
-          onInteraction={nextOpenState => {
-            setMenuOpen(nextOpenState)
+  return !isHarnessManaged && // if isGitSyncEnabled then gitobjectId should also be there to support edit/delete
+    !isGitSyncEnabled === !gitDetails?.objectId ? (
+    <Layout.Horizontal className={css.layout}>
+      <Popover
+        isOpen={menuOpen}
+        onInteraction={nextOpenState => {
+          setMenuOpen(nextOpenState)
+        }}
+        className={Classes.DARK}
+        position={Position.RIGHT_TOP}
+      >
+        <Button
+          variation={ButtonVariation.ICON}
+          icon="Options"
+          aria-label="connector menu actions"
+          onClick={e => {
+            e.stopPropagation()
+            setMenuOpen(true)
           }}
-          className={Classes.DARK}
-          position={Position.RIGHT_TOP}
+        />
+        <Menu
+          style={{ minWidth: 'unset' }}
+          onClick={e => {
+            e.stopPropagation()
+          }}
         >
-          <Button
-            variation={ButtonVariation.ICON}
-            icon="Options"
-            aria-label="connector menu actions"
-            onClick={e => {
-              e.stopPropagation()
-              setMenuOpen(true)
+          <RbacMenuItem
+            icon="edit"
+            text="Edit"
+            onClick={handleEdit}
+            permission={{
+              resource: {
+                resourceType: ResourceType.CONNECTOR,
+                resourceIdentifier: data.connector?.identifier || ''
+              },
+              permission: PermissionIdentifier.UPDATE_CONNECTOR
             }}
           />
-          <Menu
-            style={{ minWidth: 'unset' }}
-            onClick={e => {
-              e.stopPropagation()
+          <RbacMenuItem
+            icon="trash"
+            text="Delete"
+            onClick={handleDelete}
+            permission={{
+              resource: {
+                resourceType: ResourceType.CONNECTOR,
+                resourceIdentifier: data.connector?.identifier || ''
+              },
+              permission: PermissionIdentifier.DELETE_CONNECTOR
             }}
-          >
-            <Menu.Item icon="edit" text="Edit" onClick={handleEdit} disabled={!canUpdate} />
-            <Menu.Item icon="trash" text="Delete" onClick={handleDelete} disabled={!canDelete} />
-          </Menu>
-        </Popover>
-      </Layout.Horizontal>
-    )
+          />
+        </Menu>
+      </Popover>
+    </Layout.Horizontal>
+  ) : (
+    <></>
+  )
+}
+
+export const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column }) => {
+  return (
+    <ConnectorMenuItem
+      connector={row.original}
+      onSuccessfulDelete={(column as any).reload}
+      forceDeleteSupported={(column as any).forceDeleteSupported}
+      openConnectorModal={(column as any).openConnectorModal}
+    />
   )
 }
 

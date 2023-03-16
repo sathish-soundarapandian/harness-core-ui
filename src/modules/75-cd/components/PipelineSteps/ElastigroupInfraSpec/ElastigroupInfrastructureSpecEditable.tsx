@@ -220,7 +220,7 @@ const ElastigroupInfraSpecEditable: React.FC<ElastigroupInfraSpecEditableProps> 
                       {getString('connector')}
                     </Text>
                   }
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   multiTypeProps={{ expressions, allowableTypes }}
@@ -248,7 +248,6 @@ const ElastigroupInfraSpecEditable: React.FC<ElastigroupInfraSpecEditableProps> 
                     variableName="connectorRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         formik.setFieldValue('connectorRef', value)

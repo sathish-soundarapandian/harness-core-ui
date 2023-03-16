@@ -22,3 +22,9 @@
     padding-bottom: var(--spacing-small) !important;
   }
 }
+
+.pageStyles {
+  div[class*='PageSubHeader'] {
+    box-shadow: none;
+  }
+}

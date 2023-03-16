@@ -18,6 +18,7 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { cloneDeep, defaultTo, get, omit, set, unset } from 'lodash-es'
 import produce from 'immer'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -181,14 +182,16 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     if (isServiceEntityModalView) {
       return (
         <>
-          <ServiceConfiguration
-            setHasYamlValidationErrors={setHasYamlValidationErrors}
-            serviceData={props.serviceData}
-          />
+          <Container background={Color.FORM_BG} padding={{ right: 'medium', left: 'huge' }}>
+            <ServiceConfiguration
+              setHasYamlValidationErrors={setHasYamlValidationErrors}
+              serviceData={props.serviceData}
+            />
+          </Container>
           <Layout.Horizontal
             className={css.stickyBtnContainer}
             spacing="medium"
-            margin={{ top: 'medium', bottom: 'medium' }}
+            padding={{ top: 'xlarge', left: 'huge', bottom: 'large' }}
           >
             <Button
               variation={ButtonVariation.PRIMARY}
@@ -204,7 +207,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     }
 
     return (
-      <Container padding={{ left: 'xlarge', right: 'xlarge' }} className={css.tabsContainer}>
+      <Container className={css.tabsContainer}>
         <Tabs id="serviceDetailsTab" selectedTabId={selectedTabId} onChange={handleTabChange}>
           {projectIdentifier && (
             <Tab id={ServiceTabs.SUMMARY} title={getString('summary')} panel={props.summaryPanel} />

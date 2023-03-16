@@ -142,6 +142,7 @@ describe('ChaosExperiment Step', () => {
     test('Should render MemoizedSelectPipelineExperiment', () => {
       const mockOnSelect = jest.fn()
       const mockGoToNewExperiment = jest.fn()
+      const mockGoToChaosExperiment = jest.fn()
 
       const { container } = render(
         <TestWrapper>
@@ -149,6 +150,7 @@ describe('ChaosExperiment Step', () => {
             selectedExperimentID="experimentID1"
             onSelect={mockOnSelect}
             goToNewExperiment={mockGoToNewExperiment}
+            goToChaosExperiment={mockGoToChaosExperiment}
           />
         </TestWrapper>
       )

@@ -220,7 +220,6 @@ export const ScriptWizardStepTwo = ({
                           variableName="repoName"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={/* istanbul ignore next */ value => setFieldValue('repoName', value)}
                           isReadonly={isReadonly}
                           allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -252,7 +251,6 @@ export const ScriptWizardStepTwo = ({
                         variableName="branch"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={/* istanbul ignore next */ value => setFieldValue('branch', value)}
                         isReadonly={isReadonly}
                         allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -277,7 +275,6 @@ export const ScriptWizardStepTwo = ({
                         variableName="commitId"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={/* istanbul ignore next */ value => setFieldValue('commitId', value)}
                         isReadonly={isReadonly}
                         allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -300,7 +297,6 @@ export const ScriptWizardStepTwo = ({
                       variableName={'folderPath'}
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={
                         /* istanbul ignore next */ value => {
                           setFieldValue('folderPath', value)

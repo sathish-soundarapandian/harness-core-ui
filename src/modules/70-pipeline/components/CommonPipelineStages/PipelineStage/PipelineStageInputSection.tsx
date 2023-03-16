@@ -7,7 +7,16 @@
 
 import React, { FormEvent, useCallback, useEffect, useMemo, useRef, useState, useContext } from 'react'
 import cx from 'classnames'
-import { Formik, Layout, PageSpinner, FormikForm, Container, Text } from '@harness/uicore'
+import {
+  Formik,
+  Layout,
+  PageSpinner,
+  FormikForm,
+  Container,
+  Text,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { isEmpty, defaultTo, get, set, debounce, noop, memoize, remove, isUndefined, isNil } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
@@ -50,6 +59,10 @@ import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import { replaceDefaultValues } from '@pipeline/utils/templateUtils'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import type { AcceptableValue } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { PipelineStageTabs } from './utils'
 import css from './PipelineStageAdvancedSpecifications.module.scss'
 
@@ -64,7 +77,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
       accountId: string
     }>
   >()
-  const { connectorRef, repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
+  const { connectorRef, repoIdentifier: _repoId, repoName, branch } = useQueryParams<GitQueryParams>()
   const {
     state: {
       selectionState: { selectedStageId = '' }
@@ -73,7 +86,10 @@ function PipelineInputSetFormBasic(): React.ReactElement {
     updateStage,
     getStageFromPipeline
   } = usePipelineContext()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
 
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const repoIdentifier = isGitSyncEnabled ? _repoId : repoName
   const selectedStage = getStageFromPipeline<PipelineStageElementConfig>(selectedStageId).stage
   const pipelineIdentifier = get(selectedStage?.stage as PipelineStageElementConfig, 'spec.pipeline', '')
   const projectIdentifier = get(selectedStage?.stage as PipelineStageElementConfig, 'spec.project', '')
@@ -103,8 +119,10 @@ function PipelineInputSetFormBasic(): React.ReactElement {
 
   const [formErrors, setFormErrors] = useState<FormikErrors<InputSetDTO>>({})
   const formikRef = useRef<FormikProps<PipelineInfoConfig>>()
+  const isChildPipBuildRuntime = useRef<boolean>(true)
   const { getString } = useStrings()
   const { setPipeline: updatePipelineInVariablesContext, selectedInputSetsContext } = usePipelineVariables()
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const [existingProvide, setExistingProvide] = useState<ExistingProvide>('existing')
   const [inputTabFormValues, setInputTabFormValues] = React.useState<PipelineInfoConfig | undefined>(
     {} as PipelineInfoConfig
@@ -280,7 +298,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
             resolvedPipeline,
             getString,
             viewType: StepViewType.DeploymentForm,
-            viewTypeMetadata: { isInputSet: true }
+            viewTypeMetadata: { isInputSet: true },
+            isOptionalVariableAllowed
           }) as any) || formErrors
         resolve(validatedErrors)
       })
@@ -310,6 +329,19 @@ function PipelineInputSetFormBasic(): React.ReactElement {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedInputSets, inputSetData?.data])
+
+  useDeepCompareEffect(() => {
+    //  Special handling ->
+    //  when build value is not runtime in child pipeline
+    //  -> possible when trying to use child pipeline input-sets & build field is configured.
+    if (
+      getMultiTypeFromValue(
+        formikRef.current?.values?.properties?.ci?.codebase?.build as unknown as AcceptableValue
+      ) !== MultiTypeInputType.RUNTIME
+    ) {
+      isChildPipBuildRuntime.current = false
+    } else if (!isChildPipBuildRuntime.current) isChildPipBuildRuntime.current = true
+  }, [formikRef.current?.values?.properties?.ci?.codebase])
 
   const handleValidation = async (values: Pipeline | PipelineInfoConfig): Promise<FormikErrors<InputSetDTO>> => {
     let tempPipeline: PipelineInfoConfig
@@ -485,7 +517,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
                           existingProvide === 'provide' && hasInputSets ? css.inputSetFormRunPipeline : ''
                         }
                         allowableTypes={allowableTypes}
-                        viewTypeMetadata={{ isTemplateBuilder: true }}
+                        viewTypeMetadata={isChildPipBuildRuntime.current ? { isTemplateBuilder: true } : undefined}
                       />
                     </>
                   ) : null}

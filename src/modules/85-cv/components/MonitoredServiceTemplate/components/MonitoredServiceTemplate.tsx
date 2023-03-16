@@ -10,6 +10,7 @@ import type { IconName } from '@harness/uicore'
 import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 import MonitoredServiceInputSetsTemplate from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
@@ -25,21 +26,28 @@ export class MonitoredServiceTemplate extends Template {
     stroke: '#D4E7D1',
     fill: '#E4F7E1'
   }
-  protected isRemoteEnabled = false
+  protected isRemoteEnabled = true
 
   renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
     return <MonitoredTemplateCanvasWithRef ref={formikRef} />
   }
 
-  renderTemplateInputsForm(props: TemplateInputsProps & { accountId: string }): JSX.Element {
+  renderTemplateInputsForm(
+    props: TemplateInputsProps & {
+      accountId: string
+      template: TemplateInputsProps['template'] & { templateScope: TemplateSummaryResponse['templateScope'] }
+    }
+  ): JSX.Element {
     const { template, accountId } = props
-    const { identifier = '', orgIdentifier = '', projectIdentifier = '', versionLabel = '' } = template
+    const { identifier = '', orgIdentifier = '', projectIdentifier = '', versionLabel = '', templateScope } = template
+
     const templateData = {
       accountId,
       identifier,
       orgIdentifier,
       projectIdentifier,
-      versionLabel
+      versionLabel,
+      templateScope
     }
     return <MonitoredServiceInputSetsTemplate templateData={templateData} />
   }

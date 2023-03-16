@@ -23,7 +23,7 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
-import { get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -31,8 +31,17 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { FileUsage } from '@filestore/interfaces/FileStore'
-import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
-import type { KustomizeWithHarnessStorePropTypeDataType, ManifestTypes } from '../../ManifestInterface'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  ManifestIdentifierValidation,
+  ManifestStoreMap
+} from '../../Manifesthelper'
+import type {
+  KustomizeWithHarnessStoreManifestLastStepPrevStepData,
+  KustomizeWithHarnessStorePropTypeDataType,
+  ManifestTypes
+} from '../../ManifestInterface'
+import { removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface KustomizeWithHarnessStorePropType {
@@ -44,6 +53,7 @@ interface KustomizeWithHarnessStorePropType {
   manifestIdsList: Array<string>
   expressions: Array<string>
   isReadonly?: boolean
+  editManifestModePrevStepData?: KustomizeWithHarnessStoreManifestLastStepPrevStepData
 }
 
 function KustomizeWithHarnessStore({
@@ -56,9 +66,12 @@ function KustomizeWithHarnessStore({
   previousStep,
   manifestIdsList,
   expressions,
-  isReadonly
+  isReadonly,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & KustomizeWithHarnessStorePropType): React.ReactElement {
   const { getString } = useStrings()
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   const getInitialValues = (): KustomizeWithHarnessStorePropTypeDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -69,15 +82,18 @@ function KustomizeWithHarnessStore({
         ...specValues,
         identifier: initialValues.identifier,
         overlayConfiguration,
-        patchesPaths,
+        patchesPaths:
+          typeof patchesPaths === 'string' ? patchesPaths : removeEmptyFieldsFromStringArray(patchesPaths, true),
         pluginPath: get(initialValues, 'spec.pluginPath'),
-        skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning')
+        skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
+        enableDeclarativeRollback: get(initialValues, 'spec.enableDeclarativeRollback')
       }
     }
     return {
       identifier: '',
       files: [''],
-      skipResourceVersioning: false
+      skipResourceVersioning: false,
+      enableDeclarativeRollback: false
     }
   }
 
@@ -100,9 +116,16 @@ function KustomizeWithHarnessStore({
                   kustomizeYamlFolderPath: formData.overlayConfiguration
                 }
               : undefined,
-            patchesPaths: formData.patchesPaths,
+            patchesPaths:
+              typeof formData.patchesPaths === 'string'
+                ? formData.patchesPaths
+                : removeEmptyFieldsFromStringArray(formData.patchesPaths),
             pluginPath: formData?.pluginPath,
-            skipResourceVersioning: formData.skipResourceVersioning
+            skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
+              formData?.skipResourceVersioning,
+              formData?.enableDeclarativeRollback
+            ),
+            enableDeclarativeRollback: formData?.enableDeclarativeRollback
           }
         }
       }
@@ -135,12 +158,15 @@ function KustomizeWithHarnessStore({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData
           } as unknown as KustomizeWithHarnessStorePropTypeDataType)
         }}
       >
         {formik => {
+          const isSkipVersioningDisabled =
+            isBoolean(formik?.values?.enableDeclarativeRollback) && !!formik?.values?.enableDeclarativeRollback
+
           return (
             <Form>
               <Layout.Vertical
@@ -193,7 +219,6 @@ function KustomizeWithHarnessStore({
                         variableName="overlayConfiguration"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={
                           /* istanbul ignore next */ value => formik.setFieldValue('overlayConfiguration', value)
                         }
@@ -214,6 +239,7 @@ function KustomizeWithHarnessStore({
                         disableTypeSelection: false,
                         label: <Text>{getString('pipeline.manifestTypeLabels.KustomizePatches')}</Text>
                       }}
+                      allowSinglePathDeletion
                     />
                   </div>
                   <div
@@ -237,7 +263,6 @@ function KustomizeWithHarnessStore({
                         variableName="pluginPath"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('pluginPath', value)}
                         isReadonly={isReadonly}
                       />
@@ -252,33 +277,57 @@ function KustomizeWithHarnessStore({
                       addDomId={true}
                       summary={getString('advancedTitle')}
                       details={
-                        <Layout.Horizontal
-                          width={'50%'}
-                          flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-                          margin={{ bottom: 'huge' }}
-                        >
-                          <FormMultiTypeCheckboxField
-                            name="skipResourceVersioning"
-                            label={getString('skipResourceVersion')}
-                            multiTypeTextbox={{ expressions, allowableTypes }}
-                            className={css.checkbox}
-                          />
-                          {getMultiTypeFromValue(get(formik, 'values.skipResourceVersioning')) ===
-                            MultiTypeInputType.RUNTIME && (
-                            <ConfigureOptions
-                              value={get(formik, 'values.skipResourceVersioning', '') as string}
-                              type="String"
-                              variableName="skipResourceVersioning"
-                              showRequiredField={false}
-                              showDefaultField={false}
-                              showAdvanced={true}
-                              onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
-                              style={{ alignSelf: 'center', marginTop: 11 }}
-                              className={css.addmarginTop}
-                              isReadonly={isReadonly}
+                        <Layout.Vertical width={'50%'} margin={{ bottom: 'huge' }}>
+                          <Layout.Horizontal
+                            flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+                            margin={{ bottom: 'small' }}
+                          >
+                            <FormMultiTypeCheckboxField
+                              name="enableDeclarativeRollback"
+                              label={getString('pipeline.manifestType.enableDeclarativeRollback')}
+                              multiTypeTextbox={{ expressions, allowableTypes }}
+                              className={css.checkbox}
                             />
-                          )}
-                        </Layout.Horizontal>
+                            {getMultiTypeFromValue(formik.values?.enableDeclarativeRollback) ===
+                              MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                value={get(formik, 'values.enableDeclarativeRollback', '') as string}
+                                type="String"
+                                variableName="enableDeclarativeRollback"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
+                                style={{ alignSelf: 'center', marginTop: 11 }}
+                                className={css.addmarginTop}
+                                isReadonly={isReadonly}
+                              />
+                            )}
+                          </Layout.Horizontal>
+                          <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <FormMultiTypeCheckboxField
+                              key={isSkipVersioningDisabled.toString()}
+                              name="skipResourceVersioning"
+                              label={getString('skipResourceVersion')}
+                              multiTypeTextbox={{ expressions, allowableTypes, disabled: isSkipVersioningDisabled }}
+                              className={css.checkbox}
+                              disabled={isSkipVersioningDisabled}
+                            />
+                            {getMultiTypeFromValue(get(formik, 'values.skipResourceVersioning')) ===
+                              MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                value={get(formik, 'values.skipResourceVersioning', '') as string}
+                                type="String"
+                                variableName="skipResourceVersioning"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
+                                style={{ alignSelf: 'center', marginTop: 11 }}
+                                className={css.addmarginTop}
+                                isReadonly={isReadonly}
+                              />
+                            )}
+                          </Layout.Horizontal>
+                        </Layout.Vertical>
                       }
                     />
                   </Accordion>
@@ -289,7 +338,7 @@ function KustomizeWithHarnessStore({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

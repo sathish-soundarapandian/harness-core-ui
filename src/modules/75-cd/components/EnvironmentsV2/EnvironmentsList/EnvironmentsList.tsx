@@ -13,7 +13,7 @@ import { defaultTo, get } from 'lodash-es'
 import { TableV2, useToaster } from '@harness/uicore'
 import { EnvironmentResponse, EnvironmentResponseDTO, useDeleteEnvironmentV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -37,7 +37,6 @@ export default function EnvironmentsList({ response, refetch }: any) {
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
-  const { CDC_ENVIRONMENT_DASHBOARD_NG } = useFeatureFlags()
   const [environmentToDelete, setEnvironmentToDelete] = useState<EnvironmentResponseDTO>({})
   const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
 
@@ -153,10 +152,7 @@ export default function EnvironmentsList({ response, refetch }: any) {
             projectIdentifier,
             module,
             environmentIdentifier: get(row, 'environment.identifier', ''),
-            sectionId:
-              CDC_ENVIRONMENT_DASHBOARD_NG && projectIdentifier
-                ? EnvironmentDetailsTab.SUMMARY
-                : EnvironmentDetailsTab.CONFIGURATION
+            sectionId: projectIdentifier ? EnvironmentDetailsTab.SUMMARY : EnvironmentDetailsTab.CONFIGURATION
           })
         )
       }}

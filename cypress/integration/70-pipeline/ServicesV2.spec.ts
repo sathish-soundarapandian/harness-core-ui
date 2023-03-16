@@ -34,12 +34,6 @@ describe('Service V2', () => {
   const afterFinalSaveConnectorsListEndpoint =
     '/ng/api/connectors/listV2?routingId=accountId&pageIndex=0&pageSize=10&searchTerm=&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&includeAllConnectorsAvailableAtScope=true'
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
-
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
 
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {

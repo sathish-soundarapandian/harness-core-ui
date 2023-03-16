@@ -12,6 +12,7 @@ import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ErrorType, Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import { isValueRuntimeInput } from '@common/utils/utils'
 
 const MAX_RETRIES = 10000
 
@@ -214,12 +215,8 @@ export function getFailureStrategiesValidationSchema(
     // where `array().required()` sets minimum required length of the array as 1
     // TODO: get rid of this custom logic once we upgrade Yup
     test(value: unknown): boolean | Yup.ValidationError {
-      const isUndefined = typeof value === 'undefined'
-
-      if (!isUndefined && !Array.isArray(value)) {
-        return this.createError({
-          message: getString('pipeline.failureStrategies.validation.arrayOrUndefined')
-        })
+      if (typeof value === 'undefined' || isValueRuntimeInput(value as any)) {
+        return true
       }
 
       if (Array.isArray(value)) {
@@ -236,7 +233,9 @@ export function getFailureStrategiesValidationSchema(
         return validationError
       }
 
-      return true
+      return this.createError({
+        message: getString('pipeline.failureStrategies.validation.arrayOrRuntime')
+      })
     }
   })
 }

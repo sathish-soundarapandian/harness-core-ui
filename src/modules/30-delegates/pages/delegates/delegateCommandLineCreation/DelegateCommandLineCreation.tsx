@@ -16,13 +16,18 @@ import { useParams } from 'react-router-dom'
 import type { HideModal } from '@harness/use-modal'
 import DelegatesEmptyState from '@delegates/images/DelegatesEmptyState.svg'
 import { useStrings } from 'framework/strings'
-import { useGetInstallationCommand } from 'services/portal'
+import {
+  GenerateKubernetesYamlQueryParams,
+  useGenerateKubernetesYaml,
+  useGetInstallationCommand
+} from 'services/portal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   CommandType,
   DelegateCommandLineTypes,
   DelegateCommonProblemTypes,
   DelegateDefaultName,
+  DelegateNameLengthLimit,
   KubernetesType
 } from '@delegates/constants'
 import { useGenerateTerraformModule } from 'services/cd-ng'
@@ -34,6 +39,7 @@ import DockerCommands from './components/DockerCommands'
 import TerraFormCommands from './components/TerraFormCommands'
 import KubernetesManifestCommands from './components/KubernetesManifestCommands'
 import HelmChartCommands from './components/HelmChartCommands'
+import KuberntesManifestSizingTable from './components/KuberntesManifestSizingTable'
 import css from './DelegateCommandLineCreation.module.scss'
 
 interface DelegateCommandLineCreationProps {
@@ -49,7 +55,8 @@ interface CommonStatesforAllClicksProps {
 
 const installDelegateLink =
   'https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview'
-const intsallDelegateLinkTutorial = 'https://developer.harness.io/tutorials/platform/install-delegate'
+const intsallDelegateLinkTutorial =
+  'https://developer.harness.io/docs/platform/Delegates/install-delegates/install-a-delegate'
 
 const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = ({ onDone, oldDelegateCreation }) => {
   const { getString } = useStrings()
@@ -59,6 +66,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
   const [commandType, setCommandType] = useState<CommandType | undefined>(CommandType.HELM)
   const [command, setCommand] = useState<string>('')
   const [errorDelegateName, setErrorDelegateName] = useState<boolean>(false)
+  const [errorDelegateNameLength, setErrorDelegateNameLength] = useState<boolean>(false)
   const [delegateDefaultName, setDelegateDefaultName] = useState<string>(DelegateDefaultName.HELM)
   const [originalCommand, setOriginalCommand] = useState<string>('')
   const [commonProblemsDelegateType, setCommonProblemsDelegateType] = useState<DelegateCommonProblemTypes | undefined>(
@@ -67,6 +75,9 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
   const { showError } = useToaster()
   const [verifyButtonClicked, setVerifyButtonClicked] = useState<boolean>(false)
   const [delegateName, setDelegateName] = useState<string>(DelegateDefaultName.HELM)
+  const [kubenetesYamlOriginal, setKubernetesYamlOriginal] = useState<string>('')
+
+  const [kubenetesYamlUpdatedValue, setKubernetesYamlUpdatedValue] = useState<string>('')
   const [showVerifyButton, setShowVerifyButton] = useState<boolean>(true)
   const { trackEvent } = useTelemetry()
   const {
@@ -81,6 +92,31 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
     },
     lazy: true
   })
+
+  const { mutate: downloadKubernetesYaml, error: kubernetesYamlError } = useGenerateKubernetesYaml({
+    queryParams: {
+      accountId,
+      orgId: orgIdentifier,
+      projectId: projectIdentifier,
+      fileFormat: 'text/plain'
+    } as GenerateKubernetesYamlQueryParams
+  })
+  const getKubernetesYaml = async () => {
+    if (!kubenetesYamlOriginal) {
+      const yamlData = await downloadKubernetesYaml({
+        name: DelegateDefaultName.KUBERNETES,
+        delegateType: CommandType.KUBERNETES,
+        k8sConfigDetails: { k8sPermissionType: 'CLUSTER_ADMIN' },
+        orgIdentifier: orgIdentifier,
+        projectIdentifier: projectIdentifier,
+        runAsRoot: true,
+        size: 'LAPTOP',
+        tokenName: 'default_token'
+      })
+      setKubernetesYamlOriginal(yamlData as any)
+      setKubernetesYamlUpdatedValue(yamlData as any)
+    }
+  }
   const setTerraFormDataToCommand = () => {
     if (terraFormData) {
       setCommand(terraFormData)
@@ -107,6 +143,12 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
     }
   }, [error])
   useEffect(() => {
+    if (kubernetesYamlError) {
+      showError(getErrorInfoFromErrorObject(kubernetesYamlError))
+    }
+  }, [kubernetesYamlError])
+
+  useEffect(() => {
     if (terraformError) {
       showError(getErrorInfoFromErrorObject(terraformError))
     }
@@ -123,7 +165,9 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
           setTerraFormDataToCommand()
         }
       } else {
-        refetch({ queryParams: { accountId, commandType } })
+        refetch({
+          queryParams: { accountId, commandType, orgId: orgIdentifier, projectId: projectIdentifier }
+        })
       }
     }
   }, [commandType])
@@ -136,6 +180,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
   const commonCommandsForAllDelegateTypes = () => {
     setVerifyButtonClicked(false)
     setErrorDelegateName(false)
+    setErrorDelegateNameLength(false)
     setShowVerifyButton(true)
   }
 
@@ -153,6 +198,12 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
   }
   const onDelegateError = () => {
     setShowVerifyButton(false)
+  }
+  const checkIfErrorBlockAlreadyVisible = () => {
+    if (!showVerifyButton && verifyButtonClicked) {
+      setShowVerifyButton(true)
+    }
+    setVerifyButtonClicked(false)
   }
   const kubernetesDelegateButtons = (
     <Layout.Horizontal spacing="none" margin={{ bottom: 'xlarge', top: 'none' }}>
@@ -198,12 +249,13 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
         size={ButtonSize.SMALL}
         onClick={() => {
           commonStatesforAllClicks({
-            commandTypeLocal: undefined,
-            delegateNameLocal: '',
-            delegateDefaultNameLocal: '',
+            commandTypeLocal: CommandType.KUBERNETES,
+            delegateNameLocal: DelegateDefaultName.KUBERNETES,
+            delegateDefaultNameLocal: DelegateDefaultName.KUBERNETES,
             commonProblemsDelegateTypeLocal: DelegateCommonProblemTypes.KUBERNETES_MANIFEST
           })
           setkubernetesType(KubernetesType.KUBERNETES_MANIFEST)
+          getKubernetesYaml()
           trackEvent(DelegateActions.DelegateCommandLineKubernetesManifest, {
             category: Category.DELEGATE
           })
@@ -214,25 +266,46 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       ></Button>
     </Layout.Horizontal>
   )
+  const delegateNameError = () => {
+    let errorMessage = undefined
+    if (errorDelegateName) {
+      errorMessage = getString('delegates.delegateNameRegexIssue')
+    }
+    if (errorDelegateNameLength) {
+      const lengthMessage = getString('delegates.delegateNameLength', { length: DelegateNameLengthLimit })
+      errorMessage = errorMessage ? `${errorMessage}${lengthMessage}` : lengthMessage
+    }
+    return errorMessage
+  }
   const delegateNameInput = (
     <Layout.Vertical margin={{ bottom: 'xlarge' }}>
       <Label>{getString('delegate.delegateName')}</Label>
       <TextInput
         className={css.delegateNameText}
         value={delegateName}
-        errorText={errorDelegateName ? getString('delegates.delegateNameRegexIssue') : undefined}
+        errorText={delegateNameError()}
+        maxLength={DelegateNameLengthLimit + 1}
         placeholder={getString('delegate.delegateName')}
-        intent={errorDelegateName ? Intent.DANGER : Intent.NONE}
+        intent={errorDelegateName || errorDelegateNameLength ? Intent.DANGER : Intent.NONE}
         onChange={e => {
           const latestValue = (e.currentTarget as HTMLInputElement).value.trim()
           const delegateNameSchema = Yup.object({
             name: Yup.string().trim().matches(delegateNameRegex)
           })
+          const delegateLengthSchema = Yup.object({
+            name: Yup.string().trim().max(DelegateNameLengthLimit)
+          })
           const validText = delegateNameSchema.isValidSync({ name: latestValue })
+          const validTextLength = delegateLengthSchema.isValidSync({ name: latestValue })
+          setErrorDelegateNameLength(!validTextLength)
           setErrorDelegateName(!validText)
-          setVerifyButtonClicked(false)
+          checkIfErrorBlockAlreadyVisible()
           setDelegateName(latestValue)
           setCommand(originalCommand.replace(new RegExp(delegateDefaultName, 'g'), latestValue))
+
+          setKubernetesYamlUpdatedValue(
+            kubenetesYamlOriginal.replace(new RegExp(delegateDefaultName, 'g'), latestValue)
+          )
         }}
       />
     </Layout.Vertical>
@@ -257,11 +330,15 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
                 margin={{ bottom: 'xlarge' }}
               >
                 <Button
-                  disabled={!delegateName || errorDelegateName}
+                  disabled={!delegateName || errorDelegateName || errorDelegateNameLength}
                   variation={ButtonVariation.SECONDARY}
                   text={getString('verify')}
                   onClick={() => {
                     setVerifyButtonClicked(true)
+                    setShowVerifyButton(false)
+                    trackEvent(`${DelegateActions.DelegateCommandLineVerify} ${commonProblemsDelegateType}`, {
+                      category: Category.DELEGATE
+                    })
                   }}
                   margin={{ right: 'xlarge' }}
                 />
@@ -298,7 +375,15 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
         {delegateType === DelegateCommandLineTypes.KUBERNETES && (
           <>
             <>{kubernetesType === KubernetesType.HELM_CHART && <HelmChartCommands command={command} />}</>
-            <>{kubernetesType === KubernetesType.KUBERNETES_MANIFEST && <KubernetesManifestCommands />}</>
+            <>
+              {kubernetesType === KubernetesType.KUBERNETES_MANIFEST && (
+                <KubernetesManifestCommands
+                  command={command}
+                  yaml={kubenetesYamlUpdatedValue}
+                  yamlDownloaded={!!kubenetesYamlUpdatedValue}
+                />
+              )}
+            </>
             <>{kubernetesType === KubernetesType.TERRAFORM && <TerraFormCommands command={command} />}</>
           </>
         )}
@@ -309,32 +394,34 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
     <>
       <Layout.Horizontal padding="xxlarge" spacing="large" height="98%">
         <Layout.Vertical width="80%">
-          <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
-            <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-              {getString('delegates.newDelegate')}
+          <Layout.Vertical spacing="none">
+            <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
+              <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+                {getString('delegates.newDelegate')}
+              </Text>
+              {oldDelegateCreation && (
+                <Button
+                  variation={ButtonVariation.LINK}
+                  onClick={() => {
+                    if (oldDelegateCreation) {
+                      trackEvent(DelegateActions.SwitchedToOldDelegateCreationModal, {
+                        category: Category.DELEGATE
+                      })
+                      oldDelegateCreation()
+                      onDone()
+                    }
+                  }}
+                  text={getString('delegates.commandLineCreation.oldWayToCreateDelegate')}
+                />
+              )}
+            </Layout.Horizontal>
+            <Text font={{ variation: FontVariation.SMALL }} margin={{ bottom: 'xxlarge' }}>
+              {getString('delegates.commandLineCreation.installDelegateSubText')}{' '}
+              <a target="_blank" rel="noreferrer" href={installDelegateLink}>
+                {getString('common.learnMoreDelegate')}
+              </a>
             </Text>
-            {oldDelegateCreation && (
-              <Button
-                variation={ButtonVariation.LINK}
-                onClick={() => {
-                  if (oldDelegateCreation) {
-                    trackEvent(DelegateActions.SwitchedToOldDelegateCreationModal, {
-                      category: Category.DELEGATE
-                    })
-                    oldDelegateCreation()
-                    onDone()
-                  }
-                }}
-                text={getString('delegates.commandLineCreation.oldWayToCreateDelegate')}
-              />
-            )}
-          </Layout.Horizontal>
-          <Text font={{ variation: FontVariation.SMALL }} margin={{ bottom: 'xxlarge' }}>
-            {getString('delegates.commandLineCreation.installDelegateSubText')}{' '}
-            <a target="_blank" rel="noreferrer" href={installDelegateLink}>
-              {getString('common.learnMoreDelegate')}
-            </a>
-          </Text>
+          </Layout.Vertical>
           <Layout.Vertical height="99%" padding={{ bottom: 'xxlarge' }} className={css.delegateDetails}>
             <Text
               font={{ variation: FontVariation.H4 }}
@@ -350,13 +437,17 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
                 className={css.kubernetesButtons}
                 onClick={() => {
                   commonStatesforAllClicks({
-                    commandTypeLocal: undefined,
-                    delegateNameLocal: '',
-                    delegateDefaultNameLocal: DelegateDefaultName.TERRAFORM,
-                    commonProblemsDelegateTypeLocal: undefined
+                    commandTypeLocal: CommandType.HELM,
+                    delegateNameLocal: DelegateDefaultName.HELM,
+                    delegateDefaultNameLocal: DelegateDefaultName.HELM,
+                    commonProblemsDelegateTypeLocal: DelegateCommonProblemTypes.HELM_CHART
                   })
                   setDelegateType(DelegateCommandLineTypes.KUBERNETES)
+                  setkubernetesType(KubernetesType.HELM_CHART)
                   trackEvent(DelegateActions.DelegateCommandLineKubernetes, {
+                    category: Category.DELEGATE
+                  })
+                  trackEvent(DelegateActions.DelegateCommandLineHelm, {
                     category: Category.DELEGATE
                   })
                 }}
@@ -398,7 +489,9 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
             {displayDelegateNameInput()}
             {displayDockerDetails()}
             {displayKubernetesDelegateDetails()}
-
+            {delegateType === DelegateCommandLineTypes.KUBERNETES && kubernetesType && (
+              <KuberntesManifestSizingTable delegateType={delegateType} />
+            )}
             {(delegateType === DelegateCommandLineTypes.DOCKER || kubernetesType) && (
               <Text
                 font={{ variation: FontVariation.SMALL }}
@@ -406,6 +499,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
                 rightIcon="launch"
                 color={Color.PRIMARY_7}
                 rightIconProps={{
+                  color: Color.PRIMARY_7,
                   className: css.iconPointer,
                   onClick: () => {
                     window.open(intsallDelegateLinkTutorial, '_blank', 'noreferrer')
@@ -417,6 +511,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
                 </a>
               </Text>
             )}
+
             {verifyDelegateConnection}
           </Layout.Vertical>
         </Layout.Vertical>

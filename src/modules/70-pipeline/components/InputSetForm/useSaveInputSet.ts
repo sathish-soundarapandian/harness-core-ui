@@ -203,6 +203,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
       createInputSet,
       updateInputSet,
       initialGitDetails,
+      initialStoreMetadata,
       getString,
       history,
       isEdit,

@@ -56,21 +56,21 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
     orgIdentifier: string
     accountId: string
   }>()
-
+  const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
   let connectorVal = get(
     formik?.values,
-    `${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.connectorRef`
+    `${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.store.spec.connectorRef`
   )
   if (!connectorVal) {
-    const varFiles = get(props?.allValues, 'spec.configuration.spec.varFiles', [])
-    const varID = get(formik?.values, `${path}.spec.configuration.spec.varFiles[${index}].varFile.identifier`, '')
+    const varFiles = get(props?.allValues, `spec.${fieldPath}.spec.varFiles`, [])
+    const varID = get(formik?.values, `${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.identifier`, '')
     varFiles.forEach((file: any) => {
       if (file?.varFile?.identifier === varID) {
         connectorVal = get(file?.varFile, 'spec.store.spec.connectorRef')
       }
     })
   }
-  const storeType = get(formik?.values, `${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.type`)
+  const storeType = get(formik?.values, `${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.store.type`)
   const reposRequired =
     getMultiTypeFromValue(remoteVar?.varFile?.spec?.store?.spec?.repositoryName) === MultiTypeInputType.RUNTIME
   const {
@@ -129,7 +129,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
           accountIdentifier={accountId}
           selected={get(
             initialValues,
-            `${path}.configuration?.spec?.varFiles[${index}].varFile.spec.store.spec.connectorRef`,
+            `${path}.${fieldPath}?.spec?.varFiles[${index}].varFile.spec.store.spec.connectorRef`,
             ''
           )}
           multiTypeProps={{ allowableTypes, expressions }}
@@ -137,7 +137,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
           orgIdentifier={orgIdentifier}
           width={388}
           type={[remoteVar?.varFile?.spec?.store?.type]}
-          name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.connectorRef`}
+          name={`${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.store.spec.connectorRef`}
           label={getString('connector')}
           placeholder={getString('select')}
           disabled={readonly}
@@ -149,7 +149,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
               } else {
                 setShowRepoName(false)
                 formik?.setFieldValue(
-                  `${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.repoName`,
+                  `${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.store.spec.repoName`,
                   ''
                 )
               }
@@ -163,7 +163,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
       {isRepoRuntime && (
         <TextFieldInputSetView
           label={getString('pipelineSteps.repoName')}
-          name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.repoName`}
+          name={`${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.store.spec.repoName`}
           placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
           disabled={readonly}
           multiTextInputProps={{
@@ -174,7 +174,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
           template={inputSetData?.template}
-          fieldPath={`spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.repoName`}
+          fieldPath={`spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.store.spec.repoName`}
           className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
@@ -182,7 +182,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
       {getMultiTypeFromValue(remoteVar?.varFile?.spec?.store?.spec?.branch) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormInput.MultiTextInput
-            name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.branch`}
+            name={`${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.store.spec.branch`}
             label={getString('pipelineSteps.deploy.inputSet.branch')}
             multiTextInputProps={{
               expressions,
@@ -194,7 +194,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
       {getMultiTypeFromValue(remoteVar?.varFile?.spec?.store?.spec?.commitId) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormInput.MultiTextInput
-            name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.commitId`}
+            name={`${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.store.spec.commitId`}
             label={getString('pipeline.manifestType.commitId')}
             multiTextInputProps={{
               expressions,
@@ -207,7 +207,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <List
             label={getString('filePaths')}
-            name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.paths`}
+            name={`${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.store.spec.paths`}
             disabled={readonly}
             style={{ marginBottom: 'var(--spacing-small)' }}
             isNameOfArrayType
@@ -218,7 +218,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormInput.MultiTypeInput
             label={getString('pipelineSteps.repoName')}
-            name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.repositoryName`}
+            name={`${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.store.spec.repositoryName`}
             placeholder={getString(ArtifactRepoLoading ? 'common.loading' : 'cd.selectRepository')}
             disabled={readonly}
             useValue
@@ -238,7 +238,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <List
             label={getString('cd.artifactPaths')}
-            name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.artifactPaths`}
+            name={`${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.store.spec.artifactPaths`}
             disabled={readonly}
             style={{ marginBottom: 'var(--spacing-small)' }}
             isNameOfArrayType

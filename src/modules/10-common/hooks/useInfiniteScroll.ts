@@ -39,6 +39,7 @@ interface InfiniteScrollReturnProps {
   offsetToFetch: MutableRefObject<number>
   loadItems: () => void
   attachRefToLastElement: (index: number) => boolean
+  reset: () => void
 }
 
 /*
@@ -128,6 +129,11 @@ export const useInfiniteScroll = (props: InfiniteScrollProps): InfiniteScrollRet
     [fetching, hasMore.current, loadItems]
   )
 
+  const reset = (): void => {
+    offsetToFetch.current = 0
+    loadItems()
+  }
+
   // Set the intersection observer
   useEffect(() => {
     // Default options for the IO
@@ -172,6 +178,7 @@ export const useInfiniteScroll = (props: InfiniteScrollProps): InfiniteScrollRet
     hasMore,
     loadItems,
     attachRefToLastElement,
-    offsetToFetch
+    offsetToFetch,
+    reset
   }
 }

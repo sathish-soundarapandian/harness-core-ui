@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, queryByText } from '@testing-library/react'
+import { render, waitFor, queryByText, screen, RenderResult } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import SavedConnectorDetails, { RenderDetailsSection, getActivityDetails } from '../SavedConnectorDetails'
@@ -23,16 +23,25 @@ import {
   Artifactory,
   AwsCodeCommit,
   PDC,
-  GithubRepo
+  GithubRepo,
+  serviceNowADFS,
+  jiraPAT
 } from '../../../__tests__/mockData'
+
+const renderSavedConnectorDetailsComponent = (connector: ConnectorInfoDTO): RenderResult => {
+  return render(
+    <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <SavedConnectorDetails connector={connector} />
+    </TestWrapper>
+  )
+}
 
 describe('Saved Connector Details', () => {
   test('render for Inline K8s schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={K8WithInheritFromDelegate.data.connector as ConnectorInfoDTO} />
-      </TestWrapper>
+    const { container, getByText } = renderSavedConnectorDetailsComponent(
+      K8WithInheritFromDelegate.data.connector as ConnectorInfoDTO
     )
+
     await waitFor(() => queryByText(container, 'k8WithTags'))
     expect(getByText('k8WithTags')).toBeDefined()
     expect(getByText('InheritFromDelegate')).toBeDefined()
@@ -40,54 +49,48 @@ describe('Saved Connector Details', () => {
   })
 
   test('render for Manual K8s schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={ManualK8s.data.content[0].connector as ConnectorInfoDTO} />
-      </TestWrapper>
+    const { container, getByText } = renderSavedConnectorDetailsComponent(
+      ManualK8s.data.content[0].connector as ConnectorInfoDTO
     )
+
     await waitFor(() => queryByText(container, 'k8sId'))
     expect(getByText('K8sName')).toBeDefined()
     expect(getByText('ManualConfig')).toBeDefined()
     expect(container).toMatchSnapshot()
   })
   test('render for GitHttp schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={GitHttp.data.content[0].connector as ConnectorInfoDTO} />
-      </TestWrapper>
+    const { container, getByText } = renderSavedConnectorDetailsComponent(
+      GitHttp.data.content[0].connector as ConnectorInfoDTO
     )
+
     await waitFor(() => queryByText(container, 'GitHttpId'))
     expect(getByText('GitHttpName')).toBeDefined()
     expect(container).toMatchSnapshot()
   })
 
   test('render for Docker schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={Docker.data.content[0].connector as ConnectorInfoDTO} />
-      </TestWrapper>
+    const { container, getByText } = renderSavedConnectorDetailsComponent(
+      Docker.data.content[0].connector as ConnectorInfoDTO
     )
+
     await waitFor(() => queryByText(container, 'DockerId'))
     expect(getByText('DockerName')).toBeDefined()
     expect(container).toMatchSnapshot()
   })
 
   test('render for GCP schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={GCP.data.content[0].connector as ConnectorInfoDTO} />
-      </TestWrapper>
+    const { container, getByText } = renderSavedConnectorDetailsComponent(
+      GCP.data.content[0].connector as ConnectorInfoDTO
     )
+
     await waitFor(() => queryByText(container, 'GCP_for_demo'))
     expect(getByText('GCP for demo')).toBeDefined()
     expect(container).toMatchSnapshot()
   })
 
   test('render for AWS schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={AWS.data.content[0].connector as ConnectorInfoDTO} />
-      </TestWrapper>
+    const { container, getByText } = renderSavedConnectorDetailsComponent(
+      AWS.data.content[0].connector as ConnectorInfoDTO
     )
 
     await waitFor(() => queryByText(container, 'AWS_demo'))
@@ -96,10 +99,8 @@ describe('Saved Connector Details', () => {
   })
 
   test('render for Nexus schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={Nexus.data.content[0].connector as ConnectorInfoDTO} />
-      </TestWrapper>
+    const { container, getByText } = renderSavedConnectorDetailsComponent(
+      Nexus.data.content[0].connector as ConnectorInfoDTO
     )
 
     await waitFor(() => queryByText(container, 'Nexus_one'))
@@ -108,10 +109,8 @@ describe('Saved Connector Details', () => {
   })
 
   test('render for Artifactory schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={Artifactory.data.content[0].connector as ConnectorInfoDTO} />
-      </TestWrapper>
+    const { container, getByText } = renderSavedConnectorDetailsComponent(
+      Artifactory.data.content[0].connector as ConnectorInfoDTO
     )
 
     await waitFor(() => queryByText(container, 'Artifacory_One'))
@@ -120,10 +119,8 @@ describe('Saved Connector Details', () => {
   })
 
   test('render for Vault schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={Vault.data.content[0].connector as ConnectorInfoDTO} />
-      </TestWrapper>
+    const { container, getByText } = renderSavedConnectorDetailsComponent(
+      Vault.data.content[0].connector as ConnectorInfoDTO
     )
 
     await waitFor(() => queryByText(container, 'VaultId'))
@@ -131,10 +128,8 @@ describe('Saved Connector Details', () => {
     expect(container).toMatchSnapshot()
   })
   test('render for VaultWithIamAMS schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={VaultWithIamAMS.data.content[0].connector as ConnectorInfoDTO} />
-      </TestWrapper>
+    const { container, getByText } = renderSavedConnectorDetailsComponent(
+      VaultWithIamAMS.data.content[0].connector as ConnectorInfoDTO
     )
 
     await waitFor(() => queryByText(container, 'VaultId'))
@@ -143,10 +138,8 @@ describe('Saved Connector Details', () => {
   })
 
   test('render for AwsCodeCommit schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={AwsCodeCommit.data.content[0].connector as ConnectorInfoDTO} />
-      </TestWrapper>
+    const { container, getByText } = renderSavedConnectorDetailsComponent(
+      AwsCodeCommit.data.content[0].connector as ConnectorInfoDTO
     )
 
     await waitFor(() => queryByText(container, 'awscodecommit'))
@@ -155,11 +148,7 @@ describe('Saved Connector Details', () => {
   })
 
   test('render for PDC schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={PDC.data.connector as ConnectorInfoDTO} />
-      </TestWrapper>
-    )
+    const { container, getByText } = renderSavedConnectorDetailsComponent(PDC.data.connector as ConnectorInfoDTO)
 
     await waitFor(() => queryByText(container, 'PDCX'))
     expect(getByText('PDC')).toBeDefined()
@@ -167,11 +156,7 @@ describe('Saved Connector Details', () => {
   })
 
   test('render for Github Repo schema', async () => {
-    const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <SavedConnectorDetails connector={GithubRepo.connector as ConnectorInfoDTO} />
-      </TestWrapper>
-    )
+    const { container, getByText } = renderSavedConnectorDetailsComponent(GithubRepo.connector as ConnectorInfoDTO)
 
     await waitFor(() => queryByText(container, 'github-identifier'))
     expect(getByText('github')).toBeDefined()
@@ -196,6 +181,22 @@ describe('Saved Connector Details', () => {
     )
     await waitFor(() => queryByText(container, 'Connector Activity'))
     expect(getByText('connectorCreated')).toBeDefined()
+    expect(container).toMatchSnapshot()
+  })
+
+  test('render for ServiceNow ADFS schema', async () => {
+    const { container } = renderSavedConnectorDetailsComponent(serviceNowADFS.connector as ConnectorInfoDTO)
+
+    const adfsURL = await screen.findByText('connectors.serviceNow.adfsUrl')
+    expect(adfsURL).toBeInTheDocument()
+    expect(container).toMatchSnapshot()
+  })
+
+  test('render for Jira PAT schema', async () => {
+    const { container } = renderSavedConnectorDetailsComponent(jiraPAT.connector as ConnectorInfoDTO)
+
+    const patText = await screen.findByText('personalAccessToken')
+    expect(patText).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 })

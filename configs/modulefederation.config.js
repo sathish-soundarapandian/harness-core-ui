@@ -20,6 +20,7 @@ const ExactSharedPackages = [
   '@blueprintjs/select',
   '@blueprintjs/datetime',
   'restful-react',
+  '@tanstack/react-query',
   'urql'
 ]
 
@@ -33,7 +34,7 @@ module.exports = ({
   enableCIUI,
   enableTIUI,
   enableIACM,
-  enableSSCS,
+  enableSSCA,
   enableIDP
 }) => {
   const remotes = {}
@@ -49,7 +50,7 @@ module.exports = ({
   // }
 
   if (enableIDP) {
-    remotes.idp = "idp@[window.getApiBaseUrl('idp/remoteEntry.js')]"
+    remotes.idp = "idp@[window.getIDPBaseUrl('idp/remoteEntry.js')]"
     remotes.idpadmin = "idpadmin@[window.getApiBaseUrl('idp-admin/remoteEntry.js')]"
   }
 
@@ -92,8 +93,8 @@ module.exports = ({
     remotes.errortracking = "errortracking@[window.getApiBaseUrl('et/remoteEntry.js')]"
   }
 
-  if (enableSSCS) {
-    remotes.sscs = "sscs@[window.getApiBaseUrl('sscs/remoteEntry.js')]"
+  if (enableSSCA) {
+    remotes.ssca = "ssca@[window.getApiBaseUrl('ssca/remoteEntry.js')]"
   }
 
   const shared = {

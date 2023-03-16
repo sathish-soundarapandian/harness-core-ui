@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getSecretV2Promise, GetSecretV2QueryParams } from 'services/cd-ng'
 
@@ -48,4 +49,10 @@ export const setSecretField = async (
       ...scopeQueryParams
     }
   }
+}
+
+export interface SecretMultiSelectProps {
+  selectedSecrets?: ScopeAndIdentifier[]
+  isMultiSelect?: boolean
+  onMultiSelect?: (selected: ScopeAndIdentifier[]) => void
 }

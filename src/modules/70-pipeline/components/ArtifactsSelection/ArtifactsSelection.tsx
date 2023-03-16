@@ -65,9 +65,9 @@ import {
   ModalViewFor,
   isAllowedCustomArtifactDeploymentTypes,
   isSidecarAllowed,
-  isAllowedGithubPackageRegistryDeploymentTypes,
   isAllowedAzureArtifactDeploymentTypes,
-  isAllowedAMIDeploymentTypes
+  isAllowedAMIDeploymentTypes,
+  showArtifactStoreStepDirectly
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -102,13 +102,8 @@ export default function ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const {
-    CUSTOM_ARTIFACT_NG,
-    GITHUB_PACKAGES,
-    AZURE_ARTIFACTS_NG,
-    CD_AMI_ARTIFACTS_NG,
-    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
-  } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, AZURE_ARTIFACTS_NG, CD_AMI_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS } =
+    useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -118,13 +113,6 @@ export default function ArtifactsSelection({
       isAllowedCustomArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
-    }
-    if (
-      isAllowedGithubPackageRegistryDeploymentTypes(deploymentType) &&
-      GITHUB_PACKAGES &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     }
     if (
       isAllowedAzureArtifactDeploymentTypes(deploymentType) &&
@@ -571,6 +559,8 @@ export default function ArtifactsSelection({
           }}
           handleViewChange={handleConnectorViewChange}
           showConnectorStep={showConnectorStep(selectedArtifact as ArtifactType)}
+          artifactWizardInitialStep={showArtifactStoreStepDirectly(selectedArtifact) ? 2 : 1}
+          showArtifactSelectionStep
         />
       </div>
     )
@@ -578,6 +568,7 @@ export default function ArtifactsSelection({
 
   return (
     <ArtifactListView
+      deploymentType={deploymentType}
       stage={stage}
       primaryArtifact={primaryArtifact}
       sideCarArtifact={sideCarArtifact}

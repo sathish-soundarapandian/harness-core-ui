@@ -365,7 +365,7 @@ exports[`Autostopping rule analytics drawer render analytics drawer 1`] = `
             class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--font-weight-bold"
             level="2"
           >
-            ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+            pipeline.advancedConfiguration
           </h2>
         </div>
       </div>
@@ -975,7 +975,7 @@ exports[`Autostopping rule analytics drawer render k8s rule analytics drawer 1`]
             class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--font-weight-bold"
             level="2"
           >
-            ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+            pipeline.advancedConfiguration
           </h2>
         </div>
       </div>

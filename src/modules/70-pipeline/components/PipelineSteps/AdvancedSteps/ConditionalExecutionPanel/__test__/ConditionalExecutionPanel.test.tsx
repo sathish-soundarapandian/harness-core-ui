@@ -19,9 +19,7 @@ describe('ConditionalExecutionPanel', () => {
     const { container } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={() => void 0} formName="conditionalExecutionPanelForm">
-          {formikProps => {
-            return <ConditionalExecutionPanel mode={Modes.STEP} isReadonly={false} formikProps={formikProps} />
-          }}
+          <ConditionalExecutionPanel mode={Modes.STEP} isReadonly={false} path="" />
         </Formik>
       </TestWrapper>
     )

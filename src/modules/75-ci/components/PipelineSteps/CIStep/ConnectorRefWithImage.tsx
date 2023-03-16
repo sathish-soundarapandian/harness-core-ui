@@ -19,7 +19,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useGitScope, shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { renderMultiTypeInputWithAllowedValues, getOptionalSubLabel } from './CIStepOptionalConfig'
-import { AllMultiTypeInputTypesForStep } from './StepUtils'
+import { AllMultiTypeInputTypesForStep, AllMultiTypeInputTypesForInputSet } from './StepUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface ConnectorRefWithImageProps {
@@ -97,11 +97,14 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
               orgIdentifier={orgIdentifier}
               multiTypeProps={{
                 expressions,
-                allowableTypes: AllMultiTypeInputTypesForStep,
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
                 disabled: readonly
               }}
               gitScope={gitScope}
               setRefValue
+              configureOptionsProps={{
+                hideExecutionTimeField: true
+              }}
             />
           )}
         </Container>
@@ -146,8 +149,11 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
               multiTextInputProps={{
                 disabled: readonly,
                 multiTextInputProps: {
-                  allowableTypes: AllMultiTypeInputTypesForStep
+                  allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
                 }
+              }}
+              configureOptionsProps={{
+                hideExecutionTimeField: true
               }}
             />
           )}

@@ -17,7 +17,7 @@ import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { Application, Environment } from 'services/cd-ng'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
-import { isMultiSvcOrMultiEnv as getIsMultiSvcOrMultiEnv, NodeType } from '@pipeline/utils/executionUtils'
+import { isMultiSvcOrMultiEnv as getIsMultiSvcOrMultiEnv, StepNodeType } from '@pipeline/utils/executionUtils'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { ExecutionPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -190,7 +190,7 @@ export function MultiTypeDeploymentSummary(props: MultiTypeDeploymentSummaryProp
     storeType
   } = props
   const { getString } = useStrings()
-  const selectedNodeId = stage?.data?.nodeType === NodeType.RUNTIME_INPUT ? stage.identifier : stage.id
+  const selectedNodeId = stage?.data?.nodeType === StepNodeType.RUNTIME_INPUT ? stage.identifier : stage.id
   const stageIconProps = stageIconMap[stage.type as StageType]
   const subType = get(stage, 'data.moduleInfo.stepParameters.subType')
   const isMultiSvcOrMultiEnv = getIsMultiSvcOrMultiEnv(subType)

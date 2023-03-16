@@ -231,7 +231,7 @@ describe('Test TerraformApply', () => {
   })
 
   test('rendering more than one varfile', async () => {
-    const { container, getByText } = render(
+    const { container, getByText, findByTestId } = render(
       <TestStepWidget
         initialValues={{
           type: 'TerraformApply',
@@ -273,13 +273,19 @@ describe('Test TerraformApply', () => {
         stepViewType={StepViewType.Edit}
       />
     )
-    expect(container).toMatchSnapshot()
-    fireEvent.click(getByText('common.optionalConfig'))
+    fireEvent.click(getByText('common.optionalConfig')!)
+    const scrollableContainer = container.querySelector('[class*="Accordion--details"]')
+    await act(async () => {
+      fireEvent.scroll(scrollableContainer!, { target: { scrollY: 10 } })
+    })
+    const editVarfile = container.querySelectorAll('[data-icon="Edit"]')[0]
+    expect(editVarfile).toBeDefined()
 
-    // fireEvent.click(getByText('plusAdd'))
-    const trashIcon = container.querySelector('[data-testid="remove-tfvar-file-0"]')
-    fireEvent.click(trashIcon!)
-    expect(container).toMatchSnapshot()
+    const deleteVarfile = container.querySelector('[data-icon="main-trash"]') as Element
+    expect(deleteVarfile).toBeDefined()
+    fireEvent.click(deleteVarfile)
+    const addFile = await findByTestId('add-tfvar-file')
+    expect(addFile).toBeInTheDocument()
   })
 
   test('expand backend Spec config', () => {

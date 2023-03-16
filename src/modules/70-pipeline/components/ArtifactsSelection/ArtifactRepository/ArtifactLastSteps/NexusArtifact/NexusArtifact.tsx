@@ -51,6 +51,7 @@ import { RepositoryFormatTypes, getAllowedRepoOptions } from '@pipeline/utils/st
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { isValueFixed } from '@common/utils/utils'
 import { ArtifactIdentifierValidation, ModalViewFor, repositoryPortOrServer } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
@@ -215,19 +216,27 @@ export function Nexus3Artifact({
   }, [repositoryDetails?.data])
 
   const getRepository = (): { label: string; value: string }[] => {
+    /* istanbul ignore next */
     if (fetchingRepository) {
-      return [{ label: 'Loading Repository...', value: 'Loading Repository...' }]
+      return [
+        {
+          label: getString('pipeline.artifactsSelection.loadingRepository'),
+          value: getString('pipeline.artifactsSelection.loadingRepository')
+        }
+      ]
     }
     return defaultTo(selectRepositoryItems, [])
   }
 
   useEffect(() => {
+    /* istanbul ignore next */
     if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
       refetchNexusTag()
     }
   }, [lastQueryData, refetchNexusTag])
 
   useEffect(() => {
+    /* istanbul ignore next */
     if (nexusTagError) {
       setTagList([])
     } else if (Array.isArray(data?.data?.buildDetailsList)) {
@@ -439,7 +448,6 @@ export function Nexus3Artifact({
       })
     }
   }
-
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!hideHeaderAndNavBtns && (
@@ -472,7 +480,8 @@ export function Nexus3Artifact({
                   items={getAllowedRepoOptions(
                     selectedDeploymentType,
                     AZURE_WEB_APP_NG_NEXUS_PACKAGE,
-                    hideHeaderAndNavBtns
+                    hideHeaderAndNavBtns,
+                    selectedArtifact
                   )}
                   onChange={value => {
                     if (value.value === RepositoryFormatTypes.Maven) {
@@ -502,6 +511,10 @@ export function Nexus3Artifact({
                         repositoryFormat: value.value as string,
                         packageName: ''
                       })
+                    }
+
+                    if (isValueFixed(formik.values.repository)) {
+                      formik.setFieldValue('repository', '')
                     }
                   }}
                 />
@@ -557,7 +570,6 @@ export function Nexus3Artifact({
                       variableName="repository"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('repository', value)
                       }}
@@ -566,7 +578,7 @@ export function Nexus3Artifact({
                   </div>
                 )}
               </div>
-              {formik.values?.repositoryFormat === RepositoryFormatTypes.Maven ? (
+              {formik.values?.repositoryFormat === RepositoryFormatTypes.Maven && (
                 <>
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTextInput
@@ -583,7 +595,6 @@ export function Nexus3Artifact({
                           variableName="spec.groupId"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.groupId', value)
                           }}
@@ -607,7 +618,6 @@ export function Nexus3Artifact({
                           variableName="spec.artifactId"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.artifactId', value)
                           }}
@@ -631,7 +641,6 @@ export function Nexus3Artifact({
                           variableName="spec.extension"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.extension', value)
                           }}
@@ -655,7 +664,6 @@ export function Nexus3Artifact({
                           variableName="spec.classifier"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.classifier', value)
                           }}
@@ -665,7 +673,8 @@ export function Nexus3Artifact({
                     )}
                   </div>
                 </>
-              ) : formik.values?.repositoryFormat === RepositoryFormatTypes.Docker ? (
+              )}
+              {formik.values?.repositoryFormat === RepositoryFormatTypes.Docker && (
                 <>
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTextInput
@@ -682,7 +691,6 @@ export function Nexus3Artifact({
                           variableName="spec.artifactPath"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.artifactPath', value)
                           }}
@@ -721,7 +729,6 @@ export function Nexus3Artifact({
                             variableName="repositoryUrl"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={value => {
                               formik.setFieldValue('spec.repositoryUrl', value)
                             }}
@@ -753,7 +760,6 @@ export function Nexus3Artifact({
                             variableName="repositoryPort"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={value => {
                               formik.setFieldValue('spec.repositoryPort', value)
                             }}
@@ -764,7 +770,8 @@ export function Nexus3Artifact({
                     </div>
                   )}
                 </>
-              ) : formik.values?.repositoryFormat === RepositoryFormatTypes.Raw ? (
+              )}
+              {formik.values?.repositoryFormat === RepositoryFormatTypes.Raw && (
                 <div className={css.imagePathContainer}>
                   <FormInput.MultiTextInput
                     label={getString('rbac.group')}
@@ -780,7 +787,6 @@ export function Nexus3Artifact({
                         variableName="spec.group"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => {
                           formik.setFieldValue('spec.group', value)
                         }}
@@ -789,7 +795,9 @@ export function Nexus3Artifact({
                     </div>
                   )}
                 </div>
-              ) : (
+              )}
+              {(formik.values?.repositoryFormat === RepositoryFormatTypes.NPM ||
+                formik.values?.repositoryFormat === RepositoryFormatTypes.NuGet) && (
                 <div className={css.imagePathContainer}>
                   <FormInput.MultiTextInput
                     label={getString('pipeline.artifactsSelection.packageName')}
@@ -805,7 +813,6 @@ export function Nexus3Artifact({
                         variableName="spec.packageName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => {
                           formik.setFieldValue('spec.packageName', value)
                         }}
@@ -830,6 +837,7 @@ export function Nexus3Artifact({
                 tagDisabled={isTagDisabled(formik?.values)}
                 isArtifactPath={false}
                 isImagePath={false}
+                tooltipId="nexus3-tag"
               />
             </div>
             {!hideHeaderAndNavBtns && (

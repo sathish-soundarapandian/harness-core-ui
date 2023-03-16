@@ -67,7 +67,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 30%;"
+          style="width: 25%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -79,7 +79,7 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 50%;"
+          style="width: 30%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -99,6 +99,30 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
             details
           </p>
         </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 15%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            created
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            common.scopeLabel
+          </p>
+        </div>
       </div>
       <div
         class="TableV2--body"
@@ -113,39 +137,76 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 30%;"
+              style="width: 25%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    rel="noreferrer"
                   >
                     Triggers - 2
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  Pipelines
+                  typeLabel: Pipelines
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             />
             <div
               class="TableV2--cell"
               role="cell"
               style="width: 20%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Nov 08, 2022 04:39 am
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    rel="noreferrer"
+                  >
+                    Ashwin
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -158,39 +219,76 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 30%;"
+              style="width: 25%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    rel="noreferrer"
                   >
                     Triggers
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  Pipelines
+                  typeLabel: Pipelines
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             />
             <div
               class="TableV2--cell"
               role="cell"
               style="width: 20%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Jul 25, 2022 10:09 am
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    rel="noreferrer"
+                  >
+                    Ashwin
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -203,39 +301,76 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 30%;"
+              style="width: 25%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    rel="noreferrer"
                   >
                     Stage Template
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  Pipelines
+                  typeLabel: Pipelines
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             />
             <div
               class="TableV2--cell"
               role="cell"
               style="width: 20%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Jul 20, 2022 03:36 am
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    rel="noreferrer"
+                  >
+                    Ashwin
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -248,39 +383,76 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 30%;"
+              style="width: 25%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    rel="noreferrer"
                   >
                     Stage 1 (v1)
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  Template
+                  typeLabel: Template
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             />
             <div
               class="TableV2--cell"
               role="cell"
               style="width: 20%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Jul 19, 2022 11:51 pm
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    rel="noreferrer"
+                  >
+                    Ashwin
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -293,39 +465,76 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 30%;"
+              style="width: 25%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    rel="noreferrer"
                   >
                     env group 15
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  EnvironmentGroup
+                  typeLabel: EnvironmentGroup
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             />
             <div
               class="TableV2--cell"
               role="cell"
               style="width: 20%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Apr 27, 2022 08:40 pm
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    rel="noreferrer"
+                  >
+                    Ashwin
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -338,39 +547,76 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 30%;"
+              style="width: 25%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    rel="noreferrer"
                   >
                     Test 11
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  EnvironmentGroup
+                  typeLabel: EnvironmentGroup
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             />
             <div
               class="TableV2--cell"
               role="cell"
               style="width: 20%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Apr 27, 2022 12:59 pm
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    rel="noreferrer"
+                  >
+                    Ashwin
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -383,39 +629,76 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 30%;"
+              style="width: 25%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    rel="noreferrer"
                   >
                     Env Group 7
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  EnvironmentGroup
+                  typeLabel: EnvironmentGroup
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             />
             <div
               class="TableV2--cell"
               role="cell"
               style="width: 20%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Apr 27, 2022 01:56 am
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    rel="noreferrer"
+                  >
+                    Ashwin
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -491,7 +774,7 @@ exports[`Referenced_By Tab Test render for data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 50%;"
+          style="width: 30%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -503,12 +786,36 @@ exports[`Referenced_By Tab Test render for data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 50%;"
+          style="width: 30%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
             details
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            created
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            common.scopeLabel
           </p>
         </div>
       </div>
@@ -525,34 +832,71 @@ exports[`Referenced_By Tab Test render for data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    rel="noreferrer"
                   >
                     testSuccess
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  Pipelines
+                  typeLabel: Pipelines
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Nov 20, 2022 12:09 pm
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    rel="noreferrer"
+                  >
+                    Kapil
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -565,34 +909,71 @@ exports[`Referenced_By Tab Test render for data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    rel="noreferrer"
                   >
                     IgnoreFailedPipe
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  Pipelines
+                  typeLabel: Pipelines
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Nov 20, 2022 12:09 pm
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    rel="noreferrer"
+                  >
+                    Kapil
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -605,34 +986,71 @@ exports[`Referenced_By Tab Test render for data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    rel="noreferrer"
                   >
                     testSuccess
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  Pipelines
+                  typeLabel: Pipelines
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Aug 23, 2022 10:27 am
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    rel="noreferrer"
+                  >
+                    Kapil
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -645,34 +1063,71 @@ exports[`Referenced_By Tab Test render for data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    rel="noreferrer"
                   >
                     IgnoreFailedPipe
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  Pipelines
+                  typeLabel: Pipelines
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Aug 23, 2022 10:27 am
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    rel="noreferrer"
+                  >
+                    Kapil
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

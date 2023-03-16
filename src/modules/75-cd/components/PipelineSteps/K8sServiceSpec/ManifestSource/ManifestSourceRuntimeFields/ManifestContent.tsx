@@ -44,7 +44,8 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
     formik,
     stageIdentifier,
     pathFieldlabel,
-    stepViewType
+    stepViewType,
+    fileUsage
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -69,7 +70,7 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
       className={cx(css.inputWidth, css.layoutVerticalSpacing)}
     >
       <ManifestGitStoreRuntimeFields {...props} />
-      <ManifestCommonRuntimeFields {...props} />
+      <ManifestCommonRuntimeFields {...props} fileUsage={fileUsage} />
       <CustomRemoteManifestRuntimeFields {...props} />
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>
@@ -100,6 +101,7 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
               expressions={expressions}
               isNameOfArrayType
               type={SELECT_FILES_TYPE.FILE_STORE}
+              fileUsage={fileUsage}
               formik={formik}
             />
           ) : (
@@ -116,6 +118,39 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
           )}
         </div>
       )}
+      <div className={css.inputFieldLayout}>
+        {isFieldRuntime(`${manifestPath}.spec.enableDeclarativeRollback`, template) && (
+          <div className={css.verticalSpacingInput}>
+            <FormMultiTypeCheckboxField
+              disabled={isFieldDisabled(`${manifestPath}.spec.enableDeclarativeRollback`)}
+              name={`${path}.${manifestPath}.spec.enableDeclarativeRollback`}
+              label={getString('pipeline.manifestType.enableDeclarativeRollback')}
+              setToFalseWhenEmpty={true}
+              multiTypeTextbox={{
+                expressions,
+                allowableTypes
+              }}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.enableDeclarativeRollback`)) ===
+          MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            className={css.configureOptions}
+            style={{ alignSelf: 'center' }}
+            value={get(formik?.values, `${path}.${manifestPath}.spec.enableDeclarativeRollback`)}
+            type="String"
+            variableName="enableDeclarativeRollback"
+            showRequiredField={false}
+            showDefaultField={true}
+            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+            onChange={value => {
+              formik.setFieldValue(`${path}.${manifestPath}.spec.enableDeclarativeRollback`, value)
+            }}
+          />
+        )}
+      </div>
+
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.skipResourceVersioning`, template) && (
           <div className={css.verticalSpacingInput}>
@@ -142,7 +177,6 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.skipResourceVersioning`, value)
             }}

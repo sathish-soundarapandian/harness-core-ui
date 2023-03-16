@@ -1,0 +1,14 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "infrastructureYamlMetadataList": [
+      {
+        "infrastructureIdentifier": "Infra_4",
+        "infrastructureYaml": "infrastructureDefinition:\n  name: Infra 4\n  identifier: Infra_4\n  description: \"\"\n  tags: {}\n  orgIdentifier: default\n  projectIdentifier: testplg\n  environmentRef: env_with_both_inputs\n  deploymentType: Kubernetes\n  type: KubernetesDirect\n  spec:\n    connectorRef: account.testapps\n    namespace: <+input>\n    releaseName: release-<+INFRA_KEY>\n  allowSimultaneousDeployments: false\n",
+        "inputSetTemplateYaml": "infrastructureInputs:\n  identifier: \"Infra_4\"\n  type: \"KubernetesDirect\"\n  spec:\n    namespace: \"<+input>\"\n"
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "299b2a0b-eb96-47ef-9bd9-0bcaf07f5d9e"
+}

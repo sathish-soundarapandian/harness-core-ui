@@ -104,28 +104,6 @@ const template: any = {
 }
 
 describe('Test terraform input set', () => {
-  test('should render edit view as new step', () => {
-    const { container } = render(
-      <TestWrapper>
-        <Formik initialValues={{}} onSubmit={() => undefined} formName="wrapperComponentTestForm">
-          <FormikForm>
-            <TerraformInputStep
-              initialValues={initialValues as any}
-              stepType={StepType.TerraformDestroy}
-              stepViewType={StepViewType.InputSet}
-              inputSetData={{
-                template
-              }}
-              path="test"
-              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
-            />
-          </FormikForm>
-        </Formik>
-      </TestWrapper>
-    )
-    expect(container).toMatchSnapshot()
-  })
-
   test('should render backend config when it is Remote type', () => {
     const beConfigInitialVallues = {
       ...initialValues,

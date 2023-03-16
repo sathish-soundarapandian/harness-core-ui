@@ -17,11 +17,6 @@ describe('AmazonS3 Trigger', () => {
   }
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
 
     cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/triggers/amazonS3PipelineDetails.json' }).as(

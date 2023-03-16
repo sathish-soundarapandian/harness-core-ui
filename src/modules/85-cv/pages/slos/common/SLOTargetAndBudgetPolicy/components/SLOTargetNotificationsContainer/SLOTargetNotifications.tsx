@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import type { GetDataError } from 'restful-react'
 import NotificationsContainer from '@cv/components/Notifications/NotificationsContainer'
 import { SRMNotificationType } from '@cv/components/Notifications/NotificationsContainer.types'
@@ -28,11 +28,23 @@ interface SLOTargetNotificationsProps {
   error: GetDataError<unknown> | null
   page: number
   getNotifications: () => Promise<void>
+  notificationsInTable: NotificationRuleResponse[]
+  setNotificationsInTable: React.Dispatch<React.SetStateAction<NotificationRuleResponse[]>>
 }
 
 export default function SLOTargetNotifications(props: SLOTargetNotificationsProps): JSX.Element {
-  const { setFieldValue, initialNotificationsTableData, setPage, loading, error, page, getNotifications } = props
-  const [notificationsInTable, setNotificationsInTable] = useState<NotificationRuleResponse[]>([])
+  const {
+    setFieldValue,
+    initialNotificationsTableData,
+    setPage,
+    loading,
+    error,
+    page,
+    getNotifications,
+    notificationsInTable,
+    setNotificationsInTable
+  } = props
+
   const { getString } = useStrings()
 
   useEffect(() => {

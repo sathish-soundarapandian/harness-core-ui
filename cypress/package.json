@@ -14,6 +14,7 @@
     "@cypress/code-coverage": "^3.10.0",
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@testing-library/cypress": "^8.0.3",
+    "cy2": "^4.0.6",
     "cypress": "~10.8.0",
     "cypress-image-snapshot": "^4.0.1",
     "express": "^4.18.1",

@@ -131,6 +131,7 @@ function FormContent({
       refetchProjectMetadata({
         queryParams: {
           ...commonParams,
+          expand: 'projects.issuetypes',
           connectorRef: connectorRefFixedValue.toString(),
           projectKey: projectKeyFixedValue.toString(),
           fetchStatus: true
@@ -144,6 +145,7 @@ function FormContent({
       refetchIssueMetadata({
         queryParams: {
           ...commonParams,
+          expand: 'projects.issuetypes.fields',
           connectorRef: connectorRefFixedValue.toString(),
           projectKey: projectKeyFixedValue.toString(),
           issueType: issueTypeFixedValue.toString(),
@@ -279,7 +281,6 @@ function FormContent({
             variableName="spec.connectorRef"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
             connectorReferenceFieldProps={{
@@ -412,7 +413,6 @@ function FormContent({
             variableName="spec.issueKey"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.issueKey', value)}
             isReadonly={readonly}
           />
@@ -498,6 +498,7 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
     lazy: true,
     queryParams: {
       ...commonParams,
+      expand: '',
       connectorRef: '',
       projectKey: '',
       fetchStatus: true
@@ -512,6 +513,7 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
     lazy: true,
     queryParams: {
       ...commonParams,
+      expand: '',
       connectorRef: '',
       projectKey: '',
       issueType: '',

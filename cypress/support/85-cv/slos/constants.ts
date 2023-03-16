@@ -32,7 +32,7 @@ export const listMonitoredServices = `/cv/api/monitored-service/all/time-series-
 export const listMonitoredServicesForSLOs = `/cv/api/slo-dashboard/monitored-services?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const listMonitoredServicesForNewerProject = `/cv/api/monitored-service/all/time-series-health-sources?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}`
 export const getSLOMetrics = `/cv/api/monitored-service/cvng_prod/health-source/${healthSource}/slo-metrics?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
-export const getSliGraph = `/cv/api/monitored-service/cvng_prod/sli/onboarding-graph?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
+export const getSliGraph = `/cv/api/monitored-service/cvng_prod/sli/onboarding-graphs?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getAccountLevelOnboardingGraph = `/cv/api/slo/v2/composite-slo/onboarding-graph?*`
 export const getServiceLevelObjective = `/cv/api/slo/v2/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getServiceLevelObjectiveV2 = `cv/api/slo/v2/Composite_SLO_1?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1`
@@ -558,6 +558,49 @@ export const getServiceLevelObjectiveV2Response = {
 }
 
 export const getServiceLevelObjectiveResponse = {
+  metaData: {},
+  resource: {
+    serviceLevelObjectiveV2: {
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: 'SLO-1',
+      identifier: 'SLO1',
+      description: 'Tracks SLO error rate',
+      tags: {},
+      userJourneyRefs: ['newone'],
+      sloTarget: { type: 'Rolling', sloTargetPercentage: 90, spec: { periodLength: '30d' } },
+      type: 'Simple',
+      spec: {
+        monitoredServiceRef: 'cvng_prod',
+        healthSourceRef: healthSource,
+        serviceLevelIndicatorType: 'Latency',
+        serviceLevelIndicators: [
+          {
+            name: 'service_appd_env_appd_appd_SLO4_d0465971-4885-474f-be87-4a32c55d30f9}',
+            identifier: 'service_appd_env_appd_appd_SLO4_cc7b5a73-4fbb-4fd4-872f-146f854d74d7',
+            spec: {
+              type: 'Ratio',
+              spec: {
+                eventType: 'Good',
+                metric1: 'https_errors_per_min',
+                metric2: 'number_of_slow_calls',
+                thresholdValue: 20,
+                thresholdType: '<='
+              }
+            },
+            sliMissingDataType: 'Good'
+          }
+        ]
+      },
+      notificationRuleRefs: [{ notificationRuleRef: 'test1010', enabled: true }]
+    },
+    createdAt: 1663212197411,
+    lastModifiedAt: 1675745969791
+  },
+  responseMessages: []
+}
+
+export const getServiceLevelObjectiveResponseOld = {
   status: 'SUCCESS',
   resource: {
     serviceLevelObjective: {

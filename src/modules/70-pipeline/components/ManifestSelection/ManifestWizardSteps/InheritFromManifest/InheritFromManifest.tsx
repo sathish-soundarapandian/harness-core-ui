@@ -24,13 +24,17 @@ import { FontVariation } from '@harness/design-system'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { get } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import { ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
-import type { InheritFromManifestDataType, ManifestTypes } from '../../ManifestInterface'
+import type {
+  InheritFromManifestDataType,
+  InheritFromManifestLastStepPrevStepData,
+  ManifestTypes
+} from '../../ManifestInterface'
 import { filePathWidth, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
@@ -43,6 +47,7 @@ interface InheritFromManifestPropType {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+  editManifestModePrevStepData?: InheritFromManifestLastStepPrevStepData
 }
 
 function InheritFromManifest({
@@ -55,9 +60,13 @@ function InheritFromManifest({
   prevStepData,
   previousStep,
   manifestIdsList,
-  isReadonly
+  isReadonly,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & InheritFromManifestPropType): React.ReactElement {
   const { getString } = useStrings()
+  const isOnlyFileTypeManifest = selectedManifest && [ManifestDataType.Values].includes(selectedManifest)
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   const getInitialValues = (): InheritFromManifestDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -132,7 +141,7 @@ function InheritFromManifest({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData
           })
         }}
@@ -162,8 +171,14 @@ function InheritFromManifest({
                       expressions={expressions}
                       allowableTypes={allowableTypes}
                       fieldPath="paths"
-                      pathLabel={getString('fileFolderPathText')}
-                      placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                      pathLabel={
+                        isOnlyFileTypeManifest ? getString('common.git.filePath') : getString('fileFolderPathText')
+                      }
+                      placeholder={
+                        isOnlyFileTypeManifest
+                          ? getString('pipeline.manifestType.pathPlaceholder')
+                          : getString('pipeline.manifestType.manifestPathPlaceholder')
+                      }
                       defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                       dragDropFieldWidth={filePathWidth}
                     />
@@ -174,7 +189,6 @@ function InheritFromManifest({
                         variableName={'paths'}
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={val => formik?.setFieldValue('paths', val)}
                         isReadonly={isReadonly}
                       />
@@ -187,7 +201,7 @@ function InheritFromManifest({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

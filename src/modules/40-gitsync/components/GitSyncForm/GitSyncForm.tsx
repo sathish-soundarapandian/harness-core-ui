@@ -17,6 +17,7 @@ import {
   ConnectorReferenceField,
   ConnectorSelectedValue
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useQueryParams } from '@common/hooks'
@@ -25,6 +26,7 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import { Connectors } from '@connectors/constants'
+import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 import { yamlPathRegex } from '@common/utils/StringUtils'
 import css from './GitSyncForm.module.scss'
 
@@ -49,6 +51,7 @@ interface GitSyncFormProps<T> {
   errorData?: ResponseMessage[]
   entityScope?: Scope
   className?: string
+  filePathPrefix?: string
 }
 
 export const gitSyncFormSchema = (
@@ -80,10 +83,6 @@ export const gitSyncFormSchema = (
   })
 })
 
-const getConnectorIdentifierWithScope = (scope: Scope, identifier: string): string => {
-  return scope === Scope.ORG || scope === Scope.ACCOUNT ? `${scope}.${identifier}` : identifier
-}
-
 const getSupportedProviders = () => {
   const supportedRepoProviders = [Connectors.GITHUB, Connectors.BITBUCKET, Connectors.AZURE_REPO]
   return supportedRepoProviders
@@ -99,7 +98,8 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
     initialValues,
     errorData,
     entityScope = Scope.PROJECT,
-    className = ''
+    className = '',
+    filePathPrefix
   } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
@@ -117,9 +117,10 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
       if (formikProps.values.versionLabel?.trim()) {
         versionLabel = '_' + formikProps.values.versionLabel.trim().split(' ').join('_')
       }
-      formikProps.setFieldValue('filePath', `.harness/${formikProps.values.identifier}${versionLabel}.yaml`)
+      const pathPrefix = filePathPrefix || '.harness'
+      formikProps.setFieldValue('filePath', `${pathPrefix}/${formikProps.values.identifier}${versionLabel}.yaml`)
     }
-  }, [formikProps?.values?.identifier, formikProps?.values?.versionLabel, isEdit, filePathTouched])
+  }, [formikProps?.values?.identifier, formikProps?.values?.versionLabel, isEdit, filePathTouched, filePathPrefix])
 
   useEffect(() => {
     if (!filePathTouched && formikProps.touched.filePath) {

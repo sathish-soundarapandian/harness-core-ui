@@ -21,21 +21,24 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Retry,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
-          Strategy.ProceedWithDefaultValues
+          Strategy.ProceedWithDefaultValues,
+          Strategy.MarkAsFailure
         ],
         [Modes.STEP_GROUP]: [
           Strategy.ManualIntervention,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
-          Strategy.Abort
+          Strategy.Abort,
+          Strategy.MarkAsFailure
         ],
         [Modes.STAGE]: [
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
-          Strategy.ProceedWithDefaultValues
+          Strategy.ProceedWithDefaultValues,
+          Strategy.MarkAsFailure
         ]
       }
     case StageType.CUSTOM:
@@ -48,7 +51,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Retry,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
-          Strategy.ProceedWithDefaultValues
+          Strategy.ProceedWithDefaultValues,
+          Strategy.MarkAsFailure
         ],
         [Modes.STEP_GROUP]: [
           Strategy.ManualIntervention,
@@ -57,7 +61,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
-          Strategy.Abort
+          Strategy.Abort,
+          Strategy.MarkAsFailure
         ],
         [Modes.STAGE]: [
           Strategy.ManualIntervention,
@@ -67,7 +72,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Retry,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
-          Strategy.ProceedWithDefaultValues
+          Strategy.ProceedWithDefaultValues,
+          Strategy.MarkAsFailure
         ]
       }
     case StageType.PIPELINE:
@@ -80,7 +86,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Retry,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
-          Strategy.ProceedWithDefaultValues
+          Strategy.ProceedWithDefaultValues,
+          Strategy.MarkAsFailure
         ],
         [Modes.STEP_GROUP]: [
           Strategy.ManualIntervention,
@@ -89,9 +96,16 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
-          Strategy.Abort
+          Strategy.Abort,
+          Strategy.MarkAsFailure
         ],
-        [Modes.STAGE]: [Strategy.Ignore, Strategy.MarkAsSuccess, Strategy.Abort, Strategy.ProceedWithDefaultValues]
+        [Modes.STAGE]: [
+          Strategy.Ignore,
+          Strategy.MarkAsSuccess,
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues,
+          Strategy.MarkAsFailure
+        ]
       }
     case StageType.DEPLOY:
     default:
@@ -104,7 +118,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Retry,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
-          Strategy.ProceedWithDefaultValues
+          Strategy.ProceedWithDefaultValues,
+          Strategy.MarkAsFailure
         ],
         [Modes.STEP_GROUP]: [
           Strategy.ManualIntervention,
@@ -113,7 +128,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
-          Strategy.Abort
+          Strategy.Abort,
+          Strategy.MarkAsFailure
         ],
         [Modes.STAGE]: [
           Strategy.ManualIntervention,
@@ -123,7 +139,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Retry,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
-          Strategy.ProceedWithDefaultValues
+          Strategy.ProceedWithDefaultValues,
+          Strategy.MarkAsFailure
         ]
       }
   }

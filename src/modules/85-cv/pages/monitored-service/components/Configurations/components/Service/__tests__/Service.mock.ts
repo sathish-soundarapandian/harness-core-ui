@@ -188,3 +188,30 @@ export const MockMonitoredServiceDTO: MonitoredServiceForm = {
   },
   type: 'Application'
 }
+
+export const saveChangeSource = {
+  isEdit: false,
+  name: 'service1 env1',
+  identifier: 'service1_env1',
+  description: '',
+  tags: '{}',
+  serviceRef: 'service1',
+  type: 'Application',
+  notificationRuleRefs: '[]',
+  environmentRef: 'env1',
+  environmentRefList: '[]',
+  sources: {
+    changeSources: [
+      {
+        category: 'Deployment',
+        enabled: true,
+        identifier: 'harness_cd_next_gen',
+        name: 'Harness CD Next Gen',
+        spec: {},
+        type: 'HarnessCDNextGen'
+      }
+    ],
+    healthSources: null
+  },
+  dependencies: '[]'
+} as any

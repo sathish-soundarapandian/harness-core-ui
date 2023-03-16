@@ -13,7 +13,7 @@ export type AssignQueryProps = {
     sli: boolean
     healthScore?: boolean
     continuousVerification?: boolean
-    serviceInstance?: string | SelectOption
+    serviceInstanceField?: string | SelectOption
     riskCategory?: string
   }
   hideServiceIdentifier?: boolean

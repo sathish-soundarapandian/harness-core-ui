@@ -111,7 +111,7 @@ export default function ServiceNowImportSetDeploymentMode(props: ServiceNowImpor
           name={`${prefix}spec.connectorRef`}
           label={getString('pipeline.serviceNowApprovalStep.connectorRef')}
           selected={get(initialValues, 'spec.connectorRef', '') as string}
-          placeholder={getString('connectors.selectConnector')}
+          placeholder={getString('common.entityPlaceholderText')}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}

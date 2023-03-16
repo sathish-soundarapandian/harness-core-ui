@@ -55,11 +55,13 @@ export function ManifestDetailsCoreSection({
       ? GitRepoName.Repo
       : GitRepoName.Account
 
-  const accountUrl = connectionType === GitRepoName.Account ? getAccountUrl(prevStepData) : null
+  const accountUrl = connectionType === GitRepoName.Account ? getAccountUrl(prevStepData) : ''
 
   const isOnlyFileTypeManifest =
     selectedManifest &&
-    [ManifestDataType.AsgConfiguration, ManifestDataType.AsgLaunchTemplate].includes(selectedManifest)
+    [ManifestDataType.AsgConfiguration, ManifestDataType.AsgLaunchTemplate, ManifestDataType.Values].includes(
+      selectedManifest
+    )
 
   return (
     <>
@@ -72,8 +74,7 @@ export function ManifestDetailsCoreSection({
           />
         </div>
       )}
-
-      {!!(connectionType === GitRepoName.Account && accountUrl) && (
+      {!!(connectionType === GitRepoName.Account || accountUrl) && (
         <GitRepositoryName
           accountUrl={accountUrl}
           expressions={expressions}
@@ -112,7 +113,6 @@ export function ManifestDetailsCoreSection({
                 variableName="branch"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('branch', value)}
                 isReadonly={isReadonly}
               />
@@ -140,7 +140,6 @@ export function ManifestDetailsCoreSection({
                 variableName="commitId"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('commitId', value)}
                 isReadonly={isReadonly}
               />
@@ -175,7 +174,6 @@ export function ManifestDetailsCoreSection({
             variableName={'paths'}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={val => formik?.setFieldValue('paths', val)}
             isReadonly={isReadonly}
           />

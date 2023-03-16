@@ -14,19 +14,26 @@ import {
   queryByAttribute,
   waitFor
 } from '@testing-library/react'
-
+import mockImport from 'framework/utils/mockImport'
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
-import { ResponsePipelineExecutionDetail, useGetExecutionDetailV2 } from 'services/pipeline-ng'
+import { useGetExecutionDetailV2 } from 'services/pipeline-ng'
 
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import { useExecutionContext } from '@pipeline/context/ExecutionContext'
-import { getActiveStageForPipeline, getActiveStep } from '@pipeline/utils/executionUtils'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { PipelineResponse as PipelineDetailsMockResponse } from '@pipeline/pages/pipeline-details/__tests__/PipelineDetailsMocks'
 import ExecutionLandingPage, { POLL_INTERVAL } from '../ExecutionLandingPage'
-import mockData from './mock.json'
 import reportSummaryMock from './report-summary-mock.json'
+import {
+  ciPipelineExecutionSummaryWithK8sInfra,
+  cdPipelineExecutionSummary,
+  ciPipelineExecutionSummaryWithHostedVMsInfra
+} from './execution-summary-mock'
+
+jest.mock('services/pipeline-rq', () => ({
+  useGetPipelineSummaryQuery: jest.fn(() => PipelineDetailsMockResponse)
+}))
 
 jest.mock('services/pipeline-ng', () => ({
   useGetPipelineSummary: jest.fn(() => ({
@@ -44,7 +51,8 @@ jest.mock('services/pipeline-ng', () => ({
     }
   })),
   useCreateVariablesForPipelineExecution: jest.fn().mockReturnValue({
-    mutate: jest.fn()
+    mutate: jest.fn(),
+    cancel: jest.fn()
   }),
   useHandleInterrupt: jest.fn(() => ({
     mutate: jest.fn()
@@ -77,6 +85,20 @@ jest.mock('services/ti-service', () => ({
     data: 'some-token'
   })
 }))
+
+const getDeprecatedConfigPromise = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    status: 'SUCCESS',
+    data: {
+      addonTag: 'harness/ci-addon:0.16.2',
+      liteEngineTag: 'harness/ci-lite-engine:0.16.2'
+    }
+  })
+})
+
+mockImport('services/ci', {
+  getDeprecatedConfigPromise
+})
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({}))
@@ -208,74 +230,6 @@ describe('<ExecutionLandingPage /> tests', () => {
 
     expect(refetch).toHaveBeenCalledTimes(called ? 1 : 0)
   })
-
-  test('auto stage selection works', () => {
-    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
-      refetch: jest.fn(),
-      loading: true,
-      data: mockData
-    }))
-
-    function Child(): React.ReactElement {
-      const { selectedStageId, selectedStepId } = useExecutionContext()
-
-      return (
-        <React.Fragment>
-          <div data-testid="autoSelectedStageId">{selectedStageId}</div>
-          <div data-testid="autoSelectedStepId">{selectedStepId}</div>
-        </React.Fragment>
-      )
-    }
-
-    const { getByTestId } = render(
-      <TestWrapper path={TEST_EXECUTION_PIPELINE_PATH} pathParams={pathParams as unknown as Record<string, string>}>
-        <ExecutionLandingPage>
-          <Child />
-        </ExecutionLandingPage>
-      </TestWrapper>
-    )
-    const testData = mockData as unknown as ResponsePipelineExecutionDetail
-    const stage = getActiveStageForPipeline(testData.data?.pipelineExecutionSummary)
-    const runningStep = getActiveStep(testData.data?.executionGraph || {})
-    jest.runOnlyPendingTimers()
-
-    expect(getByTestId('autoSelectedStageId').innerHTML).toBe(stage)
-    expect(getByTestId('autoSelectedStepId').innerHTML).toBe(runningStep?.node)
-  })
-
-  test('auto stage should not work when user has selected a stage/step', () => {
-    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
-      refetch: jest.fn(),
-      loading: false,
-      data: mockData
-    }))
-
-    function Child(): React.ReactElement {
-      const { selectedStageId, selectedStepId } = useExecutionContext()
-
-      return (
-        <React.Fragment>
-          <div data-testid="autoSelectedStageId">{selectedStageId}</div>
-          <div data-testid="autoSelectedStepId">{selectedStepId}</div>
-        </React.Fragment>
-      )
-    }
-
-    const { getByTestId } = render(
-      <TestWrapper
-        path={TEST_EXECUTION_PIPELINE_PATH}
-        queryParams={{ stage: 'qaStage' }}
-        pathParams={pathParams as unknown as Record<string, string>}
-      >
-        <ExecutionLandingPage>
-          <Child />
-        </ExecutionLandingPage>
-      </TestWrapper>
-    )
-
-    expect(getByTestId('autoSelectedStageId').innerHTML).toBe('')
-    expect(getByTestId('autoSelectedStepId').innerHTML).toBe('')
-  })
 })
 
 describe('<ExecutionLandingPage /> tests for CI', () => {
@@ -320,5 +274,79 @@ describe('<ExecutionLandingPage /> tests for CI', () => {
       </TestWrapper>
     )
     await waitFor(() => expect(routesToExecutionTestsSpy).toHaveBeenCalled())
+  })
+
+  const routeToPipelineStudioV1 = jest.spyOn(routes, 'toPipelineStudioV1')
+  test('For CI with FF CI_YAML_VERSIONING ON, on edit, take user to Pipeline Studio V1 route', async () => {
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CI_YAML_VERSIONING: true })
+    })
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
+      refetch: jest.fn(),
+      loading: true,
+      data: null
+    }))
+    const { getByText } = render(
+      <TestWrapper path={TEST_EXECUTION_PATH} pathParams={pathParams as unknown as Record<string, string>}>
+        <ExecutionLandingPage>
+          <div data-testid="children">Execution Landing Page</div>
+        </ExecutionLandingPage>
+      </TestWrapper>
+    )
+    act(() => {
+      fireEvent.click(getByText('editPipeline')!)
+    })
+    expect(routeToPipelineStudioV1).toHaveBeenCalled()
+  })
+
+  test('does not fetch deprecated config for a pipeline with just a CD stage', () => {
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
+      refetch: jest.fn(),
+      loading: false,
+      data: cdPipelineExecutionSummary
+    }))
+
+    render(
+      <TestWrapper path={TEST_EXECUTION_PATH} pathParams={pathParams as unknown as Record<string, string>}>
+        <ExecutionLandingPage>
+          <div data-testid="children">Execution Landing Page</div>
+        </ExecutionLandingPage>
+      </TestWrapper>
+    )
+    expect(getDeprecatedConfigPromise).not.toBeCalled()
+  })
+
+  test('does not fetch deprecated config for a pipeline having no CI stage with K8s infra', () => {
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
+      refetch: jest.fn(),
+      loading: false,
+      data: ciPipelineExecutionSummaryWithHostedVMsInfra
+    }))
+
+    render(
+      <TestWrapper path={TEST_EXECUTION_PATH} pathParams={pathParams as unknown as Record<string, string>}>
+        <ExecutionLandingPage>
+          <div data-testid="children">Execution Landing Page</div>
+        </ExecutionLandingPage>
+      </TestWrapper>
+    )
+    expect(getDeprecatedConfigPromise).not.toBeCalled()
+  })
+
+  test('fetches deprecated config for a pipeline with CI stage with K8s infra', () => {
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
+      refetch: jest.fn(),
+      loading: false,
+      data: ciPipelineExecutionSummaryWithK8sInfra
+    }))
+
+    render(
+      <TestWrapper path={TEST_EXECUTION_PATH} pathParams={pathParams as unknown as Record<string, string>}>
+        <ExecutionLandingPage>
+          <div data-testid="children">Execution Landing Page</div>
+        </ExecutionLandingPage>
+      </TestWrapper>
+    )
+    expect(getDeprecatedConfigPromise).toBeCalled()
   })
 })

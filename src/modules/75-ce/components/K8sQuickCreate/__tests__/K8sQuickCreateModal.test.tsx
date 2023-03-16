@@ -25,6 +25,7 @@ const params = {
 const testConnectionStepProps = {
   name: 'Test Connection',
   closeModal: jest.fn(),
+  handleFinish: jest.fn(),
   prevStepData: { name: 'test-quickcreate', identifier: 'testquickcreate', connectorsCreated: false }
 }
 
@@ -104,7 +105,7 @@ describe('Test Cases for Quick Create Steos', () => {
     await waitFor(() => expect(getByText(container, 'finish')).toBeEnabled())
     fireEvent.click(getByText(container, 'finish'))
 
-    await waitFor(() => expect(testConnectionStepProps.closeModal).toHaveBeenCalled())
+    await waitFor(() => expect(testConnectionStepProps.handleFinish).toHaveBeenCalled())
   })
 
   test('Should be able to render Test Connection step / Connector Error', async () => {

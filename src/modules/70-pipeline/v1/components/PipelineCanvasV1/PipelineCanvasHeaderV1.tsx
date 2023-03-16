@@ -17,7 +17,7 @@ import {
   Text,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 
@@ -40,18 +40,15 @@ import type {
   RunPipelineQueryParams
 } from '@common/interfaces/RouteInterfaces'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { CacheResponseMetadata, Error } from 'services/pipeline-ng'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useQueryParams } from '@common/hooks'
 import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import {
-  PipelineCachedCopy,
-  PipelineCachedCopyHandle
-} from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
-import EndOfLifeBanner from '@pipeline/components/PipelineStudio/PipelineCanvas/EndOfLifeBanner'
+  EntityCachedCopy,
+  EntityCachedCopyHandle
+} from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import {
   SavePipelineHandleV1,
   SavePipelinePopoverWithRefV1
@@ -62,7 +59,6 @@ import css from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCanv
 import cssV1 from './PipelineCanvasV1.module.scss'
 
 export interface PipelineCanvasHeaderProps {
-  module: string | undefined
   isPipelineRemote: boolean
   isGitSyncEnabled: boolean
   disableVisualView: boolean
@@ -76,7 +72,6 @@ export interface PipelineCanvasHeaderProps {
 
 export function PipelineCanvasHeaderV1(props: PipelineCanvasHeaderProps): React.ReactElement {
   const {
-    module,
     isPipelineRemote,
     isGitSyncEnabled,
     onGitBranchChange,
@@ -101,10 +96,8 @@ export function PipelineCanvasHeaderV1(props: PipelineCanvasHeaderProps): React.
   const params = useParams<PipelineType<PipelinePathProps> & GitQueryParams>()
   const { branch, repoName, connectorRef } = useQueryParams<GitQueryParams & RunPipelineQueryParams>()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
-  const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
-  const [showBanner, setShowbanner] = React.useState<boolean>(false)
   const savePipelineHandleRef = React.useRef<SavePipelineHandleV1 | null>(null)
-  const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
+  const pipelineCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
 
   const { open: openDiffModal } = useDiffDialog({
     originalYaml: stringify(originalPipeline),
@@ -139,7 +132,7 @@ export function PipelineCanvasHeaderV1(props: PipelineCanvasHeaderProps): React.
 
   // Need to show reload option only when we are showing a cached response
   function showReloadFromGitoption(): boolean {
-    return Boolean(isPipelineRemote && isPipelineGitCacheEnabled && pipelineCacheResponse)
+    return Boolean(isPipelineRemote && pipelineCacheResponse)
   }
 
   function handleReloadFromGitClick(): void {
@@ -151,25 +144,6 @@ export function PipelineCanvasHeaderV1(props: PipelineCanvasHeaderProps): React.
     fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
   }
 
-  //Banner Effect
-  React.useEffect(() => {
-    if (module === 'cd') {
-      setShowbanner(true)
-    } else {
-      const v1DeployStages = pipeline?.stages?.filter(
-        (stage: any) =>
-          get(stage, 'stage.spec.serviceConfig') !== undefined ||
-          get(stage, 'parallel')?.some(
-            (parallelStage: any) => get(parallelStage, 'stage.spec.serviceConfig') !== undefined
-          )
-      )
-      //check if non cd module pipeline has any deployment type stage
-      if (v1DeployStages) {
-        if (v1DeployStages.length > 0) setShowbanner(true)
-        else setShowbanner(false)
-      }
-    }
-  }, [pipeline?.stages, module])
   const isNewPipeline = pipelineIdentifier === DefaultNewPipelineId
 
   function renderDiscardUnsavedChangeButton(): JSX.Element | null {
@@ -276,8 +250,8 @@ export function PipelineCanvasHeaderV1(props: PipelineCanvasHeaderProps): React.
                     readOnly: pipelineIdentifier === DefaultNewPipelineId
                   }}
                 />
-                {isPipelineGitCacheEnabled && !isEmpty(pipelineCacheResponse) && !remoteFetchError && (
-                  <PipelineCachedCopy
+                {!isEmpty(pipelineCacheResponse) && !remoteFetchError && (
+                  <EntityCachedCopy
                     ref={pipelineCachedCopyRef}
                     reloadContent={getString('common.pipeline')}
                     cacheResponse={pipelineCacheResponse as CacheResponseMetadata}
@@ -335,7 +309,6 @@ export function PipelineCanvasHeaderV1(props: PipelineCanvasHeaderProps): React.
           )}
         </div>
       )}
-      {showBanner && <EndOfLifeBanner />}
     </React.Fragment>
   )
 }

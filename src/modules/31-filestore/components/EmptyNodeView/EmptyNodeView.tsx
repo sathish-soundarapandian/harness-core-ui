@@ -6,7 +6,6 @@
  */
 
 import React, { useContext } from 'react'
-import { Spinner } from '@blueprintjs/core'
 import { Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import filestoreIllustration from '@filestore/images/no-files-state.svg'
@@ -23,39 +22,33 @@ export interface EmptyNodeViewProps {
 }
 
 export default function EmptyNodeView({ title, description = '' }: EmptyNodeViewProps): React.ReactElement {
-  const { currentNode, isModalView, pathValue } = useContext(FileStoreContext)
+  const { currentNode, isModalView } = useContext(FileStoreContext)
 
   const NewButton = React.useMemo(() => {
     return <NewFileButton parentIdentifier={currentNode.identifier} />
   }, [currentNode])
   return (
     <Container className={isModalView ? css.noViewContainerModal : css.noViewContainer}>
-      {!pathValue ? (
-        <Layout.Vertical
-          spacing={isModalView ? 'medium' : 'xxlarge'}
-          height={isModalView ? '33vh' : '100%'}
-          flex={{ align: 'center-center' }}
-        >
-          <img src={filestoreIllustration} width={'220px'} />
-          <Container>
-            <Text font={{ weight: 'bold', size: 'medium', align: 'center' }} color={Color.GREY_600}>
-              {title}
-            </Text>
-            <Container className={css.descriptions}>
-              {description && (
-                <Text font={{ size: 'normal', align: 'center' }} color={Color.GREY_600}>
-                  {description}
-                </Text>
-              )}
-            </Container>
+      <Layout.Vertical
+        spacing={isModalView ? 'medium' : 'xxlarge'}
+        height={isModalView ? '33vh' : '100%'}
+        flex={{ align: 'center-center' }}
+      >
+        <img src={filestoreIllustration} width={'220px'} />
+        <Container>
+          <Text font={{ weight: 'bold', size: 'medium', align: 'center' }} color={Color.GREY_600}>
+            {title}
+          </Text>
+          <Container className={css.descriptions}>
+            {description && (
+              <Text font={{ size: 'normal', align: 'center' }} color={Color.GREY_600}>
+                {description}
+              </Text>
+            )}
           </Container>
-          {NewButton}
-        </Layout.Vertical>
-      ) : (
-        <Container className={css.spinnerWrapper} flex={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Spinner />
         </Container>
-      )}
+        {NewButton}
+      </Layout.Vertical>
     </Container>
   )
 }

@@ -7,7 +7,6 @@
 
 import React, { FC } from 'react'
 import { Checkbox } from '@harness/uicore'
-import { killEvent } from '@common/utils/eventUtils'
 import { useFreezeWindowListContext } from '@freeze-windows/context/FreezeWindowListContext'
 import type { FreezeSummaryResponse } from 'services/cd-ng'
 import css from './FreezeWindowList.module.scss'
@@ -16,7 +15,7 @@ export const ToggleAllSelection: FC<{ data: FreezeSummaryResponse[]; canEdit: bo
   const { toggleAllSelect, selectedItems } = useFreezeWindowListContext()
 
   return (
-    <div className={css.checkbox} onClick={killEvent}>
+    <div className={css.checkbox}>
       <Checkbox
         readOnly={!canEdit}
         aria-label="Select all rows"

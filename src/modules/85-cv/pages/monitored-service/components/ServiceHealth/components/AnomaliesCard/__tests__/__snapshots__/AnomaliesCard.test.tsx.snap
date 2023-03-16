@@ -29,7 +29,7 @@ exports[`Unit tests for AnomaliesCard Verify if all the fields are rendered corr
           cv.monitoredServices.serviceHealth.lowestHealthScore
         </p>
         <p
-          class="StyledProps--font StyledProps--main StyledProps--padding-top-xsmall StyledProps--color StyledProps--color-green500 StyledProps--font-size-large StyledProps--font-weight-bold"
+          class="StyledProps--font StyledProps--main StyledProps--padding-top-xsmall StyledProps--color StyledProps--color-green700 StyledProps--font-size-large StyledProps--font-weight-bold"
         >
           100
         </p>

@@ -31,9 +31,7 @@ describe('Cloud watch health source', () => {
         ]
       })
     })
-    cy.on('uncaught:exception', () => {
-      return false
-    })
+
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
@@ -60,9 +58,11 @@ describe('Cloud watch health source', () => {
     cy.addNewMonitoredServiceWithServiceAndEnv()
 
     cy.populateDefineHealthSource(Connectors.AWS, 'testAWS', 'CloudWatch Metrics')
-    cy.contains('span', 'Next').click({ force: true })
+    cy.findByRole('button', { name: /Next/i }).scrollIntoView().click({ force: true })
 
     cy.wait('@regionsCall')
+
+    cy.findByText(/Configuration/).should('have.attr', 'aria-selected', 'true')
 
     cy.get('input[name="region"]').click()
     cy.contains('p', 'region 1').click({ force: true })
@@ -130,9 +130,11 @@ describe('Cloud watch health source', () => {
 
     cy.wait(100)
 
-    cy.contains('span', 'Next').click({ force: true })
+    cy.findByRole('button', { name: /Next/i }).scrollIntoView().click({ force: true })
 
     cy.wait('@regionsCall')
+
+    cy.findByText(/Configuration/, { timeout: 2000 }).should('have.attr', 'aria-selected', 'true')
 
     cy.contains('p', 'AWS Region', { timeout: 4000 }).should('exist')
 
@@ -202,9 +204,11 @@ describe('Cloud watch health source', () => {
       cy.addNewMonitoredServiceWithServiceAndEnv()
 
       cy.populateDefineHealthSource(Connectors.AWS, 'testAWS', 'CloudWatch Metrics')
-      cy.contains('span', 'Next').click({ force: true })
+      cy.findByRole('button', { name: /Next/i }).scrollIntoView().click({ force: true })
 
       cy.wait('@regionsCall')
+
+      cy.findByText(/Configuration/).should('have.attr', 'aria-selected', 'true')
 
       cy.get('input[name="region"]').click()
       cy.contains('p', 'region 1').click({ force: true })
@@ -239,9 +243,11 @@ describe('Cloud watch health source', () => {
       cy.addNewMonitoredServiceWithServiceAndEnv()
 
       cy.populateDefineHealthSource(Connectors.AWS, 'testAWS', 'CloudWatch Metrics')
-      cy.contains('span', 'Next').click({ force: true })
+      cy.findByRole('button', { name: /Next/i }).scrollIntoView().click({ force: true })
 
       cy.wait('@regionsCall')
+
+      cy.findByText(/Configuration/).should('have.attr', 'aria-selected', 'true')
 
       cy.get('input[name="region"]').click()
       cy.contains('p', 'region 1').click({ force: true })

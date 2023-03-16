@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 export interface UseBooleanStatusReturn {
   state: boolean
@@ -16,17 +16,14 @@ export interface UseBooleanStatusReturn {
 
 export function useBooleanStatus(init?: boolean): UseBooleanStatusReturn {
   const [state, setState] = useState(!!init)
+  const toggle = useCallback(() => setState(p => !p), [])
+  const open = useCallback(() => setState(true), [])
+  const close = useCallback(() => setState(false), [])
 
   return {
     state,
-    toggle() {
-      setState(s => !s)
-    },
-    open() {
-      setState(true)
-    },
-    close() {
-      setState(false)
-    }
+    toggle,
+    open,
+    close
   }
 }

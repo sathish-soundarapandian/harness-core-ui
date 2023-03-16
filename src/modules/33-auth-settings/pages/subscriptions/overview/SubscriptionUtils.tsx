@@ -20,7 +20,8 @@ import type {
   CIModuleLicenseDTO,
   STOModuleLicenseDTO,
   ModuleLicenseDTO,
-  ChaosModuleLicenseDTO
+  ChaosModuleLicenseDTO,
+  CVModuleLicenseDTO
 } from 'services/cd-ng'
 import css from './SubscriptionDetailsCard.module.scss'
 
@@ -191,6 +192,19 @@ function getLicenseCountByModule({
         <Layout.Vertical spacing="medium">
           <Text color={Color.BLACK} font={{ weight: 'semi-bold' }} margin={{ bottom: 5 }}>
             {getString('common.subscriptions.ci.developers', { developers: committers })}
+          </Text>
+        </Layout.Vertical>
+      )
+    }
+    case ModuleName.CV: {
+      const cvModuleLicenseDTO = licenseData as CVModuleLicenseDTO
+      const workloads = cvModuleLicenseDTO?.numberOfServices?.toLocaleString()
+      const serviceStr = getString('common.subscriptions.cd.services', { workloads })
+
+      return (
+        <Layout.Vertical spacing="medium">
+          <Text color={Color.BLACK} font={{ weight: 'semi-bold' }} margin={{ bottom: 5 }}>
+            {serviceStr}
           </Text>
         </Layout.Vertical>
       )

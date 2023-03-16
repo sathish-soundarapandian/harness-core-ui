@@ -12,6 +12,14 @@
   transform: translate(-50%, 0);
 }
 
+.gitRemoteDetails {
+  :global {
+    .bp3-icon {
+      margin-left: var(--spacing-large) !important;
+    }
+  }
+}
+
 .reconcileMenu {
   display: inline-block;
   position: absolute;

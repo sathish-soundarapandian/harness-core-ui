@@ -1,0 +1,21 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "environmentsInputYamlAndServiceOverrides": [
+      {
+        "envRef": "env_with_both_inputs",
+        "envYaml": "environment:\n  name: env with both inputs\n  identifier: env_with_both_inputs\n  tags: {}\n  type: Production\n  orgIdentifier: dummyOrg\n  projectIdentifier: dummyProj\n  variables:\n    - name: envVar3\n      type: String\n      value: <+input>\n      description: \"\"\n",
+        "envRuntimeInputYaml": "environmentInputs:\n  identifier: \"env_with_both_inputs\"\n  type: \"Production\"\n  variables:\n  - name: \"envVar3\"\n    type: \"String\"\n    value: \"<+input>\"\n",
+        "servicesOverrides": [
+          {
+            "serviceRef": "svc_to_override",
+            "serviceYaml": "service:\n  name: svc to override\n  identifier: svc_to_override\n  tags: {}\n  serviceDefinition:\n    spec:\n      variables:\n        - name: svcVar1\n          type: String\n          description: \"\"\n          value: test\n    type: Kubernetes\n",
+            "serviceOverridesYaml": "serviceOverrideInputs:\n  variables:\n  - name: \"svcVar1\"\n    type: \"String\"\n    value: \"<+input>\"\n"
+          }
+        ]
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "f864e03b-5ce8-4caa-b895-1c658460c00d"
+}

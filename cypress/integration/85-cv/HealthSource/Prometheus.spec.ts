@@ -40,9 +40,6 @@ import { Connectors } from '../../../utils/connctors-utils'
 
 describe('Health Source - Prometheus', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      return false
-    })
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
@@ -66,6 +63,7 @@ describe('Health Source - Prometheus', () => {
 
     cy.get('input[name="metricName"]').should('contain.value', 'Prometheus Metric')
     cy.get('input[name="metricName"]').clear()
+    cy.get('input[name="metricName"]').blur()
 
     cy.contains('span', 'Metric Name is required.').should('be.visible')
     cy.fillField('metricName', 'Prometheus Metric')
@@ -137,6 +135,8 @@ describe('Health Source - Prometheus', () => {
     cy.contains('div', 'Map Metric(s) to Harness Services').click()
 
     cy.fillField('metricName', 'Prometheus Metric')
+
+    cy.get('input[name="metricName"]').blur()
 
     cy.contains('span', 'Metric name must be unique.').should('be.visible')
     cy.fillField('metricName', 'Prometheus Metric 123')
@@ -294,9 +294,6 @@ describe('Prometheus metric thresholds', () => {
       })
     })
 
-    cy.on('uncaught:exception', () => {
-      return false
-    })
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
@@ -484,9 +481,6 @@ describe('Prometheus metric thresholds', () => {
 
 describe('AWS Prometheus', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      return false
-    })
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
@@ -572,6 +566,7 @@ describe('AWS Prometheus', () => {
 
     cy.get('input[name="metricName"]').should('contain.value', 'Prometheus Metric')
     cy.get('input[name="metricName"]').clear()
+    cy.get('input[name="metricName"]').blur()
 
     cy.contains('span', 'Metric Name is required.').should('be.visible')
     cy.fillField('metricName', 'Prometheus Metric')

@@ -15,7 +15,7 @@ import type {
   PipelineStageConfig,
   StageElementWrapperConfig
 } from 'services/pipeline-ng'
-import { getChildPipelineMetadata, getPromisesForChildPipeline } from '@pipeline/components/PipelineStudio/StepUtil'
+import { getChildPipelinesMetadata, getPromisesForChildPipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { StageType } from '@pipeline/utils/stageHelpers'
 
@@ -43,7 +43,7 @@ export function useGetResolvedChildPipeline(
     new Map<string, PipelineInfoConfig>()
   )
   const [loadingResolvedChildPipeline, setLoadingResolvedChildPipeline] = useState<boolean>(false)
-  const childPipelinesMetaData = React.useMemo(() => getChildPipelineMetadata(pipeline), [pipeline])
+  const childPipelinesMetaData = React.useMemo(() => getChildPipelinesMetadata(pipeline), [pipeline])
 
   const getResolvedTemplatesPipelineYamlForChildPipelines = React.useCallback(async (): Promise<void> => {
     setLoadingResolvedChildPipeline(true)

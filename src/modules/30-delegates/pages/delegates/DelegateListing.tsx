@@ -19,8 +19,7 @@ import {
   FormInput,
   MultiSelectOption,
   PageError,
-  shouldShowError,
-  getErrorInfoFromErrorObject
+  shouldShowError
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
@@ -44,13 +43,7 @@ import {
   useGetDelegateGroupsNGV2WithFilter,
   DelegateGroupDetails
 } from 'services/portal'
-import {
-  usePostFilter,
-  useUpdateFilter,
-  useDeleteFilter,
-  useGetFilterList,
-  useIsImmutableDelegateEnabled
-} from 'services/cd-ng'
+import { usePostFilter, useUpdateFilter, useDeleteFilter, useGetFilterList } from 'services/cd-ng'
 import type { FilterDTO, ResponsePageFilterDTO, Failure, DelegateFilterProperties } from 'services/cd-ng'
 import useCreateDelegateModal from '@delegates/modals/DelegateModal/useCreateDelegateModal'
 import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
@@ -111,18 +104,6 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
   const { openDelegateModalWithCommands } = useCreateDelegateViaCommandsModal({
     oldDelegateCreation: openDelegateModal
   })
-  const {
-    data: useImmutableDelegate,
-    error: useImmutableDelegateError,
-    loading: useImmutableDelegateLoading
-  } = useIsImmutableDelegateEnabled({
-    accountIdentifier: accountId
-  })
-  useEffect(() => {
-    if (useImmutableDelegateError) {
-      showError(getErrorInfoFromErrorObject(useImmutableDelegateError))
-    }
-  }, [useImmutableDelegateError])
 
   useEffect(() => {
     setShowDelegateLoader(true)
@@ -349,7 +330,7 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
     const { delegateName, delegateGroupIdentifier, delegateType, description, hostName, status, delegateTags } =
       (appliedFilter?.filterProperties as any) || {}
     const { name = '', filterVisibility } = appliedFilter || {}
-    return isFetchingFilters || useImmutableDelegateLoading ? (
+    return isFetchingFilters ? (
       <PageSpinner />
     ) : (
       <Filter<DelegateFilterProperties, FilterDTO>
@@ -476,18 +457,16 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
   const newDelegateBtn = (
     <RbacButton
       intent="primary"
-      text={hideHeader ? getString('delegates.createDelegate') : getString('delegates.newDelegate')}
-      icon="plus"
+      text={
+        hideHeader ? getString('delegates.commandLineCreation.installDelegate') : getString('delegates.newDelegate')
+      }
+      icon={hideHeader ? undefined : 'plus'}
       permission={permissionRequestNewDelegate}
       onClick={() => {
-        if (useImmutableDelegate?.data) {
-          trackEvent(DelegateActions.DelegateCommandLineCreationOpened, {
-            category: Category.DELEGATE
-          })
-          openDelegateModalWithCommands()
-        } else {
-          openDelegateModal()
-        }
+        trackEvent(DelegateActions.DelegateCommandLineCreationOpened, {
+          category: Category.DELEGATE
+        })
+        openDelegateModalWithCommands()
       }}
       id="newDelegateBtn"
       data-testid="newDelegateButton"

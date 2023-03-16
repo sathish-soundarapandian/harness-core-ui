@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, getMultiTypeFromValue, MultiTypeInputType, Text, Icon, IconName, AllowedTypes } from '@harness/uicore'
-import { isEmpty, get, defaultTo, set } from 'lodash-es'
+import { Layout, getMultiTypeFromValue, MultiTypeInputType, Text, Icon, AllowedTypes } from '@harness/uicore'
+import { isEmpty, get, defaultTo, set, omit } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -33,6 +33,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
+import { stageTypeToIconMap } from '@pipeline/utils/constants'
+import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import { StageInputSetForm } from './StageInputSetForm'
 import { StageAdvancedInputSetForm } from './StageAdvancedInputSetForm'
 import { CICodebaseInputSetForm } from './CICodebaseInputSetForm'
@@ -47,6 +49,12 @@ import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline, getTemplatePath } from '../PipelineStudio/StepUtil'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getFilteredAllowableTypes, StageSelectionData } from '../../utils/runPipelineUtils'
+import {
+  ChainedPipelineInfoPopover,
+  ChainedPipelineInputSetFormProps,
+  ChildPipelineMetadataType,
+  getChildPipelineMetadata
+} from './ChainedPipelineInputSetUtils'
 import { OutputPanelInputSetView } from '../CommonPipelineStages/PipelineStage/PipelineStageOutputSection/OutputPanelInputSetView'
 import css from './PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -66,16 +74,9 @@ export interface PipelineInputSetFormProps {
   viewTypeMetadata?: Record<string, boolean>
   gitAwareForTriggerEnabled?: boolean
   selectedStageData?: StageSelectionData
-  hideTitle?: boolean
   disableRuntimeInputConfigureOptions?: boolean
-}
-
-export const stageTypeToIconMap: Record<string, IconName> = {
-  Deployment: 'cd-main',
-  CI: 'ci-main',
-  Pipeline: 'pipeline',
-  Custom: 'custom-stage-icon',
-  Approval: 'approval-stage-icon'
+  childPipelineMetadata?: ChildPipelineMetadataType
+  chainedPipelineStagePath?: string
 }
 
 export function StageFormInternal({
@@ -126,9 +127,10 @@ export function StageFormInternal({
           </div>
         </div>
       )}
-      {template?.stage?.spec && (
+      {template?.stage?.type !== StageType.PIPELINE && template?.stage?.spec && (
         <StageInputSetForm
-          stageIdentifier={allValues?.stage?.identifier}
+          stageIdentifier={defaultTo(allValues?.stage?.identifier, '')}
+          stageType={template?.stage?.type as StageType}
           path={`${path}.spec`}
           deploymentStageTemplate={template?.stage?.spec as DeploymentStageConfig}
           deploymentStage={allValues?.stage?.spec as DeploymentStageConfig}
@@ -141,7 +143,8 @@ export function StageFormInternal({
       {(!isEmpty(template?.stage?.when) ||
         !isEmpty(template?.stage?.delegateSelectors) ||
         !isEmpty(template?.stage?.strategy) ||
-        !isEmpty(template?.stage?.skipInstances)) && (
+        !isEmpty(template?.stage?.skipInstances) ||
+        !isEmpty(template?.stage?.failureStrategies)) && (
         <StageAdvancedInputSetForm
           stageIdentifier={allValues?.stage?.identifier}
           path={path}
@@ -150,6 +153,8 @@ export function StageFormInternal({
           allowableTypes={allowableTypes}
           delegateSelectors={template?.stage?.delegateSelectors}
           skipInstances={template?.stage?.skipInstances}
+          stageType={template?.stage?.type as StageType}
+          viewType={viewType}
         />
       )}
     </div>
@@ -165,7 +170,8 @@ export function StageForm({
   hideTitle = false,
   stageClassName = '',
   allowableTypes,
-  executionIdentifier
+  executionIdentifier,
+  childPipelineMetadata
 }: {
   allValues?: StageElementWrapperConfig
   template?: StageElementWrapperConfig
@@ -176,6 +182,7 @@ export function StageForm({
   stageClassName?: string
   executionIdentifier?: string
   allowableTypes: AllowedTypes
+  childPipelineMetadata?: ChildPipelineMetadataType
 }): JSX.Element {
   const [stageFormTemplate, setStageFormTemplate] = React.useState(template)
   const isTemplateStage = !!stageFormTemplate?.stage?.template
@@ -203,8 +210,26 @@ export function StageForm({
     <div id={`Stage.${allValues?.stage?.identifier}`}>
       {!hideTitle && (
         <Layout.Horizontal spacing="small" padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}>
-          {type && <Icon name={stageTypeToIconMap[type]} size={18} />}
-          <Text color={Color.BLACK_100} font={{ weight: 'semi-bold' }}>
+          {childPipelineMetadata && (
+            <>
+              <ChainedPipelineInfoPopover childPipelineMetadata={childPipelineMetadata}>
+                <Icon name={stageTypeToIconMap[StageType.PIPELINE]} size={18} style={{ cursor: 'pointer' }} />
+              </ChainedPipelineInfoPopover>
+              <Icon name={'chevron-right'} size={18} color={Color.GREY_450} className={css.middleStageIcon} />
+            </>
+          )}
+          {type && (
+            <Icon
+              name={stageTypeToIconMap[type]}
+              size={18}
+              className={cx({ [css.childPipelineStageIcon]: !!childPipelineMetadata })}
+            />
+          )}
+          <Text
+            color={Color.BLACK_100}
+            font={{ weight: 'semi-bold' }}
+            className={cx({ [css.childPipelineStageName]: !!childPipelineMetadata })}
+          >
             Stage: {defaultTo(allValues?.stage?.name, defaultTo(allValues?.stage?.identifier, ''))}
           </Text>
         </Layout.Horizontal>
@@ -236,6 +261,84 @@ export function StageForm({
   )
 }
 
+export function ChainedPipelineInputSetForm(props: ChainedPipelineInputSetFormProps): JSX.Element {
+  const {
+    stageObj,
+    inputPath,
+    outputPath,
+    stagePath,
+    viewType,
+    allowableTypes,
+    allValues,
+    readonly,
+    executionIdentifier,
+    maybeContainerClass,
+    viewTypeMetadata,
+    disableRuntimeInputConfigureOptions
+  } = props
+  const originalPipeline = (allValues?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
+  const pipelineStageTemplate = (stageObj?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
+  const pipelineStageOutputs = (stageObj?.stage?.spec as PipelineStageConfig)?.outputs
+  const childPipelineMetadata = React.useMemo(() => getChildPipelineMetadata(allValues), [allValues])
+  const showChainedPipelineStageForm = (): boolean =>
+    !!stageObj?.stage?.variables ||
+    !isEmpty(stageObj?.stage?.when) ||
+    !isEmpty(stageObj?.stage?.delegateSelectors) ||
+    !isEmpty(stageObj?.stage?.strategy) ||
+    !isEmpty(stageObj?.stage?.skipInstances) ||
+    !isEmpty(stageObj?.stage?.failureStrategies)
+
+  return (
+    <>
+      <Layout.Horizontal spacing="small" padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}>
+        <ChainedPipelineInfoPopover
+          childPipelineMetadata={omit(childPipelineMetadata, 'parentPipelineName') as ChildPipelineMetadataType}
+        >
+          <Icon name={stageTypeToIconMap[StageType.PIPELINE]} size={18} style={{ cursor: 'pointer' }} />
+        </ChainedPipelineInfoPopover>
+        <Text color={Color.BLACK_100} font={{ weight: 'semi-bold' }}>
+          Stage: {defaultTo(allValues?.stage?.name, '')}
+        </Text>
+      </Layout.Horizontal>
+      {pipelineStageOutputs && pipelineStageOutputs.length > 0 && (
+        <OutputPanelInputSetView
+          allowableTypes={getFilteredAllowableTypes(allowableTypes, viewType)}
+          readonly={readonly}
+          template={{ outputs: pipelineStageOutputs }}
+          path={outputPath}
+        />
+      )}
+      {/* For showing chained pipeline stage variable, runtime delegate selector & failure strategy */}
+      {showChainedPipelineStageForm() && (
+        <StageForm
+          template={stageObj}
+          allValues={allValues}
+          path={stagePath}
+          readonly={readonly}
+          viewType={viewType}
+          allowableTypes={allowableTypes}
+          executionIdentifier={executionIdentifier}
+          hideTitle
+        />
+      )}
+      <PipelineInputSetFormInternal
+        originalPipeline={originalPipeline}
+        template={pipelineStageTemplate}
+        path={inputPath}
+        readonly={readonly}
+        viewType={viewType}
+        maybeContainerClass={maybeContainerClass}
+        executionIdentifier={executionIdentifier}
+        viewTypeMetadata={viewTypeMetadata}
+        allowableTypes={allowableTypes}
+        disableRuntimeInputConfigureOptions={disableRuntimeInputConfigureOptions}
+        childPipelineMetadata={childPipelineMetadata}
+        chainedPipelineStagePath={stagePath}
+      />
+    </>
+  )
+}
+
 export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): React.ReactElement {
   const {
     originalPipeline,
@@ -248,8 +351,9 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     viewTypeMetadata,
     allowableTypes,
     selectedStageData,
-    hideTitle,
-    disableRuntimeInputConfigureOptions: disableConfigureOptions
+    disableRuntimeInputConfigureOptions: disableConfigureOptions,
+    childPipelineMetadata,
+    chainedPipelineStagePath
   } = props
   const { getString } = useStrings()
   const isTemplatePipeline = !!template?.template
@@ -274,10 +378,16 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     return readonly as boolean
   }
 
+  const isCloneCodebaseEnabledAtLeastAtOneChildPipelineStage =
+    childPipelineMetadata && isCloneCodebaseEnabledAtLeastOneStage(originalPipeline)
+
   return (
     <Layout.Vertical
       spacing="medium"
-      className={cx(css.container, { [maybeContainerClass]: !hideTitle, [css.pipelineStageForm]: !!hideTitle })}
+      className={cx(css.container, {
+        [maybeContainerClass]: !childPipelineMetadata,
+        [css.pipelineStageForm]: !!childPipelineMetadata
+      })}
     >
       {getMultiTypeFromValue(finalTemplate?.timeout) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
@@ -335,58 +445,41 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
           />
         </>
       )}
-      <CICodebaseInputSetForm
-        path={finalPath}
-        readonly={readonly}
-        originalPipeline={props.originalPipeline}
-        template={template}
-        viewType={viewType}
-        viewTypeMetadata={viewTypeMetadata}
-        selectedStageData={selectedStageData}
-      />
+      {(!childPipelineMetadata || isCloneCodebaseEnabledAtLeastAtOneChildPipelineStage) && (
+        <CICodebaseInputSetForm
+          path={finalPath}
+          readonly={readonly}
+          originalPipeline={props.originalPipeline}
+          template={template}
+          viewType={viewType}
+          viewTypeMetadata={viewTypeMetadata}
+          selectedStageData={selectedStageData}
+          chainedPipelineStagePath={chainedPipelineStagePath}
+        />
+      )}
       {
         <>
           {finalTemplate?.stages?.map((stageObj, index) => {
             const pathPrefix = !isEmpty(finalPath) ? `${finalPath}.` : ''
             if (stageObj.stage) {
               const allValues = getStageFromPipeline(stageObj.stage?.identifier || '', originalPipeline)
-              const pipelineStageTemplate = (stageObj.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
-              const pipelineStageOutputs = (stageObj.stage?.spec as PipelineStageConfig)?.outputs
-              const _originalPipeline = (allValues?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
 
               return (
                 <Layout.Vertical key={stageObj?.stage?.identifier || index}>
-                  {stageObj.stage.type === StageType.PIPELINE ? (
+                  {stageObj.stage?.type === StageType.PIPELINE ? (
                     <>
-                      <Layout.Horizontal
-                        spacing="small"
-                        padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}
-                      >
-                        <Icon name={stageTypeToIconMap[StageType.PIPELINE]} size={18} />
-                        <Text color={Color.BLACK_100} font={{ weight: 'semi-bold' }}>
-                          Stage: {defaultTo(allValues?.stage?.name, '')}
-                        </Text>
-                      </Layout.Horizontal>
-                      {pipelineStageOutputs && pipelineStageOutputs.length > 0 && (
-                        <OutputPanelInputSetView
-                          allowableTypes={getFilteredAllowableTypes(allowableTypes, viewType)}
-                          readonly={readonly}
-                          template={{ outputs: pipelineStageOutputs }}
-                          path={`${pathPrefix}stages[${index}].stage.spec.outputs`}
-                        />
-                      )}
-                      <PipelineInputSetFormInternal
-                        originalPipeline={_originalPipeline}
-                        template={pipelineStageTemplate}
-                        path={`${pathPrefix}stages[${index}].stage.spec.inputs`}
-                        readonly={readonly}
+                      <ChainedPipelineInputSetForm
+                        stageObj={stageObj}
+                        inputPath={`${pathPrefix}stages[${index}].stage.spec.inputs`}
+                        outputPath={`${pathPrefix}stages[${index}].stage.spec.outputs`}
+                        stagePath={`${pathPrefix}stages[${index}].stage`}
                         viewType={viewType}
-                        maybeContainerClass={maybeContainerClass}
-                        executionIdentifier={executionIdentifier}
-                        viewTypeMetadata={viewTypeMetadata}
                         allowableTypes={allowableTypes}
-                        selectedStageData={selectedStageData}
-                        hideTitle={true}
+                        allValues={allValues}
+                        readonly={readonly}
+                        executionIdentifier={executionIdentifier}
+                        maybeContainerClass={maybeContainerClass}
+                        viewTypeMetadata={viewTypeMetadata}
                         disableRuntimeInputConfigureOptions={disableConfigureOptions}
                       />
                     </>
@@ -399,7 +492,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                       viewType={viewType}
                       allowableTypes={allowableTypes}
                       executionIdentifier={executionIdentifier}
-                      hideTitle={!!hideTitle}
+                      childPipelineMetadata={childPipelineMetadata}
                     />
                   )}
                 </Layout.Vertical>
@@ -407,43 +500,23 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             } else if (stageObj.parallel) {
               return stageObj.parallel.map((stageP, indexp) => {
                 const allValues = getStageFromPipeline(stageP?.stage?.identifier || '', originalPipeline)
-                const pipelineStageTemplate = (stageP?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
-                const pipelineStageOutputs = (stageP?.stage?.spec as PipelineStageConfig)?.outputs
-                const _originalPipeline = (allValues?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
 
                 return (
                   <Layout.Vertical key={`${stageObj?.stage?.identifier}-${stageP.stage?.identifier}-${indexp}`}>
                     {stageP.stage?.type === StageType.PIPELINE ? (
                       <>
-                        <Layout.Horizontal
-                          spacing="small"
-                          padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}
-                        >
-                          <Icon name={stageTypeToIconMap[StageType.PIPELINE]} size={18} />
-                          <Text color={Color.BLACK_100} font={{ weight: 'semi-bold' }}>
-                            Stage: {defaultTo(allValues?.stage?.name, '')}
-                          </Text>
-                        </Layout.Horizontal>
-                        {pipelineStageOutputs && pipelineStageOutputs.length > 0 && (
-                          <OutputPanelInputSetView
-                            allowableTypes={getFilteredAllowableTypes(allowableTypes, viewType)}
-                            readonly={readonly}
-                            template={{ outputs: pipelineStageOutputs }}
-                            path={`${pathPrefix}stages[${index}].parallel[${indexp}].stage.spec.outputs`}
-                          />
-                        )}
-                        <PipelineInputSetFormInternal
-                          originalPipeline={_originalPipeline}
-                          template={pipelineStageTemplate}
-                          path={`${pathPrefix}stages[${index}].parallel[${indexp}].stage.spec.inputs`}
-                          readonly={readonly}
+                        <ChainedPipelineInputSetForm
+                          stageObj={stageP}
+                          inputPath={`${pathPrefix}stages[${index}].parallel[${indexp}].stage.spec.inputs`}
+                          outputPath={`${pathPrefix}stages[${index}].parallel[${indexp}].stage.spec.outputs`}
+                          stagePath={`${pathPrefix}stages[${index}].parallel[${indexp}].stage`}
                           viewType={viewType}
-                          maybeContainerClass={maybeContainerClass}
-                          executionIdentifier={executionIdentifier}
-                          viewTypeMetadata={viewTypeMetadata}
                           allowableTypes={allowableTypes}
-                          selectedStageData={selectedStageData}
-                          hideTitle={true}
+                          allValues={allValues}
+                          readonly={readonly}
+                          executionIdentifier={executionIdentifier}
+                          maybeContainerClass={maybeContainerClass}
+                          viewTypeMetadata={viewTypeMetadata}
                           disableRuntimeInputConfigureOptions={disableConfigureOptions}
                         />
                       </>
@@ -455,7 +528,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                         readonly={isInputStageDisabled(stageP?.stage?.identifier as string)}
                         viewType={viewType}
                         allowableTypes={allowableTypes}
-                        hideTitle={!!hideTitle}
+                        childPipelineMetadata={childPipelineMetadata}
                       />
                     )}
                   </Layout.Vertical>

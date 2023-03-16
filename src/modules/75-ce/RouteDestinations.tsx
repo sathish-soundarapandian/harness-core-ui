@@ -41,6 +41,8 @@ import RecommendationFilters from '@ce/components/RecommendationFilters'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
+import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
+import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
 import CEHomePage from './pages/home/CEHomePage'
 import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
 import CECOCreateGatewayPage from './pages/co-create-gateway/CECOCreateGatewayPage'
@@ -171,6 +173,49 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_CURRENCYPREFERENCE, {
   }
 })
 
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_CLOUD_ASSET_GOVERNANCE_RULE, {
+  icon: 'ccm-solid',
+  label: 'ce.governance.rules',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_CLOUD_ASSET_GOVERNANCE_RULE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_CCM_CLOUD_ASSET_GOVERNANCE_RULE]: (
+      <LocaleString stringID="rbac.permissionLabels.createEdit" />
+    ),
+    [PermissionIdentifier.DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE]: <LocaleString stringID="delete" />
+  }
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET, {
+  icon: 'ccm-solid',
+  label: 'ce.governance.ruleSets',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET]: (
+      <LocaleString stringID="rbac.permissionLabels.view" />
+    ),
+    [PermissionIdentifier.EDIT_CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET]: (
+      <LocaleString stringID="rbac.permissionLabels.createEdit" />
+    ),
+    [PermissionIdentifier.DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE_SET]: <LocaleString stringID="delete" />
+  }
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT, {
+  icon: 'ccm-solid',
+  label: 'ce.governance.enforcements',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT]: (
+      <LocaleString stringID="rbac.permissionLabels.view" />
+    ),
+    [PermissionIdentifier.EDIT_CCM_CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT]: (
+      <LocaleString stringID="rbac.permissionLabels.createEdit" />
+    ),
+    [PermissionIdentifier.DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT]: <LocaleString stringID="delete" />
+  }
+})
+
 featureFactory.registerFeaturesByModule('ce', {
   features: [FeatureIdentifier.PERSPECTIVES],
   renderMessage: (_, getString, additionalLicenseProps, usageAndLimitInfo) => {
@@ -284,6 +329,43 @@ AuditTrailFactory.registerResourceHandler('PERSPECTIVE_FOLDER', {
     return `${routes.toCEPerspectives({
       accountId: accountIdentifier
     })}?folderId="${resource.identifier}"`
+  }
+})
+
+AuditTrailFactory.registerResourceHandler('CLOUD_ASSET_GOVERNANCE_RULE', {
+  moduleIcon: { name: 'ccm-solid' },
+  moduleLabel: 'common.purpose.ce.continuous',
+  resourceLabel: 'ce.governance.rule',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier } = resourceScope
+    return routes.toCEGovernanceRuleEditor({
+      accountId: accountIdentifier,
+      ruleId: resource.identifier
+    })
+  }
+})
+
+AuditTrailFactory.registerResourceHandler('CLOUD_ASSET_GOVERNANCE_RULE_SET', {
+  moduleIcon: { name: 'ccm-solid' },
+  moduleLabel: 'common.purpose.ce.continuous',
+  resourceLabel: 'ce.governance.ruleSet',
+  resourceUrl: (_resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier } = resourceScope
+    return `${routes.toCEGovernanceRules({
+      accountId: accountIdentifier
+    })}?tab="RuleSets"`
+  }
+})
+
+AuditTrailFactory.registerResourceHandler('CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT', {
+  moduleIcon: { name: 'ccm-solid' },
+  moduleLabel: 'common.purpose.ce.continuous',
+  resourceLabel: 'ce.governance.enforcement',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier } = resourceScope
+    return `${routes.toCEGovernanceEnforcements({
+      accountId: accountIdentifier
+    })}?s="${resource.labels?.resourceName}"`
   }
 })
 
@@ -880,7 +962,11 @@ const CERoutes: React.FC = () => {
                 AnomaliesFilter,
                 ConnectorReferenceField,
                 GatewayListFilters,
-                FeatureWarningBanner
+                FeatureWarningBanner,
+                FeatureWarningTooltip
+              }}
+              customHooks={{
+                useTestConnectionModal
               }}
               ChildApp={CcmMicroFrontendPath}
             />

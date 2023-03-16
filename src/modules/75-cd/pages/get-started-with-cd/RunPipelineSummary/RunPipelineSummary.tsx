@@ -85,7 +85,7 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
       isConnected,
       text
     }
-  }, [delegateDetails])
+  }, [delegateDetails, getString])
 
   const serviceEntities: Record<string, string> = {
     'cd.getStartedWithCD.serviceName': service?.name as string,
@@ -140,9 +140,9 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
       name: constructPipelineName(repoName),
       identifier: userPipelineIdentifier
     }
-  }, [service])
+  }, [getString, service])
 
-  const { mutate: runPipeline } = usePostPipelineExecuteWithInputSetYaml({
+  const { mutate: runPipeline, error: executePipelineError } = usePostPipelineExecuteWithInputSetYaml({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
@@ -155,6 +155,12 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
       }
     }
   })
+
+  React.useEffect(() => {
+    if (executePipelineError) {
+      showError(getErrorInfoFromErrorObject(executePipelineError))
+    }
+  }, [executePipelineError, showError])
 
   const constructPipelinePayload = React.useCallback(
     (data: PipelineRefPayload, repository = { name: DEFAULT_PIPELINE_NAME } as UserRepoResponse): string => {

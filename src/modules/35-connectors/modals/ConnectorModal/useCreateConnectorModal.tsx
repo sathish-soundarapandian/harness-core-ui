@@ -20,17 +20,12 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { getConnectivityMode } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import type { ConnectorModaldata } from '@connectors/interfaces/ConnectorInterface'
 import css from '../../components/CreateConnectorWizard/CreateConnectorWizard.module.scss'
 
 export interface UseCreateConnectorModalProps {
   onSuccess?: (data?: ConnectorRequestBody) => void
   onClose?: () => void
-}
-
-export interface ConnectorModaldata {
-  connectorInfo?: ConnectorInfoDTO
-  gitDetails?: IGitContextFormProps
-  status?: ConnectorConnectivityDetails
 }
 
 export interface UseCreateConnectorModalReturn {

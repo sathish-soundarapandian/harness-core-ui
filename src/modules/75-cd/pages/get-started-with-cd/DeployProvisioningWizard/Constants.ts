@@ -100,6 +100,12 @@ export const deploymentTypes: ServiceDeploymentTypes[] = [
     disabled: false
   },
   {
+    label: 'pipeline.serviceDeploymentTypes.kubernetesWithGitops',
+    icon: deploymentIconMap[ServiceDeploymentType.KubernetesGitops],
+    value: ServiceDeploymentType.KubernetesGitops,
+    disabled: false
+  },
+  {
     label: 'pipeline.nativeHelm',
     icon: deploymentIconMap[ServiceDeploymentType.NativeHelm],
     value: ServiceDeploymentType.NativeHelm,

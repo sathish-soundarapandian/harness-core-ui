@@ -172,7 +172,7 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                       class="Layout--horizontal StyledProps--main"
                     >
                       <span
-                        class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                        class="bp3-icon StyledProps--main StyledProps--padding-right-small"
                         data-icon="service-appdynamics"
                       >
                         <svg
@@ -193,7 +193,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font StyledProps--main"
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1;"
                       >
                         AppD default metrics runtime connector
                       </p>
@@ -205,7 +206,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+                      class="StyledProps--font Text--lineclamp StyledProps--main healthSourceInputsetTable StyledProps--padding-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       &lt;+input&gt;
                     </p>
@@ -216,7 +218,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1;"
                     >
                       Application Monitoring
                     </p>
@@ -239,7 +242,7 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                       class="Layout--horizontal StyledProps--main"
                     >
                       <span
-                        class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                        class="bp3-icon StyledProps--main StyledProps--padding-right-small"
                         data-icon="service-appdynamics"
                       >
                         <svg
@@ -260,7 +263,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font StyledProps--main"
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1;"
                       >
                         Appd with custom and runtime connector
                       </p>
@@ -272,7 +276,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+                      class="StyledProps--font Text--lineclamp StyledProps--main healthSourceInputsetTable StyledProps--padding-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       &lt;+input&gt;
                     </p>
@@ -283,7 +288,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1;"
                     >
                       Application Monitoring
                     </p>
@@ -457,7 +463,7 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                   class="Tooltip--acenter"
                   data-tooltip-id="MonitoredServiceForm_sources.healthSources.0.spec.applicationName"
                 >
-                  cv.monitoringSources.appD.applicationName
+                  pipeline.applicationName
                 </span>
                  
                 <span
@@ -684,7 +690,7 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                   class="Tooltip--acenter"
                   data-tooltip-id="MonitoredServiceForm_sources.healthSources.1.spec.applicationName"
                 >
-                  cv.monitoringSources.appD.applicationName
+                  pipeline.applicationName
                 </span>
                  
                 <span
@@ -908,19 +914,6 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
           >
             common.variables
           </p>
-          <div
-            class="Layout--vertical Layout--layout-spacing-large StyledProps--main mainContainer StyledProps--flex StyledProps--flex-align-center-center"
-          >
-            <img
-              src="test-file-stub"
-              width="117px"
-            />
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-            >
-              No Runtime inputs variables available
-            </p>
-          </div>
         </div>
       </div>
     </div>
@@ -1694,7 +1687,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                       class="Layout--horizontal StyledProps--main"
                     >
                       <span
-                        class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                        class="bp3-icon StyledProps--main StyledProps--padding-right-small"
                         data-icon="service-appdynamics"
                       >
                         <svg
@@ -1715,7 +1708,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font StyledProps--main"
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1;"
                       >
                         AppD default metrics runtime connector
                       </p>
@@ -1727,7 +1721,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+                      class="StyledProps--font Text--lineclamp StyledProps--main healthSourceInputsetTable StyledProps--padding-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       &lt;+input&gt;
                     </p>
@@ -1738,7 +1733,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1;"
                     >
                       Application Monitoring
                     </p>
@@ -1761,7 +1757,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                       class="Layout--horizontal StyledProps--main"
                     >
                       <span
-                        class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                        class="bp3-icon StyledProps--main StyledProps--padding-right-small"
                         data-icon="service-appdynamics"
                       >
                         <svg
@@ -1782,7 +1778,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font StyledProps--main"
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1;"
                       >
                         Appd with custom and runtime connector
                       </p>
@@ -1794,7 +1791,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+                      class="StyledProps--font Text--lineclamp StyledProps--main healthSourceInputsetTable StyledProps--padding-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       &lt;+input&gt;
                     </p>
@@ -1805,7 +1803,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1;"
                     >
                       Application Monitoring
                     </p>
@@ -1963,7 +1962,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                   class="Tooltip--acenter"
                   data-tooltip-id="MonitoredServiceForm_sources.healthSources.0.spec.applicationName"
                 >
-                  cv.monitoringSources.appD.applicationName
+                  pipeline.applicationName
                 </span>
                  
                 <span
@@ -2169,7 +2168,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                   class="Tooltip--acenter"
                   data-tooltip-id="MonitoredServiceForm_sources.healthSources.1.spec.applicationName"
                 >
-                  cv.monitoringSources.appD.applicationName
+                  pipeline.applicationName
                 </span>
                  
                 <span
@@ -2378,19 +2377,6 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
           >
             common.variables
           </p>
-          <div
-            class="Layout--vertical Layout--layout-spacing-large StyledProps--main mainContainer StyledProps--flex StyledProps--flex-align-center-center"
-          >
-            <img
-              src="test-file-stub"
-              width="117px"
-            />
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-            >
-              No Runtime inputs variables available
-            </p>
-          </div>
         </div>
         <button
           class="bp3-button Button--button StyledProps--font StyledProps--main cardStyle Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
@@ -2674,7 +2660,7 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
                       class="Layout--horizontal StyledProps--main"
                     >
                       <span
-                        class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                        class="bp3-icon StyledProps--main StyledProps--padding-right-small"
                         data-icon="service-stackdriver"
                       >
                         <svg
@@ -2702,7 +2688,8 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font StyledProps--main"
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1;"
                       >
                         metric
                       </p>
@@ -2714,7 +2701,8 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+                      class="StyledProps--font Text--lineclamp StyledProps--main healthSourceInputsetTable StyledProps--padding-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       &lt;+input&gt;
                     </p>
@@ -2725,7 +2713,8 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1;"
                     >
                       Cloud Metrics
                     </p>
@@ -2891,19 +2880,6 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
           >
             common.variables
           </p>
-          <div
-            class="Layout--vertical Layout--layout-spacing-large StyledProps--main mainContainer StyledProps--flex StyledProps--flex-align-center-center"
-          >
-            <img
-              src="test-file-stub"
-              width="117px"
-            />
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-            >
-              No Runtime inputs variables available
-            </p>
-          </div>
         </div>
         <button
           class="bp3-button Button--button StyledProps--font StyledProps--main cardStyle Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"

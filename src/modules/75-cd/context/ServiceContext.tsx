@@ -22,6 +22,10 @@ export interface ServiceContextValues {
   gitOpsEnabled: boolean
   isDeploymentTypeDisabled: boolean
   setIsDeploymentTypeDisabled?(status: boolean): void
+  drawerOpen?: boolean
+  setDrawerOpen?: (setOpen: boolean) => void
+  notificationPopoverVisibility?: boolean
+  setNotificationPopoverVisibility?: (setOpen: boolean) => void
 }
 
 export const ServiceContext = React.createContext<ServiceContextValues>({
@@ -34,7 +38,9 @@ export const ServiceContext = React.createContext<ServiceContextValues>({
   serviceCacheKey: '',
   selectedDeploymentType: '' as ServiceDeploymentType,
   gitOpsEnabled: false,
-  isDeploymentTypeDisabled: false
+  isDeploymentTypeDisabled: false,
+  drawerOpen: false,
+  notificationPopoverVisibility: false
 })
 
 export interface ServiceContextProviderProps extends ServiceContextValues {
@@ -43,8 +49,16 @@ export interface ServiceContextProviderProps extends ServiceContextValues {
 
 export function ServiceContextProvider(props: ServiceContextProviderProps): React.ReactElement {
   const { children, ...rest } = props
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false)
+  const [notificationPopoverVisibility, setNotificationPopoverVisibility] = React.useState<boolean>(false)
 
-  return <ServiceContext.Provider value={rest}>{children}</ServiceContext.Provider>
+  return (
+    <ServiceContext.Provider
+      value={{ ...rest, drawerOpen, setDrawerOpen, notificationPopoverVisibility, setNotificationPopoverVisibility }}
+    >
+      {children}
+    </ServiceContext.Provider>
+  )
 }
 
 export function useServiceContext(): ServiceContextValues {

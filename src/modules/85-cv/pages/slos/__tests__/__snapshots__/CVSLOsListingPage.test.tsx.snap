@@ -4,7 +4,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
 <div>
   Help Panel
   <div
-    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard sloListingPageHeader StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
     data-testid="page-header"
   >
     <div
@@ -613,7 +613,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
             class="TableV2--cell"
             colspan="1"
             role="columnheader"
-            style="width: 12%;"
+            style="width: 19%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -625,7 +625,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
             class="TableV2--cell"
             colspan="1"
             role="columnheader"
-            style="width: 13%;"
+            style="width: 12%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -649,7 +649,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
             class="TableV2--cell"
             colspan="1"
             role="columnheader"
-            style="width: 10%;"
+            style="width: 6%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -673,7 +673,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
             class="TableV2--cell"
             colspan="1"
             role="columnheader"
-            style="width: 8%;"
+            style="width: 6%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -732,8 +732,9 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                      
                   </p>
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-align-left StyledProps--font-size-small"
-                    title="Title"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-align-left StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
+                    title=""
                   >
                     
                   </p>
@@ -742,7 +743,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 12%;"
+                style="width: 19%;"
               >
                 <div
                   class="Layout--vertical StyledProps--main StyledProps--padding-left-small"
@@ -761,7 +762,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                     href="/account/account_id/cv/orgs/org_identifier/projects/project_identifier/monitoringservices/edit/monitored_service_identifier"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-xsmall"
+                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-small"
                       title="env"
                     >
                       env
@@ -772,22 +773,22 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 13%;"
+                style="width: 12%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main errorBudgetRisk StyledProps--font-align-left StyledProps--font-size-normal"
-                  style="color: white; display: flex; align-items: center;"
+                  class="StyledProps--font StyledProps--main errorBudgetRisk StyledProps--font-align-left"
+                  style="display: flex; align-items: center;"
                   title="HEALTHY"
                 >
                   <span
-                    class="bp3-icon bp3-icon-heart StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-white"
+                    class="bp3-icon bp3-icon-heart StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green700"
                     icon="heart"
                   >
                     <svg
                       data-icon="heart"
-                      height="16"
+                      height="14"
                       viewBox="0 0 16 16"
-                      width="16"
+                      width="14"
                     >
                       <desc>
                         heart
@@ -807,10 +808,10 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 style="width: 12%;"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main"
+                  class="Layout--horizontal StyledProps--main errorBudgetParent"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold StyledProps--padding-right-small"
+                    class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-light StyledProps--padding-right-small StyledProps--color StyledProps--color-grey900"
                     title=" 60.00%"
                   >
                      60.00%
@@ -819,7 +820,9 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                     class="StyledProps--font StyledProps--main errorBudgetRemainingContainer"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main errorBudgetRemaining StyledProps--font-variation-small"
+                      class="StyledProps--font Text--lineclamp StyledProps--main errorBudgetRemaining StyledProps--font-variation-small StyledProps--color StyledProps--color-grey700"
+                      style="--text-line-clamp: 1;"
+                      title="60 m"
                     >
                       60 m
                     </p>
@@ -829,10 +832,10 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 10%;"
+                style="width: 6%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-light StyledProps--color StyledProps--color-grey900"
                   title=" 60%"
                 >
                    60%
@@ -844,7 +847,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 style="width: 9%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-light StyledProps--color StyledProps--color-grey900"
                   title="90.00%"
                 >
                   90.00
@@ -854,10 +857,10 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 8%;"
+                style="width: 6%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-light StyledProps--color StyledProps--color-grey900"
                   title="0"
                 >
                   0
@@ -869,7 +872,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 style="width: 10%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-light StyledProps--color StyledProps--color-grey900"
                   title=""
                 >
                   
@@ -884,8 +887,9 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                   class="Layout--horizontal StyledProps--main actions"
                 >
                   <span
-                    class="bp3-icon StyledProps--main actionIcons StyledProps--padding-small"
+                    class="bp3-icon StyledProps--main actionIcons StyledProps--padding-xsmall StyledProps--margin-right-medium"
                     data-icon="Edit"
+                    title="edit"
                   >
                     <svg
                       height="16"
@@ -909,8 +913,9 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                     </svg>
                   </span>
                   <span
-                    class="bp3-icon StyledProps--main actionIcons StyledProps--padding-small"
+                    class="bp3-icon StyledProps--main actionIcons StyledProps--padding-xsmall"
                     data-icon="main-trash"
+                    title="delete"
                   >
                     <svg
                       height="16"
@@ -973,7 +978,8 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                     </span>
                   </p>
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-align-left StyledProps--font-size-small"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-align-left StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
                     title=""
                   >
                     
@@ -983,7 +989,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 12%;"
+                style="width: 19%;"
               >
                 <div
                   class="Layout--vertical StyledProps--main StyledProps--padding-left-small"
@@ -994,21 +1000,21 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 13%;"
+                style="width: 12%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main errorBudgetRisk StyledProps--font-align-left StyledProps--font-size-normal"
-                  style="color: white; display: flex; align-items: center;"
+                  class="StyledProps--font StyledProps--main errorBudgetRisk StyledProps--font-align-left"
+                  style="display: flex; align-items: center;"
                 >
                   <span
-                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-white"
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-grey400"
                     data-icon="grid"
                   >
                     <svg
                       fill="currentColor"
-                      height="16"
+                      height="14"
                       viewBox="0 0 16 16"
-                      width="16"
+                      width="14"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
@@ -1097,10 +1103,10 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 style="width: 12%;"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main"
+                  class="Layout--horizontal StyledProps--main errorBudgetParent"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold StyledProps--padding-right-small"
+                    class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-light StyledProps--padding-right-small StyledProps--color StyledProps--color-grey900"
                     title=" 0.00%"
                   >
                      0.00%
@@ -1109,7 +1115,9 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                     class="StyledProps--font StyledProps--main errorBudgetRemainingContainer"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main errorBudgetRemaining StyledProps--font-variation-small"
+                      class="StyledProps--font Text--lineclamp StyledProps--main errorBudgetRemaining StyledProps--font-variation-small StyledProps--color StyledProps--color-grey700"
+                      style="--text-line-clamp: 1;"
+                      title=" m"
                     >
                        m
                     </p>
@@ -1119,10 +1127,10 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 10%;"
+                style="width: 6%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-light StyledProps--color StyledProps--color-grey900"
                   title=" 0%"
                 >
                    0%
@@ -1134,7 +1142,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 style="width: 9%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-light StyledProps--color StyledProps--color-grey900"
                   title="0.00%"
                 >
                   0.00
@@ -1144,10 +1152,10 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 8%;"
+                style="width: 6%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-light StyledProps--color StyledProps--color-grey900"
                   title="0"
                 >
                   0
@@ -1159,7 +1167,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 style="width: 10%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                  class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-light StyledProps--color StyledProps--color-grey900"
                   title=""
                 >
                   
@@ -1174,8 +1182,9 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                   class="Layout--horizontal StyledProps--main actions"
                 >
                   <span
-                    class="bp3-icon StyledProps--main actionIcons StyledProps--padding-small"
+                    class="bp3-icon StyledProps--main actionIcons StyledProps--padding-xsmall StyledProps--margin-right-medium"
                     data-icon="Edit"
+                    title="edit"
                   >
                     <svg
                       height="16"
@@ -1199,8 +1208,9 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                     </svg>
                   </span>
                   <span
-                    class="bp3-icon StyledProps--main actionIcons StyledProps--padding-small"
+                    class="bp3-icon StyledProps--main actionIcons StyledProps--padding-xsmall"
                     data-icon="main-trash"
+                    title="delete"
                   >
                     <svg
                       height="16"

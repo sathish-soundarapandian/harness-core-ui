@@ -18,11 +18,6 @@ describe('Shell Script Provision', () => {
   const folderFileStore = `ng/api/file-store/folder*`
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' })
     cy.intercept('POST', stepLibrary, { fixture: 'ng/api/stepLibrary' }).as('stepLibrary')

@@ -103,7 +103,7 @@ $headerHeight: 146px;
 }
 
 .cardSloAndSliForCardView {
-  width: 200px;
+  width: 180px;
   height: 80px;
   padding: var(--spacing-large) !important;
   border-radius: var(--spacing-small);
@@ -155,14 +155,14 @@ $headerHeight: 146px;
 
 .errorBudgetRisk {
   white-space: nowrap !important;
+  font-size: var(--font-size-small) !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   padding: 0 var(--spacing-xsmall) !important;
   height: 26px;
+  font-weight: 700 !important;
   line-height: 24px !important;
   width: fit-content;
-  border-width: 1px;
-  border-style: solid;
   border-radius: var(--spacing-2);
   padding: var(--spacing-small) !important;
 }
@@ -173,10 +173,23 @@ $headerHeight: 146px;
   align-items: center;
 }
 
+.sloListingPageHeader {
+  height: auto !important;
+}
+
+.errorBudgetParent {
+  align-items: center !important;
+}
+
 .errorBudgetRemaining {
-  padding: var(--spacing-xxsmall) !important;
-  min-width: 30px;
-  height: 16px;
+  padding: var(--spacing-2) !important;
   border-radius: var(--spacing-2);
-  background-color: var(--grey-200) !important;
+  background-color: var(--grey-100) !important;
+}
+
+.main {
+  position: relative;
+  .slider {
+    height: 85% !important;
+  }
 }

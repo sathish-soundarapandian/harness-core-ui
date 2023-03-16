@@ -37,7 +37,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { MergePRVariableStepProps, MergePRVariableView } from './MergePrVariableView'
 import MergePRInputStep from './MergePrInputStep'
 import OptionalConfiguration from './OptionalConfiguration'
-import { validateStepForm } from '../DeployInfrastructureStep/utils'
+import { validateGitOpsExecutionStepForm } from '../PipelineStepsUtil'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -222,7 +222,7 @@ export class MergePR extends PipelineStep<MergePRStepData> {
     getString,
     viewType
   }: ValidateInputSetProps<MergePRStepData>): FormikErrors<MergePRStepData> {
-    return validateStepForm({ data, template, getString, viewType })
+    return validateGitOpsExecutionStepForm({ data, template, getString, viewType })
   }
 
   protected defaultValues: MergePRStepData = {

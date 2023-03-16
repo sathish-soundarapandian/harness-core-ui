@@ -65,69 +65,24 @@ exports[`MostActiveServicesWidget should be able to switch to different type 1`]
         </div>
       </div>
       <div
-        class="Layout--horizontal StyledProps--main stackTickerContainer StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-flex-start"
-        data-test="mostActiveServicesWidgetContent"
-        style="width: 100%; height: 150px;"
+        class="Layout--vertical StyledProps--main mostActiveServicesWidgetEmpty StyledProps--flex StyledProps--flex-align-center-center"
+        data-test="mostActiveServicesWidgetEmpty"
       >
         <div
-          class="Layout--vertical StyledProps--main weightedStackContainer"
-          style="width: 60%;"
+          class="StyledProps--font StyledProps--main StyledProps--margin-bottom-medium"
         >
-          <div
-            class="StyledProps--font StyledProps--main WeightedStack--main"
-          >
-            <div>
-              <div
-                class="WeightedStack--stack WeightedStack--stackColumnReverse stack"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main WeightedStack--stackLabelCommon WeightedStack--stackLabel label"
-                >
-                  Service2
-                   (
-                  163
-                  )
-                </p>
-                <div
-                  class="progress-bar progressBar"
-                >
-                  <div
-                    class="progress-track"
-                  >
-                    <div
-                      class="progress-fill"
-                      style="width: 100%;"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="WeightedStack--stack WeightedStack--stackColumnReverse stack"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main WeightedStack--stackLabelCommon WeightedStack--stackLabel label"
-                >
-                  Service1
-                   (
-                  63
-                  )
-                </p>
-                <div
-                  class="progress-bar progressBar"
-                >
-                  <div
-                    class="progress-track"
-                  >
-                    <div
-                      class="progress-fill"
-                      style="width: 38.65030674846626%;"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <img
+            height="50"
+            src="test-file-stub"
+            style="align-self: center;"
+            width="50"
+          />
         </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey400"
+        >
+          cd.serviceDashboard.noActiveServices
+        </p>
       </div>
     </div>
   </div>
@@ -217,9 +172,9 @@ exports[`MostActiveServicesWidget should render MostActiveServicesWidget 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main WeightedStack--stackLabelCommon WeightedStack--stackLabel label"
                 >
-                  Service2
+                  aws-service-test
                    (
-                  137
+                  3
                   )
                 </p>
                 <div
@@ -231,30 +186,6 @@ exports[`MostActiveServicesWidget should render MostActiveServicesWidget 1`] = `
                     <div
                       class="progress-fill"
                       style="width: 100%;"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="WeightedStack--stack WeightedStack--stackColumnReverse stack"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main WeightedStack--stackLabelCommon WeightedStack--stackLabel label"
-                >
-                  Service1
-                   (
-                  37
-                  )
-                </p>
-                <div
-                  class="progress-bar progressBar"
-                >
-                  <div
-                    class="progress-track"
-                  >
-                    <div
-                      class="progress-fill"
-                      style="width: 27.00729927007299%;"
                     />
                   </div>
                 </div>

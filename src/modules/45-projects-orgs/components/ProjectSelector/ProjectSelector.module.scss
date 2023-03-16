@@ -14,6 +14,10 @@
   -webkit-box-orient: vertical;
 }
 
+.listHeader {
+  margin: var(--spacing-medium) 0 !important;
+}
+
 .pickProjectHelp {
   padding: var(--spacing-huge) var(--spacing-xlarge);
   background-position: center 0;
@@ -41,7 +45,7 @@
 .projectContainerWrapper {
   height: calc(100vh - 156px);
   justify-content: space-between;
-  margin: var(--spacing-xlarge) var(--spacing-none) !important;
+  margin: var(--spacing-none) var(--spacing-none) !important;
   overflow-y: scroll;
   &::-webkit-scrollbar {
     width: 6px;

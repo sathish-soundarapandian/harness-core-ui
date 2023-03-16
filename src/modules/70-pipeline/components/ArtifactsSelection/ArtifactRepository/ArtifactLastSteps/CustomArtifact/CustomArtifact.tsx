@@ -218,7 +218,6 @@ function FormContent({
                   variableName="version"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => {
                     formik.setFieldValue('spec.version', value)
                   }}
@@ -288,7 +287,6 @@ function FormContent({
                   variableName="spec.scripts.fetchAllArtifacts.spec.source.spec.script"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value =>
                     formik.setFieldValue('spec.scripts.fetchAllArtifacts.spec.source.spec.script', value)
                   }
@@ -317,7 +315,6 @@ function FormContent({
                   variableName="artifactsArrayPath"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => formik.setFieldValue('spec.scripts.fetchAllArtifacts.artifactsArrayPath', value)}
                   isReadonly={isReadonly}
                 />
@@ -344,7 +341,6 @@ function FormContent({
                   variableName="versionPath"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => formik.setFieldValue('spec.scripts.fetchAllArtifacts.versionPath', value)}
                   isReadonly={isReadonly}
                 />
@@ -397,7 +393,6 @@ function FormContent({
                     variableName="version"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('spec.version', value)
                     }}
@@ -567,7 +562,6 @@ function FormContent({
                             variableName="delegateSelectors"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={value => {
                               formik.setFieldValue('spec.delegateSelectors', value)
                             }}

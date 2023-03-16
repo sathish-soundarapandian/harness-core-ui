@@ -265,19 +265,5 @@ describe('Unit tests for NewRelic health source', () => {
         expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
       })
     })
-
-    test('should not render metric thresholds if it is a template', () => {
-      const submitData = jest.fn()
-      render(
-        <TestWrapper {...createModeProps}>
-          <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
-            <NewRelicHealthSourceContainer isTemplate data={sourceData} onSubmit={submitData} />
-          </SetupSourceTabs>
-        </TestWrapper>
-      )
-
-      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
-      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
-    })
   })
 })

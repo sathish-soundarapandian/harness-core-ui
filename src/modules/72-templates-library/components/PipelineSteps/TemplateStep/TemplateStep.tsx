@@ -26,7 +26,7 @@ import stepFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StepElementConfig } from 'services/cd-ng'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
-import { TemplateStepWidgetWithRef } from './TemplateStepWidget/TemplateStepWidget'
+import { TemplateStepWidgetProps, TemplateStepWidgetWithRef } from './TemplateStepWidget/TemplateStepWidget'
 
 const logger = loggerFor(ModuleName.TEMPLATES)
 
@@ -173,7 +173,10 @@ export class TemplateStep extends PipelineStep<TemplateStepNode> {
     return values //processFormData(values)
   }
 
-  renderStep(this: TemplateStep, props: StepProps<TemplateStepNode>): JSX.Element {
+  renderStep(
+    this: TemplateStep,
+    props: StepProps<TemplateStepNode, TemplateStepWidgetProps['customStepProps']>
+  ): JSX.Element {
     const {
       initialValues,
       onUpdate,

@@ -119,7 +119,6 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
       <Container style={{ overflowY: 'auto' }}>
         {filteredDeployments?.map((dataItem, index) => {
           if (
-            dataItem.artifactVersion &&
             dataItem.instanceGroupedByEnvironmentList?.length === 1 &&
             defaultTo(dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByClusterList?.length, 0) <= 1 &&
             defaultTo(dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByInfraList?.length, 0) <= 1 &&
@@ -145,7 +144,6 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
             )
           }
           return (
-            dataItem.artifactVersion &&
             dataItem.instanceGroupedByEnvironmentList && (
               <Collapse
                 key={index}

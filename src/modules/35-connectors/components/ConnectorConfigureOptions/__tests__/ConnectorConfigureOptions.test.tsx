@@ -25,7 +25,6 @@ const connectorConfigureOptionsProps: ConnectorConfigureOptionsProps = {
   variableName: 'spec.connectorRef',
   showRequiredField: false,
   showDefaultField: false,
-  showAdvanced: true,
   isReadonly: false,
   connectorReferenceFieldProps: {
     accountIdentifier: 'accountIdentifier',
@@ -61,7 +60,7 @@ describe('test <ConnectorConfigureOptions />', () => {
 
     selectAllowedValuesRadio()
 
-    const placeholder = await screen.findByText('connectors.selectConnectors')
+    const placeholder = await screen.findByText('common.entityPlaceholderText')
     userEvent.click(placeholder)
     const accountTab = await screen.findByText(/account/i)
     userEvent.click(accountTab)
@@ -92,7 +91,7 @@ describe('test <ConnectorConfigureOptions />', () => {
 
     selectAllowedValuesRadio()
 
-    const placeholder = await screen.findByText('connectors.selectConnectors')
+    const placeholder = await screen.findByText('common.entityPlaceholderText')
     expect(placeholder).toBeInTheDocument()
 
     const submitButton = screen.getByText(/submit/i)

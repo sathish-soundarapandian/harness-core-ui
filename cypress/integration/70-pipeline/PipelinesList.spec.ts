@@ -8,11 +8,6 @@ import {
 describe('Pipelines list view', () => {
   describe('Git Sync enabled', () => {
     beforeEach(() => {
-      cy.on('uncaught:exception', () => {
-        // returning false here prevents Cypress from
-        // failing the test
-        return false
-      })
       cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
       cy.intercept('POST', pipelineListAPI, {
         fixture: 'pipeline/api/pipelines/getPipelineList.json'
@@ -31,11 +26,6 @@ describe('Pipelines list view', () => {
 
   describe('Git Sync disabled', () => {
     beforeEach(() => {
-      cy.on('uncaught:exception', () => {
-        // returning false here prevents Cypress from
-        // failing the test
-        return false
-      })
       cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: true })
       cy.intercept('POST', pipelineListAPI, {
         fixture: 'pipeline/api/pipelines/getPipelineList.json'

@@ -12,11 +12,6 @@ import {
 
 describe('Checks visual to YAML and visual to variable view parity', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', servicesCallRunPipeline, { fixture: 'ng/api/servicesV2/serviceYamlVariable' })
     cy.intercept('GET', environmentsCallRunPipeline, { fixture: 'ng/api/environmentsV2Access' }).as('environmentCall')
     cy.intercept('GET', connectorsCall, { fixture: 'ng/api/connectors' })
@@ -70,9 +65,7 @@ describe('Checks visual to YAML and visual to variable view parity', () => {
     cy.wait(1000)
 
     // Infrastructure tab config
-    cy.get('div[role="tablist"]').within(() => {
-      cy.contains('span', 'Environment').click({ force: true })
-    })
+    cy.contains('span', 'Environment').click({ force: true })
     cy.wait(1000)
     cy.get('input[name="environment"]').click({ force: true })
     cy.wait('@environmentCall')

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { MutableRefObject, useEffect, useMemo, useState } from 'react'
 import { unstable_batchedUpdates } from 'react-dom'
 import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
@@ -32,7 +32,13 @@ import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
-import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
+import {
+  isMultiTypeExpression,
+  isMultiTypeFixed,
+  isMultiTypeRuntime,
+  isValueExpression,
+  isValueRuntimeInput
+} from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 
@@ -58,7 +64,7 @@ import type {
   EnvironmentWithInputs
 } from '../types'
 import { useGetEnvironmentsData } from './useGetEnvironmentsData'
-import AddEditEnvironmentModal from '../../DeployInfrastructureStep/AddEditEnvironmentModal'
+import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 import DeployCluster from '../DeployCluster/DeployCluster'
 
@@ -77,6 +83,7 @@ interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomS
   /** env group specific props */
   isUnderEnvGroup?: boolean
   envGroupIdentifier?: string
+  environmentsTypeRef?: MutableRefObject<MultiTypeInputType | null>
 }
 
 export function getAllFixedEnvironments(data: DeployEnvironmentEntityFormState): string[] {
@@ -112,7 +119,8 @@ export default function DeployEnvironment({
   stageIdentifier,
   deploymentType,
   customDeploymentRef,
-  gitOpsEnabled
+  gitOpsEnabled,
+  environmentsTypeRef
 }: DeployEnvironmentProps): JSX.Element {
   const { values, setFieldValue, setValues, errors, setFieldError, setFieldTouched } =
     useFormikContext<DeployEnvironmentEntityFormState>()
@@ -136,8 +144,10 @@ export default function DeployEnvironment({
   const isExpression = isMultiTypeExpression(environmentsType)
   const filterPrefix = 'environmentFilters.runtime'
 
-  const shouldRenderEnvironmentEntitiesList =
-    (isFixed && !isEmpty(selectedEnvironments)) || (isExpression && values.environment)
+  const shouldRenderEnvironmentEntitiesList = isFixed && !isEmpty(selectedEnvironments)
+  const shouldRenderChildEntity = isExpression
+    ? isValueExpression(values.environment)
+    : shouldRenderEnvironmentEntitiesList
 
   // API
   const {
@@ -155,6 +165,21 @@ export default function DeployEnvironment({
     envGroupIdentifier,
     serviceIdentifiers
   })
+
+  useEffect(() => {
+    // do this only on mount of mulit env component
+    if (isMultiTypeExpression(environmentsTypeRef?.current as MultiTypeInputType) && isMultiEnvironment) {
+      setEnvironmentsType(MultiTypeInputType.FIXED)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (environmentsTypeRef?.current === null || environmentsTypeRef?.current) {
+      environmentsTypeRef.current = environmentsType
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [environmentsType])
 
   useEffect(() => {
     /**
@@ -178,7 +203,7 @@ export default function DeployEnvironment({
     return []
   }, [environmentsList])
 
-  const loading = loadingEnvironmentsList || loadingEnvironmentsData
+  const loading = isFixed && (loadingEnvironmentsList || loadingEnvironmentsData)
 
   useEffect(() => {
     // This condition is required to clear the list when switching from multi environment to single environment
@@ -415,7 +440,7 @@ export default function DeployEnvironment({
     disabled: disabled
   }
 
-  const onMultiSelectChangeForEnvironments = (items: SelectOption[]) => {
+  const onMultiSelectChangeForEnvironments = (items: SelectOption[]): void => {
     setFieldTouched(uniquePathForEnvironments.current, true)
     if (items?.at(0)?.value === 'All') {
       setFieldValue(`environments`, undefined)
@@ -446,8 +471,8 @@ export default function DeployEnvironment({
               onMultiSelectChange={onMultiSelectChangeForEnvironments}
               multitypeInputValue={environmentsType}
               isNewConnectorLabelVisible
-              onChange={(item: SelectOption[]) => {
-                onMultiSelectChangeForEnvironments(item)
+              onChange={item => {
+                onMultiSelectChangeForEnvironments(item as SelectOption[])
               }}
               width={300}
               multiTypeProps={{
@@ -481,9 +506,11 @@ export default function DeployEnvironment({
             setRefValue={true}
             openAddNewModal={openAddNewModal}
             isNewConnectorLabelVisible
-            onChange={item => {
-              if (getMultiTypeFromValue(item) === MultiTypeInputType.FIXED && item.length) {
-                setSelectedEnvironments([item])
+            onChange={(item, _valueType, type) => {
+              if (isMultiTypeExpression(type as MultiTypeInputType)) {
+                setSelectedEnvironments([])
+              } else if (getMultiTypeFromValue(item) === MultiTypeInputType.FIXED && (item as string)?.length) {
+                setSelectedEnvironments([item as string])
               } else setSelectedEnvironments([])
             }}
             width={300}
@@ -559,7 +586,7 @@ export default function DeployEnvironment({
         {!(isFixed && isEmpty(selectedEnvironments)) && !isMultiEnvironment && CD_NG_DYNAMIC_PROVISIONING_ENV_V2 ? (
           <DeployProvisioner initialValues={initialValues} allowableTypes={allowableTypes} />
         ) : null}
-        {shouldRenderEnvironmentEntitiesList && !loading && !isMultiEnvironment && (
+        {shouldRenderChildEntity && !loading && !isMultiEnvironment && (
           <>
             <Divider />
             {gitOpsEnabled ? (

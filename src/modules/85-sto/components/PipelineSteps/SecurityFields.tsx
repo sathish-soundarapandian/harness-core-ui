@@ -17,7 +17,7 @@ import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import type { BuildStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { SecurityStepData, SecurityStepSpec } from './types'
-import SecurityField from './SecurityField'
+import SecurityField, { CustomTooltipFieldProps } from './SecurityField'
 
 import {
   API_KEY_AUTH_TYPE,
@@ -40,6 +40,7 @@ import {
   LOCAL_IMAGE_CONTAINER_TYPE,
   logLevelOptions,
   severityOptions,
+  tooltipIds,
   USER_PASSWORD_AUTH_TYPE
 } from './constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -51,19 +52,30 @@ type SecurityFieldsProps<T> = {
   stepViewType: StepViewType
   allowableTypes: AllowedTypes
   formik: FormikProps<T>
+  toolTipOverrides?: CustomTooltipFieldProps
 }
 
 interface ISecurityScanFields extends SecurityFieldsProps<SecurityStepData<SecurityStepSpec>> {
   scanModeSelectItems: SelectItems[]
   scanConfigReadonly?: boolean
+  scanConfigSelectItems?: SelectItems[]
 }
 
 interface ISecurityTargetFields extends SecurityFieldsProps<SecurityStepData<SecurityStepSpec>> {
   targetTypeSelectItems: SelectItems[]
+  ingestionOnly?: boolean
 }
 
 export function SecurityScanFields(props: ISecurityScanFields) {
-  const { allowableTypes, formik, stepViewType, scanModeSelectItems, scanConfigReadonly } = props
+  const {
+    allowableTypes,
+    formik,
+    stepViewType,
+    scanModeSelectItems,
+    scanConfigReadonly,
+    toolTipOverrides,
+    scanConfigSelectItems
+  } = props
 
   return (
     <>
@@ -71,6 +83,7 @@ export function SecurityScanFields(props: ISecurityScanFields) {
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<ISecurityScanFields>}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           'spec.mode': {
             label: 'sto.stepField.mode',
@@ -78,11 +91,15 @@ export function SecurityScanFields(props: ISecurityScanFields) {
             inputProps: {
               disabled: scanModeSelectItems.length === 1
             },
-            selectItems: scanModeSelectItems
+            selectItems: scanModeSelectItems,
+            tooltipId: tooltipIds.mode
           },
           'spec.config': {
             label: 'sto.stepField.config',
-            inputProps: { disabled: scanConfigReadonly }
+            inputProps: { disabled: scanConfigReadonly },
+            tooltipId: tooltipIds.config,
+            fieldType: scanConfigSelectItems ? 'dropdown' : 'input',
+            selectItems: scanConfigSelectItems ?? scanConfigSelectItems
           }
         }}
       />
@@ -92,13 +109,14 @@ export function SecurityScanFields(props: ISecurityScanFields) {
 }
 
 export function SecurityTargetFields(props: ISecurityTargetFields) {
-  const { allowableTypes, formik, stepViewType, targetTypeSelectItems } = props
+  const { allowableTypes, formik, stepViewType, targetTypeSelectItems, ingestionOnly, toolTipOverrides } = props
   return (
     <>
       <SecurityField
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<ISecurityTargetFields>}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           header: {
             label: 'pipelineSteps.targetLabel'
@@ -107,19 +125,27 @@ export function SecurityTargetFields(props: ISecurityTargetFields) {
             fieldType: 'dropdown',
             label: 'typeLabel',
             selectItems: targetTypeSelectItems,
-            inputProps: { disabled: targetTypeSelectItems.length === 1 }
+            inputProps: { disabled: targetTypeSelectItems?.length === 1 },
+            tooltipId: tooltipIds.targetType,
+            hide: !targetTypeSelectItems?.length
           },
           'spec.target.name': {
-            label: 'name'
+            label: 'name',
+            tooltipId: tooltipIds.targetName
           },
           'spec.target.variant': {
-            label: 'sto.stepField.target.variant'
+            label: 'sto.stepField.target.variant',
+            tooltipId: tooltipIds.targetVariant
           },
           'spec.target.workspace': {
             optional: true,
             label: 'pipelineSteps.workspace',
-            hide: formik.values.spec.target.type === 'container' || formik.values.spec.mode === 'ingestion',
-            inputProps: { placeholder: '/harness' }
+            hide:
+              ingestionOnly ||
+              formik.values.spec.target.type === 'container' ||
+              formik.values.spec.mode === 'ingestion',
+            inputProps: { placeholder: '/harness' },
+            tooltipId: tooltipIds.targetWorkspace
           }
         }}
       />
@@ -129,7 +155,7 @@ export function SecurityTargetFields(props: ISecurityTargetFields) {
 }
 
 export function SecurityIngestionFields(props: SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>) {
-  const { allowableTypes, formik, stepViewType } = props
+  const { allowableTypes, formik, stepViewType, toolTipOverrides } = props
   if (formik.values.spec.mode !== 'ingestion') return null
   return (
     <>
@@ -137,9 +163,11 @@ export function SecurityIngestionFields(props: SecurityFieldsProps<SecurityStepD
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           'spec.ingestion.file': {
-            label: 'sto.stepField.ingestion.file'
+            label: 'sto.stepField.ingestion.file',
+            tooltipId: tooltipIds.ingestionFile
           }
         }}
       />
@@ -149,7 +177,7 @@ export function SecurityIngestionFields(props: SecurityFieldsProps<SecurityStepD
 }
 
 export function SecurityAdvancedFields(props: SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>) {
-  const { allowableTypes, formik, stepViewType } = props
+  const { allowableTypes, formik, stepViewType, toolTipOverrides } = props
   const { getString } = useStrings()
 
   return (
@@ -158,23 +186,27 @@ export function SecurityAdvancedFields(props: SecurityFieldsProps<SecurityStepDa
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           'spec.advanced.log.level': {
             optional: true,
             fieldType: 'dropdown',
             label: 'sto.stepField.advanced.logLevel',
-            selectItems: logLevelOptions(getString)
+            selectItems: logLevelOptions(getString),
+            tooltipId: tooltipIds.logLevel
           },
           'spec.advanced.args.cli': {
             optional: true,
             label: 'sto.stepField.advanced.cli',
-            hide: formik.values.spec.mode !== 'orchestration'
+            hide: formik.values.spec.mode !== 'orchestration',
+            tooltipId: tooltipIds.argsCli
           },
           'spec.advanced.fail_on_severity': {
             optional: true,
             fieldType: 'dropdown',
             label: 'sto.stepField.advanced.failOnSeverity',
-            selectItems: severityOptions(getString)
+            selectItems: severityOptions(getString),
+            tooltipId: tooltipIds.failOnSeverity
           }
         }}
       />
@@ -191,12 +223,21 @@ interface ISecurityAuthFields extends SecurityFieldsProps<SecurityStepData<Secur
     domain?: boolean
     access_id?: boolean
     version?: boolean
+    region?: boolean
   }
   authDomainPlaceHolder?: string
 }
 
 export function SecurityAuthFields(props: ISecurityAuthFields) {
-  const { allowableTypes, formik, stepViewType, initialAuthDomain, showFields, authDomainPlaceHolder } = props
+  const {
+    allowableTypes,
+    formik,
+    stepViewType,
+    initialAuthDomain,
+    showFields,
+    authDomainPlaceHolder,
+    toolTipOverrides
+  } = props
   if (formik.values.spec.mode === 'ingestion') return null
   return (
     <>
@@ -204,6 +245,7 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           header: {
             label: 'authentication'
@@ -211,36 +253,48 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
           'spec.auth.domain': {
             label: 'secrets.winRmAuthFormFields.domain',
             hide: !showFields?.domain,
-            inputProps: { placeholder: authDomainPlaceHolder }
+            inputProps: { placeholder: authDomainPlaceHolder },
+            tooltipId: tooltipIds.authDomain
           },
           'spec.auth.ssl': {
             label: 'sto.stepField.authSsl',
             fieldType: 'checkbox',
             hide:
               !showFields?.ssl ||
-              (!isEmpty(formik.values.spec.auth?.domain) && formik.values.spec.auth?.domain === initialAuthDomain)
+              (!isEmpty(formik.values.spec.auth?.domain) && formik.values.spec.auth?.domain === initialAuthDomain),
+            tooltipId: tooltipIds.authSSL
           },
           'spec.auth.version': {
             label: 'sto.stepField.authVersion',
             fieldType: 'dropdown',
             optional: false,
             hide: !showFields?.version,
-            selectItems: [API_VERSION_5_0_2, API_VERSION_4_2_0, API_VERSION_4_1_0]
+            selectItems: [API_VERSION_5_0_2, API_VERSION_4_2_0, API_VERSION_4_1_0],
+            tooltipId: tooltipIds.authVersion
           },
           'spec.auth.type': {
             label: 'typeLabel',
             hide: !showFields?.type,
             fieldType: 'dropdown',
-            selectItems: [API_KEY_AUTH_TYPE, USER_PASSWORD_AUTH_TYPE]
+            selectItems: [API_KEY_AUTH_TYPE, USER_PASSWORD_AUTH_TYPE],
+            tooltipId: tooltipIds.authType
           },
           'spec.auth.access_id': {
             label: 'sto.stepField.authAccessId',
             hide: !(showFields?.access_id && formik.values.spec.auth?.type !== API_KEY_AUTH_TYPE.value),
-            inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' }
+            inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' },
+            tooltipId: tooltipIds.authAccessId
           },
           'spec.auth.access_token': {
             label: 'common.getStarted.accessTokenLabel',
-            inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' }
+            inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' },
+            tooltipId: tooltipIds.authAccessToken
+          },
+          'spec.auth.region': {
+            label: 'sto.stepField.authRegion',
+            inputProps: { placeholder: '<+secrets.getValue("project.access_region")>' },
+            tooltipId: tooltipIds.authAccessRegion,
+            hide: !showFields?.region
           }
         }}
       />
@@ -250,7 +304,7 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
 }
 
 export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>) {
-  const { allowableTypes, formik, stepViewType } = props
+  const { allowableTypes, formik, stepViewType, toolTipOverrides } = props
   if (!(formik.values.spec.target.type === 'container' && formik.values.spec.mode === 'orchestration')) return null
   const hideNonLocalImageFields = !(
     formik.values.spec.target.type === 'container' && formik.values.spec.image?.type !== 'local_image'
@@ -262,6 +316,7 @@ export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           header: {
             label: 'sto.stepField.image.fieldsHeading'
@@ -275,37 +330,44 @@ export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<
               DOCKER_V2_CONTAINER_TYPE,
               JFROG_ARTIFACTORY_CONTAINER_TYPE,
               AWS_ECR_CONTAINER_TYPE
-            ]
+            ],
+            tooltipId: tooltipIds.imageType
           },
           'spec.image.domain': {
             label: 'secrets.winRmAuthFormFields.domain',
             optional: true,
-            inputProps: { placeholder: 'docker.io' }
+            inputProps: { placeholder: 'docker.io' },
+            tooltipId: tooltipIds.imageDomain
           },
           'spec.image.name': {
             label: 'name',
-            inputProps: { placeholder: 'harness/todolist-sample' }
+            inputProps: { placeholder: 'harness/todolist-sample' },
+            tooltipId: tooltipIds.imageName
           },
           'spec.image.tag': {
             label: 'tagLabel',
-            inputProps: { placeholder: 'latest' }
+            inputProps: { placeholder: 'latest' },
+            tooltipId: tooltipIds.imageTag
           },
           'spec.image.access_id': {
             label: 'sto.stepField.authAccessId',
             optional: true,
             hide: hideNonLocalImageFields,
-            inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' }
+            inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' },
+            tooltipId: tooltipIds.imageAccessId
           },
           'spec.image.access_token': {
             label: 'common.getStarted.accessTokenLabel',
             hide: hideNonLocalImageFields,
             optional: true,
-            inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' }
+            inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' },
+            tooltipId: tooltipIds.imageAccessToken
           },
           'spec.image.region': {
             label: 'regionLabel',
             hide: formik.values.spec.image?.type !== 'aws_ecr',
-            inputProps: { placeholder: 'us-east-1' }
+            inputProps: { placeholder: 'us-east-1' },
+            tooltipId: tooltipIds.imageRegion
           }
         }}
       />
@@ -377,35 +439,53 @@ export const AdditionalFields = (props: AdditionalFieldsProps) => {
   )
 }
 
-export function SecurityInstanceFields(props: SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>) {
-  const { allowableTypes, formik, stepViewType } = props
+interface SecurityInstanceFieldsProps extends SecurityFieldsProps<SecurityStepData<SecurityStepSpec>> {
+  showFields?: {
+    domain?: boolean
+    protocol?: boolean
+    port?: boolean
+    path?: boolean
+  }
+}
+
+export function SecurityInstanceFields(props: SecurityInstanceFieldsProps) {
+  const { allowableTypes, formik, stepViewType, toolTipOverrides, showFields } = props
   return (
     <>
       <SecurityField
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           header: {
             label: 'ce.co.gatewayReview.instance'
           },
           'spec.instance.domain': {
             label: 'secrets.winRmAuthFormFields.domain',
-            inputProps: { placeholder: 'app.harness.io' }
+            inputProps: { placeholder: 'app.harness.io' },
+            tooltipId: tooltipIds.instanceDomain,
+            hide: !showFields?.domain
           },
           'spec.instance.protocol': {
             label: 'ce.common.protocol',
             fieldType: 'dropdown',
-            selectItems: instanceProtocolSelectItems
+            selectItems: instanceProtocolSelectItems,
+            tooltipId: tooltipIds.instanceProtocol,
+            hide: !showFields?.protocol
           },
           'spec.instance.port': {
             label: 'common.smtp.port',
             optional: true,
-            inputProps: { placeholder: '443' }
+            inputProps: { placeholder: '443' },
+            tooltipId: tooltipIds.instancePort,
+            hide: !showFields?.port
           },
           'spec.instance.path': {
             label: 'common.path',
-            optional: true
+            optional: true,
+            tooltipId: tooltipIds.instancePath,
+            hide: !showFields?.path
           }
         }}
       />
@@ -420,9 +500,10 @@ type InputSetFieldsProps<T> = {
   stepViewType: StepViewType
   allowableTypes: AllowedTypes
   formik: FormikProps<T>
+  toolTipOverrides?: CustomTooltipFieldProps
 }
 export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<SecurityStepSpec>>) {
-  const { allowableTypes, formik, stepViewType, template, prefix } = props
+  const { allowableTypes, formik, stepViewType, template, prefix, toolTipOverrides } = props
   const { getString } = useStrings()
   return (
     <>
@@ -430,6 +511,7 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
+        customTooltipFields={toolTipOverrides}
         enableFields={inputSetScanFields(prefix, template)}
       />
 
@@ -437,6 +519,7 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           header: {
             label: 'pipelineSteps.targetLabel',
@@ -450,6 +533,7 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           ...inputSetIngestionFields(prefix, template)
         }}
@@ -459,6 +543,7 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           header: {
             label: 'imageLabel',
@@ -472,6 +557,7 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           header: {
             label: 'ce.co.gatewayReview.instance',
@@ -485,6 +571,7 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           header: {
             label: 'sto.stepField.tool.fieldsHeading',
@@ -498,6 +585,7 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           header: {
             label: 'authentication',
@@ -511,6 +599,7 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
+        customTooltipFields={toolTipOverrides}
         enableFields={{
           ...inputSetAdvancedFields(getString, prefix, template)
         }}

@@ -16,6 +16,7 @@ import { getConnectorTypeName } from '@cv/pages/health-source/HealthSourceDrawer
 import type { ConnectorInfoDTO, HealthSource } from 'services/cv'
 import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { ContinousVerificationData, spec, VerifyStepMonitoredService } from './types'
 import {
   VerificationSensitivityOptions,
@@ -37,6 +38,7 @@ import {
   QUERY_DEFINITIONS,
   V2
 } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
+import { isAnExpression } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
 
 /**
  * checks if a field is a runtime input.
@@ -240,15 +242,14 @@ export function getSpecFormData(specInfo: spec | undefined): spec {
  */
 export function setFieldData(validspec: spec | undefined, field: string, fieldOptions: SelectOption[]): void {
   //finding the complete option if the field is fixed input
-  if (validspec && validspec[field] && validspec[field] !== RUNTIME_INPUT_VALUE) {
+  if (validspec && validspec[field] && validspec[field] !== RUNTIME_INPUT_VALUE && !isAnExpression(validspec[field])) {
     //TODO logic in if block will be removed once backend api is fixed : https://harness.atlassian.net/browse/CVNG-2481
     if (field === 'sensitivity') {
       validspec[field] = fieldOptions.find(
-        (el: SelectOption) =>
-          SensitivityTypes[el.value as keyof typeof SensitivityTypes] === (validspec && validspec[field])
+        (el: SelectOption) => SensitivityTypes[el.value as keyof typeof SensitivityTypes] === validspec[field]
       )
     } else {
-      validspec[field] = fieldOptions.find((el: SelectOption) => el.value === (validspec && validspec[field]))
+      validspec[field] = fieldOptions.find((el: SelectOption) => el.value === validspec[field])
     }
   }
 }
@@ -275,7 +276,7 @@ export function isTemplatisedMonitoredService(type: string): boolean {
   return type === MONITORED_SERVICE_TYPE.TEMPLATE
 }
 
-export function doesHealthSourceHasQueries(healthSource: any) {
+export function doesHealthSourceHasQueries(healthSource: any): boolean {
   return healthSource?.spec?.queries !== undefined
 }
 
@@ -286,7 +287,7 @@ export const setCommaSeperatedList = (
   value: string,
   onChange: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
   path: string
-) => {
+): void => {
   let actualValue: string | string[] = value
   const isFixedValue = getMultiTypeFromValue(value) === MultiTypeInputType.FIXED
   if (isFixedValue) {
@@ -359,4 +360,12 @@ export function shouldRenderField(input: { name: string; path: string }): boolea
 }
 export function getScopedIdentifier(templateScope: string | undefined, identifier: string): string {
   return templateScope !== Scope.PROJECT ? `${templateScope}.${identifier}` : identifier
+}
+
+export const getIsMultiServiceOrEnvs = (
+  selectedStage: StageElementWrapper<DeploymentStageElementConfig> | undefined
+): boolean => {
+  const services = selectedStage?.stage?.spec?.services?.values || []
+  const envs = selectedStage?.stage?.spec?.environments?.values || []
+  return Boolean(services.length || envs.length)
 }

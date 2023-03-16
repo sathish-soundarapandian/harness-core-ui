@@ -56,6 +56,7 @@ export interface InputSetType {
   projectIdentifier: string
   pipeline: PipelineInfoConfig
   gitDetails: EntityGitDetails
+  connectorRef?: string
   entityValidityDetails: EntityValidityDetails
   outdated?: boolean
   storeType?: StoreType.INLINE | StoreType.REMOTE

@@ -141,10 +141,19 @@ describe('Org Page List', () => {
       })
       const form = findDialogContainer()
       expect(form).toBeTruthy()
+
+      const chckBox = queryByText(form as HTMLElement, 'projectsOrgs.yesIamSure')
+      act(() => {
+        fireEvent.click(chckBox!)
+      })
+
+      await waitFor(() => expect(queryByText(form as HTMLElement, 'delete')).not.toBeDisabled())
       const deleteBtn = queryByText(form as HTMLElement, 'delete')
-      await act(async () => {
+      act(() => {
         fireEvent.click(deleteBtn!)
       })
+
+      await waitFor(() => expect(deleteOrganization).toBeCalled())
       expect(deleteOrganization).toBeCalled()
     }),
     test('Edit Organization', async () => {

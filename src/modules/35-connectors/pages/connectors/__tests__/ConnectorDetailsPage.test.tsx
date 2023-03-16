@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import mockImport from 'framework/utils/mockImport'
 import ConnectorDetailsPage from '../ConnectorDetailsPage/ConnectorDetailsPage'
 import connector from './mocks/get-connector-mock.json'
 
@@ -41,9 +42,13 @@ jest.mock('services/cd-ng', () => ({
   useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
-  useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
+  useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetSettingValue: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useDeleteConnector: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
-
+mockImport('@common/hooks/useFeatureFlag', {
+  useFeatureFlags: () => ({ PL_FORCE_DELETE_CONNECTOR_SECRET: false, NG_SETTINGS: false })
+})
 describe('Connector DetailsPage Page Test', () => {
   test('Initial snapshot should match render', async () => {
     const { container, getByText } = render(

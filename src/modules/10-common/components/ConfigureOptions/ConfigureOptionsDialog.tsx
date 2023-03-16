@@ -48,7 +48,6 @@ export interface ConfigureOptionsDialogProps {
   showRequiredField?: boolean
   hideExecutionTimeField?: boolean
   isExecutionTimeFieldDisabled?: boolean
-  showAdvanced?: boolean
   isReadonly?: boolean
   allowedValuesType?: ALLOWED_VALUES_TYPE
   allowedValuesValidator?: Yup.Schema<unknown>
@@ -73,7 +72,6 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
     hideExecutionTimeField = false,
     isExecutionTimeFieldDisabled = false,
     showRequiredField = false,
-    showAdvanced = false,
     isReadonly = false,
     allowedValuesType,
     allowedValuesValidator,
@@ -84,7 +82,8 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { NG_EXECUTION_INPUT } = useFeatureFlags()
-  const parsedValues = parseInput(input)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const parsedValues = parseInput(input, { variableType: type as any })
 
   const formikRef = useRef<FormikProps<FormValues>>()
 
@@ -95,8 +94,6 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
   }
   const allowedValues = defaultTo(parsedValues.allowedValues?.values, [])
   const regExValues = defaultTo(parsedValues.regex, '')
-  const isAdvanced = !!parsedValues.allowedValues?.jexlExpression
-  const advancedValue = defaultTo(parsedValues.allowedValues?.jexlExpression, '')
 
   const getInitialAllowedValues = (): string[] | MultiSelectOption[] => {
     switch (allowedValuesType) {
@@ -112,15 +109,9 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
     defaultValue: parsedValues?.default ?? defaultValue,
     allowedValues: getInitialAllowedValues(),
     regExValues,
-    isAdvanced,
-    advancedValue,
     isExecutionInput: !!parsedValues?.executionInput,
     validation:
-      allowedValues.length > 0 || isAdvanced
-        ? Validation.AllowedValues
-        : regExValues.length > 0
-        ? Validation.Regex
-        : Validation.None
+      allowedValues.length > 0 ? Validation.AllowedValues : regExValues.length > 0 ? Validation.Regex : Validation.None
   }
 
   const getAllowedValuesToSubmit = (formAllowedValues: string[] | MultiSelectOption[]): string[] => {
@@ -156,6 +147,12 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
             getString('common.configureOptions.validationErrors.defaultAllowedValid')
           )
           return
+        }
+        if (
+          (type === 'Number' && isNaN(data.defaultValue as number)) ||
+          (type !== 'Number' && isEmpty(data.defaultValue as string))
+        ) {
+          data.defaultValue = undefined
         }
         data.allowedValues = formAllowedValues
         const inputStr = getInputStr(data, !!NG_EXECUTION_INPUT)
@@ -207,7 +204,6 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
                 />
                 {values.validation === Validation.AllowedValues ? (
                   <AllowedValuesFields
-                    showAdvanced={showAdvanced}
                     formik={formik}
                     isReadonly={isReadonly}
                     allowedValuesType={allowedValuesType}

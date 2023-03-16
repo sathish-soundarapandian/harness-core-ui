@@ -33,11 +33,6 @@ import {
 
 describe('Create Composite SLO', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.login('test', 'test')
 
     cy.intercept('GET', listSLOsCall, sloListCallResponseWithCompositeSLO).as('updatedListSLOsCallResponse')
@@ -182,7 +177,7 @@ describe('Create Composite SLO', () => {
     cy.contains('p', 'Weekly').click({ force: true })
     cy.get('input[name="dayOfWeek"]').click()
     cy.contains('p', 'Monday').click({ force: true })
-    cy.get('[data-testid="steptitle_Add_SLOs"] [icon="error"]').should('be.visible')
+    cy.get('[data-testid="steptitle_Add_SLOs"] [icon="warning-sign"]').should('be.visible')
     cy.contains('span', 'Next').click({ force: true })
 
     cy.contains('span', 'Add SLOs').click()
@@ -203,11 +198,6 @@ describe('Create Composite SLO', () => {
 
 describe('Create account level SLO', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.login('test', 'test')
     cy.visitPageAssertion('[class^=SideNav-module_main]')
     cy.contains('span', 'Service Reliability').click()

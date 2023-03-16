@@ -52,8 +52,7 @@ import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepComm
 import { ArtifactActions } from '@common/constants/TrackingConstants'
 import type { TemplateStepNode, TemplateLinkConfig } from 'services/pipeline-ng'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import ArtifactListView from './ArtifactListView/ArtifactListView'
@@ -82,9 +81,9 @@ import {
   isAllowedAMIDeploymentTypes,
   isAllowedAzureArtifactDeploymentTypes,
   isAllowedCustomArtifactDeploymentTypes,
-  isAllowedGithubPackageRegistryDeploymentTypes,
   isSidecarAllowed,
-  ModalViewFor
+  ModalViewFor,
+  showArtifactStoreStepDirectly
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -161,15 +160,9 @@ export default function ServiceV2ArtifactsSelection({
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
-  const {
-    CUSTOM_ARTIFACT_NG,
-    GITHUB_PACKAGES,
-    AZURE_ARTIFACTS_NG,
-    CD_AMI_ARTIFACTS_NG,
-    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
-  } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, AZURE_ARTIFACTS_NG, CD_AMI_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS } =
+    useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -179,13 +172,6 @@ export default function ServiceV2ArtifactsSelection({
       isAllowedCustomArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
-    }
-    if (
-      isAllowedGithubPackageRegistryDeploymentTypes(deploymentType) &&
-      GITHUB_PACKAGES &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     }
     if (
       isAllowedAzureArtifactDeploymentTypes(deploymentType) &&
@@ -471,7 +457,7 @@ export default function ServiceV2ArtifactsSelection({
           projectIdentifier: template.projectIdentifier,
           versionLabel: template.versionLabel || ''
         },
-        requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
+        requestOptions: { headers: { 'Load-From-Cache': 'true' } }
       })
 
       const artifactSourceTemplateInputs = templateInputYaml?.data
@@ -708,6 +694,8 @@ export default function ServiceV2ArtifactsSelection({
         }}
         handleViewChange={handleConnectorViewChange}
         showConnectorStep={showConnectorStep(selectedArtifact as ArtifactType)}
+        artifactWizardInitialStep={showArtifactStoreStepDirectly(selectedArtifact) ? 2 : 1}
+        showArtifactSelectionStep
       />
     )
   }
@@ -715,6 +703,7 @@ export default function ServiceV2ArtifactsSelection({
   return (
     <>
       <ArtifactListView
+        deploymentType={deploymentType}
         stage={stage}
         primaryArtifact={artifacts?.primary?.sources as ArtifactSource[]}
         sideCarArtifact={artifacts?.sidecars}

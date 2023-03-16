@@ -181,7 +181,12 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
               </Layout.Horizontal>
             </Layout.Vertical>
           </Container>
-          <Layout.Vertical flex spacing="xxxlarge" data-testId="grouplistContainer">
+          <Layout.Vertical
+            className={css.groupListContainer}
+            flex={{ justifyContent: 'flex-start' }}
+            spacing="xxxlarge"
+            data-testId="grouplistContainer"
+          >
             {moduleGroupConfig.map(item => (
               <Group
                 data={item}

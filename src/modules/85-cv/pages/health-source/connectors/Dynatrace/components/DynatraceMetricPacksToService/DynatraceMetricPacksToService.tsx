@@ -21,6 +21,7 @@ import {
   Utils
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { HealthSoureSupportedConnectorTypes } from '@cv/pages/health-source/connectors/MonitoredServiceConnector.constants'
 import { mapServiceListToOptions } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.utils'
@@ -46,7 +47,7 @@ import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOu
 import type { DynatraceMetricPacksToServiceProps } from './DynatraceMetricPacksToService.types'
 import { extractServiceMethods } from './DynatraceMetricPacksToService.utils'
 import { getTypeOfInput } from '../../../AppDynamics/AppDHealthSource.utils'
-import type { DynatraceMetricData } from '../../DynatraceHealthSource.types'
+import type { DynatraceFormDataInterface, DynatraceMetricData } from '../../DynatraceHealthSource.types'
 import css from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.module.scss'
 
 export default function DynatraceMetricPacksToService(props: DynatraceMetricPacksToServiceProps): JSX.Element {
@@ -57,8 +58,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
     metricValues,
     isTemplate,
     expressions,
-    metricErrors,
-    isMetricThresholdEnabled
+    metricErrors
   } = props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -73,6 +73,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
   const [inputType, setInputType] = React.useState<MultiTypeInputType | undefined>(() =>
     getTypeOfInput(metricDataSelectedService as string)
   )
+  const { setFieldValue } = useFormikContext<DynatraceFormDataInterface>() || {}
 
   const [dynatraceValidation, setDynatraceValidation] = useState<{
     status: string
@@ -180,7 +181,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
         setDynatraceMetricData({
           ...metricValues,
           selectedService: { ...selectedItem },
-          serviceMethods: extractServiceMethods(servicesListData?.data || [], selectedItem.value as string)
+          serviceMethods: extractServiceMethods(servicesListData?.data || [], selectedItem?.value as string)
         })
       } else {
         setDynatraceMetricData({
@@ -189,15 +190,15 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
           serviceMethods: []
         })
       }
+      setFieldValue('selectedService', item)
     },
-    [metricValues, servicesListData]
+    [metricValues, servicesListData?.data]
   )
 
   const onChangeMetricPack = useCallback(
     async (metricPackIdentifier: string, updatedValue: boolean) => {
       if (typeof metricPackIdentifier === 'string') {
         const updatedNonCustomFields = getUpdatedNonCustomFields<DynatraceMetricData>(
-          isMetricThresholdEnabled,
           dynatraceMetricData,
           metricPackIdentifier,
           updatedValue
@@ -208,7 +209,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
         await onValidate(metricValues.serviceMethods || [], updatedNonCustomFields.metricData)
       }
     },
-    [dynatraceMetricData, isMetricThresholdEnabled, metricValues.serviceMethods]
+    [dynatraceMetricData, metricValues.serviceMethods]
   )
 
   return (
@@ -303,7 +304,6 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
               }
               connector={HealthSoureSupportedConnectorTypes.DYNATRACE}
               onChange={onChangeMetricPack}
-              isMetricThresholdEnabled={isMetricThresholdEnabled}
             />
             {validationResultData && (
               <MetricsVerificationModal

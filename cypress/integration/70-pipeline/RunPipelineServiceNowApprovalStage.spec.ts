@@ -26,11 +26,6 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     'ng/api/servicenow/getTemplate?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=service_now_connector&ticketType=INCIDENT&templateName=Test_TemplateName&limit=1&offset=0'
   const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', accountLicense, { fixture: 'pipeline/api/approvals/accountLicense' })
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('GET', serviceNowYamlSnippetCall, { fixture: 'pipeline/api/serviceNowStage/stageYamlSnippet' }).as(
@@ -58,7 +53,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     cy.get('[icon="play"]').click({ force: true, multiple: true })
     cy.wait(2000)
     cy.contains('p', 'ServiceNowStageTest').trigger('mouseover')
-    cy.get('[icon="cross"]').eq(1).click({ force: true })
+    cy.get('[icon="cross"]').click({ force: true })
     cy.contains('p', 'Delete Pipeline Stage').should('be.visible')
     cy.contains('span', 'Delete').click({ force: true })
     cy.contains('span', 'Pipeline Stage Successfully removed.').should('be.visible')

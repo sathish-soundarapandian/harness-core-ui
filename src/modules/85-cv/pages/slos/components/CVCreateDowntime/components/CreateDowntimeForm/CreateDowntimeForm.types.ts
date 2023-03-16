@@ -6,9 +6,7 @@
  */
 
 export interface CreateDowntimeFormInterface {
-  loading: boolean
-  error: any
-  retryOnError: () => void
+  handleRedirect: () => void
   runValidationOnMount?: boolean
   loadingSaveButton: boolean
 }

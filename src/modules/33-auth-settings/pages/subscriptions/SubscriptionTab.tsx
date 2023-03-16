@@ -14,7 +14,7 @@ import type { Editions } from '@common/constants/SubscriptionTypes'
 import { SubscriptionTabNames, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
-import { ModuleName } from 'framework/types/ModuleName'
+import type { ModuleName } from 'framework/types/ModuleName'
 import type { AccountDTO, ModuleLicenseDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
@@ -119,8 +119,7 @@ const SubscriptionTab = ({
     })
 
     // show Plans tab only when feature flag is on, always show for community edition
-    // Chaos doesn't have plans defined yet
-    if ((!isCommunity && isOnPrem()) || selectedModule === ModuleName.CHAOS) {
+    if (!isCommunity && isOnPrem()) {
       tabs.splice(1, 1)
     }
 

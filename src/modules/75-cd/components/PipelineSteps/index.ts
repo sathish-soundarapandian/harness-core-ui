@@ -25,7 +25,6 @@ import { K8sDeleteStep } from './K8sDelete/K8sDeleteStep'
 import { DeployEnvironmentStep } from './DeployEnvStep/DeployEnvStep'
 import { DeployEnvironmentEntityStep } from './DeployEnvironmentEntityStep/DeployEnvironmentEntityStep'
 import { DeployEnvironmentGroupStep } from './DeployEnvironmentGroupStep/DeployEnvironmentGroupStep'
-import { DeployInfrastructureStep } from './DeployInfrastructureStep/DeployInfrastructureStep'
 import { DeployInfrastructureEntityStep } from './DeployInfrastructureEntityStep/DeployInfrastructureEntityStep'
 import { DeployClusterEntityStep } from './DeployClusterEntityStep/DeployClusterEntityStep'
 import { InlineEntityFiltersStep } from './DeployEnvironmentEntityStep/components/InlineEntityFilters/InlineEntityFiltersStep'
@@ -122,6 +121,12 @@ import { K8sDryRunStep } from './K8sDryRunStep/K8sDryRunStep'
 import { AsgSwapService } from './AsgSwapServiceStep/AsgSwapServiceStep'
 import { AsgBlueGreenRollbackStep } from './AsgBlueGreenRollbackStep/AsgBlueGreenRollbackStep'
 import { AsgBlueGreenDeployStep } from './AsgBlueGreenDeployStep/AsgBlueGreenDeployStep'
+import { AwsLambdaServiceSpec } from './AwsLambda/AwsLambdaServiceSpec/AwsLambdaServiceSpec'
+import { AwsLambdaInfraSpec } from './AwsLambda/AwsLambdaInfraSpec/AwsLambdaInfraSpec'
+import { AwsLambdaDeployStep } from './AwsLambda/AwsLambdaDeployStep/AwsLambdaDeployStep'
+import { AwsLambdaRollbackStep } from './AwsLambda/AwsLambdaRollbackStep/AwsLambdaRollbackStep'
+import { TerraformCloudRun } from './TerraformCloudRunStep/TerraformCloudRun'
+import { TerraformCloudRollback } from './TerraformCloudRollbackStep/TerraformCloudRollback'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -149,7 +154,6 @@ factory.registerStep(new ServerlessGCPSpec())
 factory.registerStep(new DeployEnvironmentStep())
 factory.registerStep(new DeployEnvironmentEntityStep())
 factory.registerStep(new DeployEnvironmentGroupStep())
-factory.registerStep(new DeployInfrastructureStep())
 factory.registerStep(new DeployInfrastructureEntityStep())
 factory.registerStep(new DeployClusterEntityStep())
 factory.registerStep(new InlineEntityFiltersStep())
@@ -238,3 +242,9 @@ factory.registerStep(new DeployCloudFunctionTrafficShiftStep())
 factory.registerStep(new AsgSwapService())
 factory.registerStep(new AsgBlueGreenRollbackStep())
 factory.registerStep(new AsgBlueGreenDeployStep())
+factory.registerStep(new AwsLambdaServiceSpec())
+factory.registerStep(new AwsLambdaInfraSpec())
+factory.registerStep(new AwsLambdaDeployStep())
+factory.registerStep(new AwsLambdaRollbackStep())
+factory.registerStep(new TerraformCloudRun())
+factory.registerStep(new TerraformCloudRollback())

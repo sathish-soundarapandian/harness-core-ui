@@ -23,7 +23,7 @@ import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 
 interface CreateHelmConnectorProps {
-  onConnectorCreated?: (data?: ConnectorConfigDTO) => void | Promise<void>
+  onSuccess?: (data?: ConnectorConfigDTO) => void | Promise<void>
   mock?: ResponseBoolean
   onClose: () => void
   isEditMode: boolean
@@ -59,7 +59,7 @@ const HelmRepoConnector: React.FC<CreateHelmConnectorProps> = props => {
         name={getString('details')}
         identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
         {...commonProps}
-        onConnectorCreated={props.onConnectorCreated}
+        onConnectorCreated={props.onSuccess}
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo}
         setIsEditMode={props.setIsEditMode}
@@ -70,7 +70,7 @@ const HelmRepoConnector: React.FC<CreateHelmConnectorProps> = props => {
         setIsEditMode={props.setIsEditMode}
         buildPayload={buildHelmPayload}
         hideModal={props.onClose}
-        onConnectorCreated={props.onConnectorCreated}
+        onConnectorCreated={props.onSuccess}
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
         helpPanelReferenceId="ConnectorDelegatesSetup"

@@ -31,15 +31,13 @@
 .descriptionField {
   :global {
     textarea {
-      min-height: 50px;
+      min-height: 75px;
       max-height: 120px;
-      height: 75px !important;
       resize: vertical;
     }
     .bp3-input {
       width: 372px !important;
     }
-
     .MultiTypeInput--btn {
       height: 30px !important;
     }

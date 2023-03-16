@@ -84,8 +84,7 @@ import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/util
 import TabWizard from '@triggers/components/TabWizard/TabWizard'
 
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import {
@@ -127,7 +126,8 @@ export default function WebhookTriggerWizard(
   props: TriggerProps<any> & { children: JSX.Element[] }
 ): React.ReactElement {
   const { isNewTrigger, baseType, triggerData, type: sourceRepo } = props
-  const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.CD_GIT_WEBHOOK_POLLING)
+  const { CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled, FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } =
+    useFeatureFlags()
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
@@ -314,7 +314,12 @@ export default function WebhookTriggerWizard(
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
   const { resolvedMergedPipeline } = useGetResolvedChildPipeline(
-    { accountId: accountIdentifier, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    {
+      accountId: accountIdentifier,
+      repoIdentifier: defaultTo(pipelineRepoName, repoIdentifier),
+      branch,
+      connectorRef: pipelineConnectorRef
+    },
     originalPipeline,
     resolvedPipeline
   )
@@ -1125,7 +1130,8 @@ export default function WebhookTriggerWizard(
                 resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
-                viewTypeMetadata: { isTrigger: true }
+                viewTypeMetadata: { isTrigger: true },
+                isOptionalVariableAllowed
               }) as any) || formErrors
             resolve(validatedErrors)
           } catch (e) {
@@ -1408,7 +1414,7 @@ export default function WebhookTriggerWizard(
       key={wizardKey} // re-renders with yaml to visual initialValues
       wizardType="webhook"
       formikInitialProps={{
-        initialValues,
+        initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
         onSubmit: onSubmit,
         validationSchema: getValidationSchema(
           getString,

@@ -1,0 +1,825 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create Bamboo connector wizard should render form - fill first step and name on the form 1`] = `
+<div>
+  <div
+    class="StepWizard--main StepWizard--navBar"
+  >
+    <div
+      class="StepWizard--navBarList"
+    >
+      <span
+        class="StepWizard--header"
+      >
+        <span
+          class="bp3-icon StyledProps--main"
+          data-icon="service-bamboo"
+        >
+          <svg
+            height="37"
+            viewBox="0 0 12 14"
+            width="37"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+          >
+            <lineargradient
+              id="service-bamboo_svg__a"
+            >
+              <stop
+                offset="0"
+                stop-color="#0052cc"
+              />
+              <stop
+                offset="1"
+                stop-color="#2684ff"
+              />
+            </lineargradient>
+            <lineargradient
+              gradientTransform="matrix(5.9 0 0 -6 1465.2 2043.9)"
+              gradientUnits="userSpaceOnUse"
+              id="service-bamboo_svg__b"
+              x1="-247.822"
+              x2="-247.822"
+              xlink:href="#service-bamboo_svg__a"
+              y1="340.303"
+              y2="338.946"
+            />
+            <lineargradient
+              gradientTransform="matrix(6 0 0 -6 1495 2038)"
+              gradientUnits="userSpaceOnUse"
+              id="service-bamboo_svg__c"
+              x1="-248.667"
+              x2="-248.667"
+              xlink:href="#service-bamboo_svg__a"
+              y1="339.32"
+              y2="337.962"
+            />
+            <path
+              d="M11.6 7.9H8.7c-.2 0-.3.1-.4.3-.2 1.2-1.2 2-2.3 2l.8 3.6c2.8-.4 5-2.7 5.2-5.5 0-.2-.2-.3-.4-.4zM6.6 7.9l4.1-3.6c.2-.1.2-.4 0-.5L6.6.2c-.1-.2-.4-.1-.5 0S6 .4 6 .5v7.1c0 .2.2.4.4.4.1-.1.2-.1.2-.1z"
+              fill="#2684ff"
+            />
+            <path
+              d="M.1 8.7c.4 3 2.9 5.2 5.9 5.2v-3.6c-1.3 0-2.4-1.1-2.4-2.4z"
+              fill="url(#service-bamboo_svg__b)"
+            />
+            <path
+              d="M0 7.9l3.6.1c0-1.3 1.1-2.4 2.4-2.4L5.2 2C2.3 2.4.1 4.9 0 7.9"
+              fill="url(#service-bamboo_svg__c)"
+            />
+          </svg>
+        </span>
+      </span>
+      <span
+        class="StepWizard--title StepWizard--header"
+      >
+        connectors.bamboo.bamboo
+      </span>
+      <div
+        class="StepWizard--navStep StepWizard--activeStep"
+      >
+        <span
+          class="StepWizard--number"
+        >
+          1
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          overview
+        </p>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          
+        </p>
+      </div>
+      <div
+        class="StepWizard--navStep"
+      >
+        <span
+          class="StepWizard--number"
+        >
+          2
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          details
+        </p>
+      </div>
+      <div
+        class="StepWizard--navStep"
+      >
+        <span
+          class="StepWizard--number"
+        >
+          3
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          delegate.DelegateselectionLabel
+        </p>
+      </div>
+      <div
+        class="StepWizard--navStep"
+      >
+        <span
+          class="StepWizard--number"
+        >
+          4
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          connectors.stepThreeName
+        </p>
+      </div>
+    </div>
+    <div
+      class="StepWizard--stepDetails"
+    >
+       
+      <div
+        class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main firstep"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+          data-cy="connector-overview-heading"
+        >
+          overview
+        </p>
+        <div
+          class="StyledProps--font StyledProps--main connectorForm"
+        >
+          <div
+            class="OverlaySpinner--overlaySpinner"
+          >
+            <form
+              action="#"
+              class="FormikForm--main"
+            >
+              <div>
+                <div
+                  class="StyledProps--font StyledProps--main"
+                  style="min-height: 460px;"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main main formElm"
+                  >
+                    <div
+                      class="InputWithIdentifier--txtNameContainer TextInput--main"
+                    >
+                      <div
+                        class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
+                      >
+                        <div
+                          class="Text--withDocsTooltip"
+                          data-tooltip-id="universalInputNameWithId"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            Id
+                          </p>
+                        </div>
+                        <p
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          :
+                        </p>
+                        <span
+                          class="bp3-popover-wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="bp3-editable-text InputWithIdentifier--idValue"
+                              tabindex="0"
+                            >
+                              <span
+                                class="bp3-editable-text-content"
+                                style="height: 1px; line-height: 1px; min-width: 0;"
+                              >
+                                dummy_name
+                              </span>
+                            </div>
+                          </span>
+                        </span>
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="Edit"
+                          style="vertical-align: middle; cursor: pointer;"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 16 16"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                            <path
+                              clip-rule="evenodd"
+                              d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                              opacity="0.3"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                      <div
+                        class="bp3-form-group"
+                        data-id="name-0"
+                      >
+                        <label
+                          class="bp3-label"
+                          for="name"
+                        >
+                          <span
+                            class="Tooltip--acenter"
+                            data-tooltip-id="connectorDetailsStepFormBamboo_name"
+                          >
+                            name
+                          </span>
+                           
+                          <span
+                            class="bp3-text-muted"
+                          />
+                        </label>
+                        <div
+                          class="bp3-form-content"
+                        >
+                          <div
+                            class="bp3-input-group"
+                          >
+                            <input
+                              autocomplete="off"
+                              class="bp3-input"
+                              name="name"
+                              placeholder="common.namePlaceholder"
+                              type="text"
+                              value="dummy name"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      <label
+                        class="Label--main bp3-label descriptionLabel"
+                      >
+                        optionalField
+                        <span
+                          class="bp3-icon StyledProps--main editOpen"
+                          data-icon="Edit"
+                          data-name="edit"
+                          data-testid="description-edit"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 16 16"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                            <path
+                              clip-rule="evenodd"
+                              d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                              opacity="0.3"
+                            />
+                          </svg>
+                        </span>
+                      </label>
+                    </div>
+                    <div
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      <label
+                        class="Label--main bp3-label descriptionLabel"
+                      >
+                        optionalField
+                        <span
+                          class="bp3-icon StyledProps--main editOpen"
+                          data-icon="Edit"
+                          data-name="edit"
+                          data-testid="tags-edit"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 16 16"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                            <path
+                              clip-rule="evenodd"
+                              d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                              opacity="0.3"
+                            />
+                          </svg>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <button
+                    class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                    type="submit"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      <span>
+                        continue
+                      </span>
+                    </span>
+                    <span
+                      class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                      icon="chevron-right"
+                    >
+                      <svg
+                        data-icon="chevron-right"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        width="16"
+                      >
+                        <desc>
+                          chevron-right
+                        </desc>
+                        <path
+                          d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <span
+      class="bp3-icon StyledProps--main StepWizard--harnessWatermark StyledProps--color StyledProps--color-grey50"
+      data-icon="harness-with-color"
+    >
+      <svg
+        height="346"
+        viewBox="0 0 25 25"
+        width="346"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M22.974 8.186L16.708 1.88a7.023 7.023 0 00-2.59-1.572C11.98-.409 9.858.154 8.135 1.88L1.868 8.186a7.081 7.081 0 00-1.562 2.606c-.713 2.153-.153 4.289 1.562 6.023l6.266 6.306a7.113 7.113 0 002.589 1.58 5.663 5.663 0 001.808.308c1.503 0 2.946-.64 4.177-1.88l6.266-6.305a7.08 7.08 0 001.562-2.606c.713-2.162.153-4.298-1.562-6.032zm-10.07-4.477c.706.213 1.232.7 1.274.735l1.851 1.862-3.608 3.631-3.608-3.63 1.859-1.872c.5-.496 1.197-1.034 2.233-.726zm-9.219 8.305c.212-.71.696-1.24.73-1.282l1.85-1.863 3.609 3.632-3.608 3.63-1.86-1.87c-.492-.504-1.027-1.214-.721-2.247zm8.252 9.279c-.705-.214-1.231-.701-1.273-.735l-1.851-1.863 3.608-3.631 3.608 3.631-1.86 1.871c-.5.496-1.205 1.034-2.232.726zm9.22-8.305c-.212.709-.696 1.239-.73 1.281l-1.851 1.863-3.608-3.631 3.608-3.632 1.86 1.872c.492.504 1.027 1.204.72 2.247z"
+          fill="currentColor"
+          fill-rule="evenodd"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Create Bamboo connector wizard should render form - fill first step and name on the form 2`] = `
+<div>
+  <div
+    class="StepWizard--main StepWizard--navBar"
+  >
+    <div
+      class="StepWizard--navBarList"
+    >
+      <span
+        class="StepWizard--header"
+      >
+        <span
+          class="bp3-icon StyledProps--main"
+          data-icon="service-bamboo"
+        >
+          <svg
+            height="37"
+            viewBox="0 0 12 14"
+            width="37"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+          >
+            <lineargradient
+              id="service-bamboo_svg__a"
+            >
+              <stop
+                offset="0"
+                stop-color="#0052cc"
+              />
+              <stop
+                offset="1"
+                stop-color="#2684ff"
+              />
+            </lineargradient>
+            <lineargradient
+              gradientTransform="matrix(5.9 0 0 -6 1465.2 2043.9)"
+              gradientUnits="userSpaceOnUse"
+              id="service-bamboo_svg__b"
+              x1="-247.822"
+              x2="-247.822"
+              xlink:href="#service-bamboo_svg__a"
+              y1="340.303"
+              y2="338.946"
+            />
+            <lineargradient
+              gradientTransform="matrix(6 0 0 -6 1495 2038)"
+              gradientUnits="userSpaceOnUse"
+              id="service-bamboo_svg__c"
+              x1="-248.667"
+              x2="-248.667"
+              xlink:href="#service-bamboo_svg__a"
+              y1="339.32"
+              y2="337.962"
+            />
+            <path
+              d="M11.6 7.9H8.7c-.2 0-.3.1-.4.3-.2 1.2-1.2 2-2.3 2l.8 3.6c2.8-.4 5-2.7 5.2-5.5 0-.2-.2-.3-.4-.4zM6.6 7.9l4.1-3.6c.2-.1.2-.4 0-.5L6.6.2c-.1-.2-.4-.1-.5 0S6 .4 6 .5v7.1c0 .2.2.4.4.4.1-.1.2-.1.2-.1z"
+              fill="#2684ff"
+            />
+            <path
+              d="M.1 8.7c.4 3 2.9 5.2 5.9 5.2v-3.6c-1.3 0-2.4-1.1-2.4-2.4z"
+              fill="url(#service-bamboo_svg__b)"
+            />
+            <path
+              d="M0 7.9l3.6.1c0-1.3 1.1-2.4 2.4-2.4L5.2 2C2.3 2.4.1 4.9 0 7.9"
+              fill="url(#service-bamboo_svg__c)"
+            />
+          </svg>
+        </span>
+      </span>
+      <span
+        class="StepWizard--title StepWizard--header"
+      >
+        connectors.bamboo.bamboo
+      </span>
+      <div
+        class="StepWizard--navStep StepWizard--activeStep"
+      >
+        <span
+          class="StepWizard--number"
+        >
+          1
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          overview
+        </p>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          
+        </p>
+      </div>
+      <div
+        class="StepWizard--navStep"
+      >
+        <span
+          class="StepWizard--number"
+        >
+          2
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          details
+        </p>
+      </div>
+      <div
+        class="StepWizard--navStep"
+      >
+        <span
+          class="StepWizard--number"
+        >
+          3
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          delegate.DelegateselectionLabel
+        </p>
+      </div>
+      <div
+        class="StepWizard--navStep"
+      >
+        <span
+          class="StepWizard--number"
+        >
+          4
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          connectors.stepThreeName
+        </p>
+      </div>
+    </div>
+    <div
+      class="StepWizard--stepDetails"
+    >
+       
+      <div
+        class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main firstep"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+          data-cy="connector-overview-heading"
+        >
+          overview
+        </p>
+        <div
+          class="StyledProps--font StyledProps--main connectorForm"
+        >
+          <div
+            class="OverlaySpinner--overlaySpinner"
+          >
+            <form
+              action="#"
+              class="FormikForm--main"
+            >
+              <div>
+                <div
+                  class="StyledProps--font StyledProps--main"
+                  style="min-height: 460px;"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main main formElm"
+                  >
+                    <div
+                      class="InputWithIdentifier--txtNameContainer TextInput--main"
+                    >
+                      <div
+                        class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
+                      >
+                        <div
+                          class="Text--withDocsTooltip"
+                          data-tooltip-id="universalInputNameWithId"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            Id
+                          </p>
+                        </div>
+                        <p
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          :
+                        </p>
+                        <span
+                          class="bp3-popover-wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="bp3-editable-text InputWithIdentifier--idValue"
+                              tabindex="0"
+                            >
+                              <span
+                                class="bp3-editable-text-content"
+                                style="height: 1px; line-height: 1px; min-width: 0;"
+                              >
+                                dummy_name
+                              </span>
+                            </div>
+                          </span>
+                        </span>
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="Edit"
+                          style="vertical-align: middle; cursor: pointer;"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 16 16"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                            <path
+                              clip-rule="evenodd"
+                              d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                              opacity="0.3"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                      <div
+                        class="bp3-form-group"
+                        data-id="name-0"
+                      >
+                        <label
+                          class="bp3-label"
+                          for="name"
+                        >
+                          <span
+                            class="Tooltip--acenter"
+                            data-tooltip-id="connectorDetailsStepFormBamboo_name"
+                          >
+                            name
+                          </span>
+                           
+                          <span
+                            class="bp3-text-muted"
+                          />
+                        </label>
+                        <div
+                          class="bp3-form-content"
+                        >
+                          <div
+                            class="bp3-input-group"
+                          >
+                            <input
+                              autocomplete="off"
+                              class="bp3-input"
+                              name="name"
+                              placeholder="common.namePlaceholder"
+                              type="text"
+                              value="dummy name"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      <label
+                        class="Label--main bp3-label descriptionLabel"
+                      >
+                        optionalField
+                        <span
+                          class="bp3-icon StyledProps--main editOpen"
+                          data-icon="Edit"
+                          data-name="edit"
+                          data-testid="description-edit"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 16 16"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                            <path
+                              clip-rule="evenodd"
+                              d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                              opacity="0.3"
+                            />
+                          </svg>
+                        </span>
+                      </label>
+                    </div>
+                    <div
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      <label
+                        class="Label--main bp3-label descriptionLabel"
+                      >
+                        optionalField
+                        <span
+                          class="bp3-icon StyledProps--main editOpen"
+                          data-icon="Edit"
+                          data-name="edit"
+                          data-testid="tags-edit"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 16 16"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                            <path
+                              clip-rule="evenodd"
+                              d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                              opacity="0.3"
+                            />
+                          </svg>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <button
+                    class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                    type="submit"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      <span>
+                        continue
+                      </span>
+                    </span>
+                    <span
+                      class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                      icon="chevron-right"
+                    >
+                      <svg
+                        data-icon="chevron-right"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        width="16"
+                      >
+                        <desc>
+                          chevron-right
+                        </desc>
+                        <path
+                          d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <span
+      class="bp3-icon StyledProps--main StepWizard--harnessWatermark StyledProps--color StyledProps--color-grey50"
+      data-icon="harness-with-color"
+    >
+      <svg
+        height="346"
+        viewBox="0 0 25 25"
+        width="346"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M22.974 8.186L16.708 1.88a7.023 7.023 0 00-2.59-1.572C11.98-.409 9.858.154 8.135 1.88L1.868 8.186a7.081 7.081 0 00-1.562 2.606c-.713 2.153-.153 4.289 1.562 6.023l6.266 6.306a7.113 7.113 0 002.589 1.58 5.663 5.663 0 001.808.308c1.503 0 2.946-.64 4.177-1.88l6.266-6.305a7.08 7.08 0 001.562-2.606c.713-2.162.153-4.298-1.562-6.032zm-10.07-4.477c.706.213 1.232.7 1.274.735l1.851 1.862-3.608 3.631-3.608-3.63 1.859-1.872c.5-.496 1.197-1.034 2.233-.726zm-9.219 8.305c.212-.71.696-1.24.73-1.282l1.85-1.863 3.609 3.632-3.608 3.63-1.86-1.87c-.492-.504-1.027-1.214-.721-2.247zm8.252 9.279c-.705-.214-1.231-.701-1.273-.735l-1.851-1.863 3.608-3.631 3.608 3.631-1.86 1.871c-.5.496-1.205 1.034-2.232.726zm9.22-8.305c-.212.709-.696 1.239-.73 1.281l-1.851 1.863-3.608-3.631 3.608-3.632 1.86 1.872c.492.504 1.027 1.204.72 2.247z"
+          fill="currentColor"
+          fill-rule="evenodd"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;

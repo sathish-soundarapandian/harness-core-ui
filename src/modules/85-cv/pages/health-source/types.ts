@@ -41,6 +41,7 @@ export enum HealthSourceTypes {
   CloudWatch = 'CloudWatch',
   CloudWatchMetrics = 'CloudWatchMetrics',
   Elk = 'ElasticSearch',
+  ElasticSearch_Logs = 'ElasticSearch Logs',
   AwsPrometheus = 'AwsPrometheus',
   SumoLogic = 'SumoLogic',
   SumologicMetrics = 'SumologicMetrics',

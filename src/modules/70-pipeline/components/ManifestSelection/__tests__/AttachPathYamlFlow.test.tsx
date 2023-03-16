@@ -99,4 +99,16 @@ describe('Define attach path yaml', () => {
       fireEvent.click(submitBtn)
     })
   })
+
+  test('should be able to delete valuesYAML when runtime', async () => {
+    const removeValuesYaml = jest.fn()
+    const props = { ...defaultProps, manifestStore: 'Git', valuesPaths: '<+input>', removeValuesYaml: removeValuesYaml }
+    const { container } = render(<WrapperComponent {...props} />)
+    expect(container).toBeDefined()
+
+    const deleteValuesYAMLBtn = container.querySelector('[data-icon="main-trash"]') as Element
+    expect(deleteValuesYAMLBtn).toBeDefined()
+    fireEvent.click(deleteValuesYAMLBtn)
+    await waitFor(() => expect(removeValuesYaml).toBeCalledTimes(1))
+  })
 })

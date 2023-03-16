@@ -32,7 +32,8 @@ const Plans: React.FC<PlansProps> = ({ plans, featureCaption, featureGroup, modu
     cd: 'cd',
     ce: 'cc',
     cf: 'ff',
-    ci: 'ci'
+    ci: 'ci',
+    chaos: 'ce'
   }
   const { trackPage } = useTelemetry()
   useEffect(() => {

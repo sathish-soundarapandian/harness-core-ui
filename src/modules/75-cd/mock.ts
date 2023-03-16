@@ -5,34 +5,78 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { ResponsePageServiceResponse } from 'services/cd-ng'
+import type {
+  ResponseDashboardWorkloadDeploymentV2,
+  ResponsePageServiceResponse,
+  ResponseServiceDeploymentListInfoV2,
+  ResponseServiceDetailsInfoDTOV2
+} from 'services/cd-ng'
 
-export const mostActiveServiceInfo = {
+export const mostActiveServiceInfo: ResponseDashboardWorkloadDeploymentV2 = {
   data: {
     workloadDeploymentInfoList: [
       {
-        serviceName: 'Service1',
-        serviceId: 'Service1Id',
-        totalDeployments: 100,
-        totalSuccess: 37,
-        totalFailure: 63,
-        rateSuccess: 45.4,
-        failureRateChangeRate: 600.2
-      },
-      {
-        serviceName: 'Service2',
-        serviceId: 'Service2Id',
-        totalDeployments: 200,
-        totalSuccess: 137,
-        totalFailure: 163,
-        rateSuccess: 435.4,
-        failureRateChangeRate: 620.2
+        serviceName: 'aws-service-test',
+        serviceId: 'awsservicetest',
+        lastExecuted: {
+          startTime: 1676014076123,
+          endTime: 1676014098086,
+          deploymentType: 'Ssh',
+          status: 'SUCCESS',
+          authorInfo: {
+            name: 'automation ng',
+            url: undefined
+          },
+          triggerType: 'MANUAL'
+        },
+        deploymentTypeList: ['Ssh', 'WinRm', 'Kubernetes'],
+        totalDeployments: 3,
+        totalDeploymentChangeRate: {
+          percentChange: 84.21052631578948,
+          trend: 'DOWN_TREND'
+        },
+        percentSuccess: 100,
+        rateSuccess: {
+          percentChange: 50,
+          trend: 'DOWN_TREND'
+        },
+        failureRate: 0,
+        failureRateChangeRate: {
+          percentChange: 100,
+          trend: 'DOWN_TREND'
+        },
+        frequency: 0.0967741935483871,
+        frequencyChangeRate: {
+          percentChange: 84.21052631578947,
+          trend: 'DOWN_TREND'
+        },
+        lastPipelineExecutionId: '63e5f0b6e342511cc75c0e2d',
+        workload: [
+          {
+            date: 1674864000000,
+            execution: {
+              count: 0
+            }
+          },
+          {
+            date: 1674950400000,
+            execution: {
+              count: 0
+            }
+          },
+          {
+            date: 1675036800000,
+            execution: {
+              count: 0
+            }
+          }
+        ]
       }
     ]
   }
 }
 
-export const deploymentsInfo = {
+export const deploymentsInfo: ResponseServiceDeploymentListInfoV2 = {
   status: 'SUCCESS',
   data: {
     startTime: 1623149323912,
@@ -40,12 +84,21 @@ export const deploymentsInfo = {
     totalDeployments: 57,
     failureRate: 24.2,
     frequency: 324.2,
-    failureRateChangeRate: 45.7,
-    totalDeploymentsChangeRate: 34.4,
-    frequencyChangeRate: 23.2,
+    failureRateChangeRate: {
+      percentChange: 45.7,
+      trend: 'UP_TREND'
+    },
+    totalDeploymentsChangeRate: {
+      percentChange: 34.4,
+      trend: 'UP_TREND'
+    },
+    frequencyChangeRate: {
+      percentChange: 23.2,
+      trend: 'UP_TREND'
+    },
     serviceDeploymentList: [{ time: 1625443200000, deployments: { total: 0, success: 0, failure: 0 } }]
   },
-  metaData: null,
+  metaData: undefined,
   correlationId: 'deaf3a4d-161b-4d64-a77d-5be92b7cf41b'
 }
 
@@ -62,24 +115,36 @@ export const envBuildInstanceCount = {
   }
 }
 
-export const serviceDetails = {
+export const serviceDetails: ResponseServiceDetailsInfoDTOV2 = {
   status: 'SUCCESS',
   data: {
     serviceDeploymentDetailsList: [
       {
         serviceName: 'asdfasdf',
         serviceIdentifier: 'asdfasdf',
-        deploymentTypeList: null,
+        deploymentTypeList: undefined,
         totalDeployments: 0,
-        totalDeploymentChangeRate: 0.0,
+        totalDeploymentChangeRate: {
+          percentChange: 0,
+          trend: 'NO_CHANGE'
+        },
         successRate: 0.0,
-        successRateChangeRate: 0.0,
+        successRateChangeRate: {
+          percentChange: 0,
+          trend: 'NO_CHANGE'
+        },
         failureRate: 0.0,
-        failureRateChangeRate: 0.0,
+        failureRateChangeRate: {
+          percentChange: 0,
+          trend: 'NO_CHANGE'
+        },
         frequency: 0.0,
-        frequencyChangeRate: 0.0,
-        instanceCountDetails: null,
-        lastPipelineExecuted: null
+        frequencyChangeRate: {
+          percentChange: 0,
+          trend: 'NO_CHANGE'
+        },
+        instanceCountDetails: undefined,
+        lastPipelineExecuted: undefined
       },
 
       {
@@ -89,14 +154,26 @@ export const serviceDetails = {
         tags: { type: 'dummy' },
         deploymentTypeList: ['Kubernetes'],
         totalDeployments: 3,
-        totalDeploymentChangeRate: 1,
+        totalDeploymentChangeRate: {
+          percentChange: 1,
+          trend: 'UP_TREND'
+        },
         successRate: 1,
-        successRateChangeRate: 1,
+        successRateChangeRate: {
+          percentChange: 1,
+          trend: 'UP_TREND'
+        },
         failureRate: 1,
-        failureRateChangeRate: 1,
+        failureRateChangeRate: {
+          percentChange: 1,
+          trend: 'UP_TREND'
+        },
         frequency: 1,
-        frequencyChangeRate: 0,
-        instanceCountDetails: null,
+        frequencyChangeRate: {
+          percentChange: 0,
+          trend: 'NO_CHANGE'
+        },
+        instanceCountDetails: undefined,
         lastPipelineExecuted: {
           pipelineExecutionId: '60c99de2a6187a57e841993b',
           identifier: 'Test',

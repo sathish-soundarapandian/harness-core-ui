@@ -98,7 +98,7 @@ export const ServiceInstancesWidget: React.FC<ServiceInstanceWidgetProps> = prop
         <Layout.Vertical className={css.bottomSection}>
           <Layout.Vertical margin={{ bottom: 'medium' }}>
             <Text font={{ weight: 'bold' }} color={Color.GREY_600} margin={{ bottom: 'xsmall' }}>
-              {getString('cd.serviceDashboard.serviceInstances')}
+              {getString('common.subscriptions.usage.serviceInstances')}
             </Text>
             <Layout.Horizontal flex={{ alignItems: 'center', distribution: 'space-between' }}>
               <Text color={Color.BLACK} font={{ weight: 'bold' }} className={css.text}>

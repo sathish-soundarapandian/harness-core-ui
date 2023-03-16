@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly borderWithPluginsPanel: string
   readonly darkBg: string
   readonly details: string
   readonly editor: string
@@ -16,11 +17,14 @@ declare const styles: {
   readonly filePath: string
   readonly flexCenter: string
   readonly header: string
+  readonly headerBorder: string
   readonly invalidYaml: string
   readonly item: string
   readonly layout: string
   readonly lightBg: string
   readonly main: string
+  readonly pluginDecorator: string
+  readonly resizeIcon: string
   readonly splitPanel: string
   readonly summaryPopover: string
   readonly validationIcon: string

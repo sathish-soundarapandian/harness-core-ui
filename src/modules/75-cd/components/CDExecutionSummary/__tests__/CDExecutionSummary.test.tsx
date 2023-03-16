@@ -8,22 +8,13 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import type { ServiceExecutionSummary } from 'services/cd-ng'
+import { TestWrapper } from '@common/utils/testUtils'
+
 import { CDExecutionSummary } from '../CDExecutionSummary'
 import { EnvironmentsList } from '../EnvironmentsList'
 import { ServicesList } from '../ServicesList'
 import { ServicesTableProps, ServicesTable } from '../ServicesTable'
 import props from './props.json'
-
-jest.mock('framework/strings', () => ({
-  useStrings: () => ({
-    getString: (key: string) => key
-  }),
-  String: jest.fn().mockImplementation((prop: any) => {
-    const MockComponent = ({ stringID }: { stringID: string }): React.ReactElement => <div>{stringID}</div>
-
-    return <MockComponent {...prop} />
-  })
-}))
 
 const environmentProps = {
   environments: ['demo1', 'demo2', 'demo3'],
@@ -59,22 +50,38 @@ const servicesTableProps: ServicesTableProps = {
 
 describe('<CDExecutionSummary /> tests', () => {
   test('snapshot test', () => {
-    const { container } = render(<CDExecutionSummary {...(props as any)} />)
+    const { container } = render(
+      <TestWrapper>
+        <CDExecutionSummary {...(props as any)} />
+      </TestWrapper>
+    )
     expect(container).toMatchSnapshot()
   })
 
   test('render environmentList', () => {
-    const { container } = render(<EnvironmentsList {...environmentProps} />)
+    const { container } = render(
+      <TestWrapper>
+        <EnvironmentsList {...environmentProps} />
+      </TestWrapper>
+    )
     expect(container).toMatchSnapshot()
   })
 
   test('render serviceTable', () => {
-    const { container } = render(<ServicesTable services={servicesTableProps.services} />)
+    const { container } = render(
+      <TestWrapper>
+        <ServicesTable services={servicesTableProps.services} />
+      </TestWrapper>
+    )
     expect(container).toMatchSnapshot()
   })
 
   test('render serviceList', () => {
-    const { container } = render(<ServicesList services={servicesTableProps.services} limit={2} className={'demo'} />)
+    const { container } = render(
+      <TestWrapper>
+        <ServicesList services={servicesTableProps.services} limit={2} className={'demo'} />
+      </TestWrapper>
+    )
     expect(container).toMatchSnapshot()
   })
 })

@@ -7,12 +7,23 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { Formik, FormikForm, Accordion, AccordionHandle, RUNTIME_INPUT_VALUE, Container, Text } from '@harness/uicore'
+import {
+  Formik,
+  FormikForm,
+  Accordion,
+  AccordionHandle,
+  RUNTIME_INPUT_VALUE,
+  Container,
+  Text,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
-import { debounce, defaultTo, isEmpty, noop } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, noop, set, unset } from 'lodash-es'
 
-import { useStrings } from 'framework/strings'
+import produce from 'immer'
+import { useStrings, String as LocaleString } from 'framework/strings'
 import {
   AdvancedPanels,
   StepCommandsProps,
@@ -24,10 +35,13 @@ import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'
 import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
-import type { PmsAbstractStepNode, PolicyConfig, TemplateStepNode } from 'services/pipeline-ng'
+import type { PolicyConfig, TemplateStepNode } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import DelegateSelectorPanel from './DelegateSelectorPanel/DelegateSelectorPanel'
 import FailureStrategyPanel from './FailureStrategyPanel/FailureStrategyPanel'
 import type { AllFailureStrategyConfig } from './FailureStrategyPanel/utils'
@@ -73,8 +87,8 @@ export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: Step
     (step as StepGroupElementConfig)?.delegateSelectors
 
   const policySets =
-    ((step as TemplateStepNode)?.template?.templateInputs as PmsAbstractStepNode)?.enforce?.policySets ||
-    (step as PmsAbstractStepNode)?.enforce?.policySets
+    ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.enforce?.policySets ||
+    (step as StepElementConfig)?.enforce?.policySets
 
   const when = ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.when || (step as Step)?.when
 
@@ -128,6 +142,30 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
   const isFailureStrategyDisabled = getIsFailureStrategyDisabled({ stageType, stepType })
   const { NG_K8_COMMAND_FLAGS } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
+  const failureStrategyValues = get(formikProps.values, 'failureStrategies')
+  const whenValues = get(formikProps.values, 'when')
+
+  const getActiveId = React.useCallback(
+    (factory: AbstractStepFactory): string => {
+      if (
+        !hiddenPanels.includes(AdvancedPanels.DelegateSelectors) &&
+        factory.getStep(stepType)?.hasDelegateSelectionVisible
+      ) {
+        return AdvancedPanels.DelegateSelectors
+      }
+
+      if (!hiddenPanels.includes(AdvancedPanels.ConditionalExecution)) {
+        return AdvancedPanels.ConditionalExecution
+      }
+
+      if (!hiddenPanels.includes(AdvancedPanels.FailureStrategy)) {
+        return AdvancedPanels.FailureStrategy
+      }
+
+      return ''
+    },
+    [hiddenPanels, stepType]
+  )
 
   React.useEffect(() => {
     if (formikProps.isSubmitting) {
@@ -155,20 +193,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
   return (
     <FormikForm className={css.form}>
       <div>
-        <Accordion
-          ref={accordionRef}
-          allowMultiOpen
-          activeId={
-            hiddenPanels.indexOf(AdvancedPanels.DelegateSelectors) === -1 &&
-            stepsFactory.getStep(stepType)?.hasDelegateSelectionVisible
-              ? AdvancedPanels.DelegateSelectors
-              : hiddenPanels.indexOf(AdvancedPanels.ConditionalExecution) === -1
-              ? AdvancedPanels.ConditionalExecution
-              : hiddenPanels.indexOf(AdvancedPanels.FailureStrategy) === -1
-              ? AdvancedPanels.FailureStrategy
-              : ''
-          }
-        >
+        <Accordion ref={accordionRef} allowMultiOpen activeId={getActiveId(stepsFactory)}>
           {!hiddenPanels.includes(AdvancedPanels.DelegateSelectors) &&
           stepsFactory.getStep(stepType)?.hasDelegateSelectionVisible ? (
             <Accordion.Panel
@@ -180,12 +205,33 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
           {hiddenPanels.includes(AdvancedPanels.ConditionalExecution) ? null : (
             <Accordion.Panel
               id={AdvancedPanels.ConditionalExecution}
-              summary={getString('pipeline.conditionalExecution.title')}
+              summary={
+                <div className={css.titleWrapper}>
+                  <LocaleString stringID="pipeline.conditionalExecution.title" />
+                  <div onClick={e => e.stopPropagation()}>
+                    <MultiTypeSelectorButton
+                      type={getMultiTypeFromValue(whenValues as unknown as string)}
+                      allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+                      onChange={type => {
+                        formikProps.setValues(
+                          produce(formikProps.values, draft => {
+                            if (isMultiTypeRuntime(type)) {
+                              set(draft, 'when', RUNTIME_INPUT_VALUE)
+                            } else {
+                              unset(draft, 'when')
+                            }
+                          })
+                        )
+                      }}
+                    />
+                  </div>
+                </div>
+              }
               details={
                 <ConditionalExecutionPanel
-                  formikProps={formikProps}
                   mode={isStepGroup ? Modes.STEP_GROUP : Modes.STEP}
                   isReadonly={isReadonly}
+                  path="when"
                 />
               }
             />
@@ -193,13 +239,34 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
           {hiddenPanels.includes(AdvancedPanels.FailureStrategy) ? null : (
             <Accordion.Panel
               id={AdvancedPanels.FailureStrategy}
-              summary={getString('pipeline.failureStrategies.title')}
+              summary={
+                <div className={css.titleWrapper}>
+                  <LocaleString stringID="pipeline.failureStrategies.title" />
+                  <div onClick={e => e.stopPropagation()}>
+                    <MultiTypeSelectorButton
+                      type={getMultiTypeFromValue(failureStrategyValues as unknown as string)}
+                      allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+                      onChange={type => {
+                        formikProps.setValues(
+                          produce(formikProps.values, draft => {
+                            if (isMultiTypeRuntime(type)) {
+                              set(draft, 'failureStrategies', RUNTIME_INPUT_VALUE)
+                            } else {
+                              unset(draft, 'failureStrategies')
+                            }
+                          })
+                        )
+                      }}
+                    />
+                  </div>
+                </div>
+              }
               details={
                 <FailureStrategyPanel
                   mode={hasStepGroupAncestor || isStepGroup ? Modes.STEP_GROUP : Modes.STEP}
                   stageType={stageType}
-                  formikProps={formikProps}
                   isReadonly={isReadonly || isFailureStrategyDisabled}
+                  path="failureStrategies"
                 />
               }
             />

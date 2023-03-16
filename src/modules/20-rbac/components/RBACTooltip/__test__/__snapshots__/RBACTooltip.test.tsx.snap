@@ -3,7 +3,7 @@
 exports[`RBACTooltip RBACTooltip component - Org scope 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-small"
+    class="Layout--vertical Layout--layout-spacing-small StyledProps--main minWidth StyledProps--padding-small"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
@@ -43,7 +43,7 @@ exports[`RBACTooltip RBACTooltip component - Org scope 1`] = `
 exports[`RBACTooltip RBACTooltip component - Project scope 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-small"
+    class="Layout--vertical Layout--layout-spacing-small StyledProps--main minWidth StyledProps--padding-small"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
@@ -83,7 +83,7 @@ exports[`RBACTooltip RBACTooltip component - Project scope 1`] = `
 exports[`RBACTooltip RBACTooltip component 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-small"
+    class="Layout--vertical Layout--layout-spacing-small StyledProps--main minWidth StyledProps--padding-small"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"

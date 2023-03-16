@@ -21,7 +21,8 @@ import {
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { DelegateTypes } from '@connectors/pages/connectors/utils/ConnectorUtils'
+
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type {
   ConnectorConfigDTO,
   ConnectorRequestBody,

@@ -7,8 +7,9 @@
 
 import { isMatch, has, get } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import { validateCICodebase, validatePipeline } from '../StepUtil'
+import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
+import type { StringKeys } from 'framework/strings'
+import { validateCICodebase, validatePipeline, validateStage } from '../StepUtil'
 import {
   pipelineTemplateWithRuntimeInput,
   pipelineWithNoBuildInfo,
@@ -19,13 +20,23 @@ import {
   pipelineTemplateOriginalPipeline,
   pipelineTemplateTemplate,
   pipelineTemplateResolvedPipeline,
-  pipelineWithPRBuild
+  pipelineWithPRBuild,
+  pipelineWithVariables,
+  templatePipelineWithVariables,
+  resolvedPipelineWithVariables,
+  stageWithVariables,
+  templateStageWithVariables,
+  originalStageWithVariables
 } from './mock'
 
 jest.mock('@common/utils/YamlUtils', () => ({
   validateJSONWithSchema: jest.fn(() => Promise.resolve(new Map())),
   useValidationError: () => ({ errorMap: new Map() })
 }))
+
+function getString(key: StringKeys): StringKeys {
+  return key
+}
 
 describe('Test StepUtils', () => {
   test('Test validateCICodebase method for pipeline without build info', () => {
@@ -44,7 +55,8 @@ describe('Test StepUtils', () => {
         selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
         selectedStageItems: [{ label: 'S1', value: 'S1' }],
         allStagesSelected: false
-      }
+      },
+      getString
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: {} } } } })).toBeTruthy()
   })
@@ -65,7 +77,8 @@ describe('Test StepUtils', () => {
         selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
         selectedStageItems: [{ label: 'S1', value: 'S1' }],
         allStagesSelected: false
-      }
+      },
+      getString
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: {} } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.type')).toBeTruthy()
@@ -83,7 +96,8 @@ describe('Test StepUtils', () => {
         selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
         selectedStageItems: [{ label: 'S1', value: 'S1' }],
         allStagesSelected: false
-      }
+      },
+      getString
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.spec.branch')).toBeTruthy()
@@ -101,7 +115,8 @@ describe('Test StepUtils', () => {
         selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
         selectedStageItems: [{ label: 'S1', value: 'S1' }],
         allStagesSelected: false
-      }
+      },
+      getString
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.spec.tag')).toBeTruthy()
@@ -114,7 +129,8 @@ describe('Test StepUtils', () => {
       // eslint-disable-next-line
       // @ts-ignore
       template: pipelineTemplateWithRuntimeInput as PipelineInfoConfig,
-      viewType: StepViewType.InputSet
+      viewType: StepViewType.InputSet,
+      getString
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.spec.number')).toBeTruthy()
@@ -127,7 +143,8 @@ describe('Test StepUtils', () => {
       // eslint-disable-next-line
       // @ts-ignore
       template: templateWithRuntimeTimeout as PipelineInfoConfig,
-      viewType: StepViewType.DeploymentForm
+      viewType: StepViewType.DeploymentForm,
+      getString
     })
     expect(isMatch(errors, { timeout: 'Invalid syntax provided' })).toBeTruthy()
   })
@@ -166,7 +183,8 @@ describe('Test StepUtils', () => {
       // @ts-ignore
       template: pipelineTemplateTemplate as PipelineInfoConfig,
       resolvedPipeline: pipelineTemplateResolvedPipeline as any,
-      viewType: StepViewType.DeploymentForm
+      viewType: StepViewType.DeploymentForm,
+      getString
     })
 
     const errorKeys = Object.keys(get(errors, 'template.templateInputs.properties.ci.codebase') || {})
@@ -207,7 +225,8 @@ describe('Test StepUtils', () => {
       // @ts-ignore
       template: pipelineTemplateTemplate as PipelineInfoConfig,
       resolvedPipeline: pipelineTemplateResolvedPipeline as any,
-      viewType: StepViewType.DeploymentForm
+      viewType: StepViewType.DeploymentForm,
+      getString
     })
 
     const errorKeys = Object.keys(get(errors, 'template.templateInputs.properties.ci.codebase') || {})
@@ -216,5 +235,40 @@ describe('Test StepUtils', () => {
     expect(errorKeys).toContain('build')
     expect(errorKeys).toContain('prCloneStrategy')
     expect(errorKeys).toContain('resources')
+  })
+  test('Test validatePipeline method with optional variable support', () => {
+    const errors = validatePipeline({
+      pipeline: pipelineWithVariables as unknown as PipelineInfoConfig,
+      originalPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
+      template: templatePipelineWithVariables as unknown as PipelineInfoConfig,
+      resolvedPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
+      viewType: StepViewType.DeploymentForm,
+      isOptionalVariableAllowed: true,
+      getString
+    })
+    expect(has(errors, 'variables')).toBeFalsy()
+  })
+  test('Test validatePipeline method without optional variable support', () => {
+    const errors = validatePipeline({
+      pipeline: pipelineWithVariables as unknown as PipelineInfoConfig,
+      originalPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
+      template: templatePipelineWithVariables as unknown as PipelineInfoConfig,
+      resolvedPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
+      viewType: StepViewType.DeploymentForm,
+      isOptionalVariableAllowed: false,
+      getString
+    })
+    expect(has(errors, 'variables')).toBeTruthy()
+  })
+  test('Test validateStage method with optional variable support', () => {
+    const errors = validateStage({
+      stage: stageWithVariables as unknown as StageElementConfig,
+      template: templateStageWithVariables as unknown as StageElementConfig,
+      originalStage: originalStageWithVariables as StageElementConfig,
+      viewType: StepViewType.InputSet,
+      isOptionalVariableAllowed: true,
+      getString
+    })
+    expect(has(errors, 'variables')).toBeFalsy()
   })
 })

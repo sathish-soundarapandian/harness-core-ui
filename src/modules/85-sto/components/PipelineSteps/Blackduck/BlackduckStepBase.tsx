@@ -37,7 +37,8 @@ import {
   EXTRACTION_SCAN_MODE,
   INGESTION_SCAN_MODE,
   ORCHESTRATION_SCAN_MODE,
-  REPOSITORY_TARGET_TYPE
+  REPOSITORY_TARGET_TYPE,
+  tooltipIds
 } from '../constants'
 import SecurityField from '../SecurityField'
 
@@ -165,11 +166,13 @@ export const BlackduckStepBase = (
                     },
                     'spec.tool.project_name': {
                       label: 'projectCard.projectName',
-                      optional: false
+                      optional: false,
+                      tooltipId: tooltipIds.toolProjectName
                     },
                     'spec.tool.project_version': {
                       label: 'sto.stepField.tool.projectVersion',
-                      optional: false
+                      optional: false,
+                      tooltipId: tooltipIds.toolProjectVersion
                     }
                   }}
                 />

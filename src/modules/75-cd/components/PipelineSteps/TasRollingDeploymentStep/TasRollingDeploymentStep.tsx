@@ -129,8 +129,10 @@ function TasRollingDeploymentWidget(
                   name="spec.additionalRoutes"
                   tagsProps={{ placeholder: getString('cd.steps.tas.typeAndEnterForRouteAdd') }}
                   multiTypeProps={{
-                    allowableTypes
+                    allowableTypes,
+                    expressions
                   }}
+                  type={getString('tagLabel')}
                   label={getString('cd.steps.tas.additionalRoutes')}
                   enableConfigureOptions
                   isArray={true}
@@ -173,7 +175,7 @@ const TasRollingDeploymentInputStep: React.FC<TasRollingDeploymentProps> = ({
           disabled={readonly}
           fieldPath={'timeout'}
           template={template}
-          className={cx(stepCss.formGroup, stepCss.sm)}
+          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
       {getMultiTypeFromValue((template?.spec as any)?.additionalRoutes) === MultiTypeInputType.RUNTIME && (
@@ -185,6 +187,7 @@ const TasRollingDeploymentInputStep: React.FC<TasRollingDeploymentProps> = ({
               expressions,
               allowableTypes
             }}
+            type={getString('tagLabel')}
             label={getString('cd.steps.tas.additionalRoutes')}
             enableConfigureOptions
             isArray={true}

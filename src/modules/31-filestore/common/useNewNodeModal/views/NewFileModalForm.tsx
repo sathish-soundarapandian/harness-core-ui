@@ -234,10 +234,12 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
                   name="fileUsage"
                   label={getString('filestore.view.fileUsage')}
                   onChange={e => {
-                    fileStoreContext?.updateCurrentNode({
-                      ...fileStoreContext.currentNode,
-                      fileUsage: e.value as FileUsage
-                    })
+                    if (editMode) {
+                      fileStoreContext?.updateCurrentNode({
+                        ...fileStoreContext.currentNode,
+                        fileUsage: e.value as FileUsage
+                      })
+                    }
                   }}
                   usePortal
                 />

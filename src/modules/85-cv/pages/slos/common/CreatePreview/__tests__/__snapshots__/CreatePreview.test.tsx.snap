@@ -7,11 +7,13 @@ exports[`CreatePreview should render CalenderValuePreview with empty value 1`] =
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      data-testid="cv.periodLength"
     >
       cv.periodLength
     </p>
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      data-testid="cv.periodLength_value"
     >
       
     </p>
@@ -26,11 +28,13 @@ exports[`CreatePreview should render CalenderValuePreview with init value 1`] = 
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      data-testid="cv.periodLength"
     >
       cv.periodLength
     </p>
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      data-testid="cv.periodLength_value"
     >
       
     </p>

@@ -91,9 +91,9 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     homePageUrl: '',
     color: 'green'
   },
-  SSCS: {
+  SSCA: {
     shouldVisible: true,
-    icon: 'sscs-main',
+    icon: 'ssca-main',
     label: 'common.cdAndGitops',
     hasLicense: false,
     homePageUrl: '',
@@ -103,6 +103,14 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     shouldVisible: true,
     icon: 'idp',
     label: 'common.purpose.idp.shortName',
+    hasLicense: false,
+    homePageUrl: '',
+    color: 'green'
+  },
+  ET: {
+    shouldVisible: true,
+    icon: 'cet',
+    label: 'common.purpose.errorTracking.title',
     hasLicense: false,
     homePageUrl: '',
     color: 'green'

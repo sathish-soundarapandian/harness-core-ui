@@ -20,7 +20,7 @@ import type {
   MultiTypeListType
 } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { StringsMap } from 'stringTypes'
-import { GHAPluginStepBaseWithRef } from './GHAPluginStepBase'
+import { GHAPluginStepBaseWithRef, customRegexForMultiTypeMap } from './GHAPluginStepBase'
 import { GHAPluginStepInputSet } from './GHAPluginStepInputSet'
 import { GHAPluginStepVariables, GHAPluginStepVariablesProps } from './GHAPluginStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './GHAPluginStepFunctionConfigs'
@@ -107,7 +107,14 @@ export class GHAPluginStep extends PipelineStep<GHAPluginStepData> {
   }: ValidateInputSetProps<GHAPluginStepData>): FormikErrors<GHAPluginStepData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getString) {
-      return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(isRequired), { getString }, viewType)
+      return validateInputSet(
+        data,
+        template,
+        getInputSetViewValidateFieldsConfig(isRequired),
+        { getString },
+        viewType,
+        customRegexForMultiTypeMap
+      )
     }
 
     return {}

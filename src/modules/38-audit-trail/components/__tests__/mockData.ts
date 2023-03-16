@@ -178,3 +178,163 @@ export const filters = {
   metaData: null,
   correlationId: 'c564944e-44c9-4469-a439-257c3a0a6b25'
 }
+
+export const logStreamingConnectorListMock = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 1,
+    totalItems: 3,
+    pageItemCount: 3,
+    pageSize: 10,
+    content: [
+      {
+        connector: {
+          name: 'List Name 1',
+          identifier: 'ListIdentifier1',
+          description: '',
+          orgIdentifier: null,
+          projectIdentifier: null,
+          tags: {},
+          type: 'Aws',
+          spec: {
+            credential: {
+              crossAccountAccess: null,
+              type: 'ManualConfig',
+              spec: { accessKey: 'abcxyz', accessKeyRef: null, secretKeyRef: 'account.secret_Vale' },
+              region: null
+            },
+            delegateSelectors: [],
+            executeOnDelegate: true
+          }
+        },
+        createdAt: 1675661883106,
+        lastModifiedAt: 1675661883095,
+        status: {
+          status: 'SUCCESS',
+          errorSummary: null,
+          errors: null,
+          testedAt: 1676027887895,
+          lastTestedAt: 0,
+          lastConnectedAt: 1676027887895
+        },
+        activityDetails: { lastActivityTime: 1675661883325 },
+        harnessManaged: false,
+        gitDetails: {
+          objectId: null,
+          branch: null,
+          repoIdentifier: null,
+          rootFolder: null,
+          filePath: null,
+          repoName: null,
+          commitId: null,
+          fileUrl: null,
+          repoUrl: null
+        },
+        entityValidityDetails: { valid: true, invalidYaml: null },
+        governanceMetadata: null
+      },
+      {
+        connector: {
+          name: 'List Name 2',
+          identifier: 'ListIdentifier2',
+          description: '',
+          orgIdentifier: null,
+          projectIdentifier: null,
+          tags: {},
+          type: 'Aws',
+          spec: {
+            credential: {
+              crossAccountAccess: null,
+              type: 'ManualConfig',
+              spec: { accessKey: 'abcxyz', accessKeyRef: null, secretKeyRef: 'account.Test_Secret' },
+              region: null
+            },
+            delegateSelectors: [],
+            executeOnDelegate: true
+          }
+        },
+        createdAt: 1675421100919,
+        lastModifiedAt: 1675422537691,
+        status: {
+          status: 'SUCCESS',
+          errorSummary: null,
+          errors: null,
+          testedAt: 1676027902857,
+          lastTestedAt: 0,
+          lastConnectedAt: 1676027902857
+        },
+        activityDetails: { lastActivityTime: 1675422537820 },
+        harnessManaged: false,
+        gitDetails: {
+          objectId: null,
+          branch: null,
+          repoIdentifier: null,
+          rootFolder: null,
+          filePath: null,
+          repoName: null,
+          commitId: null,
+          fileUrl: null,
+          repoUrl: null
+        },
+        entityValidityDetails: { valid: true, invalidYaml: null },
+        governanceMetadata: null
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  metaData: null,
+  correlationId: 'a7628764-3f10-44f5-a750-0363124ec15a'
+}
+
+export const getConnectorResponseMock = {
+  status: 'SUCCESS',
+  data: {
+    connector: {
+      name: 'Connector Name 1',
+      identifier: 'ConnectorIdentifier1',
+      description: '',
+      orgIdentifier: null,
+      projectIdentifier: null,
+      tags: {},
+      type: 'Aws',
+      spec: {
+        credential: {
+          crossAccountAccess: null,
+          type: 'ManualConfig',
+          spec: { accessKey: 'abcxyz', accessKeyRef: null, secretKeyRef: 'account.Test_Secret' },
+          region: null
+        },
+        delegateSelectors: [],
+        executeOnDelegate: true
+      }
+    },
+    createdAt: 1675421100919,
+    lastModifiedAt: 1675422537691,
+    status: {
+      status: 'SUCCESS',
+      errorSummary: null,
+      errors: null,
+      testedAt: 1676028503114,
+      lastTestedAt: 0,
+      lastConnectedAt: 1676028503114
+    },
+    activityDetails: { lastActivityTime: 1675422537820 },
+    harnessManaged: false,
+    gitDetails: {
+      objectId: null,
+      branch: null,
+      repoIdentifier: null,
+      rootFolder: null,
+      filePath: null,
+      repoName: null,
+      commitId: null,
+      fileUrl: null,
+      repoUrl: null
+    },
+    entityValidityDetails: { valid: true, invalidYaml: null },
+    governanceMetadata: null
+  },
+  metaData: null,
+  correlationId: 'c7824bcd-1875-46e4-b445-b063691b6e2a'
+}

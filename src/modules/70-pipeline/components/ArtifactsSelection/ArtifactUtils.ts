@@ -7,7 +7,7 @@
 
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
-import { defaultTo, get, isEmpty, merge } from 'lodash-es'
+import { defaultTo, get, isEmpty, isObject, merge } from 'lodash-es'
 import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import type { ArtifactConfig, ConnectorConfigDTO, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
 import { ENABLED_ARTIFACT_TYPES, ModalViewFor } from './ArtifactHelper'
@@ -322,6 +322,24 @@ export const getArtifactFormData = (
     case ENABLED_ARTIFACT_TYPES.Jenkins:
       values = initialValues
       break
+    case ENABLED_ARTIFACT_TYPES.Bamboo:
+      values = {
+        ...initialValues,
+        spec: {
+          ...specValues,
+          artifactPaths:
+            getMultiTypeFromValue(specValues.artifactPaths) === MultiTypeInputType.FIXED &&
+            specValues.artifactPaths &&
+            specValues.artifactPaths.length
+              ? specValues.artifactPaths.map((artifactPath: string) => ({
+                  label: artifactPath,
+                  value: artifactPath
+                }))
+              : specValues.artifactPaths
+        }
+      }
+      break
+
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
     case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
     case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
@@ -332,6 +350,9 @@ export const getArtifactFormData = (
       break
     case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
       values = getRepoValues(specValues)
+      break
+    case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
+      values = getRepoValuesForNexus2(specValues)
       break
     default:
       values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
@@ -390,6 +411,18 @@ const getRepoValues = (specValues: Nexus2InitialValuesType): Nexus2InitialValues
   return formikInitialValues
 }
 
+const getRepoValuesForNexus2 = (specValues: Nexus2InitialValuesType): Nexus2InitialValuesType => {
+  const formikInitialValues: Nexus2InitialValuesType = {
+    ...specValues,
+    tagType: specValues?.tag ? TagTypes.Value : TagTypes.Regex,
+    ...specValues
+  }
+  if (specValues?.tag && getMultiTypeFromValue(specValues?.tag) === MultiTypeInputType.FIXED) {
+    formikInitialValues.tag = { label: specValues?.tag, value: specValues?.tag } as any
+  }
+  return formikInitialValues
+}
+
 export const isFieldFixedAndNonEmpty = (field: string): boolean => {
   return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED ? field?.length > 0 : true
 }
@@ -434,6 +467,15 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         packageType: 'maven',
         package: '',
         version: RUNTIME_INPUT_VALUE
+      }
+    case ENABLED_ARTIFACT_TYPES.Bamboo:
+      return {
+        identifier: '',
+        spec: {
+          planKey: '',
+          artifactPaths: [],
+          build: ''
+        }
       }
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
       return {
@@ -628,15 +670,16 @@ export const amiFilters = [
   }
 ]
 
-export const getInSelectOptionForm = (data: { [key: string]: any } | string) => {
-  return getMultiTypeFromValue(data as string) === MultiTypeInputType.RUNTIME
-    ? data
-    : data
-    ? Object.keys(data || {})?.map((key: string | number) => {
-        return { name: key, value: (data as { [key: string]: any })?.[key as any] }
-      })
-    : data
+export const getInSelectOptionForm = (data?: { [key: string]: string } | string) => {
+  if (isObject(data)) {
+    return Object.entries(data)
+      .filter(([_, value]) => Boolean(value))
+      .map(([name, value]) => ({ name, value }))
+  }
+
+  return data
 }
+
 export const shouldHideHeaderAndNavBtns = (context: number): boolean =>
   [ModalViewFor.Template, ModalViewFor.CD_Onboarding].includes(context)
 
@@ -644,10 +687,10 @@ export const hasFixedDefiniteValue = (value: any) => {
   return getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME || !value
 }
 
-export const resetFieldValue = (formik: FormikValues, fieldPath: string): void => {
+export const resetFieldValue = (formik: FormikValues, fieldPath: string, resetValue: string | object = ''): void => {
   const fieldValue = get(formik.values, fieldPath, '')
   if (!isEmpty(fieldValue) && getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED) {
-    formik.setFieldValue(fieldPath, '')
+    formik.setFieldValue(fieldPath, resetValue)
   }
 }
 
@@ -656,5 +699,13 @@ export const canFetchDigest = (imagePath: string, tag: string, connectorRefValue
     getMultiTypeFromValue(imagePath) !== MultiTypeInputType.RUNTIME &&
     getMultiTypeFromValue(tag) !== MultiTypeInputType.RUNTIME &&
     getMultiTypeFromValue(connectorRefValue) !== MultiTypeInputType.RUNTIME
+  )
+}
+
+export const canFetchAMITags = (repository: string, groupId?: string, artifactId?: string) => {
+  return (
+    getMultiTypeFromValue(repository) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(groupId) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(artifactId) !== MultiTypeInputType.RUNTIME
   )
 }

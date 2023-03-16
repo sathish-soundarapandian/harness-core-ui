@@ -287,7 +287,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                 dataTooltipId: 'azureInfraConnector'
               }}
               label={getString('connector')}
-              placeholder={getString('connectors.selectConnector')}
+              placeholder={getString('common.entityPlaceholderText')}
               disabled={readonly}
               multiTypeProps={{ allowableTypes, expressions }}
               type={Connectors.AZURE}

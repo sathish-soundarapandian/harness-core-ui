@@ -7,7 +7,7 @@
 
 import React, { Ref, useRef } from 'react'
 import { noop } from 'lodash-es'
-import { Container, Formik, FormikForm } from '@harness/uicore'
+import { Container, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
@@ -53,7 +53,7 @@ export default function CommonHealthSource({
   connectorRef
 }: CommonHealthSourceProps): JSX.Element {
   const { getString } = useStrings()
-  const isMetricThresholdEnabled = !isTemplate
+
   const healthSourceConfigurationsInitialValues = getInitialValuesForHealthSourceConfigurations(configurationsPageData)
   const customMetricFormRef = useRef<FormikProps<CommonCustomMetricFormikInterface>>()
 
@@ -66,7 +66,6 @@ export default function CommonHealthSource({
         handleValidateHealthSourceConfigurationsForm({
           formValues,
           healthSourceConfig,
-          isTemplate,
           getString
         })
       }
@@ -86,14 +85,13 @@ export default function CommonHealthSource({
         cleanUpMappedMetrics(queryMetricsMap)
 
         const filterRemovedMetricNameThresholds = (deletedMetricName: string): void => {
-          if (isMetricThresholdEnabled && deletedMetricName) {
+          if (deletedMetricName) {
             const metricThresholds = {
               ignoreThresholds,
               failFastThresholds
             }
 
             const updatedMetricThresholds = getMetricNameFilteredMetricThresholds({
-              isMetricThresholdEnabled,
               metricThresholds,
               metricName: deletedMetricName
             })
@@ -109,15 +107,23 @@ export default function CommonHealthSource({
           }
         }
 
+        const customMetricFormInitialValues = getCurrentQueryData(queryMetricsMap, currentSelectedMetric)
+        const isQueryRuntimeOrExpression =
+          getMultiTypeFromValue(customMetricFormInitialValues?.query) !== MultiTypeInputType.FIXED
+
         return (
           <>
-            <CommonHealthSourceProvider updateParentFormik={formik.setFieldValue} parentFormValues={formik.values}>
+            <CommonHealthSourceProvider
+              updateParentFormik={formik.setFieldValue}
+              parentFormValues={formik.values}
+              isQueryRuntimeOrExpression={isQueryRuntimeOrExpression}
+            >
               <FormikForm>
                 <Formik<CommonCustomMetricFormikInterface>
                   enableReinitialize
                   formName={'customMetricForm'}
                   validateOnMount
-                  initialValues={getCurrentQueryData(queryMetricsMap, currentSelectedMetric)}
+                  initialValues={customMetricFormInitialValues}
                   onSubmit={noop}
                   validate={values =>
                     handleValidateCustomMetricForm({
@@ -135,7 +141,6 @@ export default function CommonHealthSource({
                           mappedMetrics={queryMetricsMap}
                           selectedMetric={currentSelectedMetric}
                           connectorIdentifier={connectorRef}
-                          isMetricThresholdEnabled={isMetricThresholdEnabled}
                           createdMetrics={createdMetrics}
                           isTemplate={isTemplate}
                           expressions={expressions}
@@ -150,7 +155,6 @@ export default function CommonHealthSource({
                 <MetricThresholdContainer
                   healthSourceConfig={healthSourceConfig}
                   groupedCreatedMetrics={groupedCreatedMetrics}
-                  isMetricThresholdEnabled={isMetricThresholdEnabled}
                 />
               </FormikForm>
               <Container height={120} />

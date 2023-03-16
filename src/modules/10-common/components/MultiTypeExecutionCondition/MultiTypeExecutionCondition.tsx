@@ -7,8 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { connect, FormikContextType } from 'formik'
-import { filter, get } from 'lodash-es'
+import { useFormikContext } from 'formik'
+import { get } from 'lodash-es'
 import { AllowedTypes, Container, ExpressionAndRuntimeType, MultiTypeInputType } from '@harness/uicore'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import multiBtnCss from '@common/components/MultiTypeTextArea/MultiTypeTextArea.module.scss'
@@ -17,7 +17,6 @@ import css from './MultiTypeExecutionCondition.module.scss'
 interface MultiTypeExecutionConditionProps {
   path: string
   allowableTypes?: AllowedTypes
-  formik?: FormikContextType<any>
   isInputDisabled?: boolean
   readonly?: boolean
   multiType?: MultiTypeInputType
@@ -39,14 +38,11 @@ function MultiTypeMonacoTextFieldFixedTypeComponent(props: {
   )
 }
 
-function MultiTypeExecutionConditionInternal(props: MultiTypeExecutionConditionProps): React.ReactElement {
-  const { path, formik, allowableTypes, isInputDisabled, readonly, multiType, setMultiType, expressions } = props
+export function MultiTypeExecutionCondition(props: MultiTypeExecutionConditionProps): React.ReactElement {
+  const { path, allowableTypes, isInputDisabled, readonly, multiType, setMultiType, expressions } = props
+  const formik = useFormikContext()
 
-  const conditionValue = get(formik?.values, path)
-  const allowableTypesExceptExpression = filter(
-    allowableTypes,
-    type => type !== MultiTypeInputType.EXPRESSION
-  ) as AllowedTypes
+  const conditionValue = get(formik.values, path)
 
   return (
     <Container className={cx(css.conditionInputContainer)}>
@@ -60,7 +56,7 @@ function MultiTypeExecutionConditionInternal(props: MultiTypeExecutionConditionP
         }}
         fixedTypeComponent={MultiTypeMonacoTextFieldFixedTypeComponent}
         style={{ flexGrow: 1 }}
-        allowableTypes={allowableTypesExceptExpression}
+        allowableTypes={allowableTypes}
         onChange={val => formik?.setFieldValue(path, val)}
         onTypeChange={setMultiType}
         btnClassName={multiType === MultiTypeInputType.FIXED ? multiBtnCss.multiButtonForFixedType : ''}
@@ -70,5 +66,3 @@ function MultiTypeExecutionConditionInternal(props: MultiTypeExecutionConditionP
     </Container>
   )
 }
-
-export const MultiTypeExecutionCondition = connect(MultiTypeExecutionConditionInternal)

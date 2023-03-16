@@ -38,7 +38,6 @@ export interface CommonMultiItemsSideNavProps {
   addFieldLabel: string
   groupedCreatedMetrics?: GroupedCreatedMetrics
   shouldBeAbleToDeleteLastMetric?: boolean
-  isMetricThresholdEnabled?: boolean
   openEditMetricModal: () => void
 }
 
@@ -55,7 +54,6 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
     addFieldLabel,
     groupedCreatedMetrics,
     shouldBeAbleToDeleteLastMetric,
-    isMetricThresholdEnabled,
     openEditMetricModal
   } = props
   const { getString } = useStrings()
@@ -110,7 +108,6 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
         }}
         selectedItem={selectedMetric}
         groupedSelectedApps={filteredGroupMetric}
-        isMetricThresholdEnabled={isMetricThresholdEnabled}
         openEditMetricModal={openEditMetricModal}
         onRemoveItem={onRemoveItem}
         hideDeleteIcon={hideDeleteIcon}

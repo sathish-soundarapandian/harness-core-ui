@@ -141,7 +141,7 @@ describe('TabToolbar', () => {
   })
 
   test('it should delete the SLO and redirects to the SLO listing page', async () => {
-    jest.spyOn(cvService, 'deleteSLODataPromise').mockReturnValue(null as any)
+    jest.spyOn(cvService, 'deleteSLOV2DataPromise').mockReturnValue(null as any)
 
     renderComponent()
 
@@ -164,7 +164,7 @@ describe('TabToolbar', () => {
 
   test('it should delete the SLO and redirects to the Monitored Service details page', async () => {
     const monitoredServiceIdentifier = 'Service_1_Environment_1'
-    jest.spyOn(cvService, 'deleteSLODataPromise').mockReturnValue(null as any)
+    jest.spyOn(cvService, 'deleteSLOV2DataPromise').mockReturnValue(null as any)
 
     render(
       <TestWrapper {...testWrapperProps} queryParams={{ monitoredServiceIdentifier }}>

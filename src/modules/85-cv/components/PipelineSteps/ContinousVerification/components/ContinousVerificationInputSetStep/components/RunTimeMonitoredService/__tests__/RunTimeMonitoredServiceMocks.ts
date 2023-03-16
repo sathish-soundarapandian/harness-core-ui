@@ -15,6 +15,7 @@ export const initialValues = {
       type: 'Default',
       spec: {}
     },
+    isMultiServicesOrEnvs: false,
     healthSources: [
       {
         identifier: 'appd'

@@ -101,8 +101,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     {
       label: <String stringID="common.defaultSettings" />,
       icon: 'nav-settings',
-      route: routes.toDefaultSettings({ accountId, orgIdentifier }),
-      selectable: true
+      route: routes.toDefaultSettings({ accountId, orgIdentifier })
     } as ResourceOption
   ]
 

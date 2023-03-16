@@ -13,6 +13,7 @@ declare const styles: {
   readonly header: string
   readonly lhs: string
   readonly main: string
+  readonly policyEvaluationDialog: string
   readonly tabLink: string
   readonly viewToggle: string
 }

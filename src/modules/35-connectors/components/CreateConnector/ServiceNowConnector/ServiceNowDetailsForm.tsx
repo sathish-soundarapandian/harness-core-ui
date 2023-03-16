@@ -91,7 +91,7 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
   const authOptions: SelectOption[] = React.useMemo(
     () => [
       {
-        label: getString('usernamePassword'),
+        label: getString('connectors.serviceNow.usernamePasswordAPIKey'),
         value: AuthTypes.USER_PASSWORD
       },
       {

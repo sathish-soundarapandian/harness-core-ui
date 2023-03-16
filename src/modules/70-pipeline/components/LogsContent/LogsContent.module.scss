@@ -31,7 +31,7 @@
 
     & .errorMsgContainer {
       display: grid;
-      grid-template-columns: 1fr 2fr 2fr;
+      grid-auto-flow: column;
       column-gap: var(--spacing-5);
     }
 
@@ -73,6 +73,7 @@
 
   &[data-mode='console-view'] {
     grid-template-rows: 52px 1fr;
+    height: 100%;
 
     &.hasErrorMessage {
       grid-template-rows: 52px 1fr 132px;
@@ -187,4 +188,60 @@
     width: auto;
     padding-left: 4px;
   }
+}
+
+.tabs {
+  height: 100%;
+  overflow: auto;
+
+  :global {
+    .bp3-tabs {
+      height: 100%;
+
+      .bp3-tab-panel {
+        border-left: 1px solid var(--grey-200);
+        height: calc(100% - 59px);
+        margin-top: 0px;
+        overflow: auto;
+      }
+      .bp3-tab-list {
+        border-bottom: 1px solid var(--grey-200);
+        border-left: 1px solid var(--grey-200);
+        padding: 0 0 0 var(--spacing-5);
+        height: 59px;
+        position: sticky;
+        top: 0;
+      }
+    }
+  }
+}
+
+.errorMsgWrapper {
+  background-color: var(--red-100);
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 var(--spacing-5);
+  margin-left: auto;
+  width: 50%;
+  height: 62px;
+}
+
+.errorMsg {
+  padding: var(--spacing-5);
+  max-height: 100%;
+  overflow-y: auto;
+
+  p {
+    font-size: var(--font-size-xsmall);
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+.errorTitle {
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  line-height: 1.33;
+  color: var(--red-600);
+  margin-bottom: var(--spacing-1);
 }

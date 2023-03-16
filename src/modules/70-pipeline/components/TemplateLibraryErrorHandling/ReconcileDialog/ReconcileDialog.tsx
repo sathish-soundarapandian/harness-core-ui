@@ -16,7 +16,6 @@ import {
   TemplateResponse,
   NGTemplateInfoConfig
 } from 'services/template-ng'
-import { YamlDiffView } from '@pipeline/components/TemplateLibraryErrorHandling/YamlDiffView/YamlDiffView'
 import { ErrorNode } from '@pipeline/components/TemplateLibraryErrorHandling/ErrorDirectory/ErrorNode'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -32,6 +31,7 @@ import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { getFirstLeafNode, getTitleFromErrorNodeSummary, TemplateErrorEntity } from '../utils'
+import { TemplateYamlDiffViewWrapper } from './TemplateYamlDiffViewWrapper'
 import css from './ReconcileDialog.module.scss'
 
 export interface ReconcileDialogProps {
@@ -235,7 +235,7 @@ export function ReconcileDialog({
                     </Text>
                   </Layout.Vertical>
                 </Container>
-                {isEdit && hasChildren && (
+                {isEdit && hasChildren && !loading && (
                   <Button
                     text={getString('pipeline.reconcileDialog.updateAllLabel')}
                     variation={ButtonVariation.PRIMARY}
@@ -244,7 +244,7 @@ export function ReconcileDialog({
                     onClick={onUpdateAll}
                   />
                 )}
-                {hasChildren && (
+                {hasChildren && !loading && (
                   <ErrorNode
                     entity={entity}
                     errorNodeSummary={errorNodeSummary}
@@ -256,12 +256,13 @@ export function ReconcileDialog({
               </Layout.Vertical>
             </Container>
             <Container style={{ flex: 1 }}>
-              <YamlDiffView
+              <TemplateYamlDiffViewWrapper
                 errorNodeSummary={selectedErrorNodeSummary}
                 rootErrorNodeSummary={errorNodeSummary}
                 originalEntityYaml={originalEntityYaml}
                 resolvedTemplateResponses={resolvedTemplateResponses}
                 onUpdate={onUpdateNode}
+                setYamlDiffLoading={setLoading}
               />
             </Container>
           </Layout.Horizontal>

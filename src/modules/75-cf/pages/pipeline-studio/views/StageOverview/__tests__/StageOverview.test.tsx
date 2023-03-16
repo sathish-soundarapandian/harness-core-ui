@@ -16,7 +16,7 @@ import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { mockPipelineTemplateYaml } from '@pipeline/components/PipelineStudio/PipelineCanvas/__tests__/PipelineCanvasTestHelper'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
-import { createPipelinePromise } from 'services/pipeline-ng'
+import { createPipelineV2Promise } from 'services/pipeline-ng'
 import { PipelineCanvas } from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCanvas'
 import { PipelineResponse } from '@pipeline/components/InputSetForm/__tests__/InputSetMocks'
 import StageOverview from '../StageOverview'
@@ -46,8 +46,8 @@ jest.mock('services/cd-ng', () => ({
 
 jest.mock('services/pipeline-ng', () => ({
   getPipelinePromise: jest.fn().mockImplementation(() => Promise.resolve(PipelineResponse)),
-  putPipelinePromise: jest.fn().mockResolvedValue({ status: 'Success' }),
-  createPipelinePromise: jest.fn().mockResolvedValue({ status: 'Success' }),
+  putPipelineV2Promise: jest.fn().mockResolvedValue({ status: 'Success' }),
+  createPipelineV2Promise: jest.fn().mockResolvedValue({ status: 'Success' }),
   useCreateVariablesV2: jest.fn(() => ({ mutate: jest.fn(() => Promise.resolve({ data: { yaml: '' } })) })),
   useGetSchemaYaml: jest.fn(() => ({})),
   useGetStepYamlSchema: jest.fn(() => ({})),
@@ -127,7 +127,7 @@ describe('Stage Overview Tests', () => {
   test(`it displays the save button as disabled until edit`, async () => {
     render(<RenderComponent initialValues={{}} />)
     userEvent.click(screen.getByText('save'))
-    await waitFor(() => expect(createPipelinePromise).not.toBeCalled())
+    await waitFor(() => expect(createPipelineV2Promise).not.toBeCalled())
   })
 
   test('changing name causes save button to be enabled', async () => {
@@ -162,6 +162,6 @@ describe('Stage Overview Tests', () => {
     userEvent.click(nameTextbox)
     userEvent.type(nameTextbox, 'Stage 1')
     userEvent.click(screen.getByText('save'))
-    await waitFor(() => expect(createPipelinePromise).toBeCalled())
+    await waitFor(() => expect(createPipelineV2Promise).toBeCalled())
   })
 })

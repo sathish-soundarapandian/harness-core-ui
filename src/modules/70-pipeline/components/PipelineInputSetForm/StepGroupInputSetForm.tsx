@@ -5,6 +5,7 @@ import { connect } from 'formik'
 import type { DeploymentStageConfig, StepGroupElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
+import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '../AbstractSteps/Step'
 import { ExecutionWrapperInputSetForm } from './ExecutionWrapperInputSetForm'
 import type { StageInputSetFormProps } from './StageInputSetForm'
@@ -22,6 +23,7 @@ export function StepGroupFormSetInternal(props: {
   customStepProps?: {
     stageIdentifier: string
     selectedStage?: DeploymentStageConfig
+    stageType?: StageType
   }
 }): JSX.Element {
   const { template, allValues, values, path, formik, readonly, viewType, allowableTypes, customStepProps } = props

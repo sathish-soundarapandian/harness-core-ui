@@ -502,6 +502,14 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
       set(errors, `${dataPathToField}.artifactPath`, getString?.('fieldRequired', { field: 'Artifact Path' }))
     }
 
+    if (
+      isEmpty(get(data, `${dataPathToField}.repositoryUrl`)) &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.repositoryUrl`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(errors, `${dataPathToField}.repositoryUrl`, getString?.('fieldRequired', { field: 'Repository Url' }))
+    }
+
     // ECR artifact specific fields
     if (
       isEmpty(get(data, `${dataPathToField}.region`)) &&

@@ -14,7 +14,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetMonitoredService } from 'services/cv'
 import routes from '@common/RouteDefinitions'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { getCVMonitoringServicesSearchParam, getErrorMessage } from '@cv/utils/CommonUtils'
+import { getErrorMessage, getSearchString } from '@cv/utils/CommonUtils'
 import DetailsBreadcrumb from '@cv/pages/monitored-service/views/DetailsBreadcrumb'
 import DetailsHeaderTitle from '@cv/pages/monitored-service/views/DetailsHeaderTitle'
 import DetailsToolbar from '@cv/pages/monitored-service/views/DetailsToolbar'
@@ -33,7 +33,11 @@ const ServiceHealthAndConfiguration: React.FC = () => {
   const history = useHistory()
   const { getString } = useStrings()
 
-  const { tab = MonitoredServiceEnum.SLOs, view } = useQueryParams<{ tab?: MonitoredServiceEnum; view?: Views.GRID }>()
+  const {
+    tab = MonitoredServiceEnum.SLOs,
+    view,
+    notificationTime
+  } = useQueryParams<{ tab?: MonitoredServiceEnum; view?: Views.GRID; notificationTime?: number }>()
   const { orgIdentifier, projectIdentifier, accountId, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
@@ -90,10 +94,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
           identifier,
           module: 'cv'
         }),
-        search: getCVMonitoringServicesSearchParam({
-          view,
-          tab: nextTab
-        })
+        search: getSearchString({ view, tab: nextTab, notificationTime })
       })
     }
   }

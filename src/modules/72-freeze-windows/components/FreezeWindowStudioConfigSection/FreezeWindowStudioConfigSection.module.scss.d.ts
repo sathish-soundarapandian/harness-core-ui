@@ -15,6 +15,7 @@ declare const styles: {
   readonly marginSmaller: string
   readonly sectionCard: string
   readonly separator: string
+  readonly tagInputStyle: string
   readonly tickButton: string
   readonly viewRowNode: string
 }

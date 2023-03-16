@@ -382,7 +382,7 @@ describe('Unit tests for CVChanges', () => {
     render(<WrapperComponent />)
 
     await waitFor(() => {
-      expect(refetch).toHaveBeenNthCalledWith(1, {
+      expect(refetch).toHaveBeenLastCalledWith({
         queryParams: expect.objectContaining({
           changeCategories: ['Deployment', 'Infrastructure', 'Alert', 'FeatureFlag'],
           changeSourceTypes: [
@@ -390,6 +390,7 @@ describe('Unit tests for CVChanges', () => {
             'HarnessCD',
             'K8sCluster',
             'PagerDuty',
+            'HarnessFF',
             'CustomDeploy',
             'CustomInfrastructure',
             'CustomIncident',

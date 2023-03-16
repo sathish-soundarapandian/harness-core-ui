@@ -252,7 +252,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       type={Connectors.AWS}
                       label={getString('connector')}
                       width={490}
-                      placeholder={getString('connectors.selectConnector')}
+                      placeholder={getString('common.entityPlaceholderText')}
                       accountIdentifier={accountId}
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
@@ -327,7 +327,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                           variableName={'region'}
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={val => formik?.setFieldValue('region', val)}
                         />
                       </Container>

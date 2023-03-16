@@ -19,7 +19,8 @@ const baseProps: ContextMenuProps = {
   onDelete: jest.fn(),
   onOpenSettings: jest.fn(),
   onPreview: jest.fn(),
-  onOpenEdit: jest.fn()
+  onOpenEdit: jest.fn(),
+  onOpenMoveResource: jest.fn()
 }
 
 describe('<TemplateListCardContextMenu /> tests', () => {

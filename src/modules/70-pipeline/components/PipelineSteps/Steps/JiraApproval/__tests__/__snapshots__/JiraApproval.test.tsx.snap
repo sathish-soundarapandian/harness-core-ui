@@ -872,7 +872,7 @@ exports[`Jira Approval tests Basic snapshot - deploymentform mode: jira-approval
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    common.entityPlaceholderText
                   </span>
                 </span>
                 <span
@@ -1190,7 +1190,7 @@ exports[`Jira Approval tests Basic snapshot - inputset mode: input set with erro
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    common.entityPlaceholderText
                   </span>
                 </span>
                 <span
@@ -2181,7 +2181,7 @@ exports[`Jira Approval tests deploymentform mode - readonly: jira-approval-deplo
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    common.entityPlaceholderText
                   </span>
                 </span>
                 <span

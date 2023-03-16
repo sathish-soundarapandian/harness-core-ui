@@ -80,3 +80,11 @@
     margin-bottom: var(--spacing-2);
   }
 }
+
+.tagInputStyle {
+  :global {
+    .bp3-input.bp3-tag-input.bp3-multi-select {
+      display: flex;
+    }
+  }
+}

@@ -173,7 +173,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                           <span
                             class="placeholder"
                           >
-                            connectors.selectConnector
+                            common.entityPlaceholderText
                           </span>
                         </span>
                         <span
@@ -1530,7 +1530,7 @@ exports[`Git Clone Step Step Render initial render 1`] = `
                           <span
                             class="placeholder"
                           >
-                            connectors.selectConnector
+                            common.entityPlaceholderText
                           </span>
                         </span>
                         <span

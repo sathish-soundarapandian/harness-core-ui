@@ -120,22 +120,6 @@ const VaultConfigForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsPr
             is: HashiCorpVaultAccessTypes.VAULT_AGENT,
             then: Yup.string().trim().required(getString('connectors.hashiCorpVault.sinkPathIsRequired'))
           }),
-          xvaultAwsIamServerId: Yup.object().when('accessType', {
-            is: HashiCorpVaultAccessTypes.AWS_IAM,
-            then: Yup.object().test(
-              'secretId',
-              getString('connectors.hashiCorpVault.serverIdHeaderRequired'),
-              function (value) {
-                if (
-                  (prevStepData?.spec as VaultConnectorDTO)?.accessType === HashiCorpVaultAccessTypes.AWS_IAM ||
-                  value?.name?.length > 0
-                ) {
-                  return true
-                }
-                return false
-              }
-            )
-          }),
           vaultAwsIamRole: Yup.string().when('accessType', {
             is: HashiCorpVaultAccessTypes.AWS_IAM,
             then: Yup.string().trim().required(getString('common.banners.trial.contactSalesForm.roleValidation'))

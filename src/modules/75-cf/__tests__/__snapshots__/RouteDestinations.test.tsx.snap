@@ -482,52 +482,50 @@ Array [
         }
       }
     />
-    <React.Fragment>
-      <PipelineRouteDestinations
-        licenseRedirectData={
-          Object {
-            "expiredTrialRedirect": [Function],
-            "licenseStateName": "FF_LICENSE_STATE",
-            "startTrialRedirect": [Function],
-          }
+    <PipelineRouteDestinations
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
         }
-        moduleParams={
-          Object {
-            "module": ":module(cf)",
-          }
+      }
+      moduleParams={
+        Object {
+          "module": ":module(cf)",
         }
-        pipelineDeploymentListComponent={[Function]}
-        pipelineStudioComponent={[Function]}
-        sidebarProps={
-          Object {
-            "icon": "cf-main",
-            "navComponent": [Function],
-            "title": "Feature Flags",
-          }
+      }
+      pipelineDeploymentListComponent={[Function]}
+      pipelineStudioComponent={[Function]}
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
         }
-      />
-      <TriggersRouteDestinations
-        licenseRedirectData={
-          Object {
-            "expiredTrialRedirect": [Function],
-            "licenseStateName": "FF_LICENSE_STATE",
-            "startTrialRedirect": [Function],
-          }
+      }
+    />
+    <TriggersRouteDestinations
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
         }
-        moduleParams={
-          Object {
-            "module": ":module(cf)",
-          }
+      }
+      moduleParams={
+        Object {
+          "module": ":module(cf)",
         }
-        sidebarProps={
-          Object {
-            "icon": "cf-main",
-            "navComponent": [Function],
-            "title": "Feature Flags",
-          }
+      }
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
         }
-      />
-    </React.Fragment>
+      }
+    />
     <GovernanceRouteDestinations
       pathProps={
         Object {

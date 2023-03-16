@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useFormikContext } from 'formik'
 import { defaultTo, get, isArray as checkIsArray } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent, ITagInputProps, TagInput } from '@blueprintjs/core'
@@ -63,7 +63,7 @@ export function KVTagInputFixed(props: KVTagInputFixedProps): React.ReactElement
         formik?.setFieldValue(
           name,
           isArray
-            ? values
+            ? values.filter(el => !!el)
             : values?.reduce((acc, tag) => {
                 const parts = tag.split(':')
                 acc[parts[0]] = parts[1]?.trim() || ''
@@ -116,11 +116,6 @@ export function FormMultiTypeKVTagInput(props: FormMultiTypeKVTagInputProps): Re
   const formik = useFormikContext()
   const hasError = errorCheck(name, formik)
   const value = get(formik.values, name)
-  const [type, setType] = React.useState(getMultiTypeFromValue(value))
-
-  useEffect(() => {
-    setType(getMultiTypeFromValue(value))
-  }, [value])
 
   const {
     intent = hasError ? Intent.DANGER : Intent.NONE,
@@ -155,7 +150,6 @@ export function FormMultiTypeKVTagInput(props: FormMultiTypeKVTagInputProps): Re
             value={value}
             onChange={handleChange}
             disabled={disabled}
-            multitypeInputValue={type}
             className={cx(css.multitype, multiTypeProps?.className, { [css.hasError]: hasError })}
             fixedTypeComponent={KVTagInputFixed}
             fixedTypeComponentProps={{ ...props }}

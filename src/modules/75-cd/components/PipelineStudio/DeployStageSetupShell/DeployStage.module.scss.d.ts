@@ -15,6 +15,7 @@ declare const styles: {
   readonly divider: string
   readonly editServiceModal: string
   readonly info: string
+  readonly multiTypeBtn: string
   readonly paddedSection: string
   readonly sectionCard: string
   readonly stageView: string

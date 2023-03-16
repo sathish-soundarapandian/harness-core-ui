@@ -49,6 +49,7 @@ export interface ServerlessArtifactoryRepositoryProps {
   fieldPath?: string
   repoFormat?: string
   stepViewType?: StepViewType
+  onChange?: any
 }
 
 export default function ServerlessArtifactoryRepository(
@@ -68,6 +69,7 @@ export default function ServerlessArtifactoryRepository(
     repoFormat,
     stepViewType
   } = props
+
   const { getString } = useStrings()
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -111,10 +113,6 @@ export default function ServerlessArtifactoryRepository(
       setConnectorRepos(map(artifactRepoData.data?.repositories, repo => ({ label: repo, value: repo })))
     }
   }, [artifactRepoData, connectorRef])
-
-  useEffect(() => {
-    setConnectorRepos([])
-  }, [repoFormat])
 
   const hasRepositoryData = () => {
     if (
@@ -188,6 +186,11 @@ export default function ServerlessArtifactoryRepository(
             return
           }
           getArtifactRepos()
+        },
+        onChange: val => {
+          if (props?.onChange) {
+            props.onChange(val)
+          }
         }
       }}
       configureOptionsProps={{

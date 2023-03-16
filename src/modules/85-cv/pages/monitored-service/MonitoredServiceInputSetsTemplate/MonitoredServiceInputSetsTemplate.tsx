@@ -34,16 +34,11 @@ import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResult
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import DetailsBreadcrumb from '@cv/pages/monitored-service/views/DetailsBreadcrumb'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { getScopeBasedProjectPathParams } from '@common/components/EntityReference/EntityReference'
 import ServiceEnvironmentInputSet from './components/ServiceEnvironmentInputSet/ServiceEnvironmentInputSet'
 import HealthSourceInputset from './components/HealthSourceInputset/HealthSourceInputset'
 import MonitoredServiceInputsetVariables from './components/MonitoredServiceInputsetVariables/MonitoredServiceInputsetVariables'
-import {
-  getPopulateSource,
-  getQueryParamsForTemplateInputSetYaml,
-  validateInputSet
-} from './MonitoredServiceInputSetsTemplate.utils'
+import { getPopulateSource, validateInputSet } from './MonitoredServiceInputSetsTemplate.utils'
 import type {
   TemplateDataInterface,
   MonitoredServiceInputSetInterface
@@ -64,7 +59,6 @@ export default function MonitoredServiceInputSetsTemplate({
   const history = useHistory()
   const { showSuccess, showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const pathParams = {
     accountId,
     orgIdentifier,
@@ -72,6 +66,13 @@ export default function MonitoredServiceInputSetsTemplate({
   }
 
   const [showLoading, setShowLoading] = React.useState(false)
+
+  const {
+    accountId: templateAccountId,
+    projectIdentifier: templateProjectId,
+    orgIdentifier: templateOrgId,
+    templateScope: templateRefScope
+  } = templateRefData || {}
 
   // InputSet Yaml
   const {
@@ -83,11 +84,18 @@ export default function MonitoredServiceInputSetsTemplate({
     lazy: true,
     templateIdentifier: defaultTo(templateRefData?.identifier, ''),
     queryParams: {
-      ...getQueryParamsForTemplateInputSetYaml(templateRefData),
+      ...getScopeBasedProjectPathParams(
+        {
+          accountId: templateAccountId,
+          orgIdentifier: templateOrgId,
+          projectIdentifier: templateProjectId
+        },
+        templateRefScope as Scope
+      ),
       versionLabel: defaultTo(templateRefData?.versionLabel, ''),
       getDefaultFromOtherRepo: true
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const {
@@ -98,7 +106,14 @@ export default function MonitoredServiceInputSetsTemplate({
   } = useGetTemplate({
     templateIdentifier: templateRefData?.identifier,
     queryParams: {
-      ...getQueryParamsForTemplateInputSetYaml(templateRefData),
+      ...getScopeBasedProjectPathParams(
+        {
+          accountId: templateAccountId,
+          orgIdentifier: templateOrgId,
+          projectIdentifier: templateProjectId
+        },
+        templateRefScope as Scope
+      ),
       versionLabel: defaultTo(templateRefData?.versionLabel, ''),
       getDefaultFromOtherRepo: true
     }
@@ -116,7 +131,7 @@ export default function MonitoredServiceInputSetsTemplate({
     if (templateInputYaml && templateInputYaml?.data && !loadingTemplateYaml) {
       const inputSet = isReadOnlyInputSet
         ? parse(templateInputYaml?.data)
-        : (parse(templateInputYaml?.data?.replace(/"<\+input>"/g, '""')) as any)
+        : (parse(templateInputYaml?.data?.replace(/<\+input>/g, '')) as any)
       setMonitoredServiceInputSet(inputSet)
     }
   }, [templateInputYaml])
@@ -144,6 +159,7 @@ export default function MonitoredServiceInputSetsTemplate({
     if (monitoredServiceInputSet?.serviceRef !== undefined) {
       monitoredServiceInputSet.serviceRef = value.serviceRef
     }
+
     if (monitoredServiceInputSet?.environmentRef !== undefined) {
       monitoredServiceInputSet.environmentRef = value.environmentRef
     }

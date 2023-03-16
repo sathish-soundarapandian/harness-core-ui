@@ -24,13 +24,17 @@ import cx from 'classnames'
 import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { FontVariation } from '@harness/design-system'
-import { get, isEmpty, set } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEmpty, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import type { OpenShiftTemplateGITDataType } from '../../ManifestInterface'
+import type {
+  OpenShiftTemplateGITDataType,
+  OpenShiftTemplateGITManifestLastStepPrevStepData
+} from '../../ManifestInterface'
 import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
   gitFetchTypeList,
   GitFetchTypes,
   GitRepoName,
@@ -52,6 +56,7 @@ interface OpenshiftTemplateWithGITPropType {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+  editManifestModePrevStepData?: OpenShiftTemplateGITManifestLastStepPrevStepData
 }
 
 function OpenShiftTemplateWithGit({
@@ -63,22 +68,26 @@ function OpenShiftTemplateWithGit({
   prevStepData,
   previousStep,
   manifestIdsList,
-  isReadonly = false
+  isReadonly = false,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & OpenshiftTemplateWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
-  const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+
+  const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
-    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-    prevStepData?.urlType === GitRepoName.Repo
+    modifiedPrevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    modifiedPrevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
   const accountUrl =
     connectionType === GitRepoName.Account
-      ? prevStepData?.connectorRef
-        ? prevStepData?.connectorRef?.connector?.spec?.url
-        : prevStepData?.url
+      ? modifiedPrevStepData?.connectorRef
+        ? modifiedPrevStepData?.connectorRef?.connector?.spec?.url
+        : modifiedPrevStepData?.url
       : null
 
   const getInitialValues = (): OpenShiftTemplateGITDataType => {
@@ -89,7 +98,7 @@ function OpenShiftTemplateWithGit({
         ...specValues,
         identifier: initialValues.identifier,
         paths: specValues.paths,
-        repoName: getRepositoryName(prevStepData, initialValues),
+        repoName: getRepositoryName(modifiedPrevStepData, initialValues),
         path:
           getMultiTypeFromValue(specValues?.paths) === MultiTypeInputType.RUNTIME
             ? specValues.paths
@@ -101,7 +110,8 @@ function OpenShiftTemplateWithGit({
                 path,
                 uuid: uuid(path, nameSpace())
               })),
-        skipResourceVersioning: initialValues?.spec?.skipResourceVersioning
+        skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback
       }
     }
     return {
@@ -111,7 +121,8 @@ function OpenShiftTemplateWithGit({
       gitFetchType: 'Branch',
       path: '',
       skipResourceVersioning: false,
-      repoName: getRepositoryName(prevStepData, initialValues)
+      enableDeclarativeRollback: false,
+      repoName: getRepositoryName(modifiedPrevStepData, initialValues)
     }
   }
 
@@ -133,8 +144,12 @@ function OpenShiftTemplateWithGit({
           paramsPaths:
             typeof formData?.paramsPaths === 'string'
               ? formData?.paramsPaths
-              : formData?.paramsPaths?.map((path: { path: string }) => path.path),
-          skipResourceVersioning: formData?.skipResourceVersioning
+              : removeEmptyFieldsFromStringArray(formData?.paramsPaths?.map((path: { path: string }) => path.path)),
+          skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
+            formData?.skipResourceVersioning,
+            formData?.enableDeclarativeRollback
+          ),
+          enableDeclarativeRollback: formData?.enableDeclarativeRollback
         }
       }
     }
@@ -179,234 +194,250 @@ function OpenShiftTemplateWithGit({
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
             if (
               connectionType === GitRepoName.Repo ||
-              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+              getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
             ) {
               return true
             }
             return !isEmpty(value) && value?.length > 0
-          }),
-          paramsPaths: Yup.lazy((value): Yup.Schema<unknown> => {
-            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-              return Yup.array().of(
-                Yup.object().shape({
-                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
-                })
-              )
-            }
-            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
           })
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
       >
-        {(formik: { setFieldValue: (a: string, b: string) => void; values: OpenShiftTemplateGITDataType }) => (
-          <FormikForm>
-            <div className={templateCss.templateForm}>
-              <FormInput.Text
-                name="identifier"
-                label={getString('pipeline.manifestType.manifestIdentifier')}
-                placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
-                className={templateCss.halfWidth}
-              />
-
-              {!!(connectionType === GitRepoName.Account && accountUrl) && (
-                <GitRepositoryName
-                  accountUrl={accountUrl}
-                  expressions={expressions}
-                  allowableTypes={allowableTypes}
-                  fieldValue={formik.values?.repoName}
-                  changeFieldValue={(value: string) => formik.setFieldValue('repoName', value)}
-                  isReadonly={isReadonly}
+        {(formik: { setFieldValue: (a: string, b: string) => void; values: OpenShiftTemplateGITDataType }) => {
+          const isSkipVersioningDisabled =
+            isBoolean(formik?.values?.enableDeclarativeRollback) && !!formik?.values?.enableDeclarativeRollback
+          return (
+            <FormikForm>
+              <div className={templateCss.templateForm}>
+                <FormInput.Text
+                  name="identifier"
+                  label={getString('pipeline.manifestType.manifestIdentifier')}
+                  placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
+                  className={templateCss.halfWidth}
                 />
-              )}
-              <Layout.Horizontal flex spacing="huge" margin={{ top: 'small', bottom: 'small' }}>
-                <div className={templateCss.halfWidth}>
-                  <FormInput.Select
-                    name="gitFetchType"
-                    label={getString('pipeline.manifestType.gitFetchTypeLabel')}
-                    items={gitFetchTypeList}
+                {!!(connectionType === GitRepoName.Account || accountUrl) && (
+                  <GitRepositoryName
+                    accountUrl={accountUrl}
+                    expressions={expressions}
+                    allowableTypes={allowableTypes}
+                    fieldValue={formik.values?.repoName}
+                    changeFieldValue={(value: string) => formik.setFieldValue('repoName', value)}
+                    isReadonly={isReadonly}
                   />
-                </div>
+                )}
+                <Layout.Horizontal flex spacing="huge" margin={{ top: 'small', bottom: 'small' }}>
+                  <div className={templateCss.halfWidth}>
+                    <FormInput.Select
+                      name="gitFetchType"
+                      label={getString('pipeline.manifestType.gitFetchTypeLabel')}
+                      items={gitFetchTypeList}
+                    />
+                  </div>
 
-                {formik.values?.gitFetchType === GitFetchTypes.Branch && (
+                  {formik.values?.gitFetchType === GitFetchTypes.Branch && (
+                    <div
+                      className={cx(templateCss.halfWidth, {
+                        [templateCss.runtimeInput]:
+                          getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME
+                      })}
+                    >
+                      <FormInput.MultiTextInput
+                        label={getString('pipelineSteps.deploy.inputSet.branch')}
+                        placeholder={getString('pipeline.manifestType.branchPlaceholder')}
+                        multiTextInputProps={{ expressions, allowableTypes }}
+                        name="branch"
+                      />
+                      {getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME && (
+                        <ConfigureOptions
+                          value={formik.values?.branch as string}
+                          type="String"
+                          variableName="branch"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          onChange={value => formik.setFieldValue('branch', value)}
+                          isReadonly={isReadonly}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  {formik.values?.gitFetchType === GitFetchTypes.Commit && (
+                    <div
+                      className={cx(templateCss.halfWidth, {
+                        [templateCss.runtimeInput]:
+                          getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME
+                      })}
+                    >
+                      <FormInput.MultiTextInput
+                        label={getString('pipeline.manifestType.commitId')}
+                        placeholder={getString('pipeline.manifestType.commitPlaceholder')}
+                        multiTextInputProps={{ expressions, allowableTypes }}
+                        name="commitId"
+                      />
+                      {getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME && (
+                        <ConfigureOptions
+                          value={formik.values?.commitId as string}
+                          type="String"
+                          variableName="commitId"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          onChange={value => formik.setFieldValue('commitId', value)}
+                          isReadonly={isReadonly}
+                        />
+                      )}
+                    </div>
+                  )}
+                </Layout.Horizontal>
+
+                <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
                   <div
                     className={cx(templateCss.halfWidth, {
                       [templateCss.runtimeInput]:
-                        getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME
+                        getMultiTypeFromValue(formik.values?.path) === MultiTypeInputType.RUNTIME
                     })}
                   >
                     <FormInput.MultiTextInput
-                      label={getString('pipelineSteps.deploy.inputSet.branch')}
-                      placeholder={getString('pipeline.manifestType.branchPlaceholder')}
+                      label={getString('pipeline.manifestType.osTemplatePath')}
+                      placeholder={getString('pipeline.manifestType.osTemplatePathPlaceHolder')}
+                      name="path"
                       multiTextInputProps={{ expressions, allowableTypes }}
-                      name="branch"
                     />
-                    {getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME && (
+                    {getMultiTypeFromValue(formik.values?.path) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
-                        value={formik.values?.branch as string}
+                        value={formik.values?.path as string}
                         type="String"
-                        variableName="branch"
+                        variableName="path"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
-                        onChange={value => formik.setFieldValue('branch', value)}
+                        onChange={value => formik.setFieldValue('path', value)}
                         isReadonly={isReadonly}
                       />
                     )}
                   </div>
-                )}
-
-                {formik.values?.gitFetchType === GitFetchTypes.Commit && (
-                  <div
-                    className={cx(templateCss.halfWidth, {
-                      [templateCss.runtimeInput]:
-                        getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME
-                    })}
-                  >
-                    <FormInput.MultiTextInput
-                      label={getString('pipeline.manifestType.commitId')}
-                      placeholder={getString('pipeline.manifestType.commitPlaceholder')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
-                      name="commitId"
-                    />
-                    {getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME && (
-                      <ConfigureOptions
-                        value={formik.values?.commitId as string}
-                        type="String"
-                        variableName="commitId"
-                        showRequiredField={false}
-                        showDefaultField={false}
-                        showAdvanced={true}
-                        onChange={value => formik.setFieldValue('commitId', value)}
-                        isReadonly={isReadonly}
-                      />
-                    )}
-                  </div>
-                )}
-              </Layout.Horizontal>
-
-              <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
+                </Layout.Horizontal>
                 <div
-                  className={cx(templateCss.halfWidth, {
+                  className={cx({
                     [templateCss.runtimeInput]:
-                      getMultiTypeFromValue(formik.values?.path) === MultiTypeInputType.RUNTIME
+                      getMultiTypeFromValue(formik.values?.paramsPaths) === MultiTypeInputType.RUNTIME
                   })}
                 >
-                  <FormInput.MultiTextInput
-                    label={getString('pipeline.manifestType.osTemplatePath')}
-                    placeholder={getString('pipeline.manifestType.osTemplatePathPlaceHolder')}
-                    name="path"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                  <DragnDropPaths
+                    formik={formik}
+                    expressions={expressions}
+                    allowableTypes={allowableTypes}
+                    fieldPath="paramsPaths"
+                    pathLabel={getString('pipeline.manifestType.paramsYamlPath')}
+                    placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                    defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                    dragDropFieldWidth={filePathWidth}
+                    allowSinglePathDeletion
                   />
-                  {getMultiTypeFromValue(formik.values?.path) === MultiTypeInputType.RUNTIME && (
+                  {getMultiTypeFromValue(formik.values.paramsPaths) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
-                      value={formik.values?.path as string}
-                      type="String"
-                      variableName="path"
+                      value={formik.values.paramsPaths}
+                      type={getString('string')}
+                      variableName={'paramsPaths'}
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
-                      onChange={value => formik.setFieldValue('path', value)}
+                      onChange={val => formik?.setFieldValue('paramsPaths', val)}
                       isReadonly={isReadonly}
                     />
                   )}
                 </div>
-              </Layout.Horizontal>
-              <div
-                className={cx({
-                  [templateCss.runtimeInput]:
-                    getMultiTypeFromValue(formik.values?.paramsPaths) === MultiTypeInputType.RUNTIME
-                })}
-              >
-                <DragnDropPaths
-                  formik={formik}
-                  expressions={expressions}
-                  allowableTypes={allowableTypes}
-                  fieldPath="paramsPaths"
-                  pathLabel={getString('pipeline.manifestType.paramsYamlPath')}
-                  placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
-                  dragDropFieldWidth={filePathWidth}
-                />
-                {getMultiTypeFromValue(formik.values.paramsPaths) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={formik.values.paramsPaths}
-                    type={getString('string')}
-                    variableName={'paramsPaths'}
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={val => formik?.setFieldValue('paramsPaths', val)}
-                    isReadonly={isReadonly}
+                <Accordion
+                  activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}
+                  className={cx(templateCss.advancedStepOpen)}
+                >
+                  <Accordion.Panel
+                    id={getString('advancedTitle')}
+                    addDomId={true}
+                    summary={getString('advancedTitle')}
+                    details={
+                      <Layout.Vertical>
+                        <Layout.Horizontal
+                          flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+                          margin={{ bottom: 'small' }}
+                        >
+                          <FormMultiTypeCheckboxField
+                            name="enableDeclarativeRollback"
+                            label={getString('pipeline.manifestType.enableDeclarativeRollback')}
+                            className={cx(templateCss.checkbox, templateCss.halfWidth)}
+                            multiTypeTextbox={{ expressions, allowableTypes }}
+                          />
+                          {getMultiTypeFromValue(formik.values?.enableDeclarativeRollback) ===
+                            MultiTypeInputType.RUNTIME && (
+                            <ConfigureOptions
+                              value={(formik.values?.enableDeclarativeRollback || '') as string}
+                              type="String"
+                              variableName="enableDeclarativeRollback"
+                              showRequiredField={false}
+                              showDefaultField={false}
+                              onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
+                              style={{ alignSelf: 'center', marginTop: 11 }}
+                              className={cx(css.addmarginTop)}
+                              isReadonly={isReadonly}
+                            />
+                          )}
+                        </Layout.Horizontal>
+                        <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+                          <FormMultiTypeCheckboxField
+                            key={isSkipVersioningDisabled.toString()}
+                            name="skipResourceVersioning"
+                            label={getString('skipResourceVersion')}
+                            multiTypeTextbox={{ expressions, allowableTypes, disabled: isSkipVersioningDisabled }}
+                            disabled={isSkipVersioningDisabled}
+                            className={cx(templateCss.halfWidth, templateCss.checkbox)}
+                          />
+                          {getMultiTypeFromValue(formik.values?.skipResourceVersioning) ===
+                            MultiTypeInputType.RUNTIME && (
+                            <ConfigureOptions
+                              value={(formik.values?.skipResourceVersioning || '') as string}
+                              type="String"
+                              variableName="skipResourceVersioning"
+                              showRequiredField={false}
+                              showDefaultField={false}
+                              onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
+                              style={{ alignSelf: 'center', marginTop: 11 }}
+                              className={css.addmarginTop}
+                              isReadonly={isReadonly}
+                            />
+                          )}
+                        </Layout.Horizontal>
+                      </Layout.Vertical>
+                    }
                   />
-                )}
+                </Accordion>
               </div>
-              <Accordion
-                activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}
-                className={cx(templateCss.advancedStepOpen)}
-              >
-                <Accordion.Panel
-                  id={getString('advancedTitle')}
-                  addDomId={true}
-                  summary={getString('advancedTitle')}
-                  details={
-                    <Layout.Horizontal
-                      flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-                      margin={{ bottom: 'huge' }}
-                    >
-                      <FormMultiTypeCheckboxField
-                        name="skipResourceVersioning"
-                        label={getString('skipResourceVersion')}
-                        multiTypeTextbox={{ expressions, allowableTypes }}
-                        className={cx(templateCss.halfWidth, templateCss.checkbox)}
-                      />
-                      {getMultiTypeFromValue(formik.values?.skipResourceVersioning) === MultiTypeInputType.RUNTIME && (
-                        <ConfigureOptions
-                          value={(formik.values?.skipResourceVersioning || '') as string}
-                          type="String"
-                          variableName="skipResourceVersioning"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          showAdvanced={true}
-                          onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
-                          style={{ alignSelf: 'center', marginTop: 11 }}
-                          className={css.addmarginTop}
-                          isReadonly={isReadonly}
-                        />
-                      )}
-                    </Layout.Horizontal>
-                  }
-                />
-              </Accordion>
-            </div>
 
-            <Layout.Horizontal spacing="medium" className={css.saveBtn}>
-              <Button
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-                icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                text={getString('submit')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
-          </FormikForm>
-        )}
+              <Layout.Horizontal spacing="medium" className={css.saveBtn}>
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  text={getString('back')}
+                  icon="chevron-left"
+                  onClick={() => previousStep?.(modifiedPrevStepData)}
+                />
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  text={getString('submit')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            </FormikForm>
+          )
+        }}
       </Formik>
     </Layout.Vertical>
   )

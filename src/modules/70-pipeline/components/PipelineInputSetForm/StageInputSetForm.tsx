@@ -9,7 +9,6 @@ import React from 'react'
 import {
   Container,
   FormInput,
-  getMultiTypeFromValue,
   Icon,
   Label,
   Layout,
@@ -20,7 +19,7 @@ import {
 } from '@harness/uicore'
 import { connect, FormikProps } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, get, isEmpty, isNil, pick, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -30,7 +29,6 @@ import type {
   PipelineInfrastructure,
   ServiceConfig,
   ServiceSpec,
-  ServiceYamlV2,
   StageOverridesConfig
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -54,7 +52,8 @@ import type { StringsMap } from 'stringTypes'
 import {
   getCustomStepProps,
   getStepTypeByDeploymentType,
-  infraDefinitionTypeMapping
+  infraDefinitionTypeMapping,
+  StageType
 } from '@pipeline/utils/stageHelpers'
 import type { K8sDirectInfraYaml } from 'services/ci'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -68,13 +67,12 @@ import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariab
 import type { StepViewType } from '../AbstractSteps/Step'
 
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '../../utils/constants'
+import ServicesInputSetForm from './ServicesInputSetForm/ServicesInputSetForm'
 import EnvironmentsInputSetForm from './EnvironmentsInputSetForm/EnvironmentsInputSetForm'
 import { ExecutionWrapperInputSetForm } from './ExecutionWrapperInputSetForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
-export type DeployServiceEntityData = Pick<DeploymentStageConfig, 'service' | 'services'>
-export type DeployEnvironmentEntityData = Pick<DeploymentStageConfig, 'environment' | 'environments'>
 const harnessImageConnectorRef = 'connectors.title.harnessImageConnectorRef'
 const osLabel = 'pipeline.infraSpecifications.os'
 const archLabel = 'pipeline.infraSpecifications.architecture'
@@ -134,9 +132,10 @@ export interface StageInputSetFormProps {
   formik?: FormikProps<any>
   readonly?: boolean
   viewType: StepViewType
-  stageIdentifier?: string
+  stageIdentifier: string
   executionIdentifier?: string
   allowableTypes: AllowedTypes
+  stageType: StageType
 }
 
 export function StageInputSetFormInternal({
@@ -148,7 +147,8 @@ export function StageInputSetFormInternal({
   viewType,
   stageIdentifier,
   executionIdentifier,
-  allowableTypes
+  allowableTypes,
+  stageType
 }: StageInputSetFormProps): React.ReactElement {
   const deploymentStageInputSet = get(formik?.values, path, {})
   const { getString } = useStrings()
@@ -164,8 +164,7 @@ export function StageInputSetFormInternal({
     deploymentStageTemplateInfraKeys.includes(field)
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
-  const { NG_SVC_ENV_REDESIGN, CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS, CDS_OrgAccountLevelServiceEnvEnvGroup } =
-    useFeatureFlags()
+  const { CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS, CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
     ({
@@ -566,144 +565,22 @@ export function StageInputSetFormInternal({
           </div>
         </div>
       )}
-      {NG_SVC_ENV_REDESIGN && deploymentStageTemplate.service && (
-        <div id={`Stage.${stageIdentifier}.Service`} className={cx(css.accordionSummary)}>
-          <div className={css.inputheader}>{getString('service')}</div>
-          <div className={css.nestedAccordions}>
-            {deploymentStageTemplate.service?.serviceRef && (
-              <StepWidget<DeployServiceEntityData>
-                factory={factory}
-                initialValues={pick(deploymentStageInputSet, ['service'])}
-                template={pick(deploymentStageTemplate, ['service'])}
-                type={StepType.DeployServiceEntity}
-                stepViewType={viewType}
-                path={`${path}.service`}
-                allowableTypes={
-                  scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
-                    ? allowableTypes
-                    : ((allowableTypes as MultiTypeInputType[]).filter(
-                        item => item !== MultiTypeInputType.FIXED
-                      ) as AllowedTypes)
-                }
-                readonly={readonly}
-                customStepProps={{
-                  stageIdentifier,
-                  deploymentType: deploymentStage?.deploymentType,
-                  gitOpsEnabled: deploymentStage?.gitOpsEnabled,
-                  allValues: pick(deploymentStage, ['service']),
-                  customDeploymentData: deploymentStage?.customDeploymentRef
-                }}
-                onUpdate={data => formik?.setFieldValue(`${path}.service`, get(data, 'service'))}
-              />
-            )}
-            {!isNil(deploymentStage?.deploymentType) && (
-              <StepWidget<ServiceSpec>
-                factory={factory}
-                initialValues={deploymentStageInputSet?.service?.serviceInputs?.serviceDefinition?.spec || {}}
-                allowableTypes={allowableTypes}
-                template={deploymentStageTemplate?.service?.serviceInputs?.serviceDefinition?.spec || {}}
-                type={getStepTypeByDeploymentType(defaultTo(deploymentStage?.deploymentType, ''))}
-                stepViewType={viewType}
-                path={`${path}.service.serviceInputs.serviceDefinition.spec`}
-                readonly={readonly}
-                customStepProps={{
-                  stageIdentifier,
-                  serviceIdentifier: defaultTo(
-                    deploymentStageInputSet?.service?.serviceRef,
-                    deploymentStage?.service?.serviceRef
-                  ),
-                  allValues: deploymentStage?.service?.serviceInputs?.serviceDefinition?.spec
-                }}
-                onUpdate={(data: any) => {
-                  /* istanbul ignore next */
-                  if (deploymentStageInputSet?.service?.serviceInputs?.serviceDefinition?.spec) {
-                    deploymentStageInputSet.service.serviceInputs.serviceDefinition.spec = data
-                    formik?.setValues(set(formik?.values, path, deploymentStageInputSet))
-                  }
-                }}
-              />
-            )}
-          </div>
-        </div>
-      )}
 
-      {NG_SVC_ENV_REDESIGN && deploymentStageTemplate.services ? (
-        <div id={`Stage.${stageIdentifier}.Service`} className={cx(css.accordionSummary)}>
-          <div className={css.inputheader}>{getString('services')}</div>
-          <div className={css.nestedAccordions}>
-            {getMultiTypeFromValue(deploymentStageTemplate.services.values as unknown as string) ===
-              MultiTypeInputType.RUNTIME ||
-            (Array.isArray(deploymentStageTemplate.services.values) &&
-              deploymentStageTemplate.services.values.some(
-                svc => getMultiTypeFromValue(svc.serviceRef) === MultiTypeInputType.RUNTIME
-              )) ? (
-              <StepWidget<DeployServiceEntityData>
-                factory={factory}
-                initialValues={pick(deploymentStageInputSet, ['services'])}
-                template={pick(deploymentStageTemplate, ['services'])}
-                type={StepType.DeployServiceEntity}
-                stepViewType={viewType}
-                path={`${path}.services`}
-                allowableTypes={
-                  scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
-                    ? allowableTypes
-                    : ((allowableTypes as MultiTypeInputType[]).filter(
-                        item => item !== MultiTypeInputType.FIXED
-                      ) as AllowedTypes)
-                }
-                readonly={readonly}
-                customStepProps={{
-                  stageIdentifier,
-                  deploymentType: deploymentStage?.deploymentType,
-                  gitOpsEnabled: deploymentStage?.gitOpsEnabled,
-                  allValues: pick(deploymentStage, ['services']),
-                  customDeploymentData: deploymentStage?.customDeploymentRef
-                }}
-                onUpdate={data => formik?.setFieldValue(`${path}.services`, get(data, 'services'))}
-              />
-            ) : null}
-            {Array.isArray(deploymentStageTemplate.services.values) ? (
-              <>
-                {deploymentStageTemplate.services.values.map((serviceTemplate, i) => {
-                  const deploymentType = serviceTemplate.serviceInputs?.serviceDefinition?.type
-                  const service: ServiceYamlV2 = get(deploymentStageInputSet, `services.values[${i}]`, {})
-
-                  if (deploymentType) {
-                    return (
-                      <React.Fragment key={`${service.serviceRef}_${i}`}>
-                        <Text
-                          font={{ size: 'normal', weight: 'bold' }}
-                          margin={{ top: 'medium', bottom: 'medium' }}
-                          color={Color.GREY_800}
-                        >
-                          {getString('common.servicePrefix', { name: service.serviceRef })}
-                        </Text>
-                        <StepWidget<ServiceSpec>
-                          factory={factory}
-                          initialValues={get(service, `serviceInputs.serviceDefinition.spec`, {})}
-                          allowableTypes={allowableTypes}
-                          template={defaultTo(serviceTemplate?.serviceInputs?.serviceDefinition?.spec, {})}
-                          type={getStepTypeByDeploymentType(deploymentType)}
-                          stepViewType={viewType}
-                          path={`${path}.services.values[${i}].serviceInputs.serviceDefinition.spec`}
-                          readonly={readonly}
-                          customStepProps={{
-                            stageIdentifier,
-                            serviceIdentifier: defaultTo(service.serviceRef, ''),
-                            allValues: service.serviceInputs?.serviceDefinition?.spec
-                          }}
-                        />
-                      </React.Fragment>
-                    )
-                  }
-
-                  return null
-                })}
-              </>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
+      <ServicesInputSetForm
+        deploymentStage={deploymentStage}
+        deploymentStageTemplate={deploymentStageTemplate}
+        allowableTypes={
+          scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
+            ? allowableTypes
+            : ((allowableTypes as MultiTypeInputType[])?.filter(
+                item => item !== MultiTypeInputType.FIXED
+              ) as AllowedTypes)
+        }
+        path={path}
+        viewType={viewType}
+        readonly={readonly}
+        stageIdentifier={stageIdentifier}
+      />
 
       <EnvironmentsInputSetForm
         deploymentStage={deploymentStage}
@@ -1212,6 +1089,7 @@ export function StageInputSetFormInternal({
                 allowableTypes={allowableTypes}
                 customStepProps={{
                   stageIdentifier: stageIdentifier as string,
+                  stageType,
                   selectedStage: deploymentStage
                 }}
               />
@@ -1231,6 +1109,7 @@ export function StageInputSetFormInternal({
                 allowableTypes={allowableTypes}
                 customStepProps={{
                   stageIdentifier: stageIdentifier as string,
+                  stageType,
                   selectedStage: deploymentStage
                 }}
               />
@@ -1332,6 +1211,7 @@ export function StageInputSetFormInternal({
                 allowableTypes={allowableTypes}
                 customStepProps={{
                   stageIdentifier: stageIdentifier as string,
+                  stageType,
                   selectedStage: deploymentStage
                 }}
               />
@@ -1349,6 +1229,7 @@ export function StageInputSetFormInternal({
                 allowableTypes={allowableTypes}
                 customStepProps={{
                   stageIdentifier: stageIdentifier as string,
+                  stageType,
                   selectedStage: deploymentStage
                 }}
               />

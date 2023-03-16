@@ -26,12 +26,12 @@ import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 import {
-  DelegateTypes,
   DelegateCardInterface,
   setupAzureFormData,
   AzureSecretKeyType,
   AzureManagedIdentityTypes
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { AzureFormInterface } from '@connectors/interfaces/ConnectorInterface'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'

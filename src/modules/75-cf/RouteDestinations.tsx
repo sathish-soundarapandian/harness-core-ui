@@ -17,7 +17,7 @@ import {
   segmentPathProps,
   targetPathProps
 } from '@common/utils/routeUtils'
-import type { AccountPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps, ModulePathParams, ProjectPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { EmptyLayout, MinimalLayout } from '@common/layouts'
 import CFHomePage from '@cf/pages/home/CFHomePage'
 import FeatureFlagsDetailPage from '@cf/pages/feature-flags-detail/FeatureFlagsDetailPage'
@@ -34,7 +34,6 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { CFSideNavProps } from '@cf/constants'
-import CFPipelineDeploymentList from '@cf/pages/pipeline-deployment-list/CFPipelineDeploymentList'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
@@ -52,6 +51,9 @@ import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
+import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
+import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import { registerFeatureFlagPipelineStage } from './pages/pipeline-studio/views/FeatureFlagStage'
 import { registerFlagConfigurationPipelineStep } from './components/PipelineSteps'
 import { TargetsPage } from './pages/target-management/targets/TargetsPage'
@@ -118,6 +120,47 @@ const licenseRedirectData: LicenseRedirectProps = {
   expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.CF)
 }
 
+AuditTrailFactory.registerResourceHandler('FEATURE_FLAG', {
+  moduleIcon: {
+    name: 'nav-cf'
+  },
+  moduleLabel: 'cf.auditTrail.label',
+  resourceLabel: 'common.moduleTitles.cf',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+
+    return routes.toCFFeatureFlagsDetail({
+      orgIdentifier: orgIdentifier as string,
+      projectIdentifier: projectIdentifier as string,
+      featureFlagIdentifier: resource.identifier,
+      accountId: accountIdentifier
+    })
+  }
+})
+
+AuditTrailFactory.registerResourceHandler('TARGET_GROUP', {
+  moduleIcon: {
+    name: 'nav-cf'
+  },
+  moduleLabel: 'cf.auditTrail.label',
+  resourceLabel: 'cf.auditTrail.tgResourceLabel',
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    auditEventData?: AuditEventData
+  ) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    return routes.toCFSegmentDetailsWithEnv({
+      accountId: accountIdentifier,
+      orgIdentifier: orgIdentifier as string,
+      projectIdentifier: projectIdentifier as string,
+      segmentIdentifier: resource.identifier,
+      environmentIdentifier: (auditEventData as any)?.environment
+    })
+  }
+})
+
 RbacFactory.registerResourceCategory(ResourceCategory.FEATUREFLAG_FUNCTIONS, {
   icon: 'nav-cf',
   label: 'cf.rbac.category'
@@ -150,7 +193,6 @@ registerFlagConfigurationPipelineStep()
 
 const CFRoutes: FC = () => {
   const {
-    FF_PIPELINE,
     FFM_1512,
     FFM_1827,
     NG_SETTINGS,
@@ -159,7 +201,9 @@ const CFRoutes: FC = () => {
     FFM_6666_FF_MFE_Target_Group_Detail,
     FFM_5256_FF_MFE_Environment_Listing,
     FFM_5951_FF_MFE_Targets_Listing,
-    FFM_6665_FF_MFE_Target_Detail
+    FFM_6665_FF_MFE_Target_Detail,
+    FFM_6800_FF_MFE_Onboarding,
+    FFM_7127_FF_MFE_Onboarding_Detail
   } = useFeatureFlags()
 
   return (
@@ -329,7 +373,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.OnboardingPage}
       >
-        <OnboardingPage />
+        {FFM_6800_FF_MFE_Onboarding ? <FFUIApp /> : <OnboardingPage />}
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -340,7 +384,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.OnboardingDetailPage}
       >
-        <OnboardingDetailPage />
+        {FFM_7127_FF_MFE_Onboarding_Detail ? <FFUIApp /> : <OnboardingDetailPage />}
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -350,7 +394,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.CFConfigurePath}
       >
-        <ConfigurePath />
+        {FFM_6800_FF_MFE_Onboarding ? <FFUIApp /> : <ConfigurePath />}
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -403,22 +447,18 @@ const CFRoutes: FC = () => {
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CFSideNavProps}
         />
-        {FF_PIPELINE && (
-          <>
-            <PipelineRouteDestinations
-              pipelineStudioComponent={PipelineStudio}
-              pipelineDeploymentListComponent={CFPipelineDeploymentList}
-              moduleParams={moduleParams}
-              licenseRedirectData={licenseRedirectData}
-              sidebarProps={CFSideNavProps}
-            />
-            <TriggersRouteDestinations
-              moduleParams={moduleParams}
-              licenseRedirectData={licenseRedirectData}
-              sidebarProps={CFSideNavProps}
-            />
-          </>
-        )}
+        <PipelineRouteDestinations
+          pipelineStudioComponent={PipelineStudio}
+          pipelineDeploymentListComponent={PipelineDeploymentList}
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <TriggersRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
         <GovernanceRouteDestinations
           sidebarProps={CFSideNavProps}
           pathProps={{ ...accountPathProps, ...projectPathProps, ...moduleParams }}

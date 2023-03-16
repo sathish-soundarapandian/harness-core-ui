@@ -25,6 +25,11 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getErrorMessage } from '@triggers/components/Triggers/utils'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
 import { getCategoryItems, ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
@@ -39,6 +44,8 @@ interface TriggersListPropsInterface {
 
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
   const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.TriggersPage}`)
   const {
     branch,
     repoIdentifier,
@@ -49,7 +56,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
     size = DEFAULT_PAGE_SIZE,
     searchTerm
   } = useQueryParams<GitQueryParams & Pick<GetTriggerListForTargetQueryParams, 'page' | 'size' | 'searchTerm'>>()
-  const { CD_TRIGGER_V2, CD_TRIGGER_CATALOG_API_ENABLED } = useFeatureFlags()
+  const { CD_TRIGGER_V2, CD_TRIGGER_CATALOG_API_ENABLED, CDS_GOOGLE_CLOUD_FUNCTION } = useFeatureFlags()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const { getString } = useStrings()
@@ -68,8 +75,10 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
       targetIdentifier: pipelineIdentifier,
       searchTerm,
       size,
-      page
-    }
+      page,
+      sort: [sortPreference]
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
 
   const triggerList = triggerListResponse?.data?.content || undefined
@@ -183,7 +192,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
 
     return (
       <AddDrawer
-        addDrawerMap={getCategoryItems(getString, false, CD_TRIGGER_V2)}
+        addDrawerMap={getCategoryItems(getString, false, CD_TRIGGER_V2, CDS_GOOGLE_CLOUD_FUNCTION)}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.STUDIO}
@@ -242,6 +251,15 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
               }
         }
       >
+        <ListHeader
+          selectedSortMethod={sortPreference}
+          sortOptions={[...sortByCreated, ...sortByName]}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
+          totalCount={triggerListResponse?.data?.totalItems}
+          className={css.listHeader}
+        />
         <TriggersListSection
           triggerListData={triggerListResponse?.data}
           refetchTriggerList={fetchTriggerList}

@@ -8,8 +8,8 @@
 import React from 'react'
 import classnames from 'classnames'
 import { set, cloneDeep } from 'lodash-es'
-import type { SelectOption } from '@harness/uicore'
-import { FormInput, Heading } from '@harness/uicore'
+import { Icon, SelectOption, FormInput, Heading } from '@harness/uicore'
+import type { ITagInputProps } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import { EntityType, EnvironmentType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
@@ -87,7 +87,13 @@ interface OrganizationfieldPropsInterface {
   formikValues: any
   setValues: any
   fetchProjectsForOrgId: (orgId: string) => void
+  fetchOrgByQuery: (query: string) => void
+  loadingOrgs: boolean
+  fetchOrgResetQuery: () => void
 }
+
+const renderSearchLoading = (loading?: boolean): JSX.Element =>
+  loading ? <Icon name="spinner" size={18} margin={{ top: 'xsmall', right: 'medium' }} /> : <></>
 
 export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
   getString,
@@ -97,7 +103,10 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
   setFieldValue,
   fetchProjectsForOrgId,
   formikValues,
-  setValues
+  setValues,
+  fetchOrgByQuery,
+  loadingOrgs,
+  fetchOrgResetQuery
 }) => {
   const orgValue = values[FIELD_KEYS.Org]
   const excludeOrgCheckboxValue = values[FIELD_KEYS.ExcludeOrgCheckbox]
@@ -124,7 +133,15 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
       <FormInput.MultiSelect
         name={orgFieldName}
         items={allOrgs}
+        className={css.tagInputStyle}
         label={getString('orgLabel')}
+        tagInputProps={{ rightElement: renderSearchLoading(loadingOrgs) } as unknown as ITagInputProps}
+        multiSelectProps={{
+          onQueryChange(query: string) {
+            query ? fetchOrgByQuery(query) : fetchOrgResetQuery()
+          },
+          resetOnSelect: false
+        }}
         onChange={(selected?: SelectOption[]) => {
           const isAllSelected = isAllOptionSelected(selected)
           const selectedLen = (selected || []).length
@@ -186,6 +203,9 @@ interface ProjectFieldPropsInterface {
   setFieldValue: any
   formikValues: any
   setValues: any
+  fetchProjectsByQuery: (query: string, orgId: string) => void
+  loadingProjects: boolean
+  fetchProjectsResetQuery: (orgId: string) => void
 }
 export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   getString,
@@ -194,7 +214,10 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   values,
   setFieldValue,
   formikValues,
-  setValues
+  setValues,
+  fetchProjectsByQuery,
+  loadingProjects,
+  fetchProjectsResetQuery
 }) => {
   const { projects, freezeWindowLevel } = resources
   const [excludeProjects, setExcludeProjects] = React.useState(projects)
@@ -236,6 +259,15 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
         name={projFieldName}
         items={allProj}
         label={getString('projectsText')}
+        className={css.tagInputStyle}
+        tagInputProps={{ rightElement: renderSearchLoading(loadingProjects) } as unknown as ITagInputProps}
+        multiSelectProps={{
+          onQueryChange(query: string) {
+            const orgId = isAccLevel ? orgValue[0].value : ''
+            query ? fetchProjectsByQuery(query, orgId) : fetchProjectsResetQuery(orgId)
+          },
+          resetOnSelect: false
+        }}
         // enabled only if org value is single select, and not All Organizations
         disabled={!isSingleOrgValue}
         onChange={(selected?: SelectOption[]) => {
@@ -265,6 +297,15 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
 
       {isCheckBoxEnabled && excludeProjValue ? (
         <FormInput.MultiSelect
+          className={css.tagInputStyle}
+          tagInputProps={{ rightElement: renderSearchLoading(loadingProjects) } as unknown as ITagInputProps}
+          multiSelectProps={{
+            onQueryChange(query: string) {
+              const orgId = isAccLevel ? orgValue[0].value : ''
+              query ? fetchProjectsByQuery(query, orgId) : fetchProjectsResetQuery(orgId)
+            },
+            resetOnSelect: false
+          }}
           disabled={isOrgValueAll}
           name={excludeProjName}
           items={excludeProjects}

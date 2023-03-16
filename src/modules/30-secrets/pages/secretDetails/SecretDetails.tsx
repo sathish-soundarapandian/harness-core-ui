@@ -276,7 +276,7 @@ const SecretDetails: React.FC<SecretDetailsProps> = props => {
                         resourceIdentifier: secretData.secret.identifier
                       }
                     }}
-                    variation={ButtonVariation.PRIMARY}
+                    variation={ButtonVariation.SECONDARY}
                   />
                 </Layout.Horizontal>
               )}

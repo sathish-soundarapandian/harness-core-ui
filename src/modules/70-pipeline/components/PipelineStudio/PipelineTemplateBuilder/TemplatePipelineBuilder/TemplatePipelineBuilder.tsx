@@ -39,7 +39,7 @@ export function TemplatePipelineBuilder(): React.ReactElement {
     ? { display: 'flow-root list-item' }
     : { display: 'inline-table' }
 
-  const { addOrUpdateTemplate, removeTemplate } = usePipelineTemplateActions()
+  const { addOrUpdateTemplate, removeTemplate, isTemplateUpdated, setIsTemplateUpdated } = usePipelineTemplateActions()
 
   return (
     <Container className={css.mainContainer}>
@@ -67,7 +67,10 @@ export function TemplatePipelineBuilder(): React.ReactElement {
             allowResize={true}
           >
             <TemplatePipelineCanvas />
-            <TemplatePipelineSpecifications />
+            <TemplatePipelineSpecifications
+              isTemplateUpdated={isTemplateUpdated}
+              setIsTemplateUpdated={setIsTemplateUpdated}
+            />
           </SplitPane>
         </Container>
       </Layout.Vertical>

@@ -210,7 +210,7 @@ const RenderColumnTrigger: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
   const data = row.original
   return (
     <>
-      <Layout.Horizontal spacing="small" data-testid={data.identifier}>
+      <Layout.Horizontal spacing="small" data-testid={data.identifier} className={css.triggerNameStyle}>
         <Icon
           name={
             data.type
@@ -225,12 +225,12 @@ const RenderColumnTrigger: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
         />
         <Layout.Vertical padding={{ left: 'small' }}>
           <Layout.Horizontal spacing="small" data-testid={data.identifier}>
-            <Text color={Color.BLACK} lineClamp={1} width={!isEmpty(data.tags) ? '270px' : '300px'}>
+            <Text color={Color.BLACK} lineClamp={1}>
               {data.name}
             </Text>
             {!isEmpty(data.tags) ? <TagsPopover className={css.tags} tags={data.tags as tagsType} /> : null}
           </Layout.Horizontal>
-          <Text color={Color.GREY_400} lineClamp={1} width={300}>
+          <Text color={Color.GREY_400} lineClamp={1}>
             {column.getString('idLabel', { id: data.identifier })}
           </Text>
         </Layout.Vertical>
@@ -606,14 +606,14 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
       {
         Header: getString('common.triggerLabel').toUpperCase(),
         accessor: 'name',
-        width: gitAwareForTriggerEnabled ? '15%' : '25%',
+        width: gitAwareForTriggerEnabled ? '20%' : '22%',
         Cell: RenderColumnTrigger,
         getString
       },
       {
         Header: 'STATUS',
         accessor: 'status',
-        width: gitAwareForTriggerEnabled ? '10%' : '15%',
+        width: gitAwareForTriggerEnabled ? '10%' : '18%',
         disableSortBy: true,
         Cell: RenderColumnStatus,
         getString

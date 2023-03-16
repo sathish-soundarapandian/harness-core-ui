@@ -15,7 +15,7 @@ import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
 import FeatureFlagsPage from '../FeatureFlagsPage'
 import mockFeatureFlags from './mockFeatureFlags'
 
-const renderComponent = (props?: any): RenderResult =>
+const renderComponent = (): RenderResult =>
   render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
@@ -27,7 +27,7 @@ const renderComponent = (props?: any): RenderResult =>
       defaultFeatureFlagValues={{
         STALE_FLAGS_FFM_1510: true,
         FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: true,
-        FFM_5332_GIT_EX_ENABLED: props?.gitExFlag
+        FFM_6683_ALL_ENVIRONMENTS_FLAGS: true
       }}
     >
       <FeatureFlagsPage />
@@ -101,75 +101,21 @@ describe('FeatureFlagsPage', () => {
 
     expect(screen.getAllByText(mockFeatureFlags.features[0].name)).toBeDefined()
     expect(screen.getAllByText(mockFeatureFlags.features[1].name)).toBeDefined()
-    expect(screen.getByTestId('gitSyncSetupRedirect')).toBeVisible()
+    expect(screen.getByRole('button', { name: 'cf.featureFlags.setupGitSync' })).toBeVisible()
   })
 
-  test('It should open a modal & not redirect to Git Management on click of "Set Up Git Sync" button when GitEx flag is true', async () => {
-    renderComponent({ gitExFlag: true })
-
-    const setupGitBtn = screen.getByRole('button', { name: 'cf.featureFlags.setupGitSync' })
-
-    expect(setupGitBtn).toBeVisible()
-    expect(screen.getByText('featureFlagsText')).toBeVisible()
-    expect(screen.getByTestId('create-flag-button')).toBeVisible()
-
-    userEvent.click(setupGitBtn)
-
-    await waitFor(() => {
-      expect(screen.getByText('cf.gitSync.setUpGitConnection')).toBeVisible()
-    })
-  })
-
-  test('It should close the Git modal on click of save or cancel', async () => {
-    renderComponent({ gitExFlag: true })
-
-    const setupGitBtn = screen.getByRole('button', { name: 'cf.featureFlags.setupGitSync' })
-
-    expect(setupGitBtn).toBeVisible()
-    expect(screen.getByText('featureFlagsText')).toBeVisible()
-    expect(screen.getByTestId('create-flag-button')).toBeVisible()
-
-    userEvent.click(setupGitBtn)
-
-    await waitFor(() => {
-      expect(screen.getByText('cf.gitSync.setUpGitConnection')).toBeVisible()
-    })
-
-    userEvent.click(screen.getByRole('button', { name: 'save' }))
-
-    await waitFor(() => {
-      expect(screen.queryByText('cf.gitSync.setUpGitConnection')).not.toBeInTheDocument()
-    })
-
-    userEvent.click(setupGitBtn)
-
-    await waitFor(() => {
-      expect(screen.getByText('cf.gitSync.setUpGitConnection')).toBeVisible()
-    })
-
-    userEvent.click(screen.getByRole('button', { name: 'cancel' }))
-
-    await waitFor(() => {
-      expect(screen.queryByText('cf.gitSync.setUpGitConnection')).not.toBeInTheDocument()
-    })
-  })
-
-  test('It should redirect to Git Management on click of "Set Up Git Sync" button when GitEx flag is false', async () => {
+  test('It should have an option for "All Environments" in the EnvironmentSelect dropdown', async () => {
     renderComponent()
 
-    const setupGitBtn = screen.getByRole('button', { name: 'cf.featureFlags.setupGitSync' })
+    const environmentSelect = screen.getByRole('textbox', { name: 'cf.shared.selectEnvironment' })
 
-    expect(setupGitBtn).toBeVisible()
-    expect(screen.getByText('featureFlagsText')).toBeVisible()
-    expect(screen.getByTestId('create-flag-button')).toBeVisible()
+    expect(environmentSelect).toHaveValue('foobar')
 
-    userEvent.click(setupGitBtn)
+    userEvent.click(environmentSelect)
 
     await waitFor(() => {
-      expect(screen.getByTestId('location')).toHaveTextContent(
-        '/account/dummy/cf/orgs/dummy/projects/dummy/setup/git-sync'
-      )
-      expect(screen.queryByTestId('create-flag-button')).not.toBeInTheDocument()
+      expect(screen.getByText('common.allEnvironments')).toBeInTheDocument()
+      expect(screen.getByText('QB')).toBeInTheDocument()
     })
   })
 

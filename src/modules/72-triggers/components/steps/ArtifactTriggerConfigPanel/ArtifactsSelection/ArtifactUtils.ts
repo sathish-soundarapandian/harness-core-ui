@@ -8,10 +8,9 @@
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, merge } from 'lodash-es'
+import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import type { ArtifactConfig, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
-import { ENABLED_ARTIFACT_TYPES } from './ArtifactHelper'
 import {
-  ArtifactTagHelperText,
   ArtifactType,
   GoogleArtifactRegistryInitialValuesType,
   CustomArtifactSource,
@@ -42,63 +41,6 @@ export const resetTag = (formik: FormikValues): void => {
     getMultiTypeFromValue(formik.values.tag?.value) === MultiTypeInputType.FIXED &&
     formik.values.tag?.value?.length &&
     formik.setFieldValue('tag', '')
-}
-
-export const helperTextData = (
-  selectedArtifact: ArtifactType,
-  formik: FormikValues,
-  connectorIdValue: string
-): ArtifactTagHelperText => {
-  switch (selectedArtifact) {
-    case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
-      return {
-        package: formik.values?.spec?.package,
-        project: formik.values?.spec?.project,
-        region: formik.values?.spec?.region,
-        repositoryName: formik.values?.spec?.repositoryName,
-        connectorRef: connectorIdValue
-      }
-    case ENABLED_ARTIFACT_TYPES.DockerRegistry:
-      return {
-        imagePath: formik.values?.imagePath,
-        connectorRef: connectorIdValue
-      }
-    case ENABLED_ARTIFACT_TYPES.Ecr:
-      return {
-        imagePath: formik.values?.imagePath,
-        region: formik.values?.region || '',
-        connectorRef: connectorIdValue
-      }
-    case ENABLED_ARTIFACT_TYPES.Gcr:
-      return {
-        imagePath: formik.values?.imagePath,
-        registryHostname: formik.values?.registryHostname || '',
-        connectorRef: connectorIdValue
-      }
-    case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
-      return {
-        artifactPath: formik.values?.artifactPath,
-        repository: formik.values?.repository,
-        repositoryPort: formik.values?.repositoryPort,
-        connectorRef: connectorIdValue
-      }
-    case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
-      return {
-        artifactPath: formik.values?.artifactPath,
-        repository: formik.values?.repository,
-        connectorRef: connectorIdValue,
-        artifactDirectory: formik.values?.artifactDirectory
-      }
-    case ENABLED_ARTIFACT_TYPES.Acr:
-      return {
-        subscriptionId: formik.values?.subscriptionId,
-        registry: formik.values?.registry,
-        repository: formik.values?.repository,
-        connectorRef: connectorIdValue
-      }
-    default:
-      return {} as ArtifactTagHelperText
-  }
 }
 
 export const checkIfQueryParamsisNotEmpty = (queryParamList: Array<string | number | undefined>): boolean => {
@@ -416,13 +358,6 @@ export const getArtifactPathToFetchTags = (
   return formik.values.imagePath
 }
 
-export const showConnectorStep = (selectedArtifact: ArtifactType): boolean => {
-  return selectedArtifact !== ENABLED_ARTIFACT_TYPES.CustomArtifact
-}
-
-export const isFieldFixed = (field: string): boolean => {
-  return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED
-}
 export const getArtifactLocation = (artifact: PrimaryArtifact | SidecarArtifact): string => {
   if (artifact.type === 'AmazonS3') {
     return artifact.spec?.filePath ?? artifact.spec?.filePathRegex

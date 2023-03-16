@@ -105,4 +105,23 @@ describe('ServicesListPage', () => {
     userEvent.click(container.querySelector('[icon="list"]') as HTMLElement)
     expect(container).toMatchSnapshot()
   })
+
+  test('ServicesListPage should show loader while API call is loading', async () => {
+    mockImport('services/cd-ng', {
+      useGetServiceList: () => ({
+        data: {},
+        loading: true,
+        refetch: jest.fn()
+      })
+    })
+    const { getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ServicesListPage />
+      </TestWrapper>
+    )
+    expect(getByText('Loading, please wait...')).toBeInTheDocument()
+  })
 })

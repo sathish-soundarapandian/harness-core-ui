@@ -24,15 +24,11 @@ jest.mock('services/pipeline-ng', () => ({
       }
     })
   ),
-  useCreateTrigger: jest.fn().mockImplementation(() => {
-    return {
-      mutate: jest.fn(() =>
-        Promise.resolve({
-          status: 'SUCCESS'
-        })
-      )
-    }
-  })
+  createTriggerPromise: jest.fn(() =>
+    Promise.resolve({
+      status: 'SUCCESS'
+    })
+  )
 }))
 
 const updateConnector = jest.fn()
@@ -137,7 +133,7 @@ describe('Render and test InfraProvisioningWizard', () => {
     })
 
     await act(async () => {
-      fireEvent.click(getByText('ci.getStartedWithCI.starterPipeline'))
+      fireEvent.click(getByText('ci.getStartedWithCI.starterPipelineConfig'))
     })
 
     await act(async () => {
@@ -191,7 +187,7 @@ describe('Render and test InfraProvisioningWizard', () => {
     })
 
     await act(async () => {
-      fireEvent.click(getByText('ci.getStartedWithCI.chooseExistingYAML'))
+      fireEvent.click(getByText('ci.getStartedWithCI.importExistingYAML'))
     })
 
     await act(async () => {
@@ -214,7 +210,7 @@ describe('Render and test InfraProvisioningWizard', () => {
     )
 
     await act(async () => {
-      fireEvent.click(getByText('ci.getStartedWithCI.chooseExistingYAML'))
+      fireEvent.click(getByText('ci.getStartedWithCI.importExistingYAML'))
     })
 
     await act(async () => {

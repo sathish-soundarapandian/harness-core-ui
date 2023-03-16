@@ -8,7 +8,6 @@
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
-import { v4 as uuid } from 'uuid'
 
 import { isEmpty } from 'lodash-es'
 import { yupToFormErrors, FormikErrors } from 'formik'
@@ -16,7 +15,6 @@ import { yupToFormErrors, FormikErrors } from 'formik'
 import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { StringNGVariable } from 'services/cd-ng'
 
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
@@ -24,17 +22,17 @@ import type { StringsMap } from 'stringTypes'
 import TerraformInputStep from '../Common/Terraform/TerraformInputStep'
 import { TerraformVariableStep } from '../Common/Terraform/TerraformVariableView'
 import {
+  getTerraformInitialValues,
   onSubmitTerraformData,
   TerraformData,
-  TerraformVariableStepProps,
-  TFDestroyData
+  TerraformVariableStepProps
 } from '../Common/Terraform/TerraformInterfaces'
 
 import TerraformEditView from '../Common/Terraform/Editview/TerraformEditView'
 
 const TerraformDestroyWidgetWithRef = React.forwardRef(TerraformEditView)
 
-export class TerraformDestroy extends PipelineStep<TFDestroyData> {
+export class TerraformDestroy extends PipelineStep<TerraformData> {
   constructor() {
     super()
     this._hasStepVariables = true
@@ -42,7 +40,7 @@ export class TerraformDestroy extends PipelineStep<TFDestroyData> {
   }
   protected type = StepType.TerraformDestroy
   protected referenceId = 'terraformDestroyStep'
-  protected defaultValues: TFDestroyData = {
+  protected defaultValues: TerraformData = {
     identifier: '',
     timeout: '10m',
     name: '',
@@ -63,7 +61,7 @@ export class TerraformDestroy extends PipelineStep<TFDestroyData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<TFDestroyData>): FormikErrors<TFDestroyData> {
+  }: ValidateInputSetProps<TerraformData>): FormikErrors<TerraformData> {
     /* istanbul ignore next */
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
@@ -99,41 +97,13 @@ export class TerraformDestroy extends PipelineStep<TFDestroyData> {
     /* istanbul ignore next */
     return errors
   }
-  private getInitialValues(data: TFDestroyData): TerraformData {
-    const envVars = data.spec?.configuration?.spec?.environmentVariables as StringNGVariable[]
-    const formData = {
-      ...data,
-      spec: {
-        ...data.spec,
-        configuration: {
-          ...data.spec?.configuration,
-          spec: {
-            ...data.spec?.configuration?.spec,
-            targets: Array.isArray(data.spec?.configuration?.spec?.targets)
-              ? data.spec?.configuration?.spec?.targets.map(target => ({
-                  value: target,
-                  id: uuid()
-                }))
-              : [{ value: '', id: uuid() }],
-            environmentVariables: Array.isArray(envVars)
-              ? envVars.map(variable => ({
-                  key: variable.name,
-                  value: variable.value,
-                  id: uuid()
-                }))
-              : [{ key: '', value: '', id: uuid() }]
-          }
-        }
-      }
-    }
-    return formData
-  }
+
   /* istanbul ignore next */
-  processFormData(data: any): TFDestroyData {
+  processFormData(data: any): TerraformData {
     return onSubmitTerraformData(data)
   }
 
-  renderStep(props: StepProps<TFDestroyData, TerraformVariableStepProps>): JSX.Element {
+  renderStep(props: StepProps<TerraformData, TerraformVariableStepProps>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -165,12 +135,15 @@ export class TerraformDestroy extends PipelineStep<TFDestroyData> {
           {...(customStepProps as TerraformVariableStepProps)}
           initialValues={initialValues}
           onUpdate={onUpdate}
+          fieldPath={
+            customStepProps?.variablesData?.spec?.cloudCliConfiguration ? 'cloudCliConfiguration' : 'configuration'
+          }
         />
       )
     }
     return (
       <TerraformDestroyWidgetWithRef
-        initialValues={this.getInitialValues(initialValues)}
+        initialValues={getTerraformInitialValues(initialValues)}
         onUpdate={data => onUpdate?.(this.processFormData(data))}
         onChange={data => onChange?.(this.processFormData(data))}
         allowableTypes={allowableTypes}

@@ -125,7 +125,6 @@ function FormField({
           value={get(formik.values, fieldName, '')}
           type="String"
           variableName={fieldName}
-          showAdvanced={true}
           onChange={
             /* istanbul ignore next */
             value => {
@@ -187,7 +186,7 @@ function RepoDetails({
       ? GitRepoName.Repo
       : GitRepoName.Account
 
-  const accountUrl = connectionType === GitRepoName.Account ? getAccountUrl(prevStepData) : null
+  const accountUrl = connectionType === GitRepoName.Account ? getAccountUrl(prevStepData) : ''
 
   const submitFormData = (formData: ReleaseRepoDataType & { store?: string; connectorRef?: string }): void => {
     const manifestObj: ReleaseRepoManifest = {
@@ -200,7 +199,7 @@ function RepoDetails({
             spec: {
               connectorRef: formData.connectorRef,
               gitFetchType: formData.gitFetchType,
-              paths: [formData.paths]
+              paths: formData.paths === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : [formData.paths]
             }
           }
         }
@@ -280,8 +279,7 @@ function RepoDetails({
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                     />
                   </div>
-
-                  {!!(connectionType === GitRepoName.Account && accountUrl) && (
+                  {!!(connectionType === GitRepoName.Account || accountUrl) && (
                     <GitRepositoryName
                       accountUrl={accountUrl}
                       expressions={expressions}

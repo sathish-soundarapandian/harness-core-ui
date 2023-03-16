@@ -21,9 +21,12 @@ export interface AdditionalInfo {
 }
 
 export interface AffectedEntity {
-  envRef?: string
-  serviceRef?: string
+  envName: string
+  monitoredServiceIdentifier: string
+  serviceName: string
 }
+
+export type AllEntitiesRule = EntitiesRule & {}
 
 export type AnalysedDeploymentNode = AbstractAnalysedNode & {
   failedErrorClusters?: number
@@ -35,7 +38,7 @@ export type AnalysedDeploymentNode = AbstractAnalysedNode & {
 
 export interface AnalysedDeploymentTestDataNode {
   analysisReason?: 'CUSTOM_FAIL_FAST_THRESHOLD' | 'ML_ANALYSIS' | 'NO_CONTROL_DATA' | 'NO_TEST_DATA'
-  analysisResult?: 'HEALTHY' | 'NO_ANALYSIS' | 'UNHEALTHY' | 'WARNING'
+  analysisResult?: 'NO_ANALYSIS' | 'HEALTHY' | 'WARNING' | 'UNHEALTHY'
   appliedThresholds?: string[]
   controlData?: MetricValueV2[]
   controlDataType?: 'AVERAGE' | 'MINIMUM_DEVIATION'
@@ -474,6 +477,27 @@ export type AzureUserAssignedMSIAuth = AzureAuthCredentialDTO & {
   clientId: string
 }
 
+export interface BambooAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface BambooAuthenticationDTO {
+  spec?: BambooAuthCredentialsDTO
+  type: 'UsernamePassword' | 'Anonymous' | 'Bearer Token(HTTP Header)'
+}
+
+export type BambooConnectorDTO = ConnectorConfigDTO & {
+  auth?: BambooAuthenticationDTO
+  bambooUrl: string
+  delegateSelectors?: string[]
+}
+
+export type BambooUserNamePasswordDTO = BambooAuthCredentialsDTO & {
+  passwordRef: string
+  username?: string
+  usernameRef?: string
+}
+
 export interface BillingExportSpec {
   containerName: string
   directoryName: string
@@ -746,6 +770,8 @@ export interface ClusterHostFrequencyData {
 export interface ClusterSummary {
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
+  feedback?: LogFeedback
+  feedbackApplied?: LogFeedback
   frequencyData?: HostFrequencyData[]
   label?: number
   risk?: number
@@ -831,6 +857,7 @@ export interface ConnectorInfoDTO {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'Bamboo'
     | 'TerraformCloud'
 }
 
@@ -1212,7 +1239,7 @@ export interface DowntimeDTO {
   category: 'ScheduledMaintenance' | 'Deployment' | 'Other'
   description?: string
   enabled?: boolean
-  entityRefs: EntityDetails[]
+  entitiesRule: EntitiesRule
   identifier: string
   name: string
   orgIdentifier: string
@@ -1236,6 +1263,7 @@ export interface DowntimeHistoryView {
   endTime?: number
   identifier?: string
   name?: string
+  spec?: DowntimeSpecDTO
   startTime?: number
 }
 
@@ -1243,13 +1271,13 @@ export interface DowntimeListView {
   affectedEntities?: AffectedEntity[]
   category?: 'ScheduledMaintenance' | 'Deployment' | 'Other'
   description?: string
+  downtimeStatusDetails?: DowntimeStatusDetails
   duration?: DowntimeDuration
   enabled?: boolean
   identifier?: string
   lastModified?: LastModified
   name?: string
   spec?: DowntimeSpecDTO
-  status?: 'Active' | 'Scheduled'
 }
 
 export interface DowntimeRecurrence {
@@ -1271,6 +1299,12 @@ export interface DowntimeSpec {
 export interface DowntimeSpecDTO {
   spec: DowntimeSpec
   type?: 'Onetime' | 'Recurring'
+}
+
+export interface DowntimeStatusDetails {
+  endTime?: number
+  startTime?: number
+  status?: 'Active' | 'Scheduled'
 }
 
 export interface Duration {
@@ -1349,9 +1383,18 @@ export interface Edge {
   to?: string
 }
 
+export interface EntitiesRule {
+  affectedEntity?: AffectedEntity
+  type?: 'All' | 'Identifiers'
+}
+
 export interface EntityDetails {
   enabled?: boolean
   entityRef: string
+}
+
+export type EntityIdentifiersRule = EntitiesRule & {
+  entityIdentifiers: EntityDetails[]
 }
 
 export interface EnvironmentResponse {
@@ -1731,6 +1774,9 @@ export interface Error {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2160,6 +2206,9 @@ export interface Failure {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2489,6 +2538,42 @@ export interface HealthSourceDTO {
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
+export interface HealthSourceParamValue {
+  name?: string
+  value?: string
+}
+
+export interface HealthSourceParamValuesRequest {
+  connectorIdentifier?: string
+  healthSourceParams?: HealthSourceParamsDTO
+  healthSourceQueryParams?: QueryParamsDTO
+  paramName: string
+  providerType:
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
+}
+
+export interface HealthSourceParamValuesResponse {
+  paramName?: string
+  paramValues?: HealthSourceParamValue[]
+}
+
 export interface HealthSourceParamsDTO {
   region?: string
 }
@@ -2498,7 +2583,26 @@ export interface HealthSourceRecordsRequest {
   endTime: number
   healthSourceParams?: HealthSourceParamsDTO
   healthSourceQueryParams?: QueryParamsDTO
-  providerType:
+  healthSourceType?:
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
+  providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
     | 'SPLUNK_METRIC'
@@ -2713,9 +2817,29 @@ export type JenkinsUserNamePasswordDTO = JenkinsAuthCredentialsDTO & {
   usernameRef?: string
 }
 
+export interface JiraAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface JiraAuthenticationDTO {
+  spec: JiraAuthCredentialsDTO
+  type: 'UsernamePassword' | 'PersonalAccessToken'
+}
+
 export type JiraConnector = ConnectorConfigDTO & {
+  auth: JiraAuthenticationDTO
   delegateSelectors?: string[]
   jiraUrl: string
+  passwordRef?: string
+  username?: string
+  usernameRef?: string
+}
+
+export type JiraPATDTO = JiraAuthCredentialsDTO & {
+  patRef: string
+}
+
+export type JiraUserNamePasswordDTO = JiraAuthCredentialsDTO & {
   passwordRef: string
   username?: string
   usernameRef?: string
@@ -2961,9 +3085,13 @@ export interface LogAnalysisRadarChartListDTO {
   clusterId?: string
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
+  feedback?: LogFeedback
+  feedbackApplied?: LogFeedback
   hasControlData?: boolean
   label?: number
   message?: string
+  previousClusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  previousRisk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   testHostFrequencyData?: HostFrequencyData[]
   totalTestFrequencyData?: TimestampFrequencyCount[]
@@ -3023,6 +3151,27 @@ export interface LogData {
   tag?: 'KNOWN' | 'UNEXPECTED' | 'UNKNOWN'
   text?: string
   trend?: FrequencyDTO[]
+}
+
+export interface LogFeedback {
+  clusterId?: string
+  createdAt?: number
+  createdBy?: string
+  description?: string
+  environmentIdentifier?: string
+  feedbackId?: string
+  feedbackScore?: 'NO_RISK_IGNORE_FREQUENCY' | 'NO_RISK_CONSIDER_FREQUENCY' | 'MEDIUM_RISK' | 'HIGH_RISK' | 'DEFAULT'
+  lastUpdatedAt?: number
+  lastUpdatedBy?: string
+  sampleMessage?: string
+  serviceIdentifier?: string
+  verificationJobInstanceId?: string
+}
+
+export interface LogFeedbackHistory {
+  createdBy?: string
+  logFeedback?: LogFeedback
+  updatedBy?: string
 }
 
 export interface LogRecord {
@@ -3111,6 +3260,13 @@ export interface MetricHistory {
   metricIdentifier?: string
   metricName?: string
   value?: number[]
+}
+
+export interface MetricOnboardingGraph {
+  metricGraphs?: {
+    [key: string]: MetricGraph
+  }
+  metricPercentageGraph?: RatioMetricPercentageGraph
 }
 
 export interface MetricPack {
@@ -3267,7 +3423,7 @@ export interface MetricValueV2 {
 }
 
 export interface MetricsAnalysis {
-  analysisResult?: 'HEALTHY' | 'NO_ANALYSIS' | 'UNHEALTHY' | 'WARNING'
+  analysisResult?: 'NO_ANALYSIS' | 'HEALTHY' | 'WARNING' | 'UNHEALTHY'
   deeplinkURL?: string
   healthSource?: HealthSourceV2
   metricIdentifier?: string
@@ -3544,6 +3700,7 @@ export interface Page {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3554,6 +3711,7 @@ export interface PageAnalyzedLogDataDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3564,6 +3722,7 @@ export interface PageAnalyzedRadarChartLogDataDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3574,6 +3733,7 @@ export interface PageAppDynamicsApplication {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3584,6 +3744,7 @@ export interface PageAppDynamicsTier {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3594,6 +3755,7 @@ export interface PageCVNGLogDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3604,6 +3766,7 @@ export interface PageChangeEventDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3614,6 +3777,7 @@ export interface PageDatadogDashboardDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3624,6 +3788,7 @@ export interface PageDowntimeHistoryView {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3634,6 +3799,7 @@ export interface PageDowntimeListView {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3644,6 +3810,7 @@ export interface PageLogAnalysisClusterDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3654,6 +3821,7 @@ export interface PageLogAnalysisRadarChartListDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3664,6 +3832,7 @@ export interface PageMSDropdownResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3674,6 +3843,7 @@ export interface PageMetricsAnalysis {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3684,6 +3854,7 @@ export interface PageMonitoredServiceListItemDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3694,6 +3865,7 @@ export interface PageMonitoredServiceResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3704,6 +3876,7 @@ export interface PageNotificationRuleResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3714,6 +3887,7 @@ export interface PageSLOConsumptionBreakdown {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3724,16 +3898,7 @@ export interface PageSLOHealthListView {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
-  totalItems?: number
-  totalPages?: number
-}
-
-export interface PageServiceLevelObjectiveResponse {
-  content?: ServiceLevelObjectiveResponse[]
-  empty?: boolean
-  pageIndex?: number
-  pageItemCount?: number
-  pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3744,6 +3909,7 @@ export interface PageServiceLevelObjectiveV2Response {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3754,6 +3920,7 @@ export interface PageStackdriverDashboardDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3764,6 +3931,7 @@ export interface PageString {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3774,6 +3942,7 @@ export interface PageTimeSeriesMetricDataDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3784,6 +3953,7 @@ export interface PageTransactionMetricInfo {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3794,6 +3964,7 @@ export interface PageUserJourneyResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -3866,12 +4037,12 @@ export interface PartialSchemaDTO {
     | 'STO'
     | 'CHAOS'
     | 'SRM'
+    | 'IACM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'IACM'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -3975,14 +4146,12 @@ export interface QueryDefinition {
   sliEnabled?: boolean
 }
 
-export interface QueryJsonPath {
-  queryValueJsonPath?: string
-  timestampFormat?: string
-  timestampJsonPath?: string
-}
-
 export interface QueryParamsDTO {
+  index?: string
+  messageIdentifier?: string
   serviceInstanceField?: string
+  timeStampFormat?: string
+  timeStampIdentifier?: string
 }
 
 export interface QueryRecordsRequest {
@@ -3990,7 +4159,26 @@ export interface QueryRecordsRequest {
   endTime: number
   healthSourceParams?: HealthSourceParamsDTO
   healthSourceQueryParams?: QueryParamsDTO
-  providerType:
+  healthSourceType?:
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
+  providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
     | 'SPLUNK_METRIC'
@@ -4011,8 +4199,15 @@ export interface QueryRecordsRequest {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
   query: string
-  queryJSONPath?: QueryJsonPath
   startTime: number
+}
+
+export interface RatioMetricPercentageGraph {
+  dataPoints?: DataPoints[]
+  endTime?: number
+  metricIdentifier1?: string
+  metricIdentifier2?: string
+  startTime?: number
 }
 
 export type RatioSLIMetricSpec = SLIMetricSpec & {
@@ -4036,6 +4231,12 @@ export interface ReferenceDTO {
   name?: string
   orgIdentifier?: string
   projectIdentifier?: string
+}
+
+export type RequestBasedServiceLevelIndicatorSpec = ServiceLevelIndicatorSpec & {
+  eventType: 'Good' | 'Bad'
+  metric1: string
+  metric2: string
 }
 
 export interface Response {
@@ -4199,6 +4400,13 @@ export interface ResponseListString {
 export interface ResponseListTimeSeriesSampleDTO {
   correlationId?: string
   data?: TimeSeriesSampleDTO[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListUnavailabilityInstancesResponse {
+  correlationId?: string
+  data?: UnavailabilityInstancesResponse[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4567,6 +4775,9 @@ export interface ResponseMessage {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4694,13 +4905,6 @@ export interface ResponsePageSLOConsumptionBreakdown {
 export interface ResponsePageSLOHealthListView {
   correlationId?: string
   data?: PageSLOHealthListView
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePageServiceLevelObjectiveResponse {
-  correlationId?: string
-  data?: PageServiceLevelObjectiveResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4877,6 +5081,14 @@ export interface RestResponseHealthMonitoringFlagResponse {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseHealthSourceParamValuesResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: HealthSourceParamValuesResponse
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseHealthSourceRecordsResponse {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4999,6 +5211,22 @@ export interface RestResponseListLogClusterDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseListLogFeedback {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LogFeedback[]
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseListLogFeedbackHistory {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LogFeedbackHistory[]
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseListMetricDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -5020,6 +5248,14 @@ export interface RestResponseListMonitoredServiceChangeDetailSLO {
     [key: string]: { [key: string]: any }
   }
   resource?: MonitoredServiceChangeDetailSLO[]
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseListMonitoredServiceDetail {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: MonitoredServiceDetail[]
   responseMessages?: ResponseMessage[]
 }
 
@@ -5119,6 +5355,14 @@ export interface RestResponseLogAnalysisRadarChartListWithCountDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseLogFeedback {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LogFeedback
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseLogRecordsResponse {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -5160,6 +5404,14 @@ export interface RestResponseMapStringMapStringListTimeSeriesAnomaliesDTO {
       [key: string]: TimeSeriesAnomaliesDTO[]
     }
   }
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseMetricOnboardingGraph {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: MetricOnboardingGraph
   responseMessages?: ResponseMessage[]
 }
 
@@ -5264,14 +5516,6 @@ export interface RestResponseServiceDependencyGraphDTO {
     [key: string]: { [key: string]: any }
   }
   resource?: ServiceDependencyGraphDTO
-  responseMessages?: ResponseMessage[]
-}
-
-export interface RestResponseServiceLevelObjectiveResponse {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: ServiceLevelObjectiveResponse
   responseMessages?: ResponseMessage[]
 }
 
@@ -5637,32 +5881,13 @@ export interface ServiceLevelIndicatorDTO {
   healthSourceRef?: string
   identifier?: string
   name?: string
-  sliMissingDataType: 'Good' | 'Bad' | 'Ignore'
+  sliMissingDataType?: 'Good' | 'Bad' | 'Ignore'
   spec: ServiceLevelIndicatorSpec
-  type: 'Availability' | 'Latency'
+  type?: 'Window' | 'Request'
 }
 
 export interface ServiceLevelIndicatorSpec {
-  spec: SLIMetricSpec
-  type?: 'Threshold' | 'Ratio'
-}
-
-export interface ServiceLevelObjectiveDTO {
-  description?: string
-  healthSourceRef: string
-  identifier: string
-  monitoredServiceRef: string
-  name: string
-  notificationRuleRefs?: NotificationRuleRefDTO[]
-  orgIdentifier: string
-  projectIdentifier: string
-  serviceLevelIndicators: ServiceLevelIndicatorDTO[]
-  tags?: {
-    [key: string]: string
-  }
-  target: SLOTargetDTO
-  type?: 'Availability' | 'Latency'
-  userJourneyRef: string
+  [key: string]: any
 }
 
 export interface ServiceLevelObjectiveDetailsDTO {
@@ -5671,12 +5896,6 @@ export interface ServiceLevelObjectiveDetailsDTO {
   projectIdentifier: string
   serviceLevelObjectiveRef: string
   weightagePercentage: number
-}
-
-export interface ServiceLevelObjectiveResponse {
-  createdAt?: number
-  lastModifiedAt?: number
-  serviceLevelObjective: ServiceLevelObjectiveDTO
 }
 
 export interface ServiceLevelObjectiveSpec {
@@ -5752,7 +5971,7 @@ export interface ServiceSummaryDetails {
 export type SimpleServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
   healthSourceRef: string
   monitoredServiceRef: string
-  serviceLevelIndicatorType: 'Availability' | 'Latency'
+  serviceLevelIndicatorType?: 'Availability' | 'Latency'
   serviceLevelIndicators: ServiceLevelIndicatorDTO[]
 }
 
@@ -6079,6 +6298,25 @@ export interface TimeSeriesMetricDataDTO {
   metricDataList?: MetricData[]
   metricName?: string
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
+  monitoredServiceDataSourceType?:
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
   monitoredServiceIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -6320,6 +6558,16 @@ export interface TransactionMetricSums {
   transactionName?: string
 }
 
+export interface UnavailabilityInstancesResponse {
+  endTime?: number
+  entityIdentifier?: string
+  entityType?: 'MaintenanceWindow' | 'Slo' | 'MonitoredService'
+  orgIdentifier?: string
+  projectIdentifier?: string
+  startTime?: number
+  status?: 'MonitoredServiceDisabled' | 'MaintenanceWindow' | 'DataCollectionFailed'
+}
+
 export interface UsageDataDTO {
   count?: number
   displayName?: string
@@ -6424,6 +6672,12 @@ export type WeeklyCalendarSpec = CalenderSpec & {
   dayOfWeek: 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun'
 }
 
+export type WindowBasedServiceLevelIndicatorSpec = ServiceLevelIndicatorSpec & {
+  sliMissingDataType?: 'Good' | 'Bad' | 'Ignore'
+  spec: SLIMetricSpec
+  type?: 'Threshold' | 'Ratio'
+}
+
 export interface YamlGroup {
   group?: string
 }
@@ -6444,12 +6698,12 @@ export interface YamlSchemaMetadata {
     | 'STO'
     | 'CHAOS'
     | 'SRM'
+    | 'IACM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'IACM'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -6468,12 +6722,12 @@ export interface YamlSchemaWithDetails {
     | 'STO'
     | 'CHAOS'
     | 'SRM'
+    | 'IACM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'IACM'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -6484,6 +6738,8 @@ export type ChangeEventDTORequestBody = ChangeEventDTO
 export type CompositeServiceLevelObjectiveSpecRequestBody = CompositeServiceLevelObjectiveSpec
 
 export type DowntimeDTORequestBody = DowntimeDTO
+
+export type LogFeedbackRequestBody = LogFeedback
 
 export type LogSampleRequestDTORequestBody = LogSampleRequestDTO
 
@@ -6501,13 +6757,11 @@ export type ServiceGuardTimeSeriesAnalysisDTORequestBody = ServiceGuardTimeSerie
 
 export type ServiceLevelIndicatorDTORequestBody = ServiceLevelIndicatorDTO
 
-export type ServiceLevelObjectiveDTORequestBody = ServiceLevelObjectiveDTO
-
 export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type UpdateMonitoredServiceFromYamlBodyRequestBody = string
+export type SaveMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface ChangeEventListForAccountQueryParams {
   serviceIdentifiers?: string[]
@@ -6532,6 +6786,7 @@ export interface ChangeEventListForAccountQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export interface ChangeEventListForAccountPathParams {
@@ -6741,6 +6996,7 @@ export interface ChangeEventListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export interface ChangeEventListPathParams {
@@ -7061,6 +7317,125 @@ export const saveDowntimePromise = (
     'POST',
     getConfig('cv/api'),
     `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime`,
+    props,
+    signal
+  )
+
+export interface EnablesDisablesDowntimeQueryParams {
+  enable: boolean
+}
+
+export interface EnablesDisablesDowntimePathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  identifier: string
+}
+
+export type EnablesDisablesDowntimeProps = Omit<
+  MutateProps<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >,
+  'path' | 'verb'
+> &
+  EnablesDisablesDowntimePathParams
+
+/**
+ * Enables disables downtime
+ */
+export const EnablesDisablesDowntime = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: EnablesDisablesDowntimeProps) => (
+  <Mutate<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >
+    verb="PUT"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/flag/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseEnablesDisablesDowntimeProps = Omit<
+  UseMutateProps<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >,
+  'path' | 'verb'
+> &
+  EnablesDisablesDowntimePathParams
+
+/**
+ * Enables disables downtime
+ */
+export const useEnablesDisablesDowntime = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: UseEnablesDisablesDowntimeProps) =>
+  useMutate<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >(
+    'PUT',
+    (paramsInPath: EnablesDisablesDowntimePathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/flag/${paramsInPath.identifier}`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, identifier },
+      ...props
+    }
+  )
+
+/**
+ * Enables disables downtime
+ */
+export const enablesDisablesDowntimePromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >(
+    'PUT',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/flag/${identifier}`,
     props,
     signal
   )
@@ -7454,6 +7829,190 @@ export const listDowntimesPromise = (
     signal
   )
 
+export interface GetDowntimeAssociatedMonitoredServicesQueryParams {
+  pageNumber?: number
+  pageSize?: number
+}
+
+export interface GetDowntimeAssociatedMonitoredServicesPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetDowntimeAssociatedMonitoredServicesProps = Omit<
+  GetProps<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >,
+  'path'
+> &
+  GetDowntimeAssociatedMonitoredServicesPathParams
+
+/**
+ * get all monitored services associated with the downtime
+ */
+export const GetDowntimeAssociatedMonitoredServices = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: GetDowntimeAssociatedMonitoredServicesProps) => (
+  <Get<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetDowntimeAssociatedMonitoredServicesProps = Omit<
+  UseGetProps<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >,
+  'path'
+> &
+  GetDowntimeAssociatedMonitoredServicesPathParams
+
+/**
+ * get all monitored services associated with the downtime
+ */
+export const useGetDowntimeAssociatedMonitoredServices = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseGetDowntimeAssociatedMonitoredServicesProps) =>
+  useGet<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >(
+    (paramsInPath: GetDowntimeAssociatedMonitoredServicesPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/monitored-services`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * get all monitored services associated with the downtime
+ */
+export const getDowntimeAssociatedMonitoredServicesPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services`,
+    props,
+    signal
+  )
+
+export interface GetAssociatedMonitoredServicesPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  identifier: string
+}
+
+export type GetAssociatedMonitoredServicesProps = Omit<
+  GetProps<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>,
+  'path'
+> &
+  GetAssociatedMonitoredServicesPathParams
+
+/**
+ * get associated Monitored Services
+ */
+export const GetAssociatedMonitoredServices = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: GetAssociatedMonitoredServicesProps) => (
+  <Get<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetAssociatedMonitoredServicesProps = Omit<
+  UseGetProps<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>,
+  'path'
+> &
+  GetAssociatedMonitoredServicesPathParams
+
+/**
+ * get associated Monitored Services
+ */
+export const useGetAssociatedMonitoredServices = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: UseGetAssociatedMonitoredServicesProps) =>
+  useGet<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>(
+    (paramsInPath: GetAssociatedMonitoredServicesPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/monitored-services/${paramsInPath.identifier}`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, identifier },
+      ...props
+    }
+  )
+
+/**
+ * get associated Monitored Services
+ */
+export const getAssociatedMonitoredServicesPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseListMonitoredServiceDetail,
+    unknown,
+    void,
+    GetAssociatedMonitoredServicesPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services/${identifier}`,
+    props,
+    signal
+  )
+
 export interface GetSampleLogDataPathParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -7656,6 +8215,113 @@ export const getSampleMetricDataPromise = (
     signal
   )
 
+export interface GetParamValuesPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetParamValuesProps = Omit<
+  MutateProps<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetParamValuesPathParams
+
+/**
+ * Fetch possible values for healthSourceParams and healthSourceQueryParams
+ */
+export const GetParamValues = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: GetParamValuesProps) => (
+  <Mutate<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/param-values`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetParamValuesProps = Omit<
+  UseMutateProps<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetParamValuesPathParams
+
+/**
+ * Fetch possible values for healthSourceParams and healthSourceQueryParams
+ */
+export const useGetParamValues = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseGetParamValuesProps) =>
+  useMutate<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >(
+    'POST',
+    (paramsInPath: GetParamValuesPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/health-source/param-values`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * Fetch possible values for healthSourceParams and healthSourceQueryParams
+ */
+export const getParamValuesPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/param-values`,
+    props,
+    signal
+  )
+
 export interface GetSampleRawRecordPathParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -7771,6 +8437,7 @@ export interface GetMetricsAnalysisForVerifyStepExecutionIdQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export interface GetMetricsAnalysisForVerifyStepExecutionIdPathParams {
@@ -10741,6 +11408,7 @@ export interface ListMonitoredServiceQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   environmentIdentifier?: string
+  environmentIdentifiers?: string[]
   offset: number
   pageSize: number
   filter?: string
@@ -11300,7 +11968,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -11314,7 +11982,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -11329,7 +11997,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -11343,7 +12011,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -11355,7 +12023,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -11364,7 +12032,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 
@@ -12556,6 +13224,209 @@ export const getSliGraphPromise = (
     GetSliGraphPathParams
   >('POST', getConfig('cv/api'), `/monitored-service/${monitoredServiceIdentifier}/sli/onboarding-graph`, props, signal)
 
+export interface GetSliOnboardingGraphsQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetSliOnboardingGraphsPathParams {
+  monitoredServiceIdentifier: string
+}
+
+export type GetSliOnboardingGraphsProps = Omit<
+  MutateProps<
+    RestResponseSLIOnboardingGraphs,
+    unknown,
+    GetSliOnboardingGraphsQueryParams,
+    ServiceLevelIndicatorDTORequestBody,
+    GetSliOnboardingGraphsPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSliOnboardingGraphsPathParams
+
+/**
+ * get Sli and metric graphs for onboarding UI
+ */
+export const GetSliOnboardingGraphs = ({ monitoredServiceIdentifier, ...props }: GetSliOnboardingGraphsProps) => (
+  <Mutate<
+    RestResponseSLIOnboardingGraphs,
+    unknown,
+    GetSliOnboardingGraphsQueryParams,
+    ServiceLevelIndicatorDTORequestBody,
+    GetSliOnboardingGraphsPathParams
+  >
+    verb="POST"
+    path={`/monitored-service/${monitoredServiceIdentifier}/sli/onboarding-graphs`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSliOnboardingGraphsProps = Omit<
+  UseMutateProps<
+    RestResponseSLIOnboardingGraphs,
+    unknown,
+    GetSliOnboardingGraphsQueryParams,
+    ServiceLevelIndicatorDTORequestBody,
+    GetSliOnboardingGraphsPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSliOnboardingGraphsPathParams
+
+/**
+ * get Sli and metric graphs for onboarding UI
+ */
+export const useGetSliOnboardingGraphs = ({ monitoredServiceIdentifier, ...props }: UseGetSliOnboardingGraphsProps) =>
+  useMutate<
+    RestResponseSLIOnboardingGraphs,
+    unknown,
+    GetSliOnboardingGraphsQueryParams,
+    ServiceLevelIndicatorDTORequestBody,
+    GetSliOnboardingGraphsPathParams
+  >(
+    'POST',
+    (paramsInPath: GetSliOnboardingGraphsPathParams) =>
+      `/monitored-service/${paramsInPath.monitoredServiceIdentifier}/sli/onboarding-graphs`,
+    { base: getConfig('cv/api'), pathParams: { monitoredServiceIdentifier }, ...props }
+  )
+
+/**
+ * get Sli and metric graphs for onboarding UI
+ */
+export const getSliOnboardingGraphsPromise = (
+  {
+    monitoredServiceIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseSLIOnboardingGraphs,
+    unknown,
+    GetSliOnboardingGraphsQueryParams,
+    ServiceLevelIndicatorDTORequestBody,
+    GetSliOnboardingGraphsPathParams
+  > & { monitoredServiceIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseSLIOnboardingGraphs,
+    unknown,
+    GetSliOnboardingGraphsQueryParams,
+    ServiceLevelIndicatorDTORequestBody,
+    GetSliOnboardingGraphsPathParams
+  >(
+    'POST',
+    getConfig('cv/api'),
+    `/monitored-service/${monitoredServiceIdentifier}/sli/onboarding-graphs`,
+    props,
+    signal
+  )
+
+export interface GetMetricOnboardingGraphQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  healthSourceRef: string
+  ratioSLIMetricEventType?: 'Good' | 'Bad'
+}
+
+export interface GetMetricOnboardingGraphPathParams {
+  monitoredServiceIdentifier: string
+}
+
+export type GetMetricOnboardingGraphProps = Omit<
+  MutateProps<
+    RestResponseMetricOnboardingGraph,
+    unknown,
+    GetMetricOnboardingGraphQueryParams,
+    string[],
+    GetMetricOnboardingGraphPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetMetricOnboardingGraphPathParams
+
+/**
+ * get metric graphs for onboarding UI
+ */
+export const GetMetricOnboardingGraph = ({ monitoredServiceIdentifier, ...props }: GetMetricOnboardingGraphProps) => (
+  <Mutate<
+    RestResponseMetricOnboardingGraph,
+    unknown,
+    GetMetricOnboardingGraphQueryParams,
+    string[],
+    GetMetricOnboardingGraphPathParams
+  >
+    verb="POST"
+    path={`/monitored-service/${monitoredServiceIdentifier}/sli/onboarding-metric-graphs`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetMetricOnboardingGraphProps = Omit<
+  UseMutateProps<
+    RestResponseMetricOnboardingGraph,
+    unknown,
+    GetMetricOnboardingGraphQueryParams,
+    string[],
+    GetMetricOnboardingGraphPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetMetricOnboardingGraphPathParams
+
+/**
+ * get metric graphs for onboarding UI
+ */
+export const useGetMetricOnboardingGraph = ({
+  monitoredServiceIdentifier,
+  ...props
+}: UseGetMetricOnboardingGraphProps) =>
+  useMutate<
+    RestResponseMetricOnboardingGraph,
+    unknown,
+    GetMetricOnboardingGraphQueryParams,
+    string[],
+    GetMetricOnboardingGraphPathParams
+  >(
+    'POST',
+    (paramsInPath: GetMetricOnboardingGraphPathParams) =>
+      `/monitored-service/${paramsInPath.monitoredServiceIdentifier}/sli/onboarding-metric-graphs`,
+    { base: getConfig('cv/api'), pathParams: { monitoredServiceIdentifier }, ...props }
+  )
+
+/**
+ * get metric graphs for onboarding UI
+ */
+export const getMetricOnboardingGraphPromise = (
+  {
+    monitoredServiceIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseMetricOnboardingGraph,
+    unknown,
+    GetMetricOnboardingGraphQueryParams,
+    string[],
+    GetMetricOnboardingGraphPathParams
+  > & { monitoredServiceIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseMetricOnboardingGraph,
+    unknown,
+    GetMetricOnboardingGraphQueryParams,
+    string[],
+    GetMetricOnboardingGraphPathParams
+  >(
+    'POST',
+    getConfig('cv/api'),
+    `/monitored-service/${monitoredServiceIdentifier}/sli/onboarding-metric-graphs`,
+    props,
+    signal
+  )
+
 export interface GetNewRelicApplicationsQueryParams {
   accountId: string
   orgIdentifier: string
@@ -13581,145 +14452,6 @@ export const getServiceDependencyGraphPromise = (
     signal
   )
 
-export interface GetServiceLevelObjectivesQueryParams {
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
-  offset: number
-  pageSize: number
-  userJourneys?: string[]
-  identifiers?: string[]
-  sliTypes?: ('Availability' | 'Latency')[]
-  targetTypes?: ('Rolling' | 'Calender')[]
-  errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
-}
-
-export type GetServiceLevelObjectivesProps = Omit<
-  GetProps<ResponsePageServiceLevelObjectiveResponse, unknown, GetServiceLevelObjectivesQueryParams, void>,
-  'path'
->
-
-/**
- * get all service level objectives
- */
-export const GetServiceLevelObjectives = (props: GetServiceLevelObjectivesProps) => (
-  <Get<ResponsePageServiceLevelObjectiveResponse, unknown, GetServiceLevelObjectivesQueryParams, void>
-    path={`/slo`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseGetServiceLevelObjectivesProps = Omit<
-  UseGetProps<ResponsePageServiceLevelObjectiveResponse, unknown, GetServiceLevelObjectivesQueryParams, void>,
-  'path'
->
-
-/**
- * get all service level objectives
- */
-export const useGetServiceLevelObjectives = (props: UseGetServiceLevelObjectivesProps) =>
-  useGet<ResponsePageServiceLevelObjectiveResponse, unknown, GetServiceLevelObjectivesQueryParams, void>(`/slo`, {
-    base: getConfig('cv/api'),
-    ...props
-  })
-
-/**
- * get all service level objectives
- */
-export const getServiceLevelObjectivesPromise = (
-  props: GetUsingFetchProps<
-    ResponsePageServiceLevelObjectiveResponse,
-    unknown,
-    GetServiceLevelObjectivesQueryParams,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponsePageServiceLevelObjectiveResponse, unknown, GetServiceLevelObjectivesQueryParams, void>(
-    getConfig('cv/api'),
-    `/slo`,
-    props,
-    signal
-  )
-
-export interface SaveSLODataQueryParams {
-  accountId: string
-}
-
-export type SaveSLODataProps = Omit<
-  MutateProps<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    SaveSLODataQueryParams,
-    ServiceLevelObjectiveDTORequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * saves slo data
- */
-export const SaveSLOData = (props: SaveSLODataProps) => (
-  <Mutate<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    SaveSLODataQueryParams,
-    ServiceLevelObjectiveDTORequestBody,
-    void
-  >
-    verb="POST"
-    path={`/slo`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseSaveSLODataProps = Omit<
-  UseMutateProps<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    SaveSLODataQueryParams,
-    ServiceLevelObjectiveDTORequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * saves slo data
- */
-export const useSaveSLOData = (props: UseSaveSLODataProps) =>
-  useMutate<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    SaveSLODataQueryParams,
-    ServiceLevelObjectiveDTORequestBody,
-    void
-  >('POST', `/slo`, { base: getConfig('cv/api'), ...props })
-
-/**
- * saves slo data
- */
-export const saveSLODataPromise = (
-  props: MutateUsingFetchProps<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    SaveSLODataQueryParams,
-    ServiceLevelObjectiveDTORequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    SaveSLODataQueryParams,
-    ServiceLevelObjectiveDTORequestBody,
-    void
-  >('POST', getConfig('cv/api'), `/slo`, props, signal)
-
 export interface GetSLOAssociatedMonitoredServicesQueryParams {
   accountId: string
   orgIdentifier?: string
@@ -13832,6 +14564,93 @@ export const getServiceLevelObjectivesRiskCountPromise = (
     props,
     signal
   )
+
+export interface GetUnavailabilityInstancesQueryParams {
+  startTime: number
+  endTime: number
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetUnavailabilityInstancesPathParams {
+  identifier: string
+}
+
+export type GetUnavailabilityInstancesProps = Omit<
+  GetProps<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >,
+  'path'
+> &
+  GetUnavailabilityInstancesPathParams
+
+/**
+ * Get Unavailability Instances for SLO
+ */
+export const GetUnavailabilityInstances = ({ identifier, ...props }: GetUnavailabilityInstancesProps) => (
+  <Get<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >
+    path={`/slo-dashboard/unavailable-instances/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetUnavailabilityInstancesProps = Omit<
+  UseGetProps<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >,
+  'path'
+> &
+  GetUnavailabilityInstancesPathParams
+
+/**
+ * Get Unavailability Instances for SLO
+ */
+export const useGetUnavailabilityInstances = ({ identifier, ...props }: UseGetUnavailabilityInstancesProps) =>
+  useGet<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >(
+    (paramsInPath: GetUnavailabilityInstancesPathParams) =>
+      `/slo-dashboard/unavailable-instances/${paramsInPath.identifier}`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * Get Unavailability Instances for SLO
+ */
+export const getUnavailabilityInstancesPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >(getConfig('cv/api'), `/slo-dashboard/unavailable-instances/${identifier}`, props, signal)
 
 export interface GetSLODetailsQueryParams {
   startTime?: number
@@ -14568,235 +15387,6 @@ export const updateSLOV2DataPromise = (
     ServiceLevelObjectiveV2DTORequestBody,
     UpdateSLOV2DataPathParams
   >('PUT', getConfig('cv/api'), `/slo/v2/${identifier}`, props, signal)
-
-export interface DeleteSLODataQueryParams {
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
-}
-
-export type DeleteSLODataProps = Omit<
-  MutateProps<RestResponseBoolean, unknown, DeleteSLODataQueryParams, string, void>,
-  'path' | 'verb'
->
-
-/**
- * delete slo data
- */
-export const DeleteSLOData = (props: DeleteSLODataProps) => (
-  <Mutate<RestResponseBoolean, unknown, DeleteSLODataQueryParams, string, void>
-    verb="DELETE"
-    path={`/slo`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseDeleteSLODataProps = Omit<
-  UseMutateProps<RestResponseBoolean, unknown, DeleteSLODataQueryParams, string, void>,
-  'path' | 'verb'
->
-
-/**
- * delete slo data
- */
-export const useDeleteSLOData = (props: UseDeleteSLODataProps) =>
-  useMutate<RestResponseBoolean, unknown, DeleteSLODataQueryParams, string, void>('DELETE', `/slo`, {
-    base: getConfig('cv/api'),
-    ...props
-  })
-
-/**
- * delete slo data
- */
-export const deleteSLODataPromise = (
-  props: MutateUsingFetchProps<RestResponseBoolean, unknown, DeleteSLODataQueryParams, string, void>,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<RestResponseBoolean, unknown, DeleteSLODataQueryParams, string, void>(
-    'DELETE',
-    getConfig('cv/api'),
-    `/slo`,
-    props,
-    signal
-  )
-
-export interface GetServiceLevelObjectiveQueryParams {
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
-}
-
-export interface GetServiceLevelObjectivePathParams {
-  identifier: string
-}
-
-export type GetServiceLevelObjectiveProps = Omit<
-  GetProps<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    GetServiceLevelObjectiveQueryParams,
-    GetServiceLevelObjectivePathParams
-  >,
-  'path'
-> &
-  GetServiceLevelObjectivePathParams
-
-/**
- * get service level objective data
- */
-export const GetServiceLevelObjective = ({ identifier, ...props }: GetServiceLevelObjectiveProps) => (
-  <Get<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    GetServiceLevelObjectiveQueryParams,
-    GetServiceLevelObjectivePathParams
-  >
-    path={`/slo/${identifier}`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseGetServiceLevelObjectiveProps = Omit<
-  UseGetProps<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    GetServiceLevelObjectiveQueryParams,
-    GetServiceLevelObjectivePathParams
-  >,
-  'path'
-> &
-  GetServiceLevelObjectivePathParams
-
-/**
- * get service level objective data
- */
-export const useGetServiceLevelObjective = ({ identifier, ...props }: UseGetServiceLevelObjectiveProps) =>
-  useGet<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    GetServiceLevelObjectiveQueryParams,
-    GetServiceLevelObjectivePathParams
-  >((paramsInPath: GetServiceLevelObjectivePathParams) => `/slo/${paramsInPath.identifier}`, {
-    base: getConfig('cv/api'),
-    pathParams: { identifier },
-    ...props
-  })
-
-/**
- * get service level objective data
- */
-export const getServiceLevelObjectivePromise = (
-  {
-    identifier,
-    ...props
-  }: GetUsingFetchProps<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    GetServiceLevelObjectiveQueryParams,
-    GetServiceLevelObjectivePathParams
-  > & { identifier: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    GetServiceLevelObjectiveQueryParams,
-    GetServiceLevelObjectivePathParams
-  >(getConfig('cv/api'), `/slo/${identifier}`, props, signal)
-
-export interface UpdateSLODataQueryParams {
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
-}
-
-export interface UpdateSLODataPathParams {
-  identifier: string
-}
-
-export type UpdateSLODataProps = Omit<
-  MutateProps<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    UpdateSLODataQueryParams,
-    ServiceLevelObjectiveDTORequestBody,
-    UpdateSLODataPathParams
-  >,
-  'path' | 'verb'
-> &
-  UpdateSLODataPathParams
-
-/**
- * update slo data
- */
-export const UpdateSLOData = ({ identifier, ...props }: UpdateSLODataProps) => (
-  <Mutate<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    UpdateSLODataQueryParams,
-    ServiceLevelObjectiveDTORequestBody,
-    UpdateSLODataPathParams
-  >
-    verb="PUT"
-    path={`/slo/${identifier}`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseUpdateSLODataProps = Omit<
-  UseMutateProps<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    UpdateSLODataQueryParams,
-    ServiceLevelObjectiveDTORequestBody,
-    UpdateSLODataPathParams
-  >,
-  'path' | 'verb'
-> &
-  UpdateSLODataPathParams
-
-/**
- * update slo data
- */
-export const useUpdateSLOData = ({ identifier, ...props }: UseUpdateSLODataProps) =>
-  useMutate<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    UpdateSLODataQueryParams,
-    ServiceLevelObjectiveDTORequestBody,
-    UpdateSLODataPathParams
-  >('PUT', (paramsInPath: UpdateSLODataPathParams) => `/slo/${paramsInPath.identifier}`, {
-    base: getConfig('cv/api'),
-    pathParams: { identifier },
-    ...props
-  })
-
-/**
- * update slo data
- */
-export const updateSLODataPromise = (
-  {
-    identifier,
-    ...props
-  }: MutateUsingFetchProps<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    UpdateSLODataQueryParams,
-    ServiceLevelObjectiveDTORequestBody,
-    UpdateSLODataPathParams
-  > & { identifier: string },
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    RestResponseServiceLevelObjectiveResponse,
-    unknown,
-    UpdateSLODataQueryParams,
-    ServiceLevelObjectiveDTORequestBody,
-    UpdateSLODataPathParams
-  >('PUT', getConfig('cv/api'), `/slo/${identifier}`, props, signal)
 
 export interface GetErrorBudgetResetHistoryQueryParams {
   accountId: string

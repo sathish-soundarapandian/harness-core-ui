@@ -15,11 +15,6 @@ import {
 
 describe('Template Reference By', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncEnabledCall, {
       connectivityMode: null,
       gitSyncEnabled: false,
@@ -42,17 +37,17 @@ describe('Template Reference By', () => {
     cy.wait('@templatesListMetadataCallForDrawer', { timeout: 10000 })
     cy.get('div[data-tab-id="INPUTS"]').should('be.visible')
     cy.get('div[data-tab-id="YAML"]').should('be.visible')
-    cy.get('div[data-tab-id="REFERENCEDBY"]').should('be.visible').click()
   })
 
   it('when no references are present', () => {
-    cy.wait(2000)
+    cy.get('div[data-tab-id="REFERENCEDBY"]').should('be.visible').click()
     cy.get('[data-icon="nav-project"]').should('be.visible')
     cy.contains('p', 'No references found').should('be.visible')
   })
 
   it('when pipeline and template references are present', () => {
     cy.intercept('GET', templateReferencesCall, { fixture: 'ng/api/entitySetupUsageV2' }).as('templateReferencesCall')
+    cy.get('div[data-tab-id="REFERENCEDBY"]').should('be.visible').click()
     cy.wait('@templateReferencesCall', { timeout: 10000 })
     cy.get('[id=bp3-tab-panel_template-details_REFERENCEDBY]').within(() => {
       cy.contains('stage temp (v34)').should('be.visible')

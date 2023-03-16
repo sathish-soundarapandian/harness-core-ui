@@ -207,7 +207,6 @@ function StartupScriptWizardStepTwo({
                           variableName="repoName"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={/* istanbul ignore next */ value => formik.setFieldValue('repoName', value)}
                           isReadonly={isReadonly}
                         />
@@ -237,7 +236,6 @@ function StartupScriptWizardStepTwo({
                           variableName="branch"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={/* istanbul ignore next */ value => formik.setFieldValue('branch', value)}
                           isReadonly={isReadonly}
                         />
@@ -261,7 +259,6 @@ function StartupScriptWizardStepTwo({
                           variableName="commitId"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={/* istanbul ignore next */ value => formik.setFieldValue('commitId', value)}
                           isReadonly={isReadonly}
                         />
@@ -283,7 +280,6 @@ function StartupScriptWizardStepTwo({
                         variableName={'paths'}
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={
                           /* istanbul ignore next */ value => {
                             formik.setFieldValue('paths', value)

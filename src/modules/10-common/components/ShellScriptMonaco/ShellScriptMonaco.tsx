@@ -18,12 +18,14 @@ import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import { useDeepCompareEffect } from '@common/hooks'
 import css from './ShellScriptMonaco.module.scss'
 
-export type ScriptType = 'Bash' | 'PowerShell'
+export type ScriptType = 'Bash' | 'PowerShell' | 'Python'
+
 type Languages = typeof languages
 
 const langMap: Record<ScriptType, string> = {
   Bash: 'shell',
-  PowerShell: 'powershell'
+  PowerShell: 'powershell',
+  Python: 'python'
 }
 
 export interface ShellScriptMonacoProps {

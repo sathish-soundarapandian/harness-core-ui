@@ -10,10 +10,12 @@ import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { pipelines } from '@pipeline/components/PipelineModalListView/__tests__/pipelinelistMocks'
+import { SortMethod } from '@common/utils/sortUtils'
 import PipelineResourceModal from '../PipelineResourceModal'
 
 const props = {
   searchTerm: '',
+  sortMethod: SortMethod.Newest,
   onSelectChange: jest.fn(),
   selectedData: [],
   resourceScope: {

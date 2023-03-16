@@ -74,6 +74,8 @@ import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetai
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import GitPopover from '../GitPopover/GitPopover'
 import SelectStagetoRetry from './SelectStagetoRetry'
@@ -121,6 +123,7 @@ function RetryPipeline({
     supportingGitSimplification
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const { getString } = useStrings()
   const { showSuccess, showWarning, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -179,7 +182,7 @@ function RetryPipeline({
   const [isLastIndex, setIsLastIndex] = useState(false)
   const [isAllStage, setIsAllStage] = useState(true)
   const [inputSetTemplateYaml, setInputSetTemplateYaml] = useState('')
-  const [skipPreFlightCheck, setSkipPreFlightCheck] = useState(false)
+  const [skipPreFlightCheck, setSkipPreFlightCheck] = useState(isPipelineRemote)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState(false)
   const [triggerValidation, setTriggerValidation] = useState(false)
   const [listOfSelectedStages, setListOfSelectedStages] = useState<Array<string>>([])
@@ -194,7 +197,11 @@ function RetryPipeline({
 
   /*------------------------------------------------API Calls------------------------------*/
 
-  const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
+  const {
+    data: pipelineResponse,
+    loading: loadingPipeline,
+    error: getPipelineError
+  } = useGetPipeline({
     pipelineIdentifier: pipelineId,
     queryParams: {
       accountIdentifier: accountId,
@@ -208,7 +215,11 @@ function RetryPipeline({
     }
   })
 
-  const { data: inputSetData, loading: loadingTemplate } = useGetInputsetYamlV2({
+  const {
+    data: inputSetData,
+    loading: loadingTemplate,
+    error: getTemplateError
+  } = useGetInputsetYamlV2({
     planExecutionId: planExecutionIdentifier,
     queryParams: {
       orgIdentifier,
@@ -222,9 +233,13 @@ function RetryPipeline({
       }
     }
   })
-  const { data: inputSetYamlResponse, loading: loadingInputSetTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
+  const {
+    data: inputSetYamlResponse,
+    loading: loadingInputSetTemplate,
+    error: getTemplateFromPipelineError
+  } = useMutateAsGet(useGetTemplateFromPipeline, {
     body: {
-      stageIdentifiers: []
+      stageIdentifiers: params.stagesExecuted
     },
     queryParams: {
       accountIdentifier: accountId,
@@ -238,7 +253,11 @@ function RetryPipeline({
     }
   })
 
-  const { mutate: retryPipeline, loading: loadingRetry } = useRetryPipeline({
+  const {
+    mutate: retryPipeline,
+    loading: loadingRetry,
+    error: getRetryPipelineError
+  } = useRetryPipeline({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
@@ -264,7 +283,8 @@ function RetryPipeline({
   const {
     refetch: getInputSetsList,
     data: inputSetResponse,
-    loading: inputSetLoading
+    loading: inputSetLoading,
+    error: getInputSetError
   } = useGetInputSetsListForPipeline({
     queryParams: {
       accountIdentifier: accountId,
@@ -282,7 +302,11 @@ function RetryPipeline({
     lazy: true
   })
 
-  const { mutate: mergeInputSet, loading: loadingUpdate } = useGetMergeInputSetFromPipelineTemplateWithListInput({
+  const {
+    mutate: mergeInputSet,
+    loading: loadingUpdate,
+    error: mergeInputSetError
+  } = useGetMergeInputSetFromPipelineTemplateWithListInput({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
@@ -301,7 +325,11 @@ function RetryPipeline({
         : {})
     }
   })
-  const { data: stageResponse, loading: retryStageLoading } = useGetRetryStages({
+  const {
+    data: stageResponse,
+    loading: retryStageLoading,
+    error: getRetryStagesError
+  } = useGetRetryStages({
     planExecutionId: planExecutionIdentifier,
     queryParams: {
       accountIdentifier: accountId,
@@ -494,7 +522,8 @@ function RetryPipeline({
         template: parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline,
         originalPipeline: currentPipeline.pipeline,
         getString,
-        viewType: StepViewType.DeploymentForm
+        viewType: StepViewType.DeploymentForm,
+        isOptionalVariableAllowed
       }) as any
       setFormErrors(errors)
       // triggerValidation should be true every time 'currentPipeline' changes
@@ -569,6 +598,55 @@ function RetryPipeline({
       storeType
     ]
   )
+
+  useEffect(() => {
+    if (getPipelineError) {
+      showError(getRBACErrorMessage(getPipelineError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getPipelineError])
+
+  useEffect(() => {
+    if (getInputSetError) {
+      showError(getRBACErrorMessage(getInputSetError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getInputSetError])
+
+  useEffect(() => {
+    if (getTemplateError) {
+      showError(getRBACErrorMessage(getTemplateError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getTemplateError])
+
+  useEffect(() => {
+    if (getTemplateFromPipelineError) {
+      showError(getRBACErrorMessage(getTemplateFromPipelineError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getTemplateFromPipelineError])
+
+  useEffect(() => {
+    if (getRetryPipelineError) {
+      showError(getRBACErrorMessage(getRetryPipelineError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getRetryPipelineError])
+
+  useEffect(() => {
+    if (mergeInputSetError) {
+      showError(getRBACErrorMessage(mergeInputSetError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mergeInputSetError])
+
+  useEffect(() => {
+    if (getRetryStagesError) {
+      showError(getRBACErrorMessage(getRetryStagesError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getRetryStagesError])
 
   const checkIfRuntimeInputsNotPresent = (): string | undefined => {
     if (pipeline && !inputSetTemplateYaml) {
@@ -735,7 +813,8 @@ function RetryPipeline({
                   template: parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline,
                   originalPipeline: pipeline,
                   getString,
-                  viewType: StepViewType.DeploymentForm
+                  viewType: StepViewType.DeploymentForm,
+                  isOptionalVariableAllowed
                 }) as any) || formErrors
               resolve(validatedErrors)
             }, 300)

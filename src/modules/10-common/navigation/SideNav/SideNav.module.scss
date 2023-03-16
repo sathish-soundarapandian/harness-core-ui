@@ -27,6 +27,7 @@
 
   &.sideNavExpanded {
     width: 184px;
+    flex-shrink: 0;
     & > * {
       opacity: 1;
       transition: opacity 300ms linear;
@@ -63,6 +64,7 @@
       overflow: hidden;
       height: 300px;
       width: 192px;
+      pointer-events: none;
 
       .icon {
         position: absolute;

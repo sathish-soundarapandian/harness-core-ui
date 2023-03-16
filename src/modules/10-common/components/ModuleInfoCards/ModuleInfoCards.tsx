@@ -13,7 +13,6 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import type { StringsMap } from 'stringTypes'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './ModuleInfoCards.module.scss'
 interface InfoCards {
   [key: string]: Array<ModuleInfoCard>
@@ -171,7 +170,6 @@ const getCardKey = ({ key1, key2 }: { key1?: string; key2?: string }): string =>
 const ModuleInfoCards: React.FC<ModuleInfoCardsProps> = props => {
   const { module, selectedInfoCard, setSelectedInfoCard, style } = props
   const { getString } = useStrings()
-  const { CDNG_ENABLED } = useFeatureFlags()
   const { accountId } = useParams<{
     accountId: string
   }>()
@@ -234,7 +232,7 @@ const ModuleInfoCards: React.FC<ModuleInfoCardsProps> = props => {
     )
   }
 
-  const infoCardProps = getInfoCardsProps(accountId, CDNG_ENABLED)[module]
+  const infoCardProps = getInfoCardsProps(accountId, true)[module]
 
   const infoCardStyle = INFO_CARD_STYLES[module]
 

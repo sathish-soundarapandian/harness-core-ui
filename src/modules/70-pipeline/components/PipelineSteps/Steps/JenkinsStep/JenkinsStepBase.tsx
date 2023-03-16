@@ -14,16 +14,17 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  RUNTIME_INPUT_VALUE,
-  SelectWithSubmenuOption
+  RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { FieldArray } from 'formik'
 import cx from 'classnames'
-import { Spinner } from '@blueprintjs/core'
+import { IconName, Spinner } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import { cloneDeep, isArray, isEqual } from 'lodash-es'
+import { cloneDeep, isArray, isEqual, memoize } from 'lodash-es'
+import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
@@ -45,6 +46,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@connectors/constants'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import type { JenkinsStepProps } from './JenkinsStep'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JenkinsFormContentInterface, JenkinsStepData, jobParameterInterface } from './types'
@@ -67,7 +69,9 @@ function FormContent({
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [jobDetails, setJobDetails] = useState<SelectWithSubmenuOption[]>([])
+  const [jobDetails, setJobDetails] = useState<SelectWithBiLevelOption[]>([])
+  const [showChildJobField, setShowChildJobField] = useState<boolean>(false)
+  const [childJob, setChildJob] = useState<SelectWithBiLevelOption>({} as SelectWithBiLevelOption)
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -130,17 +134,23 @@ function FormContent({
           }
         })
       } else {
-        if (formik.values.spec.jobName?.split('/').length > 1 && jobDetails?.length) {
+        if (
+          formik.values.spec.jobName?.split('/').length > 1 &&
+          jobDetails?.length &&
+          getMultiTypeFromValue(formik.values.spec.jobName) === MultiTypeInputType.FIXED
+        ) {
+          setShowChildJobField(true)
           const parentJobName = formik.values.spec.jobName?.split('/')[0]
           lastOpenedJob.current = parentJobName
           const parentJob = jobDetails?.find(job => job.label === parentJobName)
           if (parentJob?.submenuItems?.length) {
             const targetChildJob = parentJob.submenuItems?.find(job => job.label === formik.values?.spec?.jobName)
+            setChildJob(targetChildJob as SelectWithBiLevelOption)
             formik.setValues({
               ...formik.values,
               spec: {
                 ...formik.values.spec,
-                jobName: targetChildJob as SelectWithSubmenuOption
+                jobName: targetChildJob as SelectWithBiLevelOption
               }
             })
           } else {
@@ -165,7 +175,7 @@ function FormContent({
                 value: formik.values?.spec?.jobName,
                 submenuItems: [],
                 hasSubmenuItems: false
-              } as SelectWithSubmenuOption
+              } as SelectWithBiLevelOption
             }
           })
           setJobDetails([
@@ -185,9 +195,10 @@ function FormContent({
         getMultiTypeFromValue(formik.values.spec.jobName) === MultiTypeInputType.RUNTIME ||
         formik.values.spec.jobName === ''
       ) {
-        setJobDetails((prevState: SelectWithSubmenuOption[]) => {
+        setJobDetails((prevState: SelectWithBiLevelOption[]) => {
           const clonedJobDetails = cloneDeep(prevState)
-          const parentJob = clonedJobDetails.find(obj => obj.label === lastOpenedJob.current)
+          const probableParentName = jobsResponse?.data?.jobDetails?.[0]?.jobName?.split('/')?.[0]
+          const parentJob = clonedJobDetails.find(obj => obj.label === probableParentName)
           if (parentJob) {
             parentJob.submenuItems = [...getJobItems(jobsResponse?.data?.jobDetails || [])]
           }
@@ -222,7 +233,7 @@ function FormContent({
     }
   }, [formik.values.spec.connectorRef])
 
-  const getJobItems = (jobs: JobDetails[]): SelectWithSubmenuOption[] => {
+  const getJobItems = (jobs: JobDetails[]): SelectWithBiLevelOption[] => {
     return jobs?.map(job => {
       return {
         label: job.jobName || '',
@@ -231,6 +242,32 @@ function FormContent({
         hasSubmenuItems: job.folder
       }
     })
+  }
+
+  const childJobDetails = () => {
+    if (showChildJobField && lastOpenedJob.current) {
+      const childJobs: SelectWithBiLevelOption[] =
+        jobDetails.find(item => item.label === lastOpenedJob.current)?.submenuItems || []
+      return childJobs
+    }
+    return []
+  }
+
+  const jobNameRenderer = memoize((item: SelectWithBiLevelOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem
+      item={item}
+      itemProps={itemProps}
+      disabled={fetchingJobs}
+      icon={item?.hasSubmenuItems ? 'folder-open' : ('file' as IconName)}
+    />
+  ))
+
+  const getJobnameValue = () => {
+    if (showChildJobField) {
+      const parentJob = jobDetails.find(job => job.label === lastOpenedJob?.current)
+      if (parentJob) return parentJob
+    }
+    return formValues?.spec?.jobName
   }
 
   return (
@@ -278,6 +315,8 @@ function FormContent({
           selected={formik?.values?.spec.connectorRef as string}
           onChange={(value: any, _unused) => {
             if (value?.record?.identifier !== connectorRefFixedValue) {
+              setChildJob({} as SelectWithBiLevelOption)
+              setShowChildJobField(false)
               resetForm(
                 formik,
                 'connectorRef',
@@ -299,7 +338,6 @@ function FormContent({
             variableName="spec.connectorRef"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
             connectorReferenceFieldProps={{
@@ -316,34 +354,36 @@ function FormContent({
       </div>
 
       <div className={cx(stepCss.formGroup, stepCss.lg, css.jobDetails)}>
-        <FormInput.SelectWithSubmenuTypeInput
-          label={'Job Name'}
+        <FormInput.MultiTypeBiLevelInput
+          label={getString('connectors.jenkins.jobNameLabel')}
           name={'spec.jobName'}
-          selectItems={jobDetails}
+          value={getJobnameValue()}
           placeholder={
             connectorRefFixedValue && getMultiTypeFromValue(connectorRefFixedValue) === MultiTypeInputType.FIXED
               ? fetchingJobs
-                ? 'Fetching jobs...'
+                ? getString('common.loadingFieldOptions', { fieldName: getString('pipeline.jenkinsStep.job') })
                 : fetchingJobsError?.message
                 ? fetchingJobsError?.message
                 : getString('select')
               : getString('select')
           }
-          selectWithSubmenuTypeInputProps={{
-            expressions,
-            selectWithSubmenuProps: {
-              items: jobDetails,
-              allowCreatingNewItems: true,
-              onChange: primaryValue => {
-                formik.setValues({
-                  ...formik.values,
-                  spec: {
-                    ...formik.values.spec,
-                    jobName: primaryValue as SelectWithSubmenuOption,
-                    jobParameter:
-                      getMultiTypeFromValue(primaryValue) === MultiTypeInputType.RUNTIME ? RUNTIME_INPUT_VALUE : []
-                  }
-                })
+          multiTypeInputProps={{
+            onChange: (primaryValue: any) => {
+              if (primaryValue?.hasSubmenuItems) {
+                setShowChildJobField(true)
+                lastOpenedJob.current = primaryValue?.label
+                const parentJob = jobDetails?.find(job => job.label === primaryValue?.label)
+                if (!parentJob?.submenuItems?.length) {
+                  refetchJobs({
+                    queryParams: {
+                      ...commonParams,
+                      connectorRef: connectorRefFixedValue?.toString(),
+                      parentJobName: primaryValue?.label
+                    }
+                  })
+                }
+              } else {
+                setShowChildJobField(false)
                 if (getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED && primaryValue?.label?.length) {
                   refetchJobParameters({
                     pathParams: { jobName: encodeURIComponent(encodeURIComponent(primaryValue.label)) },
@@ -353,23 +393,30 @@ function FormContent({
                     }
                   })
                 }
-              },
-              onSubmenuOpen: (item?: SelectWithSubmenuOption | undefined) => {
-                lastOpenedJob.current = item?.label
-                const parentJob = jobDetails?.find(job => job.label === item?.label)
-                if (!parentJob?.submenuItems?.length) {
-                  return refetchJobs({
-                    queryParams: {
-                      ...commonParams,
-                      connectorRef: connectorRefFixedValue?.toString(),
-                      parentJobName: item?.label
-                    }
-                  })
-                }
-                return Promise.resolve()
               }
-            }
+              setChildJob({} as SelectWithBiLevelOption)
+              formik.setValues({
+                ...formik.values,
+                spec: {
+                  ...formik.values.spec,
+                  jobName: primaryValue as SelectWithBiLevelOption,
+                  jobParameter:
+                    getMultiTypeFromValue(primaryValue) === MultiTypeInputType.RUNTIME ? RUNTIME_INPUT_VALUE : []
+                }
+              })
+            },
+
+            onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.jobName', type),
+            expressions,
+            selectProps: {
+              allowCreatingNewItems: true,
+              items: jobDetails,
+              addClearBtn: !readonly,
+              itemRenderer: jobNameRenderer
+            },
+            allowableTypes
           }}
+          selectItems={jobDetails || []}
         />
         {getMultiTypeFromValue(formik.values.spec.jobName) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -379,12 +426,81 @@ function FormContent({
             variableName="spec.jobName"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => formik.setFieldValue('spec.jobName', value)}
+            onChange={value => {
+              formik.setFieldValue('spec.jobName', value)
+              setShowChildJobField(false)
+            }}
             isReadonly={readonly}
           />
         )}
       </div>
+      {showChildJobField && (
+        <div className={cx(stepCss.formGroup, stepCss.lg, css.jobDetails)}>
+          <FormInput.MultiTypeBiLevelInput
+            label={`${lastOpenedJob.current || getString('connectors.jenkins.child')} ${getString(
+              'connectors.jenkins.jobs'
+            )}`}
+            name={'spec.jobName'}
+            value={childJob}
+            placeholder={
+              connectorRefFixedValue && getMultiTypeFromValue(connectorRefFixedValue) === MultiTypeInputType.FIXED
+                ? fetchingJobs
+                  ? getString('common.loadingFieldOptions', { fieldName: getString('pipeline.jenkinsStep.job') })
+                  : fetchingJobsError?.message
+                  ? fetchingJobsError?.message
+                  : getString('select')
+                : getString('select')
+            }
+            multiTypeInputProps={{
+              onChange: (primaryValue: any) => {
+                if (primaryValue?.hasSubmenuItems) {
+                  lastOpenedJob.current = primaryValue?.label
+                  const parentJob = jobDetails?.find(job => job.label === primaryValue?.label)
+                  if (!parentJob?.submenuItems?.length) {
+                    refetchJobs({
+                      queryParams: {
+                        ...commonParams,
+                        connectorRef: connectorRefFixedValue?.toString(),
+                        parentJobName: primaryValue?.label
+                      }
+                    })
+                  }
+                } else {
+                  if (getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED && primaryValue?.label?.length) {
+                    refetchJobParameters({
+                      pathParams: { jobName: encodeURIComponent(encodeURIComponent(primaryValue.label)) },
+                      queryParams: {
+                        ...commonParams,
+                        connectorRef: connectorRefFixedValue?.toString()
+                      }
+                    })
+                  }
+                }
+                setChildJob(primaryValue)
+                formik.setValues({
+                  ...formik.values,
+                  spec: {
+                    ...formik.values.spec,
+                    jobName: primaryValue as SelectWithBiLevelOption,
+                    jobParameter:
+                      getMultiTypeFromValue(primaryValue) === MultiTypeInputType.RUNTIME ? RUNTIME_INPUT_VALUE : []
+                  }
+                })
+              },
+              onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.jobName', type),
+              expressions,
+              selectProps: {
+                allowCreatingNewItems: false,
+                items: childJobDetails(),
+                addClearBtn: false,
+                itemRenderer: jobNameRenderer
+              },
+              allowableTypes: [MultiTypeInputType.FIXED]
+            }}
+            selectItems={childJobDetails() || []}
+          />
+        </div>
+      )}
 
       <div className={stepCss.formGroup}>
         <MultiTypeFieldSelector
@@ -470,7 +586,6 @@ function FormContent({
             className={css.minConfigBtn}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => {
               formik.setValues({
                 ...formik.values,

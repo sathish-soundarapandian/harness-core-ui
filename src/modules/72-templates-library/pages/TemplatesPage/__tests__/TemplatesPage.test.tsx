@@ -100,6 +100,14 @@ jest.mock('services/cd-ng-rq', () => ({
   })
 }))
 
+jest.mock('@templates-library/components/MigrateTemplateResource/useMigrateTemplateSource', () => ({
+  ...jest.requireActual('@templates-library/components/MigrateTemplateResource/useMigrateTemplateSource'),
+  __esModule: true,
+  default: () => ({
+    showMigrateTemplateResourceModal: jest.fn()
+  })
+}))
+
 const PATH = routes.toTemplates({ ...projectPathProps, ...pipelineModuleParams })
 const PATH_PARAMS = {
   accountId: 'accountId',

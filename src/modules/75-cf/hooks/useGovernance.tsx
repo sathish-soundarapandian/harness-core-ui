@@ -10,12 +10,9 @@ import React, { useState } from 'react'
 import { useModalHook } from '@harness/use-modal'
 import { EvaluationModal } from '@governance/EvaluationModal'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { useStrings } from 'framework/strings'
 
 export interface UseGovernancePayload {
-  isGovernanceEnabled: boolean
   governanceError: any
   handleError: (error: any) => void
   isGovernanceError(err: any): boolean
@@ -23,10 +20,6 @@ export interface UseGovernancePayload {
 
 export const useGovernance = (): UseGovernancePayload => {
   const { getString } = useStrings()
-
-  const OPA_FF_GOVERNANCE = useFeatureFlag(FeatureFlag.OPA_FF_GOVERNANCE)
-
-  const isGovernanceEnabled = !!OPA_FF_GOVERNANCE
 
   const { accountId: accountIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
 
@@ -60,7 +53,6 @@ export const useGovernance = (): UseGovernancePayload => {
   )
 
   return {
-    isGovernanceEnabled,
     governanceError,
     handleError,
     isGovernanceError

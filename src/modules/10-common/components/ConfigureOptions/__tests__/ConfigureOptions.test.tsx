@@ -15,7 +15,10 @@ import {
   getByDisplayValue,
   queryByPlaceholderText,
   findByText,
-  queryByText
+  queryByText,
+  screen,
+  findByRole,
+  getByRole
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
@@ -30,8 +33,7 @@ const getProps = (
   variableName: string,
   isRequired = true,
   defaultValue = '',
-  showDefaultField = true,
-  showAdvanced = true
+  showDefaultField = true
 ): ConfigureOptionsProps => ({
   value,
   isRequired,
@@ -39,7 +41,6 @@ const getProps = (
   variableName,
   type,
   showDefaultField,
-  showAdvanced,
   onChange
 })
 
@@ -116,7 +117,7 @@ describe('Test ConfigureOptions', () => {
     const submitBtn = getByTextBody(dialog, 'submit')
     fireEvent.click(submitBtn)
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
-    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.regex(^abc$)`, '', true)
+    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.regex(^abc$)`, undefined, true)
   })
 
   test('test invalid default for allowed values error', async () => {
@@ -172,7 +173,7 @@ describe('Test ConfigureOptions', () => {
     const submitBtn = getByTextBody(dialog, 'submit')
     fireEvent.click(submitBtn)
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
-    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.allowedValues(abc,xyz)`, '', true)
+    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.allowedValues(abc,xyz)`, undefined, true)
   })
 
   test('test regex expression', async () => {
@@ -190,7 +191,7 @@ describe('Test ConfigureOptions', () => {
     const submitBtn = getByTextBody(dialog, 'submit')
     fireEvent.click(submitBtn)
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
-    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.regex(^a$)`, '', true)
+    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.regex(^a$)`, undefined, true)
   })
 
   test('test allowed values', async () => {
@@ -211,7 +212,7 @@ describe('Test ConfigureOptions', () => {
     const submitBtn = getByTextBody(dialog, 'submit')
     fireEvent.click(submitBtn)
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
-    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.allowedValues(abc,xyz)`, '', true)
+    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.allowedValues(abc,xyz)`, undefined, true)
   })
 
   test('test allowed advanced values', async () => {
@@ -239,7 +240,7 @@ describe('Test ConfigureOptions', () => {
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
     expect(onChange).toBeCalledWith(
       `${RUNTIME_INPUT_VALUE}.allowedValues(jexl(\${env.type} == “prod” ? aws1, aws2 : aws3, aws4))`,
-      '',
+      undefined,
       true
     )
   })
@@ -292,7 +293,7 @@ describe('Test ConfigureOptions', () => {
     const submitBtn = getByTextBody(dialog, 'submit')
     userEvent.click(submitBtn)
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
-    expect(onChange).toHaveBeenCalledWith('<+input>.allowedValues(200)', '', true)
+    expect(onChange).toHaveBeenCalledWith('<+input>.allowedValues(200)', undefined, true)
   })
 
   test('test dialog open and close', async () => {
@@ -364,5 +365,36 @@ describe('Test ConfigureOptions', () => {
     fireEvent.click(submitBtn)
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
     expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.default(123)`, 123, true)
+  })
+
+  test('default value should be undefined when value is not provided', async () => {
+    onChange.mockReset()
+    render(
+      <TestWrapper>
+        <ConfigureOptions {...getProps(`${RUNTIME_INPUT_VALUE}.default(NaN)`, 'Number', 'var-test-number')} />
+      </TestWrapper>
+    )
+
+    const configureButton = screen.getByRole('button', {
+      name: /cog/i
+    })
+    userEvent.click(configureButton)
+    const configureOptionsDialog = findDialogContainer() as HTMLElement
+    expect(
+      await waitFor(() =>
+        findByRole(configureOptionsDialog, 'heading', {
+          name: 'common.configureOptions.configureOptions'
+        })
+      )
+    )
+
+    userEvent.clear(getByRole(configureOptionsDialog, 'spinbutton'))
+    userEvent.click(
+      getByRole(configureOptionsDialog, 'button', {
+        name: /submit/i
+      })
+    )
+    await waitFor(() => expect(onChange).toBeCalledTimes(1))
+    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}`, undefined, true)
   })
 })

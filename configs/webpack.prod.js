@@ -65,7 +65,7 @@ const config = {
       filename: '../index.html',
       minify: false,
       templateParameters: {
-        __DEV__: false,
+        __DEV__: false
       }
     }),
     new MiniCssExtractPlugin({

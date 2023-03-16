@@ -6,7 +6,7 @@
  */
 
 import type { AllowedTypes, SelectOption } from '@harness/uicore'
-import type { FormikValues } from 'formik'
+import type { FormikProps, FormikValues } from 'formik'
 import type { GetDataError } from 'restful-react'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
@@ -43,6 +43,7 @@ export interface ArtifactListViewProps {
   removeArtifactSource?: (index: number) => void
   isSidecarAllowed?: boolean
   isMultiArtifactSource?: boolean
+  deploymentType: ServiceDefinition['type']
 }
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean
@@ -243,6 +244,25 @@ export interface JenkinsArtifactProps {
   isMultiArtifactSource?: boolean
 }
 
+export interface BambooArtifactProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: BambooArtifactType
+  handleSubmit: (data: BambooArtifactType) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
+}
+
+export interface ArtifactFormikProps<Values> {
+  formik: FormikProps<Values>
+  formClassName?: string
+}
+
 export interface GoogleArtifactRegistryInitialValuesType {
   identifier?: string
   versionType?: TagTypes
@@ -288,6 +308,19 @@ export interface Nexus2ArtifactProps {
   formClassName?: string
 }
 
+export interface NexusSpecType {
+  artifactId?: string
+  groupId?: string
+  group?: string
+  extension?: string
+  classifier?: string
+  packageName?: string
+  artifactPath?: string
+  repositoryUrl?: string
+  repositoryPort?: string
+  repositoryPortorRepositoryURL?: string
+}
+
 export interface Nexus2InitialValuesType {
   identifier: string
   tagType?: string
@@ -296,18 +329,7 @@ export interface Nexus2InitialValuesType {
   tagRegex: string
   repository: string
   repositoryFormat: string
-  spec: {
-    artifactId?: string
-    groupId?: string
-    group?: string
-    extension?: string
-    classifier?: string
-    packageName?: string
-    artifactPath?: string
-    repositoryUrl?: string
-    repositoryPort?: string
-    repositoryPortorRepositoryURL?: string
-  }
+  spec: NexusSpecType
 }
 
 export interface JenkinsArtifactType {
@@ -317,6 +339,17 @@ export interface JenkinsArtifactType {
     artifactPath?: SelectOption | string
     build?: SelectOption | string
     jobName?: SelectOption | string
+  }
+}
+
+export interface BambooArtifactType {
+  identifier: string
+  type?: string
+  spec: {
+    connectorRef?: string
+    artifactPaths?: SelectOption[] | string[] | string
+    build?: SelectOption | string
+    planKey?: SelectOption | string
   }
 }
 
@@ -364,6 +397,8 @@ export interface ArtifactImagePathTagViewProps {
   isArtifactPath?: boolean
   isImagePath?: boolean
   isServerlessDeploymentTypeSelected?: boolean
+  canFetchTags?: () => boolean
+  tooltipId?: string
 }
 
 export interface ACRArtifactType {

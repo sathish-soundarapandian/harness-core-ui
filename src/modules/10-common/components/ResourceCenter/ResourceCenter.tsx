@@ -53,7 +53,7 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
   const { showModal } = useReleaseNotesModal()
 
   const isCommunity = useGetCommunity()
-  const { SHOW_NG_REFINER_FEEDBACK, SPG_MODULE_VERSION_INFO } = useFeatureFlags()
+  const { SPG_MODULE_VERSION_INFO } = useFeatureFlags()
   useEffect(() => {
     _refiner('dismissForm', refinerSurveryId)
     _refiner('setProject', refinerProjectId)
@@ -98,18 +98,18 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
         testId: 'view-ticket'
       }
     ]
-    if (SHOW_NG_REFINER_FEEDBACK) {
-      finalTiles.push({
-        title: getString('common.resourceCenter.feedback.submit'),
-        icon: 'chat',
-        onClick: (_e: React.MouseEvent<Element, MouseEvent>) => refinerSurvey(),
-        disabled: buttonDisabled,
-        iconSize: 20,
-        testId: 'feedback'
-      })
-    }
+
+    finalTiles.push({
+      title: getString('common.resourceCenter.feedback.submit'),
+      icon: 'chat',
+      onClick: (_e: React.MouseEvent<Element, MouseEvent>) => refinerSurvey(),
+      disabled: buttonDisabled,
+      iconSize: 20,
+      testId: 'feedback'
+    })
+
     return finalTiles
-  }, [SHOW_NG_REFINER_FEEDBACK, currentUserInfo, buttonDisabled])
+  }, [currentUserInfo, buttonDisabled])
 
   if (!show && !link) {
     return (

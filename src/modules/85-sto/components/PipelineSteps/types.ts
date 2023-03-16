@@ -25,7 +25,7 @@ export type InputSetViewValidateFieldsConfig = {
   isRequired?: boolean
 }
 
-type TargetType = 'repository' | 'container' | 'instance'
+type TargetType = 'repository' | 'container' | 'instance' | 'configuration'
 
 type Target = {
   type: TargetType
@@ -57,6 +57,7 @@ type Auth = {
   version?: string
   type?: string
   ssl?: boolean
+  region?: string
 }
 
 type Tool = {

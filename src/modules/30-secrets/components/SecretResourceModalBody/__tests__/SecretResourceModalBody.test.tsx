@@ -8,11 +8,13 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { SortMethod } from '@common/utils/sortUtils'
 import SecretResourceModalBody from '../SecretResourceModalBody'
 import mockData from './secretMockData.json'
 
 const props = {
   searchTerm: '',
+  sortMethod: SortMethod.Newest,
   onSelectChange: jest.fn(),
   selectedData: [],
   resourceScope: {

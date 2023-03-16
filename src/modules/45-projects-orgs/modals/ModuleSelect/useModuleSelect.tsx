@@ -30,6 +30,7 @@ import ModuleSelectionFactory from '@projects-orgs/factories/ModuleSelectionFact
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import css from './useModuleSelect.module.scss'
 
 export interface UseModuleSelectModalProps {
@@ -52,7 +53,6 @@ interface ModulesRoutesMap extends GoToModuleBtnProps {
   search?: string
   accountId: string
   freePlanEnabled?: boolean
-  cdOnboardingEnabled?: boolean
 }
 interface UpdateLicneseStoreAndGotoModulePageProps {
   planData: ResponseModuleLicenseDTO
@@ -63,8 +63,7 @@ const getModulesWithSubscriptionsRoutesMap = ({
   projectData,
   search = '',
   accountId,
-  freePlanEnabled = false,
-  cdOnboardingEnabled = false
+  freePlanEnabled = false
 }: ModulesRoutesMap): Map<ModuleName, any> => {
   const cdCiPath = {
     pathname: routes.toPipelineStudio({
@@ -77,7 +76,7 @@ const getModulesWithSubscriptionsRoutesMap = ({
     search: `modal=${freePlanEnabled ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL}`
   }
   const cdOnboardingPath = {
-    pathname: routes.toGetStartedWithCD({
+    pathname: routes.toCDOnboardingWizard({
       orgIdentifier: projectData.orgIdentifier || '',
       projectIdentifier: projectData.identifier,
       accountId,
@@ -105,7 +104,7 @@ const getModulesWithSubscriptionsRoutesMap = ({
         })
       }
     ],
-    [ModuleName.CD, cdOnboardingEnabled ? cdOnboardingPath : cdCiPath],
+    [ModuleName.CD, cdOnboardingPath],
     [ModuleName.CI, cdCiPath],
     [
       ModuleName.STO,
@@ -136,7 +135,6 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const { showError } = useToaster()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const FREE_PLAN_ENABLED = !isOnPrem()
-  const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
   const history = useHistory()
   const { selectedModuleName, projectData } = props
   const { accountId } = useParams<AccountPathProps>()
@@ -155,8 +153,7 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
       projectData,
       accountId,
       search: `?experience=${experienceType}&&modal=${experienceType}`,
-      freePlanEnabled: FREE_PLAN_ENABLED,
-      cdOnboardingEnabled: CD_ONBOARDING_ENABLED
+      freePlanEnabled: FREE_PLAN_ENABLED
     })
     history.push(moudleRoutePathMap.get(selectedModuleName))
   }
@@ -249,7 +246,7 @@ export const useModuleSelectModal = ({
   const [selectedModuleName, setSelectedModuleName] = React.useState<ModuleName>()
   const [projectData, setProjectData] = React.useState<Project>()
 
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
   const modalProps: IDialogProps = {
     isOpen: true,
@@ -263,7 +260,8 @@ export const useModuleSelectModal = ({
     }
   }
   const infoCards: InfoCards[] = []
-  if (CDNG_ENABLED) {
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
+  if (shouldVisible) {
     infoCards.push({
       name: ModuleName.CD
     })

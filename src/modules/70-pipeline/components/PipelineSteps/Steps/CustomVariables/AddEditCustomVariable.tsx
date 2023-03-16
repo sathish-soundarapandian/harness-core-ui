@@ -14,7 +14,7 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 
 import { getVaribaleTypeOptions, VariableType } from './CustomVariableUtils'
 
-const MAX_LENGTH = 64
+const MAX_LENGTH = 128
 
 export interface VariableState {
   variable: AllNGVariables

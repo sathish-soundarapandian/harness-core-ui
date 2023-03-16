@@ -14,7 +14,6 @@ import common from '@common/strings/strings.en.yaml'
 import rbac from '@rbac/strings/strings.en.yaml'
 import defaultSettings from '@default-settings/strings/strings.en.yaml'
 import governance from '@governance/strings/strings.en.yaml'
-import et from '@et/strings/strings.en.yaml'
 import delegates from '@delegates/strings/strings.en.yaml'
 import secrets from '@secrets/strings/strings.en.yaml'
 import filestore from '@filestore/strings/strings.en.yaml'
@@ -27,6 +26,7 @@ import gitsync from '@gitsync/strings/strings.en.yaml'
 import dashboards from '@dashboards/strings/strings.en.yaml'
 import projectsOrgs from '@projects-orgs/strings/strings.en.yaml'
 import code from '@code/strings/strings.en.yaml'
+import et from '@et/strings/strings.en.yaml'
 import pipeline from '@pipeline/strings/strings.en.yaml'
 import freezeWindows from '@freeze-windows/strings/strings.en.yaml'
 import templatesLibrary from '@templates-library/strings/strings.en.yaml'
@@ -37,7 +37,7 @@ import cf from '@cf/strings/strings.en.yaml'
 import chaos from '@chaos/strings/strings.en.yaml'
 import ci from '@ci/strings/strings.en.yaml'
 import idp from '@idp/strings/strings.en.yaml'
-import sscs from '@sscs/strings/strings.en.yaml'
+import ssca from '@ssca/strings/strings.en.yaml'
 import cv from '@cv/strings/strings.en.yaml'
 import iacm from '@iacm/strings/strings.en.yaml'
 import sto from '@sto/strings/strings.en.yaml'
@@ -49,7 +49,6 @@ export default function languageLoader() {
     rbac,
     defaultSettings,
     governance,
-    et,
     delegates,
     secrets,
     filestore,
@@ -62,6 +61,7 @@ export default function languageLoader() {
     dashboards,
     projectsOrgs,
     code,
+    et,
     pipeline,
     freezeWindows,
     templatesLibrary,
@@ -72,7 +72,7 @@ export default function languageLoader() {
     chaos,
     ci,
     idp,
-    sscs,
+    ssca,
     cv,
     iacm,
     sto,

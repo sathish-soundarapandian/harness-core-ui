@@ -80,6 +80,9 @@ jest.mock('services/cd-ng', () => ({
   }),
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: jest.fn() }
+  }),
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { allowDifferentRepoSettings: { data: { value: 'false' } }, loading: false } }
   })
 }))
 
@@ -314,8 +317,10 @@ describe('Input Set List - Actions tests', () => {
         pageSize: 20,
         pipelineIdentifier: 'pipeline',
         projectIdentifier: 'test',
-        searchTerm: 'asd'
-      }
+        searchTerm: 'asd',
+        sortOrders: ['createdAt,DESC']
+      },
+      queryParamStringifyOptions: { arrayFormat: 'repeat' }
     })
   })
 

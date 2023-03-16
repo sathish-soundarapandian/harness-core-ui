@@ -11,10 +11,11 @@ import { Container } from '@harness/uicore'
 import type { ApprovalInstanceResponse, ExecutionGraph, ServiceNowApprovalInstanceDetails } from 'services/pipeline-ng'
 import { Duration } from '@common/exports'
 import { ApprovalStatus } from '@pipeline/utils/approvalUtils'
-import { String } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import type { StepExecutionTimeInfo } from '@pipeline/components/execution/StepDetails/views/BaseApprovalView/BaseApprovalView'
 import { StepDetails } from '@pipeline/components/execution/StepDetails/common/StepDetails/StepDetails'
+import { Collapse } from '@pipeline/components/execution/StepDetails/common/Collapse/Collapse'
 import { ServiceNowCriteria } from './ServiceNowCriteria/ServiceNowCriteria'
 import headerCss from '@pipeline/pages/execution/ExecutionPipelineView/ExecutionGraphView/ExecutionStageDetailsHeader/ExecutionStageDetailsHeader.module.scss'
 import css from './ServiceNowApprovalTab.module.scss'
@@ -33,6 +34,7 @@ export interface ServiceNowApprovalTabProps extends StepExecutionTimeInfo {
 
 export function ServiceNowApprovalTab(props: ServiceNowApprovalTabProps): React.ReactElement {
   const { isWaiting, startTs, endTs, stepParameters, executionMetadata } = props
+  const { getString } = useStrings()
   const approvalData = props.approvalData as ApprovalData
   const wasApproved = !isWaiting && approvalData?.status === ApprovalStatus.APPROVED
   const wasRejected =
@@ -111,6 +113,35 @@ export function ServiceNowApprovalTab(props: ServiceNowApprovalTabProps): React.
         {approvalData?.details?.rejectionCriteria ? (
           <ServiceNowCriteria type="rejection" criteria={approvalData.details.rejectionCriteria} />
         ) : null}
+        {
+          <>
+            <Collapse
+              className={css.approvalWindow}
+              title={<String stringID={'pipeline.approvalCriteria.approvalWindow'} />}
+              isDefaultOpen
+            >
+              {approvalData?.details?.changeWindowSpec ? (
+                <>
+                  <table className={css.detailsTable}>
+                    <tbody>
+                      <tr>
+                        <th>{`${getString('pipeline.serviceNowApprovalStep.windowStart')}:`}</th>
+                        <td>{approvalData?.details?.changeWindowSpec?.startField}</td>
+                      </tr>
+                      <tr>
+                        <th>{`${getString('pipeline.serviceNowApprovalStep.windowEnd')}:`}</th>
+                        <td>{approvalData?.details?.changeWindowSpec?.endField}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <String stringID={'pipeline.commonApprovalStep.execution.approvalWindowMsg'} />
+                </>
+              ) : (
+                getString('na')
+              )}
+            </Collapse>
+          </>
+        }
       </div>
     </React.Fragment>
   )

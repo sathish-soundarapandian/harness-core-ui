@@ -141,7 +141,6 @@ function AsgCanaryDeployWidget(
                   variableName={getString('instanceFieldOptions.instances')}
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => {
                     setFieldValue('instances', value)
                   }}
@@ -166,6 +165,7 @@ const AsgCanaryDeployInputStep: React.FC<AsgCanaryDeployProps> = ({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
+  const isTemplateUsageView = stepViewType === StepViewType.TemplateUsage
   return (
     <>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
@@ -188,7 +188,7 @@ const AsgCanaryDeployInputStep: React.FC<AsgCanaryDeployProps> = ({
       )}
       {(getMultiTypeFromValue(template?.spec?.instanceSelection?.spec?.count) === MultiTypeInputType.RUNTIME ||
         getMultiTypeFromValue(template?.spec?.instanceSelection?.spec?.percentage) === MultiTypeInputType.RUNTIME) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
+        <div className={cx(stepCss.formGroup, { [stepCss.md]: !isTemplateUsageView })}>
           <FormInstanceDropdown
             expressions={expressions}
             label={getString('common.instanceLabel')}

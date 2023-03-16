@@ -7,56 +7,62 @@
 
 import React from 'react'
 import { MultiSelectDropDown, MultiSelectOption } from '@harness/uicore'
-import { defaultTo } from 'lodash-es'
-import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
+import { defaultTo, flatten, uniqBy, has } from 'lodash-es'
+import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { StringKeys, useStrings } from 'framework/strings'
 
-type AllowedStatus = Exclude<
+type FilterExecutionStatus = Exclude<
   ExecutionStatus,
   | 'NotStarted'
   | 'Queued'
   | 'Skipped'
   | 'Pausing'
   | 'Suspended'
-  | 'AsyncWaiting'
-  | 'TaskWaiting'
-  | 'TimedWaiting'
-  | 'Errored'
-  | 'IgnoreFailed'
-  | 'Discontinuing'
   | 'QueuedLicenseLimitReached'
   | 'QueuedExecutionConcurrencyReached'
 >
-const allowedOptions = [
-  ExecutionStatusEnum.Aborted,
-  ExecutionStatusEnum.AbortedByFreeze,
-  ExecutionStatusEnum.Expired,
-  ExecutionStatusEnum.Failed,
-  ExecutionStatusEnum.Running,
-  ExecutionStatusEnum.Success,
-  ExecutionStatusEnum.ApprovalRejected,
-  ExecutionStatusEnum.Paused,
-  ExecutionStatusEnum.ApprovalWaiting,
-  ExecutionStatusEnum.InterventionWaiting,
-  ExecutionStatusEnum.ResourceWaiting,
-  ExecutionStatusEnum.WaitStepRunning
-] as AllowedStatus[]
 
-const labelMap: Record<AllowedStatus, StringKeys> = {
+export const stringsMap: Record<FilterExecutionStatus, StringKeys> = {
   Aborted: 'pipeline.executionFilters.labels.Aborted',
   AbortedByFreeze: 'pipeline.executionFilters.labels.AbortedByFreeze',
-  Expired: 'pipeline.executionFilters.labels.Expired',
-  Failed: 'pipeline.executionFilters.labels.Failed',
+  Discontinuing: 'pipeline.executionFilters.labels.Aborted',
   Running: 'pipeline.executionFilters.labels.Running',
-  Success: 'pipeline.executionFilters.labels.Success',
-  ApprovalRejected: 'pipeline.executionFilters.labels.ApprovalRejected',
+  AsyncWaiting: 'pipeline.executionFilters.labels.Running',
+  TaskWaiting: 'pipeline.executionFilters.labels.Running',
+  TimedWaiting: 'pipeline.executionFilters.labels.Running',
+  Failed: 'pipeline.executionFilters.labels.Failed',
+  Errored: 'pipeline.executionFilters.labels.Failed',
+  Expired: 'pipeline.executionFilters.labels.Expired',
   Paused: 'pipeline.executionFilters.labels.Paused',
-  ApprovalWaiting: 'pipeline.executionFilters.labels.ApprovalWaiting',
-  InterventionWaiting: 'pipeline.executionFilters.labels.InterventionWaiting',
   ResourceWaiting: 'pipeline.executionFilters.labels.Waiting',
-  WaitStepRunning: 'pipeline.executionFilters.labels.WaitStepRunning',
-  InputWaiting: 'pipeline.executionFilters.labels.InputWaiting'
+  Success: 'pipeline.executionFilters.labels.Success',
+  IgnoreFailed: 'pipeline.executionFilters.labels.Success',
+  ApprovalRejected: 'pipeline.executionFilters.labels.ApprovalRejected',
+  InterventionWaiting: 'pipeline.executionFilters.labels.InterventionWaiting',
+  ApprovalWaiting: 'pipeline.executionFilters.labels.ApprovalWaiting',
+  InputWaiting: 'pipeline.executionFilters.labels.Waiting',
+  WaitStepRunning: 'pipeline.executionFilters.labels.Waiting'
 }
+
+type GroupedOptions = Record<StringKeys, ExecutionStatus[]>
+
+/**
+ * @example
+ * {
+ *    pipeline.executionFilters.label.Aborted: [Aborted],
+ *    pipeline.executionFilters.label.Success: [Success, IgnoreFailed],
+ *    ...
+ * }
+ */
+const groupedOptions = Object.entries(stringsMap).reduce<GroupedOptions>((p, [status, strKey]) => {
+  if (!Array.isArray(p[strKey])) {
+    p[strKey] = []
+  }
+
+  p[strKey].push(status as ExecutionStatus)
+
+  return p
+}, {} as GroupedOptions)
 
 export interface StatusSelectProps {
   value?: ExecutionStatus[] | null
@@ -67,30 +73,41 @@ export default function StatusSelect(props: StatusSelectProps): React.ReactEleme
   const { value, onSelect } = props
   const { getString } = useStrings()
 
-  const getAllowedOptions = React.useMemo(
+  const items = React.useMemo(
     () =>
-      allowedOptions.map(item => ({
-        label: getString(labelMap[item]),
-        value: item
-      })) as MultiSelectOption[],
-    [allowedOptions, labelMap]
+      Object.entries(groupedOptions).map(
+        ([key, status]): MultiSelectOption => ({
+          label: getString(key as StringKeys),
+          value: status as any
+        })
+      ),
+    [getString]
+  )
+
+  const actualValue = React.useMemo(
+    () =>
+      uniqBy(
+        flatten(defaultTo(value, []))
+          .filter(val => has(stringsMap, val))
+          .map((val): MultiSelectOption => {
+            const key = stringsMap[val as FilterExecutionStatus]
+
+            return { label: getString(key), value: groupedOptions[key] as any }
+          }),
+        row => row.label
+      ),
+    [getString, value]
   )
 
   return (
     <MultiSelectDropDown
       minWidth={120}
       buttonTestId="status-select"
-      value={defaultTo(
-        value?.map(item => ({
-          label: getString(labelMap[item as AllowedStatus]),
-          value: item
-        })),
-        []
-      )}
+      value={actualValue}
       onChange={option => {
-        onSelect((option.map(item => item.value) as ExecutionStatus[]) || null)
+        onSelect((option.flatMap(item => item.value) as ExecutionStatus[]) || null)
       }}
-      items={getAllowedOptions}
+      items={items}
       usePortal={true}
       placeholder={getString('status')}
     />

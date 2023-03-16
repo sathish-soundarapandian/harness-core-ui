@@ -5,18 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { createContext, ReactElement, useState } from 'react'
+import React, { createContext, useCallback, useState } from 'react'
 import { Icon } from '@harness/uicore'
 import css from './DialogExtension.module.scss'
 
 interface ChildrenProps {
-  triggerExtension: (extentionComponent: ReactElement | React.FC) => void
+  triggerExtension: (extension: JSX.Element) => void
   closeExtension: () => void
 }
 
 interface ExtensionProps {
   dialogStyles?: { width?: number; height?: number }
-  renderExtension?: ReactElement | React.FC
 }
 
 export const DialogExtensionContext = createContext<ChildrenProps>({
@@ -26,12 +25,13 @@ export const DialogExtensionContext = createContext<ChildrenProps>({
 
 const DialogExtension: React.FC<ExtensionProps> = props => {
   const [showExtension, setShowExtension] = useState<boolean>(false)
-  const [exWindow, setExWindow] = useState<ReactElement | React.FC>()
-  const triggerExtension = (data: ReactElement | React.FC) => {
-    setExWindow(data)
+  const [exWindow, setExWindow] = useState<JSX.Element | undefined>()
+  const triggerExtension = useCallback((extension: JSX.Element): void => {
+    setExWindow(extension)
     setShowExtension(true)
-  }
-  const closeExtension = () => setShowExtension(false)
+  }, [])
+  const closeExtension = useCallback(() => setShowExtension(false), [])
+
   return (
     <div style={{ display: 'flex', maxHeight: 800 }}>
       <div style={{ width: props.dialogStyles?.width || 1175, position: 'relative' }}>

@@ -5,7 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, HarnessDocTooltip, Layout } from '@harness/uicore'
+import {
+  Card,
+  getMultiTypeFromValue,
+  HarnessDocTooltip,
+  Layout,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE
+} from '@harness/uicore'
 import React from 'react'
 import cx from 'classnames'
 import { produce } from 'immer'
@@ -19,6 +26,8 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StepActions } from '@common/constants/TrackingConstants'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
+import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
+import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 import css from './BuildAdvancedSpecifications.module.scss'
 
 export interface AdvancedSpecifications {
@@ -47,8 +56,29 @@ const BuildAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childre
         <div className={css.tabHeading}>
           <span data-tooltip-id="conditionalExecutionBuildStage">
             {getString('pipeline.conditionalExecution.title')}
-            <HarnessDocTooltip tooltipId="conditionalExecutionBuildStage" useStandAlone={true} />
           </span>
+          <MultiTypeSelectorButton
+            className={css.multiTypeBtn}
+            type={getMultiTypeFromValue(stage?.stage?.when as any)}
+            allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+            onChange={type => {
+              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+              if (pipelineStage && pipelineStage.stage) {
+                const stageData = produce(pipelineStage, draft => {
+                  if (isMultiTypeRuntime(type)) {
+                    set(draft, 'stage.when', RUNTIME_INPUT_VALUE)
+                  } else {
+                    unset(draft, 'stage.when')
+                  }
+                })
+
+                if (stageData.stage) {
+                  updateStage(stageData.stage)
+                }
+              }
+            }}
+          />
+          <HarnessDocTooltip tooltipId="conditionalExecutionBuildStage" useStandAlone={true} />
         </div>
         {!!stage && (
           <Card className={css.sectionCard} id="conditionalExecution">
@@ -102,10 +132,29 @@ const BuildAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childre
           />
         </Card>
         <div className={css.tabHeading}>
-          <span data-tooltip-id="failureStrategyBuildStage">
-            {getString('pipeline.failureStrategies.title')}
-            <HarnessDocTooltip tooltipId="failureStrategyBuildStage" useStandAlone={true} />
-          </span>
+          <span data-tooltip-id="failureStrategyBuildStage">{getString('pipeline.failureStrategies.title')}</span>
+          <MultiTypeSelectorButton
+            className={css.multiTypeBtn}
+            type={getMultiTypeFromValue(stage?.stage?.failureStrategies as any)}
+            allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+            onChange={type => {
+              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+              if (pipelineStage && pipelineStage.stage) {
+                const stageData = produce(pipelineStage, draft => {
+                  if (isMultiTypeRuntime(type)) {
+                    set(draft, 'stage.failureStrategies', RUNTIME_INPUT_VALUE)
+                  } else {
+                    unset(draft, 'stage.failureStrategies')
+                  }
+                })
+
+                if (stageData.stage) {
+                  updateStage(stageData.stage)
+                }
+              }
+            }}
+          />
+          <HarnessDocTooltip tooltipId="failureStrategyBuildStage" useStandAlone={true} />
         </div>
         <Card className={css.sectionCard} id="failureStrategy">
           <Layout.Horizontal>
@@ -119,13 +168,20 @@ const BuildAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childre
                     const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
                     if (pipelineStage && pipelineStage.stage) {
                       const stageData = produce(pipelineStage, draft => {
-                        set(draft, 'stage.failureStrategies', failureStrategies)
+                        if (
+                          (Array.isArray(failureStrategies) && failureStrategies.length > 0) ||
+                          isValueRuntimeInput(failureStrategies as any)
+                        ) {
+                          set(draft, 'stage.failureStrategies', failureStrategies)
+                        } else {
+                          unset(draft, 'stage.failureStrategies')
+                        }
                       })
 
                       if (stageData.stage) {
                         updateStage(stageData.stage)
                         const errors = formikRef.current?.getErrors()
-                        if (isEmpty(errors)) {
+                        if (isEmpty(errors) && Array.isArray(failureStrategies)) {
                           const telemetryData = failureStrategies.map(strategy => ({
                             onError: strategy.onFailure?.errors?.join(', '),
                             action: strategy.onFailure?.action?.type

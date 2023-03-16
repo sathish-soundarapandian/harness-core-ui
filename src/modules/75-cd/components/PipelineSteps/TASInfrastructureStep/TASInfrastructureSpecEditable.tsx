@@ -224,7 +224,7 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                 <FormMultiTypeConnectorField
                   name="connectorRef"
                   label={getString('connector')}
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   multiTypeProps={{ expressions, allowableTypes }}
@@ -258,7 +258,6 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                     variableName="connectorRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         formik.setFieldValue('connectorRef', value)
@@ -334,7 +333,6 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                       variableName="organization"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('organization', value)
                       }}
@@ -391,7 +389,6 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                     variableName="space"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         formik.setFieldValue('space', value)

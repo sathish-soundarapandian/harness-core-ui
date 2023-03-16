@@ -44,7 +44,7 @@ export class ServiceNowImportSet extends PipelineStep<ServiceNowImportSetData> {
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServiceNowImportSet'
   protected defaultValues: ServiceNowImportSetData = {
     identifier: '',
-    timeout: '1d',
+    timeout: '10m',
     name: '',
     type: StepType.ServiceNowImportSet,
     spec: {

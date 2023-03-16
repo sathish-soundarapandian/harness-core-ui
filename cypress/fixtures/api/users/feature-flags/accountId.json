@@ -2,7 +2,6 @@
   "metaData": {},
   "resource": [
     { "uuid": null, "name": "NEXT_GEN_ENABLED", "enabled": true, "lastUpdatedAt": 0 },
-    { "uuid": null, "name": "CDNG_ENABLED", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "CVNG_ENABLED", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "CING_ENABLED", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "CENG_ENABLED", "enabled": true, "lastUpdatedAt": 0 },
@@ -14,7 +13,6 @@
     { "uuid": null, "name": "CI_OVERVIEW_PAGE", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "TI_CALLGRAPH", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "GTM_CCM_ENABLED", "enabled": true, "lastUpdatedAt": 0 },
-    { "uuid": null, "name": "CDNG_ENABLED", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "SERVERLESS_SUPPORT", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "AZURE_WEBAPP_NG", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "ENV_GROUP", "enabled": true, "lastUpdatedAt": 0 },

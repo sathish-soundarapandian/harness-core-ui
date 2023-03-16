@@ -19,11 +19,6 @@ describe('RUN PIPELINE MODAL - approval stage', () => {
   const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('GET', yamlSnippetCall, { fixture: 'pipeline/api/approvals/stageYamlSnippet' })
     cy.intercept('GET', userGroupCall, { fixture: 'pipeline/api/approvals/userGroup' })
@@ -51,7 +46,7 @@ describe('RUN PIPELINE MODAL - approval stage', () => {
     cy.get('[icon="play"]').click({ force: true, multiple: true })
     cy.wait(1000)
     cy.contains('p', 'testStage').trigger('mouseover')
-    cy.get('[icon="cross"]').eq(1).click({ force: true })
+    cy.get('[icon="cross"]').click({ force: true })
     cy.contains('p', 'Delete Pipeline Stage').should('be.visible')
     cy.contains('span', 'Delete').click({ force: true })
     cy.contains('span', 'Pipeline Stage Successfully removed.').should('be.visible')

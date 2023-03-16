@@ -31,7 +31,10 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ArtifactTriggerConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
-import { ArtifactConnectorLabelMap, ArtifactToConnectorMap } from '../ArtifactHelper'
+import {
+  ArtifactConnectorLabelMap,
+  ArtifactToConnectorMap
+} from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import type { ArtifactType, InitialArtifactDataType } from '../ArtifactInterface'
 import css from './ArtifactConnector.module.scss'
 

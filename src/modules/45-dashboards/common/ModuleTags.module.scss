@@ -52,10 +52,10 @@
   background: var(--sto-background);
   border: 1px solid var(--sto-border);
 }
-.sscsTag {
-  color: var(--sscs-foreground);
-  background: var(--sscs-background);
-  border: 1px solid var(--sscs-border);
+.sscaTag {
+  color: var(--ssca-foreground);
+  background: var(--ssca-background);
+  border: 1px solid var(--ssca-border);
 }
 .idpTag {
   color: var(--idp-foreground);
@@ -99,10 +99,10 @@
   --ce-border: #ff006a;
   --ce-background: #fff1f7;
 
-  // Software supply chain security
-  --sscs-foreground: #1947ec;
-  --sscs-border: #4791ff;
-  --sscs-background: #ebefff;
+  // Software Supply Chain Assurance
+  --ssca-foreground: #1947ec;
+  --ssca-border: #4791ff;
+  --ssca-background: #ebefff;
 
   // Internal Developer Portal
   --idp-foreground: #36baa2;

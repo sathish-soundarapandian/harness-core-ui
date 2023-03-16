@@ -8,7 +8,7 @@
 import React from 'react'
 import { unstable_batchedUpdates } from 'react-dom'
 import { useFormikContext } from 'formik'
-import { defaultTo, get, isBoolean, isEmpty, isNil, omit, pick, set } from 'lodash-es'
+import { get, isBoolean, isEmpty, isNil, omit, pick, set } from 'lodash-es'
 
 import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -17,6 +17,7 @@ import { useStrings } from 'framework/strings'
 import type { DeploymentStageConfig, EnvironmentYamlV2, Infrastructure, ServiceSpec } from 'services/cd-ng'
 
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { Scope } from '@common/interfaces/SecretsInterface'
 
 import {
   getCustomStepProps,
@@ -44,7 +45,7 @@ export function MultiEnvironmentsInputSetForm({
   entityType,
   pathToEnvironments,
   envGroupRef
-}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier'> & {
+}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'> & {
   entityType: 'environments' | 'environmentGroup'
   pathToEnvironments: 'environments.values' | 'environmentGroup.environments'
   envGroupRef?: string
@@ -101,7 +102,8 @@ export function MultiEnvironmentsInputSetForm({
              * If the question arises why another condition for this scenario?
              * Because we need to repeat the same selection steps without the field*/
             deployToAllEnvironments: deploymentStage?.environmentGroup?.deployToAll,
-            areFiltersAdded
+            areFiltersAdded,
+            serviceIdentifiers: []
           }}
           onUpdate={data => {
             unstable_batchedUpdates(() => {
@@ -184,8 +186,11 @@ export function MultiEnvironmentsInputSetForm({
                 showInfrastructuresSelectionInputField ||
                 showInfrastructuresInputSetForm
 
-              const areEnvironmentFiltersAdded = !isEmpty(environmentInDeploymentStage.filters)
-              const areEnvironmentFiltersRuntime = !isEmpty(environmentTemplate.filters)
+              const areEnvironmentFiltersAdded = !isEmpty(environmentInDeploymentStage?.filters)
+              const areEnvironmentFiltersRuntime = !isEmpty(environmentTemplate?.filters)
+
+              const envGroupScope = envGroupRef ? getScopeFromValue(envGroupRef) : null
+              const scopePrefix = envGroupScope && envGroupScope !== Scope.PROJECT ? `${envGroupScope}.` : ''
 
               return (
                 deploymentType &&
@@ -332,7 +337,7 @@ export function MultiEnvironmentsInputSetForm({
                           customStepProps={{
                             deploymentType,
                             environmentIdentifier: environment.environmentRef,
-                            scope: getScopeFromValue(defaultTo(envGroupRef, '')),
+                            scopePrefix,
                             isMultipleInfrastructure: true,
                             customDeploymentRef: deploymentStage?.customDeploymentRef,
                             deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll,
@@ -359,7 +364,11 @@ export function MultiEnvironmentsInputSetForm({
 
                               return infraInputs?.identifier ? (
                                 <>
-                                  <Text font={{ size: 'normal', weight: 'bold' }} color={Color.GREY_700}>
+                                  <Text
+                                    font={{ size: 'normal', weight: 'bold' }}
+                                    padding={{ bottom: 'medium' }}
+                                    color={Color.GREY_700}
+                                  >
                                     {getString('common.infrastructurePrefix', {
                                       name: infraInputs.identifier
                                     })}

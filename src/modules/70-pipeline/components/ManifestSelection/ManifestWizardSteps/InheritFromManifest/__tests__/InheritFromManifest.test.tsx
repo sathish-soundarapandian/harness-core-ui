@@ -76,7 +76,7 @@ describe('Custom remote tests', () => {
         <InheritFromManifest {...defaultProps} initialValues={initialValues} />
       </TestWrapper>
     )
-    const pathsText = getByText('fileFolderPathText')
+    const pathsText = getByText('common.git.filePath')
     expect(pathsText).toBeDefined()
     expect(container).toMatchSnapshot()
   })

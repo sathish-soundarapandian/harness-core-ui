@@ -232,6 +232,7 @@ export const defaultOptions = {
     }
   ]
 }
+
 export const mockedServiceDependencies = {
   metaData: {},
   resource: {

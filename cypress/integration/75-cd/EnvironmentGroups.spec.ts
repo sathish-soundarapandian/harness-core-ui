@@ -9,11 +9,6 @@ import { addHashInCypressURLBasedOnBrowserRouter } from '../../utils/windowLocat
 
 describe('Environment Groups CRUD', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
 
     cy.visit(environmentGroupRoute, {

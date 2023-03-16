@@ -14,7 +14,7 @@ import type { GetDataError } from 'restful-react'
 
 import type { Failure, Error, ArtifactoryBuildDetailsDTO, DockerBuildDetailsDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
@@ -43,7 +43,7 @@ export function NoTagResults({
   }, [isServerlessDeploymentTypeSelected, getString])
 
   return (
-    <Text lineClamp={1} width={400}>
+    <Text lineClamp={1} width={384} margin="small">
       {get(tagError, 'data.message', null) || getErrorText()}
     </Text>
   )
@@ -90,8 +90,17 @@ function ArtifactImagePathTagView({
   tagDisabled,
   isArtifactPath,
   isImagePath = true,
-  isServerlessDeploymentTypeSelected
+  isServerlessDeploymentTypeSelected,
+  canFetchTags,
+  tooltipId
 }: ArtifactImagePathTagViewProps): React.ReactElement {
+  const tooltipProps = tooltipId
+    ? {
+        tooltipProps: {
+          dataTooltipId: tooltipId
+        }
+      }
+    : {}
   const { getString } = useStrings()
   const getSelectItems = useCallback(selectItemsMapper.bind(null, tagList, isServerlessDeploymentTypeSelected), [
     tagList,
@@ -154,12 +163,12 @@ function ArtifactImagePathTagView({
                 variableName="artifactPath"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   /* istanbul ignore next */
                   formik.setFieldValue('artifactPath', value)
                 }}
                 isReadonly={isReadonly}
+                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
               />
             </div>
           )}
@@ -182,12 +191,12 @@ function ArtifactImagePathTagView({
                   variableName="imagePath"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => {
                     /* istanbul ignore next */
                     formik.setFieldValue('imagePath', value)
                   }}
                   isReadonly={isReadonly}
+                  allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                 />
               </div>
             )}
@@ -236,12 +245,16 @@ function ArtifactImagePathTagView({
                 allowCreatingNewItems: true,
                 addTooltip: true
               },
-              onFocus: (e: React.FocusEvent<HTMLInputElement>) =>
-                onTagInputFocus(e, formik, fetchTags, isArtifactPath, isServerlessDeploymentTypeSelected)
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                if (!canFetchTags || canFetchTags()) {
+                  onTagInputFocus(e, formik, fetchTags, isArtifactPath, isServerlessDeploymentTypeSelected)
+                }
+              }
             }}
             label={isServerlessDeploymentTypeSelected ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
             name="tag"
             className={css.tagInputButton}
+            {...tooltipProps}
           />
 
           {getMultiTypeFromValue(formik?.values?.tag) === MultiTypeInputType.RUNTIME && (
@@ -253,7 +266,6 @@ function ArtifactImagePathTagView({
                 variableName="tag"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   /* istanbul ignore next */
                   formik.setFieldValue('tag', value)
@@ -283,7 +295,6 @@ function ArtifactImagePathTagView({
                 variableName="tagRegex"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('tagRegex', value)
                 }}

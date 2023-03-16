@@ -24,14 +24,13 @@ export interface AddMetricForm {
 }
 
 export interface GetMultiTypeRecordInitialValueParams {
-  filteredFieldsMapping?: FieldMapping[]
+  jsonSelectorFields?: FieldMapping[]
   isTemplate?: boolean
   formValues: CommonCustomMetricFormikInterface
 }
 
 export interface CustomMetricFormContainerProps {
   connectorIdentifier: string
-  isMetricThresholdEnabled: boolean
   mappedMetrics: CustomSelectedAndMappedMetrics['mappedMetrics']
   selectedMetric: CustomSelectedAndMappedMetrics['selectedMetric']
   createdMetrics: CreatedMetricsWithSelectedIndex['createdMetrics']

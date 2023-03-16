@@ -11,6 +11,7 @@ import { parse } from 'yaml'
 
 import { VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
+import type { FormikErrors } from 'formik'
 import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -19,6 +20,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useGetFreeze } from 'services/cd-ng'
 import { FreezeWindowLevels, WindowPathProps, FreezeNotificationRules } from '@freeze-windows/types'
+import type { FreezeWindowFormData } from '@freeze-windows/components/ScheduleFreezeForm/ScheduleFreezeForm'
 import { FreezeStatus, getFreezeStatus } from '@freeze-windows/utils/freezeWindowUtils'
 import { FreezeWindowContextActions, DrawerTypes } from './FreezeWidowActions'
 import { initialState, FreezeWindowReducerState, FreezeReducer, DefaultFreezeId } from './FreezeWindowReducer'
@@ -40,6 +42,8 @@ export interface FreezeWindowContextInterface {
   refetchFreezeObj: () => void
   isActiveFreeze: boolean
   freezeObjError?: any
+  freezeFormError?: FormikErrors<FreezeWindowFormData>
+  setFreezeFormError?: (formError: FormikErrors<FreezeWindowFormData>) => void
 }
 
 export const FreezeWindowContext = React.createContext<FreezeWindowContextInterface>({
@@ -57,7 +61,9 @@ export const FreezeWindowContext = React.createContext<FreezeWindowContextInterf
   loadingFreezeObj: false,
   isUpdatingFreeze: false,
   isActiveFreeze: false,
-  refetchFreezeObj: noop
+  refetchFreezeObj: noop,
+  freezeFormError: {},
+  setFreezeFormError: noop
 })
 
 const getFreezeWindowLevel = ({ projectIdentifier, orgIdentifier }: ProjectPathProps) => {
@@ -73,6 +79,7 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
     isInvalidYAML ? SelectedView.YAML : SelectedView.VISUAL
   )
   const [drawerType, setDrawerType] = React.useState<DrawerTypes>()
+  const [freezeFormError, setFreezeFormError] = React.useState<FormikErrors<FreezeWindowFormData>>()
   const { accountId, projectIdentifier, orgIdentifier, windowIdentifier } = useParams<WindowPathProps>()
   const [freezeWindowLevel, setFreezeWindowLevel] = React.useState<FreezeWindowLevels>(FreezeWindowLevels.ACCOUNT)
   const [isUpdatingFreeze, setIsUpdatingFreeze] = React.useState<boolean>(false)
@@ -166,7 +173,9 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
         drawerType,
         setDrawerType,
         isActiveFreeze,
-        isReadOnly: !canEdit
+        isReadOnly: !canEdit,
+        freezeFormError,
+        setFreezeFormError
       }}
     >
       {children}

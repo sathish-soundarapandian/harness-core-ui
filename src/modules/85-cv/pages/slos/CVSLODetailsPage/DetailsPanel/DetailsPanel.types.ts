@@ -7,7 +7,7 @@
 
 import type { MutateMethod } from 'restful-react'
 import type {
-  DeleteSLODataQueryParams,
+  DeleteSLOV2DataQueryParams,
   ResetErrorBudgetPathParams,
   ResetErrorBudgetQueryParams,
   RestResponseBoolean,
@@ -37,7 +37,7 @@ export interface ServiceDetailsProps {
 
 export interface TabToolbarProps {
   sloDashboardWidget: SLODashboardWidget
-  deleteSLO: MutateMethod<RestResponseBoolean, string, DeleteSLODataQueryParams, void>
+  deleteSLO: MutateMethod<RestResponseBoolean, string, DeleteSLOV2DataQueryParams, void>
   resetErrorBudget: MutateMethod<
     RestResponseSLOErrorBudgetResetDTO,
     SLOErrorBudgetResetDTO,

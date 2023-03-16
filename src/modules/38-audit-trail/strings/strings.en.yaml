@@ -17,6 +17,11 @@ actions:
   login: Login
   login2fa: Login Two Factor Authentication
   unsuccessfullLogin: Unsuccessful Login
+  end: End
+  pause: Pause
+  resume: Resume
+resourceLabel:
+  nodeExecution: Node Execution
 emptyStateMessageTitle: No records were found to match your search
 emptyStateMessage: Please try to modify your search criteria.
 externalDataText: Export data to external applications via our
@@ -30,3 +35,25 @@ delegateGroups: Delegate Groups
 excludeLoginEvents: Exclude Login Events
 excludeSystemEvents: Exclude System Events
 allEvents: All Events
+auditLogs: Audit Logs
+auditLogStreaming: Audit Log Streaming
+streamingDestination: Streaming Destination
+streamingDestinations: Streaming Destinations
+logStreaming:
+  duplicateIdError: 'Failed to create Streaming Destinaton: [{{ name }}]. There is already a Streaming Destination with identifier [{{ streamingDestinationIdentifier }}] present or soft deleted. Please provide a new unique identifier.'
+  newStreamingDestination: New Streaming Destination
+  activeDestinations: Active Destinations
+  inactiveDestinations: Inactive Destinations
+  notStreamedYet: Not streamed yet
+  failedStreaming: Failed Streaming
+  errorsInDestinations: 'Errors in {{count}} destination(s)'
+  destinationName: Destination Name
+  streamingConnector: Streaming Connector
+  lastStreamed: Last Streamed
+  amazonS3Bucket: Amazon S3 Bucket
+  streamingDestinationCreated: 'Streaming Destination [{{name}}] created successfully'
+  streamingDestinationSaved: 'Streaming Destination [{{name}}] saved'
+  deleteSDDialogContent: 'Are you sure you want to delete the Streaming Destination [{{name}}]?'
+  deleteSDDialogTitle: Delete Streaming Destination
+  deleteSuccessful: 'Streaming Destination [{{name}}] deleted successfully'
+  errorWhileDeleting: 'An error occurred while deleting Streaming Destination [{{name}}]'

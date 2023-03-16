@@ -101,7 +101,7 @@ describe('Unit tests for SelectMonitoredServiceType', () => {
     expect(getByText('environment')).toBeInTheDocument()
 
     //validate healthsource fields
-    expect(getByText('cv.monitoringSources.appD.applicationName')).toBeInTheDocument()
+    expect(getByText('pipeline.applicationName')).toBeInTheDocument()
     expect(getByText('cv.monitoringSources.appD.tierName')).toBeInTheDocument()
     expect(getByText('connector')).toBeInTheDocument()
 

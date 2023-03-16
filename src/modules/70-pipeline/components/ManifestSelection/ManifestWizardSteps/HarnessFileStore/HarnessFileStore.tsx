@@ -7,7 +7,6 @@
 
 import React from 'react'
 import {
-  Accordion,
   AllowedTypes,
   Button,
   ButtonVariation,
@@ -22,17 +21,27 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
-import { get, set } from 'lodash-es'
+import { defaultTo, get, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
-import { FormMultiTypeCheckboxField } from '@common/components'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FileUsage } from '@filestore/interfaces/FileStore'
-import { ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
-import type { HarnessFileStoreDataType, HarnessFileStoreFormData, ManifestTypes } from '../../ManifestInterface'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  ManifestDataType,
+  ManifestIdentifierValidation,
+  ManifestStoreMap
+} from '../../Manifesthelper'
+import type {
+  HarnessFileStoreDataType,
+  HarnessFileStoreFormData,
+  HarnessFileStoreManifestLastStepPrevStepData,
+  ManifestTypes
+} from '../../ManifestInterface'
+import { ManifestDetailsAdvancedSection } from '../CommonManifestDetails/ManifestDetailsAdvancedSection'
 import { shouldAllowOnlyOneFilePath } from '../CommonManifestDetails/utils'
+import { removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface HarnessFileStorePropType {
@@ -45,6 +54,7 @@ interface HarnessFileStorePropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   showIdentifierField?: boolean
+  editManifestModePrevStepData?: HarnessFileStoreManifestLastStepPrevStepData
 }
 
 const showValuesPaths = (selectedManifest: ManifestTypes): boolean => {
@@ -69,9 +79,13 @@ function HarnessFileStore({
   previousStep,
   manifestIdsList,
   isReadonly,
-  showIdentifierField = true
+  showIdentifierField = true,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & HarnessFileStorePropType): React.ReactElement {
   const { getString } = useStrings()
+  const isOnlyFileTypeManifest = selectedManifest && [ManifestDataType.Values].includes(selectedManifest)
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   const getInitialValues = (): HarnessFileStoreDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -81,9 +95,11 @@ function HarnessFileStore({
       return {
         ...specValues,
         identifier: initialValues.identifier,
-        valuesPaths,
-        paramsPaths,
-        skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning')
+        valuesPaths:
+          typeof valuesPaths === 'string' ? valuesPaths : removeEmptyFieldsFromStringArray(valuesPaths, true),
+        paramsPaths: typeof paramsPaths === 'string' ? paramsPaths : removeEmptyFieldsFromStringArray(paramsPaths),
+        skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
+        enableDeclarativeRollback: get(initialValues, 'spec.enableDeclarativeRollback')
       }
     }
     return {
@@ -91,7 +107,8 @@ function HarnessFileStore({
       files: [''],
       valuesPaths: [''],
       paramsPaths: [],
-      skipResourceVersioning: false
+      skipResourceVersioning: false,
+      enableDeclarativeRollback: false
     }
   }
 
@@ -113,13 +130,33 @@ function HarnessFileStore({
         }
       }
       if (showValuesPaths(selectedManifest as ManifestTypes)) {
-        set(manifestObj, 'manifest.spec.valuesPaths', formData.valuesPaths)
+        set(
+          manifestObj,
+          'manifest.spec.valuesPaths',
+          typeof formData?.valuesPaths === 'string'
+            ? formData?.valuesPaths
+            : removeEmptyFieldsFromStringArray(formData.valuesPaths)
+        )
       }
       if (showParamsPaths(selectedManifest as ManifestTypes)) {
-        set(manifestObj, 'manifest.spec.paramsPaths', formData.paramsPaths)
+        set(
+          manifestObj,
+          'manifest.spec.paramsPaths',
+          typeof formData?.paramsPaths === 'string'
+            ? formData?.paramsPaths
+            : removeEmptyFieldsFromStringArray(formData.paramsPaths)
+        )
       }
       if (showSkipResourceVersion(selectedManifest as ManifestTypes)) {
-        set(manifestObj, 'manifest.spec.skipResourceVersioning', formData?.skipResourceVersioning)
+        set(
+          manifestObj,
+          'manifest.spec.skipResourceVersioning',
+          getSkipResourceVersioningBasedOnDeclarativeRollback(
+            formData?.skipResourceVersioning,
+            formData?.enableDeclarativeRollback
+          )
+        )
+        set(manifestObj, 'manifest.spec.enableDeclarativeRollback', formData?.enableDeclarativeRollback)
       }
 
       handleSubmit(manifestObj)
@@ -153,7 +190,7 @@ function HarnessFileStore({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData
           } as unknown as HarnessFileStoreFormData)
         }}
@@ -188,7 +225,9 @@ function HarnessFileStore({
                         disableTypeSelection: false,
                         label: (
                           <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_600}>
-                            {getString('fileFolderPathText')}
+                            {isOnlyFileTypeManifest
+                              ? getString('common.git.filePath')
+                              : getString('fileFolderPathText')}
                           </Text>
                         )
                       }}
@@ -214,6 +253,7 @@ function HarnessFileStore({
                           )
                         }}
                         restrictToSingleEntry={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
+                        allowSinglePathDeletion
                       />
                     </div>
                   )}
@@ -232,49 +272,19 @@ function HarnessFileStore({
                           label: <Text>{getString('pipeline.manifestType.paramsYamlPath')}</Text>
                         }}
                         restrictToSingleEntry={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
+                        allowSinglePathDeletion
                       />
                     </div>
                   )}
                   {showSkipResourceVersion(selectedManifest as ManifestTypes) && (
-                    <Accordion
-                      activeId={get(initialValues, 'spec.skipResourceVersioning') ? getString('advancedTitle') : ''}
-                      className={css.advancedStepOpen}
-                    >
-                      <Accordion.Panel
-                        id={getString('advancedTitle')}
-                        addDomId={true}
-                        summary={getString('advancedTitle')}
-                        details={
-                          <Layout.Horizontal
-                            width={'50%'}
-                            flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-                            margin={{ bottom: 'huge' }}
-                          >
-                            <FormMultiTypeCheckboxField
-                              name="skipResourceVersioning"
-                              label={getString('skipResourceVersion')}
-                              multiTypeTextbox={{ expressions, allowableTypes }}
-                              className={css.checkbox}
-                            />
-                            {getMultiTypeFromValue(get(formik, 'values.skipResourceVersioning')) ===
-                              MultiTypeInputType.RUNTIME && (
-                              <ConfigureOptions
-                                value={get(formik, 'values.skipResourceVersioning', '') as string}
-                                type="String"
-                                variableName="skipResourceVersioning"
-                                showRequiredField={false}
-                                showDefaultField={false}
-                                showAdvanced={true}
-                                onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
-                                style={{ alignSelf: 'center', marginTop: 11 }}
-                                className={css.addmarginTop}
-                                isReadonly={isReadonly}
-                              />
-                            )}
-                          </Layout.Horizontal>
-                        }
-                      />
-                    </Accordion>
+                    <ManifestDetailsAdvancedSection
+                      formik={formik}
+                      expressions={expressions}
+                      allowableTypes={allowableTypes}
+                      initialValues={initialValues}
+                      isReadonly={isReadonly}
+                      selectedManifest={selectedManifest}
+                    />
                   )}
                 </div>
 
@@ -283,7 +293,7 @@ function HarnessFileStore({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

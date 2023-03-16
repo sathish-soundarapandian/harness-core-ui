@@ -201,11 +201,16 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -304,11 +309,16 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -376,11 +386,16 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -479,11 +494,16 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -549,11 +569,16 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -628,12 +653,17 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -709,11 +739,16 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -877,7 +912,7 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
                 </div>
                 <span
                   class="Tooltip--acenter tooltip"
-                  data-tooltip-id="BlackduckStep_spec.auth.ssl"
+                  data-tooltip-id="securityStepAuthSSL"
                 />
               </div>
             </div>
@@ -887,11 +922,16 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthVersion"
             >
-              sto.stepField.authVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.authVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -990,11 +1030,16 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -1093,11 +1138,16 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessId"
             >
-              sto.stepField.authAccessId
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.authAccessId
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -1203,11 +1253,16 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessToken"
             >
-              common.getStarted.accessTokenLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.getStarted.accessTokenLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -1321,11 +1376,16 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectName"
             >
-              projectCard.projectName
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                projectCard.projectName
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -1431,11 +1491,16 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectVersion"
             >
-              sto.stepField.tool.projectVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.tool.projectVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -1553,12 +1618,17 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -1667,12 +1737,17 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
                 sto.stepField.advanced.cli
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepArgsCli"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -1748,12 +1823,17 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -2479,11 +2559,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2582,11 +2667,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2654,11 +2744,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2757,11 +2852,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2867,11 +2967,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2985,11 +3090,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3153,7 +3263,7 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
                 </div>
                 <span
                   class="Tooltip--acenter tooltip"
-                  data-tooltip-id="BlackduckStep_spec.auth.ssl"
+                  data-tooltip-id="securityStepAuthSSL"
                 />
               </div>
             </div>
@@ -3163,11 +3273,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthVersion"
             >
-              sto.stepField.authVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.authVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3266,11 +3381,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3369,11 +3489,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessToken"
             >
-              common.getStarted.accessTokenLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.getStarted.accessTokenLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3487,11 +3612,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectName"
             >
-              projectCard.projectName
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                projectCard.projectName
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3597,11 +3727,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectVersion"
             >
-              sto.stepField.tool.projectVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.tool.projectVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3719,12 +3854,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -3840,12 +3980,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -4368,11 +4513,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4471,11 +4621,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4543,11 +4698,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4646,11 +4806,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4756,11 +4921,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4875,12 +5045,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -4956,11 +5131,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5123,7 +5303,7 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
                 </div>
                 <span
                   class="Tooltip--acenter tooltip"
-                  data-tooltip-id="BlackduckStep_spec.auth.ssl"
+                  data-tooltip-id="securityStepAuthSSL"
                 />
               </div>
             </div>
@@ -5133,11 +5313,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthVersion"
             >
-              sto.stepField.authVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.authVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5236,11 +5421,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5339,11 +5529,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessToken"
             >
-              common.getStarted.accessTokenLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.getStarted.accessTokenLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5457,11 +5652,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectName"
             >
-              projectCard.projectName
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                projectCard.projectName
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5567,11 +5767,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectVersion"
             >
-              sto.stepField.tool.projectVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.tool.projectVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5689,12 +5894,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -5810,12 +6020,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Repository
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6338,11 +6553,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Ingestion Container 1
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6441,11 +6661,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Ingestion Container 1
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6513,11 +6738,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Ingestion Container 1
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6616,11 +6846,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Ingestion Container 1
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6726,11 +6961,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Ingestion Container 1
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6839,11 +7079,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Ingestion Container 1
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepIngestionFile"
             >
-              sto.stepField.ingestion.file
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.ingestion.file
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6921,12 +7166,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Ingestion Container 1
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -7042,12 +7292,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Ingestion Container 1
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -7570,11 +7825,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7673,11 +7933,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7745,11 +8010,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7848,11 +8118,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7958,11 +8233,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -8076,11 +8356,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepImageType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -8188,12 +8473,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
                 secrets.winRmAuthFormFields.domain
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepImageDomain"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -8300,11 +8590,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepImageName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -8410,11 +8705,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepImageTag"
             >
-              tagLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                tagLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -8529,12 +8829,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
                 sto.stepField.authAccessId
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepImageAccessId"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -8650,12 +8955,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
                 common.getStarted.accessTokenLabel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepImageAccessToken"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -8770,11 +9080,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -8938,7 +9253,7 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
                 </div>
                 <span
                   class="Tooltip--acenter tooltip"
-                  data-tooltip-id="BlackduckStep_spec.auth.ssl"
+                  data-tooltip-id="securityStepAuthSSL"
                 />
               </div>
             </div>
@@ -8948,11 +9263,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthVersion"
             >
-              sto.stepField.authVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.authVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -9051,11 +9371,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -9154,11 +9479,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessToken"
             >
-              common.getStarted.accessTokenLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.getStarted.accessTokenLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -9272,11 +9602,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectName"
             >
-              projectCard.projectName
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                projectCard.projectName
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -9382,11 +9717,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectVersion"
             >
-              sto.stepField.tool.projectVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.tool.projectVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -9504,12 +9844,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -9625,12 +9970,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
                 sto.stepField.advanced.cli
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepArgsCli"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -9746,12 +10096,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -10274,11 +10629,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -10377,11 +10737,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -10449,11 +10814,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -10552,11 +10922,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -10662,11 +11037,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -10781,12 +11161,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -10901,11 +11286,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -11069,7 +11459,7 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
                 </div>
                 <span
                   class="Tooltip--acenter tooltip"
-                  data-tooltip-id="BlackduckStep_spec.auth.ssl"
+                  data-tooltip-id="securityStepAuthSSL"
                 />
               </div>
             </div>
@@ -11079,11 +11469,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthVersion"
             >
-              sto.stepField.authVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.authVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -11182,11 +11577,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -11285,11 +11685,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessToken"
             >
-              common.getStarted.accessTokenLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.getStarted.accessTokenLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -11403,11 +11808,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectName"
             >
-              projectCard.projectName
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                projectCard.projectName
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -11513,11 +11923,16 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectVersion"
             >
-              sto.stepField.tool.projectVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.tool.projectVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -11635,12 +12050,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -11756,12 +12176,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
                 sto.stepField.advanced.cli
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepArgsCli"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -11877,12 +12302,17 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -12356,11 +12786,16 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -12459,11 +12894,16 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -12531,11 +12971,16 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -12634,11 +13079,16 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -12704,11 +13154,16 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -12783,12 +13238,17 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -12864,11 +13324,16 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -12992,7 +13457,7 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
                 </div>
                 <span
                   class="Tooltip--acenter tooltip"
-                  data-tooltip-id="BlackduckStep_spec.auth.ssl"
+                  data-tooltip-id="securityStepAuthSSL"
                 />
               </div>
             </div>
@@ -13002,11 +13467,16 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthVersion"
             >
-              sto.stepField.authVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.authVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -13105,11 +13575,16 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -13208,11 +13683,16 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessToken"
             >
-              common.getStarted.accessTokenLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.getStarted.accessTokenLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -13287,11 +13767,16 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectName"
             >
-              projectCard.projectName
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                projectCard.projectName
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -13357,11 +13842,16 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectVersion"
             >
-              sto.stepField.tool.projectVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.tool.projectVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -13439,12 +13929,17 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -13553,12 +14048,17 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
                 sto.stepField.advanced.cli
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepArgsCli"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -13634,12 +14134,17 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -14005,11 +14510,16 @@ exports[`Blackduck Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -14075,11 +14585,16 @@ exports[`Blackduck Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -14150,11 +14665,16 @@ exports[`Blackduck Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -14220,11 +14740,16 @@ exports[`Blackduck Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -14290,11 +14815,16 @@ exports[`Blackduck Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetWorkspace"
             >
-              pipelineSteps.workspace
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                pipelineSteps.workspace
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -14365,11 +14895,16 @@ exports[`Blackduck Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectName"
             >
-              projectCard.projectName
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                projectCard.projectName
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -14435,11 +14970,16 @@ exports[`Blackduck Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolProjectVersion"
             >
-              sto.stepField.tool.projectVersion
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.tool.projectVersion
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -14510,11 +15050,16 @@ exports[`Blackduck Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessToken"
             >
-              common.getStarted.accessTokenLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.getStarted.accessTokenLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -14580,11 +15125,16 @@ exports[`Blackduck Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -14650,11 +15200,16 @@ exports[`Blackduck Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessId"
             >
-              sto.stepField.authAccessId
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.authAccessId
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -14720,11 +15275,16 @@ exports[`Blackduck Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepLogLevel"
             >
-              sto.stepField.advanced.logLevel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.advanced.logLevel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -14823,11 +15383,16 @@ exports[`Blackduck Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepLogSerializer"
             >
-              ce.common.protocol
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                ce.common.protocol
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >

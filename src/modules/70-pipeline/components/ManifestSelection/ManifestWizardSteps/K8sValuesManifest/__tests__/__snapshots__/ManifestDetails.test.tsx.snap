@@ -66,6 +66,83 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                 </div>
               </div>
               <div
+                class="repoNameSection"
+              >
+                <div
+                  class="repoName"
+                >
+                  <div
+                    class="bp3-form-group reponameField"
+                    data-id="repoName-1"
+                  >
+                    <label
+                      class="bp3-label"
+                      for="repoName"
+                    >
+                      <span
+                        class="Tooltip--acenter"
+                        data-tooltip-id="manifestDetails_repoName"
+                      >
+                        common.repositoryName
+                      </span>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      >
+                        <div
+                          class="bp3-input-group MultiTypeInput--input"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="repoName"
+                            placeholder="pipeline.manifestType.repoNamePlaceholder"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
                 class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
               >
                 <div
@@ -73,7 +150,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="gitFetchType-1"
+                    data-id="gitFetchType-2"
                   >
                     <label
                       class="bp3-label"
@@ -145,7 +222,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="branch-2"
+                    data-id="branch-3"
                   >
                     <label
                       class="bp3-label"
@@ -223,7 +300,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="paths[0].path-3"
+                    data-id="paths[0].path-4"
                   >
                     <label
                       class="bp3-label"
@@ -328,7 +405,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                             </p>
                             <div
                               class="bp3-form-group"
-                              data-id="paths[0].path-4"
+                              data-id="paths[0].path-5"
                               style="width: 600px;"
                             >
                               
@@ -430,7 +507,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="valuesPaths-5"
+                    data-id="valuesPaths-6"
                   >
                     <label
                       class="bp3-label"
@@ -567,68 +644,140 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                         data-testid="advancedTitle-details"
                       >
                         <div
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center StyledProps--margin-bottom-huge"
+                          class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center StyledProps--margin-bottom-huge"
                           style="width: 50%;"
                         >
                           <div
-                            class="bp3-form-group multiTypeCheckbox checkbox"
+                            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center StyledProps--margin-bottom-small"
+                            style="width: 100%;"
                           >
                             <div
-                              class="bp3-form-content"
+                              class="bp3-form-group multiTypeCheckbox checkbox marginTop"
                             >
                               <div
-                                class="Layout--horizontal StyledProps--main"
+                                class="bp3-form-content"
                               >
                                 <div
-                                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                                  style="flex-grow: 1;"
+                                  class="Layout--horizontal StyledProps--main"
                                 >
-                                  <label
-                                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                                  <div
+                                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                    style="flex-grow: 1;"
                                   >
-                                    <input
-                                      name="skipResourceVersioning"
-                                      type="checkbox"
-                                    />
-                                    <span
-                                      class="bp3-control-indicator"
-                                    />
-                                    skipResourceVersion
-                                  </label>
-                                  <span
-                                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                                  >
-                                    <span
-                                      class="bp3-popover-target"
+                                    <label
+                                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
                                     >
-                                      <button
-                                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                                        data-testid="multi-type-button"
+                                      <input
+                                        name="enableDeclarativeRollback"
+                                        type="checkbox"
+                                      />
+                                      <span
+                                        class="bp3-control-indicator"
+                                      />
+                                      pipeline.manifestType.enableDeclarativeRollback
+                                    </label>
+                                    <span
+                                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                    >
+                                      <span
+                                        class="bp3-popover-target"
                                       >
-                                        <span
-                                          class="bp3-icon StyledProps--main"
-                                          data-icon="fixed-input"
+                                        <button
+                                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
                                         >
-                                          <svg
-                                            height="12"
-                                            viewBox="0 0 9 9"
-                                            width="12"
-                                            xmlns="http://www.w3.org/2000/svg"
+                                          <span
+                                            class="bp3-icon StyledProps--main"
+                                            data-icon="fixed-input"
                                           >
-                                            <path
-                                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                              fill="currentColor"
-                                            />
-                                          </svg>
-                                        </span>
-                                      </button>
+                                            <svg
+                                              height="12"
+                                              viewBox="0 0 9 9"
+                                              width="12"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                                fill="currentColor"
+                                              />
+                                            </svg>
+                                          </span>
+                                        </button>
+                                      </span>
                                     </span>
-                                  </span>
+                                  </div>
+                                  <span
+                                    class="Tooltip--acenter tooltip"
+                                    data-tooltip-id="manifestDetails_enableDeclarativeRollback"
+                                  />
                                 </div>
-                                <span
-                                  class="Tooltip--acenter tooltip"
-                                  data-tooltip-id="manifestDetails_skipResourceVersioning"
-                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
+                            style="width: 100%;"
+                          >
+                            <div
+                              class="bp3-form-group multiTypeCheckbox checkbox"
+                            >
+                              <div
+                                class="bp3-form-content"
+                              >
+                                <div
+                                  class="Layout--horizontal StyledProps--main"
+                                >
+                                  <div
+                                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                    style="flex-grow: 1;"
+                                  >
+                                    <label
+                                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                                    >
+                                      <input
+                                        name="skipResourceVersioning"
+                                        type="checkbox"
+                                      />
+                                      <span
+                                        class="bp3-control-indicator"
+                                      />
+                                      skipResourceVersion
+                                    </label>
+                                    <span
+                                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                    >
+                                      <span
+                                        class="bp3-popover-target"
+                                      >
+                                        <button
+                                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
+                                        >
+                                          <span
+                                            class="bp3-icon StyledProps--main"
+                                            data-icon="fixed-input"
+                                          >
+                                            <svg
+                                              height="12"
+                                              viewBox="0 0 9 9"
+                                              width="12"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                                fill="currentColor"
+                                              />
+                                            </svg>
+                                          </span>
+                                        </button>
+                                      </span>
+                                    </span>
+                                  </div>
+                                  <span
+                                    class="Tooltip--acenter tooltip"
+                                    data-tooltip-id="manifestDetails_skipResourceVersioning"
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -777,6 +926,83 @@ exports[`Manifest Details tests initial rendering 1`] = `
                 </div>
               </div>
               <div
+                class="repoNameSection"
+              >
+                <div
+                  class="repoName"
+                >
+                  <div
+                    class="bp3-form-group reponameField"
+                    data-id="repoName-1"
+                  >
+                    <label
+                      class="bp3-label"
+                      for="repoName"
+                    >
+                      <span
+                        class="Tooltip--acenter"
+                        data-tooltip-id="manifestDetails_repoName"
+                      >
+                        common.repositoryName
+                      </span>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      >
+                        <div
+                          class="bp3-input-group MultiTypeInput--input"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="repoName"
+                            placeholder="pipeline.manifestType.repoNamePlaceholder"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
                 class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
               >
                 <div
@@ -784,7 +1010,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="gitFetchType-1"
+                    data-id="gitFetchType-2"
                   >
                     <label
                       class="bp3-label"
@@ -856,7 +1082,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="branch-2"
+                    data-id="branch-3"
                   >
                     <label
                       class="bp3-label"
@@ -934,7 +1160,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="paths[0].path-3"
+                    data-id="paths[0].path-4"
                   >
                     <label
                       class="bp3-label"
@@ -950,7 +1176,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -1039,7 +1265,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                             </p>
                             <div
                               class="bp3-form-group"
-                              data-id="paths[0].path-4"
+                              data-id="paths[0].path-5"
                               style="width: 600px;"
                             >
                               
@@ -1056,7 +1282,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value=""
                                     />
@@ -1271,6 +1497,83 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                 </div>
               </div>
               <div
+                class="repoNameSection"
+              >
+                <div
+                  class="repoName"
+                >
+                  <div
+                    class="bp3-form-group reponameField"
+                    data-id="repoName-1"
+                  >
+                    <label
+                      class="bp3-label"
+                      for="repoName"
+                    >
+                      <span
+                        class="Tooltip--acenter"
+                        data-tooltip-id="manifestDetails_repoName"
+                      >
+                        common.repositoryName
+                      </span>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      >
+                        <div
+                          class="bp3-input-group MultiTypeInput--input"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="repoName"
+                            placeholder="pipeline.manifestType.repoNamePlaceholder"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
                 class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
               >
                 <div
@@ -1278,7 +1581,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="gitFetchType-1"
+                    data-id="gitFetchType-2"
                   >
                     <label
                       class="bp3-label"
@@ -1350,7 +1653,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="commitId-2"
+                    data-id="commitId-3"
                   >
                     <label
                       class="bp3-label"
@@ -1428,7 +1731,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="paths[0].path-3"
+                    data-id="paths[0].path-4"
                   >
                     <label
                       class="bp3-label"
@@ -1444,7 +1747,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -1533,7 +1836,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                             </p>
                             <div
                               class="bp3-form-group"
-                              data-id="paths[0].path-4"
+                              data-id="paths[0].path-5"
                               style="width: 600px;"
                             >
                               
@@ -1550,7 +1853,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value="test-path"
                                     />
@@ -1765,6 +2068,83 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                 </div>
               </div>
               <div
+                class="repoNameSection"
+              >
+                <div
+                  class="repoName"
+                >
+                  <div
+                    class="bp3-form-group reponameField"
+                    data-id="repoName-1"
+                  >
+                    <label
+                      class="bp3-label"
+                      for="repoName"
+                    >
+                      <span
+                        class="Tooltip--acenter"
+                        data-tooltip-id="manifestDetails_repoName"
+                      >
+                        common.repositoryName
+                      </span>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      >
+                        <div
+                          class="bp3-input-group MultiTypeInput--input"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="repoName"
+                            placeholder="pipeline.manifestType.repoNamePlaceholder"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
                 class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
               >
                 <div
@@ -1772,7 +2152,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="gitFetchType-1"
+                    data-id="gitFetchType-2"
                   >
                     <label
                       class="bp3-label"
@@ -1844,7 +2224,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="branch-2"
+                    data-id="branch-3"
                   >
                     <label
                       class="bp3-label"
@@ -1922,7 +2302,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="paths[0].path-3"
+                    data-id="paths[0].path-4"
                   >
                     <label
                       class="bp3-label"
@@ -1938,7 +2318,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -2027,7 +2407,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                             </p>
                             <div
                               class="bp3-form-group"
-                              data-id="paths[0].path-4"
+                              data-id="paths[0].path-5"
                               style="width: 600px;"
                             >
                               
@@ -2044,7 +2424,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value="test-path"
                                     />
@@ -2259,6 +2639,83 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                 </div>
               </div>
               <div
+                class="repoNameSection"
+              >
+                <div
+                  class="repoName"
+                >
+                  <div
+                    class="bp3-form-group reponameField"
+                    data-id="repoName-1"
+                  >
+                    <label
+                      class="bp3-label"
+                      for="repoName"
+                    >
+                      <span
+                        class="Tooltip--acenter"
+                        data-tooltip-id="manifestDetails_repoName"
+                      >
+                        common.repositoryName
+                      </span>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      >
+                        <div
+                          class="bp3-input-group MultiTypeInput--input"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="repoName"
+                            placeholder="pipeline.manifestType.repoNamePlaceholder"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
                 class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
               >
                 <div
@@ -2266,7 +2723,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="gitFetchType-1"
+                    data-id="gitFetchType-2"
                   >
                     <label
                       class="bp3-label"
@@ -2338,7 +2795,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="commitId-2"
+                    data-id="commitId-3"
                   >
                     <label
                       class="bp3-label"
@@ -2416,7 +2873,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="paths[0].path-3"
+                    data-id="paths[0].path-4"
                   >
                     <label
                       class="bp3-label"
@@ -2432,7 +2889,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -2521,7 +2978,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                             </p>
                             <div
                               class="bp3-form-group"
-                              data-id="paths[0].path-4"
+                              data-id="paths[0].path-5"
                               style="width: 600px;"
                             >
                               
@@ -2538,7 +2995,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value="test-path"
                                     />
@@ -2753,6 +3210,83 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                 </div>
               </div>
               <div
+                class="repoNameSection"
+              >
+                <div
+                  class="repoName"
+                >
+                  <div
+                    class="bp3-form-group reponameField"
+                    data-id="repoName-1"
+                  >
+                    <label
+                      class="bp3-label"
+                      for="repoName"
+                    >
+                      <span
+                        class="Tooltip--acenter"
+                        data-tooltip-id="manifestDetails_repoName"
+                      >
+                        common.repositoryName
+                      </span>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      >
+                        <div
+                          class="bp3-input-group MultiTypeInput--input"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="repoName"
+                            placeholder="pipeline.manifestType.repoNamePlaceholder"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
                 class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
               >
                 <div
@@ -2760,7 +3294,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="gitFetchType-1"
+                    data-id="gitFetchType-2"
                   >
                     <label
                       class="bp3-label"
@@ -2832,7 +3366,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="branch-2"
+                    data-id="branch-3"
                   >
                     <label
                       class="bp3-label"
@@ -2910,7 +3444,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="paths[0].path-3"
+                    data-id="paths[0].path-4"
                   >
                     <label
                       class="bp3-label"
@@ -2926,7 +3460,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -3015,7 +3549,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                             </p>
                             <div
                               class="bp3-form-group"
-                              data-id="paths[0].path-4"
+                              data-id="paths[0].path-5"
                               style="width: 600px;"
                             >
                               
@@ -3032,7 +3566,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value=""
                                     />
@@ -3420,7 +3954,7 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -3526,7 +4060,7 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value="test-path"
                                     />
@@ -3741,6 +4275,83 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                 </div>
               </div>
               <div
+                class="repoNameSection"
+              >
+                <div
+                  class="repoName"
+                >
+                  <div
+                    class="bp3-form-group reponameField"
+                    data-id="repoName-1"
+                  >
+                    <label
+                      class="bp3-label"
+                      for="repoName"
+                    >
+                      <span
+                        class="Tooltip--acenter"
+                        data-tooltip-id="manifestDetails_repoName"
+                      >
+                        common.repositoryName
+                      </span>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      >
+                        <div
+                          class="bp3-input-group MultiTypeInput--input"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="repoName"
+                            placeholder="pipeline.manifestType.repoNamePlaceholder"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
                 class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
               >
                 <div
@@ -3748,7 +4359,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="gitFetchType-1"
+                    data-id="gitFetchType-2"
                   >
                     <label
                       class="bp3-label"
@@ -3820,7 +4431,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="commitId-2"
+                    data-id="commitId-3"
                   >
                     <label
                       class="bp3-label"
@@ -3898,7 +4509,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="paths[0].path-3"
+                    data-id="paths[0].path-4"
                   >
                     <label
                       class="bp3-label"
@@ -3914,7 +4525,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -4003,7 +4614,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                             </p>
                             <div
                               class="bp3-form-group"
-                              data-id="paths[0].path-4"
+                              data-id="paths[0].path-5"
                               style="width: 600px;"
                             >
                               
@@ -4020,7 +4631,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value="test-path"
                                     />

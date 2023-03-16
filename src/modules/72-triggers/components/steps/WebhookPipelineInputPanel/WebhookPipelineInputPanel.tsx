@@ -51,6 +51,8 @@ import {
 } from '@triggers/components/Triggers/utils'
 import { getPipelineWithInjectedWithCloneCodebase } from '@triggers/components/Triggers/WebhookTrigger/utils'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
+import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import css from './WebhookPipelineInputPanel.module.scss'
 
 interface WebhookPipelineInputPanelPropsInterface {
@@ -408,6 +410,10 @@ function WebhookPipelineInputPanelForm({
     !!document.activeElement &&
     document.activeElement === document.querySelector('input[name="pipelineBranchName"]')
 
+  const {
+    state: { storeMetadata }
+  } = usePipelineContext()
+
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
       {(loading || mergingInputSets) && !isPipelineBranchNameInFocus() ? (
@@ -482,20 +488,26 @@ function WebhookPipelineInputPanelForm({
               </Container>
             )}
             {showPipelineInputSetForm && template?.data?.inputSetTemplateYaml ? (
-              <PipelineInputSetForm
-                originalPipeline={resolvedPipeline}
-                template={defaultTo(
-                  memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
-                  {} as PipelineInfoConfig
-                )}
-                path="pipeline"
-                viewType={StepViewType.InputSet}
-                maybeContainerClass={css.pipelineInputSetForm}
-                viewTypeMetadata={{ isTrigger: true }}
-                readonly={isNewGitSyncRemotePipeline}
-                gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
-                disableRuntimeInputConfigureOptions
-              />
+              <PipelineVariablesContextProvider
+                pipeline={resolvedPipeline}
+                enablePipelineTemplatesResolution={true}
+                storeMetadata={storeMetadata}
+              >
+                <PipelineInputSetForm
+                  originalPipeline={resolvedPipeline}
+                  template={defaultTo(
+                    memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
+                    {} as PipelineInfoConfig
+                  )}
+                  path="pipeline"
+                  viewType={StepViewType.InputSet}
+                  maybeContainerClass={css.pipelineInputSetForm}
+                  viewTypeMetadata={{ isTrigger: true }}
+                  readonly={isNewGitSyncRemotePipeline}
+                  gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
+                  disableRuntimeInputConfigureOptions
+                />
+              </PipelineVariablesContextProvider>
             ) : null}
           </div>
         </div>

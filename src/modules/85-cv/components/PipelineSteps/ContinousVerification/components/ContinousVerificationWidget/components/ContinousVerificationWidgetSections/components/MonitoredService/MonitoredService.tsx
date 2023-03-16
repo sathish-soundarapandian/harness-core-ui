@@ -27,14 +27,16 @@ import Card from '@cv/components/Card/Card'
 import VerifyStepHealthSourceTable from '@cv/pages/health-source/HealthSourceTable/VerifyStepHealthSourceTable'
 import type { RowData } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { resetFormik } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
+import {
+  resetFormikIfNeededForDefaultMonitoredService,
+  resetFormikWhenNoChange
+} from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
 import type { MonitoredServiceProps } from './MonitoredService.types'
 import {
   getEnvironmentIdentifierFromStage,
   getNewSpecs,
   getServiceIdentifierFromStage,
-  isAnExpression,
-  isFirstTimeOpenForDefaultMonitoredSvc
+  isAnExpression
 } from './MonitoredService.utils'
 import { MONITORED_SERVICE_EXPRESSION } from './MonitoredService.constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -104,10 +106,12 @@ export default function MonitoredService({
       //when serviceIdentifier or environmentIdentifier are runtime
       newSpecs = { ...newSpecs, monitoredServiceRef: RUNTIME_INPUT_VALUE }
       setFieldValue('spec', newSpecs)
+      resetFormikWhenNoChange(formValues, newSpecs, formik)
     } else if (isAnExpression(environmentIdentifier) || isAnExpression(serviceIdentifier)) {
       //when serviceIdentifier or environmentIdentifier is an expression
       newSpecs = { ...newSpecs, monitoredServiceRef: MONITORED_SERVICE_EXPRESSION }
       setFieldValue('spec', newSpecs)
+      resetFormikWhenNoChange(formValues, newSpecs, formik)
     } else if (!loading && !error) {
       //when monitoredServiceData is derived from service and env.
       newSpecs = getNewSpecs(monitoredServiceData, formValues)
@@ -117,10 +121,7 @@ export default function MonitoredService({
         identifier: monitoredServiceData?.identifier as string,
         name: monitoredServiceData?.name as string
       })
-    }
-
-    if (isFirstTimeOpenForDefaultMonitoredSvc(formValues, monitoredServiceData)) {
-      resetFormik(formValues, newSpecs, formik)
+      resetFormikIfNeededForDefaultMonitoredService({ formValues, monitoredServiceData, newSpecs, formik })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

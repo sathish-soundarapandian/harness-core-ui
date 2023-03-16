@@ -1,0 +1,36 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.paddingCards {
+  padding: var(--spacing-xlarge) !important;
+}
+
+.paddingTable {
+  padding: var(--spacing-xlarge);
+  padding-top: 0;
+}
+
+.toggleAccordion {
+  // to have better click target area for toggle
+  padding: var(--spacing-large) var(--spacing-medium) !important;
+}
+
+.alignCenter {
+  display: flex;
+  align-items: center;
+}
+
+.rowSubComponent {
+  display: grid;
+  margin-left: 2.5rem !important;
+  margin-right: 2.5rem !important;
+}
+
+.resourceLink p {
+  color: var(--primary-7) !important;
+  margin-bottom: var(--spacing-xsmall);
+}

@@ -182,7 +182,6 @@ export const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
             variableName={name}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={val => formik?.setFieldValue(name, val)}
             {...configureOptionsProps}
             isReadonly={props.disabled}

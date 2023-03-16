@@ -6,10 +6,10 @@ exports[`CreateDowntimePreview should render CreateDowntimePreview with correct 
     class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main label"
         style="width: 120px;"
         title="summary"
       >
@@ -19,9 +19,9 @@ exports[`CreateDowntimePreview should render CreateDowntimePreview with correct 
         class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
       >
         <p
-          class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+          class="StyledProps--font StyledProps--main value"
         >
-          Starting on 2023-08-11 09:47 AM (Asia/Calcutta) for 30 Minutes
+          Starting on 2030-03-26 02:50 PM (Asia/Calcutta) for 30 Minutes
         </p>
       </div>
     </div>
@@ -35,10 +35,10 @@ exports[`CreateDowntimePreview should render CreateDowntimePreview with correct 
     class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main label"
         style="width: 120px;"
         title="summary"
       >
@@ -48,9 +48,9 @@ exports[`CreateDowntimePreview should render CreateDowntimePreview with correct 
         class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
       >
         <p
-          class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+          class="StyledProps--font StyledProps--main value"
         >
-          Starting on 2023-08-11 09:47 AM (Asia/Calcutta) till 2023-07-30 10:47 PM
+          Starting on 2030-03-26 02:50 PM (Asia/Calcutta) till 2030-03-26 03:07 PM
         </p>
       </div>
     </div>
@@ -64,10 +64,10 @@ exports[`CreateDowntimePreview should render CreateDowntimePreview with correct 
     class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main previewLabelAndValue"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main label"
         style="width: 120px;"
         title="summary"
       >
@@ -77,14 +77,14 @@ exports[`CreateDowntimePreview should render CreateDowntimePreview with correct 
         class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
       >
         <p
-          class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+          class="StyledProps--font StyledProps--main value"
         >
-          Starting on 2023-08-11 09:47 AM (UTC) for 30 Minutes
+          Starting on 2030-03-26 04:20 PM (Asia/Bangkok) for 30 Minutes
         </p>
         <p
-          class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+          class="StyledProps--font StyledProps--main value"
         >
-          Repeats after 2 Week until 2025-03-13 06:27 AM
+          Repeats after 2 Week until 2032-02-19 03:17 AM
         </p>
       </div>
     </div>

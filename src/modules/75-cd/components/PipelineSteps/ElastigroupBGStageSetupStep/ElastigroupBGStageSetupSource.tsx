@@ -40,7 +40,7 @@ export default function ElastigroupBGStageSetupSource(props: {
       <div className={css.customTitle}>{getString('cd.ElastigroupBGStageSetup.connectedCloudProvider')}</div>
       <div className={cx(stepCss.formGroup, stepCss.lg)}>
         <FormMultiTypeConnectorField
-          label={getString('connectors.selectConnector')}
+          label={getString('common.entityPlaceholderText')}
           type={Connectors.AWS}
           name="spec.connectedCloudProvider.spec.connectorRef"
           placeholder={getString('select')}

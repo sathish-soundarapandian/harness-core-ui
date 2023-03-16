@@ -11,9 +11,11 @@ import type { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceTy
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ResourceScope } from '@rbac/interfaces/ResourceScope'
 import type { StringsMap } from 'framework/strings/StringsContext'
+import type { SortMethod } from '@common/utils/sortUtils'
 
 export interface RbacResourceModalProps {
   searchTerm: string
+  sortMethod: SortMethod
   selectedData: string[]
   onSelectChange: (items: string[]) => void
   resourceScope: ResourceScope
@@ -45,6 +47,7 @@ export interface ResourceHandler {
   permissionLabels?: {
     [key in PermissionIdentifier]?: string | React.ReactElement
   }
+  resourceModalSortingEnabled?: boolean
   addResourceModalBody?: (props: RbacResourceModalProps) => React.ReactElement
   addAttributeModalBody?: (props: RbacAttributeModalProps) => React.ReactElement
   staticResourceRenderer?: (props: RbacResourceRendererProps) => React.ReactElement

@@ -16,6 +16,7 @@ declare const styles: {
   readonly delegateSuccessContainer: string
   readonly iconPointer: string
   readonly kubernetesButtons: string
+  readonly manifestCommands: string
   readonly mediumBottom: string
   readonly newDelegateContainer: string
   readonly terrformCommandContainer: string

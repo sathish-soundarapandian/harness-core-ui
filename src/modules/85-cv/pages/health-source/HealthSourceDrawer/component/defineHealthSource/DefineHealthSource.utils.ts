@@ -294,6 +294,8 @@ export function getProductBasedOnType(
     case Connectors.PROMETHEUS:
     case HealthSourceTypes.AwsPrometheus:
       return getFeatureOption(Connectors.PROMETHEUS, getString)[0]
+    case HealthSourceTypes.Elk:
+      return getFeatureOption(HealthSourceTypes.Elk, getString)[0]
     default:
       return { ...currProduct } as SelectOption
   }

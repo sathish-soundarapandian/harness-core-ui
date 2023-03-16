@@ -83,6 +83,7 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
   useEffect(() => {
     if (fetchTagsError) {
       showError(`Stage ${stageIdentifier}: ${getTagError(fetchTagsError)}`, undefined, 'cd.tag.fetch.error')
+      setTagsList([])
     }
   }, [fetchTagsError, showError, stageIdentifier])
 

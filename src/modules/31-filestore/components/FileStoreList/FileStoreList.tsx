@@ -17,6 +17,7 @@ import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import MultiTypeFileSelect from '@filestore/components/MultiTypeFileSelect/MultiTypeFileSelect'
 import FileStoreSelect from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import EncryptedFileSelect from '@filestore/components/MultiTypeFileSelect/EncryptedSelect/EncryptedFileSelectField'
+import type { FileUsage } from '@filestore/interfaces/FileStore'
 import css from './FileStoreList.module.scss'
 
 export type ListType = string[]
@@ -35,6 +36,7 @@ export interface ListProps {
   labelClassName?: string
   allowOnlyOne?: boolean
   type: string
+  fileUsage?: FileUsage
 }
 
 const generateNewValue: () => { id: string; value: string } = () => ({
@@ -55,6 +57,7 @@ export const FileSelectList = (props: ListProps): React.ReactElement => {
     style,
     formik,
     expressions,
+    fileUsage,
     labelClassName = '',
     allowOnlyOne = false,
     type = SELECT_FILES_TYPE.FILE_STORE
@@ -185,6 +188,7 @@ export const FileSelectList = (props: ListProps): React.ReactElement => {
                     <div className={css.selectFieldWrapper}>
                       {type === SELECT_FILES_TYPE.FILE_STORE ? (
                         <FileStoreSelect
+                          fileUsage={fileUsage}
                           name={`${name}[${index}]`}
                           readonly={disabled}
                           placeholder={placeholder}

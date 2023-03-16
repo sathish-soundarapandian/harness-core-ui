@@ -8,7 +8,6 @@
 import React from 'react'
 import { fireEvent, render, act, waitFor } from '@testing-library/react'
 import * as pipelineNg from 'services/pipeline-ng'
-import mockImport from 'framework/utils/mockImport'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { getDummyPipelineCanvasContextValue } from '@pipeline/components/PipelineStudio/PipelineCanvas/__tests__/PipelineCanvasTestHelper'
@@ -48,31 +47,7 @@ describe('Test SavePipelinePopoverV1 component', () => {
     expect(getByText('save')).toBeInTheDocument()
   })
 
-  test('User clicks on "Save" button with OPA_PIPELINE_GOVERNANCE FF off', async () => {
-    const contextValue = getDummyPipelineCanvasContextValue({
-      isLoading: false,
-      isReadonly: false,
-      isIntermittentLoading: false,
-      isUpdated: true
-    })
-    const { getByText } = render(
-      <TestWrapper {...testWrapperProps}>
-        <PipelineContextV1.Provider value={contextValue}>
-          <SavePipelinePopoverWithRefV1 toPipelineStudio={jest.fn()} />
-        </PipelineContextV1.Provider>
-      </TestWrapper>
-    )
-
-    await act(async () => {
-      fireEvent.click(getByText('save'))
-    })
-    await waitFor(() => expect(pipelineNg.createPipelinePromise).toHaveBeenCalled())
-  })
-
-  test.only('User clicks on "Save" button with OPA_PIPELINE_GOVERNANCE FF on', async () => {
-    mockImport('@common/hooks/useFeatureFlag', {
-      useFeatureFlags: () => ({ OPA_PIPELINE_GOVERNANCE: true })
-    })
+  test.only('User clicks on "Save" button', async () => {
     const contextValue = getDummyPipelineCanvasContextValue({
       isLoading: false,
       isReadonly: false,

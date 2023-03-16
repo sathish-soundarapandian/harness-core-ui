@@ -16,6 +16,7 @@ import {
   AllowedTypes,
   Formik,
   FormikForm,
+  Text,
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
@@ -30,6 +31,8 @@ import { SelectConfigureOptions } from '@common/components/ConfigureOptions/Sele
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { FormMultiTypeCheckboxField } from '@common/components'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import type { AsgBlueGreenDeployStepInitialValues, AsgBlueGreenDeployCustomStepProps } from './AsgBlueGreenDeployStep'
 import { shouldFetchFieldData } from '../PipelineStepsUtil'
@@ -70,6 +73,7 @@ const AsgBlueGreenDeployStepEdit = (
   const [prodListenerRulesLoading, setProdListenerRulesLoading] = useState<boolean>(false)
   const [stageListenerRules, setStageListenerRules] = useState<SelectOption[]>([])
   const [stageListenerRulesLoading, setStageListenerRulesLoading] = useState<boolean>(false)
+  const { expressions } = useVariablesExpression()
 
   const environmentRef = defaultTo(
     selectedStage?.stage?.spec?.environment?.environmentRef,
@@ -364,6 +368,17 @@ const AsgBlueGreenDeployStepEdit = (
                 stepViewType={stepViewType}
               />
 
+              <div className={stepCss.divider} />
+              <Text margin={{ bottom: 'medium' }}>{getString('instanceFieldOptions.instances')}</Text>
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <FormMultiTypeCheckboxField
+                  name="spec.useAlreadyRunningInstances"
+                  label={getString('cd.useAlreadyRunningInstance')}
+                  disabled={readonly}
+                  multiTypeTextbox={{ expressions, allowableTypes }}
+                />
+              </div>
+
               <div className={css.configureServiceTitle}>{getString('cd.loadBalancerConfig')}</div>
 
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
@@ -399,7 +414,6 @@ const AsgBlueGreenDeployStepEdit = (
                     variableName="spec.loadBalancer"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       onLoadBalancerChange(value, formik)
                     }}
@@ -453,7 +467,6 @@ const AsgBlueGreenDeployStepEdit = (
                     variableName="spec.prodListener"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       const updatedValues = produce(formik.values, draft => {
                         draft.spec.prodListener = value
@@ -496,7 +509,6 @@ const AsgBlueGreenDeployStepEdit = (
                     variableName="spec.prodListenerRuleArn"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('spec.prodListenerRuleArn', value)
                     }}
@@ -550,7 +562,6 @@ const AsgBlueGreenDeployStepEdit = (
                     variableName="spec.stageListener"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       const updatedValues = produce(formik.values, draft => {
                         draft.spec.stageListener = value
@@ -593,7 +604,6 @@ const AsgBlueGreenDeployStepEdit = (
                     variableName="spec.stageListenerRuleArn"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('spec.stageListenerRuleArn', value)
                     }}

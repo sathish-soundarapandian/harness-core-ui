@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -291,6 +291,7 @@ export interface AccessControlCheckError {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -318,6 +319,7 @@ export interface AccessControlCheckError {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -360,6 +362,14 @@ export interface AccessControlCheckError {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -405,6 +415,12 @@ export interface AuditEventDTO {
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
     | 'ERROR_BUDGET_RESET'
+    | 'START'
+    | 'END'
+    | 'PAUSE'
+    | 'RESUME'
+    | 'ABORT'
+    | 'TIMEOUT'
   auditEventData?: AuditEventData
   auditId?: string
   authenticationInfo: AuthenticationInfoDTO
@@ -414,7 +430,21 @@ export interface AuditEventDTO {
   internalInfo?: {
     [key: string]: string
   }
-  module: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  module:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'SRM'
+    | 'IACM'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   requestMetadata?: RequestMetadata
   resource: ResourceDTO
   resourceScope: ResourceScopeDTO
@@ -429,6 +459,7 @@ export interface AuditEventData {
     | 'TemplateAuditEventData'
     | 'OpaAuditEventData'
     | 'ChaosAuditEventData'
+    | 'FeatureFlagAuditEventData'
     | 'USER_INVITE'
     | 'USER_MEMBERSHIP'
 }
@@ -454,6 +485,12 @@ export interface AuditFilterProperties {
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
     | 'ERROR_BUDGET_RESET'
+    | 'START'
+    | 'END'
+    | 'PAUSE'
+    | 'RESUME'
+    | 'ABORT'
+    | 'TIMEOUT'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -471,7 +508,23 @@ export interface AuditFilterProperties {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
-  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS')[]
+    | 'RuleExecution'
+  modules?: (
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'SRM'
+    | 'IACM'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+  )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
   scopes?: ResourceScopeDTO[]
@@ -802,6 +855,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -829,6 +883,7 @@ export interface Error {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -871,6 +926,14 @@ export interface Error {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1162,6 +1225,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1189,6 +1253,7 @@ export interface Failure {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -1231,10 +1296,22 @@ export interface Failure {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export type FeatureFlagAuditEventData = AuditEventData & {
+  environment?: string
 }
 
 export interface FilterDTO {
@@ -1261,6 +1338,7 @@ export interface FilterProperties {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
   tags?: {
     [key: string]: string
   }
@@ -1273,6 +1351,16 @@ export interface HttpRequestInfo {
 export type InvitationSource = Source & {}
 
 export type MSTeamSettingDTO = NotificationSettingDTO & {}
+
+export type NodeExecutionEventData = AuditEventData & {
+  accountIdentifier?: string
+  nodeExecutionId?: string
+  orgIdentifier?: string
+  pipelineIdentifier?: string
+  planExecutionId?: string
+  projectIdentifier?: string
+  stageIdentifier?: string
+}
 
 export interface NotificationDTO {
   accountIdentifier?: string
@@ -1311,6 +1399,7 @@ export interface Page {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1321,6 +1410,7 @@ export interface PageAuditEventDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1331,6 +1421,7 @@ export interface PageFilterDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1341,6 +1432,7 @@ export interface PageNotificationDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1351,6 +1443,7 @@ export interface PageResourceGroupResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1361,6 +1454,7 @@ export interface PageResourceGroupV2Response {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1408,6 +1502,7 @@ export interface ResourceDTO {
     | 'DELEGATE_GROUPS'
     | 'SERVICE'
     | 'ENVIRONMENT'
+    | 'ENVIRONMENT_GROUP'
     | 'DELEGATE'
     | 'SERVICE_ACCOUNT'
     | 'CONNECTOR'
@@ -1436,6 +1531,15 @@ export interface ResourceDTO {
     | 'AUTOSTOPPING_STARTSTOP'
     | 'SETTING'
     | 'NG_LOGIN_SETTINGS'
+    | 'DEPLOYMENT_FREEZE'
+    | 'CLOUD_ASSET_GOVERNANCE_RULE'
+    | 'CLOUD_ASSET_GOVERNANCE_RULE_SET'
+    | 'CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT'
+    | 'TARGET_GROUP'
+    | 'FEATURE_FLAG'
+    | 'NG_ACCOUNT_DETAILS'
+    | 'BUDGET_GROUP'
+    | 'NODE_EXECUTION'
 }
 
 export interface ResourceFilter {
@@ -1872,6 +1976,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1899,6 +2004,7 @@ export interface ResponseMessage {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -1941,6 +2047,14 @@ export interface ResponseMessage {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1953,6 +2067,8 @@ export interface ResponseMessage {
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'DELEGATE_RESTART'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -2075,6 +2191,7 @@ export interface SmtpConfig {
   host?: string
   password?: string[]
   port?: number
+  startTLS?: boolean
   type?: string
   useSSL?: boolean
   username?: string
@@ -2151,7 +2268,7 @@ export type ResourceGroupRequestRequestBody = ResourceGroupRequest
 
 export type ResourceGroupV2RequestRequestBody = ResourceGroupV2Request
 
-export type InsertOrUpdateTemplateRequestBody = void
+export type PutTemplateRequestBody = void
 
 export interface GetAuditFilterListQueryParams {
   pageIndex?: number
@@ -2543,6 +2660,7 @@ export interface GetAuditEventListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetAuditEventListProps = Omit<
@@ -2695,6 +2813,7 @@ export interface ListNotificationsQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type ListNotificationsProps = Omit<
@@ -2802,6 +2921,7 @@ export interface GetResourceGroupListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetResourceGroupListProps = Omit<
@@ -2954,6 +3074,7 @@ export interface GetFilterResourceGroupListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetFilterResourceGroupListProps = Omit<
@@ -3553,13 +3674,7 @@ export interface InsertOrUpdateTemplateQueryParams {
 }
 
 export type InsertOrUpdateTemplateProps = Omit<
-  MutateProps<
-    ResponseTemplateDTO,
-    Failure | Error,
-    InsertOrUpdateTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
-    void
-  >,
+  MutateProps<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -3567,13 +3682,7 @@ export type InsertOrUpdateTemplateProps = Omit<
  * Update a template if exists else create
  */
 export const InsertOrUpdateTemplate = (props: InsertOrUpdateTemplateProps) => (
-  <Mutate<
-    ResponseTemplateDTO,
-    Failure | Error,
-    InsertOrUpdateTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
-    void
-  >
+  <Mutate<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>
     verb="PUT"
     path={`/templates/insertOrUpdate`}
     base={getConfig('audit/api')}
@@ -3582,13 +3691,7 @@ export const InsertOrUpdateTemplate = (props: InsertOrUpdateTemplateProps) => (
 )
 
 export type UseInsertOrUpdateTemplateProps = Omit<
-  UseMutateProps<
-    ResponseTemplateDTO,
-    Failure | Error,
-    InsertOrUpdateTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
-    void
-  >,
+  UseMutateProps<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -3596,13 +3699,11 @@ export type UseInsertOrUpdateTemplateProps = Omit<
  * Update a template if exists else create
  */
 export const useInsertOrUpdateTemplate = (props: UseInsertOrUpdateTemplateProps) =>
-  useMutate<
-    ResponseTemplateDTO,
-    Failure | Error,
-    InsertOrUpdateTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
-    void
-  >('PUT', `/templates/insertOrUpdate`, { base: getConfig('audit/api'), ...props })
+  useMutate<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>(
+    'PUT',
+    `/templates/insertOrUpdate`,
+    { base: getConfig('audit/api'), ...props }
+  )
 
 /**
  * Update a template if exists else create
@@ -3612,7 +3713,7 @@ export const insertOrUpdateTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     InsertOrUpdateTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -3621,7 +3722,7 @@ export const insertOrUpdateTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     InsertOrUpdateTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     void
   >('PUT', getConfig('audit/api'), `/templates/insertOrUpdate`, props, signal)
 
@@ -3747,7 +3848,7 @@ export type PutTemplateProps = Omit<
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     PutTemplatePathParams
   >,
   'path' | 'verb'
@@ -3758,13 +3859,7 @@ export type PutTemplateProps = Omit<
  * Update a template
  */
 export const PutTemplate = ({ identifier, ...props }: PutTemplateProps) => (
-  <Mutate<
-    ResponseTemplateDTO,
-    Failure | Error,
-    PutTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
-    PutTemplatePathParams
-  >
+  <Mutate<ResponseTemplateDTO, Failure | Error, PutTemplateQueryParams, PutTemplateRequestBody, PutTemplatePathParams>
     verb="PUT"
     path={`/templates/${identifier}`}
     base={getConfig('audit/api')}
@@ -3777,7 +3872,7 @@ export type UsePutTemplateProps = Omit<
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     PutTemplatePathParams
   >,
   'path' | 'verb'
@@ -3792,7 +3887,7 @@ export const usePutTemplate = ({ identifier, ...props }: UsePutTemplateProps) =>
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     PutTemplatePathParams
   >('PUT', (paramsInPath: PutTemplatePathParams) => `/templates/${paramsInPath.identifier}`, {
     base: getConfig('audit/api'),
@@ -3811,7 +3906,7 @@ export const putTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     PutTemplatePathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -3820,7 +3915,7 @@ export const putTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     PutTemplatePathParams
   >('PUT', getConfig('audit/api'), `/templates/${identifier}`, props, signal)
 
@@ -3832,6 +3927,7 @@ export interface GetResourceGroupListV2QueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetResourceGroupListV2Props = Omit<
@@ -3984,6 +4080,7 @@ export interface GetFilterResourceGroupListV2QueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetFilterResourceGroupListV2Props = Omit<

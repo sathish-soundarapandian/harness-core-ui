@@ -96,8 +96,6 @@ export default function NewRelicHealthSource({
     result: []
   })
 
-  const isMetricThresholdEnabled = !isTemplate
-
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [showCustomMetric, setShowCustomMetric] = useState(!!Array.from(newRelicData?.mappedServicesAndEnvs)?.length)
   const connectorIdentifier = (newRelicData?.connectorRef?.value || newRelicData?.connectorRef) as string
@@ -118,9 +116,7 @@ export default function NewRelicHealthSource({
     mappedServicesAndEnvs: showCustomMetric ? newRelicData?.mappedServicesAndEnvs : new Map()
   })
 
-  const [nonCustomFeilds, setNonCustomFeilds] = useState(() =>
-    initializeNonCustomFields(newRelicData, isMetricThresholdEnabled)
-  )
+  const [nonCustomFeilds, setNonCustomFeilds] = useState(() => initializeNonCustomFields(newRelicData))
 
   const {
     data: applicationsData,
@@ -232,7 +228,6 @@ export default function NewRelicHealthSource({
     async (metricPackIdentifier: string, updatedValue: boolean, appName: string, appId: string) => {
       if (typeof metricPackIdentifier === 'string') {
         const updatedNonCustomFields = getUpdatedNonCustomFields<NonCustomMetricFields>(
-          isMetricThresholdEnabled,
           nonCustomFeilds,
           metricPackIdentifier,
           updatedValue
@@ -245,14 +240,13 @@ export default function NewRelicHealthSource({
         }
       }
     },
-    [isMetricThresholdEnabled, nonCustomFeilds, onValidate]
+    [nonCustomFeilds, onValidate]
   )
 
   const filterRemovedMetricNameThresholds = useCallback(
     (deletedMetricName: string) => {
-      if (isMetricThresholdEnabled && deletedMetricName) {
+      if (deletedMetricName) {
         const updatedNonCustomFields = getMetricNameFilteredNonCustomFields<NonCustomMetricFields>(
-          isMetricThresholdEnabled,
           nonCustomFeilds,
           deletedMetricName
         )
@@ -260,7 +254,7 @@ export default function NewRelicHealthSource({
         setNonCustomFeilds(updatedNonCustomFields)
       }
     },
-    [isMetricThresholdEnabled, nonCustomFeilds]
+    [nonCustomFeilds]
   )
 
   React.useEffect(() => {
@@ -282,8 +276,7 @@ export default function NewRelicHealthSource({
             args.initialValues,
             groupedCreatedMetricsList,
             groupedCreatedMetricsList.indexOf(selectedMetric),
-            getString,
-            isMetricThresholdEnabled
+            getString
           )
         ).length === 0
       }
@@ -292,8 +285,7 @@ export default function NewRelicHealthSource({
           values,
           groupedCreatedMetricsList,
           groupedCreatedMetricsList.indexOf(selectedMetric),
-          getString,
-          isMetricThresholdEnabled
+          getString
         )
       }}
       initialValues={initPayload}
@@ -434,7 +426,6 @@ export default function NewRelicHealthSource({
                       setSelectedMetricPacks as React.Dispatch<React.SetStateAction<TimeSeriesMetricPackDTO[]>>
                     }
                     connector={HealthSoureSupportedConnectorTypes.NEW_RELIC}
-                    isMetricThresholdEnabled={isMetricThresholdEnabled}
                     onChange={(metricPackIdentifier, updatedValue) =>
                       handleMetricPackUpdate(
                         metricPackIdentifier,
@@ -471,7 +462,6 @@ export default function NewRelicHealthSource({
                 addFieldLabel={getString('cv.monitoringSources.addMetric')}
                 initCustomForm={initNewRelicCustomFormValue()}
                 shouldBeAbleToDeleteLastMetric
-                isMetricThresholdEnabled={isMetricThresholdEnabled}
                 filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
               >
                 <NewRelicCustomMetricForm
@@ -503,15 +493,14 @@ export default function NewRelicHealthSource({
               </CardWithOuterTitle>
             )}
 
-            {isMetricThresholdEnabled &&
-              getIsMetricThresholdCanBeShown(formik.values.metricData, groupedCreatedMetrics) && (
-                <MetricThresholdProvider
-                  groupedCreatedMetrics={groupedCreatedMetrics}
-                  formikValues={formik.values}
-                  metricPacks={selectedMetricPacks}
-                  setThresholdState={setNonCustomFeilds}
-                />
-              )}
+            {getIsMetricThresholdCanBeShown(formik.values.metricData, groupedCreatedMetrics) && (
+              <MetricThresholdProvider
+                groupedCreatedMetrics={groupedCreatedMetrics}
+                formikValues={formik.values}
+                metricPacks={selectedMetricPacks}
+                setThresholdState={setNonCustomFeilds}
+              />
+            )}
             <Container style={{ marginBottom: '120px' }} />
             <DrawerFooter
               isSubmit

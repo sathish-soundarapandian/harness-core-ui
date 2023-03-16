@@ -198,7 +198,6 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
                     variableName="spec.barrierRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => formik?.setFieldValue('spec.barrierRef', value)}
                     isReadonly={props.isReadonly}
                     options={barriers}

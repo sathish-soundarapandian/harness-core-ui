@@ -58,7 +58,7 @@ export const getModuleToDefaultURLMap = (accountId: string, module: Module): { [
     projectIdentifier: DEFAULT_PROJECT_ID,
     orgIdentifier: DEFAULT_ORG
   }),
-  cd: routes.toGetStartedWithCD({
+  cd: routes.toCDOnboardingWizard({
     accountId,
     module,
     projectIdentifier: DEFAULT_PROJECT_ID,

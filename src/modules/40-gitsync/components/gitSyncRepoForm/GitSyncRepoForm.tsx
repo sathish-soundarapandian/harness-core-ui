@@ -34,7 +34,7 @@ import {
   ConnectorReferenceField,
   ConnectorSelectedValue
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { Scope } from '@common/interfaces/SecretsInterface'
+import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 import {
   ConnectorCardInterface,
   getCompleteGitPath,
@@ -85,10 +85,6 @@ const getRepoUrlForConnectorType = (formValues: GitSyncFormInterface, repoNamePa
     return repoName
   }
   return getRepoUrl(formValues.gitConnector?.connector?.spec?.url, repoName)
-}
-
-const getConnectorIdentifierWithScope = (scope: Scope, identifier: string): string => {
-  return scope === Scope.ORG || scope === Scope.ACCOUNT ? `${scope}.${identifier}` : identifier
 }
 
 const getConnectorTypeIcon = (isSelected: boolean, icon: ConnectorCardInterface['icon']): IconName =>

@@ -11,7 +11,7 @@ import { noop } from 'lodash-es'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { ServicesList } from '@cd/components/Services/ServicesList/ServicesList'
 import { serviceDetails } from '@cd/mock'
-import type { ServiceDetailsDTO } from 'services/cd-ng'
+import type { ServiceDetailsDTOV2 } from 'services/cd-ng'
 import mockImport from 'framework/utils/mockImport'
 
 jest.mock('highcharts-react-official', () => () => <></>)
@@ -41,7 +41,7 @@ const mutate = jest.fn(() => {
 
 export const findDialogMenu = (): HTMLElement | null => document.querySelector('.bp3-menu')
 
-const renderSetup = (data: ServiceDetailsDTO[]) => {
+const renderSetup = (data: ServiceDetailsDTOV2[]) => {
   return render(
     <TestWrapper
       path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
@@ -62,13 +62,13 @@ const renderSetup = (data: ServiceDetailsDTO[]) => {
 
 describe('ServicesList', () => {
   test('render', () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     const { container } = renderSetup(responseData)
     expect(container).toMatchSnapshot()
   })
 
   test('go to service details on row click', async () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     const { container, getByTestId } = renderSetup(responseData)
     const row = container.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0]
     await fireEvent.click(row!)
@@ -79,12 +79,12 @@ describe('ServicesList', () => {
 
   test('should go to latest execution after click', async () => {
     window.open = jest.fn()
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     const { container } = renderSetup(responseData)
 
     const pipelineExecutionId =
-      serviceDetails.data.serviceDeploymentDetailsList[1].lastPipelineExecuted?.pipelineExecutionId
-    const planExecutionId = serviceDetails.data.serviceDeploymentDetailsList[1].lastPipelineExecuted?.planExecutionId
+      serviceDetails.data?.serviceDeploymentDetailsList?.[1].lastPipelineExecuted?.pipelineExecutionId
+    const planExecutionId = serviceDetails.data?.serviceDeploymentDetailsList?.[1].lastPipelineExecuted?.planExecutionId
     expect(container.querySelector(`[data-testid="${pipelineExecutionId}"]`)).toBeDefined()
     fireEvent.click(container.querySelector(`[data-testid="${pipelineExecutionId}"]`) as HTMLElement)
 
@@ -100,7 +100,7 @@ describe('ServicesList', () => {
 
 describe('Menu render', () => {
   test('open option menu and "open in new tab"', async () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     const { container } = renderSetup(responseData)
     fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
     const menuDailog = findDialogMenu()
@@ -117,7 +117,7 @@ describe('Menu render', () => {
   })
 
   test('should open edit modal and cancel', async () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     const { container, getByText } = renderSetup(responseData)
 
     fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
@@ -142,7 +142,7 @@ describe('Menu render', () => {
       })
     })
 
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     const { container, getByText } = renderSetup(responseData)
 
     fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
@@ -179,7 +179,7 @@ describe('Menu render', () => {
       })
     })
 
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     const { container, getByText } = renderSetup(responseData)
 
     fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
@@ -200,55 +200,55 @@ describe('Menu render', () => {
 
 describe('DeploymentType in ServicesList ', () => {
   test('render Kubernetes deployment type', () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     const { container } = renderSetup(responseData)
     expect(container.querySelector('[data-icon="service-kubernetes"]')).toBeTruthy()
   })
 
   test('render NativeHelm deployment type', () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     responseData[1].deploymentTypeList = ['NativeHelm']
     const { container } = renderSetup(responseData)
     expect(container.querySelector('[data-icon="service-helm"]')).toBeTruthy()
   })
 
   test('render ServerlessAwsLambda deployment type', () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     responseData[1].deploymentTypeList = ['ServerlessAwsLambda']
     const { container } = renderSetup(responseData)
     expect(container.querySelector('[data-icon="service-serverless"]')).toBeTruthy()
   })
 
   test('render Ssh deployment type', () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     responseData[1].deploymentTypeList = ['Ssh']
     const { container } = renderSetup(responseData)
     expect(container.querySelector('[data-icon="secret-ssh"]')).toBeTruthy()
   })
 
   test('render WinRm deployment type', () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     responseData[1].deploymentTypeList = ['WinRm']
     const { container } = renderSetup(responseData)
     expect(container.querySelector('[data-icon="command-winrm"]')).toBeTruthy()
   })
 
   test('render GitOps service type', () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     responseData[1].deploymentTypeList = ['KubernetesGitOps']
     const { container } = renderSetup(responseData)
     expect(container.querySelector('[data-icon="gitops-green"]')).toBeTruthy()
   })
 
   test('render AzureWebApps deployment type', () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     responseData[1].deploymentTypeList = ['AzureWebApp']
     const { container } = renderSetup(responseData)
     expect(container.querySelector('[data-icon="azurewebapp"]')).toBeTruthy()
   })
 
   test('render more than 2 deployments type', () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
     responseData[1].deploymentTypeList = [
       'Kubernetes',
       'NativeHelm',

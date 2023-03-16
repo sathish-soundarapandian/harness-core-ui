@@ -24,11 +24,7 @@ describe('Changing Project Page', () => {
   beforeEach(() => {
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse).as('updatedListSLOsCallResponse')
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
+
     cy.login('test', 'test')
 
     cy.visitPageAssertion('[class^=SideNav-module_main]')

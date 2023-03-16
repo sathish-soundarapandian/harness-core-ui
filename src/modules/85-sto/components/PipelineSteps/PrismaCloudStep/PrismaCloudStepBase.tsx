@@ -36,7 +36,8 @@ import {
   dividerBottomMargin,
   EXTRACTION_SCAN_MODE,
   INGESTION_SCAN_MODE,
-  ORCHESTRATION_SCAN_MODE
+  ORCHESTRATION_SCAN_MODE,
+  tooltipIds
 } from '../constants'
 import SecurityField from '../SecurityField'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -157,7 +158,8 @@ export const PrismaCloudStepBase = (
                       label: 'sto.stepField.tool.fieldsHeading'
                     },
                     'spec.tool.image_name': {
-                      label: 'imageNameLabel'
+                      label: 'imageNameLabel',
+                      tooltipId: tooltipIds.toolImageName
                     }
                   }}
                 />

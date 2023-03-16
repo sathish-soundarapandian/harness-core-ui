@@ -13,7 +13,16 @@ import type { ConnectorInfoDTO } from 'services/cd-ng'
 import ConnectorTestConnection from '../ConnectorTestConnection'
 import delegateNameresponse from './mockData/delegate-name-response-error.json'
 import testConnectionSuccess from './mockData/test-connection-success.json'
-import { K8WithInheritFromDelegate, ManualK8s, Docker, Nexus, Artifactory, GCP, AWS } from './mockData/connectorsMock'
+import {
+  K8WithInheritFromDelegate,
+  ManualK8s,
+  Docker,
+  Nexus,
+  Artifactory,
+  GCP,
+  AWS,
+  GitHttp
+} from './mockData/connectorsMock'
 
 jest.mock('services/portal', () => ({
   useGetDelegateFromId: jest.fn().mockImplementation(() => {
@@ -85,6 +94,22 @@ describe('Verification step for out of cluster delegate', () => {
               type="Nexus"
               name="sample-name"
               connectorInfo={Nexus as ConnectorInfoDTO}
+              isStep={true}
+            />
+          </TestWrapper>
+        </MemoryRouter>
+      )
+
+      expect(container).toMatchSnapshot()
+    }),
+    test('render ConnectorTestConnection for Git', () => {
+      const { container } = render(
+        <MemoryRouter>
+          <TestWrapper>
+            <ConnectorTestConnection
+              type="Github"
+              name="sample-name"
+              connectorInfo={GitHttp as ConnectorInfoDTO}
               isStep={true}
             />
           </TestWrapper>

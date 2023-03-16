@@ -41,7 +41,7 @@ export class ServiceNowCreate extends PipelineStep<ServiceNowCreateData> {
   // initialValues on mount
   protected defaultValues: ServiceNowCreateData = {
     identifier: '',
-    timeout: '1d',
+    timeout: '10m',
     name: '',
     type: StepType.ServiceNowCreate,
     spec: {

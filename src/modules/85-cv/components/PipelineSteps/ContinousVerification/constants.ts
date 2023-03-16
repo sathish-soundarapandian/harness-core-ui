@@ -66,6 +66,7 @@ export const cvDefaultValues: ContinousVerificationData = {
   timeout: '2h',
   spec: {
     monitoredServiceRef: '',
+    isMultiServicesOrEnvs: false,
     type: '',
     healthSources: [],
     monitoredService: {
@@ -126,5 +127,6 @@ export const monitoredServiceRefPath = 'spec.monitoredService.spec.monitoredServ
 export const V2_HEALTHSOURCES = [
   HealthSourceTypes.SumoLogic,
   HealthSourceTypes.SumologicLogs,
-  HealthSourceTypes.SumologicMetrics
+  HealthSourceTypes.SumologicMetrics,
+  HealthSourceTypes.Elk
 ]

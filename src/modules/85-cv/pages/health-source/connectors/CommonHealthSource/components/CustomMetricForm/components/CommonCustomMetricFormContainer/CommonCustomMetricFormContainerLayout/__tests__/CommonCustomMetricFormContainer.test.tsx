@@ -26,7 +26,7 @@ const WrapperComponent = (props: CommonCustomMetricFormContainerProps): JSX.Elem
     identifier: 'Health source Query',
     query: 'Test',
     messageIdentifier: '',
-    serviceInstance: ''
+    serviceInstanceField: ''
   }
   return (
     <TestWrapper

@@ -79,7 +79,8 @@ export const getPipelineContext = (): PipelineContextInterface => ({
   setTemplateTypes: jest.fn(),
   setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
-  setIntermittentLoading: jest.fn()
+  setIntermittentLoading: jest.fn(),
+  setValidationUuid: jest.fn()
 })
 
 export const getEditPipelineContext = (): PipelineContextInterface => ({
@@ -144,7 +145,8 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
   setTemplateTypes: jest.fn(),
   setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
-  setIntermittentLoading: jest.fn()
+  setIntermittentLoading: jest.fn(),
+  setValidationUuid: jest.fn()
 })
 
 export const showError = jest.fn()

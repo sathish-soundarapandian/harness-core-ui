@@ -39,8 +39,8 @@ export default function HealthSourceInputsetTable({ healthSources }: any): JSX.E
             accessor: function accessor(row: any) {
               return (
                 <Layout.Horizontal>
-                  <Icon name={getIconBySourceType(row.type)} margin={{ right: 'medium' }} />
-                  <Text>{row.healthSource}</Text>
+                  <Icon name={getIconBySourceType(row.type)} padding={{ right: 'small' }} />
+                  <Text lineClamp={1}>{row.healthSource}</Text>
                 </Layout.Horizontal>
               )
             },
@@ -49,14 +49,18 @@ export default function HealthSourceInputsetTable({ healthSources }: any): JSX.E
           {
             Header: 'Connector',
             accessor: function accessor(row: any) {
-              return <Text className={css.healthSourceInputsetTable}>{row.connector}</Text>
+              return (
+                <Text lineClamp={1} className={css.healthSourceInputsetTable} padding={{ right: 'small' }}>
+                  {row.connector}
+                </Text>
+              )
             },
             id: 'connector'
           },
           {
             Header: 'Feature',
             accessor: function accessor(row: any) {
-              return <Text>{row.feature}</Text>
+              return <Text lineClamp={1}>{row.feature}</Text>
             },
             id: 'feature'
           }

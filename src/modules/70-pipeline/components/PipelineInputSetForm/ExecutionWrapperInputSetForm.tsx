@@ -5,14 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { AllowedTypes } from '@harness/uicore'
-import { identity, pickBy, set, isEmpty } from 'lodash-es'
 import React from 'react'
+import { identity, pickBy, set, isEmpty, defaultTo } from 'lodash-es'
+import { AllowedTypes, Icon, Label, Layout } from '@harness/uicore'
+import cx from 'classnames'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageConfig, ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
-import type { StepViewType } from '../AbstractSteps/Step'
+import { useStrings } from 'framework/strings'
+import { StepViewType } from '../AbstractSteps/Step'
 import { CollapseForm } from './CollapseForm'
 import type { StageInputSetFormProps } from './StageInputSetForm'
 import { StepForm } from './StepInputSetForm'
+import { FailureStrategiesInputSetForm } from './StageAdvancedInputSetForm/FailureStrategiesInputSetForm'
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export function getStepFromStage(stepId: string, steps?: ExecutionWrapperConfig[]): ExecutionWrapperConfig | undefined {
   let responseStep: ExecutionWrapperConfig | undefined = undefined
@@ -45,6 +50,7 @@ export function ExecutionWrapperInputSetForm(props: {
   customStepProps?: {
     stageIdentifier: string
     selectedStage?: DeploymentStageConfig
+    stageType?: StageType
   }
 }): JSX.Element {
   const {
@@ -59,6 +65,8 @@ export function ExecutionWrapperInputSetForm(props: {
     executionIdentifier,
     customStepProps
   } = props
+  const { getString } = useStrings()
+
   return (
     <>
       {stepsTemplate?.map((item, index) => {
@@ -151,7 +159,24 @@ export function ExecutionWrapperInputSetForm(props: {
               const stepGroup = getStepFromStage(nodep.stepGroup.identifier, allValues)
               const initialValues = getStepFromStage(nodep.stepGroup?.identifier || '', values)
               return (
-                <>
+                <Layout.Vertical spacing="medium" padding={{ top: 'medium' }}>
+                  <Label>
+                    <Icon padding={{ right: 'small' }} name={'step-group'} />
+                    {getString('pipeline.execution.stepGroupTitlePrefix')}
+                    {getString('pipeline.stepLabel', stepGroup?.stepGroup)}
+                  </Label>
+                  <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
+                    <FailureStrategiesInputSetForm
+                      readonly={readonly}
+                      path={
+                        isTemplateStepGroup
+                          ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.failureStrategies`
+                          : `${path}[${index}].parallel[${indexp}].stepGroup.failureStrategies`
+                      }
+                      viewType={viewType}
+                      stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
+                    />
+                  </div>
                   <CollapseForm
                     header={isTemplateStepGroup ? nodep.stepGroup?.identifier : stepGroup?.stepGroup?.name || ''}
                     headerProps={{ font: { size: 'normal' } }}
@@ -184,7 +209,7 @@ export function ExecutionWrapperInputSetForm(props: {
                       customStepProps={customStepProps}
                     />
                   </CollapseForm>
-                </>
+                </Layout.Vertical>
               )
             } else {
               return null
@@ -195,7 +220,24 @@ export function ExecutionWrapperInputSetForm(props: {
           const stepGroup = getStepFromStage(item.stepGroup.identifier, allValues)
           const initialValues = getStepFromStage(item.stepGroup?.identifier || '', values)
           return (
-            <>
+            <Layout.Vertical spacing="medium" padding={{ top: 'medium' }}>
+              <Label>
+                <Icon padding={{ right: 'small' }} name={'step-group'} />
+                {getString('pipeline.execution.stepGroupTitlePrefix')}
+                {getString('pipeline.stepLabel', stepGroup?.stepGroup)}
+              </Label>
+              <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
+                <FailureStrategiesInputSetForm
+                  readonly={readonly}
+                  path={
+                    isTemplateStepGroup
+                      ? `${path}[${index}].stepGroup.template.templateInputs.failureStrategies`
+                      : `${path}[${index}].stepGroup.failureStrategies`
+                  }
+                  viewType={viewType}
+                  stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
+                />
+              </div>
               <CollapseForm
                 header={stepGroup?.stepGroup?.name || stepGroup?.stepGroup?.identifier || ''}
                 headerProps={{ font: { size: 'normal' } }}
@@ -228,7 +270,7 @@ export function ExecutionWrapperInputSetForm(props: {
                   customStepProps={customStepProps}
                 />
               </CollapseForm>
-            </>
+            </Layout.Vertical>
           )
         } else {
           return null

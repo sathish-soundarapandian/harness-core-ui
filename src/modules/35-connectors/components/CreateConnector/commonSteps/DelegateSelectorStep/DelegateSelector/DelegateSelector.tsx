@@ -23,6 +23,9 @@ import {
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
+import useCreateDelegateViaCommandsModal from '@delegates/pages/delegates/delegateCommandLineCreation/components/useCreateDelegateViaCommandsModal'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 import css from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelector/DelegateSelector.module.scss'
 
 export enum DelegateOptions {
@@ -137,6 +140,9 @@ export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
   const [data, setData] = useState(apiData)
   const { openDelegateModal } = useCreateDelegateModal({
     onClose: refetch
+  })
+  const { openDelegateModalWithCommands } = useCreateDelegateViaCommandsModal({
+    oldDelegateCreation: openDelegateModal
   })
   const { showError } = useToaster()
 
@@ -311,6 +317,7 @@ export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
     }
   }
 
+  const { trackEvent } = useTelemetry()
   return (
     <Layout.Vertical className={css.delegateSelectorContainer}>
       <Text color={Color.GREY_800} margin={{ top: 'xlarge', bottom: 'medium' }}>
@@ -331,7 +338,12 @@ export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
               font={{ weight: 'semi-bold' }}
               iconProps={{ margin: { right: 'xsmall' } }}
               permission={permissionRequestNewDelegate}
-              onClick={() => openDelegateModal()}
+              onClick={() => {
+                trackEvent(DelegateActions.DelegateCommandLineCreationOpened, {
+                  category: Category.DELEGATE
+                })
+                openDelegateModalWithCommands()
+              }}
               data-name="installNewDelegateButton"
             >
               {getString('connectors.testConnectionStep.installNewDelegate')}

@@ -13,7 +13,6 @@ import moment from 'moment'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
 import { defaultTo, isNumber, merge } from 'lodash-es'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Duration, UserLabel } from '@common/exports'
 import { String, useStrings } from 'framework/strings'
 import type { ChangeRate } from 'services/cd-ng'
@@ -30,7 +29,7 @@ import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import type { ExecutorInfoDTO } from 'services/pipeline-ng'
 import { INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
-import { calcTrend, calcTrendCaret, calcTrendColor, RateTrend, TrendPopover } from '../dashboardUtils'
+import { calcTrendCaret, calcTrendColor, RateTrend, TrendPopover } from '../dashboardUtils'
 
 import styles from './CardWithChart.module.scss'
 
@@ -93,14 +92,9 @@ export default function ServiceCardWithChart({
   const [chartOptions, setChartOptions] = useState(defaultChartOptions)
   const duration = diffStartAndEndTime(startTime, endTime)
   const mapTime = (value: BuildInfo) => (value?.time ? moment(value.time).format('YYYY-MM-DD') : '')
-  const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
-  const successRateDiff: number | undefined = CDC_DASHBOARD_ENHANCEMENT_NG
-    ? (successRateDelta as ChangeRate).percentChange
-    : (successRateDelta as number)
+  const successRateDiff: number | undefined = (successRateDelta as ChangeRate)?.percentChange
 
-  const successRateTrend = CDC_DASHBOARD_ENHANCEMENT_NG
-    ? ((successRateDelta as ChangeRate).trend as RateTrend)
-    : calcTrend(successRateDelta as number)
+  const successRateTrend = (successRateDelta as ChangeRate)?.trend as RateTrend
 
   useEffect(() => {
     if (countList?.length) {

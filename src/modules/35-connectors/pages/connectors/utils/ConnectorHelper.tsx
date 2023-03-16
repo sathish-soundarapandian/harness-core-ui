@@ -19,7 +19,8 @@ export const AuthTypes = {
   ANNONYMOUS: 'Anonymous',
   BEARER_TOKEN: 'Bearer Token(HTTP Header)',
   PERSONAL_ACCESS_TOKEN: 'PersonalAccessToken',
-  ADFS: 'AdfsClientCredentialsWithCertificate'
+  ADFS: 'AdfsClientCredentialsWithCertificate',
+  API_TOKEN: 'ApiToken'
 }
 
 export enum GitAuthTypes {
@@ -114,6 +115,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'dockerRegistry'
     case Connectors.JENKINS:
       return 'connectors.jenkins.jenkins'
+    case Connectors.Bamboo:
+      return 'connectors.bamboo.bamboo'
     case Connectors.CEAWS:
       return 'connectors.title.ceAws'
     case Connectors.AWS:
@@ -176,6 +179,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.azureArtifacts'
     case Connectors.TAS:
       return 'connectors.title.tas'
+    case Connectors.TERRAFORM_CLOUD:
+      return 'connectors.title.terraform'
     default:
       return 'connector'
   }
@@ -216,6 +221,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'service-dynatrace'
     case Connectors.JENKINS:
       return 'service-jenkins-inverse'
+    case Connectors.Bamboo:
+      return 'service-bamboo'
     case Connectors.DOCKER:
     case 'Dockerhub':
       return 'service-dockerhub'
@@ -276,6 +283,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'spot'
     case Connectors.TAS:
       return 'tas'
+    case Connectors.TERRAFORM_CLOUD:
+      return 'terraform-cloud'
     default:
       return 'placeholder'
   }

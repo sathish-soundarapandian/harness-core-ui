@@ -8,8 +8,10 @@ exports[`<CDExecutionCardSummary /> tests snapshot test 1`] = `
     <div
       class="cardSummary"
     >
-      <div>
-        No valid template with id "pipeline.executionList.servicesDeployedText" found in any namespace
+      <div
+        class="heading"
+      >
+        pipeline.executionList.servicesDeployedText
       </div>
       <div
         class="main service"
@@ -41,12 +43,17 @@ exports[`<CDExecutionCardSummary /> tests snapshot test 1`] = `
             <div
               class="bp3-popover-target"
             >
-              <div
-                class="serviceName"
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main serviceName StyledProps--color StyledProps--color-grey800"
+                style="--text-line-clamp: 1;"
                 tabindex="0"
               >
-                todolist
-              </div>
+                <a
+                  href="/account/undefined/services/nginx"
+                >
+                  todolist
+                </a>
+              </p>
             </div>
           </div>
           <div
@@ -55,12 +62,17 @@ exports[`<CDExecutionCardSummary /> tests snapshot test 1`] = `
             <div
               class="bp3-popover-target"
             >
-              <div
-                class="serviceName"
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main serviceName StyledProps--color StyledProps--color-grey800"
+                style="--text-line-clamp: 1;"
                 tabindex="0"
               >
-                service1
-              </div>
+                <a
+                  href="/account/undefined/services/service1"
+                >
+                  service1
+                </a>
+              </p>
             </div>
           </div>
         </div>
@@ -69,8 +81,10 @@ exports[`<CDExecutionCardSummary /> tests snapshot test 1`] = `
     <div
       class="cardSummary"
     >
-      <div>
-        No valid template with id "pipeline.executionList.EnvironmentsText" found in any namespace
+      <div
+        class="heading"
+      >
+        pipeline.executionList.EnvironmentsText
       </div>
       <div
         class="main environment"
@@ -95,11 +109,20 @@ exports[`<CDExecutionCardSummary /> tests snapshot test 1`] = `
               />
             </svg>
           </span>
-          <p
-            class="StyledProps--font StyledProps--main"
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--flex"
           >
-            UAT
-          </p>
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main envName StyledProps--margin-right-small"
+              style="--text-line-clamp: 1;"
+            >
+              <a
+                href="/account/undefined/environments/UAT/details"
+              >
+                UAT
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

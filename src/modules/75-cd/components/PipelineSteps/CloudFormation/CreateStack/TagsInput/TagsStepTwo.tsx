@@ -141,7 +141,6 @@ const TagsStepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                                 variableName="spec.store.spec.repoName"
                                 showRequiredField={false}
                                 showDefaultField={false}
-                                showAdvanced={true}
                               />
                             )
                           }
@@ -178,7 +177,6 @@ const TagsStepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                                 variableName="spec.store.spec.branch"
                                 showRequiredField={false}
                                 showDefaultField={false}
-                                showAdvanced={true}
                               />
                             )
                           }
@@ -208,7 +206,6 @@ const TagsStepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                                 variableName="spec.store.spec.commitId"
                                 showRequiredField={false}
                                 showDefaultField={false}
-                                showAdvanced={true}
                               />
                             )
                           }

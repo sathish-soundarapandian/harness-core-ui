@@ -34,6 +34,11 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import css from '../Roles.module.scss'
 
 const DEFAULT_ROLES_PAGE_SIZE = 12
@@ -55,6 +60,8 @@ const RolesList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.Roles}`)
   useDocumentTitle(getString('roles'))
 
   const {
@@ -71,8 +78,10 @@ const RolesList: React.FC = () => {
       orgIdentifier,
       pageIndex,
       pageSize,
-      searchTerm
+      searchTerm,
+      sortOrders: [sortPreference]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -167,8 +176,15 @@ const RolesList: React.FC = () => {
                 message: getString('noRoles')
               }
         }
-        className={css.pageContainer}
       >
+        <ListHeader
+          selectedSortMethod={sortPreference}
+          sortOptions={[...sortByCreated, ...sortByName]}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
+          totalCount={data?.data?.totalItems}
+        />
         <div className={css.masonry}>
           {data?.data?.content?.map((roleResponse: RoleResponse) =>
             isAccountBasicRole(roleResponse.role.identifier) ? null : (

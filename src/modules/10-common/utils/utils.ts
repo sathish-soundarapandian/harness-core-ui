@@ -265,3 +265,12 @@ export const getRefFromIdentifier = (
 export const getIdentifierFromScopedRef = (entity: string): string => {
   return entity.indexOf('.') < 0 ? entity : entity.split('.')[1]
 }
+
+export const countAllKeysInObject = (obj: Record<string, any>): number =>
+  Object.keys(obj).reduce((acc, curr) => {
+    if (typeof obj[curr] === 'object' && !Array.isArray(obj[curr]) && obj[curr] !== null) {
+      return 1 + acc + countAllKeysInObject(obj[curr])
+    } else {
+      return 1 + acc
+    }
+  }, 0)

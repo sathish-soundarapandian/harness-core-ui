@@ -54,3 +54,30 @@
     margin-bottom: 0 !important;
   }
 }
+
+.approvalWindow {
+  font-size: var(--font-size-small);
+  padding: var(--spacing-medium) 0;
+}
+
+.detailsTable {
+  border-collapse: collapse;
+
+  th {
+    color: var(--grey-400);
+    width: 100px;
+    white-space: nowrap;
+    padding-bottom: var(--spacing-small);
+  }
+
+  td {
+    color: var(--grey-500);
+    padding: 0 var(--spacing-xlarge);
+    font-weight: 600;
+    font-size: var(--font-size-small);
+    line-height: var(--font-size-small);
+    text-align: left;
+    position: relative;
+    padding-bottom: var(--spacing-small);
+  }
+}

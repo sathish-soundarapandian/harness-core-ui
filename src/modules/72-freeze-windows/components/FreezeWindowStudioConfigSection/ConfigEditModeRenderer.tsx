@@ -53,6 +53,9 @@ export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
                 setValues={formikProps.setValues}
                 organizations={resources.orgs || []}
                 fetchProjectsForOrgId={resources.fetchProjectsForOrgId}
+                fetchOrgByQuery={resources.fetchOrgByQuery}
+                loadingOrgs={resources.loadingOrgs}
+                fetchOrgResetQuery={resources.fetchOrgResetQuery}
               />
             ) : null}
             {fieldsVisibility.showProjectField ? (
@@ -64,6 +67,9 @@ export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
                 setValues={formikProps.setValues}
                 setFieldValue={formikProps.setFieldValue}
                 resources={resources}
+                fetchProjectsByQuery={resources.fetchProjectsByQuery}
+                loadingProjects={resources.loadingProjects}
+                fetchProjectsResetQuery={resources.fetchProjectsResetQuery}
               />
             ) : null}
           </Layout.Vertical>

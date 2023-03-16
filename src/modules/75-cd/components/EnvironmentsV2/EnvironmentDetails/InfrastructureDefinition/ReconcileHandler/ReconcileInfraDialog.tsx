@@ -18,7 +18,7 @@ import {
   ResponseCustomDeploymentRefreshYaml
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { YamlDiffView } from './YamlDiffView'
+import { InfraYamlDiffViewWrapper } from './InfraYamlDiffViewWrapper'
 import css from './ReconcileHandler.module.scss'
 export interface ReconcileInfraDialogProps {
   isEdit: boolean
@@ -79,7 +79,7 @@ export function ReconcileInfraDialog({ originalEntityYaml, updateRootEntity }: R
         >
           <Layout.Horizontal spacing={'huge'} height={'100%'}>
             <Container style={{ flex: 1 }}>
-              <YamlDiffView
+              <InfraYamlDiffViewWrapper
                 originalEntityYaml={originalEntityYaml}
                 onUpdate={onUpdateNode}
                 getUpdatedYaml={getUpdatedYamlForInfrastructure}

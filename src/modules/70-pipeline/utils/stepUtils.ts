@@ -6,15 +6,14 @@
  */
 
 import produce from 'immer'
-import { isEmpty, set, get } from 'lodash-es'
+import { isEmpty, set, get, defaultTo } from 'lodash-es'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import type {
   StepPalleteModuleInfo,
   StageElementConfig,
   StageElementWrapperConfig,
-  StepElementConfig,
-  PmsAbstractStepNode
+  StepElementConfig
 } from 'services/pipeline-ng'
 import {
   StepOrStepGroupOrTemplateStepData,
@@ -23,6 +22,9 @@ import {
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { sanitize } from '@common/utils/JSONUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { isValueRuntimeInput } from '@common/utils/utils'
+import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import type { DeploymentStageElementConfigWrapper } from './pipelineTypes'
 
 export enum StepMode {
@@ -133,6 +135,15 @@ export function getStepPaletteModuleInfosFromStage(
           module: 'pms',
           category: 'FeatureFlag',
           shouldShowCommonSteps: true
+        },
+        {
+          module: 'cv',
+          shouldShowCommonSteps: false
+        },
+        {
+          module: 'cd',
+          category: 'Chaos',
+          shouldShowCommonSteps: false
         }
       ]
 
@@ -232,7 +243,7 @@ export function getStepDataFromValues(
   item: Partial<Values>,
   initialValues: StepOrStepGroupOrTemplateStepData
 ): StepElementConfig {
-  const processNode = produce(initialValues as StepElementConfig & PmsAbstractStepNode, node => {
+  const processNode = produce(initialValues as StepElementConfig, node => {
     if (item.tab !== TabTypes.Advanced) {
       if ((item as StepElementConfig).description) {
         node.description = (item as StepElementConfig).description
@@ -268,7 +279,10 @@ export function getStepDataFromValues(
       }
     }
     // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
-    if (Array.isArray(item.failureStrategies) && !isEmpty(item.failureStrategies)) {
+    if (
+      !isEmpty(item.failureStrategies) &&
+      (Array.isArray(item.failureStrategies) || isValueRuntimeInput(item.failureStrategies))
+    ) {
       node.failureStrategies = item.failureStrategies
     } else if (node.failureStrategies) {
       delete node.failureStrategies
@@ -284,4 +298,13 @@ export function isTemplatizedView(
   stepViewType?: StepViewType
 ): stepViewType is StepViewType.DeploymentForm | StepViewType.InputSet | StepViewType.TemplateUsage {
   return !!stepViewType && TEMPLATIZED_VIEWS.includes(stepViewType)
+}
+
+export type ConnectorRefType = { record?: ConnectorReferenceDTO; scope?: Scope }
+
+export const getScopedConnectorValue = (selectedConnector: ConnectorRefType): string => {
+  const { record, scope } = selectedConnector
+  return scope && (scope === Scope.ORG || scope === Scope.ACCOUNT)
+    ? `${scope}.${record?.identifier}`
+    : defaultTo(record?.identifier, '')
 }

@@ -85,7 +85,7 @@ describe('Unit tests for TemplatisedRunTimeMonitoredService', () => {
     const { getByText } = render(<WrapperComponent {...props} />)
     expect(getByText('service')).toBeInTheDocument()
     expect(getByText('environment')).toBeInTheDocument()
-    expect(getByText('cv.monitoringSources.appD.applicationName')).toBeInTheDocument()
+    expect(getByText('pipeline.applicationName')).toBeInTheDocument()
     expect(getByText('cv.monitoringSources.appD.tierName')).toBeInTheDocument()
   })
 
@@ -138,7 +138,7 @@ describe('Unit tests for TemplatisedRunTimeMonitoredService', () => {
     const { getByText } = render(<WrapperComponent {...props} />)
     expect(getByText('service')).toBeInTheDocument()
     expect(getByText('environment')).toBeInTheDocument()
-    expect(getByText('cv.monitoringSources.appD.applicationName')).toBeInTheDocument()
+    expect(getByText('pipeline.applicationName')).toBeInTheDocument()
     expect(getByText('cv.monitoringSources.appD.tierName')).toBeInTheDocument()
     expect(getByText('cv.monitoringSources.appD.completeMetricPath')).toBeInTheDocument()
     expect(getByText('cv.monitoringSources.appD.serviceInstanceMetricPath')).toBeInTheDocument()

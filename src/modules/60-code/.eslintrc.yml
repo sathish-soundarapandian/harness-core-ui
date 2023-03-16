@@ -12,6 +12,7 @@ rules:
             - microfrontends/*
             - '!microfrontends/ChildAppMounter'
         - group:
+            - modules/60-et/*
             - modules/70-pipeline/*
             - modules/72-freeze-windows/*
             - modules/72-templates-library/*
@@ -22,11 +23,12 @@ rules:
             - modules/75-chaos/*
             - modules/75-ci/*
             - modules/75-idp/*
-            - modules/75-sscs/*
+            - modules/75-ssca/*
             - modules/85-cv/*
             - modules/85-iacm/*
             - modules/85-sto/*
             - modules/90-gitops/*
+            - '@et/*'
             - '@pipeline/*'
             - '@freeze-windows/*'
             - '@templates-library/*'
@@ -37,7 +39,7 @@ rules:
             - '@chaos/*'
             - '@ci/*'
             - '@idp/*'
-            - '@sscs/*'
+            - '@ssca/*'
             - '@cv/*'
             - '@iacm/*'
             - '@sto/*'

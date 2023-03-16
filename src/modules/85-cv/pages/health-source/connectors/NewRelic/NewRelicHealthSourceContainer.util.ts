@@ -13,7 +13,7 @@ import type { NewRelicData } from './NewRelicHealthSource.types'
 import { getMetricPacksForPayload } from '../../common/MetricThresholds/MetricThresholds.utils'
 import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
 
-export const createNewRelicPayload = (formData: any, isMetricThresholdEnabled: boolean): UpdatedHealthSource | null => {
+export const createNewRelicPayload = (formData: any): UpdatedHealthSource | null => {
   const specPayload = {
     applicationName: formData?.newRelicApplication?.label || formData?.newRelicApplication,
     applicationId: formData?.newRelicApplication?.value || formData?.newRelicApplication,
@@ -76,7 +76,7 @@ export const createNewRelicPayload = (formData: any, isMetricThresholdEnabled: b
         formData?.connectorRef.value ||
         (formData?.connectorRef?.connector?.identifier as string) ||
         (formData.connectorRef as string),
-      metricPacks: getMetricPacksForPayload(formData, isMetricThresholdEnabled)
+      metricPacks: getMetricPacksForPayload(formData)
     }
   }
 }

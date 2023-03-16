@@ -345,7 +345,8 @@ export const EditStageView: React.FC<EditStageView> = ({
                       MultiTypeInputType.FIXED,
                       MultiTypeInputType.EXPRESSION,
                       MultiTypeInputType.RUNTIME
-                    ]
+                    ],
+                    configureOptionsProps: { hideExecutionTimeField: true }
                   })}
                 </div>
               )}

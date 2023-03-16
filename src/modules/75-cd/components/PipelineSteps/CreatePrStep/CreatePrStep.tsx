@@ -29,7 +29,7 @@ import CreatePRScript from './CreatePrScript'
 
 import CreatePRInputStep from './CreatePRInputStep'
 import { CreatePRVariableStepProps, CreatePRVariableView } from './CreatePRVariableStep'
-import { validateStepForm } from '../DeployInfrastructureStep/utils'
+import { validateGitOpsExecutionStepForm } from '../PipelineStepsUtil'
 
 export interface CreatePRStepData extends StepElementConfig {
   spec?: {
@@ -170,7 +170,7 @@ export class CreatePr extends PipelineStep<CreatePRStepData> {
     getString,
     viewType
   }: ValidateInputSetProps<CreatePRStepData>): FormikErrors<CreatePRStepData> {
-    return validateStepForm({ data, template, getString, viewType })
+    return validateGitOpsExecutionStepForm({ data, template, getString, viewType })
   }
 
   protected defaultValues: CreatePRStepData = {

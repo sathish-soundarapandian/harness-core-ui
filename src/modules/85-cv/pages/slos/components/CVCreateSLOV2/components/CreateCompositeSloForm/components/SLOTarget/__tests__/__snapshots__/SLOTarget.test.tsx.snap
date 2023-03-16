@@ -10,11 +10,13 @@ exports[`Valiate SLOTarget should render SLOTarget 1`] = `
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+        data-testid="cv.slos.sloTargetAndBudget.periodType"
       >
         cv.slos.sloTargetAndBudget.periodType
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+        data-testid="cv.slos.sloTargetAndBudget.periodType_value"
       >
         
       </p>
@@ -449,11 +451,13 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+        data-testid="cv.slos.sloTargetAndBudget.periodType"
       >
         cv.slos.sloTargetAndBudget.periodType
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+        data-testid="cv.slos.sloTargetAndBudget.periodType_value"
       >
         Calender
       </p>
@@ -463,11 +467,13 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+        data-testid="cv.periodLength"
       >
         cv.periodLength
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+        data-testid="cv.periodLength_value"
       >
         Monthly
       </p>
@@ -477,11 +483,13 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+        data-testid="cv.widowEnds"
       >
         cv.widowEnds
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+        data-testid="cv.widowEnds_value"
       >
         10
       </p>
@@ -916,11 +924,13 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+        data-testid="cv.slos.sloTargetAndBudget.periodType"
       >
         cv.slos.sloTargetAndBudget.periodType
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+        data-testid="cv.slos.sloTargetAndBudget.periodType_value"
       >
         Calender
       </p>
@@ -930,11 +940,13 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+        data-testid="cv.periodLength"
       >
         cv.periodLength
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+        data-testid="cv.periodLength_value"
       >
         Weekly
       </p>
@@ -944,11 +956,13 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+        data-testid="cv.widowEnds"
       >
         cv.widowEnds
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+        data-testid="cv.widowEnds_value"
       >
         Mon
       </p>
@@ -1383,11 +1397,13 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 3`] = `
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+        data-testid="cv.slos.sloTargetAndBudget.periodType"
       >
         cv.slos.sloTargetAndBudget.periodType
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+        data-testid="cv.slos.sloTargetAndBudget.periodType_value"
       >
         Calender
       </p>
@@ -1397,11 +1413,13 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 3`] = `
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+        data-testid="cv.periodLength"
       >
         cv.periodLength
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+        data-testid="cv.periodLength_value"
       >
         Quarterly
       </p>
@@ -1836,11 +1854,13 @@ exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+        data-testid="cv.slos.sloTargetAndBudget.periodType"
       >
         cv.slos.sloTargetAndBudget.periodType
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+        data-testid="cv.slos.sloTargetAndBudget.periodType_value"
       >
         Rolling
       </p>
@@ -1850,11 +1870,13 @@ exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+        data-testid="cv.periodLength"
       >
         cv.periodLength
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+        data-testid="cv.periodLength_value"
       >
         10
       </p>

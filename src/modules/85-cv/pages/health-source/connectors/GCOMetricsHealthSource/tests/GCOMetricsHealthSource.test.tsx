@@ -384,13 +384,6 @@ describe('Test GCOMetricsHealthSource', () => {
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (2)')).toBeInTheDocument()
     })
 
-    test('should not render metric thresholds if it is a template', () => {
-      render(<WrapperComponent data={sourceDataUpdated} isTemplate onSubmit={jest.fn()} />)
-
-      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
-      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
-    })
-
     test('should not render metric thresholds there is not custom metric', () => {
       jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
       render(<WrapperComponent data={{}} onSubmit={jest.fn()} />)

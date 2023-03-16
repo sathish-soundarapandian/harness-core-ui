@@ -16,6 +16,7 @@ declare const styles: {
   readonly editStageGrid: string
   readonly inputContainer: string
   readonly inputSetFormRunPipeline: string
+  readonly multiTypeBtn: string
   readonly navigationButtons: string
   readonly noPadVertical: string
   readonly noPipelineInputSetForm: string

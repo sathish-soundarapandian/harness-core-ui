@@ -15,6 +15,18 @@
   }
 }
 
+.downtimeBanner {
+  height: 56px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #e8e8ff !important;
+
+  .iconWithText {
+    min-width: 800px;
+  }
+}
+
 .serviceDetailsCard {
   width: 100%;
   box-shadow: none !important;

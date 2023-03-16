@@ -123,7 +123,6 @@ export const RollbackStack = (
                   variableName="spec.configuration.provisionerIdentifier"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   isReadonly={readonly}
                   onChange={value => {
                     setFieldValue('spec.configuration.provisionerIdentifier', value)

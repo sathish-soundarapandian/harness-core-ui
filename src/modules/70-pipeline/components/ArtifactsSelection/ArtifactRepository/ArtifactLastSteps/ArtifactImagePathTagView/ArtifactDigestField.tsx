@@ -164,10 +164,10 @@ function ArtifactDigestField({
               value={formik?.values?.digest}
               type="String"
               options={digestItems}
+              loading={loading}
               variableName="digest"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => {
                 /* istanbul ignore next */
                 formik.setFieldValue('digest', value)

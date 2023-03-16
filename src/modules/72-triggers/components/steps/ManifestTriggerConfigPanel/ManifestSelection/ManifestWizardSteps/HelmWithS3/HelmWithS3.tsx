@@ -120,7 +120,7 @@ function HelmWithS3({
       bucketName: storeSpec?.bucketName ?? '',
       folderPath: storeSpec?.folderPath ?? '/',
       chartName: spec.chartName ?? '',
-      helmVersion: spec.helmVersion ?? 'V2'
+      helmVersion: spec.helmVersion ?? 'V3'
     }
   }
 

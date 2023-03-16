@@ -46,6 +46,7 @@ import {
   getScopeFromValue,
   getScopeLabelfromScope
 } from '@common/components/EntityReference/EntityReference'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import useCreateConnectorModal, {
   UseCreateConnectorModalReturn
@@ -682,6 +683,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
   const [selectedValue, setSelectedValue] = React.useState(selected)
 
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const [connectorStatusCheckInProgress, setConnectorStatusCheckInProgress] = React.useState(false)
   const [connectorStatus, setConnectorStatus] = React.useState(typeof selected !== 'string' && selected?.live)
   const scopeFromSelected = typeof selected === 'string' && getScopeFromValue(selected || '')
@@ -689,6 +691,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
   const {
     data: connectorData,
     loading,
+    error: connectorFetchError,
     refetch
   } = useGetConnector({
     identifier: selectedRef as string,
@@ -748,6 +751,10 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
 
   React.useEffect(() => {
     if (isMultiSelect) return
+
+    if (!loading && connectorFetchError) {
+      showError(getRBACErrorMessage(connectorFetchError))
+    }
 
     if (
       typeof selected === 'string' &&

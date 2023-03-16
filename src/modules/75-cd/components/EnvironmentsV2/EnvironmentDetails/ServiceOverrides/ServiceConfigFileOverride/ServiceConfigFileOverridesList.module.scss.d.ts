@@ -10,6 +10,8 @@ declare const styles: {
   readonly columnId: string
   readonly configFileList: string
   readonly listHeader: string
+  readonly locationLink: string
+  readonly locationTooltipWrapper: string
   readonly rowItem: string
   readonly type: string
 }
