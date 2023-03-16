@@ -27,7 +27,7 @@ describe('ModuleList', () => {
 
     expect(container.querySelector('[data-icon="customize"]')).not.toBeNull()
     expect(getByText('common.moduleList.title')).toBeDefined()
-    expect(getByTestId('grouplistContainer').children.length).toEqual(0)
+    expect(getByTestId('grouplistContainer').children.length).toEqual(4)
     expect(container).toMatchSnapshot()
   })
 
@@ -50,7 +50,7 @@ describe('ModuleList', () => {
     expect(queryByText('common.purpose.cf.continuous')).toBeDefined()
     expect(queryByText('common.purpose.cv.serviceReliability')).toBeDefined()
     expect(queryByText('common.purpose.ce.cloudCost')).toBeNull()
-    expect(queryByText('common.purpose.sto.continuous')).toBeNull()
+    expect(queryByText('common.purpose.sto.continuous')).not.toBeNull()
     expect(queryByText('common.purpose.chaos.chaos')).toBeNull()
   })
 
