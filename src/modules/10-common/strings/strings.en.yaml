@@ -1374,10 +1374,11 @@ Stepper:
 ssca: Supply Chain Assurance
 sscaText: Software Supply Chain Assurance
 tickets:
-  selectConnector: '[Select] Ticket Provider Connector'
-  selectProjectName: '[Select] Project Name'
+  selectConnector: 'Select Ticket Provider Connector'
+  selectProjectName: 'Select Project Name'
   connector: 'Ticket Provider Connector'
   defaultProjectName: 'Default Project Name'
+  defaultIssueType: 'Default Issue Type'
   externalTickets: 'External Tickets'
   ticketComment: 'Append comment to ticket when Security Issue changes are detected (coming soon)'
   ticketExemption: 'Create a ticket when an Exemption is created (coming soon)'

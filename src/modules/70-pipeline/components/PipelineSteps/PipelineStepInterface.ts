@@ -150,6 +150,7 @@ export enum StepType {
   AppResize = 'AppResize',
   TasRollingDeploy = 'TasRollingDeploy',
   TasRollingRollback = 'TasRollingRollback',
+  RouteMapping = 'RouteMapping',
   Asg = 'ASGServiceSpec',
   AsgInfraSpec = 'AsgInfraSpec',
   Aquatrivy = 'AquaTrivy',

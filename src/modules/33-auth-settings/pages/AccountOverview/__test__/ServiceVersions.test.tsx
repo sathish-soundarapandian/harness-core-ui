@@ -29,6 +29,8 @@ global.fetch = jest.fn().mockImplementation(url => {
     versionObj.versionInfo = '5.0.0'
   } else if (url.includes('sto-manager/version')) {
     versionObj.versionInfo = '4.0.0'
+  } else if (url.includes('ticket-service/api/system/version')) {
+    versionObj.versionInfo = '6.0.0'
   } else {
     versionObj.verionInfo = {}
     versionObj.verionInfo.version = '3.0.0'

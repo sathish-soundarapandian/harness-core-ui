@@ -154,6 +154,11 @@ steps:
     upscaleNewFirstLabel: Add new instances first, then downsize old instances
     downScaleOldFirstLabel: Downsize old instances first, then add new instances
     zeroOldInstancesWarning: There can be a downtime as the old instances are downsized first with instance value as zero
+    routeMandatory: Route is mandatory
+    mappingType: Mapping type
+    mapRoute: Map Route
+    unMapRoute: UnMap Route
+    routes: Routes
   googleCloudFunctionCommon:
     fieldMask: Field Mask
     fieldMaskPlaceholder: Enter Field Mask

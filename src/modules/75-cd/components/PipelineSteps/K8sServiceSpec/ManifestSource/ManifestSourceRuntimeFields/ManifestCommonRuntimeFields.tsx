@@ -8,13 +8,12 @@
 import React from 'react'
 import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { useStrings } from 'framework/strings'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
-import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import { shouldAllowOnlyOneFilePath } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CommonManifestDetails/utils'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
+import MultiTypeListOrFileSelectList from '../MultiTypeListOrFileSelectList'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const ManifestCommonRuntimeFields = ({
@@ -26,10 +25,11 @@ const ManifestCommonRuntimeFields = ({
   readonly,
   formik,
   stageIdentifier,
-  fileUsage
+  fileUsage,
+  allowableTypes,
+  stepViewType
 }: ManifestSourceRenderProps): React.ReactElement => {
   const { getString } = useStrings()
-  const { expressions } = useVariablesExpression()
   const isFieldDisabled = (fieldName: string): boolean => {
     // /* instanbul ignore else */
     if (readonly) {
@@ -47,19 +47,18 @@ const ManifestCommonRuntimeFields = ({
     <>
       {isFieldRuntime(`${manifestPath}.spec.store.spec.files`, template) && (
         <div className={css.verticalSpacingInput}>
-          <FileSelectList
-            labelClassName={css.listLabel}
+          <MultiTypeListOrFileSelectList
+            allowableTypes={allowableTypes}
             label={getString('resourcePage.fileStore')}
             name={`${path}.${manifestPath}.spec.store.spec.files`}
             placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
             disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.files`)}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            expressions={expressions}
-            isNameOfArrayType
-            type={SELECT_FILES_TYPE.FILE_STORE}
             formik={formik}
-            allowOnlyOne={shouldAllowOnlyOneFilePath(manifest?.type as ManifestTypes)}
+            isNameOfArrayType
             fileUsage={fileUsage}
+            manifestStoreType={ManifestStoreMap.Harness}
+            stepViewType={stepViewType}
+            allowOnlyOne={shouldAllowOnlyOneFilePath(manifest?.type as ManifestTypes)}
           />
         </div>
       )}

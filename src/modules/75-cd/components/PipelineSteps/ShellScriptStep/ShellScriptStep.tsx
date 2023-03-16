@@ -18,6 +18,7 @@ import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { listSecretsV2Promise, SecretResponseWrapper } from 'services/cd-ng'
+import type { ShellScriptStepInfo } from 'services/pipeline-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -87,6 +88,11 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
           template={inputSetData?.template}
           path={inputSetData?.path || ''}
           allowableTypes={allowableTypes}
+          connectorType={
+            (inputSetData?.allValues?.spec?.shell as ShellScriptStepInfo['shell']) === 'PowerShell'
+              ? 'WinRmCredentials'
+              : 'SSHKey'
+          }
         />
       )
     }

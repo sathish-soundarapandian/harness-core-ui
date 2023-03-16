@@ -249,7 +249,13 @@ const FlagActivationDetails: React.FC<FlagActivationDetailsProps> = props => {
         />
 
         {FFM_4117_INTEGRATE_SRM && <ServicesList featureFlag={featureFlag} refetchFlag={refetchFlag} />}
-        {FFM_4737_JIRA_INTEGRATION && <JiraIssueList jiraIssues={featureFlag.envProperties?.jiraIssues} />}
+        {FFM_4737_JIRA_INTEGRATION && (
+          <JiraIssueList
+            featureIdentifier={featureFlag.identifier}
+            refetchFlag={refetchFlag}
+            jiraIssues={featureFlag.envProperties?.jiraIssues}
+          />
+        )}
       </Container>
     </>
   )

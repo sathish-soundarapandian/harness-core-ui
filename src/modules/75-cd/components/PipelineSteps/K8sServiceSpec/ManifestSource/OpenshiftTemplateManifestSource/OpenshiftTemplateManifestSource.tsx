@@ -9,16 +9,13 @@ import React from 'react'
 import cx from 'classnames'
 import { getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
 import { get } from 'lodash-es'
-import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import List from '@common/components/List/List'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
-import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
@@ -26,6 +23,7 @@ import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/Manife
 import ManifestCommonRuntimeFields from '../ManifestSourceRuntimeFields/ManifestCommonRuntimeFields'
 import CustomRemoteManifestRuntimeFields from '../ManifestSourceRuntimeFields/CustomRemoteManifestRuntimeFields'
 import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
+import MultiTypeListOrFileSelectList from '../MultiTypeListOrFileSelectList'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
@@ -70,12 +68,14 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
           <div className={css.verticalSpacingInput}>
-            <List
+            <MultiTypeListOrFileSelectList
+              allowableTypes={allowableTypes}
               label={getString('pipeline.manifestType.osTemplatePath')}
               name={`${path}.${manifestPath}.spec.store.spec.paths`}
               placeholder={getString('pipeline.manifestType.osTemplatePathPlaceHolder')}
               disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
-              expressions={expressions}
+              formik={formik}
+              fileUsage={fileUsage}
               allowOnlyOne
               isNameOfArrayType
             />
@@ -101,36 +101,19 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.paramsPaths`, template) && (
           <div className={css.verticalSpacingInput}>
-            <FileSelectList
-              labelClassName={css.listLabel}
+            <MultiTypeListOrFileSelectList
+              allowableTypes={allowableTypes}
               label={getString('pipeline.manifestType.paramsYamlPath')}
               name={`${path}.${manifestPath}.spec.paramsPaths`}
               placeholder={getString('select')}
               disabled={isFieldDisabled(`${manifestPath}.spec.paramsPaths`)}
-              style={{ marginBottom: 'var(--spacing-small)' }}
-              expressions={expressions}
-              isNameOfArrayType
-              type={SELECT_FILES_TYPE.FILE_STORE}
               formik={formik}
+              isNameOfArrayType
               fileUsage={fileUsage}
+              manifestStoreType={ManifestStoreMap.Harness}
+              stepViewType={props.stepViewType}
             />
           </div>
-        )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.paramsPaths`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.paramsPaths`)}
-            type="String"
-            variableName="paramsPaths"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.paramsPaths`, value)
-            }}
-          />
         )}
       </div>
 

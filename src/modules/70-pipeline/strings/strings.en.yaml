@@ -1234,6 +1234,7 @@ stepDescription:
   TASCanaryAppSetup: Initialize the TAS Application for Canary Deployment
   RollingRollback: Rollback to previous deployment during failure of Rolling Deployment
   RollingDeployment: Performs Rolling Deployment of TAS
+  RouteMapping: Enhance routes available in Service Manifest
   ElastigroupDeploy: Elastigroup Deploy step
   ElastigroupSwapRoute: Elastigroup Swap Route
   ElastigroupBGStageSetup: Elastigroup Blue/Green Step

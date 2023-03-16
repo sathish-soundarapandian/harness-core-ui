@@ -19,15 +19,12 @@ import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/Manif
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import List from '@common/components/List/List'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
 import { useGetBucketsInManifests, useGetGCSBucketList, useGetHelmChartVersionDetails } from 'services/cd-ng'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
-import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
-import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useMutateAsGet } from '@common/hooks'
@@ -51,6 +48,7 @@ import {
   isExecutionTimeFieldDisabled,
   isNewServiceEnvEntity
 } from '../../ArtifactSource/artifactSourceUtils'
+import MultiTypeListOrFileSelectList from '../MultiTypeListOrFileSelectList'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
@@ -715,32 +713,18 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
 
       {isFieldRuntime(`${manifestPath}.spec.valuesPaths`, template) && (
         <div className={css.verticalSpacingInput}>
-          {manifestStoreType === ManifestStoreMap.Harness ? (
-            <FileSelectList
-              labelClassName={css.listLabel}
-              label={getString('pipeline.manifestType.valuesYamlPath')}
-              name={`${path}.${manifestPath}.spec.valuesPaths`}
-              placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-              disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
-              style={{ marginBottom: 'var(--spacing-small)' }}
-              expressions={expressions}
-              isNameOfArrayType
-              type={SELECT_FILES_TYPE.FILE_STORE}
-              fileUsage={fileUsage}
-              formik={formik}
-            />
-          ) : (
-            <List
-              labelClassName={css.listLabel}
-              label={getString('pipeline.manifestType.valuesYamlPath')}
-              name={`${path}.${manifestPath}.spec.valuesPaths`}
-              placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-              disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
-              style={{ marginBottom: 'var(--spacing-small)' }}
-              expressions={expressions}
-              isNameOfArrayType
-            />
-          )}
+          <MultiTypeListOrFileSelectList
+            allowableTypes={allowableTypes}
+            disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
+            name={`${path}.${manifestPath}.spec.valuesPaths`}
+            label={getString('pipeline.manifestType.valuesYamlPath')}
+            manifestStoreType={manifestStoreType}
+            stepViewType={stepViewType}
+            formik={formik}
+            fileUsage={fileUsage}
+            placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+            isNameOfArrayType
+          />
         </div>
       )}
       <CustomRemoteManifestRuntimeFields {...props} />

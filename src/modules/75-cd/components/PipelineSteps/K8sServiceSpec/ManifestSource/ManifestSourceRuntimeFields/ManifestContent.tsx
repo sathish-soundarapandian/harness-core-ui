@@ -12,11 +12,7 @@ import { get } from 'lodash-es'
 import { StringKeys, useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import List from '@common/components/List/List'
 import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
-import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
-import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
-import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { shouldAllowOnlyOneFilePath } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CommonManifestDetails/utils'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -27,6 +23,7 @@ import ManifestGitStoreRuntimeFields from './ManifestGitStoreRuntimeFields'
 import CustomRemoteManifestRuntimeFields from './CustomRemoteManifestRuntimeFields'
 import ManifestCommonRuntimeFields from './ManifestCommonRuntimeFields'
 import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
+import MultiTypeListOrFileSelectList from '../MultiTypeListOrFileSelectList'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 interface ManifestRenderProps extends ManifestSourceRenderProps {
@@ -74,14 +71,13 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
       <CustomRemoteManifestRuntimeFields {...props} />
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>
-          <List
-            labelClassName={css.listLabel}
-            label={getString(pathFieldlabel)}
+          <MultiTypeListOrFileSelectList
+            allowableTypes={allowableTypes}
             name={`${path}.${manifestPath}.spec.store.spec.paths`}
+            label={getString(pathFieldlabel)}
             placeholder={getString('pipeline.manifestType.pathPlaceholder')}
             disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            expressions={expressions}
+            formik={formik}
             isNameOfArrayType
             allowOnlyOne={shouldAllowOnlyOneFilePath(manifest?.type as ManifestTypes)}
           />
@@ -90,32 +86,18 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
 
       {isFieldRuntime(`${manifestPath}.spec.valuesPaths`, template) && (
         <div className={css.verticalSpacingInput}>
-          {manifestStoreType === ManifestStoreMap.Harness ? (
-            <FileSelectList
-              labelClassName={css.listLabel}
-              label={getString('pipeline.manifestType.valuesYamlPath')}
-              name={`${path}.${manifestPath}.spec.valuesPaths`}
-              placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-              disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
-              style={{ marginBottom: 'var(--spacing-small)' }}
-              expressions={expressions}
-              isNameOfArrayType
-              type={SELECT_FILES_TYPE.FILE_STORE}
-              fileUsage={fileUsage}
-              formik={formik}
-            />
-          ) : (
-            <List
-              labelClassName={css.listLabel}
-              label={getString('pipeline.manifestType.valuesYamlPath')}
-              name={`${path}.${manifestPath}.spec.valuesPaths`}
-              placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-              disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
-              style={{ marginBottom: 'var(--spacing-small)' }}
-              expressions={expressions}
-              isNameOfArrayType
-            />
-          )}
+          <MultiTypeListOrFileSelectList
+            allowableTypes={allowableTypes}
+            name={`${path}.${manifestPath}.spec.valuesPaths`}
+            label={getString('pipeline.manifestType.valuesYamlPath')}
+            placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+            disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
+            formik={formik}
+            fileUsage={fileUsage}
+            manifestStoreType={manifestStoreType}
+            isNameOfArrayType
+            allowOnlyOne={shouldAllowOnlyOneFilePath(manifest?.type as ManifestTypes)}
+          />
         </div>
       )}
       <div className={css.inputFieldLayout}>

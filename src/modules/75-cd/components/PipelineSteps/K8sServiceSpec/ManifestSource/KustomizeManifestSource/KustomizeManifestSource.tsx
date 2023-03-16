@@ -14,7 +14,6 @@ import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/Manif
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import List from '@common/components/List/List'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { FileUsage } from '@filestore/interfaces/FileStore'
@@ -23,6 +22,7 @@ import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
 import ManifestCommonRuntimeFields from '../ManifestSourceRuntimeFields/ManifestCommonRuntimeFields'
 import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
+import MultiTypeListOrFileSelectList from '../MultiTypeListOrFileSelectList'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
@@ -165,14 +165,13 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.patchesPaths`, template) && (
           <div className={css.verticalSpacingInput}>
-            <List
-              labelClassName={css.listLabel}
+            <MultiTypeListOrFileSelectList
+              allowableTypes={allowableTypes}
               label={getString('pipeline.manifestTypeLabels.KustomizePatches')}
               name={`${path}.${manifestPath}.spec.patchesPaths`}
               placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
               disabled={isFieldDisabled(`${manifestPath}.spec.patchesPaths`)}
-              style={{ marginBottom: 'var(--spacing-small)' }}
-              expressions={expressions}
+              formik={formik}
               isNameOfArrayType
             />
           </div>

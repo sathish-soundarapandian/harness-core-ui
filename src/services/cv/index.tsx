@@ -1826,7 +1826,7 @@ export interface ErrorMetadataDTO {
 }
 
 export type ErrorTrackingConditionSpec = NotificationRuleConditionSpec & {
-  errorTrackingEventStatus?: 'NewEvents'[]
+  errorTrackingEventStatus?: ('NewEvents' | 'CriticalEvents' | 'ResurfacedEvents')[]
   errorTrackingEventTypes?: ('Exceptions' | 'LogErrors' | 'HttpErrors' | 'CustomErrors' | 'TimeoutErrors')[]
 }
 

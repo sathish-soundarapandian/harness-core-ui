@@ -11,23 +11,19 @@
  * @version 0.1.0-beta
  */
 /**
- * @example {"message":"Bad Request: accountId parameter is required","status":400}
+ * @example {"comment":"This is the text to add as a comment."}
  */
-export type BadRequest = {
+export type AddCommentRequestBody = {
   /*
-   * @example Bad Request: accountId parameter is required
+   * Comment to be added
+   *
+   * @example This is the text to add as a comment.
    */
-  message: string
-  /*
-   * @default 400
-   * @example 400
-   * @format int64
-   */
-  status?: number
+  comment: string
 }
 
 /**
- * @example {"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","module":"sto","priority":"High","projectKey":"ABC","title":"A new ticket"}
+ * @example {"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","priority":"High","projectKey":"ABC","title":"A new ticket"}
  */
 export type CreateTicketRequestBody = {
   /*
@@ -57,17 +53,11 @@ export type CreateTicketRequestBody = {
     [key: string]: any
   }
   /*
-   * The Jira issue type to use for this External Ticket
+   * The Jira issue type to use for this External Ticket (for Jira only)
    *
    * @example Bug
    */
   issueType?: string
-  /*
-   * The Harness module responsible for this ticket
-   *
-   * @example sto
-   */
-  module: string
   /*
    * The priority to use for this External Ticket
    *
@@ -75,7 +65,7 @@ export type CreateTicketRequestBody = {
    */
   priority?: string
   /*
-   * The Jira project key to use for this External Ticket
+   * The Jira project key to use for this External Ticket (for Jira only)
    *
    * @example ABC
    */
@@ -99,6 +89,55 @@ export type IDResult = {
    * @pattern ^[a-zA-Z0-9_-]{22}$
    */
   id: string
+}
+
+/**
+ * @example {"priorities":[{"id":"Ipsa et id ut enim doloribus.","name":"Suscipit qui reiciendis vero officiis non."},{"id":"Ipsa et id ut enim doloribus.","name":"Suscipit qui reiciendis vero officiis non."},{"id":"Ipsa et id ut enim doloribus.","name":"Suscipit qui reiciendis vero officiis non."}]}
+ */
+export type ListPrioritiesResponse = {
+  /*
+   * The metadata for all priorities
+   *
+   * @example {"id":"Ipsa et id ut enim doloribus.","name":"Suscipit qui reiciendis vero officiis non."}
+   * @example {"id":"Ipsa et id ut enim doloribus.","name":"Suscipit qui reiciendis vero officiis non."}
+   * @example {"id":"Ipsa et id ut enim doloribus.","name":"Suscipit qui reiciendis vero officiis non."}
+   */
+  priorities: Priority[]
+}
+
+/**
+ * @example {"projects":[{"key":"Vel officiis est totam omnis quia.","name":"Quas neque voluptatem in modi odio quibusdam.","ticketTypes":[{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."},{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."}]},{"key":"Vel officiis est totam omnis quia.","name":"Quas neque voluptatem in modi odio quibusdam.","ticketTypes":[{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."},{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."}]},{"key":"Vel officiis est totam omnis quia.","name":"Quas neque voluptatem in modi odio quibusdam.","ticketTypes":[{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."},{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."}]},{"key":"Vel officiis est totam omnis quia.","name":"Quas neque voluptatem in modi odio quibusdam.","ticketTypes":[{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."},{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."}]}]}
+ */
+export type ListProjectsResponse = {
+  /*
+   * The metadata for all projects
+   *
+   * @example {"key":"Vel officiis est totam omnis quia.","name":"Quas neque voluptatem in modi odio quibusdam.","ticketTypes":[{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."},{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."}]}
+   * @example {"key":"Vel officiis est totam omnis quia.","name":"Quas neque voluptatem in modi odio quibusdam.","ticketTypes":[{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."},{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."}]}
+   * @example {"key":"Vel officiis est totam omnis quia.","name":"Quas neque voluptatem in modi odio quibusdam.","ticketTypes":[{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."},{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."}]}
+   * @example {"key":"Vel officiis est totam omnis quia.","name":"Quas neque voluptatem in modi odio quibusdam.","ticketTypes":[{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."},{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."}]}
+   */
+  projects: Project[]
+}
+
+export type MetadataListPrioritiesResponseBody = ListPrioritiesResponse
+
+export type MetadataListProjectsResponseBody = ListProjectsResponse
+
+/**
+ * @example {"message":"Not Found","status":404}
+ */
+export type NotFound = {
+  /*
+   * @example Not Found
+   */
+  message: string
+  /*
+   * @default 404
+   * @example 404
+   * @format int64
+   */
+  status?: number
 }
 
 /**
@@ -139,6 +178,39 @@ export type Pagination = {
    * @format int64
    */
   totalPages: number
+}
+
+/**
+ * @example {"id":"Ipsa et omnis quia vel non.","name":"Atque ea sunt ipsum exercitationem aut sed."}
+ */
+export type Priority = {
+  /*
+   * @example Excepturi est esse et id ullam.
+   */
+  id: string
+  /*
+   * @example Adipisci molestias quis aut officiis.
+   */
+  name: string
+}
+
+/**
+ * @example {"key":"Doloremque error nihil.","name":"Expedita non voluptates iste delectus sed.","ticketTypes":[{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."},{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."},{"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."}]}
+ */
+export type Project = {
+  /*
+   * @example Officia voluptatem voluptate.
+   */
+  key: string
+  /*
+   * @example Deserunt dignissimos ad et omnis voluptatem consequatur.
+   */
+  name: string
+  /*
+   * @example {"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."}
+   * @example {"id":"Porro eligendi.","isSubtask":true,"name":"Est dolorum."}
+   */
+  ticketTypes?: TicketType[]
 }
 
 /**
@@ -240,9 +312,16 @@ export type Setting = {
 /**
  * Information about an External Ticket
  *
- * @example {"created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","title":"A new ticket"}
+ * @example {"accountId":"abcdef1234567890ghijkl","created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","status":"To Do","statusColor":"#42526E","title":"A new ticket"}
  */
 export type Ticket = {
+  /*
+   * Harness Account ID
+   *
+   * @example abcdef1234567890ghijkl
+   * @pattern ^[a-zA-Z0-9_-]{22}$
+   */
+  accountId: string
   /*
    * Unix timestamp at which the resource was created
    *
@@ -267,14 +346,14 @@ export type Ticket = {
    *
    * @example ABC-1234
    */
-  externalId?: string
+  externalId: string
   /*
    * Resource identifier
    *
    * @example abcdef1234567890ghijkl
    * @pattern ^[a-zA-Z0-9_-]{22}$
    */
-  id?: string
+  id: string
   /*
    * Identifier(s) to associate with this ticket, in "key":"value" and/or "key":ArrayOf("values"...) form
    *
@@ -284,7 +363,7 @@ export type Ticket = {
     [key: string]: any
   }
   /*
-   * The Jira issue type to use for this External Ticket
+   * The Jira issue type to use for this External Ticket (for Jira only)
    *
    * @example Bug
    */
@@ -325,11 +404,23 @@ export type Ticket = {
    */
   projectId?: string
   /*
-   * The Jira project key to use for this External Ticket
+   * The Jira project key to use for this External Ticket (for Jira only)
    *
    * @example ABC
    */
   projectKey?: string
+  /*
+   * The status of the External Ticket, from the Ticket Provider
+   *
+   * @example To Do
+   */
+  status?: string
+  /*
+   * The HTML color related to the status of the External Ticket, from the Ticket Provider
+   *
+   * @example #42526E
+   */
+  statusColor?: string
   /*
    * The title for this External Ticket
    *
@@ -338,18 +429,36 @@ export type Ticket = {
   title?: string
 }
 
+/**
+ * @example {"id":"Provident ut ad quibusdam sequi et.","isSubtask":false,"name":"Debitis est."}
+ */
+export type TicketType = {
+  /*
+   * @example Eos sed dolor.
+   */
+  id: string
+  /*
+   * @example true
+   */
+  isSubtask: boolean
+  /*
+   * @example Culpa aliquam.
+   */
+  name: string
+}
+
 export type TicketsCreateTicketResponseBody = IDResult
 
 /**
- * @example {"pagination":{"link":"","page":4,"pageSize":20,"totalItems":230,"totalPages":12},"results":[{"created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","title":"A new ticket"},{"created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","title":"A new ticket"}]}
+ * @example {"pagination":{"link":"","page":4,"pageSize":20,"totalItems":230,"totalPages":12},"results":[{"accountId":"abcdef1234567890ghijkl","created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","status":"To Do","statusColor":"#42526E","title":"A new ticket"},{"accountId":"abcdef1234567890ghijkl","created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","status":"To Do","statusColor":"#42526E","title":"A new ticket"},{"accountId":"abcdef1234567890ghijkl","created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","status":"To Do","statusColor":"#42526E","title":"A new ticket"},{"accountId":"abcdef1234567890ghijkl","created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","status":"To Do","statusColor":"#42526E","title":"A new ticket"}]}
  */
 export type TicketsListTicketsResponseBody = {
   pagination: Pagination
   /*
-   * @example {"created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","title":"A new ticket"}
-   * @example {"created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","title":"A new ticket"}
-   * @example {"created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","title":"A new ticket"}
-   * @example {"created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","title":"A new ticket"}
+   * @example {"accountId":"abcdef1234567890ghijkl","created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","status":"To Do","statusColor":"#42526E","title":"A new ticket"}
+   * @example {"accountId":"abcdef1234567890ghijkl","created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","status":"To Do","statusColor":"#42526E","title":"A new ticket"}
+   * @example {"accountId":"abcdef1234567890ghijkl","created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","status":"To Do","statusColor":"#42526E","title":"A new ticket"}
+   * @example {"accountId":"abcdef1234567890ghijkl","created":1651578240,"description":"This is the very long ticket description...","exists":false,"externalId":"ABC-1234","id":"abcdef1234567890ghijkl","identifiers":{"idName":["value1","value2","value3"]},"issueType":"Bug","lastModified":1651578240,"module":"sto","orgId":"example_org","priority":"High","projectId":"example_project","projectKey":"ABC","status":"To Do","statusColor":"#42526E","title":"A new ticket"}
    */
   results: Ticket[]
 }

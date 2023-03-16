@@ -186,7 +186,7 @@ export const createMetricGraphPayload = ({
 } => {
   const eventTypeParam = (isWindow && isRatioBased) || !isWindow ? { ratioSLIMetricEventType: eventType } : {}
   const selectedMetricList =
-    (isWindow && isRatioBased) || !isWindow ? [validRequestMetric, goodRequestMetric] : [validRequestMetric]
+    (isWindow && isRatioBased) || !isWindow ? [goodRequestMetric, validRequestMetric] : [validRequestMetric]
   return {
     queryParams: {
       accountId,

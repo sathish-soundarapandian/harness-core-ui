@@ -12,6 +12,7 @@ import cx from 'classnames'
 import { FieldArray } from 'formik'
 
 import { useStrings } from 'framework/strings'
+import type { SecretDTOV2 } from 'services/cd-ng'
 import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
@@ -33,10 +34,12 @@ export interface ShellScriptInputSetStepProps {
   readonly?: boolean
   template?: ShellScriptData
   path?: string
+  connectorType: Exclude<SecretDTOV2['type'], 'SecretFile' | 'SecretText'>
 }
 
 export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepProps): React.ReactElement {
-  const { template, path, readonly, initialValues, allowableTypes, stepViewType } = props
+  const { template, path, readonly, initialValues, allowableTypes, stepViewType, connectorType } = props
+
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const scriptType: ScriptType = get(initialValues, 'spec.shell') || 'Bash'
@@ -62,7 +65,6 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
       )}
-
       {getMultiTypeFromValue(template?.spec?.source?.spec?.script) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
           <MultiTypeFieldSelector
@@ -97,7 +99,6 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
           </MultiTypeFieldSelector>
         </div>
       ) : null}
-
       {isArray(template?.spec?.environmentVariables) && template?.spec?.environmentVariables ? (
         <div className={stepCss.formGroup}>
           <MultiTypeFieldSelector
@@ -224,11 +225,10 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
           className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
-
       {getMultiTypeFromValue(template?.spec?.executionTarget?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <MultiTypeSecretInput
-            type="SSHKey"
+            type={connectorType}
             expressions={expressions}
             allowableTypes={allowableTypes}
             enableConfigureOptions={true}
@@ -236,12 +236,11 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             name={`${prefix}spec.executionTarget.connectorRef`}
-            label={getString('sshConnector')}
+            label={connectorType === 'SSHKey' ? getString('sshConnector') : getString('secrets.typeWinRM')}
             disabled={readonly}
           />
         </div>
       )}
-
       {getMultiTypeFromValue(template?.spec?.executionTarget?.workingDirectory) === MultiTypeInputType.RUNTIME && (
         <TextFieldInputSetView
           disabled={readonly}

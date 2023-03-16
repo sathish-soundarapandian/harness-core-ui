@@ -3999,6 +3999,8 @@ export interface EntityDetail {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
 }
 
 export interface EntityDetailProtoDTO {
@@ -6548,6 +6550,8 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   )[]
   moduleType?:
     | 'CD'
@@ -6768,6 +6772,8 @@ export interface GitEntityFilterProperties {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -7065,6 +7071,8 @@ export interface GitFullSyncEntityInfoDTO {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -7279,6 +7287,8 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7614,6 +7624,8 @@ export interface GitSyncEntityDTO {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7822,6 +7834,8 @@ export interface GitSyncEntityListDTO {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -8047,6 +8061,8 @@ export interface GitSyncErrorDTO {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8606,6 +8622,14 @@ export type HttpStateExecutionData = DelegateResponseData & {
 export type HttpStoreConfig = StoreConfig & {
   connectorRef?: string
   metadata?: string
+}
+
+export type IACMLicenseSummaryDTO = LicensesWithSummaryDTO & {
+  totalDevelopers?: number
+}
+
+export type IACMModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfDevelopers?: number
 }
 
 export type IdentifierRef = EntityReference & {
@@ -9533,7 +9557,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export interface LDAPSettings {
+export type LDAPSettings = NGAuthSettings & {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -9541,7 +9565,6 @@ export interface LDAPSettings {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -10274,10 +10297,9 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export interface OAuthSettings {
+export type OAuthSettings = NGAuthSettings & {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -11557,6 +11579,8 @@ export interface ReferencedByDTO {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
 }
 
 export interface RefreshResponse {
@@ -12892,6 +12916,8 @@ export interface ResponseListEntityType {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -16186,6 +16212,7 @@ export interface StepData {
     | 'AwsSamRollback'
     | 'AwsLambdaRollback'
     | 'BambooBuild'
+    | 'RouteMapping'
 }
 
 export interface StepElementConfig {
@@ -16627,6 +16654,13 @@ export type TasRollingDeployStepInfo = StepSpecType & {
 
 export type TasRollingRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+}
+
+export type TasRouteMappingStepInfo = StepSpecType & {
+  appName: string
+  delegateSelectors?: string[]
+  routeType: 'Map' | 'UnMap'
+  routes: string[]
 }
 
 export type TasSwapRollbackStepInfo = StepSpecType & {
@@ -17856,11 +17890,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
+export type DeleteManyFreezesBodyRequestBody = string[]
+
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
-
-export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -18689,6 +18723,8 @@ export interface ListActivitiesQueryParams {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -18889,6 +18925,8 @@ export interface ListActivitiesQueryParams {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -19193,6 +19231,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -19393,6 +19433,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -35760,6 +35802,8 @@ export interface ListReferredByEntitiesQueryParams {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -36021,6 +36065,8 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   searchTerm?: string
 }
 
@@ -39407,6 +39453,8 @@ export interface GetReferencedByQueryParams {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   searchTerm?: string
 }
 
@@ -39863,7 +39911,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -39877,7 +39925,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -39892,7 +39940,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -39906,7 +39954,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -39918,7 +39966,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -39927,7 +39975,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -40489,7 +40537,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -40503,7 +40551,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -40518,7 +40566,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -40532,7 +40580,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -40544,7 +40592,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -40553,7 +40601,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -42081,6 +42129,8 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -42349,6 +42399,8 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'AwsLambdaRollback'
       | 'GITOPS_SYNC'
       | 'BambooBuild'
+      | 'CdSscaOrchestration'
+      | 'TasRouteMapping'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -48549,6 +48601,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   yamlGroup?: string
 }
 
@@ -48877,6 +48931,8 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -53825,6 +53881,60 @@ export const updateServiceV2Promise = (
     ServiceRequestDTORequestBody,
     void
   >('PUT', getConfig('ng/api'), `/servicesV2`, props, signal)
+
+export interface GetAllServicesListQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  searchTerm?: string
+  page?: number
+  size?: number
+  sort?: string[]
+}
+
+export type GetAllServicesListProps = Omit<
+  GetProps<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all services list
+ */
+export const GetAllServicesList = (props: GetAllServicesListProps) => (
+  <Get<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>
+    path={`/servicesV2/all-services`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetAllServicesListProps = Omit<
+  UseGetProps<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all services list
+ */
+export const useGetAllServicesList = (props: UseGetAllServicesListProps) =>
+  useGet<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>(
+    `/servicesV2/all-services`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get all services list
+ */
+export const getAllServicesListPromise = (
+  props: GetUsingFetchProps<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageServiceResponse, Failure | Error, GetAllServicesListQueryParams, void>(
+    getConfig('ng/api'),
+    `/servicesV2/all-services`,
+    props,
+    signal
+  )
 
 export interface GetArtifactSourceTemplateEntityReferencesQueryParams {
   accountIdentifier: string
@@ -62923,6 +63033,8 @@ export interface GetYamlSchemaQueryParams {
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
     | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'TasRouteMapping'
   subtype?:
     | 'K8sCluster'
     | 'Git'

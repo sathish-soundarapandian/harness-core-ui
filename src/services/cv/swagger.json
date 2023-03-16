@@ -23523,7 +23523,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["NewEvents"]
+                "enum": ["NewEvents", "CriticalEvents", "ResurfacedEvents"]
               }
             }
           }

@@ -127,6 +127,7 @@ import { AwsLambdaDeployStep } from './AwsLambda/AwsLambdaDeployStep/AwsLambdaDe
 import { AwsLambdaRollbackStep } from './AwsLambda/AwsLambdaRollbackStep/AwsLambdaRollbackStep'
 import { TerraformCloudRun } from './TerraformCloudRunStep/TerraformCloudRun'
 import { TerraformCloudRollback } from './TerraformCloudRollbackStep/TerraformCloudRollback'
+import { RouteMappingStep } from './RouteMappingStep/RouteMappingStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -229,6 +230,7 @@ factory.registerStep(new TasBGAppSetupStep())
 factory.registerStep(new TasCanaryAppSetupStep())
 factory.registerStep(new TASRollingRollbackStep())
 factory.registerStep(new TasRollingDeploymentStep())
+factory.registerStep(new RouteMappingStep())
 factory.registerStep(new AsgCanaryDeleteStep())
 factory.registerStep(new AsgCanaryDeployStep())
 factory.registerStep(new AsgRollingRollbackStep())

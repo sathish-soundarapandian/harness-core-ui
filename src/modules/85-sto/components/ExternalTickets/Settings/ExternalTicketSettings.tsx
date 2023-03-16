@@ -7,66 +7,65 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { debounce } from 'lodash-es'
 import { Color } from '@harness/design-system'
-import { Checkbox, Container, Layout, Text, TextInput } from '@harness/uicore'
+import { Checkbox, Container, DropDown, Layout, SelectOption, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { Setting } from 'services/ticket-service/ticketServiceSchemas'
-import { useSettingsGetSetting, useSettingsSaveSetting } from 'services/ticket-service/ticketServiceComponents'
+import type { MetadataListProjectsResponseBody, Setting } from 'services/ticket-service/ticketServiceSchemas'
+import {
+  useMetadataListProjects,
+  useSettingsGetSetting,
+  useSettingsSaveSetting
+} from 'services/ticket-service/ticketServiceComponents'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import IssueTypesDropDown from '@sto/components/ExternalTickets/Settings/IssueTypesDropDown'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ExternalTicketSettings.module.scss'
 
 type Settings = {
   connector?: ConnectorSelectedValue | string
   projectKey?: string
+  issueType?: string
 }
-const ExternalTicketSettings: React.FC<{ debounceDelay?: number }> = ({ debounceDelay = 1000 }) => {
+const ExternalTicketSettings: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, module } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
 
   const { mutate } = useSettingsSaveSetting()
 
-  const delayedMutate = React.useRef(
-    debounce((newSettings: Settings) => {
-      if (newSettings.connector && newSettings.projectKey) {
-        const connectorId =
-          typeof newSettings.connector === 'string' ? newSettings.connector : newSettings.connector.value
-        mutate(
-          {
-            queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier },
-            body: {
-              additional: { projectKey: newSettings.projectKey },
-              connectorId,
-              module,
-              service: 'Jira'
-            }
-          },
-          {}
-        )
-      }
-    }, debounceDelay)
-  ).current
-
   const [ticketSettings, setTicketSettings] = useState<Settings | undefined>(undefined)
 
-  const { data } = useSettingsGetSetting<Setting>({
+  const { data: settingsData, isLoading: isLoadingSettings } = useSettingsGetSetting<Setting>({
     queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier, module: module || 'sto' }
   })
 
   useEffect(() => {
-    if (data && !ticketSettings) {
+    if (settingsData && !ticketSettings) {
       setTicketSettings({
-        connector: data?.connectorId,
-        projectKey: data?.additional?.projectKey
+        connector: settingsData.connectorId,
+        projectKey: settingsData?.additional?.projectKey,
+        issueType: settingsData?.additional?.issueType
       })
     }
-  }, [data, ticketSettings, setTicketSettings])
+  }, [settingsData, ticketSettings, setTicketSettings])
+
+  const { data: projectData, isLoading: isLoadingProjects } = useMetadataListProjects<MetadataListProjectsResponseBody>(
+    {
+      queryParams: { accountId, module: 'sto' }
+    },
+    {
+      retry: false
+    }
+  )
+
+  const projectItems: SelectOption[] | undefined = projectData?.projects.map(proj => ({
+    label: `${proj.name} (${proj.key})`,
+    value: proj.key
+  }))
 
   return (
     <Container margin="xlarge" padding="xlarge" className={css.container}>
@@ -87,6 +86,7 @@ const ExternalTicketSettings: React.FC<{ debounceDelay?: number }> = ({ debounce
             orgIdentifier={orgIdentifier}
             type="Jira"
             selected={ticketSettings?.connector}
+            disabled={isLoadingSettings}
             onChange={(value, scope) => {
               updateTicketSettings({
                 connector: scope !== Scope.PROJECT ? `${scope}.${value.identifier}` : value.identifier
@@ -99,15 +99,32 @@ const ExternalTicketSettings: React.FC<{ debounceDelay?: number }> = ({ debounce
       <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'right' }} margin={{ bottom: 'large' }}>
         <Text className={css.minWidth}>{getString('common.tickets.defaultProjectName')}</Text>
         <div className={cx(stepCss.formGroup, stepCss.lg)}>
-          <TextInput
+          <DropDown
+            items={projectItems}
             value={ticketSettings?.projectKey}
-            title="defaultProjectName"
-            name="defaultProjectName"
-            placeholder={getString('common.tickets.selectProjectName')}
-            onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-              updateTicketSettings({ projectKey: ev.target.value })
+            disabled={isLoadingSettings || isLoadingProjects}
+            onChange={item => {
+              updateTicketSettings({ projectKey: item.value as string })
             }}
           />
+        </div>
+      </Layout.Horizontal>
+
+      <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'right' }} margin={{ bottom: 'large' }}>
+        <Text className={css.minWidth}>{getString('common.tickets.defaultIssueType')}</Text>
+        <div className={cx(stepCss.formGroup, stepCss.lg)}>
+          {ticketSettings?.projectKey ? (
+            <IssueTypesDropDown
+              jiraProjectId={ticketSettings?.projectKey}
+              value={ticketSettings?.issueType}
+              disabled={isLoadingSettings || isLoadingProjects}
+              onChange={item => {
+                updateTicketSettings({ issueType: item.value as string })
+              }}
+            />
+          ) : (
+            <DropDown items={[]} disabled={isLoadingSettings || isLoadingProjects} onChange={() => undefined} />
+          )}
         </div>
       </Layout.Horizontal>
 
@@ -124,7 +141,22 @@ const ExternalTicketSettings: React.FC<{ debounceDelay?: number }> = ({ debounce
   function updateTicketSettings(settings: Partial<Settings>): void {
     const newSettings = { ...ticketSettings, ...settings }
     setTicketSettings(newSettings)
-    delayedMutate(newSettings)
+    if (newSettings.connector && newSettings.projectKey && newSettings.issueType) {
+      const connectorId =
+        typeof newSettings.connector === 'string' ? newSettings.connector : newSettings.connector.value
+      mutate(
+        {
+          queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier },
+          body: {
+            additional: { projectKey: newSettings.projectKey, issueType: newSettings.issueType },
+            connectorId,
+            module,
+            service: 'Jira'
+          }
+        },
+        {}
+      )
+    }
   }
 }
 
