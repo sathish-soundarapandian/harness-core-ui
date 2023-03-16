@@ -50,6 +50,8 @@ import UserGroupsResourceModalBody from '@rbac/components/UserGroupsRenderer/Use
 import UserGroupsResourceRenderer from '@rbac/components/UserGroupsRenderer/UserGroupsResourceRenderer'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
+import ServiceAccountsResourceModalBody from './components/ServiceAccountsRenderer/ServiceAccountsResourceModalBody'
+import ServiceAccountsResourceRenderer from './components/ServiceAccountsRenderer/ServiceAccountsResourceRenderer'
 
 RbacFactory.registerResourceCategory(ResourceCategory.SHARED_RESOURCES, {
   icon: 'support-tour',
@@ -98,7 +100,6 @@ RbacFactory.registerResourceTypeHandler(ResourceType.RESOURCEGROUP, {
     [PermissionIdentifier.UPDATE_RESOURCEGROUP]: <String stringID="rbac.permissionLabels.createEdit" />,
     [PermissionIdentifier.DELETE_RESOURCEGROUP]: <String stringID="rbac.permissionLabels.delete" />
   },
-  // eslint-disable-next-line react/display-name
   addResourceModalBody: props => <ResourceGroupsResourceModalBody {...props} />,
   // eslint-disable-next-line react/display-name
   staticResourceRenderer: props => <ResourceGroupsResourceRenderer {...props} />
@@ -138,7 +139,12 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SERVICEACCOUNT, {
     [PermissionIdentifier.EDIT_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.createEdit" />,
     [PermissionIdentifier.DELETE_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.delete" />,
     [PermissionIdentifier.MANAGE_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.manage" />
-  }
+  },
+
+  // eslint-disable-next-line react/display-name
+  addResourceModalBody: props => <ServiceAccountsResourceModalBody {...props} />,
+  // eslint-disable-next-line react/display-name
+  staticResourceRenderer: props => <ServiceAccountsResourceRenderer {...props} />
 })
 
 const platformLabel = 'auditTrail.Platform'
