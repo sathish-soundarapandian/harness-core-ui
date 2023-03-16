@@ -980,7 +980,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
             >
               <a
                 class="link"
-                href="/account/undefined/idp"
+                href="/account/undefined/idp-default"
               >
                 <div
                   class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
