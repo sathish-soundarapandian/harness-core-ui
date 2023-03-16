@@ -1,68 +1,63 @@
 import React from 'react'
-import { FieldArray, FormikProps } from 'formik'
-import {
-  AllowedTypes,
-  Button,
-  ButtonVariation,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType
-} from '@harness/uicore'
-import { v4 as uuid } from 'uuid'
+import { get, defaultTo } from 'lodash-es'
+import { FieldArray, FormikProps, connect } from 'formik'
+import { AllowedTypes, Button, ButtonVariation, FormInput, MultiTypeInputType } from '@harness/uicore'
 
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useStrings } from 'framework/strings'
 
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-// import type { HttpStepFormData, HttpStepHeaderConfig, HttpStepOutputVariable } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CommandEdit.module.scss'
 
-export default function OptionalConfiguration(props: {
-  formik: FormikProps<any>
+function OptionalConfiguration(props: {
+  formik?: FormikProps<any>
   readonly?: boolean
   allowableTypes?: AllowedTypes
+  name: string
+  readonlyValue: boolean
+  disableSelection: boolean
+  expressions?: string[]
 }): React.ReactElement {
   const { getString } = useStrings()
-  const { expressions } = useVariablesExpression()
-  React.useEffect(() => {
-    console.log('expressions', expressions)
-  }, [expressions])
+
   const {
-    formik: { values: formValues, setFieldValue },
+    formik,
     readonly,
-    allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+    allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
+    name,
+    readonlyValue = false,
+    disableSelection = false,
+    expressions
   } = props
 
   return (
     <div className={stepCss.stepPanel}>
       <div className={stepCss.formGroup}>
         <MultiTypeFieldSelector
-          name="spec.parameters"
+          name={name}
           label={getString('connectors.parameters')}
           isOptional
           optionalLabel={getString('common.optionalLabel')}
           defaultValueToReset={[{ key: '', value: '' }]}
-          //   disableTypeSelection
+          disableTypeSelection={disableSelection}
           allowedTypes={allowableTypes}
         >
           <FieldArray
-            name="spec.parameters"
+            name={name}
             render={({ push, remove }) => {
               return (
                 <div className={css.panel}>
-                  {formValues.spec.parameters.map(({ id }: any, i: number) => (
-                    <div className={css.headerRow} key={id}>
+                  {defaultTo(get(formik?.values, name), []).map(({ id }: any, i: number) => (
+                    <div className={css.headerRow} key={i}>
                       <FormInput.Text
-                        name={`spec.parameters[${i}].key`}
+                        name={`${name}[${i}].key`}
                         placeholder={getString('pipeline.keyPlaceholder')}
-                        disabled={readonly}
+                        disabled={readonly || readonlyValue}
                         label="Key"
                         className={css.keyField}
                       />
                       <FormInput.MultiTextInput
-                        name={`spec.parameters[${i}].value`}
+                        name={`${name}[${i}].value`}
                         placeholder={getString('common.valuePlaceholder')}
                         disabled={readonly}
                         multiTextInputProps={{
@@ -101,3 +96,5 @@ export default function OptionalConfiguration(props: {
     </div>
   )
 }
+
+export default connect(OptionalConfiguration)

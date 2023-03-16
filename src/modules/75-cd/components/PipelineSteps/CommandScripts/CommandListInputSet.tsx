@@ -18,7 +18,13 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import type { CommandScriptsData, CopyCommandUnit, CustomScriptCommandUnit } from './CommandScriptsTypes'
+import type {
+  CommandScriptsData,
+  CopyCommandUnit,
+  CustomScriptCommandUnit,
+  DownloadArtifactCommandUnit
+} from './CommandScriptsTypes'
+import OptionalConfiguration from './Commands/OptionalConfiguration'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CommandListInputSet.module.scss'
 
@@ -144,6 +150,18 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                             expressions={expressions}
                           />
                         </MultiTypeFieldSelector>
+                      </div>
+                    ) : null}
+                    {getMultiTypeFromValue((command as DownloadArtifactCommandUnit)?.spec?.parameters) ===
+                      MultiTypeInputType.RUNTIME ||
+                    Array.isArray(getMultiTypeFromValue((command as DownloadArtifactCommandUnit)?.spec?.parameters)) ? (
+                      <div className={cx(stepCss.formGroup, stepCss.alignStart)}>
+                        <OptionalConfiguration
+                          disableSelection
+                          readonlyValue
+                          expressions={expressions}
+                          name={`${prefix}spec.commandUnits[${i}].spec.parameters`}
+                        />
                       </div>
                     ) : null}
                   </React.Fragment>

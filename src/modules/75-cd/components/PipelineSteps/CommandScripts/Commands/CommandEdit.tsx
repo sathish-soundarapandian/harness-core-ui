@@ -17,7 +17,8 @@ import {
   Formik,
   FormikForm,
   FormInput,
-  SelectOption
+  SelectOption,
+  RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { NameSchema } from '@common/utils/Validation'
@@ -36,10 +37,20 @@ interface CommandEditProps {
   onAddEditCommand: (commandData: CommandUnitType) => void
   onCancelClick: () => void
   deploymentType?: string
+  expressions?: string[]
 }
 
 export function CommandEdit(props: CommandEditProps): React.ReactElement {
-  const { isEdit, initialValues, onAddEditCommand, readonly, allowableTypes, onCancelClick, deploymentType } = props
+  const {
+    isEdit,
+    initialValues,
+    onAddEditCommand,
+    readonly,
+    allowableTypes,
+    onCancelClick,
+    deploymentType,
+    expressions
+  } = props
 
   const { getString } = useStrings()
 
@@ -60,12 +71,20 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
             .trim()
             .required(getString('cd.steps.commands.validation.destinationPathRequired')),
 
-          parameters: Yup.array().of(
-            Yup.object().shape({
-              key: Yup.string().required(getString('common.validation.keyIsRequired')),
-              value: Yup.string().required(getString('common.validation.valueIsRequired'))
-            })
-          )
+          parameters: Yup.lazy(value => {
+            if (value === RUNTIME_INPUT_VALUE) {
+              return Yup.string()
+            }
+            if (Array.isArray(value) && value.length === 0) {
+              return Yup.array()
+            }
+            return Yup.array().of(
+              Yup.object().shape({
+                key: Yup.string().required(getString('common.validation.keyIsRequired')),
+                value: Yup.string().required(getString('common.validation.valueIsRequired'))
+              })
+            )
+          })
         })
       } else if (type === CommandType.Script) {
         return Yup.object().shape({
@@ -153,7 +172,7 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
             )}
 
             {formik.values.type === CommandType.DownloadArtifact && (
-              <DownloadArtifactCommandEdit allowableTypes={allowableTypes} formik={formik} />
+              <DownloadArtifactCommandEdit allowableTypes={allowableTypes} formik={formik} expressions={expressions} />
             )}
 
             {formik.values.type === CommandType.Script && (

@@ -20,18 +20,13 @@ import css from './CommandEdit.module.scss'
 interface DownloadArtifactCommandEditProps {
   allowableTypes: AllowedTypes
   readonly?: boolean
-  formik: any
+  expressions?: string[]
 }
 
 export function DownloadArtifactCommandEdit(props: DownloadArtifactCommandEditProps): React.ReactElement {
-  const { readonly, allowableTypes, formik } = props
+  const { readonly, allowableTypes, expressions = [] } = props
 
   const { getString } = useStrings()
-  const { expressions } = useVariablesExpression()
-
-  React.useEffect(() => {
-    console.log('formik', formik)
-  }, [formik])
 
   return (
     <>
@@ -60,7 +55,14 @@ export function DownloadArtifactCommandEdit(props: DownloadArtifactCommandEditPr
           <Accordion.Panel
             id="optional-config"
             summary={getString('common.optionalConfig')}
-            details={<OptionalConfiguration formik={formik} readonly={false} allowableTypes={allowableTypes} />}
+            details={
+              <OptionalConfiguration
+                expressions={expressions}
+                name={'spec.parameters'}
+                readonly={false}
+                allowableTypes={allowableTypes}
+              />
+            }
           />
         </Accordion>
       </Container>

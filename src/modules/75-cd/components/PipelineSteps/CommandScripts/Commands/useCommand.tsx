@@ -38,10 +38,11 @@ interface UseCommandProps {
   allowableTypes: AllowedTypes
   readonly?: boolean
   deploymentType?: string
+  expressions?: string[]
 }
 
 export default function useCommands(props: UseCommandProps): UseCommandReturnType {
-  const { allowableTypes, readonly = false, deploymentType = '' } = props
+  const { allowableTypes, readonly = false, deploymentType = '', expressions } = props
   const sourceTypeDefaultValue = isWinRmDeploymentType(deploymentType) ? SourceType.CONFIG : SourceType.ARTIFACT
   const [initialValues, setInitialValues] = useState<CommandUnitType>({
     identifier: '',
@@ -154,10 +155,11 @@ export default function useCommands(props: UseCommandProps): UseCommandReturnTyp
           onCancelClick={hideCommandModal}
           readonly={readonly}
           deploymentType={deploymentType}
+          expressions={expressions}
         />
       </Dialog>
     )
-  }, [initialValues, allowableTypes, onAddEditCommand, isEdit, readonly, deploymentType])
+  }, [initialValues, allowableTypes, onAddEditCommand, isEdit, readonly, deploymentType, expressions])
 
   return {
     openCommandModal,

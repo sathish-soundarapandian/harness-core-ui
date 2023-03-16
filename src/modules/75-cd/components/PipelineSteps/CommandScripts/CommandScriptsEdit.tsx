@@ -114,7 +114,7 @@ function CommandScriptsEditWidget(
               />
             </div>
             <div className={stepCss.divider} />
-            <CommandList allowableTypes={allowableTypes} readonly={readonly} />
+            <CommandList expressions={expressions} allowableTypes={allowableTypes} readonly={readonly} />
             {formik.errors.spec?.commandUnits && formik.submitCount !== 0 && (
               <Text icon="circle-cross" iconProps={{ size: 10, color: Color.RED_600 }} color={Color.RED_600}>
                 {formik.errors.spec.commandUnits}

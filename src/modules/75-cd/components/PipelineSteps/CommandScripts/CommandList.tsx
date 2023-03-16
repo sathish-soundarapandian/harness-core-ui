@@ -36,10 +36,11 @@ import css from './CommandScripts.module.scss'
 interface CommandListProps {
   allowableTypes: AllowedTypes
   readonly?: boolean
+  expressions?: string[]
 }
 
 export function CommandList(props: CommandListProps): React.ReactElement {
-  const { allowableTypes, readonly } = props
+  const { allowableTypes, readonly, expressions } = props
   const { getString } = useStrings()
   const tooltipContext = React.useContext(FormikTooltipContext)
   const formik = useFormikContext<CommandScriptsData>()
@@ -64,7 +65,8 @@ export function CommandList(props: CommandListProps): React.ReactElement {
   const { openCommandModal } = useCommands({
     allowableTypes,
     readonly,
-    deploymentType: serviceDefinitionType()
+    deploymentType: serviceDefinitionType(),
+    expressions
   })
 
   return (
