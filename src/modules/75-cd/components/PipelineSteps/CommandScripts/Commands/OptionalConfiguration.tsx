@@ -1,5 +1,5 @@
 import React from 'react'
-import { get, defaultTo } from 'lodash-es'
+import { get, defaultTo, isArray } from 'lodash-es'
 import { FieldArray, FormikProps, connect } from 'formik'
 import { AllowedTypes, Button, ButtonVariation, FormInput, MultiTypeInputType } from '@harness/uicore'
 
@@ -14,8 +14,8 @@ function OptionalConfiguration(props: {
   readonly?: boolean
   allowableTypes?: AllowedTypes
   name: string
-  readonlyValue: boolean
-  disableSelection: boolean
+  readonlyValue?: boolean
+  disableSelection?: boolean
   expressions?: string[]
 }): React.ReactElement {
   const { getString } = useStrings()
@@ -27,8 +27,10 @@ function OptionalConfiguration(props: {
     name,
     readonlyValue = false,
     disableSelection = false,
-    expressions
+    expressions = []
   } = props
+
+  const values = !isArray(get(formik?.values, name)) ? [] : defaultTo(get(formik?.values, name), [])
 
   return (
     <div className={stepCss.stepPanel}>
@@ -47,7 +49,7 @@ function OptionalConfiguration(props: {
             render={({ push, remove }) => {
               return (
                 <div className={css.panel}>
-                  {defaultTo(get(formik?.values, name), []).map(({ id }: any, i: number) => (
+                  {values.map(({ id }: any, i: number) => (
                     <div className={css.headerRow} key={i}>
                       <FormInput.Text
                         name={`${name}[${i}].key`}

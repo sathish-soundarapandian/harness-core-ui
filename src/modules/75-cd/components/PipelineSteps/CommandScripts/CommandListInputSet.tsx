@@ -153,14 +153,13 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                       </div>
                     ) : null}
                     {getMultiTypeFromValue((command as DownloadArtifactCommandUnit)?.spec?.parameters) ===
-                      MultiTypeInputType.RUNTIME ||
-                    Array.isArray(getMultiTypeFromValue((command as DownloadArtifactCommandUnit)?.spec?.parameters)) ? (
+                    MultiTypeInputType.RUNTIME ? (
                       <div className={cx(stepCss.formGroup, stepCss.alignStart)}>
                         <OptionalConfiguration
                           disableSelection
-                          readonlyValue
                           expressions={expressions}
                           name={`${prefix}spec.commandUnits[${i}].spec.parameters`}
+                          allowableTypes={allowableTypes}
                         />
                       </div>
                     ) : null}
