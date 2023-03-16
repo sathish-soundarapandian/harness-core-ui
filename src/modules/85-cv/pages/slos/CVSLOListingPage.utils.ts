@@ -48,6 +48,7 @@ import {
 } from './CVSLOsListingPage.types'
 import { getMonitoredServicesOptions } from './common/SLI/SLI.utils'
 import { getUserJourneyOptions } from './components/CVCreateSLOV2/CVCreateSLOV2.utils'
+import { EvaluationType } from './components/CVCreateSLOV2/CVCreateSLOV2.types'
 
 export const getUserJourneys = (userJourneyResponse?: UserJourneyResponse[]): UserJourneyDTO[] => {
   return userJourneyResponse?.map(response => response.userJourney) ?? []
@@ -275,6 +276,20 @@ export const getSliTypeOptionsForFilter = (getString: UseStringsReturn['getStrin
     {
       label: 'Latency',
       value: 'Latency'
+    }
+  ]
+}
+
+export const getEvaluationTypeOptionsForFilter = (getString: UseStringsReturn['getString']): SelectOption[] => {
+  return [
+    getAllOption(getString),
+    {
+      label: getString('cv.slos.slis.evaluationType.window'),
+      value: EvaluationType.WINDOW
+    },
+    {
+      label: getString('common.request'),
+      value: EvaluationType.REQUEST
     }
   ]
 }

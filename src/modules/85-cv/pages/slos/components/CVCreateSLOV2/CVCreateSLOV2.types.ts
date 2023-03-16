@@ -47,7 +47,8 @@ export const enum SLOV2FormFields {
   SLO_TARGET_PERCENTAGE = 'SLOTargetPercentage',
   NOTIFICATION_RULE_REFS = 'notificationRuleRefs',
   TYPE = 'type',
-  SERVICE_LEVEL_INDICATOR_TYPE = 'serviceLevelIndicatorType'
+  SERVICE_LEVEL_INDICATOR_TYPE = 'serviceLevelIndicatorType',
+  EVALUATION_TYPE = 'evaluationType'
 }
 
 export interface SLOObjective extends Partial<SLOHealthListView> {
@@ -84,11 +85,17 @@ export interface SLOV2Form {
   [SLOV2FormFields.VALID_REQUEST_METRIC]?: RatioSLIMetricSpec['metric2']
   [SLOV2FormFields.OBJECTIVE_VALUE]?: RatioSLIMetricSpec['thresholdValue']
   [SLOV2FormFields.OBJECTIVE_COMPARATOR]?: RatioSLIMetricSpec['thresholdType']
+  [SLOV2FormFields.EVALUATION_TYPE]?: ServiceLevelIndicatorDTO['type']
 }
 
 export interface GetSLOIdentifierWithOrgAndProjectProps {
   sloIdentifier?: string
   projectParams?: ProjectParams
+}
+
+export enum EvaluationType {
+  WINDOW = 'Window',
+  REQUEST = 'Request'
 }
 
 export enum SLITypes {
@@ -150,12 +157,14 @@ export interface GetMetricRequestValuesBySLIMetricTypeProps {
   sliMetricType?: string
   validRequestMetric?: string
   goodRequestMetric?: string
+  evaluationType?: string
 }
 
 export interface GetMetricFormValueBySLIMetricTypeProps {
   sliMetricType?: string
   metric1?: string
   metric2?: string
+  evaluationType?: string
 }
 
 export interface SLOTargetAndBudgetPolicyProps

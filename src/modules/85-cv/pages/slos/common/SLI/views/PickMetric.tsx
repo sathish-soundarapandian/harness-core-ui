@@ -26,7 +26,8 @@ import {
   SLIProps,
   SLIMetricTypes,
   SLOV2FormFields,
-  SLIEventTypes
+  SLIEventTypes,
+  EvaluationType
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { getSLOMetricOptions } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import { defaultOption } from '../SLI.constants'
@@ -44,9 +45,17 @@ const PickMetric: React.FC<PickMetricProps> = props => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & { identifier?: string }>()
-  const { monitoredServiceRef, healthSourceRef, eventType, goodRequestMetric, validRequestMetric, SLIMetricType } =
-    formikProps?.values || {}
+  const {
+    monitoredServiceRef,
+    healthSourceRef,
+    eventType,
+    goodRequestMetric,
+    validRequestMetric,
+    SLIMetricType,
+    evaluationType
+  } = formikProps?.values || {}
   const isRatioBasedMetric = SLIMetricType === SLIMetricTypes.RATIO
+  const isRequest = evaluationType === EvaluationType.REQUEST
 
   const {
     data: SLOMetricsData,
@@ -134,21 +143,23 @@ const PickMetric: React.FC<PickMetricProps> = props => {
           </Text>
           <Text font={{ size: 'normal', weight: 'light' }}>{getString('cv.slos.evaluationMethodSubtitle')}</Text>
         </Layout.Vertical>
-        <Layout.Vertical width="80%">
-          <Card className={css.noShadow}>
-            <FormInput.RadioGroup
-              name={SLOV2FormFields.SLI_METRIC_TYPE}
-              className={css.radioGroup}
-              items={radioItems}
-              onChange={(e: FormEvent<HTMLInputElement>) => {
-                formikProps.setFieldValue(SLOV2FormFields.SLI_METRIC_TYPE, e.currentTarget.value)
-                formikProps.setFieldValue(SLOV2FormFields.OBJECTIVE_VALUE, undefined)
-              }}
-            />
-          </Card>
-        </Layout.Vertical>
+        {!isRequest && (
+          <Layout.Vertical width="80%">
+            <Card className={css.noShadow}>
+              <FormInput.RadioGroup
+                name={SLOV2FormFields.SLI_METRIC_TYPE}
+                className={css.radioGroup}
+                items={radioItems}
+                onChange={(e: FormEvent<HTMLInputElement>) => {
+                  formikProps.setFieldValue(SLOV2FormFields.SLI_METRIC_TYPE, e.currentTarget.value)
+                  formikProps.setFieldValue(SLOV2FormFields.OBJECTIVE_VALUE, undefined)
+                }}
+              />
+            </Card>
+          </Layout.Vertical>
+        )}
         <Layout.Vertical spacing="small">
-          {isRatioBasedMetric && (
+          {((!isRequest && isRatioBasedMetric) || isRequest) && (
             <Layout.Vertical>
               <FormInput.Select
                 name={SLOV2FormFields.EVENT_TYPE}
@@ -214,22 +225,26 @@ const PickMetric: React.FC<PickMetricProps> = props => {
             />
           </Layout.Horizontal>
 
-          <ObjectiveStatementBlock
-            isRatioBasedMetric={isRatioBasedMetric}
-            validRequestMetric={validRequestMetric}
-            goodRequestMetric={goodRequestMetric}
-            formikProps={formikProps}
-          />
-
-          <Card className={css.noShadow}>
-            <FormInput.RadioGroup
-              radioGroup={{ inline: true }}
-              name={SLOV2FormFields.SLI_MISSING_DATA_TYPE}
-              label={getString('cv.considerMissingMetricDataAs')}
-              items={getMissingDataTypeOptions(getString)}
-              className={css.metricSelect}
+          {!isRequest && (
+            <ObjectiveStatementBlock
+              isRatioBasedMetric={isRatioBasedMetric}
+              validRequestMetric={validRequestMetric}
+              goodRequestMetric={goodRequestMetric}
+              formikProps={formikProps}
             />
-          </Card>
+          )}
+
+          {!isRequest && (
+            <Card className={css.noShadow}>
+              <FormInput.RadioGroup
+                radioGroup={{ inline: true }}
+                name={SLOV2FormFields.SLI_MISSING_DATA_TYPE}
+                label={getString('cv.considerMissingMetricDataAs')}
+                items={getMissingDataTypeOptions(getString)}
+                className={css.metricSelect}
+              />
+            </Card>
+          )}
         </Layout.Vertical>
       </Container>
     </>

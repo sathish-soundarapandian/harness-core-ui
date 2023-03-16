@@ -845,6 +845,7 @@ slos:
   monitoredService: MONITORED SERVICE
   monitoredServiceSubTitle: Monitored Service is a service and environment combination that monitors any changes, such as deployments, infrastructure changes and any health trend deviations using logs and metrics obtained from APM and Logging tools.
   evaluationMethod: Evaluation method
+  evaluationType: Evaluation type
   evaluationMethodSubtitle: The evaluation method will determine how your events are measured
   goodRequests: Good requests
   badRequests: Bad requests
@@ -915,6 +916,8 @@ slos:
     HealthSource: Health Source to manage the service level
     HealthSourceSubTitle: It uses logs and metrics to track changes in the Service's health trend
     SLIChartTitle: SLI based on the objective value
+    evaluationType:
+      window: Time Window
     type:
       availability: Availability
       latency: Latency

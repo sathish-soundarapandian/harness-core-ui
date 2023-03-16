@@ -396,6 +396,21 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     )
   }
 
+  const RenderEvaluationType: Renderer<CellProps<any>> = ({ row }) => {
+    const slo = row?.original
+    const { evaluationType = '' } = slo || {}
+    return (
+      <Text
+        className={css.titleInSloTable}
+        title={evaluationType}
+        font={{ align: 'left', size: 'normal', weight: 'light' }}
+        color={Color.GREY_900}
+      >
+        {evaluationType}
+      </Text>
+    )
+  }
+
   const RenderTarget: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row.original
     return (
@@ -481,8 +496,13 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     },
     {
       Header: getString('cv.slos.monitoredService').toUpperCase(),
-      width: '19%',
+      width: '12%',
       Cell: RenderMonitoredService
+    },
+    {
+      Header: getString('common.policy.evaluations').toUpperCase(),
+      width: '7%',
+      Cell: RenderEvaluationType
     },
     {
       Header: getString('cv.slos.status').toUpperCase(),

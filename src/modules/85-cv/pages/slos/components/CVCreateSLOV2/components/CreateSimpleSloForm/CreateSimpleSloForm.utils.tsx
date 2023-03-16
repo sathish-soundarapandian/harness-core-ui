@@ -8,7 +8,7 @@
 import { isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { GetMetricOnboardingGraphPathParams, GetMetricOnboardingGraphQueryParams } from 'services/cv'
-import { SLIMetricTypes, SLOV2Form, SLOV2FormFields } from '../../CVCreateSLOV2.types'
+import { EvaluationType, SLIMetricTypes, SLOV2Form, SLOV2FormFields } from '../../CVCreateSLOV2.types'
 import {
   validateErrorBudgetPolicy,
   validateSetSLOTimeWindow
@@ -39,7 +39,8 @@ export const validateConfigureServiceLevelIndicatiors = (formikProps: FormikProp
     SLIMetricType,
     objectiveComparator,
     objectiveValue,
-    SLIMissingDataType
+    SLIMissingDataType,
+    evaluationType
   } = formikProps.values
 
   formikProps.setTouched({
@@ -53,16 +54,22 @@ export const validateConfigureServiceLevelIndicatiors = (formikProps: FormikProp
     [SLOV2FormFields.HEALTH_SOURCE_REF]: true
   })
 
-  if (!SLIMetricType) return false
-  if (!objectiveValue) return false
-  if (!objectiveComparator) return false
-  if (SLIMetricType && SLIMetricType === SLIMetricTypes.RATIO) {
+  if (evaluationType === EvaluationType.WINDOW) {
+    if (!SLIMetricType) return false
+    if (!objectiveValue) return false
+    if (!objectiveComparator) return false
+    if (SLIMetricType && SLIMetricType === SLIMetricTypes.RATIO) {
+      if (!validRequestMetric || !goodRequestMetric || !eventType) return false
+      if (validRequestMetric === goodRequestMetric) return false
+      if (!isValidObjectiveValue(objectiveValue)) return false
+    }
+    if (!SLIMissingDataType) return false
+    return true
+  } else {
     if (!validRequestMetric || !goodRequestMetric || !eventType) return false
     if (validRequestMetric === goodRequestMetric) return false
-    if (!isValidObjectiveValue(objectiveValue)) return false
+    return true
   }
-  if (!SLIMissingDataType) return false
-  return true
 }
 
 export const isFormDataValid = (formikProps: FormikProps<SLOV2Form>, selectedTabId: CreateSimpleSLOSteps): boolean => {
@@ -131,17 +138,19 @@ export const getErrorMessageByTabId = (
 }
 
 export const shouldFetchMetricGraph = ({
+  isWindow,
   eventType,
   isRatioBased,
   validRequestMetric,
   goodRequestMetric
 }: {
+  isWindow: boolean
   isRatioBased: boolean
   validRequestMetric?: string
   goodRequestMetric?: string
   eventType?: GetMetricOnboardingGraphQueryParams['ratioSLIMetricEventType']
 }): boolean => {
-  return isRatioBased
+  return (isWindow && isRatioBased) || !isWindow
     ? (Boolean(validRequestMetric) || Boolean(goodRequestMetric)) &&
         validRequestMetric !== goodRequestMetric &&
         Boolean(eventType)
@@ -149,6 +158,7 @@ export const shouldFetchMetricGraph = ({
 }
 
 export const createMetricGraphPayload = ({
+  isWindow,
   eventType,
   isRatioBased,
   accountId,
@@ -159,6 +169,7 @@ export const createMetricGraphPayload = ({
   goodRequestMetric,
   monitoredServiceIdentifier
 }: {
+  isWindow: boolean
   isRatioBased: boolean
   eventType?: GetMetricOnboardingGraphQueryParams['ratioSLIMetricEventType']
   accountId: string
@@ -173,8 +184,9 @@ export const createMetricGraphPayload = ({
   pathParams: GetMetricOnboardingGraphPathParams
   body: string[]
 } => {
-  const eventTypeParam = isRatioBased ? { ratioSLIMetricEventType: eventType } : {}
-  const selectedMetricList = isRatioBased ? [validRequestMetric, goodRequestMetric] : [validRequestMetric]
+  const eventTypeParam = (isWindow && isRatioBased) || !isWindow ? { ratioSLIMetricEventType: eventType } : {}
+  const selectedMetricList =
+    (isWindow && isRatioBased) || !isWindow ? [validRequestMetric, goodRequestMetric] : [validRequestMetric]
   return {
     queryParams: {
       accountId,

@@ -11,6 +11,7 @@ import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { SLODashbordFiltersProps } from './SLODashboardFilters.types'
 import {
+  getEvaluationTypeOptionsForFilter,
   getIsClearFilterDisabled,
   getIsMonitoresServicePageClearFilterDisabled,
   getMonitoredServicesOptionsForFilter,
@@ -106,6 +107,23 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
               value: defaultTo(filterState?.sliTypes?.value, getString('all'))
             }}
             items={getSliTypeOptionsForFilter(getString)}
+            onChange={item => {
+              dispatch(updateSliType({ sliTypes: item }))
+            }}
+          />
+        </Layout.Vertical>
+      )}
+      {!isAccountLevel && (
+        <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="evaluationType-filter">
+          <Select
+            value={{
+              label: `${getString('common.policy.evaluations')}: ${defaultTo(
+                filterState?.sliTypes?.label,
+                getString('all')
+              )}`,
+              value: defaultTo(filterState?.sliTypes?.value, getString('all'))
+            }}
+            items={getEvaluationTypeOptionsForFilter(getString)}
             onChange={item => {
               dispatch(updateSliType({ sliTypes: item }))
             }}

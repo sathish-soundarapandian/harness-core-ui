@@ -25,6 +25,7 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Stepper } from '@common/components/Stepper/Stepper'
 import SLOName from '@cv/pages/slos/common/SLOName/SLOName'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import SLI from '@cv/pages/slos/common/SLI/SLI'
 import SLOTargetAndBudgetPolicy from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy'
 import { CreatePreview } from '@cv/pages/slos/common/CreatePreview/CreatePreview'
@@ -33,7 +34,8 @@ import {
   getMonitoredServiceOptions
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import SLOTargetNotifications from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
-import { SLOV2Form, SLIMetricTypes } from '../../CVCreateSLOV2.types'
+import { ConfigureSLIProvider } from '@cv/pages/slos/common/SLI/SLIContext'
+import { SLOV2Form, SLIMetricTypes, EvaluationType } from '../../CVCreateSLOV2.types'
 import {
   createMetricGraphPayload,
   getErrorMessageByTabId,
@@ -72,6 +74,7 @@ export default function CreateSimpleSLOForm({
   const compositeSloPayloadRef = useRef<SLOV2Form | null>()
   const prevStepDataRef = useRef<SLOV2Form | null>()
   const [notificationsInTable, setNotificationsInTable] = useState<NotificationRuleResponse[]>([])
+  const { SRM_ENABLE_REQUEST_SLO } = useFeatureFlags()
 
   const [openSaveCancelModal] = useCreateCompositeSloWarningModal({
     handleRedirect,
@@ -204,6 +207,7 @@ export default function CreateSimpleSLOForm({
     eventType,
     healthSourceRef,
     SLIMetricType,
+    evaluationType,
     validRequestMetric,
     objectiveValue,
     objectiveComparator,
@@ -213,17 +217,22 @@ export default function CreateSimpleSLOForm({
   } = formikProps.values
 
   const isRatioBased = SLIMetricType === SLIMetricTypes.RATIO
-  const metricsByType = isRatioBased ? [eventType, validRequestMetric, goodRequestMetric] : [validRequestMetric]
+  const isWindow = evaluationType === EvaluationType.WINDOW
+  const metricsByType =
+    (isWindow && isRatioBased) || !isWindow ? [eventType, validRequestMetric, goodRequestMetric] : [validRequestMetric]
 
-  const valuesToDetermineReload = [
-    healthSourceRef,
-    SLIMetricType,
-    ...metricsByType,
-    objectiveValue,
-    objectiveComparator,
-    SLIMissingDataType,
-    serviceLevelIndicatorType
-  ]
+  const ffBasedProp = SRM_ENABLE_REQUEST_SLO ? [serviceLevelIndicatorType] : []
+  const valuesToDetermineReload = !isWindow
+    ? [healthSourceRef, ...metricsByType]
+    : [
+        healthSourceRef,
+        SLIMetricType,
+        ...metricsByType,
+        objectiveValue,
+        objectiveComparator,
+        SLIMissingDataType,
+        ...ffBasedProp
+      ]
 
   const showChart = valuesToDetermineReload.reduce((total, value) => {
     return Boolean(value) && total
@@ -245,10 +254,18 @@ export default function CreateSimpleSLOForm({
     }
   }, [showChart, valuesToDetermineReload.join('')])
 
+  const showSLIMetricChart = shouldFetchMetricGraph({
+    isWindow,
+    isRatioBased,
+    validRequestMetric,
+    goodRequestMetric,
+    eventType
+  })
+
   const getSliMetricGraphData = (): void => {
-    const fetchMetricGraph = shouldFetchMetricGraph({ isRatioBased, validRequestMetric, goodRequestMetric, eventType })
-    if (healthSourceRef && fetchMetricGraph) {
+    if (healthSourceRef && showSLIMetricChart) {
       const metricPayload = createMetricGraphPayload({
+        isWindow,
         eventType,
         isRatioBased,
         accountId,
@@ -266,11 +283,13 @@ export default function CreateSimpleSLOForm({
   useEffect(() => {
     getSliMetricGraphData()
   }, [
+    showSLIMetricChart,
     healthSourceRef,
     eventType,
     validRequestMetric,
     goodRequestMetric,
     isRatioBased,
+    isWindow,
     formikProps.values.monitoredServiceRef
   ])
 
@@ -325,20 +344,26 @@ export default function CreateSimpleSLOForm({
                   title: getString('cv.slos.configureSLI'),
                   subTitle: getString('cv.slos.configureSLISubtitle'),
                   panel: (
-                    <SLI
-                      formikProps={formikProps}
-                      sliGraphData={sliGraphData?.resource?.sliGraph}
-                      loading={sliGraphLoading}
-                      error={getErrorMessage(sliGraphError)}
-                      retryOnError={retryfetchSliGraphData}
-                      metricChart={{
-                        loading: sliMetricGraphLoading,
-                        retryOnError: getSliMetricGraphData,
-                        error: getErrorMessage(sliMetricGraphError),
-                        data: sliMetricGraphData?.resource
-                      }}
-                      showMetricChart
-                    />
+                    <ConfigureSLIProvider
+                      showSLIMetricChart={showSLIMetricChart}
+                      isRatioBased={isRatioBased}
+                      isWindowBased={isWindow}
+                    >
+                      <SLI
+                        formikProps={formikProps}
+                        sliGraphData={sliGraphData?.resource?.sliGraph}
+                        loading={sliGraphLoading}
+                        error={getErrorMessage(sliGraphError)}
+                        retryOnError={retryfetchSliGraphData}
+                        metricChart={{
+                          loading: sliMetricGraphLoading,
+                          retryOnError: getSliMetricGraphData,
+                          error: getErrorMessage(sliMetricGraphError),
+                          data: sliMetricGraphData?.resource
+                        }}
+                        showMetricChart
+                      />
+                    </ConfigureSLIProvider>
                   ),
                   errorMessage: getErrorMessageByTabId(
                     formikProps,
@@ -356,14 +381,20 @@ export default function CreateSimpleSLOForm({
                   title: 'Set your SLO',
                   subTitle: getString('cv.slos.setSLOSubtitle'),
                   panel: (
-                    <SLOTargetAndBudgetPolicy
-                      formikProps={formikProps}
-                      loading={sliGraphLoading}
-                      error={getErrorMessage(sliGraphError)}
-                      retryOnError={retryfetchSliGraphData}
-                      sliGraphData={sliAreaGraphData}
-                      showMetricChart={false}
-                    />
+                    <ConfigureSLIProvider
+                      showSLIMetricChart={showSLIMetricChart}
+                      isRatioBased={isRatioBased}
+                      isWindowBased={isWindow}
+                    >
+                      <SLOTargetAndBudgetPolicy
+                        formikProps={formikProps}
+                        loading={sliGraphLoading}
+                        error={getErrorMessage(sliGraphError)}
+                        retryOnError={retryfetchSliGraphData}
+                        sliGraphData={sliAreaGraphData}
+                        showMetricChart={false}
+                      />
+                    </ConfigureSLIProvider>
                   ),
                   errorMessage: getErrorMessageByTabId(formikProps, CreateSimpleSLOSteps.Set_SLO),
                   preview: <CreatePreview id={CreateSimpleSLOSteps.Set_SLO} data={formikProps.values} />

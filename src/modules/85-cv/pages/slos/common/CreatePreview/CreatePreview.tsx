@@ -10,6 +10,7 @@ import { Layout, Text, SelectOption, MultiSelectOption, Container } from '@harne
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {
+  EvaluationType,
   PeriodLengthTypes,
   PeriodTypes,
   SLIEventTypes,
@@ -153,17 +154,21 @@ export const CreatePreview = ({ id, data }: CreatePreviewProps): JSX.Element => 
       return (
         <Layout.Vertical>
           <LabelAndValue label={getString('cv.slos.healthSource')} value={data.healthSourceRef || ''} />
-          <LabelAndValue label={getString('cv.slos.sliType')} value={data.serviceLevelIndicatorType || ''} />
-          <LabelAndValue label={getString('cv.slos.evaluationMethod')} value={data.SLIMetricType || ''} />
+          {/* <LabelAndValue label={getString('cv.slos.sliType')} value={data.serviceLevelIndicatorType || ''} /> */}
+          <LabelAndValue label={getString('cv.slos.evaluationType')} value={data.evaluationType || ''} />
+          {data.evaluationType === EvaluationType.WINDOW && (
+            <LabelAndValue label={getString('cv.slos.evaluationMethod')} value={data.SLIMetricType || ''} />
+          )}
           <LabelAndValue
             label={'Definitions'}
             value={
               <Layout.Vertical>
                 <Layout.Horizontal spacing={'small'}>
                   <Text font={{ variation: FontVariation.BODY }}>{getString('cv.slos.requestType')}: </Text>
-                  <Text font={{ variation: FontVariation.BODY }}>{data.SLIMissingDataType}</Text>
+                  <Text font={{ variation: FontVariation.BODY }}>{data.eventType}</Text>
                 </Layout.Horizontal>
-                {data.SLIMetricType === SLIMetricTypes.RATIO && (
+                {((data.SLIMetricType === SLIMetricTypes.RATIO && data.evaluationType === EvaluationType.WINDOW) ||
+                  data.evaluationType !== EvaluationType.WINDOW) && (
                   <Layout.Horizontal spacing={'small'}>
                     <Text font={{ variation: FontVariation.BODY }}>
                       {data.eventType === SLIEventTypes.GOOD
@@ -180,10 +185,12 @@ export const CreatePreview = ({ id, data }: CreatePreviewProps): JSX.Element => 
               </Layout.Vertical>
             }
           />
-          <LabelAndValue
-            label={'Success criteria'}
-            value={`Good requests must be ${data.objectiveComparator} ${data.objectiveValue} of valid requests`}
-          />
+          {data.evaluationType === EvaluationType.WINDOW && (
+            <LabelAndValue
+              label={'Success criteria'}
+              value={`Good requests must be ${data.objectiveComparator} ${data.objectiveValue} of valid requests`}
+            />
+          )}
         </Layout.Vertical>
       )
     default:

@@ -121,24 +121,24 @@ export const getSLIGraphData = ({
 }
 
 export const getMetricAndAreaChartCustomProps = (
+  isWindow: boolean,
   isRatioBased: boolean,
   goodRequestMetric: string | undefined,
   validRequestMetric: string
 ): {
   showSLIAreaChart: boolean
-  validRequestGraphColor?:
-    | {
-        graphColor: string
-      }
-    | {
-        graphColor?: undefined
-      }
+  validRequestGraphColor?: { graphColor: string } | { graphColor?: undefined }
 } => {
-  const showSLIAreaChart = isRatioBased
-    ? Boolean(goodRequestMetric) || Boolean(validRequestMetric)
-    : Boolean(validRequestMetric)
+  const validRequestGraphColor =
+    (isRatioBased && isWindow) || !isWindow ? { graphColor: Utils.getRealCSSColor(Color.MAGENTA_800) } : {}
+  // if (!isWindow) {
+  //   return { showSLIAreaChart: false, validRequestGraphColor }
+  // }
+  const showSLIAreaChart =
+    (isRatioBased && isWindow) || !isWindow
+      ? Boolean(goodRequestMetric) || Boolean(validRequestMetric)
+      : Boolean(validRequestMetric)
 
-  const validRequestGraphColor = isRatioBased ? { graphColor: Utils.getRealCSSColor(Color.MAGENTA_800) } : {}
   return { showSLIAreaChart, validRequestGraphColor }
 }
 

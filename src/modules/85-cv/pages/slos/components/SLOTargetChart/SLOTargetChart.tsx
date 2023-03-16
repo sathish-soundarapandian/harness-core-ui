@@ -14,7 +14,6 @@ import { useStrings } from 'framework/strings'
 import type { DataPoints } from 'services/cv'
 import { TimeSeriesAreaChart } from '@common/components'
 import NoChartDataImage from '@cv/assets/noChartData.svg'
-import { SLIMetricTypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import {
   getDefaultChartOptions,
   getMetricAndAreaChartCustomProps,
@@ -25,6 +24,7 @@ import type { SLOTargetChartProps, SLOTargetChartWithAPIGetSliGraphProps } from 
 import { convertServiceLevelIndicatorToSLIFormData } from '../CVCreateSLOV2/CVCreateSLOV2.utils'
 import { SLIMetricChart } from './components/SLIMetricChart/SLIMetricChart'
 import { SLIMetricEnum } from '../../common/SLI/SLI.constants'
+import { useConfigureSLIContext } from '../../common/SLI/SLIContext'
 import css from './SLOTargetChart.module.scss'
 
 export const SLOTargetChart: React.FC<SLOTargetChartProps> = ({
@@ -171,7 +171,8 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
     </Container>
   )
 
-  const { serviceLevelIndicator, showSLIMetricChart = false, sliGraphData, metricChart, metricsNames } = props
+  const { isRatioBased, isWindowBased, showSLIMetricChart } = useConfigureSLIContext()
+  const { serviceLevelIndicator, sliGraphData, metricChart, metricsNames, showMetricChart } = props
   const {
     data: metricData,
     loading: metricLoading,
@@ -184,7 +185,6 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
   const { SLIMetricType, validRequestMetric, eventType, goodRequestMetric } =
     convertServiceLevelIndicatorToSLIFormData(serviceLevelIndicator)
 
-  const isRatioBased = SLIMetricType === SLIMetricTypes.RATIO
   const isInvalidRatioBased =
     !eventType || !(goodRequestMetric || validRequestMetric) || validRequestMetric === goodRequestMetric
   const isGoodAndValidMetricSame = validRequestMetric === goodRequestMetric
@@ -198,6 +198,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
   })
 
   const { showSLIAreaChart, validRequestGraphColor } = getMetricAndAreaChartCustomProps(
+    isWindowBased,
     isRatioBased,
     goodRequestMetric,
     validRequestMetric
@@ -229,7 +230,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
 
     return (
       <Layout.Vertical spacing="small">
-        {showSLIMetricChart && (
+        {showSLIMetricChart && showMetricChart && (
           <Layout.Vertical spacing="large" margin={{ bottom: 'xlarge' }}>
             {goodRequestMetric && (
               <SLIMetricChart
@@ -249,7 +250,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
             )}
             {validRequestMetric && (
               <SLIMetricChart
-                showLegend={!isRatioBased}
+                showLegend={(isWindowBased && !isRatioBased) || isWindowBased}
                 loading={validRequestMetricLoading}
                 title={validRequestMetricTitle}
                 error={metricError}

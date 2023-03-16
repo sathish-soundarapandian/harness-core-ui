@@ -21,7 +21,7 @@ import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/Step
 import type { SLOV2Form, SLOV2FormFields } from '../../CVCreateSLOV2.types'
 
 export interface SLIForm {
-  [SLOV2FormFields.SLI_TYPE]: ServiceLevelIndicatorDTO['type']
+  [SLOV2FormFields.EVALUATION_TYPE]: ServiceLevelIndicatorDTO['type']
   [SLOV2FormFields.SLI_METRIC_TYPE]?: ServiceLevelIndicatorSpec['type']
   [SLOV2FormFields.EVENT_TYPE]?: RatioSLIMetricSpec['eventType']
   [SLOV2FormFields.VALID_REQUEST_METRIC]: string

@@ -8865,6 +8865,7 @@ export interface StringsMap {
   'cv.slos.errorBudgetPolicySubtitle': string
   'cv.slos.evaluationMethod': string
   'cv.slos.evaluationMethodSubtitle': string
+  'cv.slos.evaluationType': string
   'cv.slos.goodRequestMetric': string
   'cv.slos.goodRequests': string
   'cv.slos.healthSource': string
@@ -8895,6 +8896,7 @@ export interface StringsMap {
   'cv.slos.slis.HealthSource': string
   'cv.slos.slis.HealthSourceSubTitle': string
   'cv.slos.slis.SLIChartTitle': string
+  'cv.slos.slis.evaluationType.window': string
   'cv.slos.slis.metricOptions.ratioBased': string
   'cv.slos.slis.metricOptions.thresholdBased': string
   'cv.slos.slis.ratioMetricType.badRequestsByValidRequest': string

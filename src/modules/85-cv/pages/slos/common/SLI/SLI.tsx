@@ -5,28 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { LegacyRef, useState, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo } from 'lodash-es'
-import {
-  FormInput,
-  SelectOption,
-  Layout,
-  Container,
-  Text,
-  ButtonVariation,
-  useToaster,
-  PillToggle
-} from '@harness/uicore'
+import { FormInput, SelectOption, Layout, Container, Text, ButtonVariation, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import SliFormula from '@cv/assets/sliFormula.svg'
 import SLOTargetChartWrapper from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart'
-import { SLIProps, SLITypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import type { SLIProps } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import HealthSourceDrawerHeader from '@cv/pages/health-source/HealthSourceDrawer/component/HealthSourceDrawerHeader/HealthSourceDrawerHeader'
 import HealthSourceDrawerContent from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent'
@@ -41,18 +32,19 @@ import {
   getHealthSourceOptions
 } from '../../components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import { defaultOption } from './SLI.constants'
-import { SLIMetricTypes, SLOV2FormFields } from '../../components/CVCreateSLOV2/CVCreateSLOV2.types'
-import { shouldFetchMetricGraph } from '../../components/CVCreateSLOV2/components/CreateSimpleSloForm/CreateSimpleSloForm.utils'
+import { SLOV2FormFields } from '../../components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { MetricNames } from './SLI.types'
+import EvaluationTypePillToggle from './views/EvaluationType'
+import { useConfigureSLIContext } from './SLIContext'
 import sliCss from './SLI.module.scss'
 
 const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
   const FLEX_START = 'flex-start'
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const { AVAILABILITY, LATENCY } = SLITypes
+  const { SRM_ENABLE_REQUEST_SLO } = useFeatureFlags()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & { identifier: string }>()
-  const sliFormContainerRef: LegacyRef<HTMLDivElement> = useRef(null)
+  const { showSLIMetricChart } = useConfigureSLIContext()
 
   const [metricsNames, setMetricsNames] = useState<MetricNames>({
     activeGoodMetric: { label: '', value: '' },
@@ -93,6 +85,7 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
   }, [monitoredServiceRef])
 
   const isRunTimeInput = false
+  const OccurenceBasedSLO = SRM_ENABLE_REQUEST_SLO || true
   const monitoredService = monitoredServiceData?.data?.monitoredService
   const { serviceRef, environmentRef } = monitoredService || {}
   const { healthSources = [], changeSources = [] } = monitoredService?.sources || {}
@@ -101,15 +94,6 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
     () => healthSourcesOptions.find(healthSource => healthSource?.value === values?.healthSourceRef) ?? defaultOption,
     [healthSourcesOptions, values.healthSourceRef]
   )
-  const isRatioBasedMetric = values.SLIMetricType === SLIMetricTypes.RATIO
-
-  const { validRequestMetric, goodRequestMetric, eventType } = values
-  const showSLIMetricChart = shouldFetchMetricGraph({
-    isRatioBased: isRatioBasedMetric,
-    validRequestMetric,
-    goodRequestMetric,
-    eventType
-  })
 
   useEffect(() => {
     if (monitoredServiceError) {
@@ -171,22 +155,10 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
 
   const { chartPositionProp, chartContainerBorder } = getSLIChartContainerProps(showSLIMetricChart)
 
-  const sliFormContainerHeight = parseInt(
-    defaultTo(sliFormContainerRef.current?.getClientRects()?.[0]?.height, 0).toFixed(0)
-  )
-  const [graphContainerHeight, setGraphContainerHeight] = useState(sliFormContainerHeight)
-  useEffect(() => {
-    if (graphContainerHeight !== sliFormContainerHeight) {
-      const bufferHeight = isRatioBasedMetric ? 40 : 20
-      const updatedHeight = isRatioBasedMetric ? sliFormContainerHeight + bufferHeight : sliFormContainerHeight
-      setGraphContainerHeight(updatedHeight)
-    }
-  }, [sliFormContainerHeight, isRatioBasedMetric, showSLIMetricChart])
-
   return (
     <>
-      <Layout.Horizontal flex={{ justifyContent: FLEX_START, alignItems: FLEX_START }}>
-        <Container width="50%" padding={{ right: 'xlarge' }} ref={sliFormContainerRef}>
+      <Layout.Horizontal flex={{ justifyContent: FLEX_START, alignItems: 'stretch' }}>
+        <Container width="50%" padding={{ right: 'xlarge' }}>
           {/* Select Healthsource start */}
           <Layout.Vertical spacing="xsmall">
             <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }}>
@@ -234,19 +206,10 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
                 {getString('cv.slos.sliType')}
               </Text>
               <Container>
-                <PillToggle
-                  onChange={item => setFieldValue('serviceLevelIndicatorType', item)}
-                  selectedView={values.serviceLevelIndicatorType}
-                  options={[
-                    {
-                      label: getString('cv.slos.slis.type.availability'),
-                      value: AVAILABILITY
-                    },
-                    {
-                      label: getString('cv.slos.slis.type.latency'),
-                      value: LATENCY
-                    }
-                  ]}
+                <EvaluationTypePillToggle
+                  values={values}
+                  onChange={setFieldValue}
+                  ffEvaluationType={OccurenceBasedSLO}
                 />
               </Container>
               <Text font={{ size: 'normal', weight: 'light' }}>{getString('cv.slos.sliTypeSubtitle')}</Text>
@@ -262,13 +225,7 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
             </Layout.Vertical>
           )}
         </Container>
-        <Container
-          width="50%"
-          height={graphContainerHeight}
-          padding={{ left: 'xxlarge' }}
-          {...chartPositionProp}
-          {...chartContainerBorder}
-        >
+        <Container width="50%" padding={{ left: 'xxlarge' }} {...chartPositionProp} {...chartContainerBorder}>
           <SLOTargetChartWrapper
             monitoredServiceIdentifier={monitoredServiceRef}
             serviceLevelIndicator={convertSLOFormDataToServiceLevelIndicatorDTO(formikProps.values)}

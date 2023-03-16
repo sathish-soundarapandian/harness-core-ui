@@ -28,6 +28,7 @@ import {
   getErrorBudget,
   getCustomOptionsForSLOTargetChart
 } from './SLOTargetAndBudgetPolicy.utils'
+import { useConfigureSLIContext } from '../SLI/SLIContext'
 import SLOTargetCss from './SLOTargetAndBudgetPolicy.module.scss'
 
 interface SLOPeriodInterface {
@@ -110,6 +111,7 @@ export const ErrorBudgetCard = (props: ErrorBudgetInterface): JSX.Element => {
 const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ children, formikProps, ...rest }) => {
   const { getString } = useStrings()
 
+  const { isWindowBased } = useConfigureSLIContext()
   const { periodType, periodLength = '', periodLengthType, SLOTargetPercentage } = formikProps.values || {}
   const errorBudgetCardProps = { periodType, periodLength, periodLengthType, SLOTargetPercentage }
 
@@ -162,7 +164,7 @@ const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ chi
               </Text>
             }
           />
-          <ErrorBudgetCard {...errorBudgetCardProps} />
+          {isWindowBased && <ErrorBudgetCard {...errorBudgetCardProps} />}
         </Container>
       </Layout.Horizontal>
     </>
