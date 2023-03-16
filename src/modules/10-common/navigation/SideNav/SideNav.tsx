@@ -80,6 +80,11 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
       className={cx(css.main, {
         [css.sideNavExpanded]: sideNavExpanded
       })}
+      onClick={() => {
+        if (!sideNavExpanded) {
+          setSideNavExpanded(true)
+        }
+      }}
     >
       <>
         <div>{props.children}</div>
