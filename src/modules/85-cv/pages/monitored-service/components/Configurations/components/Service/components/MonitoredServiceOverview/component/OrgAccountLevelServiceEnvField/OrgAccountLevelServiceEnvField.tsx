@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { useToggleOpen } from '@harness/uicore'
+import { SelectOption, useToggleOpen } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
@@ -32,7 +32,10 @@ export default function OrgAccountLevelServiceEnvField({
         label={getString('cv.healthSource.serviceLabel')}
         isOnlyFixedType={!isTemplate}
         openAddNewModal={openAddServiceModal}
-        onChange={service => onValueChange({ value: service, isTemplate, onSuccess: serviceOnSelect })}
+        onChange={service => {
+          const serviceValue = isTemplate ? service?.value : service
+          onValueChange({ value: serviceValue, isTemplate, onSuccess: serviceOnSelect })
+        }}
         {...COMMON_FIELDS_PROPS}
       />
       <MultiTypeEnvironmentField
@@ -41,7 +44,10 @@ export default function OrgAccountLevelServiceEnvField({
         placeholder={getString('cv.selectOrCreateEnv')}
         isOnlyFixedType={!isTemplate}
         openAddNewModal={openAddEnvModal}
-        onChange={env => onValueChange({ value: env, isTemplate, onSuccess: environmentOnSelect })}
+        onChange={env => {
+          const envValue = isTemplate ? (env as SelectOption)?.value : env
+          onValueChange({ value: envValue, isTemplate, onSuccess: environmentOnSelect })
+        }}
         {...COMMON_FIELDS_PROPS}
       />
       <ServiceEnvModal

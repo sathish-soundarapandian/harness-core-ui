@@ -42,7 +42,11 @@ export default function ServiceEnvironmentInputSet({
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const environmentRefValue = environmentOptions?.find(item => item?.value === environmentValue)
 
-  if (CDS_OrgAccountLevelServiceEnvEnvGroup) {
+  if (isUndefined(serviceValue) && isUndefined(serviceValue)) {
+    return <></>
+  }
+
+  if (CDS_OrgAccountLevelServiceEnvEnvGroup && !isUndefined(serviceValue) && !isUndefined(environmentValue)) {
     content = (
       <OrgAccountLevelServiceEnvField
         isTemplate={isReadOnlyInputSet}
