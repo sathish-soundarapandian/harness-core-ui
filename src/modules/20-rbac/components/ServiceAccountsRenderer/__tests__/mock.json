@@ -1,0 +1,32 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 4,
+    "totalItems": 35,
+    "pageItemCount": 10,
+    "pageSize": 10,
+    "content": [
+      {
+        "serviceAccount": {
+          "identifier": "SAWithdfdsfsdfd87879897j",
+          "name": "SAWdsfdsfdsfd97j",
+          "email": "sawifdsfdsf897j@service.harness.io",
+          "description": "",
+          "tags": {},
+          "accountIdentifier": "px7xd_BffdsfdsfdsfdsfdsfFRCi-pfWPYXVjvw",
+          "orgIdentifier": null,
+          "projectIdentifier": null
+        },
+        "createdAt": 1676308997053,
+        "lastModifiedAt": 1676308997053,
+        "tokensCount": 0,
+        "roleAssignmentsMetadataDTO": []
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false,
+    "pageToken": null
+  },
+  "metaData": null,
+  "correlationId": "57d206c8-6adfdsfd8-4aca-b089-1a188824dac8"
+}
