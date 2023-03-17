@@ -8,6 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { SortMethod } from '@common/utils/sortUtils'
 import DelegateResourceModalBody from '../DelegateResourceModalBody'
 
 const onChangeFn = jest.fn()
@@ -20,6 +21,7 @@ jest.mock('services/portal', () => ({
 
 const params = {
   searchTerm: '',
+  sortMethod: SortMethod.LastModifiedDesc,
   onSelectChange: onChangeFn,
   selectedData: [],
   resourceScope: {

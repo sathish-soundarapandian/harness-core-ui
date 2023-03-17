@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`StepWidget tests inputSetMode 1`] = `
+exports[`K8sServiceSpec tests inputSetMode 1`] = `
 <div>
   <div
     class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
@@ -1400,36 +1400,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
 </div>
 `;
 
-exports[`StepWidget tests renders ServiceStep for Input sets 1`] = `
-<div>
-  <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
-  >
-    <div
-      class="nopadLeft accordionSummary"
-      id="Stage.undefined.Service.Artifacts.Sidecars"
-    >
-      <p
-        class="StyledProps--font StyledProps--main inputheader"
-      >
-        sidecarArtifactText
-      </p>
-    </div>
-    <div
-      class="nopadLeft accordionSummary"
-      id="Stage.undefined.Service.Manifests"
-    >
-      <div
-        class="subheading"
-      >
-        pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`StepWidget tests renders ServiceStep for Service Tab  1`] = `
+exports[`K8sServiceSpec tests renders ServiceStep for Service Tab  1`] = `
 <div>
   <div
     class="serviceDefinition"
@@ -1452,7 +1423,7 @@ exports[`StepWidget tests renders ServiceStep for Service Tab  1`] = `
           style="width: 100%;"
         >
           <div
-            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+            class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-medium"
           >
             <div
               class="Layout--vertical StyledProps--main"
@@ -1624,7 +1595,7 @@ exports[`StepWidget tests renders ServiceStep for Service Tab  1`] = `
 </div>
 `;
 
-exports[`StepWidget tests variablesForm 1`] = `
+exports[`K8sServiceSpec tests variablesForm 1`] = `
 <div>
   <div
     class="Accordion--panel"

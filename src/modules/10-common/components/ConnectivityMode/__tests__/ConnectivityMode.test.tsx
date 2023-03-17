@@ -11,7 +11,7 @@ import { render } from '@testing-library/react'
 import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
-import ConnectivityMode, { ConnectivityModeForm, ConnectivityModeType } from '../ConnectivityMode'
+import ConnectivityMode, { ConnectivityModeForm, ConnectivityModeType, DelegateTypes } from '../ConnectivityMode'
 
 describe('Test ConnectivityMode', () => {
   test('should render default state for ConnectivityMode', async () => {
@@ -78,5 +78,27 @@ describe('Test ConnectivityMode', () => {
 
     expect(getByText('Change')).not.toBeNull()
     expect(container).toMatchSnapshot()
+  })
+
+  test('should hide Connect through Harness Platform when inherit from delegate is selected for ConnectivityMode', async () => {
+    const { queryByText } = render(
+      <TestWrapper>
+        <Formik<ConnectivityModeForm>
+          formName="test-form"
+          initialValues={{ connectivityMode: undefined }}
+          onSubmit={jest.fn()}
+        >
+          {formik => (
+            <Form>
+              <ConnectivityMode onChange={jest.fn()} formik={formik} delegateType={DelegateTypes.DELEGATE_IN_CLUSTER} />
+            </Form>
+          )}
+        </Formik>
+      </TestWrapper>
+    )
+    expect(queryByText('common.connectThroughDelegate')).toBeInTheDocument()
+    expect(queryByText('common.connectThroughDelegateInfo')).toBeInTheDocument()
+    expect(queryByText('common.connectThroughPlatform')).not.toBeInTheDocument()
+    expect(queryByText('common.connectThroughPlatformInfo')).not.toBeInTheDocument()
   })
 })

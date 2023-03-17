@@ -159,6 +159,7 @@ const props = {
       }
     }
   },
+  fieldPath: 'configuration',
   stepType: StepType.TerraformDestroy
 } as TerraformVariableStepProps
 
@@ -196,6 +197,7 @@ describe('Terraform Variable view ', () => {
     const { container } = render(
       <TestWrapper>
         <TerraformVariableStep
+          fieldPath="configuration"
           initialValues={{
             type: 'TerraformDestroy',
             name: 'Test A',

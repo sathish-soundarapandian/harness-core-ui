@@ -29,8 +29,8 @@ export enum TableType {
 
 export interface InfraViewFilters {
   artifactFilter: {
-    artifactVersion: string
-    artifactPath: string
+    artifactVersion?: string
+    artifactPath?: string
   }
   serviceFilter: string
 }
@@ -122,9 +122,9 @@ export const getFullViewTableData = (
             tableData.push({
               serviceId: serviceId,
               serviceName: serviceName,
-              artifactVersion: artifactVersion,
+              artifactVersion,
               latest: artifact.latest,
-              artifactPath: defaultTo(artifactPath, ''),
+              artifactPath,
               showService: serviceShow,
               totalInfras: totalInfras,
               instanceCount: totalInstances,
@@ -433,8 +433,8 @@ export const EnvironmentDetailTable = (
   if (isUndefined(selectedRow) && tableType === TableType.FULL && tableData.length) {
     setRowClickFilter({
       artifactFilter: {
-        artifactVersion: defaultTo(tableData[0].artifactVersion, ''),
-        artifactPath: defaultTo(tableData[0].artifactPath, '')
+        artifactVersion: tableData[0].artifactVersion,
+        artifactPath: tableData[0].artifactPath
       },
       serviceFilter: defaultTo(tableData[0].serviceId, '')
     })
@@ -454,8 +454,8 @@ export const EnvironmentDetailTable = (
           ? row => {
               setRowClickFilter({
                 artifactFilter: {
-                  artifactVersion: defaultTo(row.artifactVersion, ''),
-                  artifactPath: defaultTo(row.artifactPath, '')
+                  artifactVersion: row.artifactVersion,
+                  artifactPath: row.artifactPath
                 },
                 serviceFilter: defaultTo(row.serviceId, '')
               })

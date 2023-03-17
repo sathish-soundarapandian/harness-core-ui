@@ -26,7 +26,7 @@ type CellType = Renderer<CellTypeWithActions<ActiveServiceDTO>>
 export const ServiceNameCell: CellType = ({ row }) => {
   const data = row.original
   return (
-    <Text color={Color.GREY_900} font={{ size: 'small' }}>
+    <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
       {data.name}
     </Text>
   )
@@ -35,7 +35,7 @@ export const ServiceNameCell: CellType = ({ row }) => {
 export const OrganizationCell: CellType = ({ row }) => {
   const data = row.original
   return (
-    <Text color={Color.GREY_900} font={{ size: 'small' }}>
+    <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
       {data.orgName}
     </Text>
   )
@@ -43,7 +43,7 @@ export const OrganizationCell: CellType = ({ row }) => {
 export const ProjectCell: CellType = ({ row }) => {
   const data = row.original
   return (
-    <Text color={Color.GREY_900} font={{ size: 'small' }}>
+    <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
       {data.projectName}
     </Text>
   )
@@ -62,7 +62,7 @@ export const LastModifiedServiceIdCell: CellType = ({ row }) => {
         module: 'cd'
       })}
     >
-      <Text color={Color.PRIMARY_7} font={{ size: 'small' }}>
+      <Text color={Color.PRIMARY_7} font={{ size: 'small' }} lineClamp={1}>
         {data.identifier}
       </Text>
     </Link>
@@ -71,7 +71,7 @@ export const LastModifiedServiceIdCell: CellType = ({ row }) => {
 export const ServiceInstancesCell: CellType = ({ row }) => {
   const data = row.original
   return (
-    <Text color={Color.GREY_900} font={{ size: 'small' }}>
+    <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
       {data.instanceCount}
     </Text>
   )
@@ -79,7 +79,7 @@ export const ServiceInstancesCell: CellType = ({ row }) => {
 export const LastDeployedCell: CellType = ({ row }) => {
   const data = row.original
   return (
-    <Text color={Color.GREY_900} font={{ size: 'small' }}>
+    <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
       {moment(data.lastDeployed).format('MM-DD-YYYY')}
     </Text>
   )
@@ -87,7 +87,7 @@ export const LastDeployedCell: CellType = ({ row }) => {
 export const LicenseConsumedCell: CellType = ({ row }) => {
   const data = row.original
   return (
-    <Text color={Color.GREY_900} font={{ size: 'small' }}>
+    <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
       {data.licensesConsumed}
     </Text>
   )

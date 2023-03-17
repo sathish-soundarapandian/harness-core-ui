@@ -489,7 +489,7 @@ exports[`Test GatewayDetails renders review screen 1`] = `
                 class="StyledProps--font StyledProps--font-h2 StyledProps--main"
                 level="2"
               >
-                ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+                pipeline.advancedConfiguration
               </h2>
               <div
                 class="Layout--vertical StyledProps--main"
@@ -1731,7 +1731,7 @@ exports[`Test GatewayDetails renders review screen 2`] = `
                     class="StyledProps--font StyledProps--main title"
                     data-tooltip-id="awsSetupAdvancedConfig"
                   >
-                    ce.co.autoStoppingRule.configuration.step4.setup ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+                    ce.co.autoStoppingRule.configuration.step4.setup pipeline.advancedConfiguration
                   </p>
                   <p
                     class="StyledProps--font StyledProps--main subTitle"
@@ -1778,7 +1778,7 @@ exports[`Test GatewayDetails renders review screen 2`] = `
                               <span
                                 class="Toggle--toggleIcon"
                               />
-                              ce.co.dryRunLabel
+                              pipeline.syncStep.dryRun
                             </label>
                           </div>
                         </div>
@@ -3589,7 +3589,7 @@ exports[`Test GatewayDetails renders setup access screen and move to previous st
                     class="StyledProps--font StyledProps--main title"
                     data-tooltip-id="awsSetupAdvancedConfig"
                   >
-                    ce.co.autoStoppingRule.configuration.step4.setup ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+                    ce.co.autoStoppingRule.configuration.step4.setup pipeline.advancedConfiguration
                   </p>
                   <p
                     class="StyledProps--font StyledProps--main subTitle"
@@ -3636,7 +3636,7 @@ exports[`Test GatewayDetails renders setup access screen and move to previous st
                               <span
                                 class="Toggle--toggleIcon"
                               />
-                              ce.co.dryRunLabel
+                              pipeline.syncStep.dryRun
                             </label>
                           </div>
                         </div>
@@ -4715,7 +4715,7 @@ exports[`Test GatewayDetails renders without crashing 1`] = `
                     class="StyledProps--font StyledProps--main title"
                     data-tooltip-id="awsSetupAdvancedConfig"
                   >
-                    ce.co.autoStoppingRule.configuration.step4.setup ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+                    ce.co.autoStoppingRule.configuration.step4.setup pipeline.advancedConfiguration
                   </p>
                   <p
                     class="StyledProps--font StyledProps--main subTitle"
@@ -4762,7 +4762,7 @@ exports[`Test GatewayDetails renders without crashing 1`] = `
                               <span
                                 class="Toggle--toggleIcon"
                               />
-                              ce.co.dryRunLabel
+                              pipeline.syncStep.dryRun
                             </label>
                           </div>
                         </div>

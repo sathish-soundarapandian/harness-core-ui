@@ -74,9 +74,6 @@ describe('Infrastructure Modal Test', () => {
           environmentIdentifier: 'test_env'
         })}
         pathParams={{ ...projectPathProps, ...environmentPathProps }}
-        defaultFeatureFlagValues={{
-          SSH_NG: true
-        }}
       >
         <InfrastructureModal
           environmentIdentifier="test_env"
@@ -134,9 +131,6 @@ describe('Infrastructure Modal Test', () => {
           environmentIdentifier: 'test_env'
         })}
         pathParams={{ ...projectPathProps, ...environmentPathProps }}
-        defaultFeatureFlagValues={{
-          SSH_NG: true
-        }}
       >
         <InfrastructureModal
           environmentIdentifier="test_env"
@@ -181,9 +175,6 @@ describe('Infrastructure Modal Test', () => {
           environmentIdentifier: 'test_env'
         })}
         pathParams={{ ...projectPathProps, ...environmentPathProps }}
-        defaultFeatureFlagValues={{
-          SSH_NG: true
-        }}
       >
         <InfrastructureModal
           environmentIdentifier="test_env"

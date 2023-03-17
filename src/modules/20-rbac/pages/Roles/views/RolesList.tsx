@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useMemo } from 'react'
 import {
   ButtonVariation,
   Container,
@@ -29,42 +29,56 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import { isAccountBasicRole } from '@rbac/utils/utils'
+import { isAccountBasicRole, ProcessedRbacQueryParams } from '@rbac/utils/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
-import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import { queryParamDecodeAll, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import css from '../Roles.module.scss'
 
-const DEFAULT_ROLES_PAGE_SIZE = 12
 const ROLES_PAGE_SIZE_OPTIONS = [12, 24, 48, 96]
-const rolesQueryParamOptions = {
-  decoder: queryParamDecodeAll(),
-  processQueryParams<Rest>(
-    params: CommonPaginationQueryParams & Rest
-  ): RequiredPick<CommonPaginationQueryParams, 'page' | 'size'> & Rest {
-    return {
-      ...params,
-      page: params.page ?? 0,
-      size: params.size ?? DEFAULT_ROLES_PAGE_SIZE
-    }
-  }
+const DEFAULT_ROLES_PAGE_SIZE = ROLES_PAGE_SIZE_OPTIONS.at(0) as number
+const NEW_DEFAULT_ROLES_PAGE_SIZE = ROLES_PAGE_SIZE_OPTIONS.at(-1) as number
+
+export const useRolesQueryParamOptions = <Rest,>(): UseQueryParamsOptions<ProcessedRbacQueryParams<Rest>> => {
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const options = useMemo(
+    () => ({
+      decoder: queryParamDecodeAll(),
+      processQueryParams(params: CommonPaginationQueryParams & Rest): ProcessedRbacQueryParams<Rest> {
+        return {
+          ...params,
+          page: params.page ?? 0,
+          size: params.size ?? (PL_NEW_PAGE_SIZE ? NEW_DEFAULT_ROLES_PAGE_SIZE : DEFAULT_ROLES_PAGE_SIZE)
+        }
+      }
+    }),
+    [PL_NEW_PAGE_SIZE]
+  )
+
+  return options
 }
 
 const RolesList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
-  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.Roles}`)
   useDocumentTitle(getString('roles'))
-
+  const queryParamOptions = useRolesQueryParamOptions()
   const {
     search: searchTerm,
     size: pageSize,
     page: pageIndex
-  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(rolesQueryParamOptions)
+  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(queryParamOptions)
   const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
 
   const { data, loading, error, refetch } = useGetRoleList({
@@ -75,7 +89,7 @@ const RolesList: React.FC = () => {
       pageIndex,
       pageSize,
       searchTerm,
-      sortOrders: [sort]
+      sortOrders: [sortPreference]
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
@@ -131,7 +145,7 @@ const RolesList: React.FC = () => {
 
   const paginationProps = useDefaultPaginationProps({
     itemCount: data?.data?.totalItems || 0,
-    pageSize: data?.data?.pageSize || DEFAULT_ROLES_PAGE_SIZE,
+    pageSize: data?.data?.pageSize || (PL_NEW_PAGE_SIZE ? NEW_DEFAULT_ROLES_PAGE_SIZE : DEFAULT_ROLES_PAGE_SIZE),
     pageCount: data?.data?.totalPages || 0,
     pageIndex: data?.data?.pageIndex || 0,
     pageSizeOptions: ROLES_PAGE_SIZE_OPTIONS
@@ -174,9 +188,11 @@ const RolesList: React.FC = () => {
         }
       >
         <ListHeader
-          value={sort}
+          selectedSortMethod={sortPreference}
           sortOptions={[...sortByCreated, ...sortByName]}
-          onChange={option => setSort(option.value as string)}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
           totalCount={data?.data?.totalItems}
         />
         <div className={css.masonry}>

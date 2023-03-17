@@ -41,6 +41,7 @@ declare const styles: {
   readonly overflow: string
   readonly overflowOpenTasks: string
   readonly overflowScroll: string
+  readonly overflowScrollPipelineIdList: string
   readonly paddingLeft12: string
   readonly pillToggle: string
   readonly pipelineExecCardStyle: string

@@ -40,7 +40,7 @@ export class JiraUpdate extends PipelineStep<JiraUpdateData> {
   // initialValues on mount
   protected defaultValues: JiraUpdateData = {
     identifier: '',
-    timeout: '1d',
+    timeout: '10m',
     name: '',
     type: StepType.JiraUpdate,
     spec: {

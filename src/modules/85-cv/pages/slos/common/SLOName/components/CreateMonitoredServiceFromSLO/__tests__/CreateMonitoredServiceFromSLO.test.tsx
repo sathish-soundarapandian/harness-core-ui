@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { render, waitFor, screen } from '@testing-library/react'
+import { render, waitFor, screen, act } from '@testing-library/react'
 import { Form, Formik } from 'formik'
 import type { UseGetReturn } from 'restful-react'
 import userEvent from '@testing-library/user-event'
+import { Button, Container } from '@harness/uicore'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import * as cdService from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import CreateMonitoredServiceFromSLO from '../CreateMonitoredServiceFromSLO'
@@ -31,7 +33,7 @@ function WrapperComponent(props: { initialValues: any }): JSX.Element {
                 setFieldForSLOForm={formikProps.setFieldValue}
                 hideModal={hideModal}
                 fetchingMonitoredServices={fetchingMonitoredServices}
-              ></CreateMonitoredServiceFromSLO>
+              />
             </Form>
           )
         }}
@@ -39,6 +41,25 @@ function WrapperComponent(props: { initialValues: any }): JSX.Element {
     </TestWrapper>
   )
 }
+
+jest.mock(
+  '@cv/pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField',
+  () => ({
+    __esModule: true,
+    default: (props: any) => (
+      <Container data-testid="OrgAccountLevelServiceEnvField">
+        <Button
+          onClick={() => props?.serviceOnSelect({ label: 'newService', value: 'newService' })}
+          title="On Service Select"
+        />
+        <Button
+          onClick={() => props?.environmentOnSelect({ label: 'newEnv', value: 'newEnv' })}
+          title="On Environment Select"
+        />
+      </Container>
+    )
+  })
+)
 
 jest.mock('services/cv', () => ({
   useCreateDefaultMonitoredService: jest.fn().mockImplementation(() => ({
@@ -65,7 +86,7 @@ jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironm
         />
         <button
           className="changeEnv"
-          onClick={() => props.environmentProps.onNewCreated({ name: 'env2', identifier: 'env2' })}
+          onClick={() => props.environmentProps.onSelect({ name: 'env2', identifier: 'env2' })}
         />
         <p>{props.environmentProps.item?.label}</p>
       </div>
@@ -80,7 +101,7 @@ jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironm
         />
         <button
           className="changeService"
-          onClick={() => props.serviceProps.onNewCreated({ name: 'service2', identifier: 'service2' })}
+          onClick={() => props.serviceProps.onSelect({ name: 'service2', identifier: 'service2' })}
         />
         <p>{props.serviceProps.item?.label}</p>
       </div>
@@ -130,5 +151,53 @@ describe('Test CreateMonitoredServiceFromSLO component', () => {
     const { getByText } = render(<WrapperComponent initialValues={initialFormData} />)
     userEvent.click(getByText('cancel'))
     await waitFor(() => expect(screen.queryByText('cv.slos.monitoredServiceText')).not.toBeInTheDocument())
+  })
+
+  test('should add and change service and environment', async () => {
+    const { container } = render(<WrapperComponent initialValues={initialFormData} />)
+    act(() => {
+      userEvent.click(container.querySelector('[class="newService"]')!)
+    })
+    act(() => {
+      userEvent.click(container.querySelector('[class="changeService"]')!)
+    })
+
+    expect(container.querySelector('[class="newService"]')).toBeInTheDocument()
+    expect(container.querySelector('[class="changeService"]')).toBeInTheDocument()
+
+    act(() => {
+      userEvent.click(container.querySelector('[class="newEnv"]')!)
+    })
+    act(() => {
+      userEvent.click(container.querySelector('[class="changeEnv"]')!)
+    })
+    expect(container.querySelector('[class="newEnv"]')).toBeInTheDocument()
+    expect(container.querySelector('[class="changeEnv"]')).toBeInTheDocument()
+  })
+
+  test('should render when ff CDS_OrgAccountLevelServiceEnvEnvGroup is true', () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CDS_OrgAccountLevelServiceEnvEnvGroup: true
+    })
+    const { container, getByTestId, rerender } = render(<WrapperComponent initialValues={initialFormData} />)
+
+    rerender(
+      <WrapperComponent
+        initialValues={{
+          serviceRef: 'service1',
+          environmentRef: 'environment1',
+          type: 'Application'
+        }}
+      />
+    )
+    expect(container.querySelector('[title="On Service Select"]')).toBeInTheDocument()
+    expect(container.querySelector('[title="On Environment Select"]')).toBeInTheDocument()
+    act(() => {
+      userEvent.click(container.querySelector('[title="On Service Select"]')!)
+    })
+    act(() => {
+      userEvent.click(container.querySelector('[title="On Environment Select"]')!)
+    })
+    expect(getByTestId('OrgAccountLevelServiceEnvField')).toBeInTheDocument()
   })
 })

@@ -7,6 +7,10 @@
 
 import { ManifestDataType } from '../../Manifesthelper'
 
+/**
+ * Amazon ECS related
+ */
+
 export const updateManifestListFirstArgEcsTaskDefinition = {
   manifest: {
     identifier: 'testidentifier',
@@ -65,6 +69,46 @@ export const updateManifestListFirstArgEcsScalableTarget = {
   manifest: {
     identifier: 'testidentifier',
     type: ManifestDataType.EcsScalableTargetDefinition,
+    spec: {
+      store: {
+        spec: {
+          branch: 'testBranch',
+          connectorRef: 'account.Git_CTR',
+          gitFetchType: 'Branch',
+          paths: ['test-path']
+        },
+        type: 'Git'
+      }
+    }
+  }
+}
+
+/**
+ * AWS Lambda related
+ */
+
+export const updateManifestListFirstArgAwsLambdaFunctionDefinition = {
+  manifest: {
+    identifier: 'testidentifier',
+    type: ManifestDataType.AwsLambdaFunctionDefinition,
+    spec: {
+      store: {
+        spec: {
+          branch: 'testBranch',
+          connectorRef: 'account.Git_CTR',
+          gitFetchType: 'Branch',
+          paths: ['test-path']
+        },
+        type: 'Git'
+      }
+    }
+  }
+}
+
+export const updateManifestListFirstArgAwsLambdaFunctionAliasDefinition = {
+  manifest: {
+    identifier: 'testidentifier',
+    type: ManifestDataType.AwsLambdaFunctionAliasDefinition,
     spec: {
       store: {
         spec: {

@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import { pick } from 'lodash-es'
 import type { SelectOption } from '@harness/uicore'
 import SecretReference, { SecretRef } from '@secrets/components/SecretReference/SecretReference'
+import type { SecretMultiSelectProps } from '@secrets/utils/SecretField'
 import { getReference } from '@common/utils/utils'
 import type {
   SecretResponseWrapper,
@@ -19,6 +20,7 @@ import type {
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
+import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import css from './CreateOrSelectSecret.module.scss'
 
 export interface SecretReference {
@@ -30,7 +32,7 @@ export interface SecretReference {
   referenceString: string
 }
 
-export interface CreateOrSelectSecretProps {
+export interface CreateOrSelectSecretProps extends SecretMultiSelectProps {
   type?: SecretResponseWrapper['secret']['type']
   onSuccess: (secret: SecretReference) => void
   secretsListMockData?: ResponsePageSecretResponseWrapper
@@ -42,6 +44,7 @@ export interface CreateOrSelectSecretProps {
   setSecretType?: (val: SelectOption) => void
   scope?: ScopedObjectDTO
   selectedSecret?: string
+  identifiersFilter?: ScopeAndIdentifier[]
 }
 
 const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
@@ -55,7 +58,11 @@ const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
   secretType,
   setSecretType,
   scope,
-  selectedSecret
+  selectedSecret,
+  selectedSecrets = [],
+  isMultiSelect = false,
+  onMultiSelect,
+  identifiersFilter
 }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   return (
@@ -69,6 +76,9 @@ const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
             referenceString: getReference(data.scope, data.identifier) as string
           })
         }}
+        onMultiSelect={onMultiSelect}
+        selectedSecrets={selectedSecrets}
+        isMultiSelect={isMultiSelect}
         accountIdentifier={accountId}
         orgIdentifier={scope ? scope.orgIdentifier : orgIdentifier}
         projectIdentifier={scope ? scope.projectIdentifier : projectIdentifier}
@@ -79,6 +89,7 @@ const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
         secretType={secretType}
         setSecretType={setSecretType}
         selectedSecret={selectedSecret}
+        identifiersFilter={identifiersFilter}
       />
     </section>
   )

@@ -38,10 +38,17 @@ export function QueryContent(props: QueryContentProps): JSX.Element {
     isFetchButtonDisabled = false
   } = props
   const { getString } = useStrings()
+  const [key, setKey] = useState<string | null>(null)
+
+  useEffect(() => {
+    setKey(getMultiTypeFromValue(query))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (!isEmpty(query) && mandatoryFields.every(v => v) && isAutoFetch && !isConnectorRuntimeOrExpression) {
       handleFetchRecords()
+      setKey(null)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, isAutoFetch])
@@ -57,6 +64,7 @@ export function QueryContent(props: QueryContentProps): JSX.Element {
           </Layout.Horizontal>
           <CVMultiTypeQuery
             name={textAreaName || MapGCPLogsToServiceFieldNames.QUERY}
+            key={key ? key : undefined}
             expressions={defaultTo(expressions, [])}
             fetchRecords={handleFetchRecords}
             disableFetchButton={isEmpty(query) || isConnectorRuntimeOrExpression || loading}

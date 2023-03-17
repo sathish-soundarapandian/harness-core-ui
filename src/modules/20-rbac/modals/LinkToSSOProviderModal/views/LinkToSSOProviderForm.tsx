@@ -26,8 +26,6 @@ import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { useToaster } from '@common/components'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -74,7 +72,6 @@ const getSelectPlaceholder = (
 }
 
 const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
-  const isNgLDAPEnabled = useFeatureFlag(FeatureFlag.NG_ENABLE_LDAP_CHECK)
   const { onSubmit, userGroupData } = props
   const { getRBACErrorMessage } = useRBACError()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -121,10 +118,7 @@ const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
   const ssoSettings: SelectOptionWithType[] = useMemo(
     () =>
       (authSettingsData || []).reduce<SelectOptionWithType[]>((acc, setting: SAMLSettings) => {
-        if (
-          (setting.settingsType === 'SAML' && setting.authorizationEnabled) ||
-          (setting.settingsType === 'LDAP' && isNgLDAPEnabled)
-        ) {
+        if ((setting.settingsType === 'SAML' && setting.authorizationEnabled) || setting.settingsType === 'LDAP') {
           acc.push({
             label: setting.displayName || setting.identifier,
             value: setting.identifier,
@@ -233,9 +227,7 @@ const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
                           label={getString('rbac.userDetails.linkToSSOProviderModal.groupNameLabel')}
                         />
                       )}
-                      {isNgLDAPEnabled && getSelectedSSOType(formik.values.sso)?.ssoType === 'LDAP' && (
-                        <LinkToLDAPProviderForm />
-                      )}
+                      {getSelectedSSOType(formik.values.sso)?.ssoType === 'LDAP' && <LinkToLDAPProviderForm />}
                     </Layout.Vertical>
                   </Container>
                   <Layout.Horizontal>

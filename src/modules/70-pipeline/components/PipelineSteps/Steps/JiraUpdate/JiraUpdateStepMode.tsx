@@ -34,7 +34,7 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { JiraFieldNG, JiraProjectBasicNG, JiraStatusNG, useGetJiraProjects, useGetJiraStatuses } from 'services/cd-ng'
+import { JiraFieldNG, JiraStatusNG, useGetJiraStatuses } from 'services/cd-ng'
 import type {
   AccountPathProps,
   GitQueryParams,
@@ -44,9 +44,8 @@ import type {
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { isMultiTypeRuntime } from '@common/utils/utils'
+import { isMultiTypeFixed, isMultiTypeRuntime } from '@common/utils/utils'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JiraCreateFieldType } from '../JiraCreate/types'
 import { getKVFieldsToBeAddedInForm, getSelectedFieldsToBeAddedInForm } from '../JiraCreate/helper'
@@ -62,8 +61,6 @@ import css from '../JiraCreate/JiraCreate.module.scss'
 
 function FormContent({
   formik,
-  refetchProjects,
-  projectsResponse,
   refetchStatuses,
   fetchingStatuses,
   statusFetchError,
@@ -80,13 +77,11 @@ function FormContent({
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
 
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [projectOptions, setProjectOptions] = useState<JiraProjectSelectOption[]>([])
   const [statusOptions, setStatusOptions] = useState<SelectOption[]>([])
   const connectorRefFixedValue = getGenuineValue(formik.values.spec.connectorRef)
-  const [selectedProjectKey, setSelectedProjectKey] = useState<string>('')
-  const [selectedIssueTypeKey, setSelectedIssueTypeKey] = useState<string>('')
-  const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
-
+  const issueKeyValue = isMultiTypeFixed(getMultiTypeFromValue(formik.values.spec.issueKey))
+    ? formik.values.spec.issueKey
+    : ''
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -96,17 +91,7 @@ function FormContent({
   }
   const jiraType = 'updateMode'
   useEffect(() => {
-    // If connector value changes in form, fetch projects
-    // second block is needed so that we don't fetch projects if type is expression
-    // CDC-15633
-    if (connectorRefFixedValue && connectorValueType === MultiTypeInputType.FIXED) {
-      refetchProjects({
-        queryParams: {
-          ...commonParams,
-          connectorRef: connectorRefFixedValue.toString()
-        }
-      })
-
+    if (connectorRefFixedValue) {
       refetchStatuses({
         queryParams: {
           ...commonParams,
@@ -120,19 +105,6 @@ function FormContent({
       formik.setFieldValue('spec.selectedOptionalFields', [])
     }
   }, [connectorRefFixedValue])
-
-  useEffect(() => {
-    let options: JiraProjectSelectOption[] = []
-    const projectResponseList: JiraProjectBasicNG[] = projectsResponse?.data || []
-    options =
-      projectResponseList.map((project: JiraProjectBasicNG) => ({
-        label: project.name || '',
-        value: project.id || '',
-        key: project.key || ''
-      })) || []
-
-    setProjectOptions(options)
-  }, [projectsResponse?.data])
 
   useEffect(() => {
     // get status by connector ref response
@@ -158,14 +130,10 @@ function FormContent({
       >
         <JiraDynamicFieldsSelector
           connectorRef={connectorRefFixedValue || ''}
-          selectedProjectKey={selectedProjectKey}
-          selectedIssueTypeKey={selectedIssueTypeKey}
-          projectOptions={projectOptions}
           selectedFields={formik.values.spec.selectedOptionalFields}
           jiraType={jiraType}
-          addSelectedFields={(fieldsToBeAdded: JiraFieldNG[], selectedProjectKeyInForm, selectedIssueTypeKeyInForm) => {
-            setSelectedProjectKey(selectedProjectKeyInForm)
-            setSelectedIssueTypeKey(selectedIssueTypeKeyInForm)
+          issueKey={issueKeyValue}
+          addSelectedFields={(fieldsToBeAdded: JiraFieldNG[]) => {
             formik.setFieldValue(
               'spec.selectedOptionalFields',
               getSelectedFieldsToBeAddedInForm(
@@ -184,11 +152,15 @@ function FormContent({
             hideDynamicFieldsModal()
           }}
           onCancel={hideDynamicFieldsModal}
-          showProjectDisclaimer={true}
         />
       </Dialog>
     )
-  }, [projectOptions, connectorRefFixedValue, formik.values.spec.selectedOptionalFields, formik.values.spec.fields])
+  }, [
+    connectorRefFixedValue,
+    formik.values.spec.selectedOptionalFields,
+    formik.values.spec.fields,
+    formik.values.spec.issueKey
+  ])
 
   function AddFieldsButton(): React.ReactElement {
     return (
@@ -255,15 +227,6 @@ function FormContent({
           selected={formik?.values?.spec.connectorRef as string}
           disabled={isApprovalStepFieldDisabled(readonly)}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-          onChange={(value: any, _unused, multiType) => {
-            // Clear dependent fields
-            setConnectorValueType(multiType)
-            if (value?.record?.identifier !== connectorRefFixedValue) {
-              if (multiType !== MultiTypeInputType.FIXED) {
-                setProjectOptions([])
-              }
-            }
-          }}
         />
         {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -273,7 +236,6 @@ function FormContent({
             variableName="spec.connectorRef"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
           />
@@ -294,7 +256,6 @@ function FormContent({
             variableName="spec.issueKey"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.issueKey', value)}
             isReadonly={readonly}
           />
@@ -339,7 +300,6 @@ function FormContent({
                     variableName="spec.transitionTo.status"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => formik.setFieldValue('spec.transitionTo.status', value)}
                     isReadonly={readonly}
                   />
@@ -383,7 +343,6 @@ function FormContent({
                     variableName="spec.transitionTo.transitionName"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => formik.setFieldValue('spec.transitionTo.transitionName', value)}
                     isReadonly={readonly}
                   />
@@ -396,7 +355,7 @@ function FormContent({
                   const selectedFieldsAfterRemoval = formik.values.spec.selectedOptionalFields?.filter(
                     (_unused, i) => i !== index
                   )
-                  formik.setFieldValue('spec.selectedFields', selectedFieldsAfterRemoval)
+                  formik.setFieldValue('spec.selectedOptionalFields', selectedFieldsAfterRemoval)
                   const customFields = formik.values.spec.fields?.filter(field => field.name !== selectedField.name)
                   formik.setFieldValue('spec.fields', customFields)
                 }}
@@ -474,19 +433,6 @@ function JiraUpdateStepMode(
   }
 
   const {
-    refetch: refetchProjects,
-    data: projectsResponse,
-    error: projectsFetchError,
-    loading: fetchingProjects
-  } = useGetJiraProjects({
-    lazy: true,
-    queryParams: {
-      ...commonParams,
-      connectorRef: ''
-    }
-  })
-
-  const {
     refetch: refetchStatuses,
     data: statusResponse,
     error: statusFetchError,
@@ -530,13 +476,9 @@ function JiraUpdateStepMode(
               formik={formik}
               allowableTypes={allowableTypes}
               stepViewType={stepViewType}
-              refetchProjects={refetchProjects}
               refetchStatuses={refetchStatuses}
-              fetchingProjects={fetchingProjects}
               fetchingStatuses={fetchingStatuses}
               statusResponse={statusResponse}
-              projectsResponse={projectsResponse}
-              projectsFetchError={projectsFetchError}
               statusFetchError={statusFetchError}
               isNewStep={isNewStep}
               readonly={readonly}

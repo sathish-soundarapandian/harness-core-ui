@@ -42,6 +42,7 @@ type PatchKind =
   | 'removeFromExcludeList'
   | 'updateRule'
   | 'updatePermanent'
+  | 'addJiraIssueToFlag'
 
 export type PrerequisiteFeature = Pick<Prerequisite, 'feature'>
 export type VariationIdentifier = Pick<Variation, 'identifier'>[]
@@ -78,6 +79,11 @@ export interface ClauseData {
   values: string[]
   negate?: boolean
 }
+
+export interface AddJiraIssueToFlagParams {
+  issueKey: string
+}
+
 export interface AddRuleParams {
   priority: number
   serve: Serve
@@ -149,6 +155,7 @@ type ParameterType =
   | RemoveClauseOnSegmentParams
   | UpdateRuleVariation
   | UpdatePermanentParams
+  | AddJiraIssueToFlagParams
 
 export interface Instruction<Params extends ParameterType = ParameterType> {
   kind: PatchKind

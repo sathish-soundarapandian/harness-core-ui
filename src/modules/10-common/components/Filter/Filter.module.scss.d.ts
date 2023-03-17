@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly filterDrawerCloseButton: string
   readonly filterSection: string
   readonly filterSelector: string
   readonly formSection: string

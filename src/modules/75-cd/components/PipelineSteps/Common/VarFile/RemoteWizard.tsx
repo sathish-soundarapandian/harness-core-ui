@@ -220,7 +220,6 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
                         variableName="varFile.spec.store.spec.repoName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={
                           /* istanbul ignore next */ value =>
                             formik.setFieldValue('varFile.spec.store.spec.repoName', value)
@@ -254,7 +253,6 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
                         variableName="varFile.spec.store.spec.branch"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={
                           /* istanbul ignore next */ value =>
                             formik.setFieldValue('varFile.spec.store.spec.branch', value)
@@ -280,7 +278,6 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
                         variableName="varFile.spec.store.spec.commitId"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={
                           /* istanbul ignore next */ value =>
                             formik.setFieldValue('varFile.spec.store.spec.commitId', value)
@@ -390,7 +387,6 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
                       variableName={'varFile.spec.store.spec.paths'}
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={
                         /* istanbul ignore next */ val => formik?.setFieldValue('varFile.spec.store.spec.paths', val)
                       }

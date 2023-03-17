@@ -67,8 +67,7 @@ const customHooks: IACMCustomMicroFrontendProps['customHooks'] = {
 
 const IACMSideNavProps: SidebarContext = {
   navComponent: IACMSideNav,
-  subtitle: 'IACM',
-  title: 'Engineering',
+  title: 'Infrastructure as Code Management',
   icon: 'iacm'
 }
 

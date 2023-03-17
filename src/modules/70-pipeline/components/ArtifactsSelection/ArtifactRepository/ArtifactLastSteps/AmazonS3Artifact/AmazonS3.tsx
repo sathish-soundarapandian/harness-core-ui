@@ -377,7 +377,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                 variableName="bucketName"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('bucketName', value)}
                 isReadonly={isReadonly}
               />
@@ -399,7 +398,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             expressions,
             allowableTypes,
             onChange: selected => {
-              if (formik.values.bucketName !== (selected as unknown as any).value) {
+              if (formik.values.bucketName !== (selected as unknown as any)?.value) {
                 resetFieldValue(formik, 'filePath')
               }
             },
@@ -436,7 +435,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
               variableName="bucketName"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('bucketName', value)}
               isReadonly={isReadonly}
             />
@@ -473,7 +471,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                 variableName="filePath"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('filePath', value)
                 }}
@@ -530,7 +527,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
               variableName="filePath"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => {
                 formik.setFieldValue('filePath', value)
               }}
@@ -574,7 +570,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                   useValue
                   multiTypeInputProps={{
                     onChange: selected => {
-                      if (formik.values.region !== (selected as unknown as any).value) {
+                      if (formik.values.region !== (selected as unknown as any)?.value) {
                         resetFieldValue(formik, 'bucketName')
                         resetFieldValue(formik, 'filePath')
                       }
@@ -603,7 +599,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                       variableName="region"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('region', value)
                       }}
@@ -662,7 +657,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                         variableName="filePathRegex"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => {
                           formik.setFieldValue('filePathRegex', value)
                         }}

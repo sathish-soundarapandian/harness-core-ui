@@ -8,6 +8,7 @@ exports[`Test full flow should render rows with checkbox and return selected dat
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
     >
+      <div />
       <div
         class="searchBox"
       >
@@ -762,6 +763,7 @@ exports[`Test full flow should render rows with checkbox and return selected dat
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
     >
+      <div />
       <div
         class="searchBox"
       >

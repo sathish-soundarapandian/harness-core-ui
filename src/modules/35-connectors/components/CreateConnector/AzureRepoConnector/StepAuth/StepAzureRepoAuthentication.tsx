@@ -239,11 +239,15 @@ const StepAzureRepoAuthentication: React.FC<
                       >
                         {getString('authentication')}
                       </Text>
-                      <FormInput.Select
+                      <FormInput.DropDown
                         name="authType"
                         items={authOptions}
                         disabled={false}
-                        className={commonStyles.authTypeSelect}
+                        dropDownProps={{
+                          isLabel: true,
+                          filterable: false,
+                          minWidth: 'unset'
+                        }}
                       />
                     </Container>
 

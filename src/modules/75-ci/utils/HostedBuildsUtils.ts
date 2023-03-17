@@ -5,21 +5,24 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { set } from 'lodash-es'
+import { get, omit, set } from 'lodash-es'
 import { parse } from 'yaml'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorResponse, UserRepoResponse } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { StringUtils } from '@common/exports'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { Connectors } from '@connectors/constants'
+import { GIT_EXTENSION } from '@pipeline/utils/CIUtils'
 import {
-  ACCOUNT_SCOPE_PREFIX,
-  ORG_SCOPE_PREFIX,
   BitbucketPRTriggerActions,
-  getCloudPipelinePayloadWithCodebase,
-  getPipelinePayloadWithCodebase,
   GitHubPRTriggerActions,
-  GitlabPRTriggerActions
+  GitlabPRTriggerActions,
+  DEFAULT_STAGE_ID,
+  KUBERNETES_HOSTED_INFRA_ID,
+  DOCKER_REGISTRY_CONNECTOR_REF,
+  ACCOUNT_SCOPE_PREFIX,
+  CodebaseProperties
 } from '../pages/get-started-with-ci/InfraProvisioningWizard/Constants'
 
 export const DELEGATE_SELECTOR_FOR_HARNESS_PROVISIONED_DELEGATE = 'harness-kubernetes-delegate'
@@ -149,19 +152,18 @@ export const addDetailsToPipeline = ({
   return updatedPipeline
 }
 
-export const getFullRepoName = (repository: UserRepoResponse): string => {
-  const { name: repositoryName, namespace } = repository
-  return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName ?? ''
+export const getGitConnectorRepoBasedOnRepoUrl = (
+  connector: ConnectorInfoDTO,
+  repository: UserRepoResponse
+): string => {
+  const existingGitConnectorUrl: string = get(connector, 'spec.url')
+  const { name: repositoryName = '', namespace = '' } = repository
+  return existingGitConnectorUrl.endsWith(namespace) ? repositoryName : getFullRepoName(repository)
 }
 
-export const getScmConnectorPrefix = ({ orgIdentifier, projectIdentifier }: ConnectorInfoDTO): string => {
-  if (orgIdentifier && projectIdentifier) {
-    return ''
-  }
-  if (orgIdentifier) {
-    return ORG_SCOPE_PREFIX
-  }
-  return ACCOUNT_SCOPE_PREFIX
+export const getFullRepoName = (repository: UserRepoResponse): string => {
+  const { name: repositoryName = '', namespace = '' } = repository
+  return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName
 }
 
 export const getPayloadForPipelineCreation = ({
@@ -200,7 +202,156 @@ export const getPayloadForPipelineCreation = ({
     }_${UNIQUE_PIPELINE_ID}`,
     projectIdentifier,
     orgIdentifier,
-    connectorRef: `${getScmConnectorPrefix(configuredGitConnector)}${configuredGitConnector?.identifier}`,
+    connectorRef: getScopedValueFromDTO(configuredGitConnector),
     repoName: getFullRepoName(repository)
   })
+}
+
+export const getValidRepoName = (repositoryName: string): string => {
+  let repoName = repositoryName
+  if (!repositoryName) {
+    return ''
+  }
+  if (repositoryName.indexOf('/')) {
+    const tokens = repositoryName.split('/')
+    repoName = tokens.length > 0 ? tokens[tokens.length - 1] : ''
+  }
+  return encodeURI(repoName.endsWith(GIT_EXTENSION) ? repoName.replace(/\.[^/.]+$/, '') : repoName)
+}
+
+/* Certain Git operations do not work if git connector url doesn't have repo namespace suffixed to it */
+export const updateUrlAndRepoInGitConnector = (
+  existingConnector: ConnectorInfoDTO,
+  repository?: UserRepoResponse
+): ConnectorInfoDTO => {
+  const existingGitConnectorUrl: string = get(existingConnector, 'spec.url')
+  const existingValidationRepo: string = get(existingConnector, 'spec.validationRepo', '')
+  const { name: repoName = '', namespace = '' } = repository || {}
+  if (existingGitConnectorUrl.endsWith(namespace)) {
+    if (existingValidationRepo.startsWith(namespace)) {
+      return set(existingConnector, 'spec.validationRepo', repoName)
+    }
+    return existingConnector
+  }
+  return set(
+    set(existingConnector, 'spec.url', `${existingGitConnectorUrl}/${namespace}`),
+    'spec.validationRepo',
+    repoName
+  )
+}
+
+export const DefaultCIPipelineName = 'Sample Pipeline'
+
+export const getPipelinePayloadWithoutCodebase = (): Record<string, any> => {
+  return {
+    pipeline: {
+      name: '',
+      identifier: '',
+      projectIdentifier: '',
+      orgIdentifier: '',
+      stages: [
+        {
+          stage: {
+            name: DEFAULT_STAGE_ID,
+            identifier: DEFAULT_STAGE_ID,
+            type: 'CI',
+            spec: {
+              cloneCodebase: false,
+              infrastructure: {
+                type: 'KubernetesHosted',
+                spec: {
+                  identifier: KUBERNETES_HOSTED_INFRA_ID
+                }
+              },
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      type: 'Run',
+                      name: 'Echo Welcome Message',
+                      identifier: 'Echo_Welcome_Message',
+                      spec: {
+                        connectorRef: ACCOUNT_SCOPE_PREFIX.concat(DOCKER_REGISTRY_CONNECTOR_REF),
+                        image: 'alpine',
+                        shell: 'Sh',
+                        command: 'echo "Welcome to Harness CI"'
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+export const addRepositoryInfoToPipeline = ({
+  currentPipeline,
+  connectorRef,
+  repoName
+}: {
+  currentPipeline: Record<string, any>
+  connectorRef: string
+  repoName: string
+}): Record<string, any> => {
+  return set(currentPipeline, 'repository', { connector: connectorRef, name: repoName })
+}
+
+export const getCIStarterPipelineV1 = (): Record<string, any> => {
+  return {
+    version: 1,
+    name: `HelloWorld CI ${new Date().getTime().toString()}`,
+    stages: [
+      {
+        name: 'build',
+        type: 'ci',
+        spec: {
+          steps: [
+            {
+              name: 'Run echo',
+              type: 'script',
+              spec: {
+                run: 'echo "Hello Harness CI!"'
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+export const getPipelinePayloadWithCodebase = (): Record<string, any> => {
+  const originalPipeline = getPipelinePayloadWithoutCodebase()
+  return set(
+    set(originalPipeline, 'pipeline.properties', CodebaseProperties),
+    'pipeline.stages.0.stage.spec.cloneCodebase',
+    true
+  )
+}
+
+export const getCloudPipelinePayloadWithoutCodebase = (): PipelineConfig => {
+  const originalPipeline = getPipelinePayloadWithoutCodebase()
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.infrastructure', undefined)
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.execution.steps.0.step.spec.image', undefined)
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.execution.steps.0.step.spec.connectorRef', undefined)
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.platform', { os: 'Linux', arch: 'Amd64' })
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.runtime', { type: 'Cloud', spec: {} })
+  return originalPipeline
+}
+
+export const getCloudPipelinePayloadWithCodebase = (): PipelineConfig => {
+  const originalPipeline = getCloudPipelinePayloadWithoutCodebase()
+  return set(
+    set(originalPipeline, 'pipeline.properties', CodebaseProperties),
+    'pipeline.stages.0.stage.spec.cloneCodebase',
+    true
+  )
+}
+
+export const moveVersionFieldToTheTop = (existingPipeline: Record<string, any>) => {
+  return { name: get(existingPipeline, 'name'), version: 1, ...omit(existingPipeline, 'version') }
 }

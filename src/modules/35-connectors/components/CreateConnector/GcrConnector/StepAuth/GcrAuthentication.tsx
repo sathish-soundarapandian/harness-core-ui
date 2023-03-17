@@ -21,11 +21,8 @@ import {
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import {
-  DelegateTypes,
-  DelegateCardInterface,
-  setupGCPFormData
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { DelegateCardInterface, setupGCPFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 

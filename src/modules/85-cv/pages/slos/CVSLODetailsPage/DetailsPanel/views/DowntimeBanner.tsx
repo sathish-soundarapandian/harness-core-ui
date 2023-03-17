@@ -32,10 +32,10 @@ const DowntimeBanner = ({ showBanner, bannerData }: DowntimeBannerProps): JSX.El
         flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
       >
         <Text
-          icon="info-message"
+          icon="info-messaging"
           color={Color.PRIMARY_10}
           font={{ variation: FontVariation.FORM_MESSAGE_WARNING, weight: 'bold' }}
-          iconProps={{ padding: { right: 'medium' }, size: 25, className: css.infoIcon }}
+          iconProps={{ padding: { right: 'medium' }, size: 24 }}
           padding={{ right: 'medium' }}
         >
           {getString('cv.sloDowntime.label').toUpperCase()}

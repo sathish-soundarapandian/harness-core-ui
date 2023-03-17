@@ -366,7 +366,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                       variableName="connectorRef"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={
                         /* istanbul ignore next */ value => {
                           formik.setFieldValue('connectorRef', value)
@@ -457,7 +456,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                         variableName="subscriptionId"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={
                           /* istanbul ignore next */ value => {
                             formik.setFieldValue('subscriptionId', value)
@@ -541,7 +539,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                         variableName="resourceGroup"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={
                           /* istanbul ignore next */ value => {
                             formik.setFieldValue('resourceGroup', value)

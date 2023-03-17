@@ -357,7 +357,7 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
             </section>
           </div>
           <div
-            class="Layout--vertical StyledProps--main formContent"
+            class="Layout--vertical StyledProps--main formContent marginBottom"
           >
             <p
               class="StyledProps--font StyledProps--main sectionHeader"
@@ -763,7 +763,7 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
             </section>
           </div>
           <div
-            class="Layout--vertical StyledProps--main formContent"
+            class="Layout--vertical StyledProps--main formContent marginBottom"
           >
             <p
               class="StyledProps--font StyledProps--main sectionHeader"

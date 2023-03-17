@@ -124,7 +124,6 @@ function TerragruntRollbackWidget(
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         setFieldValue('spec.provisionerIdentifier', value)

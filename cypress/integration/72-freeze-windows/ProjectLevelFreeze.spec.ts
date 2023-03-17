@@ -8,7 +8,6 @@
 import {
   newProjectLevelFreezeRoute,
   existingProjectLevelFreezeRoute,
-  featureFlagsCall,
   projLevelPostFreezeCall,
   projLevelPutFreezeCall,
   projLevelGetFreezeCall
@@ -16,20 +15,6 @@ import {
 
 describe('Project Level Freeze', () => {
   beforeEach(() => {
-    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
-      cy.intercept('GET', featureFlagsCall, {
-        ...featureFlagsData,
-        resource: [
-          ...featureFlagsData.resource,
-          {
-            uuid: null,
-            name: 'NG_DEPLOYMENT_FREEZE',
-            enabled: true,
-            lastUpdatedAt: 0
-          }
-        ]
-      })
-    })
     cy.initializeRoute()
     cy.intercept('POST', projLevelPostFreezeCall, { fixture: 'pipeline/api/freeze/createFreeze' }).as(
       'createFreezeCall'

@@ -13,7 +13,6 @@ import { useStrings } from 'framework/strings'
 import { CommonRecords } from '@cv/components/CommonRecords/CommonRecords'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { CommonQueryViewDialogProps, DrawerProps } from '../../types'
-import { getRunQueryButtonTooltip } from '../CommonQueryContent/CommonQueryContent.utils'
 import css from './CommonQueryViewDialog.module.scss'
 
 export function CommonQueryViewDialog(props: CommonQueryViewDialogProps): JSX.Element {
@@ -27,8 +26,7 @@ export function CommonQueryViewDialog(props: CommonQueryViewDialogProps): JSX.El
     isOpen,
     isQueryExecuted,
     isQueryButtonDisabled,
-    isQueryFieldNotPresent,
-    queryFieldIdentifier
+    runQueryBtnTooltip
   } = props
   const { getString } = useStrings()
 
@@ -64,7 +62,7 @@ export function CommonQueryViewDialog(props: CommonQueryViewDialogProps): JSX.El
             text={getString('cv.monitoringSources.commonHealthSource.runQuery')}
             onClick={fetchRecords}
             disabled={isQueryButtonDisabled}
-            tooltip={getRunQueryButtonTooltip(query, isQueryFieldNotPresent, queryFieldIdentifier, getString)}
+            tooltip={runQueryBtnTooltip}
             margin={{ right: 'small' }}
             className={css.runQueryButton}
           />

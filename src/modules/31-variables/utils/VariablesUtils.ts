@@ -110,3 +110,6 @@ function getValueFromValidationTypeForString(spec: StringVariableConfigDTO): str
       throw Error('Unsupported validation type for String variable.')
   }
 }
+
+export const VARIABLES_DEFAULT_PAGE_SIZE = 10
+export const VARIABLES_DEFAULT_PAGE_INDEX = 0

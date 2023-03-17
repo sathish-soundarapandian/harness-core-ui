@@ -72,7 +72,7 @@ describe('RepoDetails contd testing', () => {
                 connectorRef: '<+input>',
                 gitFetchType: 'Branch',
                 repoName: RUNTIME_INPUT_VALUE,
-                paths: ['<+input>'],
+                paths: '<+input>',
                 branch: RUNTIME_INPUT_VALUE
               },
               type: undefined

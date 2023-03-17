@@ -8,8 +8,14 @@
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, isObject, merge } from 'lodash-es'
-import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
-import type { ArtifactConfig, ConnectorConfigDTO, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
+import { RepositoryFormatTypes, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type {
+  ArtifactConfig,
+  ConnectorConfigDTO,
+  PrimaryArtifact,
+  ServiceDefinition,
+  SidecarArtifact
+} from 'services/cd-ng'
 import { ENABLED_ARTIFACT_TYPES, ModalViewFor } from './ArtifactHelper'
 import {
   ArtifactTagHelperText,
@@ -23,8 +29,7 @@ import {
   RepositoryPortOrServer,
   TagTypes,
   AmazonMachineImageInitialValuesType,
-  AzureArtifactsInitialValues,
-  NexusSpecType
+  AzureArtifactsInitialValues
 } from './ArtifactInterface'
 
 export const shellScriptType: SelectOption[] = [
@@ -309,12 +314,13 @@ export const getArtifactFormData = (
   initialValues: artifactInitialValueTypes,
   selectedArtifact: ArtifactType,
   isIdentifierAllowed: boolean,
+  selectedDeploymentType?: ServiceDefinition['type'],
   isServerlessDeploymentTypeSelected = false
 ): artifactInitialValueTypes => {
   const specValues = get(initialValues, 'spec', null)
 
   if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
-    return defaultArtifactInitialValues(selectedArtifact)
+    return defaultArtifactInitialValues(selectedArtifact, selectedDeploymentType)
   }
 
   let values: artifactInitialValueTypes | null = {} as artifactInitialValueTypes
@@ -323,6 +329,24 @@ export const getArtifactFormData = (
     case ENABLED_ARTIFACT_TYPES.Jenkins:
       values = initialValues
       break
+    case ENABLED_ARTIFACT_TYPES.Bamboo:
+      values = {
+        ...initialValues,
+        spec: {
+          ...specValues,
+          artifactPaths:
+            getMultiTypeFromValue(specValues.artifactPaths) === MultiTypeInputType.FIXED &&
+            specValues.artifactPaths &&
+            specValues.artifactPaths.length
+              ? specValues.artifactPaths.map((artifactPath: string) => ({
+                  label: artifactPath,
+                  value: artifactPath
+                }))
+              : specValues.artifactPaths
+        }
+      }
+      break
+
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
     case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
     case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
@@ -335,7 +359,7 @@ export const getArtifactFormData = (
       values = getRepoValues(specValues)
       break
     case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
-      values = getRepoValuesForNexus2(initialValues as any, specValues)
+      values = getRepoValuesForNexus2(specValues)
       break
     default:
       values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
@@ -394,19 +418,14 @@ const getRepoValues = (specValues: Nexus2InitialValuesType): Nexus2InitialValues
   return formikInitialValues
 }
 
-const getRepoValuesForNexus2 = (
-  initValues: Nexus2InitialValuesType,
-  specValues: NexusSpecType
-): Nexus2InitialValuesType => {
+const getRepoValuesForNexus2 = (specValues: Nexus2InitialValuesType): Nexus2InitialValuesType => {
   const formikInitialValues: Nexus2InitialValuesType = {
-    ...initValues,
-    tagType: initValues?.tag ? TagTypes.Value : TagTypes.Regex,
-    spec: {
-      ...specValues
-    }
+    ...specValues,
+    tagType: specValues?.tag ? TagTypes.Value : TagTypes.Regex,
+    ...specValues
   }
-  if (initValues?.tag && getMultiTypeFromValue(initValues?.tag) === MultiTypeInputType.FIXED) {
-    formikInitialValues.tag = { label: initValues?.tag, value: initValues?.tag } as any
+  if (specValues?.tag && getMultiTypeFromValue(specValues?.tag) === MultiTypeInputType.FIXED) {
+    formikInitialValues.tag = { label: specValues?.tag, value: specValues?.tag } as any
   }
   return formikInitialValues
 }
@@ -443,7 +462,10 @@ export const customArtifactDefaultSpec = {
   }
 }
 
-export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): any => {
+export const defaultArtifactInitialValues = (
+  selectedArtifact: ArtifactType,
+  selectedDeploymentType?: ServiceDefinition['type']
+): any => {
   switch (selectedArtifact) {
     case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
       return {
@@ -455,6 +477,15 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         packageType: 'maven',
         package: '',
         version: RUNTIME_INPUT_VALUE
+      }
+    case ENABLED_ARTIFACT_TYPES.Bamboo:
+      return {
+        identifier: '',
+        spec: {
+          planKey: '',
+          artifactPaths: [],
+          build: ''
+        }
       }
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
       return {
@@ -489,7 +520,7 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         tag: RUNTIME_INPUT_VALUE,
         tagRegex: RUNTIME_INPUT_VALUE,
         repository: '',
-        repositoryFormat: 'docker',
+        repositoryFormat: selectedDeploymentType === ServiceDeploymentType.AwsLambda ? 'maven' : 'docker',
         spec: {
           repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl,
           artifactPath: '',

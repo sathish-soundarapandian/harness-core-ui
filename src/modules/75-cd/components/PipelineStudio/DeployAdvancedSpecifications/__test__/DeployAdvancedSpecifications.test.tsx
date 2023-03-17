@@ -19,7 +19,6 @@ import type { ManualInterventionFailureActionConfig } from 'services/cd-ng'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import * as useTelemetry from '@common/hooks/useTelemetry'
 import * as useValidationErrors from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
-import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import DeployAdvancedSpecifications from '../DeployAdvancedSpecifications'
 import overridePipelineContext from './overrideSetPipeline.json'
 
@@ -224,9 +223,6 @@ describe('Deploy advanced specifications test', () => {
     expect(container.querySelector('#skipInstance')).not.toBeInTheDocument()
   })
   test(`Render Skip Instances with enabled FF`, async () => {
-    jest.spyOn(useFeatureFlagMock, 'useFeatureFlags').mockReturnValue({
-      SSH_NG: true
-    })
     const context = getOverrideContextValue()
 
     const { container, findAllByText } = render(

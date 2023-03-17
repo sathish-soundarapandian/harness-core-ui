@@ -9,6 +9,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { InputSetViewValidateFieldsConfig, SecurityStepData, SecurityStepSpec } from './types'
 import type { SecurityFieldProps } from './SecurityField'
 
@@ -39,6 +40,10 @@ export const CONTAINER_TARGET_TYPE = {
 export const INSTANCE_TARGET_TYPE = {
   value: 'instance',
   label: 'Instance'
+}
+export const CONFIGURATION_TARGET_TYPE = {
+  value: 'configuration',
+  label: 'Configuration'
 }
 export const LOCAL_IMAGE_CONTAINER_TYPE = {
   value: 'local_image',
@@ -97,6 +102,76 @@ export const ZAP_DEFAULT_CONFIG = {
   label: 'Default'
 }
 
+export const NIKTO_DEFAULT_CONFIG = {
+  value: 'default',
+  label: 'Default'
+}
+
+export const NIKTO_FULL_CONFIG = {
+  value: 'nikto-full',
+  label: 'Full'
+}
+
+export const NIKTO_FULL_WEB_CONFIG = {
+  value: 'nikto-full-web',
+  label: 'Full Web'
+}
+
+export const NMAP_DEFAULT_CONFIG = {
+  value: 'default',
+  label: 'Default'
+}
+export const NMAP_FIREWALL_BYPASS_CONFIG = {
+  value: 'firewall-bypass',
+  label: 'Firewall Bypass'
+}
+export const NMAP_UNUSUAL_PORT_CONFIG = {
+  value: 'unusual-port',
+  label: 'Unusual Port'
+}
+export const NMAP_SMB_SECURITY_MODE_CONFIG = {
+  value: 'smb-security-mode',
+  label: 'SMB Security Mode'
+}
+export const NMAP_VULN_CONFIG = {
+  value: 'vuln',
+  label: 'Vuln'
+}
+export const NMAP_EXPLOIT_CONFIG = {
+  value: 'exploit',
+  label: 'Exploit'
+}
+
+export const PROWLER_DEFAULT_CONFIG = {
+  value: 'default',
+  label: 'Default'
+}
+export const PROWLER_HIPAA_CONFIG = {
+  value: 'hipaa',
+  label: 'Hipaa'
+}
+export const PROWLER_GDPR_CONFIG = {
+  value: 'gdpr',
+  label: 'GDPR'
+}
+export const PROWLER_EXCLUDE_EXTRAS_CONFIG = {
+  value: 'exclude_extras',
+  label: 'Exclude Extras'
+}
+
+export const METASPLOIT_WEAK_SSH_CONFIG = {
+  value: 'metasploit-weak-ssh',
+  label: 'Weak SSH'
+}
+export const METASPLOIT_OPEN_SSL_HEARTBLEED_CONFIG = {
+  value: 'metasploit-openssl-heartbleed',
+  label: 'Weak SSH'
+}
+export const METASPLOIT_DYNAMIC_BY_CVE_CONFIG = {
+  value: 'dynamic-by-cve',
+  label: 'Weak SSH'
+}
+
 export const instanceProtocolSelectItems = [
   {
     value: 'https',
@@ -150,9 +225,9 @@ export const severityOptions = (getString: getStringProp) => [
   }
 ]
 
-const specPrivileged = 'spec.privileged'
-const specSettings = 'spec.settings'
-const specRunAsUser = 'spec.runAsUser'
+export const specPrivileged = 'spec.privileged'
+export const specSettings = 'spec.settings'
+export const specRunAsUser = 'spec.runAsUser'
 
 export const authFieldsTransformConfig = (data: SecurityStepData<SecurityStepSpec>) =>
   data.spec.mode !== 'ingestion'
@@ -334,18 +409,6 @@ export const imageFieldsValidationConfig = (
   data: SecurityStepData<SecurityStepSpec>
 ): InputSetViewValidateFieldsConfig[] => [
   {
-    name: 'identifier',
-    type: ValidationFieldTypes.Identifier,
-    label: 'identifier',
-    isRequired: true
-  },
-  {
-    name: 'name',
-    type: ValidationFieldTypes.Name,
-    label: 'pipelineSteps.stepNameLabel',
-    isRequired: true
-  },
-  {
     name: 'spec.image.type',
     type: ValidationFieldTypes.Text,
     label: 'typeLabel',
@@ -387,6 +450,18 @@ export const imageFieldsValidationConfig = (
 ]
 
 export const commonFieldsValidationConfig: InputSetViewValidateFieldsConfig[] = [
+  {
+    name: 'identifier',
+    type: ValidationFieldTypes.Identifier,
+    label: 'identifier',
+    isRequired: true
+  },
+  {
+    name: 'name',
+    type: ValidationFieldTypes.Name,
+    label: 'pipelineSteps.stepNameLabel',
+    isRequired: true
+  },
   {
     name: 'spec.mode',
     type: ValidationFieldTypes.Text,
@@ -487,11 +562,11 @@ export const additionalFieldsValidationConfigEitView = [
 
 export const additionalFieldsValidationConfigInputSet: InputSetViewValidateFieldsConfig[] = [
   {
-    name: 'spec.limitMemory',
+    name: 'spec.resources.limits.memory',
     type: ValidationFieldTypes.LimitMemory
   },
   {
-    name: 'spec.limitCPU',
+    name: 'spec.resources.limits.cpu',
     type: ValidationFieldTypes.LimitCPU
   }
 ]
@@ -852,6 +927,7 @@ export const tooltipIds = {
   authType: `${tooltipPrefix}AuthType`,
   authAccessId: `${tooltipPrefix}AuthAccessId`,
   authAccessToken: `${tooltipPrefix}AuthAccessToken`,
+  authAccessRegion: `${tooltipPrefix}AuthAccessRegion`,
   imageType: `${tooltipPrefix}ImageType`,
   imageDomain: `${tooltipPrefix}ImageDomain`,
   imageName: `${tooltipPrefix}ImageName`,
@@ -877,4 +953,8 @@ export const tooltipIds = {
   toolProjectVersion: `${tooltipPrefix}ToolProjectVersion`,
   toolExclude: `${tooltipPrefix}ToolExclude`,
   toolTeamName: `${tooltipPrefix}ToolTeamName`
+}
+
+export function getCustomTooltipPrefix(step: StepType): StepType {
+  return StepType[step as keyof typeof StepType]
 }

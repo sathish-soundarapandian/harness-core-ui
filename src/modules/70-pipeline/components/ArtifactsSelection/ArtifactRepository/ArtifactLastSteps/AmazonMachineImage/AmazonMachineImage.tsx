@@ -22,7 +22,7 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { cloneDeep, defaultTo, get, isNil, memoize, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isNil, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -40,12 +40,11 @@ import {
   AmazonMachineImageInitialValuesType,
   ArtifactType,
   ImagePathProps,
-  TagTypes,
-  VariableInterface
+  TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
-import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
+import MultiTypeArrayTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeArrayTagSelector'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { useMutateAsGet } from '@common/hooks'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -225,7 +224,6 @@ function FormComponent({
                 variableName="spec.region"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('spec.region', value)
                 }}
@@ -235,7 +233,7 @@ function FormComponent({
           )}
         </div>
         <div className={css.imagePathContainer}>
-          <MultiTypeTagSelector
+          <MultiTypeArrayTagSelector
             name="spec.tags"
             className="tags-select"
             expressions={expressions}
@@ -243,7 +241,7 @@ function FormComponent({
             tags={tags}
             label={getString('pipeline.amiTags')}
             isLoadingTags={isTagsLoading}
-            initialTags={formik?.initialValues?.spec?.tags || {}}
+            initialTags={formik?.initialValues?.spec?.tags || []}
             errorMessage={get(tagsError, 'data.message', '')}
           />
           {getMultiTypeFromValue(formik.values?.spec?.tags) === MultiTypeInputType.RUNTIME && (
@@ -255,7 +253,6 @@ function FormComponent({
                 variableName="spec.tags"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('spec.tags', value)
                 }}
@@ -265,14 +262,14 @@ function FormComponent({
           )}
         </div>
         <div className={css.imagePathContainer}>
-          <MultiTypeTagSelector
+          <MultiTypeArrayTagSelector
             name="spec.filters"
             className="tags-select"
             expressions={expressions}
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
             tags={amiFilters}
             label={getString('pipeline.amiFilters')}
-            initialTags={formik?.initialValues?.spec?.filters || {}}
+            initialTags={formik?.initialValues?.spec?.filters || []}
             errorMessage={get(tagsError, 'data.message', '')}
           />
           {getMultiTypeFromValue(formik.values?.spec?.filters) === MultiTypeInputType.RUNTIME && (
@@ -284,7 +281,6 @@ function FormComponent({
                 variableName="spec.filters"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('spec.filters', value)
                 }}
@@ -357,7 +353,6 @@ function FormComponent({
                 variableName="spec.version"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.version', value)}
                 isReadonly={isReadonly}
               />
@@ -383,7 +378,6 @@ function FormComponent({
                 variableName="spec.versionRegex"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.versionRegex', value)}
                 isReadonly={isReadonly}
                 allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -422,27 +416,7 @@ export function AmazonMachineImage(
 
   const getInitialValues = (): AmazonMachineImageInitialValuesType => {
     const clonedInitialValues = cloneDeep(initialValues)
-    if (
-      clonedInitialValues?.spec?.tags &&
-      getMultiTypeFromValue(clonedInitialValues.spec.tags as string) === MultiTypeInputType.FIXED
-    ) {
-      const parsedTag = {}
-      ;(clonedInitialValues.spec?.tags as VariableInterface[])?.forEach((tag: VariableInterface) => {
-        if (tag.name) set(parsedTag, tag.name, tag.value)
-      })
-      clonedInitialValues.spec.tags = parsedTag
-    }
-    if (
-      clonedInitialValues?.spec?.filters &&
-      getMultiTypeFromValue(clonedInitialValues.spec.filters as string) === MultiTypeInputType.FIXED
-    ) {
-      const parsedFilter = {} as { [key: string]: any }
-      ;(clonedInitialValues.spec?.filters as VariableInterface[])?.forEach((tag: VariableInterface) => {
-        if (tag.name) set(parsedFilter, tag.name, tag.value)
-      })
 
-      clonedInitialValues.spec.filters = parsedFilter
-    }
     return getArtifactFormData(
       clonedInitialValues,
       selectedArtifact as ArtifactType,
@@ -465,8 +439,8 @@ export function AmazonMachineImage(
       spec: {
         connectorRef: connectorId,
         region: formData.spec?.region,
-        tags: getInSelectOptionForm(formData.spec.tags as { [key: string]: any } | string),
-        filters: getInSelectOptionForm(formData.spec?.filters as { [key: string]: any } | string),
+        tags: formData.spec.tags as { [key: string]: any } | string,
+        filters: formData.spec?.filters as { [key: string]: any } | string,
         ...versionData
       }
     })

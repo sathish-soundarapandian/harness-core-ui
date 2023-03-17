@@ -7,6 +7,7 @@
 
 export enum PAGE_NAME {
   AccountResources = 'AccountResources',
+  ProjectListing = 'ProjectListing',
   SmtpDetails = 'SmtpDetails',
   AuditTrailsPage = 'AuditTrailsPage',
   ServiceAccountsPage = 'ServiceAccountsPage',
@@ -126,7 +127,7 @@ export enum PAGE_NAME {
   CEAnomaliesOverviewPage = 'CEAnomaliesOverviewPage',
   CEBusinessMapping = 'CEBusinessMapping',
   CEDashboards = 'CEDashboards',
-  CECloudIntegration = 'CECloudIntegration',
+  CECloudIntegration = 'Cloud Integrations',
   ErrorTrackingListPage = 'ErrorTrackingListPage',
   OPAPolicyDashboard = 'OPAPolicyDashboard',
   CODEHomePage = 'CODEHomePage',
@@ -145,5 +146,6 @@ export enum PAGE_NAME {
   CFConfigurePath = 'CFConfigurePath',
   SSCAHomePage = 'SSCAHomePage',
   SSCAOverviewPage = 'SSCAOverviewPage',
-  IDPAdminPage = 'IDPAdminPage'
+  IDPAdminPage = 'IDPAdminPage',
+  ETHomePage = 'ETHomePage'
 }

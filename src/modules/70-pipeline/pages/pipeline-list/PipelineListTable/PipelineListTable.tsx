@@ -12,12 +12,13 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
-import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import routes from '@common/RouteDefinitions'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import type { PipelineListPagePathParams, SortBy } from '../types'
 import {
   CodeSourceCell,
@@ -60,15 +61,15 @@ export function PipelineListTable({
   const history = useHistory()
   const { getString } = useStrings()
   const pathParams = useParams<PipelineListPagePathParams>()
+  const { CI_YAML_VERSIONING, PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const {
     content = [],
     totalElements = 0,
     totalPages = 0,
     number = DEFAULT_PAGE_INDEX,
-    size = DEFAULT_PAGE_SIZE
+    size = PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE
   } = data
   const [currentSort, currentOrder] = sortBy
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const columns: Column<PMSPipelineSummaryResponse>[] = React.useMemo(() => {
     const getServerSortProps = (id: string) => {
@@ -139,7 +140,7 @@ export function PipelineListTable({
         disableSortBy: true
       }
     ].filter(Boolean) as unknown as Column<PMSPipelineSummaryResponse>[]
-  }, [currentOrder, currentSort, minimal])
+  }, [currentOrder, currentSort, minimal, getString, onClonePipeline, onDeletePipeline, refetchList])
 
   const paginationProps = useDefaultPaginationProps({
     itemCount: totalElements,
@@ -159,8 +160,7 @@ export function PipelineListTable({
       sortable
       getRowClassName={() => css.tableRow}
       onRowClick={rowDetails =>
-        CI_YAML_VERSIONING &&
-        pathParams.module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.valueOf().toLowerCase()
+        isSimplifiedYAMLEnabled(pathParams.module, CI_YAML_VERSIONING)
           ? history.push(routes.toPipelineStudioV1(getRouteProps(pathParams, rowDetails)))
           : history.push(routes.toPipelineStudio(getRouteProps(pathParams, rowDetails)))
       }

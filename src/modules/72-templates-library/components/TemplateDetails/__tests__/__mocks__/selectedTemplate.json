@@ -1,0 +1,20 @@
+{
+  "accountId": "dummyAccount",
+  "orgIdentifier": "dummyOrg",
+  "projectIdentifier": "dummyProject",
+  "identifier": "dummy_template",
+  "name": "dummy template",
+  "description": "",
+  "tags": {},
+  "yaml": "template:\n  name: dummy template\n  type: Pipeline\n  projectIdentifier: dummyProject\n  orgIdentifier: dummyOrg\n  spec:\n    stages:\n      - stage:\n          name: Stage 1\n          identifier: Stage_1\n          template:\n            templateRef: dummyRef\n            versionLabel: v1\n  identifier: dummy_template\n  versionLabel: v2\n",
+  "versionLabel": "v1",
+  "templateEntityType": "Pipeline",
+  "templateScope": "project",
+  "version": 0,
+  "entityValidityDetails": {
+    "valid": true
+  },
+  "lastUpdatedAt": 1677572800509,
+  "storeType": "INLINE",
+  "stableTemplate": true
+}

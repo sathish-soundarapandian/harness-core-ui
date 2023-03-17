@@ -52,6 +52,7 @@ declare interface Window {
   apiUrl: string
   segmentToken: string
   HARNESS_ENABLE_NG_AUTH_UI: boolean
+  HARNESS_ENABLE_CDN: boolean
   bugsnagClient: any
   bugsnagToken: string
   Harness: {
@@ -202,6 +203,11 @@ declare module 'iacm/MicroFrontendApp' {
 }
 
 declare module 'iacm/IACMStage' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'iacm/IACMStageInputSet' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }

@@ -21,7 +21,7 @@ export default function ValidationStatus(props: ValidationStatusProps): JSX.Elem
     case StatusOfValidation.IN_PROGRESS:
       return (
         <Text icon="steps-spinner" iconProps={{ size: 16 }}>
-          {textToDisplay || getString('cv.monitoringSources.appD.verificationsInProgress')}
+          {textToDisplay || getString('common.validationInProgress')}
         </Text>
       )
     case StatusOfValidation.NO_DATA:

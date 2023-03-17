@@ -152,7 +152,12 @@ export const ZapStepBase = (
 
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
 
-            <SecurityInstanceFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityInstanceFields
+              allowableTypes={allowableTypes}
+              formik={formik}
+              stepViewType={stepViewType}
+              showFields={{ domain: true, path: true, port: true, protocol: true }}
+            />
 
             {formik.values.spec.mode === 'orchestration' && (
               <>

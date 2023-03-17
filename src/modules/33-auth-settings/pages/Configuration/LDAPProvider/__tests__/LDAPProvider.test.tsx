@@ -105,7 +105,7 @@ describe('LDAP Provider', () => {
   })
   test('LDAP Provider Snapshot', async () => {
     const { container } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponse as AuthenticationSettingsResponse}
           canEdit={true}
@@ -119,7 +119,7 @@ describe('LDAP Provider', () => {
   })
   test('LDAP Provider Snapshot with no data', async () => {
     const { container } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={[] as AuthenticationSettingsResponse}
           canEdit={true}
@@ -136,7 +136,7 @@ describe('LDAP Provider', () => {
       .spyOn(cdngServices, 'useDeleteLdapSettings')
       .mockReturnValue({ mutate: jest.fn(() => Promise.resolve(true)) } as any)
     const { getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponse as AuthenticationSettingsResponse}
           canEdit={true}
@@ -179,7 +179,7 @@ describe('LDAP Provider', () => {
         } as any)
     )
     const { getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponse as AuthenticationSettingsResponse}
           canEdit={true}
@@ -224,7 +224,7 @@ describe('LDAP Provider', () => {
         } as any)
     )
     const { getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponse as AuthenticationSettingsResponse}
           canEdit={true}
@@ -269,7 +269,7 @@ describe('LDAP Provider', () => {
         } as any)
     )
     const { getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponse as AuthenticationSettingsResponse}
           canEdit={true}
@@ -308,7 +308,7 @@ describe('LDAP Provider', () => {
         } as any)
     )
     const { getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponse as AuthenticationSettingsResponse}
           canEdit={true}
@@ -349,7 +349,7 @@ describe('LDAP Provider', () => {
         } as any)
     )
     const { getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponse as AuthenticationSettingsResponse}
           canEdit={true}
@@ -381,7 +381,7 @@ describe('LDAP Provider', () => {
   test('LDAP Provider group sync', async () => {
     jest.spyOn(cdngServices, 'syncLdapGroupsPromise').mockImplementation(() => mockGroupSync())
     const { getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponse as AuthenticationSettingsResponse}
           canEdit={true}
@@ -412,7 +412,7 @@ describe('LDAP setup Wizard', () => {
   })
   test('Setup Wizard renders with Overview step in ADD mode', async () => {
     const { getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponseWithoutLdap}
           canEdit={true}
@@ -444,7 +444,7 @@ describe('LDAP setup Wizard', () => {
 
   test('Connection Settings step renders in LDAP wizard ADD mode ', async () => {
     const { getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponseWithoutLdap}
           canEdit={true}
@@ -485,7 +485,7 @@ describe('LDAP setup Wizard', () => {
     } as any)
 
     const { getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponseWithoutLdap}
           canEdit={true}
@@ -562,7 +562,7 @@ describe('LDAP setup Wizard', () => {
     } as any)
 
     const { getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponseWithoutLdap}
           canEdit={true}
@@ -695,7 +695,7 @@ describe('LDAP setup Wizard', () => {
 
   test('Queries persist after going to previous step and coming back', async () => {
     const { getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponseWithoutLdap}
           canEdit={true}
@@ -835,7 +835,7 @@ describe('LDAP Wizard in edit mode', () => {
     } as any)
 
     const { container, getByTestId, getByText, getAllByTestId } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponse as AuthenticationSettingsResponse}
           canEdit={true}
@@ -976,7 +976,7 @@ describe('LDAP Wizard in edit mode', () => {
     } as any)
 
     const { container, getByTestId, getByText } = render(
-      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+      <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponse as AuthenticationSettingsResponse}
           canEdit={true}

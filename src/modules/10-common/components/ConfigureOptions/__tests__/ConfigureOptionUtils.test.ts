@@ -42,19 +42,7 @@ describe('ConfigureOptionsUtils tests', () => {
       // eslint-disable-next-line jest/no-disabled-tests
       test.skip('works with allowedValues - simple', () => {
         expect(parseInput('<+input>.allowedValues(1,2,3)')).toEqual({
-          allowedValues: { values: [1, 2, 3], jexlExpression: null },
-          executionInput: false,
-          regex: null,
-          default: null
-        })
-      })
-
-      test('works with allowedValues - jexl', () => {
-        expect(parseInput('<+input>.allowedValues(jexl(${env.type} == “prod” ? aws1, aws2 : aws3, aws4))')).toEqual({
-          allowedValues: {
-            values: null,
-            jexlExpression: '${env.type} == “prod” ? aws1, aws2 : aws3, aws4'
-          },
+          allowedValues: { values: [1, 2, 3] },
           executionInput: false,
           regex: null,
           default: null
@@ -101,20 +89,20 @@ describe('ConfigureOptionsUtils tests', () => {
     // eslint-disable-next-line jest/no-disabled-tests
     test.skip('works with multiple fns', () => {
       expect(parseInput('<+input>.executionInput().allowedValues(1,2,3)')).toEqual({
-        allowedValues: { values: [1, 2, 3], jexlExpression: null },
+        allowedValues: { values: [1, 2, 3] },
         executionInput: true,
         regex: null,
         default: null
       })
 
       expect(parseInput('<+input>.allowedValues(1,2,3).executionInput()')).toEqual({
-        allowedValues: { values: [1, 2, 3], jexlExpression: null },
+        allowedValues: { values: [1, 2, 3] },
         executionInput: true,
         regex: null,
         default: null
       })
       expect(parseInput('<+input>.allowedValues(true,false).executionInput()')).toEqual({
-        allowedValues: { values: ['true', 'false'], jexlExpression: null },
+        allowedValues: { values: ['true', 'false'] },
         executionInput: true,
         regex: null,
         default: null

@@ -106,7 +106,7 @@ export const ChaosExperimentStepBase = (
 
         return (
           <FormikForm className={css.chaosExperimentStep}>
-            <Layout.Vertical spacing="medium" width="75%">
+            <Layout.Vertical spacing="small" width="75%">
               {stepViewType !== StepViewType.Template && (
                 <NameIdDescription
                   className={css.nameIdDescriptionField}
@@ -131,15 +131,25 @@ export const ChaosExperimentStepBase = (
                     onSelect={experimentID => {
                       formikProps.setFieldValue('spec.experimentRef', experimentID)
                     }}
-                    goToNewExperiment={query =>
-                      history.push({
-                        pathname: routes.toNewChaosExperiment({
-                          accountId: accountId,
-                          orgIdentifier: orgIdentifier,
-                          projectIdentifier: projectIdentifier
-                        }),
-                        search: query
-                      })
+                    goToNewExperiment={() =>
+                      history.push(
+                        routes.toNewChaosExperiment({
+                          accountId,
+                          orgIdentifier,
+                          projectIdentifier,
+                          identifier: `chaos-experiment-${(+new Date()).toString(36).slice(-3)}`
+                        })
+                      )
+                    }
+                    goToChaosExperiment={(identifier: string) =>
+                      history.push(
+                        routes.toChaosExperiment({
+                          accountId,
+                          orgIdentifier,
+                          projectIdentifier,
+                          identifier
+                        })
+                      )
                     }
                   />
                 </FormGroup>
@@ -153,7 +163,7 @@ export const ChaosExperimentStepBase = (
                     formikProps.setFieldValue('spec.expectedResilienceScore', parseInt(e.target.value))
                   }
                 />
-                <Accordion activeId="step-1">
+                <Accordion panelClassName={css.optionalConfigPanel} activeId="step-1">
                   <Accordion.Panel
                     id="optional-config"
                     summary={getString('common.optionalConfig')}

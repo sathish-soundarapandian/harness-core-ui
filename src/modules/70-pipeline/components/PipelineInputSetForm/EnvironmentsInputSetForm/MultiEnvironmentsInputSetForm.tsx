@@ -186,8 +186,8 @@ export function MultiEnvironmentsInputSetForm({
                 showInfrastructuresSelectionInputField ||
                 showInfrastructuresInputSetForm
 
-              const areEnvironmentFiltersAdded = !isEmpty(environmentInDeploymentStage.filters)
-              const areEnvironmentFiltersRuntime = !isEmpty(environmentTemplate.filters)
+              const areEnvironmentFiltersAdded = !isEmpty(environmentInDeploymentStage?.filters)
+              const areEnvironmentFiltersRuntime = !isEmpty(environmentTemplate?.filters)
 
               const envGroupScope = envGroupRef ? getScopeFromValue(envGroupRef) : null
               const scopePrefix = envGroupScope && envGroupScope !== Scope.PROJECT ? `${envGroupScope}.` : ''
@@ -364,7 +364,11 @@ export function MultiEnvironmentsInputSetForm({
 
                               return infraInputs?.identifier ? (
                                 <>
-                                  <Text font={{ size: 'normal', weight: 'bold' }} color={Color.GREY_700}>
+                                  <Text
+                                    font={{ size: 'normal', weight: 'bold' }}
+                                    padding={{ bottom: 'medium' }}
+                                    color={Color.GREY_700}
+                                  >
                                     {getString('common.infrastructurePrefix', {
                                       name: infraInputs.identifier
                                     })}

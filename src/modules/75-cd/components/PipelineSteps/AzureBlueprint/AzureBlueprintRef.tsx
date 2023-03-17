@@ -182,7 +182,6 @@ export const AzureBlueprintRef = (
                     variableName="spec.configuration.assignmentName"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     /* istanbul ignore next */
                     onChange={value => {
                       setFieldValue('spec.configuration.assignmentName', value)

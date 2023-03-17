@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -367,6 +367,9 @@ export interface AccessControlCheckError {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -412,6 +415,12 @@ export interface AuditEventDTO {
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
     | 'ERROR_BUDGET_RESET'
+    | 'START'
+    | 'END'
+    | 'PAUSE'
+    | 'RESUME'
+    | 'ABORT'
+    | 'TIMEOUT'
   auditEventData?: AuditEventData
   auditId?: string
   authenticationInfo: AuthenticationInfoDTO
@@ -430,12 +439,12 @@ export interface AuditEventDTO {
     | 'STO'
     | 'CHAOS'
     | 'SRM'
+    | 'IACM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'IACM'
   requestMetadata?: RequestMetadata
   resource: ResourceDTO
   resourceScope: ResourceScopeDTO
@@ -476,6 +485,12 @@ export interface AuditFilterProperties {
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
     | 'ERROR_BUDGET_RESET'
+    | 'START'
+    | 'END'
+    | 'PAUSE'
+    | 'RESUME'
+    | 'ABORT'
+    | 'TIMEOUT'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -503,12 +518,12 @@ export interface AuditFilterProperties {
     | 'STO'
     | 'CHAOS'
     | 'SRM'
+    | 'IACM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'IACM'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -916,6 +931,9 @@ export interface Error {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1283,6 +1301,9 @@ export interface Failure {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1331,6 +1352,16 @@ export type InvitationSource = Source & {}
 
 export type MSTeamSettingDTO = NotificationSettingDTO & {}
 
+export type NodeExecutionEventData = AuditEventData & {
+  accountIdentifier?: string
+  nodeExecutionId?: string
+  orgIdentifier?: string
+  pipelineIdentifier?: string
+  planExecutionId?: string
+  projectIdentifier?: string
+  stageIdentifier?: string
+}
+
 export interface NotificationDTO {
   accountIdentifier?: string
   channelType?: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS'
@@ -1368,6 +1399,7 @@ export interface Page {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1378,6 +1410,7 @@ export interface PageAuditEventDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1388,6 +1421,7 @@ export interface PageFilterDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1398,6 +1432,7 @@ export interface PageNotificationDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1408,6 +1443,7 @@ export interface PageResourceGroupResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1418,6 +1454,7 @@ export interface PageResourceGroupV2Response {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1500,6 +1537,9 @@ export interface ResourceDTO {
     | 'CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT'
     | 'TARGET_GROUP'
     | 'FEATURE_FLAG'
+    | 'NG_ACCOUNT_DETAILS'
+    | 'BUDGET_GROUP'
+    | 'NODE_EXECUTION'
 }
 
 export interface ResourceFilter {
@@ -2012,6 +2052,9 @@ export interface ResponseMessage {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2617,6 +2660,7 @@ export interface GetAuditEventListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetAuditEventListProps = Omit<
@@ -2769,6 +2813,7 @@ export interface ListNotificationsQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type ListNotificationsProps = Omit<
@@ -2876,6 +2921,7 @@ export interface GetResourceGroupListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetResourceGroupListProps = Omit<
@@ -3028,6 +3074,7 @@ export interface GetFilterResourceGroupListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetFilterResourceGroupListProps = Omit<
@@ -3880,6 +3927,7 @@ export interface GetResourceGroupListV2QueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetResourceGroupListV2Props = Omit<
@@ -4032,6 +4080,7 @@ export interface GetFilterResourceGroupListV2QueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetFilterResourceGroupListV2Props = Omit<

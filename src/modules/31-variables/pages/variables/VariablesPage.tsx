@@ -16,9 +16,14 @@ import { Page } from '@common/exports'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import useCreateEditVariableModal from '@variables/modals/CreateEditVariableModal/useCreateEditVariableModal'
+import { VARIABLES_DEFAULT_PAGE_INDEX, VARIABLES_DEFAULT_PAGE_SIZE } from '@variables/utils/VariablesUtils'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useGetVariablesList } from 'services/cd-ng'
@@ -30,7 +35,12 @@ const VariablesPage: React.FC = () => {
   const { getString } = useStrings()
   const variableLabel = getString('common.variables')
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
-  const [page, setPage] = useState(0)
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const {
+    page: pageIndex = VARIABLES_DEFAULT_PAGE_INDEX,
+    size: pageSize = PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : VARIABLES_DEFAULT_PAGE_SIZE
+  } = useQueryParams<CommonPaginationQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams>()
 
   useDocumentTitle(variableLabel)
 
@@ -41,8 +51,8 @@ const VariablesPage: React.FC = () => {
     refetch
   } = useGetVariablesList({
     queryParams: {
-      pageIndex: page,
-      pageSize: 10,
+      pageIndex,
+      pageSize,
       projectIdentifier,
       orgIdentifier,
       accountIdentifier: accountId,
@@ -95,7 +105,7 @@ const VariablesPage: React.FC = () => {
             alwaysExpanded
             onChange={text => {
               setSearchTerm(text.trim())
-              setPage(0)
+              updateQueryParams({ page: 0 })
             }}
             width={250}
           />
@@ -126,7 +136,6 @@ const VariablesPage: React.FC = () => {
       >
         <VariableListView
           variables={variableResponse?.data}
-          gotoPage={pageNumber => setPage(pageNumber)}
           refetch={refetch}
           openCreateUpdateVariableModal={openCreateUpdateVariableModal}
         />

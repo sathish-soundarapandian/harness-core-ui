@@ -40,18 +40,20 @@ import {
   updateStageArgEcsServiceDefinitionManifestDelete,
   updateStageArgEcsScallingPolicyManifestDelete,
   updateStageArgEcsScalableTargetManifestDelete,
-  updateStageArgManifestUpdateForPropagatedStage
+  updateStageArgManifestUpdateForPropagatedStage,
+  updateStageArgTaskDefinitionARN
 } from './helpers/helper'
 import { setupMode } from '../../PipelineStepsUtil'
 
-const fetchConnector = jest.fn().mockReturnValue({ data: connectorsData.data?.content?.[1] })
+const connectorData = { data: connectorsData.data.content[1] }
+const fetchConnector = jest.fn().mockReturnValue(connectorData)
 const fetchConnectorList = (): Promise<unknown> => Promise.resolve(connectorsData)
 
 jest.mock('services/cd-ng', () => ({
   getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectorList })),
   useGetConnector: jest.fn().mockImplementation(() => {
-    return { data: { data: connectorsData.data.content[1] }, refetch: fetchConnector, loading: false }
+    return { data: connectorData, refetch: fetchConnector, loading: false }
   }),
   useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
 }))
@@ -105,17 +107,23 @@ const testEcsManifestLastStep = async (portal: HTMLElement): Promise<void> => {
   userEvent.click(submitButton)
 }
 
-const testUpdateEcsTaskDefinitionManifest = async (): Promise<void> => {
+const testUpdateEcsTaskDefinitionManifest = async (CDS_MANIFEST_LAST_STEP: boolean): Promise<void> => {
   const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
   const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
 
-  // Check if Git tile is checked and click Continue
-  const Git = queryByValueAttribute('Git')
-  await waitFor(() => expect(Git).not.toBeNull())
-  expect(Git).toBeChecked()
-  const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
-  await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-  userEvent.click(secondStepContinueButton)
+  if (CDS_MANIFEST_LAST_STEP) {
+    // Check if second step IS NOT displayed
+    const Git = queryByValueAttribute('Git')
+    await waitFor(() => expect(Git).toBeNull()) // Because upon editing manifest, directly third step will be shown
+  } else {
+    // Check if Git tile is checked and click Continue
+    const Git = queryByValueAttribute('Git')
+    await waitFor(() => expect(Git).not.toBeNull())
+    expect(Git).toBeChecked()
+    const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
+    await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
+    userEvent.click(secondStepContinueButton)
+  }
 
   // Change fields in the last step and submit manifest
   await testEcsManifestLastStep(portal)
@@ -131,7 +139,7 @@ const TEST_PATH_PARAMS: ModulePathParams & PipelinePathProps = {
   module: 'cd'
 }
 
-describe('ManifestSelection tests for ECS', () => {
+describe('ECSServiceSpecEditable tests', () => {
   test('for Amazon ECS deployment type, add EcsTaskDefinition manifest', async () => {
     const updateStage = jest.fn()
     pipelineContextECS.updateStage = updateStage
@@ -163,6 +171,37 @@ describe('ManifestSelection tests for ECS', () => {
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgEcsTaskDefinition)
+    })
+  })
+
+  test('for Amazon ECS deployment type, move to Task Definition ARN section and provide value', async () => {
+    const updateStage = jest.fn()
+    pipelineContextECS.updateStage = updateStage
+
+    const { getByTestId, container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
+        <PipelineContext.Provider value={pipelineContextECS}>
+          <ECSServiceSpecEditable
+            initialValues={{
+              isReadonlyServiceMode: false
+            }}
+            readonly={false}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+
+    const taskDefinitionSection = getByTestId('task-definition-card')
+    const taskDefinitionARNBtn = within(taskDefinitionSection).getByText('cd.serviceDashboard.taskDefinitionArn')
+    expect(taskDefinitionARNBtn).toBeInTheDocument()
+    fireEvent.click(taskDefinitionARNBtn)
+
+    fireEvent.change(queryByNameAttribute('ecsTaskDefinitionArn')!, { target: { value: 'testTaskDefinitionARN' } })
+
+    await waitFor(() => {
+      expect(updateStage).toHaveBeenCalledWith(updateStageArgTaskDefinitionARN)
     })
   })
 
@@ -278,7 +317,7 @@ describe('ManifestSelection tests for ECS', () => {
     const updateStage = jest.fn()
     pipelineContextECSManifests.updateStage = updateStage
 
-    const { getByText, findAllByText, getAllByText } = render(
+    const { getByText, findAllByText, getAllByText, getByTestId } = render(
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
@@ -297,7 +336,14 @@ describe('ManifestSelection tests for ECS', () => {
 
     // Check if section is rendered with correct header and list items
     // Task Definition
-    expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
+    const taskDefinitionManifestSection = getByTestId('task-definition-card')
+    const taskDefinitionManifestHeaderContainer = getByTestId('task-definition-manifest-header-container')
+    expect(
+      within(taskDefinitionManifestSection).getAllByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toHaveLength(2)
+    expect(
+      within(taskDefinitionManifestHeaderContainer).getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toBeInTheDocument()
     expect(getByText('TaskDefinition_Manifest')).toBeInTheDocument()
     // Service Definition
     expect(getByText('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')).toBeInTheDocument()
@@ -311,11 +357,11 @@ describe('ManifestSelection tests for ECS', () => {
     expect(getByText('ScalableTarget_Manifest')).toBeInTheDocument()
   })
 
-  test('update EcsTaskDefinition manifest', async () => {
+  test('update EcsTaskDefinition manifest when CDS_MANIFEST_LAST_STEP is OFF', async () => {
     const updateStage = jest.fn()
     pipelineContextECSManifests.updateStage = updateStage
 
-    const { getByText, container } = render(
+    const { getByText, container, getByTestId } = render(
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
@@ -329,7 +375,24 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     // Click Edit button for Task Definition manifest
-    expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
+    const taskDefinitionManifestSection = getByTestId('task-definition-card')
+    const taskDefinitionManifestHeaderContainer = getByTestId('task-definition-manifest-header-container')
+    expect(
+      within(taskDefinitionManifestSection).getAllByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toHaveLength(2)
+    expect(
+      within(taskDefinitionManifestHeaderContainer).getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toBeInTheDocument()
+
+    // Try moving Task Definition ARN section and check if warning appears
+    const taskDefinitionArnSectionCard = getByText('cd.serviceDashboard.taskDefinitionArn')
+    userEvent.click(taskDefinitionArnSectionCard)
+    const warningDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+    expect(within(warningDialog).getByText('cd.changeTaskDefinitionTypeWarning')).toBeInTheDocument()
+    const cancelBtn = within(warningDialog).getByText('cancel')
+    userEvent.click(cancelBtn)
+
+    // continue with updating manifest
     expect(getByText('TaskDefinition_Manifest')).toBeInTheDocument()
     const editButtons = container.querySelectorAll('[data-icon="Edit"]')
     expect(editButtons).toHaveLength(4)
@@ -337,7 +400,61 @@ describe('ManifestSelection tests for ECS', () => {
     expect(taskDefinitionManifestEditButton).toBeInTheDocument()
     userEvent.click(taskDefinitionManifestEditButton)
 
-    await testUpdateEcsTaskDefinitionManifest()
+    await testUpdateEcsTaskDefinitionManifest(false)
+
+    await waitFor(() => {
+      expect(updateStage).toHaveBeenCalledWith(updateStageArgEcsTaskDefinitionManifestUpdate)
+    })
+  })
+
+  test('update EcsTaskDefinition manifest when CDS_MANIFEST_LAST_STEP is ON', async () => {
+    const updateStage = jest.fn()
+    pipelineContextECSManifests.updateStage = updateStage
+
+    const { getByText, container, getByTestId } = render(
+      <TestWrapper
+        path={TEST_PATH}
+        pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
+        defaultFeatureFlagValues={{ CDS_MANIFEST_LAST_STEP: true }}
+      >
+        <PipelineContext.Provider value={pipelineContextECSManifests}>
+          <ECSServiceSpecEditable
+            initialValues={{
+              isReadonlyServiceMode: false
+            }}
+            readonly={false}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    // Click Edit button for Task Definition manifest
+    const taskDefinitionManifestSection = getByTestId('task-definition-card')
+    const taskDefinitionManifestHeaderContainer = getByTestId('task-definition-manifest-header-container')
+    expect(
+      within(taskDefinitionManifestSection).getAllByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toHaveLength(2)
+    expect(
+      within(taskDefinitionManifestHeaderContainer).getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toBeInTheDocument()
+
+    // Try moving Task Definition ARN section and check if warning appears
+    const taskDefinitionArnSectionCard = getByText('cd.serviceDashboard.taskDefinitionArn')
+    userEvent.click(taskDefinitionArnSectionCard)
+    const warningDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+    expect(within(warningDialog).getByText('cd.changeTaskDefinitionTypeWarning')).toBeInTheDocument()
+    const cancelBtn = within(warningDialog).getByText('cancel')
+    userEvent.click(cancelBtn)
+
+    // continue with updating manifest
+    expect(getByText('TaskDefinition_Manifest')).toBeInTheDocument()
+    const editButtons = container.querySelectorAll('[data-icon="Edit"]')
+    expect(editButtons).toHaveLength(4)
+    const taskDefinitionManifestEditButton = editButtons[0]
+    expect(taskDefinitionManifestEditButton).toBeInTheDocument()
+    userEvent.click(taskDefinitionManifestEditButton)
+
+    await testUpdateEcsTaskDefinitionManifest(true)
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgEcsTaskDefinitionManifestUpdate)
@@ -348,7 +465,7 @@ describe('ManifestSelection tests for ECS', () => {
     const updateStage = jest.fn()
     pipelineContextECSManifests.updateStage = updateStage
 
-    const { getByText, container } = render(
+    const { getByText, container, getByTestId } = render(
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
@@ -362,7 +479,14 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     // Check if required manifest sections are present then Click Delete button of Task Definition manifest
-    expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
+    const taskDefinitionManifestSection = getByTestId('task-definition-card')
+    const taskDefinitionManifestHeaderContainer = getByTestId('task-definition-manifest-header-container')
+    expect(
+      within(taskDefinitionManifestSection).getAllByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toHaveLength(2)
+    expect(
+      within(taskDefinitionManifestHeaderContainer).getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toBeInTheDocument()
     expect(getByText('TaskDefinition_Manifest')).toBeInTheDocument()
     const deleteButtons = container.querySelectorAll('[data-icon="main-trash"]')
     expect(deleteButtons).toHaveLength(4)
@@ -473,8 +597,12 @@ describe('ManifestSelection tests for ECS', () => {
     pipelineContextECSManifests.state.selectionState.selectedStageId = 'Stage_2'
     pipelineContextECSManifests.updateStage = updateStage
 
-    const { getByText, container } = render(
-      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
+    const { getByText, container, getByTestId } = render(
+      <TestWrapper
+        path={TEST_PATH}
+        pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
+        defaultFeatureFlagValues={{ CDS_MANIFEST_LAST_STEP: true }}
+      >
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
             initialValues={{
@@ -489,7 +617,14 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     // Check if required manifest sections are present
-    expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
+    const taskDefinitionManifestSection = getByTestId('task-definition-card')
+    const taskDefinitionManifestHeaderContainer = getByTestId('task-definition-manifest-header-container')
+    expect(
+      within(taskDefinitionManifestSection).getAllByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toHaveLength(2)
+    expect(
+      within(taskDefinitionManifestHeaderContainer).getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toBeInTheDocument()
     expect(getByText('TaskDefinition_Manifest')).toBeInTheDocument()
     const editButtons = container.querySelectorAll('[data-icon="Edit"]')
     expect(editButtons).toHaveLength(1)
@@ -497,7 +632,7 @@ describe('ManifestSelection tests for ECS', () => {
     expect(taskDefinitionManifestEditButton).toBeInTheDocument()
     userEvent.click(taskDefinitionManifestEditButton)
 
-    await testUpdateEcsTaskDefinitionManifest()
+    await testUpdateEcsTaskDefinitionManifest(true)
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgManifestUpdateForPropagatedStage)
@@ -511,7 +646,7 @@ describe('ManifestSelection tests for ECS', () => {
     pipelineContextECSManifests.state.selectionState.selectedStageId = 'Stage_2'
     pipelineContextECSManifests.updateStage = updateStage
 
-    const { queryByText, getByText } = render(
+    const { queryByText, getByTestId } = render(
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
@@ -527,7 +662,14 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     // Check if required manifest sections are present
-    expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
+    const taskDefinitionManifestSection = getByTestId('task-definition-card')
+    const taskDefinitionManifestHeaderContainer = getByTestId('task-definition-manifest-header-container')
+    expect(
+      within(taskDefinitionManifestSection).getAllByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toHaveLength(2)
+    expect(
+      within(taskDefinitionManifestHeaderContainer).getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toBeInTheDocument()
     expect(queryByText('TaskDefinition_Manifest')).not.toBeInTheDocument()
   })
 
@@ -536,7 +678,7 @@ describe('ManifestSelection tests for ECS', () => {
     pipelineContextECSManifests.state.selectionState.selectedStageId = 'Stage_1'
     pipelineContextECSManifests.updateStage = updateStage
 
-    const { getByText } = render(
+    const { getByText, getByTestId } = render(
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
@@ -550,7 +692,14 @@ describe('ManifestSelection tests for ECS', () => {
       </TestWrapper>
     )
 
-    expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
+    const taskDefinitionManifestSection = getByTestId('task-definition-card')
+    const taskDefinitionManifestHeaderContainer = getByTestId('task-definition-manifest-header-container')
+    expect(
+      within(taskDefinitionManifestSection).getAllByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toHaveLength(2)
+    expect(
+      within(taskDefinitionManifestHeaderContainer).getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toBeInTheDocument()
     expect(getByText('TaskDefinition_Manifest')).toBeInTheDocument()
   })
 
@@ -558,7 +707,7 @@ describe('ManifestSelection tests for ECS', () => {
     const updateStage = jest.fn()
     pipelineContextECSManifests.updateStage = updateStage
 
-    const { getByText, getAllByText, findAllByText } = render(
+    const { getByText, getAllByText, findAllByText, getByTestId } = render(
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
@@ -576,7 +725,14 @@ describe('ManifestSelection tests for ECS', () => {
     expect(allPlusAddManifestButtons).toHaveLength(2)
 
     // Check header of each manifest section card
-    expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
+    const taskDefinitionManifestSection = getByTestId('task-definition-card')
+    const taskDefinitionManifestHeaderContainer = getByTestId('task-definition-manifest-header-container')
+    expect(
+      within(taskDefinitionManifestSection).getAllByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toHaveLength(2)
+    expect(
+      within(taskDefinitionManifestHeaderContainer).getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toBeInTheDocument()
     expect(getByText('TaskDefinition_Manifest')).toBeInTheDocument()
     expect(getByText('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')).toBeInTheDocument()
     expect(getAllByText('common.headerWithOptionalText')).toHaveLength(2)

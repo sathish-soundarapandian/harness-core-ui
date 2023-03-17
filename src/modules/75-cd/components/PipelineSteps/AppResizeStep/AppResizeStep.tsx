@@ -171,7 +171,6 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
                     variableName={getString('cd.steps.tas.totalInstances')}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         setFieldValue('newAppInstances', value)
@@ -198,7 +197,6 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
                     variableName={getString('cd.steps.tas.oldAppInstances')}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         setFieldValue('oldAppInstances', value)

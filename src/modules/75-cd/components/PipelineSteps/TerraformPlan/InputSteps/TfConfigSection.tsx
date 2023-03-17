@@ -37,9 +37,9 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType, isBackendConfig } = props
-
-  const configPath = getPath(true, false, isBackendConfig)
-  const config = inputSetData?.template?.spec?.configuration
+  const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
+  const configPath = getPath(true, false, isBackendConfig, fieldPath)
+  const config = get(inputSetData?.template?.spec, `${fieldPath}`)
   const configSpec = get(inputSetData?.template, configPath)
   const store = configSpec?.store
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{

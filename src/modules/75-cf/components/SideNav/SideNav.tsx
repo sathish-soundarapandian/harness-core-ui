@@ -34,7 +34,7 @@ export default function CFSideNav(): React.ReactElement {
   const events = useFeatureFlagTelemetry()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
 
-  const { FF_GITSYNC, FF_PIPELINE } = useFeatureFlags()
+  const { FF_GITSYNC } = useFeatureFlags()
 
   /* istanbul ignore next */
   const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
@@ -76,12 +76,10 @@ export default function CFSideNav(): React.ReactElement {
           />
           <SidebarLink label={getString('environments')} to={withActiveEnvironment(routes.toCFEnvironments(params))} />
 
-          {FF_PIPELINE && (
-            <SidebarLink
-              label={getString('pipelines')}
-              to={withActiveEnvironment(routes.toPipelines({ ...params, module: 'cf' }))}
-            />
-          )}
+          <SidebarLink
+            label={getString('pipelines')}
+            to={withActiveEnvironment(routes.toPipelines({ ...params, module: 'cf' }))}
+          />
           <SidebarLink
             label={getString('cf.shared.getStarted')}
             to={withActiveEnvironment(routes.toCFOnboarding(params))}

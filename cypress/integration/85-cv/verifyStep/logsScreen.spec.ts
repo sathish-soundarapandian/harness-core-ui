@@ -4,13 +4,15 @@ import {
   pipelineExecutionSummaryAPI,
   pipelineListAPI
 } from '../../../support/70-pipeline/constants'
+import { featureFlagsCall } from '../../../support/85-cv/common'
 
 import {
   aggregateProjectsCall,
-  deploymentActivitySummaryAPI,
   deploymentTimeseriesDataAPI,
   deploymentTimeseriesDataWithFilters,
   deploymentTimeseriesDataWithNodeFilterAPI,
+  feedbackHistory,
+  feedbackHistoryResponse,
   gitSyncCall,
   healthSourceAPI,
   logsListCall,
@@ -23,6 +25,8 @@ import {
   logsRadarChartDataCLusterFilterCall,
   logsRadarChartDataNodeFilterCall,
   nodeNamesFilterAPI,
+  overviewCall,
+  overviewCallResponse,
   pipelinesFetchCall,
   pipelinesSummaryFetchCall,
   pipelinesYamlFetchCall,
@@ -30,8 +34,23 @@ import {
   transactionsFilterAPI
 } from '../../../support/85-cv/verifyStep/constants'
 
-describe.skip('Verify step', () => {
+describe('Verify step', () => {
   beforeEach(() => {
+    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+      cy.intercept('GET', featureFlagsCall, {
+        ...featureFlagsData,
+        resource: [
+          ...featureFlagsData.resource,
+          {
+            uuid: null,
+            name: 'SRM_LOG_FEEDBACK_ENABLE_UI',
+            enabled: true,
+            lastUpdatedAt: 0
+          }
+        ]
+      })
+    })
+
     cy.intercept('POST', pipelineListAPI, { fixture: '/pipeline/api/pipelines/getPipelineList' }).as('pipelineList')
     cy.intercept('GET', pipelinesSummaryFetchCall, { fixture: '/pipeline/api/pipelines/pipelineSummary' }).as(
       'pipelineSummary'
@@ -48,9 +67,9 @@ describe.skip('Verify step', () => {
     cy.intercept('GET', pipelineExecutionForNodeAPI, { fixture: '/pipeline/api/pipelines/getNodeExecutionDetails' }).as(
       'pipelineExecutionForNode'
     )
-    cy.intercept('GET', deploymentActivitySummaryAPI, { fixture: '/cv/verifyStep/getDeploymentActivitySummary' }).as(
-      'deployment-activity-summary'
-    )
+
+    cy.intercept('GET', overviewCall, overviewCallResponse).as('overviewCall')
+
     cy.intercept('GET', deploymentTimeseriesDataAPI, { fixture: '/cv/verifyStep/getDeploymentTimeseriesData' }).as(
       'deploymentTimeseriesData'
     )
@@ -97,6 +116,7 @@ describe.skip('Verify step', () => {
       'logsRadarChartDataCLusterFilterCall'
     )
     cy.intercept('GET', logsListMinSliderFilterCall, logsListCallResponse).as('logsListMinSliderFilterCall')
+    cy.intercept('GET', feedbackHistory, feedbackHistoryResponse).as('feedbackHistory')
 
     cy.findByText('NG Docker Image').click()
 
@@ -123,15 +143,11 @@ describe.skip('Verify step', () => {
 
     cy.url().should('include', '/pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline')
 
-    cy.findByText(/appd_dev/i).click()
-
-    cy.wait('@deployment-activity-summary')
-
     cy.url().should('include', '/pipelines/NG_Docker_Image/executions/')
 
     cy.findByTestId(/Logs/i).click()
 
-    cy.wait('@deployment-activity-summary')
+    cy.wait('@overviewCall')
     cy.wait('@logsListCall')
     cy.wait('@logsRadarChartDataCall')
 
@@ -152,6 +168,24 @@ describe.skip('Verify step', () => {
     cy.findByTestId(/ActivityHeadingContent_count/i).should('have.text', '8')
 
     cy.findAllByTestId(/activityHeadingContent-chart/i).should('have.length', '4')
+
+    cy.findByTestId(/updatedFeedbackDisplay/).should('exist')
+    cy.findByTestId(/appliedFeedbackDisplay/).should('exist')
+
+    cy.findByTestId(/updatedFeedbackRisk/).should('have.text', 'Medium risk')
+    cy.findByTestId(/appliedFeedbackRisk/).should('have.text', 'High risk')
+
+    cy.findByTestId(/updatedFeedbackDetails/).should('include.text', ' Updated By pranesh@harness.io on 02/26/2023')
+    cy.findByTestId(/appliedFeedbackDetails/).should('include.text', ' Updated By pranesh@harness.io on 02/26/2023')
+
+    cy.findByTestId(/updateEventPreferenceButton-Drawer/).click()
+
+    cy.wait('@feedbackHistory')
+
+    cy.get('input[name="eventPriority"]').should('have.value', 'Medium risk')
+    cy.get('textarea[name="reason"]').should('have.value', 'Some reason')
+
+    cy.findByTestId(/updatePreferenceDrawerSubmit_button/).click()
 
     cy.findByTestId(/DrawerClose_button/i).click()
 

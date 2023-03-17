@@ -49,7 +49,6 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import List from '@common/components/List/List'
 import type { StringsMap } from 'stringTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getServiceDefinitionType } from '@pipeline/utils/stageHelpers'
@@ -60,6 +59,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import MultiTypeListInputSet from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import { K8sOverrideValuesRuntimeFields } from './K8sOverrideValuesRuntimeFields'
 import K8sOverrideValuesManifest from './K8sOverrideValuesManifest'
 import type {
@@ -69,6 +69,7 @@ import type {
   K8sApplyProps,
   K8sApplyVariableStepProps
 } from './K8sInterface'
+import { SupportedInputTypesForListItems, SupportedInputTypesForListTypeField } from '../PipelineStepsUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -285,16 +286,24 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
   )
 }
 
-const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, allowableTypes, ...props }) => {
+const K8sApplyInputStep: React.FC<K8sApplyProps> = ({
+  inputSetData,
+  readonly,
+  allowableTypes,
+  stepViewType,
+  ...props
+}) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const isTemplateUsageView = [StepViewType.TemplateUsage, StepViewType.Template].includes(stepViewType as StepViewType)
+
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <TimeoutFieldInputSetView
           multiTypeDurationProps={{
             configureOptionsProps: {
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(props.stepViewType)
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             allowableTypes,
             expressions,
@@ -311,13 +320,18 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
 
       {getMultiTypeFromValue(inputSetData?.template?.spec?.filePaths) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <List
-            label={getString('filePaths')}
+          <MultiTypeListInputSet
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.filePaths`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes: SupportedInputTypesForListItems
+            }}
+            multiTypeFieldSelectorProps={{
+              label: getString('filePaths'),
+              allowedTypes: isTemplateUsageView ? SupportedInputTypesForListTypeField : [MultiTypeInputType.FIXED],
+              ...(!isTemplateUsageView && { disableTypeSelection: true })
+            }}
             disabled={readonly}
-            expressions={expressions}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            isNameOfArrayType
           />
         </div>
       )}
@@ -331,7 +345,7 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
             }}
             enableConfigureOptions={true}
             configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(props.stepViewType)
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             disabled={readonly}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipDryRun`}
@@ -350,7 +364,7 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
             }}
             enableConfigureOptions={true}
             configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(props.stepViewType)
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             disabled={readonly}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipSteadyStateCheck`}
@@ -369,7 +383,7 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
             }}
             enableConfigureOptions={true}
             configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(props.stepViewType)
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             disabled={readonly}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipRendering`}

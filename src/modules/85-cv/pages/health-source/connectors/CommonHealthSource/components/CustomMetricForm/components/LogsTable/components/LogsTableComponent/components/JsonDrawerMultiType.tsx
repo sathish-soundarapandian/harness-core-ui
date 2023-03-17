@@ -16,6 +16,7 @@ interface JsonDrawerMultiTypeProps {
   displayText: string
   disabled?: boolean
   className?: string
+  displayTextclassName?: string
   onClick: (name: string, label: string) => void
   multiType: MultiTypeInputType
   setMultiType: (fieldName: keyof CommonCustomMetricFormikInterface, updatedValue: MultiTypeInputType) => void
@@ -29,6 +30,7 @@ const JsonDrawerMultiType = ({
   label,
   disabled,
   className,
+  displayTextclassName,
   multiType,
   setMultiType
 }: JsonDrawerMultiTypeProps): JSX.Element => {
@@ -86,7 +88,8 @@ const JsonDrawerMultiType = ({
         displayText: displayText,
         icon: 'plus',
         isDisabled: disabled,
-        className: className,
+        className,
+        displayTextclassName,
         name
       }}
       fixedTypeComponent={JsonSelectorButton}

@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Redirect, Route, useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import type {
   ExecutionPathProps,
   Module,
@@ -65,7 +66,7 @@ import { WaitStepView } from '@pipeline/components/execution/StepDetails/views/W
 import { CustomApprovalView } from '@pipeline/components/execution/StepDetails/views/CustomApprovalView/CustomApprovalView'
 import { PolicyEvaluationView } from '@pipeline/components/execution/StepDetails/views/PolicyEvaluationView/PolicyEvaluationView'
 import { QueueStepView } from '@pipeline/components/execution/StepDetails/views/QueueStepView/QueueStepView'
-import type { ResourceDTO } from 'services/audit'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import routes from '@common/RouteDefinitions'
 import { ServiceNowCreateUpdateView } from '@pipeline/components/execution/StepDetails/views/ServiceNowCreateUpdateView/ServiceNowCreateUpdateView'
@@ -93,6 +94,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.PIPELINE, {
     [PermissionIdentifier.DELETE_PIPELINE]: <String stringID="rbac.permissionLabels.delete" />,
     [PermissionIdentifier.EXECUTE_PIPELINE]: <String stringID="rbac.permissionLabels.execute" />
   },
+  resourceModalSortingEnabled: true,
   // eslint-disable-next-line react/display-name
   addResourceModalBody: props => <PipelineResourceModal {...props} />,
   // eslint-disable-next-line react/display-name
@@ -109,6 +111,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SERVICE, {
     [PermissionIdentifier.DELETE_SERVICE]: <String stringID="rbac.permissionLabels.delete" />,
     [PermissionIdentifier.RUNTIMEACCESS_SERVICE]: <String stringID="rbac.permissionLabels.access" />
   },
+  resourceModalSortingEnabled: true,
   // eslint-disable-next-line react/display-name
   addResourceModalBody: props => <ServiceResourceModal {...props} />
 })
@@ -123,6 +126,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.ENVIRONMENT, {
     [PermissionIdentifier.DELETE_ENVIRONMENT]: <String stringID="rbac.permissionLabels.delete" />,
     [PermissionIdentifier.RUNTIMEACCESS_ENVIRONMENT]: <String stringID="rbac.permissionLabels.access" />
   },
+  resourceModalSortingEnabled: true,
   // eslint-disable-next-line react/display-name
   addResourceModalBody: props => <EnvironmentResourceModal {...props} />,
   addAttributeModalBody: props => <EnvironmentAttributeModal {...props} />,
@@ -271,6 +275,12 @@ AuditTrailFactory.registerResourceHandler('SERVICE', {
         accountId: accountIdentifier,
         serviceId: service.identifier
       })
+    } else if (service.identifier) {
+      return routes.toServiceStudio({
+        module,
+        accountId: accountIdentifier,
+        serviceId: service.identifier
+      })
     }
     return undefined
   }
@@ -313,6 +323,12 @@ AuditTrailFactory.registerResourceHandler('ENVIRONMENT', {
         accountId: accountIdentifier,
         environmentIdentifier: environment.identifier
       })
+    } else if (environment.identifier) {
+      return routes.toEnvironmentDetails({
+        module,
+        accountId: accountIdentifier,
+        environmentIdentifier: environment.identifier
+      })
     }
     return undefined
   }
@@ -341,6 +357,35 @@ AuditTrailFactory.registerResourceHandler('TRIGGER', {
         triggerIdentifier: trigger.identifier,
         triggerType: trigger.labels.triggerType,
         pipelineIdentifier: trigger.labels.pipelineIdentifier
+      })
+    }
+    return undefined
+  }
+})
+
+AuditTrailFactory.registerResourceHandler('NODE_EXECUTION', {
+  moduleIcon: {
+    name: 'cd-main'
+  },
+  moduleLabel: cdLabel,
+  resourceLabel: 'auditTrail.resourceLabel.nodeExecution',
+  resourceUrl: (
+    _resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: Module,
+    auditEventData?: AuditEventData
+  ) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    const { pipelineIdentifier, planExecutionId } = defaultTo(auditEventData, {}) as any
+    if (pipelineIdentifier && orgIdentifier && projectIdentifier && planExecutionId) {
+      return routes.toExecutionPipelineView({
+        module,
+        orgIdentifier,
+        projectIdentifier,
+        accountId: accountIdentifier,
+        pipelineIdentifier: pipelineIdentifier,
+        source: 'executions',
+        executionIdentifier: planExecutionId
       })
     }
     return undefined
@@ -379,7 +424,7 @@ export function PipelineRouteDestinations({
   licenseRedirectData,
   sidebarProps,
   pipelineStudioComponentV1: PipelineStudioV1
-}: PipelineRouteDestinationsProps) {
+}: PipelineRouteDestinationsProps): JSX.Element {
   return (
     <>
       <RouteWithLayout

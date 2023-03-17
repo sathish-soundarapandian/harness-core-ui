@@ -10,6 +10,8 @@ import classnames from 'classnames'
 import { noop } from 'lodash-es'
 import { Icon } from '@harness/uicore'
 import type { IconName } from '@harness/icons'
+import { CDOnboardingActions } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useAgentServiceForServerGet, V1Agent } from 'services/gitops'
 import { useStrings } from 'framework/strings'
 import css from './GitOpsAgentCard.module.scss'
@@ -17,6 +19,7 @@ import deployCss from '../DeployProvisioningWizard/DeployProvisioningWizard.modu
 
 const maxRetryCount = 30 // 5 minutes
 const pollingInterval = 10000
+const oneSecondMs = 1000
 export const depSuccessLegacy = 'deployment-success-legacy'
 export const danger = 'danger-icon'
 
@@ -30,6 +33,7 @@ export const AgentProvision = ({
   error?: string
 }) => {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
 
   const [retryCount, setRetryCount] = React.useState(0)
   const [unhealthyIcon, setUnhealthyIcon] = React.useState<IconName>('steps-spinner') // stepSpinner
@@ -44,6 +48,11 @@ export const AgentProvision = ({
   const isHealthy = data?.health?.harnessGitopsAgent?.status === 'HEALTHY'
 
   React.useEffect(() => {
+    if (isHealthy) {
+      trackEvent(CDOnboardingActions.AgentProvisionedSuccessfully, {
+        provisioningTime: `${(retryCount * pollingInterval) / oneSecondMs} seconds`
+      })
+    }
     if (agentCreateLoading || agentCreateError || isHealthy || !agent?.identifier) return
     let id: number | null
 

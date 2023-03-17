@@ -27,6 +27,7 @@ import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { TagsPopover } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useDocumentFavicon } from '@common/hooks/useDocumentFavicon'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RetryHistory from '@pipeline/components/RetryPipeline/RetryHistory/RetryHistory'
@@ -34,8 +35,12 @@ import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRu
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
+import { getFavIconDetailsFromPipelineExecutionStatus } from '@pipeline/utils/executionUtils'
 import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
+import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import css from './ExecutionHeader.module.scss'
 
 export interface ExecutionHeaderProps {
@@ -91,6 +96,13 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     )}`
   ])
 
+  const favIconDetails = React.useMemo(
+    () => getFavIconDetailsFromPipelineExecutionStatus(pipelineExecutionSummary?.status),
+    [pipelineExecutionSummary?.status]
+  )
+
+  useDocumentFavicon(favIconDetails)
+
   const repoName = pipelineExecutionSummary?.gitDetails?.repoName ?? repoNameQueryParam
   const repoIdentifier = defaultTo(
     pipelineExecutionSummary?.gitDetails?.repoIdentifier ?? repoIdentifierQueryParam,
@@ -109,6 +121,45 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     stagesExecuted: pipelineExecutionSummary?.stagesExecuted,
     isDebugMode: hasCI
   })
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
+
+  const pipelineStudioRoutingProps = {
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    accountId,
+    module,
+    repoIdentifier,
+    connectorRef,
+    repoName,
+    branch,
+    storeType: pipelineMetadata?.data?.storeType
+  }
+
+  const { openRunPipelineModalV1 } = useRunPipelineModalV1({
+    pipelineIdentifier,
+    executionId: executionIdentifier,
+    repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
+    branch,
+    connectorRef,
+    storeType: pipelineMetadata?.data?.storeType,
+    isDebugMode: hasCI
+  })
+
+  let moduleLabel = getString('common.pipelineExecution')
+  if (module) {
+    switch (module.toUpperCase() as ModuleName) {
+      case ModuleName.CD:
+        moduleLabel = getString('deploymentsText')
+        break
+      case ModuleName.CI:
+        moduleLabel = getString('buildsText')
+        break
+      case ModuleName.STO:
+        moduleLabel = getString('common.purpose.sto.continuous')
+        break
+    }
+  }
 
   return (
     <header className={css.header}>
@@ -119,7 +170,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
               ? [
                   {
                     url: routes.toDeployments({ orgIdentifier, projectIdentifier, accountId, module }),
-                    label: module === 'ci' ? getString('buildsText') : getString('deploymentsText')
+                    label: moduleLabel
                   }
                 ]
               : [
@@ -172,18 +223,11 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
           )}
           <Link
             className={css.view}
-            to={routes.toPipelineStudio({
-              orgIdentifier,
-              projectIdentifier,
-              pipelineIdentifier,
-              accountId,
-              module,
-              repoIdentifier,
-              connectorRef,
-              repoName,
-              branch,
-              storeType: pipelineMetadata?.data?.storeType
-            })}
+            to={
+              isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
+                ? routes.toPipelineStudioV1(pipelineStudioRoutingProps)
+                : routes.toPipelineStudio(pipelineStudioRoutingProps)
+            }
           >
             <Icon name="Edit" size={12} />
             <String stringID="editPipeline" />
@@ -213,8 +257,14 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             canExecute={canExecute}
             canRetry={pipelineExecutionSummary.canRetry}
             modules={pipelineExecutionSummary.modules}
-            onReRunInDebugMode={hasCI && CI_REMOTE_DEBUG ? () => openRunPipelineModal() : undefined}
-            onViewCompiledYaml={() => setViewCompiledYaml(pipelineExecutionSummary)}
+            onReRunInDebugMode={
+              hasCI && CI_REMOTE_DEBUG
+                ? CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+                  ? openRunPipelineModalV1
+                  : openRunPipelineModal
+                : undefined
+            }
+            onViewCompiledYaml={/* istanbul ignore next */ () => setViewCompiledYaml(pipelineExecutionSummary)}
           />
         </div>
       </div>
@@ -256,7 +306,10 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             </GitSyncStoreProvider>
           )
         ) : null}
-        <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
+        <ExecutionCompiledYaml
+          onClose={/* istanbul ignore next */ () => setViewCompiledYaml(undefined)}
+          executionSummary={viewCompiledYaml}
+        />
       </div>
     </header>
   )

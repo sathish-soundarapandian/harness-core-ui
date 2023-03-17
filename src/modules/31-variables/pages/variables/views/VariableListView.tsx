@@ -14,10 +14,17 @@ import { Color, FontVariation } from '@harness/design-system'
 import { String, useStrings, UseStringsReturn } from 'framework/strings'
 import { PageVariableResponseDTO, useDeleteVariable, VariableResponseDTO } from 'services/cd-ng'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
-import { getValueFromVariableAndValidationType } from '@variables/utils/VariablesUtils'
+import {
+  getValueFromVariableAndValidationType,
+  VARIABLES_DEFAULT_PAGE_INDEX,
+  VARIABLES_DEFAULT_PAGE_SIZE
+} from '@variables/utils/VariablesUtils'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import type { UseCreateUpdateVariableModalReturn } from '@variables/modals/CreateEditVariableModal/useCreateEditVariableModal'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -27,7 +34,6 @@ import css from './VariableListView.module.scss'
 
 interface SecretsListProps {
   variables?: PageVariableResponseDTO
-  gotoPage: (pageNumber: number) => void
   refetch?: () => void
   openCreateUpdateVariableModal: UseCreateUpdateVariableModalReturn['openCreateUpdateVariableModal']
 }
@@ -112,83 +118,85 @@ export function VariableListColumnHeader(getString: UseStringsReturn['getString'
   ]
 }
 
-const VariableListView: React.FC<SecretsListProps> = props => {
-  const { variables, gotoPage, refetch } = props
-  const variablesList: VariableResponseDTO[] = useMemo(() => variables?.content || [], [variables?.content])
+const RenderColumnAction: Renderer<CellProps<VariableResponseDTO>> = ({ row, column }) => {
+  const data = row.original.variable
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
-
-  const RenderColumnAction: Renderer<CellProps<VariableResponseDTO>> = ({ row, column }) => {
-    const data = row.original.variable
-    const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-    const { getRBACErrorMessage } = useRBACError()
-    const { showSuccess, showError } = useToaster()
-    const { mutate: deleteVariable } = useDeleteVariable({
-      queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
-      requestOptions: { headers: { 'content-type': 'application/json' } }
-    })
-    const { openDialog } = useConfirmationDialog({
-      contentText: <String stringID="variables.confirmDelete" vars={{ name: data.name }} />,
-      titleText: <String stringID="variables.confirmDeleteTitle" />,
-      confirmButtonText: <String stringID="delete" />,
-      cancelButtonText: <String stringID="cancel" />,
-      intent: Intent.DANGER,
-      buttonIntent: Intent.DANGER,
-      onCloseDialog: async didConfirm => {
-        if (didConfirm && data.identifier) {
-          try {
-            await deleteVariable(data.identifier)
-            showSuccess(getString('variables.successDelete', { name: data.name }))
-            ;(column as any).refetch?.()
-          } catch (err) {
-            showError(getRBACErrorMessage(err))
-          }
+  const { getRBACErrorMessage } = useRBACError()
+  const { showSuccess, showError } = useToaster()
+  const { mutate: deleteVariable } = useDeleteVariable({
+    queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
+    requestOptions: { headers: { 'content-type': 'application/json' } }
+  })
+  const { openDialog } = useConfirmationDialog({
+    contentText: <String stringID="variables.confirmDelete" vars={{ name: data.name }} />,
+    titleText: <String stringID="variables.confirmDeleteTitle" />,
+    confirmButtonText: <String stringID="delete" />,
+    cancelButtonText: <String stringID="cancel" />,
+    intent: Intent.DANGER,
+    buttonIntent: Intent.DANGER,
+    onCloseDialog: async didConfirm => {
+      if (didConfirm && data.identifier) {
+        try {
+          await deleteVariable(data.identifier)
+          showSuccess(getString('variables.successDelete', { name: data.name }))
+          ;(column as any).refetch?.()
+        } catch (err) {
+          showError(getRBACErrorMessage(err))
         }
       }
-    })
-
-    const handleDelete = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-      e.stopPropagation()
-      openDialog()
     }
+  })
 
-    const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-      e.stopPropagation()
-      ;(column as any).openCreateUpdateVariableModal({ variable: data })
-    }
-
-    return (
-      <Layout.Horizontal flex={{ alignItems: 'flex-end' }}>
-        <RbacOptionsMenuButton
-          tooltipProps={{
-            position: PopoverPosition.LEFT_TOP,
-            isDark: true,
-            interactionKind: 'click',
-            hasBackdrop: true
-          }}
-          items={[
-            {
-              icon: 'edit',
-              text: getString('edit'),
-              onClick: handleEdit,
-              permission: {
-                resource: { resourceType: ResourceType.VARIABLE },
-                permission: PermissionIdentifier.EDIT_VARIABLE
-              }
-            },
-            {
-              icon: 'trash',
-              text: getString('delete'),
-              onClick: handleDelete,
-              permission: {
-                resource: { resourceType: ResourceType.VARIABLE },
-                permission: PermissionIdentifier.DELETE_VARIABLE
-              }
-            }
-          ]}
-        />
-      </Layout.Horizontal>
-    )
+  const handleDelete = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+    e.stopPropagation()
+    openDialog()
   }
+
+  const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+    e.stopPropagation()
+    ;(column as any).openCreateUpdateVariableModal({ variable: data })
+  }
+
+  return (
+    <Layout.Horizontal flex={{ alignItems: 'flex-end' }}>
+      <RbacOptionsMenuButton
+        tooltipProps={{
+          position: PopoverPosition.LEFT_TOP,
+          isDark: true,
+          interactionKind: 'click',
+          hasBackdrop: true
+        }}
+        items={[
+          {
+            icon: 'edit',
+            text: getString('edit'),
+            onClick: handleEdit,
+            permission: {
+              resource: { resourceType: ResourceType.VARIABLE },
+              permission: PermissionIdentifier.EDIT_VARIABLE
+            }
+          },
+          {
+            icon: 'trash',
+            text: getString('delete'),
+            onClick: handleDelete,
+            permission: {
+              resource: { resourceType: ResourceType.VARIABLE },
+              permission: PermissionIdentifier.DELETE_VARIABLE
+            }
+          }
+        ]}
+      />
+    </Layout.Horizontal>
+  )
+}
+
+const VariableListView: React.FC<SecretsListProps> = props => {
+  const { variables, refetch } = props
+  const variablesList: VariableResponseDTO[] = useMemo(() => variables?.content || [], [variables?.content])
+  const { getString } = useStrings()
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
 
   const columns: Column<VariableResponseDTO>[] = useMemo(
     () => [
@@ -204,8 +212,15 @@ const VariableListView: React.FC<SecretsListProps> = props => {
         disableSortBy: true
       }
     ],
-    [refetch, props.openCreateUpdateVariableModal]
+    [refetch, props.openCreateUpdateVariableModal, getString]
   )
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: variables?.totalItems || 0,
+    pageSize: variables?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : VARIABLES_DEFAULT_PAGE_SIZE),
+    pageCount: variables?.totalPages || -1,
+    pageIndex: variables?.pageIndex || VARIABLES_DEFAULT_PAGE_INDEX
+  })
 
   return (
     <TableV2<VariableResponseDTO>
@@ -213,13 +228,7 @@ const VariableListView: React.FC<SecretsListProps> = props => {
       columns={columns}
       data={variablesList}
       name="VariableListView"
-      pagination={{
-        itemCount: variables?.totalItems || 0,
-        pageSize: variables?.pageSize || 10,
-        pageCount: variables?.totalPages || -1,
-        pageIndex: variables?.pageIndex || 0,
-        gotoPage
-      }}
+      pagination={paginationProps}
     />
   )
 }

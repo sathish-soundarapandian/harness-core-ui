@@ -141,7 +141,6 @@ function AsgCanaryDeployWidget(
                   variableName={getString('instanceFieldOptions.instances')}
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => {
                     setFieldValue('instances', value)
                   }}

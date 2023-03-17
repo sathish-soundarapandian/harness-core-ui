@@ -9,9 +9,14 @@
 declare const styles: {
   readonly body: string
   readonly buttonWrapper: string
+  readonly closeButton: string
   readonly dialogStyles: string
+  readonly infraDefinitionDetailsDrawer: string
+  readonly infraDetailsConfigurationTab: string
+  readonly infraDetailsReferencedByTab: string
   readonly modalFooter: string
   readonly nameIdCard: string
+  readonly referenceByPageBody: string
   readonly tagsPopover: string
   readonly yamlBuilder: string
 }

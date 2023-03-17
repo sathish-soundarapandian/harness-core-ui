@@ -12,6 +12,7 @@ import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import type { ContextMenuActionsProps } from '@cv/pages/monitored-service/CVMonitoredService/CVMonitoredService.types'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import { canTogglePopover } from './ContextMenuActions.utils'
 import css from './ContextMenuActions.module.scss'
 
 export default function ContextMenuActions({
@@ -24,7 +25,8 @@ export default function ContextMenuActions({
   deleteLabel,
   copyLabel,
   editLabel,
-  RbacPermissions
+  RbacPermissions,
+  otherMenuItems
 }: ContextMenuActionsProps): JSX.Element {
   const { getString } = useStrings()
   const [popoverOpen, setPopoverOpen] = useState(false)
@@ -76,6 +78,7 @@ export default function ContextMenuActions({
               permission={RbacPermissions?.delete}
             />
           )}
+          {otherMenuItems ? otherMenuItems : null}
         </Menu>
       }
     >
@@ -85,7 +88,7 @@ export default function ContextMenuActions({
         color={Color.GREY_350}
         onClick={e => {
           e.stopPropagation()
-          if (!!onEdit || !!onDelete) {
+          if (canTogglePopover({ onEdit, onDelete, otherMenuItems })) {
             setPopoverOpen(!popoverOpen)
           }
         }}

@@ -20,13 +20,14 @@ export interface ContextMenuActionsProps {
   onEdit?(): void
   onCopy?(): void
   onDelete?(): void
-  titleText: string
-  contentText: string | JSX.Element
+  titleText?: string
+  contentText?: string | JSX.Element
   confirmButtonText?: string
   deleteLabel?: string
   copyLabel?: string
   editLabel?: string
   RbacPermissions?: ContextMenuRbacPermissions
+  otherMenuItems?: JSX.Element
 }
 
 export enum FilterTypes {

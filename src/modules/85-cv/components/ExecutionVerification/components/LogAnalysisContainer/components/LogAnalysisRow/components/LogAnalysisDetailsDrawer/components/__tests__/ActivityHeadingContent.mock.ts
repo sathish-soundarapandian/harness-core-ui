@@ -1,3 +1,4 @@
+import type { LogFeedback } from 'services/cv'
 import type { ActivityHeadingContentProps } from '../../LogAnalysisDetailsDrawer.types'
 
 export const messageFrequency: ActivityHeadingContentProps['messageFrequency'] = [
@@ -86,3 +87,14 @@ export const messageFrequency: ActivityHeadingContentProps['messageFrequency'] =
     ]
   }
 ]
+
+export const feedbackMock: LogFeedback = {
+  feedbackScore: 'HIGH_RISK',
+  description:
+    'Some applied reason Some applied reason Some applied reason Some applied reason Some applied reasonSome applied reason',
+  createdBy: 'pranesh@harness.io',
+  createdAt: 1677414780069,
+  updatedby: 'pranesh@harness.io',
+  updatedAt: 1677414840933,
+  feedbackId: 'abc'
+}

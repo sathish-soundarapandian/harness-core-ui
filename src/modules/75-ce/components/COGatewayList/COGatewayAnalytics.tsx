@@ -389,7 +389,7 @@ const COGatewayAnalytics: React.FC<COGatewayAnalyticsProps> = props => {
         <Container className={css.analyticsHeader}>
           <Layout.Vertical spacing="medium">
             <Heading level={2} font={{ weight: 'bold' }}>
-              {getString('ce.co.autoStoppingRule.configuration.step4.advancedConfiguration')}
+              {getString('pipeline.advancedConfiguration')}
             </Heading>
             <FixedScheduleAccordion service={props.service?.data} />
           </Layout.Vertical>

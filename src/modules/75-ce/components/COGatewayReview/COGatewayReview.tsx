@@ -239,7 +239,7 @@ const COGatewayReview: React.FC<COGatewayReviewProps> = props => {
         isBoolean(props.gatewayDetails.opts?.dry_run) ||
         !_isEmpty(filteredSchedules)) && (
         <ReviewDetailsSection isEditable onEdit={handleAdvancedConfigEdit}>
-          <Heading level={2}>{getString('ce.co.autoStoppingRule.configuration.step4.advancedConfiguration')}</Heading>
+          <Heading level={2}>{getString('pipeline.advancedConfiguration')}</Heading>
           <Layout.Vertical style={{ marginTop: 'var(--spacing-large)' }}>
             <Layout.Horizontal
               spacing={'large'}

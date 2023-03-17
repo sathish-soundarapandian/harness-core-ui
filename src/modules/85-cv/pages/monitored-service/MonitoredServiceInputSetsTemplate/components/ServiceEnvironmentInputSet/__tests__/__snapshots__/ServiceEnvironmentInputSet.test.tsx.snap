@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceEnvironmentInputSet should render correctly with no service or environment values provided 1`] = `<div />`;

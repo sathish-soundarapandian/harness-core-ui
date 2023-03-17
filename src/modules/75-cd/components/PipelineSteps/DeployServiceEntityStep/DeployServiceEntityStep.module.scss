@@ -32,22 +32,22 @@
   width: 100%;
 }
 .editServiceDialog {
-  background-color: var(--form-bg) !important;
-  padding: 36px 40px 0 40px !important;
   :global {
-    .bp3-dialog-header {
-      margin: -36px -40px 0 -40px !important;
-      min-height: 50px !important;
-      box-shadow: var(--elevation-2) !important;
-      z-index: 1;
-      .bp3-heading {
-        margin-left: 40px !important;
+    .ModalDialog--body {
+      padding: 0 !important;
+
+      &::before,
+      &::after {
+        margin: 0 !important;
       }
     }
-    .Dialog--close {
-      z-index: 1;
+
+    .ModalDialog--bodyContent {
+      padding: 0 !important;
     }
   }
+
+  overflow: hidden;
 }
 
 .inputSetSpinner {

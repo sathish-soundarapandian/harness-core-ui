@@ -118,7 +118,7 @@ describe('SLOTargetChartWrapper', () => {
       </TestWrapper>
     )
 
-    expect(screen.getByText('cv.pleaseFillTheRequiredFieldsToSeeTheSLIData')).toBeInTheDocument()
+    expect(screen.getByText('cv.slos.ratioObjectiveValueCheck')).toBeInTheDocument()
   })
 
   test('it should not render empty state for Threshold based with objective value > 100', async () => {
@@ -139,6 +139,14 @@ describe('SLOTargetChartWrapper', () => {
           monitoredServiceIdentifier="Service_1_Environment_1"
           serviceLevelIndicator={serviceLevelIndicatorThreshold}
           retryOnError={jest.fn()}
+          showMetricChart
+          showSLIMetricChart
+          sliGraphData={{
+            dataPoints: [
+              { timeStamp: 1000, value: 10 },
+              { timeStamp: 1200, value: 11 }
+            ]
+          }}
         />
       </TestWrapper>
     )

@@ -40,7 +40,7 @@ const ServiceDetailsSummary: React.FC = () => {
 
   const timeServiceDetail = convertStringToDateTimeRange(serviceTimeRange)
   return (
-    <div>
+    <Container padding={{ left: 'large', right: 'medium' }}>
       <Container flex className={css.timeRangeContainer}>
         <TimeRangeSelector timeRange={timeServiceDetail?.range} setTimeRange={setServiceTimeRange} />
       </Container>
@@ -62,7 +62,7 @@ const ServiceDetailsSummary: React.FC = () => {
           </Layout.Vertical>
         </DeploymentsTimeRangeContext.Provider>
       </Layout.Horizontal>
-    </div>
+    </Container>
   )
 }
 

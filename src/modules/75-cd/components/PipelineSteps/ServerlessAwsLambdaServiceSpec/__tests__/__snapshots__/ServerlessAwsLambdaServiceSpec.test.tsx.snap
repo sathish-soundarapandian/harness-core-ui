@@ -23,7 +23,7 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
           style="width: 100%;"
         >
           <div
-            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+            class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-medium"
           >
             <div
               class="Layout--vertical StyledProps--main"

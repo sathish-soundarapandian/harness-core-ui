@@ -35,6 +35,11 @@ describe('Context Menu test', () => {
         path="/account/:accountId/projects"
         pathParams={{ accountId: 'testAcc' }}
         defaultAppStoreValues={defaultAppStoreValues}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
       >
         <ContextMenu
           project={projectWithModules}
@@ -72,7 +77,7 @@ describe('Context Menu test', () => {
     test('Go to CD ', async () => {
       fireEvent.click(getByText('projectsOrgs.gotoCD'))
       expect(
-        getByTestId('location').innerHTML.endsWith(routes.toDeployments({ ...routeParams, module: 'cd' }))
+        getByTestId('location').innerHTML.endsWith(routes.toProjectOverview({ ...routeParams, module: 'cd' }))
       ).toBeTruthy()
     }),
     test('Go to CE ', async () => {

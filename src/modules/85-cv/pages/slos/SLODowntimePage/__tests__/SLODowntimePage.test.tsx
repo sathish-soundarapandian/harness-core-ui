@@ -67,6 +67,13 @@ describe('SLO Downtime page', () => {
       error: { data: { message: 'Oops, something went wrong on our end. Please contact Harness Support.' } },
       loading: false
     } as any)
+    jest.spyOn(cvServices, 'useGetHistory').mockReturnValue({
+      data: downtimeHistoryResponse,
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    } as any)
+
     const { getByText } = render(
       <TestWrapper>
         <SLODowntimePage />
@@ -245,16 +252,13 @@ describe('SLO Downtime page', () => {
 
 describe('DowntimeHistory page', () => {
   test('should render downtime history view and change filters', async () => {
-    jest.spyOn(cvServices, 'useGetHistory').mockReturnValue({
-      data: downtimeHistoryResponse,
-      refetch: jest.fn(),
-      error: null,
-      loading: false
-    } as any)
-
     const { getByText, container, getAllByText } = render(
       <TestWrapper>
-        <DowntimeHistory />
+        <DowntimeHistory
+          downtimeHistoryLoading={false}
+          downtimeHistoryData={downtimeHistoryResponse as any}
+          refetchHistoryData={jest.fn()}
+        />
       </TestWrapper>
     )
 
@@ -275,16 +279,14 @@ describe('DowntimeHistory page', () => {
   })
 
   test('should render no error state in downtime history view', async () => {
-    jest.spyOn(cvServices, 'useGetHistory').mockReturnValue({
-      data: null,
-      refetch: jest.fn(),
-      error: { data: { message: 'Oops, something went wrong on our end. Please contact Harness Support.' } },
-      loading: false
-    } as any)
-
     const { getByText } = render(
       <TestWrapper>
-        <DowntimeHistory />
+        <DowntimeHistory
+          downtimeHistoryLoading={false}
+          downtimeHistoryData={null}
+          refetchHistoryData={jest.fn()}
+          downtimeHistoryError={'Oops, something went wrong on our end. Please contact Harness Support.'}
+        />
       </TestWrapper>
     )
 

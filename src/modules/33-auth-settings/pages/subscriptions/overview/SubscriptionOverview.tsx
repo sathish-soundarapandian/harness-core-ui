@@ -18,10 +18,12 @@ import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/ho
 import { usePreferenceStore, PreferenceScope } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import type { CDModuleLicenseDTO } from 'services/portal'
 import SubscriptionDetailsCard from './SubscriptionDetailsCard'
 import SubscriptionUsageCard from './SubscriptionUsageCard'
 import { ServiceLicenseTable } from './ServiceLicenseTable'
+import { ServiceLicenseGraphs } from './ServiceLicenseGraphs'
 import type { TrialInformation } from '../SubscriptionsPage'
 interface SubscriptionOverviewProps {
   accountName?: string
@@ -60,7 +62,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const [orgName, setOrgName] = useState<string>('')
   const [projName, setProjName] = useState<string>('')
   const [serviceName, setServiceName] = useState<string>('')
-
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   const sort = useMemo(
     () => (sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort),
     [queryParams.sort, sortingPreference]
@@ -100,7 +102,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
       {enabled && licenseData && module !== ModuleName.CHAOS && (
         <SubscriptionUsageCard module={module} licenseData={licenseData} />
       )}
-      {module === 'CD' && (licenseData as CDModuleLicenseDTO)?.cdLicenseType === 'SERVICES' ? (
+      {module === 'CD' && shouldVisible ? (
         <ServiceLicenseTable
           gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
           data={activeServiceList?.data || {}}
@@ -111,7 +113,15 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
           sortBy={sort}
           updateFilters={updateFilters}
           servicesLoading={loading}
+          licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType || ''}
         />
+      ) : null}
+      {module === 'CD' && shouldVisible ? (
+        <ServiceLicenseGraphs
+          accountId={accountId}
+          licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType}
+          licenseData={licenseData}
+        ></ServiceLicenseGraphs>
       ) : null}
     </Layout.Vertical>
   )

@@ -12,7 +12,7 @@ import type {
   useGetEnvironment,
   useGetEnvironmentListForProject
 } from 'services/cd-ng'
-import type { useConfirmAction, useQueryParams } from '@common/hooks'
+import type { useConfirmAction, useLocalStorage, useQueryParams } from '@common/hooks'
 import type { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import type { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
@@ -27,42 +27,51 @@ import type { Description } from '@common/components/NameIdDescriptionTags/NameI
 import type { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { getIdentifierFromName } from '@common/utils/StringUtils'
+import type { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import type * as trackingConstants from '@common/constants/TrackingConstants'
+import type MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
+import type { StepStatus } from '@common/constants/StepStatusTypes'
+import type { MarkdownViewer } from '@common/components/MarkdownViewer/MarkdownViewer'
 import type useActiveEnvironment from './hooks/useActiveEnvironment'
 
 export interface FFCustomMicroFrontendProps {
   ffServices: typeof ffServices & {
-    useCDGetEnvironment: typeof useGetEnvironment
-    useCDGetEnvironmentListForProject: typeof useGetEnvironmentListForProject
     useCDCreateEnvironment: typeof useCreateEnvironment
     useCDDeleteEnvironment: typeof useDeleteEnvironmentV2
+    useCDGetEnvironment: typeof useGetEnvironment
+    useCDGetEnvironmentListForProject: typeof useGetEnvironmentListForProject
   }
   customHooks: {
+    useActiveEnvironment: typeof useActiveEnvironment
     useConfirmAction: typeof useConfirmAction
+    useLicenseStore: typeof useLicenseStore
+    useLocalStorage: typeof useLocalStorage
     useQueryParams: typeof useQueryParams
     useQueryParamsState: typeof useQueryParamsState
-    useLicenseStore: typeof useLicenseStore
-    useSyncedEnvironment: typeof useSyncedEnvironment
-    useActiveEnvironment: typeof useActiveEnvironment
     usePreferenceStore: typeof usePreferenceStore
+    useSyncedEnvironment: typeof useSyncedEnvironment
   }
   customComponents: {
     ContainerSpinner: typeof ContainerSpinner
     Description: typeof Description
     EvaluationModal: typeof EvaluationModal
     FeatureWarningTooltip: typeof FeatureWarningTooltip
+    GitSyncForm: typeof GitSyncForm
+    MarkdownViewer: typeof MarkdownViewer
+    MonacoDiffEditor: typeof MonacoDiffEditor
     RbacOptionsMenuButton: typeof RbacOptionsMenuButton
     RBACTooltip: typeof RBACTooltip
   }
   customRoutes: typeof routes
   customUtils: {
+    getIdentifierFromName: typeof getIdentifierFromName
     IdentifierSchema: typeof IdentifierSchema
     NameSchema: typeof NameSchema
-    getIdentifierFromName: typeof getIdentifierFromName
   }
   customEnums: {
     FeatureIdentifier: typeof FeatureIdentifier
-    trackingConstants: typeof trackingConstants
     PreferenceScope: typeof PreferenceScope
+    StepStatus: typeof StepStatus
+    trackingConstants: typeof trackingConstants
   }
 }

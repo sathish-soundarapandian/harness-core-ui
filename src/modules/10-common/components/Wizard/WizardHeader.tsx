@@ -66,8 +66,10 @@ export const WizardHeader = ({
                 if (errorsYaml?.size > 0) {
                   return
                 }
-                handleModeSwitch?.(mode, yamlHandler)
                 setSelectedView(mode)
+                setTimeout(() => {
+                  yamlHandler && handleModeSwitch?.(mode, yamlHandler)
+                }, 0)
               } catch (e) {
                 /* istanbul ignore next */
                 showError(getString('common.validation.invalidYamlText'))

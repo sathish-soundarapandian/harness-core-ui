@@ -15,7 +15,6 @@ import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/Rout
 import {
   ChangeRate,
   GetActiveServiceInstanceSummaryV2QueryParams,
-  useGetActiveServiceInstanceSummary,
   useGetActiveServiceInstanceSummaryV2
 } from 'services/cd-ng'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
@@ -23,15 +22,13 @@ import { useStrings } from 'framework/strings'
 import { INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { numberFormatter } from '@common/utils/utils'
 import { startOfDay } from '@common/components/TimeRangeSelector/TimeRangeSelector'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Ticker } from '@common/components/Ticker/Ticker'
-import { calcTrend, RateTrend } from '@cd/pages/dashboard/dashboardUtils'
+import { RateTrend } from '@cd/pages/dashboard/dashboardUtils'
 import css from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances.module.scss'
 
 export const ActiveServiceInstancesHeader: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
-  const { CDC_DASHBOARD_ENHANCEMENT_NG: flag } = useFeatureFlags()
 
   const queryParams: GetActiveServiceInstanceSummaryV2QueryParams = useMemo(
     () => ({
@@ -43,18 +40,9 @@ export const ActiveServiceInstancesHeader: React.FC = () => {
     }),
     [accountId, orgIdentifier, projectIdentifier, serviceId]
   )
-  const { data: activeInstanceHeader, error: activeInstanceError } = useGetActiveServiceInstanceSummary({
-    queryParams,
-    lazy: flag
+  const { data, error } = useGetActiveServiceInstanceSummaryV2({
+    queryParams
   })
-  const { data: activeInstanceHeaderV2, error: activeInstanceErrorV2 } = useGetActiveServiceInstanceSummaryV2({
-    queryParams,
-    lazy: !flag
-  })
-
-  const [data, error] = flag
-    ? [activeInstanceHeaderV2, activeInstanceErrorV2]
-    : [activeInstanceHeader, activeInstanceError]
 
   if (error) {
     return <></>
@@ -64,13 +52,9 @@ export const ActiveServiceInstancesHeader: React.FC = () => {
 
   const changeValue = data?.data?.changeRate
 
-  const changeRate = defaultTo(
-    flag && changeValue ? (changeValue as ChangeRate).percentChange : (changeValue as number),
-    0
-  )
+  const changeRate = defaultTo((changeValue as ChangeRate)?.percentChange, 0)
 
-  const changeTrend =
-    flag && changeValue ? ((changeValue as ChangeRate).trend as RateTrend) : calcTrend(changeValue as number)
+  const changeTrend = (changeValue as ChangeRate)?.trend as RateTrend
 
   const pieChartProps: PieChartProps = {
     items: [

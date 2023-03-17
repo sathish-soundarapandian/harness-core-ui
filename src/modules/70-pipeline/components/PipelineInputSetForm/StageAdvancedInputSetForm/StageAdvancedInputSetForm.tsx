@@ -185,6 +185,7 @@ export function StageAdvancedInputSetForm({
               readonly={readonly}
               path={`${path}.failureStrategies`}
               viewType={viewType}
+              allowableTypes={allowableTypes}
             />
           </div>
         ) : null}

@@ -72,4 +72,45 @@ describe('GitOpsExecutionSummary', () => {
 
     expect(container).toMatchSnapshot()
   })
+
+  test('render clusters', () => {
+    const { container } = render(
+      <TestWrapper
+        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/gitops/applications/:applicationId"
+        pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', applicationId: 'applicationId' }}
+      >
+        <GitOpsExecutionSummary
+          stageInfo={{
+            gitopsExecutionSummary: {
+              environments: [
+                {
+                  name: 'prod',
+                  identifier: 'prod'
+                },
+                {
+                  name: 'prod-3',
+                  identifier: 'prod3'
+                }
+              ],
+              clusters: [
+                {
+                  envId: 'prod3',
+                  envName: 'prod-3',
+                  clusterId: 'prodcluster3',
+                  clusterName: 'prod-cluster-3'
+                },
+                {
+                  envId: 'prod',
+                  envName: 'prod',
+                  clusterId: 'prodcluster',
+                  clusterName: 'prod-cluster'
+                }
+              ]
+            }
+          }}
+        />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
 })

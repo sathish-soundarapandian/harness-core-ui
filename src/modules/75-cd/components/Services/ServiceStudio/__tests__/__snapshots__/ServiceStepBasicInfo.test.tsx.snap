@@ -3,7 +3,7 @@
 exports[`ServiceStepBasicInfo should render ServiceStepBasicInfo 1`] = `
 <div>
   <div
-    class="serviceStepBasicInfo nonModalView"
+    class="serviceStepBasicInfo"
   >
     <div
       class="OverlaySpinner--overlaySpinner"

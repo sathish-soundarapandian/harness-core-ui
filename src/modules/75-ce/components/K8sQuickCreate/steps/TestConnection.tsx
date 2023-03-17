@@ -25,6 +25,10 @@ import {
   Error
 } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
+import { CCM_CONNECTOR_SAVE_SUCCESS, CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
+import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Connectors } from '@connectors/constants'
 import { DelegateErrorHandler } from './DelegateErrorHandler'
 
 import css from '../K8sQuickCreateModal.module.scss'
@@ -58,7 +62,7 @@ const stepIconColor: Record<StepStatus, Color> = {
 
 interface TestConnectionProps {
   name: string
-  closeModal: () => void
+  handleFinish: () => void
 }
 
 const POLL_INTERVAL = 2000
@@ -70,10 +74,11 @@ const REPLICAS = 2
 const TestConnection: React.FC<TestConnectionProps & StepProps<ConnectorConfigDTO>> = ({
   previousStep,
   prevStepData,
-  closeModal
+  handleFinish
 }) => {
   const { getString } = useStrings()
   const { accountId } = useParams<{ accountId: string }>()
+  const { trackEvent } = useTelemetry()
   const [counter, setCounter] = useState(0)
   const [error, setError] = useState<ResponseConnectorValidationResult>()
   const [connectorsCreated, setConnectorsCreated] = useState(Boolean(get(prevStepData, 'connectorsCreated')))
@@ -88,6 +93,8 @@ const TestConnection: React.FC<TestConnectionProps & StepProps<ConnectorConfigDT
       3: StepStatus.WAIT
     }
   })
+
+  useStepLoadTelemetry(CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS.LOAD_CONNECTION_TEST)
 
   const name = get(prevStepData, 'name')
   const identifier = get(prevStepData, 'identifier')
@@ -322,7 +329,12 @@ const TestConnection: React.FC<TestConnectionProps & StepProps<ConnectorConfigDT
             disabled={stepDetails.progress !== 3}
             text={getString('finish')}
             variation={ButtonVariation.PRIMARY}
-            onClick={closeModal}
+            onClick={() => {
+              if (!isError) {
+                trackEvent(CCM_CONNECTOR_SAVE_SUCCESS, { type: Connectors.CE_KUBERNETES, is_quick_create: true })
+              }
+              handleFinish()
+            }}
           />
         </Layout.Horizontal>
       </Layout.Vertical>

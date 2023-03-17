@@ -16,6 +16,7 @@ import type {
   ServiceDefinition,
   TasManifest
 } from 'services/cd-ng'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 
 export type ManifestTypes =
   | 'K8sManifest'
@@ -39,6 +40,8 @@ export type ManifestTypes =
   | 'AsgScheduledUpdateGroupAction'
   | 'GoogleCloudFunctionDefinition'
   | 'HelmRepoOverride'
+  | 'AwsLambdaFunctionDefinition'
+  | 'AwsLambdaFunctionAliasDefinition'
 
 export type PrimaryManifestType =
   | 'K8sManifest'
@@ -194,6 +197,18 @@ export interface HelmWithGcsDataType extends HelmWithHTTPDataType {
   bucketName: SelectOption | string
   folderPath: string
 }
+export interface HelmWithS3DataType extends HelmWithGcsDataType {
+  region: SelectOption | string
+}
+export interface HelmWithHarnessStoreDataType {
+  identifier: string
+  files: string[]
+  valuesPaths: string[]
+  skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
+  helmVersion: HelmVersionOptions
+  commandFlags: Array<CommandFlags>
+}
 export interface OpenShiftTemplateGITDataType {
   identifier: string
   branch: string | undefined
@@ -317,3 +332,67 @@ export interface TASWithHarnessStorePropType extends Omit<HarnessFileStoreFormDa
   autoScalerPath?: string[] | string
   cfCliVersion?: CLIVersionOptions
 }
+
+export interface ManifestConnectorRefType {
+  label: string
+  value: string
+  scope: Scope
+  live: boolean
+  connector: ConnectorConfigDTO
+}
+export interface ManifestLastStepPrevStepData {
+  selectedManifest: ManifestTypes | null
+  store: ManifestStores
+  connectorRef: ManifestConnectorRefType
+}
+
+export type CommonManifestLastStepPrevStepData = CommonManifestDataType & ManifestLastStepPrevStepData
+
+export type HelmRepoOverrideManifestLastStepPrevStepData = HelmRepoOverrideManifestDataType &
+  ManifestLastStepPrevStepData
+
+export type HelmWithGITManifestLastStepPrevStepData = HelmWithGITDataType & ManifestLastStepPrevStepData
+
+export type HelmWithHTTPManifestLastStepPrevStepData = HelmWithHTTPDataType & ManifestLastStepPrevStepData
+
+export type HelmWithOCIManifestLastStepPrevStepData = HelmWithOCIDataType & ManifestLastStepPrevStepData
+
+export type HelmWithS3ManifestLastStepPrevStepData = HelmWithS3DataType & ManifestLastStepPrevStepData
+
+export type HelmWithHarnessStoreManifestLastStepPrevStepData = HelmWithHarnessStoreDataType &
+  ManifestLastStepPrevStepData
+
+export type TASManifestLastStepPrevStepData = TASManifestDataType & ManifestLastStepPrevStepData
+
+export type HelmWithGcsManifestLastStepPrevStepData = HelmWithGcsDataType & ManifestLastStepPrevStepData
+
+export type OpenShiftTemplateGITManifestLastStepPrevStepData = OpenShiftTemplateGITDataType &
+  ManifestLastStepPrevStepData
+
+export type KustomizePatchManifestLastStepPrevStepData = KustomizePatchDataType & ManifestLastStepPrevStepData
+
+export type KustomizeWithGITManifestLastStepPrevStepData = KustomizeWithGITDataType & ManifestLastStepPrevStepData
+
+export type OpenShiftParamManifestLastStepPrevStepData = OpenShiftParamDataType & ManifestLastStepPrevStepData
+
+export type ServerlessLambdaManifestLastStepPrevStepData = ServerlessManifestDataType & ManifestLastStepPrevStepData
+
+export type HelmHarnessFileStoreManifestLastStepPrevStepData = HelmHarnessFileStoreFormData &
+  ManifestLastStepPrevStepData
+
+export type KustomizeWithHarnessStoreManifestLastStepPrevStepData = KustomizeWithHarnessStorePropTypeDataType &
+  ManifestLastStepPrevStepData
+
+export type InheritFromManifestLastStepPrevStepData = InheritFromManifestDataType & ManifestLastStepPrevStepData
+
+export type HarnessFileStoreManifestLastStepPrevStepData = HarnessFileStoreDataType & ManifestLastStepPrevStepData
+
+export type CustomRemoteManifestManifestLastStepPrevStepData = CustomManifestManifestDataType &
+  ManifestLastStepPrevStepData
+
+export type ECSWithS3ManifestLastStepPrevStepData = ECSWithS3DataType & ManifestLastStepPrevStepData
+
+export type ServerlessLambdaWithS3ManifestLastStepPrevStepData = ServerlessLambdaWithS3DataType &
+  ManifestLastStepPrevStepData
+
+export type TASWithHarnessStoreManifestLastStepPrevStepData = TASWithHarnessStorePropType & ManifestLastStepPrevStepData

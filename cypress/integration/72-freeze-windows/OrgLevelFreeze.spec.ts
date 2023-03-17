@@ -6,7 +6,6 @@
  */
 
 import {
-  featureFlagsCall,
   newOrgLevelFreezeRoute,
   projectsAPI,
   orgLevelPostFreezeCall,
@@ -17,20 +16,6 @@ import {
 
 describe('Org Level Freeze', () => {
   beforeEach(() => {
-    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
-      cy.intercept('GET', featureFlagsCall, {
-        ...featureFlagsData,
-        resource: [
-          ...featureFlagsData.resource,
-          {
-            uuid: null,
-            name: 'NG_DEPLOYMENT_FREEZE',
-            enabled: true,
-            lastUpdatedAt: 0
-          }
-        ]
-      })
-    })
     cy.initializeRoute()
     cy.intercept('GET', projectsAPI, { fixture: 'ng/api/projects/projects' }).as('projectsData')
     cy.intercept('POST', orgLevelPostFreezeCall).as('createFreezeCall')

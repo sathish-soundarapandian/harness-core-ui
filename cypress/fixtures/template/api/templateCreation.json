@@ -1,0 +1,41 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "templateResponseDTO": {
+      "accountId": "accountId",
+      "orgIdentifier": "default",
+      "projectIdentifier": "projectIdentifier",
+      "identifier": "K8sDelete_2",
+      "name": "K8sDelete_2",
+      "description": "",
+      "tags": {},
+      "yaml": "template:\n  name: K8sDelete_2\n  type: Step\n  projectIdentifier: projectIdentifier\n  orgIdentifier: default\n  spec:\n    type: K8sDelete\n    spec:\n      deleteResources:\n        type: ResourceName\n        spec:\n          resourceNames:\n            - resource\n    timeout: 10m\n  identifier: K8sDelete_2\n  versionLabel: v1\n",
+      "versionLabel": "v1",
+      "templateEntityType": "Step",
+      "childType": "K8sDelete",
+      "templateScope": "project",
+      "version": 0,
+      "gitDetails": {
+        "objectId": null,
+        "branch": null,
+        "repoIdentifier": null,
+        "rootFolder": null,
+        "filePath": null,
+        "repoName": null,
+        "commitId": null,
+        "fileUrl": null,
+        "repoUrl": null
+      },
+      "entityValidityDetails": {
+        "valid": true,
+        "invalidYaml": null
+      },
+      "lastUpdatedAt": 1677086441311,
+      "storeType": "INLINE",
+      "stableTemplate": true
+    },
+    "valid": true
+  },
+  "metaData": null,
+  "correlationId": "46bb76de-4c94-4686-81ed-12ce3b32ec70"
+}

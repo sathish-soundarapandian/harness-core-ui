@@ -53,6 +53,7 @@ export interface CheckboxOptions {
   value: string
   checked: boolean
   visible: boolean
+  isStable: boolean
 }
 
 const getTemplateNameWithVersions = (name: string, versions: string[]) =>
@@ -182,7 +183,8 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
               : currTemplateData.versionLabel || '',
             value: currTemplateData.versionLabel || '',
             checked: false,
-            visible: true
+            visible: true,
+            isStable: !!currTemplateData.stableTemplate
           }
         })
       )
@@ -202,7 +204,8 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
             label: option.label,
             value: option.value,
             checked: option.checked,
-            visible: isOptionVisible
+            visible: isOptionVisible,
+            isStable: option.isStable
           }
         })
       )
@@ -227,7 +230,12 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
             const options = values.checkboxOptions
             const isSelectAllChecked = (): boolean => {
               if (!isSelectAllEnabled) return false
-              return !options.some(option => option.visible && !option.checked)
+              if (options.length === 1) {
+                return options[0].checked
+              }
+              return !options
+                .filter(option => options.length > 1 && !option.isStable)
+                .some(option => option.visible && !option.checked)
             }
             return (
               <FormikForm>
@@ -249,15 +257,27 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
                           >
                             <Container height={300} style={{ overflow: 'auto' }}>
                               {options.map((option, index) => {
+                                const isStableDisabled = options.length > 1 && option.isStable
+
                                 if (!option.visible) {
                                   return null
                                 }
                                 return (
                                   <Checkbox
                                     key={option.label}
-                                    label={option.label}
+                                    labelElement={
+                                      <Text
+                                        tooltip={
+                                          isStableDisabled ? getString('templatesLibrary.stableVersionDeleteError') : ''
+                                        }
+                                        className={option.checked ? css.selected : ''}
+                                      >
+                                        {option.label}
+                                      </Text>
+                                    }
                                     className={option.checked ? css.selected : ''}
                                     checked={option.checked}
+                                    disabled={isStableDisabled}
                                     onChange={e => {
                                       const newOptions = [...options]
                                       newOptions[index].checked = e.currentTarget.checked
@@ -281,8 +301,12 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
                                       return {
                                         label: option.label,
                                         value: option.value,
-                                        checked: e.currentTarget.checked && isOptionVisible,
-                                        visible: isOptionVisible
+                                        checked:
+                                          option.isStable && options.length > 1
+                                            ? false
+                                            : e.currentTarget.checked && isOptionVisible,
+                                        visible: isOptionVisible,
+                                        isStable: option.isStable
                                       }
                                     })
                                   )

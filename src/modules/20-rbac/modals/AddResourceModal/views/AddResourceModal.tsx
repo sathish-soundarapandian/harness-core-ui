@@ -6,14 +6,14 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, Container, ExpandingSearchInput, Layout, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Button, ButtonVariation, Container, DropDown, ExpandingSearchInput, Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Page } from '@common/exports'
+import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import css from './AddResourceModal.module.scss'
 
 interface RoleModalData {
@@ -35,10 +35,10 @@ const AddResourceModal: React.FC<RoleModalData> = ({
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = useState<string>('')
+  const [sortMethod, setSortMethod] = useState<SortMethod>(SortMethod.Newest)
   const [selectedItems, setSelectedItems] = useState<string[]>(selectedData)
 
   if (!resourceHandler) return <Page.Error />
-  const label = resource === ResourceType['DASHBOARDS'] ? resourceHandler.labelOverride : resourceHandler.label
   const ctaLabelVars = {
     count: selectedItems.length,
     resource: resourceHandler.labelSingular
@@ -68,6 +68,7 @@ const AddResourceModal: React.FC<RoleModalData> = ({
       })
     : resourceHandler?.addResourceModalBody?.({
         searchTerm,
+        sortMethod,
         onSelectChange: items => {
           setSelectedItems(items)
         },
@@ -83,19 +84,23 @@ const AddResourceModal: React.FC<RoleModalData> = ({
     <Layout.Vertical padding="xsmall">
       <Layout.Vertical>
         {!isAttributeFilter && (
-          <Layout.Horizontal flex padding={{ bottom: 'medium' }}>
+          <Layout.Horizontal spacing="small">
             <ExpandingSearchInput
               alwaysExpanded
               onChange={text => {
                 setSearchTerm(text.trim())
               }}
+              className={css.searchInput}
             />
-            <Text color={Color.PRIMARY_7}>
-              {getString('rbac.addResourceModal.selectedText', {
-                name: getString(label || resourceHandler.label),
-                number: selectedItems.length
-              })}
-            </Text>
+            {resourceHandler.resourceModalSortingEnabled ? (
+              <DropDown
+                onChange={option => setSortMethod(option.value as SortMethod)}
+                icon="main-sort"
+                items={[...sortByCreated, ...sortByLastModified, ...sortByName]}
+                filterable={false}
+                value={sortMethod}
+              />
+            ) : null}
           </Layout.Horizontal>
         )}
         <Container className={css.modal}>{addModalBody}</Container>

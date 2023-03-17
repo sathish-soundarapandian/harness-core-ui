@@ -8,10 +8,10 @@
 import React from 'react'
 import { render, waitFor, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import type { LogAnalysisRowData } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
 import { LogAnalysisDetailsDrawer } from '../LogAnalysisDetailsDrawer'
 import type { LogAnalysisDetailsDrawerProps } from '../LogAnalysisDetailsDrawer.types'
 import { drawerPropsMockData } from './LogAnalysisDetailsDrawer.mock'
-import type { LogAnalysisRowData } from '../../../LogAnalysisRow.types'
 
 const WrapperComponent = (props: LogAnalysisDetailsDrawerProps): JSX.Element => {
   return (
@@ -24,7 +24,9 @@ const WrapperComponent = (props: LogAnalysisDetailsDrawerProps): JSX.Element => 
 describe('Unit tests for LogAnalysisRiskAndJiraModal', () => {
   const initialProps: LogAnalysisDetailsDrawerProps = {
     onHide: jest.fn(),
-    ...drawerPropsMockData
+    ...drawerPropsMockData,
+    index: null,
+    onUpdatePreferenceDrawerOpen: () => void 0
   }
   test('Verify if all the fields are rendered correctly inside LogAnalysisRiskAndJiraModal', async () => {
     const { getByText } = render(<WrapperComponent {...initialProps} />)

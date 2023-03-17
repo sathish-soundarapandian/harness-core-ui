@@ -184,7 +184,7 @@ class StepFactory extends AbstractStepFactory {
 const factory = new StepFactory()
 factory.registerStep(new WinRmServiceSpec())
 
-describe('StepWidget tests', () => {
+describe('WinRmServiceSpec tests', () => {
   test(`renders ServiceStep for Service Tab `, async () => {
     const { container } = render(
       <TestWrapper>

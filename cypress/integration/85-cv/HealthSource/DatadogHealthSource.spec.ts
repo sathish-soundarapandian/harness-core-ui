@@ -345,7 +345,7 @@ describe('Datadog metric thresholds', () => {
     cy.contains('.Accordion--label', 'Advanced (Optional)').scrollIntoView().should('exist')
   })
 
-  it.skip('should render metric thresholds and perform its features', () => {
+  it('should render metric thresholds and perform its features', () => {
     //intercepting calls
     cy.intercept('GET', dataLogsIndexes.getDatadogLogsIndexes, dataLogsIndexes.getDatadogLogsIndexesResponse).as(
       'getLogsIndexes'

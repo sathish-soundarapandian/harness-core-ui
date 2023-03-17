@@ -13,9 +13,11 @@ import type {
   Failure,
   JiraFieldNG,
   ResponseJiraIssueCreateMetadataNG,
+  ResponseJiraIssueUpdateMetadataNG,
   ResponseListJiraProjectBasicNG,
   StepElementConfig,
   UseGetJiraIssueCreateMetadataProps,
+  UseGetJiraIssueUpdateMetadataProps,
   UseGetJiraProjectsProps
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -91,15 +93,15 @@ export interface JiraFieldSelectorProps {
 
 export interface JiraDynamicFieldsSelectorInterface {
   connectorRef: string
-  selectedProjectKey: string
-  selectedIssueTypeKey: string
+  selectedProjectKey?: string
+  selectedIssueTypeKey?: string
   jiraType: string
-  projectOptions: JiraProjectSelectOption[]
+  projectOptions?: JiraProjectSelectOption[]
   selectedFields?: JiraFieldNG[]
-  addSelectedFields: (fields: JiraFieldNG[], selectedProjectKey: string, selectedIssueTypeKey: string) => void
+  addSelectedFields: (fields: JiraFieldNG[], selectedProjectKey?: string, selectedIssueTypeKey?: string) => void
   provideFieldList: (fields: JiraCreateFieldType[]) => void
   onCancel: () => void
-  showProjectDisclaimer?: boolean
+  issueKey?: string
 }
 
 export interface JiraDynamicFieldsSelectorContentInterface extends JiraDynamicFieldsSelectorInterface {
@@ -111,6 +113,10 @@ export interface JiraDynamicFieldsSelectorContentInterface extends JiraDynamicFi
   fetchingIssueMetadata: boolean
   issueMetadataFetchError?: GetDataError<Failure | Error> | null
   issueMetaResponse: ResponseJiraIssueCreateMetadataNG | null
+  refetchIssueUpdateMetadata: (props: UseGetJiraIssueUpdateMetadataProps) => Promise<void>
+  fetchingIssueUpdateMetadata: boolean
+  issueUpdateMetadataFetchError?: GetDataError<Failure | Error> | null
+  issueUpdateMetaResponse: ResponseJiraIssueUpdateMetadataNG | null
 }
 
 export interface JiraCreateDeploymentModeProps {

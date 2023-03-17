@@ -26,8 +26,10 @@ declare const styles: {
   readonly divider: string
   readonly duration: string
   readonly fieldsGroup: string
+  readonly flex: string
   readonly formGroup: string
   readonly formRow: string
+  readonly grid2Coloumns: string
   readonly inpLabel: string
   readonly inputWidth: string
   readonly kvpairLg: string

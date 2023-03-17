@@ -22,10 +22,11 @@ interface ServiceDetailsDialogProps {
   isEnvView: boolean
   envFilter?: string
   artifactFilter?: string
+  artifactFilterApplied?: boolean
 }
 
 export default function ServiceDetailsDialog(props: ServiceDetailsDialogProps): React.ReactElement {
-  const { isOpen, setIsOpen, envFilter, artifactFilter, isEnvView } = props
+  const { isOpen, setIsOpen, envFilter, artifactFilter, isEnvView, artifactFilterApplied } = props
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = useState('')
   const isSearchApplied = useRef<boolean>(!isEmpty(searchTerm))
@@ -84,6 +85,7 @@ export default function ServiceDetailsDialog(props: ServiceDetailsDialogProps): 
               searchTerm={searchTerm}
               resetSearch={resetSearch}
               setRowClickFilter={setRowClickFilter}
+              artifactFilterApplied={artifactFilterApplied}
             />
           )}
         </Container>

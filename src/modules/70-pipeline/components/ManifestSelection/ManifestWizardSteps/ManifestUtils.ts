@@ -82,15 +82,16 @@ export const handleCommandFlagsSubmitData = (
   }
 ): void => {
   if (formData?.commandFlags.length && formData?.commandFlags[0].commandType) {
-    ;(manifestObj.manifest as ManifestConfig).spec.commandFlags = formData?.commandFlags.map(
-      (commandFlag: CommandFlags) =>
+    ;(manifestObj.manifest as ManifestConfig).spec.commandFlags = formData?.commandFlags
+      .map((commandFlag: CommandFlags) =>
         commandFlag.commandType && commandFlag.flag
           ? {
               commandType: commandFlag.commandType,
               flag: commandFlag.flag
             }
           : {}
-    )
+      )
+      .filter(item => !isEmpty(item))
     const filteredCommandFlags = manifestObj?.manifest?.spec?.commandFlags.filter(
       (currFlag: CommandFlags) => !isEmpty(currFlag)
     )

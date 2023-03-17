@@ -312,7 +312,6 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
           variableName={name}
           showRequiredField={false}
           showDefaultField={false}
-          showAdvanced={true}
           onChange={value => {
             formik?.setFieldValue(name, value)
           }}

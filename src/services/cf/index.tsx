@@ -249,6 +249,14 @@ export interface Feature {
      */
     environment: string
     /**
+     * Indicates whether jira functionality is enabled for the given account, project, org, and environment
+     */
+    jiraEnabled?: boolean
+    /**
+     * An array of Jira Issues linked to this Feature. Returns empty if none exist
+     */
+    jiraIssues?: JiraIssue[]
+    /**
      * The last time the flag was modified in this environment
      */
     modifiedAt?: number
@@ -626,6 +634,37 @@ export type FlagBasicInfos = Pagination & {
   featureFlags?: FlagBasicInfo[]
 }
 
+export interface FlagEnvironment {
+  /**
+   * The name of the environment
+   */
+  name: string
+}
+
+export interface FlagEnvironmentState {
+  /**
+   * Boolean representing whether a flag is enabled in the environment
+   */
+  enabled: boolean
+}
+
+/**
+ * Flag object with its state in each environment
+ */
+export interface FlagState {
+  environments: {
+    [key: string]: FlagEnvironmentState
+  }
+  /**
+   * The flags identifier
+   */
+  identifier: string
+  /**
+   * The flags name
+   */
+  name: string
+}
+
 /**
  * The commit message to use as part of a gitsync operation
  */
@@ -649,6 +688,10 @@ export interface GitRepo {
    */
   branch: string
   /**
+   * Connector reference is a connector id, used to make a request through gitEx.
+   */
+  connectorReference?: string
+  /**
    * Indicates if feature flag changes will be saved to the repository
    */
   enabled?: boolean
@@ -668,6 +711,10 @@ export interface GitRepo {
    * The identifier for the git repository
    */
   repoIdentifier: string
+  /**
+   * Repo reference is a repository id, used to make a request through gitEx.
+   */
+  repoReference?: string
   /**
    * The root folder in the repository where the feature flag yaml will be written
    */
@@ -694,6 +741,61 @@ export interface GitSyncPatchOperation {
   executionTime?: number
   gitDetails?: GitDetails
   instructions: PatchInstruction
+}
+
+/**
+ * A Jira Issue
+ */
+export interface JiraIssue {
+  /**
+   * The Jira Issue key
+   */
+  issueKey: string
+  /**
+   * The jira issue URL
+   */
+  issueURL: string
+}
+
+/**
+ * A Jira Search Response Object
+ */
+export interface JiraSearchIssue {
+  /**
+   * Information about this Jira Issue
+   */
+  fields: {
+    /**
+     * The issue title/summary
+     */
+    summary?: string
+  }
+  /**
+   * The Jira issue ID
+   */
+  id: string
+  /**
+   * The Jira issue Key
+   */
+  key?: string
+  /**
+   * A link to the Jira issue
+   */
+  self: string
+}
+
+/**
+ * A Jira Search Response Object
+ */
+export interface JiraSearchIssues {
+  /**
+   * A list containing the matching jira issues
+   */
+  issues?: JiraSearchIssue[]
+  /**
+   * The number of matching jira issues
+   */
+  total?: number
 }
 
 /**
@@ -797,6 +899,16 @@ export interface Project {
    * A list of tags for this project
    */
   tags?: Tag[]
+}
+
+/**
+ * Returns all the flags in a project and their state in each environment
+ */
+export type ProjectFlags = Pagination & {
+  environments?: {
+    [key: string]: FlagEnvironment
+  }
+  flags?: FlagState[]
 }
 
 /**
@@ -1165,6 +1277,14 @@ export interface UsageDataDTO {
 }
 
 /**
+ * Returns counts of Active (Where flag state is on in 1+ environments) and Total Flags
+ */
+export interface UserFlagOverview {
+  active: number
+  total: number
+}
+
+/**
  * A variation of a flag that can be returned to a target
  */
 export interface Variation {
@@ -1271,13 +1391,13 @@ export type GitRepoPatchRequestRequestBody = PatchOperation
 
 export interface GitRepoRequestRequestBody {
   autoCommit?: boolean
-  branch?: string
+  branch: string
+  connectorReference?: string
   filePath: string
   objectId?: string
-  repoIdentifier?: string
-  rootFolder: string
+  repoIdentifier: string
   repoReference?: string
-  connectorReference?: string
+  rootFolder: string
 }
 
 export interface ProjectRequestRequestBody {
@@ -1421,6 +1541,11 @@ export type GitSyncErrorResponse = Error
 export type InternalServerErrorResponse = Error
 
 /**
+ * OK
+ */
+export type JiraIssueSearchResponseResponse = JiraSearchIssues
+
+/**
  * The specified resource was not found
  */
 export type NotFoundResponse = Error
@@ -1434,6 +1559,11 @@ export interface ObjectSnapshotResponseResponse {
   metaData?: { [key: string]: any }
   status?: Status
 }
+
+/**
+ * OK
+ */
+export type ProjectFlagsResponseResponse = ProjectFlags
 
 /**
  * OK
@@ -1509,6 +1639,11 @@ export type UnauthenticatedResponse = Error
  * Unauthorized
  */
 export type UnauthorizedResponse = Error
+
+/**
+ * OK
+ */
+export type UserFlagOverviewResponseResponse = UserFlagOverview
 
 export interface GetAllAPIKeysQueryParams {
   /**
@@ -4555,6 +4690,89 @@ export const createFlagPipelinePromise = (
     CreateFlagPipelinePathParams
   >('POST', getConfig('cf'), `/admin/features/${identifier}/pipeline`, props, signal)
 
+export interface GetJiraIssuesQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Search term used to filter Jira Issue results by
+   */
+  searchTerm: string
+}
+
+export type GetJiraIssuesProps = Omit<
+  GetProps<
+    JiraIssueSearchResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetJiraIssuesQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Returns list of Jira issues pulled from a users Jira instance, based on a given search term
+ *
+ * Returns list of Jira issues pulled from a users Jira instance, based on a given search term
+ */
+export const GetJiraIssues = (props: GetJiraIssuesProps) => (
+  <Get<
+    JiraIssueSearchResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetJiraIssuesQueryParams,
+    void
+  >
+    path={`/admin/jira/issues`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetJiraIssuesProps = Omit<
+  UseGetProps<
+    JiraIssueSearchResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetJiraIssuesQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Returns list of Jira issues pulled from a users Jira instance, based on a given search term
+ *
+ * Returns list of Jira issues pulled from a users Jira instance, based on a given search term
+ */
+export const useGetJiraIssues = (props: UseGetJiraIssuesProps) =>
+  useGet<
+    JiraIssueSearchResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetJiraIssuesQueryParams,
+    void
+  >(`/admin/jira/issues`, { base: getConfig('cf'), ...props })
+
+/**
+ * Returns list of Jira issues pulled from a users Jira instance, based on a given search term
+ *
+ * Returns list of Jira issues pulled from a users Jira instance, based on a given search term
+ */
+export const getJiraIssuesPromise = (
+  props: GetUsingFetchProps<
+    JiraIssueSearchResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetJiraIssuesQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    JiraIssueSearchResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetJiraIssuesQueryParams,
+    void
+  >(getConfig('cf'), `/admin/jira/issues`, props, signal)
+
 export interface GetOSByIDPathParams {
   /**
    * Unique identifiers for the object in the API.
@@ -4647,6 +4865,85 @@ export const getOSByIDPromise = (
     void,
     GetOSByIDPathParams
   >(getConfig('cf'), `/admin/objects/${identifiers}`, props, signal)
+
+export interface GetUserFlagOverviewQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+}
+
+export type GetUserFlagOverviewProps = Omit<
+  GetProps<
+    UserFlagOverviewResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetUserFlagOverviewQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Returns a count of active and total flags for projects a User can access
+ *
+ * Returns an active (where flag state is on in 1+ environment) and total count of flags in all projects a user can access
+ */
+export const GetUserFlagOverview = (props: GetUserFlagOverviewProps) => (
+  <Get<
+    UserFlagOverviewResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetUserFlagOverviewQueryParams,
+    void
+  >
+    path={`/admin/overview`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetUserFlagOverviewProps = Omit<
+  UseGetProps<
+    UserFlagOverviewResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetUserFlagOverviewQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Returns a count of active and total flags for projects a User can access
+ *
+ * Returns an active (where flag state is on in 1+ environment) and total count of flags in all projects a user can access
+ */
+export const useGetUserFlagOverview = (props: UseGetUserFlagOverviewProps) =>
+  useGet<
+    UserFlagOverviewResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetUserFlagOverviewQueryParams,
+    void
+  >(`/admin/overview`, { base: getConfig('cf'), ...props })
+
+/**
+ * Returns a count of active and total flags for projects a User can access
+ *
+ * Returns an active (where flag state is on in 1+ environment) and total count of flags in all projects a user can access
+ */
+export const getUserFlagOverviewPromise = (
+  props: GetUsingFetchProps<
+    UserFlagOverviewResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetUserFlagOverviewQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    UserFlagOverviewResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetUserFlagOverviewQueryParams,
+    void
+  >(getConfig('cf'), `/admin/overview`, props, signal)
 
 export interface GetAllProjectsQueryParams {
   /**
@@ -5189,6 +5486,122 @@ export const modifyProjectPromise = (
     ProjectRequestRequestBody,
     ModifyProjectPathParams
   >('PUT', getConfig('cf'), `/admin/projects/${identifier}`, props, signal)
+
+export interface GetProjectFlagsQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * PageNumber
+   */
+  pageNumber?: number
+  /**
+   * PageSize
+   */
+  pageSize?: number
+  /**
+   * Name of the field
+   */
+  name?: string
+}
+
+export interface GetProjectFlagsPathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+}
+
+export type GetProjectFlagsProps = Omit<
+  GetProps<
+    ProjectFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProjectFlagsQueryParams,
+    GetProjectFlagsPathParams
+  >,
+  'path'
+> &
+  GetProjectFlagsPathParams
+
+/**
+ * Returns all flags for a project and their state in each environment
+ *
+ * Returns all flags for a project along with whether or not they are enabled/disabled in each environment
+ */
+export const GetProjectFlags = ({ identifier, ...props }: GetProjectFlagsProps) => (
+  <Get<
+    ProjectFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProjectFlagsQueryParams,
+    GetProjectFlagsPathParams
+  >
+    path={`/admin/projects/${identifier}/flags`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetProjectFlagsProps = Omit<
+  UseGetProps<
+    ProjectFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProjectFlagsQueryParams,
+    GetProjectFlagsPathParams
+  >,
+  'path'
+> &
+  GetProjectFlagsPathParams
+
+/**
+ * Returns all flags for a project and their state in each environment
+ *
+ * Returns all flags for a project along with whether or not they are enabled/disabled in each environment
+ */
+export const useGetProjectFlags = ({ identifier, ...props }: UseGetProjectFlagsProps) =>
+  useGet<
+    ProjectFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProjectFlagsQueryParams,
+    GetProjectFlagsPathParams
+  >((paramsInPath: GetProjectFlagsPathParams) => `/admin/projects/${paramsInPath.identifier}/flags`, {
+    base: getConfig('cf'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Returns all flags for a project and their state in each environment
+ *
+ * Returns all flags for a project along with whether or not they are enabled/disabled in each environment
+ */
+export const getProjectFlagsPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ProjectFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProjectFlagsQueryParams,
+    GetProjectFlagsPathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ProjectFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProjectFlagsQueryParams,
+    GetProjectFlagsPathParams
+  >(getConfig('cf'), `/admin/projects/${identifier}/flags`, props, signal)
 
 export interface DeleteGitRepoQueryParams {
   /**
@@ -6506,6 +6919,156 @@ export const getSegmentFlagsPromise = (
     GetSegmentFlagsQueryParams,
     GetSegmentFlagsPathParams
   >(getConfig('cf'), `/admin/segments/${identifier}/flags`, props, signal)
+
+export interface AllEnvironmentsFlag {
+  /**
+   * The date the flag was created in milliseconds
+   */
+  createdAt: number
+  /**
+   * A description for this Environment
+   */
+  description?: string
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+  /**
+   * The user friendly identifier for the API Key
+   */
+  name: string
+  /**
+   * The state of the flag across all environments
+   */
+  environments: {
+    [key: string]: {
+      enabled: boolean
+    }
+  }
+}
+
+export type AllEnvironmentsFlags = {
+  flags?: AllEnvironmentsFlag[]
+}
+
+/**
+ * OK
+ */
+export type AllEnvironmentsFlagsResponseResponse = Pagination & {
+  flags: AllEnvironmentsFlag[]
+  /**
+   * All environments names
+   */
+  environments: {
+    [key: string]: {
+      name: string
+    }
+  }
+}
+
+export type GetAllEnvironmentsFlagsProps = Omit<
+  GetProps<
+    AllEnvironmentsFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllEnvironmentsFlagsQueryParams,
+    GetAllEnvironmentsFlagsPathParams
+  >,
+  'path'
+> &
+  GetAllEnvironmentsFlagsPathParams
+export interface GetAllEnvironmentsFlagsPathParams {
+  /**
+   * Project identifier for the object in the API.
+   */
+  identifier: string
+}
+export interface GetAllEnvironmentsFlagsQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * Flag Name - used for search
+   */
+  name?: string
+}
+
+/**
+ * Returns flag states across all Environments for the given Project identifier
+ */
+export const GetAllEnvironmentsFlags = ({ identifier, ...props }: GetAllEnvironmentsFlagsProps) => (
+  <Get<
+    AllEnvironmentsFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllEnvironmentsFlagsQueryParams,
+    GetAllEnvironmentsFlagsPathParams
+  >
+    path={`/admin/projects/${identifier}/flags`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetAllEnvironmentsFlagsProps = Omit<
+  UseGetProps<
+    AllEnvironmentsFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllEnvironmentsFlagsQueryParams,
+    GetAllEnvironmentsFlagsPathParams
+  >,
+  'path'
+> &
+  GetProjectPathParams
+
+/**
+ * Returns All Feature Flags
+ *
+ * Returns All Feature Flags across all Environments for the given identifier
+ */
+export const useGetAllEnvironmentsFlags = ({ identifier, ...props }: UseGetAllEnvironmentsFlagsProps) =>
+  useGet<
+    AllEnvironmentsFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllEnvironmentsFlagsQueryParams,
+    GetAllEnvironmentsFlagsPathParams
+  >((paramsInPath: GetAllEnvironmentsFlagsPathParams) => `/admin/projects/${paramsInPath.identifier}/flags`, {
+    base: getConfig('cf'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Returns All Feature Flags
+ *
+ * Returns All Feature Flags across all Environments for the given identifier
+ */
+export const getAllEnvironmentsFlagsPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    AllEnvironmentsFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllEnvironmentsFlagsQueryParams,
+    GetAllEnvironmentsFlagsPathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    AllEnvironmentsFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllEnvironmentsFlagsQueryParams,
+    GetAllEnvironmentsFlagsPathParams
+  >(getConfig('cf'), `/admin/projects/${identifier}/flags`, props, signal)
 
 export interface GetAllTargetsQueryParams {
   /**

@@ -14,35 +14,41 @@ import { ServicesContent } from '../ServicesContent/ServicesContent'
 jest.mock('services/cd-ng', () => {
   return {
     GetServiceDetailsQueryParams: jest.fn(),
-    useGetServiceDetails: jest.fn(() => ({ loading: false })),
     useGetServiceDetailsV2: jest.fn(() => ({ loading: false })),
-    useGetWorkloads: jest.fn(() => ({ loading: false, data: null })),
     useGetWorkloadsV2: jest.fn(() => ({ loading: false, data: null })),
     useGetServicesGrowthTrend: jest.fn(() => ({ data: null })),
-    useGetServiceDeploymentsInfo: jest.fn(() => ({ loading: false })),
     useGetServiceDeploymentsInfoV2: jest.fn(() => ({ loading: false })),
     useDeleteServiceV2: jest.fn(() => ({ mutate: jest.fn() }))
   }
 })
 
-const dataMock = {
+const dataMock: cdngServices.ResponseServiceDetailsInfoDTOV2 = {
   status: 'SUCCESS',
   data: {
     serviceDeploymentDetailsList: [
       {
         serviceName: 'test1',
         serviceIdentifier: 'test1',
-        description: null,
+        description: undefined,
         tags: {},
         deploymentTypeList: ['Kubernetes'],
         totalDeployments: 1,
-        totalDeploymentChangeRate: -10000.0,
+        totalDeploymentChangeRate: {
+          trend: 'INVALID'
+        },
         successRate: 100.0,
-        successRateChangeRate: -10000.0,
+        successRateChangeRate: {
+          trend: 'INVALID'
+        },
         failureRate: 0.0,
-        failureRateChangeRate: 0.0,
+        failureRateChangeRate: {
+          percentChange: 0,
+          trend: 'NO_CHANGE'
+        },
         frequency: 0.03333333333333333,
-        frequencyChangeRate: -10000.0,
+        frequencyChangeRate: {
+          trend: 'INVALID'
+        },
         instanceCountDetails: {
           nonProdInstances: 2,
           prodInstances: 3,
@@ -59,23 +65,35 @@ const dataMock = {
       {
         serviceName: 'testDock',
         serviceIdentifier: 'testDock',
-        description: null,
+        description: undefined,
         tags: {},
-        deploymentTypeList: null,
+        deploymentTypeList: undefined,
         totalDeployments: 0,
-        totalDeploymentChangeRate: 0.0,
+        totalDeploymentChangeRate: {
+          percentChange: 0,
+          trend: 'NO_CHANGE'
+        },
         successRate: 0.0,
-        successRateChangeRate: 0.0,
+        successRateChangeRate: {
+          percentChange: 0,
+          trend: 'NO_CHANGE'
+        },
         failureRate: 0.0,
-        failureRateChangeRate: 0.0,
+        failureRateChangeRate: {
+          percentChange: 0,
+          trend: 'NO_CHANGE'
+        },
         frequency: 0.0,
-        frequencyChangeRate: 0.0,
-        instanceCountDetails: null,
-        lastPipelineExecuted: null
+        frequencyChangeRate: {
+          percentChange: 0,
+          trend: 'NO_CHANGE'
+        },
+        instanceCountDetails: undefined,
+        lastPipelineExecuted: undefined
       }
     ]
   },
-  metaData: null,
+  metaData: undefined,
   correlationId: 'a1c02f24-168e-487e-8130-34832c4c0dea'
 }
 
@@ -89,7 +107,7 @@ describe('ServicesContent', () => {
     expect(container).toMatchSnapshot()
   })
   test('render with mock details ', () => {
-    jest.spyOn(cdngServices, 'useGetServiceDetails').mockImplementation((): any => {
+    jest.spyOn(cdngServices, 'useGetServiceDetailsV2').mockImplementation((): any => {
       return {
         data: dataMock,
         error: null,

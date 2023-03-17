@@ -132,7 +132,7 @@ export default function SingleEnvironmentInputSetForm({
             pathToEnvironments: 'environment',
             isMultiEnvironment: false,
             setEnvironmentRefType,
-            serviceIdentifiers: singleServiceIdentifier ? [singleServiceIdentifier] : []
+            serviceIdentifiers: isValueFixed(singleServiceIdentifier) ? [singleServiceIdentifier] : []
           }}
           onUpdate={data => {
             formik.setFieldValue(
@@ -296,7 +296,11 @@ export default function SingleEnvironmentInputSetForm({
 
                   return infraInputs?.identifier ? (
                     <React.Fragment key={infraInputs.identifier}>
-                      <Text font={{ size: 'normal', weight: 'bold' }} color={Color.GREY_700}>
+                      <Text
+                        font={{ size: 'normal', weight: 'bold' }}
+                        padding={{ bottom: 'medium' }}
+                        color={Color.GREY_700}
+                      >
                         {getString('common.infrastructurePrefix', {
                           name: infraInputs.identifier
                         })}

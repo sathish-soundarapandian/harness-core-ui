@@ -297,7 +297,11 @@ exports[`<DeleteTemplateModal /> tests should match snapshot 1`] = `
                         <span
                           class="bp3-control-indicator"
                         />
-                        templatesLibrary.stableVersion
+                        <p
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          templatesLibrary.stableVersion
+                        </p>
                       </label>
                     </div>
                     <div
@@ -683,7 +687,11 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when error occurs i
                         <span
                           class="bp3-control-indicator"
                         />
-                        templatesLibrary.stableVersion
+                        <p
+                          class="StyledProps--font StyledProps--main selected"
+                        >
+                          templatesLibrary.stableVersion
+                        </p>
                       </label>
                     </div>
                     <div
@@ -1075,7 +1083,11 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when status is fail
                         <span
                           class="bp3-control-indicator"
                         />
-                        templatesLibrary.stableVersion
+                        <p
+                          class="StyledProps--font StyledProps--main selected"
+                        >
+                          templatesLibrary.stableVersion
+                        </p>
                       </label>
                     </div>
                     <div

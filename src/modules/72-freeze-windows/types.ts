@@ -64,6 +64,7 @@ export interface FreezeEvent {
 // This should come from BE
 export interface FreezeNotificationRules extends NotificationRules {
   events: FreezeEvent[]
+  customizedMessage?: string
 }
 
 export type ProjctsByOrgId = { projects: SelectOption[]; projectsMap: Record<string, SelectOption> }

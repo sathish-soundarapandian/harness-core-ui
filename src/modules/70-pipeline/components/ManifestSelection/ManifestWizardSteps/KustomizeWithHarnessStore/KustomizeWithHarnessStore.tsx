@@ -23,7 +23,7 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
-import { get, isBoolean, isEmpty } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -36,7 +36,11 @@ import {
   ManifestIdentifierValidation,
   ManifestStoreMap
 } from '../../Manifesthelper'
-import type { KustomizeWithHarnessStorePropTypeDataType, ManifestTypes } from '../../ManifestInterface'
+import type {
+  KustomizeWithHarnessStoreManifestLastStepPrevStepData,
+  KustomizeWithHarnessStorePropTypeDataType,
+  ManifestTypes
+} from '../../ManifestInterface'
 import { removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
@@ -49,6 +53,7 @@ interface KustomizeWithHarnessStorePropType {
   manifestIdsList: Array<string>
   expressions: Array<string>
   isReadonly?: boolean
+  editManifestModePrevStepData?: KustomizeWithHarnessStoreManifestLastStepPrevStepData
 }
 
 function KustomizeWithHarnessStore({
@@ -61,9 +66,12 @@ function KustomizeWithHarnessStore({
   previousStep,
   manifestIdsList,
   expressions,
-  isReadonly
+  isReadonly,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & KustomizeWithHarnessStorePropType): React.ReactElement {
   const { getString } = useStrings()
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   const getInitialValues = (): KustomizeWithHarnessStorePropTypeDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -150,7 +158,7 @@ function KustomizeWithHarnessStore({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData
           } as unknown as KustomizeWithHarnessStorePropTypeDataType)
         }}
@@ -211,7 +219,6 @@ function KustomizeWithHarnessStore({
                         variableName="overlayConfiguration"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={
                           /* istanbul ignore next */ value => formik.setFieldValue('overlayConfiguration', value)
                         }
@@ -232,6 +239,7 @@ function KustomizeWithHarnessStore({
                         disableTypeSelection: false,
                         label: <Text>{getString('pipeline.manifestTypeLabels.KustomizePatches')}</Text>
                       }}
+                      allowSinglePathDeletion
                     />
                   </div>
                   <div
@@ -255,7 +263,6 @@ function KustomizeWithHarnessStore({
                         variableName="pluginPath"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('pluginPath', value)}
                         isReadonly={isReadonly}
                       />
@@ -289,7 +296,6 @@ function KustomizeWithHarnessStore({
                                 variableName="enableDeclarativeRollback"
                                 showRequiredField={false}
                                 showDefaultField={false}
-                                showAdvanced={true}
                                 onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
                                 style={{ alignSelf: 'center', marginTop: 11 }}
                                 className={css.addmarginTop}
@@ -314,7 +320,6 @@ function KustomizeWithHarnessStore({
                                 variableName="skipResourceVersioning"
                                 showRequiredField={false}
                                 showDefaultField={false}
-                                showAdvanced={true}
                                 onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
                                 style={{ alignSelf: 'center', marginTop: 11 }}
                                 className={css.addmarginTop}
@@ -333,7 +338,7 @@ function KustomizeWithHarnessStore({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

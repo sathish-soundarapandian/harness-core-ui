@@ -58,7 +58,7 @@ export const strategyIconMap: Record<StrategyType, IconName> = {
   PipelineRollback: 'repeat',
   ProceedWithDefaultValues: 'main-resume',
   StepGroupRollback: 'repeat',
-  MarkAsFailure: 'cross'
+  MarkAsFailure: 'mark-as-failure'
 }
 
 export const waitActionsIconMap: Record<WaitActions, IconName> = {

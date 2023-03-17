@@ -41,6 +41,7 @@ declare const styles: {
   readonly titleBar: string
   readonly titleSubheader: string
   readonly unsavedChanges: string
+  readonly validationContainer: string
   readonly visualYamlToggle: string
 }
 export default styles

@@ -557,7 +557,7 @@ exports[`Edit rule page render edit rule page successfully 1`] = `
                     class="StyledProps--font StyledProps--main title"
                     data-tooltip-id="awsSetupAdvancedConfig"
                   >
-                    ce.co.autoStoppingRule.configuration.step4.setup ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+                    ce.co.autoStoppingRule.configuration.step4.setup pipeline.advancedConfiguration
                   </p>
                   <p
                     class="StyledProps--font StyledProps--main subTitle"
@@ -604,7 +604,7 @@ exports[`Edit rule page render edit rule page successfully 1`] = `
                               <span
                                 class="Toggle--toggleIcon"
                               />
-                              ce.co.dryRunLabel
+                              pipeline.syncStep.dryRun
                             </label>
                           </div>
                         </div>

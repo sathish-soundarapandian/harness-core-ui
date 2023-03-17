@@ -320,7 +320,6 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
 
     return (
       <>
-        <HelpPanel referenceId="monitoredServiceDetails" type={HelpPanelType.FLOATING_CONTAINER} />
         <Layout.Horizontal flex={{ alignItems: 'center' }}>
           <Button
             noStyling
@@ -346,6 +345,7 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
 
   return (
     <Container padding={{ top: 'medium', left: 'xlarge', right: 'xlarge' }} height="inherit">
+      <HelpPanel referenceId="monitoredServiceDetails" type={HelpPanelType.FLOATING_CONTAINER} />
       <FilterCard
         data={filterOptions}
         cardClassName={css.filterCard}

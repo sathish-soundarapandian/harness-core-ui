@@ -41,7 +41,8 @@ export function chartsConfig(
       gridLineDashStyle: 'Dash',
       title: {
         text: ''
-      }
+      },
+      ...(chartConfig?.xAxis ?? chartConfig?.xAxis)
     },
     yAxis: {
       lineWidth: 1,
@@ -53,7 +54,8 @@ export function chartsConfig(
       gridLineWidth: 1,
       title: {
         text: ''
-      }
+      },
+      ...(chartConfig?.yAxis ?? chartConfig?.yAxis)
     },
     plotOptions: {
       series: {

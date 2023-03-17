@@ -133,7 +133,6 @@ export default function CreatePRScript(props: {
                     className={css.minConfigBtn}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     // istanbul ignore next
                     onChange={
                       // istanbul ignore next

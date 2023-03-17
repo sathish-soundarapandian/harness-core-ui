@@ -12,6 +12,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import * as useFeaturesLib from '@common/hooks/useFeatures'
 import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import mockImport from 'framework/utils/mockImport'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { HandleInterruptQueryParams, useHandleInterrupt, useHandleStageInterrupt } from 'services/pipeline-ng'
 import { accountPathProps, executionPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
@@ -369,5 +370,60 @@ describe('<ExecutionActions /> tests', () => {
     )
 
     expect(screen.queryByText('pipeline.viewExecution')).not.toBeInTheDocument()
+  })
+
+  const routeToPipelineStudio = jest.spyOn(routes, 'toPipelineStudio')
+  test('On Edit, take user to Pipeline Studio V0 route', () => {
+    const { getByText } = render(
+      <TestWrapper path={TEST_PATH} pathParams={pathParams}>
+        <ExecutionActions
+          source="executions"
+          params={pathParams as any}
+          executionStatus="Expired"
+          refetch={jest.fn()}
+          showEditButton={true}
+          canEdit={true}
+        />
+      </TestWrapper>
+    )
+
+    userEvent.click(
+      screen.getByRole('button', {
+        name: /execution menu actions/i
+      })
+    )
+    act(() => {
+      fireEvent.click(getByText('editPipeline')!)
+    })
+    expect(routeToPipelineStudio).toHaveBeenCalled()
+  })
+
+  const routeToPipelineStudioV1 = jest.spyOn(routes, 'toPipelineStudioV1')
+  test('For CI with FF CI_YAML_VERSIONING ON, on edit, take user to Pipeline Studio V1 route', () => {
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CI_YAML_VERSIONING: true })
+    })
+    const { getByText } = render(
+      <TestWrapper path={TEST_PATH} pathParams={{ ...pathParams, module: 'ci' }}>
+        <ExecutionActions
+          source="builds"
+          params={{ ...pathParams, module: 'ci' } as any}
+          executionStatus="Expired"
+          refetch={jest.fn()}
+          showEditButton={true}
+          canEdit={true}
+        />
+      </TestWrapper>
+    )
+
+    userEvent.click(
+      screen.getByRole('button', {
+        name: /execution menu actions/i
+      })
+    )
+    act(() => {
+      fireEvent.click(getByText('editPipeline')!)
+    })
+    expect(routeToPipelineStudioV1).toHaveBeenCalled()
   })
 })

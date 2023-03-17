@@ -173,7 +173,6 @@ const getPromisesForTemplateGet = (
   params: GetTemplateQueryParams,
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
-  isPipelineGitCacheEnabled?: boolean,
   loadFromCache?: boolean
 ): Promise<ResponseTemplateResponse>[] => {
   const promises: Promise<ResponseTemplateResponse>[] = []
@@ -200,7 +199,7 @@ const getPromisesForTemplateGet = (
         },
         requestOptions: {
           headers: {
-            ...(isPipelineGitCacheEnabled && loadFromCache ? { 'Load-From-Cache': 'true' } : {})
+            ...(loadFromCache ? { 'Load-From-Cache': 'true' } : {})
           }
         }
       })
@@ -242,7 +241,6 @@ export const getTemplateTypesByRef = (
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
   supportingTemplatesGitx?: boolean,
-  isPipelineGitCacheEnabled?: boolean,
   loadFromCache?: boolean
 ): Promise<{
   templateTypes: { [key: string]: string }
@@ -250,7 +248,7 @@ export const getTemplateTypesByRef = (
   templateIcons: TemplateIcons
 }> => {
   return supportingTemplatesGitx
-    ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata, isPipelineGitCacheEnabled, loadFromCache)
+    ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata, loadFromCache)
     : getTemplateTypesByRefV1(params as GetTemplateListQueryParams, templateRefs)
 }
 
@@ -304,7 +302,6 @@ export const getTemplateTypesByRefV2 = (
   params: GetTemplateQueryParams,
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
-  isPipelineGitCacheEnabled?: boolean,
   loadFromCache?: boolean
 ): Promise<{
   templateTypes: { [key: string]: string }
@@ -315,7 +312,6 @@ export const getTemplateTypesByRefV2 = (
     omit(params, 'templateListType'),
     templateRefs,
     storeMetadata,
-    isPipelineGitCacheEnabled,
     loadFromCache
   )
   return Promise.all(promises)

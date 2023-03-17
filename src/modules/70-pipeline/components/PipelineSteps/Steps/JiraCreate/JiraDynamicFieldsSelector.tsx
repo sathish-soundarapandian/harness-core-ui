@@ -8,6 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { FieldArray, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
+import { Intent } from '@blueprintjs/core'
 import {
   Button,
   Formik,
@@ -17,14 +18,23 @@ import {
   PageSpinner,
   Radio,
   Select,
-  Text
+  Text,
+  TextInput
 } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import { JiraFieldNG, JiraProjectNG, useGetJiraIssueCreateMetadata } from 'services/cd-ng'
+import {
+  JiraFieldNG,
+  JiraProjectNG,
+  ResponseMessage,
+  useGetJiraIssueCreateMetadata,
+  useGetJiraIssueUpdateMetadata
+} from 'services/cd-ng'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { setIssueTypeOptions } from '../JiraApproval/helper'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { JiraFieldSelector } from './JiraFieldSelector'
@@ -43,13 +53,17 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
     refetchProjectMetadata,
     projectMetaResponse,
     fetchingProjectMetadata,
-    showProjectDisclaimer,
+    issueUpdateMetadataFetchError,
     jiraType,
     refetchIssueMetadata,
     issueMetaResponse,
     fetchingIssueMetadata,
+    refetchIssueUpdateMetadata,
+    issueUpdateMetaResponse,
+    fetchingIssueUpdateMetadata,
     selectedProjectKey: selectedProjectKeyInit,
-    selectedIssueTypeKey: selectedIssueTypeKeyInit
+    selectedIssueTypeKey: selectedIssueTypeKeyInit,
+    issueKey
   } = props
 
   const { accountId, projectIdentifier, orgIdentifier } =
@@ -60,20 +74,26 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
     orgIdentifier
   }
   const [projectValue, setProjectValue] = useState<JiraProjectSelectOption>({
-    key: selectedProjectKeyInit,
-    value: selectedProjectKeyInit,
-    label: selectedProjectKeyInit
+    key: selectedProjectKeyInit as string,
+    value: selectedProjectKeyInit as string,
+    label: selectedProjectKeyInit as string
   })
 
   const [issueTypeValue, setIssueTypeValue] = useState<JiraProjectSelectOption>({
-    key: selectedIssueTypeKeyInit,
-    value: selectedIssueTypeKeyInit,
-    label: selectedIssueTypeKeyInit
+    key: selectedIssueTypeKeyInit as string,
+    value: selectedIssueTypeKeyInit as string,
+    label: selectedIssueTypeKeyInit as string
   })
+
+  const [issueKeyValue, setIssueKeyValue] = useState(issueKey)
 
   const [projectMetadata, setProjectMetadata] = useState<JiraProjectNG>()
   const [issueMetadata, setIssueMetadata] = useState<JiraProjectNG>()
   const [fieldList, setFieldList] = useState<JiraFieldNG[]>([])
+
+  const { getRBACErrorMessage } = useRBACError()
+
+  const issueUpdateResponseErrors = (issueUpdateMetadataFetchError?.data as any)?.responseMessages as ResponseMessage[]
 
   const selectedProjectKey = projectValue?.key?.toString()
   const selectedIssueTypeKey = issueTypeValue?.key?.toString()
@@ -83,6 +103,7 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
       refetchProjectMetadata({
         queryParams: {
           ...commonParams,
+          expand: 'projects.issuetypes',
           connectorRef,
           projectKey: selectedProjectKey
         }
@@ -95,6 +116,7 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
       refetchIssueMetadata({
         queryParams: {
           ...commonParams,
+          expand: 'projects.issuetypes.fields',
           connectorRef,
           projectKey: selectedProjectKey,
           issueType: selectedIssueTypeKey
@@ -104,6 +126,18 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
   }, [selectedIssueTypeKey])
 
   useEffect(() => {
+    if (jiraType === 'updateMode' && issueKeyValue) {
+      refetchIssueUpdateMetadata({
+        queryParams: {
+          ...commonParams,
+          connectorRef,
+          issueKey: issueKeyValue
+        }
+      })
+    }
+  }, [connectorRef, issueKeyValue, jiraType])
+
+  useEffect(() => {
     // If issuetype changes in form, set status and field list
     if (selectedIssueTypeKey && issueMetadata?.issuetypes[selectedIssueTypeKey]?.fields) {
       const issueTypeData = issueMetadata?.issuetypes[selectedIssueTypeKey || '']
@@ -111,14 +145,30 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
       const fieldKeys = Object.keys(issueTypeData?.fields || {})
       fieldKeys.sort().forEach(keyy => {
         if (issueTypeData?.fields[keyy]) {
-          if ((jiraType === 'createMode' && !issueTypeData?.fields[keyy]?.required) || jiraType === 'updateMode') {
+          if (jiraType === 'createMode' && !issueTypeData?.fields[keyy]?.required) {
             fieldListToSet.push(issueTypeData?.fields[keyy])
           }
         }
       })
       setFieldList(fieldListToSet)
     }
-  }, [selectedIssueTypeKey, issueMetadata])
+  }, [selectedIssueTypeKey, issueMetadata, jiraType])
+
+  useEffect(() => {
+    // If issueKey changes in form, set status and field list
+    if (issueKeyValue && issueUpdateMetaResponse?.data?.fields) {
+      const issueTypeData = issueUpdateMetaResponse?.data
+      const fieldListToSet: JiraFieldNG[] = []
+      const fieldKeys = Object.keys(issueTypeData?.fields)
+      fieldKeys.sort().forEach(keyy => {
+        if (issueTypeData?.fields[keyy]) {
+          fieldListToSet.push(issueTypeData?.fields[keyy])
+        }
+      })
+      setFieldList(fieldListToSet)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [issueKeyValue, issueUpdateMetaResponse])
 
   useEffect(() => {
     if (selectedProjectKey && projectMetaResponse?.data?.projects) {
@@ -136,72 +186,88 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
 
   return (
     <div>
-      <Text className={css.selectFieldListHelp}>{getString('pipeline.jiraCreateStep.selectFieldListHelp')}</Text>
-      <div className={css.select}>
-        <Text className={css.selectLabel}>{getString('pipeline.jiraApprovalStep.project')}</Text>
-        <Select
-          items={props.projectOptions}
-          defaultSelectedItem={{
-            label: selectedProjectKey,
-            value: selectedProjectKey
-          }}
-          onChange={value => {
-            setProjectValue(value as JiraProjectSelectOption)
-            setIssueTypeValue({ label: '', value: '', key: '' } as JiraProjectSelectOption)
-          }}
-          inputProps={{
-            placeholder: getString('common.selectProject')
-          }}
-        />
-      </div>
+      {jiraType === 'createMode' ? (
+        <>
+          <Text className={css.selectFieldListHelp}>{getString('pipeline.jiraCreateStep.selectFieldListHelp')}</Text>
+          <div className={css.select}>
+            <Text className={css.selectLabel}>{getString('pipeline.jiraApprovalStep.project')}</Text>
+            <Select
+              items={props.projectOptions as JiraProjectSelectOption[]}
+              defaultSelectedItem={{
+                label: selectedProjectKey,
+                value: selectedProjectKey
+              }}
+              onChange={value => {
+                setProjectValue(value as JiraProjectSelectOption)
+                setIssueTypeValue({ label: '', value: '', key: '' } as JiraProjectSelectOption)
+              }}
+              inputProps={{
+                placeholder: getString('common.selectProject')
+              }}
+            />
+          </div>
 
-      <div className={css.select}>
-        <Text className={css.selectLabel}>{getString('pipeline.jiraApprovalStep.issueType')}</Text>
-        <Select
-          value={issueTypeValue}
-          items={
-            fetchingProjectMetadata
-              ? [{ label: 'Fetching Issue Types...', value: '' }]
-              : setIssueTypeOptions(projectMetadata?.issuetypes)
-          }
-          inputProps={{
-            placeholder: fetchingProjectMetadata
-              ? getString('pipeline.jiraApprovalStep.fetchingIssueTypePlaceholder')
-              : getString('pipeline.jiraApprovalStep.issueTypePlaceholder')
-          }}
-          defaultSelectedItem={{
-            label: selectedIssueTypeKey,
-            value: selectedIssueTypeKey
-          }}
-          onChange={value => {
-            setIssueTypeValue(value as JiraProjectSelectOption)
-          }}
-        />
-      </div>
+          <div className={css.select}>
+            <Text className={css.selectLabel}>{getString('pipeline.jiraApprovalStep.issueType')}</Text>
+            <Select
+              value={issueTypeValue}
+              items={
+                fetchingProjectMetadata
+                  ? [{ label: 'Fetching Issue Types...', value: '' }]
+                  : setIssueTypeOptions(projectMetadata?.issuetypes)
+              }
+              inputProps={{
+                placeholder: fetchingProjectMetadata
+                  ? getString('pipeline.jiraApprovalStep.fetchingIssueTypePlaceholder')
+                  : getString('pipeline.jiraApprovalStep.issueTypePlaceholder')
+              }}
+              defaultSelectedItem={{
+                label: selectedIssueTypeKey,
+                value: selectedIssueTypeKey
+              }}
+              onChange={value => {
+                setIssueTypeValue(value as JiraProjectSelectOption)
+              }}
+            />
+          </div>
+        </>
+      ) : (
+        <>
+          <Text className={css.selectLabel}>{getString('pipeline.jiraApprovalStep.issueKey')}</Text>
+          <TextInput
+            name="issueKey"
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setIssueKeyValue(event.target.value)
+            }}
+            value={issueKeyValue}
+          />
+        </>
+      )}
 
-      {fetchingIssueMetadata ? (
+      {fetchingIssueMetadata || fetchingIssueUpdateMetadata ? (
         <PageSpinner
           message={getString('pipeline.jiraCreateStep.fetchingFields')}
           className={css.fetchingPageSpinner}
         />
       ) : null}
 
-      {!selectedIssueTypeKey ? (
+      {(jiraType === 'createMode' && !selectedIssueTypeKey) || (jiraType === 'updateMode' && !issueKeyValue) ? (
         <div className={css.fieldsSelectorPlaceholder}>
           <Text>{getString('pipeline.jiraCreateStep.fieldsSelectorPlaceholder')}</Text>
         </div>
+      ) : issueUpdateMetadataFetchError ? (
+        issueUpdateResponseErrors ? (
+          <ErrorHandler responseMessages={issueUpdateResponseErrors} />
+        ) : (
+          <Text intent={Intent.DANGER}>{getRBACErrorMessage(issueUpdateMetadataFetchError)}</Text>
+        )
       ) : (
-        <div>
-          {showProjectDisclaimer ? (
-            <Text intent="warning">{getString('pipeline.jiraUpdateStep.projectIssueTypeDisclaimer')}</Text>
-          ) : null}
-          <JiraFieldSelector
-            fields={fieldList}
-            selectedFields={props?.selectedFields || []}
-            onCancel={props.onCancel}
-            addSelectedFields={fields => props.addSelectedFields(fields, selectedProjectKey, selectedIssueTypeKey)}
-          />
-        </div>
+        <JiraFieldSelector
+          fields={fieldList}
+          selectedFields={props?.selectedFields || []}
+          onCancel={props.onCancel}
+          addSelectedFields={fields => props.addSelectedFields(fields, selectedProjectKey, selectedIssueTypeKey)}
+        />
       )}
     </div>
   )
@@ -287,17 +353,19 @@ function ProvideFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
 
 function Content(props: JiraDynamicFieldsSelectorContentInterface) {
   const { getString } = useStrings()
-  const { connectorRef } = props
+  const { connectorRef, jiraType, issueKey } = props
+  const isFixedInput = jiraType === 'updateMode' ? issueKey && connectorRef : connectorRef
   const [type, setType] = useState<JiraCreateFormFieldSelector>(
-    connectorRef ? JiraCreateFormFieldSelector.FIXED : JiraCreateFormFieldSelector.EXPRESSION
+    isFixedInput ? JiraCreateFormFieldSelector.FIXED : JiraCreateFormFieldSelector.EXPRESSION
   )
+
   return (
     <div className={css.contentWrapper}>
       <div className={css.radioGroup}>
         <Radio
           onClick={() => setType(JiraCreateFormFieldSelector.FIXED)}
           checked={type === JiraCreateFormFieldSelector.FIXED}
-          disabled={!connectorRef}
+          disabled={jiraType === 'updateMode' ? !issueKey || !connectorRef : !connectorRef}
         >
           <span data-tooltip-id="jiraSelectFromFieldList">
             {getString('pipeline.jiraCreateStep.selectFromFieldList')}{' '}
@@ -336,11 +404,11 @@ export function JiraDynamicFieldsSelector(props: JiraDynamicFieldsSelectorInterf
     lazy: true,
     queryParams: {
       ...commonParams,
+      expand: '',
       connectorRef: '',
       projectKey: ''
     }
   })
-
   const {
     refetch: refetchIssueMetadata,
     data: issueMetaResponse,
@@ -350,10 +418,26 @@ export function JiraDynamicFieldsSelector(props: JiraDynamicFieldsSelectorInterf
     lazy: true,
     queryParams: {
       ...commonParams,
+      expand: '',
       connectorRef: '',
       projectKey: '',
       issueType: ''
     }
+  })
+
+  const {
+    refetch: refetchIssueUpdateMetadata,
+    data: issueUpdateMetaResponse,
+    error: issueUpdateMetadataFetchError,
+    loading: fetchingIssueUpdateMetadata
+  } = useGetJiraIssueUpdateMetadata({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: '',
+      issueKey: ''
+    },
+    debounce: 500
   })
 
   return (
@@ -367,6 +451,10 @@ export function JiraDynamicFieldsSelector(props: JiraDynamicFieldsSelectorInterf
       refetchIssueMetadata={refetchIssueMetadata}
       issueMetaResponse={issueMetaResponse}
       issueMetadataFetchError={issueMetadataFetchError}
+      refetchIssueUpdateMetadata={refetchIssueUpdateMetadata}
+      issueUpdateMetaResponse={issueUpdateMetaResponse}
+      issueUpdateMetadataFetchError={issueUpdateMetadataFetchError}
+      fetchingIssueUpdateMetadata={fetchingIssueUpdateMetadata}
     />
   )
 }

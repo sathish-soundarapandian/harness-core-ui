@@ -25,7 +25,7 @@ export function TemplateReferenceByTabPanel(props: Props): React.ReactElement {
   const { selectedTemplate, templates } = props
 
   const { accountId } = useParams<ProjectPathProps>()
-  const [searchTerm, setSearchTerm] = useState<string | undefined>()
+  const [searchTerm, setSearchTerm] = useState<string>('')
   const [page, setPage] = useState(0)
 
   const stableTemplateInList = templates.find(
@@ -39,7 +39,7 @@ export function TemplateReferenceByTabPanel(props: Props): React.ReactElement {
       orgIdentifier: selectedTemplate.orgIdentifier,
       isStableTemplate: defaultTo(selectedTemplate.stableTemplate, stableTemplateInList.stableTemplate),
       versionLabel: defaultTo(selectedTemplate.versionLabel, stableTemplateInList.versionLabel),
-      searchTerm: '',
+      searchTerm,
       pageSize: 4,
       pageIndex: page
     },

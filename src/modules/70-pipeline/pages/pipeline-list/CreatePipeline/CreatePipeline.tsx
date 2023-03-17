@@ -13,8 +13,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import CreatePipelineButton from '@pipeline/components/CreatePipelineButton/CreatePipelineButton'
 import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { useStrings } from 'framework/strings'
-import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { PMSPipelineSummaryResponse } from 'services/pipeline-ng'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 
@@ -44,8 +44,7 @@ export function CreatePipeline({ onSuccess }: CreatePipelineProps): ReactElement
     <CreatePipelineButton
       label={getString('common.createPipeline')}
       onCreatePipelineClick={() =>
-        CI_YAML_VERSIONING &&
-        pathParams.module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.valueOf().toLowerCase()
+        isSimplifiedYAMLEnabled(pathParams.module, CI_YAML_VERSIONING)
           ? goToPipelineStudioV1({ identifier: '-1' })
           : goToPipelineStudio({ identifier: '-1' })
       }

@@ -32,6 +32,8 @@ const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType a
 const useDownloadActiveServiceCSVReportMock = useDownloadActiveServiceCSVReport as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
+
+jest.mock('highcharts-react-official', () => () => <div />)
 const orgListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
     orgMockData
@@ -78,7 +80,6 @@ jest.mock('@common/hooks', () => ({
 moment.now = jest.fn(() => 1482363367071)
 
 const featureFlags = {
-  CDNG_ENABLED: true,
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
@@ -122,7 +123,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )

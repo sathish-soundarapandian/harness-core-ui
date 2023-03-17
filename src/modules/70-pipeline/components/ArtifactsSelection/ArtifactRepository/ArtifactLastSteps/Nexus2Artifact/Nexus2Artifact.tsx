@@ -55,7 +55,7 @@ import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHel
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
 import ArtifactImagePathTagView, { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import type { queryInterface } from '../NexusArtifact/NexusArtifact'
+import type { queryInterface } from '../Nexus3Artifact/Nexus3Artifact'
 import css from '../../ArtifactConnector.module.scss'
 
 export function Nexus2Artifact({
@@ -275,7 +275,7 @@ export function Nexus2Artifact({
       : !checkIfQueryParamsisNotEmpty([
           formikValue.repositoryFormat,
           formikValue.repository,
-          formikValue.spec.packageName
+          formikValue?.spec?.packageName
         ])
   }, [])
 
@@ -451,7 +451,6 @@ export function Nexus2Artifact({
                       variableName="repository"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('repository', value)
                       }}
@@ -477,7 +476,6 @@ export function Nexus2Artifact({
                           variableName="spec.groupId"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.groupId', value)
                           }}
@@ -501,7 +499,6 @@ export function Nexus2Artifact({
                           variableName="spec.artifactId"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.artifactId', value)
                           }}
@@ -525,7 +522,6 @@ export function Nexus2Artifact({
                           variableName="spec.extension"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.extension', value)
                           }}
@@ -549,7 +545,6 @@ export function Nexus2Artifact({
                           variableName="spec.classifier"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.classifier', value)
                           }}
@@ -575,7 +570,6 @@ export function Nexus2Artifact({
                         variableName="spec.packageName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => {
                           formik.setFieldValue('spec.packageName', value)
                         }}
@@ -607,6 +601,7 @@ export function Nexus2Artifact({
                     formik?.values?.spec?.artifactId
                   )
                 }
+                tooltipId="nexus2-tag"
               />
             </div>
             {!hideHeaderAndNavBtns && (

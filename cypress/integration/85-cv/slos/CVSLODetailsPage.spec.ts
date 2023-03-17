@@ -44,7 +44,9 @@ import {
   getSLODashboardWidgets,
   listMonitoredServicesForSLOs,
   listMonitoredServices,
-  listMonitoredServicesCallResponseForSLOs
+  listMonitoredServicesCallResponseForSLOs,
+  unavailabilityInstancesResponse,
+  listUnavailabilityInstances
 } from '../../../support/85-cv/slos/constants'
 
 describe('CVSLODetailsPage', () => {
@@ -70,6 +72,7 @@ describe('CVSLODetailsPage', () => {
 
     cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('be.visible')
     cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', listUnavailabilityInstances, { data: [] })
 
     cy.contains('span', 'Retry').click()
 
@@ -79,6 +82,7 @@ describe('CVSLODetailsPage', () => {
 
   it('should handle the Details tab options', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', listUnavailabilityInstances, unavailabilityInstancesResponse)
     cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
@@ -118,6 +122,7 @@ describe('CVSLODetailsPage', () => {
 
   it('should render the Service Details card with data and by clicking the MS name it should redirect to MS details page', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', listUnavailabilityInstances, { data: [] })
     cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
@@ -142,6 +147,7 @@ describe('CVSLODetailsPage', () => {
 
   it('should handle the time range filters and ensure the timeline slider functionality', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', listUnavailabilityInstances, { data: [] })
     cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
@@ -165,6 +171,7 @@ describe('CVSLODetailsPage', () => {
 
   it('should open the Change details drawer by clicking on the Change and ensure the SLO and Error budget charts functionality', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', listUnavailabilityInstances, { data: [] })
     cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
@@ -186,6 +193,7 @@ describe('CVSLODetailsPage', () => {
 
   it('should handle the no data state for SLO charts', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', listUnavailabilityInstances, { data: [] })
     cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
@@ -204,6 +212,7 @@ describe('CVSLODetailsPage', () => {
 
   it('should handle the no data for out of SLO cycle', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', listUnavailabilityInstances, { data: [] })
     cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
@@ -225,6 +234,7 @@ describe('CVSLODetailsPage', () => {
 
   it('should handle the SLI recalculation', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', listUnavailabilityInstances, { data: [] })
     cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
@@ -246,6 +256,7 @@ describe('CVSLODetailsPage', () => {
 
   it('check Deployment details', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', listUnavailabilityInstances, { data: [] })
     cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 

@@ -17,6 +17,7 @@ import { useStrings } from 'framework/strings'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/MultiTypeKVTagInput'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { TasBGAppSetupData } from './TasBGAppSetup'
 import TasSetupSource from '../TASBasicAppSetupStep/TASSetupSource'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -36,6 +37,7 @@ export function TasBGAppSetupWidget(
   formikRef: StepFormikFowardRef
 ): JSX.Element {
   const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
 
   function commonValidation(this: Yup.TestContext, value: any, valueString: string): boolean | Yup.ValidationError {
     if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED && typeof value !== 'number') {
@@ -105,7 +107,8 @@ export function TasBGAppSetupWidget(
                 name="spec.tempRoutes"
                 tagsProps={{ placeholder: getString('cd.steps.tas.typeAndEnterForRouteAdd') }}
                 multiTypeProps={{
-                  allowableTypes
+                  allowableTypes,
+                  expressions
                 }}
                 type={getString('tagLabel')}
                 label={getString('cd.steps.tas.tempRoutes')}

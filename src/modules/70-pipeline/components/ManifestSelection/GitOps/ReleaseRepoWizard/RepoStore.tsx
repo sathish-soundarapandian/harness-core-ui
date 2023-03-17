@@ -203,7 +203,6 @@ function RepoStore({
                         variableName="connectorRef"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={
                           /*istanbul ignore next */
                           value => {

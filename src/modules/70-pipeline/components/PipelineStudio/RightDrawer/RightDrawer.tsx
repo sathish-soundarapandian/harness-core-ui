@@ -40,6 +40,7 @@ import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { usePrevious } from '@common/hooks/usePrevious'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -769,11 +770,11 @@ export function RightDrawer(): React.ReactElement {
 
   const { onSearchInputChange } = usePipelineVariables()
 
-  const getStepNameSuffix = (stepType: string, stepName: string, isProvisioner: boolean): string => {
+  const getStepNameSuffix = (stepType: string, isProvisioner: boolean): string => {
     let maxId = 0
     const suffixNameArray: string[] = []
     const stepsMap = data?.paletteData?.stepsMap
-    const _stepName = stepName.split(' ').join('')
+    const _stepName = stepType.split(' ').join('')
     stepsMap?.forEach((_value, key: string) => {
       const stepDetails = getStepFromId(
         isProvisioner
@@ -808,7 +809,7 @@ export function RightDrawer(): React.ReactElement {
 
   const onStepSelection = async (item: StepData): Promise<void> => {
     const paletteData = data?.paletteData
-    const suffixString = getStepNameSuffix(item.type, item.name, false)
+    const suffixString = getStepNameSuffix(item.type, false)
     const stepName = `${item.name}${suffixString}`
     if (paletteData?.entity) {
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(defaultTo(selectedStageId, '')))
@@ -900,7 +901,8 @@ export function RightDrawer(): React.ReactElement {
     try {
       const stepType =
         (data?.stepConfig?.node as StepElementConfig)?.type ||
-        get(templateTypes, (data?.stepConfig?.node as TemplateStepNode).template.templateRef)
+        get(templateTypes, (data?.stepConfig?.node as TemplateStepNode).template.templateRef) ||
+        (stageType as string)
 
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
@@ -937,7 +939,8 @@ export function RightDrawer(): React.ReactElement {
     await updateNode(processNode, drawerType, isRollback)
   }
 
-  const onDiscard = (): void => {
+  const previousStepId = usePrevious(selectedStepId)
+  const onDiscard = React.useCallback((): void => {
     updatePipelineView({
       ...pipelineView,
       isDrawerOpened: false,
@@ -945,7 +948,13 @@ export function RightDrawer(): React.ReactElement {
         type: DrawerTypes.AddStep
       }
     })
-  }
+  }, [pipelineView, updatePipelineView])
+
+  React.useEffect(() => {
+    if (!selectedStepId && previousStepId) {
+      onDiscard()
+    }
+  }, [previousStepId, selectedStepId, onDiscard])
 
   const showHelpPanel = () => {
     setHelpPanel(!helpPanelVisible)
@@ -1109,7 +1118,7 @@ export function RightDrawer(): React.ReactElement {
             const paletteData = data.paletteData
             if (paletteData?.entity) {
               const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
-              const suffixString = getStepNameSuffix(item.type, item.name, true)
+              const suffixString = getStepNameSuffix(item.type, true)
               const stepName = `${item.name}${suffixString}`
               const newStepData = {
                 step: {

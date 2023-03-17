@@ -1,5 +1,7 @@
 import { isEmpty } from 'lodash-es'
+import type { UseStringsReturn } from 'framework/strings'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import { getRunQueryButtonTooltip } from './components/CommonQueryContent/CommonQueryContent.utils'
 
 export function getIsQueryButtonDisabled({
   query,
@@ -20,4 +22,15 @@ export function getIsQueryFieldNotPresent(
   values: CommonCustomMetricFormikInterface
 ): boolean {
   return Boolean(queryFieldIdentifier && !values[queryFieldIdentifier as keyof CommonCustomMetricFormikInterface])
+}
+
+export function getRunQueryBtnTooltip(
+  queryFieldIdentifier: string | undefined,
+  values: CommonCustomMetricFormikInterface,
+  query: string,
+  getString: UseStringsReturn['getString']
+): string {
+  const isQueryFieldNotPresent = getIsQueryFieldNotPresent(queryFieldIdentifier, values)
+  const tooltipMessage = getRunQueryButtonTooltip(query, isQueryFieldNotPresent, queryFieldIdentifier, getString)
+  return tooltipMessage
 }

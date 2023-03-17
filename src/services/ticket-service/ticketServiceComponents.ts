@@ -16,6 +16,292 @@ import type * as Fetcher from './ticketServiceFetcher'
 import { ticketServiceFetch } from './ticketServiceFetcher'
 import type * as Schemas from './ticketServiceSchemas'
 
+export type MetadataListPrioritiesQueryParams = {
+  /*
+   * Harness Account ID
+   *
+   * @example abcdef1234567890ghijkl
+   * @pattern ^[a-zA-Z0-9_-]{22}$
+   */
+  accountId: string
+  /*
+   * Harness Organization ID
+   *
+   * @example example_org
+   * @pattern ^[A-Za-z_][A-Za-z0-9_]*$
+   * @maxLength 128
+   */
+  orgId?: string
+  /*
+   * Harness Project ID
+   *
+   * @example example_project
+   * @pattern ^[A-Za-z_][A-Za-z0-9_]*$
+   * @maxLength 128
+   */
+  projectId?: string
+  /*
+   * Harness Module
+   *
+   * @example sto
+   */
+  module: string
+}
+
+export type MetadataListPrioritiesError = Fetcher.ErrorWrapper<
+  | {
+      status: 400
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 401
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 403
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 404
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 500
+      payload: Schemas.NotFound
+    }
+>
+
+export type MetadataListPrioritiesVariables = {
+  queryParams: MetadataListPrioritiesQueryParams
+} & TicketServiceContext['fetcherOptions']
+
+/**
+ * List all Ticket priorities accessible on the Ticket Provider
+ */
+export const fetchMetadataListPriorities = (variables: MetadataListPrioritiesVariables) =>
+  ticketServiceFetch<
+    Schemas.MetadataListPrioritiesResponseBody,
+    MetadataListPrioritiesError,
+    undefined,
+    {},
+    MetadataListPrioritiesQueryParams,
+    {}
+  >({ url: '/api/metadata/priorities', method: 'get', ...variables })
+
+/**
+ * List all Ticket priorities accessible on the Ticket Provider
+ */
+export const useMetadataListPriorities = <TData>(
+  variables: MetadataListPrioritiesVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<Schemas.MetadataListPrioritiesResponseBody, MetadataListPrioritiesError, TData>,
+    'queryKey' | 'queryFn'
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } = useTicketServiceContext(options)
+  return reactQuery.useQuery<Schemas.MetadataListPrioritiesResponseBody, MetadataListPrioritiesError, TData>(
+    queryKeyFn({ path: '/api/metadata/priorities', operationId: 'metadataListPriorities', variables }),
+    () => fetchMetadataListPriorities({ ...fetcherOptions, ...variables }),
+    {
+      ...options,
+      ...queryOptions
+    }
+  )
+}
+
+export type MetadataListProjectsQueryParams = {
+  /*
+   * Harness Account ID
+   *
+   * @example abcdef1234567890ghijkl
+   * @pattern ^[a-zA-Z0-9_-]{22}$
+   */
+  accountId: string
+  /*
+   * Harness Organization ID
+   *
+   * @example example_org
+   * @pattern ^[A-Za-z_][A-Za-z0-9_]*$
+   * @maxLength 128
+   */
+  orgId?: string
+  /*
+   * Harness Project ID
+   *
+   * @example example_project
+   * @pattern ^[A-Za-z_][A-Za-z0-9_]*$
+   * @maxLength 128
+   */
+  projectId?: string
+  /*
+   * Harness Module
+   *
+   * @example sto
+   */
+  module: string
+}
+
+export type MetadataListProjectsError = Fetcher.ErrorWrapper<
+  | {
+      status: 400
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 401
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 403
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 404
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 500
+      payload: Schemas.NotFound
+    }
+>
+
+export type MetadataListProjectsVariables = {
+  queryParams: MetadataListProjectsQueryParams
+} & TicketServiceContext['fetcherOptions']
+
+/**
+ * List all projects accessible on the Ticket Provider
+ */
+export const fetchMetadataListProjects = (variables: MetadataListProjectsVariables) =>
+  ticketServiceFetch<
+    Schemas.MetadataListProjectsResponseBody,
+    MetadataListProjectsError,
+    undefined,
+    {},
+    MetadataListProjectsQueryParams,
+    {}
+  >({ url: '/api/metadata/projects', method: 'get', ...variables })
+
+/**
+ * List all projects accessible on the Ticket Provider
+ */
+export const useMetadataListProjects = <TData>(
+  variables: MetadataListProjectsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<Schemas.MetadataListProjectsResponseBody, MetadataListProjectsError, TData>,
+    'queryKey' | 'queryFn'
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } = useTicketServiceContext(options)
+  return reactQuery.useQuery<Schemas.MetadataListProjectsResponseBody, MetadataListProjectsError, TData>(
+    queryKeyFn({ path: '/api/metadata/projects', operationId: 'metadataListProjects', variables }),
+    () => fetchMetadataListProjects({ ...fetcherOptions, ...variables }),
+    {
+      ...options,
+      ...queryOptions
+    }
+  )
+}
+
+export type MetadataGetProjectPathParams = {
+  /*
+   * The ID of the project to retrieve
+   *
+   * @example Dicta ut eius corrupti quos.
+   */
+  id: string
+}
+
+export type MetadataGetProjectQueryParams = {
+  /*
+   * Harness Account ID
+   *
+   * @example abcdef1234567890ghijkl
+   * @pattern ^[a-zA-Z0-9_-]{22}$
+   */
+  accountId: string
+  /*
+   * Harness Organization ID
+   *
+   * @example example_org
+   * @pattern ^[A-Za-z_][A-Za-z0-9_]*$
+   * @maxLength 128
+   */
+  orgId?: string
+  /*
+   * Harness Project ID
+   *
+   * @example example_project
+   * @pattern ^[A-Za-z_][A-Za-z0-9_]*$
+   * @maxLength 128
+   */
+  projectId?: string
+  /*
+   * Harness Module
+   *
+   * @example sto
+   */
+  module: string
+}
+
+export type MetadataGetProjectError = Fetcher.ErrorWrapper<
+  | {
+      status: 400
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 401
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 403
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 404
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 500
+      payload: Schemas.NotFound
+    }
+>
+
+export type MetadataGetProjectVariables = {
+  pathParams: MetadataGetProjectPathParams
+  queryParams: MetadataGetProjectQueryParams
+} & TicketServiceContext['fetcherOptions']
+
+/**
+ * Get information for a given project on the Ticket Provider
+ */
+export const fetchMetadataGetProject = (variables: MetadataGetProjectVariables) =>
+  ticketServiceFetch<
+    Schemas.Project,
+    MetadataGetProjectError,
+    undefined,
+    {},
+    MetadataGetProjectQueryParams,
+    MetadataGetProjectPathParams
+  >({ url: '/api/metadata/projects/{id}', method: 'get', ...variables })
+
+/**
+ * Get information for a given project on the Ticket Provider
+ */
+export const useMetadataGetProject = <TData>(
+  variables: MetadataGetProjectVariables,
+  options?: Omit<reactQuery.UseQueryOptions<Schemas.Project, MetadataGetProjectError, TData>, 'queryKey' | 'queryFn'>
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } = useTicketServiceContext(options)
+  return reactQuery.useQuery<Schemas.Project, MetadataGetProjectError, TData>(
+    queryKeyFn({ path: '/api/metadata/projects/{id}', operationId: 'metadataGetProject', variables }),
+    () => fetchMetadataGetProject({ ...fetcherOptions, ...variables }),
+    {
+      ...options,
+      ...queryOptions
+    }
+  )
+}
+
 export type SettingsGetSettingQueryParams = {
   /*
    * Harness Account ID
@@ -51,19 +337,23 @@ export type SettingsGetSettingQueryParams = {
 export type SettingsGetSettingError = Fetcher.ErrorWrapper<
   | {
       status: 400
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
   | {
       status: 401
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
   | {
       status: 403
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 404
+      payload: Schemas.NotFound
     }
   | {
       status: 500
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
 >
 
@@ -128,19 +418,19 @@ export type SettingsSaveSettingQueryParams = {
 export type SettingsSaveSettingError = Fetcher.ErrorWrapper<
   | {
       status: 400
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
   | {
       status: 401
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
   | {
       status: 403
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
   | {
       status: 500
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
 >
 
@@ -180,7 +470,7 @@ export const useSettingsSaveSetting = (
 
 export type SystemHealthError = Fetcher.ErrorWrapper<{
   status: 500
-  payload: Schemas.BadRequest
+  payload: Schemas.NotFound
 }>
 
 export type SystemHealthVariables = TicketServiceContext['fetcherOptions']
@@ -271,12 +561,6 @@ export type TicketsListTicketsQueryParams = {
    */
   pageSize?: number
   /*
-   * Identifier(s) as a json string to find associated ticket, in { "key1": "value1", "key2":"value2" }
-   *
-   * @example {"key1":"value1","key2":"value2"}
-   */
-  identifiers?: string
-  /*
    * Harness Organization ID
    *
    * @example example_org
@@ -292,28 +576,52 @@ export type TicketsListTicketsQueryParams = {
    * @maxLength 128
    */
   projectId?: string
+  /*
+   * Harness Module
+   *
+   * @example sto
+   */
+  module: string
+  /*
+   * Identifier(s) to match, in JSON format
+   *
+   * @example {"key1":"value1","key2":"value2"}
+   */
+  identifiers?: string
+  /*
+   * Optional Scope(s) to to match, in JSON format
+   *
+   * @example {"target": "123"}
+   */
+  optional?: string
+  /*
+   * External Ticket ID to match
+   *
+   * @example PROJ-1234
+   */
+  externalId?: string
 }
 
 export type TicketsListTicketsError = Fetcher.ErrorWrapper<
   | {
       status: 400
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
   | {
       status: 401
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
   | {
       status: 403
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
   | {
       status: 404
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
   | {
       status: 500
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
 >
 
@@ -379,24 +687,30 @@ export type TicketsCreateTicketQueryParams = {
    * @maxLength 128
    */
   projectId?: string
+  /*
+   * The Harness module responsible for this ticket
+   *
+   * @example sto
+   */
+  module: string
 }
 
 export type TicketsCreateTicketError = Fetcher.ErrorWrapper<
   | {
       status: 400
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
   | {
       status: 401
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
   | {
       status: 403
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
   | {
       status: 500
-      payload: Schemas.BadRequest
+      payload: Schemas.NotFound
     }
 >
 
@@ -439,7 +753,223 @@ export const useTicketsCreateTicket = (
   >((variables: TicketsCreateTicketVariables) => fetchTicketsCreateTicket({ ...fetcherOptions, ...variables }), options)
 }
 
+export type TicketsFindTicketByIdPathParams = {
+  /*
+   * The ID of the External Ticket to retrieve
+   *
+   * @example abcdef1234567890ghijkl
+   * @pattern ^[a-zA-Z0-9_-]{22}$
+   */
+  id: string
+}
+
+export type TicketsFindTicketByIdQueryParams = {
+  /*
+   * Harness Account ID
+   *
+   * @example abcdef1234567890ghijkl
+   * @pattern ^[a-zA-Z0-9_-]{22}$
+   */
+  accountId: string
+  /*
+   * Harness Organization ID
+   *
+   * @example example_org
+   * @pattern ^[A-Za-z_][A-Za-z0-9_]*$
+   * @maxLength 128
+   */
+  orgId?: string
+  /*
+   * Harness Project ID
+   *
+   * @example example_project
+   * @pattern ^[A-Za-z_][A-Za-z0-9_]*$
+   * @maxLength 128
+   */
+  projectId?: string
+  /*
+   * Harness Module
+   *
+   * @example sto
+   */
+  module: string
+}
+
+export type TicketsFindTicketByIdError = Fetcher.ErrorWrapper<
+  | {
+      status: 400
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 401
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 403
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 404
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 500
+      payload: Schemas.NotFound
+    }
+>
+
+export type TicketsFindTicketByIdVariables = {
+  pathParams: TicketsFindTicketByIdPathParams
+  queryParams: TicketsFindTicketByIdQueryParams
+} & TicketServiceContext['fetcherOptions']
+
+/**
+ * Find External Ticket by ID
+ */
+export const fetchTicketsFindTicketById = (variables: TicketsFindTicketByIdVariables) =>
+  ticketServiceFetch<
+    Schemas.Ticket,
+    TicketsFindTicketByIdError,
+    undefined,
+    {},
+    TicketsFindTicketByIdQueryParams,
+    TicketsFindTicketByIdPathParams
+  >({ url: '/api/tickets/{id}', method: 'get', ...variables })
+
+/**
+ * Find External Ticket by ID
+ */
+export const useTicketsFindTicketById = <TData>(
+  variables: TicketsFindTicketByIdVariables,
+  options?: Omit<reactQuery.UseQueryOptions<Schemas.Ticket, TicketsFindTicketByIdError, TData>, 'queryKey' | 'queryFn'>
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } = useTicketServiceContext(options)
+  return reactQuery.useQuery<Schemas.Ticket, TicketsFindTicketByIdError, TData>(
+    queryKeyFn({ path: '/api/tickets/{id}', operationId: 'ticketsFindTicketById', variables }),
+    () => fetchTicketsFindTicketById({ ...fetcherOptions, ...variables }),
+    {
+      ...options,
+      ...queryOptions
+    }
+  )
+}
+
+export type TicketsAddCommentPathParams = {
+  /*
+   * The ID of the External Ticket
+   *
+   * @example YE_8g5_49zj7iPv7U9G6JZ
+   * @pattern ^[a-zA-Z0-9_-]{22}$
+   */
+  id: string
+}
+
+export type TicketsAddCommentQueryParams = {
+  /*
+   * Harness Account ID
+   *
+   * @example abcdef1234567890ghijkl
+   * @pattern ^[a-zA-Z0-9_-]{22}$
+   */
+  accountId: string
+  /*
+   * Harness Organization ID
+   *
+   * @example example_org
+   * @pattern ^[A-Za-z_][A-Za-z0-9_]*$
+   * @maxLength 128
+   */
+  orgId?: string
+  /*
+   * Harness Project ID
+   *
+   * @example example_project
+   * @pattern ^[A-Za-z_][A-Za-z0-9_]*$
+   * @maxLength 128
+   */
+  projectId?: string
+  /*
+   * Harness Module
+   *
+   * @example sto
+   */
+  module: string
+}
+
+export type TicketsAddCommentError = Fetcher.ErrorWrapper<
+  | {
+      status: 400
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 401
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 403
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 404
+      payload: Schemas.NotFound
+    }
+  | {
+      status: 500
+      payload: Schemas.NotFound
+    }
+>
+
+export type TicketsAddCommentVariables = {
+  body: Schemas.AddCommentRequestBody
+  pathParams: TicketsAddCommentPathParams
+  queryParams: TicketsAddCommentQueryParams
+} & TicketServiceContext['fetcherOptions']
+
+/**
+ * Add Comment to External Ticket
+ */
+export const fetchTicketsAddComment = (variables: TicketsAddCommentVariables) =>
+  ticketServiceFetch<
+    undefined,
+    TicketsAddCommentError,
+    Schemas.AddCommentRequestBody,
+    {},
+    TicketsAddCommentQueryParams,
+    TicketsAddCommentPathParams
+  >({ url: '/api/tickets/{id}/comment', method: 'post', ...variables })
+
+/**
+ * Add Comment to External Ticket
+ */
+export const useTicketsAddComment = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<undefined, TicketsAddCommentError, TicketsAddCommentVariables>,
+    'mutationFn'
+  >
+) => {
+  const { fetcherOptions } = useTicketServiceContext()
+  return reactQuery.useMutation<undefined, TicketsAddCommentError, TicketsAddCommentVariables>(
+    (variables: TicketsAddCommentVariables) => fetchTicketsAddComment({ ...fetcherOptions, ...variables }),
+    options
+  )
+}
+
 export type QueryOperation =
+  | {
+      path: '/api/metadata/priorities'
+      operationId: 'metadataListPriorities'
+      variables: MetadataListPrioritiesVariables
+    }
+  | {
+      path: '/api/metadata/projects'
+      operationId: 'metadataListProjects'
+      variables: MetadataListProjectsVariables
+    }
+  | {
+      path: '/api/metadata/projects/{id}'
+      operationId: 'metadataGetProject'
+      variables: MetadataGetProjectVariables
+    }
   | {
       path: '/api/settings'
       operationId: 'settingsGetSetting'
@@ -459,4 +989,9 @@ export type QueryOperation =
       path: '/api/tickets'
       operationId: 'ticketsListTickets'
       variables: TicketsListTicketsVariables
+    }
+  | {
+      path: '/api/tickets/{id}'
+      operationId: 'ticketsFindTicketById'
+      variables: TicketsFindTicketByIdVariables
     }

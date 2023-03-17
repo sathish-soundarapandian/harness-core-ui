@@ -86,6 +86,11 @@ describe('Create empty monitored service', () => {
     cy.get('[data-testid="service"] input').click()
     cy.contains('p', 'Service 101').click({ force: true })
     cy.get('[data-testid="environment"] input').click()
+    cy.contains('p', '+ Add New').click({ force: true })
+    cy.contains('h4', 'New Environment').should('be.visible')
+    cy.contains('span', 'Cancel').click({ force: true })
+    cy.contains('h4', 'New Environment').should('not.exist')
+    cy.get('[data-testid="environment"] input').click()
     cy.contains('p', 'QA').click({ force: true })
     cy.get('button').contains('span', 'Save').click()
     cy.get('[class*=bp3-dialog]').within(() => {

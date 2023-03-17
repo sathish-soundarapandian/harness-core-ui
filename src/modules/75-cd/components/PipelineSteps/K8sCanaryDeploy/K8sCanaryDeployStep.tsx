@@ -143,7 +143,6 @@ function K8CanaryDeployWidget(
                     variableName={getString('instanceFieldOptions.instances')}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       setFieldValue('instances', value)
                     }}

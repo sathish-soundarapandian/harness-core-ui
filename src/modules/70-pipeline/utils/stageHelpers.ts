@@ -24,10 +24,10 @@ import type {
   ServiceDefinition,
   CustomDeploymentServiceSpec
 } from 'services/cd-ng'
-import { connectorTypes } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType, connectorTypes } from '@pipeline/utils/constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline as getStageByPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import type { DependencyElement } from 'services/ci'
+import type { CIInfraDetails, DependencyElement } from 'services/ci'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 
@@ -75,7 +75,8 @@ export enum ServiceDeploymentType {
   SshWinRmAws = 'SshWinRmAws',
   SshWinRmAzure = 'SshWinRmAzure',
   Asg = 'Asg',
-  GoogleCloudFunctions = 'GoogleCloudFunctions'
+  GoogleCloudFunctions = 'GoogleCloudFunctions',
+  AwsLambda = 'AwsLambda'
 }
 
 export enum RepositoryFormatTypes {
@@ -95,10 +96,9 @@ const commonRepoFormatTypes = [
 
 export const nexus2RepositoryFormatTypes = [...commonRepoFormatTypes]
 
-export const nexus3RepositoryFormatTypes = [
-  ...commonRepoFormatTypes,
-  { label: 'Raw', value: RepositoryFormatTypes.Raw }
-]
+export const rawRepoFormat = [{ label: 'Raw', value: RepositoryFormatTypes.Raw }]
+
+export const nexus3RepositoryFormatTypes = [...commonRepoFormatTypes, ...rawRepoFormat]
 
 export const k8sRepositoryFormatTypes = [{ label: 'Docker', value: RepositoryFormatTypes.Docker }]
 
@@ -161,6 +161,15 @@ export function hasOverviewDetail(pipelineExecution?: PipelineExecutionSummary):
 
 export function hasCIStage(pipelineExecution?: PipelineExecutionSummary): boolean {
   return pipelineExecution?.modules?.includes('ci') || !isEmpty(pipelineExecution?.moduleInfo?.ci)
+}
+
+export function pipelineHasCIStageWithK8sInfra(pipelineExecution?: PipelineExecutionSummary): boolean {
+  const infras: CIInfraDetails[] = get(pipelineExecution, 'moduleInfo.ci.infraDetailsList', [])
+  return (
+    infras.findIndex(
+      (stageInfra: CIInfraDetails) => stageInfra.infraType === CIBuildInfrastructureType.KubernetesDirect
+    ) !== -1
+  )
 }
 
 export function hasSTOStage(pipelineExecution?: PipelineExecutionSummary): boolean {
@@ -357,6 +366,10 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
   )
 }
 
+export const isOnlyOneManifestAllowedForDeploymentType = (deploymentType: ServiceDefinition['type']) => {
+  return isServerlessDeploymentType(deploymentType) || deploymentType === ServiceDeploymentType.AwsLambda
+}
+
 export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.WinRm || deploymentType === ServiceDeploymentType.Ssh
 }
@@ -425,6 +438,10 @@ export const isTasGenericDeploymentType = (deploymentType: string, repo: string 
 
 export const isGoogleCloudFuctionsDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.GoogleCloudFunctions
+}
+
+export const isAWSLambdaDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.AwsLambda
 }
 
 export const detailsHeaderName: Record<string, string> = {
@@ -674,7 +691,8 @@ export const infraDefinitionTypeMapping: { [key: string]: string } = {
   CustomDeployment: StepType.CustomDeployment,
   TAS: StepType.TasInfra,
   Asg: StepType.AsgInfraSpec,
-  GoogleCloudFunctions: StepType.GoogleCloudFunctionsInfra
+  GoogleCloudFunctions: StepType.GoogleCloudFunctionsInfra,
+  AwsLambda: StepType.AwsLambdaInfra
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
@@ -699,6 +717,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.Asg
     case ServiceDeploymentType.GoogleCloudFunctions:
       return StepType.GoogleCloudFunctionsService
+    case ServiceDeploymentType.AwsLambda:
+      return StepType.AwsLambdaService
     default:
       return StepType.K8sServiceSpec
   }
@@ -737,11 +757,13 @@ export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefin
 export const getAllowedRepoOptions = (
   deploymentType: string,
   azureFlag?: boolean,
-
   isTemplateContext?: boolean,
   selectedArtifact?: ArtifactType | null
 ): SelectOption[] => {
   if (selectedArtifact === 'Nexus3Registry') {
+    if (isAWSLambdaDeploymentType(deploymentType)) {
+      return [...nexus3RepositoryFormatTypes]
+    }
     return [...k8sRepositoryFormatTypes, ...nexus3RepositoryFormatTypes]
   }
   return !!isTemplateContext ||

@@ -121,6 +121,13 @@ import { K8sDryRunStep } from './K8sDryRunStep/K8sDryRunStep'
 import { AsgSwapService } from './AsgSwapServiceStep/AsgSwapServiceStep'
 import { AsgBlueGreenRollbackStep } from './AsgBlueGreenRollbackStep/AsgBlueGreenRollbackStep'
 import { AsgBlueGreenDeployStep } from './AsgBlueGreenDeployStep/AsgBlueGreenDeployStep'
+import { AwsLambdaServiceSpec } from './AwsLambda/AwsLambdaServiceSpec/AwsLambdaServiceSpec'
+import { AwsLambdaInfraSpec } from './AwsLambda/AwsLambdaInfraSpec/AwsLambdaInfraSpec'
+import { AwsLambdaDeployStep } from './AwsLambda/AwsLambdaDeployStep/AwsLambdaDeployStep'
+import { AwsLambdaRollbackStep } from './AwsLambda/AwsLambdaRollbackStep/AwsLambdaRollbackStep'
+import { TerraformCloudRun } from './TerraformCloudRunStep/TerraformCloudRun'
+import { TerraformCloudRollback } from './TerraformCloudRollbackStep/TerraformCloudRollback'
+import { RouteMappingStep } from './RouteMappingStep/RouteMappingStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -223,6 +230,7 @@ factory.registerStep(new TasBGAppSetupStep())
 factory.registerStep(new TasCanaryAppSetupStep())
 factory.registerStep(new TASRollingRollbackStep())
 factory.registerStep(new TasRollingDeploymentStep())
+factory.registerStep(new RouteMappingStep())
 factory.registerStep(new AsgCanaryDeleteStep())
 factory.registerStep(new AsgCanaryDeployStep())
 factory.registerStep(new AsgRollingRollbackStep())
@@ -236,3 +244,9 @@ factory.registerStep(new DeployCloudFunctionTrafficShiftStep())
 factory.registerStep(new AsgSwapService())
 factory.registerStep(new AsgBlueGreenRollbackStep())
 factory.registerStep(new AsgBlueGreenDeployStep())
+factory.registerStep(new AwsLambdaServiceSpec())
+factory.registerStep(new AwsLambdaInfraSpec())
+factory.registerStep(new AwsLambdaDeployStep())
+factory.registerStep(new AwsLambdaRollbackStep())
+factory.registerStep(new TerraformCloudRun())
+factory.registerStep(new TerraformCloudRollback())

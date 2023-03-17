@@ -18,7 +18,6 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { AMITagObject, BuildDetails, useListVersionsForAMIArtifact } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
-import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import { amiFilters, getInSelectOptionForm } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -27,6 +26,8 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useListTagsForAmiArtifactMutation } from 'services/cd-ng-rq'
+import MultiTypeArrayTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeArrayTagSelector'
+
 import {
   getDefaultQueryParam,
   getFinalQueryParamValue,
@@ -254,7 +255,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               setRefValue
               disabled={readonly}
               multiTypeProps={{
-                allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+                allowableTypes,
                 expressions
               }}
               type={ArtifactToConnectorMap[defaultTo(artifact?.type, '')]}
@@ -289,7 +290,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.tags`, template) && (
-            <MultiTypeTagSelector
+            <MultiTypeArrayTagSelector
               name={`${path}.artifacts.${artifactPath}.spec.tags`}
               className="tags-select"
               expressions={expressions}
@@ -302,7 +303,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.filters`, template) && (
-            <MultiTypeTagSelector
+            <MultiTypeArrayTagSelector
               name={`${path}.artifacts.${artifactPath}.spec.filters`}
               className="tags-select"
               expressions={expressions}

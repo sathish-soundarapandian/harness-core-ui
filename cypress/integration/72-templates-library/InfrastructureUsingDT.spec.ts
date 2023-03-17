@@ -102,7 +102,7 @@ describe('Deployment Template - Infrastructures Page', () => {
 
     cy.get('[value="stringUpdated"]').should('not.exist')
     cy.get('[value="Hi, I am Updated"]').should('not.exist')
-    cy.contains('h3', 'Edit Infrastructure').should('be.visible')
+    cy.contains('p', 'Edit Infrastructure').should('be.visible')
     cy.contains('span', 'Reconcile').should('be.visible').click()
     cy.contains('p', 'Original').should('be.visible')
     cy.contains('p', 'Refreshed').should('be.visible')

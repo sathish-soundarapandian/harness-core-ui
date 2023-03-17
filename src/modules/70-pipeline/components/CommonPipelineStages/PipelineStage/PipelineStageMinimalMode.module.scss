@@ -43,6 +43,10 @@
   }
   .pipelineContainer {
     height: 540px;
+    .spinnerContainer {
+      height: 20%;
+      margin-top: 20px;
+    }
   }
 }
 
@@ -54,6 +58,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  margin-top: 20px;
   .image {
     width: 400px;
     margin-bottom: 40px;

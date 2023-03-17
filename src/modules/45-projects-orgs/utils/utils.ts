@@ -15,6 +15,7 @@ import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import type { TimeRangeFilterType } from '@common/types'
 import { getDiffInDays } from '@common/utils/momentUtils'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 
 interface RoleOption extends SelectOption {
   managed: boolean
@@ -186,7 +187,7 @@ export const projectsPageQueryParamOptions = {
     return {
       ...params,
       page: params.page ?? 0,
-      size: params.size ?? 100
+      size: params.size ?? COMMON_DEFAULT_PAGE_SIZE
     }
   }
 }

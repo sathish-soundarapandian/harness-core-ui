@@ -44,6 +44,7 @@ export interface UserGroupsReferenceProps {
   onlyCurrentScope?: boolean
   disablePreSelectedItems?: boolean
   identifierFilter?: string[]
+  scopeCountMap?: Map<Scope, string[]>
 }
 
 const fetchRecords = async (
@@ -134,7 +135,8 @@ const UserGroupsReference: React.FC<UserGroupsReferenceProps> = props => {
     onlyCurrentScope,
     disablePreSelectedItems,
     scope = onlyCurrentScope ? getScopeFromDTO({ accountIdentifier, projectIdentifier, orgIdentifier }) : Scope.ACCOUNT,
-    identifierFilter
+    identifierFilter,
+    scopeCountMap
   } = props
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -164,6 +166,7 @@ const UserGroupsReference: React.FC<UserGroupsReferenceProps> = props => {
       orgIdentifier={orgIdentifier}
       noRecordsText={getString('noData')}
       selectedItemsUuidAndScope={userGroupsScopeAndUuid}
+      scopeCountMap={scopeCountMap}
       recordRender={({ item, selected }) => {
         const avatars =
           item.record.users?.map(user => {

@@ -34,7 +34,6 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { CFSideNavProps } from '@cf/constants'
-import CFPipelineDeploymentList from '@cf/pages/pipeline-deployment-list/CFPipelineDeploymentList'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
@@ -54,6 +53,7 @@ import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestina
 import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import type { AuditEventData, ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
+import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import { registerFeatureFlagPipelineStage } from './pages/pipeline-studio/views/FeatureFlagStage'
 import { registerFlagConfigurationPipelineStep } from './components/PipelineSteps'
 import { TargetsPage } from './pages/target-management/targets/TargetsPage'
@@ -193,7 +193,6 @@ registerFlagConfigurationPipelineStep()
 
 const CFRoutes: FC = () => {
   const {
-    FF_PIPELINE,
     FFM_1512,
     FFM_1827,
     NG_SETTINGS,
@@ -202,7 +201,9 @@ const CFRoutes: FC = () => {
     FFM_6666_FF_MFE_Target_Group_Detail,
     FFM_5256_FF_MFE_Environment_Listing,
     FFM_5951_FF_MFE_Targets_Listing,
-    FFM_6665_FF_MFE_Target_Detail
+    FFM_6665_FF_MFE_Target_Detail,
+    FFM_6800_FF_MFE_Onboarding,
+    FFM_7127_FF_MFE_Onboarding_Detail
   } = useFeatureFlags()
 
   return (
@@ -372,7 +373,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.OnboardingPage}
       >
-        <OnboardingPage />
+        {FFM_6800_FF_MFE_Onboarding ? <FFUIApp /> : <OnboardingPage />}
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -383,7 +384,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.OnboardingDetailPage}
       >
-        <OnboardingDetailPage />
+        {FFM_7127_FF_MFE_Onboarding_Detail ? <FFUIApp /> : <OnboardingDetailPage />}
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -393,7 +394,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.CFConfigurePath}
       >
-        <ConfigurePath />
+        {FFM_6800_FF_MFE_Onboarding ? <FFUIApp /> : <ConfigurePath />}
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -446,22 +447,18 @@ const CFRoutes: FC = () => {
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CFSideNavProps}
         />
-        {FF_PIPELINE && (
-          <>
-            <PipelineRouteDestinations
-              pipelineStudioComponent={PipelineStudio}
-              pipelineDeploymentListComponent={CFPipelineDeploymentList}
-              moduleParams={moduleParams}
-              licenseRedirectData={licenseRedirectData}
-              sidebarProps={CFSideNavProps}
-            />
-            <TriggersRouteDestinations
-              moduleParams={moduleParams}
-              licenseRedirectData={licenseRedirectData}
-              sidebarProps={CFSideNavProps}
-            />
-          </>
-        )}
+        <PipelineRouteDestinations
+          pipelineStudioComponent={PipelineStudio}
+          pipelineDeploymentListComponent={PipelineDeploymentList}
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <TriggersRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
         <GovernanceRouteDestinations
           sidebarProps={CFSideNavProps}
           pathProps={{ ...accountPathProps, ...projectPathProps, ...moduleParams }}

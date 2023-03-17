@@ -49,7 +49,6 @@ function GitRepositoryName({
             variableName="repoName"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={changeFieldValue}
             isReadonly={isReadonly}
           />

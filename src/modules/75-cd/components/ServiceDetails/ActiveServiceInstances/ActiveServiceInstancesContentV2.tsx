@@ -202,7 +202,7 @@ export const getSummaryTableData = (instanceGroupedByArtifactV2?: InstanceGroupe
   let lastDeployedAt = 0
   instanceGroupedByArtifactV2?.forEach(artifact => {
     if (artifact.instanceGroupedByEnvironmentList) {
-      artifactVersion ??= artifact.artifactVersion
+      artifactVersion = artifact.artifactVersion
       artifactPath ??= artifact.artifactPath
       artifact.instanceGroupedByEnvironmentList?.forEach(env => {
         if (env.envId && env.envName) {

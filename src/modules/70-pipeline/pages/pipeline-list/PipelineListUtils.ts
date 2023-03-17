@@ -5,13 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { useMemo } from 'react'
 import { Color } from '@harness/design-system'
 import EmptySearchResults from '@common/images/EmptySearchResults.svg'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import type { PMSPipelineSummaryResponse } from 'services/pipeline-ng'
-import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import { queryParamDecodeAll, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, DEFAULT_PIPELINE_LIST_TABLE_SORT } from '@pipeline/utils/constants'
 import type { Module } from '@common/interfaces/RouteInterfaces'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import CFPipelineIllustration from './images/cf-pipeline-illustration.svg'
 import CDPipelineIllustration from './images/cd-pipeline-illustration.svg'
 import CIPipelineIllustration from './images/ci-pipeline-illustration.svg'
@@ -49,17 +52,23 @@ export const getRouteProps = (pathParams: PipelineListPagePathParams, pipeline?:
   }
 }
 
-export const queryParamOptions = {
-  parseArrays: true,
-  decoder: queryParamDecodeAll({ ignoreEmptyString: false }),
-  processQueryParams(params: PipelineListPageQueryParams): ProcessedPipelineListPageQueryParams {
-    return {
-      ...params,
-      page: params.page ?? DEFAULT_PAGE_INDEX,
-      size: params.size ?? DEFAULT_PAGE_SIZE,
-      sort: params.sort ?? DEFAULT_PIPELINE_LIST_TABLE_SORT
-    }
-  }
+export const useQueryParamOptions = (): UseQueryParamsOptions<ProcessedPipelineListPageQueryParams> => {
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const options = useMemo(
+    () => ({
+      decoder: queryParamDecodeAll(),
+      processQueryParams(params: PipelineListPageQueryParams): ProcessedPipelineListPageQueryParams {
+        return {
+          ...params,
+          page: params.page ?? DEFAULT_PAGE_INDEX,
+          size: params.size ?? (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE),
+          sort: params.sort ?? DEFAULT_PIPELINE_LIST_TABLE_SORT
+        }
+      }
+    }),
+    [PL_NEW_PAGE_SIZE]
+  )
+  return options
 }
 
 export const getEmptyStateIllustration = (hasFilter: boolean, module?: Module): string => {

@@ -22,7 +22,8 @@ export enum ModuleName {
   TEMPLATES = 'TEMPLATES',
   IACM = 'IACM',
   SSCA = 'SSCA',
-  IDP = 'IDP'
+  IDP = 'IDP',
+  ET = 'ET'
 }
 
 export const moduleToModuleNameMapping: Record<Module, ModuleName> = {
@@ -36,7 +37,8 @@ export const moduleToModuleNameMapping: Record<Module, ModuleName> = {
   chaos: ModuleName.CHAOS,
   iacm: ModuleName.IACM,
   ssca: ModuleName.SSCA,
-  idp: ModuleName.IDP
+  idp: ModuleName.IDP,
+  et: ModuleName.ET
 }
 
-export type Module = 'ci' | 'cd' | 'cf' | 'cv' | 'ce' | 'sto' | 'chaos' | 'code' | 'iacm' | 'ssca' | 'idp'
+export type Module = 'ci' | 'cd' | 'cf' | 'cv' | 'ce' | 'sto' | 'chaos' | 'code' | 'iacm' | 'ssca' | 'idp' | 'et'

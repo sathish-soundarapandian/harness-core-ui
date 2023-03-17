@@ -5,13 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { flatMap, findIndex, cloneDeep, set, noop, isEmpty, defaultTo } from 'lodash-es'
+import { flatMap, findIndex, cloneDeep, set, noop, isEmpty, defaultTo, get } from 'lodash-es'
+import produce from 'immer'
 import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { v4 as uuid } from 'uuid'
-import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
-import type { PageConnectorResponse, DeploymentStageConfig, ServiceDefinition } from 'services/cd-ng'
+import type {
+  DeploymentStageConfig,
+  PageConnectorResponse,
+  ServiceDefinition,
+  StageElementConfig
+} from 'services/cd-ng'
 import type { StageElementWrapperConfig, PipelineInfoConfig, EntityGitDetails } from 'services/pipeline-ng'
 import {
   getIdentifierFromValue,
@@ -19,7 +24,7 @@ import {
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
-import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import type { PipelineStageWrapper, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { PipelineOrStageStatus } from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanelUtils'
@@ -261,17 +266,12 @@ export const removeNodeFromPipeline = (
   const { stage: node, parent } = nodeResponse
   if (node && data.stages) {
     const index = data.stages.indexOf(node)
+    const nodeIdentifier = node.stage?.identifier
     if (index > -1) {
       data?.stages?.splice(index, 1)
       if (updateStateMap) {
-        stageMap?.delete(node.stage?.identifier || '')
-
-        data.stages?.map(currentStage => {
-          const spec = currentStage.stage?.spec as DeploymentStageConfig
-          if (spec?.serviceConfig?.useFromStage?.stage === node?.stage?.identifier) {
-            spec.serviceConfig = {}
-          }
-        })
+        stageMap?.delete(defaultTo(nodeIdentifier, ''))
+        set(data, 'stages', getStagesAfterNodeRemoval(cloneDeep(data.stages), nodeIdentifier))
       }
       return true
     } else if (parent?.parallel) {
@@ -290,27 +290,14 @@ export const removeNodeFromPipeline = (
           }
         }
         if (updateStateMap) {
-          stageMap?.delete(node.stage?.identifier || '')
+          stageMap?.delete(defaultTo(nodeIdentifier, ''))
+          set(data, 'stages', getStagesAfterNodeRemoval(cloneDeep(data.stages), nodeIdentifier))
         }
         return true
       }
     }
   }
   return false
-}
-export const getDependantStages = (pipeline: PipelineInfoConfig, node?: StageElementWrapper): string[] => {
-  const dependantStages: string[] = []
-  const flattenedStages = getFlattenedStages(pipeline).stages
-
-  flattenedStages?.forEach(currentStage => {
-    if (
-      (currentStage.stage?.spec as DeploymentStageConfig)?.serviceConfig?.useFromStage?.stage ===
-      node?.stage?.identifier
-    ) {
-      dependantStages.push(currentStage.stage?.name || '')
-    }
-  })
-  return dependantStages
 }
 
 export const isDuplicateStageId = (id: string, stages: StageElementWrapperConfig[], updateMode?: boolean): boolean => {
@@ -340,85 +327,6 @@ export const getConnectorNameFromValue = (
   const connectorName = filteredConnector?.connector?.name
   return connectorName
 }
-
-export const resetServiceSelectionForStages = (
-  stages: string[] = [],
-  pipeline: PipelineInfoConfig
-): StageElementWrapperConfig[] => {
-  const stagesCopy = cloneDeep(pipeline.stages) || []
-  stages.forEach(stageId => {
-    const { stage, parent = null } = getStageFromPipeline(stageId, pipeline)
-    const parentStageId = (stage?.stage as DeploymentStageElementConfig)?.spec?.serviceConfig?.useFromStage?.stage
-    const { stageIndex: propagatingParentIndex } = getStageIndexByIdentifier(pipeline, parentStageId)
-    if (!stage) {
-      return
-    }
-
-    if (parent) {
-      const { parallelStageIndex, stageIndex: parentStageIndex } = getStageIndexByIdentifier(pipeline, stageId)
-      const updatedStage = resetStageServiceSpec(stagesCopy?.[parentStageIndex]?.parallel?.[parallelStageIndex] || {})
-      set(stagesCopy, `${parentStageIndex}.parallel.${parallelStageIndex}`, updatedStage)
-      return
-    }
-    let stageIndex = pipeline.stages?.indexOf(stage)
-    stageIndex = stageIndex !== undefined ? stageIndex : -1
-    if (stageIndex <= propagatingParentIndex) {
-      const updatedStage = resetStageServiceSpec(stage)
-      stagesCopy[stageIndex] = updatedStage
-    }
-  })
-  return stagesCopy
-}
-
-export const getAffectedDependentStages = (
-  dependentStages: string[] = [],
-  dropIndex: number,
-  pipeline: PipelineInfoConfig,
-  parallelStageIndex = -1
-): string[] => {
-  const affectedStages: Set<string> = new Set()
-  dependentStages.forEach(stageId => {
-    const { stage: currentStage, parent = null } = getStageFromPipeline(stageId, pipeline)
-    if (!currentStage) {
-      return false
-    }
-    if (parent) {
-      parent?.parallel?.forEach((pStageId: StageElementWrapperConfig, index: number) => {
-        const stageIndex = dependentStages.indexOf(pStageId?.stage?.identifier || '')
-        if (parallelStageIndex !== -1) {
-          stageIndex > -1 && index <= parallelStageIndex && affectedStages.add(stageId)
-        } else {
-          stageIndex > -1 && index <= dropIndex && affectedStages.add(stageId)
-        }
-      })
-      return
-    }
-    const stageIndex = pipeline.stages?.indexOf(currentStage || {})
-
-    if (stageIndex !== undefined && stageIndex > -1) {
-      return stageIndex <= dropIndex && affectedStages.add(stageId)
-    }
-    return
-  })
-  return [...affectedStages]
-}
-
-export const resetStageServiceSpec = (stage: StageElementWrapperConfig): StageElementWrapperConfig =>
-  produce(stage, draft => {
-    const spec = (draft.stage?.spec as DeploymentStageConfig) || {}
-    spec.serviceConfig = {
-      serviceRef: '',
-      serviceDefinition: {
-        type: 'Kubernetes',
-        spec: {
-          artifacts: {
-            sidecars: []
-          },
-          manifests: []
-        }
-      }
-    }
-  })
 
 export const getLinkEventListeners = (
   dynamicPopoverHandler: DynamicPopoverHandlerBinding<PopoverData> | undefined,
@@ -480,48 +388,20 @@ export const getLinkEventListeners = (
       if (event.node?.identifier) {
         const dropNode = getStageFromPipelineContext(event.node.identifier).stage
         const destination = getStageFromPipelineContext(event.destination.identifier).stage
-        const parentStageName = (dropNode?.stage as DeploymentStageElementConfig)?.spec?.serviceConfig?.useFromStage
-          ?.stage
-        const dependentStages = getDependantStages(pipeline, dropNode)
-        const { stageIndex: destinationIndex } = getStageIndexByIdentifier(pipeline, event.destination.identifier)
-        if (parentStageName?.length) {
-          const { stageIndex: propagatingParentIndex = -1 } = getStageIndexByIdentifier(pipeline, parentStageName)
 
-          if (destinationIndex <= propagatingParentIndex) {
-            updateMoveStageDetails({
-              event,
-              direction: MoveDirection.AHEAD
-            })
-            confirmMoveStage()
-            return
-          }
-        } else if (dependentStages?.length) {
-          let indexToDropAt = -1
-          const node = event.destination
-          const { stage } = getStageFromPipelineContext(event.destination.identifier)
-          if (!stage) {
-            //  node on sourceport is parallel so split nodeId to get original node identifier
-            const nodeId = node.getIdentifier().split(EmptyNodeSeparator)[1]
+        // We intercept the DropLinkEvent here to handle to handle specific use cases
+        // For 'Deployment' nodes - to handle moving dependent stages
+        const interceptDrop = interceptDropLinkEvent(
+          dropNode as StageElementWrapper,
+          pipeline,
+          event,
+          getStageFromPipelineContext,
+          updateMoveStageDetails,
+          confirmMoveStage
+        )
 
-            const { stageIndex: nextStageIndex } = getStageIndexByIdentifier(pipeline, nodeId)
-            indexToDropAt = nextStageIndex + 1 // adding 1 as we checked source port that is prev to index where we will move this node
-          } else {
-            indexToDropAt = pipeline?.stages?.indexOf(stage!) || -1
-          }
-
-          const { stageIndex: firstDependentStageIndex = -1 } = getStageIndexByIdentifier(pipeline, dependentStages[0])
-
-          if (indexToDropAt > firstDependentStageIndex) {
-            const stagesTobeUpdated = getAffectedDependentStages(dependentStages, indexToDropAt, pipeline)
-
-            updateMoveStageDetails({
-              event,
-              direction: MoveDirection.BEHIND,
-              dependentStages: stagesTobeUpdated
-            })
-            confirmMoveStage()
-            return
-          }
+        if (interceptDrop) {
+          return
         }
 
         const isRemove = removeNodeFromPipeline(
@@ -704,70 +584,23 @@ export const getNodeEventListerner = (
       if (event.node?.identifier) {
         const dropNode = getStageFromPipelineContext(event?.node?.identifier).stage
         const current = getStageFromPipelineContext(event?.destination?.identifier)
-        const dependentStages = getDependantStages(pipeline, dropNode)
-        const parentStageId = (dropNode?.stage as DeploymentStageElementConfig)?.spec?.serviceConfig?.useFromStage
-          ?.stage
-        const isDropNodeParallel = event.node?.isParallelNode || event.node?.isFirstParallelNode
-        const { stageIndex: dropNodeIndex } = getStageIndexByIdentifier(pipeline, dropNode?.stage?.identifier)
-        if (parentStageId?.length) {
-          const { stageIndex: indexToDropAt } = getStageIndexByIdentifier(pipeline, current?.stage?.stage?.identifier)
 
-          const { stageIndex: propagatingParentIndex } = getStageIndexByIdentifier(pipeline, parentStageId)
-          // if dropping last serial node to Add Stage icon , do nothing
-          if (indexToDropAt == -1 && !isDropNodeParallel) {
-            return
-          }
-          // if dropping parallel node  ahead of its index and is not  a  terminal  index(first and last) node
-          const showConfirmation = isDropNodeParallel && dropNodeIndex > indexToDropAt && indexToDropAt !== -1
-          // if dropping last parrallel node to Add Stage icon , do nothing
-          if (indexToDropAt <= propagatingParentIndex && showConfirmation) {
-            updateMoveStageDetails({
-              event,
-              direction: MoveDirection.AHEAD,
-              currentStage: current
-            })
-            confirmMoveStage()
-            return
-          }
-          updateStageOnAddLinkNew(event, dropNode, current)
+        // We intercept the DropNodeEvent here to handle to handle specific use cases
+        // For 'Deployment' nodes - to handle moving dependent stages
+        const interceptDrop = interceptDropNodeEvent(
+          dropNode as StageElementWrapper,
+          pipeline,
+          event,
+          updateStageOnAddLinkNew,
+          updateMoveStageDetails,
+          confirmMoveStage,
+          current
+        )
+
+        if (interceptDrop) {
           return
-        } else if (dependentStages?.length) {
-          let finalDropIndex = -1
-          let firstDependentStageIndex
-          const { stageIndex: dependentStageIndex, parallelStageIndex: dependentParallelIndex = -1 } =
-            getStageIndexByIdentifier(pipeline, dependentStages[0])
-
-          firstDependentStageIndex = dependentStageIndex
-
-          if (current.parent) {
-            const { stageIndex } = getStageIndexByIdentifier(pipeline, current?.stage?.stage?.identifier)
-            finalDropIndex = stageIndex
-            firstDependentStageIndex = dependentStageIndex
-          } else if (current?.stage) {
-            const { stageIndex } = getStageIndexByIdentifier(pipeline, current?.stage?.stage?.identifier)
-            finalDropIndex = stageIndex
-          }
-
-          finalDropIndex = finalDropIndex === -1 ? pipeline.stages?.length || 0 : finalDropIndex
-          const stagesTobeUpdated = getAffectedDependentStages(
-            dependentStages,
-            finalDropIndex,
-            pipeline,
-            dependentParallelIndex
-          )
-          if (finalDropIndex >= firstDependentStageIndex) {
-            updateMoveStageDetails({
-              event,
-              direction: MoveDirection.BEHIND,
-              dependentStages: stagesTobeUpdated,
-              currentStage: current,
-              isLastAddLink: !current.parent
-            })
-
-            confirmMoveStage()
-            return
-          }
         }
+
         updateStageOnAddLinkNew(event, dropNode, current)
       }
     },
@@ -878,3 +711,282 @@ export const getDeploymentSpecificYamlKeys = (
       return 'startupCommand'
   }
 }
+
+/** START: 'Deployment' Stage Utils */
+
+export const getPropagatingStagesFromStage = (
+  stageId: string,
+  pipeline: PipelineInfoConfig
+): StageElementWrapperConfig[] => {
+  return getFlattenedStages(pipeline).stages?.filter(
+    currentStage =>
+      (currentStage.stage?.spec as DeploymentStageConfig)?.serviceConfig?.useFromStage?.stage === stageId ||
+      // The below conditions are for NG_SVC_ENV_REDESIGN. A specific FF check
+      // IS NOT required as the useFromStage combinations are exclusive
+      (currentStage.stage?.spec as DeploymentStageConfig)?.service?.useFromStage?.stage === stageId ||
+      (currentStage.stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.service?.useFromStage?.stage ===
+        stageId
+  )
+}
+
+export const getStagesAfterNodeRemoval = (
+  stages: StageElementWrapperConfig[],
+  nodeIdentifier?: string
+): StageElementWrapperConfig[] => {
+  return stages?.map(currentStage =>
+    produce(currentStage, draft => {
+      if (draft.parallel) {
+        set(draft, 'parallel', getStagesAfterNodeRemoval(cloneDeep(draft.parallel), nodeIdentifier))
+      } else {
+        if (get(draft, 'stage.spec.serviceConfig.useFromStage.stage') === nodeIdentifier) {
+          set(draft, 'stage.spec.serviceConfig', {})
+        }
+
+        if (get(draft, 'stage.spec.service.useFromStage.stage') === nodeIdentifier) {
+          set(draft, 'stage.spec.service', { serviceRef: '' })
+        }
+
+        if (get(draft, 'stage.template.templateInputs.spec.service.useFromStage.stage') === nodeIdentifier) {
+          set(draft, 'stage.template.templateInputs.spec.service', { serviceRef: '' })
+        }
+      }
+    })
+  )
+}
+
+export const getParentPropagatedStage = (stage?: StageElementConfig): string | undefined => {
+  return (
+    (stage?.spec as DeploymentStageConfig)?.serviceConfig?.useFromStage?.stage ||
+    // The below conditions are for NG_SVC_ENV_REDESIGN. A specific FF check
+    // IS NOT required as the useFromStage combinations are exclusive
+    (stage?.spec as DeploymentStageConfig)?.service?.useFromStage?.stage ||
+    (stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.service?.useFromStage?.stage
+  )
+}
+
+export const getDependentPropagatingStages = (pipeline: PipelineInfoConfig, node?: StageElementWrapper): string[] => {
+  const dependentStages: string[] = []
+  const flattenedStages = getFlattenedStages(pipeline).stages
+
+  flattenedStages?.forEach(currentStage => {
+    const parentStageIdentifier = getParentPropagatedStage(currentStage.stage)
+
+    if (parentStageIdentifier === node?.stage?.identifier) {
+      dependentStages.push(currentStage.stage?.identifier as string)
+    }
+  })
+
+  return dependentStages
+}
+
+export const getAffectedDependentStages = (
+  dependentStages: string[] = [],
+  dropIndex: number,
+  pipeline: PipelineInfoConfig,
+  parallelStageIndex = -1
+): string[] => {
+  const affectedStages: Set<string> = new Set()
+  dependentStages.forEach(stageId => {
+    const { stage: currentStage, parent = null } = getStageFromPipeline(stageId, pipeline)
+    if (!currentStage) {
+      return false
+    }
+    if (parent) {
+      parent?.parallel?.forEach((pStageId: StageElementWrapperConfig, index: number) => {
+        const stageIndex = dependentStages.indexOf(pStageId?.stage?.identifier || '')
+        if (parallelStageIndex !== -1) {
+          stageIndex > -1 && index <= parallelStageIndex && affectedStages.add(stageId)
+        } else {
+          stageIndex > -1 && index <= dropIndex && affectedStages.add(stageId)
+        }
+      })
+      return
+    }
+    const stageIndex = pipeline.stages?.indexOf(currentStage || {})
+
+    if (stageIndex !== undefined && stageIndex > -1) {
+      return stageIndex <= dropIndex && affectedStages.add(stageId)
+    }
+  })
+  return [...affectedStages]
+}
+
+export const interceptDropLinkEvent = (
+  dropNode: StageElementWrapper<StageElementConfig>,
+  pipeline: PipelineInfoConfig,
+  event: any,
+  getStageFromPipelineContext: any,
+  updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
+  confirmMoveStage: () => void
+): boolean => {
+  const parentStageId = getParentPropagatedStage(dropNode?.stage)
+  const dependentStages = getDependentPropagatingStages(pipeline, dropNode)
+
+  const { stageIndex: destinationIndex } = getStageIndexByIdentifier(pipeline, event.destination.identifier)
+
+  if (parentStageId?.length) {
+    const { stageIndex: propagatingParentIndex = -1 } = getStageIndexByIdentifier(pipeline, parentStageId)
+
+    if (destinationIndex <= propagatingParentIndex) {
+      updateMoveStageDetails({
+        event,
+        direction: MoveDirection.AHEAD
+      })
+      confirmMoveStage()
+      return true
+    }
+  } else if (dependentStages?.length) {
+    let indexToDropAt = -1
+    const node = event.destination
+    const { stage } = getStageFromPipelineContext(event.destination.identifier)
+    if (!stage) {
+      //  node on sourceport is parallel so split nodeId to get original node identifier
+      const nodeId = node.getIdentifier().split(EmptyNodeSeparator)[1]
+
+      const { stageIndex: nextStageIndex } = getStageIndexByIdentifier(pipeline, nodeId)
+      indexToDropAt = nextStageIndex + 1 // adding 1 as we checked source port that is prev to index where we will move this node
+    } else {
+      indexToDropAt = pipeline?.stages?.indexOf(stage!) || -1
+    }
+
+    const { stageIndex: firstDependentStageIndex = -1 } = getStageIndexByIdentifier(pipeline, dependentStages[0])
+
+    if (indexToDropAt > firstDependentStageIndex) {
+      const stagesTobeUpdated = getAffectedDependentStages(dependentStages, indexToDropAt, pipeline)
+
+      updateMoveStageDetails({
+        event,
+        direction: MoveDirection.BEHIND,
+        dependentStages: stagesTobeUpdated
+      })
+      confirmMoveStage()
+      return true
+    }
+  }
+  return false
+}
+
+export const interceptDropNodeEvent = (
+  dropNode: StageElementWrapper<StageElementConfig>,
+  pipeline: PipelineInfoConfig,
+  event: any,
+  updateStageOnAddLinkNew: (event: any, dropNode: StageElementWrapper | undefined, current: any) => void,
+  updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
+  confirmMoveStage: () => void,
+  current: PipelineStageWrapper<StageElementConfig>
+): boolean => {
+  const parentStageId = getParentPropagatedStage(dropNode?.stage)
+  const dependentStages = getDependentPropagatingStages(pipeline, dropNode)
+
+  const isDropNodeParallel = event.node?.isParallelNode || event.node?.isFirstParallelNode
+  const { stageIndex: dropNodeIndex } = getStageIndexByIdentifier(pipeline, dropNode?.stage?.identifier)
+
+  if (parentStageId?.length) {
+    const { stageIndex: indexToDropAt } = getStageIndexByIdentifier(pipeline, current?.stage?.stage?.identifier)
+
+    const { stageIndex: propagatingParentIndex } = getStageIndexByIdentifier(pipeline, parentStageId)
+    // if dropping last serial node to Add Stage icon , do nothing
+    if (indexToDropAt == -1 && !isDropNodeParallel) {
+      return true
+    }
+    // if dropping parallel node  ahead of its index and is not  a  terminal  index(first and last) node
+    const showConfirmation = isDropNodeParallel && dropNodeIndex > indexToDropAt && indexToDropAt !== -1
+    // if dropping last parrallel node to Add Stage icon , do nothing
+    if (indexToDropAt <= propagatingParentIndex && showConfirmation) {
+      updateMoveStageDetails({
+        event,
+        direction: MoveDirection.AHEAD,
+        currentStage: current
+      })
+      confirmMoveStage()
+      return true
+    }
+    updateStageOnAddLinkNew(event, dropNode, current)
+    return true
+  } else if (dependentStages?.length) {
+    let finalDropIndex = -1
+    let firstDependentStageIndex
+    const { stageIndex: dependentStageIndex, parallelStageIndex: dependentParallelIndex = -1 } =
+      getStageIndexByIdentifier(pipeline, dependentStages[0])
+
+    firstDependentStageIndex = dependentStageIndex
+
+    if (current.parent) {
+      const { stageIndex } = getStageIndexByIdentifier(pipeline, current?.stage?.stage?.identifier)
+      finalDropIndex = stageIndex
+      firstDependentStageIndex = dependentStageIndex
+    } else if (current?.stage) {
+      const { stageIndex } = getStageIndexByIdentifier(pipeline, current?.stage?.stage?.identifier)
+      finalDropIndex = stageIndex
+    }
+
+    finalDropIndex = finalDropIndex === -1 ? pipeline.stages?.length || 0 : finalDropIndex
+    const stagesTobeUpdated = getAffectedDependentStages(
+      dependentStages,
+      finalDropIndex,
+      pipeline,
+      dependentParallelIndex
+    )
+    if (finalDropIndex >= firstDependentStageIndex) {
+      updateMoveStageDetails({
+        event,
+        direction: MoveDirection.BEHIND,
+        dependentStages: stagesTobeUpdated,
+        currentStage: current,
+        isLastAddLink: !current.parent
+      })
+
+      confirmMoveStage()
+      return true
+    }
+  }
+  return false
+}
+
+export const resetStageServiceSpec = (stage: StageElementWrapperConfig): StageElementWrapperConfig =>
+  produce(stage, draft => {
+    if (get(draft, 'stage.spec.serviceConfig.useFromStage.stage')) {
+      set(draft, 'stage.spec.serviceConfig', {})
+    }
+
+    if (get(draft, 'stage.spec.service.useFromStage.stage')) {
+      set(draft, 'stage.spec.service', { serviceRef: '' })
+    }
+
+    if (get(draft, 'stage.template.templateInputs.spec.service.useFromStage.stage')) {
+      set(draft, 'stage.template.templateInputs.spec.service', { serviceRef: '' })
+    }
+  })
+
+export const resetServiceSelectionForStages = (
+  stages: string[] = [],
+  pipeline: PipelineInfoConfig
+): StageElementWrapperConfig[] => {
+  const stagesCopy = cloneDeep(pipeline.stages) || []
+  stages.forEach(stageId => {
+    const { stage, parent = null } = getStageFromPipeline(stageId, pipeline)
+
+    const parentStageId = getParentPropagatedStage(stage?.stage)
+    const { stageIndex: propagatingParentIndex } = getStageIndexByIdentifier(pipeline, parentStageId)
+
+    if (!stage) {
+      return
+    }
+
+    if (parent) {
+      const { parallelStageIndex, stageIndex: parentStageIndex } = getStageIndexByIdentifier(pipeline, stageId)
+      const updatedStage = resetStageServiceSpec(stagesCopy?.[parentStageIndex]?.parallel?.[parallelStageIndex] || {})
+      set(stagesCopy, `${parentStageIndex}.parallel.${parallelStageIndex}`, updatedStage)
+      return
+    }
+    let stageIndex = pipeline.stages?.indexOf(stage)
+    stageIndex = stageIndex !== undefined ? stageIndex : -1
+    if (stageIndex <= propagatingParentIndex) {
+      const updatedStage = resetStageServiceSpec(stage)
+      stagesCopy[stageIndex] = updatedStage
+    }
+  })
+  return stagesCopy
+}
+
+/** END: 'Deployment' Stage Utils */

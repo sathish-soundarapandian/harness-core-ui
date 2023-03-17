@@ -1,3 +1,5 @@
+import type { UseStringsReturn } from 'framework/strings'
+
 export const THRESHOLD_TYPE_MAPPING: MappingType = {
   IGNORE: 'Ignore',
   FAIL_FAST: 'Fail fast'
@@ -9,12 +11,23 @@ export const CRITERIA_MAPPING: MappingType = {
   'ABSOLUTE-VALUE': 'Absolute'
 }
 
-export const getActionText = (action: string, actionableCount?: number): string => {
+export const getActionText = (
+  action: string,
+  getString: UseStringsReturn['getString'],
+  actionableCount?: number
+): string => {
+  const occurrenceText = actionableCount === 1 ? 'occurrence' : 'occurrences'
   switch (action) {
     case 'FAILAFTERCONSECUTIVEOCCURRENCE':
-      return `Fail after ${actionableCount} consecutive occurence`
+      return getString('cv.metricsAnalysis.metricThresholds.failAfterConsecutiveOccurrence', {
+        actionableCount,
+        occurrenceText
+      })
     case 'FAILAFTEROCCURRENCE':
-      return `Fail after ${actionableCount} occurence`
+      return getString('cv.metricsAnalysis.metricThresholds.failAfterOccurrence', {
+        actionableCount,
+        occurrenceText
+      })
     case 'FAILIMMEDIATELY':
       return `Fail immediately`
     case 'IGNORE':

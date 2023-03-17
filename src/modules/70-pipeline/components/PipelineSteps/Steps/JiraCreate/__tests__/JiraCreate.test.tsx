@@ -31,6 +31,7 @@ import {
 } from './JiraCreateTestHelper'
 import { JiraFieldsRenderer } from '../JiraFieldsRenderer'
 import { JiraUserMultiTypeInput } from '../JiraUserMultiTypeInput'
+import { mockFieldsMetadataResponse } from '../../JiraUpdate/__tests__/JiraUpdateTestHelper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -38,6 +39,7 @@ jest.mock('services/cd-ng', () => ({
   useGetConnector: () => mockConnectorResponse,
   useGetJiraProjects: jest.fn(),
   useGetJiraIssueCreateMetadata: () => mockProjectMetadataResponse,
+  useGetJiraIssueUpdateMetadata: () => mockFieldsMetadataResponse,
   useJiraUserSearch: () => mockJiraUserResponse
 }))
 describe('Jira Create fetch projects', () => {

@@ -134,7 +134,6 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                     variableName="connectorRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('connectorRef', value)
                     }}
@@ -168,7 +167,6 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                     variableName="region"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('region', value)
                     }}

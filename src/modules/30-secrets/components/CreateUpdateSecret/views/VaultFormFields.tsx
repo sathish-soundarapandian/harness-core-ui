@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { FormEvent } from 'react'
 import { FormInput, SelectOption, useToaster, Popover, Text } from '@harness/uicore'
+import { Radio, RadioGroup } from '@blueprintjs/core'
 import type { FormikContextType } from 'formik'
 import { ConnectorInfoDTO, SecretDTOV2, useGetGcpRegions } from 'services/cd-ng'
 
@@ -65,15 +66,17 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
             content={<Text padding="medium">{getString('secrets.gcpSecretEdit')}</Text>}
             disabled={!gcpSmInEditMode()}
           >
-            <FormInput.RadioGroup
-              name="valueType"
-              radioGroup={{ inline: true }}
+            <RadioGroup
               disabled={gcpSmInEditMode()}
-              items={[
-                { label: getString('secrets.secret.inlineSecret'), value: 'Inline', disabled: readonly },
-                { label: getString('secrets.secret.referenceSecret'), value: 'Reference' }
-              ]}
-            />
+              inline={true}
+              onChange={(event: FormEvent<HTMLInputElement>) => {
+                formik?.setFieldValue('valueType', event.currentTarget.value)
+              }}
+              selectedValue={formik?.values['valueType']}
+            >
+              <Radio label={getString('secrets.secret.inlineSecret')} value="Inline" disabled={readonly} />
+              <Radio label={getString('secrets.secret.referenceSecret')} value="Reference" />
+            </RadioGroup>
           </Popover>
           {formik?.values['valueType'] === 'Inline' ? (
             <FormInput.Text

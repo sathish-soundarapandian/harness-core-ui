@@ -164,7 +164,6 @@ function InlineManifest({
                         variableName="content"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('content', value)}
                       />
                     )}

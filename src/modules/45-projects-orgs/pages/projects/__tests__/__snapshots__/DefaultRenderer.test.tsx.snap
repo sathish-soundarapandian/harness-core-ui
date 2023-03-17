@@ -6,7 +6,7 @@ exports[`Default Renderer test initializes ok  1`] = `
     class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
   >
     <p
-      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400 StyledProps--padding-bottom-xsmall"
     >
       modules
     </p>

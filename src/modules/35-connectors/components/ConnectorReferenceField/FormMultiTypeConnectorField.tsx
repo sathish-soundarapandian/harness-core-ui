@@ -517,7 +517,6 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
               variableName={name}
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={val => {
                 formik?.setFieldValue(name, val)
                 onChange?.(val, MultiTypeInputValue.STRING, MultiTypeInputType.RUNTIME)

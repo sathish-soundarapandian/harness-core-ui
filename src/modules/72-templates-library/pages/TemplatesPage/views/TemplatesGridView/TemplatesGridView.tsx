@@ -16,7 +16,17 @@ import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import css from './TemplatesGridView.module.scss'
 
 export const TemplatesGridView: React.FC<TemplatesViewProps> = (props): JSX.Element => {
-  const { data, selectedTemplate, gotoPage, onSelect, onPreview, onOpenEdit, onOpenSettings, onDelete } = props
+  const {
+    data,
+    selectedTemplate,
+    gotoPage,
+    onSelect,
+    onPreview,
+    onOpenEdit,
+    onOpenSettings,
+    onDelete,
+    onOpenMoveResource
+  } = props
 
   const key = React.useMemo(() => uuid(), [data.content])
 
@@ -37,6 +47,7 @@ export const TemplatesGridView: React.FC<TemplatesViewProps> = (props): JSX.Elem
               onOpenEdit={onOpenEdit}
               onOpenSettings={onOpenSettings}
               onDelete={onDelete}
+              onOpenMoveResource={onOpenMoveResource}
             />
           )}
           keyOf={(item: TemplateSummaryResponse) => getScopeBasedTemplateRef(item)}

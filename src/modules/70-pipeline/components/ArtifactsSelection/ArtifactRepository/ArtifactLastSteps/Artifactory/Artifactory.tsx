@@ -23,7 +23,7 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps, FormikValues } from 'formik'
 import * as Yup from 'yup'
-import { defaultTo, memoize, merge } from 'lodash-es'
+import { defaultTo, get, isEqual, memoize, merge } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
@@ -37,7 +37,8 @@ import {
   Failure,
   Error,
   useGetBuildDetailsForArtifactoryArtifact,
-  useGetImagePathsForArtifactory
+  useGetImagePathsForArtifactory,
+  ServiceDefinition
 } from 'services/cd-ng'
 import {
   checkIfQueryParamsisNotEmpty,
@@ -61,7 +62,8 @@ import {
   isSshOrWinrmDeploymentType,
   isTASDeploymentType,
   repositoryFormats,
-  RepositoryFormatTypes
+  RepositoryFormatTypes,
+  isAWSLambdaDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type {
@@ -116,11 +118,13 @@ function Artifactory({
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
+  const [error, setError] = useState<boolean>(false)
   const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
   const isSSHWinRmDeploymentType = isSshOrWinrmDeploymentType(selectedDeploymentType)
   const isAzureWebAppDeploymentTypeSelected = isAzureWebAppDeploymentType(selectedDeploymentType)
   const isCustomDeploymentTypeSelected = isCustomDeploymentType(selectedDeploymentType)
   const isTasDeploymentTypeSelected = isTASDeploymentType(selectedDeploymentType)
+  const isAWSLambdaDeploymentTypeSelected = isAWSLambdaDeploymentType(selectedDeploymentType)
   const CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY = useFeatureFlag(FeatureFlag.CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY)
 
   const showRepositoryFormatForAllowedTypes =
@@ -128,10 +132,19 @@ function Artifactory({
     isAzureWebAppDeploymentTypeSelected ||
     isCustomDeploymentTypeSelected ||
     isTasDeploymentTypeSelected
+
+  // For Serverless and AWS Lambda, there is not dropdown for repositoryFormat to select from
+  // By default, UI should be rendered assuming repositoryFormat is Generic
+  const shouldChooseGenericAsDefault = isServerlessDeploymentTypeSelected || isAWSLambdaDeploymentTypeSelected
+
   const [repositoryFormat, setRepositoryFormat] = useState<string | undefined>(
-    showRepositoryFormatForAllowedTypes || isServerlessDeploymentTypeSelected
-      ? RepositoryFormatTypes.Generic
-      : RepositoryFormatTypes.Docker
+    get(
+      initialValues,
+      'spec.repositoryFormat',
+      showRepositoryFormatForAllowedTypes || shouldChooseGenericAsDefault
+        ? RepositoryFormatTypes.Generic
+        : RepositoryFormatTypes.Docker
+    )
   )
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
@@ -148,7 +161,7 @@ function Artifactory({
 
   useLayoutEffect(() => {
     let repoFormat = RepositoryFormatTypes.Docker
-    if (isServerlessDeploymentTypeSelected) repoFormat = RepositoryFormatTypes.Generic
+    if (shouldChooseGenericAsDefault) repoFormat = RepositoryFormatTypes.Generic
     if (showRepositoryFormatForAllowedTypes) {
       repoFormat = getRepositoryFormat(initialValues)
         ? (getRepositoryFormat(initialValues) as RepositoryFormatTypes)
@@ -307,12 +320,13 @@ function Artifactory({
     }
   }, [lastQueryData, refetchArtifactoryTag])
   useEffect(() => {
-    if (artifactoryTagError) {
+    if (artifactoryTagError && !error) {
+      setError(true)
       setTagList([])
-    } else if (Array.isArray(data?.data?.buildDetailsList)) {
+    } else if (Array.isArray(data?.data?.buildDetailsList) && !isEqual(data?.data?.buildDetailsList, tagList)) {
       setTagList(data?.data?.buildDetailsList)
     }
-  }, [data?.data?.buildDetailsList, artifactoryTagError])
+  }, [data?.data?.buildDetailsList, artifactoryTagError, error, tagList])
 
   const canFetchTags = useCallback(
     (artifactPath: string, repository: string): boolean => {
@@ -345,6 +359,7 @@ function Artifactory({
       initialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed,
+      selectedDeploymentType as ServiceDefinition['type'],
       isGenericArtifactory
     ) as ImagePathTypes
     if (
@@ -400,7 +415,7 @@ function Artifactory({
     return primarySchema
   }, [context, isGenericArtifactory, primarySchema, serverlessPrimarySchema, sidecarSchema])
 
-  const loadingPlaceholderText = isServerlessDeploymentTypeSelected
+  const loadingPlaceholderText = shouldChooseGenericAsDefault
     ? getString('pipeline.artifactsSelection.loadingArtifactPaths')
     : getString('pipeline.artifactsSelection.loadingTags')
 
@@ -446,7 +461,6 @@ function Artifactory({
       )
     )
   }
-
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!hideHeaderAndNavBtns && (
@@ -488,7 +502,11 @@ function Artifactory({
                       items={repositoryFormats}
                       onChange={value => {
                         if (showRepositoryFormatForAllowedTypes) {
-                          selectedArtifact && formik.setValues(defaultArtifactInitialValues(selectedArtifact))
+                          selectedArtifact &&
+                            formik.setValues({
+                              ...defaultArtifactInitialValues(selectedArtifact),
+                              identifier: formik.values.identifier
+                            })
                           formik.setFieldValue('repositoryFormat', value?.value)
                           setRepositoryFormat(value?.value as string)
                           setIsAzureWebAppGeneric(
@@ -509,6 +527,52 @@ function Artifactory({
                   repoFormat={repositoryFormat}
                   fieldName={'repository'}
                   stepViewType={StepViewType.Edit}
+                  onChange={(value: SelectOption) => {
+                    if (
+                      value.value !== formik.values.repository &&
+                      getMultiTypeFromValue(value) === MultiTypeInputType.FIXED &&
+                      value
+                    ) {
+                      setArtifactPaths([])
+                      setTagList([])
+                      if (isGenericArtifactory) {
+                        formik.setValues({
+                          ...formik.values,
+                          repository: value.value as string,
+                          artifactDirectory:
+                            getMultiTypeFromValue(get(formik.values, 'artifactDirectory', '')) ===
+                            MultiTypeInputType.FIXED
+                              ? ''
+                              : get(formik.values, 'artifactDirectory', ''),
+                          tag:
+                            getMultiTypeFromValue(get(formik.values, 'tag', '')) === MultiTypeInputType.FIXED
+                              ? ''
+                              : get(formik.values, 'tag', ''),
+                          tagRegex:
+                            getMultiTypeFromValue(get(formik.values, 'tagRegex', '')) === MultiTypeInputType.FIXED
+                              ? ''
+                              : get(formik.values, 'tagRegex', '')
+                        })
+                      } else {
+                        formik.setValues({
+                          ...formik.values,
+                          repository: value.value as string,
+                          artifactPath:
+                            getMultiTypeFromValue(get(formik.values, 'artifactPath', '')) === MultiTypeInputType.FIXED
+                              ? ''
+                              : get(formik.values, 'artifactPath', ''),
+                          tag:
+                            getMultiTypeFromValue(get(formik.values, 'tag', '')) === MultiTypeInputType.FIXED
+                              ? ''
+                              : get(formik.values, 'tag', ''),
+                          tagRegex:
+                            getMultiTypeFromValue(get(formik.values, 'tagRegex', '')) === MultiTypeInputType.FIXED
+                              ? ''
+                              : get(formik.values, 'tagRegex', '')
+                        })
+                      }
+                    }
+                  }}
                 />
 
                 {isGenericArtifactory && (
@@ -535,7 +599,6 @@ function Artifactory({
                           variableName="artifactDirectory"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('artifactDirectory', value)
                           }}
@@ -608,7 +671,6 @@ function Artifactory({
                           variableName="artifactPath"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('artifactPath', value)
                           }}
@@ -639,7 +701,6 @@ function Artifactory({
                           variableName="repositoryUrl"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('repositoryUrl', value)
                           }}
@@ -699,7 +760,6 @@ function Artifactory({
                           variableName="tag"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('tag', value)
                           }}
@@ -728,7 +788,6 @@ function Artifactory({
                           variableName="tagRegex"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('tagRegex', value)
                           }}

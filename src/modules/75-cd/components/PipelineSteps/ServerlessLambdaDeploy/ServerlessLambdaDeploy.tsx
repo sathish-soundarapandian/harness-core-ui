@@ -6,171 +6,34 @@
  */
 
 import React from 'react'
-import {
-  IconName,
-  Formik,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  AllowedTypes,
-  FormikForm
-} from '@harness/uicore'
-import cx from 'classnames'
-import * as Yup from 'yup'
-
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
-import {
-  StepViewType,
-  StepProps,
-  ValidateInputSetProps,
-  setFormikRef,
-  StepFormikFowardRef,
-  InputSetData
-} from '@pipeline/components/AbstractSteps/Step'
-import type { StepElementConfig } from 'services/cd-ng'
+import type { FormikErrors } from 'formik'
+import type { IconName } from '@harness/uicore'
 
-import { useStrings } from 'framework/strings'
-import {
-  FormMultiTypeDurationField,
-  getDurationValidationSchema
-} from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
+import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-
-import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
-import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { ServerlessDeployCommandOptions } from './ServerlessDeployCommandOptions'
+import { ServerlessLambdaDeployStepEditRef } from './ServerlessLambdaDeployStepEdit'
+import { ServerlessLambdaDeployStepInputSet } from './ServerlessLambdaDeployStepInputSet'
+import { validateGenericFields } from '../Common/GenericExecutionStep/utils'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-interface ServerlessLambdaDeployProps {
-  initialValues: StepElementConfig
-  onUpdate?: (data: StepElementConfig) => void
-  stepViewType?: StepViewType
-  onChange?: (data: StepElementConfig) => void
-  allowableTypes: AllowedTypes
-  readonly?: boolean
-  isNewStep?: boolean
-  inputSetData: {
-    template?: StepElementConfig
-    path?: string
-    readonly?: boolean
+export interface ServerlessLambdaDeployStepValues extends StepElementConfig {
+  spec: {
+    commandOptions?: string
   }
 }
 
-function ServerlessLambdaDeployWidget(
-  props: ServerlessLambdaDeployProps,
-  formikRef: StepFormikFowardRef<StepElementConfig>
-): React.ReactElement {
-  const { initialValues, onUpdate, isNewStep = true, readonly, onChange, allowableTypes, stepViewType } = props
-  const { expressions } = useVariablesExpression()
-  const { getString } = useStrings()
-  return (
-    <>
-      <Formik<StepElementConfig>
-        onSubmit={(values: StepElementConfig) => {
-          onUpdate?.(values)
-        }}
-        formName="ServerlessAwsLambdaDeploy"
-        initialValues={initialValues}
-        validate={data => {
-          onChange?.(data)
-        }}
-        validationSchema={Yup.object().shape({
-          ...getNameAndIdentifierSchema(getString, stepViewType),
-          timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
-        })}
-      >
-        {(formik: FormikProps<StepElementConfig>) => {
-          setFormikRef(formikRef, formik)
-
-          return (
-            <FormikForm>
-              {stepViewType !== StepViewType.Template && (
-                <div className={cx(stepCss.formGroup, stepCss.lg)}>
-                  <FormInput.InputWithIdentifier
-                    inputLabel={getString('name')}
-                    isIdentifierEditable={isNewStep && !readonly}
-                    inputGroupProps={{
-                      placeholder: getString('pipeline.stepNamePlaceholder'),
-                      disabled: readonly
-                    }}
-                  />
-                </div>
-              )}
-
-              <div className={cx(stepCss.formGroup, stepCss.sm)}>
-                <FormMultiTypeDurationField
-                  name="timeout"
-                  label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{
-                    enableConfigureOptions: true,
-                    expressions,
-                    disabled: readonly,
-                    allowableTypes
-                  }}
-                  disabled={readonly}
-                />
-              </div>
-
-              <ServerlessDeployCommandOptions isReadonly={readonly} stepViewType={props.stepViewType} />
-            </FormikForm>
-          )
-        }}
-      </Formik>
-    </>
-  )
-}
-
-const ServerlessLambdaDeployInputStep: React.FC<ServerlessLambdaDeployProps> = ({
-  inputSetData,
-  allowableTypes,
-  stepViewType
-}) => {
-  const { getString } = useStrings()
-  const { expressions } = useVariablesExpression()
-  return (
-    <>
-      {getMultiTypeFromValue(inputSetData.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <TimeoutFieldInputSetView
-          name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
-          label={getString('pipelineSteps.timeoutLabel')}
-          multiTypeDurationProps={{
-            configureOptionsProps: {
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            },
-            allowableTypes,
-            expressions,
-            disabled: inputSetData.readonly
-          }}
-          disabled={inputSetData.readonly}
-          fieldPath="timeout"
-          template={inputSetData.template}
-          className={cx(stepCss.formGroup, stepCss.sm)}
-        />
-      )}
-      {getMultiTypeFromValue(inputSetData.template?.spec?.commandOptions) === MultiTypeInputType.RUNTIME && (
-        <ServerlessDeployCommandOptions
-          isReadonly={inputSetData.readonly}
-          inputSetData={inputSetData}
-          stepViewType={stepViewType}
-        />
-      )}
-    </>
-  )
-}
 export interface ServerlessLambdaDeployVariableStepProps {
-  initialValues: StepElementConfig
+  initialValues: ServerlessLambdaDeployStepValues
   stageIdentifier: string
-  onUpdate?(data: StepElementConfig): void
+  onUpdate?(data: ServerlessLambdaDeployStepValues): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: StepElementConfig
+  variablesData: ServerlessLambdaDeployStepValues
 }
 
 const ServerlessLambdaDeployVariableStep: React.FC<ServerlessLambdaDeployVariableStepProps> = ({
@@ -188,15 +51,13 @@ const ServerlessLambdaDeployVariableStep: React.FC<ServerlessLambdaDeployVariabl
   )
 }
 
-const ServerlessLambdaDeployRef = React.forwardRef(ServerlessLambdaDeployWidget)
-
-export class ServerlessLambdaDeployStep extends PipelineStep<StepElementConfig> {
+export class ServerlessLambdaDeployStep extends PipelineStep<ServerlessLambdaDeployStepValues> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
-  renderStep(props: StepProps<StepElementConfig>): JSX.Element {
+  renderStep(props: StepProps<ServerlessLambdaDeployStepValues>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -212,12 +73,12 @@ export class ServerlessLambdaDeployStep extends PipelineStep<StepElementConfig> 
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <ServerlessLambdaDeployInputStep
+        <ServerlessLambdaDeployStepInputSet
           initialValues={initialValues}
           onUpdate={onUpdate}
           allowableTypes={allowableTypes}
           stepViewType={stepViewType}
-          inputSetData={inputSetData as InputSetData<StepElementConfig>}
+          inputSetData={inputSetData as InputSetData<ServerlessLambdaDeployStepValues>}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
@@ -231,7 +92,7 @@ export class ServerlessLambdaDeployStep extends PipelineStep<StepElementConfig> 
     }
 
     return (
-      <ServerlessLambdaDeployRef
+      <ServerlessLambdaDeployStepEditRef
         initialValues={initialValues}
         onUpdate={onUpdate}
         isNewStep={isNewStep}
@@ -240,7 +101,7 @@ export class ServerlessLambdaDeployStep extends PipelineStep<StepElementConfig> 
         stepViewType={stepViewType}
         ref={formikRef}
         readonly={readonly}
-        inputSetData={inputSetData as InputSetData<StepElementConfig>}
+        inputSetData={inputSetData as InputSetData<ServerlessLambdaDeployStepValues>}
       />
     )
   }
@@ -249,31 +110,14 @@ export class ServerlessLambdaDeployStep extends PipelineStep<StepElementConfig> 
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<StepElementConfig>): FormikErrors<StepElementConfig> {
-    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const errors = { spec: {} } as any
-    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
-      let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
-      if (isRequired) {
-        timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
-      }
-      const timeout = Yup.object().shape({
-        timeout: timeoutSchema
-      })
+  }: ValidateInputSetProps<ServerlessLambdaDeployStepValues>): FormikErrors<ServerlessLambdaDeployStepValues> {
+    const errors = validateGenericFields({
+      data,
+      template,
+      getString,
+      viewType
+    }) as FormikErrors<ServerlessLambdaDeployStepValues>
 
-      try {
-        timeout.validateSync(data)
-      } catch (e) {
-        /* istanbul ignore else */
-        if (e instanceof Yup.ValidationError) {
-          const err = yupToFormErrors(e)
-
-          Object.assign(errors, err)
-        }
-      }
-    }
-    /* istanbul ignore else */
     if (isEmpty(errors.spec)) {
       delete errors.spec
     }
@@ -288,7 +132,7 @@ export class ServerlessLambdaDeployStep extends PipelineStep<StepElementConfig> 
   protected isHarnessSpecific = false
   protected referenceId = 'serverlessDeployStep'
 
-  protected defaultValues: StepElementConfig = {
+  protected defaultValues: ServerlessLambdaDeployStepValues = {
     identifier: '',
     name: '',
     type: StepType.ServerlessAwsLambdaDeploy,

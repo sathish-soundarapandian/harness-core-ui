@@ -4,17 +4,20 @@ import { Container, Text, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { useStrings } from 'framework/strings'
-import { getEventTypeColor, getEventTypeLightColor } from '@cv/utils/CommonUtils'
 import type { ActivityHeadingContentProps } from '../LogAnalysisDetailsDrawer.types'
 import { getChartsConfigForDrawer } from '../LogAnalysisDetailsDrawer.utils'
-import { getEventTypeFromClusterType } from '../../../LogAnalysisRow.utils'
 import LogsDetailLegendForChart from './components/LogsDetailLegendForChart/LogsDetailLegendForChart'
-import logRowStyle from '../../../LogAnalysisRow.module.scss'
+import LogsMetaData from './LogsMetaData'
+import LogDetailsFeedbackDisplay from './components/LogDetailsFeedbackDisplay/LogDetailsFeedbackDisplay'
 import css from '../LogAnalysisDetailsDrawer.module.scss'
 
 export function ActivityHeadingContent(props: ActivityHeadingContentProps): JSX.Element | null {
-  const { count, messageFrequency, activityType } = props
+  const { count, messageFrequency, activityType, riskStatus, feedback, feedbackApplied } = props
+
+  const isLogFeedbackEnabled = useFeatureFlag(FeatureFlag.SRM_LOG_FEEDBACK_ENABLE_UI)
 
   const { getString } = useStrings()
 
@@ -33,37 +36,15 @@ export function ActivityHeadingContent(props: ActivityHeadingContentProps): JSX.
 
   return (
     <>
-      <Container className={css.activityContainer}>
-        <Layout.Horizontal className={css.firstRow}>
-          <Container>
-            <Text>{getString('pipeline.verification.logs.eventType')}</Text>
-            <Text
-              className={logRowStyle.eventTypeTag}
-              font="normal"
-              style={{
-                color: getEventTypeColor(activityType),
-                background: getEventTypeLightColor(activityType)
-              }}
-              data-testid="ActivityHeadingContent_eventType"
-            >
-              {getEventTypeFromClusterType(activityType, getString, true)}
-            </Text>
-          </Container>
-          <Container>
-            <Text>{getString('cv.logs.totalCount')}</Text>
-            <Text color={Color.BLACK} data-testid="ActivityHeadingContent_count">
-              {count}
-            </Text>
-          </Container>
-        </Layout.Horizontal>
-      </Container>
+      <LogsMetaData activityType={activityType} count={count} risk={riskStatus} />
+
+      {isLogFeedbackEnabled && <LogDetailsFeedbackDisplay feedback={feedback} feedbackApplied={feedbackApplied} />}
 
       {canShowCharts && (
         <Container margin={{ bottom: 'medium' }}>
           <LogsDetailLegendForChart clusterType={activityType} />
         </Container>
       )}
-
       {canShowCharts &&
         chartsConfig?.map(chart => {
           return (

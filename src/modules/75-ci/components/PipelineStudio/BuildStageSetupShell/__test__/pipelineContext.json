@@ -1,134 +1,189 @@
 {
   "state": {
     "pipeline": {
-      "name": "Pipeline",
-      "identifier": "Pipeline",
-      "description": null,
-      "tags": null,
+      "name": "Build springboot",
+      "identifier": "Build_springboot_1678707609028",
+      "projectIdentifier": "default_project",
+      "orgIdentifier": "default",
       "stages": [
         {
           "stage": {
-            "name": "Deploy",
-            "identifier": "Deploy",
-            "description": "",
-            "type": "Deployment",
+            "name": "Build",
+            "identifier": "Build",
+            "type": "CI",
             "spec": {
-              "serviceConfig": {
-                "service": {
-                  "identifier": null,
-                  "name": null,
-                  "description": null
-                },
-                "serviceDefinition": {
-                  "type": "Kubernetes",
-                  "spec": {
-                    "artifacts": {
-                      "sidecars": [],
-                      "primary": {
-                        "type": "Dockerhub",
-                        "spec": { "connectorRef": "<+input>", "imagePath": "<+input>" }
-                      }
-                    },
-                    "manifests": [],
-                    "artifactOverrideSets": [],
-                    "manifestOverrideSets": []
+              "cloneCodebase": true,
+              "execution": {
+                "steps": [
+                  {
+                    "step": {
+                      "type": "Run",
+                      "name": "Echo Welcome Message",
+                      "identifier": "Echo_Welcome_Message",
+                      "spec": { "shell": "Sh", "command": "echo Welcome to Harness CI" },
+                      "description": "Desc"
+                    }
                   }
-                },
-                "infrastructure": {
-                  "spec": {
-                    "connectorRef": "account.harnessciplatform",
-                    "namespace": "harness-delegate-prod"
-                  }
-                }
-              }
-            }
+                ]
+              },
+              "platform": { "os": "Linux", "arch": "Amd64" },
+              "runtime": { "type": "Cloud", "spec": {} }
+            },
+            "variables": [{ "name": "var1", "type": "String", "description": "", "value": "" }]
           }
         }
-      ]
+      ],
+      "properties": {
+        "ci": {
+          "codebase": { "connectorRef": "account.Github", "repoName": "wings-software/springboot", "build": "<+input>" }
+        }
+      }
     },
     "originalPipeline": {
-      "name": "Pipeline",
-      "identifier": "Pipeline",
-      "description": null,
-      "tags": null,
+      "name": "Build springboot",
+      "identifier": "Build_springboot_1678707609028",
+      "projectIdentifier": "default_project",
+      "orgIdentifier": "default",
       "stages": [
         {
           "stage": {
-            "name": "Deploy 1",
-            "identifier": "Deploy_1",
-            "description": "",
-            "type": "Deployment",
+            "name": "Build",
+            "identifier": "Build",
+            "type": "CI",
             "spec": {
-              "serviceConfig": {
-                "service": {
-                  "identifier": null,
-                  "name": null,
-                  "description": null
-                },
-                "serviceDefinition": {
-                  "type": "Kubernetes",
-                  "spec": {
-                    "artifacts": { "sidecars": [] },
-                    "manifests": [],
-                    "artifactOverrideSets": [],
-                    "manifestOverrideSets": []
+              "cloneCodebase": true,
+              "execution": {
+                "steps": [
+                  {
+                    "step": {
+                      "type": "Run",
+                      "name": "Echo Welcome Message",
+                      "identifier": "Echo_Welcome_Message",
+                      "spec": { "shell": "Sh", "command": "echo Welcome to Harness CI" },
+                      "description": "Desc"
+                    }
                   }
-                }
-              }
-            }
-          }
-        },
-        {
-          "stage": {
-            "name": "Deploy 2",
-            "identifier": "Deploy_2",
-            "description": "",
-            "type": "Deployment",
-            "spec": {
-              "serviceConfig": {
-                "service": {
-                  "identifier": null,
-                  "name": null,
-                  "description": null
-                },
-                "serviceDefinition": {
-                  "type": "Kubernetes",
-                  "spec": {
-                    "artifacts": { "sidecars": [] },
-                    "manifests": [],
-                    "artifactOverrideSets": [],
-                    "manifestOverrideSets": []
-                  }
-                }
-              }
-            }
-          }
-        },
-        {
-          "stage": {
-            "name": "Deploy 3",
-            "identifier": "Deploy_3",
-            "description": "",
-            "type": "Deployment",
-            "spec": { "serviceConfig": { "useFromStage": { "stage": "Deploy_2" }, "stageOverrides": null } }
+                ]
+              },
+              "platform": { "os": "Linux", "arch": "Amd64" },
+              "runtime": { "type": "Cloud", "spec": {} }
+            },
+            "variables": [{ "name": "var1", "type": "String", "description": "", "value": "" }]
           }
         }
-      ]
+      ],
+      "properties": {
+        "ci": {
+          "codebase": { "connectorRef": "account.Github", "repoName": "wings-software/springboot", "build": "<+input>" }
+        }
+      }
     },
-    "pipelineIdentifier": "Pipeline",
+    "pipelineIdentifier": "Build_springboot_1678707609028",
     "pipelineView": {
       "isSplitViewOpen": true,
       "isDrawerOpened": false,
+      "isYamlEditable": false,
       "splitViewData": { "type": "StageView" },
       "drawerData": { "type": "AddCommand" }
     },
-    "selectionState": { "selectedStageId": "Deploy" },
+    "schemaErrors": false,
+    "storeMetadata": {},
+    "gitDetails": {},
+    "entityValidityDetails": { "valid": true, "invalidYaml": null },
+    "templateTypes": {},
+    "templateIcons": {},
+    "templateServiceData": {},
+    "resolvedCustomDeploymentDetailsByRef": {},
     "isLoading": false,
+    "isIntermittentLoading": false,
     "isBEPipelineUpdated": false,
     "isDBInitialized": true,
-    "isUpdated": true,
+    "isDBInitializationFailed": false,
+    "isUpdated": false,
+    "modules": ["ci", "pms"],
     "isInitialized": true,
-    "error": ""
+    "selectionState": { "selectedStageId": "Build" },
+    "error": "",
+    "yamlSchemaErrorWrapper": {}
   },
-  "contextType": "Pipeline"
+  "view": "VISUAL",
+  "contextType": "Pipeline",
+  "allowableTypes": ["FIXED", "RUNTIME", "EXPRESSION"],
+  "stepsFactory": { "invocationMap": {}, "stepBank": {}, "stepIconMap": {}, "type": "pipeline-factory" },
+  "stagesMap": {
+    "Template": {
+      "name": "Template",
+      "type": "Template",
+      "icon": "template-library",
+      "iconColor": "var(--pipeline-custom-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    },
+    "Approval": {
+      "name": "Approval",
+      "type": "Approval",
+      "icon": "approval-stage-icon",
+      "iconColor": "var(--pipeline-approval-stage-color)",
+      "isApproval": true,
+      "openExecutionStrategy": false
+    },
+    "Custom": {
+      "name": "Custom",
+      "type": "Custom",
+      "icon": "custom-stage-icon",
+      "iconColor": "var(--pipeline-custom-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    },
+    "Pipeline": {
+      "name": "Pipeline",
+      "type": "Pipeline",
+      "icon": "chained-pipeline",
+      "iconColor": "var(--pipeline-blue-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    },
+    "Deployment": {
+      "name": "Deploy",
+      "type": "Deployment",
+      "icon": "cd-main",
+      "iconColor": "var(--pipeline-deploy-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": true
+    },
+    "CI": {
+      "name": "Build",
+      "type": "CI",
+      "icon": "ci-main",
+      "iconColor": "var(--pipeline-build-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    },
+    "FeatureFlag": {
+      "name": "Feature Flag",
+      "type": "FeatureFlag",
+      "icon": "cf-main",
+      "iconColor": "var(--pipeline-feature-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    },
+    "SecurityTests": {
+      "name": "Security Tests",
+      "type": "SecurityTests",
+      "icon": "sto-color-filled",
+      "iconColor": "var(--primary-8)",
+      "isApproval": false,
+      "openExecutionStrategy": true
+    },
+    "IACM": {
+      "name": "Infrastructure",
+      "type": "IACM",
+      "icon": "iacm",
+      "iconColor": "var(--pipeline-custom-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": true
+    }
+  },
+  "isReadonly": false,
+  "scope": "project"
 }

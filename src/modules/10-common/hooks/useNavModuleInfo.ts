@@ -12,6 +12,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useGetCommunity } from '@common/utils/utils'
 import { FeatureFlag } from '@common/featureFlags'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { ModuleLicenseDTO } from '../../../services/cd-ng'
@@ -28,6 +29,7 @@ export type NavModuleName =
   | ModuleName.IACM
   | ModuleName.SSCA
   | ModuleName.IDP
+  | ModuleName.ET
 
 // Default order of modules on side nav, please add modules to this list accordingly.
 // For any module to be visible on side nav, it has to be added in this list
@@ -42,7 +44,8 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.CHAOS,
   ModuleName.IACM,
   ModuleName.SSCA,
-  ModuleName.IDP
+  ModuleName.IDP,
+  ModuleName.ET
 ]
 
 export interface useNavModuleInfoReturnType {
@@ -69,7 +72,6 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     icon: 'cd-main',
     label: 'common.cdAndGitops',
     getHomePageUrl: (accountId: string) => routes.toCD({ accountId }),
-    featureFlagName: FeatureFlag.CDNG_ENABLED,
     color: '--cd-border',
     backgroundColor: '--cd-background'
   },
@@ -135,7 +137,7 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     color: '--iacm-border'
   },
   [ModuleName.SSCA]: {
-    icon: 'sscs-main',
+    icon: 'ssca-main',
     label: 'common.sscaText',
     getHomePageUrl: (accountId: string) => routes.toSSCA({ accountId }),
     featureFlagName: FeatureFlag.SSCA_ENABLED,
@@ -144,8 +146,15 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.IDP]: {
     icon: 'idp',
     label: 'common.purpose.idp.fullName',
-    getHomePageUrl: (accountId: string) => routes.toIDP({ accountId }),
+    getHomePageUrl: (accountId: string) => routes.toIDPDefaultPath({ accountId }),
     featureFlagName: FeatureFlag.IDP_ENABLED,
+    color: '--default-module-border'
+  },
+  [ModuleName.ET]: {
+    icon: 'cet',
+    label: 'common.purpose.errorTracking.longTitle',
+    getHomePageUrl: (accountId: string) => routes.toETHome({ accountId }),
+    featureFlagName: FeatureFlag.CET_ENABLED,
     color: '--default-module-border'
   }
 }
@@ -167,7 +176,7 @@ export const moduleGroupConfig: GroupConfig[] = [
   },
   {
     label: 'common.moduleList.manageImpact',
-    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCA]
+    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCA, ModuleName.ET]
   },
   {
     label: 'common.moduleList.optimizeProcesses',
@@ -198,11 +207,13 @@ const getModuleInfo = (
 const shouldBeVisible = (
   module: NavModuleName,
   featureFlags: Partial<Record<FeatureFlag, boolean>>,
-  licenseInformation: { [key: string]: ModuleLicenseDTO } | Record<string, undefined>
+  licenseInformation: { [key: string]: ModuleLicenseDTO } | Record<string, undefined>,
+  isCommunity: boolean
 ): boolean => {
   const featureFlagName = moduleInfoMap[module]?.featureFlagName
-
-  if (module === ModuleName.CV) {
+  if (isCommunity && module === ModuleName.CV) {
+    return false
+  } else if (module === ModuleName.CV) {
     return Boolean(
       licenseInformation[ModuleName.CV]?.status === 'ACTIVE' ||
         licenseInformation[ModuleName.CD]?.status === 'ACTIVE' ||
@@ -219,14 +230,14 @@ const useNavModuleInfo = (module: NavModuleName) => {
   const { accountId } = useParams<AccountPathProps>()
   const featureFlags = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
-
+  const isCommunity = useGetCommunity()
   const { color, backgroundColor } = moduleInfoMap[module]
 
   return getModuleInfo(
     moduleInfoMap[module],
     accountId,
     !!licenseInformation[module]?.id,
-    shouldBeVisible(module, featureFlags, licenseInformation),
+    shouldBeVisible(module, featureFlags, licenseInformation, isCommunity),
     color,
     backgroundColor
   ) as useNavModuleInfoReturnType
@@ -235,6 +246,7 @@ const useNavModuleInfo = (module: NavModuleName) => {
 export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoReturnType> => {
   const { accountId } = useParams<AccountPathProps>()
   const featureFlags = useFeatureFlags()
+  const isCommunity = useGetCommunity()
 
   const { licenseInformation } = useLicenseStore()
 
@@ -247,7 +259,7 @@ export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoRet
         moduleInfoMap[module],
         accountId,
         !!licenseInformation[module]?.id,
-        shouldBeVisible(module, featureFlags, licenseInformation),
+        shouldBeVisible(module, featureFlags, licenseInformation, isCommunity),
         moduleInfoMap[module].color
       )
     }

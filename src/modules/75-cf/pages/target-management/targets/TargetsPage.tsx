@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import moment from 'moment'
 import ReactTimeago from 'react-timeago'
 import { Intent } from '@blueprintjs/core'
 import { Button, Container, ExpandingSearchInput, Layout, Pagination, TableV2, Text } from '@harness/uicore'
 import type { Cell, Column } from 'react-table'
+import { defer } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import ListingPageTemplate from '@cf/components/ListingPageTemplate/ListingPageTemplate'
 import {
@@ -26,6 +27,7 @@ import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { useToaster } from '@common/exports'
 import { Segment, Target, useDeleteTarget, useGetAllTargets } from 'services/cf'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import {
   makeStackedCircleShortName,
   StackedCircleContainer
@@ -54,8 +56,8 @@ export const TargetsPage: React.FC = () => {
   })
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const { getString } = useStrings()
-  const [pageNumber, setPageNumber] = useState(0)
-  const [searchTerm, setSearchTerm] = useState('')
+  const [pageNumber, setPageNumber] = useQueryParamsState('page', 0)
+  const [searchTerm, setSearchTerm] = useQueryParamsState('searchTerm', '')
   const queryParams = useMemo(
     () => ({
       accountIdentifier,
@@ -80,11 +82,10 @@ export const TargetsPage: React.FC = () => {
   const history = useHistory()
   const onSearchInputChanged = useCallback(
     targetName => {
-      setSearchTerm(targetName)
-      setPageNumber(0)
-      refetchTargets({ queryParams: { ...queryParams, targetName, pageNumber: 0 } })
+      defer(() => setSearchTerm(targetName))
+      defer(() => setPageNumber(0))
     },
-    [setSearchTerm, refetchTargets, queryParams, setPageNumber]
+    [setSearchTerm, setPageNumber]
   )
   const loading = loadingEnvironments || loadingTargets
   const error = errEnvironments || errTargets
@@ -112,7 +113,6 @@ export const TargetsPage: React.FC = () => {
           projectIdentifier={projectIdentifier}
           onCreated={() => {
             setPageNumber(0)
-            refetchTargets({ queryParams: { ...queryParams, pageNumber: 0 } })
             showToaster(getString('cf.messages.targetCreated'))
           }}
         />
@@ -125,6 +125,7 @@ export const TargetsPage: React.FC = () => {
         name="findFlag"
         placeholder={getString('search')}
         onChange={onSearchInputChanged}
+        defaultValue={searchTerm}
       />
     </>
   )
@@ -323,7 +324,6 @@ export const TargetsPage: React.FC = () => {
       <NoTargetsView
         onNewTargetsCreated={() => {
           setPageNumber(0)
-          refetchTargets({ queryParams: { ...queryParams, pageNumber: 0 } })
           showToaster(getString('cf.messages.targetCreated'))
         }}
         noEnvironment={noEnvironmentExists}
@@ -357,10 +357,7 @@ export const TargetsPage: React.FC = () => {
             pageSize={targetsData?.pageSize || 0}
             pageCount={targetsData?.pageCount || 0}
             pageIndex={pageNumber}
-            gotoPage={index => {
-              setPageNumber(index)
-              refetchTargets({ queryParams: { ...queryParams, pageNumber: index } })
-            }}
+            gotoPage={setPageNumber}
             showPagination
           />
         )

@@ -9,6 +9,7 @@ import { FormInput, MultiSelectOption } from '@harness/uicore'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
+import { orderBy } from 'lodash-es'
 import { useMutateAsGet } from '@common/hooks'
 import { StringKeys, useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -19,6 +20,7 @@ import UserTagRenderer from '@common/components/UserTagRenderer/UserTagRenderer'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { SortMethod } from '@common/utils/sortUtils'
 import type { AuditTrailFormType } from './FilterDrawer'
 
 interface AuditTrailFormProps {
@@ -34,7 +36,8 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
   const { getString } = useStrings()
 
   const { data: userData } = useMutateAsGet(useGetUsers, {
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier, sortOrders: [SortMethod.NameAsc] },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     body: {
       searchTerm: userQuery
     },
@@ -42,7 +45,13 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
   })
 
   const { data } = useGetOrganizationAggregateDTOList({
-    queryParams: { accountIdentifier: accountId, searchTerm: orgQuery },
+    queryParams: {
+      accountIdentifier: accountId,
+      searchTerm: orgQuery,
+      sortOrders: [SortMethod.NameAsc],
+      pageSize: 100
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -69,7 +78,8 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
       accountIdentifier: accountId,
       searchTerm: projectsQuery,
       orgIdentifiers: getOrgs(),
-      pageSize: 10
+      pageSize: 100,
+      sortOrders: [SortMethod.NameAsc]
     },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
@@ -78,10 +88,13 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
   })
 
   const getOptionsForMultiSelect = (map: Record<any, StringKeys>): MultiSelectOption[] => {
-    return Object.keys(map).map(key => ({
-      label: getString(map[key]),
-      value: key
-    }))
+    return orderBy(
+      Object.keys(map).map(key => ({
+        label: getString(map[key]),
+        value: key
+      })),
+      'label'
+    )
   }
 
   let auditActions = getOptionsForMultiSelect(actionToLabelMap)
@@ -101,6 +114,7 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
         label={getString('common.userLabel')}
         multiSelectProps={{
           allowCreatingNewItems: true,
+          allowCommaSeparatedList: true,
           onQueryChange: setUserQuery,
           tagRenderer: (item: MultiSelectOption) => <UserTagRenderer key={item.value.toString()} item={item} />,
           itemRender: (item, { handleClick }) => (

@@ -51,6 +51,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams } from '@common/hooks'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
+import useTriggerView from '@common/components/Wizard/useTriggerView'
 import { TriggerBreadcrumbs } from '../trigger-details/TriggerDetails'
 import { getTriggerIcon, getEnabledStatusTriggerValues } from './utils/TriggersListUtils'
 import { clearNullUndefined, ResponseStatus } from './utils/TriggersWizardPageUtils'
@@ -231,7 +232,7 @@ const renderSwitch = ({
 
 export default function TriggersDetailPage(): JSX.Element {
   const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
-  const [selectedView, setSelectedView] = React.useState<SelectedView>(SelectedView.VISUAL)
+  const [selectedView, setSelectedView] = useTriggerView()
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, triggerIdentifier, module } = useParams<
     PipelineType<
       PipelinePathProps & {

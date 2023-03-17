@@ -22,7 +22,7 @@ import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import JiraDetailsForm from './JiraDetailsForm'
 
 interface CreateJiraConnectorProps {
-  onConnectorCreated?: (data?: ConnectorConfigDTO) => void | Promise<void>
+  onSuccess?: (data?: ConnectorConfigDTO) => void | Promise<void>
   mock?: ResponseBoolean
   onClose: () => void
   isEditMode?: boolean
@@ -57,7 +57,7 @@ const JiraConnector: React.FC<CreateJiraConnectorProps> = props => {
         name={getString('details')}
         identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
         {...commonProps}
-        onConnectorCreated={props.onConnectorCreated}
+        onConnectorCreated={props.onSuccess}
         isEditMode={isEditMode}
         connectorInfo={props.connectorInfo}
         setIsEditMode={setIsEditMode}
@@ -68,7 +68,7 @@ const JiraConnector: React.FC<CreateJiraConnectorProps> = props => {
         setIsEditMode={setIsEditMode}
         buildPayload={buildJiraPayload}
         hideModal={props.onClose}
-        onConnectorCreated={props.onConnectorCreated}
+        onConnectorCreated={props.onSuccess}
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
         helpPanelReferenceId="ConnectorDelegatesSetup"

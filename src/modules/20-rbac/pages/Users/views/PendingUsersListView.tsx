@@ -34,11 +34,14 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useGetCommunity } from '@common/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { rbacQueryParamOptions } from '@rbac/utils/utils'
+import { useRbacQueryParamOptions } from '@rbac/utils/utils'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByEmail, sortByLastModified, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByEmail, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import css from './UserListView.module.scss'
 
 interface PendingUserListViewProps {
@@ -200,9 +203,11 @@ const RenderColumnMenu: Renderer<CellProps<Invite>> = ({ row, column }) => {
 const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, shouldReload }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { page, size } = useQueryParams(rbacQueryParamOptions)
+  const queryParamOptions = useRbacQueryParamOptions()
+  const { page, size } = useQueryParams(queryParamOptions)
   const isCommunity = useGetCommunity()
-  const [sort, setSort] = useState<string>(sortByLastModified[0].value as string)
+  const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.UsersPage}`)
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetPendingUsersAggregated, {
     body: {},
@@ -212,8 +217,10 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
       projectIdentifier,
       pageIndex: page,
       pageSize: size,
-      searchTerm: searchTerm
+      searchTerm: searchTerm,
+      sortOrders: [sortPreference]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -314,9 +321,11 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
       }
     >
       <ListHeader
-        value={sort}
+        selectedSortMethod={sortPreference}
         sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName, ...sortByEmail]}
-        onChange={option => setSort(option.value as string)}
+        onSortMethodChange={option => {
+          setSortPreference(option.value as SortMethod)
+        }}
         totalCount={data?.data?.totalItems}
       />
       <TableV2<Invite>

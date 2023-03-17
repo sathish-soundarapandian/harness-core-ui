@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, ButtonVariation, ExpandingSearchInput } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useParams, useHistory } from 'react-router-dom'
@@ -26,7 +26,10 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getErrorMessage } from '@triggers/components/Triggers/utils'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
 import { getCategoryItems, ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
@@ -41,7 +44,8 @@ interface TriggersListPropsInterface {
 
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
   const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
-  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.TriggersPage}`)
   const {
     branch,
     repoIdentifier,
@@ -72,7 +76,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
       searchTerm,
       size,
       page,
-      sort: [sort]
+      sort: [sortPreference]
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
@@ -248,9 +252,11 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
         }
       >
         <ListHeader
-          value={sort}
+          selectedSortMethod={sortPreference}
           sortOptions={[...sortByCreated, ...sortByName]}
-          onChange={option => setSort(option.value as string)}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
           totalCount={triggerListResponse?.data?.totalItems}
           className={css.listHeader}
         />

@@ -70,6 +70,7 @@ describe('Unit tests for VerifyExection', () => {
     expect(redCount).toBe(0)
     expect(greenCount).toBe(1)
     expect(yellowCount).toBe(0)
+    expect(container).toMatchSnapshot()
   })
 
   test('Ensure that loading indicator is displayed when api is loading', async () => {

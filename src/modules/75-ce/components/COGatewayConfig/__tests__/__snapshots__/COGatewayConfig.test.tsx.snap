@@ -19,7 +19,7 @@ exports[`Auto stopping Rule creation Tests Advanced configuration section change
       class="StyledProps--font StyledProps--main title"
       data-tooltip-id="awsSetupAdvancedConfig"
     >
-      ce.co.autoStoppingRule.configuration.step4.setup ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+      ce.co.autoStoppingRule.configuration.step4.setup pipeline.advancedConfiguration
     </p>
     <p
       class="StyledProps--font StyledProps--main subTitle"
@@ -66,7 +66,7 @@ exports[`Auto stopping Rule creation Tests Advanced configuration section change
                 <span
                   class="Toggle--toggleIcon"
                 />
-                ce.co.dryRunLabel
+                pipeline.syncStep.dryRun
               </label>
             </div>
           </div>
@@ -187,7 +187,7 @@ exports[`Auto stopping Rule creation Tests Advanced configuration section should
       class="StyledProps--font StyledProps--main title"
       data-tooltip-id="awsSetupAdvancedConfig"
     >
-      ce.co.autoStoppingRule.configuration.step4.setup ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+      ce.co.autoStoppingRule.configuration.step4.setup pipeline.advancedConfiguration
     </p>
     <p
       class="StyledProps--font StyledProps--main subTitle"
@@ -234,7 +234,7 @@ exports[`Auto stopping Rule creation Tests Advanced configuration section should
                 <span
                   class="Toggle--toggleIcon"
                 />
-                ce.co.dryRunLabel
+                pipeline.syncStep.dryRun
               </label>
             </div>
           </div>
@@ -354,7 +354,7 @@ exports[`Auto stopping Rule creation Tests Advanced configuration section should
       class="StyledProps--font StyledProps--main title"
       data-tooltip-id="awsSetupAdvancedConfig"
     >
-      ce.co.autoStoppingRule.configuration.step4.setup ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+      ce.co.autoStoppingRule.configuration.step4.setup pipeline.advancedConfiguration
     </p>
     <p
       class="StyledProps--font StyledProps--main subTitle"
@@ -401,7 +401,7 @@ exports[`Auto stopping Rule creation Tests Advanced configuration section should
                 <span
                   class="Toggle--toggleIcon"
                 />
-                ce.co.dryRunLabel
+                pipeline.syncStep.dryRun
               </label>
             </div>
           </div>
@@ -956,7 +956,7 @@ exports[`Auto stopping Rule creation Tests Config screen renders without crashin
             class="StyledProps--font StyledProps--main title"
             data-tooltip-id="awsSetupAdvancedConfig"
           >
-            ce.co.autoStoppingRule.configuration.step4.setup ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+            ce.co.autoStoppingRule.configuration.step4.setup pipeline.advancedConfiguration
           </p>
           <p
             class="StyledProps--font StyledProps--main subTitle"
@@ -1003,7 +1003,7 @@ exports[`Auto stopping Rule creation Tests Config screen renders without crashin
                       <span
                         class="Toggle--toggleIcon"
                       />
-                      ce.co.dryRunLabel
+                      pipeline.syncStep.dryRun
                     </label>
                   </div>
                 </div>
@@ -1774,7 +1774,7 @@ exports[`Auto stopping Rule creation Tests Fill remaining form for INSTANCES 1`]
             class="StyledProps--font StyledProps--main title"
             data-tooltip-id="awsSetupAdvancedConfig"
           >
-            ce.co.autoStoppingRule.configuration.step4.setup ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+            ce.co.autoStoppingRule.configuration.step4.setup pipeline.advancedConfiguration
           </p>
           <p
             class="StyledProps--font StyledProps--main subTitle"
@@ -1821,7 +1821,7 @@ exports[`Auto stopping Rule creation Tests Fill remaining form for INSTANCES 1`]
                       <span
                         class="Toggle--toggleIcon"
                       />
-                      ce.co.dryRunLabel
+                      pipeline.syncStep.dryRun
                     </label>
                   </div>
                 </div>
@@ -2574,7 +2574,7 @@ exports[`Auto stopping Rule creation Tests fill remaining form for ASGs 1`] = `
             class="StyledProps--font StyledProps--main title"
             data-tooltip-id="awsSetupAdvancedConfig"
           >
-            ce.co.autoStoppingRule.configuration.step4.setup ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+            ce.co.autoStoppingRule.configuration.step4.setup pipeline.advancedConfiguration
           </p>
           <p
             class="StyledProps--font StyledProps--main subTitle"
@@ -2621,7 +2621,7 @@ exports[`Auto stopping Rule creation Tests fill remaining form for ASGs 1`] = `
                       <span
                         class="Toggle--toggleIcon"
                       />
-                      ce.co.dryRunLabel
+                      pipeline.syncStep.dryRun
                     </label>
                   </div>
                 </div>
@@ -3374,7 +3374,7 @@ exports[`Auto stopping Rule creation Tests fill remaining form for ASGs 2`] = `
             class="StyledProps--font StyledProps--main title"
             data-tooltip-id="awsSetupAdvancedConfig"
           >
-            ce.co.autoStoppingRule.configuration.step4.setup ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+            ce.co.autoStoppingRule.configuration.step4.setup pipeline.advancedConfiguration
           </p>
           <p
             class="StyledProps--font StyledProps--main subTitle"
@@ -3421,7 +3421,7 @@ exports[`Auto stopping Rule creation Tests fill remaining form for ASGs 2`] = `
                       <span
                         class="Toggle--toggleIcon"
                       />
-                      ce.co.dryRunLabel
+                      pipeline.syncStep.dryRun
                     </label>
                   </div>
                 </div>
@@ -3897,7 +3897,7 @@ exports[`Auto stopping Rule creation Tests kubernestes config edit 1`] = `
             class="StyledProps--font StyledProps--main title"
             data-tooltip-id="awsSetupAdvancedConfig"
           >
-            ce.co.autoStoppingRule.configuration.step4.setup ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
+            ce.co.autoStoppingRule.configuration.step4.setup pipeline.advancedConfiguration
           </p>
           <p
             class="StyledProps--font StyledProps--main subTitle"
@@ -3944,7 +3944,7 @@ exports[`Auto stopping Rule creation Tests kubernestes config edit 1`] = `
                       <span
                         class="Toggle--toggleIcon"
                       />
-                      ce.co.dryRunLabel
+                      pipeline.syncStep.dryRun
                     </label>
                   </div>
                 </div>

@@ -10,14 +10,16 @@ import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, AllowedTypes } f
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/MultiTypeKVTagInput'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { TASBasicAppSetupTemplate } from './TASBasicAppSetupTypes'
+import { getResizeStrategies } from '../TasCanaryAppSetup/TasCanaryAppSetupWidget'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-
 export interface TasBasicAppSetupInputSetProps<T> {
   initialValues: TASBasicAppSetupTemplate<T>
   onUpdate?: (data: TASBasicAppSetupTemplate<T>) => void
@@ -30,10 +32,11 @@ export interface TasBasicAppSetupInputSetProps<T> {
 }
 
 export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInputSetProps<T>): React.ReactElement {
-  const { template, path, readonly, allowableTypes } = props
+  const { template, path, readonly, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
+  const isTemplateUsageView = stepViewType === StepViewType.TemplateUsage
 
   return (
     <FormikForm>
@@ -66,6 +69,29 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
           template={template}
           fieldPath={'spec.existingVersionToKeep'}
           className={cx(stepCss.formGroup, stepCss.md)}
+        />
+      )}
+      {getMultiTypeFromValue((template?.spec as any)?.resizeStrategy) === MultiTypeInputType.RUNTIME && (
+        <SelectInputSetView
+          label={getString('cd.steps.tas.resizeStrategy')}
+          name={`${path}.spec.resizeStrategy`}
+          useValue
+          fieldPath={'spec.resizeStrategy'}
+          template={template}
+          selectItems={getResizeStrategies(getString)}
+          multiTypeInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            selectProps: {
+              items: getResizeStrategies(getString)
+            }
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          disabled={readonly}
+          className={cx(stepCss.formGroup, { [stepCss.md]: !isTemplateUsageView })}
         />
       )}
       {getMultiTypeFromValue((template?.spec as any)?.additionalRoutes) === MultiTypeInputType.RUNTIME && (

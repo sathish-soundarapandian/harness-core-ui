@@ -73,6 +73,7 @@ showYAMLChange: Show YAML Change
 seeYAML: See full event YAML
 addGroupName: Please Select Group Name
 minimum: Minimum
+notificationTimestampError: Notification timestamp greater than chart start time and less than chart end time
 serviceDashboardPage:
   fiveMinutes: 5 Minutes
   fifteenMinutes: 15 Minutes
@@ -236,7 +237,7 @@ monitoringSources:
     chart: Chart
     addMetric: Add metric
     metricName: '{{name}} name'
-    addGroupName: Add group Name
+    addGroupName: Add Group Name
     runQuery: Run Query
     confirmDeleteMetric: 'Are you sure you want to delete metric {{name}}'
     submitQueryToSeeRecords: Enter your query
@@ -313,7 +314,6 @@ monitoringSources:
     absoluteValue: Absolute Value
     percentageDeviation: Percentage Deviation
     appdPathTitle: AppDynamics Path
-    applicationName: Application Name
     tierName: Tier Name
     completeMetricPath: Complete Metric Path
     serviceInstanceMetricPath: Service Instance Label Path
@@ -343,7 +343,6 @@ monitoringSources:
     validation: VALIDATION
     tiersMappedToServices: tiers mapped to services
     errorsFound: errors found
-    verificationsInProgress: Validation in progress
     noData: No data
     searchPlaceholderApplications: Search for Applications
     validationsPassed: Validation passed
@@ -537,7 +536,6 @@ activitySources:
   harnessCD:
     defaultName: 'My Harness CD'
     select: 'Select your Change Source'
-    selectApplication: 'Select Applications'
     selectEnvironment: 'Select Environments'
     selectService: '{{ $.common.selectServices }}'
     iconLabel: 'Harness FirstGen'
@@ -626,6 +624,7 @@ monitoredServices:
     serviceDependencies:
       states:
         unhealthy: Unhealthy
+        mediumHealthy: Medium healthy
         needsAttention: Needs attention
         observe: Observe
         exhausted: Exhausted
@@ -832,6 +831,8 @@ metricsAnalysis:
     criteria: CRITERIA
     value: VALUE
     applied: APPLIED
+    failAfterConsecutiveOccurrence: 'Fail after {{ actionableCount }} consecutive {{ occurrenceText }}'
+    failAfterOccurrence: 'Fail after {{ actionableCount }}  {{ occurrenceText }}'
 slos:
   title: SLOs
   subTitle: Review the status and error budget of all your defined service level objectives
@@ -865,6 +866,7 @@ slos:
   confirmDeleteSLO: 'Are you sure you want to delete SLO: {{ name }}?'
   sloDeleted: '{{ name }} successfully deleted'
   sli: SLI
+  ratioObjectiveValueCheck: Objective value should be between 0 and 100
   backToSLI: Back to SLI
   sliMetricChartRatioBasedHeader: Metric for good requests vs valid requests
   sliMetricChartSubHeader: Using historical data and current parameters in the last 1 day
@@ -924,6 +926,8 @@ slos:
       goodRequestsMetrics: Metric for good requests
       badRequestsMetrics: Metric for bad requests
       validRequestsMetrics: Metric for valid requests
+      goodRequestsByValidRequest: Ratio of good requests by valid requests
+      badRequestsByValidRequest: Ratio of bad requests by valid requests
       selectMetric1: Select metric 1
       selectMetric2: Select metric 2
   contextualHelp:
@@ -1169,6 +1173,22 @@ logs:
   totalCount: Total Count
   radarChartInfo: Each point in the graph above represents a log message. The region inside innermost circle represents logs from baseline/control nodes. The region between outermost circle and second circle is used for unknown logs seen in canary nodes while  the region between second circle and innermost circle is used for logs with unexpected frequency. The points that are related (logs observed in both canary and baseline nodes) will be shown on the same radii.The circle is divided into several sectors with each sector having several log messages. Use the slider to narrow down to the specific sector.
   baselineLegendTooltip: Average of the event counts across all of the control hosts
+  viewEventDetails: View event details
+  riskPriorityLabel: Update event priority
+  riskPriorityValidation: Risk priority is required
+  feedbackHistory: Feedback history
+  eventPriority: Event priority
+  updatedBy: Updated by
+  feedbackApplied: Feedback applied
+  feedbackAppliedMessage: Feedback has been applied to the log that ran in this deployment.
+  feedbackUpdatedMessage: Updated event priority feedback will be applied in the next deployment run.
+  reasonPlaceholder: Enter the reason for updating the event priority
+  eventPriorityValues:
+    notARiskIgnore: Not a risk - Ignore frequency
+    notARiskConsider: Not a risk - Consider frequency
+    mediumRisk: Medium risk
+    highRisk: High risk
+    default: Default Harness ML
 externalAPICalls: External API Calls
 somethingWentWrongWhileParsingTheData: Something went wrong while parsing the data
 fetchingDataFrom: Fetching data from
@@ -1194,8 +1214,6 @@ codeErrors:
   agents: '{{ $.common.agents }}'
   agentTokens: '{{ $.common.tokens }}'
   criticalEvents: 'Critical Events'
-CVStepper:
-  StepError: Required fields are missing or incorrect data
 licenseBanner:
   freePlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the free plan
   teamPlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the team plan

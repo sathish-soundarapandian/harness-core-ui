@@ -78,6 +78,7 @@ export const RenderLastRunDate: Renderer<CellProps<PipelineDTO>> = ({ row }) => 
 
 function PipelineResourceModal({
   searchTerm,
+  sortMethod,
   onSelectChange,
   selectedData,
   resourceScope
@@ -96,7 +97,8 @@ function PipelineResourceModal({
       orgIdentifier,
       searchTerm,
       page,
-      size: 10
+      size: 10,
+      sort: [sortMethod]
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })

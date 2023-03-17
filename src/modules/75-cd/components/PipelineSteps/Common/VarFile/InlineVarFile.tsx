@@ -130,7 +130,6 @@ const InlineVarFile = (props: InlineVarFileProps) => {
                         variableName="varFile.spec.content"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formikProps.setFieldValue('varFile.spec.content', value)}
                         isReadonly={isReadonly}
                       />

@@ -135,6 +135,50 @@ export const mockedLogAnalysisData = {
   responseMessages: []
 }
 
+export const mockedLogAnalysisDataWithFeedback = {
+  metaData: {},
+  resource: {
+    totalPages: 1,
+    totalItems: 1,
+    pageItemCount: 0,
+    pageSize: 10,
+    content: [
+      {
+        message: 'Done with entity',
+        clusterType: 'KNOWN',
+        riskStatus: RiskValues.HEALTHY,
+        riskScore: 0.0,
+        count: 410,
+        messageFrequency,
+        label: 1,
+        clusterId: 'abc',
+        feedbackApplied: {
+          feedbackScore: 'HIGH_RISK',
+          description:
+            'Some applied reason Some applied reason Some applied reason Some applied reason Some applied reasonSome applied reason',
+          createdBy: 'pranesh@harness.io',
+          createdAt: 1677414780069,
+          updatedBy: 'pranesh@harness.io',
+          updatedAt: 1677414840933,
+          feedbackId: 'abc'
+        },
+        feedback: {
+          feedbackScore: 'MEDIUM_RISK',
+          description: 'Some reason',
+          createdBy: 'pranesh@harness.io',
+          createdAt: 1677414780069,
+          updatedBy: 'pranesh@harness.io',
+          updatedAt: 1677414840933,
+          feedbackId: 'abc'
+        }
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  responseMessages: []
+}
+
 export const mockLogsCall = {
   metaData: {},
   resource: {
@@ -237,4 +281,32 @@ export const mockServicePageLogsCall = {
     }
   },
   responseMessages: []
+}
+
+export const saveFeedbackExpectedPayload = {
+  clusterId: 'abc',
+  description: 'This is not a risk',
+  feedbackScore: 'NO_RISK_IGNORE_FREQUENCY',
+  verificationJobInstanceId: 'activityIdTest'
+}
+
+export const updateFeedbackExpectedPayload = {
+  clusterId: 'abc',
+  createdAt: 1677414780069,
+  createdBy: 'pranesh@harness.io',
+  description: 'This is not a risk',
+  feedbackId: 'abc',
+  feedbackScore: 'NO_RISK_IGNORE_FREQUENCY',
+  updatedBy: 'pranesh@harness.io',
+  updatedAt: 1677414840933,
+  verificationJobInstanceId: 'updateActivityIdTest'
+}
+
+export const logFeedbackHistoryPathParams = {
+  pathParams: {
+    accountIdentifier: '1234_accountId',
+    logFeedbackId: 'abc',
+    orgIdentifier: '1234_ORG',
+    projectIdentifier: '1234_project'
+  }
 }

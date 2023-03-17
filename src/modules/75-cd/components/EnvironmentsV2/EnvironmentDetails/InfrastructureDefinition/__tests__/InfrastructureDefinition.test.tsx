@@ -23,6 +23,23 @@ jest.mock('../InfrastructureModal', () => ({
   default: () => <div data-testid="mock-infra-modal" />
 }))
 
+jest.mock('@common/pages/entityUsage/EntityUsage', () => ({
+  __esModule: true,
+  default: () => <div data-testid="mock-entity-setup-usage" />
+}))
+
+jest.mock(
+  '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/BootstrapDeployInfraDefinitionWrapper',
+  () => ({
+    ...(jest.requireActual(
+      '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/BootstrapDeployInfraDefinitionWrapper'
+    ) as any),
+    BootstrapDeployInfraDefinitionWrapperWithRef: () => {
+      return <div data-testid="mock-bootstrap-deploy-infra-definition" />
+    }
+  })
+)
+
 const showSuccessMock = jest.fn()
 const showErrorMock = jest.fn()
 
@@ -184,7 +201,7 @@ describe('Infrastructure Definition tests', () => {
 
     const editButton = document.querySelector('[data-icon="edit"]')
     fireEvent.click(editButton!)
-    await waitFor(() => expect(screen.getByTestId('mock-infra-modal')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByTestId('mock-bootstrap-deploy-infra-definition')).toBeInTheDocument())
   })
 
   test('opens delete confirmation dialog and shows success toast on delete', async () => {

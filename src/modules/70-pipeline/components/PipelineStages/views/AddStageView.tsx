@@ -22,6 +22,7 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { PipelineStageProps } from '../PipelineStage'
 import EmptyStageView from './EmptyStageView'
 import StageHoverView from './StageHoverView'
@@ -55,6 +56,8 @@ export function AddStageView({
 }: AddStageViewProps): JSX.Element {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [selectedType, setSelectedType] = React.useState<SelectedAddStageTypeData | undefined>(undefined)
   const isPipelineChainingEnabled = useFeatureFlag(FeatureFlag.PIPELINE_CHAINING)
 
@@ -95,7 +98,7 @@ export function AddStageView({
                 {stage.isHidden !== true &&
                 (!stage.isApproval || !isParallel) &&
                 (stage.type !== StageType.PIPELINE ||
-                  (isPipelineChainingEnabled && !isContextTypeTemplateType(contextType))) ? (
+                  (isPipelineChainingEnabled && !isContextTypeTemplateType(contextType) && !isGitSyncEnabled)) ? (
                   <div>
                     <Card
                       data-testid={`stage-${stage.type}`}

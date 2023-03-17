@@ -177,39 +177,44 @@ exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer rend
       >
         <div
           class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--margin-top-huge"
-          style="justify-content: center;"
+          data-testid="minMaxSlider_container"
+          style="justify-content: center; width: 400px;"
         >
           <input
-            class="thumb thumbZindex3"
+            class="MinMaxSlider--thumb MinMaxSlider--thumbZindex-3"
             data-testid="MinMaxSlider_MinInput"
             max="360"
             min="0"
             step="30"
+            style="width: 400px;"
             type="range"
             value="0"
           />
           <input
-            class="thumb thumbZindex5"
+            class="MinMaxSlider--thumb MinMaxSlider--thumbZindex-5"
             data-testid="MinMaxSlider_MaxInput"
             max="360"
             min="0"
             step="30"
+            style="width: 400px;"
             type="range"
             value="360"
           />
           <div
-            class="StyledProps--font StyledProps--main slider"
+            class="StyledProps--font StyledProps--main MinMaxSlider--slider"
+            style="width: 100%;"
           >
             <div
-              class="sliderTrack"
+              class="MinMaxSlider--slider__track"
+              style="width: 400px;"
             />
             <div
-              class="sliderRange"
+              class="MinMaxSlider--slider__range"
               data-testid="MinMaxSlider_Range"
               style="left: 0%; width: 100%;"
             />
             <p
-              class="sliderLeftValue"
+              class="MinMaxSlider--slider__left-value"
               data-testid="MinMaxSlider_MinValue"
               style="left: calc(0% - 5px);"
             >
@@ -217,7 +222,7 @@ exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer rend
               °
             </p>
             <p
-              class="sliderRightValue"
+              class="MinMaxSlider--slider__right-value"
               data-testid="MinMaxSlider_MaxValue"
               style="right: calc(0% - 10px);"
             >
@@ -230,7 +235,7 @@ exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer rend
           class="StyledProps--font StyledProps--main"
         >
           <button
-            class="bp3-button Button--button StyledProps--font StyledProps--main resetButton StyledProps--inline StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-link"
+            class="bp3-button Button--button StyledProps--font StyledProps--main MinMaxSlider--resetButton StyledProps--inline StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-link"
             data-testid="MinMaxSlider_reset"
             type="button"
           >
@@ -256,7 +261,7 @@ exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer rend
             <span
               class="bp3-button-text"
             >
-              reset
+              Reset
             </span>
           </button>
         </div>

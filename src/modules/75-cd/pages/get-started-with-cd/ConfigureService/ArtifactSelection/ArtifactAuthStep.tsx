@@ -15,7 +15,6 @@ import { useFormikContext } from 'formik'
 import {
   DockerProviderType,
   buildDockerPayload,
-  DelegateTypes,
   buildArtifactoryPayload,
   buildAWSPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -24,7 +23,7 @@ import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
 import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
-import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
+import { ConnectivityModeType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import StepDockerAuthentication, {
   DockerFormInterface

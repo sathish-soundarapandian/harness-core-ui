@@ -211,7 +211,6 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                     variableName="connectorRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('connectorRef', value)
                     }}
@@ -253,7 +252,6 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                     variableName="region"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('region', value)
                     }}
@@ -316,7 +314,6 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                     variableName="cluster"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('cluster', value)
                     }}

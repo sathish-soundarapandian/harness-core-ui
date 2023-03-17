@@ -20,6 +20,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
+import { InfraDefinitionDetailsDrawer } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
 
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference.types'
@@ -35,7 +36,12 @@ export default function InfrastructureDefinition(): JSX.Element {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const [selectedInfrastructure, setSelectedInfrastructure] = useState<string>('')
-  const { isOpen: isModalOpen, close: hideModal, open: showModal } = useToggleOpen(false)
+  const [infraSaveInProgress, setInfraSaveInProgress] = useState<boolean>(false)
+  const {
+    isOpen: isInfraDefinitionDetailsOpen,
+    close: closeInfraDefinitionDetails,
+    open: openInfraDefinitionDetails
+  } = useToggleOpen(false)
 
   const { data, loading, error, refetch } = useGetInfrastructureList({
     queryParams: {
@@ -45,18 +51,19 @@ export default function InfrastructureDefinition(): JSX.Element {
       environmentIdentifier
     }
   })
+  const scopeFromDTO = getScopeFromDTO({ accountId, orgIdentifier, projectIdentifier })
 
   const { getTemplate } = useTemplateSelector()
   const onClose = (): void => {
     setSelectedInfrastructure('')
-    hideModal()
+    closeInfraDefinitionDetails()
   }
 
   useEffect(() => {
     if (selectedInfrastructure) {
-      showModal()
+      openInfraDefinitionDetails()
     }
-  }, [selectedInfrastructure, showModal])
+  }, [selectedInfrastructure, openInfraDefinitionDetails])
 
   return (
     <>
@@ -71,7 +78,7 @@ export default function InfrastructureDefinition(): JSX.Element {
               text={getString('pipelineSteps.deploy.infrastructure.infraDefinition')}
               font={{ weight: 'bold' }}
               icon="plus"
-              onClick={showModal}
+              onClick={openInfraDefinitionDetails}
               size={ButtonSize.SMALL}
               variation={ButtonVariation.LINK}
               permission={{
@@ -89,35 +96,47 @@ export default function InfrastructureDefinition(): JSX.Element {
             />
             <InfrastructureList
               list={data?.data?.content}
-              showModal={showModal}
+              showModal={openInfraDefinitionDetails}
               refetch={refetch}
               setSelectedInfrastructure={setSelectedInfrastructure}
             />
           </>
         )}
-        <ModalDialog
-          isOpen={isModalOpen}
-          isCloseButtonShown
-          canEscapeKeyClose
-          canOutsideClickClose
-          enforceFocus={false}
-          onClose={onClose}
-          title={
-            selectedInfrastructure ? getString('cd.infrastructure.edit') : getString('cd.infrastructure.createNew')
-          }
-          width={1128}
-          height={840}
-          className={css.dialogStyles}
-        >
-          <InfrastructureModal
-            hideModal={onClose}
-            refetch={refetch}
-            environmentIdentifier={environmentIdentifier}
+        {selectedInfrastructure ? (
+          <InfraDefinitionDetailsDrawer
+            isDrawerOpened={isInfraDefinitionDetailsOpen}
+            onCloseDrawer={onClose}
             selectedInfrastructure={selectedInfrastructure}
+            scope={scopeFromDTO}
+            environmentIdentifier={environmentIdentifier}
+            refetch={refetch}
             getTemplate={getTemplate}
-            scope={getScopeFromDTO({ accountId, orgIdentifier, projectIdentifier })}
+            setInfraSaveInProgress={setInfraSaveInProgress}
+            infraSaveInProgress={infraSaveInProgress}
           />
-        </ModalDialog>
+        ) : (
+          <ModalDialog
+            isOpen={isInfraDefinitionDetailsOpen}
+            isCloseButtonShown
+            canEscapeKeyClose
+            canOutsideClickClose
+            enforceFocus={false}
+            onClose={onClose}
+            title={getString('cd.infrastructure.createNew')}
+            width={1128}
+            height={840}
+            className={css.dialogStyles}
+          >
+            <InfrastructureModal
+              hideModal={onClose}
+              refetch={refetch}
+              environmentIdentifier={environmentIdentifier}
+              selectedInfrastructure={selectedInfrastructure}
+              getTemplate={getTemplate}
+              scope={scopeFromDTO}
+            />
+          </ModalDialog>
+        )}
       </Container>
     </>
   )

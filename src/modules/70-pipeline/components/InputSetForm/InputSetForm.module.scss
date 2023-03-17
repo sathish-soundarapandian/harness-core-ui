@@ -12,6 +12,15 @@
   transform: translate(-50%, 0);
 }
 
+.gitRemoteDetails {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 12px !important;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--spacing-2);
+  margin-left: var(--spacing-medium) !important;
+}
+
 .reconcileMenu {
   display: inline-block;
   position: absolute;

@@ -24,12 +24,15 @@ import cx from 'classnames'
 import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { FontVariation } from '@harness/design-system'
-import { get, isBoolean, isEmpty, set } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEmpty, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import type { OpenShiftTemplateGITDataType } from '../../ManifestInterface'
+import type {
+  OpenShiftTemplateGITDataType,
+  OpenShiftTemplateGITManifestLastStepPrevStepData
+} from '../../ManifestInterface'
 import {
   getSkipResourceVersioningBasedOnDeclarativeRollback,
   gitFetchTypeList,
@@ -53,6 +56,7 @@ interface OpenshiftTemplateWithGITPropType {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+  editManifestModePrevStepData?: OpenShiftTemplateGITManifestLastStepPrevStepData
 }
 
 function OpenShiftTemplateWithGit({
@@ -64,22 +68,26 @@ function OpenShiftTemplateWithGit({
   prevStepData,
   previousStep,
   manifestIdsList,
-  isReadonly = false
+  isReadonly = false,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & OpenshiftTemplateWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
-  const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+
+  const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
-    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-    prevStepData?.urlType === GitRepoName.Repo
+    modifiedPrevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    modifiedPrevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
   const accountUrl =
     connectionType === GitRepoName.Account
-      ? prevStepData?.connectorRef
-        ? prevStepData?.connectorRef?.connector?.spec?.url
-        : prevStepData?.url
+      ? modifiedPrevStepData?.connectorRef
+        ? modifiedPrevStepData?.connectorRef?.connector?.spec?.url
+        : modifiedPrevStepData?.url
       : null
 
   const getInitialValues = (): OpenShiftTemplateGITDataType => {
@@ -90,7 +98,7 @@ function OpenShiftTemplateWithGit({
         ...specValues,
         identifier: initialValues.identifier,
         paths: specValues.paths,
-        repoName: getRepositoryName(prevStepData, initialValues),
+        repoName: getRepositoryName(modifiedPrevStepData, initialValues),
         path:
           getMultiTypeFromValue(specValues?.paths) === MultiTypeInputType.RUNTIME
             ? specValues.paths
@@ -114,7 +122,7 @@ function OpenShiftTemplateWithGit({
       path: '',
       skipResourceVersioning: false,
       enableDeclarativeRollback: false,
-      repoName: getRepositoryName(prevStepData, initialValues)
+      repoName: getRepositoryName(modifiedPrevStepData, initialValues)
     }
   }
 
@@ -186,7 +194,7 @@ function OpenShiftTemplateWithGit({
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
             if (
               connectionType === GitRepoName.Repo ||
-              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+              getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
             ) {
               return true
             }
@@ -195,14 +203,14 @@ function OpenShiftTemplateWithGit({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
@@ -258,7 +266,6 @@ function OpenShiftTemplateWithGit({
                           variableName="branch"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => formik.setFieldValue('branch', value)}
                           isReadonly={isReadonly}
                         />
@@ -286,7 +293,6 @@ function OpenShiftTemplateWithGit({
                           variableName="commitId"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => formik.setFieldValue('commitId', value)}
                           isReadonly={isReadonly}
                         />
@@ -315,7 +321,6 @@ function OpenShiftTemplateWithGit({
                         variableName="path"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('path', value)}
                         isReadonly={isReadonly}
                       />
@@ -337,6 +342,7 @@ function OpenShiftTemplateWithGit({
                     placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                     defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                     dragDropFieldWidth={filePathWidth}
+                    allowSinglePathDeletion
                   />
                   {getMultiTypeFromValue(formik.values.paramsPaths) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
@@ -345,7 +351,6 @@ function OpenShiftTemplateWithGit({
                       variableName={'paramsPaths'}
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={val => formik?.setFieldValue('paramsPaths', val)}
                       isReadonly={isReadonly}
                     />
@@ -379,7 +384,6 @@ function OpenShiftTemplateWithGit({
                               variableName="enableDeclarativeRollback"
                               showRequiredField={false}
                               showDefaultField={false}
-                              showAdvanced={true}
                               onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
                               style={{ alignSelf: 'center', marginTop: 11 }}
                               className={cx(css.addmarginTop)}
@@ -404,7 +408,6 @@ function OpenShiftTemplateWithGit({
                               variableName="skipResourceVersioning"
                               showRequiredField={false}
                               showDefaultField={false}
-                              showAdvanced={true}
                               onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
                               style={{ alignSelf: 'center', marginTop: 11 }}
                               className={css.addmarginTop}
@@ -423,7 +426,7 @@ function OpenShiftTemplateWithGit({
                   variation={ButtonVariation.SECONDARY}
                   text={getString('back')}
                   icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
+                  onClick={() => previousStep?.(modifiedPrevStepData)}
                 />
                 <Button
                   variation={ButtonVariation.PRIMARY}

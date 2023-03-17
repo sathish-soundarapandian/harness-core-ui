@@ -1,0 +1,78 @@
+.updatePreferenceDrawer {
+  background-color: var(--grey-50);
+
+  &CloseBtn:global(.bp3-button.bp3-minimal) {
+    right: 50% !important;
+    z-index: 30 !important;
+  }
+}
+
+.formSection {
+  background-color: var(--white) !important;
+  padding-bottom: var(--spacing-medium);
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.riskItem {
+  padding: var(--spacing-small) !important;
+  cursor: pointer;
+  align-items: center;
+
+  &:hover {
+    background: var(--grey-100) !important;
+  }
+}
+
+.riskSelectElement {
+  width: 350px !important;
+}
+
+.riskColorIndicator {
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background-color: var(--grey-300);
+  margin-right: var(--spacing-medium);
+
+  &Small {
+    height: 12px;
+    width: 12px;
+    margin-right: var(--spacing-small) !important;
+  }
+}
+
+.feedbackItem {
+  padding-bottom: var(--spacing-medium) !important;
+  border-bottom: 1px solid var(--grey-200);
+
+  &:not(:first-child) {
+    margin-top: var(--spacing-medium) !important;
+  }
+}
+
+.feedbackSection {
+  overflow-y: auto !important;
+}
+
+.feedbackData {
+  font-size: var(--font-size-small) !important;
+  padding-top: var(--spacing-small) !important;
+  align-items: center;
+
+  &Label {
+    width: 150px;
+    color: var(--black) !important;
+    font-weight: 500 !important;
+    font-size: var(--font-size-small) !important;
+  }
+
+  &Risk {
+    align-items: center;
+  }
+}
+
+.spinnerContainer {
+  height: 400px;
+  display: grid;
+  place-items: center;
+}

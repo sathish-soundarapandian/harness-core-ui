@@ -71,7 +71,6 @@ export function ManifestDetailsAdvancedSection({
                     variableName="enableDeclarativeRollback"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
                     style={{ alignSelf: 'center', marginTop: 11 }}
                     className={css.addmarginTop}
@@ -96,7 +95,6 @@ export function ManifestDetailsAdvancedSection({
                   variableName="skipResourceVersioning"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
                   style={{ alignSelf: 'center', marginTop: 11 }}
                   className={css.addmarginTop}

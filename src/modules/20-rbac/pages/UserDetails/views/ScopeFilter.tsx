@@ -161,9 +161,10 @@ const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onC
 interface ScopeFilterProps {
   view: UserDetailsViews
   userData: UserAggregate
+  onNewRoleAdded?: () => void
 }
 
-const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
+const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData, onNewRoleAdded }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
@@ -344,7 +345,7 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
       )
     } else {
       if (view === UserDetailsViews.ROLE_BINDING) {
-        return <UserRoleBindings scopeFilters={scopeFilters} user={userData} />
+        return <UserRoleBindings scopeFilters={scopeFilters} user={userData} onNewRoleAdded={onNewRoleAdded} />
       } else {
         return <UserGroupTable user={userData} scopeFilters={scopeFilters} />
       }

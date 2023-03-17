@@ -334,7 +334,9 @@ jenkins:
   usernamePasswordAPIToken: 'Username and Password/APIToken'
   passwordAPIToken: 'Password/APIToken'
   jenkinsConnectorLabel: 'Jenkins Connector'
-  jobNameLabel: 'Job Name'
+  jobNameLabel: 'Job/Folder Name'
+  jobs: 'Jobs'
+  child: 'Child'
   jobParameterLabel: 'Job Parameter (Optional)'
   jenkins: 'Jenkins'
   jenkinsUrlRequired: 'Jenkins Registry URL is required'
@@ -345,6 +347,10 @@ azureArtifacts:
   azureArtifactsUrl: Azure Artifacts URL
 helmRepo:
   helmRepoUrl: 'Helm Repository URL'
+bamboo:
+  bamboo: 'Bamboo'
+  bambooUrl: 'Bamboo URL'
+  bambooConnectorLabel: 'Bamboo Connector'
 aws:
   awsAccessKey: AWS Access Key
   accessKey: '{{ $.common.accessKey }}'
@@ -561,7 +567,7 @@ ceK8:
       info2: 'Permissions to access the pods and services of the cluster'
       info3: 'Installing components to create Autostopping rules'
       info4: 'Permissions to start and stop services as per rules'
-    downloadYamlBtnText: 'Download YAML'
+    downloadYamlBtnText: '{{ $.common.downloadYaml }}'
     downloadComplete: 'Download Complete'
     applyDelegateText: 'Copy the downloaded YAML to a machine where you have kubectl installed and have access to your Kubernetes cluster. Run the following command to apply the Harness delegate to your Kubernetes Cluster'
     successfulCommandExec: 'Command executed successfully'

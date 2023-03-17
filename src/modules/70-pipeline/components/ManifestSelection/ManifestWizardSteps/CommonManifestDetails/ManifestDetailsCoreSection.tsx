@@ -113,7 +113,6 @@ export function ManifestDetailsCoreSection({
                 variableName="branch"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('branch', value)}
                 isReadonly={isReadonly}
               />
@@ -141,7 +140,6 @@ export function ManifestDetailsCoreSection({
                 variableName="commitId"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('commitId', value)}
                 isReadonly={isReadonly}
               />
@@ -176,7 +174,6 @@ export function ManifestDetailsCoreSection({
             variableName={'paths'}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={val => formik?.setFieldValue('paths', val)}
             isReadonly={isReadonly}
           />

@@ -21,7 +21,9 @@ import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { downloadYamlAsFile } from '@common/utils/downloadYamlUtils'
 import { DelegateFileName } from '@delegates/components/CreateDelegate/K8sDelegate/K8sDelegate.constants'
 import { quickCreateDelegateParams } from '@ce/utils/cloudIntegrationUtils'
-
+import { CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
+import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import StepContainer from './StepContainer'
 
 import css from '../K8sQuickCreateModal.module.scss'
@@ -37,10 +39,13 @@ const DownloadYaml: React.FC<DownloadYamlProps & StepProps<ConnectorConfigDTO>> 
 }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   const { triggerExtension } = useContext(DialogExtensionContext)
   const [yaml, setYaml] = useState(get(prevStepData, 'yaml'))
 
   const steps: Array<keyof StringsMap> = ['ce.k8sQuickCreate.applyYaml.step1', 'ce.k8sQuickCreate.applyYaml.step2']
+
+  useStepLoadTelemetry(CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS.LOAD_DOWNLOAD_YAML)
 
   /* istanbul ignore next */
   const defaultParams: DelegateSetupDetails = {
@@ -69,6 +74,7 @@ const DownloadYaml: React.FC<DownloadYamlProps & StepProps<ConnectorConfigDTO>> 
   }, [])
 
   const handleDownloadYaml = /* istanbul ignore next */ (): void => {
+    trackEvent(CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS.DOWNLOAD_YAML, {})
     downloadYamlAsFile(yaml, 'harness-delegate.yml')
   }
 

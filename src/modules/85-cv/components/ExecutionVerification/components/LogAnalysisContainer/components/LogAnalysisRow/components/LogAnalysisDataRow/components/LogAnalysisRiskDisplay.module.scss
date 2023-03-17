@@ -1,0 +1,9 @@
+.iconContainer {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  place-items: center !important;
+
+  > .imageHolder {
+    margin-bottom: var(--spacing-none) !important;
+  }
+}

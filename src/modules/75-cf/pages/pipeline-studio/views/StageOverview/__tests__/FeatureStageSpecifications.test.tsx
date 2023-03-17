@@ -87,10 +87,11 @@ const getPipelineContext = (): PipelineContextInterface => ({
   setTemplateTypes: jest.fn(),
   setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
-  setIntermittentLoading: jest.fn()
+  setIntermittentLoading: jest.fn(),
+  setValidationUuid: jest.fn()
 })
 
-describe('StepWidget tests', () => {
+describe('FeatureStageSpecifications tests', () => {
   test('it renders StageOverview', () => {
     const { container } = render(
       <TestWrapper>

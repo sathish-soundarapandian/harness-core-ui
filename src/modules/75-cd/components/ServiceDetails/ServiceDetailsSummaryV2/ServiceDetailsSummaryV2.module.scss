@@ -353,7 +353,7 @@
 
 .artifactViewEnvDetail {
   display: grid !important;
-  grid-template-columns: 1fr 80px;
+  grid-template-columns: 1fr 90px;
   column-gap: var(--spacing-3);
   align-items: center;
   height: var(--spacing-8);
@@ -408,4 +408,9 @@
   border: 1px solid var(--grey-200);
   border-radius: var(--spacing-2);
   background-color: var(--grey-0) !important;
+}
+
+.overflowScrollPipelineIdList {
+  overflow: scroll;
+  max-height: 680px;
 }

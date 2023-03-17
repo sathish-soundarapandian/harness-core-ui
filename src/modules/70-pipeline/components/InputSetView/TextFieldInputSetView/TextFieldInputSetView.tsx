@@ -72,7 +72,6 @@ function TextFieldInputSet(props: TextFieldInputSetView): JSX.Element {
           variableName={variableName}
           showRequiredField={false}
           showDefaultField={false}
-          showAdvanced={true}
           onChange={val => formik?.setFieldValue(name, val)}
           style={label ? { marginTop: 'var(--spacing-6)' } : undefined}
           allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}

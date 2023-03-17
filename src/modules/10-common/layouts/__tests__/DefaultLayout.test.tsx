@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import featuresFactory from 'framework/featureStore/FeaturesFactory'
-import { useGetLicensesAndSummary, useExtendTrialLicense, useSaveFeedback } from 'services/cd-ng'
+import { useGetLicensesAndSummary, useExtendTrialLicense, useSaveFeedback, useGetAccountNG } from 'services/cd-ng'
 
 import { BANNER_KEY } from '../FeatureBanner'
 import { BannerType } from '../Constants'
@@ -44,6 +44,25 @@ useGetLicensesAndSummaryMock.mockImplementation(() => {
   }
 })
 
+const useGetAccountNGMock = useGetAccountNG as jest.MockedFunction<any>
+beforeEach(() => {
+  window.deploymentType = 'SAAS'
+
+  useGetAccountNGMock.mockImplementation(() => {
+    return {
+      data: {
+        data: {
+          name: 'account name',
+          identifier: 'id1',
+          cluster: 'free',
+          defaultExperience: 'NG',
+          crossGenerationAccessEnabled: true
+        }
+      },
+      refetch: jest.fn()
+    }
+  })
+})
 const useGetUsageAndLimitReturnMock = {
   usageData: {
     usage: {}

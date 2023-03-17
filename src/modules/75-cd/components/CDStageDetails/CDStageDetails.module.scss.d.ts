@@ -13,6 +13,7 @@ declare const styles: {
   readonly main: string
   readonly serviceName: string
   readonly serviceWrapper: string
+  readonly stageItemDetails: string
   readonly threeSections: string
   readonly title: string
   readonly values: string

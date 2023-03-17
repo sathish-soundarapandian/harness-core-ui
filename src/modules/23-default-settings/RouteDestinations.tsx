@@ -78,6 +78,13 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_GIT_COMMANDS, {
   settingCategory: 'GIT_EXPERIENCE'
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS, {
+  label: 'defaultSettings.allowDifferentRepoForInputSets',
+  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'GIT_EXPERIENCE'
+})
+
 AuditTrailFactory.registerResourceHandler('SETTING', {
   moduleIcon: {
     name: 'nav-settings'

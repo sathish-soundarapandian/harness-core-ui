@@ -20,7 +20,7 @@ import { GcoQueryKey } from './MonitoredServiceInputSetsTemplate.constants'
 export const getLabelByName = (name: string, getString: UseStringsReturn['getString']): string => {
   switch (name) {
     case 'applicationName':
-      return getString('cv.monitoringSources.appD.applicationName')
+      return getString('pipeline.applicationName')
     case 'tierName':
       return getString('cv.monitoringSources.appD.tierName')
     case 'completeMetricPath':
@@ -43,12 +43,14 @@ export const getLabelByName = (name: string, getString: UseStringsReturn['getStr
     case 'metricType':
       return `Metric type for ${getString('cv.monitoringSources.riskCategoryLabel')}`
     case 'indexes':
+    case 'index':
       return getString('cv.monitoringSources.datadogLogs.logIndexesLabel')
     case 'messageIdentifier':
       return getString('cv.monitoringSources.gcoLogs.messageIdentifierTitle')
     case 'metricValueJsonPath':
       return getString('cv.healthSource.connectors.NewRelic.metricFields.metricValueJsonPath.label')
     case 'timestampJsonPath':
+    case 'timeStampIdentifier':
       return getString('cv.healthSource.connectors.NewRelic.metricFields.timestampJsonPath.label')
     default:
       return name

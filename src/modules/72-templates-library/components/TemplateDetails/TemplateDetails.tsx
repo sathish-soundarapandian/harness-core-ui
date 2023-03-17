@@ -42,6 +42,7 @@ import {
   TemplateResponse,
   TemplateSummaryResponse,
   useGetTemplate,
+  useGetTemplateInputSetYaml,
   useGetTemplateList,
   useGetTemplateMetadataList
 } from 'services/template-ng'
@@ -66,9 +67,8 @@ import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
-import { PipelineCachedCopy } from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { EntityCachedCopy } from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
+import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -118,12 +118,18 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const { accountId, module } = params
   const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>()
   const gitPopoverBranch = isStandAlone ? storeMetadata?.branch : selectedBranch
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   const stableVersion = React.useMemo(() => {
     return (templates as TemplateSummaryResponse[])?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))
       ?.versionLabel
   }, [templates])
+
+  const repo =
+    (selectedTemplate as TemplateSummaryResponse)?.gitDetails?.repoIdentifier ||
+    (selectedTemplate as NGTemplateInfoConfigWithGitDetails)?.repo
+  const selectedTemplateBranch =
+    (selectedTemplate as TemplateSummaryResponse)?.gitDetails?.branch ||
+    (selectedTemplate as NGTemplateInfoConfigWithGitDetails)?.branch
 
   const {
     data: templateYamlData,
@@ -139,7 +145,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       versionLabel: selectedTemplate?.versionLabel,
       ...getGitQueryParamsWithParentScope({ storeMetadata, params, loadFromFallbackBranch })
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true
   })
 
@@ -165,6 +171,25 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
+
+  const templateInputSetFetchParams = useGetTemplateInputSetYaml({
+    templateIdentifier: defaultTo(selectedTemplate?.identifier, ''),
+    queryParams: {
+      accountIdentifier: defaultTo(selectedTemplate?.accountId, accountId),
+      orgIdentifier: selectedTemplate?.orgIdentifier,
+      projectIdentifier: selectedTemplate?.projectIdentifier,
+      versionLabel: defaultTo(selectedTemplate?.versionLabel, ''),
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params,
+        repoIdentifier: repo,
+        branch: selectedTemplateBranch
+      })
+    },
+    lazy: true,
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+  })
+  const { refetch: refetchTemplateInputSetYaml } = templateInputSetFetchParams
 
   const templateIconName = React.useMemo(() => getIconForTemplate(getString, selectedTemplate), [selectedTemplate])
   const templateIconUrl = React.useMemo(() => selectedTemplate?.icon, [selectedTemplate?.icon])
@@ -198,9 +223,24 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   }, [templates])
 
   React.useEffect(() => {
+    if (
+      templateYamlError &&
+      (selectedTemplate as TemplateResponse).storeType === 'REMOTE' &&
+      !isEmpty((selectedTemplate as TemplateResponse).cacheResponseMetadata)
+    ) {
+      setSelectedTemplate({ ...selectedTemplate, cacheResponseMetadata: undefined } as TemplateResponse)
+    }
+  }, [templateYamlError])
+
+  React.useEffect(() => {
+    if (selectedTemplate) {
+      refetchTemplateInputSetYaml()
+    }
+  }, [selectedTemplate?.identifier, selectedTemplate?.versionLabel])
+
+  React.useEffect(() => {
     if (selectedTemplate) {
       setTemplate?.(selectedTemplate)
-
       if (isEmpty(selectedTemplate?.yaml)) {
         refetchTemplateYaml()
       }
@@ -254,6 +294,15 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
           branch
         }
       })
+      refetchTemplateInputSetYaml({
+        queryParams: {
+          accountIdentifier: defaultTo(selectedTemplate?.accountId, accountId),
+          orgIdentifier: selectedTemplate?.orgIdentifier,
+          projectIdentifier: selectedTemplate?.projectIdentifier,
+          versionLabel: defaultTo(selectedTemplate?.versionLabel, ''),
+          ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier: repo, branch })
+        }
+      })
     }
   }
 
@@ -268,7 +317,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         templateIdentifier: selectedTemplate.identifier,
         versionLabel: selectedTemplate.versionLabel,
         repoIdentifier: selectedTemplate.gitDetails?.repoIdentifier,
-        branch: !isStandAlone ? selectedTemplate.gitDetails?.branch || selectedBranch : storeMetadata?.branch
+        branch: !isStandAlone ? selectedBranch || selectedTemplate.gitDetails?.branch : storeMetadata?.branch
       })
       if (isStandAlone) {
         window.open(`${windowLocationUrlPartBeforeHash()}#${url}`, '_blank')
@@ -308,7 +357,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     templateFactory.getTemplate(selectedTemplate.templateEntityType || '')?.renderTemplateInputsForm({
       template: selectedTemplate,
       accountId: defaultTo(template.accountId, ''),
-      storeMetadata
+      templateInputSetFetchParams
     })
   ) : (
     <PageBody className={css.yamlLoader} loading />
@@ -365,9 +414,8 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                         forceFetch
                         btnClassName={css.gitBtn}
                         customIcon={
-                          isGitCacheEnabled &&
                           !isEmpty((selectedTemplate as TemplateResponse)?.cacheResponseMetadata) ? (
-                            <PipelineCachedCopy
+                            <EntityCachedCopy
                               reloadContent={getString('common.template.label')}
                               cacheResponse={
                                 (selectedTemplate as TemplateResponse)?.cacheResponseMetadata as CacheResponseMetadata

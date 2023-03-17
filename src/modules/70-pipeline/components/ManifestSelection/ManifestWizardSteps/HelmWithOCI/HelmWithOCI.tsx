@@ -23,13 +23,13 @@ import {
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import type { HelmWithOCIDataType } from '../../ManifestInterface'
+import type { HelmWithOCIDataType, HelmWithOCIManifestLastStepPrevStepData } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
 import {
@@ -51,6 +51,7 @@ interface HelmWithOCIPropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   deploymentType?: string
+  editManifestModePrevStepData?: HelmWithOCIManifestLastStepPrevStepData
 }
 
 function HelmWithOCI({
@@ -63,11 +64,14 @@ function HelmWithOCI({
   previousStep,
   manifestIdsList,
   isReadonly = false,
-  deploymentType
+  deploymentType,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & HelmWithOCIPropType): React.ReactElement {
   const { getString } = useStrings()
   const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   const getInitialValues = (): HelmWithOCIDataType => {
     const specValues = get(initialValues, 'spec.store.spec.config.spec', null)
@@ -169,7 +173,7 @@ function HelmWithOCI({
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {
-                is: val => !isEmpty(val?.value),
+                is: val => !isEmpty(val),
                 then: Yup.string().required(getString('pipeline.manifestType.commandFlagRequired'))
               })
             })
@@ -183,14 +187,14 @@ function HelmWithOCI({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: /* istanbul ignore next */ prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: /* istanbul ignore next */ modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
@@ -225,7 +229,6 @@ function HelmWithOCI({
                       variableName="basePath"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={/* istanbul ignore next */ value => formik.setFieldValue('basePath', value)}
                       isReadonly={isReadonly}
                     />
@@ -253,7 +256,6 @@ function HelmWithOCI({
                       variableName="chartName"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={/* istanbul ignore next */ value => formik.setFieldValue('chartName', value)}
                       isReadonly={isReadonly}
                     />
@@ -279,7 +281,6 @@ function HelmWithOCI({
                       variableName="chartVersion"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={/* istanbul ignore next */ value => formik.setFieldValue('chartVersion', value)}
                       isReadonly={isReadonly}
                     />
@@ -309,7 +310,6 @@ function HelmWithOCI({
                         variableName="subChartName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('subChartName', value)}
                         isReadonly={isReadonly}
                         allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -333,6 +333,7 @@ function HelmWithOCI({
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                   defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                   dragDropFieldWidth={filePathWidth}
+                  allowSinglePathDeletion
                 />
                 {getMultiTypeFromValue(formik.values.valuesPaths) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
@@ -341,7 +342,6 @@ function HelmWithOCI({
                     variableName={'valuesPaths'}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={val => formik?.setFieldValue('valuesPaths', val)}
                     isReadonly={isReadonly}
                   />
@@ -364,7 +364,7 @@ function HelmWithOCI({
                       allowableTypes={allowableTypes}
                       helmVersion={formik.values?.helmVersion}
                       deploymentType={deploymentType as string}
-                      helmStore={prevStepData?.store ?? ''}
+                      helmStore={modifiedPrevStepData?.store ?? ''}
                     />
                   }
                 />
@@ -376,7 +376,7 @@ function HelmWithOCI({
                 text={getString('back')}
                 icon="chevron-left"
                 variation={ButtonVariation.SECONDARY}
-                onClick={() => previousStep?.(prevStepData)}
+                onClick={() => previousStep?.(modifiedPrevStepData)}
               />
               <Button
                 variation={ButtonVariation.PRIMARY}

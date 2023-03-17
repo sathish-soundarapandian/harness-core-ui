@@ -3,7 +3,7 @@
 exports[`Connector Details Page Edit and save connector YAML 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main StyledProps--padding-xlarge"
+    class="Layout--horizontal StyledProps--main"
     style="height: inherit;"
   >
     <div
@@ -662,12 +662,12 @@ exports[`Connector Details Page Edit and save connector via YAML for a git-sync 
 exports[`Connector Details Page Edit details test 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main StyledProps--padding-xlarge"
+    class="Layout--horizontal StyledProps--main"
     style="height: inherit;"
   >
     <div
       class="Layout--vertical StyledProps--main"
-      style="width: 67%;"
+      style="width: 100%;"
     >
       <div
         class="StyledProps--font StyledProps--main buttonContainer"
@@ -760,7 +760,7 @@ exports[`Connector Details Page Edit details test 1`] = `
 exports[`Connector Details Page Rendering connector details with DockerRegistry: DockerRegistry 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main StyledProps--padding-xlarge"
+    class="Layout--horizontal StyledProps--main"
     style="height: inherit;"
   >
     <div
@@ -938,7 +938,7 @@ exports[`Connector Details Page Rendering connector details with DockerRegistry:
 exports[`Connector Details Page Rendering connector details with K8sCluster: K8sCluster 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main StyledProps--padding-xlarge"
+    class="Layout--horizontal StyledProps--main"
     style="height: inherit;"
   >
     <div
@@ -1116,7 +1116,7 @@ exports[`Connector Details Page Rendering connector details with K8sCluster: K8s
 exports[`Connector Details Page Rendering connector details: view text 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main StyledProps--padding-xlarge"
+    class="Layout--horizontal StyledProps--main"
     style="height: inherit;"
   >
     <div

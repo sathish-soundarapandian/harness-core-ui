@@ -1,6 +1,12 @@
 import React from 'react'
 import { useFormikContext } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import {
+  AllowedTypes,
+  AllowedTypesWithRunTime,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE
+} from '@harness/uicore'
 import { get, set, unset } from 'lodash-es'
 import produce from 'immer'
 
@@ -20,6 +26,7 @@ export interface FailureStrategiesInputSetFormProps {
   path: string
   stageType: StageType
   viewType?: StepViewType
+  allowableTypes?: AllowedTypes
 }
 
 export interface FormikState {
@@ -27,7 +34,13 @@ export interface FormikState {
 }
 
 export function FailureStrategiesInputSetForm(props: FailureStrategiesInputSetFormProps): React.ReactElement {
-  const { readonly, path, stageType, viewType } = props
+  const {
+    readonly,
+    path,
+    stageType,
+    viewType,
+    allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+  } = props
   const formik = useFormikContext()
   const { getString } = useStrings()
 
@@ -40,7 +53,9 @@ export function FailureStrategiesInputSetForm(props: FailureStrategiesInputSetFo
         {viewType === StepViewType.TemplateUsage ? (
           <MultiTypeSelectorButton
             type={getMultiTypeFromValue(failureStrategies as any)}
-            allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+            allowedTypes={(allowableTypes as AllowedTypesWithRunTime[]).filter(
+              type => type !== MultiTypeInputType.EXPRESSION
+            )}
             onChange={type => {
               formik.setValues(
                 produce(formik.values, (draft: any) => {

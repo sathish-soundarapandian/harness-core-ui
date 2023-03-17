@@ -57,12 +57,6 @@ describe.skip('Ssh/WinRM -E2E flow', () => {
             name: 'NG_SVC_ENV_REDESIGN',
             enabled: true,
             lastUpdatedAt: 0
-          },
-          {
-            uuid: null,
-            name: 'SSH_NG',
-            enabled: true,
-            lastUpdatedAt: 0
           }
         ]
       })

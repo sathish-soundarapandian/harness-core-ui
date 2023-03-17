@@ -144,6 +144,7 @@ steps:
     oldAppInstance: Old App Instance
     minimumCountPercentage: Percentage must be greater than or equal to 0
     existingVersionToKeep: Existing Versions To Keep
+    resizeStrategy: Resize Strategy
     additionalRoutes: Additional Routes
     tempRoutes: Temporary Routes
     readFromManifest: Read from Manifest
@@ -153,6 +154,11 @@ steps:
     upscaleNewFirstLabel: Add new instances first, then downsize old instances
     downScaleOldFirstLabel: Downsize old instances first, then add new instances
     zeroOldInstancesWarning: There can be a downtime as the old instances are downsized first with instance value as zero
+    routeMandatory: Route is mandatory
+    mappingType: Mapping type
+    mapRoute: Map Route
+    unMapRoute: UnMap Route
+    routes: Routes
   googleCloudFunctionCommon:
     fieldMask: Field Mask
     fieldMaskPlaceholder: Enter Field Mask
@@ -172,7 +178,6 @@ preProduction: '{{ $.common.preProduction }}'
 preProductionType: 'Pre-Prod'
 environmentDelete: '{{ $.common.deleteEnvironment.title }}'
 environmentDeleteMessage: 'Are you sure you want to delete environment <strong>{{name}}</strong>?'
-namespaceValidation: Namespace must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc')
 releaseNameValidation: Release name must consist of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character (e.g. http://example.com). Harness evaluates the release name using the regex [a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*
 cdTrialHomePage:
   startTrial:
@@ -283,9 +288,11 @@ pipelineSteps:
     newService: '{{$.newService}}'
     plusNewService: '+ {{$.newService}}'
     serviceIsRequired: Service is required
+    useFromStageRequired: Service or Propagate From is required
     aboutYourService: About the Service
     manifest:
       taskDefinition: Task Definition
+      taskDefinitionARNPlaceholder: Enter Task Definition ARN
       serviceDefinition: Service Definition
       scalingPolicy: Scaling Policy
       scalableTarget: Scalable Target
@@ -316,7 +323,6 @@ serviceDashboard:
   recentDeployments: 'Recent Deployments'
   servicesInLast: 'Services added in {{period}}'
   serviceInstancesInLast: 'Active service instance trend in {{period}}'
-  serviceInstances: 'Service Instances'
   activeInstanceCount: 'Active Instance Count'
   nonProd: 'Non Prod'
   prod: 'Prod'
@@ -365,6 +371,7 @@ serviceDashboard:
   noActiveServices: No Active Services in {{timeRange}}
   helmChartDetails: Helm Chart Details
   helmChartName: Helm Chart Name
+  helmSubChartName: Helm Sub-Chart Name
   helmRopoUrl: Repo URL
   manageServiceLabel: Manage Services
   unitDay: '/Day'
@@ -389,6 +396,7 @@ gitOps: '{{ $.common.gitOps }}'
 addService: Add Service
 noService: You have no Services
 addEnvironment: Add Environment
+existingEnvironment: 'Existing Environment'
 editIdError: 'ID: {{id}} cannot be edited'
 typeError: 'Type should not be empty and contain either "Production" or "PreProduction"'
 newAdapter: New Adapter
@@ -552,6 +560,7 @@ cloudFormation:
     pdc: PDC
 gitOpsCluster: 'GitOps Clusters'
 selectGitopsCluster: 'Select GitOps Clusters to add to Environment'
+agentID: Agent Id
 clustersSelected: 'Clusters Selected'
 selectClusterLabel: 'Select Cluster(s)'
 noLinkedClusters: 'No Linked Clusters Available'
@@ -583,6 +592,7 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  cdWizardEventName: CD Wizard - {{ eventName }}
   creatingApp: Creating Application in progress
   main: main
   installationInstructions: Installation Instructions
@@ -710,7 +720,7 @@ getStartedWithCD:
   delegateSuccess: The delegate is installed. Next you can configure the service.
   connectHarnessEnv: Connect Harness to your environment
   installDelegateToTargetEnv: Install a Harness Delegate in your target environment.
-  delegateDescription: A Delegate is a service that runs on your infrastructure to execute tasks on behalf of the Harness platform.
+  delegateDescription: Run the Harness Delegate in your Kubernetes cluster directly in order to deploy your app. You can install the Harness Delegate with a Helm chart by copying and running the commands below in your Kubernetes cluster.
   helpAndTroubleshoot: Help & Troubleshoot
   hostedAgentExplain: What is it?
   hostedAgentExplainContent: Harness hosts and manages your GitOps agent, making set up easy with zero maintenance
@@ -784,7 +794,7 @@ welcomeToHarnessCD: Welcome to Harness Continuous Delivery!
 runDelegate: How do you want to install the Delegate?
 installDelegate: Install Delegate
 instructionsDelegate: Install the Delegate
-previewYAML: Preview Yaml
+previewYAML: '{{ $.common.previewYAML }}'
 installCluster: Install on your Cluster
 checkCluster: Set up and connect to your target cluster.
 delegateInstallCommand: 'Install the Delegate with the following command:'
@@ -915,3 +925,6 @@ openTask:
   openTaskStatusMsgAborted: 'deployment aborted'
   openTaskStatusMsgApprovalWaiting: 'deployment waiting for approval'
 since: Since
+noInfraInputsWhenDeployingToAllInfra: No infrastructure inputs are required when deploying to all infrastructures under this environment
+changingTaskDefinitionTypeWarningTitle: 'Changing Task Definition Type?'
+changeTaskDefinitionTypeWarning: If you move to {{nextSection}} section, you will loose your {{currentSection}} value. Do you still want to continue?

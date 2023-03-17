@@ -169,8 +169,8 @@ const ConnectorView: React.FC<ConnectorViewProps> = props => {
   }
 
   return (
-    <Layout.Horizontal padding="xlarge" height="inherit">
-      <Layout.Vertical width={enableEdit && selectedView === SelectedView.YAML ? '100%' : '67%'}>
+    <Layout.Horizontal height="inherit">
+      <Layout.Vertical width={enableEdit || selectedView === SelectedView.YAML ? '100%' : '67%'}>
         <Container className={css.buttonContainer}>
           {state.enableEdit ? null : (
             <VisualYamlToggle

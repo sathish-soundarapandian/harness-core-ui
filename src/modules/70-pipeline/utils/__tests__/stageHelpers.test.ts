@@ -7,7 +7,11 @@
 
 import { MultiTypeInputType } from '@harness/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { StageElementWrapperConfig } from 'services/pipeline-ng'
+import {
+  ciPipelineExecutionSummaryWithK8sInfra,
+  ciPipelineExecutionSummaryWithHostedVMsInfra
+} from '@pipeline/pages/execution/ExecutionLandingPage/__tests__/execution-summary-mock'
+import type { PipelineExecutionSummary, StageElementWrapperConfig } from 'services/pipeline-ng'
 import type { DeploymentStageElementConfig } from '../pipelineTypes'
 import {
   changeEmptyValuesToRunTimeInput,
@@ -47,7 +51,11 @@ import {
   isServiceEntityPresent,
   isEnvironmentGroupPresent,
   isEnvironmentPresent,
-  isExecutionFieldPresent
+  isExecutionFieldPresent,
+  getVariablesHeaderTooltipId,
+  isSshOrWinrmDeploymentType,
+  isGoogleCloudFuctionsDeploymentType,
+  pipelineHasCIStageWithK8sInfra
 } from '../stageHelpers'
 import inputSetPipeline from './inputset-pipeline.json'
 import chainedPipeline from './mockJson/chainedPipeline.json'
@@ -236,6 +244,7 @@ test('getStepTypeByDeploymentType', () => {
   )
   expect(getStepTypeByDeploymentType(ServiceDeploymentType.AzureWebApp)).toBe(StepType.AzureWebAppServiceSpec)
   expect(getStepTypeByDeploymentType('')).toBe(StepType.K8sServiceSpec)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.AwsLambda)).toBe(StepType.AwsLambdaService)
 })
 
 test('isServerlessDeploymentType', () => {
@@ -299,13 +308,25 @@ test('isFixedNonEmptyValue', () => {
 test('getAllowedRepoOptions', () => {
   expect(getAllowedRepoOptions(ServiceDeploymentType.WinRm, true, true, 'Acr')).toHaveLength(4)
 
-  expect(getAllowedRepoOptions(ServiceDeploymentType.AzureWebApp, true, true, 'Acr')).toHaveLength
+  expect(getAllowedRepoOptions(ServiceDeploymentType.AzureWebApp, true, true, 'Acr')).toHaveLength(4)
+
+  expect(getAllowedRepoOptions(ServiceDeploymentType.Kubernetes, true, true, 'Nexus3Registry')).toHaveLength(5)
 })
 
 test('isAzureWebAppOrSshWinrmGenericDeploymentType', () => {
   expect(
     isAzureWebAppOrSshWinrmGenericDeploymentType(ServiceDeploymentType.AzureWebApp, RepositoryFormatTypes.Generic)
   ).toBe(true)
+})
+
+test('isGoogleCloudFuctionsDeploymentType', () => {
+  expect(isGoogleCloudFuctionsDeploymentType(ServiceDeploymentType.GoogleCloudFunctions)).toBe(true)
+})
+
+test('isSshOrWinrmDeploymentType', () => {
+  expect(isSshOrWinrmDeploymentType(ServiceDeploymentType.Ssh)).toBe(true)
+  expect(isSshOrWinrmDeploymentType(ServiceDeploymentType.Kubernetes)).toBe(false)
+  expect(isSshOrWinrmDeploymentType(ServiceDeploymentType.WinRm)).toBe(true)
 })
 
 test('withoutSideCar', () => {
@@ -330,6 +351,12 @@ test('isTasGenericDeploymentType should return false for nongeneric repo type', 
 test('isTASDeploymentType', () => {
   expect(isTASDeploymentType(ServiceDeploymentType.TAS)).toBe(true)
   expect(isTASDeploymentType(ServiceDeploymentType.Elastigroup)).toBe(false)
+})
+
+test('getVariablesHeaderTooltipId', () => {
+  expect(getVariablesHeaderTooltipId(ServiceDeploymentType.Kubernetes)).toBe(
+    `${ServiceDeploymentType.Kubernetes}DeploymentTypeVariables`
+  )
 })
 
 test('getHelpeTextForTags', () => {
@@ -642,4 +669,18 @@ test('isExecutionFieldPresent', () => {
       }
     })
   ).toBe(false)
+})
+
+test('Test pipelineHasCIStageWithK8sInfra method', () => {
+  expect(pipelineHasCIStageWithK8sInfra()).toBe(false)
+  expect(
+    pipelineHasCIStageWithK8sInfra(
+      ciPipelineExecutionSummaryWithHostedVMsInfra.data.pipelineExecutionSummary as PipelineExecutionSummary
+    )
+  ).toBe(false)
+  expect(
+    pipelineHasCIStageWithK8sInfra(
+      ciPipelineExecutionSummaryWithK8sInfra.data.pipelineExecutionSummary as PipelineExecutionSummary
+    )
+  ).toBe(true)
 })

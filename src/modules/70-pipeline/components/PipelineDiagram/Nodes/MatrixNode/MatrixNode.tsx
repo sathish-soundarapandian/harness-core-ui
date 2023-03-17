@@ -83,18 +83,9 @@ export function MatrixNode(props: any): JSX.Element {
   const defaultNode = props.getDefaultNode()?.component
   const isNestedStepGroup = Boolean(get(props, 'data.step.data.isNestedGroup'))
   const subType = get(props, 'data.data.moduleInfo.stepParameters.subType')
-  const numOfServices = get(
-    props,
-    'data.data.moduleInfo.stepParameters.services.values.__encodedValue.valueDoc.value.length',
-    1
-  )
-  const numOfEnvironments =
-    get(props, 'data.data.moduleInfo.stepParameters.environments.values.__encodedValue.valueDoc.value.length') ||
-    get(
-      props,
-      'data.data.moduleInfo.stepParameters.environmentGroup.environments.__encodedValue.valueDoc.value.length'
-    ) ||
-    1
+  const numOfServices = defaultTo(get(props, 'data.data.stepDetails.svcEnvCount.svcCount'), 1)
+  const numOfEnvironments = defaultTo(get(props, 'data.data.stepDetails.svcEnvCount.envCount'), 1)
+
   const updateTreeRect = (): void => {
     const treeContainer = document.getElementById('tree-container')
     const rectBoundary = treeContainer?.getBoundingClientRect()

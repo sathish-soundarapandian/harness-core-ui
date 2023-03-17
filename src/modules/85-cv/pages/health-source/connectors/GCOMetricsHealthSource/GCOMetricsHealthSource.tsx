@@ -366,7 +366,6 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                                 }
                                 onQueryChange(query)
                               }}
-                              key={getMultiTypeFromValue(query)}
                               onClickExpand={setIsQueryExpanded}
                               isDialogOpen={isQueryExpanded}
                               query={query}

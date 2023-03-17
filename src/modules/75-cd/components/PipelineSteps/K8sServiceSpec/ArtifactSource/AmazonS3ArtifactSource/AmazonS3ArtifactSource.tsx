@@ -516,7 +516,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.region`)}
               multiTypeInputProps={{
                 onChange: selected => {
-                  if (fixedRegionValue !== (selected as any).value) {
+                  if (fixedRegionValue !== (selected as any)?.value) {
                     resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
                     resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.filePath`)
                   }
@@ -551,7 +551,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 expressions,
                 allowableTypes,
                 onChange: selected => {
-                  if (fixedBucketValue !== (selected as any).value) {
+                  if (fixedBucketValue !== (selected as any)?.value) {
                     resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.filePath`)
                   }
                 },

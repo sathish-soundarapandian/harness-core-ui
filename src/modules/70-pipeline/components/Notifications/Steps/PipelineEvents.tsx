@@ -13,6 +13,7 @@ import { Divider } from '@blueprintjs/core'
 import { Form } from 'formik'
 import { startCase, isEmpty, isUndefined } from 'lodash-es'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { NotificationRules, PipelineEvent } from 'services/pipeline-ng'
 import css from '../useNotificationModal.module.scss'
 
@@ -81,11 +82,15 @@ interface PipelineEventsFormData {
 type PipelineEventsProps = StepProps<NotificationRules> & { stagesOptions?: MultiSelectOption[] }
 
 // returns - [all events checked , all events not checked]
-const allEventsStatus = (events: PipelineEventsFormData): [boolean, boolean] => {
+const allEventsStatus = (events: PipelineEventsFormData, skipPauseStatus: boolean): [boolean, boolean] => {
   let allFalse = true
   let allTrue = true
 
-  pipelineEventItems.map(item => {
+  pipelineEventItems.forEach(item => {
+    if (skipPauseStatus && item.value === PipelineEventType.PipelinePaused) {
+      return
+    }
+
     if (events?.types?.[item.value] === true) {
       allFalse = false
     }
@@ -97,17 +102,25 @@ const allEventsStatus = (events: PipelineEventsFormData): [boolean, boolean] => 
 }
 
 //sets all events as either checked or unchecked
-const setAllEventStatus = (status: boolean): PipelineEventsFormData => {
+const setAllEventStatus = (status: boolean, skipPauseStatus: boolean): PipelineEventsFormData => {
   const events = { types: {} } as PipelineEventsFormData
-  pipelineEventItems.map(item => {
+  pipelineEventItems.forEach(item => {
+    if (skipPauseStatus && item.value === PipelineEventType.PipelinePaused) {
+      return
+    }
+
     events.types[item.value] = status
   })
   return events
 }
 
-const isIndeterminate = (events: PipelineEventsFormData, currentEvent: PipelineEventType): boolean => {
-  const allChecked = allEventsStatus(events)[0]
-  const allUnChecked = allEventsStatus(events)[1]
+const isIndeterminate = (
+  events: PipelineEventsFormData,
+  currentEvent: PipelineEventType,
+  skipPauseStatus: boolean
+): boolean => {
+  const [allChecked, allUnChecked] = allEventsStatus(events, skipPauseStatus)
+
   return currentEvent === PipelineEventType.ALL_EVENTS && !allChecked && !allUnChecked
 }
 
@@ -115,12 +128,18 @@ const isAll_Event = (currentEvent: PipelineEventType): boolean => currentEvent =
 
 function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEventsProps): React.ReactElement {
   const { getString } = useStrings()
+  const { PIE_DEPRECATE_PAUSE_INTERRUPT_NG } = useFeatureFlags()
   const initialValues: PipelineEventsFormData = { types: {} }
   const types: Required<PipelineEventsFormData>['types'] = {}
+  const skipPauseStatus = !!PIE_DEPRECATE_PAUSE_INTERRUPT_NG
 
-  const getStageOption = (stageId: string) => {
+  const getStageOption = (stageId: string): MultiSelectOption | undefined => {
     return stagesOptions?.find(item => item.value === stageId)
   }
+
+  const items = pipelineEventItems.filter(item =>
+    PIE_DEPRECATE_PAUSE_INTERRUPT_NG ? item.value !== PipelineEventType.PipelinePaused : true
+  )
 
   prevStepData?.pipelineEvents?.map(event => {
     const type = event.type
@@ -160,7 +179,7 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
               }
 
               //validation for when all the events are unchecked
-              if (allEventsStatus(val)[1]) {
+              if (allEventsStatus(val, skipPauseStatus)[1]) {
                 return this.createError({
                   path: 'types',
                   message: getString('rbac.notifications.eventRequired')
@@ -226,7 +245,7 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                     {getString('rbac.notifications.eventRequired')}
                   </Text>
                 )}
-                {pipelineEventItems.map(event => {
+                {items.map(event => {
                   return (
                     <Layout.Vertical key={event.label}>
                       <Layout.Horizontal margin={{ bottom: isAll_Event(event.value) ? 0 : 'small' }} flex>
@@ -235,13 +254,13 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                           name={`types.${event.value}`}
                           checked={formikProps.values.types[event.label]}
                           label={event.label}
-                          indeterminate={isIndeterminate(formikProps.values, event.value)}
+                          indeterminate={isIndeterminate(formikProps.values, event.value, skipPauseStatus)}
                           padding={{ left: 'xxxlarge' }}
                           onChange={e => {
                             if (e.currentTarget.checked) {
                               if (isAll_Event(event.value)) {
                                 formikProps.setValues({
-                                  ...setAllEventStatus(true)
+                                  ...setAllEventStatus(true, skipPauseStatus)
                                 })
                               } else {
                                 const finalUpdatedValue = {
@@ -253,7 +272,7 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                                 } as PipelineEventsFormData
 
                                 formikProps.setValues(
-                                  allEventsStatus(finalUpdatedValue)[0]
+                                  allEventsStatus(finalUpdatedValue, skipPauseStatus)[0]
                                     ? finalUpdatedValue
                                     : {
                                         ...formikProps.values,
@@ -266,7 +285,7 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                                 )
                               }
                             } else if (isAll_Event(event.value)) {
-                              formikProps.setValues(setAllEventStatus(false))
+                              formikProps.setValues(setAllEventStatus(false, skipPauseStatus))
                             } else {
                               delete formikProps.values?.[event?.value]
                               formikProps.setValues({

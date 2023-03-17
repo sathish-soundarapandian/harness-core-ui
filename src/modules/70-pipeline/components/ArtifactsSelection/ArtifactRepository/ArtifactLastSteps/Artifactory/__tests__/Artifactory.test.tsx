@@ -24,19 +24,32 @@ import {
   useGetRepositoriesDetailsForArtifactoryError,
   useGetRepositoriesDetailsForArtifactoryFailure,
   sshDeploymentTypeProps,
-  winRmDeploymentTypeProps
+  winRmDeploymentTypeProps,
+  genericArtifactoryRunTimeInitialValues,
+  azureWebAppDeploymentRunTimeProps
 } from './mock'
 
 jest.mock('services/cd-ng', () => ({
   ...jest.requireActual('services/cd-ng'),
   useGetBuildDetailsForArtifactoryArtifact: jest.fn().mockImplementation(() => {
-    return { data: {}, refetch: jest.fn(), error: null, loading: false }
+    return {
+      data: {
+        data: {
+          buildDetailsList: []
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
   }),
   useGetRepositoriesDetailsForArtifactory: jest.fn().mockReturnValue({
     data: {
-      repositories: {
-        iistest: 'iistest',
-        'harness-nuget': 'harness-nuget'
+      data: {
+        repositories: {
+          iistest: 'iistest',
+          'harness-nuget': 'harness-nuget'
+        }
       }
     },
     refetch: jest.fn(),
@@ -67,6 +80,9 @@ const runtimeInitialValues = {
 }
 
 describe('Nexus Artifact tests', () => {
+  beforeAll(() => {
+    jest.clearAllMocks()
+  })
   beforeEach(() => {
     jest.spyOn(pipelineng, 'useGetRepositoriesDetailsForArtifactory').mockImplementation((): any => {
       return {
@@ -296,6 +312,20 @@ describe('Azure web app artifact', () => {
 
     const repositoryUrl = container.querySelector('input[name="repositoryUrl"]')
     expect(repositoryUrl!).toBeNull()
+  })
+
+  test('renders with runtime- generic artifactory', () => {
+    const { container } = render(
+      <TestWrapper>
+        <Artifactory
+          key={'key'}
+          initialValues={genericArtifactoryRunTimeInitialValues}
+          {...azureWebAppDeploymentRunTimeProps}
+        />
+      </TestWrapper>
+    )
+
+    expect(container).toMatchSnapshot()
   })
 
   test(`renders Docker Artifactory view`, () => {

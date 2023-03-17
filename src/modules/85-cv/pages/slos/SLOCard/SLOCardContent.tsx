@@ -5,10 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useCallback, useEffect, useState } from 'react'
-import { Layout, Container, Heading, PillToggle, PillToggleProps, Text, Card } from '@harness/uicore'
+import { useHistory, useLocation } from 'react-router-dom'
+import { Layout, Container, Heading, PillToggle, PillToggleProps, Text, Card, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
+import { useQueryParams } from '@common/hooks/useQueryParams'
 import UserHint from '@cv/pages/components/UserHint/UserHint'
 import type { SLODashboardWidget } from 'services/cv'
 import { getErrorBudgetGaugeOptions } from '../CVSLOListingPage.utils'
@@ -16,20 +18,27 @@ import { SLOCardContentProps, SLOCardToggleViews } from '../CVSLOsListingPage.ty
 import TimeRangeFilter from './TimeRangeFilter'
 import ErrorBudgetGauge from './ErrorBudgetGauge'
 import SLOTargetChartWithChangeTimeline from './SLOTargetChartWithChangeTimeline'
+import { getDefaultOffSet } from './SLOCardContent.utils'
 import css from '../CVSLOsListingPage.module.scss'
 
 const SLOCardContent: React.FC<SLOCardContentProps> = props => {
   const { getString } = useStrings()
+  const { showError } = useToaster()
   const { isCardView, serviceLevelObjective, setSliderTimeRange, showUserHint } = props
-  const { sloPerformanceTrend, sloTargetPercentage } = serviceLevelObjective
+  const { sloPerformanceTrend, sloTargetPercentage, currentPeriodStartTime, currentPeriodEndTime } =
+    serviceLevelObjective
 
   const [toggle, setToggle] = useState(SLOCardToggleViews.SLO)
   const [showTimelineSlider, setShowTimelineSlider] = useState(false)
   const [customTimeFilter, setCustomTimeFilter] = useState(false)
+  const { notificationTime } = useQueryParams<{ notificationTime?: number }>()
+  const location = useLocation()
+  const history = useHistory()
 
   const resetSlider = useCallback(() => {
     setShowTimelineSlider(false)
     setSliderTimeRange?.()
+    setDefaultOffset(0)
   }, [setSliderTimeRange])
 
   const toggleProps: PillToggleProps<SLOCardToggleViews> = {
@@ -74,9 +83,28 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
     }
   }
 
+  const [defaultOffset, setDefaultOffset] = useState(0)
   const SLOAndErrorBudgetChartContainer = isCardView ? Card : Container
   const stylesSLOAndSLICard = isCardView ? css.cardSloAndSliForCardView : css.cardSloAndSli
   const headingVariation = isCardView ? FontVariation.SMALL_BOLD : FontVariation.FORM_LABEL
+
+  useEffect(() => {
+    if (notificationTime) {
+      const updatedDefaultOffset = getDefaultOffSet({
+        getString,
+        notificationTime,
+        currentPeriodEndTime,
+        currentPeriodStartTime,
+        percentageDiff: defaultOffset,
+        showError,
+        location,
+        history
+      })
+      if (defaultOffset !== updatedDefaultOffset) {
+        setDefaultOffset(updatedDefaultOffset)
+      }
+    }
+  }, [])
 
   return (
     <Layout.Vertical
@@ -152,6 +180,7 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
                   setShowTimelineSlider={setShowTimelineSlider}
                   customTimeFilter={customTimeFilter}
                   setCustomTimeFilter={setCustomTimeFilter}
+                  defaultOffSetPercentage={defaultOffset}
                 />
               </Container>
             </Layout.Horizontal>

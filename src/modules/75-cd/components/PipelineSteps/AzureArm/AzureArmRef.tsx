@@ -214,7 +214,6 @@ export const AzureArmRef = (
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     /* istanbul ignore next */
                     onChange={value => {
                       setFieldValue('spec.provisionerIdentifier', value)

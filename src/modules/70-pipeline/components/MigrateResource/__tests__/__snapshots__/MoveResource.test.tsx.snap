@@ -570,7 +570,7 @@ exports[`ImportResource - Pipeline testing for Input set should have pre-filled 
                 class="Layout--vertical StyledProps--main"
               >
                 <div
-                  class="bp3-form-group"
+                  class="bp3-form-group bp3-disabled"
                   data-id="null-1"
                 >
                   <label
@@ -1020,7 +1020,7 @@ exports[`ImportResource - Pipeline when move throws error with responseMessages 
                 class="Layout--vertical StyledProps--main"
               >
                 <div
-                  class="bp3-form-group"
+                  class="bp3-form-group bp3-disabled"
                 >
                   <label
                     class="bp3-label"

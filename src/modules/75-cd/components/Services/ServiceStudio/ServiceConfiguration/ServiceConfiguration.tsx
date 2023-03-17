@@ -6,9 +6,15 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { VisualYamlToggle, VisualYamlSelectedView as SelectedView, Tag, ButtonVariation } from '@harness/uicore'
+import {
+  VisualYamlToggle,
+  VisualYamlSelectedView as SelectedView,
+  Tag,
+  ButtonVariation,
+  Container
+} from '@harness/uicore'
 import { cloneDeep, defaultTo, isEmpty, isEqual, set } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import produce from 'immer'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
@@ -24,6 +30,9 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { NavigationCheck } from '@common/exports'
+import routes from '@common/RouteDefinitions'
+import { pipelineModuleParams, projectPathProps, servicePathProps } from '@common/utils/routeUtils'
 import { setNameIDDescription } from '../../utils/ServiceUtils'
 import ServiceStepBasicInfo from './ServiceStepBasicInfo'
 import css from './ServiceConfiguration.module.scss'
@@ -37,7 +46,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   fileName: `service.yaml`,
   entityType: 'Service',
   width: '100%',
-  height: 'calc(100vh - 250px)',
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -54,15 +62,17 @@ function ServiceConfiguration({
     state: {
       pipeline: service,
       pipelineView: { isYamlEditable },
-      pipelineView
+      pipelineView,
+      isUpdated
     },
     updatePipeline,
     updatePipelineView,
     setView,
     isReadonly
   } = usePipelineContext()
-  const { isServiceCreateModalView } = useServiceContext()
+  const { isServiceCreateModalView, isServiceEntityModalView } = useServiceContext()
   const { getString } = useStrings()
+  const history = useHistory()
 
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
@@ -126,11 +136,45 @@ function ServiceConfiguration({
     [setView, getUpdatedPipelineYaml, updatePipeline]
   )
 
+  const isInvalidYaml = useCallback((): boolean => {
+    if (yamlHandler) {
+      const parsedYaml = parse(yamlHandler.getLatestYaml())
+      if (!parsedYaml || yamlHandler.getYAMLValidationErrorMap()?.size > 0) {
+        return true
+      }
+    }
+    return false
+  }, [yamlHandler])
+
+  const invalidYaml = isInvalidYaml()
+
   if (service.identifier === DefaultNewPipelineId && !isServiceCreateModalView) {
     return null
   }
   return (
-    <div className={css.serviceEntity}>
+    <Container className={css.serviceEntity} padding={{ left: isServiceEntityModalView ? 'xsmall' : 'xxlarge' }}>
+      <NavigationCheck
+        when={isUpdated}
+        shouldBlockNavigation={nextLocation => {
+          const matchDefault = matchPath(nextLocation.pathname, {
+            path: routes.toServiceStudio({
+              ...projectPathProps,
+              ...servicePathProps,
+              ...pipelineModuleParams
+            }),
+            exact: true
+          })
+
+          return !matchDefault?.isExact
+        }}
+        textProps={{
+          contentText: getString(invalidYaml ? 'navigationYamlError' : 'navigationCheckText'),
+          titleText: getString(invalidYaml ? 'navigationYamlErrorTitle' : 'navigationCheckTitle')
+        }}
+        navigate={newPath => {
+          history.push(newPath)
+        }}
+      />
       <div className={css.optionBtns}>
         <VisualYamlToggle
           selectedView={selectedView}
@@ -160,6 +204,7 @@ function ServiceConfiguration({
             existingJSON={serviceData}
             bind={setYamlHandler}
             schema={serviceSchema?.data}
+            height={isServiceEntityModalView ? 540 : 700}
           />
           {isReadonly || !isYamlEditable ? (
             <div className={css.buttonsWrapper}>
@@ -182,7 +227,7 @@ function ServiceConfiguration({
           ) : null}
         </div>
       )}
-    </div>
+    </Container>
   )
 }
 

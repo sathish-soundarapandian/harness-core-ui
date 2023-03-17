@@ -13,17 +13,34 @@
     overflow-y: auto;
     padding: 0 var(--spacing-tiny) var(--spacing-xxlarge) var(--spacing-tiny) !important;
   }
+
+  .rowContainer {
+    box-shadow: var(--elevation-2);
+    border-radius: var(--spacing-2);
+    margin-top: var(--spacing-medium);
+    border: 1px solid var(--grey-100);
+  }
+
+  .rowAppliedFeedbackIndicator {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-medium) 0 !important;
+    border-top: 1px solid var(--grey-200) !important;
+
+    &Text {
+      color: var(--primary-main) !important;
+      border-bottom: 1px dashed;
+      width: fit-content !important;
+    }
+  }
+
   .mainRow {
     display: grid;
-    grid-template-columns: 100px 1fr 100px 50px;
+    grid-template-columns: 24px 100px 1fr 50px;
     padding: 0 var(--spacing-3);
 
     &.dataRow {
-      box-shadow: var(--elevation-2);
-      border-radius: var(--spacing-2);
-      margin-top: var(--spacing-medium);
       height: 50px;
-      border: 1px solid var(--grey-100);
       cursor: pointer;
     }
 

@@ -23,7 +23,7 @@ import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 
 interface CreateOCIHelmConnectorProps {
-  onConnectorCreated?: (data?: ConnectorConfigDTO) => void | Promise<void>
+  onSuccess?: (data?: ConnectorConfigDTO) => void | Promise<void>
   mock?: ResponseBoolean
   onClose: () => void
   isEditMode: boolean
@@ -57,7 +57,7 @@ const OCIHelmConnector: React.FC<CreateOCIHelmConnectorProps> = props => {
         name={getString('details')}
         identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
         {...commonProps}
-        onConnectorCreated={props.onConnectorCreated}
+        onConnectorCreated={props.onSuccess}
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo}
         setIsEditMode={props.setIsEditMode}
@@ -69,7 +69,7 @@ const OCIHelmConnector: React.FC<CreateOCIHelmConnectorProps> = props => {
         setIsEditMode={props.setIsEditMode}
         buildPayload={buildOCIHelmPayload}
         hideModal={props.onClose}
-        onConnectorCreated={props.onConnectorCreated}
+        onConnectorCreated={props.onSuccess}
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
       />

@@ -57,7 +57,7 @@ const AdvancedConfiguration: React.FC<AdvancedConfigurationProps> = props => {
     <COGatewayConfigStep
       count={props.totalStepsCount}
       title={`${getString('ce.co.autoStoppingRule.configuration.step4.setup')} ${getString(
-        'ce.co.autoStoppingRule.configuration.step4.advancedConfiguration'
+        'pipeline.advancedConfiguration'
       )}`}
       subTitle={getString('ce.co.gatewayConfig.advancedConfigDescription')}
       totalStepsCount={props.totalStepsCount}
@@ -83,7 +83,7 @@ const AdvancedConfiguration: React.FC<AdvancedConfigurationProps> = props => {
             <div>
               <Layout.Horizontal flex={{ alignItems: 'baseline' }}>
                 <Toggle
-                  label={getString('ce.co.dryRunLabel')}
+                  label={getString('pipeline.syncStep.dryRun')}
                   checked={props.gatewayDetails.opts.dry_run}
                   onToggle={isToggled => {
                     props.setGatewayDetails({

@@ -82,4 +82,8 @@
 .logCountsDetail {
   margin-bottom: var(--spacing-small);
   flex-wrap: wrap;
+
+  img {
+    margin-right: var(--spacing-xsmall);
+  }
 }

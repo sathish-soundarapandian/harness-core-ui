@@ -9,6 +9,7 @@
 declare const styles: {
   readonly formContent: string
   readonly heading: string
+  readonly marginBottom: string
   readonly predefinedRows: string
   readonly rowContainer: string
   readonly rowTrashIcon: string

@@ -92,22 +92,26 @@ export interface ParentContext {
   tooltipContext?: typeof TooltipContext
 }
 
-export interface ChildAppProps {
+export interface ChildComponentProps {
   parentContextObj: ParentContext
   renderUrl: string
   matchPath: string
   scope: Scope
+  on401?: () => void
+  children?: React.ReactNode
+}
+
+export interface ChildAppProps extends ChildComponentProps {
   components: CommonComponents
   hooks: Hooks
   utils?: Utils
-  on401?: () => void
-  children?: React.ReactNode
 }
 
 /**
  * function to render child app inside the parent
  */
 export type ChildAppComponent = React.ComponentType<ChildAppProps>
+export type ChildComponent = React.ComponentType<ChildComponentProps>
 
 export {
   AppStoreContextProps,

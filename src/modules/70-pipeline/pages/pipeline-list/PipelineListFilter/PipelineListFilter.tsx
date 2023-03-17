@@ -43,7 +43,7 @@ import type {
   PipelineListPageQueryParams,
   ProcessedPipelineListPageQueryParams
 } from '../types'
-import { queryParamOptions } from '../PipelineListUtils'
+import { useQueryParamOptions } from '../PipelineListUtils'
 
 const UNSAVED_FILTER_IDENTIFIER = StringUtils.getIdentifierFromName(UNSAVED_FILTER)
 
@@ -59,12 +59,12 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
   const { projectIdentifier, orgIdentifier, accountId } = useParams<PipelineListPagePathParams>()
   const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
   const filterDrawerOpenedRef = useRef(false)
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+  const queryParamOptions = useQueryParamOptions()
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
   const { selectedProject } = useAppStore()
   const isCDEnabled = !!selectedProject?.modules?.includes('CD')
   const isCIEnabled = !!selectedProject?.modules?.includes('CI')
-
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   /**Start Data hooks */
 

@@ -19,19 +19,19 @@ import {
   getJiraUpdateEditModePropsWithValues,
   getJiraUpdateInputVariableModeProps,
   mockConnectorResponse,
-  mockProjectMetadataResponse,
-  mockProjectsResponse,
   mockStatusResponse,
-  mockStatusErrorResponse
+  mockStatusErrorResponse,
+  mockFieldsMetadataResponse
 } from './JiraUpdateTestHelper'
 import type { JiraUpdateData } from '../types'
 import { processFormData } from '../helper'
+import { mockProjectMetadataResponse } from '../../JiraCreate/__tests__/JiraCreateTestHelper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: () => mockConnectorResponse,
-  useGetJiraProjects: () => mockProjectsResponse,
+  useGetJiraIssueUpdateMetadata: () => mockFieldsMetadataResponse,
   useGetJiraIssueCreateMetadata: () => mockProjectMetadataResponse,
   useGetJiraStatuses: jest.fn()
 }))
@@ -203,7 +203,6 @@ describe('Jira Update tests', () => {
       queryByPlaceholderText,
       queryAllByPlaceholderText,
       queryByDisplayValue,
-      queryByText,
       getByTestId
     } = render(
       <TestStepWidget
@@ -218,7 +217,7 @@ describe('Jira Update tests', () => {
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     fireEvent.change(queryByNameAttribute('name')!, { target: { value: 'jira update step' } })
     expect(queryByDisplayValue('1d')).toBeTruthy()
-    expect(queryByDisplayValue('<+issueKey>')).toBeTruthy()
+    expect(queryByDisplayValue('tji-8097')).toBeTruthy()
 
     fireEvent.click(getByText('common.optionalConfig'))
     expect(queryByNameAttribute('spec.transitionTo.status')).toBeTruthy()
@@ -230,16 +229,9 @@ describe('Jira Update tests', () => {
       fireEvent.click(getByText('pipeline.jiraCreateStep.fieldSelectorAdd'))
     })
 
-    await waitFor(() => expect(queryByText('pipeline.jiraCreateStep.selectFieldListHelp')).toBeTruthy())
     const dialogContainer = document.body.querySelector('.bp3-portal')
-    const icon = dialogContainer?.querySelectorAll('[icon="chevron-down"]')
 
-    // Project dropdown
-    fireEvent.click(icon![0])
-    fireEvent.click(getByText('p1'))
-
-    fireEvent.click(icon![1])
-    fireEvent.click(getByText('it1'))
+    expect(document.querySelector('.bp3-dialog input[name="issueKey"]')).toBeInTheDocument()
 
     fireEvent.click(getByText('f1'))
 
@@ -278,7 +270,7 @@ describe('Jira Update tests', () => {
       type: 'JiraUpdate',
       spec: {
         connectorRef: 'c1d1',
-        issueKey: '<+issueKey>',
+        issueKey: 'tji-8097',
         delegateSelectors: undefined,
         transitionTo: { transitionName: '', status: 'Done' },
         fields: [

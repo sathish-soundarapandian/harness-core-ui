@@ -103,7 +103,6 @@ const remoteFetchErrorGitDetails = (remoteFetchError: ResponsePMSPipelineRespons
 export const getPipelineByIdentifier = (
   params: GetPipelineQueryParams & GitQueryParams,
   identifier: string,
-  isPipelineGitCacheEnabled: boolean,
   loadFromCache?: boolean,
   signal?: AbortSignal
 ): Promise<PipelineInfoConfigWithGitDetails | FetchError> => {
@@ -123,7 +122,7 @@ export const getPipelineByIdentifier = (
       requestOptions: {
         headers: {
           'content-type': 'application/yaml',
-          ...(isPipelineGitCacheEnabled && loadFromCache ? { 'Load-From-Cache': 'true' } : {})
+          ...(loadFromCache ? { 'Load-From-Cache': 'true' } : {})
         }
       }
     },
@@ -333,7 +332,6 @@ export interface FetchPipelineBoundProps {
   queryParams: GetPipelineQueryParams
   pipelineIdentifier: string
   gitDetails: EntityGitDetails
-  isPipelineGitCacheEnabled: boolean
   storeMetadata?: StoreMetadata
   supportingTemplatesGitx?: boolean
 }
@@ -367,7 +365,7 @@ const getRepoIdentifierName = (gitDetails?: EntityGitDetails): string => {
 }
 
 const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipelineUnboundProps): Promise<void> => {
-  const { dispatch, queryParams, pipelineIdentifier: identifier, gitDetails, isPipelineGitCacheEnabled } = props
+  const { dispatch, queryParams, pipelineIdentifier: identifier, gitDetails } = props
   const {
     forceFetch = false,
     forceUpdate = false,
@@ -401,7 +399,6 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     const pipelineByIdPromise = getPipelineByIdentifier(
       { ...queryParams, ...(repoIdentifier ? { repoIdentifier } : {}), ...(branch ? { branch } : {}) },
       pipelineId,
-      isPipelineGitCacheEnabled,
       loadFromCache,
       signal
     )
@@ -957,7 +954,6 @@ export interface PipelineProviderProps {
   stagesMap: StagesMap
   runPipeline: (identifier: string) => void
   renderPipelineStage: PipelineContextInterface['renderPipelineStage']
-  isPipelineGitCacheEnabled: boolean
 }
 
 export function PipelineProviderV1({
@@ -967,8 +963,7 @@ export function PipelineProviderV1({
   renderPipelineStage,
   stepsFactory,
   stagesMap,
-  runPipeline,
-  isPipelineGitCacheEnabled
+  runPipeline
 }: React.PropsWithChildren<PipelineProviderProps>): React.ReactElement {
   const contextType = PipelineContextType.Pipeline
   const allowableTypes: AllowedTypesWithRunTime[] = [
@@ -1011,8 +1006,7 @@ export function PipelineProviderV1({
       branch
     },
     storeMetadata: state.storeMetadata,
-    supportingTemplatesGitx,
-    isPipelineGitCacheEnabled
+    supportingTemplatesGitx
   })
 
   const updatePipelineStoreMetadata = _updateStoreMetadata.bind(null, {

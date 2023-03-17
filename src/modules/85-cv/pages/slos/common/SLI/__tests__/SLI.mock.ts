@@ -5,6 +5,84 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+export const monitoredServiceMockData = {
+  status: 'SUCCESS',
+  data: {
+    createdAt: 1669357987964,
+    lastModifiedAt: 1677221797740,
+    monitoredService: {
+      orgIdentifier: 'cvng',
+      projectIdentifier: 'templatetesting',
+      identifier: 'AppD_monsoon1',
+      name: 'AppD_monsoon1',
+      type: 'Application',
+      description: '',
+      serviceRef: 'AppD',
+      environmentRef: 'monsoon1',
+      environmentRefList: ['monsoon1'],
+      tags: {},
+      sources: {
+        healthSources: [
+          {
+            name: 'AppD for SLO 2 metric',
+            identifier: 'AppD_for_SLO_2_metric',
+            type: 'AppDynamics',
+            spec: {
+              connectorRef: 'account.appdtest',
+              metricPacks: [{ identifier: 'Performance' }, { identifier: 'Errors' }],
+              feature: 'Application Monitoring',
+              applicationName: 'Harness-Dev',
+              tierName: 'manager',
+              metricDefinitions: [
+                {
+                  identifier: 'appdMetric_2',
+                  metricName: 'appdMetric 2',
+                  riskProfile: { category: 'Errors', thresholdTypes: [] },
+                  analysis: {
+                    liveMonitoring: { enabled: false },
+                    deploymentVerification: { enabled: false },
+                    riskProfile: { category: 'Errors', thresholdTypes: [] }
+                  },
+                  sli: { enabled: true },
+                  groupName: 'Group 2',
+                  completeMetricPath: 'Overall Application Performance|manager|Calls per Minute'
+                },
+                {
+                  identifier: 'appdMetric_1',
+                  metricName: 'appdMetric 1',
+                  riskProfile: { category: 'Errors', thresholdTypes: [] },
+                  analysis: {
+                    liveMonitoring: { enabled: false },
+                    deploymentVerification: { enabled: false },
+                    riskProfile: { category: 'Errors', thresholdTypes: [] }
+                  },
+                  sli: { enabled: true },
+                  groupName: 'Group 1',
+                  completeMetricPath: 'Overall Application Performance|manager|Error Page Redirects per Minute'
+                }
+              ]
+            }
+          }
+        ],
+        changeSources: [
+          {
+            name: 'Harness CD Next Gen',
+            identifier: 'harness_cd_next_gen',
+            type: 'HarnessCDNextGen',
+            enabled: true,
+            spec: {},
+            category: 'Deployment'
+          }
+        ]
+      },
+      dependencies: [],
+      notificationRuleRefs: [],
+      enabled: true
+    }
+  },
+  correlationId: 'f3c4494c-0577-493d-b450-4de6a9f560c3'
+}
+
 export const mockedMonitoredServiceData = {
   status: 'SUCCESS',
   data: [

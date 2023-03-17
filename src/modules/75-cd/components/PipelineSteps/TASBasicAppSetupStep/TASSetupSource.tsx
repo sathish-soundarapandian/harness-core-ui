@@ -109,7 +109,6 @@ export default function TasSetupSource(props: {
             variableName="spec.existingVersionToKeep"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={/* istanbul ignore next */ value => setFieldValue('spec.existingVersionToKeep', value)}
             isReadonly={readonly}
             allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}

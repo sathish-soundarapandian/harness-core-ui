@@ -23,7 +23,7 @@ import type {
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { GCRImagePath } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/GCRImagePath/GCRImagePath'
 import { ECRArtifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
-import { Nexus3Artifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
+import { Nexus3Artifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Nexus3Artifact/Nexus3Artifact'
 import { Nexus2Artifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Nexus2Artifact/Nexus2Artifact'
 import Artifactory from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Artifactory/Artifactory'
 import { AmazonS3 } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
@@ -37,6 +37,7 @@ import { AmazonMachineImage } from '../ArtifactRepository/ArtifactLastSteps/Amaz
 import { AzureArtifacts } from '../ArtifactRepository/ArtifactLastSteps/AzureArtifacts/AzureArtifacts'
 import { GoogleCloudStorage } from '../ArtifactRepository/ArtifactLastSteps/GoogleCloudStorageArtifact/GoogleCloudStorage'
 import { GoogleCloudSourceRepositories } from '../ArtifactRepository/ArtifactLastSteps/GoogleCloudSourceRepositoriesArtifact/GoogleCloudSourceRepositoriesArtifact'
+import { BambooArtifact } from '../ArtifactRepository/ArtifactLastSteps/BambooArtifact/BambooArtifact'
 
 export type ArtifactLastStepProps = ImagePathProps<
   ImagePathTypes &
@@ -80,6 +81,8 @@ export function useArtifactSelectionLastSteps(params: ArtifactSelectionLastSteps
       return <ACRArtifact {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.Jenkins:
       return <JenkinsArtifact {...artifactLastStepProps} />
+    case ENABLED_ARTIFACT_TYPES.Bamboo:
+      return <BambooArtifact {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
       return <GoogleArtifactRegistry {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:

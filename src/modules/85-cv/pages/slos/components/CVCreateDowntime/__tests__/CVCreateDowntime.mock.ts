@@ -5,25 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const downtimeForm = {
-  name: 'test',
-  identifier: 'test',
-  tags: {},
-  description: 'First downtime',
-  category: 'Deployment',
-  type: 'Onetime',
-  timezone: 'Asia/Calcutta',
-  startTime: 1691747256,
-  endTimeMode: 'EndTime',
-  endTime: 1699757256,
-  entityRefs: [
-    {
-      entityRef: 'test_run',
-      enabled: true
-    }
-  ]
-}
-
 export const downtimeAssociatedMSs = {
   metaData: {},
   resource: [
@@ -128,10 +109,10 @@ export const oneTimeEndTimeBasedDowntimeResponse = {
         type: 'Onetime',
         spec: {
           timezone: 'Asia/Calcutta',
-          startTime: 1691747256,
+          startTime: 1900747256,
           type: 'EndTime',
           spec: {
-            endTime: 1699757256
+            endTime: 1900748256
           }
         }
       }
@@ -168,7 +149,7 @@ export const oneTimeDurationBasedDowntimeResponse = {
         type: 'Onetime',
         spec: {
           timezone: 'Asia/Calcutta',
-          startTime: 1691747256,
+          startTime: 1900747256,
           type: 'Duration',
           spec: {
             downtimeDuration: {
@@ -201,8 +182,8 @@ export const recurrenceBasedDowntimeResponse = {
         type: 'Recurring',
         spec: {
           timezone: 'Asia/Bangkok',
-          startTime: 1691747256,
-          recurrenceEndTime: 1741847256,
+          startTime: 1900747256,
+          recurrenceEndTime: 1960748256,
           downtimeDuration: {
             durationType: 'Minutes',
             durationValue: 30

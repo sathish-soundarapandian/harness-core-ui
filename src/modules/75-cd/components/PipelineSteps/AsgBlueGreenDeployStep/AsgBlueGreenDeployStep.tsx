@@ -25,6 +25,7 @@ import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVar
 
 export interface AsgBlueGreenDeployStepInitialValues extends StepElementConfig {
   spec: {
+    useAlreadyRunningInstances: boolean
     loadBalancer: string
     prodListener: string
     prodListenerRuleArn: string
@@ -51,6 +52,7 @@ export class AsgBlueGreenDeployStep extends PipelineStep<AsgBlueGreenDeployStepI
     type: StepType.AsgBlueGreenDeploy,
     timeout: '10m',
     spec: {
+      useAlreadyRunningInstances: false,
       loadBalancer: '',
       prodListener: '',
       prodListenerRuleArn: '',

@@ -6,102 +6,69 @@
  */
 
 import React from 'react'
-import { cloneDeep } from 'lodash-es'
 import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { SLIEventTypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
-import { SliMetricGraph } from '../SLIMetricChart'
-import type { SLOTargetChartWithAPIGetSliGraphProps } from '../../../SLOTargetChart.types'
-import { ServiceLevelIndicator, OnboardingAPIMock } from './SLIMetricChart.mock'
+import { SLIMetricChart, SLIMetricChartProps } from '../SLIMetricChart'
 
-const Wrapper = (props: SLOTargetChartWithAPIGetSliGraphProps) => (
+const Wrapper = (props: SLIMetricChartProps) => (
   <TestWrapper>
-    <SliMetricGraph {...props} />
+    <SLIMetricChart {...props} />
   </TestWrapper>
 )
 
 describe('Validate SLI Metric chart', () => {
   test('should render with no data', () => {
     const retryOnError = jest.fn()
-    const { getByText } = render(<Wrapper serviceLevelIndicator={ServiceLevelIndicator} retryOnError={retryOnError} />)
+    const { getByText } = render(<Wrapper retryOnError={retryOnError} dataPoints={[]} metricName="" />)
     expect(getByText('cv.monitoringSources.gco.noMetricData')).toBeInTheDocument()
   })
 
   test('should render with loading', () => {
     const retryOnError = jest.fn()
-    const { container } = render(
-      <Wrapper serviceLevelIndicator={ServiceLevelIndicator} retryOnError={retryOnError} loading={true} />
-    )
+    const { container } = render(<Wrapper retryOnError={retryOnError} loading={true} dataPoints={[]} metricName="" />)
     expect(container.querySelector('[data-icon="steps-spinner"]')).toBeInTheDocument()
   })
 
   test('should render with error', () => {
     const retryOnError = jest.fn()
     const { getByText } = render(
-      <Wrapper serviceLevelIndicator={ServiceLevelIndicator} retryOnError={retryOnError} error={'API Failure'} />
+      <Wrapper retryOnError={retryOnError} error={'API Failure'} dataPoints={[]} metricName="" />
     )
     expect(getByText('API Failure')).toBeInTheDocument()
     fireEvent.click(getByText('Retry'))
     expect(retryOnError).toHaveBeenCalled()
   })
 
-  test('should render with data for ratio based', () => {
+  test('should render with data', () => {
     const retryOnError = jest.fn()
     const { getByText } = render(
       <Wrapper
-        serviceLevelIndicator={ServiceLevelIndicator}
         retryOnError={retryOnError}
-        metricGraphData={OnboardingAPIMock.resource.metricGraphs}
+        dataPoints={[
+          [1, 2],
+          [2, 3]
+        ]}
+        metricName="metric1"
+        title="metric1"
       />
     )
-    expect(getByText('cv.slos.validRequests:')).toBeInTheDocument()
-    expect(getByText('cv.slos.goodRequests:')).toBeInTheDocument()
+    expect(getByText('metric1')).toBeInTheDocument()
   })
-
-  test('should render with data for ratio based', () => {
-    const retryOnError = jest.fn()
-    const { getByText } = render(
-      <Wrapper
-        serviceLevelIndicator={ServiceLevelIndicator}
-        retryOnError={retryOnError}
-        metricGraphData={OnboardingAPIMock.resource.metricGraphs}
-      />
-    )
-    expect(getByText('cv.slos.validRequests:')).toBeInTheDocument()
-    expect(getByText('cv.slos.goodRequests:')).toBeInTheDocument()
-  })
-
-  test('should render with data for ratio based with Bad Metric', () => {
-    const clonedServiceLevelIndicator = cloneDeep(ServiceLevelIndicator)
-    clonedServiceLevelIndicator.spec.spec.eventType = SLIEventTypes.BAD
+  test('should render with legend', () => {
     const retryOnError = jest.fn()
     const { getByText } = render(
       <Wrapper
         retryOnError={retryOnError}
-        serviceLevelIndicator={clonedServiceLevelIndicator}
-        metricGraphData={OnboardingAPIMock.resource.metricGraphs}
+        dataPoints={[
+          [1, 2],
+          [2, 3]
+        ]}
+        metricName="metric1"
+        title="metric1"
+        showLegend
       />
     )
-    expect(getByText('cv.slos.validRequests:')).toBeInTheDocument()
-    expect(getByText('cv.slos.badRequests:')).toBeInTheDocument()
-  })
-
-  test('should render with data for threshold based', () => {
-    const clonedMock: { prometheus_metric?: any } = cloneDeep(OnboardingAPIMock.resource.metricGraphs)
-    delete clonedMock?.prometheus_metric
-    const retryOnError = jest.fn()
-    const { getByText } = render(
-      <Wrapper
-        serviceLevelIndicator={{
-          ...ServiceLevelIndicator,
-          spec: { ...ServiceLevelIndicator.spec, type: 'Threshold' }
-        }}
-        retryOnError={retryOnError}
-        metricGraphData={clonedMock}
-      />
-    )
+    expect(getByText('metric1')).toBeInTheDocument()
     expect(getByText('cv.minimum:')).toBeInTheDocument()
-    expect(getByText('ce.perspectives.nodeDetails.aggregation.maximum:')).toBeInTheDocument()
-    expect(getByText('ce.perspectives.nodeDetails.aggregation.average:')).toBeInTheDocument()
   })
 })

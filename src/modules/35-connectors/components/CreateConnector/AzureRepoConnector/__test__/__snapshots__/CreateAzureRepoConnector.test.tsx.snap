@@ -1130,53 +1130,58 @@ exports[`Create AzureRepoconnector Wizard Creating AzureRepo connector step one 
                       </p>
                     </div>
                     <div
-                      class="bp3-form-group authTypeSelect"
-                      data-id="authType-0"
+                      class="bp3-form-group"
+                      data-id="undefined-0"
                     >
                       <div
                         class="bp3-form-content"
                       >
                         <div
-                          class="bp3-popover-wrapper Select--main bp3-fill"
+                          class="bp3-popover-wrapper DropDown--main"
                         >
                           <div
                             class="bp3-popover-target"
                           >
                             <div
-                              class="bp3-input-group"
+                              class=""
                             >
-                              <input
-                                autocomplete="off"
-                                class="bp3-input"
-                                name="authType"
-                                placeholder="- Select -"
-                                style="padding-right: 0px;"
-                                type="text"
-                                value="usernameToken"
-                              />
-                              <span
-                                class="bp3-input-action"
+                              <div
+                                class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--minWidth StyledProps--flex"
+                                data-testid="dropdown-button"
+                                style="min-width: unset;"
                               >
-                                <span
-                                  class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                                  icon="chevron-down"
+                                <div
+                                  class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
                                 >
-                                  <svg
-                                    data-icon="chevron-down"
-                                    height="14"
-                                    viewBox="0 0 16 16"
-                                    width="14"
+                                  <p
+                                    class="StyledProps--font Text--lineclamp StyledProps--main DropDown--label"
+                                    data-testid="dropdown-value"
+                                    style="--text-line-clamp: 1;"
                                   >
-                                    <desc>
-                                      chevron-down
-                                    </desc>
-                                    <path
-                                      d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                      fill-rule="evenodd"
-                                    />
-                                  </svg>
-                                </span>
-                              </span>
+                                    usernameToken
+                                  </p>
+                                </div>
+                                <div
+                                  class="Layout--horizontal StyledProps--main DropDown--btnWrapper StyledProps--flex"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                                    data-icon="main-chevron-down"
+                                  >
+                                    <svg
+                                      height="8"
+                                      viewBox="0 0 14 8"
+                                      width="8"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                                        fill="#4d5969"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -2974,53 +2979,58 @@ exports[`Create AzureRepoconnector Wizard form for edit http and authtype userna
                       </p>
                     </div>
                     <div
-                      class="bp3-form-group authTypeSelect"
-                      data-id="authType-0"
+                      class="bp3-form-group"
+                      data-id="undefined-0"
                     >
                       <div
                         class="bp3-form-content"
                       >
                         <div
-                          class="bp3-popover-wrapper Select--main bp3-fill"
+                          class="bp3-popover-wrapper DropDown--main"
                         >
                           <div
                             class="bp3-popover-target"
                           >
                             <div
-                              class="bp3-input-group"
+                              class=""
                             >
-                              <input
-                                autocomplete="off"
-                                class="bp3-input"
-                                name="authType"
-                                placeholder="- Select -"
-                                style="padding-right: 0px;"
-                                type="text"
-                                value="usernameToken"
-                              />
-                              <span
-                                class="bp3-input-action"
+                              <div
+                                class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--minWidth StyledProps--flex"
+                                data-testid="dropdown-button"
+                                style="min-width: unset;"
                               >
-                                <span
-                                  class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                                  icon="chevron-down"
+                                <div
+                                  class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
                                 >
-                                  <svg
-                                    data-icon="chevron-down"
-                                    height="14"
-                                    viewBox="0 0 16 16"
-                                    width="14"
+                                  <p
+                                    class="StyledProps--font Text--lineclamp StyledProps--main DropDown--label"
+                                    data-testid="dropdown-value"
+                                    style="--text-line-clamp: 1;"
                                   >
-                                    <desc>
-                                      chevron-down
-                                    </desc>
-                                    <path
-                                      d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                      fill-rule="evenodd"
-                                    />
-                                  </svg>
-                                </span>
-                              </span>
+                                    usernameToken
+                                  </p>
+                                </div>
+                                <div
+                                  class="Layout--horizontal StyledProps--main DropDown--btnWrapper StyledProps--flex"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                                    data-icon="main-chevron-down"
+                                  >
+                                    <svg
+                                      height="8"
+                                      viewBox="0 0 14 8"
+                                      width="8"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                                        fill="#4d5969"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -3542,53 +3552,58 @@ exports[`Create AzureRepoconnector Wizard should render edit form for hosted 1`]
                       </p>
                     </div>
                     <div
-                      class="bp3-form-group authTypeSelect"
-                      data-id="authType-0"
+                      class="bp3-form-group"
+                      data-id="undefined-0"
                     >
                       <div
                         class="bp3-form-content"
                       >
                         <div
-                          class="bp3-popover-wrapper Select--main bp3-fill"
+                          class="bp3-popover-wrapper DropDown--main"
                         >
                           <div
                             class="bp3-popover-target"
                           >
                             <div
-                              class="bp3-input-group"
+                              class=""
                             >
-                              <input
-                                autocomplete="off"
-                                class="bp3-input"
-                                name="authType"
-                                placeholder="- Select -"
-                                style="padding-right: 0px;"
-                                type="text"
-                                value="usernameToken"
-                              />
-                              <span
-                                class="bp3-input-action"
+                              <div
+                                class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--minWidth StyledProps--flex"
+                                data-testid="dropdown-button"
+                                style="min-width: unset;"
                               >
-                                <span
-                                  class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                                  icon="chevron-down"
+                                <div
+                                  class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
                                 >
-                                  <svg
-                                    data-icon="chevron-down"
-                                    height="14"
-                                    viewBox="0 0 16 16"
-                                    width="14"
+                                  <p
+                                    class="StyledProps--font Text--lineclamp StyledProps--main DropDown--label"
+                                    data-testid="dropdown-value"
+                                    style="--text-line-clamp: 1;"
                                   >
-                                    <desc>
-                                      chevron-down
-                                    </desc>
-                                    <path
-                                      d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                      fill-rule="evenodd"
-                                    />
-                                  </svg>
-                                </span>
-                              </span>
+                                    usernameToken
+                                  </p>
+                                </div>
+                                <div
+                                  class="Layout--horizontal StyledProps--main DropDown--btnWrapper StyledProps--flex"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                                    data-icon="main-chevron-down"
+                                  >
+                                    <svg
+                                      height="8"
+                                      viewBox="0 0 14 8"
+                                      width="8"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                                        fill="#4d5969"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>

@@ -41,7 +41,14 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
   const { sloType } = useQueryParams<{ sloType?: string }>()
   const isCompositeSLO = sloType === SLOType.COMPOSITE
 
-  const { currentPeriodStartTime = 0, currentPeriodEndTime = 0, monitoredServiceDetails } = sloDashboardWidget ?? {}
+  const {
+    currentPeriodStartTime = 0,
+    currentPeriodEndTime = 0,
+    monitoredServiceDetails,
+    calculatingSLI,
+    recalculatingSLI,
+    sloPerformanceTrend
+  } = sloDashboardWidget ?? {}
   const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [sliderTimeRange, setSliderTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [showDowntimeBanner, setShowDowntimeBanner] = useState(true)
@@ -72,11 +79,11 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
     lazy: true
   })
 
-  const downtimeStartTime = chartTimeRange?.startTime || sloDashboardWidget?.currentPeriodStartTime || 0
-  const downtimeEndTime = chartTimeRange?.endTime || sloDashboardWidget?.currentPeriodEndTime || 0
+  const downtimeStartTime = chartTimeRange?.startTime || sloPerformanceTrend?.at(0)?.timestamp || currentPeriodStartTime
+  const downtimeEndTime = chartTimeRange?.endTime || currentPeriodEndTime
 
   useEffect(() => {
-    if (identifier && sloDashboardWidget && sloType === SLOType.SIMPLE) {
+    if (identifier && sloDashboardWidget) {
       unavailabilityRefetch({
         queryParams: {
           accountId,
@@ -94,6 +101,8 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
     [downtimeInstanceUnavailability, downtimeEndTime]
   )
 
+  const shouldRenderDowntimeBanner = showDowntimeBanner && !calculatingSLI && !recalculatingSLI
+
   return (
     <Page.Body
       loading={loading}
@@ -105,7 +114,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
     >
       {sloDashboardWidget && (
         <>
-          {showDowntimeBanner && !!bannerData?.length && (
+          {shouldRenderDowntimeBanner && !!bannerData?.length && (
             <DowntimeBanner showBanner={setShowDowntimeBanner} bannerData={bannerData} />
           )}
           <Container padding="xlarge">

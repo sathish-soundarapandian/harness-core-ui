@@ -12,7 +12,7 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   JiraFieldSchemaNG,
   ResponseConnectorResponse,
-  ResponseJiraIssueCreateMetadataNG,
+  ResponseJiraIssueUpdateMetadataNG,
   ResponseListJiraProjectBasicNG,
   ResponseListJiraStatusNG,
   ResponsePageConnectorResponse
@@ -77,7 +77,7 @@ export const getJiraUpdateEditModePropsWithValues = (): JiraUpdateStepModeProps 
     identifier: '',
     spec: {
       connectorRef: 'c1d1',
-      issueKey: '<+issueKey>',
+      issueKey: 'tji-8097',
       transitionTo: {
         status: 'Done',
         transitionName: ''
@@ -307,69 +307,42 @@ export const mockProjectsResponse: UseGetMockData<ResponseListJiraProjectBasicNG
   }
 }
 
-export const mockProjectMetadataResponse: UseGetMockData<ResponseJiraIssueCreateMetadataNG> = {
+export const mockFieldsMetadataResponse: UseGetMockData<ResponseJiraIssueUpdateMetadataNG> = {
   loading: false,
   // eslint-disable-next-line
   // @ts-ignore
   refetch: jest.fn(),
   data: {
-    correlationId: '',
     status: 'SUCCESS',
-    metaData: null as unknown as undefined,
     data: {
-      projects: {
-        pid1: {
-          id: 'pid1',
-          key: 'pid1',
-          name: 'p1',
-          // eslint-disable-next-line
-          // @ts-ignore
-          issuetypes: [
+      fields: {
+        field1: {
+          key: 'f1',
+          name: 'f1',
+          allowedValues: [],
+          schema: {
+            type: 'string' as JiraFieldSchemaNG['type'],
+            typeStr: ''
+          }
+        },
+        field2: {
+          key: 'f2',
+          name: 'f2',
+          allowedValues: [
             {
-              id: 'itd1',
-              name: 'it1',
-              statuses: [
-                {
-                  name: 'todo',
-                  id: 'todo'
-                },
-                {
-                  name: 'Done',
-                  id: 'Done'
-                }
-              ],
-              fields: {
-                field1: {
-                  key: 'f1',
-                  name: 'f1',
-                  allowedValues: [],
-                  schema: {
-                    type: 'string' as JiraFieldSchemaNG['type'],
-                    typeStr: ''
-                  }
-                },
-                field2: {
-                  key: 'f2',
-                  name: 'f2',
-                  allowedValues: [
-                    {
-                      id: 'av1',
-                      name: 'av1',
-                      value: 'av1'
-                    },
-                    {
-                      id: 'av2',
-                      name: 'av2'
-                    }
-                  ],
-                  schema: {
-                    type: 'string' as JiraFieldSchemaNG['type'],
-                    typeStr: ''
-                  }
-                }
-              }
+              id: 'av1',
+              name: 'av1',
+              value: 'av1'
+            },
+            {
+              id: 'av2',
+              name: 'av2'
             }
-          ]
+          ],
+          schema: {
+            type: 'string' as JiraFieldSchemaNG['type'],
+            typeStr: ''
+          }
         }
       }
     }

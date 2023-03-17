@@ -22,6 +22,9 @@ declare const styles: {
   readonly mainRow: string
   readonly noFeedback: string
   readonly openModalColumn: string
+  readonly rowAppliedFeedbackIndicator: string
+  readonly rowAppliedFeedbackIndicatorText: string
+  readonly rowContainer: string
   readonly secondaryText: string
 }
 export default styles

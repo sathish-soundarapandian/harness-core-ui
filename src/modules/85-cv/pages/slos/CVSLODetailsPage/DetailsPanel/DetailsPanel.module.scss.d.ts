@@ -10,7 +10,6 @@ declare const styles: {
   readonly changesCard: string
   readonly downtimeBanner: string
   readonly iconWithText: string
-  readonly infoIcon: string
   readonly serviceDetailsCard: string
   readonly tabLink: string
 }

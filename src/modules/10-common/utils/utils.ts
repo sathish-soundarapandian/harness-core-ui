@@ -8,10 +8,11 @@
 import { getMultiTypeFromValue, IconName, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { ModuleName } from 'framework/types/ModuleName'
+import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import type { UserMetadataDTO } from 'services/cd-ng'
+import type { Module } from '@common/interfaces/RouteInterfaces'
 
 const PR_ENV_HOST_NAME = 'pr.harness.io'
 
@@ -264,4 +265,20 @@ export const getRefFromIdentifier = (
 
 export const getIdentifierFromScopedRef = (entity: string): string => {
   return entity.indexOf('.') < 0 ? entity : entity.split('.')[1]
+}
+
+export const countAllKeysInObject = (obj: Record<string, any>): number =>
+  Object.keys(obj).reduce((acc, curr) => {
+    if (typeof obj[curr] === 'object' && !Array.isArray(obj[curr]) && obj[curr] !== null) {
+      return 1 + acc + countAllKeysInObject(obj[curr])
+    } else {
+      return 1 + acc
+    }
+  }, 0)
+
+export const isSimplifiedYAMLEnabled = (module?: Module, isSimpliedYAMLFFEnabled?: boolean): boolean => {
+  return isSimpliedYAMLFFEnabled
+    ? module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase() ||
+        module?.valueOf().toLowerCase() === moduleToModuleNameMapping.iacm.toLowerCase()
+    : false
 }

@@ -1,0 +1,43 @@
+.LogAnalysisRiskDisplayTooltip {
+  width: 200px;
+  padding: var(--spacing-medium) !important;
+  p {
+    color: var(--grey-100) !important;
+  }
+}
+
+.feedbackTooltip {
+  width: 450px;
+  padding: var(--spacing-medium) !important;
+
+  p {
+    color: var(--white) !important;
+  }
+
+  &RiskDisplay {
+    padding-bottom: var(--spacing-small) !important;
+    margin-bottom: var(--spacing-small) !important;
+    border-bottom: 1px solid var(--grey-300);
+  }
+
+  &RiskDisplay,
+  &RiskIndicator {
+    display: flex;
+    align-items: center;
+  }
+
+  &Details {
+    display: flex;
+
+    svg path {
+      stroke: var(--grey-300) !important;
+    }
+  }
+
+  &Description {
+    width: 100% !important;
+    p {
+      color: var(--grey-300) !important;
+    }
+  }
+}

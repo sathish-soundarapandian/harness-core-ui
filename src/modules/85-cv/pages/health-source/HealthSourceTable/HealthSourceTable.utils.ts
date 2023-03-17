@@ -12,7 +12,6 @@ import { Connectors } from '@connectors/constants'
 import type { UseStringsReturn } from 'framework/strings'
 import { HealthSourceTypes } from '../types'
 import type { UpdatedHealthSource, RowData } from '../HealthSourceDrawer/HealthSourceDrawerContent.types'
-import { HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING } from '../connectors/CommonHealthSource/components/CustomMetricForm/components/CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/CommonCustomMetricFormContainer.constants'
 
 export const getTypeByFeature = (feature: string, getString: UseStringsReturn['getString']): string => {
   switch (feature) {
@@ -102,8 +101,6 @@ export const getIconBySourceType = (type: string): IconName => {
       return 'service-aws'
     case HealthSourceTypes.SumologicLogs:
     case HealthSourceTypes.SumologicMetrics:
-    case HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING[HealthSourceTypes.SumologicLogs]:
-    case HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING[HealthSourceTypes.SumologicMetrics]:
       return 'service-sumologic'
     default:
       return 'placeholder'

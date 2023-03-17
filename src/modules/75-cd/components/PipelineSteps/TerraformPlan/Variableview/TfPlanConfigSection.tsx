@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Text } from '@harness/uicore'
+import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
@@ -16,52 +17,52 @@ import type { TerraformPlanData, TerraformPlanVariableStepProps } from '../../Co
 import css from '@cd/components/PipelineSteps/Common/Terraform/TerraformStep.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 export function ConfigVariables(props: TerraformPlanVariableStepProps): React.ReactElement {
-  const { variablesData = {} as TerraformPlanData, metadataMap, initialValues } = props
+  const { variablesData = {} as TerraformPlanData, metadataMap, initialValues, fieldPath } = props
   const { getString } = useStrings()
+  const variablesDataSpec = get(variablesData?.spec, `${fieldPath}`)
+  const initialValuesSpec = get(initialValues?.spec, `${fieldPath}`)
   return (
     <>
       <VariablesListTable
-        data={variablesData?.spec?.configuration}
-        originalData={initialValues.spec?.configuration}
+        data={variablesDataSpec}
+        originalData={initialValuesSpec}
         metadataMap={metadataMap}
         className={pipelineVariableCss.variablePaddingL3}
       />
       <VariablesListTable
-        data={variablesData?.spec?.configuration?.configFiles}
-        originalData={initialValues.spec?.configuration?.configFiles}
+        data={variablesDataSpec?.configFiles}
+        originalData={initialValuesSpec?.configFiles}
         metadataMap={metadataMap}
         className={pipelineVariableCss.variablePaddingL3}
       />
-      {variablesData?.spec?.configuration?.configFiles?.store?.spec && (
+      {variablesDataSpec?.configFiles?.store?.spec && (
         <>
           <Text className={css.stepTitle}>{getString('pipelineSteps.configFiles')}</Text>
           <VariablesListTable
-            data={variablesData?.spec?.configuration?.configFiles?.store?.spec}
-            originalData={initialValues.spec?.configuration?.configFiles?.store?.spec}
+            data={variablesDataSpec?.configFiles?.store?.spec}
+            originalData={initialValuesSpec?.configFiles?.store?.spec}
             metadataMap={metadataMap}
             className={pipelineVariableCss.variablePaddingL4}
           />
         </>
       )}
-      {variablesData?.spec?.configuration?.varFiles?.length && (
+      {variablesDataSpec?.varFiles?.length && (
         <>
           <Text className={css.stepTitle}>{getString('cd.terraformVarFiles')}</Text>
-          {variablesData?.spec?.configuration?.varFiles?.map((varFile, index) => {
+          {variablesDataSpec?.varFiles?.map((varFile: { varFile: { type: string } }, index: number) => {
             if (varFile?.varFile?.type === 'Inline') {
               return (
                 <VariablesListTable
                   key={index}
-                  data={variablesData?.spec?.configuration?.varFiles?.[index]?.varFile?.spec}
-                  originalData={initialValues?.spec?.configuration?.varFiles?.[index]?.varFile?.spec || ({} as any)}
+                  data={variablesDataSpec?.varFiles?.[index]?.varFile?.spec}
+                  originalData={initialValuesSpec?.varFiles?.[index]?.varFile?.spec || ({} as any)}
                   metadataMap={metadataMap}
                   className={pipelineVariableCss.variablePaddingL4}
                 />
               )
             } else if (varFile?.varFile?.type === 'Remote') {
-              const remoteSpec = variablesData?.spec?.configuration?.varFiles?.[index]?.varFile
-                ?.spec as RemoteTerraformVarFileSpec
-              const initVarSpec = initialValues?.spec?.configuration?.varFiles?.[index]?.varFile
-                ?.spec as RemoteTerraformVarFileSpec
+              const remoteSpec = variablesDataSpec?.varFiles?.[index]?.varFile?.spec as RemoteTerraformVarFileSpec
+              const initVarSpec = initialValuesSpec?.varFiles?.[index]?.varFile?.spec as RemoteTerraformVarFileSpec
               return (
                 <VariablesListTable
                   key={index}

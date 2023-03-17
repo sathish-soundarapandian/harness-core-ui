@@ -28,7 +28,16 @@ exports[`<CDStageDetails /> tests snapshot test 1`] = `
                   class="serviceName"
                   tabindex="0"
                 >
-                  Order
+                  <a
+                    href="/account/undefined/services/Order"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main stageItemDetails"
+                      style="--text-line-clamp: 1;"
+                    >
+                      Order
+                    </p>
+                  </a>
                 </div>
               </div>
             </div>
@@ -44,9 +53,18 @@ exports[`<CDStageDetails /> tests snapshot test 1`] = `
         <ul
           class="values"
         >
-          <li>
-            Production
-          </li>
+          <a
+            href="/account/undefined/environments/Production/details"
+          >
+            <li>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main stageItemDetails"
+                style="--text-line-clamp: 1;"
+              >
+                Production
+              </p>
+            </li>
+          </a>
         </ul>
       </div>
     </div>

@@ -46,7 +46,19 @@ describe('Test ArtifactSourceTemplate', () => {
 
   test('call ArtifactSourceTemplate.renderTemplateInputsForm', async () => {
     const { getByText } = render(
-      artifactSourceTemplate.renderTemplateInputsForm({ template: {}, accountId: 'accountId' })
+      artifactSourceTemplate.renderTemplateInputsForm({
+        template: {},
+        accountId: 'accountId',
+        templateInputSetFetchParams: {
+          data: null,
+          refetch: jest.fn(),
+          error: null,
+          loading: false,
+          absolutePath: '',
+          cancel: jest.fn(),
+          response: null
+        }
+      })
     )
     expect(getByText('Template inputs section')).toBeDefined()
   })

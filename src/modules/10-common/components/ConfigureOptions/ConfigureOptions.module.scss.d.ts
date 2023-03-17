@@ -7,8 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly advancedBtn: string
-  readonly allowedOptions: string
   readonly checkbox: string
   readonly cogBtnTooltipContainer: string
   readonly dialog: string

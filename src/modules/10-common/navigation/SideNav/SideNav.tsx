@@ -11,11 +11,13 @@ import { NavLink as Link, NavLinkProps, useParams } from 'react-router-dom'
 import { Text, Layout, IconName, Icon, Container, TextProps, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, Position, PopoverInteractionKind } from '@blueprintjs/core'
+import { useGetAccountNG } from 'services/cd-ng'
 import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { useStrings } from 'framework/strings'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import css from './SideNav.module.scss'
 
 export interface SideNavProps {
@@ -29,7 +31,6 @@ export interface SideNavProps {
 
 const SideNavCollapseButton: React.FC<{ isExpanded: boolean; onClick: () => void }> = ({ isExpanded, onClick }) => {
   const { getString } = useStrings()
-
   return (
     <Container
       className={cx(css.sideNavResizeBtn, {
@@ -58,22 +59,41 @@ const SideNavCollapseButton: React.FC<{ isExpanded: boolean; onClick: () => void
 export default function SideNav(props: React.PropsWithChildren<SideNavProps>): ReactElement {
   const { collapseByDefault = false } = props
   const { getString } = useStrings()
-  const { SPG_SIDENAV_COLLAPSE } = useFeatureFlags()
+  const { SPG_SIDENAV_COLLAPSE, PLG_ENABLE_CROSS_GENERATION_ACCESS } = useFeatureFlags()
   const params = useParams<ProjectPathProps>()
-  const [sideNavExpanded, setSideNavExpanded] = useState<boolean>(!collapseByDefault)
+  const { accountId } = useParams<AccountPathProps>()
+  const { setPreference: setSideNavExpandedPrefStore, preference: sideNavExpandedPrefStore = true } =
+    usePreferenceStore<boolean>(PreferenceScope.ACCOUNT, 'collapseSideNav')
+
+  const [sideNavExpanded, setSideNavExpanded] = useState<boolean>(collapseByDefault ? false : sideNavExpandedPrefStore)
   const launchButtonRedirectUrl = props.launchButtonRedirectUrl
     ? props.launchButtonRedirectUrl?.replace('{replaceAccountId}', params.accountId)
     : ''
+  const { data } = useGetAccountNG({ accountIdentifier: accountId, queryParams: { accountIdentifier: accountId } })
+  const account = data?.data
+  let newNavFlag = true
+  if (PLG_ENABLE_CROSS_GENERATION_ACCESS) {
+    if (account?.crossGenerationAccessEnabled === undefined) {
+      newNavFlag = true
+    } else {
+      newNavFlag = account?.crossGenerationAccessEnabled
+    }
+  }
 
   return (
     <div
       className={cx(css.main, {
         [css.sideNavExpanded]: sideNavExpanded
       })}
+      onClick={() => {
+        if (!sideNavExpanded) {
+          setSideNavExpanded(true)
+        }
+      }}
     >
       <>
         <div>{props.children}</div>
-        {props.launchButtonText && props.launchButtonRedirectUrl ? (
+        {props.launchButtonText && props.launchButtonRedirectUrl && newNavFlag ? (
           <LaunchButton
             launchButtonText={getString(props.launchButtonText)}
             redirectUrl={returnLaunchUrl(launchButtonRedirectUrl)}
@@ -101,6 +121,9 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
         <SideNavCollapseButton
           isExpanded={sideNavExpanded}
           onClick={() => {
+            if (!collapseByDefault) {
+              setSideNavExpandedPrefStore(!sideNavExpanded)
+            }
             setSideNavExpanded(!sideNavExpanded)
           }}
         />

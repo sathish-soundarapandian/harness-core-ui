@@ -156,12 +156,12 @@ describe('useString tests', () => {
         <StringsContext.Provider value={value as any}>{children}</StringsContext.Provider>
       )
       const { result, rerender } = renderHook(useStrings, { wrapper })
-      const prevGetString = result.current
 
+      const prevGetString = result.current.getString
       rerender()
-      const nextGetString = result.current
+      const nextGetString = result.current.getString
 
-      expect(prevGetString).toEqual(nextGetString)
+      expect(prevGetString).toBe(nextGetString)
     })
   })
 

@@ -9,6 +9,7 @@
 declare const styles: {
   readonly checkbox: string
   readonly container: string
+  readonly errorMessage: string
   readonly iconMargin: string
   readonly listItem: string
   readonly referenceList: string

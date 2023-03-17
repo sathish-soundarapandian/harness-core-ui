@@ -162,7 +162,7 @@ export function InfrastructureMenu({
             onClick={handleDelete}
             permission={{
               ...resourceAndScope,
-              permission: PermissionIdentifier.DELETE_ENVIRONMENT
+              permission: PermissionIdentifier.EDIT_ENVIRONMENT
             }}
           />
         </Menu>

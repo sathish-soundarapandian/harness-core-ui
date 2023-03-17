@@ -44,6 +44,8 @@ import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SettingType } from '@default-settings/interfaces/SettingType.types'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { SECRETS_DEFAULT_PAGE_INDEX, SECRETS_DEFAULT_PAGE_SIZE } from '../../Constants'
 import css from './SecretsList.module.scss'
 
 interface SecretsListProps {
@@ -326,7 +328,7 @@ const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch }) => {
   const { pathname } = useLocation()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS } = useFeatureFlags()
+  const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS, PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
@@ -389,9 +391,9 @@ const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch }) => {
 
   const paginationProps = useDefaultPaginationProps({
     itemCount: secrets?.totalItems || 0,
-    pageSize: secrets?.pageSize || 10,
+    pageSize: secrets?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : SECRETS_DEFAULT_PAGE_SIZE),
     pageCount: secrets?.totalPages || -1,
-    pageIndex: secrets?.pageIndex || 0
+    pageIndex: secrets?.pageIndex || SECRETS_DEFAULT_PAGE_INDEX
   })
 
   return (

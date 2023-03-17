@@ -19,7 +19,9 @@ export const shouldAllowOnlyOneFilePath = (selectedManifest: ManifestTypes): boo
     ManifestDataType.TasAutoScaler,
     ManifestDataType.AsgLaunchTemplate,
     ManifestDataType.AsgConfiguration,
-    ManifestDataType.GoogleCloudFunctionDefinition
+    ManifestDataType.GoogleCloudFunctionDefinition,
+    ManifestDataType.AwsLambdaFunctionDefinition,
+    ManifestDataType.AwsLambdaFunctionAliasDefinition
   ].includes(selectedManifest)
 }
 

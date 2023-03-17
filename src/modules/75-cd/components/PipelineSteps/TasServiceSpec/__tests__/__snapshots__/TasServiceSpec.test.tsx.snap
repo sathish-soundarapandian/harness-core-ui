@@ -23,7 +23,7 @@ exports[`TasServiceSpec tests StepViewType Edit mode intial rendering 1`] = `
           style="width: 100%;"
         >
           <div
-            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+            class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-medium"
           >
             <div
               class="Layout--vertical StyledProps--main"

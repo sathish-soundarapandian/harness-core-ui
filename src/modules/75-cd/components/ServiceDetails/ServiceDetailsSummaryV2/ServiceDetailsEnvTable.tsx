@@ -290,21 +290,15 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
 
   if (isUndefined(selectedRow) && tableData.length) {
     setRowClickFilter({
-      artifact: defaultTo(tableData[0].artifact, ''),
+      artifact: tableData[0].artifact,
       envId: defaultTo(tableData[0].envId, ''),
-      environmentType: defaultTo(tableData[0].environmentType as 'PreProduction' | 'Production', 'Production'),
+      environmentType: tableData[0].environmentType as 'PreProduction' | 'Production',
       envName: defaultTo(tableData[0].envName, ''),
       clusterIdentifier: tableData[0].clusterId,
       infraIdentifier: tableData[0].infrastructureId,
       infraName: tableData[0].infrastructureName
     })
-    setSelectedRow(
-      JSON.stringify(tableData[0]) +
-        tableData[0].envId +
-        tableData[0].artifact +
-        tableData[0].infrastructureId +
-        tableData[0].clusterId
-    )
+    setSelectedRow(`${tableData[0].envId}-${0}`)
   }
 
   if (loading) {
@@ -341,30 +335,19 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       columns={columns}
       data={tableData}
       className={css.fullViewTableStyle}
-      onRowClick={row => {
+      onRowClick={(row, idx) => {
         setRowClickFilter({
-          artifact: defaultTo(row.artifact, ''),
+          artifact: row.artifact,
           envId: defaultTo(row.envId, ''),
-          environmentType: defaultTo(row.environmentType as 'PreProduction' | 'Production', 'Production'),
+          environmentType: row.environmentType as 'PreProduction' | 'Production',
           envName: defaultTo(row.envName, ''),
           clusterIdentifier: row.clusterId,
           infraIdentifier: row.infrastructureId,
           infraName: row.infrastructureName
         })
-        setSelectedRow(JSON.stringify(row) + row.envId + row.artifact + row.infrastructureId + row.clusterId)
+        setSelectedRow(`${row.envId}-${idx}`)
       }}
-      getRowClassName={row =>
-        isEqual(
-          JSON.stringify(row.original) +
-            row.original.envId +
-            row.original.artifact +
-            row.original.infrastructureId +
-            row.original.clusterId,
-          selectedRow
-        )
-          ? css.selected
-          : ''
-      }
+      getRowClassName={row => (isEqual(`${row.original.envId}-${row.index}`, selectedRow) ? css.selected : '')}
     />
   )
 }

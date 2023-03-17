@@ -10,8 +10,11 @@ declare const styles: {
   readonly container: string
   readonly errorContainer: string
   readonly errorIcon: string
+  readonly errorMsg: string
   readonly errorMsgContainer: string
+  readonly errorMsgWrapper: string
   readonly errorMsgs: string
+  readonly errorTitle: string
   readonly fullScreen: string
   readonly hasErrorMessage: string
   readonly header: string

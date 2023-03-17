@@ -16,7 +16,6 @@ import { useStrings } from 'framework/strings'
 import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticker'
 import { getBucketSizeForTimeRange } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { PageSpinner, TimeSeriesAreaChart } from '@common/components'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { TimeSeriesAreaChartProps } from '@common/components/TimeSeriesAreaChart/TimeSeriesAreaChart'
 import { DeploymentsTimeRangeContext, INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { numberFormatter } from '@common/utils/utils'
@@ -28,12 +27,11 @@ import {
   ServiceDeploymentListInfo,
   ServiceDeploymentListInfoV2,
   ServiceDeploymentV2,
-  useGetServiceDeploymentsInfo,
   useGetServiceDeploymentsInfoV2
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getTooltip } from '@pipeline/utils/DashboardUtils'
-import { calcTrend, getFormattedTimeRange, RateTrend } from '@cd/pages/dashboard/dashboardUtils'
+import { getFormattedTimeRange, RateTrend } from '@cd/pages/dashboard/dashboardUtils'
 import css from '@cd/components/Services/DeploymentsWidget/DeploymentsWidget.module.scss'
 
 export interface ChangeValue {
@@ -62,7 +60,6 @@ const TickerValue: React.FC<{ value: number; color: Color }> = props => (
 export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { CDC_DASHBOARD_ENHANCEMENT_NG: flag } = useFeatureFlags()
 
   const { serviceIdentifier } = props
   const { timeRange } = useContext(DeploymentsTimeRangeContext)
@@ -82,28 +79,13 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
   }, [accountId, orgIdentifier, projectIdentifier, serviceIdentifier, timeRange])
 
   const {
-    loading,
-    data: serviceData,
-    error,
-    refetch
-  } = useGetServiceDeploymentsInfo({
-    queryParams,
-    lazy: flag
-  })
-
-  const {
-    loading: loadingV2,
-    data: serviceDataV2,
-    error: errorV2,
-    refetch: refetchV2
+    loading: serviceDeploymentsLoading,
+    data: serviceDeploymentsInfo,
+    error: serviceDeploymentsError,
+    refetch: serviceDeploymentsRefetch
   } = useGetServiceDeploymentsInfoV2({
-    queryParams,
-    lazy: !flag
+    queryParams
   })
-
-  const [serviceDeploymentsLoading, serviceDeploymentsInfo, serviceDeploymentsError, serviceDeploymentsRefetch] = flag
-    ? [loadingV2, serviceDataV2, errorV2, refetchV2]
-    : [loading, serviceData, error, refetch]
 
   const parseData = useCallback(
     (serviceDeploymentListInfo: ServiceDeploymentListInfo | ServiceDeploymentListInfoV2): DeploymentWidgetData => {
@@ -143,42 +125,18 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
       return {
         deployments: {
           value: numberFormatter(serviceDeploymentListInfo.totalDeployments),
-          change: defaultTo(
-            flag && serviceDeploymentListInfo.totalDeploymentsChangeRate
-              ? (serviceDeploymentListInfo.totalDeploymentsChangeRate as ChangeRate).percentChange
-              : (serviceDeploymentListInfo.totalDeploymentsChangeRate as number),
-            0
-          ),
-          trend:
-            flag && serviceDeploymentListInfo.totalDeploymentsChangeRate
-              ? ((serviceDeploymentListInfo.totalDeploymentsChangeRate as ChangeRate).trend as RateTrend)
-              : calcTrend(serviceDeploymentListInfo.totalDeploymentsChangeRate as number)
+          change: defaultTo((serviceDeploymentListInfo.totalDeploymentsChangeRate as ChangeRate)?.percentChange, 0),
+          trend: (serviceDeploymentListInfo.totalDeploymentsChangeRate as ChangeRate)?.trend as RateTrend
         },
         failureRate: {
           value: numberFormatter(serviceDeploymentListInfo.failureRate),
-          change: defaultTo(
-            flag && serviceDeploymentListInfo.failureRateChangeRate
-              ? (serviceDeploymentListInfo.failureRateChangeRate as ChangeRate).percentChange
-              : (serviceDeploymentListInfo.failureRateChangeRate as number),
-            0
-          ),
-          trend:
-            flag && serviceDeploymentListInfo.failureRateChangeRate
-              ? ((serviceDeploymentListInfo.failureRateChangeRate as ChangeRate).trend as RateTrend)
-              : calcTrend(serviceDeploymentListInfo.failureRateChangeRate as number)
+          change: defaultTo((serviceDeploymentListInfo.failureRateChangeRate as ChangeRate)?.percentChange, 0),
+          trend: (serviceDeploymentListInfo.failureRateChangeRate as ChangeRate)?.trend as RateTrend
         },
         frequency: {
           value: numberFormatter(serviceDeploymentListInfo.frequency),
-          change: defaultTo(
-            flag && serviceDeploymentListInfo.frequencyChangeRate
-              ? (serviceDeploymentListInfo.frequencyChangeRate as ChangeRate).percentChange
-              : (serviceDeploymentListInfo.frequencyChangeRate as number),
-            0
-          ),
-          trend:
-            flag && serviceDeploymentListInfo.frequencyChangeRate
-              ? ((serviceDeploymentListInfo.frequencyChangeRate as ChangeRate).trend as RateTrend)
-              : calcTrend(serviceDeploymentListInfo.frequencyChangeRate as number)
+          change: defaultTo((serviceDeploymentListInfo.frequencyChangeRate as ChangeRate)?.percentChange, 0),
+          trend: (serviceDeploymentListInfo.frequencyChangeRate as ChangeRate)?.trend as RateTrend
         },
         data: [
           {
@@ -212,7 +170,7 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
     serviceDeploymentsLoading ||
     serviceDeploymentsError ||
     !serviceDeploymentsInfo?.data ||
-    (serviceDeploymentsInfo.data.totalDeployments === 0 && serviceDeploymentsInfo.data.totalDeploymentsChangeRate === 0)
+    serviceDeploymentsInfo.data.totalDeployments === 0
   ) {
     const component = (() => {
       if (serviceDeploymentsLoading) {

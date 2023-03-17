@@ -28,8 +28,7 @@ export interface QueryContentProps {
   fetchButtonText?: string
   isFetchButtonDisabled?: boolean
   isQueryButtonDisabled: boolean
-  queryFieldIdentifier?: string
-  isQueryFieldNotPresent: boolean
+  runQueryBtnTooltip: string
 }
 
 export interface CommonQueryViewerProps {
@@ -60,8 +59,7 @@ export interface CommonQueryViewDialogProps extends RecordsProps {
   fetchRecords: () => void
   isOpen: boolean
   isQueryButtonDisabled: boolean
-  isQueryFieldNotPresent: boolean
-  queryFieldIdentifier?: string
+  runQueryBtnTooltip: string
 }
 
 export const DrawerProps: IDrawerProps = {

@@ -35,7 +35,6 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
     fetchOptions,
     variableName,
     type,
-    showAdvanced,
     showRequiredField,
     showDefaultField,
     loading,
@@ -98,7 +97,6 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
       variableName={variableName}
       showRequiredField={showRequiredField}
       showDefaultField={showDefaultField}
-      showAdvanced={showAdvanced}
       onChange={onChange}
       isReadonly={isReadonly}
       getAllowedValuesCustomComponent={getAllowedValuesMultiSelectComponent}

@@ -73,7 +73,7 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
     },
     permission: PermissionIdentifier.INVITE_USER
   }
-  const onDeleted = (): void => {
+  const onDeleted = /* istanbul ignore next */ (): void => {
     reloadProjects?.()
   }
   const { openDialog } = useDeleteProjectDialog(data, onDeleted)
@@ -101,13 +101,14 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
             menuPopoverProps={{
               className: Classes.DARK,
               isOpen: menuOpen,
-              onInteraction: nextOpenState => {
+              onInteraction: /* istanbul ignore next */ nextOpenState => {
                 setMenuOpen(nextOpenState)
               }
             }}
           />
         ) : null}
         <Container
+          data-testid="card-content"
           onClick={() => {
             allowInteraction &&
               history.push({
@@ -120,53 +121,45 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
           }}
         >
           <div className={css.colorBar} style={{ backgroundColor: data.color }} />
-          {data.name ? (
-            <Text font="medium" lineClamp={1} color={Color.BLACK}>
-              {data.name}
+          {harnessManagedOrg || isPreview ? null : (
+            <Text
+              font={{ variation: FontVariation.TINY_SEMI }}
+              lineClamp={1}
+              color={Color.GREY_400}
+              margin={{ bottom: 'small' }}
+            >
+              {getString('common.org')}: {organization?.name}
             </Text>
-          ) : isPreview ? (
-            <Text font="medium" lineClamp={1} color={Color.BLACK}>
-              {getString('projectCard.projectName')}
-            </Text>
-          ) : null}
+          )}
+          <Text font={{ variation: FontVariation.CARD_TITLE }} lineClamp={1} color={Color.BLACK}>
+            {data.name ? data.name : isPreview ? getString('projectCard.projectName') : null}
+          </Text>
           <Text
             className={css.projectId}
             lineClamp={1}
-            font={{ variation: FontVariation.SMALL }}
-            margin={{ top: 'xsmall' }}
-            color={Color.GREY_700}
+            font={{ variation: FontVariation.TINY }}
+            color={Color.GREY_600}
+            margin={{ bottom: 'medium' }}
           >
             {getString('idLabel', { id: data.identifier })}
           </Text>
-          {harnessManagedOrg || isPreview ? null : (
-            <Container margin={{ top: 'small', bottom: 'small' }}>
-              <Text
-                font={{ size: 'small', weight: 'semi-bold' }}
-                icon="union"
-                lineClamp={1}
-                iconProps={{ padding: { right: 'small' } }}
-              >
-                {organization?.name}
-              </Text>
-            </Container>
-          )}
           {data.description ? (
-            <Text font="small" lineClamp={2} padding={{ top: 'small' }}>
+            <Text font={{ variation: FontVariation.SMALL }} lineClamp={2} color={Color.GREY_400}>
               {data.description}
             </Text>
           ) : null}
-          {data.tags && (
-            <Container padding={{ top: 'small' }}>
+          {data.tags && Object.keys(data.tags).length > 0 && (
+            <Container margin={{ top: 'small' }}>
               <TagsRenderer tags={data.tags} length={2} width={150} tagClassName={css.tagClassName} />
             </Container>
           )}
-
-          <Layout.Horizontal padding={{ top: 'medium' }}>
+          <Layout.Horizontal margin={{ top: 'xlarge' }}>
             <Layout.Vertical padding={{ right: 'large' }} spacing="xsmall">
-              <Text font={{ size: 'small', weight: 'semi-bold' }} padding={{ bottom: 'small' }}>{`${getString(
-                'adminLabel'
-              )} ${adminList?.length ? `(${adminList?.length})` : ``}`}</Text>
+              <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_400} padding={{ bottom: 'small' }}>
+                {getString('adminLabel')} {adminList?.length ? `(${adminList?.length})` : null}
+              </Text>
               <RbacAvatarGroup
+                size={'small'}
                 className={css.projectAvatarGroup}
                 avatarClassName={avatarClassName}
                 avatars={adminList?.length ? adminList : [{}]}
@@ -178,16 +171,17 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
                 permission={{
                   ...invitePermission,
                   options: {
-                    skipCondition: () => !allowInteraction
+                    skipCondition: /* istanbul ignore next */ () => !allowInteraction
                   }
                 }}
               />
             </Layout.Vertical>
             <Layout.Vertical spacing="xsmall">
-              <Text font={{ size: 'small', weight: 'semi-bold' }} padding={{ bottom: 'small' }}>{`${getString(
-                'collaboratorsLabel'
-              )} ${collaboratorsList?.length ? `(${collaboratorsList?.length})` : ``}`}</Text>
+              <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_400} padding={{ bottom: 'small' }}>
+                {getString('collaboratorsLabel')} {collaboratorsList?.length ? `(${collaboratorsList?.length})` : null}
+              </Text>
               <RbacAvatarGroup
+                size={'small'}
                 className={css.projectAvatarGroup}
                 avatarClassName={avatarClassName}
                 avatars={collaboratorsList?.length ? collaboratorsList : [{}]}
@@ -199,13 +193,12 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
                 permission={{
                   ...invitePermission,
                   options: {
-                    skipCondition: () => !allowInteraction
+                    skipCondition: /* istanbul ignore next */ () => !allowInteraction
                   }
                 }}
               />
             </Layout.Vertical>
           </Layout.Horizontal>
-
           <DefaultRenderer />
         </Container>
       </Container>

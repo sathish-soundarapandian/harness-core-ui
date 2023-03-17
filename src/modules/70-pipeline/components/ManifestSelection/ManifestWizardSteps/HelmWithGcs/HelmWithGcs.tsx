@@ -25,7 +25,7 @@ import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, useGetGCSBucketList } from 'services/cd-ng'
@@ -35,7 +35,7 @@ import { useToaster } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 
-import type { HelmWithGcsDataType } from '../../ManifestInterface'
+import type { HelmWithGcsDataType, HelmWithGcsManifestLastStepPrevStepData } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
 import {
@@ -58,6 +58,7 @@ interface HelmWithGcsPropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   deploymentType?: string
+  editManifestModePrevStepData?: HelmWithGcsManifestLastStepPrevStepData
 }
 
 function HelmWithGcs({
@@ -70,7 +71,8 @@ function HelmWithGcs({
   previousStep,
   manifestIdsList,
   isReadonly = false,
-  deploymentType
+  deploymentType,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & HelmWithGcsPropType): React.ReactElement {
   const { getString } = useStrings()
   const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
@@ -78,6 +80,8 @@ function HelmWithGcs({
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
   const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V3')
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   const {
     data: bucketData,
@@ -104,7 +108,7 @@ function HelmWithGcs({
           accountIdentifier: accountId,
           projectIdentifier,
           orgIdentifier,
-          connectorRef: prevStepData?.connectorRef?.value
+          connectorRef: modifiedPrevStepData?.connectorRef?.value
         }
       })
     }
@@ -206,7 +210,7 @@ function HelmWithGcs({
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {
-                is: val => !isEmpty(val?.value),
+                is: val => !isEmpty(val),
                 then: Yup.string().required(getString('pipeline.manifestType.commandFlagRequired'))
               })
             })
@@ -214,14 +218,14 @@ function HelmWithGcs({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
@@ -237,7 +241,7 @@ function HelmWithGcs({
                     placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                   />
                 </div>
-                {getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED && (
+                {getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED && (
                   <div
                     className={cx(helmcss.halfWidth, {
                       [helmcss.runtimeInput]:
@@ -258,14 +262,13 @@ function HelmWithGcs({
                         variableName="bucketName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('bucketName', value)}
                         isReadonly={isReadonly}
                       />
                     )}
                   </div>
                 )}
-                {getMultiTypeFromValue(prevStepData?.connectorRef) === MultiTypeInputType.FIXED && (
+                {getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) === MultiTypeInputType.FIXED && (
                   <div
                     className={cx(helmcss.halfWidth, {
                       [helmcss.runtimeInput]:
@@ -295,7 +298,6 @@ function HelmWithGcs({
                         variableName="bucketName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('bucketName', value)}
                         isReadonly={isReadonly}
                       />
@@ -325,7 +327,6 @@ function HelmWithGcs({
                       variableName="folderPath"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('folderPath', value)}
                       isReadonly={isReadonly}
                     />
@@ -352,7 +353,6 @@ function HelmWithGcs({
                       variableName="chartName"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('chartName', value)}
                       isReadonly={isReadonly}
                     />
@@ -381,7 +381,6 @@ function HelmWithGcs({
                       variableName="chartVersion"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('chartVersion', value)}
                       isReadonly={isReadonly}
                     />
@@ -427,7 +426,6 @@ function HelmWithGcs({
                         variableName="subChartName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('subChartName', value)}
                         isReadonly={isReadonly}
                         allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -451,6 +449,7 @@ function HelmWithGcs({
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                   defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                   dragDropFieldWidth={filePathWidth}
+                  allowSinglePathDeletion
                 />
                 {getMultiTypeFromValue(formik.values.valuesPaths) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
@@ -459,7 +458,6 @@ function HelmWithGcs({
                     variableName={'valuesPaths'}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={val => formik?.setFieldValue('valuesPaths', val)}
                     isReadonly={isReadonly}
                   />
@@ -484,7 +482,7 @@ function HelmWithGcs({
                       helmVersion={formik.values?.helmVersion}
                       isReadonly={isReadonly}
                       deploymentType={deploymentType as string}
-                      helmStore={prevStepData?.store ?? ''}
+                      helmStore={modifiedPrevStepData?.store ?? ''}
                     />
                   }
                 />
@@ -496,7 +494,7 @@ function HelmWithGcs({
                 text={getString('back')}
                 variation={ButtonVariation.SECONDARY}
                 icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
+                onClick={() => previousStep?.(modifiedPrevStepData)}
               />
               <Button
                 variation={ButtonVariation.PRIMARY}

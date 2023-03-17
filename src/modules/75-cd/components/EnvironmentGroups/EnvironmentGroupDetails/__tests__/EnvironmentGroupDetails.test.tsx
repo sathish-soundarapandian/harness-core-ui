@@ -285,7 +285,8 @@ describe('Environment Group Details Page', () => {
       attachRefToLastElement: jest.fn(),
       hasMore: { current: false },
       loadItems: jest.fn(),
-      offsetToFetch: { current: 0 }
+      offsetToFetch: { current: 0 },
+      reset: jest.fn()
     })
 
     render(
@@ -308,8 +309,8 @@ describe('Environment Group Details Page', () => {
       </TestWrapper>
     )
 
-    const addEnvironmentButton = screen.queryByText('environment')
-    fireEvent.click(addEnvironmentButton!)
+    const addEnvironmentButton = await screen.getAllByTestId('new-env-inside-group')
+    fireEvent.click(addEnvironmentButton![0])
 
     const dialog = findDialogContainer()
 

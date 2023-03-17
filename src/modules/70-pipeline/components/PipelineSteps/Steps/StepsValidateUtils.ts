@@ -25,6 +25,8 @@ import { IdentifierSchema, IdentifierSchemaWithoutHook, NameSchema } from '@comm
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { CIBuildInfrastructureType, stepNameRegex, stepIdentifierRegex } from '@pipeline/utils/constants'
 
+export const namespaceRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
+
 export enum Types {
   Text,
   List,
@@ -43,7 +45,8 @@ export enum Types {
   BuildEnvironment,
   FrameworkVersion,
   BuildTool,
-  NotIn
+  NotIn,
+  Namespace
 }
 
 interface Field {
@@ -221,7 +224,8 @@ export function generateSchemaForNumeric(
 function generateSchemaForMap(
   { label, isRequired, isInputSet, allowNumericKeys }: Field,
   { getString }: GenerateSchemaDependencies,
-  objectShape?: Schema<unknown>
+  objectShape?: Schema<unknown>,
+  customRegex?: RegExp
 ): Lazy {
   if (isInputSet) {
     // We can't add validation for key uniqueness and key's value
@@ -230,7 +234,7 @@ function generateSchemaForMap(
         return true
       }
       if (typeof values === 'object' && !Array.isArray(values) && values !== null && !allowNumericKeys) {
-        return Object.keys(values).every(key => keyRegexIdentifier.test(key))
+        return Object.keys(values).every(key => (customRegex ? customRegex.test(key) : keyRegexIdentifier.test(key)))
       }
       return true
     })
@@ -247,7 +251,7 @@ function generateSchemaForMap(
                     is: val => val?.length,
                     then: yup
                       .string()
-                      .matches(keyRegexIdentifier, getString('validation.validKeyRegex'))
+                      .matches(customRegex ?? keyRegexIdentifier, getString('validation.validKeyRegex'))
                       .required(getString('validation.keyRequired'))
                   }),
                   value: yup.string().when('key', {
@@ -332,6 +336,22 @@ function generateSchemaForOutputVariables(
         : yup.string()
     )
   }
+}
+
+export function generateSchemaForNamespace({
+  getString,
+  isRequired = true
+}: GenerateSchemaDependencies): yup.StringSchema<string | undefined> {
+  const namespaceSchema = yup.string().test('namespace', getString('pipeline.namespaceValidation'), function (value) {
+    if (getMultiTypeFromValue(value) !== MultiTypeInputType.FIXED || isEmpty(value)) {
+      return true
+    }
+    return namespaceRegex.test(value)
+  })
+  if (isRequired) {
+    return namespaceSchema.required(getString('fieldRequired', { field: getString('common.namespace') }))
+  }
+  return namespaceSchema
 }
 
 export function generateSchemaForLimitMemory({ getString, isRequired = false }: GenerateSchemaDependencies): Lazy {
@@ -426,7 +446,8 @@ export function generateSchemaFields(
   fields: Field[],
   { initialValues, steps, serviceDependencies, getString }: GenerateSchemaDependencies,
   stepViewType: StepViewType,
-  buildInfrastructureType?: CIBuildInfrastructureType
+  buildInfrastructureType?: CIBuildInfrastructureType,
+  customRegex?: RegExp
 ): SchemaField[] {
   return fields.map(field => {
     const { name, type, label, isRequired, isActive } = field
@@ -438,7 +459,7 @@ export function generateSchemaFields(
     }
 
     if (type === Types.Map) {
-      validationRule = generateSchemaForMap(field, { getString })
+      validationRule = generateSchemaForMap(field, { getString }, undefined, customRegex)
     }
 
     if (stepViewType !== StepViewType.Template && type === Types.Identifier) {
@@ -451,6 +472,10 @@ export function generateSchemaFields(
 
     if (type === Types.OutputVariables) {
       validationRule = generateSchemaForOutputVariables(field, { getString })
+    }
+
+    if (type === Types.Namespace) {
+      validationRule = generateSchemaForNamespace({ getString })
     }
 
     if (type === Types.LimitMemory) {
@@ -533,7 +558,8 @@ export function validate(
   config: Field[],
   dependencies: GenerateSchemaDependencies,
   stepViewType: StepViewType,
-  buildInfrastructureType?: CIBuildInfrastructureType
+  buildInfrastructureType?: CIBuildInfrastructureType,
+  customRegex?: RegExp
 ): FormikErrors<any> {
   const errors = {}
   if (isEmpty(dependencies.steps)) {
@@ -542,7 +568,7 @@ export function validate(
   if (isEmpty(dependencies.serviceDependencies)) {
     dependencies.serviceDependencies = []
   }
-  const schemaFields = generateSchemaFields(config, dependencies, stepViewType, buildInfrastructureType)
+  const schemaFields = generateSchemaFields(config, dependencies, stepViewType, buildInfrastructureType, customRegex)
   schemaFields.forEach(({ name, validationRule, isActive = true }) => {
     if (!isActive) return
 
@@ -570,7 +596,8 @@ export function validateInputSet(
   template: any,
   config: Field[],
   dependencies: GenerateSchemaDependencies,
-  stepViewType: StepViewType
+  stepViewType: StepViewType,
+  customRegex?: RegExp
 ): FormikErrors<any> {
   const configWithActiveState = config.map(field => {
     return {
@@ -580,7 +607,7 @@ export function validateInputSet(
     }
   })
 
-  return validate(values, configWithActiveState, dependencies, stepViewType)
+  return validate(values, configWithActiveState, dependencies, stepViewType, undefined, customRegex)
 }
 
 export function getNameAndIdentifierSchema(

@@ -111,20 +111,19 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
             class="tab"
           >
             <span
-              class="bp3-icon bp3-icon-warning-sign StyledProps--main StyledProps--color StyledProps--color-orange500"
-              icon="warning-sign"
+              class="bp3-icon StyledProps--main StyledProps--color"
+              data-icon="infrastructure"
             >
               <svg
-                data-icon="warning-sign"
-                height="16"
-                viewBox="0 0 16 16"
-                width="16"
+                fill="currentColor"
+                height="20"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <desc>
-                  warning-sign
-                </desc>
                 <path
-                  d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
+                  clip-rule="evenodd"
+                  d="M11.15 10.822l2.091-3.623-2.091-3.624H6.966L4.874 7.2l2.092 3.623h4.184zm2.944-4.106l-.004-.007-2.092-3.623a.98.98 0 00-.848-.49H6.966a.98.98 0 00-.848.49L4.026 6.709a.98.98 0 000 .98l2.092 3.623.007.012-.007.013-2.092 3.623a.98.98 0 000 .98l2.092 3.623a.98.98 0 00.848.49h4.184a.98.98 0 00.848-.49l2.092-3.623.01-.018h4.194a.98.98 0 00.849-.49l2.091-3.623a.98.98 0 000-.98l-2.091-3.623a.98.98 0 00-.849-.49h-4.2zM11.15 19.073l2.091-3.623-2.091-3.623H6.966L4.874 15.45l2.092 3.623h4.184zm9.236-7.754l-2.092 3.623h-4.183l-2.092-3.623 2.092-3.623h4.183l2.092 3.623z"
                   fill-rule="evenodd"
                 />
               </svg>
@@ -168,20 +167,25 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
             class="tab"
           >
             <span
-              class="bp3-icon bp3-icon-warning-sign StyledProps--main StyledProps--color StyledProps--color-orange500"
-              icon="warning-sign"
+              class="bp3-icon StyledProps--main StyledProps--color"
+              data-icon="execution"
             >
               <svg
-                data-icon="warning-sign"
-                height="16"
+                height="20"
                 viewBox="0 0 16 16"
-                width="16"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <desc>
-                  warning-sign
-                </desc>
                 <path
-                  d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
+                  clip-rule="evenodd"
+                  d="M3.546 4.017a.5.5 0 00-.5.492v7.005a.5.5 0 00.5.507h8.98a.5.5 0 00.5-.5V6.61a.5.5 0 011 0v4.91a1.5 1.5 0 01-1.5 1.5h-8.98a1.5 1.5 0 01-1.5-1.522V4.495a1.5 1.5 0 011.5-1.478h6.804a.5.5 0 010 1H3.546z"
+                  fill="#CurrentColor"
+                  fill-rule="evenodd"
+                />
+                <path
+                  clip-rule="evenodd"
+                  d="M5.219 5.094a.467.467 0 01.48-.04l5.025 2.463c.18.088.296.284.296.5 0 .214-.116.41-.296.498l-5.026 2.463a.468.468 0 01-.479-.04.56.56 0 01-.23-.459V5.553a.56.56 0 01.23-.46zM5.994 6.4v3.233l3.3-1.617-3.3-1.616z"
+                  fill="currentColor"
                   fill-rule="evenodd"
                 />
               </svg>
@@ -365,7 +369,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
                                   class="bp3-editable-text-content"
                                   style="height: 1px; line-height: 1px; min-width: 0;"
                                 >
-                                  Deploy
+                                  Build
                                 </span>
                               </div>
                             </span>
@@ -401,7 +405,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
                                 class="bp3-input"
                                 name="name"
                                 type="text"
-                                value="Deploy"
+                                value="Build"
                               />
                             </div>
                           </div>
@@ -487,6 +491,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
                         class="bp3-control bp3-switch StyledProps--font Switch--switch StyledProps--main"
                       >
                         <input
+                          checked=""
                           type="checkbox"
                         />
                         <span

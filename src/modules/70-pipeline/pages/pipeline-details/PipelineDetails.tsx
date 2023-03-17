@@ -15,13 +15,16 @@ import routes from '@common/RouteDefinitions'
 import { useGlobalEventListener, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Error } from 'services/pipeline-ng'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
-import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
+import {
+  useGetListOfBranchesWithStatus,
+  useCheckIfPipelineUsingV1Stage,
+  ResponseEOLBannerResponseDTO
+} from 'services/cd-ng'
 import { NavigatedToPage } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useStrings, String } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
@@ -31,6 +34,8 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import { BannerEOL } from '@pipeline/components/BannerEOL/BannerEOL'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import NoEntityFound from '../utils/NoEntityFound/NoEntityFound'
 import css from './PipelineDetails.module.scss'
 
@@ -74,6 +79,12 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   ) || { isExact: false }
   const isPipelineStudioRoute = isPipelineStudioV0Route || isPipelineStudioV1Route
 
+  const { mutate } = useCheckIfPipelineUsingV1Stage({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
   const { data: pipeline, error } = useGetPipelineSummaryQuery(
     {
       pipelineIdentifier,
@@ -108,9 +119,9 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
 
   const [pipelineName, setPipelineName] = React.useState('')
   const [triggerTabDisabled, setTriggerTabDisabled] = React.useState(false)
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
-  const isYAMLSimplicationEnabledForCI =
-    CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.valueOf().toLowerCase()
+  const [showBanner, setShowBanner] = React.useState<boolean>(false)
+  const { CI_YAML_VERSIONING, CDS_V1_EOL_BANNER } = useFeatureFlags()
+  const isYAMLSimplicationEnabledForCI = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
 
   const routeParams = {
     orgIdentifier,
@@ -124,6 +135,20 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
     connectorRef,
     storeType
   }
+
+  React.useEffect(() => {
+    if (CDS_V1_EOL_BANNER) {
+      mutate({
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier
+      }).then((res: ResponseEOLBannerResponseDTO) => {
+        if (res?.data?.showBanner) {
+          setShowBanner(true)
+        }
+      })
+    }
+  }, [pipelineIdentifier])
 
   React.useEffect(() => {
     if (repoIdentifier && !storeType) {
@@ -249,8 +274,9 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
 
   return (
     <>
+      <BannerEOL isVisible={showBanner} />
       <Page.Header
-        className={isPipelineStudioRoute ? css.rightMargin : ''}
+        className={isPipelineStudioV0Route ? css.rightMargin : ''}
         testId={isPipelineStudioRoute ? 'pipeline-studio' : 'not-pipeline-studio'}
         size={isPipelineStudioRoute ? 'small' : 'standard'}
         title={
@@ -372,7 +398,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
           />
         }
       />
-      <Page.Body className={isPipelineStudioRoute ? css.rightMargin : ''}>{children}</Page.Body>
+      <Page.Body className={isPipelineStudioV0Route ? css.rightMargin : ''}>{children}</Page.Body>
     </>
   )
 }

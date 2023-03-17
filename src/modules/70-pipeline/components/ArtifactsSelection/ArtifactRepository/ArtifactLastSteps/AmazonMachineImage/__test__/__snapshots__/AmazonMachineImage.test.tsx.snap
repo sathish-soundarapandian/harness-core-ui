@@ -265,7 +265,7 @@ exports[`AMI Artifact tests should render form without any issues 1`] = `
                             <input
                               autocomplete="off"
                               class="bp3-input"
-                              name="spec.tags.tag1"
+                              name="spec.tags[0].value"
                               type="text"
                               value="value1"
                             />
@@ -473,7 +473,7 @@ exports[`AMI Artifact tests should render form without any issues 1`] = `
                             <input
                               autocomplete="off"
                               class="bp3-input"
-                              name="spec.filters.filter1"
+                              name="spec.filters[0].value"
                               type="text"
                               value="filter1-value"
                             />
@@ -1193,7 +1193,7 @@ exports[`AMI Artifact tests should render the runtime fields correctly 1`] = `
                             <input
                               autocomplete="off"
                               class="bp3-input"
-                              name="spec.filters.filter1"
+                              name="spec.filters[0].value"
                               type="text"
                               value="filter1-value"
                             />

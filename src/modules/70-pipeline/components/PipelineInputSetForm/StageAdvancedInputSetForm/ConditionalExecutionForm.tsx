@@ -7,7 +7,8 @@ import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   AllowedTypes,
-  RUNTIME_INPUT_VALUE
+  RUNTIME_INPUT_VALUE,
+  AllowedTypesWithRunTime
 } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { get, set, unset } from 'lodash-es'
@@ -22,7 +23,7 @@ import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/
 import ConditionalExecutionPanel, {
   ConditionalExecutionPanelProps
 } from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanel'
-import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
+import { isMultiTypeRuntime, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 import type { StageWhenCondition, StepWhenCondition } from 'services/pipeline-ng'
 import type { StepMode } from '@pipeline/utils/stepUtils'
 
@@ -53,6 +54,14 @@ export function ConditionalExecutionForm<T extends StepMode>(
   const { expressions } = useVariablesExpression()
   const [multiType, setMultiType] = React.useState<MultiTypeInputType>(getMultiTypeFromValue(value))
 
+  React.useEffect(() => {
+    if (isValueRuntimeInput(value?.condition)) {
+      setMultiType(MultiTypeInputType.RUNTIME)
+    } else if (isValueExpression(value?.condition)) {
+      setMultiType(MultiTypeInputType.EXPRESSION)
+    }
+  }, [value?.condition])
+
   return (
     <Container margin={{ bottom: 'medium' }}>
       <Layout.Horizontal margin={{ bottom: 'medium' }} flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
@@ -67,7 +76,9 @@ export function ConditionalExecutionForm<T extends StepMode>(
         {viewType === StepViewType.TemplateUsage ? (
           <MultiTypeSelectorButton
             type={getMultiTypeFromValue(value as any)}
-            allowedTypes={allowableTypes}
+            allowedTypes={(allowableTypes as AllowedTypesWithRunTime[]).filter(
+              type => type !== MultiTypeInputType.EXPRESSION
+            )}
             onChange={type => {
               formik.setValues(
                 produce(formik.values, (draft: any) => {

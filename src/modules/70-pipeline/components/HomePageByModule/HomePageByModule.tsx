@@ -179,7 +179,7 @@ function HomePageByModule({ moduleName, bgImageURL, useTrialModal }: HomePageMod
       closeProjectModal()
       if (modal === ModuleLicenseType.FREE && experience === ModuleLicenseType.FREE && module === 'cd') {
         history.push(
-          routes.toGetStartedWithCD({
+          routes.toCDOnboardingWizard({
             accountId,
             module,
             orgIdentifier: projectData?.orgIdentifier || '',
@@ -269,7 +269,7 @@ function HomePageByModule({ moduleName, bgImageURL, useTrialModal }: HomePageMod
     }
     if (project) {
       history.push(
-        routes.toDeployments({
+        routes.toProjectOverview({
           projectIdentifier: project.identifier,
           orgIdentifier: project.orgIdentifier || '',
           accountId,

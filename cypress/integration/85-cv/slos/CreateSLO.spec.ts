@@ -268,23 +268,23 @@ describe('Create SLO', () => {
     cy.get('input[name="SLIMetricType"][value="Ratio"]').should('be.checked')
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
-    cy.findAllByText('Required').should('have.length', 1)
+    cy.findAllByText('Required').should('have.length', 2)
     cy.get('input[name="eventType"]').click()
     cy.contains('p', 'Good').click({ force: true })
 
-    cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
     cy.findAllByText(validations.metric).should('have.length', 2)
     cy.get('input[name="goodRequestMetric"]').click()
     cy.contains('p', 'number_of_slow_calls').click({ force: true })
     cy.findAllByText(validations.metric).should('have.length', 0)
 
-    cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
+    cy.contains('p', 'Metric for good/bad and valid requests should be different').should('be.visible')
     cy.contains('span', 'Metric for good/bad and valid requests should be different').should('be.visible')
     cy.get('input[name="validRequestMetric"]').click()
     cy.contains('p', 'https_errors_per_min').click({ force: true })
     cy.contains('span', 'Metric for good/bad and valid requests should be different').should('not.exist')
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
+    cy.fillField('objectiveValue', '200')
     cy.contains('span', 'Max value 100').should('be.visible')
     cy.fillField('objectiveValue', '-20')
     cy.contains('span', 'Max value 100').should('not.exist')

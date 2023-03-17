@@ -9,14 +9,7 @@ import type { FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
 import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type {
-  Failure,
-  ResponseListJiraProjectBasicNG,
-  ResponseListJiraStatusNG,
-  StepElementConfig,
-  UseGetJiraProjectsProps,
-  UseGetJiraStatusesProps
-} from 'services/cd-ng'
+import type { Failure, ResponseListJiraStatusNG, StepElementConfig, UseGetJiraStatusesProps } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { JiraCreateFieldType, JiraFieldNGWithValue } from '../JiraCreate/types'
 
@@ -53,13 +46,9 @@ export interface JiraUpdateFormContentInterface {
   formik: FormikProps<JiraUpdateData>
   stepViewType: StepViewType
   allowableTypes: AllowedTypes
-  refetchProjects: (props: UseGetJiraProjectsProps) => Promise<void>
   refetchStatuses: (props: UseGetJiraStatusesProps) => Promise<void>
-  fetchingProjects: boolean
   fetchingStatuses: boolean
-  projectsResponse: ResponseListJiraProjectBasicNG | null
   statusResponse: ResponseListJiraStatusNG | null
-  projectsFetchError?: GetDataError<Failure | Error> | null
   statusFetchError?: GetDataError<Failure | Error> | null
   isNewStep?: boolean
   readonly?: boolean

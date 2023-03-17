@@ -351,8 +351,7 @@ function FormComponent(
                 variableName="project"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
-                onChange={/* istanbul ignore next */ value => formik.setFieldValue('project', value)}
+                onChange={value => formik.setFieldValue('project', value)}
                 isReadonly={isReadonly}
               />
             )}
@@ -424,8 +423,7 @@ function FormComponent(
               variableName="feed"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
-              onChange={/* istanbul ignore next */ value => formik.setFieldValue('feed', value)}
+              onChange={value => formik.setFieldValue('feed', value)}
               isReadonly={isReadonly}
             />
           )}
@@ -510,8 +508,7 @@ function FormComponent(
               variableName="package"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
-              onChange={/* istanbul ignore next */ value => formik.setFieldValue('package', value)}
+              onChange={value => formik.setFieldValue('package', value)}
               isReadonly={isReadonly}
             />
           )}
@@ -581,8 +578,7 @@ function FormComponent(
                 variableName="version"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
-                onChange={/* istanbul ignore next */ value => formik.setFieldValue('version', value)}
+                onChange={value => formik.setFieldValue('version', value)}
                 isReadonly={isReadonly}
               />
             )}
@@ -607,8 +603,7 @@ function FormComponent(
                 variableName="versionRegex"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
-                onChange={/* istanbul ignore next */ value => formik.setFieldValue('versionRegex', value)}
+                onChange={value => formik.setFieldValue('versionRegex', value)}
                 isReadonly={isReadonly}
                 allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
               />

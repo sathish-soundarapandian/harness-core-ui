@@ -295,6 +295,20 @@ AuditTrailFactory.registerResourceHandler('PERSPECTIVE_BUDGET', {
   }
 })
 
+AuditTrailFactory.registerResourceHandler('BUDGET_GROUP', {
+  moduleIcon: { name: 'ccm-solid' },
+  moduleLabel: 'common.purpose.ce.continuous',
+  resourceLabel: 'ce.perspectives.budgets.perspectiveBudgetGroup',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier } = resourceScope
+    return routes.toCEBudgetDetails({
+      accountId: accountIdentifier,
+      budgetId: resource.identifier,
+      budgetName: resource.labels?.resourceName || resource.identifier
+    })
+  }
+})
+
 AuditTrailFactory.registerResourceHandler('PERSPECTIVE_REPORT', {
   moduleIcon: { name: 'ccm-solid' },
   moduleLabel: 'common.purpose.ce.continuous',

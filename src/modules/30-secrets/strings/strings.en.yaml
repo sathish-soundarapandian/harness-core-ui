@@ -1,4 +1,5 @@
 selectSecret: Select a Secret
+selectSecrets: Select Secrets
 titleCreate: 'Create a new secret'
 titleSelect: 'Select an existing secret'
 labelType: 'Secret Type'
@@ -38,7 +39,10 @@ winRmAuthFormFields:
   labelWinRmPort: 'WinRM Port'
   skipCertCheck: 'Skip Cert Check'
   useNoProfile: 'Use No Profile'
-
+  optionalValue: 'Value (Optional)'
+  parameterName: 'Parameter name'
+  parameterError: 'Parameter name is required'
+  parameterDuplicatedError: 'Parameter name is duplicated'
 createSSHCredWizard:
   btnSaving: 'Saving...'
   titleDetails: 'SSH Details'

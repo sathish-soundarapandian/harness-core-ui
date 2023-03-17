@@ -23,10 +23,10 @@ import TestConnection from './steps/TestConnection'
 import css from './K8sQuickCreateModal.module.scss'
 
 interface UseK8sQuickCreateModalProps {
-  onClose: () => void
+  onSuccess: () => void
 }
 
-const useK8sQuickCreateModal = ({ onClose }: UseK8sQuickCreateModalProps) => {
+const useK8sQuickCreateModal = ({ onSuccess }: UseK8sQuickCreateModalProps) => {
   const { getString } = useStrings()
 
   const modalProps: IDialogProps = {
@@ -44,7 +44,11 @@ const useK8sQuickCreateModal = ({ onClose }: UseK8sQuickCreateModalProps) => {
   }
 
   const handleClose = /* istanbul ignore next */ (): void => {
-    onClose()
+    closeModal()
+  }
+
+  const handleFinish = /* istanbul ignore next */ (): void => {
+    onSuccess()
     closeModal()
   }
 
@@ -74,7 +78,7 @@ const useK8sQuickCreateModal = ({ onClose }: UseK8sQuickCreateModalProps) => {
           >
             <Overview name={getString('overview')} />
             <DownloadYaml name={getString('ce.k8sQuickCreate.downloadAndApplyYaml')} />
-            <TestConnection name={getString('ce.k8sQuickCreate.createAndTest')} closeModal={handleClose} />
+            <TestConnection name={getString('ce.k8sQuickCreate.createAndTest')} handleFinish={handleFinish} />
           </StepWizard>
         </DialogExtention>
         <Button minimal icon="cross" iconProps={{ size: 18 }} onClick={handleClose} className={css.crossIcon} />

@@ -50,11 +50,12 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import List from '@common/components/List/List'
 import type { StringsMap } from 'stringTypes'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import MultiTypeListInputSet from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
+import { SupportedInputTypesForListItems, SupportedInputTypesForListTypeField } from '../PipelineStepsUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './K8sDelete.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -464,6 +465,7 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
 const K8sDeleteInputStep: React.FC<K8sDeleteProps> = ({ inputSetData, readonly, allowableTypes, stepViewType }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const isTemplateUsageView = [StepViewType.TemplateUsage, StepViewType.Template].includes(stepViewType as StepViewType)
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
@@ -487,30 +489,40 @@ const K8sDeleteInputStep: React.FC<K8sDeleteProps> = ({ inputSetData, readonly, 
       {getMultiTypeFromValue(inputSetData?.template?.spec?.deleteResources?.spec?.manifestPaths as string) ===
         MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <List
-            label={getString('filePaths')}
+          <MultiTypeListInputSet
             name={`${
               isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
             }spec.deleteResources.spec.manifestPaths`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes: SupportedInputTypesForListItems
+            }}
+            multiTypeFieldSelectorProps={{
+              label: getString('pipelineSteps.manifestPathLabel'),
+              allowedTypes: isTemplateUsageView ? SupportedInputTypesForListTypeField : [MultiTypeInputType.FIXED],
+              ...(!isTemplateUsageView && { disableTypeSelection: true })
+            }}
             disabled={readonly}
-            expressions={expressions}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            isNameOfArrayType
           />
         </div>
       )}
       {getMultiTypeFromValue(inputSetData?.template?.spec?.deleteResources?.spec?.resourceNames as string) ===
         MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <List
-            label={getString('filePaths')}
+          <MultiTypeListInputSet
             name={`${
               isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
             }spec.deleteResources.spec.resourceNames`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes: SupportedInputTypesForListItems
+            }}
+            multiTypeFieldSelectorProps={{
+              label: getString('auditTrail.resourceNameLabel'),
+              allowedTypes: isTemplateUsageView ? SupportedInputTypesForListTypeField : [MultiTypeInputType.FIXED],
+              ...(!isTemplateUsageView && { disableTypeSelection: true })
+            }}
             disabled={readonly}
-            expressions={expressions}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            isNameOfArrayType
           />
         </div>
       )}

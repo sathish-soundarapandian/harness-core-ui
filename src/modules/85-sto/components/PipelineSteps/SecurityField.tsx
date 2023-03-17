@@ -10,6 +10,7 @@ import cx from 'classnames'
 import { MultiTypeInputProps, Container, SelectOption, AllowedTypes, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
+import { capitalize } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
@@ -18,11 +19,18 @@ import type { StringsMap } from 'stringTypes'
 import { renderOptionalWrapper } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import SectionHeader from './SectionHeader'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-
 interface SelectItems extends SelectOption {
   disabled?: boolean
+}
+
+export type CustomTooltipFieldProps = {
+  prefix: StepType
+  fields: {
+    [fieldName: string]: boolean
+  }
 }
 export interface SecurityFieldProps<T> {
   enableFields: {
@@ -45,6 +53,7 @@ export interface SecurityFieldProps<T> {
   allowableTypes?: AllowedTypes
   template?: Record<string, any>
   expressions?: string[]
+  customTooltipFields?: CustomTooltipFieldProps
 }
 
 type LabelProps = {
@@ -81,7 +90,7 @@ const renderLabel = (props: LabelProps) => {
 }
 
 function SecurityField<T>(props: SecurityFieldProps<T>) {
-  const { enableFields, stepViewType, formik, allowableTypes } = props
+  const { enableFields, stepViewType, formik, allowableTypes, customTooltipFields } = props
   const fields = Object.entries(enableFields)
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -97,11 +106,15 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
             selectItems = [],
             hide,
             multiTypeInputProps,
-            tooltipId = '',
+            tooltipId: _tooltipId = '',
             inputProps,
             fieldType,
             readonly
           } = fieldProps
+
+          const tooltipId = customTooltipFields?.fields[fieldName]
+            ? `${customTooltipFields.prefix}${capitalize(_tooltipId)}`
+            : _tooltipId
 
           if (hide) return null
 

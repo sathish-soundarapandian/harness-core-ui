@@ -86,6 +86,7 @@ import TabWizard from '@triggers/components/TabWizard/TabWizard'
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import useTriggerView from '@common/components/Wizard/useTriggerView'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import {
   ConnectorRefInterface,
@@ -130,7 +131,7 @@ export default function WebhookTriggerWizard(
     useFeatureFlags()
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
-  const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
+  const [selectedView, setSelectedView] = useTriggerView()
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const history = useHistory()
@@ -314,7 +315,12 @@ export default function WebhookTriggerWizard(
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
   const { resolvedMergedPipeline } = useGetResolvedChildPipeline(
-    { accountId: accountIdentifier, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    {
+      accountId: accountIdentifier,
+      repoIdentifier: defaultTo(pipelineRepoName, repoIdentifier),
+      branch,
+      connectorRef: pipelineConnectorRef
+    },
     originalPipeline,
     resolvedPipeline
   )
@@ -1409,12 +1415,16 @@ export default function WebhookTriggerWizard(
       key={wizardKey} // re-renders with yaml to visual initialValues
       wizardType="webhook"
       formikInitialProps={{
-        initialValues,
+        initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
         onSubmit: onSubmit,
         validationSchema: getValidationSchema(
           getString,
-          isGitWebhookPollingEnabled,
-          isGithubWebhookAuthenticationEnabled
+          isGitWebhookPollingEnabled &&
+            (sourceRepo === GitSourceProviders.GITHUB.value ||
+              (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value),
+          isGithubWebhookAuthenticationEnabled &&
+            (sourceRepo === GitSourceProviders.GITHUB.value ||
+              (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value)
         ),
         validate: validateTriggerPipeline,
         enableReinitialize: true

@@ -13,11 +13,22 @@ import type { FormikContextType } from 'formik'
 import DelegatesGit from '@common/icons/DelegatesGit.svg'
 import PlatformGit from '@common/icons/PlatformGit.svg'
 import { useStrings } from 'framework/strings'
+import type { AwsCredential } from 'services/cd-ng'
 
 export enum ConnectivityModeType {
   Manager = 'Manager',
   Delegate = 'Delegate'
 }
+export interface CredentialType {
+  [key: string]: AwsCredential['type']
+}
+
+export const DelegateTypes: CredentialType = {
+  DELEGATE_IN_CLUSTER: 'InheritFromDelegate',
+  DELEGATE_IN_CLUSTER_IRSA: 'Irsa',
+  DELEGATE_OUT_CLUSTER: 'ManualConfig'
+}
+
 export interface ConnectivityCardItem extends CollapsableSelectOptions {
   type: ConnectivityModeType
   title: string
@@ -36,19 +47,28 @@ interface ConnectivityModeProps {
   connectorLabel?: string
   delegateImage?: string
   platformImage?: string
+  delegateType?: AwsCredential['type']
 }
 
+const hideConnectThroughPlatformCard = (delegateType?: AwsCredential['type']): boolean =>
+  !!delegateType && [DelegateTypes.DELEGATE_IN_CLUSTER, DelegateTypes.DELEGATE_IN_CLUSTER_IRSA].includes(delegateType)
+
 const ConnectivityMode: React.FC<ConnectivityModeProps> = props => {
-  const { delegateImage = DelegatesGit, platformImage = PlatformGit } = props
+  const { delegateImage = DelegatesGit, platformImage = PlatformGit, delegateType, formik } = props
+  const { values, setFieldValue } = formik
   const { getString } = useStrings()
   const ConnectivityCard: ConnectivityCardItem[] = [
-    {
-      type: ConnectivityModeType.Manager,
-      title: getString('common.connectThroughPlatform'),
-      info: getString('common.connectThroughPlatformInfo', { connectorType: props.connectorLabel }),
-      icon: <img src={platformImage} width="100%" />,
-      value: ConnectivityModeType.Manager
-    },
+    ...(!hideConnectThroughPlatformCard(delegateType)
+      ? [
+          {
+            type: ConnectivityModeType.Manager,
+            title: getString('common.connectThroughPlatform'),
+            info: getString('common.connectThroughPlatformInfo', { connectorType: props.connectorLabel }),
+            icon: <img src={platformImage} width="100%" />,
+            value: ConnectivityModeType.Manager
+          }
+        ]
+      : []),
     {
       type: ConnectivityModeType.Delegate,
       title: getString('common.connectThroughDelegate'),
@@ -57,6 +77,13 @@ const ConnectivityMode: React.FC<ConnectivityModeProps> = props => {
       value: ConnectivityModeType.Delegate
     }
   ]
+
+  React.useEffect(() => {
+    // reset fieldValue for validations
+    if (hideConnectThroughPlatformCard(delegateType)) {
+      values.connectivityMode === ConnectivityModeType.Manager && setFieldValue('connectivityMode', undefined)
+    }
+  }, [delegateType])
 
   return (
     <FormikCollapsableSelect<ConnectivityCardItem>

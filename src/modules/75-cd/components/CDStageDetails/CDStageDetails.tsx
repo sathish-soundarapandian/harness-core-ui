@@ -15,6 +15,10 @@ import { Popover, Text } from '@harness/uicore'
 import { String as StrTemplate } from 'framework/strings'
 import type { Application, GitOpsExecutionSummary } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { getIdentifierFromScopedRef } from '@common/utils/utils'
+
+import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ProjectPathProps, ModulePathParams, Module } from '@common/interfaces/RouteInterfaces'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { ServicePopoverCard } from '@cd/components/ServicePopoverCard/ServicePopoverCard'
@@ -101,9 +105,11 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
 
   const gitOpsEnvironments = Array.isArray(get(stage, 'moduleInfo.cd.gitopsExecutionSummary.environments'))
     ? (get(stage, 'moduleInfo.cd.gitopsExecutionSummary') as Required<GitOpsExecutionSummary>).environments.map(
-        envForGitOps => defaultTo(envForGitOps.name, '')
+        envForGitOps =>
+          defaultTo({ name: envForGitOps.name, identifier: envForGitOps.identifier }, { name: '', identifier: '' })
       )
     : []
+  const serviceScope = getScopeFromValue(get(stage, 'moduleInfo.cd.serviceInfo.identifier', ''))
 
   return (
     <div className={css.container}>
@@ -119,7 +125,21 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
                 position={Position.BOTTOM_RIGHT}
                 className={css.serviceWrapper}
               >
-                <div className={css.serviceName}>{get(stage, 'moduleInfo.cd.serviceInfo.displayName', null)}</div>
+                <div className={css.serviceName}>
+                  <Link
+                    to={`${routes.toServiceStudio({
+                      accountId,
+                      ...(serviceScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+                      ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+                      serviceId: getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.serviceInfo.identifier', '')),
+                      module
+                    })}`}
+                  >
+                    <Text className={css.stageItemDetails} lineClamp={1}>
+                      {get(stage, 'moduleInfo.cd.serviceInfo.displayName', null)}
+                    </Text>
+                  </Link>
+                </div>
                 <ServicePopoverCard service={get(stage, 'moduleInfo.cd.serviceInfo')} />
               </Popover>
             </li>
@@ -130,10 +150,41 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
           <ul className={css.values}>
             {gitOpsEnvironments.length ? (
               <Text lineClamp={2} className={css.gitOpsEnvText}>
-                {gitOpsEnvironments.join(', ')}
+                {gitOpsEnvironments.map(env => {
+                  return (
+                    <Link
+                      key={env.identifier}
+                      to={`${routes.toEnvironmentDetails({
+                        accountId,
+                        orgIdentifier,
+                        projectIdentifier,
+                        environmentIdentifier: defaultTo(env.identifier, ''),
+                        module
+                      })}`}
+                    >
+                      <Text lineClamp={1} className={css.stageItemDetails} margin={{ right: 'xsmall' }}>
+                        {env.name}
+                      </Text>
+                    </Link>
+                  )
+                })}
               </Text>
             ) : (
-              <li>{get(stage, 'moduleInfo.cd.infraExecutionSummary.name', null)}</li>
+              <Link
+                to={routes.toEnvironmentDetails({
+                  accountId,
+                  orgIdentifier,
+                  projectIdentifier,
+                  environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', null),
+                  module
+                })}
+              >
+                <li>
+                  <Text lineClamp={1} className={css.stageItemDetails}>
+                    {get(stage, 'moduleInfo.cd.infraExecutionSummary.name', null)}
+                  </Text>
+                </li>
+              </Link>
             )}
           </ul>
         </div>

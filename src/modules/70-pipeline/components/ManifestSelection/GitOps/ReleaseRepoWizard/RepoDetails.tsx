@@ -125,7 +125,6 @@ function FormField({
           value={get(formik.values, fieldName, '')}
           type="String"
           variableName={fieldName}
-          showAdvanced={true}
           onChange={
             /* istanbul ignore next */
             value => {
@@ -200,7 +199,7 @@ function RepoDetails({
             spec: {
               connectorRef: formData.connectorRef,
               gitFetchType: formData.gitFetchType,
-              paths: [formData.paths]
+              paths: formData.paths === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : [formData.paths]
             }
           }
         }

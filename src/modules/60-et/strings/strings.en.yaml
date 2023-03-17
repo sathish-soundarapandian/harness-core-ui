@@ -1,0 +1,7 @@
+title: '{{$.common.purpose.errorTracking.title}}'
+longTitle: '{{$.common.purpose.errorTracking.longTitle}}'
+nav:
+  settings: 'Error Tacking Settings'
+homepage:
+  slogan: 'This is the homepage of Continuous Error Tracking module'
+  learnMore: Learn more about Error Tracking

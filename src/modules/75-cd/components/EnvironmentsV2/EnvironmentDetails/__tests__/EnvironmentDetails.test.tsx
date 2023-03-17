@@ -16,9 +16,12 @@ import routes from '@common/RouteDefinitions'
 import { environmentPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { sourceCodeManagers } from '@connectors/mocks/mock'
+import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
 import EnvironmentDetails from '../EnvironmentDetails'
-import mockEnvironmentDetailMismatchedDTOYaml from './__mocks__/mockEnvironmentDetailMismatchedDTOYaml.json'
 import { activeInstanceAPI, envAPI } from '../EnvironmentDetailSummary/__test__/EnvDetailSummary.mock'
+import mockEnvironmentDetailMismatchedDTOYaml from './__mocks__/mockEnvironmentDetailMismatchedDTOYaml.json'
+
+const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 
 jest.mock('services/cd-ng', () => ({
   useListGitSync: jest.fn().mockImplementation(() => {
@@ -42,17 +45,10 @@ jest.mock('services/cd-ng', () => ({
     refetch: jest.fn()
   } as any),
   useDeleteCluster: jest.fn().mockReturnValue({} as any),
-  useGetConnectorListV2: jest.fn().mockReturnValue({
-    mutate: async () => {
-      return {
-        status: 'SUCCESS',
-        data: {
-          pageItemCount: 0,
-          content: []
-        }
-      }
-    }
-  } as any),
+  useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
+  useGetConnector: jest.fn().mockImplementation(() => {
+    return { data: connectorsData.data.content[1], refetch: fetchConnectors, loading: false }
+  }),
   useGetYamlSchema: jest.fn().mockReturnValue({
     data: {
       name: 'testenv',

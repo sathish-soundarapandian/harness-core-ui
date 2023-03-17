@@ -40,6 +40,7 @@ const orgListPromiseMock = jest.fn().mockImplementation(() => {
     orgMockData
   })
 })
+jest.mock('highcharts-react-official', () => () => <div />)
 const projListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
     projMockData
@@ -81,7 +82,6 @@ jest.mock('@common/hooks', () => ({
 moment.now = jest.fn(() => 1482363367071)
 
 const featureFlags = {
-  CDNG_ENABLED: true,
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
@@ -126,7 +126,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -137,6 +144,7 @@ describe('Subscriptions Page', () => {
     expect(getByText('common.licensesConsumed')).toBeTruthy()
     userEvent.click(getByText('common.licensesConsumed'))
   })
+
   test('test for fetching active services by clicking the fetch button using filters', async () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {
@@ -166,13 +174,20 @@ describe('Subscriptions Page', () => {
     })
 
     const { getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
     expect(getByText('common.licensesConsumed')).toBeTruthy()
     userEvent.click(getByText('common.licensesConsumed'))
-    const fetchButton = getByText('Fetch')
+    const fetchButton = getByText('Update')
     expect(fetchButton).toBeDefined()
     userEvent.click(fetchButton)
   })
@@ -206,7 +221,15 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CI }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        pathParams={{ module: ModuleName.CI }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -244,7 +267,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, queryByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -280,7 +310,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, queryByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -319,7 +356,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -355,7 +399,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -390,7 +441,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText, queryByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -425,7 +483,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText, queryByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -459,7 +524,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -493,6 +565,9 @@ describe('Subscriptions Page', () => {
       <TestWrapper
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          },
           updateLicenseStore: updateLicenseStoreSpy
         }}
       >

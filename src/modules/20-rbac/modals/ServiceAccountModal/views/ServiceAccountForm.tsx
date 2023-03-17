@@ -15,10 +15,7 @@ import {
   Layout,
   ModalErrorHandler,
   ModalErrorHandlerBinding,
-  Text,
-  TextInput,
-  ButtonVariation,
-  Label
+  ButtonVariation
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
@@ -27,7 +24,7 @@ import { useToaster } from '@common/components'
 import { DescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { NameSchema, IdentifierSchema } from '@common/utils/Validation'
+import { NameSchema, IdentifierSchema, EmailSchema } from '@common/utils/Validation'
 import { ServiceAccountDTO, useCreateServiceAccount, useUpdateServiceAccount } from 'services/cd-ng'
 import css from '@rbac/modals/ServiceAccountModal/useServiceAccountModal.module.scss'
 
@@ -38,6 +35,8 @@ interface ServiceAccountModalData {
   onClose?: () => void
 }
 
+const DEFAULT_EMAIL_DOMAIN = '@service.harness.io'
+
 const ServiceAccountForm: React.FC<ServiceAccountModalData> = props => {
   const { data: serviceAccountData, onSubmit, isEdit, onClose } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -45,6 +44,7 @@ const ServiceAccountForm: React.FC<ServiceAccountModalData> = props => {
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
+
   const { mutate: createServiceAccount, loading: saving } = useCreateServiceAccount({
     queryParams: {
       accountIdentifier: accountId,
@@ -63,7 +63,7 @@ const ServiceAccountForm: React.FC<ServiceAccountModalData> = props => {
   })
 
   const handleSubmit = async (values: ServiceAccountDTO): Promise<void> => {
-    const dataToSubmit = { ...values, email: values['identifier'].concat('@service.harness.io').toLowerCase() }
+    const dataToSubmit = values
     try {
       if (isEdit) {
         const updated = await editServiceAccount(dataToSubmit)
@@ -83,13 +83,14 @@ const ServiceAccountForm: React.FC<ServiceAccountModalData> = props => {
       modalErrorHandler?.showDanger(getRBACErrorMessage(e))
     }
   }
+
   return (
     <Formik
       initialValues={{
         identifier: '',
         name: '',
         description: '',
-        email: '',
+        email: DEFAULT_EMAIL_DOMAIN,
         tags: {},
         accountIdentifier: accountId,
         orgIdentifier,
@@ -99,7 +100,8 @@ const ServiceAccountForm: React.FC<ServiceAccountModalData> = props => {
       formName="serviceAccountForm"
       validationSchema={Yup.object().shape({
         name: NameSchema(getString),
-        identifier: IdentifierSchema(getString)
+        identifier: IdentifierSchema(getString),
+        email: EmailSchema(getString)
       })}
       onSubmit={values => {
         modalErrorHandler?.hide()
@@ -111,14 +113,15 @@ const ServiceAccountForm: React.FC<ServiceAccountModalData> = props => {
           <Form>
             <Container className={css.form}>
               <ModalErrorHandler bind={setModalErrorHandler} />
-              <FormInput.InputWithIdentifier isIdentifierEditable={!isEdit} />
-              <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="small">
-                <Layout.Vertical>
-                  <Label>{getString('email')}</Label>
-                  <TextInput disabled value={formikProps.values.identifier.toLowerCase()} />
-                </Layout.Vertical>
-                <Text margin={{ top: 'xsmall' }}>{getString('rbac.serviceAccounts.email')}</Text>
-              </Layout.Horizontal>
+              <FormInput.InputWithIdentifier
+                isIdentifierEditable={!isEdit}
+                onIdentifierChangeCallback={identifier => {
+                  if (!formikProps.touched.email) {
+                    formikProps.setFieldValue('email', `${identifier.toLowerCase()}${DEFAULT_EMAIL_DOMAIN}`)
+                  }
+                }}
+              />
+              <FormInput.Text name="email" label={getString('email')} disabled={isEdit} />
               <DescriptionTags formikProps={formikProps} />
             </Container>
             <Layout.Horizontal spacing="small">

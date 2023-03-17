@@ -91,8 +91,16 @@ function ArtifactImagePathTagView({
   isArtifactPath,
   isImagePath = true,
   isServerlessDeploymentTypeSelected,
-  canFetchTags
+  canFetchTags,
+  tooltipId
 }: ArtifactImagePathTagViewProps): React.ReactElement {
+  const tooltipProps = tooltipId
+    ? {
+        tooltipProps: {
+          dataTooltipId: tooltipId
+        }
+      }
+    : {}
   const { getString } = useStrings()
   const getSelectItems = useCallback(selectItemsMapper.bind(null, tagList, isServerlessDeploymentTypeSelected), [
     tagList,
@@ -155,7 +163,6 @@ function ArtifactImagePathTagView({
                 variableName="artifactPath"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   /* istanbul ignore next */
                   formik.setFieldValue('artifactPath', value)
@@ -184,7 +191,6 @@ function ArtifactImagePathTagView({
                   variableName="imagePath"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => {
                     /* istanbul ignore next */
                     formik.setFieldValue('imagePath', value)
@@ -248,6 +254,7 @@ function ArtifactImagePathTagView({
             label={isServerlessDeploymentTypeSelected ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
             name="tag"
             className={css.tagInputButton}
+            {...tooltipProps}
           />
 
           {getMultiTypeFromValue(formik?.values?.tag) === MultiTypeInputType.RUNTIME && (
@@ -259,7 +266,6 @@ function ArtifactImagePathTagView({
                 variableName="tag"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   /* istanbul ignore next */
                   formik.setFieldValue('tag', value)
@@ -289,7 +295,6 @@ function ArtifactImagePathTagView({
                 variableName="tagRegex"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('tagRegex', value)
                 }}

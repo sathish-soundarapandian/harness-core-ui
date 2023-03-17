@@ -170,8 +170,7 @@ describe('Unit tests for timeline slider', () => {
     expect(onSliderDragEnd).toBeCalledTimes(0)
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('it should handle the left and right clicks on mask', () => {
+  test('it should have the left and right handles', () => {
     const onSliderDragEnd = jest.fn()
 
     const { container } = render(
@@ -186,12 +185,10 @@ describe('Unit tests for timeline slider', () => {
       </TestWrapper>
     )
 
-    expect(container.querySelector('[class*="main"]')).toBeInTheDocument()
+    expect(container.getElementsByClassName('leftHandle').length).toBe(1)
+    expect(container.getElementsByClassName('leftHandle')[0]).toBeInTheDocument()
 
-    userEvent.click(container.querySelectorAll('[class*="mask"]')?.[0]!)
-    expect(onSliderDragEnd).toBeCalledTimes(1)
-
-    userEvent.click(container.querySelectorAll('[class*="mask"]')?.[1]!)
-    expect(onSliderDragEnd).toBeCalledTimes(2)
+    expect(container.getElementsByClassName('rightHandle').length).toBe(1)
+    expect(container.getElementsByClassName('rightHandle')[0]).toBeInTheDocument()
   })
 })

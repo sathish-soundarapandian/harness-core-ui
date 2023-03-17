@@ -34,90 +34,77 @@ export const formatInitialValues = (
   isBackendConfig: boolean,
   prevStepData: any,
   isTerraformPlan: boolean,
-  isTerragruntPlan?: boolean
+  isTerragruntPlan?: boolean,
+  fieldPath?: string
 ) => {
-  if (isBackendConfig) {
-    if (isTerraformPlan || isTerragruntPlan) {
-      return {
-        spec: {
-          configuration: {
-            backendConfig: {
-              spec: {
-                store: {
-                  spec: {
-                    repositoryName:
-                      prevStepData?.formValues?.spec?.configuration?.backendConfig?.spec?.store?.spec?.repositoryName ||
-                      '',
-                    artifactPaths: formatPaths(
-                      prevStepData?.formValues?.spec?.configuration?.backendConfig?.spec?.store?.spec
-                        ?.artifactPaths || ['']
+  const backendSpecData = {
+    backendConfig: {
+      spec: {
+        store: {
+          spec: {
+            repositoryName:
+              isTerraformPlan || isTerragruntPlan
+                ? get(prevStepData?.formValues?.spec, `${fieldPath}.backendConfig.spec.store.spec.repositoryName`, '')
+                : get(
+                    prevStepData?.formValues?.spec,
+                    `${fieldPath}.spec.backendConfig.spec.store.spec.repositoryName`,
+                    ''
+                  ),
+            artifactPaths:
+              isTerraformPlan || isTerragruntPlan
+                ? formatPaths(
+                    get(prevStepData?.formValues?.spec, `${fieldPath}.backendConfig.spec.store.spec.artifactPaths`, [
+                      ''
+                    ])
+                  )
+                : formatPaths(
+                    get(
+                      prevStepData?.formValues?.spec,
+                      `${fieldPath}.spec.backendConfig.spec.store.spec.artifactPaths`,
+                      ['']
                     )
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    } else {
-      return {
-        spec: {
-          configuration: {
-            backendConfig: {
-              spec: {
-                store: {
-                  spec: {
-                    repositoryName:
-                      prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec
-                        ?.repositoryName || '',
-                    artifactPaths: formatPaths(
-                      prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec
-                        ?.artifactPaths || ['']
-                    )
-                  }
-                }
-              }
-            }
+                  )
           }
         }
       }
     }
   }
-  if (isConfig) {
-    if (isTerraformPlan || isTerragruntPlan) {
-      return {
-        spec: {
-          configuration: {
-            configFiles: {
-              store: {
-                spec: {
-                  repositoryName:
-                    prevStepData?.formValues?.spec?.configuration?.configFiles?.store?.spec?.repositoryName || '',
-                  artifactPaths: formatPaths(
-                    prevStepData?.formValues?.spec?.configuration?.configFiles?.store?.spec?.artifactPaths || ['']
-                  )
-                }
-              }
-            }
-          }
+
+  if (isBackendConfig) {
+    return {
+      spec: {
+        [`${fieldPath}`]: {
+          ...backendSpecData
         }
       }
-    } else {
-      return {
+    }
+  }
+
+  const configSpecData = {
+    configFiles: {
+      store: {
         spec: {
-          configuration: {
-            configFiles: {
-              store: {
-                spec: {
-                  repositoryName:
-                    prevStepData?.formValues?.spec?.configuration?.spec?.configFiles?.store?.spec?.repositoryName || '',
-                  artifactPaths: formatPaths(
-                    prevStepData?.formValues?.spec?.configuration?.spec?.configFiles?.store?.spec?.artifactPaths || ['']
-                  )
-                }
-              }
-            }
-          }
+          repositoryName:
+            isTerraformPlan || isTerragruntPlan
+              ? get(prevStepData?.formValues?.spec, `${fieldPath}.configFiles.store.spec.repositoryName`, '')
+              : get(prevStepData?.formValues?.spec, `${fieldPath}.spec.configFiles.store.spec.repositoryName`, ''),
+          artifactPaths:
+            isTerraformPlan || isTerragruntPlan
+              ? formatPaths(
+                  get(prevStepData?.formValues?.spec, `${fieldPath}.configFiles.store.spec.artifactPaths`, [''])
+                )
+              : formatPaths(
+                  get(prevStepData?.formValues?.spec, `${fieldPath}.spec.configFiles.store.spec.artifactPaths`, [''])
+                )
+        }
+      }
+    }
+  }
+  if (isConfig) {
+    return {
+      spec: {
+        [`${fieldPath}`]: {
+          ...configSpecData
         }
       }
     }
@@ -144,21 +131,24 @@ export const getConnectorRef = (
   isBackendConfig: boolean,
   isTerraformPlan: boolean,
   prevStepData: any,
-  isTerragruntPlan?: boolean
+  isTerragruntPlan?: boolean,
+  fieldPath?: string
 ) => {
   let connectorValue
   if (isConfig) {
     if (isTerraformPlan || isTerragruntPlan) {
-      connectorValue = prevStepData?.formValues.spec?.configuration?.configFiles?.store?.spec?.connectorRef
+      connectorValue = get(prevStepData?.formValues.spec, `${fieldPath}.configFiles.store.spec.connectorRef`)
     } else {
-      connectorValue = prevStepData?.formValues?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef
+      connectorValue = get(prevStepData?.formValues?.spec, `${fieldPath}.spec.configFiles.store.spec.connectorRef`)
     }
   } else if (isBackendConfig) {
     if (isTerraformPlan || isTerragruntPlan) {
-      connectorValue = prevStepData?.formValues.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+      connectorValue = get(prevStepData?.formValues.spec, `${fieldPath}.backendConfig.spec.store.spec.connectorRef`)
     } else {
-      connectorValue =
-        prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
+      connectorValue = get(
+        prevStepData?.formValues.spec,
+        `${fieldPath}.spec.backendConfig.spec.store.spec.connectorRef`
+      )
     }
   } else connectorValue = prevStepData?.varFile?.spec?.store?.spec?.connectorRef
 
@@ -173,7 +163,12 @@ export const getConnectorRef = (
   return connectorValue
 }
 
-export const terraformArtifactorySchema = (isConfig: boolean, isBackendConfig: boolean, getString: any) => {
+export const terraformArtifactorySchema = (
+  isConfig: boolean,
+  isBackendConfig: boolean,
+  getString: any,
+  fieldPath?: string
+) => {
   const artifacts = {
     repositoryName: Yup.string().required(getString('cd.artifactFormErrors.repositoryName')),
     artifactPaths: Yup.lazy((value): Yup.Schema<unknown> => {
@@ -201,7 +196,7 @@ export const terraformArtifactorySchema = (isConfig: boolean, isBackendConfig: b
 
     return Yup.object().shape({
       spec: Yup.object().shape({
-        configuration: Yup.object().shape({
+        [`${fieldPath}`]: Yup.object().shape({
           ...configSetup
         })
       })
@@ -223,7 +218,7 @@ export const terraformArtifactorySchema = (isConfig: boolean, isBackendConfig: b
 
     return Yup.object().shape({
       spec: Yup.object().shape({
-        configuration: Yup.object().shape({
+        [`${fieldPath}`]: Yup.object().shape({
           ...configSetup
         })
       })
@@ -244,18 +239,18 @@ export const terraformArtifactorySchema = (isConfig: boolean, isBackendConfig: b
   })
 }
 
-export const tfArtifactoryFormInputNames = (isConfig: boolean, isBackendConfig: boolean) => {
+export const tfArtifactoryFormInputNames = (isConfig: boolean, isBackendConfig: boolean, fieldPath?: string) => {
   if (isConfig) {
     return {
-      repositoryName: 'spec.configuration.configFiles.store.spec.repositoryName',
-      artifactPaths: 'spec.configuration.configFiles.store.spec.artifactPaths'
+      repositoryName: `spec.${fieldPath}.configFiles.store.spec.repositoryName`,
+      artifactPaths: `spec.${fieldPath}.configFiles.store.spec.artifactPaths`
     }
   }
 
   if (isBackendConfig) {
     return {
-      repositoryName: 'spec.configuration.backendConfig.spec.store.spec.repositoryName',
-      artifactPaths: 'spec.configuration.backendConfig.spec.store.spec.artifactPaths'
+      repositoryName: `spec.${fieldPath}.backendConfig.spec.store.spec.repositoryName`,
+      artifactPaths: `spec.${fieldPath}.backendConfig.spec.store.spec.artifactPaths`
     }
   }
 
@@ -270,6 +265,7 @@ export const formatOnSubmitData = (values: any, prevStepData: any, connectorValu
     ...values,
     connectorRef: connectorValue
   }
+
   let artifacts = []
   if (getMultiTypeFromValue(payload.varFile.spec?.store?.spec.artifactPaths) === MultiTypeInputType.FIXED) {
     artifacts = payload.varFile.spec?.store?.spec.artifactPaths.map((item: PathInterface) => item.path)

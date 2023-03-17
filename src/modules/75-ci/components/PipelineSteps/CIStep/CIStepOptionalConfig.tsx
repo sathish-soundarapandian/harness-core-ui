@@ -180,9 +180,9 @@ export const renderMultiTypeInputWithAllowedValues = ({
   template?: Record<string, any>
   expressions: string[]
   readonly?: boolean
-  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
+  getString: (key: keyof StringsMap, vars?: Record<string, unknown> | undefined) => string
   showOptionalSublabel?: boolean
-}) => {
+}): React.ReactElement | undefined => {
   if (!name) {
     return
   }
@@ -350,6 +350,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           valueLabel={valueLabel ? getString(valueLabel) : ''}
           restrictToSingleEntry={restrictToSingleEntry}
           keyValuePlaceholders={keyValuePlaceholders}
+          configureOptionsProps={{ hideExecutionTimeField: true }}
         />
       </Container>
     ),
@@ -405,6 +406,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           appliedInputSetValue={appliedInputSetValue}
           hasValuesAsRuntimeInput={getHasValuesAsRuntimeInputFromTemplate({ template, templateFieldName })}
           keyValuePlaceholders={keyValuePlaceholders}
+          configureOptionsProps={{ hideExecutionTimeField: true }}
         />
       </Container>
     ),
@@ -455,6 +457,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
             </Layout.Horizontal>
           }
           multiTextInputProps={inputProps}
+          configureOptionsProps={{ hideExecutionTimeField: true }}
         />
       )
     },
@@ -483,6 +486,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         }}
         tooltipProps={{ dataTooltipId: tooltipId }}
         disabled={readonly}
+        configureOptionsProps={{ hideExecutionTimeField: true }}
       />
     ),
     [expressions]
@@ -538,6 +542,9 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         connectorTypes={connectorTypes}
         connectorRefRenderer={connectorRefRenderer}
         restrictToSingleEntry={restrictToSingleEntry}
+        configureOptionsProps={{
+          hideExecutionTimeField: true
+        }}
       />
     ),
     [expressions]
@@ -570,6 +577,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           }}
           gitScope={gitScope}
           setRefValue
+          configureOptionsProps={{ hideExecutionTimeField: true }}
         />
       )
     },

@@ -41,7 +41,7 @@ src/modules/10-common/pages/welcome @harness/ui-plg
 src/modules/38-audit-trail @harness/ui-platform
 src/modules/20-rbac @harness/ui-platform
 src/modules/20-rbac/components/TrialHomePageTemplate @harness/ui-plg
-src/modules/28-et @harness/error-tracking
+src/modules/60-et @harness/error-tracking
 src/modules/33-auth-settings @harness/ui-platform
 src/modules/33-auth-settings/pages/subscriptions @harness/ui-plg
 src/modules/33-auth-settings/pages/AccountOverview @harness/ui-plg
@@ -58,6 +58,7 @@ src/modules/70-pipeline/components/TrialModalTemplate @harness/ui-plg
 src/modules/70-pipeline/interfaces/STOApp.ts @harness/ui-sto
 src/modules/70-pipeline/pages/execution/ExecutionSecurityView @harness/ui-sto
 src/modules/70-pipeline/components/PipelineInputSetForm/EnvironmentsInputSetForm @vkbansal-harness @AshwinBhatkal-Harness
+src/modules/70-pipeline/components/PipelineInputSetForm/ServicesInputSetForm @vkbansal-harness @AshwinBhatkal-Harness
 src/modules/72-templates-library @harness/ui-templates
 src/modules/72-freeze-windows @harness/ui-pipeline
 src/modules/75-cd @harness/ui-pipeline

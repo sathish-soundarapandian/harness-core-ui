@@ -98,7 +98,6 @@ export const AzureTrafficShiftRef = (props: AzureTrafficShiftProps, formikRef: S
                   variableName="spec.traffic"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={
                     /* istanbul ignore next */ value => {
                       formik?.setFieldValue('spec.traffic', value)

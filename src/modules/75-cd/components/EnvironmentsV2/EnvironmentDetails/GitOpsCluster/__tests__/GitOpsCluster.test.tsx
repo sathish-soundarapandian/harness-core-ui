@@ -40,7 +40,8 @@ jest.spyOn(infiniteScrollHook, 'useInfiniteScroll').mockReturnValue({
   attachRefToLastElement: jest.fn(),
   hasMore: { current: false },
   loadItems: jest.fn(),
-  offsetToFetch: { current: 0 }
+  offsetToFetch: { current: 0 },
+  reset: jest.fn()
 })
 
 jest.mock('services/cd-ng', () => ({

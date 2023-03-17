@@ -13,6 +13,7 @@ import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/
 import { IACMSideNavProps, RedirectToIACMProject } from '@iacm/utils/IACMChildAppUtils'
 import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
+import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import '@iacm/components/IACMStage'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { ConnectorRouteDestinations } from '@connectors/RouteDestinations'
@@ -25,8 +26,8 @@ import { String } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import PipelineStudioV1 from '@pipeline/v1/components/PipelineStudioV1/PipelineStudioV1'
 import { IACMApp } from './components/IACMApp'
-import IACMPipelineDeploymentList from './pages/pipeline-deployment-list/IACMPipelineDeploymentList'
 
 const moduleParams: ModulePathParams = {
   module: ':module(iacm)'
@@ -72,9 +73,10 @@ function IACMRoutes(): JSX.Element {
       >
         <PipelineRouteDestinations
           pipelineStudioComponent={PipelineStudio}
-          pipelineDeploymentListComponent={IACMPipelineDeploymentList}
+          pipelineDeploymentListComponent={PipelineDeploymentList}
           moduleParams={moduleParams}
           sidebarProps={IACMSideNavProps}
+          pipelineStudioComponentV1={PipelineStudioV1}
         />
       </Route>
       <RouteWithLayout

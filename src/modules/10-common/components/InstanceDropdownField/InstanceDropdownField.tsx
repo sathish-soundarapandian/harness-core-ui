@@ -287,7 +287,6 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
             variableName={name}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={val => {
               formik?.setFieldValue(name, { ...value, spec: isPercentageType ? { percentage: val } : { count: val } })
             }}

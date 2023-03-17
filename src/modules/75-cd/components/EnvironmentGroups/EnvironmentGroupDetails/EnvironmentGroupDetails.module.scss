@@ -40,3 +40,29 @@
     color: var(--grey-600);
   }
 }
+
+.newEnvModal {
+  > div[class*='bp3-dialog-header'] {
+    margin: 0px 0px 6px !important;
+  }
+  :global {
+    .ModalDialog--body {
+      padding: 0 !important;
+
+      &::before,
+      &::after {
+        margin: 0 !important;
+      }
+    }
+
+    .ModalDialog--bodyContent {
+      padding: 0 !important;
+    }
+  }
+
+  overflow: hidden;
+}
+
+.envListWrapper {
+  overflow: scroll;
+}

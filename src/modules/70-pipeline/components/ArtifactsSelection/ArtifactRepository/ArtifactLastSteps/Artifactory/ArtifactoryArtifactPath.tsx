@@ -146,7 +146,6 @@ export default function ArtifactoryArtifactPath(props: ArtifactoryArtifactPathPr
             variableName={fieldName}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(fieldName, value)
             }}

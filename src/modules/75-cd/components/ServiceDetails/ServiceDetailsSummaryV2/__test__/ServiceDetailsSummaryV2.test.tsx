@@ -326,7 +326,7 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
     const fullTableDialog = findDialogContainer()
 
     expect(findByText(fullTableDialog!, 'cd.environmentDetailPage.noServiceArtifactMsg')).toBeTruthy()
-    expect(findByText(fullTableDialog!, 'cd.environmentDetailPage.selectArtifactMsg')).toBeTruthy()
+    expect(findByText(fullTableDialog!, 'cd.environmentDetailPage.noInstancesToShow')).toBeTruthy()
   })
 
   test('Test ServiceDetailsDialog - error states', () => {

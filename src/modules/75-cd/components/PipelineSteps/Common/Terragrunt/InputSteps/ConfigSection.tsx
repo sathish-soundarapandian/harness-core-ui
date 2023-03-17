@@ -33,7 +33,7 @@ function ConfigSectionRef<T extends TerragruntData>(
   const { expressions } = useVariablesExpression()
   const { inputSetData, readonly, initialValues, path, allowableTypes, isBackendConfig, stepViewType, formik } = props
   const template = inputSetData?.template
-  const configPath = getPath(false, false, isBackendConfig)
+  const configPath = getPath(false, false, isBackendConfig, 'configuration')
   const configSpec = get(template, configPath)
   const store = configSpec?.store
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()

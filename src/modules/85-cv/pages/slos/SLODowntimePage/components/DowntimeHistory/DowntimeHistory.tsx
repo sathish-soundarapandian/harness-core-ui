@@ -9,13 +9,12 @@ import React, { useContext } from 'react'
 import { Container, Layout, NoDataCard, Page, TableV2, Text } from '@harness/uicore'
 import type { CellProps, Renderer } from 'react-table'
 import { useStrings } from 'framework/strings'
-import { DowntimeHistoryView, useGetHistory } from 'services/cv'
+import type { DowntimeHistoryView, ResponsePageDowntimeHistoryView, UseGetHistoryProps } from 'services/cv'
 import { DowntimeWindowToggleViews } from '@cv/pages/slos/components/CVCreateDowntime/components/CreateDowntimeForm/CreateDowntimeForm.types'
 import {
   getDowntimeCategoryLabel,
   getFormattedTime
 } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
-import { getErrorMessage } from '@cv/utils/CommonUtils'
 import emptyData from '@cv/assets/emptyData.svg'
 import DowntimeFilters from '../DowntimeFilters/DowntimeFilters'
 import { FiltersContext } from '../../FiltersContext'
@@ -23,11 +22,21 @@ import { getDuration } from '../DowntimeList/DowntimeList.utils'
 import { RenderServices } from '../DowntimeList/DowntimeList'
 import css from '../DowntimeList/DowntimeList.module.scss'
 
-const DowntimeHistory = (): JSX.Element => {
+interface DowntimeHistoryProps {
+  downtimeHistoryLoading: boolean
+  downtimeHistoryData: ResponsePageDowntimeHistoryView | null
+  refetchHistoryData: (data: UseGetHistoryProps) => void
+  downtimeHistoryError?: string
+}
+
+const DowntimeHistory = ({
+  downtimeHistoryData,
+  downtimeHistoryLoading,
+  refetchHistoryData,
+  downtimeHistoryError
+}: DowntimeHistoryProps): JSX.Element => {
   const { getString } = useStrings()
   const { queryParams, setPageNumber, pathParams, appliedSearchAndFilter } = useContext(FiltersContext)
-
-  const { data: downtimeHistoryData, refetch, loading, error } = useGetHistory({ ...pathParams, queryParams })
 
   const { content, totalItems = 0, totalPages = 0, pageIndex = 0, pageSize = 10 } = downtimeHistoryData?.data ?? {}
 
@@ -161,13 +170,13 @@ const DowntimeHistory = (): JSX.Element => {
     <Container margin={'xlarge'} padding={{ left: 'small', right: 'small' }}>
       <DowntimeFilters />
       <Page.Body
-        loading={loading}
-        retryOnError={() => refetch({ ...pathParams, queryParams })}
-        error={getErrorMessage(error)}
+        loading={downtimeHistoryLoading}
+        retryOnError={() => refetchHistoryData({ ...pathParams, queryParams })}
+        error={downtimeHistoryError}
         className={css.downtimeList}
       >
         {content?.length ? (
-          <Container margin={{ top: 'medium' }}>
+          <Container margin={{ top: 'large' }}>
             <TableV2
               sortable={false}
               columns={columns}

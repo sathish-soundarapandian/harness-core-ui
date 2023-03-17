@@ -45,6 +45,11 @@ const versionAPIs = [
     id: 'ti'
   },
   {
+    label: 'Ticket Service',
+    url: 'ticket-service/api/system/version',
+    id: 'ticket_service'
+  },
+  {
     label: 'Security Tests',
     url: 'sto/api/v2/system/version',
     id: 'sto'

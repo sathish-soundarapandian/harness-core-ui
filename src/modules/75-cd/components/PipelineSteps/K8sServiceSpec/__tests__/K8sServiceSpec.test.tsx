@@ -439,7 +439,7 @@ class StepFactory extends AbstractStepFactory {
 const factory = new StepFactory()
 factory.registerStep(new GenericServiceSpec())
 
-describe('StepWidget tests', () => {
+describe('K8sServiceSpec tests', () => {
   test(`renders ServiceStep for Service Tab `, () => {
     const { container } = render(
       <TestWrapper>

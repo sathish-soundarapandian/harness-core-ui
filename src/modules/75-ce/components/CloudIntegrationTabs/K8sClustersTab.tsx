@@ -57,6 +57,9 @@ import {
 } from '@ce/utils/cloudIntegrationUtils'
 
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
+import { ModuleName } from 'framework/types/ModuleName'
 import { useCloudVisibilityModal } from '../CloudVisibilityModal/CloudVisibilityModal'
 import { useAutoStoppingModal } from '../AutoStoppingModal/AutoStoppingModal'
 import { EmptySearchState } from './NoConnectors'
@@ -135,6 +138,8 @@ const FeaturesEnabledCell: CustomK8sCell = ({ row, column }) => {
   const { getString } = useStrings()
   const data = row.original
 
+  const { trackEvent } = useTelemetry()
+
   const featureInfo = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.CCM_K8S_CLUSTERS
@@ -200,6 +205,7 @@ const FeaturesEnabledCell: CustomK8sCell = ({ row, column }) => {
             resource: { resourceType: ResourceType.CONNECTOR }
           }}
           onClick={() => {
+            trackEvent(USER_JOURNEY_EVENTS.ENABLE_CLOUD_COST, { module: ModuleName.CE })
             openCloudVisibilityModal()
           }}
           tooltip={

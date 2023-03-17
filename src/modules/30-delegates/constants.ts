@@ -84,11 +84,13 @@ export enum KubernetesType {
 export enum CommandType {
   DOCKER = 'DOCKER',
   HELM = 'HELM',
-  TERRAFORM = 'TERRAFORM'
+  TERRAFORM = 'TERRAFORM',
+  KUBERNETES = 'KUBERNETES'
 }
 export enum DelegateDefaultName {
   DOCKER = 'docker-delegate',
   HELM = 'helm-delegate',
-  TERRAFORM = 'terraform-delegate'
+  TERRAFORM = 'terraform-delegate',
+  KUBERNETES = 'kubernetes-delegate'
 }
 export const DelegateNameLengthLimit = 63

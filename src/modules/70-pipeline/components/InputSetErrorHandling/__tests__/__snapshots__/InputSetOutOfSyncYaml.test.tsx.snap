@@ -148,7 +148,7 @@ exports[`Inline Input Set Error Exp should render input set menu action button 1
         style="width: 42%;"
       >
         <p
-          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4"
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
           style="--text-line-clamp: 1;"
         >
           inputSets.editTitle
@@ -466,7 +466,7 @@ exports[`Old Git Sync Input Set Error Exp should render input set menu action bu
         style="width: 42%;"
       >
         <p
-          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4"
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
           style="--text-line-clamp: 1;"
         >
           inputSets.editTitle
@@ -860,7 +860,7 @@ exports[`Remote Git Sync Input Set Error Exp should render input set menu action
         style="width: 42%;"
       >
         <p
-          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4"
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
           style="--text-line-clamp: 1;"
         >
           inputSets.editTitle

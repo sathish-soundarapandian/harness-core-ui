@@ -50,10 +50,13 @@ import { TemplateVariablesContextProvider } from '@pipeline/components/TemplateV
 import { RightBar } from '@templates-library/components/TemplateStudio/RightBar/RightBar'
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import { BannerEOL } from '@pipeline/components/BannerEOL/BannerEOL'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ErrorNodeSummary, useValidateTemplateInputs } from 'services/template-ng'
+import { useCheckIfTemplateUsingV1Stage, ResponseEOLBannerResponseDTO } from 'services/cd-ng'
 import { TemplateContext } from './TemplateContext/TemplateContext'
-import { getContentAndTitleStringKeys, isValidYaml } from './TemplateStudioUtils'
+import { getContentAndTitleStringKeys, isValidYaml, isPipelineOrStageType } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'
 
 export type TemplateFormikRef<T = unknown> = {
@@ -100,6 +103,9 @@ export function TemplateStudioInternal(): React.ReactElement {
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const templateStudioSubHeaderHandleRef = React.useRef<TemplateStudioSubHeaderHandle | null>(null)
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
+  const [showBanner, setShowBanner] = React.useState<boolean>(false)
+
+  const { CDS_V1_EOL_BANNER } = useFeatureFlags()
 
   useDocumentTitle([parse(defaultTo(template?.name, getString('common.templates')))])
 
@@ -108,6 +114,26 @@ export function TemplateStudioInternal(): React.ReactElement {
   const { data: errorData, refetch: validateTemplateInputs } = useValidateTemplateInputs({
     lazy: true
   })
+
+  const { mutate } = useCheckIfTemplateUsingV1Stage({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
+  React.useEffect(() => {
+    if (CDS_V1_EOL_BANNER && isPipelineOrStageType(templateType as TemplateType)) {
+      mutate({
+        templateIdentifier,
+        orgIdentifier,
+        projectIdentifier
+      }).then((res: ResponseEOLBannerResponseDTO) => {
+        if (res?.data?.showBanner) {
+          setShowBanner(true)
+        }
+      })
+    }
+  }, [templateType, templateIdentifier])
 
   const { openDialog: openConfirmBEUpdateError } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
@@ -382,6 +408,7 @@ export function TemplateStudioInternal(): React.ReactElement {
           history.push(newPath)
         }}
       />
+      <BannerEOL isVisible={showBanner} />
       <Page.Header
         className={css.rightMargin}
         size={'small'}

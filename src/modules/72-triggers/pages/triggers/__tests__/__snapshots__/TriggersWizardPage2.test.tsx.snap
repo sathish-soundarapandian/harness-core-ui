@@ -1240,10 +1240,6 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                     </div>
                                   </div>
                                 </div>
-                                <div
-                                  class="accordionSummary"
-                                  id="pipeline.stages[0].stage.spec.Environment"
-                                />
                               </div>
                             </div>
                           </div>
@@ -1655,7 +1651,6 @@ exports[`Manifest Trigger Tests function getArtifactSpecObj by displaying select
                           </div>
                           <div
                             class="bp3-form-group"
-                            data-id="name-0"
                           >
                             <label
                               class="bp3-label"
@@ -2372,7 +2367,6 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                           </div>
                           <div
                             class="bp3-form-group"
-                            data-id="name-0"
                           >
                             <label
                               class="bp3-label"
@@ -3760,7 +3754,6 @@ exports[`Manifest Trigger Tests on click of edit artifact - submits thru the rig
                           </div>
                           <div
                             class="bp3-form-group"
-                            data-id="name-0"
                           >
                             <label
                               class="bp3-label"

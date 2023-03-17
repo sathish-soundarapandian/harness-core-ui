@@ -38,30 +38,6 @@ exports[`Test FilterCRUD component Add a new filter with visibke to Everyone 1`]
             Filter
           </span>
         </div>
-        <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main closeFilter Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--color StyledProps--color-white"
-            icon="cross"
-          >
-            <svg
-              data-icon="cross"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                cross
-              </desc>
-              <path
-                d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
     <div
@@ -420,30 +396,6 @@ exports[`Test FilterCRUD component Add a new filter with visibke to Everyone 2`]
             Filter
           </span>
         </div>
-        <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main closeFilter Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--color StyledProps--color-white"
-            icon="cross"
-          >
-            <svg
-              data-icon="cross"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                cross
-              </desc>
-              <path
-                d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
     <div
@@ -676,30 +628,6 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 1`] =
             Filter
           </span>
         </div>
-        <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main closeFilter Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--color StyledProps--color-white"
-            icon="cross"
-          >
-            <svg
-              data-icon="cross"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                cross
-              </desc>
-              <path
-                d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
     <div
@@ -1058,30 +986,6 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 2`] =
             Filter
           </span>
         </div>
-        <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main closeFilter Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--color StyledProps--color-white"
-            icon="cross"
-          >
-            <svg
-              data-icon="cross"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                cross
-              </desc>
-              <path
-                d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
     <div
@@ -1314,30 +1218,6 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 3`] =
             Filter
           </span>
         </div>
-        <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main closeFilter Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--color StyledProps--color-white"
-            icon="cross"
-          >
-            <svg
-              data-icon="cross"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                cross
-              </desc>
-              <path
-                d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
     <div
@@ -1696,30 +1576,6 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 4`] =
             Filter
           </span>
         </div>
-        <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main closeFilter Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--color StyledProps--color-white"
-            icon="cross"
-          >
-            <svg
-              data-icon="cross"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                cross
-              </desc>
-              <path
-                d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
     <div
@@ -1952,30 +1808,6 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 5`] =
             Filter
           </span>
         </div>
-        <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main closeFilter Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--color StyledProps--color-white"
-            icon="cross"
-          >
-            <svg
-              data-icon="cross"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                cross
-              </desc>
-              <path
-                d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
     <div
@@ -2422,30 +2254,6 @@ exports[`Test FilterCRUD component Edit already created filter 2`] = `
             Filter
           </span>
         </div>
-        <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main closeFilter Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--color StyledProps--color-white"
-            icon="cross"
-          >
-            <svg
-              data-icon="cross"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                cross
-              </desc>
-              <path
-                d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
     <div
@@ -2678,30 +2486,6 @@ exports[`Test FilterCRUD component Enable edit mode 1`] = `
             Filter
           </span>
         </div>
-        <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main closeFilter Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--color StyledProps--color-white"
-            icon="cross"
-          >
-            <svg
-              data-icon="cross"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                cross
-              </desc>
-              <path
-                d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
     <div
@@ -3060,30 +2844,6 @@ exports[`Test FilterCRUD component Initial render should match snapshot 1`] = `
             Filter
           </span>
         </div>
-        <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main closeFilter Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--color StyledProps--color-white"
-            icon="cross"
-          >
-            <svg
-              data-icon="cross"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                cross
-              </desc>
-              <path
-                d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
     <div

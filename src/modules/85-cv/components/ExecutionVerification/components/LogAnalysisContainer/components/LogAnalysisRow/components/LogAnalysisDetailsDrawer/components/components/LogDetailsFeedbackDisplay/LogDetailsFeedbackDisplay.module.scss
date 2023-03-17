@@ -1,0 +1,22 @@
+.logDetailsContainer {
+  background-color: var(--grey-50) !important;
+  border: 1px solid var(--grey-200);
+  border-radius: 6px;
+  padding: 0 var(--spacing-3) !important;
+  margin-bottom: var(--spacing-large) !important;
+}
+
+.updatedFeedback {
+  &border {
+    border-top: 1px solid var(--grey-200);
+  }
+
+  svg path {
+    fill: var(--blue-700) !important;
+  }
+}
+
+.feedbackDetails {
+  display: flex;
+  align-items: center;
+}

@@ -105,7 +105,8 @@ const getPipelineContext = (): PipelineContextInterface => ({
   setTemplateTypes: jest.fn(),
   setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
-  setIntermittentLoading: jest.fn()
+  setIntermittentLoading: jest.fn(),
+  setValidationUuid: jest.fn()
 })
 
 jest.mock('../../DeployStage/EditStageView/EditStageView', () => ({
@@ -127,7 +128,7 @@ jest.mock('../../DeployStage/EditStageView/EditStageView', () => ({
   }
 }))
 
-describe('StepWidget tests', () => {
+describe('DeployStageSpecifications tests', () => {
   test(`renders DeployStageSpecifications without crashing `, () => {
     const { container } = render(
       <TestWrapper>

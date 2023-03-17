@@ -33,14 +33,16 @@ const textColorMap: Record<string, string> = {
   cd: css.cdColor,
   ce: css.ccmColor,
   cf: css.ffColor,
-  ci: css.ciColor
+  ci: css.ciColor,
+  chaos: css.chaosColor
 }
 
 const borderMap: Record<string, string> = {
   cd: css.cdBorder,
   ce: css.ccmBorder,
   cf: css.ffBorder,
-  ci: css.ciBorder
+  ci: css.ciBorder,
+  chaos: css.chaosBorder
 }
 
 const Plan: React.FC<PlanProps> = ({ plan, timeType, module }) => {

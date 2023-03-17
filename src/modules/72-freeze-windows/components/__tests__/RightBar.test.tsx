@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render, findByText } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { TestWrapper } from '@common/utils/testUtils'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import { DrawerTypes } from '@freeze-windows/context/FreezeWidowActions'
 import { RightBar } from '../RightBar/RightBar'
@@ -73,5 +73,45 @@ describe('Freeze Window Studio - Right Bar', () => {
     expect(closeBtn).toBeInTheDocument()
     await userEvent.click(closeBtn)
     expect(setDrawerType).toHaveBeenCalledWith()
+  })
+
+  test('it should render Text area in Notifications wizard', async () => {
+    const { getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
+      >
+        <FreezeWindowContext.Provider
+          value={{
+            ...defaultContext,
+            drawerType: DrawerTypes.Notification
+          }}
+        >
+          <RightBar />
+        </FreezeWindowContext.Provider>
+      </TestWrapper>
+    )
+
+    const notifyBtn = getByText('rbac.notifications.pipelineName')
+    expect(notifyBtn).toBeInTheDocument()
+    userEvent.click(notifyBtn)
+
+    const notificationBtn = document.getElementsByClassName('bp3-drawer')[0].querySelector('#newNotificationBtn')
+    userEvent.click(notificationBtn!)
+
+    //Notification Wizard
+    const notificationWizard = findDialogContainer()
+    fireEvent.change(notificationWizard!.querySelector('input[name="name"]')!, {
+      target: { value: 'testNotification' }
+    })
+    expect(notificationWizard?.querySelector('input[name="name"]')).toHaveValue('testNotification')
+    userEvent.click(await findByText(notificationWizard!, 'continue'))
+
+    expect(
+      await findByText(notificationWizard!, 'freezeWindows.freezeNotifications.rejectedDeployments')
+    ).toBeInTheDocument()
+
+    //check if text area is in document
+    expect(notificationWizard?.querySelector('textarea[name="customizedMessage"]')).toBeInTheDocument()
   })
 })

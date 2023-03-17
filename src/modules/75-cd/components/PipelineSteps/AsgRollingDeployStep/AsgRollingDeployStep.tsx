@@ -168,7 +168,6 @@ function AsgRollingDeployWidget(
                             variableName="spec.minimumHealthyPercentage"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={
                               /* istanbul ignore next */ value => setFieldValue('spec.minimumHealthyPercentage', value)
                             }
@@ -197,7 +196,6 @@ function AsgRollingDeployWidget(
                             variableName="spec.instanceWarmup"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={/* istanbul ignore next */ value => setFieldValue('spec.instanceWarmup', value)}
                             isReadonly={readonly}
                             allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}

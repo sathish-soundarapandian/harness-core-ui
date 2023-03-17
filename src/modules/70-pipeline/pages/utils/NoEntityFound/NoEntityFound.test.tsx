@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import { noop } from 'lodash-es'
 import type { Error, Failure } from 'services/pipeline-ng'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
+import { TestWrapper } from '@common/utils/testUtils'
 import NoEntityFound from './NoEntityFound'
 
 const errorObjMock: Error = {
@@ -43,6 +45,9 @@ const failureObj: Failure = {
   message: 'Please check the requested file path / branch / Github repo name if they exist or not.',
   correlationId: 'cf6bd38a-7eb7-4c2d-8e67-64c57ddb1d1d'
 }
+
+const handleRemoteBranchChangMock = jest.fn((selectedBranch?: string) => branchChangeHandler(selectedBranch))
+const branchChangeHandler = jest.fn().mockImplementation((selectedBranch?: string) => noop(selectedBranch))
 
 const TEST_PATH = routes.toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })
 
@@ -83,6 +88,44 @@ describe('NoEntityFound tests', () => {
   test('when errorObj is passed and it has responseMessages', () => {
     const { container } = renderComponent(errorObjMock)
     expect(container).toMatchSnapshot()
+  })
+
+  test('NoENtityFound test for remote Overlay InputSet', async () => {
+    const { getByText } = render(
+      <TestWrapper
+        path={TEST_PATH}
+        pathParams={{
+          accountId: 'testAcc',
+          orgIdentifier: 'default',
+          projectIdentifier: 'testProject',
+          pipelineIdentifier: 'abc',
+          module: 'cd'
+        }}
+        queryParams={{
+          repoName: 'identifier',
+          branch: 'feature',
+          connectorRef: 'connectorRef',
+          storeType: StoreType.REMOTE
+        }}
+        defaultAppStoreValues={{ supportingGitSimplification: true }}
+      >
+        <NoEntityFound
+          identifier={'o_is'}
+          entityType={'overlayInputSet'}
+          entityConnectorRef={'connectorRef'}
+          gitDetails={{
+            repoName: 'isRepoName',
+            branch: 'is_branch'
+          }}
+          errorObj={errorObjMock}
+          onBranchChange={handleRemoteBranchChangMock}
+        />
+      </TestWrapper>
+    )
+    expect(getByText('pipeline.gitExperience.noEntityFound')).toBeInTheDocument()
+    const branchSelect = await screen.findByPlaceholderText('- common.git.selectBranchPlaceholder -')
+    expect(branchChangeHandler).toHaveBeenCalledTimes(0)
+    expect(branchSelect).toHaveValue('is_branch')
   })
 
   test('when isGitSyncEnabled is true', () => {

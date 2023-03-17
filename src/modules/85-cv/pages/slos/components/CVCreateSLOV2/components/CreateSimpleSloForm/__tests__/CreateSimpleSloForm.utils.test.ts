@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { GetMetricOnboardingGraphQueryParams } from 'services/cv'
 import { SLIMetricTypes } from '../../../CVCreateSLOV2.types'
-import { validateConfigureServiceLevelIndicatiors } from '../CreateSimpleSloForm.utils'
+import { validateConfigureServiceLevelIndicatiors, createMetricGraphPayload } from '../CreateSimpleSloForm.utils'
 
 describe('validateConfigureServiceLevelIndicatiors', () => {
   test('should return true when all required fields have valid input', () => {
@@ -152,5 +153,33 @@ describe('validateConfigureServiceLevelIndicatiors', () => {
       setTouched: jest.fn()
     }
     expect(validateConfigureServiceLevelIndicatiors(formikProps as any)).toBe(false)
+  })
+
+  test('should return correct payload for metric graph', () => {
+    const params = {
+      eventType: 'Good' as GetMetricOnboardingGraphQueryParams['ratioSLIMetricEventType'],
+      accountId: 'accountId',
+      orgIdentifier: 'orgIdentifier',
+      projectIdentifier: 'projectIdentifier',
+      healthSourceRef: 'hs101',
+      validRequestMetric: 'metric1',
+      goodRequestMetric: 'metric2',
+      monitoredServiceIdentifier: 'ms101'
+    }
+    const payloadThresholdBased = createMetricGraphPayload({
+      ...params,
+      isRatioBased: false
+    })
+    expect(payloadThresholdBased.body).toEqual([params.validRequestMetric])
+    expect(payloadThresholdBased.pathParams.monitoredServiceIdentifier).toEqual(params.monitoredServiceIdentifier)
+    expect(payloadThresholdBased.queryParams.healthSourceRef).toEqual(params.healthSourceRef)
+
+    const payloadMetricBased = createMetricGraphPayload({
+      ...params,
+      isRatioBased: true
+    })
+    expect(payloadMetricBased.body).toEqual([params.goodRequestMetric, params.validRequestMetric])
+    expect(payloadMetricBased.pathParams.monitoredServiceIdentifier).toEqual(params.monitoredServiceIdentifier)
+    expect(payloadMetricBased.queryParams.healthSourceRef).toEqual(params.healthSourceRef)
   })
 })

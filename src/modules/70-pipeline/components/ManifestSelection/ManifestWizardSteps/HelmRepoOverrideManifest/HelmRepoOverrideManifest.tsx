@@ -21,13 +21,17 @@ import { FontVariation } from '@harness/design-system'
 
 import * as Yup from 'yup'
 
-import { get } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { isValueFixed } from '@common/utils/utils'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import type { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { shouldHideHeaderAndNavBtns } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import type { HelmRepoOverrideManifestDataType, ManifestTypes } from '../../ManifestInterface'
+import type {
+  HelmRepoOverrideManifestDataType,
+  HelmRepoOverrideManifestLastStepPrevStepData,
+  ManifestTypes
+} from '../../ManifestInterface'
 import { ManifestIdentifierValidation } from '../../Manifesthelper'
 
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
@@ -42,6 +46,7 @@ interface HelmRepoOverrideManifestPropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   context?: ModalViewFor
+  editManifestModePrevStepData?: HelmRepoOverrideManifestLastStepPrevStepData
 }
 
 function HelmRepoOverrideManifest({
@@ -52,9 +57,13 @@ function HelmRepoOverrideManifest({
   prevStepData,
   previousStep,
   manifestIdsList,
-  context
+  context,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & HelmRepoOverrideManifestPropType): React.ReactElement {
   const { getString } = useStrings()
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+
   const hideHeaderAndNavBtns = context ? shouldHideHeaderAndNavBtns(context) : false
 
   const getInitialValues = (): HelmRepoOverrideManifestDataType => {
@@ -96,14 +105,14 @@ function HelmRepoOverrideManifest({
   })
   const onSubmitFormData = (formData: HelmRepoOverrideManifestDataType): void => {
     const submitObj = {
-      ...prevStepData,
+      ...modifiedPrevStepData,
       ...formData,
-      connectorRef: prevStepData?.connectorRef
-        ? !isValueFixed(prevStepData?.connectorRef)
-          ? prevStepData?.connectorRef
-          : prevStepData?.connectorRef?.value
-        : prevStepData?.identifier
-        ? prevStepData?.identifier
+      connectorRef: modifiedPrevStepData?.connectorRef
+        ? !isValueFixed(modifiedPrevStepData?.connectorRef)
+          ? modifiedPrevStepData?.connectorRef
+          : modifiedPrevStepData?.connectorRef?.value
+        : modifiedPrevStepData?.identifier
+        ? modifiedPrevStepData?.identifier
         : ''
     }
     submitFormData(submitObj)
@@ -151,7 +160,7 @@ function HelmRepoOverrideManifest({
                   variation={ButtonVariation.SECONDARY}
                   text={getString('back')}
                   icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
+                  onClick={() => previousStep?.(modifiedPrevStepData)}
                 />
                 <Button
                   variation={ButtonVariation.PRIMARY}

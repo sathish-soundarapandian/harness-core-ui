@@ -102,6 +102,7 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
       <Container className={styles.clusterChart}>
         {!clusterChartLoading && !logsError && (
           <LogAnalysisRadarChartHeader
+            showHealthLegend
             totalClustersCount={data?.resource?.totalClusters}
             eventsCount={data?.resource?.eventCounts}
           />

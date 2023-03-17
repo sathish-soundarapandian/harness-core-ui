@@ -12,31 +12,38 @@ import { useParams } from 'react-router-dom'
 import { Classes } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
+
 import {
   TemplateMenuItem,
   TemplatesActionPopover
 } from '@templates-library/components/TemplatesActionPopover/TemplatesActionPopover'
-import type { TemplateSummaryResponse } from 'services/template-ng'
+
+import type { TemplateSummaryResponse, TemplateMetadataSummaryResponse } from 'services/template-ng'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
+
 import css from './TemplateListCardContextMenu.module.scss'
 
 export interface ContextMenuProps extends PopoverProps {
-  template: TemplateSummaryResponse
+  template: TemplateSummaryResponse | TemplateMetadataSummaryResponse
   onPreview: (template: TemplateSummaryResponse) => void
   onOpenEdit: (template: TemplateSummaryResponse) => void
   onOpenSettings: (templateIdentifier: string) => void
   onDelete: (template: TemplateSummaryResponse) => void
+  onOpenMoveResource: (template: TemplateSummaryResponse) => void
   className?: string
 }
 
 export const TemplateListCardContextMenu: React.FC<ContextMenuProps> = (props): JSX.Element => {
   const { getString } = useStrings()
-  const { template, onPreview, onOpenEdit, onOpenSettings, onDelete, className, ...popoverProps } = props
+  const { template, onPreview, onOpenEdit, onOpenSettings, onDelete, onOpenMoveResource, className, ...popoverProps } =
+    props
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { accountId, orgIdentifier, projectIdentifier, templateIdentifier } = useParams<TemplateStudioPathProps>()
+
   const [canView, canEdit, canDelete] = usePermission(
     {
       resourceScope: {
@@ -57,7 +64,7 @@ export const TemplateListCardContextMenu: React.FC<ContextMenuProps> = (props): 
     [orgIdentifier, projectIdentifier, accountId, templateIdentifier]
   )
   const items = React.useMemo((): TemplateMenuItem[] => {
-    return [
+    const menuItems: TemplateMenuItem[] = [
       {
         icon: 'main-view',
         label: getString('connectors.ceAws.crossAccountRoleExtention.step1.p2'),
@@ -83,6 +90,14 @@ export const TemplateListCardContextMenu: React.FC<ContextMenuProps> = (props): 
         }
       },
       {
+        icon: 'git-merge',
+        label: getString('common.moveToGit'),
+        disabled: !canEdit,
+        onClick: () => {
+          onOpenMoveResource(template)
+        }
+      },
+      {
         icon: 'main-trash',
         label: getString('templatesLibrary.deleteTemplate'),
         disabled: !canDelete,
@@ -91,7 +106,9 @@ export const TemplateListCardContextMenu: React.FC<ContextMenuProps> = (props): 
         }
       }
     ]
-  }, [canView, canEdit, canDelete, onPreview, onOpenEdit, onOpenSettings, onDelete, template])
+
+    return menuItems
+  }, [canView, canEdit, canDelete, onPreview, onOpenEdit, onOpenSettings, onDelete, template, onOpenMoveResource])
 
   return (
     <TemplatesActionPopover

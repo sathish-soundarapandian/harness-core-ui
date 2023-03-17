@@ -87,7 +87,6 @@ export const ParameterRepoDetails: React.FC<StepProps<any> & CFFileStoreProps> =
               variableName={fieldNames(isNumber(index)).repoName}
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
             />
           )}
         </div>
@@ -123,7 +122,6 @@ export const ParameterRepoDetails: React.FC<StepProps<any> & CFFileStoreProps> =
                 variableName={fieldNames(isNumber(index)).branch}
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
               />
             )
           }
@@ -151,7 +149,6 @@ export const ParameterRepoDetails: React.FC<StepProps<any> & CFFileStoreProps> =
                 variableName={fieldNames(isNumber(index)).commitId}
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
               />
             )
           }

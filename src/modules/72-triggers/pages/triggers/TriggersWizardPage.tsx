@@ -76,6 +76,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import useIsGithubWebhookAuthenticationEnabled from '@triggers/components/Triggers/WebhookTrigger/useIsGithubWebhookAuthenticationEnabled'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import { isNewTrigger } from '@triggers/components/Triggers/utils'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -184,8 +185,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
       branch
-    } as GetTriggerQueryParams
-    // lazy: true
+    } as GetTriggerQueryParams,
+    lazy: isNewTrigger(triggerIdentifier)
   })
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
     pipelineIdentifier,
@@ -391,7 +392,12 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
   const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
-    { accountId, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    {
+      accountId,
+      repoIdentifier: defaultTo(pipelineRepoName, repoIdentifier),
+      branch,
+      connectorRef: pipelineConnectorRef
+    },
     originalPipeline,
     resolvedPipeline
   )
@@ -1857,7 +1863,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       <Wizard
         key={wizardKey} // re-renders with yaml to visual initialValues
         formikInitialProps={{
-          initialValues,
+          initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidWebhookFormikValuesInterface) => handleWebhookSubmit(val),
           validationSchema: getValidationSchema(
             TriggerTypes.WEBHOOK as unknown as NGTriggerSourceV2['type'],
@@ -1865,7 +1871,9 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
             isGitWebhookPollingEnabled &&
               (sourceRepoOnNew === GitSourceProviders.GITHUB.value ||
                 (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value),
-            isGithubWebhookAuthenticationEnabled
+            isGithubWebhookAuthenticationEnabled &&
+              (sourceRepoOnNew === GitSourceProviders.GITHUB.value ||
+                (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value)
           ),
           validate: validateTriggerPipeline,
           validateOnChange: true,
@@ -1915,7 +1923,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       <Wizard
         key={wizardKey} // re-renders with yaml to visual initialValues
         formikInitialProps={{
-          initialValues,
+          initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidArtifactFormikValuesInterface) => handleArtifactSubmit(val),
           validationSchema: getValidationSchema(
             initialValues.triggerType as unknown as NGTriggerSourceV2['type'],
@@ -1965,7 +1973,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     return (
       <Wizard
         formikInitialProps={{
-          initialValues,
+          initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidScheduleFormikValuesInterface) => handleScheduleSubmit(val),
           validationSchema: getValidationSchema(
             TriggerTypes.SCHEDULE as unknown as NGTriggerSourceV2['type'],

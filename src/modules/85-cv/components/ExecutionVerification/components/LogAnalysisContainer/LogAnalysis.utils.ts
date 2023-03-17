@@ -136,13 +136,18 @@ export const getSingleLogData = (logData: LogAnalysisRadarChartListDTO): LogAnal
   if (!logData) {
     return {} as LogAnalysisRowData
   }
+
+  const { count, message, clusterId, risk, feedbackApplied, feedback } = logData
+
   return {
+    clusterId,
     clusterType: mapClusterType(logData?.clusterType as string),
-    count: logData?.count as number,
-    message: logData?.message as string,
-    clusterId: logData?.clusterId,
-    riskStatus: logData?.risk,
-    messageFrequency: getMessgeFrequencies(logData)
+    count: count as number,
+    message: message as string,
+    riskStatus: risk,
+    messageFrequency: getMessgeFrequencies(logData),
+    feedbackApplied,
+    feedback
   }
 }
 

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { getMultiTypeFromValue, Label, MultiTypeInputType } from '@harness/uicore'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -50,7 +50,7 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
       {isRuntime(template?.timeout) && (
         <TimeoutFieldInputSetView
           label={getString('pipelineSteps.timeoutLabel')}
-          name={`${isEmpty(path) ? '' : `${path}.`}timeout`}
+          name={`${prefix}timeout`}
           disabled={readonly}
           multiTypeDurationProps={{
             configureOptionsProps: {
@@ -65,13 +65,13 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
       )}
-      {isRuntime(get(template, 'spec.connectorRef', '')) && (
+      {isRuntime(template?.spec?.connectorRef) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
-            name={`${path}.connectorRef`}
+            name={`${prefix}spec.connectorRef`}
             label={getString('connector')}
             enableConfigureOptions={false}
             placeholder={getString('select')}
@@ -87,7 +87,7 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
 
       {isRuntime(template?.spec?.image) && (
         <TextFieldInputSetView
-          name={`${path}spec.image`}
+          name={`${prefix}spec.image`}
           placeholder={getString('imagePlaceholder')}
           label={getString('imageLabel')}
           disabled={readonly}
@@ -108,7 +108,7 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
         <SelectInputSetView
           className={cx(stepCss.formGroup, stepCss.md)}
           label={getString('common.shell')}
-          name={`${path}.spec.shell`}
+          name={`${prefix}spec.shell`}
           disabled={readonly}
           useValue
           template={template}
@@ -172,7 +172,7 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
-            name={`${path}.spec.infrastructure.spec.connectorRef`}
+            name={`${prefix}spec.infrastructure.spec.connectorRef`}
             label={getString('connector')}
             placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
@@ -191,7 +191,7 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
 
       {isRuntime(template?.spec?.infrastructure?.spec?.namespace) && (
         <TextFieldInputSetView
-          name={`${path}.spec.infrastructure.spec.namespace`}
+          name={`${prefix}spec.infrastructure.spec.namespace`}
           label={getString('common.namespace')}
           disabled={readonly}
           multiTextInputProps={{
@@ -210,7 +210,7 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
 
       {isRuntime(template?.spec?.infrastructure?.spec?.resources?.limits?.cpu) && (
         <TextFieldInputSetView
-          name={`${path}spec.infrastructure.spec.resources.limits.cpu`}
+          name={`${prefix}spec.infrastructure.spec.resources.limits.cpu`}
           placeholder={getString('imagePlaceholder')}
           label={getString('pipelineSteps.limitCPULabel')}
           disabled={readonly}
@@ -229,7 +229,7 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
 
       {isRuntime(template?.spec?.infrastructure?.spec?.resources?.limits?.memory) && (
         <TextFieldInputSetView
-          name={`${path}spec.infrastructure.spec.resources.limits.memory`}
+          name={`${prefix}spec.infrastructure.spec.resources.limits.memory`}
           placeholder={getString('imagePlaceholder')}
           label={getString('pipelineSteps.limitMemoryLabel')}
           disabled={readonly}
@@ -249,7 +249,7 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
       {isRuntime(template?.spec?.outputVariables) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <MultiTypeListInputSet
-            name={`${isEmpty(path) ? '' : `${path}.`}spec.outputVariables`}
+            name={`${prefix}spec.outputVariables`}
             multiTypeFieldSelectorProps={{
               label: getString('pipelineSteps.outputVariablesLabel'),
               allowedTypes: [MultiTypeInputType.FIXED]
@@ -268,7 +268,7 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
       {(isRuntime(template?.spec?.envVariables) ||
         (template?.spec?.envVariables && Object.entries(template?.spec?.envVariables).length > 0)) && (
         <MultiTypeMapInputSet
-          name={`${isEmpty(path) ? '' : `${path}.`}spec.envVariables`}
+          name={`${prefix}spec.envVariables`}
           valueMultiTextInputProps={{
             allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
             expressions

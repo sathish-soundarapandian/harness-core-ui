@@ -30,7 +30,10 @@ export class StepTemplate extends Template {
     return <StepTemplateCanvasWithRef ref={formikRef} />
   }
 
-  renderTemplateInputsForm({ template, storeMetadata }: TemplateInputsProps & { accountId: string }): JSX.Element {
-    return <TemplateInputs template={template} storeMetadata={storeMetadata} />
+  renderTemplateInputsForm({
+    template,
+    templateInputSetFetchParams
+  }: TemplateInputsProps & { accountId: string }): JSX.Element {
+    return <TemplateInputs template={template} templateInputSetFetchParams={templateInputSetFetchParams} />
   }
 }

@@ -9,6 +9,7 @@ import React, { useCallback, useMemo } from 'react'
 import type { FormikProps } from 'formik'
 import { Button, ButtonVariation, Layout, SelectOption, useToaster, Utils } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   useGetHarnessServices,
   useGetHarnessEnvironments,
@@ -22,6 +23,7 @@ import {
 import type { EnvironmentMultiSelectOrCreateProps } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentMultiSelectAndEnv/EnvironmentMultiSelectAndEnv'
 import type { EnvironmentSelectOrCreateProps } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentSelectOrCreate/EnvironmentSelectOrCreate'
 import { ChangeSourceCategoryName } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
+import OrgAccountLevelServiceEnvField from '@cv/pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField'
 import { useStrings } from 'framework/strings'
 import { SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { useCreateDefaultMonitoredService } from 'services/cv'
@@ -39,12 +41,13 @@ interface CreateMonitoredServiceFromSLOProps {
 
 export default function CreateMonitoredServiceFromSLO(props: CreateMonitoredServiceFromSLOProps): JSX.Element {
   const { monitoredServiceFormikProps, fetchingMonitoredServices, hideModal, setFieldForSLOForm } = props
-  const { serviceRef, environmentRef } = monitoredServiceFormikProps?.values || {}
+  const { serviceRef, environmentRef } = monitoredServiceFormikProps.values || {}
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { serviceOptions, setServiceOptions } = useGetHarnessServices()
   const { environmentOptions, setEnvironmentOptions } = useGetHarnessEnvironments()
   const { showSuccess, showError } = useToaster()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const createServiceQueryParams = useMemo(() => {
     return {
@@ -98,57 +101,69 @@ export default function CreateMonitoredServiceFromSLO(props: CreateMonitoredServ
 
   return (
     <>
-      <HarnessServiceAsFormField
-        key={keys[0]}
-        customRenderProps={{
-          name: 'serviceRef',
-          label: getString('cv.healthSource.serviceLabel')
-        }}
-        serviceProps={{
-          className: css.dropdown,
-          item: serviceOptions.find(item => item?.value === serviceRef),
-          options: serviceOptions,
-          onSelect: (selectedService: SelectOption) =>
-            updateMonitoredServiceNameForService(monitoredServiceFormikProps, selectedService),
-          onNewCreated: newOption => {
-            if (newOption?.identifier && newOption.name) {
-              const newServiceOption = { label: newOption.name, value: newOption.identifier }
-              setServiceOptions([newServiceOption, ...serviceOptions])
-              updateMonitoredServiceNameForService(monitoredServiceFormikProps, newServiceOption)
-            }
+      {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+        <OrgAccountLevelServiceEnvField
+          isTemplate={false}
+          serviceOnSelect={(selectedService: SelectOption) =>
+            updateMonitoredServiceNameForService(monitoredServiceFormikProps, selectedService)
           }
-        }}
-      />
-      <HarnessEnvironmentAsFormField
-        key={keys[1]}
-        customRenderProps={{
-          name: 'environmentRef',
-          label: getString('cv.healthSource.environmentLabel')
-        }}
-        isMultiSelectField={monitoredServiceFormikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE}
-        environmentProps={
-          {
-            className: css.dropdown,
-            item:
-              monitoredServiceFormikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE
-                ? environmentOptions.filter(it => environmentRef?.includes(it.value as string))
-                : environmentOptions.find(item => item?.value === environmentRef),
-            onSelect,
-            options: environmentOptions,
-            onNewCreated: newOption => {
-              if (newOption?.identifier && newOption.name) {
-                const newEnvOption = { label: newOption.name, value: newOption.identifier }
-                setEnvironmentOptions([newEnvOption, ...environmentOptions])
-                updatedMonitoredServiceNameForEnv(
-                  monitoredServiceFormikProps,
-                  newEnvOption,
-                  monitoredServiceFormikProps.values?.type
-                )
+          environmentOnSelect={(selectedEnv: SelectOption) => onSelect(selectedEnv)}
+        />
+      ) : (
+        <>
+          <HarnessServiceAsFormField
+            key={keys[0]}
+            customRenderProps={{
+              name: 'serviceRef',
+              label: getString('cv.healthSource.serviceLabel')
+            }}
+            serviceProps={{
+              className: css.dropdown,
+              item: serviceOptions.find(item => item?.value === serviceRef),
+              options: serviceOptions,
+              onSelect: (selectedService: SelectOption) =>
+                updateMonitoredServiceNameForService(monitoredServiceFormikProps, selectedService),
+              onNewCreated: newOption => {
+                if (newOption?.identifier && newOption.name) {
+                  const newServiceOption = { label: newOption.name, value: newOption.identifier }
+                  setServiceOptions([newServiceOption, ...serviceOptions])
+                  updateMonitoredServiceNameForService(monitoredServiceFormikProps, newServiceOption)
+                }
               }
+            }}
+          />
+          <HarnessEnvironmentAsFormField
+            key={keys[1]}
+            customRenderProps={{
+              name: 'environmentRef',
+              label: getString('cv.healthSource.environmentLabel')
+            }}
+            isMultiSelectField={monitoredServiceFormikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE}
+            environmentProps={
+              {
+                className: css.dropdown,
+                item:
+                  monitoredServiceFormikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE
+                    ? environmentOptions.filter(it => environmentRef?.includes(it.value as string))
+                    : environmentOptions.find(item => item?.value === environmentRef),
+                onSelect,
+                options: environmentOptions,
+                onNewCreated: newOption => {
+                  if (newOption?.identifier && newOption.name) {
+                    const newEnvOption = { label: newOption.name, value: newOption.identifier }
+                    setEnvironmentOptions([newEnvOption, ...environmentOptions])
+                    updatedMonitoredServiceNameForEnv(
+                      monitoredServiceFormikProps,
+                      newEnvOption,
+                      monitoredServiceFormikProps.values?.type
+                    )
+                  }
+                }
+              } as EnvironmentMultiSelectOrCreateProps | EnvironmentSelectOrCreateProps
             }
-          } as EnvironmentMultiSelectOrCreateProps | EnvironmentSelectOrCreateProps
-        }
-      />
+          />
+        </>
+      )}
       <Layout.Horizontal spacing="small">
         <Button
           variation={ButtonVariation.PRIMARY}

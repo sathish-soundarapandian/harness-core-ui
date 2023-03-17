@@ -11,5 +11,6 @@ declare const styles: {
   readonly header: string
   readonly lhs: string
   readonly main: string
+  readonly policyEvaluationDialog: string
 }
 export default styles

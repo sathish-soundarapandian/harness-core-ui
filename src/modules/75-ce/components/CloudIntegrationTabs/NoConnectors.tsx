@@ -11,7 +11,10 @@ import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 
 import { String, useStrings } from 'framework/strings'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Connectors } from '@connectors/constants'
 import QuickK8sIcon from '@ce/images/quick-kubernetes.svg'
+import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 
 import { CloudProviderList } from '../CreateConnector/CreateConnector'
 
@@ -35,6 +38,7 @@ const NoConnectors: React.FC<NoConnectorsProps> = ({
   openQuicK8sCreateModal
 }) => {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
 
   const [quickCreateSelected, setQuickCreateSelected] = useState(true)
 
@@ -117,6 +121,11 @@ const NoConnectors: React.FC<NoConnectorsProps> = ({
               text={getString('continue')}
               intent="primary"
               onClick={() => {
+                trackEvent(USER_JOURNEY_EVENTS.ONBOARDING_CONNECTOR_CLICK, {
+                  connector_type: Connectors.CE_KUBERNETES,
+                  is_quick_create: quickCreateSelected
+                })
+
                 quickCreateSelected ? openQuicK8sCreateModal() : openAdvancedK8sModal()
               }}
             />

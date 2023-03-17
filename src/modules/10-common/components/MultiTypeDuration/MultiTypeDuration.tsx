@@ -105,7 +105,6 @@ export function MultiTypeDuration(props: MultiTypeDurationProps): React.ReactEle
               variableName={name}
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={val => onChange?.(val, MultiTypeInputValue.STRING, MultiTypeInputType.RUNTIME)}
               style={{ marginLeft: 'var(--spacing-medium)' }}
               allowedValuesType={ALLOWED_VALUES_TYPE.TIME}

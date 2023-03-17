@@ -142,8 +142,8 @@ export const HarnessEnvironmentModal: React.FC<HarnessEnvironmentModalProps> = (
                 onClick={() => formikProps.submitForm()}
                 intent="primary"
                 text={getString('save')}
+                margin={{ right: 'medium' }}
               />
-              &nbsp; &nbsp;
               <Button text={getString('cancel')} onClick={closeModal} />
             </Container>
           </Layout.Vertical>
@@ -173,7 +173,10 @@ export const useHarnessEnvironmentModal = (
           formik={formik}
           isEnvironment={isEnvironment}
           onCreateOrUpdate={onCreateOrUpdate}
-          closeModal={onClose ? onClose : hideModal}
+          closeModal={() => {
+            onClose?.()
+            hideModal()
+          }}
         />
       </Dialog>
     ),

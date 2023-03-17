@@ -861,6 +861,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
       label={<HarnessDocTooltip labelText={label} tooltipId={dataTooltipId} />}
       helperText={helperText}
       intent={intent}
+      disabled={disabled}
     >
       <ReferenceSelect<ConnectorReferenceDTO>
         selected={selectedValue}

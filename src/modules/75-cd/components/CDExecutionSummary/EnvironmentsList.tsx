@@ -6,10 +6,19 @@
  */
 
 import React from 'react'
+import { Link, useParams } from 'react-router-dom'
 import { Popover, Position } from '@blueprintjs/core'
-import { Icon, Layout, Text } from '@harness/uicore'
+import { Icon, Layout, Text, Container } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
+
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { getIdentifierFromScopedRef } from '@common/utils/utils'
+import routes from '@common/RouteDefinitions'
+
+import { Scope } from '@common/interfaces/SecretsInterface'
+import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { String } from 'framework/strings'
 import css from './CDExecutionSummary.module.scss'
 
@@ -20,13 +29,34 @@ interface EnvironmentsListProps {
 }
 
 export function EnvironmentsList({ environments, limit = 2, className }: EnvironmentsListProps): React.ReactElement {
+  const { orgIdentifier, projectIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
+
   return (
     <div className={cx(css.main, className)}>
       {environments.length > 0 ? (
         <>
           <div className={css.environments}>
             <Icon name="environments" className={css.envIcon} size={14} />
-            <Text>{environments.slice(0, limit).join(', ')}</Text>
+            <Container flex>
+              {environments.slice(0, limit).map(env => {
+                const envScope = getScopeFromValue(defaultTo(env, ''))
+                return (
+                  <Text className={css.envName} lineClamp={1} key={env} margin={{ right: 'small' }}>
+                    <Link
+                      to={`${routes.toEnvironmentDetails({
+                        accountId,
+                        ...(envScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+                        ...(envScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+                        environmentIdentifier: defaultTo(getIdentifierFromScopedRef(env), ''),
+                        module
+                      })}`}
+                    >
+                      {env}
+                    </Link>
+                  </Text>
+                )
+              })}
+            </Container>
           </div>
           {environments.length > limit ? (
             <>
@@ -46,7 +76,11 @@ export function EnvironmentsList({ environments, limit = 2, className }: Environ
                 />
                 <Layout.Vertical padding="small">
                   {environments.slice(limit).map((environment, index) => (
-                    <Text font={{ variation: FontVariation.FORM_LABEL }} key={index}>
+                    <Text
+                      className={css.executionItemDetails}
+                      font={{ variation: FontVariation.FORM_LABEL }}
+                      key={index}
+                    >
                       {environment}
                     </Text>
                   ))}

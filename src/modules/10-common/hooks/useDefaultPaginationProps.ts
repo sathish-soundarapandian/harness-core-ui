@@ -7,6 +7,8 @@
 
 import { PopoverPosition } from '@blueprintjs/core'
 import type { PaginationProps } from '@harness/uicore'
+import { COMMON_PAGE_SIZE_OPTIONS } from '@common/constants/Pagination'
+import { useFeatureFlags } from './useFeatureFlag'
 import { useUpdateQueryParams } from './useUpdateQueryParams'
 
 export type CommonPaginationQueryParams = {
@@ -21,6 +23,8 @@ export type PaginationPropsWithDefaults = RequiredPick<
 
 export const useDefaultPaginationProps = (props: PaginationProps): PaginationPropsWithDefaults => {
   const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams>()
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+
   return {
     gotoPage: page => updateQueryParams({ page }),
     onPageSizeChange: size => updateQueryParams({ page: 0, size }),
@@ -31,7 +35,7 @@ export const useDefaultPaginationProps = (props: PaginationProps): PaginationPro
         position: PopoverPosition.TOP
       }
     },
-    pageSizeOptions: [10, 20, 50, 100],
+    pageSizeOptions: PL_NEW_PAGE_SIZE ? COMMON_PAGE_SIZE_OPTIONS : [10, 20, 50, 100],
     ...props
   }
 }

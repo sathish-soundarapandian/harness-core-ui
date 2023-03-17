@@ -111,7 +111,6 @@ export const AzureSlotDeploymentRef = (
                   variableName="spec.webApp"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={
                     /* istanbul ignore next */ value => {
                       formik?.setFieldValue('spec.webApp', value)
@@ -136,7 +135,6 @@ export const AzureSlotDeploymentRef = (
                   variableName="spec.deploymentSlot"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={
                     /* istanbul ignore next */ value => {
                       formik?.setFieldValue('spec.deploymentSlot', value)

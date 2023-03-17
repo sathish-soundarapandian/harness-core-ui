@@ -18,7 +18,10 @@ import {
   isExecutionWaiting,
   isExecutionSkipped,
   isExecutionNotStarted,
-  isExecutionWaitingForInput
+  isExecutionWaitingForInput,
+  isExecutionFailed,
+  isExecutionAborted,
+  isExecutionExpired
 } from '@pipeline/utils/statusHelpers'
 import type {
   GraphLayoutNode,
@@ -1366,4 +1369,81 @@ export function getInterruptHistoriesFromType(
   interruptType: InterruptType
 ): InterruptEffectDTO[] {
   return defaultTo(interruptHistories, []).filter(row => row.interruptType === interruptType)
+}
+
+const EXECUTION_STATUS_VS_FAVICON_DETAILS_MAP = {
+  [ExecutionStatusEnum.Success]: {
+    STATIC: {
+      ICO: 'favicon-success.ico',
+      PNG: 'favicon-success.png'
+    },
+    CDN: {
+      ICO: 'https://static.harness.io/ng-static/images/favicon-success.ico',
+      PNG: 'https://static.harness.io/ng-static/images/favicon-success.png'
+    }
+  },
+  [ExecutionStatusEnum.Failed]: {
+    STATIC: {
+      ICO: 'favicon-failed.ico',
+      PNG: 'favicon-failed.png'
+    },
+    CDN: {
+      ICO: 'https://static.harness.io/ng-static/images/favicon-failed.ico',
+      PNG: 'https://static.harness.io/ng-static/images/favicon-failed.png'
+    }
+  },
+  [ExecutionStatusEnum.Running]: {
+    STATIC: {
+      ICO: 'favicon-running.ico',
+      PNG: 'favicon-running.png'
+    },
+    CDN: {
+      ICO: 'https://static.harness.io/ng-static/images/favicon-running.ico',
+      PNG: 'https://static.harness.io/ng-static/images/favicon-running.png'
+    }
+  },
+  [ExecutionStatusEnum.InterventionWaiting]: {
+    STATIC: {
+      ICO: 'favicon-waiting.ico',
+      PNG: 'favicon-waiting.png'
+    },
+    CDN: {
+      ICO: 'https://static.harness.io/ng-static/images/favicon-waiting.ico',
+      PNG: 'https://static.harness.io/ng-static/images/favicon-waiting.png'
+    }
+  },
+  [ExecutionStatusEnum.Aborted]: {
+    STATIC: {
+      ICO: 'favicon-aborted.ico',
+      PNG: 'favicon-aborted.png'
+    },
+    CDN: {
+      ICO: 'https://static.harness.io/ng-static/images/favicon-aborted.ico',
+      PNG: 'https://static.harness.io/ng-static/images/favicon-aborted.png'
+    }
+  }
+}
+
+export const getFavIconDetailsFromPipelineExecutionStatus = (pipelineStatus: PipelineExecutionSummary['status']) => {
+  if (isExecutionSuccess(pipelineStatus)) {
+    return EXECUTION_STATUS_VS_FAVICON_DETAILS_MAP[ExecutionStatusEnum.Success]
+  }
+
+  if (isExecutionFailed(pipelineStatus)) {
+    return EXECUTION_STATUS_VS_FAVICON_DETAILS_MAP[ExecutionStatusEnum.Failed]
+  }
+
+  if (isExecutionRunning(pipelineStatus)) {
+    return EXECUTION_STATUS_VS_FAVICON_DETAILS_MAP[ExecutionStatusEnum.Running]
+  }
+
+  if (isExecutionWaiting(pipelineStatus)) {
+    return EXECUTION_STATUS_VS_FAVICON_DETAILS_MAP[ExecutionStatusEnum.InterventionWaiting]
+  }
+
+  if (isExecutionAborted(pipelineStatus) || isExecutionExpired(pipelineStatus)) {
+    return EXECUTION_STATUS_VS_FAVICON_DETAILS_MAP[ExecutionStatusEnum.Aborted]
+  }
+
+  return undefined
 }

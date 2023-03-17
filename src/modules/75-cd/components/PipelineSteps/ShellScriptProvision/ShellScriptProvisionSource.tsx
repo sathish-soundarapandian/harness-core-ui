@@ -135,7 +135,6 @@ export default function ShellScriptProvisionSource(props: {
               className={css.minConfigBtn}
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={/* istanbul ignore next */ value => formik.setFieldValue('spec.source.spec.script', value)}
               isReadonly={readonly}
             />

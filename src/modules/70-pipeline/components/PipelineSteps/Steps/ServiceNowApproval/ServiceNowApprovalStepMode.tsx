@@ -200,7 +200,6 @@ function FormContent({
             variableName="spec.connectorRef"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
             connectorReferenceFieldProps={{
@@ -279,7 +278,6 @@ function FormContent({
               variableName="spec.ticketNumber"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.ticketNumber', value)}
               isReadonly={readonly}
               allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}

@@ -20,6 +20,7 @@ declare const styles: {
   readonly iconPaddingSmall: string
   readonly label: string
   readonly learnMore: string
+  readonly main: string
   readonly nextLevel: string
   readonly paddingXSmall: string
   readonly pipelineBg: string

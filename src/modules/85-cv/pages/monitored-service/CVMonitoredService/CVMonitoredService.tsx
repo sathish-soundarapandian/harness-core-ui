@@ -103,12 +103,14 @@ const MonitoredService: React.FC = () => {
 
   const onUseTemplate = async () => {
     const { template } = await getTemplate({ templateType: 'MonitoredService', allowedUsages: [TemplateUsage.USE] })
+    const { identifier, versionLabel, templateScope } = template
     const templateRefData = {
-      identifier: template?.identifier,
-      accountId: template?.accountId,
-      orgIdentifier: template?.orgIdentifier,
-      projectIdentifier: template?.projectIdentifier,
-      versionLabel: template?.versionLabel
+      identifier,
+      accountId: accountId,
+      orgIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier,
+      versionLabel,
+      templateScope
     }
     history.push({
       pathname: routes.toCVMonitoringServicesInputSets(pathParams),

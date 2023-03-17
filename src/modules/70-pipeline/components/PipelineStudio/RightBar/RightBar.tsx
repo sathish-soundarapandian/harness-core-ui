@@ -584,7 +584,8 @@ export function RightBar(): JSX.Element {
                         MultiTypeInputType.FIXED,
                         MultiTypeInputType.EXPRESSION,
                         MultiTypeInputType.RUNTIME
-                      ]
+                      ],
+                      configureOptionsProps: { hideExecutionTimeField: true }
                     })}
                     <Accordion>
                       <Accordion.Panel

@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Container, Icon, NoDataCard, Text, PageError } from '@harness/uicore'
+import { Container, Icon, NoDataCard, Text, PageError, MinMaxSlider } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -15,7 +15,7 @@ import noDataImage from '@cv/assets/noData.svg'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
 import type { LogAnalysisRadarChartProps } from './LogAnalysisRadarChart.types'
-import MultiRangeSlider from './MinMaxSlider'
+
 import {
   getRadarChartSeries,
   getLogAnalysisSpiderChartOptions,
@@ -90,7 +90,7 @@ const LogAnalysisRadarChart: React.FC<LogAnalysisRadarChartProps> = ({
     return (
       <>
         <HighchartsReact highcharts={Highcharts} options={highchartsConfigOptions} />
-        <MultiRangeSlider min={0} max={360} step={30} onChange={handleAngleChange} />
+        <MinMaxSlider min={0} max={360} step={30} width="400px" unitSuffixString="°" onChange={handleAngleChange} />
         <Text
           width="90%"
           icon="main-issue"

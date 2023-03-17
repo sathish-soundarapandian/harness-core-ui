@@ -224,7 +224,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
-                allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+                allowableTypes,
                 expressions
               }}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
@@ -252,24 +252,6 @@ const Content = (props: GCRRenderContent): JSX.Element => {
                   expressions,
                   allowableTypes,
                   selectProps: { allowCreatingNewItems: true, addClearBtn: true, items: gcrUrlList }
-                }}
-              />
-            )}
-            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.registryHostname`)) ===
-              MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                className={css.configureOptions}
-                style={{ alignSelf: 'center' }}
-                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.registryHostname`)}
-                type="String"
-                variableName="registryHostname"
-                showRequiredField={false}
-                isReadonly={readonly}
-                showDefaultField={true}
-                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
-                onChange={value => {
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.registryHostname`, value)
                 }}
               />
             )}
@@ -341,7 +323,6 @@ const Content = (props: GCRRenderContent): JSX.Element => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.tagRegex`, value)
                 }}

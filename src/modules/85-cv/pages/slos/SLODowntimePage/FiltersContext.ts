@@ -23,6 +23,7 @@ interface FiltersContextParams {
   queryParams: QueryParamsProps
   pathParams: PathParamsProps
   appliedSearchAndFilter: boolean
+  handleCreateButton: () => void
 }
 
 export const FiltersContext = createContext<FiltersContextParams>({} as FiltersContextParams)

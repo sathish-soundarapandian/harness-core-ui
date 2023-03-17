@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import cx from 'classnames'
 import {
   SelectOption,
@@ -27,6 +27,8 @@ import { useParams } from 'react-router-dom'
 import { get, isEmpty, remove } from 'lodash-es'
 import { Classes } from '@blueprintjs/core'
 import {
+  GitEnabledDTO,
+  isGitSyncEnabledPromise,
   OrganizationResponse,
   ProjectAggregateDTO,
   useGetOrganizationList,
@@ -86,7 +88,12 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [projectsQuery, setProjectsQuery] = useState('')
   const [selectedRow, setSelectedRow] = useState<PMSPipelineSummaryResponse>({})
+  const [isProjectLoading, setProjectLoading] = useState<boolean>(false)
   const { updateQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
+  const selectedOrgProjectRef = useRef<{ orgId: string; projectId: string | undefined }>({
+    orgId: get(currentOrg, 'identifier', orgIdentifier),
+    projectId: get(currentProject, 'identifier', projectIdentifier)
+  })
 
   const { data: orgData } = useGetOrganizationList({
     queryParams: {
@@ -111,42 +118,47 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
-  const fetchPipelineList = React.useCallback(async () => {
-    try {
-      const { status, data } = await loadPipelineList(
-        {
-          filterType: 'PipelineSetup'
-        } as PipelineFilterProperties,
-        {
-          queryParams: {
-            accountIdentifier: accountId,
-            projectIdentifier: selectedProject.value as string,
-            orgIdentifier: selectedOrg.value as string,
-            searchTerm,
-            page,
-            size,
-            ...(repoIdentifier &&
-              branch && {
-                repoIdentifier,
-                branch
-              })
+  const fetchPipelineList = React.useCallback(
+    async (projectId = selectedProject.value as string, orgId = selectedOrg.value as string) => {
+      try {
+        const { status, data } = await loadPipelineList(
+          {
+            filterType: 'PipelineSetup'
+          } as PipelineFilterProperties,
+          {
+            queryParams: {
+              accountIdentifier: accountId,
+              projectIdentifier: projectId,
+              orgIdentifier: orgId,
+              searchTerm,
+              page,
+              size,
+              ...(repoIdentifier &&
+                branch && {
+                  repoIdentifier,
+                  branch
+                })
+            }
           }
+        )
+        if (status === 'SUCCESS') {
+          if (data?.content)
+            // Parent pipeline should not be displayed in the child pipeline selection list.
+            remove(data.content, (pipelineObj: PMSPipelineSummaryResponse) => {
+              return pipelineObj?.identifier === pipelineIdentifier
+            })
+          setPipelineListData(data)
         }
-      )
-      if (status === 'SUCCESS') {
-        if (data?.content)
-          // Parent pipeline should not be displayed in the child pipeline selection list.
-          remove(data.content, (pipelineObj: PMSPipelineSummaryResponse) => {
-            return pipelineObj?.identifier === pipelineIdentifier
-          })
-        setPipelineListData(data)
+      } catch (e) {
+        if (shouldShowError(e)) {
+          showError(getRBACErrorMessage(e), undefined, 'pipeline.fetch.pipeline.error')
+        }
+      } finally {
+        setProjectLoading(false)
       }
-    } catch (e) {
-      if (shouldShowError(e)) {
-        showError(getRBACErrorMessage(e), undefined, 'pipeline.fetch.pipeline.error')
-      }
-    }
-  }, [accountId, selectedProject, selectedOrg, searchTerm, page, size, repoIdentifier, branch])
+    },
+    [searchTerm, page, size]
+  )
 
   useEffect(() => {
     fetchPipelineList()
@@ -181,12 +193,74 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
       })
     }
     return options
-  }, [projectData, selectedProject, projectsQuery, selectedOrg])
+  }, [projectData, projectsQuery])
+
+  function gitSyncEnabledPromise(projectId: string, orgId: string): Promise<boolean> {
+    return new Promise<boolean>(resolve => {
+      isGitSyncEnabledPromise({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier: orgId,
+          projectIdentifier: projectId
+        }
+      })
+        .then((response: GitEnabledDTO) => {
+          const oldGitSyncEnabled = !!response?.gitSyncEnabled && !response?.gitSyncEnabledOnlyForFF
+          resolve(oldGitSyncEnabled)
+        })
+        .catch(err => {
+          showError(getRBACErrorMessage(err))
+          resolve(true)
+        })
+    })
+  }
+
+  function getGitSyncDisabledPipelinePromise(projectId: string, orgId = selectedOrg.value as string): void {
+    gitSyncEnabledPromise(projectId, orgId).then((oldGitSyncEnabled: boolean) => {
+      if (oldGitSyncEnabled) {
+        setPipelineListData(undefined)
+        setProjectLoading(false)
+      } else {
+        fetchPipelineList(projectId, orgId)
+      }
+    })
+  }
+
+  useEffect(() => {
+    // Don't set project & call git sync API when projectsQuery is changed
+    if (!selectedOrgProjectRef.current.projectId) {
+      let _selectedProject: SelectOption = { label: '', value: '' }
+      if (projects.length > 0) {
+        _selectedProject = projects[0]
+        setSelectedProject(_selectedProject)
+      }
+      selectedOrgProjectRef.current.projectId = _selectedProject.value as string
+      if (!isEmpty(_selectedProject.value))
+        getGitSyncDisabledPipelinePromise(_selectedProject.value as string, selectedOrgProjectRef.current.orgId)
+      else setProjectLoading(false)
+    }
+  }, [projects])
+
+  const handleProjectWrapper = (item: SelectOption): void => {
+    setProjectLoading(true)
+    setSelectedProject(item)
+    setSelectedRow({})
+  }
 
   const handleOrgChange = (item: SelectOption): void => {
-    setSelectedOrg(item)
-    setSelectedProject({ label: '', value: '' } as SelectOption)
-    setSelectedRow({})
+    if (item.value !== selectedOrg.value) {
+      selectedOrgProjectRef.current.orgId = item.value as string
+      selectedOrgProjectRef.current.projectId = undefined
+      setSelectedOrg(item)
+      handleProjectWrapper({ label: '', value: '' } as SelectOption)
+    }
+  }
+
+  const handleProjectChange = (item: SelectOption): void => {
+    if (!isEmpty(item.value) && item.value !== selectedProject.value) {
+      handleProjectWrapper(item)
+      getGitSyncDisabledPipelinePromise(item.value as string)
+    }
   }
 
   const handleClose = (): void => {
@@ -233,18 +307,15 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
               <Select
                 items={projects}
                 onQueryChange={setProjectsQuery}
-                onChange={(item: SelectOption) => {
-                  setSelectedProject(item)
-                  setSelectedRow({})
-                }}
+                onChange={handleProjectChange}
                 value={selectedProject}
                 popoverClassName={css.projectListPopover}
               />
             </div>
           </Layout.Horizontal>
           <div className={css.pipelineContainer}>
-            {isPipelineListLoading ? (
-              <Container flex={{ align: 'center-center' }} padding="small" margin={{ top: 'xxlarge' }}>
+            {isPipelineListLoading || isProjectLoading ? (
+              <Container flex={{ align: 'center-center' }} padding="small" className={css.spinnerContainer}>
                 <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
               </Container>
             ) : pipelineListLoadingError ? (
@@ -264,7 +335,9 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
               <div className={css.noPipelineSection}>
                 <img src={CDPipelineIllustration} className={css.image} />
                 <Text className={css.noPipelineText} margin={{ top: 'medium', bottom: 'small' }}>
-                  {getString('pipeline.noPipelinesText')}
+                  {isEmpty(searchTerm)
+                    ? getString('pipeline.pipelineChaining.noPipelinesInSelectedScope')
+                    : getString('pipeline.pipelineChaining.noPipelinesInSearchCriteria')}
                 </Text>
               </div>
             )}

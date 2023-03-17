@@ -46,7 +46,18 @@ describe('<TemplateInputs /> tests', () => {
   test('snapshot test', async () => {
     const { container } = render(
       <TestWrapper>
-        <TemplateInputs template={baseTemplate} />
+        <TemplateInputs
+          template={baseTemplate}
+          templateInputSetFetchParams={{
+            data: mockTemplatesInputYaml,
+            refetch: jest.fn(),
+            error: null,
+            loading: false,
+            absolutePath: '',
+            cancel: jest.fn(),
+            response: null
+          }}
+        />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

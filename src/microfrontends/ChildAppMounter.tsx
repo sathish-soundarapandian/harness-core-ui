@@ -5,17 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
-
-import { loggerFor } from 'framework/logging/logging'
-import { ModuleName } from 'framework/types/ModuleName'
+import React, { ComponentType, LazyExoticComponent, ReactElement } from 'react'
 import { useLogout } from 'framework/utils/SessionUtils'
-import { PermissionsContext } from 'framework/rbac/PermissionsContext'
-import { LicenseStoreContext } from 'framework/LicenseStore/LicenseStoreContext'
-import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
-import { TooltipContext } from 'framework/tooltip/TooltipContext'
-import { PageSpinner } from '@common/components'
 import RbacButton from '@rbac/components/Button/Button'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -25,7 +16,6 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
-import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { usePermission } from '@rbac/hooks/usePermission'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
@@ -34,103 +24,46 @@ import LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
 import ParentLink from '@common/components/ParentLink/ParentLink'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { useEventSourceListener } from '@common/hooks/useEventSourceListener'
-import ChildAppError from './ChildAppError'
-import type { ChildAppProps, Scope } from './index'
-
-const logger = loggerFor(ModuleName.FRAMEWORK)
+import ChildComponentMounter, { ChildComponentMounterProps } from './ChildComponentMounter'
+import type { ChildAppProps } from './index'
 
 export { ChildAppProps }
 
-export interface BaseChildAppMounterProps {
-  ChildApp: React.LazyExoticComponent<React.ComponentType<ChildAppProps>>
-  children?: React.ReactNode
+interface ChildAppMounterProps extends Omit<ChildComponentMounterProps, 'ChildComponent'> {
+  ChildApp: LazyExoticComponent<ComponentType<ChildAppProps>>
 }
 
-export type ChildAppMounterProps<T = never> = T extends never ? BaseChildAppMounterProps : T & BaseChildAppMounterProps
-
-export interface ChildAppMounterState {
-  hasError: boolean
+function ChildAppMounter<T>({ ChildApp, children, ...rest }: T & ChildAppMounterProps): ReactElement {
+  return (
+    <ChildComponentMounter<Pick<ChildAppProps, 'components' | 'hooks' | 'utils'>>
+      ChildComponent={ChildApp as ChildComponentMounterProps['ChildComponent']}
+      {...rest}
+      components={{
+        RbacButton,
+        RbacMenuItem,
+        RBACTooltip,
+        NGBreadcrumbs,
+        MonacoEditor,
+        YAMLBuilder,
+        MonacoDiffEditor,
+        LevelUpBanner,
+        ParentLink
+      }}
+      hooks={{
+        useDocumentTitle,
+        useTelemetry,
+        useLogout,
+        useRBACError,
+        usePermission,
+        useCreateConnectorModal,
+        useFeature,
+        useEventSourceListener
+      }}
+      utils={{ getLocationPathName }}
+    >
+      {children}
+    </ChildComponentMounter>
+  )
 }
 
-export class ChildAppMounter<T = never> extends React.Component<
-  ChildAppMounterProps<T> & RouteComponentProps<Scope>,
-  ChildAppMounterState
-> {
-  state: ChildAppMounterState = {
-    hasError: false
-  }
-
-  static getDerivedStateFromError(e: Error): ChildAppMounterState {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    logger.error(e.message, e as any)
-    return { hasError: true }
-  }
-
-  render(): React.ReactElement {
-    const { ChildApp, match, children, history, ...rest } = this.props
-
-    // We use routeMatch instead of location because,
-    // we want to pass the mount url and not the actual url
-    const { url, params, path } = match
-
-    if (this.state.hasError) {
-      return <ChildAppError />
-    }
-
-    return (
-      <React.Suspense fallback={<PageSpinner />}>
-        <ChildApp
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          {...(rest as any)}
-          renderUrl={url}
-          matchPath={path}
-          scope={params}
-          parentContextObj={{
-            appStoreContext: AppStoreContext,
-            permissionsContext: PermissionsContext,
-            licenseStoreProvider: LicenseStoreContext,
-            tooltipContext: TooltipContext
-          }}
-          on401={() => {
-            global401HandlerUtils(history)
-          }}
-          components={{
-            RbacButton,
-            RbacMenuItem,
-            RBACTooltip,
-            NGBreadcrumbs,
-            MonacoEditor,
-            YAMLBuilder,
-            MonacoDiffEditor,
-            LevelUpBanner,
-            ParentLink
-          }}
-          hooks={{
-            useDocumentTitle,
-            useTelemetry,
-            useLogout,
-            useRBACError,
-            usePermission,
-            useCreateConnectorModal,
-            useFeature,
-            useEventSourceListener
-          }}
-          utils={{ getLocationPathName }}
-        >
-          {children}
-        </ChildApp>
-      </React.Suspense>
-    )
-  }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ChildAppMounterWithRouter = withRouter(ChildAppMounter as any)
-
-// It's impossible to use a HOC with Generics, while using `withRouter`
-// hence, we need to create a wrapper around it to add support for generics
-function ChildAppMounterWithRouterWrapper<T = never>(props: ChildAppMounterProps<T>): React.ReactElement {
-  return <ChildAppMounterWithRouter {...props} />
-}
-
-export default ChildAppMounterWithRouterWrapper
+export default ChildAppMounter

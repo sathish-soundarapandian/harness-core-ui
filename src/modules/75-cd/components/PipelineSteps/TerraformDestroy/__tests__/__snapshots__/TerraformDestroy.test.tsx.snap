@@ -4092,7 +4092,7 @@ exports[`Test TerraformDestroy should render edit view as new step 1`] = `
                   placeholder="- pipelineSteps.configurationType -"
                   style="padding-right: 0px;"
                   type="text"
-                  value="pipelineSteps.configTypes.fromApply"
+                  value=""
                 />
                 <span
                   class="bp3-input-action"

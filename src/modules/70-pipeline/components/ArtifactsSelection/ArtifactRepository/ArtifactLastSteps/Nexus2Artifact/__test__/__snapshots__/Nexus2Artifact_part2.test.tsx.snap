@@ -594,7 +594,7 @@ exports[`Nexus Artifact tests - api success flow renders without crashing 1`] = 
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus2-tag"
                   >
                     tagLabel
                   </span>
@@ -1359,7 +1359,7 @@ exports[`Nexus Artifact tests - error handling case renders without crashing 1`]
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus2-tag"
                   >
                     tagLabel
                   </span>

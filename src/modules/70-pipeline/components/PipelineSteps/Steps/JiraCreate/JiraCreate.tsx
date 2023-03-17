@@ -40,7 +40,7 @@ export class JiraCreate extends PipelineStep<JiraCreateData> {
   // initialValues on mount
   protected defaultValues: JiraCreateData = {
     identifier: '',
-    timeout: '1d',
+    timeout: '10m',
     name: '',
     type: StepType.JiraCreate,
     spec: {

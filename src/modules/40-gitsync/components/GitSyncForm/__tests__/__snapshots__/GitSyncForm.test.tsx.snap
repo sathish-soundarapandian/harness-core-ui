@@ -337,7 +337,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while edit : all field shoul
               class="Layout--vertical StyledProps--main"
             >
               <div
-                class="bp3-form-group"
+                class="bp3-form-group bp3-disabled"
                 data-id="null-0"
               >
                 <label

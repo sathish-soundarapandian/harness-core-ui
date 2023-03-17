@@ -36,6 +36,8 @@ import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './JiraConnector.module.scss'
 
@@ -44,6 +46,7 @@ interface JiraFormData {
   authType: string
   username: TextReferenceInterface | void
   password: SecretReferenceInterface | void
+  patRef: SecretReferenceInterface | void
 }
 
 interface AuthenticationProps {
@@ -65,7 +68,8 @@ const defaultInitialFormData: JiraFormData = {
   jiraUrl: '',
   authType: AuthTypes.USER_PASSWORD,
   username: undefined,
-  password: undefined
+  password: undefined,
+  patRef: undefined
 }
 
 const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> = props => {
@@ -75,6 +79,7 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
   const [loadConnector] = React.useState(false)
 
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = React.useState(true && props.isEditMode)
+  const isJiraPatAuthEnabled = useFeatureFlag(FeatureFlag.CDS_JIRA_PAT_AUTH)
 
   const { getString } = useStrings()
   const authOptions: SelectOption[] = React.useMemo(
@@ -82,8 +87,11 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
       {
         label: getString('connectors.jira.usernameAPIKey'),
         value: AuthTypes.USER_PASSWORD
+      },
+      {
+        label: getString('personalAccessToken'),
+        value: AuthTypes.PERSONAL_ACCESS_TOKEN
       }
-      // PAT will be added as a second option for authentication support behind FF.
     ],
     []
   )
@@ -147,6 +155,11 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
             is: val => val === AuthTypes.USER_PASSWORD,
             then: Yup.object().required(getString('validation.password')),
             otherwise: Yup.object().nullable()
+          }),
+          patRef: Yup.object().when('authType', {
+            is: val => val === AuthTypes.PERSONAL_ACCESS_TOKEN,
+            then: Yup.object().required(getString('connectors.validation.personalAccessToken')),
+            otherwise: Yup.object().nullable()
           })
         })}
         onSubmit={stepData => {
@@ -174,7 +187,11 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
                   </Text>
                   <FormInput.Select
                     name="authType"
-                    items={authOptions}
+                    items={
+                      isJiraPatAuthEnabled
+                        ? authOptions
+                        : authOptions.filter(authOption => authOption.value !== AuthTypes.PERSONAL_ACCESS_TOKEN)
+                    }
                     disabled={false}
                     className={commonStyles.authTypeSelectLarge}
                   />
@@ -188,6 +205,9 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
                     />
                     <SecretInput name={'passwordRef'} label={getString('connectors.apiKey')} scope={scope} />
                   </>
+                ) : null}
+                {formik.values.authType === AuthTypes.PERSONAL_ACCESS_TOKEN && isJiraPatAuthEnabled ? (
+                  <SecretInput name={'patRef'} label={getString('personalAccessToken')} isMultiTypeSelect />
                 ) : null}
               </Layout.Vertical>
 

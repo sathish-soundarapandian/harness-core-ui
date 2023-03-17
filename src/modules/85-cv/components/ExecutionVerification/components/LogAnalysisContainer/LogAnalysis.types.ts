@@ -9,6 +9,7 @@ import type { SeriesColumnOptions } from 'highcharts'
 import type { GetDataError } from 'restful-react'
 
 import type {
+  LogAnalysisRadarChartListDTO,
   LogData,
   RestResponseAnalyzedRadarChartLogDataWithCountDTO,
   RestResponseListLogAnalysisRadarChartClusterDTO,
@@ -27,8 +28,10 @@ export type LogAnalysisRowData = {
   message: string
   count: number
   messageFrequency: LogAnalysisMessageFrequency[]
-  riskStatus: LogData['riskStatus']
+  riskStatus: LogAnalysisRadarChartListDTO['risk']
   clusterId?: string
+  feedbackApplied?: LogAnalysisRadarChartListDTO['feedbackApplied']
+  feedback?: LogAnalysisRadarChartListDTO['feedback']
 }
 
 export interface LogAnalysisContainerProps {

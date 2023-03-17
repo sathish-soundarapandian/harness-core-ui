@@ -25,6 +25,8 @@ import { StepPalette } from '@pipeline/components/PipelineStudio/StepPalette/Ste
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { getAllStepPaletteModuleInfos, getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { ModuleName } from 'framework/types/ModuleName'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import css from './StepTemplateDiagram.module.scss'
 
 export const StepTemplateDiagram = (): JSX.Element => {
@@ -37,7 +39,8 @@ export const StepTemplateDiagram = (): JSX.Element => {
   const [stepPaletteModuleInfos, setStepPaletteModuleInfos] = React.useState<StepPalleteModuleInfo[]>([])
   const { module } = useParams<ModulePathParams>()
   const [isStepSelectorOpen, setIsStepSelectorOpen] = React.useState<boolean>()
-  const { CDNG_ENABLED, CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   const openStepSelector = React.useCallback(() => {
     setIsStepSelectorOpen(true)
   }, [setIsStepSelectorOpen])
@@ -77,9 +80,9 @@ export const StepTemplateDiagram = (): JSX.Element => {
     } else if (module === 'cf') {
       setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.FEATURE))
     } else {
-      if (CDNG_ENABLED && CING_ENABLED && CFNG_ENABLED) {
+      if (shouldVisible && CING_ENABLED && CFNG_ENABLED) {
         setStepPaletteModuleInfos(getAllStepPaletteModuleInfos())
-      } else if (CDNG_ENABLED) {
+      } else if (shouldVisible) {
         setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.DEPLOY))
       } else if (CING_ENABLED) {
         setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.BUILD))

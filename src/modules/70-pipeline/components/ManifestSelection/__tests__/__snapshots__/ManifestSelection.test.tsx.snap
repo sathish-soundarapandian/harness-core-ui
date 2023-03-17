@@ -7,7 +7,7 @@ exports[`ManifestSelection tests delete manifest list works correctly 1`] = `
     style="width: 100%;"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+      class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-medium"
     >
       <div
         class="manifestList listHeader"
@@ -319,7 +319,7 @@ exports[`ManifestSelection tests edit manifest list works correctly 1`] = `
     style="width: 100%;"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+      class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-medium"
     >
       <div
         class="manifestList listHeader"
@@ -623,7 +623,7 @@ exports[`ManifestSelection tests renders Manifest Listview with connectors Data 
     style="width: 100%;"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+      class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-medium"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -678,7 +678,7 @@ exports[`ManifestSelection tests renders Manifest Listview with overrideSetIdent
     style="width: 100%;"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+      class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-medium"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -733,7 +733,7 @@ exports[`ManifestSelection tests renders Manifest Listview without crashing 1`] 
     style="width: 100%;"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+      class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-medium"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -791,7 +791,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
       style="width: 100%;"
     >
       <div
-        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-medium"
       >
         <div
           class="manifestList listHeader"
@@ -1630,7 +1630,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
       style="width: 100%;"
     >
       <div
-        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-medium"
       >
         <div
           class="manifestList listHeader"
@@ -2469,7 +2469,7 @@ exports[`ManifestSelection tests renders without crashing 1`] = `
       style="width: 100%;"
     >
       <div
-        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-medium"
       >
         <div
           class="Layout--vertical StyledProps--main"

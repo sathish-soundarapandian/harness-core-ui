@@ -7,10 +7,12 @@
 
 import React, { useState, useCallback } from 'react'
 import { isEmpty } from 'lodash-es'
-import { Container, Heading, Button, Text, Icon, PageError, Layout } from '@harness/uicore'
+import { Container, Heading, Button, Text, Icon, PageError, Layout, ButtonVariation } from '@harness/uicore'
 import { Drawer } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { useStrings } from 'framework/strings'
 import type { SampleDataProps, LogAnalysisDetailsDrawerProps } from './LogAnalysisDetailsDrawer.types'
 import { ActivityHeadingContent } from './components/ActivityHeadingContent'
@@ -33,10 +35,20 @@ export function SampleData(props: SampleDataProps): JSX.Element {
 }
 
 export function LogAnalysisDetailsDrawer(props: LogAnalysisDetailsDrawerProps): JSX.Element {
-  const { onHide, rowData, isDataLoading, logsError, retryLogsCall } = props
+  const { onHide, rowData, isDataLoading, logsError, retryLogsCall, onUpdatePreferenceDrawerOpen, index } = props
   const [isOpen, setOpen] = useState(true)
 
-  const { messageFrequency, count = 0, clusterType: activityType, message } = rowData
+  const isLogFeedbackEnabled = useFeatureFlag(FeatureFlag.SRM_LOG_FEEDBACK_ENABLE_UI)
+
+  const {
+    messageFrequency,
+    count = 0,
+    clusterType: activityType,
+    message,
+    riskStatus,
+    feedback,
+    feedbackApplied
+  } = rowData
 
   const { getString } = useStrings()
   const onHideCallback = useCallback(() => {
@@ -67,11 +79,30 @@ export function LogAnalysisDetailsDrawer(props: LogAnalysisDetailsDrawerProps): 
           <Heading level={2} font={{ variation: FontVariation.H4 }}>
             {getString('pipeline.verification.logs.eventDetails')}
           </Heading>
+          {isLogFeedbackEnabled && (
+            <Button
+              variation={ButtonVariation.SECONDARY}
+              onClick={() =>
+                onUpdatePreferenceDrawerOpen({ selectedIndex: index ?? 0, isOpenedViaLogsDrawer: true, rowData })
+              }
+              data-testid="updateEventPreferenceButton-Drawer"
+            >
+              {getString('pipeline.verification.logs.updateEventPreference')}
+            </Button>
+          )}
         </Container>
+
         <Container className={css.formAndMessageContainer}>
           <Layout.Horizontal height="100%">
             <Container className={css.chartSection}>
-              <ActivityHeadingContent activityType={activityType} messageFrequency={messageFrequency} count={count} />
+              <ActivityHeadingContent
+                activityType={activityType}
+                riskStatus={riskStatus}
+                messageFrequency={messageFrequency}
+                count={count}
+                feedback={feedback}
+                feedbackApplied={feedbackApplied}
+              />
             </Container>
             <Container className={css.sampleMessageSection}>
               <SampleData logMessage={message} />

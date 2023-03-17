@@ -118,7 +118,7 @@ describe('AuditLogsList', () => {
           break
 
         case 'addRule':
-          expect(screen.queryByText('cf.auditLogs.events.addRule')).toBeInTheDocument()
+          expect(screen.queryByText('cf.auditLogs.events.addPercentageRollout')).toBeInTheDocument()
           break
 
         case 'updateRule':
@@ -138,8 +138,14 @@ describe('AuditLogsList', () => {
           expect(screen.queryByText('cf.auditLogs.events.updateDefaultServe.variation')).toBeInTheDocument()
           break
 
+        //Uses the same string as the addTargetToFlagsVariationTargetMap
         case 'addTargetsToVariationTargetMap':
-          expect(screen.queryByText('cf.auditLogs.events.addTargetsToVariationTargetMap')).toBeInTheDocument()
+          expect(screen.getAllByText('cf.auditLogs.events.targetAddedForVariation')[0]).toBeInTheDocument()
+          break
+
+        //Uses the same string as the addTargetsToVariationTargetMap
+        case 'addTargetToFlagsVariationTargetMap':
+          expect(screen.getAllByText('cf.auditLogs.events.targetAddedForVariation')[1]).toBeInTheDocument()
           break
 
         case 'updateDescription':

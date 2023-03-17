@@ -37,6 +37,7 @@ import {
 import { FormikEffect, FormikEffectProps } from '../FormikEffect/FormikEffect'
 import { WizardHeader } from './WizardHeader'
 import { WizardFooter } from './WizardFooter'
+import useTriggerView from './useTriggerView'
 import css from './Wizard.module.scss'
 
 export interface PanelInterface {
@@ -119,7 +120,7 @@ const Wizard: React.FC<WizardProps> = ({
   const [touchedPanels, setTouchedPanels] = React.useState<number[]>([])
   const [validateOnChange, setValidateOnChange] = React.useState<boolean>(formikInitialProps.validateOnChange || false)
   const [selectedTabIndex, setSelectedTabIndex] = React.useState<number>(initialIndex)
-  const [selectedView, setSelectedView] = React.useState<SelectedView>(SelectedView.VISUAL)
+  const [selectedView, setSelectedView] = useTriggerView()
   const layoutRef = useRef<HTMLDivElement>(null)
   const lastTab = selectedTabIndex === tabsMap.length - 1
   const {

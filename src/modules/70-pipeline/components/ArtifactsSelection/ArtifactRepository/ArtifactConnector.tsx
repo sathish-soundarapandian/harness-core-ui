@@ -147,7 +147,6 @@ export function ArtifactConnector(props: StepProps<ConnectorConfigDTO> & Artifac
                     variableName="connectorRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('connectorId', value)
                     }}

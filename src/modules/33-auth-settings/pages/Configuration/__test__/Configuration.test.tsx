@@ -59,7 +59,6 @@ describe('Configuration', () => {
       <TestWrapper
         path={routes.toAuthenticationSettings({ ...accountPathProps })}
         pathParams={{ accountId: 'testAcc' }}
-        defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}
       >
         <Configuration />
       </TestWrapper>

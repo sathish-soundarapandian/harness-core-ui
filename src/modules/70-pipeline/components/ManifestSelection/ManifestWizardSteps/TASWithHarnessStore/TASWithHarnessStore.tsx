@@ -23,14 +23,18 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
-import { get } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { cfCliVersions, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
-import type { TASWithHarnessStorePropType, ManifestTypes } from '../../ManifestInterface'
+import type {
+  TASWithHarnessStorePropType,
+  ManifestTypes,
+  TASWithHarnessStoreManifestLastStepPrevStepData
+} from '../../ManifestInterface'
 import { removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
@@ -43,6 +47,7 @@ interface TASWithHarnessStoreProps {
   manifestIdsList: Array<string>
   expressions: Array<string>
   isReadonly?: boolean
+  editManifestModePrevStepData?: TASWithHarnessStoreManifestLastStepPrevStepData
 }
 
 function TASWithHarnessStore({
@@ -54,9 +59,12 @@ function TASWithHarnessStore({
   prevStepData,
   previousStep,
   manifestIdsList,
-  expressions
+  expressions,
+  editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & TASWithHarnessStoreProps): React.ReactElement {
   const { getString } = useStrings()
+
+  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
   const getInitialValues = (): TASWithHarnessStorePropType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -136,7 +144,7 @@ function TASWithHarnessStore({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData
           } as unknown as TASWithHarnessStorePropType)
         }}
@@ -224,7 +232,7 @@ function TASWithHarnessStore({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

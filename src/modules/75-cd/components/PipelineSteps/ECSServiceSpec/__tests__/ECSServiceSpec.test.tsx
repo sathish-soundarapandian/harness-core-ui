@@ -7,7 +7,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
@@ -39,7 +39,8 @@ import {
 } from './helpers/helper'
 import { ECSServiceSpec } from '../ECSServiceSpec'
 
-const fetchConnector = jest.fn().mockReturnValue({ data: connectorsData.data?.content?.[1] })
+const connectorData = { data: connectorsData.data.content[1] }
+const fetchConnector = jest.fn().mockReturnValue(connectorData)
 const fetchConnectorList = (): Promise<unknown> => Promise.resolve(connectorsData)
 const fetchBuckets = jest.fn().mockReturnValue(bucketListData)
 
@@ -48,7 +49,7 @@ jest.mock('services/cd-ng', () => ({
   getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectorList })),
   useGetConnector: jest.fn().mockImplementation(() => {
-    return { data: { data: connectorsData.data.content[1] }, refetch: fetchConnector, loading: false }
+    return { data: connectorData, refetch: fetchConnector, loading: false }
   }),
   useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
   getConnectorListV2Promise: () => Promise.resolve(connectorsData),
@@ -101,9 +102,9 @@ const existingInitialValues = {
   }
 }
 
-describe('ECSInfraSpec tests', () => {
+describe('ECSServiceSpec tests', () => {
   test('check service tab for given pipeline state from context', async () => {
-    const { getByText, findAllByText, getAllByText } = render(
+    const { getByText, findAllByText, getAllByText, getByTestId } = render(
       <PipelineContext.Provider value={pipelineContextECSManifests}>
         <TestStepWidget
           testWrapperProps={{
@@ -126,7 +127,14 @@ describe('ECSInfraSpec tests', () => {
 
     // Check if section is rendered with correct header and list items
     // Task Definition
-    expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
+    const taskDefinitionManifestSection = getByTestId('task-definition-card')
+    const taskDefinitionManifestHeaderContainer = getByTestId('task-definition-manifest-header-container')
+    expect(
+      within(taskDefinitionManifestSection).getAllByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toHaveLength(2)
+    expect(
+      within(taskDefinitionManifestHeaderContainer).getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toBeInTheDocument()
     expect(getByText('TaskDefinition_Manifest')).toBeInTheDocument()
     // Service Definition
     expect(getByText('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')).toBeInTheDocument()

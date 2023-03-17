@@ -2290,7 +2290,7 @@ exports[`HealthSource table should matchsnapshot 1`] = `
                         class="connectorField"
                       >
                         <div
-                          class="bp3-form-group"
+                          class="bp3-form-group bp3-disabled"
                           data-id="null-2"
                         >
                           <label

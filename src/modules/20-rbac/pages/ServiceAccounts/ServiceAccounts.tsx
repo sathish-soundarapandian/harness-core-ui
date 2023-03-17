@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { ButtonSize, ButtonVariation, ExpandingSearchInput, Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -23,9 +23,12 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
-import { rbacQueryParamOptions } from '@rbac/utils/utils'
+import { useRbacQueryParamOptions } from '@rbac/utils/utils'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByEmail, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByEmail, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import ServiceAccountsEmptyState from './service-accounts-empty-state.png'
 import css from './ServiceAccounts.module.scss'
 
@@ -33,13 +36,14 @@ const ServiceAccountsPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
   useDocumentTitle(getString('rbac.serviceAccounts.label'))
-  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
-
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.ServiceAccountsPage}`)
+  const queryParamOptions = useRbacQueryParamOptions()
   const {
     search: searchTerm,
     page: pageIndex,
     size: pageSize
-  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(rbacQueryParamOptions)
+  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(queryParamOptions)
   const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
 
   const { data, loading, error, refetch } = useListAggregatedServiceAccounts({
@@ -50,7 +54,7 @@ const ServiceAccountsPage: React.FC = () => {
       searchTerm,
       pageIndex,
       pageSize,
-      sortOrders: [sort]
+      sortOrders: [sortPreference]
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
@@ -127,9 +131,11 @@ const ServiceAccountsPage: React.FC = () => {
         }}
       >
         <ListHeader
-          value={sort}
+          selectedSortMethod={sortPreference}
           sortOptions={[...sortByCreated, ...sortByName, ...sortByEmail]}
-          onChange={option => setSort(option.value as string)}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
           totalCount={data?.data?.totalItems}
         />
         <ServiceAccountsListView

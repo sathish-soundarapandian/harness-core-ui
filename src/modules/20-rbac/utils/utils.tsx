@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useMemo } from 'react'
 import type { IconName, ModalErrorHandlerBinding, MultiSelectOption, SelectOption } from '@harness/uicore'
 import { defaultTo, pick } from 'lodash-es'
 import type { StringsMap } from 'stringTypes'
@@ -35,8 +35,10 @@ import type { UseStringsReturn } from 'framework/strings'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
 import type { AttributeFilter } from 'services/resourcegroups'
-import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import { queryParamDecodeAll, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 
 export const DEFAULT_RG = '_all_resources_including_child_scopes'
 export const PROJECT_DEFAULT_RG = '_all_project_level_resources'
@@ -512,15 +514,23 @@ export const getDefaultSelectedFilter = (scope: Scope): ScopeFilterItems => {
   }
 }
 
-export const rbacQueryParamOptions = {
-  decoder: queryParamDecodeAll(),
-  processQueryParams<Rest>(
-    params: CommonPaginationQueryParams & Rest
-  ): RequiredPick<CommonPaginationQueryParams, 'page' | 'size'> & Rest {
-    return {
-      ...params,
-      page: params.page ?? 0,
-      size: params.size ?? 10
-    }
-  }
+export type ProcessedRbacQueryParams<Rest> = RequiredPick<CommonPaginationQueryParams, 'page' | 'size'> & Rest
+
+export const useRbacQueryParamOptions = <Rest,>(): UseQueryParamsOptions<ProcessedRbacQueryParams<Rest>> => {
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const options = useMemo(
+    () => ({
+      decoder: queryParamDecodeAll(),
+      processQueryParams(params: CommonPaginationQueryParams & Rest): ProcessedRbacQueryParams<Rest> {
+        return {
+          ...params,
+          page: params.page ?? 0,
+          size: params.size ?? (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : 10)
+        }
+      }
+    }),
+    [PL_NEW_PAGE_SIZE]
+  )
+
+  return options
 }

@@ -11,15 +11,7 @@ import { connect, FormikProps } from 'formik'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import {
-  Layout,
-  AllowedTypes,
-  SelectOption,
-  Text,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  FormError
-} from '@harness/uicore'
+import { Layout, AllowedTypes, SelectOption, Text, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { useGetProjects, useGetRegionsForGoogleArtifactRegistry } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -172,9 +164,6 @@ const GoogleCloudFunctionInfraSpecInputForm = ({
   const regionFieldName = isEmpty(path) ? 'region' : `${path}.region`
 
   const getProjectHelperText = React.useCallback(() => {
-    if (fetchProjectsError) {
-      return <FormError name={projectFieldName} errorMessage={getRBACErrorMessage(fetchProjectsError as RBACError)} />
-    }
     const connectorRef = get(formik?.values, connectorFieldName)
     if (
       getMultiTypeFromValue(get(formik?.values, projectFieldName)) === MultiTypeInputType.FIXED &&
@@ -237,8 +226,8 @@ const GoogleCloudFunctionInfraSpecInputForm = ({
               allowCreatingNewItems: true,
               itemRenderer,
               noResults: (
-                <Text lineClamp={1} width={500} height={35} padding="small">
-                  {getString('noProjects')}
+                <Text lineClamp={1} width={500} height={32} padding="small">
+                  {getRBACErrorMessage(fetchProjectsError as RBACError) || getString('noProjects')}
                 </Text>
               )
             },

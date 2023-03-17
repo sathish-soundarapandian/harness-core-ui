@@ -38,14 +38,18 @@ import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncIn
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import { InputSetListView } from './InputSetListView'
 import css from './InputSetList.module.scss'
 
 function InputSetList(): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [page, setPage] = React.useState(0)
-  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.InputSetList}`)
   const { connectorRef, repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<PipelinePathProps> & { accountId: string }
@@ -77,7 +81,7 @@ function InputSetList(): React.ReactElement {
             getDefaultFromOtherRepo: true
           }
         : {}),
-      sortOrders: [sort]
+      sortOrders: [sortPreference]
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: !isEmpty(searchParam) ? 300 : false
@@ -103,7 +107,8 @@ function InputSetList(): React.ReactElement {
     },
     body: {
       stageIdentifiers: []
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const {
@@ -153,6 +158,8 @@ function InputSetList(): React.ReactElement {
     identifier?: string
     repoIdentifier?: string
     branch?: string
+    inputSetRepoName?: string
+    inputSetConnectorRef?: string
   }>()
   const history = useHistory()
 
@@ -173,8 +180,10 @@ function InputSetList(): React.ReactElement {
           inputSetIdentifier: typeof inputSetTemp?.identifier !== 'string' ? '-1' : inputSetTemp.identifier,
           module,
           inputSetRepoIdentifier: inputSetTemp?.gitDetails?.repoIdentifier,
+          inputSetRepoName: inputSetTemp?.gitDetails?.repoName,
           inputSetBranch: inputSetTemp?.gitDetails?.branch,
-          connectorRef,
+          inputSetConnectorRef: inputSetTemp?.connectorRef, //InputSet connector
+          connectorRef, //Pipeline connector
           repoIdentifier,
           repoName,
           branch,
@@ -208,6 +217,8 @@ function InputSetList(): React.ReactElement {
         identifier={selectedInputSet?.identifier}
         overlayInputSetRepoIdentifier={selectedInputSet?.repoIdentifier}
         overlayInputSetBranch={selectedInputSet?.branch}
+        overlayInputSetRepoName={selectedInputSet?.inputSetRepoName}
+        overlayInputSetConnectorRef={selectedInputSet?.inputSetConnectorRef}
         hideForm={() => {
           refetch()
           hideOverlayInputSetForm()
@@ -355,9 +366,11 @@ function InputSetList(): React.ReactElement {
         ) : (
           <>
             <ListHeader
-              value={sort}
+              selectedSortMethod={sortPreference}
               sortOptions={[...sortByCreated, ...sortByName]}
-              onChange={option => setSort(option.value as string)}
+              onSortMethodChange={option => {
+                setSortPreference(option.value as SortMethod)
+              }}
               totalCount={inputSet?.data?.totalItems}
               className={css.listHeader}
             />
@@ -371,7 +384,9 @@ function InputSetList(): React.ReactElement {
                 setSelectedInputSet({
                   identifier: inputSetTemp?.identifier,
                   repoIdentifier: inputSetTemp?.gitDetails?.repoIdentifier,
-                  branch: inputSetTemp?.gitDetails?.branch
+                  branch: inputSetTemp?.gitDetails?.branch,
+                  inputSetRepoName: inputSetTemp?.gitDetails?.repoName,
+                  inputSetConnectorRef: inputSetTemp?.connectorRef
                 })
                 if (inputSetTemp?.inputSetType === 'INPUT_SET') {
                   goToInputSetForm(inputSetTemp)

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypesWithRunTime } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { get, isEmpty } from 'lodash-es'
@@ -20,8 +20,8 @@ import type { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
+import { namespaceRegex } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 
-const namespaceRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
 const releaseNameRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/
 
 export enum InfraDeploymentType {
@@ -42,7 +42,8 @@ export enum InfraDeploymentType {
   CustomDeployment = 'CustomDeployment',
   Elastigroup = 'Elastigroup',
   TAS = 'TAS',
-  GoogleCloudFunctions = 'GoogleCloudFunctions'
+  GoogleCloudFunctions = 'GoogleCloudFunctions',
+  AwsLambda = 'AwsLambda'
 }
 
 export const deploymentTypeToInfraTypeMap = {
@@ -61,7 +62,7 @@ export function getNameSpaceSchema(
   getString: UseStringsReturn['getString'],
   isRequired = true
 ): Yup.StringSchema<string | undefined> {
-  const namespaceSchema = Yup.string().test('namespace', getString('cd.namespaceValidation'), function (value) {
+  const namespaceSchema = Yup.string().test('namespace', getString('pipeline.namespaceValidation'), function (value) {
     if (getMultiTypeFromValue(value) !== MultiTypeInputType.FIXED || isEmpty(value)) {
       return true
     }
@@ -278,6 +279,13 @@ export function getGoogleCloudFunctionInfraValidationSchema(getString: UseString
   })
 }
 
+export function getAwsLambdaInfraValidationSchema(getString: UseStringsReturn['getString']) {
+  return Yup.object().shape({
+    connectorRef: getConnectorSchema(getString),
+    region: Yup.string().required(getString('validation.regionRequired'))
+  })
+}
+
 export const isMultiArtifactSourceEnabled = (
   isMultiArtifactSource: boolean,
   stage: DeploymentStageElementConfig,
@@ -347,3 +355,14 @@ export function validateGitOpsExecutionStepForm({
   }
   return errors
 }
+
+// List type field do not support expression at root
+export const SupportedInputTypesForListTypeField: AllowedTypesWithRunTime[] = [
+  MultiTypeInputType.FIXED,
+  MultiTypeInputType.RUNTIME
+]
+
+export const SupportedInputTypesForListItems: AllowedTypesWithRunTime[] = [
+  MultiTypeInputType.FIXED,
+  MultiTypeInputType.EXPRESSION
+]

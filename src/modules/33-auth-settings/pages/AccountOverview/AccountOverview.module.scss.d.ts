@@ -13,6 +13,7 @@ declare const styles: {
   readonly moduleIcons: string
   readonly nameInput: string
   readonly subscribedModules: string
+  readonly switch: string
   readonly zeroPadding: string
 }
 export default styles

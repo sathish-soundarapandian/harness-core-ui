@@ -105,10 +105,12 @@ export function FailureTypeMultiSelect(props: FailureTypeMultiSelectProps): Reac
   }
 
   // selected options to show
-  const selectedOptions: Option[] = filteredValues.map((key: FailureErrorType) => ({
-    value: key,
-    label: getString(stringsMap[key])
-  }))
+  const selectedOptions: Option[] = filteredValues
+    .filter((key: FailureErrorType) => !!ErrorType[key])
+    .map((key: FailureErrorType) => ({
+      value: key,
+      label: getString(stringsMap[key])
+    }))
 
   // when x is clicked on an option
   function onRemove(value: string): void {

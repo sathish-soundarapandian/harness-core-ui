@@ -62,3 +62,49 @@
   overflow-x: hidden !important;
   overflow-y: auto;
 }
+
+.InfraDefinitionDetailsDrawer {
+  .infraDetailsConfigurationTab,
+  .infraDetailsReferencedByTab {
+    max-height: calc(100vh - 120px);
+    overflow: auto;
+    background-color: var(--form-bg);
+
+    :global(.bp3-card) {
+      max-width: 100% !important;
+    }
+  }
+
+  .closeButton:global(.bp3-button.bp3-minimal) {
+    position: absolute;
+    right: 100%;
+    top: 0;
+    background: var(--primary-5) !important;
+    opacity: 0.5;
+    color: var(--white) !important;
+    border-radius: 4px 0 0 4px !important;
+    padding: 0 !important;
+  }
+
+  :global(.bp3-drawer-header) {
+    margin: 0 !important;
+    padding: 0 var(--spacing-10) 0 var(--spacing-10) !important;
+    border-bottom: 1px solid var(--grey-200);
+  }
+  :global(.bp3-heading) {
+    margin-right: 0 !important;
+  }
+  :global(.bp3-tab-list) {
+    padding-left: var(--spacing-10) !important;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 13%) !important;
+    z-index: 10;
+  }
+  :global(.bp3-tab-panel) {
+    margin-top: 0 !important;
+  }
+}
+
+.referenceByPageBody {
+  min-height: unset !important;
+  height: calc(100vh - 200px) !important;
+}

@@ -52,7 +52,7 @@ export function K8sOverrideValuesRuntimeFields(
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           width={400}
-          type={overrideValue?.manifest?.spec?.type}
+          type={overrideValue?.manifest?.spec?.store?.type}
           name={`${inputSetData?.path}.spec.overrides[${index}].manifest.spec.store.spec.connectorRef`}
           label={getString('connector')}
           disabled={readonly}

@@ -235,7 +235,7 @@ export function ReconcileDialog({
                     </Text>
                   </Layout.Vertical>
                 </Container>
-                {isEdit && hasChildren && (
+                {isEdit && hasChildren && !loading && (
                   <Button
                     text={getString('pipeline.reconcileDialog.updateAllLabel')}
                     variation={ButtonVariation.PRIMARY}
@@ -244,7 +244,7 @@ export function ReconcileDialog({
                     onClick={onUpdateAll}
                   />
                 )}
-                {hasChildren && (
+                {hasChildren && !loading && (
                   <ErrorNode
                     entity={entity}
                     errorNodeSummary={errorNodeSummary}
@@ -262,6 +262,7 @@ export function ReconcileDialog({
                 originalEntityYaml={originalEntityYaml}
                 resolvedTemplateResponses={resolvedTemplateResponses}
                 onUpdate={onUpdateNode}
+                setYamlDiffLoading={setLoading}
               />
             </Container>
           </Layout.Horizontal>

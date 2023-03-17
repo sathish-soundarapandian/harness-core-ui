@@ -6,9 +6,12 @@
  */
 
 import type { GetDataError } from 'restful-react'
-import type { LogData } from 'services/cv'
-import type { LogAnalysisMessageFrequency } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
-import type { LogAnalysisRowData } from '../../LogAnalysisRow.types'
+import type { LogAnalysisRadarChartListDTO, LogData, LogFeedback } from 'services/cv'
+import type {
+  LogAnalysisMessageFrequency,
+  LogAnalysisRowData
+} from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
+import type { UpdateEventPreferenceOpenFn } from '../../LogAnalysisRow.types'
 
 export interface LogAnalysisDetailsDrawerProps {
   rowData: LogAnalysisRowData
@@ -16,6 +19,8 @@ export interface LogAnalysisDetailsDrawerProps {
   isDataLoading?: boolean
   logsError?: GetDataError<unknown> | null
   retryLogsCall?: () => void
+  index: number | null
+  onUpdatePreferenceDrawerOpen: (options: UpdateEventPreferenceOpenFn) => void
 }
 
 export interface RiskAndMessageFormProps {
@@ -27,6 +32,9 @@ export interface ActivityHeadingContentProps {
   count: number
   messageFrequency?: LogAnalysisMessageFrequency[]
   activityType?: LogData['tag']
+  riskStatus?: LogAnalysisRadarChartListDTO['risk']
+  feedback?: LogFeedback
+  feedbackApplied?: LogFeedback
 }
 
 export interface SampleDataProps {

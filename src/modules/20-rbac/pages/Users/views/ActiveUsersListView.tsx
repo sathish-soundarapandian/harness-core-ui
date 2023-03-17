@@ -33,12 +33,13 @@ import {
   UserMetadataDTO,
   RoleAssignmentMetadataDTO,
   useUnlockUser,
-  checkIfLastAdminPromise
+  checkIfLastAdminPromise,
+  resetTwoFactorAuthPromise
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
-import { PrincipalType, rbacQueryParamOptions } from '@rbac/utils/utils'
+import { PrincipalType, useRbacQueryParamOptions } from '@rbac/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { PipelineType, ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
@@ -57,7 +58,10 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByEmail, sortByLastModified, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByEmail, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import css from './UserListView.module.scss'
 
 interface ActiveUserListViewProps {
@@ -213,6 +217,32 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
     }
   })
 
+  const { openDialog: openReset2FADialog } = useConfirmationDialog({
+    className: css.wordbreak,
+    contentText: getString('rbac.usersPage.resetTwoFactorAuthConfirmation', { name }),
+    canEscapeKeyClose: true,
+    titleText: getString('rbac.usersPage.resetTwoFactorAuth'),
+    confirmButtonText: getString('rbac.notifications.buttonSend'),
+    cancelButtonText: getString('cancel'),
+    intent: Intent.WARNING,
+    onCloseDialog: async didConfirm => {
+      if (didConfirm && data) {
+        try {
+          const sent = await resetTwoFactorAuthPromise({
+            queryParams: {
+              accountIdentifier: accountId
+            },
+            userId: data.uuid
+          })
+          sent && showSuccess(getString('rbac.usersPage.resendTwoFactorEmailSuccess', { name }))
+          ;(column as any).refetchActiveUsers?.()
+        } catch (err) {
+          showError(defaultTo(err?.data?.message, err?.message))
+        }
+      }
+    }
+  })
+
   const { openDialog: openUnlockDialog } = useConfirmationDialog({
     contentText: getString('rbac.usersPage.unlockConfirmation', { name }),
     titleText: getString('rbac.usersPage.unlockTitle'),
@@ -252,6 +282,10 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
     } catch (err) {
       showError(defaultTo(err?.data?.message, err?.message))
     }
+  }
+
+  const resendTwoFactorEmail = (): void => {
+    openReset2FADialog()
   }
 
   const permissionRequest = {
@@ -326,6 +360,18 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
               permission={permissionRequest}
             />
           ) : null}
+          {data.twoFactorAuthenticationEnabled ? (
+            <RbacMenuItem
+              icon="email-step"
+              text={getString('rbac.usersPage.resetTwoFactorAuth')}
+              onClick={e => {
+                e.stopPropagation()
+                setMenuOpen(false)
+                resendTwoFactorEmail()
+              }}
+              permission={permissionRequest}
+            />
+          ) : null}
           {data.externallyManaged && (scope === Scope.ACCOUNT || !isExternallyManagedUserDeletionEnabled) ? (
             <Popover
               position={Position.TOP}
@@ -380,9 +426,11 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
   const { getString } = useStrings()
   const history = useHistory()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
-  const { page, size } = useQueryParams(rbacQueryParamOptions)
+  const queryParamOptions = useRbacQueryParamOptions()
+  const { page, size } = useQueryParams(queryParamOptions)
   const isCommunity = useGetCommunity()
-  const [sort, setSort] = useState<string>(sortByLastModified[0].value as string)
+  const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.UsersPage}`)
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetAggregatedUsers, {
     body: {},
@@ -393,8 +441,9 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
       pageIndex: page,
       pageSize: size,
       searchTerm: searchTerm,
-      sortOrders: sort
+      sortOrders: [sortPreference]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -492,9 +541,11 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
       }
     >
       <ListHeader
-        value={sort}
+        selectedSortMethod={sortPreference}
         sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName, ...sortByEmail]}
-        onChange={option => setSort(option.value as string)}
+        onSortMethodChange={option => {
+          setSortPreference(option.value as SortMethod)
+        }}
         totalCount={data?.data?.totalItems}
       />
       <TableV2<UserAggregate>

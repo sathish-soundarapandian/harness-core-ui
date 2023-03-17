@@ -170,7 +170,7 @@ export const BackgroundStepBase = (
                   disabled: readonly
                 }}
                 disabled={readonly}
-                configureOptionsProps={{ variableName: 'spec.shell' }}
+                configureOptionsProps={{ variableName: 'spec.shell', hideExecutionTimeField: true }}
               />
             </Container>
 
@@ -199,6 +199,7 @@ export const BackgroundStepBase = (
                   allowedTypes: SupportedInputTypesForListTypeField
                 }}
                 disabled={readonly}
+                configureOptionsProps={{ hideExecutionTimeField: true }}
               />
             </div>
             <div className={cx(css.fieldsGroup, css.withoutSpacing, css.topPadding3, css.bottomPadding3)}>
@@ -251,9 +252,9 @@ export const BackgroundStepBase = (
                   variableName="spec.command"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => formik?.setFieldValue('spec.command', value)}
                   isReadonly={readonly}
+                  hideExecutionTimeField={true}
                 />
               )}
             </div>

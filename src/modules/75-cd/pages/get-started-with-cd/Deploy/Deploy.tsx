@@ -20,6 +20,8 @@ import {
 } from 'services/gitops'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import successSetup from '../../home/images/success_setup.svg'
 import {
@@ -52,6 +54,7 @@ export const Deploy = ({ onBack, setSelectedSectionId, appDetails }: DeployProps
   const history = useHistory()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const toast = useToaster()
+  const { trackEvent } = useTelemetry()
   const fullAgentName = getFullAgentWithScope(defaultTo(agentData?.identifier, ''), Scope.ACCOUNT)
   const formikRef = useRef<FormikContextType<Servicev1Application>>()
   const { mutate: createApplication, loading: creatingApp } = useAgentApplicationServiceCreate({
@@ -84,6 +87,7 @@ export const Deploy = ({ onBack, setSelectedSectionId, appDetails }: DeployProps
       accountIdentifier: accountId
     }
 
+    trackEvent(CDOnboardingActions.CreateAndSyncAppClicked, {})
     createApplication(data, {
       queryParams: {
         clusterIdentifier: `account.${clusterData?.identifier}`,
@@ -102,6 +106,7 @@ export const Deploy = ({ onBack, setSelectedSectionId, appDetails }: DeployProps
           undefined
         )
         saveApplicationData(applicationResponse)
+        trackEvent(CDOnboardingActions.AppCreatedSuccessfully, {})
         const sortedResources = new Map(
           sortBy(
             applicationResponse?.app?.status?.resources || [],
@@ -121,6 +126,7 @@ export const Deploy = ({ onBack, setSelectedSectionId, appDetails }: DeployProps
         }).then(() => {
           if (!syncError) {
             toast.showSuccess(getString('cd.getStartedWithCD.syncCompleteMessage'))
+            trackEvent(CDOnboardingActions.AppSyncedSuccessfully, {})
           }
           history.push(
             routes.toGitOpsApplication({
@@ -136,6 +142,7 @@ export const Deploy = ({ onBack, setSelectedSectionId, appDetails }: DeployProps
       })
       .catch(err => {
         toast.showError(err?.data?.message || err?.message)
+        trackEvent(CDOnboardingActions.AppCreateOrSyncFailure, {})
       })
   }
 

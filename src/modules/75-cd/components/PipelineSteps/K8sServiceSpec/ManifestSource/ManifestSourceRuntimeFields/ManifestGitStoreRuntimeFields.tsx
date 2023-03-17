@@ -107,7 +107,6 @@ const ManifestGitStoreRuntimeFields = ({
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.repoName`, value)
             }}
@@ -154,7 +153,6 @@ const ManifestGitStoreRuntimeFields = ({
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.commitId`, value)
             }}

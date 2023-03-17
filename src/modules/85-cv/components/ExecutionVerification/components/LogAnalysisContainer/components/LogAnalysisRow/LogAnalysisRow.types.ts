@@ -7,22 +7,12 @@
 
 import type { GetDataError } from 'restful-react'
 import type {
-  LogData,
   PageAnalyzedRadarChartLogDataDTO,
   PageLogAnalysisRadarChartListDTO,
   RestResponseAnalyzedRadarChartLogDataWithCountDTO,
   RestResponseLogAnalysisRadarChartListWithCountDTO
 } from 'services/cv'
-import type { LogAnalysisMessageFrequency } from '../../LogAnalysis.types'
-
-export type LogAnalysisRowData = {
-  clusterType: LogData['tag']
-  message: string
-  count: number
-  messageFrequency: LogAnalysisMessageFrequency[]
-  riskStatus: LogData['riskStatus']
-  clusterId?: string
-}
+import type { LogAnalysisRowData } from '../../LogAnalysis.types'
 
 export interface LogAnalysisRowProps {
   data: LogAnalysisRowData[]
@@ -49,6 +39,7 @@ export interface LogAnalysisDataRowProps {
     chartOptions: Highcharts.Options
   ) => void
   onDrawOpen: (index: number) => void
+  onUpdateEventPreferenceDrawer: (options: UpdateEventPreferenceOpenFn) => void
   index: number
   isSelected: boolean
   isErrorTracking?: boolean
@@ -63,4 +54,10 @@ export interface LogsRowData {
   logsData: RestResponseAnalyzedRadarChartLogDataWithCountDTO | RestResponseLogAnalysisRadarChartListWithCountDTO | null
   logsLoading: boolean
   logsError: GetDataError<unknown> | null
+}
+
+export interface UpdateEventPreferenceOpenFn {
+  selectedIndex: number
+  isOpenedViaLogsDrawer?: boolean
+  rowData?: LogAnalysisRowData
 }

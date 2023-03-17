@@ -19,6 +19,15 @@ stepDescription:
   Zap: Use Zap to test for vulnerabilities.
   PrismaCloud: Use Prisma Cloud to test for vulnerabilities.
   Mend: Use Mend to test for vulnerabilities.
+  CustomIngestion: Ingest custom Issues from any scanning tool.
+  AWSSecurityHub: Use AWS Security Hub to test for vulnerabilities.
+  AWSECR: Use AWS ECR to test for vulnerabilities.
+  Nikto: Use Nikto Security Hub to test for vulnerabilities.
+  Nmap: Use Nikto to test for vulnerabilities.
+  OWASP: Use OWASP Dependency Check to test for vulnerabilities.
+  Prowler: Use Prowler to test for vulnerabilities.
+  Sniper: Use Sniper to test for vulnerabilities.
+  Metasploit: Use Metasploit to test for vulnerabilities.
 stepField:
   mode: Scan Mode
   config: Scan Configuration
@@ -29,6 +38,7 @@ stepField:
   authAccessId: Access Id
   authSsl: Enforce SSL
   authVersion: API Version
+  authRegion: Access Region
   toolInclude: Include
   tool:
     fieldsHeading: Scan Tool
@@ -53,6 +63,7 @@ stepField:
     includeRaw: Include Raw
   ingestion:
     file: Ingestion File
+    customerArtifactsPath: Customer Artifacts Path
   optionLabels:
     logLevel:
       debug: Debug

@@ -53,6 +53,7 @@ interface ConfigFileStoreStepOneProps {
   isBackendConfig?: boolean
   isTerragruntPlan?: boolean
   isTerragrunt?: boolean
+  fieldPath?: string
 }
 
 export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreStepOneProps> = ({
@@ -66,7 +67,8 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
   isTerraformPlan = false,
   isBackendConfig = false,
   isTerragruntPlan = false,
-  isTerragrunt
+  isTerragrunt,
+  fieldPath
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -81,7 +83,7 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
     : isBackendConfig
     ? [...AllowedTypes, 'Harness']
     : AllowedTypes
-  const path = getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig)
+  const path = getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig, fieldPath)
 
   useEffect(() => {
     const selectedStore: ConnectorTypes = get(data, `${path}.store.type`)
@@ -129,14 +131,14 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
       return isTfPlan || isTgPlan
         ? Yup.object().shape({
             spec: Yup.object().shape({
-              configuration: Yup.object().shape({
+              [`${fieldPath}`]: Yup.object().shape({
                 ...backendConfigSchema
               })
             })
           })
         : Yup.object().shape({
             spec: Yup.object().shape({
-              configuration: Yup.object().shape({
+              [`${fieldPath}`]: Yup.object().shape({
                 spec: Yup.object().shape({
                   ...backendConfigSchema
                 })
@@ -147,14 +149,14 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
       return isTfPlan || isTgPlan
         ? Yup.object().shape({
             spec: Yup.object().shape({
-              configuration: Yup.object().shape({
+              [`${fieldPath}`]: Yup.object().shape({
                 ...configSchema
               })
             })
           })
         : Yup.object().shape({
             spec: Yup.object().shape({
-              configuration: Yup.object().shape({
+              [`${fieldPath}`]: Yup.object().shape({
                 spec: Yup.object().shape({
                   ...configSchema
                 })

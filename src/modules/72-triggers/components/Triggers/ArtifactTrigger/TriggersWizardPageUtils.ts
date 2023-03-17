@@ -2093,7 +2093,9 @@ export const getTriggerArtifactInitialSpec = (
         repositoryFormat: 'docker',
         repository: '',
         repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl,
-        tag
+        tag,
+        repositoryUrl: '',
+        artifactPath: ''
       } as NexusRegistrySpec
     }
     case 'Jenkins': {

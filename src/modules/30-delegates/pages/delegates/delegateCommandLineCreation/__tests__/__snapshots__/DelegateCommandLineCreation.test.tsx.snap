@@ -11,27 +11,31 @@ exports[`Delegate Command line creation render UI Docker Delegate 1`] = `
       style="width: 80%;"
     >
       <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+        class="Layout--vertical StyledProps--main"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
         >
-          delegates.newDelegate
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
+          >
+            delegates.newDelegate
+          </p>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxlarge"
+        >
+          delegates.commandLineCreation.installDelegateSubText
+           
+          <a
+            href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
+            rel="noreferrer"
+            target="_blank"
+          >
+            common.learnMoreDelegate
+          </a>
         </p>
       </div>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxlarge"
-      >
-        delegates.commandLineCreation.installDelegateSubText
-         
-        <a
-          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
-          rel="noreferrer"
-          target="_blank"
-        >
-          common.learnMoreDelegate
-        </a>
-      </p>
       <div
         class="Layout--vertical StyledProps--main delegateDetails StyledProps--padding-bottom-xxlarge"
         style="height: 99%;"
@@ -227,14 +231,14 @@ exports[`Delegate Command line creation render UI Docker Delegate 1`] = `
           style="display: flex; align-items: center;"
         >
           <a
-            href="https://developer.harness.io/tutorials/platform/install-delegate"
+            href="https://developer.harness.io/docs/platform/Delegates/install-delegates/install-a-delegate"
             rel="noreferrer"
             target="_blank"
           >
             delegates.commandLineCreation.forAdvancedConfig
           </a>
           <span
-            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-left-xsmall"
+            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
             data-icon="launch"
           >
             <svg
@@ -342,27 +346,31 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
       style="width: 80%;"
     >
       <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+        class="Layout--vertical StyledProps--main"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
         >
-          delegates.newDelegate
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
+          >
+            delegates.newDelegate
+          </p>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxlarge"
+        >
+          delegates.commandLineCreation.installDelegateSubText
+           
+          <a
+            href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
+            rel="noreferrer"
+            target="_blank"
+          >
+            common.learnMoreDelegate
+          </a>
         </p>
       </div>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxlarge"
-      >
-        delegates.commandLineCreation.installDelegateSubText
-         
-        <a
-          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
-          rel="noreferrer"
-          target="_blank"
-        >
-          common.learnMoreDelegate
-        </a>
-      </p>
       <div
         class="Layout--vertical StyledProps--main delegateDetails StyledProps--padding-bottom-xxlarge"
         style="height: 99%;"
@@ -521,7 +529,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
                 maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
-                value=""
+                value="kubernetes-delegate"
               />
             </div>
           </div>
@@ -532,142 +540,73 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--margin-bottom-medium"
           >
-            delegates.commandLineCreation.firstComandHeadingKubernetes
+            delegates.commandLineCreation.yamlFileOptions
           </p>
           <div
-            class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xxlarge"
+            class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-xlarge StyledProps--margin-top-none"
           >
-            <div
-              class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
+            <button
+              aria-label="basic"
+              class="bp3-button Button--button StyledProps--font StyledProps--main kubernetesButtons StyledProps--intent-primary Button--with-current-color Button--round Button--size Button--small"
+              type="button"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+              <span
+                class="bp3-button-text"
               >
-                delegates.commandLineCreation.firstComandKubernetesFirstLine
-              </p>
-              <div
-                class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center"
+                basic
+              </span>
+            </button>
+            <button
+              aria-label="common.repo_provider.customLabel"
+              class="bp3-button Button--button StyledProps--font StyledProps--main kubernetesButtons Button--with-current-color Button--round Button--size Button--small"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
               >
-                <span
-                  class="bp3-popover-wrapper"
-                >
-                  <span
-                    class="bp3-popover-target"
-                  >
-                    <button
-                      aria-label="common.copied"
-                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                      tabindex="0"
-                      type="button"
-                    >
-                      <span
-                        class="bp3-icon bp3-icon-duplicate StyledProps--main"
-                        icon="duplicate"
-                      >
-                        <svg
-                          data-icon="duplicate"
-                          height="16"
-                          viewBox="0 0 16 16"
-                          width="16"
-                        >
-                          <desc>
-                            duplicate
-                          </desc>
-                          <path
-                            d="M15 0H5c-.55 0-1 .45-1 1v2h2V2h8v7h-1v2h2c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-4 4H1c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-1 10H2V6h8v8z"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
-                </span>
-              </div>
-            </div>
+                common.repo_provider.customLabel
+              </span>
+            </button>
           </div>
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--margin-bottom-medium"
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-xlarge StyledProps--margin-top-none"
           >
-            delegates.commandLineCreation.commandsKubernetesHeading
-          </p>
-          <ul
-            class="ulList"
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+            >
+              delegates.commandLineCreation.yamlBasicOptionText
+            </p>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center StyledProps--margin-bottom-xlarge StyledProps--margin-top-none"
           >
-            <li>
-              <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+            <button
+              aria-label="common.downloadYaml"
+              class="bp3-button Button--button StyledProps--font StyledProps--main kubernetesButtons Button--with-current-color Button--variation Button--variation-secondary"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi"
-                >
-                  delegates.commandLineCreation.kubernetesFirstDirectionPartOne
-                </p>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-small"
-                >
-                  delegates.commandLineCreation.kubernetesFirstDirectionPartTwo
-                </p>
-              </div>
-            </li>
-            <li>
-              <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                common.downloadYaml
+              </span>
+            </button>
+            <a
+              class="hide"
+              target="_blank"
+            />
+            <button
+              aria-label="common.previewYAML"
+              class="bp3-button Button--button StyledProps--font StyledProps--main kubernetesButtons Button--with-current-color Button--variation Button--variation-link"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi"
-                >
-                  delegates.commandLineCreation.kubernetesSecondDirectionPartOne
-                </p>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-small"
-                >
-                  delegates.commandLineCreation.kubernetesSecondDirectionPartTwo
-                </p>
-              </div>
-            </li>
-            <li>
-              <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi"
-                >
-                  delegates.commandLineCreation.kubernetesThirdDirectionPartOne
-                </p>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-small"
-                >
-                  delegates.commandLineCreation.kubernetesThirdDirectionPartTwo
-                </p>
-              </div>
-            </li>
-            <li>
-              <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi"
-                >
-                  delegates.commandLineCreation.kubernetesFourthDirectionPartOne
-                </p>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-small"
-                >
-                  common.with
-                </p>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-primary8"
-                >
-                  <a
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    delegates.commandLineCreation.kubernetesFourthDirectionPartThree
-                  </a>
-                </p>
-              </div>
-            </li>
-          </ul>
+                common.previewYAML
+              </span>
+            </button>
+          </div>
           <p
             class="StyledProps--font StyledProps--main textHeading StyledProps--font-variation-h6"
           >
@@ -722,18 +661,49 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
           </div>
         </div>
         <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-primary7 StyledProps--margin-bottom-xxlarge"
+          style="display: flex; align-items: center;"
+        >
+          <span
+            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
+            data-icon="nav-help"
+          >
+            <svg
+              height="20"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M4.314 4.163a2 2 0 00-2 2v6.085a2 2 0 001.478 1.931l.085 1.619a.8.8 0 001.365.522l2.063-2.072h6.876a2 2 0 002-2V6.163a2 2 0 00-2-2H4.314zm4.148 6.365v-.11a4.63 4.63 0 01.038-.593 1.766 1.766 0 01.152-.542c.056-.116.122-.216.199-.3.126-.137.278-.26.456-.372a3.266 3.266 0 00.356-.267 1.235 1.235 0 00.25-.305.742.742 0 00.094-.379.71.71 0 00-.236-.541.725.725 0 00-.273-.153.885.885 0 00-.275-.041c-.139 0-.27.03-.395.093a.754.754 0 00-.305.27.828.828 0 00-.128.44h-1.31c.01-.429.113-.782.308-1.06.195-.28.453-.49.774-.627.32-.139.675-.208 1.063-.208.083 0 .164.002.243.008.328.022.624.09.887.204.328.139.585.341.771.607.186.265.28.585.28.96 0 .106-.008.207-.023.303a1.623 1.623 0 01-.446.879 2.662 2.662 0 01-.524.401 2.1 2.1 0 00-.417.315 1.092 1.092 0 00-.241.379c-.052.144-.078.32-.08.53v.11H8.461zm.636 2.056a.754.754 0 01-.55-.225.739.739 0 01-.22-.546.739.739 0 01.221-.54.754.754 0 01.55-.224c.203 0 .381.074.536.224a.737.737 0 01.121.928.849.849 0 01-.279.28.73.73 0 01-.379.103z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+              <path
+                d="M8.82 18.564a2 2 0 01-1.995-1.85l1.062-1.067h.432v.917a.5.5 0 00.5.5h7.393l1.305 1.311v-1.31h1.5a.25.25 0 00.08-.01l.005-.005a.251.251 0 00.03-.05.744.744 0 00.054-.28v-6.24a.5.5 0 00-.5-.5h-1.105v-1.5h1.105a2 2 0 012 2v6.241c0 .924-.548 1.844-1.669 1.844v1.55a.8.8 0 01-1.366.522l-2.062-2.072h-6.77z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <a
+            rel="noreferrer"
+          >
+            delegates.commandLineCreation.delegateSizing
+          </a>
+        </p>
+        <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxxlarge StyledProps--color StyledProps--color-primary7"
           style="display: flex; align-items: center;"
         >
           <a
-            href="https://developer.harness.io/tutorials/platform/install-delegate"
+            href="https://developer.harness.io/docs/platform/Delegates/install-delegates/install-a-delegate"
             rel="noreferrer"
             target="_blank"
           >
             delegates.commandLineCreation.forAdvancedConfig
           </a>
           <span
-            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-left-xsmall"
+            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
             data-icon="launch"
           >
             <svg
@@ -761,9 +731,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
         >
           <button
             aria-label="verify"
-            class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--margin-right-xlarge Button--with-current-color Button--variation Button--variation-secondary"
-            disabled=""
-            tabindex="-1"
+            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-xlarge Button--with-current-color Button--variation Button--variation-secondary"
             type="button"
           >
             <span
@@ -843,27 +811,31 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
       style="width: 80%;"
     >
       <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+        class="Layout--vertical StyledProps--main"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
         >
-          delegates.newDelegate
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
+          >
+            delegates.newDelegate
+          </p>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxlarge"
+        >
+          delegates.commandLineCreation.installDelegateSubText
+           
+          <a
+            href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
+            rel="noreferrer"
+            target="_blank"
+          >
+            common.learnMoreDelegate
+          </a>
         </p>
       </div>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxlarge"
-      >
-        delegates.commandLineCreation.installDelegateSubText
-         
-        <a
-          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
-          rel="noreferrer"
-          target="_blank"
-        >
-          common.learnMoreDelegate
-        </a>
-      </p>
       <div
         class="Layout--vertical StyledProps--main delegateDetails StyledProps--padding-bottom-xxlarge"
         style="height: 99%;"
@@ -1089,22 +1061,17 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
                         </button>
                       </span>
                     </span>
-                    <span
-                      class="bp3-icon StyledProps--main downloadBtn StyledProps--color StyledProps--color-primary7"
-                      data-icon="main-download"
+                    <button
+                      aria-label="common.download"
+                      class="bp3-button Button--button StyledProps--font StyledProps--main downloadBtn Button--with-current-color Button--variation Button--variation-link"
+                      type="button"
                     >
-                      <svg
-                        height="16"
-                        viewBox="0 0 14 14"
-                        width="16"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <span
+                        class="bp3-button-text"
                       >
-                        <path
-                          d="M7 0C3.1 0 0 3.1 0 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm3.3 8.2L7.5 11c-.1.1-.3.2-.5.2s-.4-.1-.5-.2L3.7 8.2c-.1-.1-.2-.3-.2-.5 0-.4.3-.7.7-.7.2 0 .4.1.5.2l1.6 1.6V3.5c0-.4.3-.7.7-.7s.7.3.7.7v5.3l1.6-1.6c.1-.1.3-.2.5-.2.4 0 .7.3.7.7 0 .2-.1.4-.2.5z"
-                          fill="#4d5969"
-                        />
-                      </svg>
-                    </span>
+                        common.download
+                      </span>
+                    </button>
                     <a
                       class="hide"
                       target="_blank"
@@ -1224,18 +1191,49 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
           </div>
         </div>
         <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-primary7 StyledProps--margin-bottom-xxlarge"
+          style="display: flex; align-items: center;"
+        >
+          <span
+            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
+            data-icon="nav-help"
+          >
+            <svg
+              height="20"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M4.314 4.163a2 2 0 00-2 2v6.085a2 2 0 001.478 1.931l.085 1.619a.8.8 0 001.365.522l2.063-2.072h6.876a2 2 0 002-2V6.163a2 2 0 00-2-2H4.314zm4.148 6.365v-.11a4.63 4.63 0 01.038-.593 1.766 1.766 0 01.152-.542c.056-.116.122-.216.199-.3.126-.137.278-.26.456-.372a3.266 3.266 0 00.356-.267 1.235 1.235 0 00.25-.305.742.742 0 00.094-.379.71.71 0 00-.236-.541.725.725 0 00-.273-.153.885.885 0 00-.275-.041c-.139 0-.27.03-.395.093a.754.754 0 00-.305.27.828.828 0 00-.128.44h-1.31c.01-.429.113-.782.308-1.06.195-.28.453-.49.774-.627.32-.139.675-.208 1.063-.208.083 0 .164.002.243.008.328.022.624.09.887.204.328.139.585.341.771.607.186.265.28.585.28.96 0 .106-.008.207-.023.303a1.623 1.623 0 01-.446.879 2.662 2.662 0 01-.524.401 2.1 2.1 0 00-.417.315 1.092 1.092 0 00-.241.379c-.052.144-.078.32-.08.53v.11H8.461zm.636 2.056a.754.754 0 01-.55-.225.739.739 0 01-.22-.546.739.739 0 01.221-.54.754.754 0 01.55-.224c.203 0 .381.074.536.224a.737.737 0 01.121.928.849.849 0 01-.279.28.73.73 0 01-.379.103z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+              <path
+                d="M8.82 18.564a2 2 0 01-1.995-1.85l1.062-1.067h.432v.917a.5.5 0 00.5.5h7.393l1.305 1.311v-1.31h1.5a.25.25 0 00.08-.01l.005-.005a.251.251 0 00.03-.05.744.744 0 00.054-.28v-6.24a.5.5 0 00-.5-.5h-1.105v-1.5h1.105a2 2 0 012 2v6.241c0 .924-.548 1.844-1.669 1.844v1.55a.8.8 0 01-1.366.522l-2.062-2.072h-6.77z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <a
+            rel="noreferrer"
+          >
+            delegates.commandLineCreation.delegateSizing
+          </a>
+        </p>
+        <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxxlarge StyledProps--color StyledProps--color-primary7"
           style="display: flex; align-items: center;"
         >
           <a
-            href="https://developer.harness.io/tutorials/platform/install-delegate"
+            href="https://developer.harness.io/docs/platform/Delegates/install-delegates/install-a-delegate"
             rel="noreferrer"
             target="_blank"
           >
             delegates.commandLineCreation.forAdvancedConfig
           </a>
           <span
-            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-left-xsmall"
+            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
             data-icon="launch"
           >
             <svg
@@ -1343,27 +1341,31 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
       style="width: 80%;"
     >
       <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+        class="Layout--vertical StyledProps--main"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
         >
-          delegates.newDelegate
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
+          >
+            delegates.newDelegate
+          </p>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxlarge"
+        >
+          delegates.commandLineCreation.installDelegateSubText
+           
+          <a
+            href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
+            rel="noreferrer"
+            target="_blank"
+          >
+            common.learnMoreDelegate
+          </a>
         </p>
       </div>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxlarge"
-      >
-        delegates.commandLineCreation.installDelegateSubText
-         
-        <a
-          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
-          rel="noreferrer"
-          target="_blank"
-        >
-          common.learnMoreDelegate
-        </a>
-      </p>
       <div
         class="Layout--vertical StyledProps--main delegateDetails StyledProps--padding-bottom-xxlarge"
         style="height: 99%;"
@@ -1637,11 +1639,26 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
               </div>
             </div>
           </div>
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--margin-bottom-medium"
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center StyledProps--margin-bottom-medium"
           >
-            delegates.commandLineCreation.secondCommandHeadingHelm
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+            >
+              delegates.commandLineCreation.secondCommandHeadingHelm
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-primary7"
+            >
+              <a
+                href="https://raw.githubusercontent.com/harness/delegate-helm-chart/main/harness-delegate-ng/values.yaml"
+                rel="noreferrer"
+                target="_blank"
+              >
+                delegates.commandLineCreation.defaultValuesYaml
+              </a>
+            </p>
+          </div>
           <div
             class="StyledProps--font StyledProps--main"
           >
@@ -1699,18 +1716,49 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
           </div>
         </div>
         <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-primary7 StyledProps--margin-bottom-xxlarge"
+          style="display: flex; align-items: center;"
+        >
+          <span
+            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
+            data-icon="nav-help"
+          >
+            <svg
+              height="20"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M4.314 4.163a2 2 0 00-2 2v6.085a2 2 0 001.478 1.931l.085 1.619a.8.8 0 001.365.522l2.063-2.072h6.876a2 2 0 002-2V6.163a2 2 0 00-2-2H4.314zm4.148 6.365v-.11a4.63 4.63 0 01.038-.593 1.766 1.766 0 01.152-.542c.056-.116.122-.216.199-.3.126-.137.278-.26.456-.372a3.266 3.266 0 00.356-.267 1.235 1.235 0 00.25-.305.742.742 0 00.094-.379.71.71 0 00-.236-.541.725.725 0 00-.273-.153.885.885 0 00-.275-.041c-.139 0-.27.03-.395.093a.754.754 0 00-.305.27.828.828 0 00-.128.44h-1.31c.01-.429.113-.782.308-1.06.195-.28.453-.49.774-.627.32-.139.675-.208 1.063-.208.083 0 .164.002.243.008.328.022.624.09.887.204.328.139.585.341.771.607.186.265.28.585.28.96 0 .106-.008.207-.023.303a1.623 1.623 0 01-.446.879 2.662 2.662 0 01-.524.401 2.1 2.1 0 00-.417.315 1.092 1.092 0 00-.241.379c-.052.144-.078.32-.08.53v.11H8.461zm.636 2.056a.754.754 0 01-.55-.225.739.739 0 01-.22-.546.739.739 0 01.221-.54.754.754 0 01.55-.224c.203 0 .381.074.536.224a.737.737 0 01.121.928.849.849 0 01-.279.28.73.73 0 01-.379.103z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+              <path
+                d="M8.82 18.564a2 2 0 01-1.995-1.85l1.062-1.067h.432v.917a.5.5 0 00.5.5h7.393l1.305 1.311v-1.31h1.5a.25.25 0 00.08-.01l.005-.005a.251.251 0 00.03-.05.744.744 0 00.054-.28v-6.24a.5.5 0 00-.5-.5h-1.105v-1.5h1.105a2 2 0 012 2v6.241c0 .924-.548 1.844-1.669 1.844v1.55a.8.8 0 01-1.366.522l-2.062-2.072h-6.77z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <a
+            rel="noreferrer"
+          >
+            delegates.commandLineCreation.delegateSizing
+          </a>
+        </p>
+        <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxxlarge StyledProps--color StyledProps--color-primary7"
           style="display: flex; align-items: center;"
         >
           <a
-            href="https://developer.harness.io/tutorials/platform/install-delegate"
+            href="https://developer.harness.io/docs/platform/Delegates/install-delegates/install-a-delegate"
             rel="noreferrer"
             target="_blank"
           >
             delegates.commandLineCreation.forAdvancedConfig
           </a>
           <span
-            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-left-xsmall"
+            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
             data-icon="launch"
           >
             <svg
@@ -1818,27 +1866,31 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
       style="width: 80%;"
     >
       <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+        class="Layout--vertical StyledProps--main"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
         >
-          delegates.newDelegate
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
+          >
+            delegates.newDelegate
+          </p>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxlarge"
+        >
+          delegates.commandLineCreation.installDelegateSubText
+           
+          <a
+            href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
+            rel="noreferrer"
+            target="_blank"
+          >
+            common.learnMoreDelegate
+          </a>
         </p>
       </div>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxlarge"
-      >
-        delegates.commandLineCreation.installDelegateSubText
-         
-        <a
-          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
-          rel="noreferrer"
-          target="_blank"
-        >
-          common.learnMoreDelegate
-        </a>
-      </p>
       <div
         class="Layout--vertical StyledProps--main delegateDetails StyledProps--padding-bottom-xxlarge"
         style="height: 99%;"
@@ -2112,11 +2164,26 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
               </div>
             </div>
           </div>
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--margin-bottom-medium"
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center StyledProps--margin-bottom-medium"
           >
-            delegates.commandLineCreation.secondCommandHeadingHelm
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+            >
+              delegates.commandLineCreation.secondCommandHeadingHelm
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-primary7"
+            >
+              <a
+                href="https://raw.githubusercontent.com/harness/delegate-helm-chart/main/harness-delegate-ng/values.yaml"
+                rel="noreferrer"
+                target="_blank"
+              >
+                delegates.commandLineCreation.defaultValuesYaml
+              </a>
+            </p>
+          </div>
           <div
             class="StyledProps--font StyledProps--main"
           >
@@ -2174,18 +2241,49 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
           </div>
         </div>
         <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-primary7 StyledProps--margin-bottom-xxlarge"
+          style="display: flex; align-items: center;"
+        >
+          <span
+            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
+            data-icon="nav-help"
+          >
+            <svg
+              height="20"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M4.314 4.163a2 2 0 00-2 2v6.085a2 2 0 001.478 1.931l.085 1.619a.8.8 0 001.365.522l2.063-2.072h6.876a2 2 0 002-2V6.163a2 2 0 00-2-2H4.314zm4.148 6.365v-.11a4.63 4.63 0 01.038-.593 1.766 1.766 0 01.152-.542c.056-.116.122-.216.199-.3.126-.137.278-.26.456-.372a3.266 3.266 0 00.356-.267 1.235 1.235 0 00.25-.305.742.742 0 00.094-.379.71.71 0 00-.236-.541.725.725 0 00-.273-.153.885.885 0 00-.275-.041c-.139 0-.27.03-.395.093a.754.754 0 00-.305.27.828.828 0 00-.128.44h-1.31c.01-.429.113-.782.308-1.06.195-.28.453-.49.774-.627.32-.139.675-.208 1.063-.208.083 0 .164.002.243.008.328.022.624.09.887.204.328.139.585.341.771.607.186.265.28.585.28.96 0 .106-.008.207-.023.303a1.623 1.623 0 01-.446.879 2.662 2.662 0 01-.524.401 2.1 2.1 0 00-.417.315 1.092 1.092 0 00-.241.379c-.052.144-.078.32-.08.53v.11H8.461zm.636 2.056a.754.754 0 01-.55-.225.739.739 0 01-.22-.546.739.739 0 01.221-.54.754.754 0 01.55-.224c.203 0 .381.074.536.224a.737.737 0 01.121.928.849.849 0 01-.279.28.73.73 0 01-.379.103z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+              <path
+                d="M8.82 18.564a2 2 0 01-1.995-1.85l1.062-1.067h.432v.917a.5.5 0 00.5.5h7.393l1.305 1.311v-1.31h1.5a.25.25 0 00.08-.01l.005-.005a.251.251 0 00.03-.05.744.744 0 00.054-.28v-6.24a.5.5 0 00-.5-.5h-1.105v-1.5h1.105a2 2 0 012 2v6.241c0 .924-.548 1.844-1.669 1.844v1.55a.8.8 0 01-1.366.522l-2.062-2.072h-6.77z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <a
+            rel="noreferrer"
+          >
+            delegates.commandLineCreation.delegateSizing
+          </a>
+        </p>
+        <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--margin-bottom-xxxlarge StyledProps--color StyledProps--color-primary7"
           style="display: flex; align-items: center;"
         >
           <a
-            href="https://developer.harness.io/tutorials/platform/install-delegate"
+            href="https://developer.harness.io/docs/platform/Delegates/install-delegates/install-a-delegate"
             rel="noreferrer"
             target="_blank"
           >
             delegates.commandLineCreation.forAdvancedConfig
           </a>
           <span
-            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-left-xsmall"
+            class="bp3-icon StyledProps--main iconPointer StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
             data-icon="launch"
           >
             <svg

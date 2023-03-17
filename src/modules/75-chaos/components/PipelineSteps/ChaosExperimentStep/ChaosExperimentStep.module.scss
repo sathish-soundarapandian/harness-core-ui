@@ -29,5 +29,16 @@
   }
   .nameIdDescriptionField {
     max-width: 352px;
+    margin-bottom: 0px !important;
+    :global {
+      .TextInput--main {
+        margin-bottom: var(--spacing-3) !important;
+      }
+    }
+  }
+
+  .optionalConfigPanel {
+    padding-top: var(--spacing-small) !important;
+    padding-bottom: var(--spacing-small) !important;
   }
 }

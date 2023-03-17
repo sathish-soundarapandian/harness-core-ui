@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`StepWidget tests it renders StageOverview 1`] = `
+exports[`FeatureStageSpecifications tests it renders StageOverview 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--padding-huge"

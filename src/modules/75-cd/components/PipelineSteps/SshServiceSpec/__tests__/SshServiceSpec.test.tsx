@@ -184,7 +184,7 @@ class StepFactory extends AbstractStepFactory {
 const factory = new StepFactory()
 factory.registerStep(new SshServiceSpec())
 
-describe('StepWidget tests', () => {
+describe('SshServiceSpec tests', () => {
   test(`renders ServiceStep for Service Tab `, () => {
     const { container } = render(
       <TestWrapper>

@@ -77,6 +77,9 @@ jest.mock('services/cd-ng', () => ({
   }),
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: [], refetch: jest.fn() }
+  }),
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { allowDifferentRepoSettings: { data: { value: 'false' } }, loading: false } }
   })
 }))
 

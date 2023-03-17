@@ -130,7 +130,7 @@ export default function OptionalConfiguration(props: {
               isOptional
               optionalLabel={getString('common.optionalLabel')}
               defaultValueToReset={[]}
-              disableTypeSelection
+              disableTypeSelection={false}
             >
               <FieldArray
                 name="spec.outputVariables"
@@ -221,7 +221,6 @@ export default function OptionalConfiguration(props: {
                   variableName="spec.executionTarget.host"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => setFieldValue('spec.executionTarget.host', value)}
                   style={{ marginTop: 12 }}
                   isReadonly={readonly}
@@ -250,7 +249,6 @@ export default function OptionalConfiguration(props: {
                   variableName="spec.executionTarget.connectorRef"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => {
                     setFieldValue('spec.executionTarget.connectorRef', value)
                   }}
@@ -276,7 +274,6 @@ export default function OptionalConfiguration(props: {
                   variableName="spec.executionTarget.workingDirectory"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => setFieldValue('spec.executionTarget.workingDirectory', value)}
                   style={{ marginTop: 12 }}
                   isReadonly={readonly}

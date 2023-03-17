@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { get } from 'lodash-es'
@@ -21,6 +21,7 @@ import { useToaster } from '@common/exports'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 import { useConfirmAction } from '@common/hooks/useConfirmAction'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { String, useStrings } from 'framework/strings'
 import ListingPageTemplate from '@cf/components/ListingPageTemplate/ListingPageTemplate'
 import EnvironmentDialog from '@cf/components/CreateEnvironmentDialog/EnvironmentDialog'
@@ -128,7 +129,7 @@ const EnvironmentsPage: React.FC = () => {
   const { getString } = useStrings()
   const { showError, showSuccess } = useToaster()
   const history = useHistory()
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useQueryParamsState('page', 0)
   const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
   const queryParams = useMemo<GetEnvironmentListForProjectQueryParams>(() => {
     return {

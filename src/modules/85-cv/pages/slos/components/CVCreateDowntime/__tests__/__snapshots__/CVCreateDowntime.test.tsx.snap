@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CVCreateDowntime should render CVCreateDowntime and show validations 1`] = `
+exports[`CVCreateDowntime should render create flow 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large"
@@ -67,6 +67,36 @@ exports[`CVCreateDowntime should render CVCreateDowntime and show validations 1`
                 </svg>
               </span>
             </div>
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+            >
+              <a
+                class="Breadcrumbs--breadcrumb"
+                href="/account/undefined/settings/resources/slo-downtime"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+                >
+                  common.sloDowntimeLabel
+                </p>
+              </a>
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+                data-icon="main-chevron-right"
+              >
+                <svg
+                  height="8"
+                  viewBox="0 0 8 14"
+                  width="8"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
+            </div>
           </div>
         </div>
         <h3
@@ -87,7 +117,7 @@ exports[`CVCreateDowntime should render CVCreateDowntime and show validations 1`
       >
         <div
           class="Layout--vertical StyledProps--main StyledProps--margin-xlarge"
-          data-testid="CVStepper_main"
+          data-testid="Stepper_main"
         >
           <div
             class="StyledProps--font StyledProps--main stepContainer"
@@ -665,6 +695,36 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
                 </svg>
               </span>
             </div>
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+            >
+              <a
+                class="Breadcrumbs--breadcrumb"
+                href="/account/dummy/cv/orgs/dummy/projects/dummy/setup/resources/slo-downtime"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+                >
+                  common.sloDowntimeLabel
+                </p>
+              </a>
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+                data-icon="main-chevron-right"
+              >
+                <svg
+                  height="8"
+                  viewBox="0 0 8 14"
+                  width="8"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
+            </div>
           </div>
         </div>
         <h3
@@ -685,7 +745,7 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
       >
         <div
           class="Layout--vertical StyledProps--main StyledProps--margin-xlarge"
-          data-testid="CVStepper_main"
+          data-testid="Stepper_main"
         >
           <div
             class="StyledProps--font StyledProps--main stepContainer"
@@ -867,7 +927,7 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
                       <p
                         class="StyledProps--font StyledProps--main value"
                       >
-                        Starting on 2023-08-11 03:17 PM (Asia/Calcutta) till 2023-11-12 08:17 AM
+                        Starting on 2030-03-26 02:50 PM (Asia/Calcutta) till 2030-03-26 03:07 PM
                       </p>
                     </div>
                   </div>

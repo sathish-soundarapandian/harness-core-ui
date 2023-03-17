@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import moment from 'moment'
 import ReactTimeago from 'react-timeago'
 import { Intent } from '@blueprintjs/core'
 import { Container, ExpandingSearchInput, Layout, Pagination, TableV2, Text } from '@harness/uicore'
 import type { Cell, Column } from 'react-table'
+import { defer } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import ListingPageTemplate from '@cf/components/ListingPageTemplate/ListingPageTemplate'
 import { CF_DEFAULT_PAGE_SIZE, getErrorMessage, SEGMENT_PRIMARY_COLOR, showToaster } from '@cf/utils/CFUtils'
@@ -19,12 +20,13 @@ import { useConfirmAction } from '@common/hooks'
 import { useStrings, String } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { useToaster } from '@common/exports'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import {
   makeStackedCircleShortName,
   StackedCircleContainer
 } from '@cf/components/StackedCircleContainer/StackedCircleContainer'
 import { useEnvironmentSelectV2 } from '@cf/hooks/useEnvironmentSelectV2'
-import { GetAllSegmentsQueryParams, Segment, useDeleteSegment, useGetAllSegments } from 'services/cf'
+import { Segment, useDeleteSegment, useGetAllSegments } from 'services/cf'
 import TargetManagementHeader from '@cf/components/TargetManagementHeader/TargetManagementHeader'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -46,8 +48,8 @@ export const SegmentsPage: React.FC = () => {
   })
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const { getString } = useStrings()
-  const [pageNumber, setPageNumber] = useState(0)
-  const [searchTerm, setSearchTerm] = useState('')
+  const [pageNumber, setPageNumber] = useQueryParamsState('page', 0)
+  const [searchTerm, setSearchTerm] = useQueryParamsState('searchTerm', '')
   const queryParams = useMemo(
     () => ({
       projectIdentifier,
@@ -72,11 +74,10 @@ export const SegmentsPage: React.FC = () => {
   const history = useHistory()
   const onSearchInputChanged = useCallback(
     name => {
-      setSearchTerm(name)
-      setPageNumber(0)
-      refetchSegments({ queryParams: { ...queryParams, name, pageNumber: 0 } as GetAllSegmentsQueryParams })
+      defer(() => setSearchTerm(name))
+      defer(() => setPageNumber(0))
     },
-    [setSearchTerm, refetchSegments, queryParams, setPageNumber]
+    [setSearchTerm, setPageNumber]
   )
   const loading = loadingEnvironments || loadingSegments
   const error = errEnvironments || errSegments
@@ -120,6 +121,7 @@ export const SegmentsPage: React.FC = () => {
         name="findFlag"
         placeholder={getString('search')}
         onChange={onSearchInputChanged}
+        defaultValue={searchTerm}
       />
     </>
   )
@@ -297,9 +299,7 @@ export const SegmentsPage: React.FC = () => {
             pageSize={segmentsData?.pageSize || 0}
             pageCount={segmentsData?.pageCount || 0}
             pageIndex={pageNumber}
-            gotoPage={index => {
-              setPageNumber(index)
-            }}
+            gotoPage={setPageNumber}
             showPagination
           />
         )

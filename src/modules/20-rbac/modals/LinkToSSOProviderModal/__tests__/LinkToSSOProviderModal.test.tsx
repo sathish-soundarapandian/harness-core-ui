@@ -12,7 +12,6 @@ import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import type { UserGroupDTO } from 'services/cd-ng'
-import { FeatureFlag } from '@common/featureFlags'
 import LinkToSSOProviderForm from '../views/LinkToSSOProviderForm'
 import UnlinkSSOProviderForm from '../views/UnlinkSSOProviderForm'
 
@@ -92,13 +91,7 @@ const mockUserGroup: UserGroupDTO = {
 describe('Create LinkToSSOProviderModal', () => {
   test('should render UnlinkToSSOProviderModalForm', async () => {
     const { container } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={{ accountId: TEST_ID }}
-        defaultFeatureFlagValues={{
-          [FeatureFlag.NG_ENABLE_LDAP_CHECK]: false
-        }}
-      >
+      <TestWrapper path={TEST_PATH} pathParams={{ accountId: TEST_ID }}>
         <UnlinkSSOProviderForm onSubmit={noop} userGroupData={mockUserGroup} />
       </TestWrapper>
     )
@@ -108,13 +101,7 @@ describe('Create LinkToSSOProviderModal', () => {
   test('should render the form with ssoLinked false', async () => {
     mockUserGroup.ssoLinked = false
     const { container } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={{ accountId: TEST_ID }}
-        defaultFeatureFlagValues={{
-          [FeatureFlag.NG_ENABLE_LDAP_CHECK]: false
-        }}
-      >
+      <TestWrapper path={TEST_PATH} pathParams={{ accountId: TEST_ID }}>
         <LinkToSSOProviderForm onSubmit={noop} userGroupData={mockUserGroup} />
       </TestWrapper>
     )
@@ -124,13 +111,7 @@ describe('Create LinkToSSOProviderModal', () => {
   test('should render the form with ssoLinked true', async () => {
     mockUserGroup.ssoLinked = true
     const { container } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={{ accountId: TEST_ID }}
-        defaultFeatureFlagValues={{
-          [FeatureFlag.NG_ENABLE_LDAP_CHECK]: true
-        }}
-      >
+      <TestWrapper path={TEST_PATH} pathParams={{ accountId: TEST_ID }}>
         <LinkToSSOProviderForm onSubmit={noop} userGroupData={mockUserGroup} />
       </TestWrapper>
     )

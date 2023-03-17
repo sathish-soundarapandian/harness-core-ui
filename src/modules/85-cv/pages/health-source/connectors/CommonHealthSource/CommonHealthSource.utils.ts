@@ -169,7 +169,7 @@ export function getTemplateValuesForConfigFields(
 }
 
 export function getRequestBodyForSampleLogs(
-  providerTypeForRecords: QueryRecordsRequest['providerType'],
+  healthSourceType: QueryRecordsRequest['healthSourceType'],
   otherValues: {
     query: string
     connectorIdentifier: string | { connector: { identifier: string } }
@@ -194,7 +194,7 @@ export function getRequestBodyForSampleLogs(
   return {
     startTime,
     endTime: Date.now(),
-    providerType: providerTypeForRecords,
+    healthSourceType,
     query,
     connectorIdentifier:
       typeof connectorIdentifier === 'string' ? connectorIdentifier : connectorIdentifier?.connector?.identifier,

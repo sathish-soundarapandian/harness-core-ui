@@ -55,7 +55,7 @@ export interface ServiceDetailInstanceViewProps {
   infraIdentifier?: string
   infraName?: string
   clusterIdentifier?: string
-  artifact: string
+  artifact?: string
 }
 
 interface PipelineExecInfoProps {
@@ -186,7 +186,7 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
 
   return (
     <Layout.Horizontal className={css.instanceDetail}>
-      <Layout.Vertical className={css.overflowScroll}>
+      <Layout.Vertical className={css.overflowScrollPipelineIdList}>
         {pipelineDetailList.map(card => (
           <Card
             key={makeKey(card)}
@@ -267,7 +267,7 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
     serviceId,
     envId,
     environmentType,
-    artifact: !isEmpty(artifact) ? artifact : undefined,
+    artifact,
     clusterIdentifier,
     infraIdentifier
   }
@@ -336,7 +336,7 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
           isSearchApplied={searchApplied}
           resetSearch={resetSearch}
           isServicePage={true}
-          message={getString('cd.environmentDetailPage.selectArtifactMsg')}
+          message={getString('cd.environmentDetailPage.noInstancesToShow')}
         />
       ) : (
         <>

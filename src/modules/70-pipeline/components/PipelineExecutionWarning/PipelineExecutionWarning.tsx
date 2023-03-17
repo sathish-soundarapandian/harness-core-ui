@@ -12,14 +12,25 @@ import css from './PipelineExecutionWarning.module.scss'
 
 interface PipelineExecutionWarningProps {
   warning: string | React.ReactNode
+  onBannerClose: () => void
 }
 
-export function PipelineExecutionWarning({ warning }: PipelineExecutionWarningProps): React.ReactElement {
+export function PipelineExecutionWarning({
+  warning,
+  onBannerClose
+}: PipelineExecutionWarningProps): React.ReactElement {
   const [hideWarning, setHideWarning] = useState<boolean>(false)
   return !hideWarning ? (
     <Layout.Horizontal className={css.warningBanner} spacing="medium" flex={{ justifyContent: 'space-between' }}>
       {warning}
-      <Button icon="cross" minimal onClick={() => setHideWarning(true)} />
+      <Button
+        icon="cross"
+        minimal
+        onClick={() => {
+          setHideWarning(true)
+          onBannerClose()
+        }}
+      />
     </Layout.Horizontal>
   ) : (
     <></>

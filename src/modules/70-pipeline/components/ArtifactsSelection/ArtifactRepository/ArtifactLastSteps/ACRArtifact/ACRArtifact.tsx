@@ -600,7 +600,6 @@ export function ACRArtifact({
                         variableName="subscriptionId"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         isReadonly={isReadonly}
                         onChange={
                           /* istanbul ignore next */ value => {
@@ -689,7 +688,6 @@ export function ACRArtifact({
                         variableName="registry"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         isReadonly={isReadonly}
                         onChange={
                           /* istanbul ignore next */ value => {
@@ -775,7 +773,6 @@ export function ACRArtifact({
                         variableName="repository"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         isReadonly={isReadonly}
                         onChange={
                           /* istanbul ignore next */ value => {
@@ -850,7 +847,6 @@ export function ACRArtifact({
                           variableName="tag"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={
                             /* istanbul ignore next */ value => {
                               formik.setFieldValue('tag', value)
@@ -879,7 +875,6 @@ export function ACRArtifact({
                           variableName="tagRegex"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={
                             /* istanbul ignore next */ value => {
                               formik.setFieldValue('tagRegex', value)

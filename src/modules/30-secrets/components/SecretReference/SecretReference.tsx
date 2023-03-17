@@ -11,7 +11,6 @@ import { Color } from '@harness/design-system'
 import { Select } from '@blueprintjs/select'
 import { MenuItem } from '@blueprintjs/core'
 import cx from 'classnames'
-
 import {
   ListSecretsV2QueryParams,
   Failure,
@@ -29,8 +28,10 @@ import {
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { useStrings } from 'framework/strings'
 import useCreateUpdateSecretModal from '@secrets/modals/CreateSecretModal/useCreateUpdateSecretModal'
+import type { SecretMultiSelectProps } from '@secrets/utils/SecretField'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
@@ -54,7 +55,7 @@ interface SceretTypeDropDownProps {
   secretType?: SelectOption
   setSecretType?: (val: SelectOption) => void
 }
-export interface SecretReferenceProps extends SceretTypeDropDownProps {
+export interface SecretReferenceProps extends SceretTypeDropDownProps, SecretMultiSelectProps {
   onSelect: (secret: SecretRef) => void
   accountIdentifier: string
   projectIdentifier?: string
@@ -67,6 +68,14 @@ export interface SecretReferenceProps extends SceretTypeDropDownProps {
   handleInlineSSHSecretCreation?: (record?: SecretRef) => void
   handleInlineWinRmSecretCreation?: (record?: SecretRef) => void
   selectedSecret?: string
+  identifiersFilter?: ScopeAndIdentifier[]
+}
+
+const getIdentifiersOfScope = (scopeAndIdentifiers?: ScopeAndIdentifier[], scope?: Scope): string[] | undefined => {
+  if (!Array.isArray(scopeAndIdentifiers) || !scopeAndIdentifiers.length) return
+  if (!scope) return scopeAndIdentifiers.map(({ identifier }) => identifier)
+
+  return scopeAndIdentifiers.filter(sI => sI.scope === scope).map(({ identifier }) => identifier)
 }
 
 const fetchRecords = (
@@ -81,7 +90,8 @@ const fetchRecords = (
   orgIdentifier?: string,
   mock?: ResponsePageSecretResponseWrapper,
   connectorTypeContext?: ConnectorInfoDTO['type'],
-  allTabSelected?: boolean
+  allTabSelected?: boolean,
+  identifiersFilter?: ScopeAndIdentifier[]
 ): void => {
   const secretManagerTypes: ConnectorInfoDTO['type'][] = [
     'AwsKms',
@@ -90,6 +100,8 @@ const fetchRecords = (
     'AwsSecretManager',
     'GcpKms'
   ]
+  const identifiers = getIdentifiersOfScope(identifiersFilter, allTabSelected ? undefined : scope)
+
   let sourceCategory: ListSecretsV2QueryParams['source_category'] | undefined
   if (connectorTypeContext && secretManagerTypes.includes(connectorTypeContext)) {
     sourceCategory = 'SECRET_MANAGER'
@@ -105,7 +117,11 @@ const fetchRecords = (
       source_category: sourceCategory,
       pageIndex: pageIndex,
       pageSize: 10,
-      includeAllSecretsAccessibleAtScope: !scope && allTabSelected
+      includeAllSecretsAccessibleAtScope: !scope && allTabSelected,
+      identifiers
+    },
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
     },
     mock
   })
@@ -130,6 +146,7 @@ const fetchRecords = (
       throw err.message
     })
 }
+
 const SelectTypeDropdown: React.FC<SceretTypeDropDownProps> = props => {
   const { getString } = useStrings()
   const secretTypeOptions: SelectOption[] = [
@@ -179,7 +196,11 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
     type,
     mock,
     connectorTypeContext,
-    selectedSecret
+    selectedSecret: selectedSecretProp,
+    selectedSecrets = [],
+    isMultiSelect = false,
+    onMultiSelect,
+    identifiersFilter
   } = props
   const { getString } = useStrings()
   const [pagedSecretData, setPagedSecretData] = useState<ResponsePageSecretResponseWrapper>({})
@@ -187,6 +208,8 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
 
   const { openCreateSecretModal } = useCreateUpdateSecretModal({
     onSuccess: data => {
+      if (isMultiSelect) return
+
       props.onSelect({
         ...data,
         spec: {},
@@ -194,12 +217,12 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
       })
     }
   })
-  const selectedSecretLocal = useMemo(() => {
-    if (typeof selectedSecret === 'string' && selectedSecret) {
-      return { scope: getScopeFromValue(selectedSecret), identifier: getIdentifierFromValue(selectedSecret) }
-    }
-    return undefined
-  }, [selectedSecret])
+
+  const selectedSecret = useMemo(() => {
+    if (!(typeof selectedSecretProp === 'string' && selectedSecretProp)) return
+
+    return { scope: getScopeFromValue(selectedSecretProp), identifier: getIdentifierFromValue(selectedSecretProp) }
+  }, [selectedSecretProp])
 
   const handleEdit = (item: EntityReferenceResponse<SecretRef>) => {
     switch (item.record.type) {
@@ -224,7 +247,10 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
           secret.scope = scope
           props.onSelect(secret)
         }}
-        selectedRecord={selectedSecretLocal}
+        onMultiSelect={onMultiSelect}
+        selectedRecord={selectedSecret}
+        selectedRecords={selectedSecrets}
+        isMultiSelect={isMultiSelect}
         defaultScope={defaultScope}
         noDataCard={{
           image: SecretEmptyState,
@@ -246,7 +272,8 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
             orgIdentifier,
             mock,
             connectorTypeContext,
-            allTabSelected
+            allTabSelected,
+            identifiersFilter
           )
         }}
         projectIdentifier={projectIdentifier}
@@ -307,26 +334,27 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
                   </Layout.Horizontal>
                 </Layout.Horizontal>
 
-                <RbacButton
-                  minimal
-                  className={css.editBtn}
-                  data-testid={`${name}-edit`}
-                  onClick={() => handleEdit(item)}
-                  permission={{
-                    permission: PermissionIdentifier.UPDATE_SECRET,
-                    resource: {
-                      resourceType: ResourceType.SECRET,
-                      resourceIdentifier: item.identifier
-                    },
-                    resourceScope: {
-                      accountIdentifier,
-                      orgIdentifier:
-                        selectedScope === Scope.ORG || selectedScope === Scope.PROJECT ? orgIdentifier : undefined,
-                      projectIdentifier: selectedScope === Scope.PROJECT ? projectIdentifier : undefined
-                    }
-                  }}
-                  text={<Icon size={16} name={'Edit'} color={Color.GREY_600} />}
-                />
+                {!isMultiSelect && (
+                  <RbacButton
+                    minimal
+                    className={css.editBtn}
+                    onClick={() => handleEdit(item)}
+                    permission={{
+                      permission: PermissionIdentifier.UPDATE_SECRET,
+                      resource: {
+                        resourceType: ResourceType.SECRET,
+                        resourceIdentifier: item.identifier
+                      },
+                      resourceScope: {
+                        accountIdentifier,
+                        orgIdentifier:
+                          selectedScope === Scope.ORG || selectedScope === Scope.PROJECT ? orgIdentifier : undefined,
+                        projectIdentifier: selectedScope === Scope.PROJECT ? projectIdentifier : undefined
+                      }
+                    }}
+                    text={<Icon size={16} name={'Edit'} color={Color.GREY_600} />}
+                  />
+                )}
               </Layout.Horizontal>
             </>
           )

@@ -10,6 +10,7 @@ import type { UseGetReturn } from 'restful-react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import * as cdService from 'services/cd-ng'
 import MonitoredServiceOverview from '../MonitoredServiceOverview'
 import { MonitoredServiceType } from '../MonitoredServiceOverview.constants'
@@ -174,5 +175,20 @@ describe('Unit tests for MonitoredServiceOverview', () => {
     fireEvent.click(getByText('confirm'))
 
     expect(onChangeMonitoredServiceType).toHaveBeenCalledWith('Infrastructure')
+  })
+
+  test('should load when ff CDS_OrgAccountLevelServiceEnvEnvGroup is enabled', () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CDS_OrgAccountLevelServiceEnvEnvGroup: true
+    })
+    const onSubmitMock = jest.fn()
+    const { getByText } = render(
+      <WrapperComponent
+        onSubmit={onSubmitMock}
+        initialValues={{ type: MonitoredServiceType.APPLICATION, serviceRef: 'service1', environmentRef: 'env1' }}
+      />
+    )
+    expect(getByText('env1')).toBeInTheDocument()
+    expect(getByText('service1')).toBeInTheDocument()
   })
 })

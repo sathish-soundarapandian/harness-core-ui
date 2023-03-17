@@ -41,6 +41,7 @@ import { useToaster } from '@common/exports'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+
 import { cleanData, EnvironmentGroupDetailsTab } from './utils'
 import ModalEnvironmentList from './ModalEnvironmentList'
 
@@ -80,6 +81,7 @@ export default function CreateEnvironmentGroupModal({
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [createLoading, setCreateLoading] = useState(false)
   const [isFetchingEnvironments, setIsFetchingEnvironments] = useState(true)
+  const [newEnvOpen, setNewEnvOpen] = useState(false)
 
   const { getString } = useStrings()
   const history = useHistory()
@@ -265,7 +267,6 @@ export default function CreateEnvironmentGroupModal({
                         isIdentifierEditable: !isEdit
                       }}
                     />
-
                     <Layout.Horizontal spacing="large">
                       <Button
                         variation={ButtonVariation.PRIMARY}
@@ -294,14 +295,24 @@ export default function CreateEnvironmentGroupModal({
                       onChange={setSearchTerm}
                       throttle={200}
                     />
-                    <Layout.Vertical height={300} className={css.modalEnvironmentList}>
+                    <Layout.Vertical height={300} className={css.modalEnvironmentList} margin={{ bottom: 'small' }}>
                       <ModalEnvironmentList
                         searchTerm={searchTerm}
                         setIsFetchingEnvironments={setIsFetchingEnvironments}
                         selectedEnvironments={selectedEnvironments}
                         onSelectedEnvironmentChange={onSelectedEnvironmentChange}
+                        newEnvOpen={newEnvOpen}
+                        handleNewEnvModal={status => setNewEnvOpen(status)}
                       />
                     </Layout.Vertical>
+                    <Button
+                      onClick={() => setNewEnvOpen(true)}
+                      variation={ButtonVariation.LINK}
+                      width={200}
+                      icon="plus"
+                    >
+                      {getString('newEnvironment')}
+                    </Button>
                   </Layout.Vertical>
                 </Layout.Horizontal>
               ) : (

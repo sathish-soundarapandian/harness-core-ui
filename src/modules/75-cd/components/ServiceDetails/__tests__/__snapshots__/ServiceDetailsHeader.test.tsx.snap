@@ -104,7 +104,7 @@ exports[`ServiceDetailsHeader render no data 1`] = `
 exports[`ServiceDetailsHeader should render ServiceDetailsHeader 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--large header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--large header headerWithDescShown StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
     data-testid="page-header"
   >
     <div
@@ -212,24 +212,21 @@ exports[`ServiceDetailsHeader should render ServiceDetailsHeader 1`] = `
           class="Layout--horizontal StyledProps--main serviceDetails StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <div
-            class="Layout--vertical StyledProps--main detailsSection"
+            class="Layout--vertical Layout--layout-spacing-small StyledProps--main detailsSection"
           >
-            <div
-              class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-small StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-            >
-              <p
-                class="StyledProps--font StyledProps--main textOverflow StyledProps--font-size-medium StyledProps--color StyledProps--color-black StyledProps--margin-right-small"
-              >
-                dmeo
-              </p>
-              <p
-                class="StyledProps--font StyledProps--main textOverflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
-              >
-                common.ID: undefined
-              </p>
-            </div>
             <p
-              class="StyledProps--font StyledProps--main textOverflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-small"
+              class="StyledProps--font StyledProps--main textOverflow StyledProps--font-size-medium StyledProps--color StyledProps--color-black"
+            >
+              dmeo
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main textOverflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
+            >
+              common.ID: undefined
+            </p>
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
+              style="--text-line-clamp: 1; width: 800px;"
             >
               dmeo
             </p>

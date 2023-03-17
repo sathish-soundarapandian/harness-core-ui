@@ -50,6 +50,7 @@ jest.mock('services/cv', () => ({
     }
   })
 }))
+
 describe('Test DetailsPanel', () => {
   test('should render DetailsPanel', () => {
     const { container, getByTestId } = render(

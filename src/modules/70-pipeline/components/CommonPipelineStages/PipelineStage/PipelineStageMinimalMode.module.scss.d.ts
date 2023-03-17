@@ -25,6 +25,7 @@ declare const styles: {
   readonly searchBox: string
   readonly selectInput: string
   readonly selectedItem: string
+  readonly spinnerContainer: string
   readonly stageCreate: string
   readonly table: string
   readonly tableRow: string

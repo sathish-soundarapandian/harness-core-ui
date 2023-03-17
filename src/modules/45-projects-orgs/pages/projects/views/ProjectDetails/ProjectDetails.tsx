@@ -25,7 +25,6 @@ import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useColl
 import ContextMenu from '@projects-orgs/components/Menu/ContextMenu'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -45,7 +44,10 @@ import {
   LandingDashboardContextProvider
 } from '@common/factories/LandingDashboardContext'
 import TimeRangeSelect from '@projects-orgs/components/TimeRangeSelect/TimeRangeSelect'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
+import { isOnPrem } from '@common/utils/utils'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectDetails.module.scss'
 
@@ -57,8 +59,8 @@ const ProjectDetails: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const { selectedTimeRange } = useLandingDashboardContext()
   const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, NEW_LEFT_NAVBAR_SETTINGS } =
-    useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+  const showProjectOverview = NEW_LEFT_NAVBAR_SETTINGS && !isOnPrem()
   const { licenseInformation } = useLicenseStore()
   const invitePermission = {
     resourceScope: {
@@ -117,6 +119,7 @@ const ProjectDetails: React.FC = () => {
   }
   const { openDialog } = useDeleteProjectDialog(projectData || { identifier: '', name: '' }, onDeleted)
   useDocumentTitle(getString('projectsText'))
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   const getModuleInfoCards = (): React.ReactElement | React.ReactElement[] => {
     if (!projectData?.modules?.length) {
       return (
@@ -129,7 +132,7 @@ const ProjectDetails: React.FC = () => {
 
     const infoCards = []
 
-    if (CDNG_ENABLED && projectData.modules.includes(ModuleName.CD)) infoCards.push(ModuleName.CD)
+    if (shouldVisible && projectData.modules.includes(ModuleName.CD)) infoCards.push(ModuleName.CD)
     if (CING_ENABLED && projectData.modules.includes(ModuleName.CI)) infoCards.push(ModuleName.CI)
     if (CFNG_ENABLED && projectData.modules.includes(ModuleName.CF)) infoCards.push(ModuleName.CF)
     if (CENG_ENABLED && projectData.modules.includes(ModuleName.CE)) infoCards.push(ModuleName.CE)
@@ -160,7 +163,7 @@ const ProjectDetails: React.FC = () => {
         breadcrumbs={
           <NGBreadcrumbs
             links={
-              !NEW_LEFT_NAVBAR_SETTINGS
+              !showProjectOverview
                 ? [
                     {
                       url: routes.toProjects({ accountId }),
@@ -279,17 +282,14 @@ const ProjectDetails: React.FC = () => {
       />
       <Page.Body>
         <Layout.Horizontal>
-          <Container
-            padding="xxlarge"
-            className={cx(css.enabledModules, { [css.fullWidth]: NEW_LEFT_NAVBAR_SETTINGS })}
-          >
+          <Container padding="xxlarge" className={cx(css.enabledModules, { [css.fullWidth]: showProjectOverview })}>
             <Layout.Vertical padding="small" spacing="large">
-              {!NEW_LEFT_NAVBAR_SETTINGS && (
+              {!showProjectOverview && (
                 <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
                   {getString('modules')}
                 </Text>
               )}
-              {NEW_LEFT_NAVBAR_SETTINGS ? (
+              {showProjectOverview ? (
                 <LandingDashboardContextProvider>
                   <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
                     <Text font={{ size: 'medium', weight: 'bold' }} color={Color.BLACK}>

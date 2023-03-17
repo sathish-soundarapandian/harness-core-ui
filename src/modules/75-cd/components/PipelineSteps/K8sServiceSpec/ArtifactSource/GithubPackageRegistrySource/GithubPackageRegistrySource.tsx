@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
 
-import { FormInput, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { FormInput, Layout, Text } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -323,7 +323,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
-                allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+                allowableTypes,
                 expressions
               }}
               type={ArtifactToConnectorMap[defaultTo(artifact?.type, '')]}

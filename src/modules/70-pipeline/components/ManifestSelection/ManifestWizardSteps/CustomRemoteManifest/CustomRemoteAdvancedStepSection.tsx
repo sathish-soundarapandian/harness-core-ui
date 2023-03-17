@@ -72,11 +72,15 @@ function CustomRemoteAdvancedStepSection({
     lazy: true
   })
 
+  const showHelmVersion = React.useMemo((): boolean => {
+    return !!selectedManifest && [ManifestDataType.HelmChart].includes(selectedManifest)
+  }, [selectedManifest])
+
   useEffect(() => {
-    if (!commandFlagOptions[helmVersion]?.length && selectedManifest !== ManifestDataType.K8sManifest) {
+    if (!commandFlagOptions[helmVersion]?.length && showHelmVersion) {
       refetchCommandFlags()
     }
-  }, [helmVersion])
+  }, [helmVersion, showHelmVersion])
 
   useDeepCompareEffect(() => {
     const commandFlagSelectOption = {
@@ -115,7 +119,6 @@ function CustomRemoteAdvancedStepSection({
               variableName="enableDeclarativeRollback"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
               style={{ alignSelf: 'center', marginTop: 11 }}
               className={css.addmarginTop}
@@ -140,14 +143,13 @@ function CustomRemoteAdvancedStepSection({
             variableName="skipResourceVersioning"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced
             onChange={/* istanbul ignore next */ value => formik.setFieldValue('skipResourceVersioning', value)}
             style={{ alignSelf: 'center', marginTop: 11 }}
             className={cx(css.addmarginTop)}
             isReadonly={isReadonly}
           />
         )}
-        {selectedManifest !== ManifestDataType.K8sManifest ? (
+        {showHelmVersion ? (
           <FormInput.Select
             name="helmVersion"
             label={getString('helmVersion')}

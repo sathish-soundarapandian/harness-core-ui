@@ -103,6 +103,7 @@ import {
   getTriggerArtifactInitialSource
 } from './TriggersWizardPageUtils'
 import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
+import { isNewTrigger } from '../utils'
 import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
@@ -152,8 +153,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
       branch
-    } as GetTriggerQueryParams
-    // lazy: true
+    } as GetTriggerQueryParams,
+    lazy: isNewTrigger(triggerIdentifier)
   })
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
     pipelineIdentifier,
@@ -307,7 +308,12 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
   const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
-    { accountId, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    {
+      accountId,
+      repoIdentifier: defaultTo(pipelineRepoName, repoIdentifier),
+      branch,
+      connectorRef: pipelineConnectorRef
+    },
     originalPipeline,
     resolvedPipeline
   )
@@ -1086,7 +1092,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
       <Wizard
         key={wizardKey} // re-renders with yaml to visual initialValues
         formikInitialProps={{
-          initialValues,
+          initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidArtifactFormikValuesInterface) => handleArtifactSubmit(val),
           validationSchema: getValidationSchema(getString),
           validate: validateTriggerPipeline,

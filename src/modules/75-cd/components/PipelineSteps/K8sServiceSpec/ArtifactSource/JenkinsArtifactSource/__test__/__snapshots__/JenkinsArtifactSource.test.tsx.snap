@@ -205,7 +205,7 @@ exports[`JenkinsArtifactSource tests renders fine for all Runtime values 1`] = `
                 class="Tooltip--acenter"
                 data-tooltip-id="jenkinsArtifact_pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary.spec.jobName"
               >
-                Job Name
+                connectors.jenkins.jobNameLabel
               </span>
                
               <span

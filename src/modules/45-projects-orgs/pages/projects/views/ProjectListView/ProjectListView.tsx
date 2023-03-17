@@ -22,9 +22,11 @@ import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectListView.module.scss'
 
@@ -45,9 +47,13 @@ export const RenderColumnProject: Renderer<CellProps<ProjectAggregateDTO>> = ({ 
   const project = row.original.projectResponse.project
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+    <Layout.Horizontal
+      spacing="small"
+      flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+      padding={{ right: 'medium' }}
+    >
       <div className={css.colorbox} style={{ backgroundColor: `${project.color}` }} />
-      <Layout.Vertical spacing="xsmall" padding={{ left: 'small' }} className={css.verticalCenter}>
+      <Layout.Vertical spacing="xsmall" padding={{ left: 'small' }} className={css.projectTextContainer}>
         <Layout.Horizontal spacing="small">
           <Text color={Color.BLACK} lineClamp={1} className={css.project}>
             {project.name}
@@ -72,15 +78,16 @@ export const RenderColumnOrganization: Renderer<CellProps<ProjectAggregateDTO>> 
 }
 
 const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
   const data = row.original
   const shouldShowModules = data.projectResponse.project.modules?.length
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   function getModuleIcons(project: Project): React.ReactElement[] {
     const modules = project.modules
     const icons = []
 
-    if (CDNG_ENABLED && modules?.includes(ModuleName.CD)) {
+    if (shouldVisible && modules?.includes(ModuleName.CD)) {
       icons.push(<Icon name={getModuleIcon(ModuleName.CD)} size={20} key={ModuleName.CD} />)
     }
 
@@ -297,7 +304,7 @@ const ProjectListView: React.FC<ProjectListViewProps> = props => {
 
   const paginationProps = useDefaultPaginationProps({
     itemCount: data?.data?.totalItems || 0,
-    pageSize: data?.data?.pageSize || 10,
+    pageSize: data?.data?.pageSize || COMMON_DEFAULT_PAGE_SIZE,
     pageCount: data?.data?.totalPages || 0,
     pageIndex: data?.data?.pageIndex || 0
   })

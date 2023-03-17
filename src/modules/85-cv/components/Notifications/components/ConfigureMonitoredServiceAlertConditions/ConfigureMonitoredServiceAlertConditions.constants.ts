@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -21,7 +21,9 @@ export enum ChangeType {
 }
 
 export enum EventStatus {
-  NEW_EVENTS = 'NewEvents'
+  NEW_EVENTS = 'NewEvents',
+  CRITICAL_EVENTS = 'CriticalEvents',
+  RESURFACED_EVENTS = 'ResurfacedEvents'
 }
 
 export enum EventType {
@@ -46,9 +48,13 @@ export const changeTypeOptions: SelectOption[] = [
   { label: 'Incident', value: ChangeType.INCIDENT }
 ]
 
-export const eventStatusOptions: SelectOption[] = [{ label: 'New Events', value: EventStatus.NEW_EVENTS }]
+export const eventStatusOptions: SelectOption[] = [
+  { label: 'New Events', value: EventStatus.NEW_EVENTS },
+  { label: 'Critical Events', value: EventStatus.CRITICAL_EVENTS },
+  { label: 'Resurfaced Events', value: EventStatus.RESURFACED_EVENTS }
+]
 
-export const allEventsTypeOption = { label: 'All Events', value: EventType.ALL_EVENTS }
+export const allEventsTypeOption = { label: 'Any', value: EventType.ALL_EVENTS }
 
 export const eventTypeOptions: SelectOption[] = [
   allEventsTypeOption,

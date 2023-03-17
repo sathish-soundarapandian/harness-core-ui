@@ -8,7 +8,13 @@
 import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
-import { useGetAccountNG, useUpdateAccountDefaultExperienceNG, useUpdateAccountNameNG } from 'services/cd-ng'
+import {
+  useGetAccountNG,
+  useUpdateAccountDefaultExperienceNG,
+  useUpdateAccountNameNG,
+  useUpdateAccountCrossGenerationAccessEnabledNG
+} from 'services/cd-ng'
+
 import { communityLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
 import AccountDetails from '../views/AccountDetails'
 
@@ -16,7 +22,9 @@ jest.mock('services/cd-ng')
 const useGetAccountNGMock = useGetAccountNG as jest.MockedFunction<any>
 const useUpdateAccountDefaultExperienceNGMock = useUpdateAccountDefaultExperienceNG as jest.MockedFunction<any>
 const updateAccountNameNGMock = useUpdateAccountNameNG as jest.MockedFunction<any>
-
+const useUpdateAccountCrossGenerationAccessEnabledNGMock =
+  useUpdateAccountCrossGenerationAccessEnabledNG as jest.MockedFunction<any>
+const updateAccountCrossGenerationAccessEnabledNGMock = jest.fn()
 const updateAcctDefaultExperienceMock = jest.fn()
 const updateAcctNameMock = jest.fn()
 
@@ -28,7 +36,8 @@ beforeEach(() => {
           name: 'account name',
           identifier: 'id1',
           cluster: 'free',
-          defaultExperience: 'NG'
+          defaultExperience: 'NG',
+          crossGenerationAccessEnabled: true
         }
       },
       refetch: jest.fn()
@@ -38,6 +47,13 @@ beforeEach(() => {
   useUpdateAccountDefaultExperienceNGMock.mockImplementation(() => {
     return {
       mutate: updateAcctDefaultExperienceMock,
+      loading: false
+    }
+  })
+
+  useUpdateAccountCrossGenerationAccessEnabledNGMock.mockImplementation(() => {
+    return {
+      mutate: updateAccountCrossGenerationAccessEnabledNGMock,
       loading: false
     }
   })
@@ -55,7 +71,14 @@ beforeEach(() => {
 describe('AccountDetails', () => {
   test('should render AccountDetails page with values', () => {
     const { container, getByText } = render(
-      <TestWrapper>
+      <TestWrapper
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}
+        defaultAppStoreValues={{
+          featureFlags: {
+            PLG_ENABLE_CROSS_GENERATION_ACCESS: true
+          }
+        }}
+      >
         <AccountDetails />
       </TestWrapper>
     )
@@ -66,7 +89,7 @@ describe('AccountDetails', () => {
 
   test('should call update default version when click save from default version form', async () => {
     const { getByText } = render(
-      <TestWrapper>
+      <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}>
         <AccountDetails />
       </TestWrapper>
     )
@@ -79,7 +102,7 @@ describe('AccountDetails', () => {
 
   test('should call update account name api when edit name and save', async () => {
     const { getByText, container } = render(
-      <TestWrapper>
+      <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}>
         <AccountDetails />
       </TestWrapper>
     )
@@ -104,7 +127,7 @@ describe('AccountDetails', () => {
       }
     })
     const { getByText, container } = render(
-      <TestWrapper>
+      <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}>
         <AccountDetails />
       </TestWrapper>
     )
@@ -130,7 +153,7 @@ describe('AccountDetails', () => {
       }
     })
     const { getByText } = render(
-      <TestWrapper>
+      <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}>
         <AccountDetails />
       </TestWrapper>
     )

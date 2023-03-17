@@ -32,6 +32,7 @@ export interface TemplateYamlDiffViewWrapperProps {
   originalEntityYaml: string
   resolvedTemplateResponses?: TemplateResponse[]
   onUpdate: (refreshedYaml: string) => Promise<void>
+  setYamlDiffLoading: (yamlLoading: boolean) => void
 }
 
 export function TemplateYamlDiffViewWrapper({
@@ -39,12 +40,12 @@ export function TemplateYamlDiffViewWrapper({
   rootErrorNodeSummary,
   originalEntityYaml,
   resolvedTemplateResponses = [],
-  onUpdate
+  onUpdate,
+  setYamlDiffLoading
 }: TemplateYamlDiffViewWrapperProps): React.ReactElement {
   const { getString } = useStrings()
   const params = useParams<ProjectPathProps>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<any>()
   const [originalYaml, setOriginalYaml] = React.useState<string>('')
   const [refreshedYaml, setRefreshedYaml] = React.useState<string>('')
@@ -95,7 +96,7 @@ export function TemplateYamlDiffViewWrapper({
     } catch (err) {
       setError(err)
     } finally {
-      setLoading(false)
+      setYamlDiffLoading(false)
     }
   }
 
@@ -130,12 +131,12 @@ export function TemplateYamlDiffViewWrapper({
     } catch (err) {
       setError(err)
     } finally {
-      setLoading(false)
+      setYamlDiffLoading(false)
     }
   }
 
   const refetch = async () => {
-    setLoading(true)
+    setYamlDiffLoading(true)
     setError(undefined)
     if (isEqual(errorNodeSummary, rootErrorNodeSummary)) {
       await getYamlDiffFromYaml()
@@ -164,7 +165,6 @@ export function TemplateYamlDiffViewWrapper({
       refreshedYaml={refreshedYaml}
       error={error}
       refetchYamlDiff={refetch}
-      loading={loading}
       templateErrorUtils={{ isTemplateResolved, buttonLabel, onNodeUpdate, isYamlDiffForTemplate: true }}
     />
   )

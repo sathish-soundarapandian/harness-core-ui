@@ -33,8 +33,6 @@ import { ManifestDataType } from '../Manifesthelper'
 
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 
-jest.mock('@common/components/YAMLBuilder/YamlBuilder')
-
 jest.mock('services/cd-ng', () => ({
   getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
@@ -55,6 +53,10 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
   expect(GitLab).not.toBeNull()
   const Bitbucket = queryByValueAttribute('Bitbucket')
   expect(Bitbucket).not.toBeNull()
+  const AzureRepo = queryByValueAttribute('AzureRepo')
+  expect(AzureRepo).not.toBeNull()
+  const Harness = queryByValueAttribute('Harness')
+  expect(Harness).not.toBeNull()
 
   userEvent.click(Git!)
   const connnectorRefInput = await findByTestId(portal, /connectorRef/)

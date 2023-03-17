@@ -284,13 +284,13 @@ const UserGroupTable: React.FC<UserGroupTableProps> = ({ user, scopeFilters }) =
         Header: getString('members'),
         id: 'members',
         accessor: row => row.users,
-        width: '45%',
+        width: '30%',
         Cell: RenderColumnMembers
       },
       {
         Header: getNewUserGroupBtn(ButtonVariation.SECONDARY, ButtonSize.SMALL),
         accessor: row => row.lastModifiedAt,
-        width: '15%',
+        width: '30%',
         id: 'action',
         Cell: ResourceGroupColumnMenu,
         disableSortBy: true,

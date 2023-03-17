@@ -58,7 +58,6 @@ export default function OptionalConfiguration(props: {
             variableName="spec.assertion"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => setFieldValue('spec.assertion', value)}
             isReadonly={readonly}
           />

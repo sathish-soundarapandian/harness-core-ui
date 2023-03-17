@@ -22,6 +22,8 @@ import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants
 import type { ModulePathParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import factory from '@pipeline/factories/ExecutionFactory'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   DurationCell,
   ExecutionCell,
@@ -57,6 +59,7 @@ function ExecutionListTable({
   const queryParams = useExecutionListQueryParams()
   const { getString } = useStrings()
   const { isCompareMode } = useExecutionCompareContext()
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const [currentSort, currentOrder] = queryParams.sort
 
   const {
@@ -64,7 +67,7 @@ function ExecutionListTable({
     totalElements = 0,
     totalPages = 0,
     number = DEFAULT_PAGE_INDEX,
-    size = DEFAULT_PAGE_SIZE
+    size = PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE
   } = executionList
 
   const columns: Column<PipelineExecutionSummary>[] = React.useMemo(() => {

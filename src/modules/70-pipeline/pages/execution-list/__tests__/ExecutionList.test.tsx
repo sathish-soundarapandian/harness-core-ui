@@ -283,7 +283,7 @@ describe('Execution List', () => {
     userEvent.click(optionExpired)
 
     const request = commonRequest()
-    request.queryParams.status = ['Failed', 'Expired']
+    request.queryParams.status = ['Failed', 'Errored', 'Expired']
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
 
     // deselect all

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`StepWidget tests renders DeployStageSpecifications without crashing  1`] = `
+exports[`DeployStageSpecifications tests renders DeployStageSpecifications without crashing  1`] = `
 <div>
   <div
     class="edit-stage-view-mock"

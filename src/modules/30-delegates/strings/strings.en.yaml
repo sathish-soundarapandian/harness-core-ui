@@ -155,8 +155,17 @@ configNameRequired: 'Delegate Configuration name is Required.'
 instanceStatus: 'Instance Status'
 runAsRoot: 'Run delegate with root access'
 commandLineCreation:
+  replicas: Replicas
+  createYourOwnYaml: This template is configured with auto upgrade set to ON so that the delegate version installed will always remain in sync with the version available on the Harness Manager.
+  defaultValuesYaml: Default values.yaml used for command below
+  totalMemory: Total Memory / Total CPU needed on the Kubernetes Cluster
+  numberOfParallel: Number of parallel deployments/builds that can be run across all replicas
+  yamlBasicOptionText: This YAML has all configuration variables pre-populated with values specific to your Harness account. Additionally, the auto upgrade configuration is set to ON so that the delegate version installed will always remain in sync with the version available on the Harness Manager.
+  yamlFileOptions: YAML file options
+  delegateSizing: Delegate sizing guide - modify the replica count to run specific number of parallel deployments/builds
   installDelegate: Install a Delegate
-  terraForm: Terraform
+  closePreview: Close preview
+  terraForm: Terraform Helm Provider
   kubernetesManifest: Kubernetes Manifest
   installYourDelegate: Install your Delegate
   harenssDelegates: Harness Delegates
@@ -167,12 +176,12 @@ commandLineCreation:
   installDelegateSubText: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
   firstCommandHeadingHelm: Add Harness helm chart repo to your local helm registry
   firstCommandHelmFirstLine: helm repo add harness-delegate https://app.harness.io/storage/harness-download/delegate-helm-chart/
-  firstCommandHelmSecondLine: helm repo update
+  firstCommandHelmSecondLine: helm repo update harness-delegate
   secondCommandHeadingHelm: Now we are ready to install the delegate
-  firstComandHeadingKubernetes: Copy the Kubernetes YAML file where you want to install the delegate
+  firstComandHeadingKubernetes: Create your own YAML from a Kubernetes manifest template
   firstComandKubernetesFirstLine: curl -LO https://raw.githubusercontent.com/harness/delegate-kubernetes-manifest/main/harness-delegate.yaml
   lastCommandKubernetesLastLine: kubectl apply -f harness-delegate.yaml
-  commandsKubernetesHeading: Update your file by replacing the palceholders with your actual values
+  commandsKubernetesHeading: Update the downloaded template by replacing the placeholders with the following values. You will now have a Kubernetes manifest YAML ready for installation.
   kubernetesFirstDirectionPartOne: '"PUT_YOUR_DELEGATE_NAME"'
   kubernetesFirstDirectionPartTwo: with the desired delegate name
   kubernetesSecondDirectionPartOne: '"PUT_YOUR_ACCOUNT_ID"'
@@ -184,7 +193,7 @@ commandLineCreation:
   firstCommandHeadingDocker: Run the following command to install
   firstCommandHeadingTerraform: Create the main.tf file where you want to install the delegate
   secondCommandHeadingTerraform: Initialize Terraform
-  thirdCommandHeadingTerraform: Run the command to install the delegate
+  thirdCommandHeadingTerraform: Copy the YAML to a machine with kubectl installed and with access to your Kubernetes cluster. Run the following command to install the Harness Delegate in your Kubernetes Cluster.
   foruthCommandHeading: Apply terraform
   firstCommandTerraFormFirstLine: terraform apply
   secondCommandTerraFormFirstLine: terraform init
@@ -214,7 +223,9 @@ commandLineCreation:
   terraformTroubleShooting2: terraform -version
   terraformTroubleShooting3: To further troubleshoot terraform installation refer
   terraformTroubleShooting4: terraform troubleshooting guide
-  clickDoneAndCheckLater: Checking if the delegate is installed. It might take 1-2 minutes for the installation. Click Done and check back later.
+  clickDoneAndCheckLater: Checking if the delegate is installed. It might take 1-3 minutes for the installation. Click Done and check back later.
   feedBackSaved: Feedback Saved
   feedBackNotSaved: Error in saving feedback
   retryConnections: Retry Connection
+  combinedHelmChartCommandsHeading: To install the Harness Delegate in your Kubernetes cluster directly, copy and run the below command to deploy the Harness Delegate with a Helm chart.
+  copyCommand: Copy command

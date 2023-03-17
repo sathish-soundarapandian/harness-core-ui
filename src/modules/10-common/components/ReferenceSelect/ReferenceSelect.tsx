@@ -322,10 +322,10 @@ export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholder
   const groupedReferences = useMemo(() => {
     return Object.values(
       selected.reduce((acc, el) => {
-        acc[el.scope] = acc[el.scope] ?? { scope: el.scope, count: 0 }
+        acc[el.scope] ??= { scope: el.scope, count: 0 }
         acc[el.scope].count++
         return acc
-      }, {} as { [K in Scope]: { scope: Scope; count: number } })
+      }, {} as Record<Scope, { scope: Scope; count: number }>)
     )
   }, [selected])
 

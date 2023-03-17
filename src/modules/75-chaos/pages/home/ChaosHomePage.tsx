@@ -104,7 +104,7 @@ export default function ChaosHomePage(): React.ReactElement {
       projectCreateSuccessHandler={projectCreateSuccessHandler}
       subTitle={getString('chaos.homepage.slogan')}
       documentText={getString('chaos.homepage.learnMore')}
-      documentURL={'https://docs.harness.io/category/kl0mxwpfw1-hce-category'}
+      documentURL={'https://developer.harness.io/docs/chaos-engineering/overview/introduction-to-chaos-module'}
     />
   )
 }

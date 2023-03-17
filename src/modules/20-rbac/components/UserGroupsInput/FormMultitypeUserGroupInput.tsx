@@ -15,11 +15,12 @@ import {
   MultiTypeInputType
 } from '@harness/uicore'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { ExpressionsListInput } from '@common/components/ExpressionsListInput/ExpressionsListInput'
 import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { InputSetFunction, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 import UserGroupsInput, { FormikUserGroupsInput } from './UserGroupsInput'
+import UserGroupExpressionInput from './UserGroupExpressionInput'
 
 export interface FormMultiTypeUserGroupInputProps
   extends Omit<ExpressionAndRuntimeTypeProps, 'fixedTypeComponent' | 'fixedTypeComponentProps'> {
@@ -33,6 +34,7 @@ export interface FormMultiTypeUserGroupInputProps
   }
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
+  scopeCountMap?: Map<Scope, string[]>
 }
 
 export type Extended = FormikUserGroupsInput & FormMultiTypeUserGroupInputProps
@@ -45,11 +47,11 @@ export const FormMultiTypeUserGroupInput: React.FC<Extended> = props => {
     tooltipProps,
     formik,
     name,
-    expressions,
     allowableTypes,
     templateProps,
     enableConfigureOptions = false,
-    configureOptionsProps
+    configureOptionsProps,
+    scopeCountMap
   } = props
 
   const value = get(formik?.values, name)
@@ -76,9 +78,7 @@ export const FormMultiTypeUserGroupInput: React.FC<Extended> = props => {
       allowedTypes={allowableTypes}
       supportListOfExpressions={true}
       disableMultiSelectBtn={disabled}
-      expressionRender={() => (
-        <ExpressionsListInput name={name} value={value} readOnly={disabled} expressions={expressions} />
-      )}
+      expressionRender={() => <UserGroupExpressionInput {...props} />}
       style={{ flexGrow: 1, marginBottom: 0 }}
       enableConfigureOptions={enableConfigureOptions}
       configureOptionsProps={configureOptionsProps}
@@ -89,6 +89,7 @@ export const FormMultiTypeUserGroupInput: React.FC<Extended> = props => {
         name={name}
         disabled={disabled}
         identifierFilter={identifierFilter}
+        scopeCountMap={scopeCountMap}
       >
         {children}
       </UserGroupsInput>

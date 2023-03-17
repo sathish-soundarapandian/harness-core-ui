@@ -1849,3 +1849,50 @@ export const useAgentRepositoryServiceGetAppDetails = ({
       `/api/v1/agents/${paramsInPath.agentIdentifier}/repositories/${paramsInPath.identifier}/appdetails`,
     { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, identifier }, ...props }
   )
+
+export interface Servicev1Applicationlist {
+  content?: Servicev1Application[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface Servicev1ApplicationQuery {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Filters for Application. Eg. "app.status.sync.status": "Synced" or "app.status.sync.status": { "$in": ["Synced", "NotSynced"]
+   */
+  filter?: { [key: string]: any }
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  pageIndex?: number
+  pageSize?: number
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  searchTerm?: string
+}
+
+export type UseApplicationServiceListAppsProps = Omit<
+  UseMutateProps<Servicev1Applicationlist, GatewayruntimeError, void, Servicev1ApplicationQuery, void>,
+  'path' | 'verb'
+>
+
+/**
+ * List returns list of apps
+ */
+export const useApplicationServiceListApps = (props: UseApplicationServiceListAppsProps) =>
+  useMutate<Servicev1Applicationlist, GatewayruntimeError, void, Servicev1ApplicationQuery, void>(
+    'POST',
+    `/api/v1/applications`,
+    { base: window.getApiBaseUrl('gitops'), ...props }
+  )

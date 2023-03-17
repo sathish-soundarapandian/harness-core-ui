@@ -34,13 +34,14 @@ export const inputSetTemplateForRuntimeServiceCall = `/cv/api/verify-step/input-
 export const serviceEnvironmentTest1Call = `/cv/api/monitored-service/service-environment?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&environmentIdentifier=${ENV}&serviceIdentifier=testService`
 export const serviceEnvironmentTest2Call = `/cv/api/monitored-service/service-environment?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&environmentIdentifier=prod&serviceIdentifier=testService2`
 export const serviceEnvironmentTest3Call = `/cv/api/monitored-service/service-environment?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&environmentIdentifier=${ENV}&serviceIdentifier=testService3`
+export const overviewCall = `/cv/api/account/${accountId}/orgs/default/projects/${project}/verifications/GZNwefkdR2aBhc7owmJ1-w/overview?routingId=${accountId}`
 
 export const pipelinesFetchCall = `/pipeline/api/pipelines/NG_Docker_Image?*`
 export const pipelinesSummaryFetchCall = `/pipeline/api/pipelines/summary/NG_Docker_Image?*`
 export const pipelinesYamlFetchCall = `/pipeline/api/yaml-schema?*`
 // git sync call
 export const gitSyncCall = `/ng/api/git-sync?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}`
-export const aggregateProjectsCall = `/ng/api/aggregate/projects?routingId=${accountId}&accountIdentifier=${accountId}&pageIndex=0&pageSize=50`
+export const aggregateProjectsCall = `/ng/api/aggregate/projects?routingId=${accountId}&accountIdentifier=${accountId}&pageIndex=0&pageSize=50&*`
 export const sourceCodeManagerCall = `/ng/api/source-code-manager?routingId=${accountId}&accountIdentifier=${accountId}`
 
 // logs initial call
@@ -57,6 +58,9 @@ export const logsRadarChartDataCLusterFilterCall = `/cv/api/verify-step/GZNwefkd
 
 // logs min slider filter
 export const logsListMinSliderFilterCall = `cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-data?routingId=${accountId}&accountId=${accountId}&pageNumber=0&pageSize=10&minAngle=30&maxAngle=360&clusterTypes=UNEXPECTED_FREQUENCY`
+
+// log feedback call
+export const feedbackHistory = `/cv/api/account/accountId/org/${org}/project/${project}/log-feedback/abc/history?*`
 
 export const strategiesResponse = {
   status: 'SUCCESS',
@@ -1018,7 +1022,26 @@ export const logsListCallResponse = {
               timeStamp: 1672845300,
               count: 10
             }
-          ]
+          ],
+          feedbackApplied: {
+            feedbackScore: 'HIGH_RISK',
+            description:
+              'Some applied reason Some applied reason Some applied reason Some applied reason Some applied reasonSome applied reason',
+            createdBy: 'pranesh@harness.io',
+            createdAt: 1677414780069,
+            updatedby: 'pranesh@harness.io',
+            updatedAt: 1677414840933,
+            feedbackId: 'abc'
+          },
+          feedback: {
+            feedbackScore: 'MEDIUM_RISK',
+            description: 'Some reason',
+            createdBy: 'pranesh@harness.io',
+            createdAt: 1677414780069,
+            updatedby: 'pranesh@harness.io',
+            updatedAt: 1677414840933,
+            feedbackId: 'abc'
+          }
         },
         {
           message: 'test 2',
@@ -2021,4 +2044,88 @@ export const variablesResponse = {
   },
   metaData: null,
   correlationId: '0a187e1c-7422-4b16-bbfd-8063098a0690'
+}
+
+export const overviewCallResponse = {
+  spec: {
+    analysedServiceIdentifier: 'promService',
+    analysedEnvIdentifier: 'promEnv',
+    monitoredServiceType: 'DEFAULT',
+    monitoredServiceIdentifier: 'promService_promEnv',
+    analysisType: 'CANARY',
+    sensitivity: 'HIGH',
+    durationInMinutes: 5,
+    isFailOnNoAnalysis: true
+  },
+  appliedDeploymentAnalysisType: 'NO_ANALYSIS',
+  verificationStatus: 'VERIFICATION_FAILED',
+  verificationProgressPercentage: 100,
+  verificationStartTimestamp: 1675795194203,
+  testNodes: {
+    nodeType: 'CANARY',
+    nodes: [
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'harness-deployment-canary-7445f86dbf-ml857',
+        verificationResult: 'NO_ANALYSIS',
+        failedMetrics: 0,
+        failedLogClusters: 0
+      },
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'manager-54c5cbb474-fq28j',
+        verificationResult: 'NO_ANALYSIS',
+        failedMetrics: 0,
+        failedLogClusters: 0
+      },
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'manager-54c5cbb474-bzddb',
+        verificationResult: 'NO_ANALYSIS',
+        failedMetrics: 0,
+        failedLogClusters: 0
+      },
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'manager-54c5cbb474-tjs4x',
+        verificationResult: 'NO_ANALYSIS',
+        failedMetrics: 0,
+        failedLogClusters: 0
+      },
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'manager-54c5cbb474-6hckp',
+        verificationResult: 'NO_ANALYSIS',
+        failedMetrics: 0,
+        failedLogClusters: 0
+      }
+    ]
+  },
+  controlNodes: {
+    nodeType: 'PRIMARY',
+    nodes: [
+      { type: 'DEPLOYMENT_NODE', nodeIdentifier: 'harness-deployment-canary-7445f86dbf-ml857' },
+      { type: 'DEPLOYMENT_NODE', nodeIdentifier: 'manager-54c5cbb474-fq28j' },
+      { type: 'DEPLOYMENT_NODE', nodeIdentifier: 'manager-54c5cbb474-bzddb' },
+      { type: 'DEPLOYMENT_NODE', nodeIdentifier: 'manager-54c5cbb474-tjs4x' },
+      { type: 'DEPLOYMENT_NODE', nodeIdentifier: 'manager-54c5cbb474-6hckp' }
+    ]
+  },
+  metricsAnalysis: { healthy: 0, warning: 0, unhealthy: 0, noAnalysis: 336 },
+  logClusters: { knownClustersCount: 0, unknownClustersCount: 0, unexpectedFrequencyClustersCount: 0 },
+  errorClusters: { knownClustersCount: 0, unknownClustersCount: 0, unexpectedFrequencyClustersCount: 0 }
+}
+
+export const feedbackHistoryResponse = {
+  metaData: {},
+  resource: [
+    {
+      updatedBy: 'pranesh.g@harness.io',
+      logFeedback: {
+        feedbackScore: 'NO_RISK_CONSIDER_FREQUENCY',
+        description: 'It is not an issue',
+        updatedAt: 1672845660
+      }
+    }
+  ]
 }

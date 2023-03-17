@@ -64,6 +64,7 @@ import SpotConnector from '../CreateConnector/SpotConnector/SpotConnector'
 import CreateAzureArtifactsConnector from '../CreateConnector/AzureArtifactConnector/CreateAzureArtifactConnector'
 import TASConnector from '../CreateConnector/TASConnector/TASConnector'
 import TerraformCloudConnector from '../CreateConnector/TerraformCloudConnector/TerraformCloudConnector'
+import CreateBambooConnector from '../CreateConnector/BambooConnector/CreateBambooConnector'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -112,7 +113,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { CVNG_ENABLED, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, TERRAFORM_CLOUD } = useFeatureFlags()
+  const { CVNG_ENABLED, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, CDS_TERRAFORM_CLOUD } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -199,6 +200,9 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return <CreateAzureConnector {...commonProps} />
     case Connectors.JENKINS:
       return <CreateJenkinsConnector {...commonProps} />
+    case Connectors.Bamboo:
+      return <CreateBambooConnector {...commonProps} />
+
     case Connectors.CUSTOM_SECRET_MANAGER:
       return <CreateCustomSMConnector {...commonProps} />
     case Connectors.GcpSecretManager:
@@ -210,7 +214,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     case Connectors.TAS:
       return CDS_TAS_NG ? <TASConnector {...commonProps} /> : null
     case Connectors.TERRAFORM_CLOUD:
-      return TERRAFORM_CLOUD ? <TerraformCloudConnector {...commonProps} /> : null
+      return CDS_TERRAFORM_CLOUD ? <TerraformCloudConnector {...commonProps} /> : null
     default:
       return null
   }

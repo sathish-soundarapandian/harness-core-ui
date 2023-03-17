@@ -13,10 +13,12 @@ import {
   VariableSuccessResponseWithNoData
 } from '@variables/pages/variables/__tests__/mock/variableResponse'
 import * as cdngServices from 'services/cd-ng'
+import { SortMethod } from '@common/utils/sortUtils'
 import VariableResourceModalBody from '../VariableResourceModalBody'
 
 const props = {
   searchTerm: '',
+  sortMethod: SortMethod.Newest,
   onSelectChange: jest.fn(),
   selectedData: [],
   resourceScope: {

@@ -803,53 +803,49 @@ exports[`About Project test create project  2`] = `
               >
                 <div
                   class="StyledProps--font StyledProps--main"
+                  data-testid="card-content"
                 >
                   <div
                     class="colorBar"
                     style="background-color: rgb(0, 99, 247);"
                   />
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-card-title StyledProps--color StyledProps--color-black"
                     style="--text-line-clamp: 1;"
                   >
                     dummy name
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                    class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-tiny StyledProps--color StyledProps--color-grey600 StyledProps--margin-bottom-medium"
                     style="--text-line-clamp: 1;"
                   >
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                      This is new description
                   </p>
                   <div
-                    class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
-                  >
-                    <div
-                      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                    />
-                  </div>
-                  <div
-                    class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+                    class="Layout--horizontal StyledProps--main StyledProps--margin-top-xlarge"
                   >
                     <div
                       class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
                     >
                       <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400 StyledProps--padding-bottom-small"
                       >
-                        adminLabel (1)
+                        adminLabel
+                         
+                        (1)
                       </p>
                       <div
                         class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
                       >
                         <div
                           class="AvatarGroup--stack projectAvatarGroup"
-                          style="--avatar-over-lap: -13px;"
+                          style="--avatar-over-lap: -10px;"
                         >
                           <div
                             class="AvatarGroup--stackAvatar avatarGroupAdd Avatar--Avatar Avatar--contentStyle"
@@ -862,7 +858,7 @@ exports[`About Project test create project  2`] = `
                               >
                                 <div
                                   class="Avatar--AvatarInner"
-                                  style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                                  style="border-radius: 100%; line-height: 16px; width: 24px; height: 24px; font-size: 20px; font-weight: 200;"
                                   tabindex="0"
                                 >
                                   +
@@ -882,7 +878,7 @@ exports[`About Project test create project  2`] = `
                               >
                                 <div
                                   class="Avatar--AvatarInner"
-                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  style="border-radius: 100%; line-height: 18px; width: 24px; height: 24px; font-size: 10px;"
                                   tabindex="0"
                                 >
                                   <span
@@ -914,16 +910,17 @@ exports[`About Project test create project  2`] = `
                       class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
                     >
                       <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400 StyledProps--padding-bottom-small"
                       >
-                        collaboratorsLabel 
+                        collaboratorsLabel
+                         
                       </p>
                       <div
                         class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
                       >
                         <div
                           class="AvatarGroup--stack projectAvatarGroup"
-                          style="--avatar-over-lap: -13px;"
+                          style="--avatar-over-lap: -10px;"
                         >
                           <div
                             class="AvatarGroup--stackAvatar avatarGroupAdd Avatar--Avatar Avatar--contentStyle"
@@ -936,7 +933,7 @@ exports[`About Project test create project  2`] = `
                               >
                                 <div
                                   class="Avatar--AvatarInner"
-                                  style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                                  style="border-radius: 100%; line-height: 16px; width: 24px; height: 24px; font-size: 20px; font-weight: 200;"
                                   tabindex="0"
                                 >
                                   +
@@ -955,7 +952,7 @@ exports[`About Project test create project  2`] = `
                               >
                                 <div
                                   class="Avatar--AvatarInner"
-                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  style="border-radius: 100%; line-height: 18px; width: 24px; height: 24px; font-size: 10px;"
                                   tabindex="0"
                                 >
                                   <span
@@ -988,7 +985,7 @@ exports[`About Project test create project  2`] = `
                     class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400 StyledProps--padding-bottom-xsmall"
                     >
                       modules
                     </p>

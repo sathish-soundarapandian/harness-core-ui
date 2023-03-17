@@ -76,7 +76,7 @@ export const shouldShowMultiSelectField = (selectedField: JiraFieldNG): boolean 
   selectedField.allowedValues && selectedField.schema.type === 'option' && !!selectedField.schema.array
 
 export const shouldShowMultiTypeField = (selectedField: JiraFieldNG): boolean =>
-  selectedField.allowedValues && selectedField.schema.type === 'option'
+  selectedField.allowedValues && (selectedField.schema.type === 'option' || selectedField.schema.type === 'issuetype')
 
 export const shouldShowJiraUserField = (selectedField: JiraFieldNG): boolean => selectedField.schema.type === 'user'
 

@@ -11,6 +11,7 @@ import {
 } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
+import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import JsonSelector from '@cv/components/JsonSelector/JsonSelector'
@@ -176,6 +177,9 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
                 value={values[field.identifier] as string}
                 key={multiTypeRecord?.[field.identifier] as string}
                 disabled={isDisabled}
+                displayTextclassName={classNames({
+                  [css.inputText]: Boolean(values[field.identifier])
+                })}
                 className={css.jsonSelectorButton}
                 multiType={multiTypeRecord?.[field.identifier] as MultiTypeInputType}
                 setMultiType={handleTemplateTypeUpdate}
@@ -183,7 +187,10 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
             ) : (
               <JsonSelectorButton
                 className={css.jsonSelectorButton}
-                displayText={(values[field.identifier] as string) || field.label}
+                displayTextclassName={classNames({
+                  [css.inputText]: Boolean(values[field.identifier])
+                })}
+                displayText={(values[field.identifier] as string) || `Select ${field.label}`}
                 onClick={() => openDrawer(field.identifier, field.label)}
                 disabled={isDisabled}
                 icon="plus"

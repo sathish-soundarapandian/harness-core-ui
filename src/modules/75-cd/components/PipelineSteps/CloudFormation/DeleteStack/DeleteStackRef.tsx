@@ -237,7 +237,6 @@ export const CloudFormationDeleteStack = (
                       variableName="spec.configuration.spec.provisionerIdentifier"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       isReadonly={readonly}
                       onChange={value => formik.setFieldValue('spec.configuration.spec.provisionerIdentifier', value)}
                     />
@@ -324,7 +323,6 @@ export const CloudFormationDeleteStack = (
                         variableName="spec.configuration.spec.region"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         isReadonly={readonly}
                         onChange={value => formik.setFieldValue('spec.configuration.spec.region', value)}
                       />
@@ -361,7 +359,6 @@ export const CloudFormationDeleteStack = (
                           variableName="spec.configuration.spec.roleArn"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           isReadonly={readonly}
                           onChange={value => formik.setFieldValue('spec.configuration.spec.roleArn', value)}
                         />
@@ -385,7 +382,6 @@ export const CloudFormationDeleteStack = (
                           variableName="spec.configuration.spec.stackName"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           isReadonly={readonly}
                           className={css.configureButton}
                           onChange={value => formik.setFieldValue('spec.configuration.spec.stackName', value)}

@@ -10,7 +10,11 @@ import { defaultTo } from 'lodash-es'
 import { Layout, Text, Checkbox } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Renderer, CellProps, Row } from 'react-table'
-import { getSLOIdentifierWithOrgAndProject } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
+import {
+  getSLOIdentifierWithOrgAndProject,
+  getSLORefIdWithOrgAndProject
+} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
+import type { SLOObjective } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { ServiceLevelObjectiveDetailsDTO, SLOConsumptionBreakdown, SLOHealthListView } from 'services/cv'
 import css from './SLOList.module.scss'
 
@@ -189,4 +193,56 @@ export const getIsIntermediate = (slosList: SLOHealthListView[], selectedSlos: S
   const listOfSloIdsOnPage = slosList?.map(item => item.sloIdentifier)
   const selectedSlosOnPage = selectedSlos.filter(item => listOfSloIdsOnPage?.includes(item.sloIdentifier))
   return Boolean(selectedSlosOnPage.length) && selectedSlosOnPage?.length < (listOfSloIdsOnPage?.length ?? 0)
+}
+
+export const getSelectedSLOsHaveRefIds = (
+  isAccountLevel: boolean,
+  content: SLOHealthListView[],
+  serviceLevelObjectivesDetails: SLOObjective[]
+): {
+  selectedSlosOnPage: SLOHealthListView[]
+  selectedSlosNotOnPage: SLOObjective[]
+} => {
+  const selectedSlosOnPage =
+    (isAccountLevel
+      ? content?.filter(item =>
+          serviceLevelObjectivesDetails
+            .map(details => getSLORefIdWithOrgAndProject(details))
+            .includes(getSLOIdentifierWithOrgAndProject(item))
+        )
+      : content?.filter(item =>
+          serviceLevelObjectivesDetails?.map(details => details.serviceLevelObjectiveRef).includes(item.sloIdentifier)
+        )) || []
+  const selectedSlosNotOnPage = isAccountLevel
+    ? serviceLevelObjectivesDetails.filter(
+        item =>
+          !selectedSlosOnPage
+            .map(slos => getSLOIdentifierWithOrgAndProject(slos))
+            .includes(getSLORefIdWithOrgAndProject(item))
+      )
+    : serviceLevelObjectivesDetails.filter(
+        item => !selectedSlosOnPage.map(slos => slos.sloIdentifier).includes(item.sloIdentifier || '')
+      )
+  return { selectedSlosOnPage, selectedSlosNotOnPage }
+}
+
+export const getSelectedSLOsHavingSLOIdentifier = (
+  isAccountLevel: boolean,
+  content: SLOHealthListView[],
+  prvSelected: SLOHealthListView[]
+): {
+  selectedSlosNotOnPage: SLOHealthListView[]
+  selectedSlosOnPage: SLOHealthListView[]
+} => {
+  const listOfSloIdsOnPage = isAccountLevel
+    ? content?.map(item => getSLOIdentifierWithOrgAndProject(item))
+    : content?.map(item => item.sloIdentifier)
+
+  const selectedSlosNotOnPage = prvSelected.filter(
+    item => !listOfSloIdsOnPage?.includes(isAccountLevel ? getSLOIdentifierWithOrgAndProject(item) : item.sloIdentifier)
+  )
+  const selectedSlosOnPage = prvSelected.filter(item =>
+    listOfSloIdsOnPage?.includes(isAccountLevel ? getSLOIdentifierWithOrgAndProject(item) : item.sloIdentifier)
+  )
+  return { selectedSlosNotOnPage, selectedSlosOnPage }
 }

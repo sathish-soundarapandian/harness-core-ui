@@ -7,7 +7,7 @@
 
 import React, { Ref, useRef } from 'react'
 import { noop } from 'lodash-es'
-import { Container, Formik, FormikForm } from '@harness/uicore'
+import { Container, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
@@ -107,15 +107,23 @@ export default function CommonHealthSource({
           }
         }
 
+        const customMetricFormInitialValues = getCurrentQueryData(queryMetricsMap, currentSelectedMetric)
+        const isQueryRuntimeOrExpression =
+          getMultiTypeFromValue(customMetricFormInitialValues?.query) !== MultiTypeInputType.FIXED
+
         return (
           <>
-            <CommonHealthSourceProvider updateParentFormik={formik.setFieldValue} parentFormValues={formik.values}>
+            <CommonHealthSourceProvider
+              updateParentFormik={formik.setFieldValue}
+              parentFormValues={formik.values}
+              isQueryRuntimeOrExpression={isQueryRuntimeOrExpression}
+            >
               <FormikForm>
                 <Formik<CommonCustomMetricFormikInterface>
                   enableReinitialize
                   formName={'customMetricForm'}
                   validateOnMount
-                  initialValues={getCurrentQueryData(queryMetricsMap, currentSelectedMetric)}
+                  initialValues={customMetricFormInitialValues}
                   onSubmit={noop}
                   validate={values =>
                     handleValidateCustomMetricForm({

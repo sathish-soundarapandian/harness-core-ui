@@ -8,6 +8,26 @@
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 
+export const updateStageArgTaskDefinitionARN = {
+  name: 'Stage 1',
+  identifier: 'Stage_1',
+  description: '',
+  type: 'Deployment',
+  spec: {
+    serviceConfig: {
+      serviceRef: 'Service_1',
+      serviceDefinition: {
+        type: 'ECS',
+        spec: {
+          artifacts: { sidecars: [], primary: null },
+          manifests: [],
+          ecsTaskDefinitionArn: 'testTaskDefinitionARN'
+        }
+      }
+    }
+  }
+}
+
 export const updateStageArgEcsTaskDefinition = {
   name: 'Stage 1',
   identifier: 'Stage_1',
@@ -15,11 +35,7 @@ export const updateStageArgEcsTaskDefinition = {
   type: 'Deployment',
   spec: {
     serviceConfig: {
-      service: {
-        identifier: 'Service_1',
-        name: 'Service 1',
-        description: ''
-      },
+      serviceRef: 'Service_1',
       serviceDefinition: {
         type: 'ECS',
         spec: {
@@ -56,11 +72,7 @@ export const updateStageArgEcsServiceDefinition = {
   type: 'Deployment',
   spec: {
     serviceConfig: {
-      service: {
-        identifier: 'Service_1',
-        name: 'Service 1',
-        description: ''
-      },
+      serviceRef: 'Service_1',
       serviceDefinition: {
         type: 'ECS',
         spec: {
@@ -97,11 +109,7 @@ export const updateStageArgEcsScallingPolicyDefinition = {
   type: 'Deployment',
   spec: {
     serviceConfig: {
-      service: {
-        identifier: 'Service_1',
-        name: 'Service 1',
-        description: ''
-      },
+      serviceRef: 'Service_1',
       serviceDefinition: {
         type: 'ECS',
         spec: {
@@ -138,11 +146,7 @@ export const updateStageArgEcsScalableTargetDefinition = {
   type: 'Deployment',
   spec: {
     serviceConfig: {
-      service: {
-        identifier: 'Service_1',
-        name: 'Service 1',
-        description: ''
-      },
+      serviceRef: 'Service_1',
       serviceDefinition: {
         type: 'ECS',
         spec: {
@@ -179,11 +183,7 @@ export const updateStageArgEcsTaskDefinitionManifestUpdate = {
   type: 'Deployment',
   spec: {
     serviceConfig: {
-      service: {
-        identifier: 'Service_1',
-        name: 'Service 1',
-        description: ''
-      },
+      serviceRef: 'Service_1',
       serviceDefinition: {
         type: 'ECS',
         spec: {
@@ -307,11 +307,7 @@ export const updateStageArgEcsTaskDefinitionManifestDelete = {
   type: 'Deployment',
   spec: {
     serviceConfig: {
-      service: {
-        identifier: 'Service_1',
-        name: 'Service 1',
-        description: ''
-      },
+      serviceRef: 'Service_1',
       serviceDefinition: {
         type: 'ECS',
         spec: {
@@ -382,11 +378,7 @@ export const updateStageArgEcsServiceDefinitionManifestDelete = {
   type: 'Deployment',
   spec: {
     serviceConfig: {
-      service: {
-        identifier: 'Service_1',
-        name: 'Service 1',
-        description: ''
-      },
+      serviceRef: 'Service_1',
       serviceDefinition: {
         type: 'ECS',
         spec: {
@@ -457,11 +449,7 @@ export const updateStageArgEcsScallingPolicyManifestDelete = {
   type: 'Deployment',
   spec: {
     serviceConfig: {
-      service: {
-        identifier: 'Service_1',
-        name: 'Service 1',
-        description: ''
-      },
+      serviceRef: 'Service_1',
       serviceDefinition: {
         type: 'ECS',
         spec: {
@@ -532,11 +520,7 @@ export const updateStageArgEcsScalableTargetManifestDelete = {
   type: 'Deployment',
   spec: {
     serviceConfig: {
-      service: {
-        identifier: 'Service_1',
-        name: 'Service 1',
-        description: ''
-      },
+      serviceRef: 'Service_1',
       serviceDefinition: {
         type: 'ECS',
         spec: {

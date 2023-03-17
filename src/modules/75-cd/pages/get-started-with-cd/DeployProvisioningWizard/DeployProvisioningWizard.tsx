@@ -26,6 +26,8 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { RepositoriesRepoAppDetailsResponse } from 'services/gitops'
+import { useUpdateQueryParams } from '@common/hooks'
+import { ResourceCategory } from '@rbac/interfaces/ResourceType'
 import { WizardStep, StepStatus, DeployProvisiongWizardStepId, DeployProvisioningWizardProps } from './Constants'
 import { SelectDeploymentType, SelectDeploymentTypeRefInstance } from '../SelectWorkload/SelectDeploymentType'
 import type { SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
@@ -49,14 +51,15 @@ const WizardStepOrder = [
 ]
 
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
-  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.Deploy } = props
+  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectDeploymentType } = props
   const {
     state: { service: serviceData, agent: agentData }
   } = useCDOnboardingContext()
 
   const { getString } = useStrings()
-  const { trackEvent } = useTelemetry()
+  const { trackEvent, trackPage } = useTelemetry()
   const history = useHistory()
+  const { updateQueryParams } = useUpdateQueryParams()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const selectedDeploymentType: string | undefined = get(serviceData, 'serviceDefinition.type')
   const [appDetails, setAppDetails] = React.useState<RepositoriesRepoAppDetailsResponse>()
@@ -93,6 +96,15 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       setCurrentWizardStepId(WizardStepOrder[indexAt])
     }
   }
+  React.useEffect(() => {
+    trackPage(getString('cd.getStartedWithCD.cdWizardEventName', { eventName: currentWizardStepId as string }), {})
+    const prefix =
+      selectedDeploymentType === ServiceDeploymentType.KubernetesGitops ? `${ResourceCategory.GITOPS}_` : ''
+    updateQueryParams({
+      sectionId: `${prefix}${currentWizardStepId}`
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentWizardStepId])
 
   React.useEffect(() => {
     if (selectedSectionId?.length && WizardStepOrder.includes(selectedSectionId)) {
@@ -162,7 +174,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     intent: Intent.WARNING,
     onCloseDialog: async (isConfirmed: boolean) => {
       if (isConfirmed) {
-        trackEvent(CDOnboardingActions.MovetoConfigureEnvironmentWithDelegateNotConnected, {})
+        trackEvent(CDOnboardingActions.MoveToServiceSelection, { is_delegate_connected: false })
         moveToConfigureService()
       }
     }
@@ -197,7 +209,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
             updateStepStatus([DeployProvisiongWizardStepId.SelectDeploymentType], StepStatus.Success)
             updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.ToDo)
             updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
-            trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
+            trackEvent(CDOnboardingActions.MovetoConnectStep, {})
           }}
           disableNextBtn={() => setDisableBtn(true)}
           enableNextBtn={() => setDisableBtn(false)}
@@ -225,7 +237,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
               setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
               setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectDeploymentType)
               updateStepStatus([DeployProvisiongWizardStepId.Connect], StepStatus.ToDo)
-              trackEvent(CDOnboardingActions.SelectDeploymentType, {})
+              trackEvent(CDOnboardingActions.MoveBackToSelectDeploymentType, {})
             }}
             onNext={() => {
               setDisableBtn(true)
@@ -237,7 +249,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
               )
               updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.InProgress)
               updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
-              trackEvent(CDOnboardingActions.MoveToServiceSelection, {})
+              trackEvent(CDOnboardingActions.MoveToConfigureStep, {})
             }}
           />
         ),
@@ -266,13 +278,14 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           setSelectedSectionId(DeployProvisiongWizardStepId.Connect)
           setCurrentWizardStepId(DeployProvisiongWizardStepId.Connect)
           updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.ToDo)
-          trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
+          trackEvent(CDOnboardingActions.MoveBacktoConnectStep, {})
         },
         onClickNext: () => {
           setSelectedSectionId(DeployProvisiongWizardStepId.Deploy)
           setCurrentWizardStepId(DeployProvisiongWizardStepId.Deploy)
           updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
           updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.Success)
+          trackEvent(CDOnboardingActions.MovetoDeployStep, {})
         },
         stepFooterLabel: 'review'
       }
@@ -286,6 +299,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
             onBack={() => {
               setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
               updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
+              trackEvent(CDOnboardingActions.MoveBacktoConfigureStep, {})
             }}
             setSelectedSectionId={setSelectedSectionId}
           />
@@ -314,7 +328,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
           setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectDeploymentType)
           updateStepStatus([DeployProvisiongWizardStepId.Connect], StepStatus.ToDo)
-          trackEvent(CDOnboardingActions.SelectDeploymentType, {})
+          trackEvent(CDOnboardingActions.MoveBackToSelectDeploymentType, {})
         },
         onClickNext: async () => {
           const { isDelegateInstalled } = delegateSelectorRef.current || {}
@@ -352,7 +366,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           setSelectedSectionId(DeployProvisiongWizardStepId.Connect)
           setCurrentWizardStepId(DeployProvisiongWizardStepId.Connect)
           updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.ToDo)
-          trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
+          trackEvent(CDOnboardingActions.MoveBacktoConnectStep, {})
         },
         onClickNext: async () => {
           const { submitForm } = configureServiceRef.current || {}

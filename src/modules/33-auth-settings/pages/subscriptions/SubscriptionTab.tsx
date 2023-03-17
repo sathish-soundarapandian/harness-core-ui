@@ -111,6 +111,10 @@ const SubscriptionTab = ({
 
       const isSelected = tab === selectedSubscriptionTab
       const buttonClassnames = cx(css.subscriptionTabButton, isSelected && css.selected)
+      // adding this until we have plans page for srm page
+      if (selectedModule.toUpperCase() === ModuleName.CV && tab.label === SUBSCRIPTION_TABS[1].label) {
+        return <></>
+      }
       return (
         <Button className={buttonClassnames} key={tab.label} round onClick={handleTabClick}>
           {getString(tab.label)}
@@ -119,8 +123,7 @@ const SubscriptionTab = ({
     })
 
     // show Plans tab only when feature flag is on, always show for community edition
-    // Chaos doesn't have plans defined yet
-    if ((!isCommunity && isOnPrem()) || selectedModule === ModuleName.CHAOS) {
+    if (!isCommunity && isOnPrem()) {
       tabs.splice(1, 1)
     }
 

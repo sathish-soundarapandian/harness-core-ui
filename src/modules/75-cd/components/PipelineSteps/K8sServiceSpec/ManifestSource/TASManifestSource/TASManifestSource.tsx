@@ -112,7 +112,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.paths`, value)
             }}
@@ -163,7 +162,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.autoScalerPath`, value)
             }}
@@ -212,7 +210,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.varsPaths`, value)
             }}

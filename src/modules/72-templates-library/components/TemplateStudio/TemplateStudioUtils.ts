@@ -10,6 +10,7 @@ import { parse } from 'yaml'
 import type { StringKeys } from 'framework/strings'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import { TemplateType } from '@templates-library/utils/templatesUtils'
 
 export function getContentAndTitleStringKeys(isYamlError: boolean): {
   navigationContentText: StringKeys
@@ -44,4 +45,8 @@ export function isValidYaml(
   }
   // istanbul ignore next - This is required just to match the return type and nothing more
   return true
+}
+
+export const isPipelineOrStageType = (type: TemplateType) => {
+  return type === TemplateType.Pipeline || type === TemplateType.Stage
 }

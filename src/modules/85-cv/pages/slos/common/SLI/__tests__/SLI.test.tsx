@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { Formik } from 'formik'
 import { FormikForm, useToaster } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
@@ -16,7 +16,10 @@ import {
   getHealthSourceOptions,
   getMonitoredServiceOptions
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
-import { initialFormData } from '@cv/pages/slos/components/CVCreateSLOV2/__tests__/CVCreateSLOV2.mock'
+import {
+  initialFormData,
+  metricListResponse
+} from '@cv/pages/slos/components/CVCreateSLOV2/__tests__/CVCreateSLOV2.mock'
 import type { StringKeys } from 'framework/strings'
 import { getSLITypeOptions, getSLIMetricOptions } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import type { MonitoredServiceDTO, ResponsePageMSDropdownResponse } from 'services/cv'
@@ -26,14 +29,13 @@ import {
   expectedMonitoredServiceOptions,
   mockedMonitoredService,
   mockedMonitoredServiceData,
-  mockedMonitoredServiceDataWithNullData
+  mockedMonitoredServiceDataWithNullData,
+  monitoredServiceMockData
 } from './SLI.mock'
 
-jest.mock('@cv/pages/slos/components/SLOTargetChart/SLOTargetChart', () => ({
-  __esModule: true,
-  default: function SLOTargetChart() {
-    return <span data-testid="SLO-target-chart" />
-  }
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn()
 }))
 
 jest.mock('@harness/uicore', () => ({
@@ -72,7 +74,8 @@ jest.mock('services/cv', () => ({
   useGetSLOAssociatedMonitoredServices: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
   }),
-  useGetSloMetrics: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
+  useGetSloMetrics: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useGetMetricOnboardingGraph: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
 }))
 
 function getString(key: StringKeys): StringKeys {
@@ -86,10 +89,97 @@ describe('Test SLI component', () => {
 
   test('should render SLI component', async () => {
     const { container, getByText } = render(<WrapperComponent initialValues={initialFormData} />)
-    expect(screen.getByTestId('SLO-target-chart')).toBeInTheDocument()
     act(() => {
       userEvent.click(getByText('cv.healthSource.newHealthSource'))
     })
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should render SLI metric chart component for Ratio and Threshold', async () => {
+    const refetchMS = jest.fn()
+    const refetchMetric = jest.fn()
+    jest.spyOn(cvServices, 'useGetMonitoredService').mockImplementation(
+      () =>
+        ({
+          data: monitoredServiceMockData,
+          refetch: refetchMS
+        } as any)
+    )
+    jest.spyOn(cvServices, 'useGetSloMetrics').mockImplementation(
+      () =>
+        ({
+          data: metricListResponse,
+          refetch: refetchMetric
+        } as any)
+    )
+    refetchMS.mockImplementation(
+      () =>
+        ({
+          data: monitoredServiceMockData,
+          error: null,
+          loading: false,
+          refetch: refetchMS
+        } as any)
+    )
+
+    const { container, getByText } = render(
+      <WrapperComponent initialValues={{ ...initialFormData, monitoredServiceRef: 'ms101' }} />
+    )
+
+    // select healthsource
+    const durationDropdown = container.querySelector('[data-icon="chevron-down"]') as HTMLInputElement
+    await waitFor(() => expect(durationDropdown!).toBeInTheDocument())
+    await act(() => {
+      fireEvent.click(durationDropdown)
+    })
+    await waitFor(() => expect(document.querySelectorAll('ul.bp3-menu li').length).toEqual(1))
+    await act(() => {
+      fireEvent.click(document.querySelectorAll('ul.bp3-menu li')[0])
+    })
+    expect(container.querySelector('input[name="healthSourceRef"]')).toHaveValue('AppD for SLO 2 metric')
+
+    // select event type
+    await act(() => {
+      userEvent.click(container.querySelector('input[name="eventType"]')!)
+    })
+    await waitFor(() => expect(document.querySelectorAll('ul.bp3-menu li').length).toEqual(2))
+    await act(() => {
+      fireEvent.click(document.querySelectorAll('ul.bp3-menu li')[0])
+    })
+    expect(container.querySelector('input[name="eventType"]')).toHaveValue('cv.good')
+
+    //  select metric validRequestMetric
+    expect(container.querySelectorAll('[data-icon="chevron-down"]').length).toEqual(5)
+    await act(() => {
+      userEvent.click(container.querySelector('input[name="validRequestMetric"]')!)
+    })
+    await waitFor(() => expect(document.querySelectorAll('ul.bp3-menu li').length).toEqual(2))
+    await act(() => {
+      fireEvent.click(document.querySelectorAll('ul.bp3-menu li')[0])
+    })
+    expect(container.querySelector('input[name="validRequestMetric"]')).toHaveValue('appdMetric 2')
+
+    //  select metric goodRequestMetric
+    await act(() => {
+      userEvent.click(container.querySelector('input[name="goodRequestMetric"]')!)
+    })
+    await waitFor(() => expect(document.querySelectorAll('ul.bp3-menu li').length).toEqual(2))
+    await act(() => {
+      fireEvent.click(document.querySelectorAll('ul.bp3-menu li')[1])
+    })
+    expect(container.querySelector('input[name="goodRequestMetric"]')).toHaveValue('appdMetric 1')
+
+    expect(container.querySelector('input[name="goodRequestMetric"]')).toHaveValue('appdMetric 1')
+    expect(container.querySelector('div[data-testid="appdMetric_1_metricChart"]')).toBeInTheDocument()
+    expect(container.querySelector('div[data-testid="appdMetric_2_metricChart"]')).toBeInTheDocument()
+    expect(container.querySelector('div[data-testid="ratio_metricChart"]')).toBeInTheDocument()
+    expect(container).toMatchSnapshot()
+
+    await act(() => {
+      fireEvent.click(getByText('cv.slos.slis.metricOptions.thresholdBased'))
+    })
+
+    expect(container.querySelector('div[data-testid="appdMetric_2_metricChart"]')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { ButtonSize, ButtonVariation, ExpandingSearchInput, Layout, PageHeader } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -17,7 +17,7 @@ import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRole
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PrincipalType, rbacQueryParamOptions } from '@rbac/utils/utils'
+import { PrincipalType, useRbacQueryParamOptions } from '@rbac/utils/utils'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -25,7 +25,10 @@ import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPagina
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByEmail, sortByLastModified, sortByName } from '@common/utils/sortUtils'
+import { sortByCreated, sortByEmail, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
 import UserGroupEmptyState from './user-group-empty-state.png'
 import css from './UserGroups.module.scss'
 
@@ -42,13 +45,14 @@ const UserGroupsPage: React.FC = () => {
   })
   const { getString } = useStrings()
   useDocumentTitle(getString('common.userGroups'))
-  const [sort, setSort] = useState<string>(sortByLastModified[0].value as string)
-
+  const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod | undefined>(PreferenceScope.USER, `sort-${PAGE_NAME.UserGroups}`)
+  const queryParamOptions = useRbacQueryParamOptions()
   const {
     search: searchTerm,
     page: pageIndex,
     size: pageSize
-  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(rbacQueryParamOptions)
+  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(queryParamOptions)
   const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
   const { data, loading, error, refetch } = useGetUserGroupAggregateList({
     queryParams: {
@@ -59,7 +63,7 @@ const UserGroupsPage: React.FC = () => {
       pageSize,
       searchTerm,
       filterType: 'INCLUDE_INHERITED_GROUPS',
-      sortOrders: [sort]
+      sortOrders: [sortPreference]
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
@@ -149,9 +153,11 @@ const UserGroupsPage: React.FC = () => {
         }}
       >
         <ListHeader
-          value={sort}
+          selectedSortMethod={sortPreference}
           sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName, ...sortByEmail]}
-          onChange={option => setSort(option.value as string)}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
           totalCount={data?.data?.totalItems}
         />
         <UserGroupsListView

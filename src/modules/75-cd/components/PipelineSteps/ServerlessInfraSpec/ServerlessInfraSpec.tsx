@@ -150,7 +150,6 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                     variableName="connectorRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('connectorRef', value)
                     }}
@@ -192,7 +191,6 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                       variableName="region"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('region', value)
                       }}
@@ -221,7 +219,6 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                     variableName="stage"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('stage', value)
                     }}

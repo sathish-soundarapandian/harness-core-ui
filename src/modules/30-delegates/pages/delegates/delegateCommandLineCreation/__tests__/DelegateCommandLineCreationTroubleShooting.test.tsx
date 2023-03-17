@@ -30,6 +30,19 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 jest.mock('services/portal', () => ({
+  useGenerateKubernetesYaml: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn().mockImplementation(() => {
+        return 'test'
+      }),
+      data: 'test',
+      loading: false,
+      error: null,
+      refetch: jest.fn().mockImplementation(() => {
+        return 'test'
+      })
+    }
+  }),
   useGetInstallationCommand: jest.fn().mockImplementation(() => {
     return {
       mutate: jest.fn(),
@@ -202,9 +215,8 @@ describe('Delegate Command line creation failure', () => {
       fireEvent.click(getByText('delegates.commandLineCreation.kubernetesManifest'))
     })
     await waitFor(() => {
-      expect(getByText('delegates.commandLineCreation.firstComandHeadingKubernetes')).toBeDefined()
+      expect(getByText('delegates.commandLineCreation.yamlBasicOptionText')).toBeDefined()
     })
-    expect(getByText('verify').closest('button')).toBeDisabled()
     const textInput = container.querySelector('.bp3-input')
 
     await act(async () => {

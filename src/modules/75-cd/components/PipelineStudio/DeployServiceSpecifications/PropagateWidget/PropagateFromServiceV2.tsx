@@ -24,6 +24,7 @@ interface PropagateFromServiceV2Props {
   selectedPropagatedState: SelectOption | string
   onPropogatedStageSelect: (value: SelectOption) => void
   onStageServiceChange: (value: string) => void
+  subscribeToForm?: boolean
 }
 
 export default function PropagateFromServiceV2({
@@ -32,15 +33,18 @@ export default function PropagateFromServiceV2({
   previousStageList,
   selectedPropagatedState,
   onPropogatedStageSelect,
-  onStageServiceChange
+  onStageServiceChange,
+  subscribeToForm = true
 }: PropagateFromServiceV2Props): JSX.Element {
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
 
   useEffect(() => {
-    subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
-    return () => unSubscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
+    if (subscribeToForm) {
+      subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
+      return () => unSubscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -70,7 +74,12 @@ export default function PropagateFromServiceV2({
         return (
           <Container>
             <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing={'xxxlarge'}>
-              <section onClick={() => onStageServiceChange(setupMode.PROPAGATE)} className={css.stageSelectionGrid}>
+              <section
+                onClick={() => {
+                  !isReadonly && onStageServiceChange(setupMode.PROPAGATE)
+                }}
+                className={css.stageSelectionGrid}
+              >
                 <Layout.Horizontal flex spacing={'medium'}>
                   <Radio
                     color={Color.GREY_500}
@@ -78,6 +87,7 @@ export default function PropagateFromServiceV2({
                     label={'Propagate from:'}
                     checked={values.setupModeType === setupMode.PROPAGATE}
                     className={css.propagateFromRadio}
+                    disabled={isReadonly}
                   />
                   <span onClick={e => e.stopPropagation()}>
                     <FormInput.Select
@@ -98,12 +108,18 @@ export default function PropagateFromServiceV2({
                 </Layout.Horizontal>
               </section>
 
-              <section onClick={() => onStageServiceChange(setupMode.DIFFERENT)} className={css.stageSelectionGrid}>
+              <section
+                onClick={() => {
+                  !isReadonly && onStageServiceChange(setupMode.DIFFERENT)
+                }}
+                className={css.stageSelectionGrid}
+              >
                 <Radio
                   color={Color.GREY_500}
                   font={{ weight: 'semi-bold' }}
                   label={getString('cd.pipelineSteps.serviceTab.differentService')}
                   checked={values.setupModeType === setupMode.DIFFERENT}
+                  disabled={isReadonly}
                 />
               </section>
             </Layout.Horizontal>

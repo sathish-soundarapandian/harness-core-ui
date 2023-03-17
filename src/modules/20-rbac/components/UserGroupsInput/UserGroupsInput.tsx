@@ -20,6 +20,7 @@ import { errorCheck } from '@common/utils/formikHelpers'
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { getScopeFromValue, getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import { MultiReferenceSelectPlaceholder } from '@common/components/ReferenceSelect/ReferenceSelect'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 
 export interface UserGroupsInputProps {
   name: string
@@ -36,6 +37,7 @@ export interface FormikUserGroupsInput extends UserGroupsInputProps {
   disabled?: boolean
   formGroupClass?: string
   onlyCurrentScope?: boolean
+  scopeCountMap?: Map<Scope, string[]>
 }
 
 const UserGroupsInput: React.FC<FormikUserGroupsInput> = props => {
@@ -50,7 +52,8 @@ const UserGroupsInput: React.FC<FormikUserGroupsInput> = props => {
     disabled,
     formGroupClass = '',
     onlyCurrentScope,
-    identifierFilter
+    identifierFilter,
+    scopeCountMap
   } = props
   const userGroupsReference: string[] = get(formik?.values, name)
 
@@ -61,7 +64,8 @@ const UserGroupsInput: React.FC<FormikUserGroupsInput> = props => {
       onSuccess?.(scopeObjToStringArry)
     },
     onlyCurrentScope,
-    identifierFilter
+    identifierFilter,
+    scopeCountMap
   })
 
   const userGroupsScopeAndIndentifier = useMemo(() => {

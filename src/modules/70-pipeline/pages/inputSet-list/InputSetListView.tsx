@@ -30,6 +30,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
+import { CodeSourceCell } from '@pipeline/pages/pipeline-list/PipelineListTable/PipelineListCells'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
@@ -344,13 +345,20 @@ export function InputSetListView({
       {
         Header: getString('pipeline.inputSets.inputSetNameLabel').toUpperCase(),
         accessor: 'name',
-        width: isGitSyncEnabled ? '25%' : '30%',
+        width: '25%',
         Cell: RenderColumnInputSet
+      },
+      {
+        Header: getString('pipeline.codeSource'),
+        accessor: 'storeType',
+        width: '15%',
+        disableSortBy: true,
+        Cell: CodeSourceCell
       },
       {
         Header: getString('description').toUpperCase(),
         accessor: 'description',
-        width: isGitSyncEnabled ? '30%' : '35%',
+        width: '30%',
         Cell: RenderColumnDescription,
         disableSortBy: true
       },
@@ -395,7 +403,9 @@ export function InputSetListView({
   )
 
   if (!isGitSyncEnabled) {
-    columns.splice(2, 1)
+    columns.splice(3, 1)
+  } else {
+    columns.splice(1, 1)
   }
 
   return (

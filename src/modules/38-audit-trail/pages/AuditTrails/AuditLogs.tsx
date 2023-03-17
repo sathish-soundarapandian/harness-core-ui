@@ -8,6 +8,8 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { DateRangePickerButton, Layout, DropDown, SelectOption } from '@harness/uicore'
+import type { DateRange } from '@blueprintjs/datetime'
+import { identity } from 'lodash-es'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet } from '@common/hooks'
 import { Page } from '@common/exports'
@@ -16,27 +18,47 @@ import AuditTrailsFilters from '@audit-trail/components/AuditTrailsFilters'
 import { useStrings } from 'framework/strings'
 import type { AuditFilterProperties } from 'services/audit'
 import { useGetAuditEventList } from 'services/audit'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import AuditLogsListView from './views/AuditLogsListView'
 import AuditTrailsEmptyState from './audit_trails_empty_state.png'
 import css from './AuditTrailsPage.module.scss'
 
+interface AuditDateFilter {
+  startTime: string
+  endTime: string
+}
 const AuditLogs: React.FC = () => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const [selectedFilterProperties, setSelectedFilterProperties] = useState<AuditFilterProperties>()
-  const [page, setPage] = useState(0)
+  const [staticFilter, setStaticFilter] = useQueryParamsState<AuditFilterProperties['staticFilter'] | undefined>(
+    'staticFilter',
+    undefined,
+    {
+      serializer: identity,
+      deserializer: identity
+    }
+  )
+  const [page, setPage] = useQueryParamsState('page', 0)
   const { getString } = useStrings()
-  const [startDate, setStartDate] = useState<Date>(() => {
-    const start = new Date()
-    start.setDate(start.getDate() - 7)
-    start.setHours(0, 0, 0, 0)
-    return start
-  })
 
-  const [endDate, setEndDate] = useState<Date>(() => {
-    const end = new Date()
-    end.setHours(23, 59, 59, 999)
-    return end
-  })
+  const start = new Date()
+  start.setDate(start.getDate() - 7)
+  start.setHours(0, 0, 0, 0)
+
+  const end = new Date()
+  end.setHours(23, 59, 59, 999)
+
+  const [dateFilter, setDateFilter] = useQueryParamsState<AuditDateFilter>(
+    'dateFilter',
+    {
+      startTime: start.getTime().toString(),
+      endTime: end.getTime().toString()
+    },
+    {
+      serializer: identity,
+      deserializer: identity
+    }
+  )
 
   const {
     data: auditData,
@@ -53,15 +75,18 @@ const AuditLogs: React.FC = () => {
       scopes: [{ accountIdentifier: accountId, orgIdentifier }],
       ...selectedFilterProperties,
       filterType: 'Audit',
-      startTime: startDate.getTime(),
-      endTime: endDate.getTime()
+      staticFilter,
+      startTime: dateFilter.startTime,
+      endTime: dateFilter.endTime
     }
   })
 
   const onDateChange = (selectedDates: [Date, Date]): void => {
     setPage(0)
-    setStartDate(selectedDates[0])
-    setEndDate(selectedDates[1])
+    setDateFilter({
+      startTime: selectedDates[0].getTime().toString(),
+      endTime: selectedDates[1].getTime().toString()
+    })
   }
 
   const getShowEventsDropdownList = (): SelectOption[] => {
@@ -72,6 +97,8 @@ const AuditLogs: React.FC = () => {
       }
     })
   }
+  const dateRange: DateRange = [new Date(Number(dateFilter.startTime)), new Date(Number(dateFilter.endTime))]
+  const isLast7Days = dateRange[0]?.getTime() === start.getTime() && dateRange[1]?.getTime() === end.getTime()
   return (
     <>
       <Page.SubHeader className={css.subHeaderContainer}>
@@ -79,8 +106,14 @@ const AuditLogs: React.FC = () => {
           <Layout.Horizontal>
             <DateRangePickerButton
               className={css.dateRange}
-              initialButtonText={getString('common.last7days')}
-              dateRangePickerProps={{ defaultValue: [startDate, endDate] }}
+              initialButtonText={
+                isLast7Days
+                  ? getString('common.last7days')
+                  : `${dateRange[0]?.toLocaleDateString()} - ${dateRange[1]?.toLocaleDateString()}`
+              }
+              dateRangePickerProps={{
+                defaultValue: dateRange
+              }}
               onChange={onDateChange}
               renderButtonText={selectedDates =>
                 `${selectedDates[0].toLocaleDateString()} - ${selectedDates[1].toLocaleDateString()}`
@@ -91,16 +124,10 @@ const AuditLogs: React.FC = () => {
               filterable={false}
               addClearBtn={true}
               placeholder={getString('auditTrail.allEvents')}
-              value={selectedFilterProperties?.staticFilter}
+              value={staticFilter}
               width={170}
               onChange={selected => {
-                const staticFilter = selected.value
-                  ? (selected.value as AuditFilterProperties['staticFilter'])
-                  : undefined
-                setSelectedFilterProperties({
-                  ...selectedFilterProperties,
-                  staticFilter: staticFilter
-                })
+                setStaticFilter(selected.value ? (selected.value as AuditFilterProperties['staticFilter']) : undefined)
               }}
             />
           </Layout.Horizontal>

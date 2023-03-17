@@ -6,9 +6,7 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
-import { Layout, Container, Icon, Text, SelectOption, PageSpinner, PageError } from '@harness/uicore'
-import { Tag } from '@blueprintjs/core'
-import cx from 'classnames'
+import { Layout, Container, Icon, Text, SelectOption, PageSpinner, PageError, useToaster } from '@harness/uicore'
 import { useParams, useHistory } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { Page } from '@common/exports'
@@ -18,7 +16,8 @@ import {
   EntityGitDetails,
   useGetListOfBranchesWithStatus,
   GitBranchDTO,
-  ResponseConnectorResponse
+  ResponseConnectorResponse,
+  useGetSettingValue
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -29,10 +28,15 @@ import routes from '@common/RouteDefinitions'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
+import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getIconByType } from '../utils/ConnectorUtils'
 import ConnectorPageGitDetails from './ConnectorDetailsPageGitDetails/ConnectorPageGitDetails'
 import RenderConnectorDetailsActiveTab from '../views/RenderConnectorDetailsActiveTab/RenderConnectorDetailsActiveTab'
 import { ConnectorDetailsView } from '../utils/ConnectorHelper'
+import { ConnectorMenuItem } from '../views/ConnectorsListView'
 import css from './ConnectorDetailsPage.module.scss'
 
 interface MockData {
@@ -65,12 +69,6 @@ const ConnectorDetailsPage: React.FC<ConnectorDetailsPageProps> = props => {
     projectIdentifier: projectIdentifier as string
   }
 
-  const viewToLabelMap: Record<ConnectorDetailsView, string> = {
-    [ConnectorDetailsView.overview]: getString('overview'),
-    [ConnectorDetailsView.referencedBy]: getString('referencedBy'),
-    [ConnectorDetailsView.activityHistory]: getString('activityHistoryLabel')
-  }
-
   const {
     loading,
     data: connectorData,
@@ -80,6 +78,15 @@ const ConnectorDetailsPage: React.FC<ConnectorDetailsPageProps> = props => {
     identifier: connectorId as string,
     queryParams: { ...defaultQueryParam, repoIdentifier, branch },
     mock: props.mockData
+  })
+
+  const { openConnectorModal } = useCreateConnectorModal({
+    onSuccess: () => {
+      refetchHandler()
+    },
+    onClose: () => {
+      refetchHandler()
+    }
   })
 
   const connectorName = data?.connector?.name
@@ -217,7 +224,7 @@ const ConnectorDetailsPage: React.FC<ConnectorDetailsPageProps> = props => {
     [connectorData, branchSelectOptions, activeCategory, selectedBranch, loadingBranchList]
   )
 
-  const refetchhandler = (): Promise<void> =>
+  const refetchHandler = (): Promise<void> =>
     refetch({
       queryParams: selectedBranch
         ? {
@@ -234,11 +241,38 @@ const ConnectorDetailsPage: React.FC<ConnectorDetailsPageProps> = props => {
     }
     if (error) {
       const errorMessage = (error.data as Error)?.message || error.message
-      return <PageError message={errorMessage} onClick={refetchhandler} />
+      return <PageError message={errorMessage} onClick={refetchHandler} />
     }
-    return <RenderConnectorDetailsActiveTab activeCategory={activeCategory} data={data} refetch={refetchhandler} />
+    return (
+      <RenderConnectorDetailsActiveTab
+        activeCategory={activeCategory}
+        onTabChange={tabId => {
+          setActiveCategory(tabId)
+        }}
+        data={data}
+        refetch={refetchHandler}
+      />
+    )
   }
+  const onSuccessfulDeleteRedirect = () => {
+    history.push(routes.toConnectors({ accountId, projectIdentifier, orgIdentifier, module }))
+  }
+  const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS } = useFeatureFlags()
+  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_FORCE_DELETE,
+    queryParams: { accountIdentifier: accountId },
+    lazy: !NG_SETTINGS
+  })
 
+  const { getRBACErrorMessage } = useRBACError()
+
+  const { showError } = useToaster()
+  useEffect(() => {
+    if (forceDeleteSettingsError) {
+      showError(getRBACErrorMessage(forceDeleteSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceDeleteSettingsError])
   return (
     <>
       <Page.Header
@@ -246,32 +280,17 @@ const ConnectorDetailsPage: React.FC<ConnectorDetailsPageProps> = props => {
         className={css.header}
         title={renderTitle}
         toolbar={
-          <Container>
-            <Layout.Horizontal spacing="medium">
-              {Object.keys(viewToLabelMap).map((item, index) => {
-                return (
-                  <Tag
-                    className={cx(css.tags, css.small, { [css.active]: activeCategory === item })}
-                    onClick={() => {
-                      history.push({
-                        pathname: routes.toConnectorDetails({
-                          accountId,
-                          orgIdentifier,
-                          projectIdentifier,
-                          module,
-                          connectorId
-                        }),
-                        search: `?view=${item}`
-                      })
-                    }}
-                    key={item + index}
-                  >
-                    {viewToLabelMap[item as ConnectorDetailsView]}
-                  </Tag>
-                )
-              })}
-            </Layout.Horizontal>
-          </Container>
+          <div>
+            <ConnectorMenuItem
+              connector={data}
+              onSuccessfulDelete={onSuccessfulDeleteRedirect}
+              switchToRefernceTab={() => {
+                setActiveCategory(ConnectorDetailsView.referencedBy)
+              }}
+              forceDeleteSupported={!!(PL_FORCE_DELETE_CONNECTOR_SECRET && forceDeleteSettings?.data?.value === 'true')}
+              openConnectorModal={openConnectorModal}
+            />
+          </div>
         }
       />
       <Page.Body>{getPageBody()}</Page.Body>

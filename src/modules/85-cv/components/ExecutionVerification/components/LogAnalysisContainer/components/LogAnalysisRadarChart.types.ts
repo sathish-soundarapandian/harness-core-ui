@@ -24,6 +24,7 @@ export interface MultiRangeSliderProps {
 export interface LogAnalysisRadarChartHeaderProps {
   eventsCount?: EventCount[]
   totalClustersCount?: number
+  showHealthLegend?: boolean
 }
 
 interface MarkerData {

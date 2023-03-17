@@ -22,6 +22,7 @@ export interface TemplatesViewProps {
   onOpenEdit?: (template: TemplateSummaryResponse) => void
   onOpenSettings?: (templateIdentifier: string) => void
   onDelete?: (template: TemplateSummaryResponse) => void
+  onOpenMoveResource?: (template: TemplateSummaryResponse) => void
 }
 
 export default function TemplatesView(props: TemplatesViewProps & { view: Views }): React.ReactElement {

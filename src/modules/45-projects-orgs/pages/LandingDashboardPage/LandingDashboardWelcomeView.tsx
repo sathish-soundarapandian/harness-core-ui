@@ -18,7 +18,7 @@ import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectMo
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import useLandingPageDefaultView, { View } from '@projects-orgs/hooks/useLandingPageDefaultView'
-import welcomeVideo from './images/welcome-anim.mp4'
+import welcomeVideo from './images/hero-animation.mp4'
 import css from './LandingDashboardPage.module.scss'
 
 interface WelcomeViewProps {

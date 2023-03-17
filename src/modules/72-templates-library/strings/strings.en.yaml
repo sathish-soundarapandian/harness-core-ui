@@ -60,3 +60,5 @@ templateDoesNotExistInBranch: The Template you are using, {{template}} does not 
 chooseTemplateSetupHeader: How do you want to setup your template?
 diffTitle: template.yaml (saved) ↔ template.yaml (updated)
 seeLinkedTemplate: See only linked templates
+moveTemplateToRemoteWarning: All existing versions are already in remote repository
+stableVersionDeleteError: You cannot delete the stable version of the template. Please update another version as the stable version before deleting this version

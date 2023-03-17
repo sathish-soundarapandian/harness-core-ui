@@ -6,12 +6,16 @@
  */
 
 import React from 'react'
-import { FormInput, Layout, Text } from '@harness/uicore'
+import { get } from 'lodash-es'
+import { FormInput, Layout, Text, Button, ButtonVariation, FormError } from '@harness/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
-import type { FormikProps } from 'formik'
+import { FormikProps, FieldArray } from 'formik'
 import { useStrings } from 'framework/strings'
+import type { WinRmCommandParameter } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import type { WinRmConfigFormData } from '@secrets/modals/CreateWinRmCredModal/views/StepAuthentication'
+
+import css from './WinRmAuthFormFields.module.scss'
 
 interface WinRmAuthFormFieldsProps {
   formik: FormikProps<WinRmConfigFormData>
@@ -53,6 +57,7 @@ const WinRmAuthFormFields: React.FC<WinRmAuthFormFieldsProps> = props => {
         items={authSchemeOptions}
         radioGroup={{ inline: true }}
       />
+
       {formik.values.authScheme === 'NTLM' ? (
         <>
           <Layout.Horizontal margin={{ bottom: 'medium' }} flex>
@@ -107,6 +112,60 @@ const WinRmAuthFormFields: React.FC<WinRmAuthFormFieldsProps> = props => {
           ) : null}
         </>
       ) : null}
+      <FieldArray
+        name="parameters"
+        data-testid="phases-field"
+        render={({ push, remove }) => {
+          return (
+            <>
+              {Array.isArray(formik.values.parameters) &&
+                formik.values.parameters.map((field: WinRmCommandParameter, index: number) => {
+                  return (
+                    <Layout.Vertical key={`${index}`}>
+                      <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                        <FormInput.Text
+                          name={`parameters[${index}].parameter`}
+                          label={`${getString('secrets.winRmAuthFormFields.parameterName')}`}
+                        />
+                        <FormInput.Text
+                          name={`parameters[${index}].value`}
+                          label={`${getString('secrets.winRmAuthFormFields.optionalValue')}`}
+                          className={css.paramValueField}
+                          data-testid={`param-${Object.keys(field)[0]}${index}`}
+                        />
+                        <Button
+                          icon="main-trash"
+                          iconProps={{ size: 20 }}
+                          minimal
+                          data-testid={`remove-parameters-[${index}]`}
+                          onClick={() => remove(index)}
+                        />
+                      </Layout.Horizontal>
+                      {get(formik?.errors, `parameters[${index}]`) ? (
+                        <>
+                          <FormError
+                            name={`paramaters[${index}]`}
+                            errorMessage={get(formik?.errors, `parameters[${index}]`)}
+                          />
+                        </>
+                      ) : null}
+                    </Layout.Vertical>
+                  )
+                })}
+              <Button
+                variation={ButtonVariation.LINK}
+                /* eslint-disable strings-restrict-modules */
+                text={getString('connectors.addParameter')}
+                margin={{ bottom: 'small' }}
+                icon="plus"
+                onClick={() => {
+                  push({ parameter: '', value: '' })
+                }}
+              />
+            </>
+          )
+        }}
+      />
     </>
   )
 }

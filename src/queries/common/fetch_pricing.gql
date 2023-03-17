@@ -99,6 +99,9 @@ query fetchPlans {
     srmPlans {
       ...Plans
     }
+    cePlans {
+      ...Plans
+    }
 
     ciFeatureCaption {
       ...FeatureCaption
@@ -137,6 +140,12 @@ query fetchPlans {
     srmFeatureGroup {
       ...FeatureGroup
     }
+    ceFeatureCaption {
+      ...FeatureCaption
+    }
+    ceFeatureGroup {
+      ...FeatureGroup
+    }
     cdFaq {
       ...Faq
     }
@@ -150,6 +159,9 @@ query fetchPlans {
     }
 
     ffFaq {
+      ...Faq
+    }
+    ceFaq {
       ...Faq
     }
 

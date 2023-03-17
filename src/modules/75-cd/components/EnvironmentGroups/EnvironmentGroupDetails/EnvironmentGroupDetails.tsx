@@ -11,7 +11,7 @@ import { Expander } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import cx from 'classnames'
-import { defaultTo, difference, isEqual } from 'lodash-es'
+import { defaultTo, difference, isEqual, noop } from 'lodash-es'
 import * as Yup from 'yup'
 
 import {
@@ -28,8 +28,12 @@ import {
   useToaster,
   getErrorInfoFromErrorObject,
   Formik,
-  ButtonSize
+  ButtonSize,
+  ModalDialog,
+  SplitButton,
+  SplitButtonOption
 } from '@harness/uicore'
+
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
@@ -39,7 +43,8 @@ import {
   EnvironmentResponse,
   updateEnvironmentGroupPromise,
   useGetEnvironmentGroup,
-  useGetYamlSchema
+  useGetYamlSchema,
+  EnvironmentResponseDTO
 } from 'services/cd-ng'
 
 import type {
@@ -54,6 +59,7 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { useDeepCompareEffect, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import AddEditEnvironmentModal from '../../PipelineSteps/DeployEnvironmentEntityStep/AddEditEnvironmentModal'
 
 import { EnvironmentList } from './EnvironmentList'
 import EditEnvironmentGroupModal from './EditEnvironmentGroupModal'
@@ -95,6 +101,7 @@ export default function EnvironmentGroupDetails() {
   const [updateLoading, setUpdateLoading] = useState(false)
   const [firstLoad, setFirstLoad] = useState(true)
   const [isModified, setIsModified] = useState(false)
+  const [newEnvOpen, setNewEnvOpen] = useState(false)
 
   const { data, loading, error, refetch } = useGetEnvironmentGroup({
     queryParams: {
@@ -186,6 +193,14 @@ export default function EnvironmentGroupDetails() {
       })
     }
     hideModal()
+  }
+
+  const onCreateNewEnvironment = (newEnv: EnvironmentResponseDTO) => {
+    const newEnvs = selectedEnvs.map(env => ({ ...env.environment }))
+    onUpdate({
+      ...formikRef?.current?.values,
+      envIdentifiers: [...newEnvs, newEnv]?.map(env => defaultTo(env?.identifier, ''))
+    })
   }
 
   useDeepCompareEffect(() => {
@@ -310,7 +325,9 @@ export default function EnvironmentGroupDetails() {
                               selectedView={selectedView}
                               handleModeSwitch={handleModeSwitch}
                               showModal={showModal}
+                              showNewEnvModal={noop}
                             />
+
                             {selectedView === SelectedView.VISUAL ? (
                               <Container
                                 width={'80%'}
@@ -358,7 +375,37 @@ export default function EnvironmentGroupDetails() {
                               selectedView={selectedView}
                               handleModeSwitch={handleModeSwitch}
                               showModal={showModal}
+                              showNewEnvModal={() => {
+                                setNewEnvOpen(true)
+                              }}
                             />
+                            <ModalDialog
+                              isOpen={newEnvOpen}
+                              onClose={() => {
+                                setNewEnvOpen(false)
+                              }}
+                              title={getString('newEnvironment')}
+                              canEscapeKeyClose={false}
+                              canOutsideClickClose={false}
+                              enforceFocus={false}
+                              lazy
+                              width={1128}
+                              height={840}
+                              className={css.newEnvModal}
+                            >
+                              <AddEditEnvironmentModal
+                                data={{}}
+                                onCreateOrUpdate={(newEnv: EnvironmentResponseDTO) => {
+                                  onCreateNewEnvironment(newEnv)
+                                  setNewEnvOpen(false)
+                                }}
+                                closeModal={() => {
+                                  setNewEnvOpen(false)
+                                }}
+                                isEdit={false}
+                                insideGroupEnv={true}
+                              />
+                            </ModalDialog>
                             {selectedView === SelectedView.VISUAL ? (
                               <EnvironmentList
                                 list={selectedEnvs}
@@ -444,12 +491,14 @@ function TabSubHeader({
   selectedTabId,
   showModal,
   selectedView,
-  handleModeSwitch
+  handleModeSwitch,
+  showNewEnvModal
 }: {
   selectedTabId: EnvironmentGroupDetailsTab
   showModal: () => void
   selectedView: SelectedView
   handleModeSwitch: (nextMode: SelectedView) => void
+  showNewEnvModal: () => void
 }) {
   const { getString } = useStrings()
 
@@ -468,14 +517,17 @@ function TabSubHeader({
     >
       {selectedTabId === EnvironmentGroupDetailsTab.ENVIRONMENTS && (
         <Container width={'45.5%'}>
-          <Button
-            text={getString('environment')}
-            font={{ weight: 'bold' }}
-            icon="plus"
-            onClick={showModal}
+          <SplitButton
+            variation={ButtonVariation.LINK}
+            data-testid="new-env-inside-group"
+            icon={'plus'}
+            text={getString('cd.existingEnvironment')}
             minimal
             size={ButtonSize.SMALL}
-          />
+            onClick={showModal}
+          >
+            <SplitButtonOption onClick={showNewEnvModal} text={getString('newEnvironment')} icon={'plus'} />
+          </SplitButton>
         </Container>
       )}
       <VisualYamlToggle

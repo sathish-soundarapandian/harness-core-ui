@@ -37,8 +37,6 @@ import type { PermissionRequest } from '@auth-settings/pages/Configuration/Confi
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import useCreateUpdateLdapProvider from '@auth-settings/modals/LdapProvider/useCreateUpdateLdapProvider'
 import useLdapTestConfigurationProvider from '@auth-settings/modals/LdapTestConfiguration/useLdapTestConfigurationProvider'
@@ -72,7 +70,6 @@ const LDAPProvider: React.FC<Props> = ({ authSettings, refetchAuthSettings, perm
 
   const [isLdapSyncInProgress, setIsLdapSyncInProgress] = useState<boolean>(false)
 
-  const isNgLDAPFFEnabled = useFeatureFlag(FeatureFlag.NG_ENABLE_LDAP_CHECK)
   const onSuccess = (): void => {
     closeLdapModal()
     refetchAuthSettings()
@@ -112,10 +109,6 @@ const LDAPProvider: React.FC<Props> = ({ authSettings, refetchAuthSettings, perm
       }
     }
   })
-
-  if (!isNgLDAPFFEnabled) {
-    return null
-  }
 
   return (
     <Container margin="xlarge" background={Color.WHITE}>

@@ -102,7 +102,7 @@ describe('Test PagerDuty Change Source', () => {
           refetch
         } as any)
     )
-    const { container } = render(
+    const { container, getByTestId } = render(
       <TestComponent
         initialValues={{
           isEdit: true,
@@ -116,7 +116,7 @@ describe('Test PagerDuty Change Source', () => {
 
     await waitFor(() => expect(refetch).toHaveBeenCalled())
     await waitFor(() => expect(container.querySelector('input[value="cvng"]')).toBeTruthy())
-    await waitFor(() => expect(container.querySelector('.connectorField .bp3-disabled')).toBeDisabled())
+    await waitFor(() => expect(getByTestId('cr-field-spec.connectorRef')).toBeDisabled())
   })
 
   test('PagerDuty ChangeSource verify service count', async () => {

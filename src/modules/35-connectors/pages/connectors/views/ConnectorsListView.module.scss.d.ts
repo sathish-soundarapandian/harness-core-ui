@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly confirmText: string
+  readonly connectorTabs: string
   readonly flex: string
   readonly identifier: string
   readonly invalidConnector: string

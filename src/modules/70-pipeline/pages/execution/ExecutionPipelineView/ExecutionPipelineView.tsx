@@ -6,20 +6,27 @@
  */
 
 import React from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import ExecutionGraphView from './ExecutionGraphView/ExecutionGraphView'
 import ExecutionLogView from './ExecutionLogView/ExecutionLogView'
 
 export default function ExecutionPipelineView(): React.ReactElement {
+  const { module } = useParams<PipelineType<ExecutionPathProps>>()
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const { preference: savedExecutionView } = usePreferenceStore<string | undefined>(
     PreferenceScope.USER,
     'executionViewType'
   )
-  const initialSelectedView = savedExecutionView || SavedExecutionViewTypes.GRAPH
+  const initialSelectedView = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
+    ? SavedExecutionViewTypes.LOG
+    : savedExecutionView || SavedExecutionViewTypes.GRAPH
   const view = queryParams.get('view')
   const isLogView =
     view === SavedExecutionViewTypes.LOG || (!view && initialSelectedView === SavedExecutionViewTypes.LOG)

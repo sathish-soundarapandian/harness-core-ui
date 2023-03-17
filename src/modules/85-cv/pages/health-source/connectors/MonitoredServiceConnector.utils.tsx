@@ -185,9 +185,9 @@ export async function validateMetrics(
       let status
       if (data?.some(val => val.overallStatus === StatusState.FAILED)) {
         status = StatusOfValidation.ERROR
-      } else if (data?.some(val => val.overallStatus === StatusState.NO_DATA)) {
+      } else if (data?.every(val => val.overallStatus === StatusState.NO_DATA)) {
         status = StatusOfValidation.NO_DATA
-      } else if (data?.every(val => val.overallStatus === StatusState.SUCCESS)) {
+      } else if (data?.some(val => val.overallStatus === StatusState.SUCCESS)) {
         status = StatusOfValidation.SUCCESS
       }
       return { validationStatus: status, validationResult: data }

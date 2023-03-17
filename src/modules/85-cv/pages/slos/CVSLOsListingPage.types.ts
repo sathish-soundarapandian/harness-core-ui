@@ -51,6 +51,7 @@ export interface SLOTargetChartWithChangeTimelineProps extends SLOCardContentPro
   setShowTimelineSlider: (showTimelineSlider: boolean) => void
   customTimeFilter: boolean
   setCustomTimeFilter: (customTimeFilter: boolean) => void
+  defaultOffSetPercentage?: number
 }
 
 export enum SLOCardToggleViews {

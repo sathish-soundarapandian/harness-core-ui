@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
+import React, { PropsWithChildren, ReactElement } from 'react'
 import * as Yup from 'yup'
 import { Drawer, IDrawerProps } from '@blueprintjs/core'
-import { Formik, FormikProps, FormikErrors } from 'formik'
+import { Formik, FormikProps, FormikErrors, FormikValues } from 'formik'
 import { truncate } from 'lodash-es'
 import { FormikForm, Button, Layout, OverlaySpinner, ButtonVariation, useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -53,7 +53,10 @@ export type FilterFowardRef<U> =
   | React.MutableRefObject<FilterRef<U> | null>
   | null
 
-const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filterRef: FilterCRUDFowardRef<U>) => {
+const FilterComponent = <T extends FormikValues, U extends FilterInterface>(
+  props: PropsWithChildren<FilterProps<T, U>>,
+  filterRef: FilterCRUDFowardRef<U>
+): JSX.Element => {
   const {
     formFields,
     onApply,
@@ -119,7 +122,15 @@ const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filte
   const isUpdate = (name !== '' && filterVisibility !== undefined) as boolean
 
   return (
-    <Drawer {...defaultPageDrawerProps} onClosed={onClose}>
+    <Drawer {...defaultPageDrawerProps} onClose={closeDrawer} onClosed={onClose}>
+      <Button
+        minimal
+        className={css.filterDrawerCloseButton}
+        icon="cross"
+        withoutBoxShadow
+        onClick={closeDrawer}
+        data-testid="filter-drawer-close"
+      />
       <Formik<T>
         onSubmit={onApply}
         initialValues={initialFilter.formValues}
@@ -196,7 +207,6 @@ const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filte
                     }}
                     isLeftFilterDirty={formik.dirty}
                     initialValues={{ name, filterVisibility, identifier } as U}
-                    onClose={closeDrawer}
                     onDelete={onDelete}
                     onFilterSelect={onFilterSelect}
                     ref={filterRef}
@@ -213,7 +223,7 @@ const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filte
   )
 }
 
-export const Filter = React.forwardRef(FilterRef) as <T, U extends FilterInterface>(
-  props: FilterProps<T, U>,
+export const Filter = React.forwardRef(FilterComponent) as <T, U extends FilterInterface>(
+  props: PropsWithChildren<FilterProps<T, U>>,
   filterRef: FilterCRUDFowardRef<U>
 ) => ReactElement
