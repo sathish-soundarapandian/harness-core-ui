@@ -9,7 +9,7 @@ import React from 'react'
 import { Text, MultiTypeInputType, getMultiTypeFromValue, AllowedTypes } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { cloneDeep, defaultTo, get } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -83,29 +83,6 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
 
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
-  // this was necessary due to absence of YAML validations in run pipeline form. Add such logic here only when absolutely unavoidable
-  React.useEffect(() => {
-    const mergeTemplateBaseValues = defaultTo(cloneDeep(template?.variables), [])
-
-    let isYamlDirty = false
-    mergeTemplateBaseValues.forEach((variable, index) => {
-      const isVariablePresentIndex = formikVariables.findIndex(
-        (fVar: AllNGVariables) => fVar.name === variable.name && fVar.type === variable.type
-      )
-      if (isVariablePresentIndex !== -1) {
-        mergeTemplateBaseValues[index].value = formikVariables[isVariablePresentIndex].value
-      } else {
-        isYamlDirty = true
-      }
-    })
-
-    if (isYamlDirty) {
-      // !path signifies pipeline variables path and the second term is used to check the presence of stage in pipeline YAML
-      const isEntityPresent = !path || get(formik.values, defaultTo(path, ''))
-      isEntityPresent && formik.setFieldValue(basePath, clearRuntimeInput(mergeTemplateBaseValues))
-    }
-  }, [])
-
   return (
     <div className={cx(css.customVariablesInputSets, 'customVariables', className)} id={domId}>
       {stepViewType === StepViewType.StageVariable && initialValues.variables.length > 0 && (
@@ -115,10 +92,17 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
           <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('valueLabel')}</Text>
         </section>
       )}
-      {template?.variables?.map?.(variable => {
+      {template?.variables?.map?.((variable, templateIndex) => {
         // find Index from values, not from template variables
         // because the order of the variables might not be the same
-        const index = formikVariables.findIndex((fVar: AllNGVariables) => variable.name === fVar.name)
+        let index = formikVariables.findIndex((fVar: AllNGVariables) => variable.name === fVar.name)
+        if (index === -1) {
+          index = templateIndex
+          formik.setFieldValue(
+            `${basePath}[${index}]`,
+            stepViewType === StepViewType.InputSet ? variable : clearRuntimeInput(variable)
+          )
+        }
 
         const value = defaultTo(variable.value, '')
         if (getMultiTypeFromValue(value as string) !== MultiTypeInputType.RUNTIME) {
