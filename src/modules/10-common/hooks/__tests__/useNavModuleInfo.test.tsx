@@ -18,7 +18,7 @@ describe('useModuleInfo tests', () => {
 
     expect(result.current.icon).toBe('cd-main')
     expect(result.current.label).toBe('common.cdAndGitops')
-    expect(result.current.shouldVisible).toBe(false)
+    expect(result.current.shouldVisible).toBe(true)
   })
 
   test('test ci', () => {
@@ -28,7 +28,7 @@ describe('useModuleInfo tests', () => {
 
     expect(result.current.icon).toBe('ci-main')
     expect(result.current.label).toBe('common.purpose.ci.continuous')
-    expect(result.current.shouldVisible).toBe(false)
+    expect(result.current.shouldVisible).toBe(true)
   })
 
   test('test cv', () => {
@@ -48,7 +48,7 @@ describe('useModuleInfo tests', () => {
 
     expect(result.current.icon).toBe('ff-solid')
     expect(result.current.label).toBe('common.purpose.cf.continuous')
-    expect(result.current.shouldVisible).toBe(false)
+    expect(result.current.shouldVisible).toBe(true)
   })
 
   test('test ce', () => {
@@ -58,7 +58,7 @@ describe('useModuleInfo tests', () => {
 
     expect(result.current.icon).toBe('ce-main')
     expect(result.current.label).toBe('common.purpose.ce.continuous')
-    expect(result.current.shouldVisible).toBe(false)
+    expect(result.current.shouldVisible).toBe(true)
   })
 
   test('test sto', () => {
@@ -68,7 +68,7 @@ describe('useModuleInfo tests', () => {
 
     expect(result.current.icon).toBe('sto-color-filled')
     expect(result.current.label).toBe('common.purpose.sto.continuous')
-    expect(result.current.shouldVisible).toBe(false)
+    expect(result.current.shouldVisible).toBe(true)
   })
 
   test('test CHAOS', () => {
@@ -78,7 +78,7 @@ describe('useModuleInfo tests', () => {
 
     expect(result.current.icon).toBe('chaos-main')
     expect(result.current.label).toBe('common.purpose.chaos.continuous')
-    expect(result.current.shouldVisible).toBe(false)
+    expect(result.current.shouldVisible).toBe(true)
   })
 
   test('test CODE', () => {
@@ -88,7 +88,7 @@ describe('useModuleInfo tests', () => {
 
     expect(result.current.icon).toBe('code')
     expect(result.current.label).toBe('common.purpose.code.name')
-    expect(result.current.shouldVisible).toBe(false)
+    expect(result.current.shouldVisible).toBe(true)
   })
 
   test('test useNavModuleInfoMap', () => {
@@ -108,7 +108,7 @@ describe('useModuleInfo tests', () => {
 
     expect(result.current['CODE'].icon).toBe('code')
     expect(result.current['CODE'].label).toBe('common.purpose.code.name')
-    expect(result.current['CODE'].shouldVisible).toBe(false)
+    expect(result.current['CODE'].shouldVisible).toBe(true)
     expect(result.current['CODE'].hasLicense).toBe(true)
   })
 })

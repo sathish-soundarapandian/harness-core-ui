@@ -63,19 +63,16 @@ describe('main nav tests', () => {
         <MainNav />
       </TestWrapper>
     )
-    expect(container.querySelectorAll('[class*="navItem"]').length).toBe(4)
+    expect(container.querySelectorAll('[class*="navItem"]').length).toBe(15)
     expect(queryByText('common.home')).not.toBeNull()
     expect(queryByText('common.accountSettings')).not.toBeNull()
     expect(queryByText('common.myProfile')).not.toBeNull()
-    expect(queryByText('buildsText')).toBeNull()
+    expect(queryByText('buildsText')).not.toBeNull()
   })
 
   test('when modules are enabled', () => {
     const { queryByText } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
-      >
+      <TestWrapper>
         <MainNav />
       </TestWrapper>
     )

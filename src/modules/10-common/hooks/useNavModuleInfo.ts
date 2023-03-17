@@ -218,9 +218,9 @@ const shouldBeVisible = (
     )
   }
 
-  return featureFlagName !== undefined
+  return featureFlagName !== undefined && featureFlags[featureFlagName] !== undefined
     ? !!featureFlags[featureFlagName]
-    : licenseInformation[module]?.status === 'ACTIVE'
+    : true
 }
 
 const useNavModuleInfo = (module: NavModuleName) => {
