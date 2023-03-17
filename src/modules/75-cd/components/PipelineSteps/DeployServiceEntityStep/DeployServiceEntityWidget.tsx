@@ -24,7 +24,7 @@ import {
   ModalDialog
 } from '@harness/uicore'
 import type { ModalDialogProps } from '@harness/uicore/dist/components/ModalDialog/ModalDialog'
-import { defaultTo, get, isEmpty, isNil, noop } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, isNil, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { Intent } from '@blueprintjs/core'
 import produce from 'immer'
@@ -280,9 +280,11 @@ export default function DeployServiceEntityWidget({
 
   useEffect(() => {
     /* istanbul ignore else */
-    if (!loading && formikRef.current) {
+    if (!loading) {
       // update services in formik
-      updateServiceInputsForServices(formikRef.current.values)
+      debounce(() => {
+        formikRef.current && updateServiceInputsForServices(formikRef.current.values)
+      }, 500)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, servicesList, servicesData])
