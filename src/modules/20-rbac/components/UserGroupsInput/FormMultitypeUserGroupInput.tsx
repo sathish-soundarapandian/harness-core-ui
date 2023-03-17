@@ -18,6 +18,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { InputSetFunction, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 import UserGroupsInput, { FormikUserGroupsInput } from './UserGroupsInput'
 import UserGroupExpressionInput from './UserGroupExpressionInput'
 
@@ -33,6 +34,7 @@ export interface FormMultiTypeUserGroupInputProps
   }
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
+  scopeCountMap?: Map<Scope, string[]>
 }
 
 export type Extended = FormikUserGroupsInput & FormMultiTypeUserGroupInputProps
@@ -48,7 +50,8 @@ export const FormMultiTypeUserGroupInput: React.FC<Extended> = props => {
     allowableTypes,
     templateProps,
     enableConfigureOptions = false,
-    configureOptionsProps
+    configureOptionsProps,
+    scopeCountMap
   } = props
 
   const value = get(formik?.values, name)
@@ -86,6 +89,7 @@ export const FormMultiTypeUserGroupInput: React.FC<Extended> = props => {
         name={name}
         disabled={disabled}
         identifierFilter={identifierFilter}
+        scopeCountMap={scopeCountMap}
       >
         {children}
       </UserGroupsInput>

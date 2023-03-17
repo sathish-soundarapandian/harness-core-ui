@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render, act, fireEvent, queryByAttribute, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
@@ -22,14 +23,26 @@ import {
   getHarnessApprovalEditModePropsAsExpressions,
   getHarnessApprovalEditModePropsMinimumCountNegative,
   getYaml,
-  getParams
+  getParams,
+  userGroupsAggregate,
+  batchUserGroupListMock
 } from './HarnessApprovalTestHelper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
   useGetUserGroupList: () => mockUserGroupsResponse,
-  getUserGroupListPromise: jest.fn(() => Promise.resolve(mockUserGroupsResponse.data))
+  getUserGroupListPromise: jest.fn(() => Promise.resolve(mockUserGroupsResponse.data)),
+  getUserGroupAggregateListPromise: jest.fn().mockImplementation(() => {
+    return new Promise(resolve => {
+      resolve({ data: userGroupsAggregate.data, refetch: jest.fn(), error: null, loading: false })
+    })
+  }),
+  getBatchUserGroupListPromise: jest.fn().mockImplementation(() => {
+    return new Promise(resolve => {
+      resolve({ data: batchUserGroupListMock.data, refetch: jest.fn(), error: null, loading: false })
+    })
+  })
 }))
 
 describe('Harness Approval tests', () => {
@@ -380,5 +393,31 @@ describe('Harness Approval tests', () => {
       viewType: StepViewType.TriggerForm
     })
     expect(response).toMatchSnapshot('Value must be greater than or equal to "10s"')
+  })
+
+  test('Show warning message in modal when user group is deleted and update the user group list', async () => {
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const props = getHarnessApprovalEditModePropsWithValues()
+    const { findByText, getByText } = render(
+      <TestStepWidget
+        initialValues={props.initialValues}
+        type={StepType.HarnessApproval}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+        onUpdate={props.onUpdate}
+        onChange={props.onChange}
+      />
+    )
+
+    const btn = await findByText(/project/i)
+    expect(btn).toBeTruthy()
+    userEvent.click(btn)
+
+    await waitFor(() => expect(document.querySelector('.bp3-dialog div[data-tab-id="account"]')).toBeInTheDocument())
+    fireEvent.click(document.querySelector('.bp3-dialog div[data-tab-id="account"]') as HTMLElement)
+    expect(getByText('6')).toBeInTheDocument()
+    expect(getByText('common.userGroupsWarningMessage')).toBeInTheDocument()
+    fireEvent.click(getByText('update'))
+    expect(getByText('5')).toBeInTheDocument()
   })
 })

@@ -8,7 +8,7 @@
 import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { ResponsePageUserGroupDTO } from 'services/cd-ng'
+import type { ResponsePageUserGroupAggregateDTO, ResponsePageUserGroupDTO } from 'services/cd-ng'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { HarnessApprovalStepModeProps } from '../types'
 
@@ -289,3 +289,54 @@ export const getParams = () => ({
   pipelineIdentifier: '-1',
   projectIdentifier: 'projectIdentifier'
 })
+
+export const batchUserGroupListMock = {
+  status: 'SUCCESS',
+  data: [
+    {
+      accountIdentifier: 'px7xd_BFRCi-pfWPYXVjvx',
+      identifier: 'ug6',
+      name: 'ug6',
+      users: ['86iXtyZnROuN4RoLxbrepg'],
+      notificationConfigs: [],
+      externallyManaged: false,
+      description: '',
+      tags: {},
+      ssoLinked: false
+    }
+  ],
+  metaData: null,
+  correlationId: 'cf75d0b4-320e-4468-a266-69a4eb939199'
+}
+
+export const userGroupsAggregate: ResponsePageUserGroupAggregateDTO = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 1,
+    totalItems: 1,
+    pageItemCount: 1,
+    pageSize: 50,
+    content: [
+      {
+        userGroupDTO: {
+          accountIdentifier: 'px7xd_BFRCi-pfWPYXVjvx',
+          identifier: 'ug6',
+          name: 'ug6',
+          users: ['86iXtyZnROuN4RoLxbrepg'],
+          notificationConfigs: [],
+          externallyManaged: false,
+          description: '',
+          tags: {},
+          ssoLinked: false
+        },
+        users: [],
+        roleAssignmentsMetadataDTO: [],
+        lastModifiedAt: 1617941811398
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  metaData: undefined,
+  correlationId: '0f832df3-d742-4689-950b-f30573d1db5a'
+}

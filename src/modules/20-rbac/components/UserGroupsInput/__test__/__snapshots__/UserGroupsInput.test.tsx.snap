@@ -151,6 +151,7 @@ exports[`Rendering Modal should close on clicking cross 1`] = `
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
     >
+      <div />
       <div
         class="searchBox"
       >
@@ -422,6 +423,7 @@ exports[`Rendering should render Modal 1`] = `
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
     >
+      <div />
       <div
         class="searchBox"
       >

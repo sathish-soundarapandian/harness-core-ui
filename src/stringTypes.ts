@@ -1183,6 +1183,7 @@ export interface StringsMap {
   'common.useTemplate': string
   'common.userGroup': string
   'common.userGroups': string
+  'common.userGroupsWarningMessage': string
   'common.userLabel': string
   'common.validation.clientIdIsRequired': string
   'common.validation.clientSecretRequired': string

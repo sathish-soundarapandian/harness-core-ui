@@ -23,6 +23,7 @@ export interface UseSelectUserGroupsModalProps {
   onlyCurrentScope?: boolean
   disablePreSelectedItems?: boolean
   identifierFilter?: string[]
+  scopeCountMap?: Map<Scope, string[]>
 }
 
 export interface UseSelectUserGroupsModalReturn {

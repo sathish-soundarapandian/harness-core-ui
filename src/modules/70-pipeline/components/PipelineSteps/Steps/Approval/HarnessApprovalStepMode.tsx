@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import { produce } from 'immer'
-import { isEmpty, compact, isArray, has } from 'lodash-es'
+import { isEmpty, compact, isArray, has, defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
@@ -21,8 +21,10 @@ import {
   HarnessDocTooltip,
   MultiTypeInputType,
   Container,
-  AllowedTypes
+  AllowedTypes,
+  useToaster
 } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, useStrings } from 'framework/strings'
 import {
@@ -37,6 +39,11 @@ import { regexPositiveNumbers } from '@common/utils/StringUtils'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { UserGroupConfigureOptions } from '@rbac/components/UserGroupConfigureOptions/UserGroupConfigureOptions'
 
+import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getBatchUserGroupListPromise } from 'services/cd-ng'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type {
   ApproverInputsSubmitCallInterface,
@@ -56,7 +63,68 @@ function FormContent({
   stepViewType
 }: HarnessApprovalFormContentProps): React.ReactElement {
   const { getString } = useStrings()
+  const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const formikUserGroups = formik.values.spec?.approvers?.userGroups
+  const [scopeCountMap, setScopeCountMap] = useState<Map<Scope, string[]>>(new Map<Scope, string[]>())
+
+  const userGroupMap = React.useMemo(() => {
+    const _userGroupMap = new Map<Scope, string[]>()
+    if (Array.isArray(formikUserGroups) && getMultiTypeFromValue(formikUserGroups) === MultiTypeInputType.FIXED) {
+      formikUserGroups?.forEach((userGroup: any) => {
+        const userGroupScope = getScopeFromValue(userGroup as string)
+        if (_userGroupMap.has(userGroupScope)) {
+          _userGroupMap.get(userGroupScope)?.push(getIdentifierFromValue(userGroup))
+        } else {
+          _userGroupMap.set(userGroupScope, [getIdentifierFromValue(userGroup)])
+        }
+      })
+    }
+    return _userGroupMap
+  }, [formikUserGroups])
+
+  const getScopeCountMap = React.useCallback(async (): Promise<void> => {
+    const scopeArray = [Scope.ACCOUNT, Scope.ORG, Scope.PROJECT]
+    const promises = scopeArray.map((scope: Scope) => {
+      return getBatchUserGroupListPromise({
+        queryParams: {
+          accountIdentifier: accountId
+        },
+        body: {
+          accountIdentifier: accountId,
+          ...((scope === Scope.ORG || scope === Scope.PROJECT) && { orgIdentifier }),
+          ...(scope === Scope.PROJECT && { projectIdentifier }),
+          identifierFilter: defaultTo(userGroupMap?.get(scope), ['@'])
+        }
+      })
+    })
+    return Promise.all(promises)
+      .then(responses => {
+        const _scopeCountMap = new Map<Scope, string[]>()
+        responses.map((response, idx: number) => {
+          if (response?.data)
+            _scopeCountMap.set(
+              scopeArray[idx],
+              defaultTo(
+                response.data?.map(userGroups => userGroups.identifier),
+                []
+              )
+            )
+        })
+        if (!isEmpty(_scopeCountMap)) {
+          setScopeCountMap(_scopeCountMap)
+        }
+      })
+      .catch(e => {
+        showError(getRBACErrorMessage(e))
+      })
+  }, [userGroupMap, accountId, orgIdentifier, projectIdentifier])
+
+  useEffect(() => {
+    if (!isEmpty(userGroupMap)) getScopeCountMap()
+  }, [userGroupMap, getScopeCountMap])
 
   return (
     <React.Fragment>
@@ -124,6 +192,7 @@ function FormContent({
           disabled={isApprovalStepFieldDisabled(readonly)}
           expressions={expressions}
           allowableTypes={allowableTypes}
+          scopeCountMap={scopeCountMap}
         />
         {getMultiTypeFromValue(formik.values.spec.approvers.userGroups) === MultiTypeInputType.RUNTIME && (
           <Container margin={{ top: 'medium' }}>

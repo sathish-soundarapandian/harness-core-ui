@@ -18,9 +18,11 @@ import {
   Icon,
   IconName,
   Checkbox,
-  PageError
+  PageError,
+  ButtonVariation,
+  ButtonSize
 } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, Intent } from '@harness/design-system'
 import { debounce, isEmpty, isEqual } from 'lodash-es'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useStrings } from 'framework/strings'
@@ -93,6 +95,7 @@ export interface MultiSelectEntityReferenceProps<T> {
   onMultiSelect: (payLoad: ScopeAndIdentifier[]) => void
   onlyCurrentScope?: boolean
   disablePreSelectedItems?: boolean
+  scopeCountMap?: Map<Scope, string[]>
 }
 
 export function getDefaultScope(orgIdentifier?: string, projectIdentifier?: string): Scope {
@@ -128,7 +131,8 @@ export function MultiSelectEntityReference<T extends Identifier>(
     selectedItemsUuidAndScope,
     disablePreSelectedItems = false,
     onMultiSelect,
-    onlyCurrentScope
+    onlyCurrentScope,
+    scopeCountMap
   } = props
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
   const [selectedScope, setSelectedScope] = useState<Scope>(
@@ -384,9 +388,44 @@ export function MultiSelectEntityReference<T extends Identifier>(
     )
   }
 
+  const showWarningMessage =
+    Array.isArray(scopeCountMap?.get(selectedScope)) &&
+    (scopeCountMap?.get(selectedScope) as string[]).length < checkedItems[selectedScope]?.scopedItemsTotal
+
   return (
     <Container className={cx(css.container, className)}>
       <Layout.Vertical spacing="medium">
+        <div>
+          {showWarningMessage && (
+            <div className={css.errorMessage}>
+              <Layout.Horizontal spacing={'medium'} flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+                <Icon name="warning-sign" intent={Intent.DANGER} />
+                <Text intent={Intent.DANGER}>{getString('common.userGroupsWarningMessage')}</Text>
+                <Button
+                  text={getString('update')}
+                  variation={ButtonVariation.SECONDARY}
+                  size={ButtonSize.SMALL}
+                  onClick={() => {
+                    setCheckedItems({
+                      ...checkedItems,
+                      [selectedScope]: {
+                        items: checkedItems[selectedScope]?.items?.filter(item =>
+                          scopeCountMap?.get(selectedScope)?.find((id: string) => id === item.identifier)
+                        ),
+                        scopedItemsTotal: scopeCountMap?.get(selectedScope)?.length,
+                        updatedWithOldData: true
+                      },
+                      total:
+                        checkedItems.total -
+                        checkedItems[selectedScope]?.scopedItemsTotal +
+                        (scopeCountMap?.get(selectedScope) as string[])?.length
+                    })
+                  }}
+                />
+              </Layout.Horizontal>
+            </div>
+          )}
+        </div>
         <div className={css.searchBox}>
           <TextInput
             wrapperClassName={css.search}
