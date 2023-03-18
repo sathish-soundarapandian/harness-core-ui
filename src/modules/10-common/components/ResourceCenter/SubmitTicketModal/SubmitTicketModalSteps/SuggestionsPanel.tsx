@@ -21,7 +21,16 @@ const SuggestionsPanel = (props: SuggestionsPanelProps) => {
   const { data } = props
 
   return (
-    <div style={{ paddingLeft: '20px', overflowY: 'auto' }}>
+    <div
+      style={{
+        paddingLeft: '20px',
+        overflowY: 'auto',
+        border: '1px solid grey',
+        backgroundColor: 'white',
+        height: '500px',
+        marginBottom: '20px'
+      }}
+    >
       <h3> Some of the suggestions that might help...</h3>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
         {data.map((result: any) => (

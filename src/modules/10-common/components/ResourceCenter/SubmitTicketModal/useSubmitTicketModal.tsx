@@ -9,27 +9,19 @@ import { Dialog } from '@blueprintjs/core'
 import { StepWizard, Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import React from 'react'
-// import { SubmitTicketModalStepOne } from './SubmitTicketModalSteps/SubmitTickerModalStepOne'
 import { SubmitTicketModalStepTwo } from './SubmitTicketModalSteps/SubmitTicketModalStepTwo'
 import { SubmitTicketModalStepThree } from './SubmitTicketModalSteps/SubmitTicketModalStepThree'
 import { resultList, searchBox } from './Controllers/Controllers'
 import css from './SubmitTicketModal.module.scss'
 
 export const useSubmitTicketModal = () => {
-  const onStepChange = () => {
-    // handle step change here
-  }
-  // const changeIssueTypeHandler = (): void => {
-  //   // will handle something here
-  // }
-
   const [showModal, hideModal] = useModalHook(() => {
     return (
       <Dialog isOpen enforceFocus={false} onClose={hideModal} className={css.submitTicketWizard}>
-        <StepWizard onStepChange={onStepChange} initialStep={1}>
+        <StepWizard initialStep={1}>
           <SubmitTicketModalStepTwo
-            name="Deflection Step"
-            stepName="Deflection Step"
+            name="Ticket Subject"
+            stepName="Ticket Subject"
             searchBoxController={searchBox}
             resultListController={resultList}
           />

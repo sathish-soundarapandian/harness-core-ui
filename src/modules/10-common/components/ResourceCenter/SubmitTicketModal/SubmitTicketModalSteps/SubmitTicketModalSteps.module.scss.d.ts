@@ -7,6 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly backBtn: string
+  readonly fieldWidth: string
   readonly img: string
   readonly inputWidth: string
   readonly optionsViewContainer: string

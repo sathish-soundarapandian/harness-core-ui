@@ -8,12 +8,13 @@
 .saveBtn {
   position: relative;
   bottom: 0;
+  width: 180px;
 }
 .optionsViewContainer {
   margin: var(--spacing-small) 0 0 var(--spacing-small) !important;
 }
 .inputWidth {
-  width: 300px;
+  width: 600px;
   margin-bottom: var(--spacing-large);
 }
 
@@ -28,4 +29,15 @@
   overflow-y: auto;
   height: 470px;
   width: 60% !important;
+}
+
+.fieldWidth {
+  width: 300px;
+  margin-bottom: var(--spacing-large);
+}
+
+.backBtn {
+  position: absolute;
+  bottom: 0;
+  width: 150px;
 }

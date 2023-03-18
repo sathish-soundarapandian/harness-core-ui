@@ -20,17 +20,22 @@ interface SubmitTicketModalStepThreeProps {
   onCloseHandler: () => void
 }
 export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketModalStepThreeProps) => {
-  const { stepName, onCloseHandler, prevStepData } = props
+  const { stepName, onCloseHandler, prevStepData, previousStep } = props
 
   const { module } = useModuleInfo()
 
+  const backBtnandler = () => {
+    previousStep?.()
+  }
+
   return (
-    <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
+    <Layout.Vertical spacing="small" className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
         {stepName}
       </Text>
       <Formik
         initialValues={{
+          subject: prevStepData.val.subject,
           ticketDetails: '',
           module: module ? module : 'platform',
           component: ''
@@ -47,10 +52,32 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
           <Form>
             <Layout.Vertical flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <Layout.Horizontal spacing="medium">
+                <FormInput.Text name="subject" label={'Subject'} className={css.inputWidth} disabled />
+              </Layout.Horizontal>
+              <Layout.Horizontal spacing="medium">
+                <FormInput.Select
+                  name="issueType"
+                  className={css.fieldWidth}
+                  items={issueTypes}
+                  placeholder={'Select Issue Type'}
+                  label={'Issue Type'}
+                />
+              </Layout.Horizontal>
+              <Layout.Horizontal spacing="medium">
+                <FormInput.Select
+                  name="priority"
+                  className={css.fieldWidth}
+                  items={priorityItems}
+                  placeholder={'Select Priority'}
+                  label={'Priority'}
+                />
+              </Layout.Horizontal>
+              <Layout.Horizontal spacing="medium"></Layout.Horizontal>
+              <Layout.Horizontal spacing="medium">
                 <FormInput.Select
                   name="module"
                   label={'Module'}
-                  className={css.inputWidth}
+                  className={css.fieldWidth}
                   placeholder="Select the Module with the issue"
                   items={moduleOptions}
                 />
@@ -59,7 +86,7 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
                 <FormInput.Select
                   name="component"
                   label={'Component'}
-                  className={css.inputWidth}
+                  className={css.fieldWidth}
                   placeholder="Select the Components with the issue"
                   items={getComponentsFromModule(formik.values.module as string)}
                 />
@@ -68,7 +95,7 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
                 <FormInput.TextArea
                   name="ticketDetails"
                   label={'Ticket Details'}
-                  className={css.inputWidth}
+                  className={css.fieldWidth}
                   placeholder="Please add relevant information for the ticket"
                 />
               </Layout.Horizontal>
@@ -82,6 +109,13 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
                 />
               </Layout.Horizontal>
               <Layout.Horizontal spacing="medium">
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  text={'Back'}
+                  icon="chevron-left"
+                  className={css.saveBtn}
+                  onClick={backBtnandler}
+                />
                 <Button
                   variation={ButtonVariation.PRIMARY}
                   type="submit"
@@ -130,3 +164,9 @@ export const getComponentsFromModule = (module: string): Array<{ label: string; 
       return [{ label: 'Misc', value: 'Misc' }]
   }
 }
+
+const issueTypes = [{ label: 'Bug', value: 'bug' }]
+const priorityItems = [
+  { label: 'P0', value: 'p0' },
+  { label: 'P1', value: 'p1' }
+]
