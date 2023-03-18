@@ -9,5 +9,6 @@
 declare const styles: {
   readonly crossIcon: string
   readonly submitTicketWizard: string
+  readonly subtitle: string
 }
 export default styles

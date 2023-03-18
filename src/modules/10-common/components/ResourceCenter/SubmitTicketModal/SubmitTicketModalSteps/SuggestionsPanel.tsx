@@ -31,7 +31,7 @@ const SuggestionsPanel = (props: SuggestionsPanelProps) => {
         marginBottom: '20px'
       }}
     >
-      <h3> Some of the suggestions that might help...</h3>
+      <h3> Before you proceed , here are some suggestions that might help...</h3>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
         {data.map((result: any) => (
           <SuggestionsCard suggestionItem={result} key={result.uri} />

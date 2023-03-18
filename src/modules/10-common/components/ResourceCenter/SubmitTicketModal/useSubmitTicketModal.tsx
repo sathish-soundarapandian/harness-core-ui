@@ -18,7 +18,12 @@ export const useSubmitTicketModal = () => {
   const [showModal, hideModal] = useModalHook(() => {
     return (
       <Dialog isOpen enforceFocus={false} onClose={hideModal} className={css.submitTicketWizard}>
-        <StepWizard initialStep={1}>
+        <StepWizard
+          initialStep={1}
+          icon="pipeline-deploy"
+          iconProps={{ size: 37, inverse: true }}
+          title={'Submit a Ticket'}
+        >
           <SubmitTicketModalStepTwo
             name="Ticket Subject"
             stepName="Ticket Subject"

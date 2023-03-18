@@ -52,7 +52,7 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
           <Form>
             <Layout.Vertical flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <Layout.Horizontal spacing="medium">
-                <FormInput.Text name="subject" label={'Subject'} className={css.inputWidth} disabled />
+                <FormInput.Text name="subject" label={'Ticket Subject'} className={css.inputWidth} disabled />
               </Layout.Horizontal>
               <Layout.Horizontal spacing="medium">
                 <FormInput.Select
@@ -94,7 +94,7 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
               <Layout.Horizontal spacing="medium">
                 <FormInput.TextArea
                   name="ticketDetails"
-                  label={'Ticket Details'}
+                  label={'Ticket Description'}
                   className={css.fieldWidth}
                   placeholder="Please add relevant information for the ticket"
                 />

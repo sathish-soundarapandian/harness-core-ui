@@ -70,8 +70,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
             <Layout.Vertical>
               <FormInput.Select
                 name="subject"
-                placeholder={'Enter the Subject'}
-                label={'Subject'}
+                label={'Ticket Subject'}
                 className={css.inputWidth}
                 items={suggestionItems}
                 onQueryChange={(val: any) => {
