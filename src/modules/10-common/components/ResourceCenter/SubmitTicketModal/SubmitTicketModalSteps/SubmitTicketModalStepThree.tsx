@@ -50,11 +50,11 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
       >
         {formik => (
           <Form>
-            <Layout.Vertical flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <Layout.Horizontal spacing="medium">
+            <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
+              <Layout.Horizontal>
                 <FormInput.Text name="subject" label={'Ticket Subject'} className={css.inputWidth} disabled />
               </Layout.Horizontal>
-              <Layout.Horizontal spacing="medium">
+              <Layout.Horizontal>
                 <FormInput.Select
                   name="issueType"
                   className={css.fieldWidth}
@@ -63,7 +63,7 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
                   label={'Issue Type'}
                 />
               </Layout.Horizontal>
-              <Layout.Horizontal spacing="medium">
+              <Layout.Horizontal>
                 <FormInput.Select
                   name="priority"
                   className={css.fieldWidth}
@@ -72,8 +72,7 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
                   label={'Priority'}
                 />
               </Layout.Horizontal>
-              <Layout.Horizontal spacing="medium"></Layout.Horizontal>
-              <Layout.Horizontal spacing="medium">
+              <Layout.Horizontal>
                 <FormInput.Select
                   name="module"
                   label={'Module'}
@@ -82,7 +81,7 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
                   items={moduleOptions}
                 />
               </Layout.Horizontal>
-              <Layout.Horizontal spacing="medium">
+              <Layout.Horizontal>
                 <FormInput.Select
                   name="component"
                   label={'Component'}
@@ -91,29 +90,30 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
                   items={getComponentsFromModule(formik.values.module as string)}
                 />
               </Layout.Horizontal>
-              <Layout.Horizontal spacing="medium">
+              <Layout.Horizontal>
                 <FormInput.TextArea
                   name="ticketDetails"
                   label={'Ticket Description'}
-                  className={css.fieldWidth}
-                  placeholder="Please add relevant information for the ticket"
+                  className={css.inputWidth}
+                  placeholder="Please add more relevant information for the ticket"
                 />
               </Layout.Horizontal>
-              <Layout.Horizontal spacing="medium">
+              <Layout.Horizontal>
                 <FormInput.FileInput
                   name="fileData"
                   label={'Upload File'}
                   buttonText={'Upload'}
-                  placeholder={'Upload Some file here'}
+                  placeholder={'Choose a File'}
                   multiple
+                  className={css.fieldWidth}
                 />
               </Layout.Horizontal>
-              <Layout.Horizontal spacing="medium">
+              <Layout.Horizontal>
                 <Button
-                  variation={ButtonVariation.PRIMARY}
+                  variation={ButtonVariation.SECONDARY}
                   text={'Back'}
                   icon="chevron-left"
-                  className={css.saveBtn}
+                  className={css.backBtn}
                   onClick={backBtnandler}
                 />
                 <Button

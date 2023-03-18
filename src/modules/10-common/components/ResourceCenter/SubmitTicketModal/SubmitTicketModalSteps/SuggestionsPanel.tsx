@@ -1,3 +1,4 @@
+import { Spinner } from '@blueprintjs/core'
 import { Layout, Text } from '@harness/uicore'
 import React from 'react'
 
@@ -33,9 +34,11 @@ const SuggestionsPanel = (props: SuggestionsPanelProps) => {
     >
       <h3> Before you proceed , here are some suggestions that might help...</h3>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
-        {data.map((result: any) => (
-          <SuggestionsCard suggestionItem={result} key={result.uri} />
-        ))}
+        {data.length ? (
+          data.map((result: any) => <SuggestionsCard suggestionItem={result} key={result.uri} />)
+        ) : (
+          <Spinner />
+        )}
       </div>
     </div>
   )

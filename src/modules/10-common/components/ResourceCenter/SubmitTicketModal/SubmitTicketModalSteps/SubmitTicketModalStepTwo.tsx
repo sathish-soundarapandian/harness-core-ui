@@ -81,7 +81,11 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
                   searchBoxController.submit()
                 }}
               />
-              {state.value.length > 0 && <SuggestionsPanel data={resultsState.results} />}
+              {state.value.length > 0 ? (
+                <SuggestionsPanel data={resultsState.results} />
+              ) : (
+                <div style={{ height: '500px' }} />
+              )}
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"
