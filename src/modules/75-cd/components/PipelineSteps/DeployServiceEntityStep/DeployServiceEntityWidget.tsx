@@ -73,6 +73,7 @@ import {
 import { ServiceEntitiesList } from './ServiceEntitiesList/ServiceEntitiesList'
 import { useGetServicesData } from './useGetServicesData'
 import { setupMode } from '../PipelineStepsUtil'
+import TextAreaEditable from './TextAreaEditable'
 import css from './DeployServiceEntityStep.module.scss'
 
 export interface DeployServiceEntityWidgetProps extends DeployServiceEntityCustomProps {
@@ -151,6 +152,15 @@ export default function DeployServiceEntityWidget({
   const { subscribeForm, unSubscribeForm } = useStageErrorContext<FormState>()
   const formikRef = React.useRef<FormikProps<FormState> | null>(null)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
+
+  const initialValue = 'My Pipeline name is <+pipeline.name> and it ran for <+pipeline.execTime>'
+  const [values1, setValues1] = useState(initialValue)
+
+  const handleInput = React.useCallback(e => {
+    const text = e.target.textContent
+
+    setValues1(text)
+  }, [])
   const {
     isOpen: isSwitchToMultiSvcDialogOpen,
     open: openSwitchToMultiSvcDialog,
@@ -566,28 +576,7 @@ export default function DeployServiceEntityWidget({
                         ) : (
                           <div className={css.inputFieldLayout}>
                             {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-                              <MultiTypeServiceField
-                                name="service"
-                                label={defaultTo(
-                                  serviceLabel,
-                                  getString('cd.pipelineSteps.serviceTab.specifyYourService')
-                                )}
-                                deploymentType={deploymentType as ServiceDeploymentType}
-                                gitOpsEnabled={gitOpsEnabled}
-                                placeholder={placeHolderForService}
-                                setRefValue={true}
-                                disabled={readonly || (isFixed && loading)}
-                                openAddNewModal={openAddNewModal}
-                                isNewConnectorLabelVisible
-                                onChange={handleSingleSelectChange}
-                                width={300}
-                                multiTypeProps={{
-                                  expressions,
-                                  allowableTypes,
-                                  defaultValueToReset: '',
-                                  onTypeChange: setServiceInputType
-                                }}
-                              />
+                              <TextAreaEditable onInput={handleInput} text={values1} />
                             ) : (
                               <FormInput.MultiTypeInput
                                 tooltipProps={{ dataTooltipId: 'specifyYourService' }}
