@@ -483,22 +483,6 @@ exports[`Verification step for out of cluster delegate render ConnectorTestConne
         connectors.stepThreeName
       </p>
       <div
-        class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-top-xsmall"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small"
-          style="white-space: nowrap;"
-        >
-          connectors.testConnectionStep.url.bitbucket
-        </p>
-        <p
-          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small"
-          style="--text-line-clamp: 1;"
-        >
-          undefined/undefined
-        </p>
-      </div>
-      <div
         class="StyledProps--font StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
       >
         <div

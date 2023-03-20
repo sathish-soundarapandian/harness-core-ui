@@ -142,7 +142,9 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
       case Connectors.GITLAB:
       case Connectors.GITHUB:
       case Connectors.GIT:
-        return props.prevStepData?.url + '/' + props.prevStepData?.validationRepo
+        return props.prevStepData?.validationRepo
+          ? props.prevStepData?.url + '/' + props.prevStepData?.validationRepo
+          : props.prevStepData?.url
 
       default:
         return ''
