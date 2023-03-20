@@ -33,6 +33,7 @@ import {
   DockerBuildDetailsDTO,
   ServiceDefinition,
   useGetBuildDetailsForNexusArtifact,
+  useGetGroupIds,
   useGetRepositories
 } from 'services/cd-ng'
 import {
@@ -100,6 +101,7 @@ export function Nexus3Artifact({
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const [repoValue, setRepoValue] = useState('')
   const { AZURE_WEB_APP_NG_NEXUS_PACKAGE } = useFeatureFlags()
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -197,6 +199,35 @@ export function Nexus3Artifact({
   })
 
   const {
+    data: groupData,
+    error: groupError,
+    refetch: refetchGroups
+  } = useMutateAsGet(useGetGroupIds, {
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      connectorRef: getConnectorRefQueryData(),
+      repository: lastQueryData.repository
+    },
+    lazy: true,
+    debounce: 300
+  })
+
+  console.log(groupData, groupError)
+
+  useEffect(() => {
+    if (repoValue) {
+      refetchGroups()
+    }
+  }, [repoValue])
+
+  const {
     data: repositoryDetails,
     refetch: refetchRepositoryDetails,
     loading: fetchingRepository,
@@ -236,9 +267,14 @@ export function Nexus3Artifact({
   }
 
   useEffect(() => {
+    console.log(lastQueryData, 'qa')
+  }, [lastQueryData])
+
+  useEffect(() => {
     /* istanbul ignore next */
     if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
       refetchNexusTag()
+      refetchGroups()
     }
   }, [lastQueryData, refetchNexusTag])
 
