@@ -101,7 +101,7 @@ export function Nexus3Artifact({
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [repoValue, setRepoValue] = useState('')
+  // const [repoValue, setRepoValue] = useState('')
   const { AZURE_WEB_APP_NG_NEXUS_PACKAGE } = useFeatureFlags()
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -199,8 +199,8 @@ export function Nexus3Artifact({
   })
 
   const {
-    data: groupData,
-    error: groupError,
+    // data: groupData,
+    // error: groupError,
     refetch: refetchGroups
   } = useMutateAsGet(useGetGroupIds, {
     requestOptions: {
@@ -218,14 +218,6 @@ export function Nexus3Artifact({
     lazy: true,
     debounce: 300
   })
-
-  console.log(groupData, groupError)
-
-  useEffect(() => {
-    if (repoValue) {
-      refetchGroups()
-    }
-  }, [repoValue])
 
   const {
     data: repositoryDetails,
@@ -267,14 +259,9 @@ export function Nexus3Artifact({
   }
 
   useEffect(() => {
-    console.log(lastQueryData, 'qa')
-  }, [lastQueryData])
-
-  useEffect(() => {
     /* istanbul ignore next */
     if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
       refetchNexusTag()
-      refetchGroups()
     }
   }, [lastQueryData, refetchNexusTag])
 
@@ -638,11 +625,33 @@ export function Nexus3Artifact({
               {formik.values?.repositoryFormat === RepositoryFormatTypes.Maven && (
                 <>
                   <div className={css.imagePathContainer}>
-                    <FormInput.MultiTextInput
+                    <FormInput.MultiTypeInput
+                      selectItems={[]}
+                      useValue
                       label={getString('pipeline.artifactsSelection.groupId')}
                       name="spec.groupId"
                       placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTypeInputProps={{
+                        expressions,
+                        allowableTypes,
+                        onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                          if (
+                            e?.target?.type !== 'text' ||
+                            (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                            getMultiTypeFromValue(formik.values?.repositoryFormat) === MultiTypeInputType.RUNTIME
+                          ) {
+                            return
+                          }
+
+                          refetchGroups({
+                            queryParams: {
+                              ...commonParams,
+                              connectorRef: getConnectorRefQueryData(),
+                              repository: formik.values?.repository
+                            }
+                          })
+                        }
+                      }}
                     />
                     {getMultiTypeFromValue(formik.values?.spec?.groupId) === MultiTypeInputType.RUNTIME && (
                       <div className={css.configureOptions}>
