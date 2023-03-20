@@ -31,6 +31,8 @@ import { useGetCCMLicenseUsage } from 'services/ce'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useGetSRMLicenseUsage } from 'services/cv'
 import type { UsageResult } from 'services/sto/stoSchemas'
+// eslint-disable-next-line no-restricted-imports
+import { useGetCHAOSLicenseUsage } from '@chaos/hooks/useGetUsageAndLimit'
 
 export type CHAOSLicenseSummaryDTO = LicensesWithSummaryDTO & {
   totalChaosExperimentRuns?: number
@@ -324,18 +326,18 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     lazy: module !== ModuleName.CV
   })
 
-  // const {
-  //   data: chaosUsageData,
-  //   loading: loadingCHAOSUsage,
-  //   error: chaosUsageError,
-  //   refetch: refetchCHAOSUsage
-  // } = useGetCHAOSLicenseUsage({
-  //   queryParams: {
-  //     accountIdentifier: accountId,
-  //     timestamp
-  //   },
-  //   lazy: module !== ModuleName.CHAOS
-  // })
+  const {
+    data: chaosUsageData,
+    loading: loadingChaosUsage,
+    error: chaosUsageError,
+    refetch: refetchChaosUsage
+  } = useGetCHAOSLicenseUsage({
+    queryParams: {
+      accountIdentifier: accountId,
+      timestamp
+    },
+    lazy: module !== ModuleName.CHAOS
+  })
 
   function setUsageByModule(): void {
     switch (module) {
@@ -419,6 +421,20 @@ export function useGetUsage(module: ModuleName): UsageReturn {
           refetchUsage: refetchCVUsage
         })
         break
+
+      case ModuleName.CHAOS:
+        setUsageData({
+          usage: {
+            chaos: {
+              totalChaosExperimentRuns: chaosUsageData?.data?.totalChaosExperimentRuns,
+              totalChaosInfrastructures: chaosUsageData?.data?.totalChaosInfrastructures
+            }
+          },
+          loadingUsage: loadingChaosUsage,
+          usageErrorMsg: chaosUsageError?.message,
+          refetchUsage: refetchChaosUsage
+        })
+        break
     }
   }
 
@@ -429,6 +445,10 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     ciUsageData,
     ciUsageError,
     loadingCIUsage,
+    loadingChaosUsage,
+    refetchChaosUsage,
+    chaosUsageData,
+    chaosUsageError,
     ffUsageData,
     ffUsageError,
     loadingFFUsage,
