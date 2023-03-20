@@ -16,7 +16,7 @@ import AuthSettingsRoutes from '@auth-settings/RouteDestinations'
 import secretsRoutes from '@secrets/RouteDestinations'
 import variableRoutes from '@variables/RouteDestinations'
 import fileStoreRoutes from '@filestore/RouteDestinations'
-import rbacRoutes from '@rbac/RouteDestinations'
+import RbacRoutes from '@rbac/RouteDestinations'
 import projectsOrgsRoutes from '@projects-orgs/RouteDestinations'
 import connectorRoutes from '@connectors/RouteDestinations'
 import tempatesRoutes from '@templates-library/RouteDestinations'
@@ -77,7 +77,7 @@ export default function RouteDestinations(): React.ReactElement {
       {secretsRoutes.props.children}
       {variableRoutes.props.children}
       {auditTrailRoutes.props.children}
-      {rbacRoutes.props.children}
+      {RbacRoutes().props.children}
       {NG_SETTINGS ? DefaultSettingsRoutes().props.children : null}
       {delegatesRoutes.props.children}
       {fileStoreRoutes.props.children}

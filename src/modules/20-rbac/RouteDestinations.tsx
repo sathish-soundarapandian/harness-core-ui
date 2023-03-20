@@ -50,6 +50,7 @@ import UserGroupsResourceModalBody from '@rbac/components/UserGroupsRenderer/Use
 import UserGroupsResourceRenderer from '@rbac/components/UserGroupsRenderer/UserGroupsResourceRenderer'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ServiceAccountsResourceModalBody from './components/ServiceAccountsRenderer/ServiceAccountsResourceModalBody'
 import ServiceAccountsResourceRenderer from './components/ServiceAccountsRenderer/ServiceAccountsResourceRenderer'
 
@@ -127,24 +128,6 @@ RbacFactory.registerResourceTypeHandler(ResourceType.AUTHSETTING, {
     [PermissionIdentifier.EDIT_AUTHSETTING]: <String stringID="rbac.permissionLabels.createEdit" />,
     [PermissionIdentifier.DELETE_AUTHSETTING]: <String stringID="rbac.permissionLabels.delete" />
   }
-})
-
-RbacFactory.registerResourceTypeHandler(ResourceType.SERVICEACCOUNT, {
-  icon: 'nav-settings',
-  label: 'rbac.serviceAccounts.label',
-  labelSingular: 'serviceAccount',
-  category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
-  permissionLabels: {
-    [PermissionIdentifier.VIEW_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.EDIT_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.DELETE_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.delete" />,
-    [PermissionIdentifier.MANAGE_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.manage" />
-  },
-
-  // eslint-disable-next-line react/display-name
-  addResourceModalBody: props => <ServiceAccountsResourceModalBody {...props} />,
-  // eslint-disable-next-line react/display-name
-  staticResourceRenderer: props => <ServiceAccountsResourceRenderer {...props} />
 })
 
 const platformLabel = 'auditTrail.Platform'
@@ -254,82 +237,107 @@ const RedirectToAccessControlHome = (): React.ReactElement => {
   return <Redirect to={routes.toUsers({ accountId })} />
 }
 
-export default (
-  <>
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toAccessControl({ ...accountPathProps })} exact>
-      <RedirectToAccessControlHome />
-    </RouteWithLayout>
+export default function RbacRoutes(): React.ReactElement {
+  const { PL_SELECT_SPECIFIC_SERVICE_ACCOUNT_IN_RESOURCE_GROUP } = useFeatureFlags()
+  RbacFactory.registerResourceTypeHandler(ResourceType.SERVICEACCOUNT, {
+    icon: 'nav-settings',
+    label: 'rbac.serviceAccounts.label',
+    labelSingular: 'serviceAccount',
+    category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
+    permissionLabels: {
+      [PermissionIdentifier.VIEW_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.view" />,
+      [PermissionIdentifier.EDIT_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.createEdit" />,
+      [PermissionIdentifier.DELETE_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.delete" />,
+      [PermissionIdentifier.MANAGE_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.manage" />
+    },
+    ...(PL_SELECT_SPECIFIC_SERVICE_ACCOUNT_IN_RESOURCE_GROUP && {
+      // eslint-disable-next-line react/display-name
+      addResourceModalBody: props => <ServiceAccountsResourceModalBody {...props} />,
+      // eslint-disable-next-line react/display-name
+      staticResourceRenderer: props => <ServiceAccountsResourceRenderer {...props} />
+    })
+  })
+  return (
+    <>
+      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toAccessControl({ ...accountPathProps })} exact>
+        <RedirectToAccessControlHome />
+      </RouteWithLayout>
 
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toServiceAccounts({ ...accountPathProps })} exact>
-      <AccessControlPage>
-        <ServiceAccountsPage />
-      </AccessControlPage>
-    </RouteWithLayout>
+      <RouteWithLayout
+        sidebarProps={AccountSideNavProps}
+        path={routes.toServiceAccounts({ ...accountPathProps })}
+        exact
+      >
+        <AccessControlPage>
+          <ServiceAccountsPage />
+        </AccessControlPage>
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      sidebarProps={AccountSideNavProps}
-      path={routes.toServiceAccountDetails({ ...accountPathProps, ...serviceAccountProps })}
-      exact
-    >
-      <ServiceAccountDetails />
-    </RouteWithLayout>
+      <RouteWithLayout
+        sidebarProps={AccountSideNavProps}
+        path={routes.toServiceAccountDetails({ ...accountPathProps, ...serviceAccountProps })}
+        exact
+      >
+        <ServiceAccountDetails />
+      </RouteWithLayout>
 
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toUsers({ ...accountPathProps })} exact>
-      <AccessControlPage>
-        <UsersPage />
-      </AccessControlPage>
-    </RouteWithLayout>
+      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toUsers({ ...accountPathProps })} exact>
+        <AccessControlPage>
+          <UsersPage />
+        </AccessControlPage>
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      sidebarProps={AccountSideNavProps}
-      path={routes.toUserDetails({ ...accountPathProps, ...userPathProps })}
-      exact
-    >
-      <UserDetails />
-    </RouteWithLayout>
+      <RouteWithLayout
+        sidebarProps={AccountSideNavProps}
+        path={routes.toUserDetails({ ...accountPathProps, ...userPathProps })}
+        exact
+      >
+        <UserDetails />
+      </RouteWithLayout>
 
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toUserGroups({ ...accountPathProps })} exact>
-      <AccessControlPage>
-        <UserGroups />
-      </AccessControlPage>
-    </RouteWithLayout>
+      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toUserGroups({ ...accountPathProps })} exact>
+        <AccessControlPage>
+          <UserGroups />
+        </AccessControlPage>
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      sidebarProps={AccountSideNavProps}
-      path={routes.toUserGroupDetails({ ...accountPathProps, ...userGroupPathProps })}
-      exact
-    >
-      <UserGroupDetails />
-    </RouteWithLayout>
+      <RouteWithLayout
+        sidebarProps={AccountSideNavProps}
+        path={routes.toUserGroupDetails({ ...accountPathProps, ...userGroupPathProps })}
+        exact
+      >
+        <UserGroupDetails />
+      </RouteWithLayout>
 
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toResourceGroups({ ...accountPathProps })} exact>
-      <AccessControlPage>
-        <ResourceGroups />
-      </AccessControlPage>
-    </RouteWithLayout>
+      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toResourceGroups({ ...accountPathProps })} exact>
+        <AccessControlPage>
+          <ResourceGroups />
+        </AccessControlPage>
+      </RouteWithLayout>
 
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toRoles({ ...accountPathProps })} exact>
-      <AccessControlPage>
-        <Roles />
-      </AccessControlPage>
-    </RouteWithLayout>
+      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toRoles({ ...accountPathProps })} exact>
+        <AccessControlPage>
+          <Roles />
+        </AccessControlPage>
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      sidebarProps={AccountSideNavProps}
-      path={routes.toRoleDetails({ ...accountPathProps, ...rolePathProps })}
-      exact
-    >
-      <RoleDetails />
-    </RouteWithLayout>
-    <RouteWithLayout
-      sidebarProps={AccountSideNavProps}
-      path={routes.toResourceGroupDetails({ ...accountPathProps, ...resourceGroupPathProps })}
-      exact
-    >
-      <ResourceGroupDetails />
-    </RouteWithLayout>
-  </>
-)
+      <RouteWithLayout
+        sidebarProps={AccountSideNavProps}
+        path={routes.toRoleDetails({ ...accountPathProps, ...rolePathProps })}
+        exact
+      >
+        <RoleDetails />
+      </RouteWithLayout>
+      <RouteWithLayout
+        sidebarProps={AccountSideNavProps}
+        path={routes.toResourceGroupDetails({ ...accountPathProps, ...resourceGroupPathProps })}
+        exact
+      >
+        <ResourceGroupDetails />
+      </RouteWithLayout>
+    </>
+  )
+}
 
 const RedirectToModuleAccessControlHome = (): React.ReactElement => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
