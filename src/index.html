@@ -72,12 +72,12 @@
           path = `/${path}`
         }
         if (window.harnessClusterURL) {
-          const harnessClusterURLLocal = window.harnessClusterURL
-          // add / at end if it does not exisits
-          if (!harnessClusterURLLocal.endsWith('/')) {
-            harnessClusterURLLocal = `${harnessClusterURLLocal}/`
+          let harnessClusterURLLocal = window.harnessClusterURL
+          // remove / at end if exists
+          if (harnessClusterURLLocal.endsWith('/')) {
+            harnessClusterURLLocal = harnessClusterURLLocal.substring(0, harnessClusterURLLocal.length - 1)
           }
-          // remove / in starting if it exists
+          // remove / in starting if  exists
           if (harnessClusterURLLocal.startsWith('/')) {
             harnessClusterURLLocal = harnessClusterURLLocal.substring(1)
           }
