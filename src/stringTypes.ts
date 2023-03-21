@@ -7483,6 +7483,7 @@ export interface StringsMap {
   'cf.onboarding.createFlag': string
   'cf.onboarding.createSdkKey': string
   'cf.onboarding.createdAndValidated': string
+  'cf.onboarding.emptyFlagListInputLabel': string
   'cf.onboarding.enterKeyName': string
   'cf.onboarding.envCreated': string
   'cf.onboarding.environmentDescription': string
@@ -7539,6 +7540,7 @@ export interface StringsMap {
   'cf.onboarding.title': string
   'cf.onboarding.toggleError': string
   'cf.onboarding.tryItOut': string
+  'cf.onboarding.typeFeatureFlagName': string
   'cf.onboarding.validatingFlagInfo': string
   'cf.onboarding.validatingYourFlag': string
   'cf.onboarding.youCreated': string

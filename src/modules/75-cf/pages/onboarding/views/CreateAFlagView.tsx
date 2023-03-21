@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, Layout, Text, Select } from '@harness/uicore'
+import { Container, Layout, Text, Select, TextInput, Formik } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
@@ -33,7 +33,9 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ selectedFlag, 
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const [searchTerm, setSearchTerm] = useState<string>('')
+  const [emptyOnLoad, setEmptyOnLoad] = useState(false)
   const [flagCreated, setFlagCreated] = useState(false)
+  const [loadingView, setLoadingView] = useState(true)
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
 
   const { mutate: createFeatureFlag, loading: isLoadingCreateFeatureFlag } = useCreateFeatureFlag({
@@ -54,7 +56,7 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ selectedFlag, 
   const { data: allFeatureFlags, refetch: refetchFlags } = useGetAllFeatures({
     lazy: true,
     queryParams,
-    debounce: 250
+    debounce: 500
   })
 
   useEffect(() => {
@@ -62,8 +64,21 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ selectedFlag, 
       category: Category.FEATUREFLAG
     })
     refetchFlags()
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    setLoadingView(true)
+    if (!allFeatureFlags) {
+      setEmptyOnLoad(true)
+      setLoadingView(false)
+    } else {
+      setEmptyOnLoad(false)
+      setLoadingView(false)
+    }
+    refetchFlags()
+  }, [allFeatureFlags, refetchFlags])
 
   useEffect(() => {
     refetchFlags()
@@ -108,36 +123,57 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ selectedFlag, 
 
   return (
     <>
-      <Layout.Vertical spacing="medium">
-        <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-          {getString('cf.featureFlags.flagsDescription')}
-        </Text>
-        <Container width="max-content">
-          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600} padding={{ bottom: 'xsmall' }}>
-            {getString('cf.onboarding.flagInputLabel')}
+      {!loadingView && (
+        <Layout.Vertical spacing="medium">
+          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
+            {getString('cf.featureFlags.flagsDescription')}
           </Text>
-          <Select
-            value={selectedFlag && { label: selectedFlag.name, value: selectedFlag.identifier }}
-            disabled={flagCreated}
-            items={
-              allFeatureFlags?.features?.map((flag: Feature) => {
-                return {
-                  label: flag.name,
-                  value: flag.identifier
-                }
-              }) || []
-            }
-            allowCreatingNewItems
-            onQueryChange={(query: string) => setSearchTerm(query)}
-            onChange={option => onChangeSelect(option.value as string)}
-            inputProps={{
-              placeholder: getString('cf.onboarding.selectOrCreateFlag'),
-              id: 'selectOrCreateFlag'
-            }}
-          />
-        </Container>
-      </Layout.Vertical>
-      {isLoadingCreateFeatureFlag && (
+          <Container width="max-content">
+            {emptyOnLoad && (
+              <>
+                <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600} padding={{ bottom: 'xsmall' }}>
+                  {getString('cf.onboarding.emptyFlagListInputLabel')}
+                </Text>
+                <TextInput
+                  placeholder={getString('cf.onboarding.typeFeatureFlagName')}
+                  onKeyPress={e => {
+                    if (e.key === 'Enter') {
+                      createNewFlag((e.target as HTMLInputElement).value)
+                    }
+                  }}
+                ></TextInput>
+              </>
+            )}
+            {!emptyOnLoad && (
+              <>
+                <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600} padding={{ bottom: 'xsmall' }}>
+                  {getString('cf.onboarding.flagInputLabel')}
+                </Text>
+                <Select
+                  value={selectedFlag && { label: selectedFlag.name, value: selectedFlag.identifier }}
+                  disabled={flagCreated}
+                  items={
+                    allFeatureFlags?.features?.map((flag: Feature) => {
+                      return {
+                        label: flag.name,
+                        value: flag.identifier
+                      }
+                    }) || []
+                  }
+                  allowCreatingNewItems
+                  onQueryChange={(query: string) => setSearchTerm(query)}
+                  onChange={option => onChangeSelect(option.value as string)}
+                  inputProps={{
+                    placeholder: getString('cf.onboarding.selectOrCreateFlag'),
+                    id: 'selectOrCreateFlag'
+                  }}
+                />
+              </>
+            )}
+          </Container>
+        </Layout.Vertical>
+      )}
+      {(isLoadingCreateFeatureFlag || loadingView) && (
         <Layout.Horizontal padding={{ top: 'medium', bottom: 'medium' }}>
           <Spinner size={24} />
         </Layout.Horizontal>

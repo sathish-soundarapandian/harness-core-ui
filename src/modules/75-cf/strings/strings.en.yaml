@@ -547,6 +547,8 @@ onboarding:
   testYourFlag: '3. Test Your Flag'
   letsGetStarted: Let's get started
   createFlag: Create a Feature Flag
+  typeFeatureFlagName: Type Feature Flag Name
+  emptyFlagListInputLabel: Type the name of a new Feature Flag and press Enter to create
   flagInputLabel: Select an existing Flag or type the name to create new one
   selectOrCreateFlag: Select or Create a Flag
   youCreated: You've created
