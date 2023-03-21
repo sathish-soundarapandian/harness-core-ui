@@ -155,7 +155,7 @@ function TerraformCloudRollbackWidget(
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormMultiTypeCheckboxField
                   name="spec.overridePolicies"
-                  label={getString('pipeline.terraformStep.overridePolicies')}
+                  label={getString('pipeline.terraformStep.overridePoliciesLabel')}
                   disabled={readonly}
                   multiTypeTextbox={{ expressions, allowableTypes }}
                   className={css.addMarginTop}
@@ -269,7 +269,7 @@ const TerraformCloudRollbackInputStep: React.FC<TerraformCloudRollbackProps> = (
               allowableTypes
             }}
             name={`${prefix}spec.overridePolicies`}
-            label={getString('pipeline.terraformStep.overridePolicies')}
+            label={getString('pipeline.terraformStep.overridePoliciesLabel')}
             disabled={readonly}
             setToFalseWhenEmpty={true}
           />

@@ -8,7 +8,7 @@
 import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import * as Yup from 'yup'
-import { flatMap, isEmpty, omit } from 'lodash-es'
+import { defaultTo, flatMap, isEmpty, omit, get } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import type { ListType } from '@common/components/List/List'
@@ -16,7 +16,7 @@ import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getConnectorSchema } from '../PipelineStepsUtil'
-import type { TerraformCloudRunData, TerraformCloudRunFormData } from './types'
+import type { TerraformCloudRunFormData } from './types'
 
 export const runTypeLabel = 'pipeline.terraformStep.runTypeLabel'
 export const organizationLabel = 'orgLabel'
@@ -54,7 +54,7 @@ export const variableTypes: SelectOption[] = [
   { label: 'Secret', value: 'Secret' }
 ]
 
-export const processFormData = (values: TerraformCloudRunFormData): TerraformCloudRunData => {
+export const processFormData = (values: TerraformCloudRunFormData): TerraformCloudRunFormData => {
   const targets = values.spec?.spec?.targets as MultiTypeInputType
   const targetMap: ListType = []
   if (Array.isArray(targets)) {
@@ -64,24 +64,50 @@ export const processFormData = (values: TerraformCloudRunFormData): TerraformClo
       }
     })
   }
-  return {
-    ...values,
-    spec: {
-      ...values.spec,
+
+  const variables = values.spec?.spec?.variables
+  const varMap: any = []
+  if (Array.isArray(variables)) {
+    variables.forEach(mapValue => {
+      if (mapValue.value) {
+        varMap.push({
+          name: mapValue.key,
+          value: mapValue.value,
+          type: 'String'
+        })
+      }
+    })
+  }
+
+  if (values.spec?.runType === RunTypes.Apply) {
+    return {
+      ...values,
       spec: {
-        ...values.spec.spec,
-        organization: getValue(values.spec?.spec?.organization),
-        workspace: getValue(values.spec?.spec?.workspace),
-        variables: Array.isArray(values.spec?.spec?.variables)
-          ? values.spec?.spec?.variables.filter(variable => variable.value).map(({ id, ...variable }) => variable)
-          : undefined,
-        targets: targetMap
+        runType: values.spec?.runType,
+        spec: {
+          provisionerIdentifier: values.spec?.spec?.provisionerIdentifier
+        }
+      }
+    }
+  } else {
+    return {
+      ...values,
+      spec: {
+        ...values.spec,
+        spec: {
+          ...values.spec.spec,
+          organization: getValue(values.spec?.spec?.organization),
+          workspace: getValue(values.spec?.spec?.workspace),
+          variables: varMap,
+          targets: targetMap
+        }
       }
     }
   }
 }
 
-export const processInitialValues = (values: TerraformCloudRunData): TerraformCloudRunFormData => {
+export const processInitialValues = (values: TerraformCloudRunFormData): TerraformCloudRunFormData => {
+  const isVarRunTime = getMultiTypeFromValue(get(values.spec, 'spec.variables') as any) === MultiTypeInputType.RUNTIME
   return {
     ...values,
     spec: {
@@ -104,12 +130,19 @@ export const processInitialValues = (values: TerraformCloudRunData): TerraformCl
                 value: values.spec?.spec?.workspace.toString()
               }
             : values.spec?.spec?.workspace,
-        variables: Array.isArray(values.spec?.spec?.variables)
-          ? values.spec?.spec?.variables.map((variable: any) => ({
-              ...variable,
-              id: uuid()
-            }))
-          : [],
+        variables: !isVarRunTime
+          ? Array.isArray(values.spec?.spec?.variables)
+            ? values.spec?.spec?.variables.map(variable => ({
+                key: defaultTo(variable.name, ''),
+                value: variable.value,
+                id: uuid()
+              }))
+            : [{ key: '', value: '', id: uuid() }]
+          : get(values.spec, 'spec.variables'),
+        discardPendingRuns: defaultTo(values.spec?.spec?.discardPendingRuns, false),
+        ...((values.spec?.runTypes === RunTypes.PlanAndApply || values.spec?.runTypes === RunTypes.PlanAndDestroy) && {
+          overridePolicies: defaultTo(values.spec?.spec?.overridePolicies, false)
+        }),
         targets: !(getMultiTypeFromValue(values.spec?.spec?.targets as string) === MultiTypeInputType.RUNTIME)
           ? Array.isArray(values.spec?.spec?.targets)
             ? (values.spec?.spec?.targets as string[]).map((target: string) => ({
@@ -123,24 +156,6 @@ export const processInitialValues = (values: TerraformCloudRunData): TerraformCl
   }
 }
 
-const variableSchema = (
-  getString: UseStringsReturn['getString']
-): Yup.NotRequiredArraySchema<
-  | {
-      name: string
-      value: string
-      type: string
-    }
-  | undefined
-> =>
-  Yup.array().of(
-    Yup.object({
-      name: Yup.string().required(getString('common.validation.nameIsRequired')),
-      value: Yup.string().required(getString('common.validation.valueIsRequired')),
-      type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
-    })
-  )
-
 export function getValidationSchema(
   getString: UseStringsReturn['getString'],
   stepViewType?: StepViewType
@@ -152,7 +167,7 @@ export function getValidationSchema(
       runType: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString(runTypeLabel) })),
       spec: Yup.object()
         .when('runType', {
-          is: val => !isEmpty(val),
+          is: val => !isEmpty(val) && val !== RunTypes.Apply,
           then: Yup.object().shape({
             connectorRef: getConnectorSchema(getString),
             organization: Yup.lazy((value): Yup.Schema<unknown> => {
@@ -232,8 +247,7 @@ export function getValidationSchema(
               })
             )
           })
-        }),
-      variables: variableSchema(getString)
+        })
     })
   })
 }

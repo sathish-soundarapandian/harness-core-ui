@@ -298,7 +298,7 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeCheckboxField
             name={`${prefix}spec.spec.overridePolicies`}
-            label={getString('pipeline.terraformStep.overridePolicies')}
+            label={getString('pipeline.terraformStep.overridePoliciesLabel')}
             multiTypeTextbox={{ expressions, allowableTypes }}
             enableConfigureOptions={true}
             configureOptionsProps={{

@@ -552,7 +552,7 @@ function TerraformPlanWidget(
 
               <div className={css.divider} />
               {CD_TERRAFORM_CLOUD_CLI_NG && (
-                <div className={cx(stepCss.formGroup, css.addMarginTop)}>
+                <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
                   <Checkbox
                     label={getString('pipeline.terraformStep.runOnRemote')}
                     checked={enableCloudCli}
@@ -960,17 +960,7 @@ export class TerraformPlan extends PipelineStep<TFPlanFormData> {
     name: '',
     type: StepType.TerraformPlan,
     spec: {
-      provisionerIdentifier: '',
-      configuration: {
-        command: 'Apply',
-        configFiles: {
-          store: {
-            type: 'Git',
-            spec: {}
-          }
-        },
-        secretManagerRef: ''
-      }
+      provisionerIdentifier: ''
     }
   }
   protected stepIcon: IconName = 'terraform-plan'

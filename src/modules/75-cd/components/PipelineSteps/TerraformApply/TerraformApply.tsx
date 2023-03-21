@@ -26,8 +26,7 @@ import {
   getTerraformInitialValues,
   onSubmitTerraformData,
   TerraformVariableStepProps,
-  TerraformData,
-  ConfigurationTypes
+  TerraformData
 } from '../Common/Terraform/TerraformInterfaces'
 
 import TerraformEditView from '../Common/Terraform/Editview/TerraformEditView'
@@ -48,20 +47,7 @@ export class TerraformApply extends PipelineStep<TerraformData> {
     name: '',
     type: StepType.TerraformApply,
     spec: {
-      provisionerIdentifier: '',
-      configuration: {
-        type: ConfigurationTypes.Inline,
-        spec: {
-          configFiles: {
-            store: {
-              type: 'Git',
-              spec: {
-                gitFetchType: 'Branch'
-              }
-            }
-          }
-        }
-      }
+      provisionerIdentifier: ''
     }
   }
   protected stepIcon: IconName = 'terraform-apply'

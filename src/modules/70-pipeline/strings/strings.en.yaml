@@ -97,12 +97,12 @@ terraformStep:
   provisionerIdentifier: Enter Provisioner Identifier
   workspace: Enter Workspace
   workspacePlaceholder: Select Workspace
-  workspaceName: Terraform Workspace Name
+  workspaceName: Terraform Workspace
   workspaceError: No workspaces found within given organization
   messageLabel: Run Message
   messagePlaceholder: Enter Message
   discardPendingRuns: Discard Pending Runs
-  overridePolicies: Override Policies
+  overridePoliciesLabel: Continue on Soft Mandatory Policy evaluation result
   runTypeLabel: Run Type
   runTypePlaceholder: Select Run Type
   terraformVersion: Terraform Version

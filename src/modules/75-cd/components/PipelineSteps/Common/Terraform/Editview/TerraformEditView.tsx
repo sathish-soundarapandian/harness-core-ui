@@ -544,8 +544,9 @@ export default function TerraformEditView(
                   disabled={readonly}
                 />
               </div>
+              <div className={css.divider} />
               {CD_TERRAFORM_CLOUD_CLI_NG && (
-                <div className={cx(stepCss.formGroup, css.addMarginTop)}>
+                <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
                   <Checkbox
                     label={getString('pipeline.terraformStep.runOnRemote')}
                     checked={enableCloudCli}
@@ -556,7 +557,6 @@ export default function TerraformEditView(
                   />
                 </div>
               )}
-              <div className={css.divider} />
               {!enableCloudCli && (
                 <div className={cx(stepCss.formGroup, stepCss.md)}>
                   <FormInput.Select

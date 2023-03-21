@@ -482,6 +482,7 @@ export interface AccountDTO {
   name?: string
   nextGenEnabled?: boolean
   productLed?: boolean
+  ringName?: string
   serviceAccountConfig?: ServiceAccountConfig
   twoFactorAdminEnforced?: boolean
 }
@@ -747,6 +748,7 @@ export interface AgentApplicationTargets {
   agentId?: string
   applicationName?: string[]
 }
+
 export interface AgentMtlsEndpointDetails {
   accountId?: string
   caCertificates?: string
@@ -884,6 +886,7 @@ export interface Application {
   healthStatus?: string
   identifier?: string
   name?: string
+  syncErrorMessage?: string
   syncStatus?: string
   url?: string
 }
@@ -8447,6 +8450,7 @@ export type HelmChartManifest = ManifestAttributes & {
 
 export interface HelmChartResponseDTO {
   helmChartVersions?: string[]
+  lastTag?: string
 }
 
 export type HelmDeployStepInfo = StepSpecType & {
@@ -8668,6 +8672,7 @@ export interface InfrastructureDef {
     | 'GoogleCloudFunctions'
     | 'AWS_SAM'
     | 'AwsLambda'
+    | 'KubernetesAws'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -8715,6 +8720,7 @@ export interface InfrastructureDefinitionConfig {
     | 'GoogleCloudFunctions'
     | 'AWS_SAM'
     | 'AwsLambda'
+    | 'KubernetesAws'
 }
 
 export interface InfrastructureDetails {
@@ -8758,6 +8764,7 @@ export interface InfrastructureRequestDTO {
     | 'GoogleCloudFunctions'
     | 'AWS_SAM'
     | 'AwsLambda'
+    | 'KubernetesAws'
   yaml?: string
 }
 
@@ -8810,6 +8817,7 @@ export interface InfrastructureResponseDTO {
     | 'GoogleCloudFunctions'
     | 'AWS_SAM'
     | 'AwsLambda'
+    | 'KubernetesAws'
   yaml?: string
 }
 
@@ -9303,6 +9311,14 @@ export type K8sApplyStepInfo = StepSpecType & {
   skipDryRun?: boolean
   skipRendering?: boolean
   skipSteadyStateCheck?: boolean
+}
+
+export type K8sAwsInfrastructure = Infrastructure & {
+  cluster: string
+  connectorRef: string
+  metadata?: string
+  namespace: string
+  releaseName: string
 }
 
 export type K8sAzureInfrastructure = Infrastructure & {
@@ -16438,17 +16454,17 @@ export interface SvcEnvMigrationResponseDto {
 export interface SyncOptions {
   applyOutOfSyncOnly?: boolean
   autoCreateNamespace?: boolean
-  prunePropagationPolicy?: string
+  prunePropagationPolicy?: 'foreground' | 'background' | 'orphan'
   pruneResourcesAtLast?: boolean
   replaceResources?: boolean
   skipSchemaValidation?: boolean
 }
 
 export interface SyncRetryStrategy {
+  baseBackoffDuration?: string
+  increaseBackoffByFactor?: number
   limit?: number
-  maxRetryBackoffDuration?: string
-  retryBackoffBaseDuration?: string
-  waitAfterRetryFactor?: number
+  maxBackoffDuration?: string
 }
 
 export type SyncStepInfo = StepSpecType & {
@@ -16801,6 +16817,7 @@ export type TerraformCloudPlanAndApplySpec = TerraformCloudRunExecutionSpec & {
   connectorRef: string
   discardPendingRuns?: boolean
   organization: string
+  overridePolicies?: boolean
   provisionerIdentifier: string
   targets?: string[]
   variables?: NGVariable[]
@@ -16811,6 +16828,7 @@ export type TerraformCloudPlanAndDestroySpec = TerraformCloudRunExecutionSpec & 
   connectorRef: string
   discardPendingRuns?: boolean
   organization: string
+  overridePolicies?: boolean
   provisionerIdentifier: string
   targets?: string[]
   variables?: NGVariable[]
@@ -16853,22 +16871,18 @@ export type TerraformCloudRefreshSpec = TerraformCloudRunExecutionSpec & {
 export type TerraformCloudRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   discardPendingRuns?: boolean
-  message?: string
+  overridePolicies?: boolean
   provisionerIdentifier: string
+  runMessage?: string
 }
 
 export interface TerraformCloudRunExecutionSpec {
-  specParams?: TerraformCloudRunSpecParameters
-  type?: 'RefreshState' | 'PlanOnly' | 'PlanAndApply' | 'PlanAndDestroy' | 'Plan' | 'Apply'
-}
-
-export interface TerraformCloudRunSpecParameters {
-  type?: 'RefreshState' | 'PlanOnly' | 'PlanAndApply' | 'PlanAndDestroy' | 'Plan' | 'Apply'
+  [key: string]: any
 }
 
 export type TerraformCloudRunStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  message?: string
+  runMessage?: string
   runType: 'RefreshState' | 'PlanOnly' | 'PlanAndApply' | 'PlanAndDestroy' | 'Plan' | 'Apply'
   spec: TerraformCloudRunExecutionSpec
 }
@@ -16907,6 +16921,7 @@ export interface TerraformPlanExecutionData {
   exportTerraformHumanReadablePlan?: boolean
   exportTerraformPlanJson?: boolean
   secretManagerRef: string
+  skipRefreshCommand?: boolean
   targets?: string[]
   varFiles?: TerraformVarFileWrapper[]
   workspace?: string
@@ -16922,9 +16937,11 @@ export type TerraformPlanStepInfo = StepSpecType & {
 export type TerraformRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   provisionerIdentifier: string
+  skipRefreshCommand?: boolean
 }
 
 export interface TerraformStepConfiguration {
+  skipRefreshCommand?: boolean
   spec?: TerraformExecutionData
   type: 'Inline' | 'InheritFromPlan' | 'InheritFromApply'
 }
@@ -17372,6 +17389,7 @@ export interface UserInfo {
   edition?: string
   email?: string
   emailVerified?: boolean
+  externalId?: string
   externallyManaged?: boolean
   familyName?: string
   givenName?: string
@@ -37412,6 +37430,64 @@ export const getEnvironmentAccessListPromise = (
     signal
   )
 
+export interface GetEnvironmentListFilteredQueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  envIdentifiers?: string[]
+}
+
+export type GetEnvironmentListFilteredProps = Omit<
+  GetProps<ResponsePageEnvironmentResponse, Failure | Error, GetEnvironmentListFilteredQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets environment list filtered by scoped env refs
+ */
+export const GetEnvironmentListFiltered = (props: GetEnvironmentListFilteredProps) => (
+  <Get<ResponsePageEnvironmentResponse, Failure | Error, GetEnvironmentListFilteredQueryParams, void>
+    path={`/environmentsV2/list/scoped`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetEnvironmentListFilteredProps = Omit<
+  UseGetProps<ResponsePageEnvironmentResponse, Failure | Error, GetEnvironmentListFilteredQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets environment list filtered by scoped env refs
+ */
+export const useGetEnvironmentListFiltered = (props: UseGetEnvironmentListFilteredProps) =>
+  useGet<ResponsePageEnvironmentResponse, Failure | Error, GetEnvironmentListFilteredQueryParams, void>(
+    `/environmentsV2/list/scoped`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets environment list filtered by scoped env refs
+ */
+export const getEnvironmentListFilteredPromise = (
+  props: GetUsingFetchProps<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListFilteredQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageEnvironmentResponse, Failure | Error, GetEnvironmentListFilteredQueryParams, void>(
+    getConfig('ng/api'),
+    `/environmentsV2/list/scoped`,
+    props,
+    signal
+  )
+
 export interface GetEnvironmentListV2QueryParams {
   page?: number
   size?: number
@@ -47659,6 +47735,7 @@ export interface GetHelmChartVersionDetailsQueryParams {
   region?: string
   bucketName?: string
   folderPath?: string
+  lastTag?: string
 }
 
 export type GetHelmChartVersionDetailsProps = Omit<
@@ -47704,6 +47781,103 @@ export const getHelmChartVersionDetailsPromise = (
     props,
     signal
   )
+
+export interface GetHelmChartVersionDetailsWithYamlQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier: string
+  serviceId?: string
+  fqnPath: string
+  connectorRef?: string
+  chartName?: string
+  region?: string
+  bucketName?: string
+  folderPath?: string
+  lastTag?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetHelmChartVersionDetailsWithYamlProps = Omit<
+  MutateProps<
+    ResponseHelmChartResponseDTO,
+    Failure | Error,
+    GetHelmChartVersionDetailsWithYamlQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets helm chart version details with yaml input for expression resolution
+ */
+export const GetHelmChartVersionDetailsWithYaml = (props: GetHelmChartVersionDetailsWithYamlProps) => (
+  <Mutate<
+    ResponseHelmChartResponseDTO,
+    Failure | Error,
+    GetHelmChartVersionDetailsWithYamlQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/manifests/helm/v2/chart/version`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetHelmChartVersionDetailsWithYamlProps = Omit<
+  UseMutateProps<
+    ResponseHelmChartResponseDTO,
+    Failure | Error,
+    GetHelmChartVersionDetailsWithYamlQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets helm chart version details with yaml input for expression resolution
+ */
+export const useGetHelmChartVersionDetailsWithYaml = (props: UseGetHelmChartVersionDetailsWithYamlProps) =>
+  useMutate<
+    ResponseHelmChartResponseDTO,
+    Failure | Error,
+    GetHelmChartVersionDetailsWithYamlQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/manifests/helm/v2/chart/version`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets helm chart version details with yaml input for expression resolution
+ */
+export const getHelmChartVersionDetailsWithYamlPromise = (
+  props: MutateUsingFetchProps<
+    ResponseHelmChartResponseDTO,
+    Failure | Error,
+    GetHelmChartVersionDetailsWithYamlQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseHelmChartResponseDTO,
+    Failure | Error,
+    GetHelmChartVersionDetailsWithYamlQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/manifests/helm/v2/chart/version`, props, signal)
 
 export interface ConfigureOauthQueryParams {
   accountIdentifier?: string
@@ -54138,6 +54312,59 @@ export const getServiceAccessListPromise = (
   getUsingFetch<ResponseListServiceResponse, Failure | Error, GetServiceAccessListQueryParams, void>(
     getConfig('ng/api'),
     `/servicesV2/list/access`,
+    props,
+    signal
+  )
+
+export interface GetServiceListFilteredQueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceIdentifiers?: string[]
+}
+
+export type GetServiceListFilteredProps = Omit<
+  GetProps<ResponsePageServiceResponse, Failure | Error, GetServiceListFilteredQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Service list filtered by service refs
+ */
+export const GetServiceListFiltered = (props: GetServiceListFilteredProps) => (
+  <Get<ResponsePageServiceResponse, Failure | Error, GetServiceListFilteredQueryParams, void>
+    path={`/servicesV2/list/scoped`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceListFilteredProps = Omit<
+  UseGetProps<ResponsePageServiceResponse, Failure | Error, GetServiceListFilteredQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Service list filtered by service refs
+ */
+export const useGetServiceListFiltered = (props: UseGetServiceListFilteredProps) =>
+  useGet<ResponsePageServiceResponse, Failure | Error, GetServiceListFilteredQueryParams, void>(
+    `/servicesV2/list/scoped`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets Service list filtered by service refs
+ */
+export const getServiceListFilteredPromise = (
+  props: GetUsingFetchProps<ResponsePageServiceResponse, Failure | Error, GetServiceListFilteredQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageServiceResponse, Failure | Error, GetServiceListFilteredQueryParams, void>(
+    getConfig('ng/api'),
+    `/servicesV2/list/scoped`,
     props,
     signal
   )
@@ -62380,6 +62607,60 @@ export const getVariablePromise = (
   getUsingFetch<ResponseVariableResponseDTO, Failure | Error, GetVariableQueryParams, GetVariablePathParams>(
     getConfig('ng/api'),
     `/variables/${identifier}`,
+    props,
+    signal
+  )
+
+export interface OverrideDelegateImageTagQueryParams {
+  accountIdentifier?: string
+  delegateTag?: string
+  validTillNextRelease?: boolean
+  validForDays?: number
+}
+
+export type OverrideDelegateImageTagProps = Omit<
+  MutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Overrides delegate image tag for account
+ */
+export const OverrideDelegateImageTag = (props: OverrideDelegateImageTagProps) => (
+  <Mutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>
+    verb="PUT"
+    path={`/version-override/delegate-tag`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseOverrideDelegateImageTagProps = Omit<
+  UseMutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Overrides delegate image tag for account
+ */
+export const useOverrideDelegateImageTag = (props: UseOverrideDelegateImageTagProps) =>
+  useMutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
+    'PUT',
+    `/version-override/delegate-tag`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Overrides delegate image tag for account
+ */
+export const overrideDelegateImageTagPromise = (
+  props: MutateUsingFetchProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
+    'PUT',
+    getConfig('ng/api'),
+    `/version-override/delegate-tag`,
     props,
     signal
   )

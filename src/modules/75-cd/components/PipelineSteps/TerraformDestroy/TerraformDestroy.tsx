@@ -46,10 +46,7 @@ export class TerraformDestroy extends PipelineStep<TerraformData> {
     name: '',
     type: StepType.TerraformDestroy,
     spec: {
-      provisionerIdentifier: '',
-      configuration: {
-        type: 'InheritFromApply'
-      }
+      provisionerIdentifier: ''
     }
   }
   protected stepIcon: IconName = 'terraform-destroy'

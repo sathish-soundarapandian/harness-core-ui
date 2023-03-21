@@ -114,8 +114,8 @@ export function TerraformCloudRunEdit(
 
   const workspaces: SelectOption[] = useMemo(() => {
     return defaultTo(workspacesData?.data?.workspaces, [])?.map(workspace => ({
-      value: workspace?.workspaceName,
-      label: workspace?.workspaceId
+      value: workspace?.workspaceId,
+      label: `${workspace?.workspaceName}: ${workspace?.workspaceId}`
     }))
   }, [workspacesData?.data?.workspaces])
 
@@ -124,7 +124,7 @@ export function TerraformCloudRunEdit(
       { label: 'Plan', value: RunTypes.Plan },
       { label: 'Apply', value: RunTypes.Apply },
       { label: 'Refresh', value: RunTypes.RefreshState },
-      { label: 'PlanOnly', value: RunTypes.PlanOnly },
+      { label: 'Plan Only', value: RunTypes.PlanOnly },
       { label: 'Plan and Apply', value: RunTypes.PlanAndApply },
       { label: 'Plan and Destroy', value: RunTypes.PlanAndDestroy }
     ],
@@ -163,246 +163,6 @@ export function TerraformCloudRunEdit(
               stepViewType={stepViewType}
             />
             <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormMultiTypeConnectorField
-                name="spec.spec.connectorRef"
-                label={getString('connectors.selectConnector')}
-                type={[Connectors.TERRAFORM_CLOUD]}
-                placeholder={getString('select')}
-                disabled={readonly}
-                accountIdentifier={accountId}
-                multiTypeProps={{ expressions, allowableTypes, disabled: readonly }}
-                projectIdentifier={projectIdentifier}
-                orgIdentifier={orgIdentifier}
-                enableConfigureOptions={false}
-                gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-                width={372}
-                setRefValue
-                onChange={type => {
-                  if (type !== MultiTypeInputType.FIXED) {
-                    getMultiTypeFromValue(values.spec?.spec?.organization) !== MultiTypeInputType.RUNTIME &&
-                      setFieldValue('spec.spec.organization', '')
-                    getMultiTypeFromValue(values.spec?.spec?.workspace) !== MultiTypeInputType.RUNTIME &&
-                      setFieldValue('spec.spec.workspace', '')
-                  }
-                }}
-              />
-              {getMultiTypeFromValue(values.spec?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
-                <ConnectorConfigureOptions
-                  style={{ marginTop: 10 }}
-                  value={values.spec?.spec?.connectorRef as string}
-                  type="String"
-                  variableName="spec.spec.connectorRef"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  onChange={value => {
-                    setFieldValue('spec.spec.connectorRef', value)
-                  }}
-                  isReadonly={readonly}
-                  connectorReferenceFieldProps={{
-                    accountIdentifier: accountId,
-                    projectIdentifier,
-                    orgIdentifier,
-                    label: getString('connector'),
-                    disabled: readonly,
-                    gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
-                  }}
-                />
-              )}
-            </div>
-            <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormInput.MultiTypeInput
-                name="spec.spec.organization"
-                selectItems={organizations}
-                disabled={readonly}
-                placeholder={
-                  loadingOrganizations
-                    ? /* istanbul ignore next */ getString('loading')
-                    : getString('cd.steps.tasInfra.organizationPlaceholder')
-                }
-                multiTypeInputProps={{
-                  onChange: /* istanbul ignore next */ () => {
-                    getMultiTypeFromValue(values.spec?.spec?.workspace) !== MultiTypeInputType.RUNTIME &&
-                      setFieldValue('spec.spec.workspace', '')
-                  },
-                  expressions,
-                  disabled: readonly,
-                  onFocus: /* istanbul ignore next */ () => {
-                    if (getMultiTypeFromValue(values.spec?.spec?.organization) === MultiTypeInputType.FIXED) {
-                      refetchOrganizations({
-                        queryParams: {
-                          accountIdentifier: accountId,
-                          projectIdentifier,
-                          orgIdentifier,
-                          connectorRef: getValue(values.spec?.spec?.connectorRef)
-                        }
-                      })
-                    }
-                  },
-                  selectProps: {
-                    items: organizations,
-                    allowCreatingNewItems: true,
-                    addClearBtn: !(loadingOrganizations || readonly),
-                    noResults: (
-                      <Text padding={'small'}>
-                        {loadingOrganizations
-                          ? getString('loading')
-                          : get(organizationsError, errorMessage, null) ||
-                            getString('cd.steps.tasInfra.organizationError')}
-                      </Text>
-                    )
-                  },
-                  allowableTypes
-                }}
-                label={getString(organizationLabel)}
-              />
-              {getMultiTypeFromValue(getValue(values.spec?.spec?.organization)) === MultiTypeInputType.RUNTIME &&
-                !readonly && (
-                  <SelectConfigureOptions
-                    value={getValue(values.spec?.spec?.organization)}
-                    type="String"
-                    variableName="spec.spec.organization"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    onChange={value => {
-                      setFieldValue('spec.spec.organization', value)
-                    }}
-                    isReadonly={readonly}
-                    loading={loadingOrganizations}
-                    options={organizations}
-                  />
-                )}
-            </div>
-            <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormInput.MultiTypeInput
-                name="spec.spec.workspace"
-                selectItems={workspaces}
-                disabled={readonly}
-                placeholder={
-                  loadingWorkspaces ? getString('loading') : getString('pipeline.terraformStep.workspacePlaceholder')
-                }
-                multiTypeInputProps={{
-                  expressions,
-                  disabled: readonly,
-                  onFocus: /* istanbul ignore next */ () => {
-                    if (getMultiTypeFromValue(values.spec?.spec?.workspace) === MultiTypeInputType.FIXED) {
-                      refetchWorkspaces({
-                        queryParams: {
-                          accountIdentifier: accountId,
-                          projectIdentifier,
-                          orgIdentifier,
-                          connectorRef: getValue(values.spec?.spec?.connectorRef),
-                          organization: getValue(values.spec?.spec?.organization)
-                        }
-                      })
-                    }
-                  },
-                  selectProps: {
-                    items: workspaces,
-                    allowCreatingNewItems: true,
-                    addClearBtn: !(loadingWorkspaces || readonly),
-                    noResults: (
-                      <Text padding={'small'}>
-                        {loadingWorkspaces
-                          ? getString('loading')
-                          : get(workspacesError, errorMessage, null) ||
-                            getString('pipeline.terraformStep.workspaceError')}
-                      </Text>
-                    )
-                  },
-                  allowableTypes
-                }}
-                label={getString(workspaceLabel)}
-              />
-              {getMultiTypeFromValue(getValue(values.spec?.spec?.workspace)) === MultiTypeInputType.RUNTIME &&
-                !readonly && (
-                  <SelectConfigureOptions
-                    value={getValue(values.spec?.spec?.workspace)}
-                    type="String"
-                    variableName="spec.spec.workspace"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    onChange={
-                      /* istanbul ignore next */ value => {
-                        setFieldValue('spec.spec.workspace', value)
-                      }
-                    }
-                    isReadonly={readonly}
-                    loading={loadingWorkspaces}
-                    options={workspaces}
-                  />
-                )}
-            </div>
-            <div className={stepCss.formGroup}>
-              <FormMultiTypeTextAreaField
-                placeholder={getString('pipeline.terraformStep.messagePlaceholder')}
-                name="spec.runMessage"
-                label={getString('pipeline.terraformStep.messageLabel')}
-                className={css.message}
-                multiTypeTextArea={{
-                  enableConfigureOptions: false,
-                  expressions,
-                  disabled: readonly,
-                  allowableTypes,
-                  textAreaProps: { growVertically: true }
-                }}
-              />
-              {getMultiTypeFromValue(values.spec?.runMessage) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={values.spec?.runMessage}
-                  type="String"
-                  variableName="spec.runMessage"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  onChange={/* istanbul ignore next */ value => setFieldValue('spec.runMessage', value)}
-                  isReadonly={readonly}
-                />
-              )}
-            </div>
-            <div className={cx(stepCss.formGroup)}>
-              <FormMultiTypeCheckboxField
-                formik={formikValues}
-                name={'spec.spec.discardPendingRuns'}
-                label={getString('pipeline.terraformStep.discardPendingRuns')}
-                multiTypeTextbox={{ expressions, allowableTypes }}
-                disabled={readonly}
-              />
-              {getMultiTypeFromValue(values.spec?.spec?.discardPendingRuns) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={(values.spec?.spec?.discardPendingRuns || '') as string}
-                  type="String"
-                  variableName="spec.spec.discardPenidngRuns"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  onChange={/* istanbul ignore next */ value => setFieldValue('spec.spec.discardPenidngRuns', value)}
-                  style={{ alignSelf: 'center' }}
-                  isReadonly={readonly}
-                />
-              )}
-            </div>
-            {(values.spec?.runType === RunTypes.PlanAndApply || values.spec?.runType === RunTypes.PlanAndDestroy) && (
-              <div className={cx(stepCss.formGroup)}>
-                <FormMultiTypeCheckboxField
-                  formik={formikValues}
-                  name={'spec.spec.overridePolicies'}
-                  label={getString('pipeline.terraformStep.overridePolicies')}
-                  multiTypeTextbox={{ expressions, allowableTypes }}
-                  disabled={readonly}
-                />
-                {getMultiTypeFromValue(values.spec?.spec?.overridePolicies) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={(values.spec?.spec?.overridePolicies || '') as string}
-                    type="String"
-                    variableName="spec.spec.overridePolicies"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    onChange={/* istanbul ignore next */ value => setFieldValue('spec.spec.overridePolicies', value)}
-                    style={{ alignSelf: 'center' }}
-                    isReadonly={readonly}
-                  />
-                )}
-              </div>
-            )}
-            <div className={cx(stepCss.formGroup, stepCss.lg)}>
               <FormInput.Select
                 label={getString(runTypeLabel)}
                 name="spec.runType"
@@ -410,6 +170,231 @@ export function TerraformCloudRunEdit(
                 placeholder={getString('pipeline.terraformStep.runTypePlaceholder')}
               />
             </div>
+            {values.spec?.runType !== RunTypes.Apply && (
+              <>
+                <div className={cx(stepCss.formGroup)}>
+                  <FormMultiTypeCheckboxField
+                    formik={formikValues}
+                    name={'spec.spec.discardPendingRuns'}
+                    label={getString('pipeline.terraformStep.discardPendingRuns')}
+                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    disabled={readonly}
+                  />
+                  {getMultiTypeFromValue(values.spec?.spec?.discardPendingRuns) === MultiTypeInputType.RUNTIME && (
+                    <ConfigureOptions
+                      value={(values.spec?.spec?.discardPendingRuns || '') as string}
+                      type="String"
+                      variableName="spec.spec.discardPenidngRuns"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={
+                        /* istanbul ignore next */ value => setFieldValue('spec.spec.discardPenidngRuns', value)
+                      }
+                      style={{ alignSelf: 'center' }}
+                      isReadonly={readonly}
+                    />
+                  )}
+                </div>
+                <div className={stepCss.formGroup}>
+                  <FormMultiTypeTextAreaField
+                    placeholder={getString('pipeline.terraformStep.messagePlaceholder')}
+                    name="spec.runMessage"
+                    label={getString('pipeline.terraformStep.messageLabel')}
+                    className={css.message}
+                    multiTypeTextArea={{
+                      enableConfigureOptions: false,
+                      expressions,
+                      disabled: readonly,
+                      allowableTypes,
+                      textAreaProps: { growVertically: true }
+                    }}
+                  />
+                  {getMultiTypeFromValue(values.spec?.runMessage) === MultiTypeInputType.RUNTIME && (
+                    <ConfigureOptions
+                      value={values.spec?.runMessage}
+                      type="String"
+                      variableName="spec.runMessage"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={/* istanbul ignore next */ value => setFieldValue('spec.runMessage', value)}
+                      isReadonly={readonly}
+                    />
+                  )}
+                </div>
+                <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                  <FormMultiTypeConnectorField
+                    name="spec.spec.connectorRef"
+                    label={getString('connectors.selectConnector')}
+                    type={[Connectors.TERRAFORM_CLOUD]}
+                    placeholder={getString('select')}
+                    disabled={readonly}
+                    accountIdentifier={accountId}
+                    multiTypeProps={{ expressions, allowableTypes, disabled: readonly }}
+                    projectIdentifier={projectIdentifier}
+                    orgIdentifier={orgIdentifier}
+                    enableConfigureOptions={false}
+                    gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                    width={372}
+                    setRefValue
+                    onChange={type => {
+                      if (type !== MultiTypeInputType.FIXED) {
+                        getMultiTypeFromValue(values.spec?.spec?.organization) !== MultiTypeInputType.RUNTIME &&
+                          setFieldValue('spec.spec.organization', '')
+                        getMultiTypeFromValue(values.spec?.spec?.workspace) !== MultiTypeInputType.RUNTIME &&
+                          setFieldValue('spec.spec.workspace', '')
+                      }
+                    }}
+                  />
+                  {getMultiTypeFromValue(values.spec?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
+                    <ConnectorConfigureOptions
+                      style={{ marginTop: 10 }}
+                      value={values.spec?.spec?.connectorRef as string}
+                      type="String"
+                      variableName="spec.spec.connectorRef"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => {
+                        setFieldValue('spec.spec.connectorRef', value)
+                      }}
+                      isReadonly={readonly}
+                      connectorReferenceFieldProps={{
+                        accountIdentifier: accountId,
+                        projectIdentifier,
+                        orgIdentifier,
+                        label: getString('connector'),
+                        disabled: readonly,
+                        gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+                      }}
+                    />
+                  )}
+                </div>
+                <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                  <FormInput.MultiTypeInput
+                    name="spec.spec.organization"
+                    selectItems={organizations}
+                    disabled={readonly}
+                    placeholder={
+                      loadingOrganizations
+                        ? /* istanbul ignore next */ getString('loading')
+                        : getString('cd.steps.tasInfra.organizationPlaceholder')
+                    }
+                    multiTypeInputProps={{
+                      onChange: /* istanbul ignore next */ () => {
+                        getMultiTypeFromValue(values.spec?.spec?.workspace) !== MultiTypeInputType.RUNTIME &&
+                          setFieldValue('spec.spec.workspace', '')
+                      },
+                      expressions,
+                      disabled: readonly,
+                      onFocus: /* istanbul ignore next */ () => {
+                        if (getMultiTypeFromValue(values.spec?.spec?.organization) === MultiTypeInputType.FIXED) {
+                          refetchOrganizations({
+                            queryParams: {
+                              accountIdentifier: accountId,
+                              projectIdentifier,
+                              orgIdentifier,
+                              connectorRef: getValue(values.spec?.spec?.connectorRef)
+                            }
+                          })
+                        }
+                      },
+                      selectProps: {
+                        items: organizations,
+                        allowCreatingNewItems: true,
+                        addClearBtn: !(loadingOrganizations || readonly),
+                        noResults: (
+                          <Text padding={'small'}>
+                            {loadingOrganizations
+                              ? getString('loading')
+                              : get(organizationsError, errorMessage, null) ||
+                                getString('cd.steps.tasInfra.organizationError')}
+                          </Text>
+                        )
+                      },
+                      allowableTypes
+                    }}
+                    label={getString(organizationLabel)}
+                  />
+                  {getMultiTypeFromValue(getValue(values.spec?.spec?.organization)) === MultiTypeInputType.RUNTIME &&
+                    !readonly && (
+                      <SelectConfigureOptions
+                        value={getValue(values.spec?.spec?.organization)}
+                        type="String"
+                        variableName="spec.spec.organization"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        onChange={value => {
+                          setFieldValue('spec.spec.organization', value)
+                        }}
+                        isReadonly={readonly}
+                        loading={loadingOrganizations}
+                        options={organizations}
+                      />
+                    )}
+                </div>
+                <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                  <FormInput.MultiTypeInput
+                    name="spec.spec.workspace"
+                    selectItems={workspaces}
+                    disabled={readonly}
+                    placeholder={
+                      loadingWorkspaces
+                        ? getString('loading')
+                        : getString('pipeline.terraformStep.workspacePlaceholder')
+                    }
+                    multiTypeInputProps={{
+                      expressions,
+                      disabled: readonly,
+                      onFocus: /* istanbul ignore next */ () => {
+                        if (getMultiTypeFromValue(values.spec?.spec?.workspace) === MultiTypeInputType.FIXED) {
+                          refetchWorkspaces({
+                            queryParams: {
+                              accountIdentifier: accountId,
+                              projectIdentifier,
+                              orgIdentifier,
+                              connectorRef: getValue(values.spec?.spec?.connectorRef),
+                              organization: getValue(values.spec?.spec?.organization)
+                            }
+                          })
+                        }
+                      },
+                      selectProps: {
+                        items: workspaces,
+                        allowCreatingNewItems: true,
+                        addClearBtn: !(loadingWorkspaces || readonly),
+                        noResults: (
+                          <Text padding={'small'}>
+                            {loadingWorkspaces
+                              ? getString('loading')
+                              : get(workspacesError, errorMessage, null) ||
+                                getString('pipeline.terraformStep.workspaceError')}
+                          </Text>
+                        )
+                      },
+                      allowableTypes
+                    }}
+                    label={getString(workspaceLabel)}
+                  />
+                  {getMultiTypeFromValue(getValue(values.spec?.spec?.workspace)) === MultiTypeInputType.RUNTIME &&
+                    !readonly && (
+                      <SelectConfigureOptions
+                        value={getValue(values.spec?.spec?.workspace)}
+                        type="String"
+                        variableName="spec.spec.workspace"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        onChange={
+                          /* istanbul ignore next */ value => {
+                            setFieldValue('spec.spec.workspace', value)
+                          }
+                        }
+                        isReadonly={readonly}
+                        loading={loadingWorkspaces}
+                        options={workspaces}
+                      />
+                    )}
+                </div>
+              </>
+            )}
             {(values.spec?.runType === RunTypes.Plan || values.spec?.runType === RunTypes.PlanOnly) && (
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormInput.RadioGroup

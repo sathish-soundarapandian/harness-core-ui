@@ -6,27 +6,18 @@
  */
 
 import React from 'react'
-import { FieldArray, FormikProps } from 'formik'
-import {
-  AllowedTypes,
-  Button,
-  ButtonVariation,
-  FormikForm,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  Text
-} from '@harness/uicore'
+import type { FormikProps } from 'formik'
+import { AllowedTypes, FormikForm, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
-import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import type { TerraformCloudRunFormData, TerraformCloudRunStepVariable } from './types'
-import { RunTypes, variableTypes } from './helper'
+import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
+import type { TerraformCloudRunFormData } from './types'
+import { RunTypes } from './helper'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TerraformCloudRunStep.module.scss'
@@ -45,76 +36,28 @@ export default function OptionalConfiguration(props: {
   return (
     <>
       <FormikForm>
-        <>
-          <div className={cx(stepCss.formGroup)}>
-            <MultiTypeFieldSelector
-              name="spec.spec.variables"
-              label={getString('common.variables')}
-              isOptional
-              allowedTypes={[MultiTypeInputType.FIXED]}
-              defaultValueToReset={[]}
-              disableTypeSelection={true}
-            >
-              <FieldArray
-                name="spec.spec.variables"
-                render={({ push, remove }) => {
-                  return (
-                    <div className={css.panel}>
-                      <div className={css.variables}>
-                        <span className={css.label}>Name</span>
-                        <span className={css.label}>Type</span>
-                        <span className={css.label}>Value</span>
-                      </div>
-                      {formik.values?.spec?.spec?.variables?.map(({ id }: TerraformCloudRunStepVariable, i: number) => {
-                        return (
-                          <div className={css.variables} key={id}>
-                            <FormInput.Text
-                              name={`spec.spec.variables.[${i}].name`}
-                              placeholder={getString('name')}
-                              disabled={readonly}
-                            />
-                            <FormInput.Select
-                              items={variableTypes}
-                              name={`spec.spec.variables.[${i}].type`}
-                              placeholder={getString('typeLabel')}
-                              disabled={readonly}
-                            />
-                            <FormInput.MultiTextInput
-                              name={`spec.spec.variables.[${i}].value`}
-                              placeholder={getString('valueLabel')}
-                              multiTextInputProps={{
-                                allowableTypes: [MultiTypeInputType.FIXED],
-                                expressions,
-                                disabled: readonly
-                              }}
-                              label=""
-                              disabled={readonly}
-                            />
-                            <Button
-                              variation={ButtonVariation.ICON}
-                              icon="main-trash"
-                              data-testid={`remove-var-${i}`}
-                              onClick={() => remove(i)}
-                              disabled={readonly}
-                            />
-                          </div>
-                        )
-                      })}
-                      <Button
-                        icon="plus"
-                        variation={ButtonVariation.LINK}
-                        data-testid="add-var"
-                        disabled={readonly}
-                        onClick={() => push({ name: '', type: 'String', value: '' })}
-                      >
-                        {getString('addInputVar')}
-                      </Button>
-                    </div>
-                  )
-                }}
-              />
-            </MultiTypeFieldSelector>
-          </div>
+        <div className={cx(stepCss.formGroup)}>
+          <MultiTypeMap
+            name="spec.spec.variables"
+            valueMultiTextInputProps={{
+              expressions,
+              allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                item => !isMultiTypeRuntime(item)
+              ) as AllowedTypes
+            }}
+            multiTypeFieldSelectorProps={{
+              disableTypeSelection: true,
+              label: (
+                <Text style={{ display: 'flex', alignItems: 'center', color: 'rgb(11, 11, 13)' }}>
+                  {getString('common.variables')}
+                </Text>
+              )
+            }}
+            disabled={readonly}
+          />
+        </div>
+
+        {values.spec?.runType !== RunTypes.RefreshState && (
           <div className={cx(stepCss.formGroup)}>
             <MultiTypeList
               name="spec.spec.targets"
@@ -140,13 +83,14 @@ export default function OptionalConfiguration(props: {
               disabled={readonly}
             />
           </div>
-        </>
+        )}
+
         {(values.spec?.runType === RunTypes.Plan || values.spec?.runType === RunTypes.PlanOnly) && (
           <div className={cx(stepCss.formGroup, css.addMarginTop)}>
             <FormMultiTypeCheckboxField
               formik={formik}
               name={'spec.spec.exportTerraformPlanJson'}
-              label={getString('cd.exportTerragruntPlanJson')}
+              label={getString('cd.exportTerraformPlanJson')}
               multiTypeTextbox={{ expressions, allowableTypes }}
               disabled={readonly}
             />
@@ -167,6 +111,32 @@ export default function OptionalConfiguration(props: {
                 />
               )
             }
+          </div>
+        )}
+
+        {(values.spec?.runType === RunTypes.PlanAndApply || values.spec?.runType === RunTypes.PlanAndDestroy) && (
+          <div className={cx(stepCss.formGroup)}>
+            <FormMultiTypeCheckboxField
+              formik={formik}
+              name={'spec.spec.overridePolicies'}
+              label={getString('pipeline.terraformStep.overridePoliciesLabel')}
+              multiTypeTextbox={{ expressions, allowableTypes }}
+              disabled={readonly}
+            />
+            {getMultiTypeFromValue(values.spec?.spec?.overridePolicies) === MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                value={(values.spec?.spec?.overridePolicies || '') as string}
+                type="String"
+                variableName="spec.spec.overridePolicies"
+                showRequiredField={false}
+                showDefaultField={false}
+                onChange={
+                  /* istanbul ignore next */ value => formik?.setFieldValue('spec.spec.overridePolicies', value)
+                }
+                style={{ alignSelf: 'center' }}
+                isReadonly={readonly}
+              />
+            )}
           </div>
         )}
       </FormikForm>

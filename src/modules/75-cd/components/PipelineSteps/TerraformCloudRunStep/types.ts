@@ -26,54 +26,29 @@ export interface TerraformCloudRunEditProps {
 
 export interface TerraformCloudRunInputStepProps {
   initialValues: TerraformCloudRunFormData
-  allValues?: TerraformCloudRunData
+  allValues?: TerraformCloudRunFormData
   allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   readonly?: boolean
-  template?: TerraformCloudRunData
+  template?: TerraformCloudRunFormData
   path?: string
 }
 
 export interface TerraformCloudRunVariablesViewProps {
   metadataMap: Record<string, VariableResponseMapValue>
-  variablesData: TerraformCloudRunData
-}
-
-export interface TerraformCloudRunStepVariable {
-  value: number | string
-  id: string
-  name?: string
-  type?: 'String' | 'Number' | 'Secret'
-}
-
-export interface TerraformCloudRunData extends StepElementConfig {
-  spec: Omit<TerraformCloudRunStepInfo, 'spec'> & {
-    spec: {
-      connectorRef: string
-      discardPendingRuns?: boolean
-      organization: string | SelectOption
-      workspace: string | SelectOption
-      provisionerIdentifier?: string
-      terraformVersion?: string
-      variables?: Array<Omit<TerraformCloudRunStepVariable, 'id'>>
-      exportTerraformPlanJson?: boolean
-      targets?: Array<{ id: string; value: string }> | string[] | string
-      planType?: 'Plan' | 'Destroy'
-      overridePolicies?: boolean
-    }
-  }
+  variablesData: TerraformCloudRunFormData
 }
 
 export interface TerraformCloudRunFormData extends StepElementConfig {
   spec: Omit<TerraformCloudRunStepInfo, 'spec'> & {
     spec: {
-      connectorRef: string
+      connectorRef?: string
       discardPendingRuns?: boolean
-      organization: string | SelectOption | any
-      workspace: string | any
+      organization?: string | SelectOption | any
+      workspace?: string | SelectOption
       provisionerIdentifier?: string
       terraformVersion?: string
-      variables?: Array<TerraformCloudRunStepVariable>
+      variables?: any
       exportTerraformPlanJson?: boolean
       targets?: Array<{ id: string; value: string }> | string[] | string
       planType?: 'Plan' | 'Destroy'

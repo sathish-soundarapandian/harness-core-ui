@@ -3449,7 +3449,6 @@ exports[`Test TerraformPlan should render edit view as new step 1`] = `
                 class="RadioButton--radio StyledProps--main"
               >
                 <input
-                  checked=""
                   class="RadioButton--input"
                   name="spec.configuration.command"
                   type="radio"
@@ -3938,7 +3937,6 @@ exports[`Test TerraformPlan should render edit view as new step 2`] = `
                 class="RadioButton--radio StyledProps--main"
               >
                 <input
-                  checked=""
                   class="RadioButton--input"
                   name="spec.configuration.command"
                   type="radio"

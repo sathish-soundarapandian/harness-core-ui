@@ -4745,7 +4745,7 @@ export interface StringsMap {
   'pipeline.terraformStep.discardPendingRuns': string
   'pipeline.terraformStep.messageLabel': string
   'pipeline.terraformStep.messagePlaceholder': string
-  'pipeline.terraformStep.overridePolicies': string
+  'pipeline.terraformStep.overridePoliciesLabel': string
   'pipeline.terraformStep.provisionerIdentifier': string
   'pipeline.terraformStep.runOnRemote': string
   'pipeline.terraformStep.runTypeLabel': string
