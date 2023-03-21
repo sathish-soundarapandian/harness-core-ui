@@ -1023,6 +1023,7 @@ artifactsSelection:
   errors:
     noRepositories: No repositories found with given connector
     nodigest: No Digests found with given tag
+    noGroupIds: No GroupIds
 overrideSets:
   createOverrideSet: Create Override Set
   overrideSetPlaceholder: Enter Override Set Name
