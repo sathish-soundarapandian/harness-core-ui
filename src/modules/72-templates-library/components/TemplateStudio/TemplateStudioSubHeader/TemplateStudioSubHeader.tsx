@@ -142,11 +142,11 @@ function TemplateStudioSubHeader(
                     {getString('unsavedChanges')}
                   </Button>
                 )}
-                {!isReadonly && (
-                  <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
-                    <SaveTemplatePopoverWithRef getErrors={getErrors} ref={saveTemplateHandleRef} />
-                    {isNewTemplate ? null : (
-                      <React.Fragment>
+                <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
+                  {!isReadonly && <SaveTemplatePopoverWithRef getErrors={getErrors} ref={saveTemplateHandleRef} />}
+                  {isNewTemplate ? null : (
+                    <React.Fragment>
+                      {isReadonly ? null : (
                         <Button
                           disabled={!isUpdated}
                           onClick={() => {
@@ -155,32 +155,15 @@ function TemplateStudioSubHeader(
                           variation={ButtonVariation.SECONDARY}
                           text={getString('common.discard')}
                         />
-                        <Popover className={Classes.DARK} position={Position.LEFT}>
-                          <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
-                          <Menu style={{ backgroundColor: 'unset' }}>
-                            {isPipelineRemote ? (
-                              <RbacMenuItem
-                                icon="repeat"
-                                text={getString('common.reloadFromGit')}
-                                onClick={handleReloadFromGitClick}
-                                permission={{
-                                  resourceScope: {
-                                    accountIdentifier: accountId,
-                                    orgIdentifier,
-                                    projectIdentifier
-                                  },
-                                  resource: {
-                                    resourceType: ResourceType.TEMPLATE,
-                                    resourceIdentifier: template?.identifier
-                                  },
-                                  permission: PermissionIdentifier.VIEW_TEMPLATE
-                                }}
-                              />
-                            ) : null}
+                      )}
+                      <Popover className={Classes.DARK} position={Position.LEFT}>
+                        <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
+                        <Menu style={{ backgroundColor: 'unset' }}>
+                          {isPipelineRemote ? (
                             <RbacMenuItem
-                              icon="refresh"
-                              text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
-                              onClick={onReconcile}
+                              icon="repeat"
+                              text={getString('common.reloadFromGit')}
+                              onClick={handleReloadFromGitClick}
                               permission={{
                                 resourceScope: {
                                   accountIdentifier: accountId,
@@ -191,15 +174,33 @@ function TemplateStudioSubHeader(
                                   resourceType: ResourceType.TEMPLATE,
                                   resourceIdentifier: template?.identifier
                                 },
-                                permission: PermissionIdentifier.EDIT_TEMPLATE
+                                permission: PermissionIdentifier.VIEW_TEMPLATE
                               }}
                             />
-                          </Menu>
-                        </Popover>
-                      </React.Fragment>
-                    )}
-                  </Layout.Horizontal>
-                )}
+                          ) : null}
+                          <RbacMenuItem
+                            icon="refresh"
+                            text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
+                            onClick={onReconcile}
+                            disabled={isReadonly}
+                            permission={{
+                              resourceScope: {
+                                accountIdentifier: accountId,
+                                orgIdentifier,
+                                projectIdentifier
+                              },
+                              resource: {
+                                resourceType: ResourceType.TEMPLATE,
+                                resourceIdentifier: template?.identifier
+                              },
+                              permission: PermissionIdentifier.EDIT_TEMPLATE
+                            }}
+                          />
+                        </Menu>
+                      </Popover>
+                    </React.Fragment>
+                  )}
+                </Layout.Horizontal>
               </Layout.Horizontal>
             )}
           </Layout.Horizontal>

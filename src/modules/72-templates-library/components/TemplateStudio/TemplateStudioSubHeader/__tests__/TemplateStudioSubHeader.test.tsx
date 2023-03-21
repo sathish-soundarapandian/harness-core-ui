@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render } from '@testing-library/react'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import produce from 'immer'
 import { set } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -27,7 +27,7 @@ const baseProps: TemplateStudioSubHeaderProps = {
   onReconcile: jest.fn()
 }
 
-describe('TemplateStudioSubHeader tests', async () => {
+describe('TemplateStudioSubHeader tests', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -74,5 +74,20 @@ describe('TemplateStudioSubHeader tests', async () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('should have reload from Git read only mode', () => {
+    const templateContext = produce(stepTemplateContext, draft => {
+      set(draft, 'isReadonly', true)
+    })
+    const { container, getByText } = render(
+      <TestWrapper>
+        <TemplateContext.Provider value={templateContext}>
+          <TemplateStudioSubHeaderWithRef {...baseProps} />
+        </TemplateContext.Provider>
+      </TestWrapper>
+    )
+    fireEvent.mouseOver(container.querySelector('[data-icon="Options"]')!)
+    waitFor(() => expect(getByText('common.reloadFromGit')).toBeInTheDocument())
   })
 })
