@@ -11,6 +11,7 @@ import { parse } from 'yaml'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
+
 import {
   Container,
   Layout,
@@ -29,9 +30,7 @@ import {
   AllowedTypesWithRunTime
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import routes from '@common/RouteDefinitions'
-import { projectPathProps, modulePathProps, environmentPathProps } from '@common/utils/routeUtils'
-import { NavigationCheck } from '@common/exports'
+
 import { useStrings } from 'framework/strings'
 import {
   ApplicationSettingsConfiguration,
@@ -42,21 +41,30 @@ import {
   ResponseEnvironmentResponse,
   useGetYamlSchema
 } from 'services/cd-ng'
+
+import routes from '@common/RouteDefinitions'
+import { NavigationCheck } from '@common/exports'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { projectPathProps, modulePathProps, environmentPathProps } from '@common/utils/routeUtils'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { NameIdDescriptionTags } from '@common/components'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
-import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
-import type { AllNGVariables } from '@pipeline/utils/types'
-import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { PermissionRequest, usePermission } from '@rbac/hooks/usePermission'
+
+import type { AllNGVariables } from '@pipeline/utils/types'
+import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
+import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
 import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
+
 import ServiceManifestOverride from '../ServiceOverrides/ServiceManifestOverride/ServiceManifestOverride'
 import ServiceConfigFileOverride from '../ServiceOverrides/ServiceConfigFileOverride/ServiceConfigFileOverride'
 import css from '../EnvironmentDetails.module.scss'
@@ -120,6 +128,7 @@ export default function EnvironmentConfiguration({
 }: EnvironmentConfigurationProps): JSX.Element {
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const isOverrides2Dot0 = useFeatureFlag(FeatureFlag.CDS_SERVICE_OVERRIDES_2_0)
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & EnvironmentPathProps>()
   const history = useHistory()
   const { expressions } = useVariablesExpression()
@@ -337,188 +346,195 @@ export default function EnvironmentConfiguration({
             </Text>
             <ThumbnailSelect className={css.thumbnailSelect} name={'type'} items={typeList} isReadonly={!canEdit} />
           </Card>
-          <Accordion activeId={'environment'} className={css.accordion}>
-            <Accordion.Panel
-              id="environment"
-              addDomId={true}
-              summary={
-                <Text
-                  color={Color.GREY_700}
-                  font={{ weight: 'bold', size: 'medium' }}
-                  margin={{ left: 'small', right: 'small' }}
-                  data-tooltip-id="environmentGlobalOverride"
-                >
-                  {`${getString('common.environmentOverrides')}`}
-                  <HarnessDocTooltip useStandAlone={true} tooltipId="environmentGlobalOverride" />
-                </Text>
-              }
-              details={
-                <Layout.Vertical spacing="medium" margin={{ bottom: 'small' }}>
-                  <Card
-                    className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
-                    id="manifests"
-                  >
+          {!isOverrides2Dot0 && (
+            <>
+              {' '}
+              <Accordion activeId={'environment'} className={css.accordion}>
+                <Accordion.Panel
+                  id="environment"
+                  addDomId={true}
+                  summary={
                     <Text
                       color={Color.GREY_700}
-                      font={{ weight: 'bold' }}
-                      margin={{ bottom: 'small' }}
-                      data-tooltip-id="manifestsOverride"
+                      font={{ weight: 'bold', size: 'medium' }}
+                      margin={{ left: 'small', right: 'small' }}
+                      data-tooltip-id="environmentGlobalOverride"
                     >
-                      {getString('manifests')}
-                      <HarnessDocTooltip useStandAlone={true} tooltipId="manifestsOverride" />
+                      {`${getString('common.environmentOverrides')}`}
+                      <HarnessDocTooltip useStandAlone={true} tooltipId="environmentGlobalOverride" />
                     </Text>
-                    <ServiceManifestOverride
-                      manifestOverrides={defaultTo(formikProps.values.overrides?.manifests, [])}
-                      handleManifestOverrideSubmit={(manifestObj, index) =>
-                        handleOverrideSubmit(manifestObj, index, 'manifests')
-                      }
-                      removeManifestConfig={index => removeOverrideConfig(index, 'manifests')}
-                      isReadonly={!canEdit}
-                      fromEnvConfigPage
-                      expressions={expressions}
-                      allowableTypes={allowableTypes}
-                    />
-                  </Card>
-                  <Card
-                    className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
-                    id="configFiles"
-                  >
-                    <Text
-                      color={Color.GREY_700}
-                      font={{ weight: 'bold' }}
-                      margin={{ bottom: 'small' }}
-                      data-tooltip-id="filesOverride"
-                    >
-                      {getString('pipelineSteps.configFiles')}
-                      <HarnessDocTooltip useStandAlone={true} tooltipId="filesOverride" />
-                    </Text>
-                    <ServiceConfigFileOverride
-                      fileOverrides={defaultTo(formikProps.values.overrides?.configFiles, [])}
-                      allowableTypes={allowableTypes}
-                      handleConfigFileOverrideSubmit={(filesObj, index) =>
-                        handleOverrideSubmit(filesObj, index, 'configFiles')
-                      }
-                      handleServiceFileDelete={index => removeOverrideConfig(index, 'configFiles')}
-                      isReadonly={!canEdit}
-                      expressions={expressions}
-                      fromEnvConfigPage
-                    />
-                  </Card>
-                  <Card
-                    className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
-                    id="applicationSettings"
-                  >
-                    <Text
-                      color={Color.GREY_700}
-                      font={{ weight: 'bold' }}
-                      margin={{ bottom: 'small' }}
-                      data-tooltip-id="applicationSettingsOverride"
-                    >
-                      {getString('pipeline.appServiceConfig.applicationSettings.name')}
-                      <HarnessDocTooltip useStandAlone={true} tooltipId="applicationSettingsOverride" />
-                    </Text>
-                    <ApplicationConfigSelection
-                      allowableTypes={allowableTypes}
-                      readonly={!canEdit}
-                      showApplicationSettings={true}
-                      data={formikProps.values.overrides?.applicationSettings}
-                      selectionType={ApplicationConfigSelectionTypes.ENV_CONFIG}
-                      handleSubmitConfig={(config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration) =>
-                        handleOverrideSubmit(config, 0, 'applicationSettings')
-                      }
-                      handleDeleteConfig={index => removeOverrideConfig(index, 'applicationSettings')}
-                    />
-                  </Card>
-                  <Card
-                    className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
-                    id="connectionStrings"
-                  >
-                    <Text
-                      color={Color.GREY_700}
-                      font={{ weight: 'bold' }}
-                      margin={{ bottom: 'small' }}
-                      data-tooltip-id="connectionStringsOverride"
-                    >
-                      {getString('pipeline.appServiceConfig.connectionStrings.name')}
-                      <HarnessDocTooltip useStandAlone={true} tooltipId="connectionStringsOverride" />
-                    </Text>
-                    <ApplicationConfigSelection
-                      allowableTypes={allowableTypes}
-                      readonly={!canEdit}
-                      showConnectionStrings={true}
-                      data={formikProps.values.overrides?.connectionStrings}
-                      selectionType={ApplicationConfigSelectionTypes.ENV_CONFIG}
-                      handleSubmitConfig={(config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration) =>
-                        handleOverrideSubmit(config, 0, 'connectionStrings')
-                      }
-                      handleDeleteConfig={index => removeOverrideConfig(index, 'connectionStrings')}
-                    />
-                  </Card>
-                </Layout.Vertical>
-              }
-            />
-          </Accordion>
-          {/* #region Advanced section */}
-          {data?.data && (
-            <Accordion activeId={'advanced'} className={css.accordion}>
-              <Accordion.Panel
-                id="advanced"
-                addDomId={true}
-                summary={
-                  <Text
-                    color={Color.GREY_700}
-                    font={{ weight: 'bold', size: 'medium' }}
-                    margin={{ left: 'small', right: 'small' }}
-                    data-tooltip-id="environmentAdvancedOverride"
-                  >
-                    {`${getString('common.advanced')}  ${getString('titleOptional')}`}
-                    <HarnessDocTooltip useStandAlone={true} tooltipId="environmentAdvancedOverride" />
-                  </Text>
-                }
-                details={
-                  <Layout.Vertical spacing="medium" margin={{ bottom: 'small' }}>
-                    <Card
-                      className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
-                      id="variables"
-                    >
+                  }
+                  details={
+                    <Layout.Vertical spacing="medium" margin={{ bottom: 'small' }}>
+                      <Card
+                        className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                        id="manifests"
+                      >
+                        <Text
+                          color={Color.GREY_700}
+                          font={{ weight: 'bold' }}
+                          margin={{ bottom: 'small' }}
+                          data-tooltip-id="manifestsOverride"
+                        >
+                          {getString('manifests')}
+                          <HarnessDocTooltip useStandAlone={true} tooltipId="manifestsOverride" />
+                        </Text>
+                        <ServiceManifestOverride
+                          manifestOverrides={defaultTo(formikProps.values.overrides?.manifests, [])}
+                          handleManifestOverrideSubmit={(manifestObj, index) =>
+                            handleOverrideSubmit(manifestObj, index, 'manifests')
+                          }
+                          removeManifestConfig={index => removeOverrideConfig(index, 'manifests')}
+                          isReadonly={!canEdit}
+                          fromEnvConfigPage
+                          expressions={expressions}
+                          allowableTypes={allowableTypes}
+                        />
+                      </Card>
+                      <Card
+                        className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                        id="configFiles"
+                      >
+                        <Text
+                          color={Color.GREY_700}
+                          font={{ weight: 'bold' }}
+                          margin={{ bottom: 'small' }}
+                          data-tooltip-id="filesOverride"
+                        >
+                          {getString('pipelineSteps.configFiles')}
+                          <HarnessDocTooltip useStandAlone={true} tooltipId="filesOverride" />
+                        </Text>
+                        <ServiceConfigFileOverride
+                          fileOverrides={defaultTo(formikProps.values.overrides?.configFiles, [])}
+                          allowableTypes={allowableTypes}
+                          handleConfigFileOverrideSubmit={(filesObj, index) =>
+                            handleOverrideSubmit(filesObj, index, 'configFiles')
+                          }
+                          handleServiceFileDelete={index => removeOverrideConfig(index, 'configFiles')}
+                          isReadonly={!canEdit}
+                          expressions={expressions}
+                          fromEnvConfigPage
+                        />
+                      </Card>
+                      <Card
+                        className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                        id="applicationSettings"
+                      >
+                        <Text
+                          color={Color.GREY_700}
+                          font={{ weight: 'bold' }}
+                          margin={{ bottom: 'small' }}
+                          data-tooltip-id="applicationSettingsOverride"
+                        >
+                          {getString('pipeline.appServiceConfig.applicationSettings.name')}
+                          <HarnessDocTooltip useStandAlone={true} tooltipId="applicationSettingsOverride" />
+                        </Text>
+                        <ApplicationConfigSelection
+                          allowableTypes={allowableTypes}
+                          readonly={!canEdit}
+                          showApplicationSettings={true}
+                          data={formikProps.values.overrides?.applicationSettings}
+                          selectionType={ApplicationConfigSelectionTypes.ENV_CONFIG}
+                          handleSubmitConfig={(
+                            config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
+                          ) => handleOverrideSubmit(config, 0, 'applicationSettings')}
+                          handleDeleteConfig={index => removeOverrideConfig(index, 'applicationSettings')}
+                        />
+                      </Card>
+                      <Card
+                        className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                        id="connectionStrings"
+                      >
+                        <Text
+                          color={Color.GREY_700}
+                          font={{ weight: 'bold' }}
+                          margin={{ bottom: 'small' }}
+                          data-tooltip-id="connectionStringsOverride"
+                        >
+                          {getString('pipeline.appServiceConfig.connectionStrings.name')}
+                          <HarnessDocTooltip useStandAlone={true} tooltipId="connectionStringsOverride" />
+                        </Text>
+                        <ApplicationConfigSelection
+                          allowableTypes={allowableTypes}
+                          readonly={!canEdit}
+                          showConnectionStrings={true}
+                          data={formikProps.values.overrides?.connectionStrings}
+                          selectionType={ApplicationConfigSelectionTypes.ENV_CONFIG}
+                          handleSubmitConfig={(
+                            config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
+                          ) => handleOverrideSubmit(config, 0, 'connectionStrings')}
+                          handleDeleteConfig={index => removeOverrideConfig(index, 'connectionStrings')}
+                        />
+                      </Card>
+                    </Layout.Vertical>
+                  }
+                />
+              </Accordion>
+              {/* #region Advanced section */}
+              {data?.data && (
+                <Accordion activeId={'advanced'} className={css.accordion}>
+                  <Accordion.Panel
+                    id="advanced"
+                    addDomId={true}
+                    summary={
                       <Text
                         color={Color.GREY_700}
-                        margin={{ bottom: 'small' }}
-                        font={{ weight: 'bold' }}
-                        data-tooltip-id="variableOverride"
+                        font={{ weight: 'bold', size: 'medium' }}
+                        margin={{ left: 'small', right: 'small' }}
+                        data-tooltip-id="environmentAdvancedOverride"
                       >
-                        {getString('common.variables')}
-                        <HarnessDocTooltip useStandAlone={true} tooltipId="variableOverride" />
+                        {`${getString('common.advanced')}  ${getString('titleOptional')}`}
+                        <HarnessDocTooltip useStandAlone={true} tooltipId="environmentAdvancedOverride" />
                       </Text>
-                      <CustomVariablesEditableStage
-                        formName="editEnvironment"
-                        initialValues={{
-                          variables: defaultTo(formikProps.values.variables, []) as AllNGVariables[],
-                          canAddVariable: true
-                        }}
-                        allowableTypes={[
-                          MultiTypeInputType.FIXED,
-                          MultiTypeInputType.RUNTIME,
-                          MultiTypeInputType.EXPRESSION
-                        ]}
-                        readonly={!canEdit}
-                        onUpdate={values => {
-                          formikProps.setFieldValue('variables', values.variables)
-                        }}
-                        addVariableLabel={'variables.newVariable'}
-                        yamlProperties={defaultTo(formikProps.values.variables, []).map(variable => ({
-                          fqn: `env.variables.${variable?.name}`,
-                          variableName: variable?.name,
-                          visible: true
-                        }))}
-                      />
-                    </Card>
-                  </Layout.Vertical>
-                }
-              />
-            </Accordion>
+                    }
+                    details={
+                      <Layout.Vertical spacing="medium" margin={{ bottom: 'small' }}>
+                        <Card
+                          className={cx(css.sectionCard, {
+                            [css.fullWidth]: context !== PipelineContextType.Standalone
+                          })}
+                          id="variables"
+                        >
+                          <Text
+                            color={Color.GREY_700}
+                            margin={{ bottom: 'small' }}
+                            font={{ weight: 'bold' }}
+                            data-tooltip-id="variableOverride"
+                          >
+                            {getString('common.variables')}
+                            <HarnessDocTooltip useStandAlone={true} tooltipId="variableOverride" />
+                          </Text>
+                          <CustomVariablesEditableStage
+                            formName="editEnvironment"
+                            initialValues={{
+                              variables: defaultTo(formikProps.values.variables, []) as AllNGVariables[],
+                              canAddVariable: true
+                            }}
+                            allowableTypes={[
+                              MultiTypeInputType.FIXED,
+                              MultiTypeInputType.RUNTIME,
+                              MultiTypeInputType.EXPRESSION
+                            ]}
+                            readonly={!canEdit}
+                            onUpdate={values => {
+                              formikProps.setFieldValue('variables', values.variables)
+                            }}
+                            addVariableLabel={'variables.newVariable'}
+                            yamlProperties={defaultTo(formikProps.values.variables, []).map(variable => ({
+                              fqn: `env.variables.${variable?.name}`,
+                              variableName: variable?.name,
+                              visible: true
+                            }))}
+                          />
+                        </Card>
+                      </Layout.Vertical>
+                    }
+                  />
+                </Accordion>
+              )}
+              {/* #endregion */}
+            </>
           )}
-          {/* #endregion */}
         </FormikForm>
       ) : (
         <div className={css.yamlBuilder}>

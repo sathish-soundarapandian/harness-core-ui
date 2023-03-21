@@ -182,7 +182,14 @@ export interface EnvironmentPathProps {
 }
 
 export interface EnvironmentQueryParams {
-  sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE' | 'SERVICE_OVERRIDES' | 'GITOPS' | 'SUMMARY' | 'REFERENCED_BY'
+  sectionId?:
+    | 'CONFIGURATION'
+    | 'INFRASTRUCTURE'
+    | 'SERVICE_OVERRIDES'
+    | 'OVERRIDES'
+    | 'GITOPS'
+    | 'SUMMARY'
+    | 'REFERENCED_BY'
 }
 
 export interface EnvironmentGroupPathProps {

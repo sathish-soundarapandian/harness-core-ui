@@ -72,7 +72,7 @@ export default function EnvironmentDetails(): React.ReactElement {
 
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
-  const { GITOPS_ONPREM_ENABLED } = useFeatureFlags()
+  const { GITOPS_ONPREM_ENABLED, CDS_SERVICE_OVERRIDES_2_0: isOverrides2Dot0 } = useFeatureFlags()
   const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
   const environmentSummaryEnabled = projectIdentifier
 
@@ -140,7 +140,8 @@ export default function EnvironmentDetails(): React.ReactElement {
       } else {
         throw response
       }
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
       showError(getErrorInfoFromErrorObject(e, true))
     }
     setUpdateLoading(false)
@@ -267,7 +268,14 @@ export default function EnvironmentDetails(): React.ReactElement {
                       {
                         id: EnvironmentDetailsTab.SERVICE_OVERRIDES,
                         title: getString('common.serviceOverrides'),
-                        panel: <ServiceOverrides />
+                        panel: <ServiceOverrides />,
+                        hidden: !isOverrides2Dot0
+                      },
+                      {
+                        id: EnvironmentDetailsTab.OVERRIDES,
+                        title: getString('common.serviceOverrides'),
+                        panel: <ServiceOverrides />,
+                        hidden: isOverrides2Dot0
                       },
                       {
                         id: EnvironmentDetailsTab.INFRASTRUCTURE,
