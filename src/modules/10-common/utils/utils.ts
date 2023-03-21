@@ -6,12 +6,13 @@
  */
 
 import { getMultiTypeFromValue, IconName, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isUndefined } from 'lodash-es'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import type { UserMetadataDTO } from 'services/cd-ng'
+import { useModuleInfo } from '@common/hooks/useModuleInfo'
 
 const PR_ENV_HOST_NAME = 'pr.harness.io'
 
@@ -274,3 +275,16 @@ export const countAllKeysInObject = (obj: Record<string, any>): number =>
       return 1 + acc
     }
   }, 0)
+
+export function useGetCDFree(): boolean {
+  const { licenseInformation } = useLicenseStore()
+  return licenseInformation?.['CD']?.edition === Editions.FREE
+}
+
+export const useGetFreeOrCommunityCD = (): boolean => {
+  const { module } = useModuleInfo()
+  const isCommunity = useGetCommunity()
+  const isFree = useGetCDFree()
+  // Visible at projects and cd all empty state pages
+  return (module === 'cd' || isUndefined(module)) && (isFree || isCommunity)
+}

@@ -92,7 +92,7 @@ export default function PageTemplate({
   handleCustomSortChange,
   filterType,
   FilterComponent
-}: PropsWithChildren<PageTemplateProps>) {
+}: PropsWithChildren<PageTemplateProps>): JSX.Element {
   useDocumentTitle(title)
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
 
@@ -169,7 +169,7 @@ export default function PageTemplate({
     return STATUS.ok
   }, [error, loading, STATUS])
 
-  const handleSearchTermChange = (query: string) => {
+  const handleSearchTermChange = (query: string): void => {
     if (query) {
       updateQueryParams({ searchTerm: query })
     } else {
@@ -177,13 +177,14 @@ export default function PageTemplate({
     }
   }
 
-  const handleSortChange = (item: SelectOption) => {
+  const handleSortChange = (item: SelectOption): void => {
     const sortValue = handleCustomSortChange(item.value as string)
     setSort(sortValue)
     setSortOption(item)
   }
 
-  const handlePageIndexChange = /* istanbul ignore next */ (index: number) => updateQueryParams({ page: index + 1 })
+  const handlePageIndexChange = /* istanbul ignore next */ (index: number): void =>
+    updateQueryParams({ page: index + 1 })
 
   const {
     data: filterData,

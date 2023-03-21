@@ -4040,6 +4040,7 @@ export interface StringsMap {
   'pipeline.gitPullRequest': string
   'pipeline.gitPullRequestNumber': string
   'pipeline.gitRepo': string
+  'pipeline.guidedCDK8sGetStarted': string
   'pipeline.iacm.resourceStack': string
   'pipeline.iacm.workflow': string
   'pipeline.imagePathHelperText': string

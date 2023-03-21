@@ -23,7 +23,7 @@ export default function NoData({
   hasFilters: boolean
   clearFilters?: () => void
   emptyContent: any
-}) {
+}): JSX.Element {
   const { getString } = useStrings()
 
   return (

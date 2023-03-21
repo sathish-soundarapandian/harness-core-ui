@@ -26,6 +26,8 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { RepositoriesRepoAppDetailsResponse } from 'services/gitops'
+import { useUpdateQueryParams } from '@common/hooks'
+import { ResourceCategory } from '@rbac/interfaces/ResourceType'
 import { WizardStep, StepStatus, DeployProvisiongWizardStepId, DeployProvisioningWizardProps } from './Constants'
 import { SelectDeploymentType, SelectDeploymentTypeRefInstance } from '../SelectWorkload/SelectDeploymentType'
 import type { SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
@@ -57,6 +59,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   const { getString } = useStrings()
   const { trackEvent, trackPage } = useTelemetry()
   const history = useHistory()
+  const { updateQueryParams } = useUpdateQueryParams()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const selectedDeploymentType: string | undefined = get(serviceData, 'serviceDefinition.type')
   const [appDetails, setAppDetails] = React.useState<RepositoriesRepoAppDetailsResponse>()
@@ -95,6 +98,12 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   }
   React.useEffect(() => {
     trackPage(getString('cd.getStartedWithCD.cdWizardEventName', { eventName: currentWizardStepId as string }), {})
+    const prefix =
+      selectedDeploymentType === ServiceDeploymentType.KubernetesGitops ? `${ResourceCategory.GITOPS}_` : ''
+    updateQueryParams({
+      sectionId: `${prefix}${currentWizardStepId}`
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWizardStepId])
 
   React.useEffect(() => {
@@ -106,21 +115,6 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSectionId])
-
-  const alertUser = (event: BeforeUnloadEvent): string => {
-    const listener = event || window.event
-    listener.preventDefault()
-    if (listener) {
-      listener.returnValue = ''
-    }
-    return ''
-  }
-  React.useEffect(() => {
-    window.addEventListener('beforeunload', alertUser)
-    return () => {
-      window.removeEventListener('beforeunload', alertUser)
-    }
-  }, [])
 
   const deletionContentText = (
     <Text color={Color.BLACK} padding="medium">

@@ -148,7 +148,7 @@ export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifac
     orgIdentifier,
     projectIdentifier,
     serviceId,
-    artifact: artifactFilter ? artifactFilter : undefined,
+    artifact: artifactFilter,
     environmentIdentifier: envFilter ? envFilter : undefined,
     filterOnArtifact: artifactFilterApplied
   }

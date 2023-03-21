@@ -12,6 +12,7 @@ import {
   ExpandingSearchInput,
   ExpandingSearchInputHandle,
   HarnessDocTooltip,
+  Layout,
   Text,
   useToggleOpen
 } from '@harness/uicore'
@@ -44,6 +45,8 @@ import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
 import { getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
+import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
+import { useGetFreeOrCommunityCD } from '@common/utils/utils'
 import { CreatePipeline } from './CreatePipeline/CreatePipeline'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
 import { getEmptyStateIllustration, queryParamOptions } from './PipelineListUtils'
@@ -66,6 +69,7 @@ function _PipelineListPage(): React.ReactElement {
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
+  const isFreeOrCommunityCD = useGetFreeOrCommunityCD()
   const { searchTerm, repoIdentifier, branch, page, size, repoName, filterIdentifier, filters } = queryParams
   const isSavedFilterApplied = getIsSavedFilterApplied(queryParams.filterIdentifier)
   const [filterList, setFilterList] = useState<FilterDTO[] | undefined>()
@@ -287,7 +291,13 @@ function _PipelineListPage(): React.ReactElement {
               onClick={resetFilter}
             />
           ) : (
-            <CreatePipeline onSuccess={pipelinesQuery.refetch} />
+            <Layout.Vertical flex={{ alignItems: 'center' }}>
+              {isFreeOrCommunityCD && <GetStartedWithCDButton />}
+              <CreatePipeline
+                onSuccess={pipelinesQuery.refetch}
+                {...(isFreeOrCommunityCD && { variation: ButtonVariation.LINK })}
+              />
+            </Layout.Vertical>
           )
         }}
       >

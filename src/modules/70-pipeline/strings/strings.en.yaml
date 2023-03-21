@@ -1712,3 +1712,4 @@ bambooStep:
   planParameter: Plan Parameters
   addPlanParameters: Add Plan Parameter
   noPlans: No Plans Defined
+guidedCDK8sGetStarted: Get started with guided K8s Deployment

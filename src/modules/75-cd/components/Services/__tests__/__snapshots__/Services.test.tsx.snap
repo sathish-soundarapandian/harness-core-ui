@@ -507,7 +507,7 @@ exports[`Services should render Services 1`] = `
                 </div>
               </div>
               <div
-                class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+                class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--padding-top-medium"
                 data-test="deploymentsWidgetEmpty"
                 style="height: 80%;"
               >

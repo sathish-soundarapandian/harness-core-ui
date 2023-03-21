@@ -7,6 +7,8 @@
 
 import React, { useCallback } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { ButtonVariation } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -15,6 +17,8 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
+import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
+import { useGetFreeOrCommunityCD } from '@common/utils/utils'
 import { useExecutionListQueryParams } from '../utils/executionListUtil'
 
 export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPipeline: () => void) {
@@ -24,6 +28,7 @@ export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPip
   const { getString } = useStrings()
   const history = useHistory()
   const queryParams = useExecutionListQueryParams()
+  const isFreeOrCommunityCD = useGetFreeOrCommunityCD()
 
   const { data, loading } = useGetPipelines({
     accountIdentifier: accountId,
@@ -47,28 +52,31 @@ export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPip
   }, [accountId, history, module, orgIdentifier, projectIdentifier])
 
   // eslint-disable-next-line react/function-component-definition
-  const EmptyAction = () => (
-    <RbacButton
-      loading={loading}
-      intent="primary"
-      tooltipProps={{
-        dataTooltipId: hasNoPipelines ? 'addPipeline' : 'runAPipeline'
-      }}
-      text={hasNoPipelines ? getString('common.createPipeline') : getString('pipeline.runAPipeline')}
-      disabled={isPipelineInvalid}
-      tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
-      onClick={hasNoPipelines ? onCreatePipeline : onRunPipeline}
-      permission={{
-        permission: hasNoPipelines ? PermissionIdentifier.EDIT_PIPELINE : PermissionIdentifier.EXECUTE_PIPELINE,
-        resource: {
-          resourceType: ResourceType.PIPELINE,
-          resourceIdentifier: pipelineIdentifier || queryParams.pipelineIdentifier
-        },
-        options: {
-          skipCondition: ({ resourceIdentifier }) => !resourceIdentifier
-        }
-      }}
-    />
+  const EmptyAction = (): JSX.Element => (
+    <>
+      {isFreeOrCommunityCD && <GetStartedWithCDButton />}
+      <RbacButton
+        loading={loading}
+        {...(isFreeOrCommunityCD ? { variation: ButtonVariation.LINK } : { intent: Intent.PRIMARY })}
+        tooltipProps={{
+          dataTooltipId: hasNoPipelines ? 'addPipeline' : 'runAPipeline'
+        }}
+        text={hasNoPipelines ? getString('common.createPipeline') : getString('pipeline.runAPipeline')}
+        disabled={isPipelineInvalid}
+        tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
+        onClick={hasNoPipelines ? onCreatePipeline : onRunPipeline}
+        permission={{
+          permission: hasNoPipelines ? PermissionIdentifier.EDIT_PIPELINE : PermissionIdentifier.EXECUTE_PIPELINE,
+          resource: {
+            resourceType: ResourceType.PIPELINE,
+            resourceIdentifier: pipelineIdentifier || queryParams.pipelineIdentifier
+          },
+          options: {
+            skipCondition: ({ resourceIdentifier }) => !resourceIdentifier
+          }
+        }}
+      />
+    </>
   )
 
   return {

@@ -253,6 +253,19 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
     isEditMode ? runPipelineHandler() : setupPipeline(refsData)
   }
 
+  const EditButton: React.FC<{ sectionId: DeployProvisiongWizardStepId }> = ({ sectionId }) => {
+    return (
+      <Button
+        icon="Edit"
+        onClick={() => setSelectedSectionId(sectionId)}
+        intent="primary"
+        minimal
+        iconProps={{ size: 18, color: Color.PRIMARY_7 }}
+        withoutBoxShadow
+      />
+    )
+  }
+
   return (
     <Container className={css.container} width="50%">
       <Layout.Vertical padding="xxlarge">
@@ -269,12 +282,7 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
               <Text font={{ variation: FontVariation.H5 }} padding={{ right: 'medium' }}>
                 {getString('cd.getStartedWithCD.deploymentType')}
               </Text>
-              <Icon
-                name="Edit"
-                size={18}
-                color={Color.PRIMARY_7}
-                onClick={() => setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)}
-              />
+              <EditButton sectionId={DeployProvisiongWizardStepId.SelectDeploymentType} />
             </Layout.Horizontal>
             <Text margin={{ left: 'medium' }} font="normal">
               {service?.serviceDefinition?.type}
@@ -296,12 +304,7 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
               <Text font={{ variation: FontVariation.H5 }} padding={{ right: 'medium' }}>
                 {getString('common.connectEnvironment')}
               </Text>
-              <Icon
-                name="Edit"
-                size={18}
-                color={Color.PRIMARY_7}
-                onClick={() => setSelectedSectionId(DeployProvisiongWizardStepId.Deploy)}
-              />
+              <EditButton sectionId={DeployProvisiongWizardStepId.Connect} />
             </Layout.Horizontal>
             {successsFullConfiguration}
           </Layout.Horizontal>
@@ -349,12 +352,7 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
               <Text font={{ variation: FontVariation.H5 }} padding={{ right: 'medium' }}>
                 {getString('cd.getStartedWithCD.serviceConfiguration')}
               </Text>
-              <Icon
-                name="Edit"
-                size={18}
-                color={Color.PRIMARY_7}
-                onClick={() => setSelectedSectionId(DeployProvisiongWizardStepId.Configure)}
-              />
+              <EditButton sectionId={DeployProvisiongWizardStepId.Configure} />
             </Layout.Horizontal>
             {successsFullConfiguration}
           </Layout.Horizontal>

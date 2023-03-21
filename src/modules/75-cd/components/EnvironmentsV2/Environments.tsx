@@ -10,7 +10,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 
-import { Container, Dialog, Heading, Text, Views } from '@harness/uicore'
+import { ButtonVariation, Container, Dialog, Heading, Text, Views } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
@@ -26,7 +26,9 @@ import routes from '@common/RouteDefinitions'
 import { NewEditEnvironmentModal } from '@cd/components/PipelineSteps/DeployEnvStep/DeployEnvStep'
 
 import EmptyContentImg from '@pipeline/icons/emptyServiceDetail.svg'
+import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
 import RbacButton from '@rbac/components/Button/Button'
+import { useGetFreeOrCommunityCD } from '@common/utils/utils'
 import { PageStoreContext } from './PageTemplate/PageContext'
 import PageTemplate from './PageTemplate/PageTemplate'
 import { Sort, SortFields } from './PageTemplate/utils'
@@ -34,7 +36,6 @@ import EnvironmentTabs from './EnvironmentTabs'
 import EnvironmentsList from './EnvironmentsList/EnvironmentsList'
 import EnvironmentsGrid from './EnvironmentsGrid/EnvironmentsGrid'
 import EnvironmentsFilters from './EnvironmentsFilters/EnvironmentsFilters'
-
 import css from './Environments.module.scss'
 
 export function Environments(): React.ReactElement {
@@ -42,6 +43,7 @@ export function Environments(): React.ReactElement {
 
   const { getString } = useStrings()
   const history = useHistory()
+  const isFreeOrCommunityCD = useGetFreeOrCommunityCD()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
 
   const [showCreateModal, hideCreateModal] = useModalHook(
@@ -91,7 +93,7 @@ export function Environments(): React.ReactElement {
     [orgIdentifier, projectIdentifier]
   )
 
-  const handleCustomSortChange = /* istanbul ignore next */ (value: string) => {
+  const handleCustomSortChange = /* istanbul ignore next */ (value: string): (SortFields | Sort)[] => {
     return value === SortFields.AZ09
       ? [SortFields.Name, Sort.ASC]
       : value === SortFields.ZA90
@@ -136,7 +138,13 @@ export function Environments(): React.ReactElement {
             <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
               {getString('cd.noEnvironment.title')}
             </Heading>
-            <RbacButton intent="primary" icon="plus" font={{ weight: 'bold' }} {...createButtonProps} />
+            {isFreeOrCommunityCD && <GetStartedWithCDButton />}
+            <RbacButton
+              {...(isFreeOrCommunityCD ? { variation: ButtonVariation.LINK } : { intent: 'primary' })}
+              icon="plus"
+              font={{ weight: 'bold' }}
+              {...createButtonProps}
+            />
           </>
         }
         ListComponent={EnvironmentsList}

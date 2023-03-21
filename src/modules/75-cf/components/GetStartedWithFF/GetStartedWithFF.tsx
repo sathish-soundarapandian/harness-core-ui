@@ -10,7 +10,7 @@ import { Button, ButtonSize, ButtonVariation, Container, Layout } from '@harness
 import { useHistory, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
-import orImg from '@cf/images/orImg.svg'
+import orImg from '@common/images/orImg.svg'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'

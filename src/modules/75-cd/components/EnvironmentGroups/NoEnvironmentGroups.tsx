@@ -11,6 +11,8 @@ import { Button, ButtonVariation, Container, Heading, Layout, Text } from '@harn
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 
+import { useGetFreeOrCommunityCD } from '@common/utils/utils'
+import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
 import EmptyContent from './images/NoEnvironmentGroup.svg'
 import EmptySearch from './images/NoEnvironmentGroups-Search.svg'
 
@@ -24,8 +26,9 @@ export default function NoEnvironmentGroups({
   hasFilters: boolean
   clearFilters: () => void
   showModal: () => void
-}) {
+}): JSX.Element {
   const { getString } = useStrings()
+  const isFreeOrCommunityCD = useGetFreeOrCommunityCD()
 
   return (
     <Container flex={{ align: 'center-center' }} height="75vh">
@@ -56,11 +59,12 @@ export default function NoEnvironmentGroups({
           <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
             {getString('common.environmentGroups.noEnvironmentGroups.label')}
           </Heading>
+          {isFreeOrCommunityCD && <GetStartedWithCDButton />}
           <Button
             text={getString('common.environmentGroup.new')}
             icon="plus"
             onClick={showModal}
-            variation={ButtonVariation.PRIMARY}
+            variation={isFreeOrCommunityCD ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
           />
         </Container>
       )}

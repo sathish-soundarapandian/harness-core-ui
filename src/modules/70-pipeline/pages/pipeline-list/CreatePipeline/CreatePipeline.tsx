@@ -7,6 +7,7 @@
 
 import React, { ReactElement } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import type { ButtonVariation } from '@harness/uicore'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -20,9 +21,10 @@ import type { PipelineListPagePathParams } from '../types'
 
 interface CreatePipelineProps {
   onSuccess: () => void
+  variation?: ButtonVariation
 }
 
-export function CreatePipeline({ onSuccess }: CreatePipelineProps): ReactElement {
+export function CreatePipeline({ onSuccess, variation }: CreatePipelineProps): ReactElement {
   const { getString } = useStrings()
   const pathParams = useParams<PipelineListPagePathParams>()
   const history = useHistory()
@@ -50,6 +52,7 @@ export function CreatePipeline({ onSuccess }: CreatePipelineProps): ReactElement
           : goToPipelineStudio({ identifier: '-1' })
       }
       onImportPipelineClick={showImportResourceModal}
+      variation={variation}
     />
   )
 }

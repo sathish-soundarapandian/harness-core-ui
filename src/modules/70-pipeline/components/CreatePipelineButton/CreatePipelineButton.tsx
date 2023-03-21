@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { ButtonVariation, IconName, SplitButton, SplitButtonOption } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
@@ -19,13 +20,15 @@ export interface CreatePipelineButtonProps {
   iconName?: IconName
   onCreatePipelineClick: (event: React.MouseEvent<Element, MouseEvent>) => void
   onImportPipelineClick: (event: React.MouseEvent<Element, MouseEvent>) => void
+  variation?: ButtonVariation
 }
 
 export default function CreatePipelineButton({
   label,
   iconName,
   onCreatePipelineClick,
-  onImportPipelineClick
+  onImportPipelineClick,
+  variation
 }: CreatePipelineButtonProps): JSX.Element {
   const { getString } = useStrings()
   const { supportingGitSimplification } = useAppStore()
@@ -40,7 +43,7 @@ export default function CreatePipelineButton({
   if (supportingGitSimplification) {
     return (
       <SplitButton
-        variation={ButtonVariation.PRIMARY}
+        variation={defaultTo(variation, ButtonVariation.PRIMARY)}
         data-testid="add-pipeline"
         icon={iconName ?? 'plus'}
         text={label ?? getString('common.createPipeline')}
@@ -58,7 +61,7 @@ export default function CreatePipelineButton({
 
   return (
     <RbacButton
-      variation={ButtonVariation.PRIMARY}
+      variation={defaultTo(variation, ButtonVariation.PRIMARY)}
       data-testid="add-pipeline"
       icon={iconName ?? 'plus'}
       text={label ?? getString('common.createPipeline')}

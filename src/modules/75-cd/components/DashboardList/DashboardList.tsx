@@ -12,6 +12,8 @@ import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import ServiceDetailsEmptyState from '@cd/icons/ServiceDetailsEmptyState.svg'
+import { useGetFreeOrCommunityCD } from '@common/utils/utils'
+import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
 import css from '@cd/components/DashboardList/DashboardList.module.scss'
 
 const PAGE_SIZE = 10
@@ -68,6 +70,7 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
     data,
     onRowClick
   } = props
+  const isFreeOrCommunityCD = useGetFreeOrCommunityCD()
 
   const [pageIndex, setPageIndex] = useState(0)
   const [filteredData, setFilteredData] = useState<T[]>([])
@@ -97,11 +100,17 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
     }
     if (!filteredData?.length) {
       return (
-        <Layout.Vertical height="80%" flex={{ align: 'center-center' }} data-test="deploymentsWidgetEmpty">
+        <Layout.Vertical
+          height="80%"
+          flex={{ align: 'center-center' }}
+          padding={{ top: 'medium' }}
+          data-test="deploymentsWidgetEmpty"
+        >
           <img width="150" height="100" src={ServiceDetailsEmptyState} style={{ alignSelf: 'center' }} />
           <Text color={Color.GREY_400} margin={{ top: 'medium' }}>
             {getString('cd.serviceDashboard.noServiceDetails')}
           </Text>
+          {isFreeOrCommunityCD && <GetStartedWithCDButton className={css.paddingTop} hideOrSection />}
         </Layout.Vertical>
       )
     }

@@ -15,7 +15,8 @@ import {
   Container,
   GridListToggle,
   useToaster,
-  Heading
+  Heading,
+  ButtonVariation
 } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
@@ -30,7 +31,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { GetServiceListQueryParams, ServiceResponseDTO, useGetServiceList, ServiceResponse } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import { useGetCommunity } from '@common/utils/utils'
+import { useGetCommunity, useGetFreeOrCommunityCD } from '@common/utils/utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { FeatureFlag } from '@common/featureFlags'
@@ -38,6 +39,7 @@ import { Sort, SortFields } from '@common/utils/listUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { SortOption } from '@common/components/SortOption/SortOption'
 import serviceEmptyStateSvg from '@cd/icons/ServiceDetailsEmptyState.svg'
+import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
 import { ServiceTabs } from '../utils/ServiceUtils'
@@ -57,6 +59,7 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
   const { showError } = useToaster()
   const { fetchDeploymentList } = useServiceStore()
   const history = useHistory()
+  const isFreeOrCommunityCD = useGetFreeOrCommunityCD()
 
   const { preference: savedSortOption, setPreference: setSavedSortOption } = usePreferenceStore<string[] | undefined>(
     PreferenceScope.USER,
@@ -260,8 +263,9 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
                 <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
                   {getString('cd.noService')}
                 </Heading>
+                {isFreeOrCommunityCD && <GetStartedWithCDButton />}
                 <RbacButton
-                  intent="primary"
+                  {...(isFreeOrCommunityCD ? { variation: ButtonVariation.LINK } : { intent: 'primary' })}
                   data-testid="add-service"
                   icon="plus"
                   iconProps={{ size: 10 }}

@@ -35,7 +35,7 @@ interface ModuleProps {
 const WelcomePage: React.FC = () => {
   const HarnessLogo = HarnessIcons['harness-logo-black']
   const { getString } = useStrings()
-  const [ribbonImg, setRibbonImg] = useState<string>(ribbon_cd)
+  const [ribbonImg, setRibbonImg] = useState<string>(ribbon_ci)
 
   const { CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
   const CDNG_OPTIONS: ModuleProps = {
@@ -105,7 +105,7 @@ const WelcomePage: React.FC = () => {
 
   const getOptions = (): ModuleProps[] => {
     const options: ModuleProps[] = []
-    ;[CDNG_OPTIONS, CING_OPTIONS, CVNG_OPTIONS, CFNG_OPTIONS, CENG_OPTIONS, CHAOS_OPTIONS].forEach(option => {
+    ;[CING_OPTIONS, CDNG_OPTIONS, CVNG_OPTIONS, CFNG_OPTIONS, CENG_OPTIONS, CHAOS_OPTIONS].forEach(option => {
       if (option.enabled) {
         const { module: _module } = option
         const moduleProps = getModuleProps(_module)
