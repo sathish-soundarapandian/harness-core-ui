@@ -22,6 +22,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import LDAPProvider from './LDAPProvider/LDAPProvider'
 import css from './Configuration.module.scss'
+import SessionTimeOut from './SessionTimeOut/SessionTimeOut'
 
 export interface PermissionRequest {
   resourceScope: {
@@ -116,6 +117,7 @@ const Configuration: React.FC = () => {
               canEdit={canEdit}
               setUpdating={setUpdating}
             />
+            <SessionTimeOut setUpdating={setUpdating} timeout={data.resource.sessionTimeoutInMinutes} />
           </React.Fragment>
         )}
       </Page.Body>
