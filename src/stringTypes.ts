@@ -2156,6 +2156,7 @@ export interface StringsMap {
   'authSettings.samlTestSuccessful': string
   'authSettings.selectSAMLProvider': string
   'authSettings.sessionTimeOut': string
+  'authSettings.sessionTimeOutErrorMessage': string
   'authSettings.success.msg': string
   'authSettings.success.title': string
   'authSettings.success.woohoo': string

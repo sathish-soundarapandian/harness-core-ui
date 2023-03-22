@@ -1,16 +1,16 @@
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   Layout,
-  MultiTextInput,
-  MultiTypeInputType,
   Text,
   Button,
   useToaster,
   getErrorInfoFromErrorObject,
   Container,
   Card,
-  Color
+  Color,
+  TextInput
 } from '@harness/uicore'
+import { Intent } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -23,13 +23,13 @@ interface SessionTimeOutProps {
 }
 const MINIMUM_SESSION_TIME_OUT = 30
 const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout, setUpdating }) => {
-  console.log({ timeout })
   const params = useParams<AccountPathProps>()
   const [timeoutLocal, setTimeoutLocal] = useState<number>()
   const { accountId } = params
   const { getString } = useStrings()
   const { showError } = useToaster()
   const [saving, setSaving] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string>()
   React.useEffect(() => {
     if (setUpdating) {
       setUpdating(saving)
@@ -43,6 +43,7 @@ const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout, setUpdating })
   useEffect(() => {
     setTimeoutLocal(timeout)
   }, [timeout])
+
   useEffect(() => {
     if (error) {
       showError(getErrorInfoFromErrorObject(error))
@@ -51,20 +52,30 @@ const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout, setUpdating })
   return (
     <Container margin="xlarge">
       <Card className={css.card}>
-        <Layout.Horizontal spacing={'large'} flex>
+        <Layout.Horizontal spacing={'large'} flex={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <Text color={Color.BLACK}>{getString('authSettings.sessionTimeOut')}</Text>
-          <MultiTextInput
-            name="sessionTimeOut"
-            textProps={{ type: 'number', min: MINIMUM_SESSION_TIME_OUT }}
-            allowableTypes={[MultiTypeInputType.FIXED]}
-            value={timeoutLocal}
-            onChange={value => {
-              setTimeoutLocal(value as number)
+
+          <TextInput
+            className={css.textInpt}
+            value={timeoutLocal as any}
+            type="number"
+            min={MINIMUM_SESSION_TIME_OUT}
+            errorText={errorMsg}
+            intent={errorMsg ? Intent.DANGER : Intent.NONE}
+            onChange={e => {
+              const val = parseInt((e.currentTarget as HTMLInputElement).value)
+              setTimeoutLocal(val)
+              if (val < MINIMUM_SESSION_TIME_OUT) {
+                setErrorMsg(getString('authSettings.sessionTimeOutErrorMessage', { minimum: MINIMUM_SESSION_TIME_OUT }))
+              } else {
+                setErrorMsg(undefined)
+              }
             }}
           />
+
           <Button
             text={getString('save')}
-            disabled={loading || !timeoutLocal}
+            disabled={loading || !timeoutLocal || !!errorMsg}
             onClick={() => {
               if (timeoutLocal) {
                 setSaving(true)
