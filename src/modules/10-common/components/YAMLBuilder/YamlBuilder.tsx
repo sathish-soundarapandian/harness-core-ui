@@ -607,32 +607,45 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     )
   }
 
-  const renderHeader = useCallback(
-    (): JSX.Element => (
-      <div className={cx(css.header)}>
-        <div className={css.flexCenter}>
-          <span className={cx(css.filePath, css.flexCenter, { [css.lightBg]: theme === 'DARK' })}>{fileName}</span>
-          {fileName && entityType ? <Tag className={css.entityTag}>{entityType}</Tag> : null}
-        </div>
-        <div className={cx(css.flexCenter, css.validationStatus)}>
-          {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
+  const renderHeader = useCallback((): JSX.Element => {
+    const showEntityDetails = fileName && entityType
+    return (
+      <Layout.Horizontal
+        spacing="small"
+        flex={{
+          alignItems: 'center',
+          justifyContent: showEntityDetails ? 'space-between' : 'flex-end'
+        }}
+        className={css.header}
+        width="100%"
+      >
+        <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
+          {showEntityDetails ? (
+            <>
+              <span className={cx(css.filePath, css.flexCenter, { [css.lightBg]: theme === 'DARK' })}>{fileName}</span>
+              <Tag className={css.entityTag}>{entityType}</Tag>
+            </>
+          ) : null}
+          <Container padding={{ left: 'small' }}>{renderEditorControls()}</Container>
+        </Layout.Horizontal>
+        {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
+          <div className={css.flexCenter}>
             <Popover
               interactionKind={PopoverInteractionKind.HOVER}
               position={PopoverPosition.TOP}
               content={getErrorSummary(yamlValidationErrors)}
               popoverClassName={css.summaryPopover}
             >
-              <div>
+              <Layout.Horizontal flex spacing="xsmall">
                 <Icon name="main-issue-filled" size={14} className={css.validationIcon} />
                 <span className={css.invalidYaml}>{getString('invalidText')}</span>
-              </div>
+              </Layout.Horizontal>
             </Popover>
-          )}
-        </div>
-      </div>
-    ),
-    [yamlValidationErrors, fileName, entityType, theme, isReadOnlyMode]
-  )
+          </div>
+        )}
+      </Layout.Horizontal>
+    )
+  }, [yamlValidationErrors, fileName, entityType, theme, isReadOnlyMode])
 
   // used to remove initial selection that appears when yaml builder is loaded with an initial value
   useEffect(() => {
@@ -865,6 +878,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }, [currentYaml, editorRef.current?.editor, shouldShowPluginsPanel, codeLensRegistrations.current])
 
+  useEffect(() => {
+    onEditorResize?.(isEditorExpanded)
+  }, [isEditorExpanded])
+
   const highlightInsertedYAML = useCallback(
     (fromLine: number, toLineNum: number): void => {
       const pluginInputDecoration: editor.IModelDeltaDecoration = {
@@ -978,27 +995,23 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
 
   const renderEditorControls = useCallback((): React.ReactElement => {
-    return !isReadOnlyMode && isEditModeSupported ? (
+    return (
       <Layout.Horizontal spacing="small">
-        {yamlRef.current ? (
-          <Container padding={{ left: entityType ? 'medium' : undefined }}>
-            {showCopyIcon ? <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} /> : null}
-          </Container>
+        {showCopyIcon && yamlRef.current ? (
+          <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} />
         ) : null}
-        <Icon
-          className={css.resizeIcon}
-          name="main-minimize"
-          onClick={() => {
-            const isExpanded = !isEditorExpanded
-            setIsEditorExpanded(isExpanded)
-            onEditorResize?.(isExpanded)
-          }}
-        />
+        {shouldShowPluginsPanel ? (
+          <Icon
+            className={css.resizeIcon}
+            name="main-minimize"
+            onClick={() => {
+              setIsEditorExpanded(isExpanded => !isExpanded)
+            }}
+          />
+        ) : null}
       </Layout.Horizontal>
-    ) : (
-      <></>
     )
-  }, [isReadOnlyMode, isEditModeSupported, yamlRef.current, entityType, showCopyIcon, isEditorExpanded])
+  }, [yamlRef.current, showCopyIcon, isEditorExpanded, shouldShowPluginsPanel])
 
   return shouldShowPluginsPanel ? (
     <Layout.Horizontal>
@@ -1009,7 +1022,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           })}
         >
           <div className={css.editor}>
-            <Layout.Horizontal
+            <Container
               flex={{ justifyContent: 'space-between' }}
               className={css.headerBorder}
               padding={
@@ -1019,8 +1032,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               }
             >
               {defaultTo(renderCustomHeader, renderHeader)()}
-              {renderEditorControls()}
-            </Layout.Horizontal>
+            </Container>
             {renderEditor()}
           </div>
         </div>
@@ -1041,7 +1053,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   ) : (
     <div className={cx(customCss, { [css.main]: displayBorder }, { [css.darkBg]: theme === 'DARK' })}>
       <div className={css.editor}>
-        {defaultTo(renderCustomHeader, renderHeader)()}
+        <Container margin={{ left: 'xxlarge', right: 'xlarge' }}>
+          {defaultTo(renderCustomHeader, renderHeader)()}
+        </Container>
         {renderEditor()}
       </div>
     </div>

@@ -17,8 +17,6 @@
 }
 
 .filePath {
-  margin: 0 var(--spacing-small) 0 var(--spacing-large);
-  height: 50px;
   font-weight: bolder;
   font-size: var(--font-size-normal);
   color: var(--black);
@@ -42,20 +40,13 @@
   width: 100% !important;
 }
 
-.validationStatus {
-  padding-right: var(--spacing-large);
-  z-index: 1;
-}
-
 .invalidYaml {
-  padding-left: var(--spacing-xsmall);
   color: var(--red-600);
   font-weight: bold;
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
+  height: 50px;
 }
 
 .validationIcon {
