@@ -63,7 +63,7 @@ const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout, setUpdating })
           />
           <Button
             text={getString('save')}
-            disabled={loading}
+            disabled={loading || !timeoutLocal}
             onClick={() => {
               if (timeoutLocal) {
                 setSaving(true)
