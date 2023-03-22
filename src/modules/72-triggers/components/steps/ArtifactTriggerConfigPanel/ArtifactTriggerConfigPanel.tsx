@@ -10,6 +10,8 @@ import { Layout, Text } from '@harness/uicore'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import ArtifactsSelection from './ArtifactsSelection/ArtifactsSelection'
+import StageSelection from './StageSelection'
+
 import css from './ArtifactTriggerConfigPanel.module.scss'
 export interface ArtifactTriggerConfigPanelPropsInterface {
   formikProps?: any
@@ -53,6 +55,8 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
       <div className={css.formContent}>
         <ArtifactsSelection formikProps={formikProps} />
       </div>
+      {formikProps.values?.originalPipeline?.allowStageExecutions ? <StageSelection formikProps={formikProps} /> : null}
+      {/* console.log(formikProps.values.originalPipeline.allowStageExecutions, 'props') */}
     </Layout.Vertical>
   )
 }

@@ -99,7 +99,7 @@ function ArtifactTriggerInputPanelForm({
       branch
     },
     body: {
-      stageIdentifiers: []
+      stageIdentifiers: [...formikProps.values.selectedStages]
     }
   })
   const inputSetSelectedBranch = useMemo(() => {
