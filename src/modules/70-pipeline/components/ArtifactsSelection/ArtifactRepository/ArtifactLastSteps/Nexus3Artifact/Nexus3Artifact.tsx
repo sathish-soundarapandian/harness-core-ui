@@ -227,9 +227,9 @@ export function Nexus3Artifact({
   })
 
   const {
-    // data: artifactData,
-    // loading: fetchingArtifacts,
-    // error: artifactError,
+    data: artifactData,
+    loading: fetchingArtifacts,
+    error: artifactError,
     refetch: refetchArtifacts
   } = useMutateAsGet(useArtifactIds, {
     requestOptions: {
@@ -281,6 +281,13 @@ export function Nexus3Artifact({
     }))
   }, [groupData?.data])
 
+  const selectArtifactIdItems = useMemo(() => {
+    return artifactData?.data?.map(artifact => ({
+      value: defaultTo(artifact, ''),
+      label: defaultTo(artifact, '')
+    }))
+  }, [artifactData?.data])
+
   const getRepository = (): { label: string; value: string }[] => {
     /* istanbul ignore next */
     if (fetchingRepository) {
@@ -305,6 +312,19 @@ export function Nexus3Artifact({
       ]
     }
     return defaultTo(selectGroupIdItems, [])
+  }
+
+  const getArtifactIds = (): { label: string; value: string }[] => {
+    /* istanbul ignore next */
+    if (fetchingRepository) {
+      return [
+        {
+          label: getString('pipeline.artifactsSelection.loadingRepository'),
+          value: getString('pipeline.artifactsSelection.loadingRepository')
+        }
+      ]
+    }
+    return defaultTo(selectArtifactIdItems, [])
   }
 
   useEffect(() => {
@@ -339,6 +359,10 @@ export function Nexus3Artifact({
 
   const groupIdItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingGroups} />
+  ))
+
+  const artifactIdItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingArtifacts} />
   ))
 
   const canFetchTags = useCallback(
@@ -736,7 +760,7 @@ export function Nexus3Artifact({
                   </div>
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTypeInput
-                      selectItems={getGroupIds()}
+                      selectItems={getArtifactIds()}
                       useValue
                       label={getString('pipeline.artifactsSelection.artifactId')}
                       name="spec.artifactId"
@@ -747,12 +771,12 @@ export function Nexus3Artifact({
                         selectProps: {
                           noResults: (
                             <NoTagResults
-                              tagError={groupError}
+                              tagError={artifactError}
                               defaultErrorText={getString('pipeline.artifactsSelection.errors.noGroupIds')}
                             />
                           ),
-                          itemRenderer: groupIdItemRenderer,
-                          items: getGroupIds(),
+                          itemRenderer: artifactIdItemRenderer,
+                          items: getArtifactIds(),
                           allowCreatingNewItems: true
                         },
                         onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
@@ -770,7 +794,8 @@ export function Nexus3Artifact({
                               connectorRef: getConnectorRefQueryData(),
                               repository: formik.values?.repository,
                               repositoryFormat: formik.values?.repositoryFormat,
-                              groupId: formik.values?.spec?.groupId
+                              groupId: formik.values?.spec?.groupId,
+                              nexusSourceType: 'Nexus3Registry'
                             }
                           })
                         }
