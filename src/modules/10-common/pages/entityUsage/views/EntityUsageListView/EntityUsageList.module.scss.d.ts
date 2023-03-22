@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly gitText: string
+  readonly navLink: string
   readonly overflow: string
   readonly table: string
   readonly tableWithNoSpace: string

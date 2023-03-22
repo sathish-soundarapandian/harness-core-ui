@@ -147,7 +147,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/pipelines/Triggers_2/pipeline-studio/"
                   >
                     Triggers - 2
                   </a>
@@ -194,7 +195,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/pipelines/Triggers_2/pipeline-studio/"
                   >
                     Ashwin
                   </a>
@@ -229,7 +231,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/pipelines/Triggers/pipeline-studio/"
                   >
                     Triggers
                   </a>
@@ -276,7 +279,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/pipelines/Triggers/pipeline-studio/"
                   >
                     Ashwin
                   </a>
@@ -311,7 +315,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/pipelines/Stage_Template/pipeline-studio/"
                   >
                     Stage Template
                   </a>
@@ -358,7 +363,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/pipelines/Stage_Template/pipeline-studio/"
                   >
                     Ashwin
                   </a>
@@ -393,7 +399,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/setup/resources/templates"
                   >
                     Stage 1 (v1)
                   </a>
@@ -440,7 +447,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/setup/resources/templates"
                   >
                     Ashwin
                   </a>
@@ -475,7 +483,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/environments/groups/env_group_15/details"
                   >
                     env group 15
                   </a>
@@ -522,7 +531,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/environments/groups/env_group_15/details"
                   >
                     Ashwin
                   </a>
@@ -557,7 +567,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/environments/groups/Test_11/details"
                   >
                     Test 11
                   </a>
@@ -604,7 +615,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/environments/groups/Test_11/details"
                   >
                     Ashwin
                   </a>
@@ -639,7 +651,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/environments/groups/Env_Group_7/details"
                   >
                     Env Group 7
                   </a>
@@ -686,7 +699,8 @@ exports[`Referenced_By Tab Test render data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Ashwin/environments/groups/Env_Group_7/details"
                   >
                     Ashwin
                   </a>
@@ -842,7 +856,8 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Kapil/pipelines/testSuccess/pipeline-studio/"
                   >
                     testSuccess
                   </a>
@@ -884,7 +899,8 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Kapil/pipelines/testSuccess/pipeline-studio/"
                   >
                     Kapil
                   </a>
@@ -919,7 +935,8 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Kapil/pipelines/IgnoreFailedPipe/pipeline-studio/"
                   >
                     IgnoreFailedPipe
                   </a>
@@ -961,7 +978,8 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Kapil/pipelines/IgnoreFailedPipe/pipeline-studio/"
                   >
                     Kapil
                   </a>
@@ -996,7 +1014,8 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Kapil/pipelines/testSuccess/pipeline-studio/"
                   >
                     testSuccess
                   </a>
@@ -1038,7 +1057,8 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Kapil/pipelines/testSuccess/pipeline-studio/"
                   >
                     Kapil
                   </a>
@@ -1073,7 +1093,8 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Kapil/pipelines/IgnoreFailedPipe/pipeline-studio/"
                   >
                     IgnoreFailedPipe
                   </a>
@@ -1115,7 +1136,8 @@ exports[`Referenced_By Tab Test render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    rel="noreferrer"
+                    class="navLink"
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Kapil/pipelines/IgnoreFailedPipe/pipeline-studio/"
                   >
                     Kapil
                   </a>

@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { Text, Layout, Icon, TableV2 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -41,7 +41,6 @@ interface ReferredByEntity extends EntityDetail {
 export interface EntitySetupUsageDTOColumnData extends EntitySetupUsageDTO {
   getString?: (key: StringKeys, vars?: Record<string, any>) => string
   enableURLLinkToScope?: boolean
-  history?: any
 }
 
 const getReferredByEntityName = (referredByEntity?: ReferredByEntity) => {
@@ -78,18 +77,9 @@ const RenderColumnEntity: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = (
       <Layout.Vertical>
         <Text color={Color.BLACK} lineClamp={1} className={css.overflow}>
           {scopeURL ? (
-            <>
-              <a
-                rel="noreferrer"
-                onClick={e => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  ;(column as any)?.history?.push(scopeURL)
-                }}
-              >
-                {getReferredByEntityName(data.referredByEntity)}
-              </a>
-            </>
+            <Link className={css.navLink} to={scopeURL}>
+              {getReferredByEntityName(data.referredByEntity)}
+            </Link>
           ) : (
             <>{getReferredByEntityName(data.referredByEntity)}</>
           )}
@@ -206,16 +196,9 @@ export const RenderScope: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = (
     <Layout.Vertical>
       <Text color={Color.BLACK} lineClamp={1} className={css.overflow}>
         {scopeURL ? (
-          <a
-            rel="noreferrer"
-            onClick={e => {
-              e.preventDefault()
-              e.stopPropagation()
-              ;(column as any)?.history?.push(scopeURL)
-            }}
-          >
+          <Link className={css.navLink} to={scopeURL}>
             {scopeId || scopeName}
-          </a>
+          </Link>
         ) : (
           <> {scopeId || scopeName}</>
         )}
@@ -247,9 +230,6 @@ export const RenderGitDetails: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row
 const EntityUsageList: React.FC<EntityUsageListProps> = ({ entityData, gotoPage, withNoSpaceAroundTable = false }) => {
   const data: EntitySetupUsageDTO[] = entityData?.data?.content || []
   const { getString } = useStrings()
-
-  const history = useHistory()
-
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const columns: Column<EntitySetupUsageDTOColumnData>[] = useMemo(
@@ -259,8 +239,7 @@ const EntityUsageList: React.FC<EntityUsageListProps> = ({ entityData, gotoPage,
         accessor: 'referredByEntity',
         width: isGitSyncEnabled ? '25%' : '30%',
         Cell: RenderColumnEntity,
-        getString: getString,
-        history: history
+        getString: getString
       },
       {
         Header: getString('common.gitSync.repoDetails').toUpperCase(),
@@ -285,8 +264,7 @@ const EntityUsageList: React.FC<EntityUsageListProps> = ({ entityData, gotoPage,
         width: isGitSyncEnabled ? '10%' : '20%',
         Cell: RenderScope,
         getString: getString,
-        enableURLLinkToScope: true,
-        history: history
+        enableURLLinkToScope: true
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
