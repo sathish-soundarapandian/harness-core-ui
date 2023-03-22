@@ -2139,7 +2139,7 @@ export const getTriggerArtifactInitialSpec = (
     }
     case 'AzureArtifacts': {
       return {
-        packageName: '',
+        package: '',
         connectorRef,
         eventConditions,
         packageType: 'maven',

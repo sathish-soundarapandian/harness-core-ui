@@ -56,7 +56,7 @@ import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArt
 import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
 import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
 import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
-import { AzureArtifacts } from './ArtifactRepository/ArtifactLastSteps/AzureArtifacts/AzuerArtifacts'
+import { AzureArtifacts } from './ArtifactRepository/ArtifactLastSteps/AzureArtifacts/AzureArtifacts'
 import { AmazonMachineImage } from './ArtifactRepository/ArtifactLastSteps/AmazonMachineImage/AmazonMachineImage'
 import { GoogleCloudStorage } from './ArtifactRepository/ArtifactLastSteps/GoogleCloudStorage/GoogleCloudStorage'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactsSelection.module.scss'
