@@ -3,12 +3,13 @@ import {
   Layout,
   MultiTextInput,
   MultiTypeInputType,
-  Label,
+  Text,
   Button,
   useToaster,
   getErrorInfoFromErrorObject,
   Container,
-  Card
+  Card,
+  Color
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
@@ -51,7 +52,7 @@ const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout, setUpdating })
     <Container margin="xlarge">
       <Card className={css.card}>
         <Layout.Horizontal spacing={'large'} flex>
-          <Label>{getString('authSettings.sessionTimeOut')}</Label>
+          <Text color={Color.BLACK}>{getString('authSettings.sessionTimeOut')}</Text>
           <MultiTextInput
             name="sessionTimeOut"
             textProps={{ type: 'number', min: MINIMUM_SESSION_TIME_OUT }}
