@@ -2061,6 +2061,7 @@ export interface StringsMap {
   'authSettings.costCalculator.switchTooltip': string
   'authSettings.costCalculator.tax': string
   'authSettings.costCalculator.using': string
+  'authSettings.costCalculatorCI.developer.title': string
   'authSettings.daysBeforePasswordExpires': string
   'authSettings.daysBeforeUserNotified': string
   'authSettings.deleteLdapProvider': string

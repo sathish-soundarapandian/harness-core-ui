@@ -34,8 +34,8 @@ import { SubscriptionProvider, useSubscriptionContext, getSkewsMap } from './Sub
 import css from './useSubscriptionModal.module.scss'
 
 interface UseSubscribeModalReturns {
-  openSubscribeModal: ({ _plan, _module, _time }: OpenSubscribeModalProps) => void
-  closeSubscribeModal: () => void
+  openSubscribeModalCI: ({ _plan, _module, _time }: OpenSubscribeModalProps) => void
+  closeSubscribeModalCI: () => void
 }
 type SetStateMethod = (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
 
@@ -88,12 +88,6 @@ const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose, c
     premiumSupport: false,
     paymentFreq: time,
     subscriptionId: '',
-    quantities: {
-      featureFlag: {
-        numberOfMau: plan === 'TEAM' ? 100 : 1,
-        numberOfDevelopers: 1
-      }
-    },
     billingContactInfo: {
       name: '',
       email: email || '',
@@ -154,7 +148,7 @@ const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose, c
     <Layout.Vertical>
       {title}
       <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }} className={css.view}>
-        <LeftView
+        <LeftViewCI
           countries={countries}
           states={states}
           module={module}
@@ -177,7 +171,7 @@ const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose, c
   )
 }
 
-const LeftView = ({
+const LeftViewCI = ({
   module,
   subscriptionProps,
   invoiceData,
@@ -245,10 +239,10 @@ const LeftView = ({
   }
 }
 
-export const useSubscribeModal = ({ onClose }: { onClose?: () => void }): UseSubscribeModalReturns => {
+export const useSubscribeModalCI = ({ onClose }: { onClose?: () => void }): UseSubscribeModalReturns => {
   const [newPlan, setNewPlan] = useState<Editions>(Editions.FREE)
   const [time, setTime] = useState<TimeType>(TimeType.YEARLY)
-  const [module, setModule] = useState<Module>('cf')
+  const [module, setModule] = useState<Module>('ci')
   const { countries, states } = useRegionList()
 
   const handleClose = (): void => {
@@ -294,7 +288,7 @@ export const useSubscribeModal = ({ onClose }: { onClose?: () => void }): UseSub
   )
 
   return {
-    openSubscribeModal: open,
-    closeSubscribeModal: hideModal
+    openSubscribeModalCI: open,
+    closeSubscribeModalCI: hideModal
   }
 }

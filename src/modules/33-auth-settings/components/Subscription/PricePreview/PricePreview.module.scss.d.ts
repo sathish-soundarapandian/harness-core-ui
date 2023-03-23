@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly cf: string
+  readonly ci: string
   readonly line: string
   readonly paymentFrequency: string
   readonly pricePreview: string
