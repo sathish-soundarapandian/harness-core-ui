@@ -29,7 +29,7 @@ export const validateDefineSLOSection = (formikProps: FormikProps<SLOV2Form>): b
   return true
 }
 
-const isValidObjectiveValue = (value: number) => value >= 0 && value <= 99
+const isValidObjectiveValue = (value: number) => value >= 0 && value < 100
 
 export const validateConfigureServiceLevelIndicatiors = (formikProps: FormikProps<SLOV2Form>): boolean => {
   const {
