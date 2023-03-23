@@ -10,7 +10,7 @@ import { MultiSelectDropDown, SelectOption } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 
 const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
-  const [setStage] = React.useState<string[] | any>([''])
+  const [selectedStages, setStage] = React.useState<string[] | any>(formikProps.values.stagesToExecute)
   //   const { getString } = useStrings()
   const executionStageList = formikProps.values?.originalPipeline?.stages?.map((stage: any) => {
     return {
@@ -20,27 +20,28 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   })
 
   return (
-    <>
+    <div>
+      <label>Select Stages To Execute</label>
       <MultiSelectDropDown
         // popoverClassName={css.disabledStageDropdown}
-        // hideItemCount={localSelectedStagesData.allStagesSelected}
+        // hideItemCount={selectedStages.length}
         disabled={false}
         buttonTestId={'stage-select'}
-        onChange={(items: SelectOption[]) => {
-          const stages = items.map(item => item.value)
-          setStage([...stages])
-          formikProps.setFieldValue('selectedStages', stages)
+        onChange={setStage}
+        onPopoverClose={() => {
+          setStage(selectedStages)
+          const stages = selectedStages.map((stage: SelectOption) => stage.value)
+          formikProps.setFieldValue('stagesToExecute', stages)
         }}
-        // onPopoverClose={() => setSelectedStageData(localSelectedStagesData)}
-        // value={localSelectedStagesData.selectedStageItems}
+        value={selectedStages}
         items={executionStageList}
-        minWidth={150}
+        minWidth={50}
         usePortal={true}
         // placeholder={localSelectedStagesData.allStagesSelected ? getString('pipeline.allStages') : getString('stages')}
         // className={css.stagesDropdown}
       />
       {/* <HarnessDocTooltip tooltipId={stageExecutionDisabledTooltip} useStandAlone={true} /> */}
-    </>
+    </div>
   )
 }
 

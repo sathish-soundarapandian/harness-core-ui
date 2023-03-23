@@ -176,6 +176,7 @@ export interface FlatValidArtifactFormikValuesInterface {
   stageId: string
   pipeline: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
+  stagesToExecute?: string[]
 }
 
 export interface TriggerConfigDTO extends Omit<NGTriggerConfigV2, 'identifier'> {
