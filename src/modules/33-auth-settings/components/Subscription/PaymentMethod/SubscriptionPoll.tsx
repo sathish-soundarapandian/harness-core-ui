@@ -53,8 +53,9 @@ function SubscriptionPoll({
   }, [])
 
   useEffect(() => {
-    if (data?.data?.clientSecret) {
-      setInvoiceData(data.data.latestInvoiceDetail as InvoiceDetailDTO)
+    if (data?.data) {
+      const latestInvoiceDetailNew = { ...data?.data.latestInvoiceDetail, paymentIntent: { clientSecret: 'acd' } }
+      setInvoiceData(latestInvoiceDetailNew as InvoiceDetailDTO)
       setPollCount(MAX_POLL_COUNT)
       const taxItem = getTaxItem(defaultTo(data.data.latestInvoiceDetail?.items, []))
       taxItem &&

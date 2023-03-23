@@ -97,11 +97,11 @@ const SubscriptionPlans: React.FC<SubscriptionPlansProps> = ({ module }) => {
     return (
       <PageError
         message={error.message || getString('somethingWentWrong')}
-        onClick={() =>
-          executeQuery({
-            requestPolicy: 'cache-and-network'
-          })
-        }
+        // onClick={() =>
+        //   executeQuery({
+        //     requestPolicy: 'cache-and-network'
+        //   })
+        // }
       />
     )
   }

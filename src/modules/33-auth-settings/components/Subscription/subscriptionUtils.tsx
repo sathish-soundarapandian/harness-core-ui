@@ -7,6 +7,8 @@
 import React from 'react'
 import { Layout } from '@harness/uicore'
 import { defaultTo, get, toInteger } from 'lodash-es'
+import FFSubUtils from './FFSubutils'
+import CISubUtils from './CISubUtils'
 import type { PriceDTO, SubscriptionDetailDTO } from 'services/cd-ng/index'
 import type {
   Editions,
@@ -19,8 +21,6 @@ import { TimeType } from '@common/constants/SubscriptionTypes'
 import { getDollarAmount } from '@auth-settings/utils'
 import type { Module } from 'framework/types/ModuleName'
 import type { UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
-import FFDeveloperCard from './CostCalculator/FFDeveloperCard'
-import FFMAUCard from './CostCalculator/FFMAUCard'
 
 export const PLAN_TYPES: { [key: string]: string } = {
   DEVELOPERS: 'DEVELOPERS',
@@ -92,90 +92,32 @@ export function getCostCalculatorBodyByModule({
   recommendation,
   updateQuantities
 }: GetCostCalculatorBodyByModuleProps): React.ReactElement {
-  const { edition, paymentFreq } = subscriptionDetails
-  const productPricesByPayFreq = getProductPrices(edition, paymentFreq, productPrices)
   switch (module) {
-    case 'cf': {
-      const planType = getPlanType(PLAN_TYPES.MAU)
-      const sampleData = getSampleData(planType, productPricesByPayFreq)
-      let licenseUnitPrice = getDollarAmount(
-        productPricesByPayFreq.find(price => price.metaData?.type === getPlanType(PLAN_TYPES.DEVELOPERS))?.unitAmount
-      )
-
-      let mauUnitPrice = getDollarAmount(
-        productPricesByPayFreq.find(price => price.metaData?.type === getPlanType(PLAN_TYPES.MAU))?.unitAmount
-      )
-
-      if (paymentFrequency === TimeType.YEARLY) {
-        licenseUnitPrice = licenseUnitPrice / 12
-        mauUnitPrice = mauUnitPrice / 12
-      }
-
-      if (!subscriptionDetails.sampleDetails?.sampleUnit && sampleData.sampleUnit) {
-        setSubscriptionDetails({ ...subscriptionDetails, sampleDetails: sampleData })
-      }
-
+    case 'cf':
       return (
-        <Layout.Vertical spacing={'large'} margin={{ bottom: 'large' }}>
-          <FFDeveloperCard
-            currentPlan={currentPlan}
-            newPlan={edition}
-            recommended={get(recommendation, 'data.NUMBER_OF_USERS', null)}
-            currentSubscribed={usageAndLimitInfo.limitData.limit?.ff?.totalFeatureFlagUnits || 0}
-            unitPrice={licenseUnitPrice}
-            usage={usageAndLimitInfo.usageData.usage?.ff?.activeFeatureFlagUsers?.count || 0}
-            toggledNumberOfDevelopers={subscriptionDetails.quantities?.featureFlag?.numberOfDevelopers}
-            setNumberOfDevelopers={(value: number) => {
-              if (subscriptionDetails.edition === 'ENTERPRISE' && value === 25) {
-                value = 0
-              }
-              if (value > 0) {
-                updateQuantities({
-                  devs: value
-                })
-              } else {
-                updateQuantities({
-                  devs: subscriptionDetails?.quantities?.featureFlag?.numberOfDevelopers || 1
-                })
-              }
-            }}
-          />
-          <FFMAUCard
-            getRecommendedNumbers={getRecommendedNumbers}
-            recommended={get(recommendation, 'data.NUMBER_OF_MAUS', 0)}
-            key={sampleData.minValue}
-            minValue={sampleData.minValue}
-            unit={sampleData.sampleUnit}
-            sampleMultiplier={sampleData.sampleMultiplier}
-            currentPlan={currentPlan}
-            newPlan={edition}
-            paymentFreq={paymentFreq}
-            currentSubscribed={usageAndLimitInfo.limitData.limit?.ff?.totalClientMAUs || 0}
-            unitPrice={mauUnitPrice}
-            usage={usageAndLimitInfo.usageData.usage?.ff?.activeClientMAUs?.count || 0}
-            selectedNumberOfMAUs={defaultTo(
-              subscriptionDetails.quantities?.featureFlag?.numberOfMau,
-              sampleData.minValue
-            )}
-            setNumberOfMAUs={(value: number) => {
-              if (
-                (subscriptionDetails.edition === 'TEAM' && value === 100) ||
-                (subscriptionDetails.edition === 'ENTERPRISE' && value === 1)
-              ) {
-                value = 0
-              }
-              if (value > 0) {
-                updateQuantities({
-                  maus: value
-                })
-              } else {
-                updateQuantities({
-                  maus: subscriptionDetails?.quantities?.featureFlag?.numberOfMau || sampleData.minValue
-                })
-              }
-            }}
-          />
-        </Layout.Vertical>
+        <FFSubUtils
+          currentPlan={currentPlan}
+          recommendation={recommendation}
+          usageAndLimitInfo={usageAndLimitInfo}
+          subscriptionDetails={subscriptionDetails}
+          updateQuantities={updateQuantities}
+          productPrices={productPrices}
+          setSubscriptionDetails={setSubscriptionDetails}
+          paymentFrequency={paymentFrequency}
+        ></FFSubUtils>
+      )
+    case 'ci': {
+      return (
+        <CISubUtils
+          currentPlan={currentPlan}
+          recommendation={recommendation}
+          usageAndLimitInfo={usageAndLimitInfo}
+          subscriptionDetails={subscriptionDetails}
+          updateQuantities={updateQuantities}
+          productPrices={productPrices}
+          setSubscriptionDetails={setSubscriptionDetails}
+          paymentFrequency={paymentFrequency}
+        ></CISubUtils>
       )
     }
   }
@@ -315,6 +257,37 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
           underComment: 'authSettings.costCalculator.mau.mMauFree',
           quantity: numberOfMauYearly,
           unitPrice: mauUnitPrice
+        })
+      }
+    }
+    case 'ci': {
+      if (paymentFreq === TimeType.MONTHLY) {
+        const developerUnitPrice = getDollarAmount(
+          productPrices.monthly?.find(product => {
+            return isSelectedPlan(product, false, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
+          })?.unitAmount
+        )
+        products.push({
+          paymentFrequency: paymentFreq,
+          description: 'common.subscriptions.usage.developers',
+          unitDescription: 'common.perDeveloper',
+          quantity: quantities?.ci?.numberOfDevelopers || 0,
+          unitPrice: developerUnitPrice
+        })
+      }
+      if (paymentFreq === TimeType.YEARLY) {
+        const developerUnitPrice = getDollarAmount(
+          productPrices.yearly?.find(product => {
+            return isSelectedPlan(product, false, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
+          })?.unitAmount
+        )
+
+        products.push({
+          paymentFrequency: paymentFreq,
+          description: 'common.subscriptions.usage.developers',
+          unitDescription: 'common.perDeveloper',
+          quantity: quantities?.ci?.numberOfDevelopers || 0,
+          unitPrice: developerUnitPrice
         })
       }
     }

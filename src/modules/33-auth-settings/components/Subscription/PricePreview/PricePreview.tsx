@@ -91,6 +91,10 @@ function getColorByModule(module: Module): string | undefined {
   switch (module) {
     case 'cf':
       return css.cf
+      break
+    case 'ci':
+      return css.ci
+      break
   }
   return undefined
 }
