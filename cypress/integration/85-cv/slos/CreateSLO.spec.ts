@@ -148,7 +148,7 @@ describe('Create SLO', () => {
     cy.get('input[name="eventType"]').should('have.value', 'Good')
     cy.get('input[name="goodRequestMetric"]').should('have.value', 'https_errors_per_min')
     cy.get('input[name="validRequestMetric"]').should('have.value', 'number_of_slow_calls')
-    cy.get('input[name="objectiveValue"]').should('have.value', '20')
+    cy.get('input[name="objectiveValue"]').should('have.value', '99.99')
     cy.get('input[name="objectiveComparator"]').should('have.value', '<=')
     cy.get('input[name="objectiveComparator"]').should('have.value', '<=')
     cy.get('input[name="SLIMissingDataType"]').should('have.value', 'Good')

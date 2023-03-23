@@ -42,6 +42,7 @@ import {
 } from './CVCreateSLOV2.types'
 import { serviceLevelObjectiveKeys } from './components/CreateCompositeSloForm/CreateCompositeSloForm.constant'
 import type { SLIForm } from './components/CreateSimpleSloForm/CreateSimpleSloForm.types'
+import { MAX_OBJECTIVE_PERCENTAGE } from './CVCreateSLOV2.constants'
 
 export const filterServiceLevelObjectivesDetailsFromSLOObjective = (
   serviceLevelObjectivesDetails?: SLOObjective[]
@@ -490,7 +491,7 @@ export const getSimpleSLOV2FormValidationSchema = (getString: UseStringsReturn['
           is: SLIMetricType => SLIMetricType === SLIMetricTypes.RATIO,
           then: Yup.number()
             .typeError(REQUIRED)
-            .max(100, getString('cv.maxValue', { n: 100 }))
+            .max(MAX_OBJECTIVE_PERCENTAGE, getString('cv.maxValue', { n: MAX_OBJECTIVE_PERCENTAGE }))
         })
         .required(REQUIRED)
     }),

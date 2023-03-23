@@ -585,7 +585,7 @@ export const getServiceLevelObjectiveResponse = {
                 eventType: 'Good',
                 metric1: 'https_errors_per_min',
                 metric2: 'number_of_slow_calls',
-                thresholdValue: 20,
+                thresholdValue: 99.99,
                 thresholdType: '<='
               }
             },

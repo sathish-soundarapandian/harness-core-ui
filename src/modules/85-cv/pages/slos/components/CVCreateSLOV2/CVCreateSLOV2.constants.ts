@@ -69,3 +69,5 @@ export const getMissingDataTypeOptions = (
     { label: getString('cv.ignore'), value: SLIMissingDataTypes.IGNORE }
   ]
 }
+
+export const MAX_OBJECTIVE_PERCENTAGE = 100

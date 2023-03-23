@@ -200,6 +200,49 @@ export const simpleSLOData = {
   responseMessages: []
 }
 
+export const ratioBasedSLO = {
+  metaData: {},
+  resource: {
+    serviceLevelObjectiveV2: {
+      orgIdentifier: 'cvng',
+      projectIdentifier: 'templatetesting',
+      identifier: 'Ratio_based',
+      name: 'Ratio based',
+      tags: { serviceLevelIndicatorType: 'AVAILABILITY' },
+      userJourneyRefs: ['new102'],
+      sloTarget: { type: 'Rolling', sloTargetPercentage: 99.0, spec: { periodLength: '7d' } },
+      type: 'Simple',
+      spec: {
+        monitoredServiceRef: 'AppD_dynatrace',
+        healthSourceRef: 'Prometheus',
+        serviceLevelIndicatorType: 'Availability',
+        serviceLevelIndicators: [
+          {
+            name: 'AppD_dynatrace_Prometheus_Ratio_based_9b9dc34f-67a5-445a-b0de-b518ef4ff151}',
+            identifier: 'AppD_dynatrace_Prometheus_Ratio_based_c454a38a-0c1c-4843-ad9c-224e491a8d65',
+            type: 'Window',
+            spec: {
+              spec: {
+                eventType: 'Good',
+                metric1: 'Prometheus_Metric_2',
+                metric2: 'prometheus_metric',
+                thresholdValue: 99.99,
+                thresholdType: '>'
+              },
+              type: 'Ratio'
+            },
+            sliMissingDataType: 'Good'
+          }
+        ]
+      },
+      notificationRuleRefs: []
+    },
+    createdAt: 1676346718888,
+    lastModifiedAt: 1679570275046
+  },
+  responseMessages: []
+}
+
 export const healthSourceListResponse = {
   status: 'SUCCESS',
   data: {

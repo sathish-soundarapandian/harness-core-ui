@@ -23,7 +23,8 @@ import {
   metricListResponse,
   healthSourceListResponse,
   monitoredServicelist,
-  notificationMock
+  notificationMock,
+  ratioBasedSLO
 } from './CVCreateSLOV2.mock'
 import { getSLOTarget } from '../CVCreateSLOV2.utils'
 
@@ -841,5 +842,29 @@ describe('Simple SLO V2', () => {
     act(() => {
       userEvent.click(getByText('cancel'))
     })
+  })
+
+  test('should load ratio based with objective value 99.99', () => {
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: ratioBasedSLO, loading: false, error: null, refetch: jest.fn() } as any))
+
+    const { container } = render(
+      <TestWrapper
+        path="/account/:accountId/cv/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier/slos"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <CVCreateSLOV2 isComposite={false} />
+      </TestWrapper>
+    )
+
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    expect(container.querySelector('[name="objectiveValue"]')).toHaveValue(99.99)
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    expect(container.querySelectorAll('[class*="intent-danger"]').length).toEqual(0)
   })
 })

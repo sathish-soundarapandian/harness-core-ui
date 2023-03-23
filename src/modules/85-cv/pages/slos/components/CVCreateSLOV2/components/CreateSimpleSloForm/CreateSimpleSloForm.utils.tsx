@@ -25,6 +25,7 @@ import {
   GetSLIDerivedProps,
   GetSLIDerivedValues
 } from './CreateSimpleSloForm.types'
+import { MAX_OBJECTIVE_PERCENTAGE } from '../../CVCreateSLOV2.constants'
 
 export const validateDefineSLOSection = (formikProps: FormikProps<SLOV2Form>): boolean => {
   formikProps.setFieldTouched(SLOV2FormFields.NAME, true)
@@ -40,7 +41,7 @@ export const validateDefineSLOSection = (formikProps: FormikProps<SLOV2Form>): b
   return true
 }
 
-const isValidObjectiveValue = (value: number) => value >= 0 && value <= 99
+const isValidObjectivePercentage = (value: number) => value >= 0 && value < MAX_OBJECTIVE_PERCENTAGE
 
 const validateWindowBased = (values: SLOV2Form): boolean => {
   const {
@@ -59,7 +60,7 @@ const validateWindowBased = (values: SLOV2Form): boolean => {
   if (SLIMetricType && SLIMetricType === SLIMetricTypes.RATIO) {
     if (!validRequestMetric || !goodRequestMetric || !eventType) return false
     if (validRequestMetric === goodRequestMetric) return false
-    if (!isValidObjectiveValue(objectiveValue)) return false
+    if (!isValidObjectivePercentage(objectiveValue)) return false
   }
   if (!SLIMissingDataType) return false
   return true
