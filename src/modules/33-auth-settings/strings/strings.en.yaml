@@ -159,6 +159,9 @@ salesTax: Plus sales tax
 unitPrice: Unit Price
 recomendation: Recomendation
 priceBreakdown: Subscription Price Breakdown
+costCalculatorCI:
+  developer:
+    title: How many developers will build with Continuous Integration?
 costCalculator:
   tax: Tax
   using: Using

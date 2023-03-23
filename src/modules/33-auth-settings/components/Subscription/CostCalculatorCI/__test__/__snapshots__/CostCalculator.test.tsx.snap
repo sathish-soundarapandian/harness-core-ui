@@ -1,0 +1,1476 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CostCalculator not cf module 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+        <div
+          class="MultiStepProgressIndicator--statusBar"
+        >
+          <div
+            class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+          />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+        <div
+          class="MultiStepProgressIndicator--statusBar"
+        >
+          <div
+            class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+          />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+        <div
+          class="MultiStepProgressIndicator--statusBar"
+        >
+          <div
+            class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+          />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main body StyledProps--padding-top-large StyledProps--padding-bottom-large"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+        >
+          authSettings.choosePlan
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+        >
+          <div
+            class="PillToggle--optionBtns plan"
+          >
+            <div
+              class="PillToggle--item PillToggle--selected"
+              data-name="toggle-option-one"
+              role="button"
+              tabindex="0"
+            >
+              Team
+            </div>
+            <div
+              class="PillToggle--item"
+              data-name="toggle-option-two"
+              role="button"
+              tabindex="0"
+            >
+              Enterprise
+            </div>
+          </div>
+          <a
+            href="/account/undefined/settings/subscriptions?moduleCard=cd&&tab=PLANS"
+            target="_blank"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+            >
+              authSettings.costCalculator.comparePlans
+            </p>
+          </a>
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main premSupport StyledProps--padding-small StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+      >
+        <span
+          class="bp3-popover-wrapper"
+        >
+          <span
+            class="bp3-popover-target"
+          >
+            <label
+              class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox checkbox StyledProps--main"
+            >
+              <input
+                disabled=""
+                size="12"
+                tabindex="0"
+                type="checkbox"
+              />
+              <span
+                class="bp3-control-indicator"
+              />
+            </label>
+          </span>
+        </span>
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between StyledProps--padding-top-xsmall"
+          style="width: 90%;"
+        >
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-bold"
+              style="display: flex; align-items: center;"
+            >
+              <span
+                class="bp3-icon bp3-icon-crown StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-orange700"
+                icon="crown"
+              >
+                <svg
+                  data-icon="crown"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    crown
+                  </desc>
+                  <path
+                    d="M2 6l3 2 3-4 3 4 3-2-1 6H3L2 6zm6-5a1 1 0 110 2 1 1 0 010-2zM1 3a1 1 0 110 2 1 1 0 010-2zm14 0a1 1 0 110 2 1 1 0 010-2zM3 13h10v2H3v-2z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              authSettings.costCalculator.premSupport.title
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            >
+              authSettings.costCalculator.premSupport.onCallSupport
+            </p>
+          </div>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+          >
+            authSettings.costCalculator.premSupport.includedByDefault
+          </p>
+        </div>
+      </div>
+    </div>
+    <button
+      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withRightIcon Button--variation Button--variation-primary"
+      type="button"
+    >
+      <span
+        class="bp3-button-text"
+      >
+        authSettings.costCalculator.next
+      </span>
+      <span
+        class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+        icon="chevron-right"
+      >
+        <svg
+          data-icon="chevron-right"
+          height="16"
+          viewBox="0 0 16 16"
+          width="16"
+        >
+          <desc>
+            chevron-right
+          </desc>
+          <path
+            d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`CostCalculator render 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+        <div
+          class="MultiStepProgressIndicator--statusBar"
+        >
+          <div
+            class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+          />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+        <div
+          class="MultiStepProgressIndicator--statusBar"
+        >
+          <div
+            class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+          />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+        <div
+          class="MultiStepProgressIndicator--statusBar"
+        >
+          <div
+            class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+          />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main body StyledProps--padding-top-large StyledProps--padding-bottom-large"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+        >
+          authSettings.choosePlan
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+        >
+          <div
+            class="PillToggle--optionBtns plan"
+          >
+            <div
+              class="PillToggle--item PillToggle--selected"
+              data-name="toggle-option-one"
+              role="button"
+              tabindex="0"
+            >
+              Team
+            </div>
+            <div
+              class="PillToggle--item"
+              data-name="toggle-option-two"
+              role="button"
+              tabindex="0"
+            >
+              Enterprise
+            </div>
+          </div>
+          <a
+            href="/account/undefined/settings/subscriptions?moduleCard=cf&&tab=PLANS"
+            target="_blank"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+            >
+              authSettings.costCalculator.comparePlans
+            </p>
+          </a>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--margin-bottom-large"
+      >
+        <div
+          class="bp3-card bp3-elevation-0 Card--card"
+        >
+          <div
+            class="Layout--vertical StyledProps--main"
+          >
+            <div
+              class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                authSettings.costCalculator.developer.title
+              </p>
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                >
+                  authSettings.costCalculator.developer.developer
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                >
+                  authSettings.unitPrice: $0.00 common.perDeveloper common.perMonth
+                </p>
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main subscriptionInfo StyledProps--flex StyledProps--flex-justifyContent-space-between"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.costCalculator.currentSubscribed
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                  >
+                    250
+                  </p>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                  >
+                    Free common.subscriptions.overview.plan
+                  </p>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.costCalculator.using
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                >
+                  20
+                </p>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.recomendation
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
+                >
+                  250
+                </p>
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+            >
+              <div
+                class="bp3-slider slider"
+              >
+                <div
+                  class="bp3-slider-track"
+                >
+                  <div
+                    class="bp3-slider-progress"
+                    style="left: 0.00%; right: 100.00%; top: 0px;"
+                  />
+                  <div
+                    class="bp3-slider-progress bp3-intent-primary"
+                    style="left: 0.00%; right: 50.00%; top: 0px;"
+                  />
+                  <div
+                    class="bp3-slider-progress"
+                    style="left: 50.00%; right: 0.00%; top: 0px;"
+                  />
+                </div>
+                <div
+                  class="bp3-slider-axis"
+                >
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 0.00%;"
+                  >
+                    0
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 20.00%;"
+                  >
+                    10
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 40.00%;"
+                  >
+                    20
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 60.00%;"
+                  >
+                    30
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 80.00%;"
+                  >
+                    40
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 100.00%;"
+                  >
+                    50
+                  </div>
+                </div>
+                <span
+                  class="bp3-slider-handle"
+                  style="left: calc(50.00% - 0px);"
+                  tabindex="0"
+                >
+                  <span
+                    class="bp3-slider-label"
+                  >
+                    25
+                  </span>
+                </span>
+              </div>
+              <div
+                class="TextInput--main"
+              >
+                <div
+                  class="bp3-input-group textInput"
+                >
+                  <input
+                    class="bp3-input"
+                    data-testid="slider-input"
+                    type="text"
+                    value="25"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-elevation-0 Card--card"
+        >
+          <div
+            class="Layout--vertical StyledProps--main"
+          >
+            <div
+              class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                authSettings.costCalculator.mau.title
+              </p>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main subscriptionInfo StyledProps--flex StyledProps--flex-justifyContent-space-between"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.costCalculator.currentSubscribed
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                  >
+                    100000
+                    k
+                  </p>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                  >
+                    Free common.subscriptions.overview.plan
+                  </p>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.costCalculator.using
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                >
+                  10000
+                  k
+                </p>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.recomendation
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
+                >
+                  100000
+                  k
+                </p>
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+            >
+              <div
+                class="bp3-slider slider"
+              >
+                <div
+                  class="bp3-slider-track"
+                >
+                  <div
+                    class="bp3-slider-progress bp3-intent-primary"
+                    style="left: 0.00%; right: 100.00%; top: 0px;"
+                  />
+                  <div
+                    class="bp3-slider-progress"
+                    style="left: 0.00%; right: 100.00%; top: 0px;"
+                  />
+                  <div
+                    class="bp3-slider-progress"
+                    style="left: 0.00%; right: 0.00%; top: 0px;"
+                  />
+                </div>
+                <div
+                  class="bp3-slider-axis"
+                >
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 0.00%;"
+                  >
+                    100
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 25.00%;"
+                  >
+                    200
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 50.00%;"
+                  >
+                    300
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 75.00%;"
+                  >
+                    400
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 100.00%;"
+                  >
+                    500
+                  </div>
+                </div>
+                <span
+                  class="bp3-slider-handle"
+                  style="left: calc(0.00% - 0px);"
+                  tabindex="0"
+                >
+                  <span
+                    class="bp3-slider-label"
+                  >
+                    100
+                  </span>
+                </span>
+              </div>
+              <div
+                class="bp3-popover-wrapper DropDown--main dropdown"
+              >
+                <div
+                  class="bp3-popover-target"
+                >
+                  <div
+                    class=""
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder StyledProps--flex"
+                      data-testid="slider-dropdown"
+                      style="width: 70px;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main DropDown--label"
+                          data-testid="dropdown-value"
+                          style="--text-line-clamp: 1;"
+                        >
+                          100
+                        </p>
+                      </div>
+                      <div
+                        class="Layout--horizontal StyledProps--main DropDown--btnWrapper StyledProps--flex"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                          data-icon="main-chevron-down"
+                        >
+                          <svg
+                            height="8"
+                            viewBox="0 0 14 8"
+                            width="8"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                              fill="#4d5969"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main premSupport StyledProps--padding-small StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+      >
+        <span
+          class="bp3-popover-wrapper"
+        >
+          <span
+            class="bp3-popover-target"
+          >
+            <label
+              class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox checkbox StyledProps--main"
+            >
+              <input
+                disabled=""
+                size="12"
+                tabindex="0"
+                type="checkbox"
+              />
+              <span
+                class="bp3-control-indicator"
+              />
+            </label>
+          </span>
+        </span>
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between StyledProps--padding-top-xsmall"
+          style="width: 90%;"
+        >
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-bold"
+              style="display: flex; align-items: center;"
+            >
+              <span
+                class="bp3-icon bp3-icon-crown StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-orange700"
+                icon="crown"
+              >
+                <svg
+                  data-icon="crown"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    crown
+                  </desc>
+                  <path
+                    d="M2 6l3 2 3-4 3 4 3-2-1 6H3L2 6zm6-5a1 1 0 110 2 1 1 0 010-2zM1 3a1 1 0 110 2 1 1 0 010-2zm14 0a1 1 0 110 2 1 1 0 010-2zM3 13h10v2H3v-2z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              authSettings.costCalculator.premSupport.title
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            >
+              authSettings.costCalculator.premSupport.onCallSupport
+            </p>
+          </div>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+          >
+            authSettings.costCalculator.premSupport.includedByDefault
+          </p>
+        </div>
+      </div>
+    </div>
+    <button
+      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withRightIcon Button--variation Button--variation-primary"
+      type="button"
+    >
+      <span
+        class="bp3-button-text"
+      >
+        authSettings.costCalculator.next
+      </span>
+      <span
+        class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+        icon="chevron-right"
+      >
+        <svg
+          data-icon="chevron-right"
+          height="16"
+          viewBox="0 0 16 16"
+          width="16"
+        >
+          <desc>
+            chevron-right
+          </desc>
+          <path
+            d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`CostCalculator yearly and enterprise 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+        <div
+          class="MultiStepProgressIndicator--statusBar"
+        >
+          <div
+            class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+          />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+        <div
+          class="MultiStepProgressIndicator--statusBar"
+        >
+          <div
+            class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+          />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+        <div
+          class="MultiStepProgressIndicator--statusBar"
+        >
+          <div
+            class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+          />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main body StyledProps--padding-top-large StyledProps--padding-bottom-large"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+        >
+          authSettings.choosePlan
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+        >
+          <div
+            class="PillToggle--optionBtns plan"
+          >
+            <div
+              class="PillToggle--item"
+              data-name="toggle-option-one"
+              role="button"
+              tabindex="0"
+            >
+              Team
+            </div>
+            <div
+              class="PillToggle--item PillToggle--selected"
+              data-name="toggle-option-two"
+              role="button"
+              tabindex="0"
+            >
+              Enterprise
+            </div>
+          </div>
+          <a
+            href="/account/undefined/settings/subscriptions?moduleCard=cf&&tab=PLANS"
+            target="_blank"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+            >
+              authSettings.costCalculator.comparePlans
+            </p>
+          </a>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--margin-bottom-large"
+      >
+        <div
+          class="bp3-card bp3-elevation-0 Card--card"
+        >
+          <div
+            class="Layout--vertical StyledProps--main"
+          >
+            <div
+              class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                authSettings.costCalculator.developer.title
+              </p>
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                >
+                  authSettings.costCalculator.developer.developer
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                >
+                  authSettings.unitPrice: $0.00 common.perDeveloper common.perMonth
+                </p>
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main subscriptionInfo StyledProps--flex StyledProps--flex-justifyContent-space-between"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.costCalculator.currentSubscribed
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                  >
+                    250
+                  </p>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                  >
+                    Free common.subscriptions.overview.plan
+                  </p>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.costCalculator.using
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                >
+                  20
+                </p>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.recomendation
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
+                >
+                  250
+                </p>
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+            >
+              <div
+                class="bp3-slider slider"
+              >
+                <div
+                  class="bp3-slider-track"
+                >
+                  <div
+                    class="bp3-slider-progress bp3-intent-primary"
+                    style="left: 0.00%; right: 100.00%; top: 0px;"
+                  />
+                  <div
+                    class="bp3-slider-progress"
+                    style="left: 0.00%; right: 100.00%; top: 0px;"
+                  />
+                  <div
+                    class="bp3-slider-progress"
+                    style="left: 0.00%; right: 0.00%; top: 0px;"
+                  />
+                </div>
+                <div
+                  class="bp3-slider-axis"
+                >
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 0.00%;"
+                  >
+                    25
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 100.00%;"
+                  >
+                    50
+                  </div>
+                </div>
+                <span
+                  class="bp3-slider-handle"
+                  style="left: calc(0.00% - 0px);"
+                  tabindex="0"
+                >
+                  <span
+                    class="bp3-slider-label"
+                  >
+                    25
+                  </span>
+                </span>
+              </div>
+              <div
+                class="TextInput--main"
+              >
+                <div
+                  class="bp3-input-group textInput"
+                >
+                  <input
+                    class="bp3-input"
+                    data-testid="slider-input"
+                    type="text"
+                    value="25"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-elevation-0 Card--card"
+        >
+          <div
+            class="Layout--vertical StyledProps--main"
+          >
+            <div
+              class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                authSettings.costCalculator.mau.title
+              </p>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main subscriptionInfo StyledProps--flex StyledProps--flex-justifyContent-space-between"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.costCalculator.currentSubscribed
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                  >
+                    100000
+                    k
+                  </p>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                  >
+                    Free common.subscriptions.overview.plan
+                  </p>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.costCalculator.using
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                >
+                  10000
+                  k
+                </p>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.recomendation
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
+                >
+                  100000
+                  k
+                </p>
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+            >
+              <div
+                class="bp3-slider slider"
+              >
+                <div
+                  class="bp3-slider-track"
+                >
+                  <div
+                    class="bp3-slider-progress bp3-intent-primary"
+                    style="left: 0.00%; right: 100.00%; top: 0px;"
+                  />
+                  <div
+                    class="bp3-slider-progress"
+                    style="left: 0.00%; right: 100.00%; top: 0px;"
+                  />
+                  <div
+                    class="bp3-slider-progress"
+                    style="left: 0.00%; right: 0.00%; top: 0px;"
+                  />
+                </div>
+                <div
+                  class="bp3-slider-axis"
+                >
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 0.00%;"
+                  >
+                    1
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 25.00%;"
+                  >
+                    5
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 50.00%;"
+                  >
+                    10
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 75.00%;"
+                  >
+                    15
+                  </div>
+                  <div
+                    class="bp3-slider-label"
+                    style="left: 100.00%;"
+                  >
+                    20
+                  </div>
+                </div>
+                <span
+                  class="bp3-slider-handle"
+                  style="left: calc(0.00% - 0px);"
+                  tabindex="0"
+                >
+                  <span
+                    class="bp3-slider-label"
+                  >
+                    1
+                  </span>
+                </span>
+              </div>
+              <div
+                class="bp3-popover-wrapper DropDown--main dropdown"
+              >
+                <div
+                  class="bp3-popover-target"
+                >
+                  <div
+                    class=""
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder StyledProps--flex"
+                      data-testid="slider-dropdown"
+                      style="width: 70px;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main DropDown--label"
+                          data-testid="dropdown-value"
+                          style="--text-line-clamp: 1;"
+                        >
+                          1
+                        </p>
+                      </div>
+                      <div
+                        class="Layout--horizontal StyledProps--main DropDown--btnWrapper StyledProps--flex"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                          data-icon="main-chevron-down"
+                        >
+                          <svg
+                            height="8"
+                            viewBox="0 0 14 8"
+                            width="8"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                              fill="#4d5969"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main premSupport StyledProps--padding-small StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+      >
+        <label
+          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox StyledProps--main"
+        >
+          <input
+            size="12"
+            type="checkbox"
+          />
+          <span
+            class="bp3-control-indicator"
+          />
+        </label>
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between StyledProps--padding-top-xsmall"
+          style="width: 90%;"
+        >
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-bold"
+              style="display: flex; align-items: center;"
+            >
+              <span
+                class="bp3-icon bp3-icon-crown StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-orange700"
+                icon="crown"
+              >
+                <svg
+                  data-icon="crown"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    crown
+                  </desc>
+                  <path
+                    d="M2 6l3 2 3-4 3 4 3-2-1 6H3L2 6zm6-5a1 1 0 110 2 1 1 0 010-2zM1 3a1 1 0 110 2 1 1 0 010-2zm14 0a1 1 0 110 2 1 1 0 010-2zM3 13h10v2H3v-2z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              authSettings.costCalculator.premSupport.title
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            >
+              authSettings.costCalculator.premSupport.onCallSupport
+            </p>
+          </div>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+          >
+            authSettings.costCalculator.premSupport.includedByDefault
+          </p>
+        </div>
+      </div>
+    </div>
+    <button
+      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withRightIcon Button--variation Button--variation-primary"
+      type="button"
+    >
+      <span
+        class="bp3-button-text"
+      >
+        authSettings.costCalculator.next
+      </span>
+      <span
+        class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+        icon="chevron-right"
+      >
+        <svg
+          data-icon="chevron-right"
+          height="16"
+          viewBox="0 0 16 16"
+          width="16"
+        >
+          <desc>
+            chevron-right
+          </desc>
+          <path
+            d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </button>
+  </div>
+</div>
+`;

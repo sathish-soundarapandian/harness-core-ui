@@ -80,10 +80,10 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   })
   const prices = data?.data?.prices
   React.useEffect(() => {
-    if (usageAndLimitInfo.usageData.usage?.ff) {
+    if (usageAndLimitInfo.usageData.usage?.ff || usageAndLimitInfo.usageData.usage?.ci) {
       fetchRecommendations()
     }
-  }, [usageAndLimitInfo.usageData.usage?.ff])
+  }, [usageAndLimitInfo.usageData.usage?.ff, usageAndLimitInfo.usageData.usage?.ci])
   React.useEffect(() => {
     const newProductPrices: ProductPricesProp = { monthly: [], yearly: [] }
     if (prices) {
@@ -125,27 +125,46 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   }
 
   const updateQuantities = ({ maus, devs }: { maus?: number; devs?: number }): void => {
-    setQuantities((oldData: SubscriptionProps['quantities']) => {
-      let updatedQuantities = cloneDeep(oldData)
-      if (devs) {
-        updatedQuantities = {
-          ...oldData,
-          featureFlag: {
-            numberOfMau: oldData?.featureFlag?.numberOfMau as number,
-            numberOfDevelopers: devs as number
+    switch (module) {
+      case 'cf':
+        setQuantities((oldData: SubscriptionProps['quantities']) => {
+          let updatedQuantities = cloneDeep(oldData)
+          if (devs) {
+            updatedQuantities = {
+              ...oldData,
+              featureFlag: {
+                numberOfMau: oldData?.featureFlag?.numberOfMau as number,
+                numberOfDevelopers: devs as number
+              }
+            }
+          } else if (maus) {
+            updatedQuantities = {
+              ...oldData,
+              featureFlag: {
+                numberOfMau: maus as number,
+                numberOfDevelopers: oldData?.featureFlag?.numberOfDevelopers as number
+              }
+            }
           }
-        }
-      } else if (maus) {
-        updatedQuantities = {
-          ...oldData,
-          featureFlag: {
-            numberOfMau: maus as number,
-            numberOfDevelopers: oldData?.featureFlag?.numberOfDevelopers as number
+          return updatedQuantities
+        })
+        break
+      case 'ci':
+        setQuantities((oldData: SubscriptionProps['quantities']) => {
+          let updatedQuantities = cloneDeep(oldData)
+          if (devs) {
+            updatedQuantities = {
+              ...oldData,
+              ci: {
+                numberOfDevelopers: devs as number
+              }
+            }
           }
-        }
-      }
-      return updatedQuantities
-    })
+
+          return updatedQuantities
+        })
+        break
+    }
   }
   return (
     <Layout.Vertical className={className}>
