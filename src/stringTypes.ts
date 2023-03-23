@@ -3571,6 +3571,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.customArtifactScriptFill': string
   'pipeline.artifactsSelection.delegateselectionPlaceholder': string
   'pipeline.artifactsSelection.digestPlaceholder': string
+  'pipeline.artifactsSelection.errors.noArtifactIds': string
   'pipeline.artifactsSelection.errors.noGroupIds': string
   'pipeline.artifactsSelection.errors.noRepositories': string
   'pipeline.artifactsSelection.errors.nodigest': string
