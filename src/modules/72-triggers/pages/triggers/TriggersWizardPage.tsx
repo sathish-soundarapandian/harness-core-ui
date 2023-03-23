@@ -1871,7 +1871,9 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
             isGitWebhookPollingEnabled &&
               (sourceRepoOnNew === GitSourceProviders.GITHUB.value ||
                 (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value),
-            isGithubWebhookAuthenticationEnabled
+            isGithubWebhookAuthenticationEnabled &&
+              (sourceRepoOnNew === GitSourceProviders.GITHUB.value ||
+                (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value)
           ),
           validate: validateTriggerPipeline,
           validateOnChange: true,

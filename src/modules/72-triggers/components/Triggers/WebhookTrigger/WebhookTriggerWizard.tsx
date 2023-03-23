@@ -1418,8 +1418,12 @@ export default function WebhookTriggerWizard(
         onSubmit: onSubmit,
         validationSchema: getValidationSchema(
           getString,
-          isGitWebhookPollingEnabled,
-          isGithubWebhookAuthenticationEnabled
+          isGitWebhookPollingEnabled &&
+            (sourceRepo === GitSourceProviders.GITHUB.value ||
+              (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value),
+          isGithubWebhookAuthenticationEnabled &&
+            (sourceRepo === GitSourceProviders.GITHUB.value ||
+              (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value)
         ),
         validate: validateTriggerPipeline,
         enableReinitialize: true
