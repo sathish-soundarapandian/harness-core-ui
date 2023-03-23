@@ -16,7 +16,6 @@ import { PeriodLengthTypes, PeriodTypes, SLOObjective, SLOV2Form } from '../../C
 import { createSloTargetFilterDTO } from './components/AddSlos/AddSLOs.utils'
 import { MinNumberOfSLO, MaxNumberOfSLO, SLOWeight } from './CreateCompositeSloForm.constant'
 import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
-import css from './CreateCompositeSloForm.module.scss'
 
 const addSLOError = (formikProps: FormikProps<SLOV2Form>, getString?: UseStringsReturn['getString']) => {
   let errorList: string[] = []
@@ -178,7 +177,7 @@ export const shouldOpenPeriodUpdateModal = (
 export const RenderOrg: Renderer<CellProps<SLOObjective | SLOConsumptionBreakdown>> = ({ row }) => {
   const slo = row.original
   return (
-    <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+    <Text lineClamp={1} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
       {slo?.orgName}
     </Text>
   )
@@ -187,7 +186,7 @@ export const RenderOrg: Renderer<CellProps<SLOObjective | SLOConsumptionBreakdow
 export const RenderProject: Renderer<CellProps<SLOObjective | SLOConsumptionBreakdown>> = ({ row }) => {
   const slo = row.original
   return (
-    <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+    <Text lineClamp={1} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
       {slo?.projectName}
     </Text>
   )

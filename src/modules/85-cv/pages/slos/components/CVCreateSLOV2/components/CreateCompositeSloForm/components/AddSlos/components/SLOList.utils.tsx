@@ -68,6 +68,7 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
     <Layout.Vertical padding={{ left: 'small' }}>
       <>
         <Text
+          lineClamp={1}
           className={css.titleInSloTable}
           title={serviceName}
           font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
@@ -76,7 +77,7 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
         </Text>
       </>
       <>
-        <Text title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
+        <Text lineClamp={1} title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
           {environmentIdentifier}
         </Text>
       </>
@@ -90,12 +91,7 @@ export const RenderUserJourney: Renderer<CellProps<SLOHealthListView>> = ({ row 
   return userJourneys?.map(userJourney => {
     const { name, identifier } = userJourney
     return (
-      <Text
-        key={identifier}
-        className={css.titleInSloTable}
-        title={name}
-        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
-      >
+      <Text key={identifier} lineClamp={1} title={name} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
         {name || identifier}
       </Text>
     )
@@ -107,11 +103,7 @@ export const RenderTags: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
   const { tags = {} } = slo
   const tagsString = Object.keys(tags).join(' ')
   return (
-    <Text
-      className={css.titleInSloTable}
-      title={tagsString}
-      font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
-    >
+    <Text lineClamp={1} title={tagsString} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
       {tagsString}
     </Text>
   )

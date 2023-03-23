@@ -43,13 +43,7 @@ import {
   resetSLOWeightage
 } from './AddSLOs.utils'
 import { SLOList } from './components/SLOList'
-import {
-  RenderMonitoredService,
-  RenderSLIType,
-  RenderTags,
-  RenderTarget,
-  RenderUserJourney
-} from './components/SLOList.utils'
+import { RenderMonitoredService, RenderTags, RenderTarget, RenderUserJourney } from './components/SLOList.utils'
 import { SLOWeight } from '../../CreateCompositeSloForm.constant'
 import { getColumsForProjectAndAccountLevel, getProjectAndOrgColumn } from '../../CreateCompositeSloForm.utils'
 import css from './AddSLOs.module.scss'
@@ -237,14 +231,8 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
     },
     {
       Header: getString('tagsLabel').toUpperCase(),
-      width: '10%',
+      width: '15%',
       Cell: RenderTags
-    },
-    {
-      accessor: 'sliType',
-      Header: getString('cv.slos.sliType').toUpperCase(),
-      width: '10%',
-      Cell: RenderSLIType
     },
     {
       accessor: 'sloTargetPercentage',
@@ -325,7 +313,13 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       />
       {showSLOTableAndMessage && (
         <>
-          <TableV2 sortable columns={filteredColumns} data={serviceLevelObjectivesDetails} minimal />
+          <TableV2
+            className={css.addSlo}
+            sortable
+            columns={filteredColumns}
+            data={serviceLevelObjectivesDetails}
+            minimal
+          />
           <HelpPanel referenceId={'compositeSLOWeightage'} type={HelpPanelType.FLOATING_CONTAINER} />
           <Container className={cx(css.totalRow, showErrorState ? css.rowFailure : css.rowSuccess)}>
             {Array(5)

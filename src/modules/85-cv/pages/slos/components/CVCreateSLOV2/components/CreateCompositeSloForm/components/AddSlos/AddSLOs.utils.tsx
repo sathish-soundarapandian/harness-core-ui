@@ -82,7 +82,7 @@ export const getDistribution = ({
 }
 
 export const RenderName: Renderer<CellProps<SLOObjective>> = ({ row }) => {
-  return <Text>{row.original.name || row.original.serviceLevelObjectiveRef}</Text>
+  return <Text lineClamp={1}>{row.original.name || row.original.serviceLevelObjectiveRef}</Text>
 }
 
 export const createRequestBodyForSLOHealthListViewV2 = ({ values }: { values: SLOV2Form }): SLODashboardApiFilter => {

@@ -42,3 +42,16 @@
 .noMinHeight {
   min-height: 0px !important;
 }
+
+.addSlo {
+  [role='cell'] {
+    p {
+      font-weight: normal !important;
+      font-size: 13px !important;
+    }
+  }
+  [role='cell']:not(:first-child) {
+    margin-left: var(--spacing-5) !important;
+    padding-right: var(--spacing-5) !important;
+  }
+}
