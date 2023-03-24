@@ -10,6 +10,7 @@ import { defaultTo, get, isEmpty, isEqual, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useToaster, shouldShowError } from '@harness/uicore'
 import produce from 'immer'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import type { JsonNode, ServiceDefinition, ServiceInputsMergedResponseDto, ServiceYaml } from 'services/cd-ng'
 import { useGetServiceAccessListQuery, useGetServicesYamlAndRuntimeInputsQuery } from 'services/cd-ng-rq'
@@ -24,6 +25,7 @@ export interface UseGetServicesDataProps {
   serviceIdentifiers: string[]
   deploymentTemplateIdentifier?: string
   versionLabel?: string
+  lazyService?: boolean
 }
 
 export interface UseGetServicesDataReturn {
@@ -42,7 +44,8 @@ export interface UseGetServicesDataReturn {
 const STALE_TIME = 60 * 1000 * 15
 
 export function useGetServicesData(props: UseGetServicesDataProps): UseGetServicesDataReturn {
-  const { deploymentType, gitOpsEnabled, serviceIdentifiers, deploymentTemplateIdentifier, versionLabel } = props
+  const { deploymentType, gitOpsEnabled, serviceIdentifiers, deploymentTemplateIdentifier, versionLabel, lazyService } =
+    props
   const [servicesList, setServicesList] = useState<ServiceYaml[]>([])
   const [servicesData, setServicesData] = useState<ServiceData[]>([])
   const [nonExistingServiceIdentifiers, setNonExistingServiceIdentifiers] = useState<string[]>([])
@@ -68,7 +71,8 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
       }
     },
     {
-      staleTime: STALE_TIME
+      staleTime: STALE_TIME,
+      enabled: !lazyService
     }
   )
 
@@ -87,7 +91,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
       body: { serviceIdentifiers }
     },
     {
-      enabled: serviceIdentifiers.length > 0,
+      enabled: !lazyService && serviceIdentifiers.length > 0,
       staleTime: STALE_TIME
     }
   )
@@ -166,11 +170,11 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
       setServicesList(_servicesList)
       setServicesData(_servicesData)
 
-      const serviceListIdentifiers = _servicesList.map(svcInList => svcInList.identifier)
+      const serviceListIdentifiers = _servicesData.map(svcInList => getScopedValueFromDTO(svcInList.service))
       const _nonExistingServiceIdentifiers = serviceIdentifiers.filter(
         svcInList => serviceListIdentifiers.indexOf(svcInList) === -1
       )
-      if (!isEqual(_nonExistingServiceIdentifiers, nonExistingServiceIdentifiers)) {
+      if (!isEqual(_nonExistingServiceIdentifiers, nonExistingServiceIdentifiers) && !lazyService) {
         setNonExistingServiceIdentifiers(_nonExistingServiceIdentifiers)
       }
     }

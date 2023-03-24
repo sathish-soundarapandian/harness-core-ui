@@ -14,6 +14,7 @@ import { shouldShowError, useToaster } from '@harness/uicore'
 import { useMutateAsGet } from '@common/hooks'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGetEnvironmentGroupList } from 'services/cd-ng'
@@ -83,8 +84,9 @@ export function useGetEnvironmentGroupsData({
 
       setEnvironmentGroupsList(_environmentGroupsList)
 
-      const environmentGroupListIdentifiers = _environmentGroupsList.map(
-        envGroupInList => envGroupInList.envGroup?.identifier
+      const environmentGroupListIdentifiers = _environmentGroupsList.map(envGroupInList =>
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        getScopedValueFromDTO(envGroupInList.envGroup!)
       )
       const _nonExistingEnvironmentGroupIdentifiers = environmentGroupIdentifiers.filter(
         envGroupInList => environmentGroupListIdentifiers.indexOf(envGroupInList) === -1

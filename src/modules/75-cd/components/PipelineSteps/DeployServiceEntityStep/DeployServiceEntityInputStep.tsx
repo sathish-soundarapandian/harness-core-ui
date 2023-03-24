@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import {
   AllowedTypes,
   getMultiTypeFromValue,
@@ -27,7 +27,7 @@ import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMu
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
-import { isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
+import { isMultiTypeExpression, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -73,6 +73,10 @@ export function DeployServiceEntityInputStep({
   const serviceTemplate = inputSetData?.template?.service?.serviceRef
   const servicesTemplate = inputSetData?.template?.services?.values
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+
+  // This is required only for single service
+  const [serviceInputType, setServiceInputType] = useState<MultiTypeInputType>(getMultiTypeFromValue(serviceValue))
+
   const serviceIdentifiers: string[] = useMemo(() => {
     if (serviceValue && !isValueRuntimeInput(serviceValue)) {
       return [serviceValue]
@@ -97,7 +101,8 @@ export function DeployServiceEntityInputStep({
     gitOpsEnabled,
     deploymentType: deploymentType as ServiceDefinition['type'],
     serviceIdentifiers,
-    ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {})
+    ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {}),
+    lazyService: isMultiTypeExpression(serviceInputType)
   })
   const isMultiSvcTemplate =
     getMultiTypeFromValue(servicesTemplate as unknown as string) === MultiTypeInputType.RUNTIME ||
@@ -278,7 +283,8 @@ export function DeployServiceEntityInputStep({
                 multiTypeProps={{
                   expressions,
                   allowableTypes: allowableTypesWithoutExecution,
-                  defaultValueToReset: ''
+                  defaultValueToReset: '',
+                  onTypeChange: setServiceInputType
                 }}
               />
             ) : (
@@ -292,7 +298,8 @@ export function DeployServiceEntityInputStep({
                   allowableTypes: allowableTypesWithoutExecution,
                   selectProps: {
                     addClearBtn: !inputSetData?.readonly,
-                    items: selectOptions
+                    items: selectOptions,
+                    onTypeChange: setServiceInputType
                   }
                 }}
                 className={css.inputWidth}

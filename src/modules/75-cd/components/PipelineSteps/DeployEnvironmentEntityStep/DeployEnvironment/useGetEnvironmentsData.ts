@@ -182,7 +182,9 @@ export function useGetEnvironmentsData({
       setEnvironmentsList(_environmentsList)
       setEnvironmentsData(_environmentsData)
 
-      const environmentListIdentifiers = _environmentsList.map(envInList => envInList.identifier)
+      const environmentListIdentifiers = _environmentsData.map(envInList =>
+        getScopedValueFromDTO(envInList.environment)
+      )
       const _nonExistingEnvironmentIdentifiers = envIdentifiers.filter(
         envInList => environmentListIdentifiers.indexOf(envInList) === -1
       )

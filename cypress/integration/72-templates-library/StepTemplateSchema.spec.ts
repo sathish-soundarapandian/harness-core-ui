@@ -101,13 +101,13 @@ describe('Template Schema Validation', () => {
       cy.wait(1000)
     })
     cy.contains('span', 'Invalid').should('be.visible')
-    cy.contains('span', 'Invalid').trigger('mouseover')
+    cy.wait(1000)
+    cy.contains('span', 'Invalid').trigger('mouseover', { force: true })
     cy.wait(1000)
 
     cy.get(`li[title^="Value is not accepted. Valid values: "]`).should('be.visible')
 
     cy.contains('span', 'Shellcript').type('S')
-    cy.contains('span', 'Invalid').trigger('mouseout')
     cy.wait(1000)
     cy.contains('span', 'Invalid').should('not.exist')
   })

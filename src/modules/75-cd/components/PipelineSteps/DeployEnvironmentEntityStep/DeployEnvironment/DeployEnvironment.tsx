@@ -148,9 +148,6 @@ export default function DeployEnvironment({
   const filterPrefix = 'environmentFilters.runtime'
 
   const shouldRenderEnvironmentEntitiesList = isFixed && !isEmpty(selectedEnvironments)
-  const shouldRenderChildEntity = isExpression
-    ? isValueExpression(values.environment)
-    : shouldRenderEnvironmentEntitiesList
 
   // API
   const {
@@ -219,6 +216,12 @@ export default function DeployEnvironment({
   }, [environmentsList])
 
   const loading = isFixed && (loadingEnvironmentsList || loadingEnvironmentsData)
+
+  const shouldRenderChildEntity = isExpression
+    ? isValueExpression(values.environment)
+    : nonExistingEnvironmentIdentifiers.length
+    ? false
+    : shouldRenderEnvironmentEntitiesList
 
   useEffect(() => {
     // This condition is required to clear the list when switching from multi environment to single environment

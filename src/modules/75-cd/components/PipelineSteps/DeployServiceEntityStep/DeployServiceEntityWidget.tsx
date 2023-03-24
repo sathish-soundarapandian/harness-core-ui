@@ -196,7 +196,8 @@ export default function DeployServiceEntityWidget({
     gitOpsEnabled,
     serviceIdentifiers: allServices,
     deploymentType: deploymentType as ServiceDefinition['type'],
-    ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {})
+    ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {}),
+    lazyService: isMultiTypeExpression(serviceInputType)
   })
 
   useEffect(() => {
