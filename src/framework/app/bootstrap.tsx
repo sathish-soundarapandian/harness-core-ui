@@ -13,7 +13,9 @@ import languageLoader from 'strings/languageLoader'
 import type { LangLocale } from 'strings/languageLoader'
 
 import { AppWithAuthentication, AppWithoutAuthentication } from './App'
+import UserActivityTracker from '../UserActivityTracker/UserActivityTracker'
 
+UserActivityTracker.trackUserActivity()
 const ignoredErrorClasses = ['YAMLSemanticError', 'YAMLSyntaxError', 'AbortError']
 const DefaultRouter: React.FC<React.PropsWithChildren<unknown>> = props => {
   const { browserRouterEnabled } = window
@@ -43,32 +45,6 @@ export default async function render(): Promise<void> {
 
         return true
       }
-    })
-  }
-  if (document.getElementById('react-root')) {
-    const ele = document
-    ele?.addEventListener(
-      'mousemove',
-      () => {
-        console.log('mousemove document')
-      },
-      true
-    )
-    ele?.addEventListener(
-      'mousedown',
-      () => {
-        console.log('mousedown document')
-      },
-      true
-    )
-    ele?.addEventListener('keydown', () => {
-      console.log('keydown document')
-    })
-    ele?.addEventListener('keyup', () => {
-      console.log('keyup document')
-    })
-    ele?.addEventListener('keypress', () => {
-      console.log('keypress document')
     })
   }
 

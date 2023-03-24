@@ -27,7 +27,7 @@ import { LicenseStoreProvider } from 'framework/LicenseStore/LicenseStoreContext
 import RouteDestinationsWithoutAuth from 'modules/RouteDestinationsWithoutAuth'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { StringsContextProvider } from 'framework/strings/StringsContextProvider'
-import { useLogout } from 'framework/utils/SessionUtils'
+import { parseJwtToken, useLogout } from 'framework/utils/SessionUtils'
 import SecureStorage from 'framework/utils/SecureStorage'
 import { SideNavProvider } from 'framework/SideNavStore/SideNavContext'
 import { useRefreshToken } from 'services/portal'
@@ -41,6 +41,7 @@ import HelpPanelProvider from 'framework/utils/HelpPanelProvider'
 import { ToolTipProvider } from 'framework/tooltip/TooltipContext'
 import { FeatureFlagsProvider } from 'framework/FeatureFlags/FeatureFlagsProvider'
 import './App.scss'
+import UserActivityTracker from '../UserActivityTracker/UserActivityTracker'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
@@ -119,14 +120,31 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   }, [refreshTokenResponse])
 
   const checkAndRefreshToken = (): void => {
+    console.log('checking refersh token')
     const currentTime = Date.now()
-    const lastTokenSetTime = SessionToken.getLastTokenSetTime() as number
-    const refreshInterval = 60 * 60 * 1000 // one hour in milliseconds
-    if (currentTime - lastTokenSetTime > refreshInterval && !refreshingToken) {
+    const lastTokenSetTime = SessionToken.getLastTokenIssuedTime() as number
+    const lastTokenExpiryTime = SessionToken.getLastTokenExpiryTime() as number
+    let refreshInterval = (lastTokenExpiryTime - lastTokenSetTime) / (1000 * 60 * 2)
+    let difference = (currentTime - lastTokenSetTime) / (1000 * 60)
+    console.log({
+      refreshInterval,
+      lastTokenExpiryTime,
+      lastTokenSetTime,
+      currentTime,
+      clientsetTime: SessionToken.getLastTokenSetTime(),
+      diff: currentTime - lastTokenSetTime,
+      exp: parseJwtToken(SecureStorage.get<string>('token') as string),
+      difference
+    })
+    if ((currentTime - lastTokenSetTime) > refreshInterval && !refreshingToken) {
+      console.log('refreshing the token abde')
       refreshToken()
     }
   }
-
+  useEffect(() => {
+    console.log('seeting check and refersh token from parent app')
+    UserActivityTracker.setCheckAndRefreshToken(checkAndRefreshToken)
+  }, [])
   const globalResponseHandler = (response: Response): void => {
     if (!response.ok) {
       switch (response.status) {

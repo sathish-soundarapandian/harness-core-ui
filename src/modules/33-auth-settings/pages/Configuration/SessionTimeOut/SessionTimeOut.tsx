@@ -21,7 +21,8 @@ interface SessionTimeOutProps {
   timeout: number | undefined
   setUpdating: Dispatch<SetStateAction<boolean>>
 }
-const MINIMUM_SESSION_TIME_OUT = 30
+const MINIMUM_SESSION_TIME_OUT_IN_MINUTES = 30
+const MAXIMUM_SESSION_TIME_OUT_IN_MINUTES = 4320 // 72 hours
 const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout, setUpdating }) => {
   const params = useParams<AccountPathProps>()
   const [timeoutLocal, setTimeoutLocal] = useState<number>()
@@ -36,10 +37,12 @@ const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout, setUpdating })
     }
   }, [saving, setUpdating])
   const {
-    loading,
     mutate: saveSessionTimeout,
-    error
-  } = useSetSessionTimeoutAtAccountLevel({ queryParams: { accountIdentifier: accountId } })
+    error,
+    loading
+  } = useSetSessionTimeoutAtAccountLevel({
+    queryParams: { accountIdentifier: accountId }
+  })
   useEffect(() => {
     setTimeoutLocal(timeout)
   }, [timeout])
@@ -52,21 +55,36 @@ const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout, setUpdating })
   return (
     <Container margin="xlarge">
       <Card className={css.card}>
-        <Layout.Horizontal spacing={'large'} flex={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
-          <Text color={Color.BLACK}>{getString('authSettings.sessionTimeOut')}</Text>
+        <Layout.Horizontal
+          className={css.sessionTimeoutLayout}
+          spacing={'large'}
+          flex={{ alignItems: 'flex-start', justifyContent: 'space-between' }}
+        >
+          <Text color={Color.BLACK} font={{ weight: 'bold', size: 'normal' }}>
+            {getString('authSettings.sessionTimeOut')}
+          </Text>
 
           <TextInput
             className={css.textInpt}
             value={timeoutLocal as any}
             type="number"
-            min={MINIMUM_SESSION_TIME_OUT}
+            min={MINIMUM_SESSION_TIME_OUT_IN_MINUTES}
+            max={MAXIMUM_SESSION_TIME_OUT_IN_MINUTES}
             errorText={errorMsg}
             intent={errorMsg ? Intent.DANGER : Intent.NONE}
             onChange={e => {
               const val = parseInt((e.currentTarget as HTMLInputElement).value)
               setTimeoutLocal(val)
-              if (val < MINIMUM_SESSION_TIME_OUT) {
-                setErrorMsg(getString('authSettings.sessionTimeOutErrorMessage', { minimum: MINIMUM_SESSION_TIME_OUT }))
+              if (val < MINIMUM_SESSION_TIME_OUT_IN_MINUTES) {
+                setErrorMsg(
+                  getString('authSettings.sessionTimeOutErrorMessage', { minimum: MINIMUM_SESSION_TIME_OUT_IN_MINUTES })
+                )
+              } else if (val > MAXIMUM_SESSION_TIME_OUT_IN_MINUTES) {
+                setErrorMsg(
+                  getString('authSettings.sessionTimeOutErrorMaxMessage', {
+                    maximum: MAXIMUM_SESSION_TIME_OUT_IN_MINUTES
+                  })
+                )
               } else {
                 setErrorMsg(undefined)
               }
@@ -75,11 +93,11 @@ const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout, setUpdating })
 
           <Button
             text={getString('save')}
-            disabled={loading || !timeoutLocal || !!errorMsg}
+            //  disabled={loading || !timeoutLocal || !!errorMsg}
             onClick={() => {
               if (timeoutLocal) {
                 setSaving(true)
-                saveSessionTimeout({ sessionTimeOutInMinutes: timeoutLocal }).then(() => {
+                saveSessionTimeout({ sessionTimeOutInMinutes: timeoutLocal }).finally(() => {
                   setSaving(false)
                 })
               }

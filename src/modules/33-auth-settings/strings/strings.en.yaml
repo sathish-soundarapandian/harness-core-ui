@@ -117,6 +117,7 @@ authenticationSettings: Authentication Settings
 updating: Updating, please wait...
 sessionTimeOut: Session Timeout (in minutes)
 sessionTimeOutErrorMessage: Session Timeout cannot be less than {{minimum}} minutes
+sessionTimeOutErrorMaxMessage: Session Timeout cannot be more than {{maximum}} minutes
 onprem: 'Self Hosted'
 saas: 'SaaS'
 multipleOrganizations: Multiple Organizations
