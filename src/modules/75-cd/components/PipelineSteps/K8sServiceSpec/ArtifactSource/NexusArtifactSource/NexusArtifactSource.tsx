@@ -241,7 +241,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     queryParams: {
       ...commonParams,
       connectorRef: getFinalQueryParamValue(connectorRefValue),
-      repositoryFormat: repositoryFormatValue,
+      repositoryFormat: getFinalQueryParamValue(repositoryFormatValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
       fqnPath: getFqnPath(
@@ -273,9 +273,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     },
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue,
-      repositoryFormat: repositoryFormatValue,
-      repository: repositoryValue,
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      repositoryFormat: getFinalQueryParamValue(repositoryFormatValue),
+      repository: getFinalQueryParamValue(repositoryValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
       fqnPath: getFqnPath(
