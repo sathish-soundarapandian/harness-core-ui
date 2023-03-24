@@ -276,3 +276,10 @@
     }
   }
 }
+
+.permissionText {
+  align-items: flex-start !important;
+  > span[icon='tick'] {
+    margin-top: 3px !important;
+  }
+}

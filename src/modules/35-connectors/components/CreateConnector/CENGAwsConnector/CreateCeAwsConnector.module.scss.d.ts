@@ -34,6 +34,7 @@ declare const styles: {
   readonly main: string
   readonly newCurReport: string
   readonly noAccountLink: string
+  readonly permissionText: string
   readonly stepContainer: string
   readonly submitBtn: string
   readonly warningIcon: string

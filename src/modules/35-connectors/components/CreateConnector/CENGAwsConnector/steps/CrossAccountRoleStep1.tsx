@@ -26,7 +26,9 @@ export enum Features {
   VISIBILITY = 'VISIBILITY',
   OPTIMIZATION = 'OPTIMIZATION',
   BILLING = 'BILLING',
-  GOVERNANCE = 'GOVERNANCE'
+  GOVERNANCE = 'GOVERNANCE',
+  COMMITMENT = 'COMMITMENT_ORCHESTRATOR',
+  CLUSTER = 'CLUSTER_ORCHESTRATOR'
 }
 
 interface CardData {
@@ -125,6 +127,71 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
           getString('connectors.ceAzure.chooseRequirements.optimization.feat2'),
           getString('connectors.ceAzure.chooseRequirements.optimization.feat3'),
           getString('connectors.ceAzure.chooseRequirements.optimization.feat4')
+        ],
+        footer: (
+          <>
+            {getString('connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
+            <a
+              href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_resource_optimization_using_auto_stopping_rules"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {getString('connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
+            </a>{' '}
+            {getString('connectors.ceAws.crossAccountRoleStep1.iamRole')}
+          </>
+        )
+      },
+      {
+        icon: 'nav-settings',
+        text: getString('connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.header'),
+        value: Features.COMMITMENT,
+        desc: (
+          <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+            {getString('connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.mainLabel')}
+          </Text>
+        ),
+        heading: getString('connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.header'),
+        prefix: `${getString(
+          'connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.mainLabel'
+        )} ${getString('connectors.ceAws.crossAccountRoleStep1.cards.withLabel')}`,
+        features: [
+          getString('connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.feat1'),
+          getString('connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.feat2'),
+          getString('connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.feat3'),
+          getString('connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.feat4')
+        ],
+        footer: (
+          <>
+            {getString('connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
+            <a
+              href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_resource_optimization_using_auto_stopping_rules"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {getString('connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
+            </a>{' '}
+            {getString('connectors.ceAws.crossAccountRoleStep1.iamRole')}
+          </>
+        )
+      },
+      {
+        icon: 'nav-settings',
+        text: getString('connectors.ceAws.crossAccountRoleStep1.cards.clusterOrchestrator.header'),
+        value: Features.CLUSTER,
+        desc: (
+          <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+            {getString('connectors.ceAws.crossAccountRoleStep1.cards.clusterOrchestrator.mainLabel')}
+          </Text>
+        ),
+        heading: getString('connectors.ceAws.crossAccountRoleStep1.cards.clusterOrchestrator.header'),
+        prefix: `${getString('connectors.ceAws.crossAccountRoleStep1.cards.clusterOrchestrator.mainLabel')} ${getString(
+          'connectors.ceAws.crossAccountRoleStep1.cards.withLabel'
+        )}`,
+        features: [
+          getString('connectors.ceAws.crossAccountRoleStep1.cards.clusterOrchestrator.feat1'),
+          getString('connectors.ceAws.crossAccountRoleStep1.cards.clusterOrchestrator.feat2'),
+          getString('connectors.ceAws.crossAccountRoleStep1.cards.clusterOrchestrator.feat3')
         ],
         footer: (
           <>
@@ -390,6 +457,7 @@ const FeatureDetails: React.FC<{ feature: CardData }> = ({ feature }) => {
             color={Color.GREY_600}
             icon="tick"
             iconProps={{ size: 12, color: Color.GREEN_700, margin: { right: 'small' } }}
+            className={css.permissionText}
           >
             {feat}
           </Text>

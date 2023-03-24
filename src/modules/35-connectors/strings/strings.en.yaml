@@ -678,6 +678,7 @@ ceAws:
     thesePermissions: these permissions
     iamRole: to an IAM role in the next step.
     cards:
+      withLabel: with
       providedBy: 'Provided by:'
       permissionsInvolved: 'Permissions involved:'
       costVisibility:
@@ -689,6 +690,19 @@ ceAws:
         header: Cloud Governance
         feat1: Asset Management (EC2, EBS, RDS, S3)
         feat2: Automated Actions
+      commitmentOrchestrator:
+        mainLabel: RIs and Savings Plans
+        header: Commitment Orchestrator
+        feat1: Granular visibility into savings from RIs and Savings Plans
+        feat2: Granular visibility into utilization of existing RIs and Savings Plans
+        feat3: Granular visibility into compute coverage from existing RIs and Savings Plans
+        feat4: Automated purchase and management of RIs and Savings Plans to maximize savings, compute coverage and utilization
+      clusterOrchestrator:
+        mainLabel: KS Auto-scaling & Spot Orchestration
+        header: Cluster Orchestrator
+        feat1: Granular visibility into your EKS cluster nodes and pods
+        feat2: Workload-driven intelligent auto-scaling
+        feat3: Distributed spot orchestration and interruption handling
     visibility: '{{ $.common.ce.visibility }}'
     optimization: '{{ $.common.ce.optimization }}'
     visibilityDes: '{{ $.connectors.ceAzure.chooseRequirements.visibilityCardDesc }}'

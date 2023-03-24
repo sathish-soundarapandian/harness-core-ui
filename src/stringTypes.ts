@@ -2305,6 +2305,17 @@ export interface StringsMap {
   'connectors.ceAws.crossAccountRoleExtention.subHeading': string
   'connectors.ceAws.crossAccountRoleStep1.adding': string
   'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.prefix': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.clusterOrchestrator.feat1': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.clusterOrchestrator.feat2': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.clusterOrchestrator.feat3': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.clusterOrchestrator.header': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.clusterOrchestrator.mainLabel': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.feat1': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.feat2': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.feat3': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.feat4': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.header': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestrator.mainLabel': string
   'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer2': string
   'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer3': string
   'connectors.ceAws.crossAccountRoleStep1.cards.governance.feat1': string
@@ -2312,6 +2323,7 @@ export interface StringsMap {
   'connectors.ceAws.crossAccountRoleStep1.cards.governance.header': string
   'connectors.ceAws.crossAccountRoleStep1.cards.permissionsInvolved': string
   'connectors.ceAws.crossAccountRoleStep1.cards.providedBy': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.withLabel': string
   'connectors.ceAws.crossAccountRoleStep1.cost': string
   'connectors.ceAws.crossAccountRoleStep1.default.feat1': string
   'connectors.ceAws.crossAccountRoleStep1.default.footer': string
