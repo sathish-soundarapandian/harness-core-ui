@@ -7,9 +7,9 @@
  */
 
 import React from 'react'
-import { render, waitForElementToBeRemoved, screen, fireEvent } from '@testing-library/react'
+import { render, waitForElementToBeRemoved, screen, fireEvent, within } from '@testing-library/react'
 import userEvent, { TargetElement } from '@testing-library/user-event'
-import { TestWrapper } from '@common/utils/testUtils'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { getOrganizationAggregateDTOListMockData } from '@projects-orgs/pages/organizations/__tests__/OrganizationsMockData'
 import serviceData from '@common/modals/HarnessServiceModal/__tests__/serviceMock'
@@ -241,5 +241,48 @@ describe('Freeze Window Studio Config Section', () => {
     //error toaster
     expect(document.getElementsByClassName('bp3-toast-message')).toBeDefined()
     expect(getByText('Duration: Value must be greater than or equal to "30m"')).toBeInTheDocument()
+  })
+
+  test('test ScheduleSection recurrence', async () => {
+    const { container, getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
+      >
+        <FreezeWindowContext.Provider
+          value={{
+            ...defaultContext,
+            state: {
+              ...defaultContext.state,
+              isUpdated: true
+            }
+          }}
+        >
+          <FreezeWindowScheduleSection isReadOnly={false} onBack={jest.fn()} />
+        </FreezeWindowContext.Provider>
+      </TestWrapper>
+    )
+
+    expect(getByText('freezeWindows.recurrenceConfig.recurrence')).toBeTruthy()
+    expect(getByText('freezeWindows.recurrenceConfig.everyNMonths')).toBeTruthy()
+
+    //default values test
+
+    //default recurrence type
+    expect(getByText('freezeWindows.recurrenceConfig.doesNotRepeat')).toBeTruthy()
+
+    //default n months recurrence value
+    const everyNMonthField = container.querySelector('input[name="recurrence.spec.value"]')
+    expect(everyNMonthField).toHaveValue('')
+
+    //change value
+    userEvent.click(everyNMonthField!)
+    const dropdownOptions = findPopoverContainer() as HTMLElement
+    const firstOption = await within(dropdownOptions).findByText('2')
+    userEvent.click(firstOption)
+    expect(everyNMonthField).toHaveValue('2')
+
+    //check if recurrence type is also automatically changed to 'Monthly'
+    expect(getByText('Monthly')).toBeTruthy()
   })
 })
