@@ -347,7 +347,6 @@ export interface AccessControlCheckError {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
-    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -554,7 +553,6 @@ export type ArtifactTriggerConfig = NGTriggerSpecV2 & {
     | 'AzureArtifacts'
     | 'AmazonMachineImage'
     | 'GoogleCloudStorage'
-    | 'Bamboo'
 }
 
 export interface ArtifactTypeSpec {
@@ -691,14 +689,6 @@ export type AzureRepoPushSpec = AzureRepoEventSpec & {
 export type AzureRepoSpec = WebhookTriggerSpecV2 & {
   spec?: AzureRepoEventSpec
   type?: 'PullRequest' | 'Push' | 'IssueComment'
-}
-
-export type BambooRegistrySpec = ArtifactTypeSpec & {
-  artifactPaths?: string[]
-  build?: string
-  connectorRef?: string
-  eventConditions?: TriggerEventDataCondition[]
-  planKey?: string
 }
 
 export interface BarrierExecutionInfo {
@@ -1504,7 +1494,6 @@ export interface Error {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
-    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -1872,7 +1861,6 @@ export interface ErrorMetadata {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
-    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -2454,7 +2442,6 @@ export interface Failure {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
-    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -3246,6 +3233,7 @@ export interface NGTriggerConfigV2 {
   pipelineIdentifier?: string
   projectIdentifier?: string
   source?: NGTriggerSourceV2
+  stagesToExecute?: string[]
   tags?: {
     [key: string]: string
   }
@@ -3332,6 +3320,7 @@ export interface NGTriggerResponse {
   name?: string
   orgIdentifier?: string
   projectIdentifier?: string
+  stagesToExecute?: string[]
   targetIdentifier?: string
   type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled'
   yaml?: string
@@ -4936,7 +4925,6 @@ export interface ResponseMessage {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
-    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -16691,7 +16679,6 @@ export interface GetSchemaYamlQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
-    | 'AWSSecurityHub'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -16994,7 +16981,6 @@ export interface GetStepYamlSchemaQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
-    | 'AWSSecurityHub'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

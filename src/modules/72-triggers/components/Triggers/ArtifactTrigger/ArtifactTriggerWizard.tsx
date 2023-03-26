@@ -427,7 +427,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
           pipelineBranchName = getDefaultPipelineReferenceBranch(),
           inputSetRefs,
           source: { type },
-          source
+          source,
+          stagesToExecute
         }
       } = triggerResponseJson
 
@@ -443,7 +444,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
         selectedArtifact = {
           identifier: artifactRef,
           type: artifactManifestType || _artifactType,
-          spec
+          spec,
+          stagesToExecute
         }
       }
 
@@ -480,6 +482,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
         name,
         identifier,
         description,
+        stagesToExecute,
         tags,
         source,
         pipeline: pipelineJson,
@@ -714,7 +717,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
         resolvedPipeline: resolvedMergedPipeline,
         inputSetTemplateYamlObj,
         pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew) || branch,
-        selectedArtifact: {}
+        selectedArtifact: {},
+        stagesToExecute: newPipeline?.stagesToExecute
       }
     }
     return {}
