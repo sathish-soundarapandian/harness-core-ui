@@ -50,6 +50,7 @@ export interface FlatInitialValuesInterface {
   inputSetRefs?: string[]
   // Triggers authentication
   encryptedWebhookSecretIdentifier?: string
+  stagesToExecute?: string[]
 }
 
 export interface FlatOnEditValuesInterface {
@@ -108,6 +109,7 @@ export interface FlatOnEditValuesInterface {
   pollInterval?: string
   webhookId?: string
   encryptedWebhookSecretIdentifier?: string
+  stagesToExecute?: string[]
 }
 
 export interface FlatValidWebhookFormikValuesInterface {
