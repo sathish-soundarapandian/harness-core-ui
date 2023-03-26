@@ -28,3 +28,23 @@
     }
   }
 }
+
+.recurrenceStyle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-3);
+
+  > p {
+    margin-bottom: 15px !important;
+    margin-left: var(--spacing-2) !important;
+  }
+}
+
+.marginBottom24 {
+  margin-bottom: var(--spacing-7);
+}
+
+.selectDropdownWidth {
+  width: 200px;
+}

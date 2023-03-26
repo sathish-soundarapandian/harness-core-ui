@@ -11451,6 +11451,7 @@ export interface Recurrence {
 
 export interface RecurrenceSpec {
   until: string
+  value?: number
 }
 
 export interface ReferenceDTO {
