@@ -9,7 +9,8 @@ export enum ChangeSourceTypes {
   Deployment = 'Deployment',
   Infrastructure = 'Infrastructure',
   FeatureFlag = 'FeatureFlag',
-  Alert = 'Alert'
+  Alert = 'Alert',
+  ChaosExperiment = 'ChaosExperiment'
 }
 
 export const defaultCategoryTimeline = {

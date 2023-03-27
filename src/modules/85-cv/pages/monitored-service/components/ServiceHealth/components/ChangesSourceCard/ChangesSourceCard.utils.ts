@@ -25,6 +25,8 @@ const labelByCategory = (
       return getString('common.purpose.cf.continuous')
     case ChangeSourceCategoryName.ALERT:
       return getString('cv.changeSource.tooltip.incidents')
+    case ChangeSourceCategoryName.CHAOS_EXPERIMENT:
+      return getString('chaos.chaosExperiment')
     case changeLabel:
       return getString('changes')
     default:

@@ -696,6 +696,7 @@ changeSource:
     triggred: Triggered
     viewDeployment: View Deployment
     viewFeatureFlag: View Feature Flag
+    viewChaosExpriment: View Chaos Experiment
     finished: 'Finished: '
     deploymentHealth: Deployment Health
     ago: ago

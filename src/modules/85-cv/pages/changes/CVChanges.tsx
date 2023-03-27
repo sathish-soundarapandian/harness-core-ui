@@ -32,6 +32,8 @@ import { TimeLine } from '@cv/components/Timeline/TimeLine'
 import type { StringsMap } from 'stringTypes'
 import { prepareFilterInfo } from '@cv/utils/CommonUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import {
   ChangeSourceCategoryName,
   ChangeSourceTypes
@@ -56,11 +58,12 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
   const { serviceOptions } = useGetHarnessServices()
   const { environmentOptions } = useGetHarnessEnvironments()
   const { getString } = useStrings()
+  const isChaosExperimentCSEnabled = useFeatureFlag(FeatureFlag.SRM_INTERNAL_CHANGE_SOURCE_CE)
 
   useDocumentTitle([getString('cv.srmTitle'), getString('changes')])
 
   const sourceTypes = useMemo(() => {
-    return getChangeSourceOptions(getString).map((changeSourceOption: SelectOption) => {
+    return getChangeSourceOptions({ getString, isChaosExperimentCSEnabled }).map((changeSourceOption: SelectOption) => {
       if (changeSourceOption?.value === ChangeSourceCategoryName.ALERT) {
         return { label: ChangeSourceCategoryName.INCIDENTS, value: ChangeSourceCategoryName.ALERT }
       }

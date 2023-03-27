@@ -695,7 +695,7 @@ export interface CategoryCountDetails {
 
 export interface ChangeEventDTO {
   accountId: string
-  category?: 'Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag'
+  category?: 'Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag' | 'ChaosExperiment'
   changeSourceIdentifier?: string
   envIdentifier?: string
   environmentName?: string
@@ -714,6 +714,7 @@ export interface ChangeEventDTO {
     | 'K8sCluster'
     | 'HarnessCD'
     | 'HarnessFF'
+    | 'HarnessCE'
     | 'CustomDeploy'
     | 'CustomIncident'
     | 'CustomInfrastructure'
@@ -738,7 +739,7 @@ export type ChangeObservedConditionSpec = NotificationRuleConditionSpec & {
 }
 
 export interface ChangeSourceDTO {
-  category?: 'Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag'
+  category?: 'Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag' | 'ChaosExperiment'
   enabled?: boolean
   identifier?: string
   name?: string
@@ -749,6 +750,7 @@ export interface ChangeSourceDTO {
     | 'K8sCluster'
     | 'HarnessCD'
     | 'HarnessFF'
+    | 'HarnessCE'
     | 'CustomDeploy'
     | 'CustomIncident'
     | 'CustomInfrastructure'
@@ -845,7 +847,7 @@ export interface ClusteredLog {
   verificationTaskId?: string
 }
 
-export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
+export interface CompositeServiceLevelObjectiveSpec {
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
 }
 
@@ -944,6 +946,7 @@ export type CustomChangeEventMetadata = ChangeEventMetadata & {
     | 'K8sCluster'
     | 'HarnessCD'
     | 'HarnessFF'
+    | 'HarnessCE'
     | 'CustomDeploy'
     | 'CustomIncident'
     | 'CustomInfrastructure'
@@ -953,7 +956,7 @@ export type CustomChangeEventMetadata = ChangeEventMetadata & {
 
 export type CustomChangeSourceSpec = ChangeSourceSpec & {
   name?: string
-  type?: 'Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag'
+  type?: 'Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag' | 'ChaosExperiment'
   webhookCurlCommand?: string
   webhookUrl?: string
 }
@@ -1202,6 +1205,7 @@ export interface DemoChangeEventDTO {
     | 'K8sCluster'
     | 'HarnessCD'
     | 'HarnessFF'
+    | 'HarnessCE'
     | 'CustomDeploy'
     | 'CustomIncident'
     | 'CustomInfrastructure'
@@ -1834,6 +1838,8 @@ export interface Error {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2268,6 +2274,8 @@ export interface Failure {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2850,6 +2858,7 @@ export type InternalChangeEventMetaData = ChangeEventMetadata & {
     | 'PAGER_DUTY'
     | 'HARNESS_CD_CURRENT_GEN'
     | 'FEATURE_FLAG'
+    | 'CHAOS_EXPERIMENT'
     | 'CUSTOM_DEPLOY'
     | 'CUSTOM_INCIDENT'
     | 'CUSTOM_INFRA'
@@ -4281,6 +4290,8 @@ export interface RatioMetricPercentageGraph {
 }
 
 export type RatioSLIMetricSpec = SLIMetricSpec & {
+  considerAllConsecutiveMinutesFromStartAsBad?: boolean
+  considerConsecutiveMinutes?: number
   eventType: 'Good' | 'Bad'
   metric1: string
   metric2: string
@@ -4857,6 +4868,8 @@ export interface ResponseMessage {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5791,6 +5804,7 @@ export interface SLODashboardApiFilter {
   childResource?: boolean
   compositeSLOIdentifier?: string
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+  evaluationType?: 'Window' | 'Request'
   monitoredServiceIdentifier?: string
   searchFilter?: string
   sliTypes?: ('Availability' | 'Latency')[]
@@ -5861,6 +5875,7 @@ export interface SLOHealthListView {
   errorBudgetRemaining: number
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
+  evaluationType: 'Window' | 'Request'
   healthSourceIdentifier?: string
   healthSourceName?: string
   monitoredServiceIdentifier?: string
@@ -5955,6 +5970,7 @@ export interface ServiceDependencyMetadata {
     | 'K8sCluster'
     | 'HarnessCD'
     | 'HarnessFF'
+    | 'HarnessCE'
     | 'CustomDeploy'
     | 'CustomIncident'
     | 'CustomInfrastructure'
@@ -6272,6 +6288,8 @@ export type TerraformCloudTokenCredentials = TerraformCloudCredentialSpec & {
 }
 
 export type ThresholdSLIMetricSpec = SLIMetricSpec & {
+  considerAllConsecutiveMinutesFromStartAsBad?: boolean
+  considerConsecutiveMinutes?: number
   metric1: string
   thresholdType: '>' | '<' | '>=' | '<='
   thresholdValue: number
@@ -6962,13 +6980,14 @@ export interface ChangeEventListForAccountQueryParams {
   envIdentifiers?: string[]
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
-  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag' | 'ChaosExperiment')[]
   changeSourceTypes?: (
     | 'HarnessCDNextGen'
     | 'PagerDuty'
     | 'K8sCluster'
     | 'HarnessCD'
     | 'HarnessFF'
+    | 'HarnessCE'
     | 'CustomDeploy'
     | 'CustomIncident'
     | 'CustomInfrastructure'
@@ -7067,13 +7086,14 @@ export interface ChangeEventTimelineForAccountQueryParams {
   envIdentifiers?: string[]
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
-  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag' | 'ChaosExperiment')[]
   changeSourceTypes?: (
     | 'HarnessCDNextGen'
     | 'PagerDuty'
     | 'K8sCluster'
     | 'HarnessCD'
     | 'HarnessFF'
+    | 'HarnessCE'
     | 'CustomDeploy'
     | 'CustomIncident'
     | 'CustomInfrastructure'
@@ -7409,13 +7429,14 @@ export interface ChangeEventListQueryParams {
   envIdentifiers?: string[]
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
-  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag' | 'ChaosExperiment')[]
   changeSourceTypes?: (
     | 'HarnessCDNextGen'
     | 'PagerDuty'
     | 'K8sCluster'
     | 'HarnessCD'
     | 'HarnessFF'
+    | 'HarnessCE'
     | 'CustomDeploy'
     | 'CustomIncident'
     | 'CustomInfrastructure'
@@ -7508,13 +7529,14 @@ export interface ChangeEventTimelineQueryParams {
   envIdentifiers?: string[]
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
-  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag' | 'ChaosExperiment')[]
   changeSourceTypes?: (
     | 'HarnessCDNextGen'
     | 'PagerDuty'
     | 'K8sCluster'
     | 'HarnessCD'
     | 'HarnessFF'
+    | 'HarnessCE'
     | 'CustomDeploy'
     | 'CustomIncident'
     | 'CustomInfrastructure'
@@ -10254,13 +10276,14 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   monitoredServiceIdentifier?: string
   monitoredServiceIdentifiers?: string[]
   isMonitoredServiceIdentifierScoped?: boolean
-  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag' | 'ChaosExperiment')[]
   changeSourceTypes?: (
     | 'HarnessCDNextGen'
     | 'PagerDuty'
     | 'K8sCluster'
     | 'HarnessCD'
     | 'HarnessFF'
+    | 'HarnessCE'
     | 'CustomDeploy'
     | 'CustomIncident'
     | 'CustomInfrastructure'
@@ -10330,6 +10353,7 @@ export interface GetMonitoredServiceChangeTimelineQueryParams {
     | 'K8sCluster'
     | 'HarnessCD'
     | 'HarnessFF'
+    | 'HarnessCE'
     | 'CustomDeploy'
     | 'CustomIncident'
     | 'CustomInfrastructure'
@@ -15349,6 +15373,7 @@ export interface GetServiceLevelObjectivesRiskCountQueryParams {
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
   filter?: string
+  evaluationType?: 'Window' | 'Request'
 }
 
 export type GetServiceLevelObjectivesRiskCountProps = Omit<
@@ -15763,6 +15788,7 @@ export interface GetSLOHealthListViewQueryParams {
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
   filter?: string
+  evaluationType?: 'Window' | 'Request'
   pageNumber?: number
   pageSize?: number
 }

@@ -152,14 +152,23 @@ export const validateChangeSourceSpec = (
   }
 }
 
-export const getChangeSourceOptions = (
-  getString: UseStringsReturn['getString'],
-  type?: MonitoredServiceDTO['type'],
+interface GetChangeSourceOptionsProps {
+  getString: UseStringsReturn['getString']
+  type?: MonitoredServiceDTO['type']
   isCustomChangeSourceEnabled?: boolean
-): SelectOption[] => {
+  isChaosExperimentCSEnabled?: boolean
+}
+
+export const getChangeSourceOptions = ({
+  getString,
+  type,
+  isCustomChangeSourceEnabled,
+  isChaosExperimentCSEnabled
+}: GetChangeSourceOptionsProps): SelectOption[] => {
   const options: SelectOption[] = []
   for (const category of ChangeSourceCategoryOptions) {
     if (
+      (!isChaosExperimentCSEnabled && category.value === ChangeSourceCategoryName.CHAOS_EXPERIMENT) ||
       (!isCustomChangeSourceEnabled && type && internalChangeSources.includes(category.value)) ||
       (type === MonitoredServiceType.APPLICATION && category.value === ChangeSourceCategoryName.INFRASTRUCTURE) ||
       (type === MonitoredServiceType.INFRASTRUCTURE && category.value === ChangeSourceCategoryName.DEPLOYMENT)

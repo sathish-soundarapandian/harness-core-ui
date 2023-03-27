@@ -36,6 +36,7 @@ export default function InternalCSEventCard({ data }: { data: ChangeEventDTO }):
   const changeDetailsData: ChangeDetailsDataInterface = useMemo(() => createChangeDetailsData(data), [])
   const metadata: InternalChangeEventMetaData | CustomChangeEventMetadata = defaultTo(data.metadata, {})
   const { eventStartTime, updatedBy, internalChangeEvent, customChangeEvent, user, startTime } = metadata
+  const { changeEventDetailsLink, eventDescriptions } = internalChangeEvent || {}
 
   const isCustomChangeSource = CustomChangeSourceList.includes(data.type as ChangeSourceTypes)
 
@@ -73,12 +74,14 @@ export default function InternalCSEventCard({ data }: { data: ChangeEventDTO }):
       }
     : {
         ...changeDetailsData,
-        details: { action: defaultTo(internalChangeEvent?.eventDescriptions, []) },
+        details: { action: defaultTo(eventDescriptions, []) },
         executedBy: {
           shouldVisible: true,
           component: renderUserLabel()
         }
       }
+
+  const showYamlDiff = changeEventDetailsLink?.url && data.type !== ChangeSourceTypes.HarnessCE
 
   return (
     <Card className={css.main}>
@@ -86,7 +89,7 @@ export default function InternalCSEventCard({ data }: { data: ChangeEventDTO }):
       <Divider className={css.divider} />
       <ChangeDetails ChangeDetailsData={changeDetailsProps} />
       <Divider className={css.divider} />
-      {internalChangeEvent?.changeEventDetailsLink?.url && (
+      {showYamlDiff && (
         <>
           <Container>
             <Text

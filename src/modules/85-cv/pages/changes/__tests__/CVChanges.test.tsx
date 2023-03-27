@@ -394,7 +394,7 @@ describe('Unit tests for CVChanges', () => {
     await waitFor(() => {
       expect(refetch).toHaveBeenLastCalledWith({
         queryParams: expect.objectContaining({
-          changeCategories: ['Deployment', 'Infrastructure', 'Alert', 'FeatureFlag'],
+          changeCategories: ['Deployment', 'Infrastructure', 'Alert', 'FeatureFlag', 'ChaosExperiment'],
           changeSourceTypes: [
             'HarnessCDNextGen',
             'HarnessCD',

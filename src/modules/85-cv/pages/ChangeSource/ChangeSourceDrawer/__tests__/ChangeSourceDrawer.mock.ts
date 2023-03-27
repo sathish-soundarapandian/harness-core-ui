@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { ChangeSourceCategoryName } from '../ChangeSourceDrawer.constants'
+
 export const changeSourceDrawerData = {
   name: 'Harness CD Nextgen',
   identifier: 'harness_cd_next_gen',
@@ -127,4 +129,12 @@ export const emptyPagerDutyConnectorAndService = {
     connectorRef: 'Connector Selection is required',
     pagerDutyServiceId: ''
   }
+}
+
+export const changeSourceCategorySelectOptions = {
+  Deployment: { label: 'deploymentsText', value: ChangeSourceCategoryName.DEPLOYMENT },
+  Alert: { label: 'cv.changeSource.incident', value: ChangeSourceCategoryName.ALERT },
+  FeatureFlag: { label: 'common.purpose.cf.continuous', value: ChangeSourceCategoryName.FEATURE_FLAG },
+  ChaosExperiment: { label: 'chaos.chaosExperiment', value: ChangeSourceCategoryName.CHAOS_EXPERIMENT },
+  Infrastructure: { label: 'infrastructureText', value: ChangeSourceCategoryName.INFRASTRUCTURE }
 }

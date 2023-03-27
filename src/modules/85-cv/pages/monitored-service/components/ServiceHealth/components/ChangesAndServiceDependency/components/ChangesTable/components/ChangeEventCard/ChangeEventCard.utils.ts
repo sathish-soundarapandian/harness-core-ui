@@ -98,6 +98,8 @@ export const getTextForRedirectButton = (getString: UseStringsReturn['getString'
       return getString('cv.changeSource.changeSourceCard.viewDeployment')
     case ChangeSourceTypes.HarnessFF:
       return getString('cv.changeSource.changeSourceCard.viewFeatureFlag')
+    case ChangeSourceTypes.HarnessCE:
+      return getString('cv.changeSource.changeSourceCard.viewChaosExpriment')
     default:
       return ''
   }

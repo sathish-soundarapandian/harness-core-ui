@@ -51,6 +51,7 @@ export default function ChangeEventCard({ activityId }: { activityId: string }):
       case ChangeSourceTypes.CustomDeploy:
       case ChangeSourceTypes.CustomIncident:
       case ChangeSourceTypes.CustomInfrastructure:
+      case ChangeSourceTypes.HarnessCE:
         return <InternalCSEventCard data={data?.resource} />
       default:
         return <NoDataCard message={getString('cv.changeSource.noDataAvaiableForCard')} image={noDataImage} />

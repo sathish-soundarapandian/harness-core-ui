@@ -11,7 +11,11 @@ import {
   getChangeSourceOptions,
   buildInitialData
 } from '../ChangeSourceDrawer.utils'
-import { allFieldsEmpty, emptyPagerDutyConnectorAndService } from './ChangeSourceDrawer.mock'
+import {
+  allFieldsEmpty,
+  emptyPagerDutyConnectorAndService,
+  changeSourceCategorySelectOptions
+} from './ChangeSourceDrawer.mock'
 import { ChangeSourceCategoryName } from '../ChangeSourceDrawer.constants'
 
 function mockGetString(name: string): string {
@@ -99,54 +103,36 @@ describe('Validate ChangeSource Utils', () => {
 
   test('Ensure getChangeSourceOptions works as intended', async () => {
     // no infra options should be returned for application type
-    expect(getChangeSourceOptions(jest.fn(), 'Application', true)).toEqual([
-      {
-        label: undefined,
-        value: 'Deployment'
-      },
-      {
-        label: undefined,
-        value: 'Alert'
-      },
-      {
-        label: undefined,
-        value: 'FeatureFlag'
-      }
+    expect(
+      getChangeSourceOptions({ getString: str => str, type: 'Application', isCustomChangeSourceEnabled: true })
+    ).toEqual([
+      changeSourceCategorySelectOptions.Deployment,
+      changeSourceCategorySelectOptions.Alert,
+      changeSourceCategorySelectOptions.FeatureFlag
     ])
 
     // no deployment options should be return for infra type
-    expect(getChangeSourceOptions(jest.fn(), 'Infrastructure', true)).toEqual([
-      {
-        label: undefined,
-        value: 'Infrastructure'
-      },
-      {
-        label: undefined,
-        value: 'Alert'
-      },
-      {
-        label: undefined,
-        value: 'FeatureFlag'
-      }
+    expect(
+      getChangeSourceOptions({ getString: str => str, type: 'Infrastructure', isCustomChangeSourceEnabled: true })
+    ).toEqual([
+      changeSourceCategorySelectOptions.Infrastructure,
+      changeSourceCategorySelectOptions.Alert,
+      changeSourceCategorySelectOptions.FeatureFlag
     ])
 
-    expect(getChangeSourceOptions(jest.fn())).toEqual([
-      {
-        label: undefined,
-        value: 'Deployment'
-      },
-      {
-        label: undefined,
-        value: 'Infrastructure'
-      },
-      {
-        label: undefined,
-        value: 'Alert'
-      },
-      {
-        label: undefined,
-        value: 'FeatureFlag'
-      }
+    expect(getChangeSourceOptions({ getString: str => str })).toEqual([
+      changeSourceCategorySelectOptions.Deployment,
+      changeSourceCategorySelectOptions.Infrastructure,
+      changeSourceCategorySelectOptions.Alert,
+      changeSourceCategorySelectOptions.FeatureFlag
+    ])
+    // should return chaos change
+    expect(getChangeSourceOptions({ getString: str => str, isChaosExperimentCSEnabled: true })).toEqual([
+      changeSourceCategorySelectOptions.Deployment,
+      changeSourceCategorySelectOptions.Infrastructure,
+      changeSourceCategorySelectOptions.Alert,
+      changeSourceCategorySelectOptions.FeatureFlag,
+      changeSourceCategorySelectOptions.ChaosExperiment
     ])
   })
 

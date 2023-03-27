@@ -14,6 +14,7 @@ export enum ChangeSourceTypes {
   PagerDuty = 'PagerDuty',
   K8sCluster = 'K8sCluster',
   HarnessFF = 'HarnessFF',
+  HarnessCE = 'HarnessCE',
   CustomDeploy = 'CustomDeploy',
   CustomIncident = 'CustomIncident',
   CustomInfrastructure = 'CustomInfrastructure',
@@ -32,14 +33,16 @@ export const ChangeSourceCategoryName = {
   INFRASTRUCTURE: 'Infrastructure',
   ALERT: 'Alert',
   FEATURE_FLAG: 'FeatureFlag',
-  INCIDENTS: 'Incidents'
+  INCIDENTS: 'Incidents',
+  CHAOS_EXPERIMENT: 'ChaosExperiment'
 }
 
 export const ChangeSourceCategoryOptions = [
   { label: 'deploymentsText', value: ChangeSourceCategoryName.DEPLOYMENT },
   { label: 'infrastructureText', value: ChangeSourceCategoryName.INFRASTRUCTURE },
   { label: 'cv.changeSource.incident', value: ChangeSourceCategoryName.ALERT },
-  { label: 'common.purpose.cf.continuous', value: ChangeSourceCategoryName.FEATURE_FLAG }
+  { label: 'common.purpose.cf.continuous', value: ChangeSourceCategoryName.FEATURE_FLAG },
+  { label: 'chaos.chaosExperiment', value: ChangeSourceCategoryName.CHAOS_EXPERIMENT }
 ]
 
 export const ChangeSourceConnectorOptions: CardSelectOption[] = [
@@ -89,4 +92,4 @@ export const ChangeSourceFieldNames = {
   TYPE: 'type'
 }
 
-export const internalChangeSources = [ChangeSourceCategoryName.FEATURE_FLAG]
+export const internalChangeSources = [ChangeSourceCategoryName.FEATURE_FLAG, ChangeSourceCategoryName.CHAOS_EXPERIMENT]

@@ -8066,6 +8066,7 @@ export interface StringsMap {
   'cv.changeSource.changeSourceCard.finished': string
   'cv.changeSource.changeSourceCard.information': string
   'cv.changeSource.changeSourceCard.triggred': string
+  'cv.changeSource.changeSourceCard.viewChaosExpriment': string
   'cv.changeSource.changeSourceCard.viewDeployment': string
   'cv.changeSource.changeSourceCard.viewFeatureFlag': string
   'cv.changeSource.configureChangeSource': string

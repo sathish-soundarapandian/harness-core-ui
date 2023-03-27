@@ -62,7 +62,7 @@ export function ChangeSourceDrawer({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const categoryOptions = useMemo(
-    () => getChangeSourceOptions(getString, monitoredServiceType, isCustomChangeSourceEnabled),
+    () => getChangeSourceOptions({ getString, type: monitoredServiceType, isCustomChangeSourceEnabled }),
     [monitoredServiceType, isCustomChangeSourceEnabled]
   )
 

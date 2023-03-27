@@ -25,6 +25,8 @@ const iconByType = (type: ChangeEventDTO['type']) => {
     case ChangeSourceTypes.CustomIncident:
     case ChangeSourceTypes.CustomInfrastructure:
       return 'service-custom-connector'
+    case ChangeSourceTypes.HarnessCE:
+      return 'chaos-main'
     default:
       return 'cd-solid'
   }

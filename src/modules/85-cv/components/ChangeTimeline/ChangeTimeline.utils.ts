@@ -10,6 +10,8 @@ import { sumBy, isNumber } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import type { ChangeEventDTO, TimeRangeDetail } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
+import ChaosExperimentWithNChange from '@cv/assets/ChangeTimelineSymbol/ChaosExperiment/ChaosExperimentWithNChange.svg'
+import ChaosExperimentWithTwoChange from '@cv/assets/ChangeTimelineSymbol/ChaosExperiment/ChaosExperimentWithTwoChange.svg'
 import DeploymentWithTwoChanges from '@cv/assets/ChangeTimelineSymbol/Deployment/DeploymentWithTwoChange.svg'
 import DeploymentWithNChanges from '@cv/assets/ChangeTimelineSymbol/Deployment/DeploymentWithNChange.svg'
 import IncidentWithTwoChanges from '@cv/assets/ChangeTimelineSymbol/Incident/IncidentWithTwoChange.svg'
@@ -37,6 +39,8 @@ export const getChangeSoureIconColor = (type = '', isChartSymbol = false): strin
       return isChartSymbol ? 'var(--purple-400)' : Color.PURPLE_400
     case ChangeSourceTypes.FeatureFlag:
       return isChartSymbol ? '#EE8625' : Color.ORANGE_800
+    case ChangeSourceTypes.ChaosExperiment:
+      return isChartSymbol ? '#ff61a2' : Color.MAGENTA_800
     default:
       return Color.GREY_200
   }
@@ -52,6 +56,8 @@ const getSymbolByTypeForTwoCluster = (type: string) => {
       return IncidentWithTwoChanges
     case ChangeSourceTypes.FeatureFlag:
       return FeatureFlagWithTwoChanges
+    case ChangeSourceTypes.ChaosExperiment:
+      return ChaosExperimentWithTwoChange
     default:
       return 'diamond'
   }
@@ -83,6 +89,8 @@ const getSymbolByTypeForGreaterThanTwoCluster = (type: string) => {
       return IncidentWithNChanges
     case ChangeSourceTypes.FeatureFlag:
       return FeatureFlagWithNChanges
+    case ChangeSourceTypes.ChaosExperiment:
+      return ChaosExperimentWithNChange
     default:
       return 'diamond'
   }
@@ -115,6 +123,10 @@ export const createTooltipLabel = (
       return `${count} ${getString('common.moduleTitles.cf')} ${
         count !== 1 ? getString('changes') : getString('change')
       }`
+    case ChangeSourceTypes.ChaosExperiment:
+      return `${count} ${
+        count !== 1 ? getString('chaos.chaosExperiment') : getString('chaos.navLabels.chaosExperiments')
+      }`
     default:
       return ''
   }
@@ -130,6 +142,8 @@ export const labelByCategory = (categoryType: string, getString: UseStringsRetur
       return getString('common.purpose.cf.continuous')
     case ChangeSourceTypes.Alert:
       return getString('cv.changeSource.tooltip.incidents')
+    case ChangeSourceTypes.ChaosExperiment:
+      return getString('chaos.chaosExperiment')
     default:
       return ''
   }

@@ -35,7 +35,7 @@ export default function ChangeDetails({
   const { color, backgroundColor } = statusToColorMapping(status, type) || {}
   if ([ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.K8sCluster].includes(type as ChangeSourceTypes)) {
     details = { source: type as string, ...details, executedBy: (executedBy as any) || null }
-  } else if ([ChangeSourceTypes.HarnessFF].includes(type as ChangeSourceTypes)) {
+  } else if ([ChangeSourceTypes.HarnessFF, ChangeSourceTypes.HarnessCE].includes(type as ChangeSourceTypes)) {
     details = { source: getSourceLabel(getString, type), ...details, updatedBy: (executedBy as any) || null }
   } else if (CustomChangeSourceList.includes(type as ChangeSourceTypes)) {
     details = { source: getSourceLabel(getString, type), ...details, updatedBy: (executedBy as any) || null }
