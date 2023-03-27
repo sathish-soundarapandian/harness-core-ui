@@ -3,7 +3,7 @@ editSAMLProvider: Edit SAML Provider
 selectSAMLProvider: Select a SAML Provider
 enterSAMLEndPoint: Enter this SAML Endpoint URL as your Harness {{ selectedSAMLProvider }} application's ACS URL.
 uploadIdentityProvider: Upload the Identity Provider metadata XML downloaded from your {{ selectedSAMLProvider }} app
-identityProvider: Identity Provider metadata XML downloaded from your {{ selectedSAMLProvider }} app {{ $.titleOptional }}
+identityProvider: Identity Provider metadata XML downloaded from your {{ selectedSAMLProvider }} app
 chooseFile: Choose a file...
 enableAuthorization: Enable Authorization
 enableClientIdAndSecret: Enable ClientId and Secret
