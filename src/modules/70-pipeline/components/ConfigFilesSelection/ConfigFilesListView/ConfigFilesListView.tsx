@@ -24,7 +24,7 @@ import { Dialog, Classes } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 
 import cx from 'classnames'
-import { get, set, noop, isArray } from 'lodash-es'
+import { get, set, noop, isArray, defaultTo } from 'lodash-es'
 import produce from 'immer'
 import { useModalHook } from '@harness/use-modal'
 import type { ConfigFileWrapper, StageElementConfig } from 'services/cd-ng'
@@ -120,13 +120,14 @@ function ConfigFilesListView({
 
   const getInitialValues = (): ConfigInitStepData => {
     const initValues = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec', null)
+    const filesValues = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.files')
     let files
     let fileType
     if (get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', []).length > 0) {
       files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', [''])
       fileType = FILE_TYPE_VALUES.ENCRYPTED
     } else {
-      files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.files', ['']).filter((f: string) => f)
+      files = !isArray(filesValues) ? filesValues : defaultTo(filesValues, ['']).filter((f: string) => f)
       fileType = FILE_TYPE_VALUES.FILE_STORE
     }
 
