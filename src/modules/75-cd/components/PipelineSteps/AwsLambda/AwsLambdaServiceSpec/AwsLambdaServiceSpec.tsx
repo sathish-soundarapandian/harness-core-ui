@@ -19,7 +19,6 @@ import {
   getConnectorListV2Promise,
   ResponsePageConnectorResponse,
   ConnectorResponse,
-  getBuildDetailsForDockerPromise,
   getBuildDetailsForEcrPromise,
   getBuildDetailsForNexusArtifactPromise,
   ResponseArtifactoryResponseDTO,
@@ -192,17 +191,6 @@ export class AwsLambdaServiceSpec extends Step<ServiceSpec> {
       const obj = get(pipelineObj, path.replace('.spec.tag', ''))
       if (awsLambdaAllowedArtifactTypes.includes(obj?.type)) {
         switch (obj.type) {
-          case ENABLED_ARTIFACT_TYPES.DockerRegistry: {
-            return getBuildDetailsForDockerPromise({
-              queryParams: {
-                imagePath: obj.spec?.imagePath,
-                connectorRef: obj.spec?.connectorRef,
-                accountIdentifier: accountId,
-                orgIdentifier,
-                projectIdentifier
-              }
-            }).then(response => this.trasformTagData(response))
-          }
           case ENABLED_ARTIFACT_TYPES.Ecr: {
             return getBuildDetailsForEcrPromise({
               queryParams: {
@@ -322,7 +310,7 @@ export class AwsLambdaServiceSpec extends Step<ServiceSpec> {
     getString,
     isRequired,
     errors
-  }: ValidateArtifactInputSetFieldArgs) {
+  }: ValidateArtifactInputSetFieldArgs): void {
     /** Most common artifact fields */
     if (
       isEmpty(get(data, `${dataPathToField}.connectorRef`)) &&
