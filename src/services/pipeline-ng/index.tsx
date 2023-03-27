@@ -347,6 +347,7 @@ export interface AccessControlCheckError {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -400,6 +401,8 @@ export interface AccessControlCheckError {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -553,6 +556,7 @@ export type ArtifactTriggerConfig = NGTriggerSpecV2 & {
     | 'AzureArtifacts'
     | 'AmazonMachineImage'
     | 'GoogleCloudStorage'
+    | 'Bamboo'
 }
 
 export interface ArtifactTypeSpec {
@@ -689,6 +693,14 @@ export type AzureRepoPushSpec = AzureRepoEventSpec & {
 export type AzureRepoSpec = WebhookTriggerSpecV2 & {
   spec?: AzureRepoEventSpec
   type?: 'PullRequest' | 'Push' | 'IssueComment'
+}
+
+export type BambooRegistrySpec = ArtifactTypeSpec & {
+  artifactPaths?: string[]
+  build?: string
+  connectorRef?: string
+  eventConditions?: TriggerEventDataCondition[]
+  planKey?: string
 }
 
 export interface BarrierExecutionInfo {
@@ -1494,6 +1506,7 @@ export interface Error {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -1547,6 +1560,8 @@ export interface Error {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1861,6 +1876,7 @@ export interface ErrorMetadata {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -1914,6 +1930,8 @@ export interface ErrorMetadata {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   errorMessage?: string
 }
 
@@ -2442,6 +2460,7 @@ export interface Failure {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -2495,6 +2514,8 @@ export interface Failure {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3086,6 +3107,9 @@ export interface JiraField {
 
 export interface JiraIssueKeyNG {
   key: string
+  ticketFields?: {
+    [key: string]: { [key: string]: any }
+  }
   url: string
 }
 
@@ -4244,7 +4268,6 @@ export interface ResourceDTO {
     | 'RESOURCE_GROUP'
     | 'USER'
     | 'ROLE'
-    | 'ROLE_ASSIGNMENT'
     | 'PIPELINE'
     | 'TRIGGER'
     | 'TEMPLATE'
@@ -4925,6 +4948,7 @@ export interface ResponseMessage {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -4978,6 +5002,8 @@ export interface ResponseMessage {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5562,6 +5588,9 @@ export type ServiceNowImportSetStepInfo = StepSpecType & {
 
 export interface ServiceNowTicketKeyNG {
   key: string
+  ticketFields?: {
+    [key: string]: string
+  }
   ticketType: string
   url: string
 }
@@ -16679,6 +16708,8 @@ export interface GetSchemaYamlQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
+    | 'CustomIngest'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -16981,6 +17012,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'BambooBuild'
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
+    | 'AWSSecurityHub'
+    | 'CustomIngest'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
