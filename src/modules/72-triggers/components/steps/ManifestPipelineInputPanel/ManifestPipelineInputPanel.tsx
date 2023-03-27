@@ -99,7 +99,10 @@ function ManifestTriggerInputPanelForm({
       branch
     },
     body: {
-      stageIdentifiers: []
+      stageIdentifiers:
+        formikProps.values?.stagesToExecute && formikProps.values?.stagesToExecute.length
+          ? [...formikProps.values.stagesToExecute]
+          : []
     }
   })
   const inputSetSelectedBranch = useMemo(() => {

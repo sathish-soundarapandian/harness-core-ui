@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Heading, MultiSelectDropDown, SelectOption } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
@@ -15,9 +15,13 @@ import { useStrings } from 'framework/strings'
 const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   const { getString } = useStrings()
   const stagesArr = []
-  for (const stage of formikProps.values.originalPipeline.stages) {
-    if (formikProps.values.stagesToExecute.includes(stage.stage.identifier)) {
-      stagesArr.push({ label: stage.stage.name, value: stage.stage.identifier })
+  if (Array.isArray(formikProps.values?.stagesToExecute) && !formikProps.values?.stagesToExecute.length) {
+    stagesArr.push(getAllStageItem(getString))
+  } else {
+    for (const stage of formikProps.values.originalPipeline.stages) {
+      if (formikProps.values?.stagesToExecute?.includes(stage.stage.identifier)) {
+        stagesArr.push({ label: stage.stage.name, value: stage.stage.identifier })
+      }
     }
   }
   const executionStageList = formikProps.values?.originalPipeline?.stages?.map((stage: any) => {
@@ -33,13 +37,18 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
 
   const [allStagesSelected, setAllStagesSelect] = React.useState<boolean[] | any>(false)
 
+  useEffect(() => {
+    if (Array.isArray(formikProps.values?.stagesToExecute) && !formikProps.values?.stagesToExecute.length) {
+      setAllStagesSelect(true)
+    }
+  }, [])
+
   return (
     <div>
       <Heading level={5} font={{ variation: FontVariation.H5 }}>
         {getString('triggers.selectStagesToExecute')}
       </Heading>
       <MultiSelectDropDown
-        // popoverClassName={css.disabledStageDropdown}
         hideItemCount={allStagesSelected}
         disabled={false}
         buttonTestId={'stage-select'}
@@ -62,14 +71,12 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
           )
           formikProps.setFieldValue('stagesToExecute', hasAllStagesChecked ? [] : stages)
         }}
-        value={selectedStages}
+        value={allStagesSelected ? [getAllStageItem(getString)] : selectedStages}
         items={executionStageList}
         minWidth={50}
         usePortal={true}
-        // placeholder={localSelectedStagesData.allStagesSelected ? getString('pipeline.allStages') : getString('stages')}
-        // className={css.stagesDropdown}
+        placeholder={allStagesSelected ? getString('pipeline.allStages') : getString('stages')}
       />
-      {/* <HarnessDocTooltip tooltipId={stageExecutionDisabledTooltip} useStandAlone={true} /> */}
     </div>
   )
 }

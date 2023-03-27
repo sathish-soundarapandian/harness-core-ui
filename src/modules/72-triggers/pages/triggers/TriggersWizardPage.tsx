@@ -357,6 +357,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         inputSetTemplateYamlObj?: {
           pipeline: PipelineInfoConfig | Record<string, never>
         }
+        stagesToExecute?: string[]
       }
   >({ triggerType: triggerTypeOnNew })
   const isCreatingNewTrigger = useMemo(() => !onEditInitialValues?.identifier, [onEditInitialValues?.identifier])
@@ -508,6 +509,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       identifier,
       description = '',
       tags,
+      stagesToExecute,
       pipeline: pipelineRuntimeInput,
       sourceRepo: formikValueSourceRepo,
       triggerType: formikValueTriggerType,
@@ -609,6 +611,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         description,
         tags,
         orgIdentifier,
+        stagesToExecute,
         projectIdentifier,
         pipelineIdentifier,
         source: {
@@ -660,6 +663,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         enabled: enabledStatus,
         description,
         tags,
+        stagesToExecute,
         orgIdentifier,
         projectIdentifier,
         pipelineIdentifier,
@@ -725,6 +729,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           trigger: {
             name,
             identifier,
+            stagesToExecute,
             description,
             tags,
             inputYaml,
@@ -794,6 +799,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           name,
           identifier,
           description,
+          stagesToExecute,
           tags,
           ...(sourceRepo === GitSourceProviders.GITHUB.value && { encryptedWebhookSecretIdentifier }),
           pipeline: pipelineJson,
@@ -908,6 +914,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         triggerValues = {
           name,
           identifier,
+          stagesToExecute,
           description,
           tags,
           pipeline: pipelineJson,
@@ -945,6 +952,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           name,
           identifier,
           description,
+          stagesToExecute,
           tags,
           inputYaml,
           pipelineBranchName = getDefaultPipelineReferenceBranch(),
@@ -985,6 +993,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         name,
         identifier,
         description,
+        stagesToExecute,
         tags,
         pipeline: pipelineJson,
         triggerType: TriggerTypes.SCHEDULE as unknown as NGTriggerSourceV2['type'],
@@ -1121,6 +1130,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     const {
       name,
       identifier,
+      stagesToExecute,
       description,
       tags,
       pipeline: pipelineRuntimeInput,
@@ -1141,6 +1151,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     return clearNullUndefined({
       name,
       identifier,
+      stagesToExecute,
       enabled: enabledStatus,
       description,
       tags,
@@ -1187,12 +1198,14 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     latestPipeline,
     latestYamlTemplate,
     orgPipeline,
-    setSubmitting
+    setSubmitting,
+    stagesToExecute
   }: {
     latestPipeline: { pipeline: PipelineInfoConfig }
     latestYamlTemplate: PipelineInfoConfig
     orgPipeline: PipelineInfoConfig | undefined
     setSubmitting: (bool: boolean) => void
+    stagesToExecute?: string[]
   }): Promise<any> => {
     let errors = formErrors
     function validateErrors(): Promise<
@@ -1214,7 +1227,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true },
-                isOptionalVariableAllowed
+                isOptionalVariableAllowed,
+                stagesToExecute
               }) as any) || formErrors
             resolve(validatedErrors)
           } catch (e) {
@@ -1400,6 +1414,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         resolvedPipeline: resolvedMergedPipeline,
         anyAction: false,
         autoAbortPreviousExecutions: false,
+        stagesToExecute: newPipeline?.stagesToExecute,
         pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType),
         // setDefaultValue only when polling is enabled and for Github Webhook Trigger
         ...(isGitWebhookPollingEnabled &&
@@ -1414,6 +1429,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         pipeline: newPipeline,
         originalPipeline,
         resolvedPipeline: resolvedMergedPipeline,
+        stagesToExecute: newPipeline?.stagesToExecute,
         pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType) || branch,
         ...getDefaultExpressionBreakdownValues(scheduleTabsId.MINUTES)
       }
@@ -1430,6 +1446,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         originalPipeline,
         resolvedPipeline: resolvedMergedPipeline,
         inputSetTemplateYamlObj,
+        stagesToExecute: newPipeline?.stagesToExecute,
         pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew) || branch,
         selectedArtifact: {}
       }
@@ -1827,7 +1844,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           latestPipeline: latestPipelineFromYamlView || latestPipeline,
           latestYamlTemplate: yamlTemplate,
           orgPipeline: values.pipeline,
-          setSubmitting
+          setSubmitting,
+          stagesToExecute: formikProps?.values?.stagesToExecute
         })
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)

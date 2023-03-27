@@ -11,8 +11,9 @@ import { NameIdDescriptionTags } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { useStrings } from 'framework/strings'
+import StageSelection from '@triggers/components/StageSelection/StageSelection'
+
 import ArtifactsSelection from './ArtifactsSelection/ArtifactsSelection'
-import StageSelection from './StageSelection'
 
 import css from './ArtifactTriggerConfigPanel.module.scss'
 export interface ArtifactTriggerConfigPanelPropsInterface {

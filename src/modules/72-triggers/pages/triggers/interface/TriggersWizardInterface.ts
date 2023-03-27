@@ -116,6 +116,7 @@ export interface FlatValidWebhookFormikValuesInterface {
   name: string
   identifier: string
   description?: string
+  stagesToExecute?: string[]
   tags?: {
     [key: string]: string
   }
@@ -164,6 +165,7 @@ export interface FlatValidScheduleFormikValuesInterface {
   expression: string
   pipelineBranchName?: string
   inputSetRefs?: string[]
+  stagesToExecute?: string[]
 }
 
 export interface FlatValidArtifactFormikValuesInterface {

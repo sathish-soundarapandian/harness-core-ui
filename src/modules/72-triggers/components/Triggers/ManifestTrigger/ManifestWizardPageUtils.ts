@@ -615,6 +615,7 @@ export const getArtifactManifestTriggerYaml = ({
     name,
     identifier,
     description,
+    stagesToExecute,
     tags,
     pipeline: pipelineRuntimeInput,
     triggerType: formikValueTriggerType,
@@ -654,6 +655,7 @@ export const getArtifactManifestTriggerYaml = ({
   const triggerYaml: NGTriggerConfigV2 = {
     name,
     identifier,
+    stagesToExecute,
     enabled: enabledStatus,
     description,
     tags,

@@ -53,6 +53,7 @@ export interface FlatValidWebhookFormikValuesInterface {
   encryptedWebhookSecretIdentifier?: SecretReference
   pollInterval?: string
   webhookId?: string
+  stagesToExecute?: string[]
 }
 export interface TriggerTypeSourceInterface {
   triggerType: NGTriggerSourceV2['type']

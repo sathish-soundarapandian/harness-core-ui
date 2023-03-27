@@ -160,6 +160,7 @@ export interface FlatInitialValuesInterface {
   anyAction?: boolean
   autoAbortPreviousExecutions?: boolean
   pipelineBranchName?: string
+  stagesToExecute?: string[]
 }
 
 export interface ConnectorRefInterface {
