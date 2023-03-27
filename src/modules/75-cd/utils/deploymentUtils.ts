@@ -46,7 +46,6 @@ export interface DeploymentTypeItem {
 }
 
 export interface GetNgSupportedDeploymentTypesProps {
-  SSH_NG?: boolean
   NG_SVC_ENV_REDESIGN?: boolean
   SPOT_ELASTIGROUP_NG?: boolean
   CDS_TAS_NG?: boolean
@@ -57,7 +56,6 @@ export interface GetNgSupportedDeploymentTypesProps {
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
   const {
-    SSH_NG,
     NG_SVC_ENV_REDESIGN,
     SPOT_ELASTIGROUP_NG,
     CDS_TAS_NG,
@@ -81,6 +79,16 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.serverlessAwsLambda',
       icon: deploymentIconMap[ServiceDeploymentType.ServerlessAwsLambda],
       value: ServiceDeploymentType.ServerlessAwsLambda
+    },
+    {
+      label: 'pipeline.serviceDeploymentTypes.ssh',
+      icon: deploymentIconMap[ServiceDeploymentType.Ssh],
+      value: ServiceDeploymentType.Ssh
+    },
+    {
+      label: 'pipeline.serviceDeploymentTypes.winrm',
+      icon: deploymentIconMap[ServiceDeploymentType.WinRm],
+      value: ServiceDeploymentType.WinRm
     }
   ]
 
@@ -99,18 +107,7 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       value: ServiceDeploymentType.GoogleCloudFunctions
     })
   }
-  if (SSH_NG) {
-    baseTypes.push({
-      label: 'pipeline.serviceDeploymentTypes.ssh',
-      icon: deploymentIconMap[ServiceDeploymentType.Ssh],
-      value: ServiceDeploymentType.Ssh
-    })
-    baseTypes.push({
-      label: 'pipeline.serviceDeploymentTypes.winrm',
-      icon: deploymentIconMap[ServiceDeploymentType.WinRm],
-      value: ServiceDeploymentType.WinRm
-    })
-  }
+
   if (NG_SVC_ENV_REDESIGN) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.amazonEcs',
@@ -151,13 +148,12 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
 }
 
 export interface GetCgSupportedDeploymentTypesProps {
-  SSH_NG?: boolean
   NG_SVC_ENV_REDESIGN?: boolean
   SPOT_ELASTIGROUP_NG?: boolean
 }
 
 export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { SSH_NG, NG_SVC_ENV_REDESIGN } = props
+  const { NG_SVC_ENV_REDESIGN } = props
 
   const types: DeploymentTypeItem[] = [
     {
@@ -179,6 +175,16 @@ export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.tas',
       icon: deploymentIconMap[ServiceDeploymentType.TAS],
       value: ServiceDeploymentType.TAS
+    },
+    {
+      label: 'pipeline.serviceDeploymentTypes.ssh',
+      icon: deploymentIconMap[ServiceDeploymentType.Ssh],
+      value: ServiceDeploymentType.Ssh
+    },
+    {
+      label: 'pipeline.serviceDeploymentTypes.winrm',
+      icon: deploymentIconMap[ServiceDeploymentType.WinRm],
+      value: ServiceDeploymentType.WinRm
     }
   ]
 
@@ -187,19 +193,6 @@ export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.amazonEcs',
       icon: deploymentIconMap[ServiceDeploymentType.ECS],
       value: ServiceDeploymentType.ECS
-    })
-  }
-
-  if (!SSH_NG) {
-    types.splice(3, 0, {
-      label: 'pipeline.serviceDeploymentTypes.ssh',
-      icon: deploymentIconMap[ServiceDeploymentType.Ssh],
-      value: ServiceDeploymentType.Ssh
-    })
-    types.splice(4, 0, {
-      label: 'pipeline.serviceDeploymentTypes.winrm',
-      icon: deploymentIconMap[ServiceDeploymentType.WinRm],
-      value: ServiceDeploymentType.WinRm
     })
   }
 

@@ -40,8 +40,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import SecretsList from './views/SecretsListView/SecretsList'
@@ -137,8 +136,6 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const SSH_NG = useFeatureFlag(FeatureFlag.SSH_NG)
-
     return (
       <Menu large>
         <Menu.Item
@@ -159,14 +156,12 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
           labelElement={<Icon name="secret-ssh" />}
           onClick={/* istanbul ignore next */ () => openCreateSSHCredModal()}
         />
-        {SSH_NG && (
-          <Menu.Item
-            labelClassName="menu-item-label"
-            text={getString('secrets.typeWinRM')}
-            labelElement={<Icon name="command-winrm" />}
-            onClick={/* istanbul ignore next */ () => openCreateWinRmCredModal()}
-          />
-        )}
+        <Menu.Item
+          labelClassName="menu-item-label"
+          text={getString('secrets.typeWinRM')}
+          labelElement={<Icon name="command-winrm" />}
+          onClick={/* istanbul ignore next */ () => openCreateWinRmCredModal()}
+        />
       </Menu>
     )
   }

@@ -254,7 +254,6 @@ export default function SelectDeploymentType({
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const {
-    SSH_NG,
     NG_SVC_ENV_REDESIGN,
     SPOT_ELASTIGROUP_NG,
     CDS_TAS_NG,
@@ -266,7 +265,6 @@ export default function SelectDeploymentType({
   // Supported in NG (Next Gen - The one for which you are coding right now)
   const ngSupportedDeploymentTypes = React.useMemo(() => {
     return getNgSupportedDeploymentTypes({
-      SSH_NG,
       NG_SVC_ENV_REDESIGN,
       SPOT_ELASTIGROUP_NG,
       CDS_TAS_NG,
@@ -275,7 +273,6 @@ export default function SelectDeploymentType({
       CDS_AWS_NATIVE_LAMBDA
     })
   }, [
-    SSH_NG,
     NG_SVC_ENV_REDESIGN,
     SPOT_ELASTIGROUP_NG,
     CDS_TAS_NG,
@@ -286,8 +283,8 @@ export default function SelectDeploymentType({
 
   // Suppported in CG (First Gen - Old Version of Harness App)
   const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
-    return getCgSupportedDeploymentTypes({ SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG })
-  }, [SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG])
+    return getCgSupportedDeploymentTypes({ NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG })
+  }, [NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG])
 
   const [cgDeploymentTypes, setCgDeploymentTypes] = React.useState(cgSupportedDeploymentTypes)
   const [ngDeploymentTypes, setNgDeploymentTypes] = React.useState(ngSupportedDeploymentTypes)

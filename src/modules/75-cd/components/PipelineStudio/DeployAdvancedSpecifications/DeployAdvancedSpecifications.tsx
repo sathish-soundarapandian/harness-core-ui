@@ -33,7 +33,6 @@ import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpec
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSSHWinRMDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageConfig } from 'services/cd-ng'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
@@ -66,7 +65,6 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
     return isSSHWinRMDeploymentType(type)
   }, [stage])
 
-  const { SSH_NG } = useFeatureFlags()
   const formikRef = React.useRef<StepFormikRef | null>(null)
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
   const { submitFormsForTab } = React.useContext(StageErrorContext)
@@ -255,7 +253,7 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
             tabName={DeployTabs.ADVANCED}
           />
         </Card>
-        {SSH_NG && getSshOrWinRmType() ? (
+        {getSshOrWinRmType() ? (
           <div data-testid="skip-instances" className={stageCss.tabHeading}>
             <MultiTypeSkipInstances value={stage?.stage?.skipInstances} />
           </div>
