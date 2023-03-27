@@ -161,7 +161,7 @@ export function useGetInfrastructuresData({
 
       const infrastructureListIdentifiers = _infrastructuresList.map(infraInList => infraInList.identifier)
       const _nonExistingInfrastructureIdentifiers = infrastructureIdentifiers.filter(
-        infraInList => infrastructureListIdentifiers.indexOf(infraInList) === -1
+        infraInList => infraInList && infrastructureListIdentifiers.indexOf(infraInList) === -1
       )
       if (!isEqual(_nonExistingInfrastructureIdentifiers, nonExistingInfrastructureIdentifiers)) {
         setNonExistingInfrastructureIdentifiers(_nonExistingInfrastructureIdentifiers)
