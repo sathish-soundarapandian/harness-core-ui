@@ -115,6 +115,8 @@
     "react-virtuoso": "^3.1.2",
     "refiner-js": "^1.0.2",
     "restful-react": "15.6.0",
+    "slate": "^0.91.4",
+    "slate-react": "^0.92.0",
     "urql": "^2.0.3",
     "uuid": "^8.3.0",
     "vscode-languageserver-types": "3.15.1",

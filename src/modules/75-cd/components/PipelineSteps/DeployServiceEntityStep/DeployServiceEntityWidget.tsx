@@ -74,6 +74,7 @@ import {
 import { ServiceEntitiesList } from './ServiceEntitiesList/ServiceEntitiesList'
 import { useGetServicesData } from './useGetServicesData'
 import { setupMode } from '../PipelineStepsUtil'
+import MentionExample from './TextAreaEditable'
 import css from './DeployServiceEntityStep.module.scss'
 
 export interface DeployServiceEntityWidgetProps extends DeployServiceEntityCustomProps {
@@ -581,28 +582,7 @@ export default function DeployServiceEntityWidget({
                         ) : (
                           <div className={css.inputFieldLayout}>
                             {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-                              <MultiTypeServiceField
-                                name="service"
-                                label={defaultTo(
-                                  serviceLabel,
-                                  getString('cd.pipelineSteps.serviceTab.specifyYourService')
-                                )}
-                                deploymentType={deploymentType as ServiceDeploymentType}
-                                gitOpsEnabled={gitOpsEnabled}
-                                placeholder={placeHolderForService}
-                                setRefValue={true}
-                                disabled={readonly || (isFixed && loading)}
-                                openAddNewModal={openAddNewModal}
-                                isNewConnectorLabelVisible
-                                onChange={handleSingleSelectChange}
-                                width={300}
-                                multiTypeProps={{
-                                  expressions,
-                                  allowableTypes,
-                                  defaultValueToReset: '',
-                                  onTypeChange: setServiceInputType
-                                }}
-                              />
+                              <MentionExample />
                             ) : (
                               <FormInput.MultiTypeInput
                                 tooltipProps={{ dataTooltipId: 'specifyYourService' }}
