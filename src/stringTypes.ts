@@ -632,7 +632,6 @@ export interface StringsMap {
   'common.moduleList.optimize': string
   'common.moduleList.optimizeProcesses': string
   'common.moduleList.title': string
-  'common.moduleOverviewLabel.ce': string
   'common.moduleOverviewLabel.chaos': string
   'common.moduleOverviewLabel.cv': string
   'common.moduleOverviewLabel.ff': string

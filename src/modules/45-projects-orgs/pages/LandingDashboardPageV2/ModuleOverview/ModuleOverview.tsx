@@ -78,7 +78,7 @@ const moduleLabelMap: Record<NavModuleName, IModuleOverviewMap> = {
     imageSrc: SloImage
   },
   [ModuleName.CE]: {
-    label: 'common.moduleOverviewLabel.ce',
+    label: 'cloudCostsText',
     Component: CEModuleOverview,
     imageSrc: CeImage
   },

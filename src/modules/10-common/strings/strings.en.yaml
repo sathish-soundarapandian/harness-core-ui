@@ -1283,7 +1283,6 @@ moduleOverviewLabel:
   cv: Manage Service Level Objectives
   ff: Manage Feature Flags
   sto: Manage Security Tests
-  ce: Costs Saved
   chaos: Chaos Expriments
 moduleDetails:
   cd:
