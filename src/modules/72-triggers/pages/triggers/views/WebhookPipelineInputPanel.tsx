@@ -189,7 +189,10 @@ function WebhookPipelineInputPanelForm({
       parentEntityRepoName: repoName
     },
     body: {
-      stageIdentifiers: []
+      stageIdentifiers:
+        formikProps.values?.stagesToExecute && formikProps.values?.stagesToExecute.length
+          ? [...formikProps.values.stagesToExecute]
+          : []
     }
   })
   const inputSetSelectedBranch = useMemo(() => {

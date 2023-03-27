@@ -232,7 +232,6 @@ function ArtifactTriggerInputPanelForm({
           // No need to fetch input sets if they are fetched already
           return
         }
-
         Promise.all(
           inputSetRefs.map(async (inputSetIdentifier: string): Promise<any> => {
             const data = await getInputSetForPipelinePromise({

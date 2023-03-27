@@ -685,6 +685,7 @@ interface ValidatePipelineProps {
   viewTypeMetadata?: { [key: string]: boolean }
   selectedStageData?: StageSelectionData
   isOptionalVariableAllowed?: boolean
+  stagesToExecute?: string[]
 }
 
 /**
@@ -892,7 +893,8 @@ export const validatePipeline = ({
   path,
   viewTypeMetadata,
   selectedStageData,
-  isOptionalVariableAllowed
+  isOptionalVariableAllowed,
+  stagesToExecute
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   if (template?.template) {
     const errors = validatePipeline({
@@ -952,7 +954,10 @@ export const validatePipeline = ({
         set(errors, 'variables', errorsResponse.variables)
       }
     }
-    pipeline?.stages?.forEach((stageObj, index) => {
+    const stages = stagesToExecute?.length
+      ? pipeline?.stages?.filter(stage => stage && stage.stage && stagesToExecute.includes(stage.stage.identifier))
+      : pipeline?.stages
+    stages?.forEach((stageObj, index) => {
       if (stageObj.stage) {
         const originalStage = getStageFromPipeline(stageObj.stage.identifier, originalPipeline)
         if (stageObj.stage.type === StageType.PIPELINE) {

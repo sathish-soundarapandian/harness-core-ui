@@ -538,12 +538,14 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     latestPipeline,
     latestYamlTemplate,
     orgPipeline,
-    setSubmitting
+    setSubmitting,
+    stagesToExecute
   }: {
     latestPipeline: { pipeline: PipelineInfoConfig }
     latestYamlTemplate: PipelineInfoConfig
     orgPipeline: PipelineInfoConfig | undefined
     setSubmitting: (bool: boolean) => void
+    stagesToExecute?: string[]
   }): Promise<any> => {
     let errors = formErrors
     function validateErrors(): Promise<
@@ -565,7 +567,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true },
-                isOptionalVariableAllowed
+                isOptionalVariableAllowed,
+                stagesToExecute
               }) as any) || formErrors
             resolve(validatedErrors)
           } catch (e) {
@@ -1063,14 +1066,14 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     if (triggerYaml) {
       latestPipelineFromYamlView = getTriggerPipelineValues(triggerYaml, formikProps)
     }
-
     const runPipelineFormErrors = isNewGitSyncRemotePipeline
       ? null
       : await getFormErrors({
           latestPipeline: latestPipelineFromYamlView || latestPipeline,
           latestYamlTemplate: yamlTemplate,
           orgPipeline: values.pipeline,
-          setSubmitting
+          setSubmitting,
+          stagesToExecute: formikProps.values?.stagesToExecute
         })
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)

@@ -83,6 +83,7 @@ export interface FlatValidScheduleFormikValuesInterface {
   expression: string
   pipelineBranchName?: string
   inputSetRefs?: string[]
+  stagesToExecute?: string[]
 }
 
 const isIdentifierIllegal = (identifier: string): boolean =>

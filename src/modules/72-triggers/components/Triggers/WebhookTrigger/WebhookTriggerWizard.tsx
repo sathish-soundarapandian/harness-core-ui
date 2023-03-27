@@ -330,7 +330,7 @@ export default function WebhookTriggerWizard(
   })
 
   const getInitialValues = (): FlatInitialValuesInterface => {
-    let newPipeline = { ...(currentPipeline?.pipeline || {}) }
+    let newPipeline: any = { ...(currentPipeline?.pipeline || {}) }
     // only applied for CI, Not cloned codebase
     if (
       newPipeline?.template?.templateInputs &&
@@ -355,6 +355,7 @@ export default function WebhookTriggerWizard(
       resolvedPipeline: resolvedMergedPipeline,
       anyAction: false,
       autoAbortPreviousExecutions: false,
+      stagesToExecute: newPipeline?.stagesToExecute,
       pipelineBranchName: getDefaultPipelineReferenceBranch(baseType) || branch,
       // setDefaultValue only when polling is enabled and for Github Webhook Trigger
       ...(isGitWebhookPollingEnabled &&
@@ -809,6 +810,7 @@ export default function WebhookTriggerWizard(
       name = '',
       identifier,
       description = '',
+      stagesToExecute,
       tags,
       pipeline: pipelineRuntimeInput,
       sourceRepo: formikValueSourceRepo,
@@ -961,6 +963,7 @@ export default function WebhookTriggerWizard(
         name,
         identifier,
         enabled: enabledStatus,
+        stagesToExecute,
         description,
         tags,
         orgIdentifier,

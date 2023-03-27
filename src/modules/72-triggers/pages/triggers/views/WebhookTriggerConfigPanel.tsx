@@ -13,9 +13,11 @@ import { isEmpty } from 'lodash-es'
 import { useGetGitTriggerEventDetails } from 'services/pipeline-ng'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import WebhookSecretInputWithDialog from '@triggers/components/steps/WebhookTriggerConfigPanel/WebhookSecretInputWithDialog'
+import StageSelection from '@triggers/components/StageSelection/StageSelection'
+
 import { GitSourceProviders, getSourceRepoOptions } from '../utils/TriggersListUtils'
 import {
   renderNonCustomEventFields,
@@ -48,6 +50,7 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
   const [actionsOptionsMap, setActionsOptionsMap] = useState<{ [key: string]: string[] }>({})
   const { getString } = useStrings()
   const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.CD_GIT_WEBHOOK_POLLING)
+  const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
   const loading = false
 
   useEffect(() => {
@@ -152,6 +155,9 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
           {sourceRepo === GitSourceProviders.GITHUB.value && <WebhookSecretInputWithDialog formikProps={formikProps} />}
         </section>
       </div>
+      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION && formikProps.values?.originalPipeline?.allowStageExecutions ? (
+        <StageSelection formikProps={formikProps} />
+      ) : null}
     </Layout.Vertical>
   )
 }
