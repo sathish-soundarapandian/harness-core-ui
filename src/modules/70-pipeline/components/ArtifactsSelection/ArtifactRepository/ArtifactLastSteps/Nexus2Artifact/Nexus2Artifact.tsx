@@ -17,13 +17,16 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  FormikForm
+  FormikForm,
+  SelectOption
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { merge, defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
+import type { IItemRendererProps } from '@blueprintjs/select'
+
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
@@ -31,7 +34,9 @@ import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import {
   ConnectorConfigDTO,
   DockerBuildDetailsDTO,
+  useArtifactIds,
   useGetBuildDetailsForNexusArtifact,
+  useGetGroupIds,
   useGetRepositories
 } from 'services/cd-ng'
 import {
@@ -51,6 +56,8 @@ import { nexus2RepositoryFormatTypes, RepositoryFormatTypes } from '@pipeline/ut
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
@@ -156,12 +163,70 @@ export function Nexus2Artifact({
     }
   })
 
+  const {
+    data: groupData,
+    loading: fetchingGroups,
+    error: groupError,
+    refetch: refetchGroups
+  } = useMutateAsGet(useGetGroupIds, {
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      connectorRef: getConnectorRefQueryData(),
+      repository: lastQueryData.repository
+    },
+    lazy: true,
+    debounce: 300
+  })
+
+  const {
+    data: artifactData,
+    loading: fetchingArtifacts,
+    error: artifactError,
+    refetch: refetchArtifacts
+  } = useMutateAsGet(useArtifactIds, {
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      connectorRef: getConnectorRefQueryData(),
+      repository: lastQueryData.repository
+    },
+    lazy: true,
+    debounce: 300
+  })
+
   const selectRepositoryItems = useMemo(() => {
     return repositoryDetails?.data?.map(repository => ({
       value: defaultTo(repository.repositoryId, ''),
       label: defaultTo(repository.repositoryId, '')
     }))
   }, [repositoryDetails?.data])
+
+  const selectGroupIdItems = useMemo(() => {
+    return groupData?.data?.map(group => ({
+      value: defaultTo(group, ''),
+      label: defaultTo(group, '')
+    }))
+  }, [groupData?.data])
+
+  const selectArtifactIdItems = useMemo(() => {
+    return artifactData?.data?.map(artifact => ({
+      value: defaultTo(artifact, ''),
+      label: defaultTo(artifact, '')
+    }))
+  }, [artifactData?.data])
 
   const getRepository = (): { label: string; value: string }[] => {
     if (fetchingRepository) {
@@ -173,6 +238,32 @@ export function Nexus2Artifact({
       ]
     }
     return defaultTo(selectRepositoryItems, [])
+  }
+
+  const getGroupIds = (): { label: string; value: string }[] => {
+    /* istanbul ignore next */
+    if (fetchingRepository) {
+      return [
+        {
+          label: getString('pipeline.artifactsSelection.loadingRepository'),
+          value: getString('pipeline.artifactsSelection.loadingRepository')
+        }
+      ]
+    }
+    return defaultTo(selectGroupIdItems, [])
+  }
+
+  const getArtifactIds = (): { label: string; value: string }[] => {
+    /* istanbul ignore next */
+    if (fetchingRepository) {
+      return [
+        {
+          label: getString('pipeline.artifactsSelection.loadingRepository'),
+          value: getString('pipeline.artifactsSelection.loadingRepository')
+        }
+      ]
+    }
+    return defaultTo(selectArtifactIdItems, [])
   }
 
   const {
@@ -350,6 +441,14 @@ export function Nexus2Artifact({
     </div>
   ))
 
+  const groupIdItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingGroups} />
+  ))
+
+  const artifactIdItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingArtifacts} />
+  ))
+
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!hideHeaderAndNavBtns && (
@@ -469,11 +568,50 @@ export function Nexus2Artifact({
               {formik.values?.repositoryFormat === RepositoryFormatTypes.Maven ? (
                 <>
                   <div className={css.imagePathContainer}>
-                    <FormInput.MultiTextInput
+                    <FormInput.MultiTypeInput
+                      selectItems={getGroupIds()}
+                      useValue
                       label={getString('pipeline.artifactsSelection.groupId')}
                       name="spec.groupId"
                       placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTypeInputProps={{
+                        expressions,
+                        allowableTypes,
+                        selectProps: {
+                          noResults: (
+                            <NoTagResults
+                              tagError={groupError}
+                              defaultErrorText={
+                                fetchingGroups
+                                  ? getString('pipeline.artifactsSelection.errors.noGroupIds')
+                                  : getString('pipeline.artifactsSelection.groupIdPlaceholder')
+                              }
+                            />
+                          ),
+                          itemRenderer: groupIdItemRenderer,
+                          items: getGroupIds(),
+                          allowCreatingNewItems: true
+                        },
+                        onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                          if (
+                            e?.target?.type !== 'text' ||
+                            (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                            getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME ||
+                            getMultiTypeFromValue(formik.values?.spec?.groupId) === MultiTypeInputType.RUNTIME
+                          ) {
+                            return
+                          }
+
+                          refetchGroups({
+                            queryParams: {
+                              ...commonParams,
+                              connectorRef: getConnectorRefQueryData(),
+                              repository: formik.values?.repository,
+                              repositoryFormat: formik.values?.repositoryFormat
+                            }
+                          })
+                        }
+                      }}
                     />
                     {getMultiTypeFromValue(formik.values?.spec?.groupId) === MultiTypeInputType.RUNTIME && (
                       <div className={css.configureOptions}>
@@ -492,11 +630,52 @@ export function Nexus2Artifact({
                     )}
                   </div>
                   <div className={css.imagePathContainer}>
-                    <FormInput.MultiTextInput
+                    <FormInput.MultiTypeInput
+                      selectItems={getArtifactIds()}
+                      useValue
                       label={getString('pipeline.artifactsSelection.artifactId')}
                       name="spec.artifactId"
                       placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTypeInputProps={{
+                        expressions,
+                        allowableTypes,
+                        selectProps: {
+                          noResults: (
+                            <NoTagResults
+                              tagError={artifactError}
+                              defaultErrorText={
+                                fetchingArtifacts
+                                  ? getString('pipeline.artifactsSelection.errors.noGroupIds')
+                                  : getString('pipeline.artifactsSelection.artifactIdPlaceholder')
+                              }
+                            />
+                          ),
+                          itemRenderer: artifactIdItemRenderer,
+                          items: getArtifactIds(),
+                          allowCreatingNewItems: true
+                        },
+                        onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                          if (
+                            e?.target?.type !== 'text' ||
+                            (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                            getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME ||
+                            getMultiTypeFromValue(formik.values?.spec?.artifactId) === MultiTypeInputType.RUNTIME
+                          ) {
+                            return
+                          }
+
+                          refetchArtifacts({
+                            queryParams: {
+                              ...commonParams,
+                              connectorRef: getConnectorRefQueryData(),
+                              repository: formik.values?.repository,
+                              repositoryFormat: formik.values?.repositoryFormat,
+                              groupId: formik.values?.spec?.groupId,
+                              nexusSourceType: 'Nexus3Registry'
+                            }
+                          })
+                        }
+                      }}
                     />
                     {getMultiTypeFromValue(formik.values?.spec?.artifactId) === MultiTypeInputType.RUNTIME && (
                       <div className={css.configureOptions}>

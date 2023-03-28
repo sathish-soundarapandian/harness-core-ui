@@ -715,7 +715,11 @@ export function Nexus3Artifact({
                           noResults: (
                             <NoTagResults
                               tagError={groupError}
-                              defaultErrorText={getString('pipeline.artifactsSelection.errors.noGroupIds')}
+                              defaultErrorText={
+                                fetchingGroups
+                                  ? getString('pipeline.artifactsSelection.errors.noGroupIds')
+                                  : getString('pipeline.artifactsSelection.groupIdPlaceholder')
+                              }
                             />
                           ),
                           itemRenderer: groupIdItemRenderer,
@@ -726,6 +730,7 @@ export function Nexus3Artifact({
                           if (
                             e?.target?.type !== 'text' ||
                             (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                            getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME ||
                             getMultiTypeFromValue(formik.values?.spec?.groupId) === MultiTypeInputType.RUNTIME
                           ) {
                             return
@@ -772,7 +777,11 @@ export function Nexus3Artifact({
                           noResults: (
                             <NoTagResults
                               tagError={artifactError}
-                              defaultErrorText={getString('pipeline.artifactsSelection.errors.noGroupIds')}
+                              defaultErrorText={
+                                fetchingArtifacts
+                                  ? getString('pipeline.artifactsSelection.errors.noGroupIds')
+                                  : getString('pipeline.artifactsSelection.artifactIdPlaceholder')
+                              }
                             />
                           ),
                           itemRenderer: artifactIdItemRenderer,
@@ -783,6 +792,7 @@ export function Nexus3Artifact({
                           if (
                             e?.target?.type !== 'text' ||
                             (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                            getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME ||
                             getMultiTypeFromValue(formik.values?.spec?.artifactId) === MultiTypeInputType.RUNTIME
                           ) {
                             return
