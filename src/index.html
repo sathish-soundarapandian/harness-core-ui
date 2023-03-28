@@ -119,7 +119,7 @@
 
       window.getIDPBaseUrl = str => {
         return window.IDPUrl && accountId
-          ? `${window.IDPUrl}/${accountId}/${str}?${addRoutingIdParam()}`
+          ? `${window.IDPUrl}/${accountId}/${str}?timestamp=${Date.now()}${addRoutingIdParam()}`
           : window.getApiBaseUrl(str)
       }
     </script>
