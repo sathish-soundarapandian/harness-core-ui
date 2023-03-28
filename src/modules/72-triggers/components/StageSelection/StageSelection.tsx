@@ -17,7 +17,7 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   const stagesArr = []
   if (Array.isArray(formikProps.values?.stagesToExecute) && !formikProps.values?.stagesToExecute.length) {
     stagesArr.push(getAllStageItem(getString))
-  } else {
+  } else if (formikProps.values?.resolvedPipeline?.stages && formikProps.values?.resolvedPipeline?.stages.length) {
     for (const stage of formikProps.values.resolvedPipeline.stages) {
       if (formikProps.values?.stagesToExecute?.includes(stage.stage.identifier)) {
         stagesArr.push({ label: stage.stage.name, value: stage.stage.identifier })
