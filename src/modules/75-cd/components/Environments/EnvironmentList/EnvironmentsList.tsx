@@ -8,15 +8,17 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
 import { Pagination, Layout, Text, Container, Heading, TableV2 } from '@harness/uicore'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog } from '@blueprintjs/core'
+import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import { useEnvironmentStore, ParamsType } from '@cd/components/Environments/common'
 import { EnvironmentResponseDTO, useDeleteEnvironmentV2, useGetEnvironmentList } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
 import RbacButton from '@rbac/components/Button/Button'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useStrings } from 'framework/strings'
 import { NewEditEnvironmentModal } from '@cd/components/PipelineSteps/DeployEnvStep/DeployEnvStep'
@@ -34,12 +36,14 @@ import css from './EnvironmentsList.module.scss'
 
 export const EnvironmentList: React.FC = () => {
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ParamsType>()
   const { showError, showSuccess } = useToaster()
   const [page, setPage] = useState(0)
   const { fetchDeploymentList } = useEnvironmentStore()
   const [rowData, setRowData] = React.useState<EnvironmentResponseDTO>()
   const [editable, setEditable] = React.useState(false)
+  const [environmentToDelete, setEnvironmentToDelete] = useState<EnvironmentResponseDTO>({})
 
   const queryParams = {
     accountIdentifier: accountId,
@@ -127,15 +131,41 @@ export const EnvironmentList: React.FC = () => {
     showModal()
   }
 
-  const handleEnvDelete = async (id: string) => {
+  const redirectToReferencedBy = (): void => {
+    closeDialog()
+  }
+
+  const { openDialog: openReferenceErrorDialog, closeDialog } = useEntityDeleteErrorHandlerDialog({
+    entity: {
+      type: ResourceType.ENVIRONMENT,
+      name: environmentToDelete.name as string
+    },
+    redirectToReferencedBy,
+    hideReferencedByButton: true,
+    forceDeleteCallback: () => handleEnvDelete(environmentToDelete as Required<EnvironmentResponseDTO>, true)
+  })
+
+  const handleEnvDelete = async (
+    environment: Required<EnvironmentResponseDTO>,
+    forceDelete?: boolean
+  ): Promise<void> => {
     try {
-      await deleteEnvironment(id, { headers: { 'content-type': 'application/json' } })
-      showSuccess(`Successfully deleted environment ${id}`)
+      await deleteEnvironment(environment.identifier, {
+        headers: { 'content-type': 'application/json' },
+        queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, forceDelete }
+      })
+      showSuccess(getString('cd.environment.deleted', { identifier: environment.identifier }))
       refetch()
-    } catch (e) {
-      showError(get(e, 'data.message', e?.message), 0, 'cf.delete.env.error')
+    } catch (e: any) {
+      if (e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+        setEnvironmentToDelete(environment)
+        openReferenceErrorDialog()
+      } else {
+        showError(getRBACErrorMessage(e))
+      }
     }
   }
+
   type CustomColumn<T extends Record<string, any>> = Column<T>
 
   const envColumns: CustomColumn<EnvironmentResponseDTO>[] = useMemo(

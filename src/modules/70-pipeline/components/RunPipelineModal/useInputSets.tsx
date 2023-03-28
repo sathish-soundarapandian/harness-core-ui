@@ -41,6 +41,8 @@ export interface UseInputSetsProps {
   rerunInputSetYaml?: string
   selectedStageData: StageSelectionData
   resolvedPipeline?: PipelineInfoConfig
+  executionInputSetTemplateYaml: string
+  executionView?: boolean
   executionIdentifier?: string
   setSelectedInputSets: Dispatch<SetStateAction<InputSetValue[] | undefined>>
   currentYAML?: PipelineInfoConfig
@@ -73,6 +75,8 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     connectorRef,
     projectIdentifier,
     pipelineIdentifier,
+    executionInputSetTemplateYaml,
+    executionView,
     selectedStageData,
     resolvedPipeline,
     executionIdentifier,
@@ -113,7 +117,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
     },
-    lazy: !selectedStageData.selectedStageItems.length
+    lazy: executionInputSetTemplateYaml || executionView || !selectedStageData.selectedStageItems.length
   })
 
   const isRuntimeInputsPresent =
@@ -169,6 +173,11 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
 
       setInputSetTemplate(newInputSetTemplate)
 
+      if (executionInputSetTemplateYaml) {
+        newInputSetTemplate = { pipeline: memoizedParse<Pipeline>(executionInputSetTemplateYaml).pipeline }
+        setInputSetTemplate(newInputSetTemplate)
+      }
+
       const doRuntimeValuesExist = !isEmpty(newInputSetTemplate)
       setHasRuntimeInputs(doRuntimeValuesExist)
       // this state is set to true only if there exists runtimeInput
@@ -178,7 +187,8 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     loadingTemplate,
     loadingInputSetsData,
     inputSetYamlResponse?.data?.inputSetTemplateYaml,
-    inputSetData?.data?.pipelineYaml
+    inputSetData?.data?.pipelineYaml,
+    executionInputSetTemplateYaml
   ])
 
   useEffect(() => {

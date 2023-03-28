@@ -6,7 +6,9 @@
  */
 
 import React from 'react'
-import { render, getByText, getAllByText, fireEvent, waitFor } from '@testing-library/react'
+import { render, getByText, getAllByText, fireEvent, waitFor, getByRole, getAllByRole } from '@testing-library/react'
+import routes from '@common/RouteDefinitions'
+import { modulePathProps, projectPathProps } from '@common/utils/routeUtils'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import mockEnvironments from '@cd/components/PipelineSteps/DeployEnvStep/__tests__/mock.json'
 import mockImport from 'framework/utils/mockImport'
@@ -149,5 +151,75 @@ describe('EnvironmentList', () => {
     expect(getByText(document.body, 'confirm')).toBeDefined()
     fireEvent.click(getByText(document.body, 'confirm') as HTMLButtonElement)
     await waitFor(() => expect(mutate).toBeCalledTimes(1))
+  })
+
+  test('force delete env entity', async () => {
+    const forceDeleteMutateRejected = jest.fn().mockRejectedValue({
+      data: {
+        status: 'ERROR',
+        code: 'ENTITY_REFERENCE_EXCEPTION',
+        message: 'Error Detected'
+      }
+    })
+
+    mockImport('services/cd-ng', {
+      useDeleteEnvironmentV2: () => ({
+        mutate: forceDeleteMutateRejected
+      })
+    })
+
+    const { container } = render(
+      <TestWrapper
+        defaultFeatureFlagValues={{ SPG_MODULE_VERSION_INFO: true }}
+        path={routes.toEnvironment({ ...projectPathProps, ...modulePathProps })}
+        pathParams={{ accountId: 'dummy', module: 'cd', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <EnvironmentList />
+      </TestWrapper>
+    )
+
+    fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
+    fireEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
+
+    const form = findDialogContainer() as HTMLElement
+    await waitFor(() => expect(form).toBeTruthy())
+
+    expect(getByText(form, 'confirm')).toBeInTheDocument()
+    fireEvent.click(getByText(form, 'confirm') as HTMLButtonElement)
+
+    await waitFor(() => expect(findDialogContainer()!).toBeTruthy())
+    const forceDeleteForm = findDialogContainer()
+
+    const forceDeleteMutateResolved = jest.fn().mockResolvedValue({
+      data: {
+        status: 'ERROR',
+        code: 'ENTITY_REFERENCE_EXCEPTION',
+        message: 'Error Detected'
+      }
+    })
+
+    mockImport('services/cd-ng', {
+      useDeleteEnvironmentV2: () => ({
+        mutate: forceDeleteMutateResolved
+      })
+    })
+
+    expect(getAllByRole(forceDeleteForm!, 'button')[1]).toBeDisabled()
+    fireEvent.click(getByRole(forceDeleteForm!, 'checkbox'))
+
+    await waitFor(() => expect(getAllByRole(forceDeleteForm!, 'button')[1]).not.toBeDisabled())
+    fireEvent.click(getAllByRole(forceDeleteForm!, 'button')[1])
+
+    await waitFor(() =>
+      expect(forceDeleteMutateResolved).toHaveBeenLastCalledWith('gjhjghjhg', {
+        headers: { 'content-type': 'application/json' },
+        queryParams: {
+          accountIdentifier: 'dummy',
+          forceDelete: true,
+          orgIdentifier: 'dummy',
+          projectIdentifier: 'dummy'
+        }
+      })
+    )
   })
 })

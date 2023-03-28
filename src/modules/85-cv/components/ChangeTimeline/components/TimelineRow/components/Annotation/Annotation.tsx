@@ -9,7 +9,7 @@ import { useDeleteAnnotation, useGetSecondaryEventDetails } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { TimelineDataPoint } from '../../TimelineRow.types'
-import { DATE_FORMAT, SLO_WIDGETS } from '../../TimelineRow.constants'
+import { DATE_FORMAT, INITIAL_MESSAGE_DETAILS, SLO_WIDGETS } from '../../TimelineRow.constants'
 import type { AnnotationMessage } from './Annotation.types'
 import { getInitialPositionOfWidget } from '../../TimelineRow.utils'
 import css from './Annotation.module.scss'
@@ -35,7 +35,7 @@ export default function Annotation(props: AnnotationProps): JSX.Element {
     | null
   >(null)
 
-  const [messageDetails, setMessageDetails] = useState<{ message: string; id: string }>({ message: '', id: '' })
+  const [messageDetails, setMessageDetails] = useState<{ message: string; id: string }>(INITIAL_MESSAGE_DETAILS)
   const { icon, leftOffset: position, startTime, endTime, identifiers } = widget
   const { height, width, url } = icon
   const initialPosition = getInitialPositionOfWidget(position, height, width)

@@ -11,15 +11,37 @@ import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
-import * as pipelineNg from 'services/pipeline-ng'
 import type { PipelineType, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 
-import ExecutionInputsView from '../ExecutionInputsView'
-import { inputSetYamlResponse } from './mocks/inputSetYamlV2Response'
+import mock from './mocks/schema.json'
 
+import ExecutionInputsView from '../ExecutionInputsView'
+
+jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({}))
 jest.mock('services/pipeline-ng', () => ({
-  useGetInputsetYamlV2: jest.fn(() => ({ data: inputSetYamlResponse }))
+  useGetInputsetYaml: jest.fn(() => ({ data: null })),
+  useGetTemplateFromPipeline: jest.fn(() => ({
+    mutate: jest.fn().mockResolvedValue({ data: {} })
+  })),
+  useGetStagesExecutionList: jest.fn(() => ({})),
+  useDebugPipelineExecuteWithInputSetYaml: jest.fn(() => ({})),
+  useGetPipeline: jest.fn(() => ({ data: null })),
+  useCreateVariablesV2: jest.fn(() => ({
+    mutate: jest.fn().mockResolvedValue({ data: {} })
+  })),
+  usePostPipelineExecuteWithInputSetYaml: jest.fn(() => ({ data: null })),
+  useRePostPipelineExecuteWithInputSetYaml: jest.fn(() => ({ data: null })),
+  useRerunStagesWithRuntimeInputYaml: jest.fn(() => ({ data: null })),
+  useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => ({
+    mutate: jest.fn().mockResolvedValue({ data: {} })
+  })),
+  useGetInputSetsListForPipeline: jest.fn(() => ({ data: null, refetch: jest.fn() })),
+  useGetYamlSchema: jest.fn(() => ({ data: null })),
+  useCreateInputSetForPipeline: jest.fn(() => ({ data: null })),
+  useGetInputsetYamlV2: jest.fn(() => ({ data: null })),
+  useRunStagesWithRuntimeInputYaml: jest.fn(() => ({ data: null })),
+  useValidateTemplateInputs: jest.fn(() => ({ data: null }))
 }))
 
 jest.mock('services/cd-ng', () => ({
@@ -28,18 +50,6 @@ jest.mock('services/cd-ng', () => ({
     data: {}
   })
 }))
-
-function YamlMock({ children }: { children: JSX.Element }): React.ReactElement {
-  return (
-    <div>
-      <span>Yaml View</span>
-      {children}
-    </div>
-  )
-}
-
-YamlMock.YamlBuilderMemo = YamlMock
-jest.mock('@common/components/YAMLBuilder/YamlBuilder', () => YamlMock)
 
 const TEST_PATH = routes.toExecutionInputsView({
   ...accountPathProps,
@@ -59,49 +69,13 @@ const pathParams: PipelineType<ExecutionPathProps> = {
 
 describe('<ExecutionInputsView /> tests', () => {
   test('snapshot test', async () => {
-    const { container, getByText } = render(
+    const { container, findByText } = render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams as any}>
-        <ExecutionInputsView />
-      </TestWrapper>
-    )
-    expect(getByText('pipeline.inputSets.noRuntimeInputsWhileExecution')).toBeTruthy()
-    await waitFor(() => expect(container).toMatchSnapshot())
-  })
-
-  test('test api failed error', () => {
-    jest.spyOn(pipelineNg, 'useGetInputsetYamlV2').mockImplementation((): any => {
-      return {
-        data: {},
-        loading: false,
-        refetch: jest.fn(),
-        error: {
-          message: 'something went wrong'
-        }
-      }
-    })
-    const { findByText } = render(
-      <TestWrapper path={TEST_PATH} pathParams={pathParams as any}>
-        <ExecutionInputsView />
+        <ExecutionInputsView mockData={mock as any} />
       </TestWrapper>
     )
 
-    expect(findByText('something went wrong')).toBeTruthy()
-  })
-
-  test('test api response pending', () => {
-    jest.spyOn(pipelineNg, 'useGetInputsetYamlV2').mockImplementation((): any => {
-      return {
-        data: {},
-        loading: true,
-        refetch: jest.fn(),
-        error: null
-      }
-    })
-    const { findByText } = render(
-      <TestWrapper path={TEST_PATH} pathParams={pathParams as any}>
-        <ExecutionInputsView />
-      </TestWrapper>
-    )
-    expect(findByText('Loading, please wait...')).toBeTruthy()
+    await waitFor(() => findByText('pipeline.inputSets.noRuntimeInputsWhileExecution'))
+    expect(container).toMatchSnapshot()
   })
 })

@@ -36,7 +36,7 @@ describe('Create Composite SLO', () => {
     cy.login('test', 'test')
 
     cy.intercept('GET', listSLOsCall, sloListCallResponseWithCompositeSLO).as('updatedListSLOsCallResponse')
-    cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
+    cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse).as('sloRiskCount')
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
@@ -223,7 +223,7 @@ describe('Create account level SLO', () => {
 
     cy.contains('span', 'Add SLOs').click()
     cy.wait(1000)
-    cy.findAllByRole('checkbox').eq(1).click({ force: true })
+    cy.findAllByRole('checkbox').eq(1).scrollIntoView().click({ force: true })
     cy.findAllByRole('checkbox').eq(1).should('be.checked')
     cy.findAllByRole('checkbox').eq(2).should('not.be.checked')
     cy.findAllByRole('checkbox').eq(2).click({ force: true })
@@ -251,6 +251,7 @@ describe('Create account level SLO', () => {
     cy.contains('p', 'demo_composite_slo').should('not.exist')
     cy.contains('span', 'Add SLOs').click()
     cy.wait('@sloListPostResponseRolling7Days')
+
     cy.findAllByRole('checkbox', { timeout: 2000 }).eq(1).should('be.checked')
     cy.findAllByRole('checkbox').eq(2).click({ force: true })
     cy.get('[data-testid="addSloButton"]').click({ force: true })

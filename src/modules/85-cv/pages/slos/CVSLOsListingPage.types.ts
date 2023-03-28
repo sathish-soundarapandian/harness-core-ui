@@ -92,6 +92,7 @@ export interface SLOFilterState {
   sliTypes: SelectOption
   targetTypes: SelectOption
   sloRiskFilter: SLORiskFilter | null
+  search: string
 }
 
 export interface SLOFilterAction {
@@ -99,10 +100,4 @@ export interface SLOFilterAction {
   payload?: SLOActionPayload
 }
 
-export interface SLOActionPayload {
-  userJourney?: SelectOption
-  monitoredService?: SelectOption
-  sliTypes?: SelectOption
-  targetTypes?: SelectOption
-  sloRiskFilter?: SLORiskFilter | null
-}
+export type SLOActionPayload = Partial<SLOFilterState>

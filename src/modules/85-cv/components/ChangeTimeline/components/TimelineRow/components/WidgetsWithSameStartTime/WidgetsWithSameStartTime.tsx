@@ -10,9 +10,10 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { TimelineDataPoint } from '../../TimelineRow.types'
 import { getWidgetsGroupedByType } from './WidgetsWithSameStartTime.utils'
-import { DATE_FORMAT, SLO_WIDGETS } from '../../TimelineRow.constants'
+import { DATE_FORMAT, INITIAL_MESSAGE_DETAILS, SLO_WIDGETS } from '../../TimelineRow.constants'
 import type { AnnotationMessage } from '../Annotation/Annotation.types'
 import { getInitialPositionOfWidget } from '../../TimelineRow.utils'
+import type { AnnotationMessageInfo } from './WidgetsWithSameStartTime.types'
 import css from './WidgetsWithSameStartTimeProps.module.scss'
 
 export interface WidgetsWithSameStartTimeProps {
@@ -27,24 +28,16 @@ export default function WidgetsWithSameStartTime(props: WidgetsWithSameStartTime
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { widgets, index, addAnnotation, startTimeForWidgets, fetchSecondaryEvents } = props
-  const [messages, setMessages] = useState<
-    | {
-        uuid: string
-        message: string
-        createdBy: string
-        createdAt: number
-      }[]
-    | null
-  >(null)
-  const [messageDetailsInfo, setMessageDetailsInfo] = useState<{ message: string; id: string }>({ message: '', id: '' })
+  const [messages, setMessages] = useState<AnnotationMessageInfo[] | null>(null)
+  const [messageDetailsInfo, setMessageDetailsInfo] = useState<{ message: string; id: string }>(INITIAL_MESSAGE_DETAILS)
   const { showError, showSuccess } = useToaster()
 
   const { widgetsWithDownTimeType, widgetsWithAnnotationType } = useMemo(() => {
     return getWidgetsGroupedByType(widgets)
   }, [widgets])
 
-  const widgetWithDownTimeType = widgetsWithDownTimeType?.[0]
-  const widgetWithAnnotationType = widgetsWithAnnotationType?.[0]
+  const widgetWithDownTimeType = widgetsWithDownTimeType[0]
+  const widgetWithAnnotationType = widgetsWithAnnotationType[0]
   const { icon, leftOffset: position } = widgetWithDownTimeType || {}
   const {
     startTime: startTimeForAnnotation,

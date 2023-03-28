@@ -39,6 +39,7 @@ const getInitialProps = (): UseInputSetsProps => ({
       }
     ]
   },
+  executionInputSetTemplateYaml: '',
   setSelectedInputSets: jest.fn()
 })
 

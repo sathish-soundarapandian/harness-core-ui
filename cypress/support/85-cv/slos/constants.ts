@@ -38,7 +38,7 @@ export const getServiceLevelObjective = `/cv/api/slo/v2/SLO1?routingId=${account
 export const getServiceLevelObjectiveV2 = `cv/api/slo/v2/Composite_SLO_1?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1`
 export const getSLODetails = `/cv/api/slo-dashboard/widget/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getServiceLevelObjectiveForNewerProject = `/cv/api/slo/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}`
-export const getSLORiskCount = `/cv/api/slo-dashboard/risk-count?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1`
+export const getSLORiskCount = `/cv/api/slo-dashboard/risk-count?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&filter=`
 export const getSLORiskCountForNewerProject = `/cv/api/slo-dashboard/risk-count?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}`
 export const getSLORiskCountWithUserJourneyNewOne = `/cv/api/slo-dashboard/risk-count?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&userJourneyIdentifiers=newone`
 export const getSLORiskCountWithUserJourneySecondJourney = `/cv/api/slo-dashboard/risk-count?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&userJourneyIdentifiers=Second_Journey`

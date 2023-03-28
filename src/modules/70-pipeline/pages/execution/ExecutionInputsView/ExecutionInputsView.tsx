@@ -7,34 +7,32 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { getErrorInfoFromErrorObject, Layout, PageError, Tag, Text } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
 
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useGetInputsetYamlV2 } from 'services/pipeline-ng'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { PageSpinner } from '@common/components'
+import type { StoreType } from '@common/constants/GitSyncTypes'
+import { RunPipelineForm } from '@pipeline/components/RunPipelineModal/RunPipelineForm'
+import type { ResponseJsonNode } from 'services/cd-ng'
 
-import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
-import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
+import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import css from './ExecutionInputsView.module.scss'
 
-const defaultFileName = 'Inputs.yaml'
-
-const yamlBuilderProps: YamlBuilderProps = {
-  fileName: defaultFileName,
-  yamlSanityConfig: {
-    removeEmptyString: false,
-    removeEmptyObject: false,
-    removeEmptyArray: false
-  }
+interface ExecutionInputsViewInterface {
+  mockData?: ResponseJsonNode
 }
 
-export default function ExecutionInputsView(): React.ReactElement {
-  const { projectIdentifier, orgIdentifier, accountId, executionIdentifier } =
+export default function ExecutionInputsView(props: ExecutionInputsViewInterface): React.ReactElement {
+  const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, module, executionIdentifier, source } =
     useParams<PipelineType<ExecutionPathProps>>()
-  const { getString } = useStrings()
 
-  const { data, loading, error, refetch } = useGetInputsetYamlV2({
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+
+  const { pipelineExecutionDetail } = useExecutionContext()
+
+  const { data, loading, error } = useGetInputsetYamlV2({
     planExecutionId: executionIdentifier,
     queryParams: {
       orgIdentifier,
@@ -49,11 +47,21 @@ export default function ExecutionInputsView(): React.ReactElement {
     }
   })
 
+  const storeMetadata = {
+    connectorRef: pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef,
+    branch: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch,
+    repoName: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName
+  }
+
   const [inputSetYaml, setInputSetYaml] = useState('')
+  const [inputSetTemplateYaml, setInputSetTemplateYaml] = useState('')
   useEffect(() => {
     // Won't actually render out RunPipelineForm
     /* istanbul ignore else */ if (data?.data?.inputSetYaml) {
       setInputSetYaml(data.data?.inputSetYaml)
+    }
+    /* istanbul ignore else */ if (data?.data?.inputSetTemplateYaml) {
+      setInputSetTemplateYaml(data.data.inputSetTemplateYaml)
     }
   }, [data])
 
@@ -61,30 +69,30 @@ export default function ExecutionInputsView(): React.ReactElement {
     return <PageSpinner />
   }
 
-  if (error) {
-    return <PageError onClick={() => refetch()} message={getErrorInfoFromErrorObject(error)} />
-  }
   return (
     <div className={css.main}>
-      {!inputSetYaml ? (
-        <Text padding="medium" margin="medium">
-          {getString('pipeline.inputSets.noRuntimeInputsWhileExecution')}
-        </Text>
-      ) : (
-        <>
-          <Layout.Vertical padding="xlarge">
-            <YamlBuilderMemo
-              {...yamlBuilderProps}
-              existingYaml={inputSetYaml}
-              height="72vh"
-              width="100%"
-              isReadOnlyMode={true}
-              isEditModeSupported={false}
-            />
-          </Layout.Vertical>
-          <Tag className={css.buttonsWrapper}>{getString('common.readOnly')}</Tag>
-        </>
-      )}
+      <RunPipelineForm
+        pipelineIdentifier={pipelineIdentifier}
+        orgIdentifier={orgIdentifier}
+        projectIdentifier={projectIdentifier}
+        accountId={accountId}
+        module={module}
+        source={source}
+        inputSetYAML={inputSetYaml || ''}
+        executionView
+        branch={pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch}
+        repoIdentifier={
+          isGitSyncEnabled
+            ? pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoIdentifier
+            : pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName
+        }
+        connectorRef={pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef}
+        mockData={props.mockData}
+        executionInputSetTemplateYaml={inputSetTemplateYaml}
+        executionInputSetTemplateYamlError={error}
+        storeType={pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType}
+        storeMetadata={storeMetadata}
+      />
     </div>
   )
 }

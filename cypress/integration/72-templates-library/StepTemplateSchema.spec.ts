@@ -34,8 +34,8 @@ describe('Template Schema Validation', () => {
           ...featureFlagsData.resource,
           {
             uuid: null,
-            name: 'TEMPLATE_SCHEMA_VALIDATION',
-            enabled: true,
+            name: 'DISABLE_TEMPLATE_SCHEMA_VALIDATION',
+            enabled: false,
             lastUpdatedAt: 0
           }
         ]

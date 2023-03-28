@@ -30,7 +30,7 @@ import {
   getColumsForProjectAndAccountLevel
 } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/CreateCompositeSloForm.utils'
 import { SLOObjective, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
-
+import { getSLOIdentifierWithOrgAndProject } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   useGetSLOHealthListViewV2,
@@ -170,9 +170,16 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
       id: 'selectSlo',
       width: '50px',
       Cell: ({ row }: { row: Row<SLOHealthListView> }) => {
+        const sloData = row.original
+        const isChecked = isAccountLevel
+          ? selectedSlos.some(
+              item => getSLOIdentifierWithOrgAndProject(item) === getSLOIdentifierWithOrgAndProject(sloData)
+            )
+          : selectedSlos.some(item => item.name === sloData.name)
         return (
           <RenderCheckBoxes
             row={row}
+            isChecked={isChecked}
             selectedSlos={selectedSlos}
             setSelectedSlos={setSelectedSlos}
             isAccountLevel={isAccountLevel}

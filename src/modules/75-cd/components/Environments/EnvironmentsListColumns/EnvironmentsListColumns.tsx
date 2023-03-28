@@ -75,10 +75,13 @@ type EnvData = { environment: EnvironmentResponseDTO }
 const withEnvironment = withTableData<EnvironmentResponseDTO, EnvData>(({ row }) => ({ environment: row.original }))
 const withActions = withTableData<
   EnvironmentResponseDTO,
-  EnvData & { actions: { [P in 'onEdit' | 'onDelete']?: (id: string) => void } }
+  EnvData & { actions: { onEdit?: (id: string) => void; onDelete?(environment: EnvironmentResponseDTO): void } }
 >(({ row, column }) => ({
   environment: row.original,
-  actions: (column as any).actions as { [P in 'onEdit' | 'onDelete']?: (id: string) => void }
+  actions: (column as any).actions as {
+    onEdit?: (id: string) => void
+    onDelete?(environment: EnvironmentResponseDTO): void
+  }
 }))
 
 export const EnvironmentTypes = withEnvironment(({ environment }) => {
@@ -105,7 +108,7 @@ export const EnvironmentMenu = withActions(({ environment, actions }) => {
       />
     ),
     action: () => {
-      actions.onDelete?.(identifier)
+      actions.onDelete?.(environment)
     }
   })
 

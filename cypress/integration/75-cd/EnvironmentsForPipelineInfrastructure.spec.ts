@@ -127,6 +127,6 @@ describe('Environment for Pipeline', () => {
     cy.contains('span', 'Confirm').should('be.visible')
     cy.contains('span', 'Confirm').click()
     cy.wait(1000)
-    cy.contains('span', 'Successfully deleted environment testEnv').should('be.visible')
+    cy.contains('span', 'Successfully deleted Environment testEnv').should('be.visible')
   })
 })

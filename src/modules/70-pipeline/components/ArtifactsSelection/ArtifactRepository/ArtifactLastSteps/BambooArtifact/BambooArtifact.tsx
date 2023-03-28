@@ -39,7 +39,8 @@ import {
   useGetBuildsForBamboo,
   useGetArtifactPathsForBamboo,
   BambooPlanNames,
-  Failure
+  Failure,
+  ServiceDefinition
 } from 'services/cd-ng'
 import {
   getConnectorIdValue,
@@ -55,7 +56,7 @@ import type {
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-
+import { isTASDeploymentType } from '@pipeline/utils/stageHelpers'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
@@ -72,7 +73,8 @@ function FormComponent({
   formik,
   isMultiArtifactSource,
   formClassName = '',
-  editArtifactModePrevStepData
+  editArtifactModePrevStepData,
+  isTasDeploymentTypeSelected
 }: StepProps<ConnectorConfigDTO> & BambooArtifactProps & ArtifactFormikProps<BambooArtifactType>): React.ReactElement {
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
@@ -146,6 +148,18 @@ function FormComponent({
     lazy: true,
     body: {}
   })
+
+  const artifactPathComponent = React.useMemo((): JSX.Element => {
+    const commonProps = {
+      selectItems: defaultTo(artifactPaths, []),
+      label: getString('pipeline.artifactPathLabel'),
+      name: 'spec.artifactPaths',
+      placeholder: fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder'),
+      ...(!isTasDeploymentTypeSelected && { multiSelectTypeInputProps: {} })
+    }
+    const Component = isTasDeploymentTypeSelected ? FormInput.MultiTypeInput : FormInput.MultiSelectTypeInput
+    return <Component {...commonProps} />
+  }, [artifactPaths, fetchingArtifacts, getString, isTasDeploymentTypeSelected])
 
   useEffect(() => {
     if (planValue) {
@@ -298,13 +312,7 @@ function FormComponent({
           )}
         </div>
         <div className={css.imagePathContainer}>
-          <FormInput.MultiSelectTypeInput
-            selectItems={defaultTo(artifactPaths, [])}
-            label={getString('pipeline.artifactPathLabel')}
-            name="spec.artifactPaths"
-            placeholder={fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder')}
-            multiSelectTypeInputProps={{}}
-          />
+          {artifactPathComponent}
           {getMultiTypeFromValue(artifactPathValue) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <SelectConfigureOptions
@@ -402,12 +410,14 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
     prevStepData,
     selectedArtifact,
     artifactIdentifiers,
-    editArtifactModePrevStepData
+    editArtifactModePrevStepData,
+    selectedDeploymentType = ''
   } = props
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
+  const isTasDeploymentTypeSelected = isTASDeploymentType(selectedDeploymentType)
 
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -415,15 +425,19 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
     return getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
-      isIdentifierAllowed
+      isIdentifierAllowed,
+      selectedDeploymentType as ServiceDefinition['type']
     ) as BambooArtifactType
   }
 
   const submitFormData = (formData: BambooArtifactType, connectorId?: string): void => {
     const planKey = get(formData, 'spec.planKey', '')
-    const artifactPaths = get(formData, 'spec.artifactPaths', [])
+    let artifactPaths = get(formData, 'spec.artifactPaths', [])
     const build = get(formData, 'spec.build', '')
 
+    if (isTasDeploymentTypeSelected && getMultiTypeFromValue(artifactPaths) === MultiTypeInputType.FIXED) {
+      artifactPaths = [artifactPaths]
+    }
     handleSubmit({
       identifier: formData.identifier,
       spec: {
@@ -494,7 +508,7 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
         }}
       >
         {formik => {
-          return <FormComponent {...props} formik={formik} />
+          return <FormComponent {...props} formik={formik} isTasDeploymentTypeSelected={isTasDeploymentTypeSelected} />
         }}
       </Formik>
     </Layout.Vertical>

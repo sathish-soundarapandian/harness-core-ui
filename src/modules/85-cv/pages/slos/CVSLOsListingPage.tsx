@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { useEffect, useState, useMemo, useReducer } from 'react'
+import React, { useEffect, useState, useMemo, useReducer, useRef } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import {
   useToaster,
@@ -22,11 +22,12 @@ import {
   ExpandingSearchInput
 } from '@harness/uicore'
 import { Intent, Color, FontVariation } from '@harness/design-system'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEqual } from 'lodash-es'
 import type { CellProps, Renderer } from 'react-table'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import slosEmptyState from '@cv/assets/slosEmptyState.svg'
 import { Page } from '@common/exports'
+import { useDeepCompareEffect } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -39,7 +40,8 @@ import {
   RiskCount,
   useGetSLOHealthListView,
   useGetSLOAssociatedMonitoredServices,
-  useDeleteSLOV2Data
+  useDeleteSLOV2Data,
+  GetSLOHealthListViewQueryParams
 } from 'services/cv'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -94,7 +96,10 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     getInitialFilterStateLazy(passedInitialState, monitoredService)
   )
   const [pageNumber, setPageNumber] = useState(0)
-  const [search, setSearch] = useState<string>('')
+
+  const filtersRef = useRef(filterState)
+  const projectRef = useRef(projectIdentifier)
+  const mounted = useRef(false)
 
   useEffect(() => {
     if (monitoredService && monitoredServiceIdentifier) {
@@ -111,24 +116,25 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   }, [accountId, orgIdentifier, projectIdentifier])
 
   const sloDashboardWidgetsParams = useMemo(() => {
-    return getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber, search)
-  }, [pathParams, filterState, pageNumber, search])
+    return getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber)
+  }, [pathParams, filterState, pageNumber])
 
   const {
     data: dashboardWidgetsResponse,
     loading: dashboardWidgetsLoading,
     refetch: refetchDashboardWidgets,
     error: dashboardWidgetsError
-  } = useGetSLOHealthListView(sloDashboardWidgetsParams)
+  } = useGetSLOHealthListView({ ...sloDashboardWidgetsParams, lazy: true })
 
   const {
     data: riskCountResponse,
     loading: riskCountLoading,
     refetch: refetchRiskCount,
     error: dashboardRiskCountError
-  } = useGetServiceLevelObjectivesRiskCount(
-    getServiceLevelObjectivesRiskCountParams(pathParams, getString, filterState)
-  )
+  } = useGetServiceLevelObjectivesRiskCount({
+    ...getServiceLevelObjectivesRiskCountParams(pathParams, getString, filterState),
+    lazy: true
+  })
 
   const {
     data: monitoredServicesData,
@@ -138,6 +144,45 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   } = useGetSLOAssociatedMonitoredServices({
     queryParams: pathParams
   })
+
+  const fetchWidgetAndRiskCount = (queryParams?: Pick<GetSLOHealthListViewQueryParams, 'pageNumber'>): void => {
+    refetchDashboardWidgets({
+      ...sloDashboardWidgetsParams,
+      queryParams: { ...sloDashboardWidgetsParams.queryParams, ...queryParams }
+    })
+    refetchRiskCount()
+  }
+
+  useDeepCompareEffect(() => {
+    setPageNumber(0)
+    // On mount call
+    fetchWidgetAndRiskCount({ pageNumber: 0 })
+  }, [filterState])
+
+  useEffect(() => {
+    if (projectRef.current !== projectIdentifier) {
+      // this is to prevent calling the API twice during pagination and projectIdentifier change
+      projectRef.current = projectIdentifier
+    } else if (mounted.current) {
+      // Call happen during pagination
+      fetchWidgetAndRiskCount({ pageNumber })
+    }
+  }, [pageNumber])
+
+  useEffect(() => {
+    setPageNumber(0)
+    if (projectIdentifier) {
+      // Resets all the filter
+      dispatch(SLODashboardFilterActions.resetFilters())
+
+      if (isEqual(filterState, filtersRef.current) && mounted.current) {
+        // Call happen when no filter change, but project has changed later by the user
+        fetchWidgetAndRiskCount({ pageNumber: 0 })
+      }
+      projectRef.current = projectIdentifier
+      mounted.current = true
+    }
+  }, [projectIdentifier])
 
   const {
     content,
@@ -629,7 +674,11 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                 <ExpandingSearchInput
                   width={250}
                   throttle={500}
-                  onChange={setSearch}
+                  defaultValue={filterState.search}
+                  key={filterState.search}
+                  onChange={updatedText =>
+                    dispatch(SLODashboardFilterActions.updatedSearchAction({ search: updatedText }))
+                  }
                   autoFocus={false}
                   placeholder={getString('cv.slos.searchSLO')}
                 />
@@ -680,8 +729,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                 monitoredServiceIdentifier,
                 getString,
                 riskCountResponse,
-                filterState,
-                search
+                filterState
               })}
               message={getString('cv.slos.noSLOsStateMessage')}
               className={css.noSloData}

@@ -215,7 +215,7 @@ describe('CVSLOsListingPage', () => {
 
     expect(onRetryButton).toBeInTheDocument()
     expect(refetchUserJourneys).not.toHaveBeenCalled()
-    expect(refetchDashboardWidgets).not.toHaveBeenCalled()
+    expect(refetchDashboardWidgets).toHaveBeenCalled()
 
     userEvent.click(onRetryButton)
 
@@ -236,12 +236,12 @@ describe('CVSLOsListingPage', () => {
     const onRetryButton = screen.getByRole('button', { name: 'Retry' })
 
     expect(onRetryButton).toBeInTheDocument()
+    expect(refetchDashboardWidgets).toHaveBeenCalled()
     expect(refetchUserJourneys).not.toHaveBeenCalled()
 
     userEvent.click(onRetryButton)
 
     expect(refetchUserJourneys).toHaveBeenCalled()
-    expect(refetchDashboardWidgets).not.toHaveBeenCalled()
   })
 
   test('page retry should only trigger the dashboard widget API when userJourney API returned success response', () => {
@@ -257,7 +257,7 @@ describe('CVSLOsListingPage', () => {
     const onRetryButton = screen.getByRole('button', { name: 'Retry' })
 
     expect(onRetryButton).toBeInTheDocument()
-    expect(refetchDashboardWidgets).not.toHaveBeenCalled()
+    expect(refetchDashboardWidgets).toHaveBeenCalled()
 
     userEvent.click(onRetryButton)
 
@@ -265,7 +265,7 @@ describe('CVSLOsListingPage', () => {
     expect(refetchDashboardWidgets).toHaveBeenCalled()
   })
 
-  test('it should render page body no data state only if dashboard widgets and selected user journey are empty', () => {
+  test('should render page body no data state only if dashboard widgets and selected user journey are empty', () => {
     useGetSLODashboardWidgets = jest.spyOn(cvServices, 'useGetSLOHealthListView').mockReturnValue({
       data: {},
       loading: false,
@@ -274,12 +274,13 @@ describe('CVSLOsListingPage', () => {
     } as any)
 
     const { container } = render(<ComponentWrapper />)
-    expect(screen.getByText('cv.slos.noMatchingData')).toBeInTheDocument()
+
+    expect(screen.getByText('common.sloNoData')).toBeInTheDocument()
     expect(screen.queryByText('First Journey')).not.toBeInTheDocument()
     expect(container.querySelector('.TableV2--body [role="row"]')).not.toBeInTheDocument()
   })
 
-  test('it should only render dashboard widgets when user journeys are empty', () => {
+  test('should only render dashboard widgets when user journeys are empty', () => {
     useGetSLODashboardWidgets.mockReturnValue({
       data: dashboardWidgetsResponse,
       loading: false,
@@ -292,7 +293,7 @@ describe('CVSLOsListingPage', () => {
     expect(screen.queryByText('First Journey')).not.toBeInTheDocument()
   })
 
-  test('it should render page body no data state only if dashboard widgets and selected user journey are empty', () => {
+  test('should render page body no data state only if dashboard widgets and selected user journey are empty', () => {
     useGetSLODashboardWidgets = jest.spyOn(cvServices, 'useGetSLOHealthListView').mockReturnValue({
       data: {},
       loading: false,
@@ -300,7 +301,7 @@ describe('CVSLOsListingPage', () => {
       refetch: refetchDashboardWidgets
     } as any)
     render(<ComponentWrapper />)
-    expect(screen.getByText('cv.slos.noMatchingData')).toBeInTheDocument()
+    expect(screen.getByText('common.sloNoData')).toBeInTheDocument()
   })
 
   test('Risk filter select and deselect', async () => {
@@ -318,8 +319,6 @@ describe('CVSLOsListingPage', () => {
     })
 
     const { container } = render(<ComponentWrapper />)
-
-    expect(container).toMatchSnapshot()
 
     expect(container.querySelector('div[data-test-id="Healthy_tooltip"]')?.parentElement).not.toHaveClass(
       'Card--selected'

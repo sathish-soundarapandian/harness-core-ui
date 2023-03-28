@@ -26,6 +26,7 @@
     "dev": "NODE_ENV=development webpack serve --progress --config configs/webpack.dev.js --config configs/webpack.monaco.js",
     "watch": "yarn clean && NODE_ENV=development webpack --watch --progress --config configs/webpack.dev.js --config configs/webpack.monaco.js",
     "services": "node scripts/services.mjs",
+    "preqa-services": "node scripts/pre-qa-services.mjs",
     "services:rq": "node scripts/services-rq.mjs",
     "build": "yarn clean && GIT_COMMIT=$(git log -1 --pretty=%h) GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD) webpack --config configs/webpack.prod.js --config configs/webpack.monaco.js",
     "build:cypress": "yarn clean && NODE_ENV=development CYPRESS=true NODE_OPTIONS=\"--max-old-space-size=6144\" webpack --progress --config configs/webpack.dev.js --config configs/webpack.monaco.js",

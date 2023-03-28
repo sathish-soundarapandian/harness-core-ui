@@ -12,7 +12,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import * as cvServices from 'services/cv'
 import type { WidgetsWithSameStartTimeProps } from '../WidgetsWithSameStartTime'
 import WidgetsWithSameStartTime from '../WidgetsWithSameStartTime'
-import { mockedSecondaryEventsDetailsResponse } from './WidgetsWithSameStartTime.mock'
+import { mockedProps, mockedSecondaryEventsDetailsResponse } from './WidgetsWithSameStartTime.mock'
 import { getWidgetsGroupedByType } from '../WidgetsWithSameStartTime.utils'
 
 function WrapperComponent(props: WidgetsWithSameStartTimeProps): JSX.Element {
@@ -34,41 +34,8 @@ jest.mock('services/cv', () => ({
 }))
 
 describe('Unit tests for WidgetsWithSameStartTime', () => {
-  const props = {
-    index: 0,
-    widgets: [
-      {
-        endTime: 1679230800000,
-        startTime: 1679229000000,
-        icon: {
-          height: 16,
-          width: 16,
-          url: 'images/downtime'
-        },
-        type: 'Downtime',
-        identifiers: ['yEudIuKcQ_Cnd4TTzluxxg'],
-        leftOffset: 471.3019313602891
-      },
-      {
-        endTime: 1679580900000,
-        startTime: 1679229000000,
-        icon: {
-          height: 16,
-          width: 16,
-          url: '/images/d400ced.svg'
-        },
-        type: 'Annotation',
-        identifiers: ['2fq95fHDS_6If0_QRixu6w', 'YXrDFNNcSPC3kS9J1V8pPw'],
-        leftOffset: 471.3019313602891
-      }
-    ],
-    startTimeForWidgets: 1679229000000,
-    addAnnotation: jest.fn(),
-    fetchSecondaryEvents: jest.fn()
-  }
-
   test('should be able to verify that WidgetsWithSameStartTime component loads with annotations Icon', async () => {
-    const { getByTestId, getByText } = render(<WrapperComponent {...props} />)
+    const { getByTestId, getByText } = render(<WrapperComponent {...mockedProps} />)
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
     userEvent.click(getByTestId('multiWidgetsIcon'))
@@ -83,7 +50,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
   })
 
   test('should render the view when addAnnotation handler is not passed', async () => {
-    const updatedProps = { ...props, addAnnotation: undefined }
+    const updatedProps = { ...mockedProps, addAnnotation: undefined }
     const { getByTestId, getByText } = render(<WrapperComponent {...updatedProps} />)
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
     const multiWidgetsIcon = getByTestId('multiWidgetsIcon')
@@ -97,7 +64,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
   })
 
   test('should be able to click on Edit annotation link when annotations icon is clicked for nested annotations card', async () => {
-    const { getByTestId, getByText, getAllByTestId } = render(<WrapperComponent {...props} />)
+    const { getByTestId, getByText, getAllByTestId } = render(<WrapperComponent {...mockedProps} />)
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
     userEvent.click(getByTestId('multiWidgetsIcon'))
@@ -116,7 +83,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
   })
 
   test('should be able to click on delete annotation link when annotations icon is clicked for nested annotations card', async () => {
-    const { getByTestId, getByText, getAllByTestId } = render(<WrapperComponent {...props} />)
+    const { getByTestId, getByText, getAllByTestId } = render(<WrapperComponent {...mockedProps} />)
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
     userEvent.click(getByTestId('multiWidgetsIcon'))
@@ -140,7 +107,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
   })
 
   test('should be able to click on delete annotation link when annotations icon is clicked for nested annotations card and cancel the delete', async () => {
-    const { getByTestId, getByText, getAllByTestId } = render(<WrapperComponent {...props} />)
+    const { getByTestId, getByText, getAllByTestId } = render(<WrapperComponent {...mockedProps} />)
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
     userEvent.click(getByTestId('multiWidgetsIcon'))
@@ -173,7 +140,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
         } as any)
     )
 
-    const { getByTestId, getByText } = render(<WrapperComponent {...props} />)
+    const { getByTestId, getByText } = render(<WrapperComponent {...mockedProps} />)
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
     // Verify if downtime is present
@@ -200,7 +167,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
         } as any)
     )
 
-    const { getByTestId, getByText } = render(<WrapperComponent {...props} />)
+    const { getByTestId, getByText } = render(<WrapperComponent {...mockedProps} />)
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
     // Verify if downtime is present
@@ -215,9 +182,27 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
     expect(getByText('Failed to fetch secondary event details')).toBeInTheDocument()
   })
 
+  test('should render valid state when api to fetch annotation details gives empty results', async () => {
+    jest.spyOn(cvServices, 'useGetSecondaryEventDetails').mockImplementationOnce(
+      () =>
+        ({
+          data: {},
+          loading: false,
+          error: {}
+        } as any)
+    )
+
+    const { getByTestId, getByText } = render(<WrapperComponent {...mockedProps} />)
+    await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
+
+    // Verify if downtime is present
+    userEvent.click(getByTestId('multiWidgetsIcon'))
+    expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
+  })
+
   test('should be able to render list of downtimes when no annotation is present', async () => {
     const updatedProps = {
-      ...props,
+      ...mockedProps,
       widgets: [
         {
           endTime: 1679230800000,
@@ -245,7 +230,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
   })
 
   test('should be able to verify getWidgetsGroupedByType', async () => {
-    expect(getWidgetsGroupedByType(props.widgets)).toEqual({
+    expect(getWidgetsGroupedByType(mockedProps.widgets)).toEqual({
       widgetsWithAnnotationType: [
         {
           endTime: 1679580900000,

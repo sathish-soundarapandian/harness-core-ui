@@ -24,6 +24,7 @@ import cx from 'classnames'
 import { useHistory } from 'react-router-dom'
 import { isEmpty, defaultTo, keyBy, omitBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
+import type { GetDataError } from 'restful-react'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   PipelineConfig,
@@ -36,7 +37,8 @@ import {
   useRunStagesWithRuntimeInputYaml,
   useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
-  useDebugPipelineExecuteWithInputSetYaml
+  useDebugPipelineExecuteWithInputSetYaml,
+  Failure
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -112,6 +114,8 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
   stagesExecuted?: string[]
   executionIdentifier?: string
   source: ExecutionPathProps['source']
+  executionInputSetTemplateYaml?: string
+  executionInputSetTemplateYamlError?: GetDataError<Failure | Error> | null
   storeMetadata?: StoreMetadata
   isDebugMode?: boolean
 }
@@ -142,6 +146,8 @@ function RunPipelineFormBasic({
   connectorRef,
   storeType,
   stagesExecuted,
+  executionInputSetTemplateYaml = '',
+  executionInputSetTemplateYamlError,
   executionIdentifier,
   isDebugMode
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
@@ -274,6 +280,8 @@ function RunPipelineFormBasic({
     connectorRef,
     executionIdentifier,
     inputSetSelected: selectedInputSets,
+    executionInputSetTemplateYaml,
+    executionView,
     resolvedPipeline: resolvedMergedPipeline,
     setSelectedInputSets,
     currentYAML: currentPipeline
@@ -832,6 +840,7 @@ function RunPipelineFormBasic({
                       submitForm={submitForm}
                       setRunClicked={setRunClicked}
                       hasInputSets={hasInputSets}
+                      templateError={executionInputSetTemplateYamlError}
                       setSelectedInputSets={setSelectedInputSets}
                       selectedStageData={selectedStageData}
                       pipelineResponse={pipelineResponse}

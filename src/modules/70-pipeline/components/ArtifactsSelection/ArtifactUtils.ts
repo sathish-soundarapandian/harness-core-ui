@@ -8,7 +8,7 @@
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, isObject, merge } from 'lodash-es'
-import { RepositoryFormatTypes, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { isTASDeploymentType, RepositoryFormatTypes, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type {
   ArtifactConfig,
   ConnectorConfigDTO,
@@ -318,12 +318,21 @@ export const getArtifactFormData = (
   isServerlessDeploymentTypeSelected = false
 ): artifactInitialValueTypes => {
   const specValues = get(initialValues, 'spec', null)
+  const isTasDeploymentTypeSelected = isTASDeploymentType(selectedDeploymentType as string)
 
   if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
     return defaultArtifactInitialValues(selectedArtifact, selectedDeploymentType)
   }
 
   let values: artifactInitialValueTypes | null = {} as artifactInitialValueTypes
+
+  const getFixedArtifactValue = () => {
+    const artifactFixedPaths = specValues.artifactPaths.map((artifactPath: string) => ({
+      label: artifactPath,
+      value: artifactPath
+    }))
+    return isTasDeploymentTypeSelected ? artifactFixedPaths[0] : artifactFixedPaths
+  }
   switch (selectedArtifact) {
     case ENABLED_ARTIFACT_TYPES.CustomArtifact:
     case ENABLED_ARTIFACT_TYPES.Jenkins:
@@ -338,10 +347,7 @@ export const getArtifactFormData = (
             getMultiTypeFromValue(specValues.artifactPaths) === MultiTypeInputType.FIXED &&
             specValues.artifactPaths &&
             specValues.artifactPaths.length
-              ? specValues.artifactPaths.map((artifactPath: string) => ({
-                  label: artifactPath,
-                  value: artifactPath
-                }))
+              ? getFixedArtifactValue()
               : specValues.artifactPaths
         }
       }

@@ -264,6 +264,8 @@ export interface BambooArtifactProps {
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
   editArtifactModePrevStepData?: ArtifactConnectorStepDataToLastStep
+  selectedDeploymentType?: string
+  isTasDeploymentTypeSelected?: boolean
 }
 
 export interface ArtifactFormikProps<Values> {

@@ -166,13 +166,17 @@ interface RenderCheckBoxesInterface {
   selectedSlos: SLOHealthListView[]
   setSelectedSlos: React.Dispatch<React.SetStateAction<SLOHealthListView[]>>
   isAccountLevel?: boolean
+  isChecked: boolean
 }
 
-export const RenderCheckBoxes = ({ row, selectedSlos, setSelectedSlos, isAccountLevel }: RenderCheckBoxesInterface) => {
+export const RenderCheckBoxes = ({
+  row,
+  selectedSlos,
+  setSelectedSlos,
+  isAccountLevel,
+  isChecked
+}: RenderCheckBoxesInterface): JSX.Element => {
   const sloData = row.original
-  const isChecked = isAccountLevel
-    ? selectedSlos.some(item => getSLOIdentifierWithOrgAndProject(item) === getSLOIdentifierWithOrgAndProject(sloData))
-    : selectedSlos.some(item => item.name === sloData.name)
   return (
     <Checkbox
       checked={isChecked}

@@ -389,7 +389,8 @@ export const initialState: SLOFilterState = {
   monitoredService: defaultAllOption,
   sliTypes: defaultAllOption,
   targetTypes: defaultAllOption,
-  sloRiskFilter: null
+  sloRiskFilter: null,
+  search: ''
 }
 
 const updateUserJourney = (payload: SLOActionPayload): SLOFilterAction => ({
@@ -420,6 +421,11 @@ const resetFiltersInMonitoredServicePageAction = (): SLOFilterAction => ({
   type: SLOActionTypes.resetFiltersInMonitoredServicePage
 })
 
+const updatedSearchAction = (payload: SLOActionPayload): SLOFilterAction => ({
+  type: SLOActionTypes.search,
+  payload
+})
+
 export const SLODashboardFilterActions = {
   updateUserJourney,
   updateMonitoredServices,
@@ -427,7 +433,8 @@ export const SLODashboardFilterActions = {
   updateTargetType,
   updateSloRiskType,
   resetFilters,
-  resetFiltersInMonitoredServicePageAction
+  resetFiltersInMonitoredServicePageAction,
+  updatedSearchAction
 }
 
 export const sloFilterReducer = (state = initialState, data: SLOFilterAction): SLOFilterState => {
@@ -466,6 +473,13 @@ export const sloFilterReducer = (state = initialState, data: SLOFilterAction): S
         ...initialState,
         monitoredService: state.monitoredService
       }
+
+    case SLOActionTypes.search:
+      return {
+        ...initialState,
+        search: payload.search as string
+      }
+
     default:
       return initialState
   }
@@ -479,7 +493,8 @@ export const getInitialFilterState = (
     monitoredService: getDefaultAllOption(getString),
     sliTypes: getDefaultAllOption(getString),
     targetTypes: getDefaultAllOption(getString),
-    sloRiskFilter: null
+    sloRiskFilter: null,
+    search: ''
   }
 }
 
@@ -543,22 +558,22 @@ export const getSLODashboardWidgetsParams = (
   pathParams: PathParams,
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   filterState: SLOFilterState,
-  pageNumber?: number,
-  search?: string
+  pageNumber?: number
 ): SLODashboardWidgetsParams => {
+  const { monitoredService, search, sliTypes, sloRiskFilter, targetTypes, userJourney } = filterState
   return {
     queryParams: {
       ...pathParams,
-      monitoredServiceIdentifier: getMonitoredServiceSLODashboardParams(getString, filterState.monitoredService),
+      monitoredServiceIdentifier: getMonitoredServiceSLODashboardParams(getString, monitoredService),
       pageNumber,
       pageSize: PAGE_SIZE_DASHBOARD_WIDGETS,
-      userJourneyIdentifiers: getFilterValueForSLODashboardParams(getString, filterState.userJourney),
-      targetTypes: getFilterValueForSLODashboardParams(getString, filterState.targetTypes) as TargetTypesParams[],
-      sliTypes: getFilterValueForSLODashboardParams(getString, filterState.sliTypes) as SLITypesParams[],
+      userJourneyIdentifiers: getFilterValueForSLODashboardParams(getString, userJourney),
+      targetTypes: getFilterValueForSLODashboardParams(getString, targetTypes) as TargetTypesParams[],
+      sliTypes: getFilterValueForSLODashboardParams(getString, sliTypes) as SLITypesParams[],
       filter: search,
       errorBudgetRisks: getRiskFilterForSLODashboardParams(
         getString,
-        filterState.sloRiskFilter?.identifier as string | null
+        sloRiskFilter?.identifier as string | null
       ) as RiskTypes[]
     },
     queryParamStringifyOptions: {
@@ -572,13 +587,15 @@ export const getServiceLevelObjectivesRiskCountParams = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   filterState: SLOFilterState
 ): SLODashboardWidgetsParams => {
+  const { monitoredService, search, sliTypes, targetTypes, userJourney } = filterState
   return {
     queryParams: {
       ...pathParams,
-      monitoredServiceIdentifier: getMonitoredServiceSLODashboardParams(getString, filterState.monitoredService),
-      userJourneyIdentifiers: getFilterValueForSLODashboardParams(getString, filterState.userJourney),
-      targetTypes: getFilterValueForSLODashboardParams(getString, filterState.targetTypes) as TargetTypesParams[],
-      sliTypes: getFilterValueForSLODashboardParams(getString, filterState.sliTypes) as SLITypesParams[]
+      monitoredServiceIdentifier: getMonitoredServiceSLODashboardParams(getString, monitoredService),
+      userJourneyIdentifiers: getFilterValueForSLODashboardParams(getString, userJourney),
+      targetTypes: getFilterValueForSLODashboardParams(getString, targetTypes) as TargetTypesParams[],
+      sliTypes: getFilterValueForSLODashboardParams(getString, sliTypes) as SLITypesParams[],
+      filter: search
     },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
@@ -638,21 +655,19 @@ export function getSLOsNoDataMessageTitle({
   monitoredServiceIdentifier,
   getString,
   riskCountResponse,
-  filterState,
-  search
+  filterState
 }: {
   monitoredServiceIdentifier: string | undefined
   getString: UseStringsReturn['getString']
   riskCountResponse: ResponseSLORiskCountResponse | null
   filterState: SLOFilterState
-  search: string
 }): string | undefined {
   if (monitoredServiceIdentifier) {
     return getString('cv.slos.noDataMS')
   } else {
-    if (ifNoSLOsAreCreated(riskCountResponse, filterState, search)) {
+    if (ifNoSLOsAreCreated(riskCountResponse, filterState)) {
       return getString('common.sloNoData')
-    } else if (!isEmpty(search)) {
+    } else if (!isEmpty(filterState.search)) {
       return getString('cv.slos.noMatchingDataForSearch')
     } else {
       return getString('cv.slos.noMatchingData')
@@ -660,13 +675,10 @@ export function getSLOsNoDataMessageTitle({
   }
 }
 
-function ifNoSLOsAreCreated(
-  riskCountResponse: ResponseSLORiskCountResponse | null,
-  filterState: SLOFilterState,
-  search: string
-) {
+function ifNoSLOsAreCreated(riskCountResponse: ResponseSLORiskCountResponse | null, filterState: SLOFilterState) {
   return (
     !riskCountResponse?.data?.riskCounts ||
-    (isEmpty(filter(compact(values(filterState)), ({ label }: SelectOption) => label !== 'All')) && isEmpty(search))
+    (isEmpty(filter(compact(values(filterState)), ({ label }: SelectOption) => label !== 'All')) &&
+      isEmpty(filterState.search))
   )
 }

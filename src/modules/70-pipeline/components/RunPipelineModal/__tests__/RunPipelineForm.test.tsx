@@ -722,6 +722,12 @@ describe('RERUN MODE', () => {
 
 describe('EXECUTION VIEW', () => {
   test('should should have the values prefilled and fields as disabled', async () => {
+    const executionInputSetTemplateYaml = `pipeline:
+  identifier: "First"
+  variables:
+  - name: "checkVariable1"
+    type: "String"
+    value: "<+input>"`
     const inputSetYaml = `pipeline:
   identifier: "First"
   variables:
@@ -731,7 +737,13 @@ describe('EXECUTION VIEW', () => {
 
     const { container, queryByText } = render(
       <TestWrapper>
-        <RunPipelineForm {...commonProps} inputSetYAML={inputSetYaml} executionView={true} source="executions" />
+        <RunPipelineForm
+          {...commonProps}
+          inputSetYAML={inputSetYaml}
+          executionView={true}
+          executionInputSetTemplateYaml={executionInputSetTemplateYaml}
+          source="executions"
+        />
       </TestWrapper>
     )
 
