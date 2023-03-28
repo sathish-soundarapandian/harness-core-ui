@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { omit } from 'lodash-es'
 import { act } from 'react-dom/test-utils'
 import { findByText, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -24,9 +25,13 @@ import {
   healthSourceListResponse,
   monitoredServicelist,
   notificationMock,
+  initialData,
+  serviceLevelObjectiveV2,
+  editFormData,
   ratioBasedSLO
 } from './CVCreateSLOV2.mock'
-import { getSLOTarget } from '../CVCreateSLOV2.utils'
+import { getSLOTarget, getSLOV2InitialFormData } from '../CVCreateSLOV2.utils'
+import { SLOType } from '../CVCreateSLOV2.constants'
 
 jest.useFakeTimers()
 
@@ -771,6 +776,7 @@ describe('Simple SLO V2', () => {
     expect(getByText('service_appd_env_appd')).toBeInTheDocument()
     expect(getByText('cv.slos.slis.HealthSource')).toBeInTheDocument()
     expect(getByText('cv.healthSource.newHealthSource')).toBeInTheDocument()
+    expect(container.querySelector('input[value="Good"]')).toBeChecked()
 
     act(() => {
       userEvent.click(getByText('cv.slos.slis.type.latency'))
@@ -866,5 +872,13 @@ describe('Simple SLO V2', () => {
       userEvent.click(screen.getByText('next'))
     })
     expect(container.querySelectorAll('[class*="intent-danger"]').length).toEqual(0)
+  })
+
+  test('validate getSLOV2InitialFormData', () => {
+    expect(getSLOV2InitialFormData(SLOType.SIMPLE, undefined, false)).toEqual(initialData)
+    expect(getSLOV2InitialFormData(SLOType.SIMPLE, undefined, true)).toEqual(
+      omit(initialData, ['serviceLevelIndicatorType'])
+    )
+    expect(getSLOV2InitialFormData(SLOType.SIMPLE, serviceLevelObjectiveV2 as any, false)).toEqual(editFormData)
   })
 })

@@ -581,6 +581,7 @@ export const getServiceLevelObjectiveResponse = {
             identifier: 'service_appd_env_appd_appd_SLO4_cc7b5a73-4fbb-4fd4-872f-146f854d74d7',
             spec: {
               type: 'Ratio',
+              sliMissingDataType: 'Good',
               spec: {
                 eventType: 'Good',
                 metric1: 'https_errors_per_min',

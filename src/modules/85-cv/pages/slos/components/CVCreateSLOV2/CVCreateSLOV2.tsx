@@ -208,6 +208,11 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
   // TODO: Update with swagger
   const sloType = isComposite ? SLOType.COMPOSITE : SLOType.SIMPLE
   const validationSchema = isComposite ? getSLOV2FormValidationSchema : getSimpleSLOV2FormValidationSchema
+  const initialFormData = getSLOV2InitialFormData(
+    sloType,
+    SLODataResponse?.resource?.serviceLevelObjectiveV2,
+    SRM_ENABLE_REQUEST_SLO
+  )
   return (
     <Container margin={{ bottom: 'large' }}>
       {!identifier && (
@@ -229,11 +234,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
         />
       )}
       <Formik<SLOV2Form>
-        initialValues={getSLOV2InitialFormData(
-          sloType,
-          SLODataResponse?.resource?.serviceLevelObjectiveV2,
-          SRM_ENABLE_REQUEST_SLO
-        )}
+        initialValues={initialFormData}
         formName="SLO_form"
         onSubmit={values => {
           handleSLOV2Submit(values)

@@ -127,7 +127,7 @@ describe('Create SLO', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetail)
 
     cy.contains('p', 'SLOs').click()
-    cy.get('[data-icon="Edit"]').click()
+    cy.get('[data-icon="Edit"]').scrollIntoView().click()
 
     cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('be.visible')
 

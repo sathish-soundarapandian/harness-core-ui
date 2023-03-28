@@ -182,8 +182,11 @@ export const simpleSLOData = {
           {
             name: 'SLO1_appdMetric_c7cml5choco',
             identifier: 'SLO1_appdMetric_c7cml5choco',
-            spec: { type: 'Threshold', spec: { metric1: 'appdMetric_1', thresholdValue: 80, thresholdType: '<' } },
-            sliMissingDataType: 'Good'
+            spec: {
+              type: 'Threshold',
+              sliMissingDataType: 'Good',
+              spec: { metric1: 'appdMetric_1', thresholdValue: 80, thresholdType: '<' }
+            }
           }
         ]
       },
@@ -222,6 +225,7 @@ export const ratioBasedSLO = {
             identifier: 'AppD_dynatrace_Prometheus_Ratio_based_c454a38a-0c1c-4843-ad9c-224e491a8d65',
             type: 'Window',
             spec: {
+              sliMissingDataType: 'Good',
               spec: {
                 eventType: 'Good',
                 metric1: 'Prometheus_Metric_2',
@@ -379,4 +383,87 @@ export const monitoredServicelist = {
     { identifier: 'AppD_version2', name: 'AppD_version2', healthSources: [] }
   ],
   correlationId: '56bdf581-3e9c-4847-9c55-6952a03f28d1'
+}
+
+export const initialData = {
+  SLIMetricType: 'Ratio',
+  SLOTargetPercentage: 99,
+  evaluationType: 'Window',
+  healthSourceRef: '',
+  identifier: '',
+  monitoredServiceRef: '',
+  name: '',
+  notificationRuleRefs: [],
+  periodType: 'Rolling',
+  serviceLevelIndicatorType: 'Availability',
+  type: 'Simple',
+  userJourneyRef: []
+}
+
+export const serviceLevelObjectiveV2 = {
+  orgIdentifier: 'cvng',
+  projectIdentifier: 'templatetesting',
+  identifier: 'SLO4',
+  name: 'SLO 4 Updated',
+  description: 'Tracks SLO error rate',
+  tags: { serviceLevelIndicatorType: 'LATENCY' },
+  userJourneyRefs: ['Journey3'],
+  sloTarget: {
+    type: 'Rolling',
+    sloTargetPercentage: 97,
+    spec: { periodLength: '1d' }
+  },
+  type: 'Simple',
+  spec: {
+    monitoredServiceRef: 'service_appd_env_appd',
+    healthSourceRef: 'appd',
+    serviceLevelIndicatorType: 'Latency',
+    serviceLevelIndicators: [
+      {
+        name: 'service_appd_env_appd_appd_SLO4_d0465971-4885-474f-be87-4a32c55d30f9}',
+        identifier: 'service_appd_env_appd_appd_SLO4_cc7b5a73-4fbb-4fd4-872f-146f854d74d7',
+        type: 'Window',
+        spec: {
+          sliMissingDataType: 'Good',
+          spec: {
+            eventType: 'Good',
+            metric1: 'appdMetric',
+            metric2: 'appdMetric_c7cml5choco',
+            thresholdValue: 95,
+            thresholdType: '<'
+          },
+          type: 'Ratio'
+        },
+        sliMissingDataType: 'Good'
+      }
+    ]
+  },
+  notificationRuleRefs: [{ notificationRuleRef: 'test1010', enabled: true }]
+}
+
+export const editFormData = {
+  type: 'Simple',
+  name: 'SLO 4 Updated',
+  identifier: 'SLO4',
+  description: 'Tracks SLO error rate',
+  tags: { serviceLevelIndicatorType: 'LATENCY' },
+  userJourneyRef: ['Journey3'],
+  periodType: 'Rolling',
+  periodLength: '1d',
+  SLOTargetPercentage: 97,
+  notificationRuleRefs: [{ notificationRuleRef: 'test1010', enabled: true }],
+  monitoredServiceRef: 'service_appd_env_appd',
+  healthSourceRef: 'appd',
+  serviceLevelIndicatorType: 'Latency',
+  evaluationType: 'Window',
+  SLIMetricType: 'Ratio',
+  eventType: 'Good',
+  validRequestMetric: 'appdMetric_c7cml5choco',
+  goodRequestMetric: 'appdMetric',
+  objectiveValue: 95,
+  objectiveComparator: '<',
+  dayOfMonth: undefined,
+  dayOfWeek: undefined,
+  periodLengthType: undefined,
+  SLIMissingDataType: 'Good'
 }

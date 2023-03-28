@@ -42,7 +42,7 @@ import {
 } from './CVCreateSLOV2.types'
 import { serviceLevelObjectiveKeys } from './components/CreateCompositeSloForm/CreateCompositeSloForm.constant'
 import type { SLIForm } from './components/CreateSimpleSloForm/CreateSimpleSloForm.types'
-import { MAX_OBJECTIVE_PERCENTAGE } from './CVCreateSLOV2.constants'
+import { MAX_OBJECTIVE_PERCENTAGE, SLOType } from './CVCreateSLOV2.constants'
 
 export const filterServiceLevelObjectivesDetailsFromSLOObjective = (
   serviceLevelObjectivesDetails?: SLOObjective[]
@@ -80,109 +80,104 @@ const populateMetricInSLOForm = (serviceLevelObjective: ServiceLevelObjectiveV2D
       }
 }
 
+export const getSLOCommonFormValues = (serviceLevelObjective: ServiceLevelObjectiveV2DTO) => {
+  const { name, identifier, type, description, tags, userJourneyRefs, sloTarget, notificationRuleRefs } =
+    serviceLevelObjective
+  return {
+    [SLOV2FormFields.TYPE]: type,
+    // SLO Name definition
+    [SLOV2FormFields.NAME]: name,
+    [SLOV2FormFields.IDENTIFIER]: identifier,
+    [SLOV2FormFields.DESCRIPTION]: description,
+    [SLOV2FormFields.TAGS]: tags,
+    [SLOV2FormFields.USER_JOURNEY_REF]: userJourneyRefs,
+    // SLO Period Type
+    [SLOV2FormFields.PERIOD_TYPE]: defaultTo(sloTarget.type, 'Rolling'),
+    // for Rolling
+    [SLOV2FormFields.PERIOD_LENGTH]: sloTarget?.spec?.periodLength,
+    // for Calendar
+    [SLOV2FormFields.PERIOD_LENGTH_TYPE]: sloTarget?.spec?.type,
+    [SLOV2FormFields.DAY_OF_MONTH]: sloTarget?.spec?.spec?.dayOfMonth,
+    [SLOV2FormFields.DAY_OF_WEEK]: sloTarget?.spec?.spec?.dayOfWeek,
+    // SLO target
+    [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: sloTarget.sloTargetPercentage,
+    // SLO Notificaitons
+    [SLOV2FormFields.NOTIFICATION_RULE_REFS]: notificationRuleRefs
+  }
+}
+
+export const getSimpleSLOFormValue = (serviceLevelObjective: ServiceLevelObjectiveV2DTO) => {
+  const { spec } = serviceLevelObjective
+  const { monitoredServiceRef, healthSourceRef, serviceLevelIndicatorType, serviceLevelIndicators } = spec || {}
+  const [data] = serviceLevelIndicators
+  return {
+    ...getSLOCommonFormValues(serviceLevelObjective),
+    //SPEC
+    [SLOV2FormFields.MONITORED_SERVICE_REF]: monitoredServiceRef,
+    [SLOV2FormFields.HEALTH_SOURCE_REF]: healthSourceRef,
+    [SLOV2FormFields.SERVICE_LEVEL_INDICATOR_TYPE]: defaultTo(serviceLevelIndicatorType, SLITypes.AVAILABILITY),
+    [SLOV2FormFields.EVALUATION_TYPE]: defaultTo(data?.type, EvaluationType.WINDOW),
+    [SLOV2FormFields.SLI_METRIC_TYPE]: defaultTo(data?.spec?.type, SLIMetricTypes.THRESHOLD),
+    ...populateMetricInSLOForm(serviceLevelObjective),
+    [SLOV2FormFields.OBJECTIVE_VALUE]: data?.spec?.spec?.thresholdValue,
+    [SLOV2FormFields.OBJECTIVE_COMPARATOR]: data?.spec?.spec?.thresholdType,
+    [SLOV2FormFields.SLI_MISSING_DATA_TYPE]: data?.spec?.sliMissingDataType
+  }
+}
+
+export const getCompositeSLOFormValue = (serviceLevelObjective: ServiceLevelObjectiveV2DTO) => {
+  const { spec } = serviceLevelObjective
+  return {
+    ...getSLOCommonFormValues(serviceLevelObjective),
+    // Add SLOs
+    [SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS]: spec?.serviceLevelObjectivesDetails
+  }
+}
+
+export const getCommonInitialFormValue = (sloType: ServiceLevelObjectiveV2DTO['type']) => ({
+  [SLOV2FormFields.TYPE]: sloType,
+  [SLOV2FormFields.NAME]: '',
+  [SLOV2FormFields.IDENTIFIER]: '',
+  [SLOV2FormFields.USER_JOURNEY_REF]: [],
+  [SLOV2FormFields.MONITORED_SERVICE_REF]: '',
+  [SLOV2FormFields.HEALTH_SOURCE_REF]: '',
+  [SLOV2FormFields.PERIOD_TYPE]: PeriodTypes.ROLLING,
+  [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: 99,
+  [SLOV2FormFields.NOTIFICATION_RULE_REFS]: []
+})
+
+export const getSimpleSLOInitialFormValues = (occurenceBased: boolean) => {
+  const featureFlagBasedProp = occurenceBased
+    ? {}
+    : {
+        [SLOV2FormFields.SERVICE_LEVEL_INDICATOR_TYPE]: SLITypes.AVAILABILITY
+      }
+  return {
+    ...featureFlagBasedProp,
+    [SLOV2FormFields.SLI_METRIC_TYPE]: SLIMetricTypes.RATIO,
+    [SLOV2FormFields.EVALUATION_TYPE]: EvaluationType.WINDOW
+  }
+}
+
 export const getSLOV2InitialFormData = (
   sloType: ServiceLevelObjectiveV2DTO['type'],
   serviceLevelObjective?: ServiceLevelObjectiveV2DTO,
   occurenceBased = false
 ): SLOV2Form => {
   if (serviceLevelObjective) {
-    if (sloType === 'Simple') {
-      return {
-        [SLOV2FormFields.TYPE]: serviceLevelObjective.type,
-        // SLO Name definition
-        [SLOV2FormFields.NAME]: serviceLevelObjective.name,
-        [SLOV2FormFields.IDENTIFIER]: serviceLevelObjective.identifier,
-        [SLOV2FormFields.DESCRIPTION]: serviceLevelObjective.description,
-        [SLOV2FormFields.TAGS]: serviceLevelObjective.tags,
-        [SLOV2FormFields.USER_JOURNEY_REF]: serviceLevelObjective.userJourneyRefs,
-        // SLO Period Type
-        [SLOV2FormFields.PERIOD_TYPE]: defaultTo(serviceLevelObjective.sloTarget.type, 'Rolling'),
-        // for Rolling
-        [SLOV2FormFields.PERIOD_LENGTH]: serviceLevelObjective?.sloTarget?.spec?.periodLength,
-        // for Calendar
-        [SLOV2FormFields.PERIOD_LENGTH_TYPE]: serviceLevelObjective?.sloTarget?.spec?.type,
-        [SLOV2FormFields.DAY_OF_MONTH]: serviceLevelObjective?.sloTarget?.spec?.spec?.dayOfMonth,
-        [SLOV2FormFields.DAY_OF_WEEK]: serviceLevelObjective?.sloTarget?.spec?.spec?.dayOfWeek,
-
-        //SPEC
-        [SLOV2FormFields.MONITORED_SERVICE_REF]: serviceLevelObjective.spec?.monitoredServiceRef,
-        [SLOV2FormFields.HEALTH_SOURCE_REF]: serviceLevelObjective.spec?.healthSourceRef,
-        [SLOV2FormFields.SERVICE_LEVEL_INDICATOR_TYPE]: defaultTo(
-          serviceLevelObjective.spec?.serviceLevelIndicatorType,
-          SLITypes.AVAILABILITY
-        ),
-        [SLOV2FormFields.EVALUATION_TYPE]: defaultTo(
-          serviceLevelObjective.spec?.serviceLevelIndicators?.[0]?.type,
-          EvaluationType.WINDOW
-        ),
-        [SLOV2FormFields.SLI_METRIC_TYPE]: defaultTo(
-          serviceLevelObjective.spec?.serviceLevelIndicators?.[0]?.spec?.type,
-          SLIMetricTypes.THRESHOLD
-        ),
-        ...populateMetricInSLOForm(serviceLevelObjective),
-        [SLOV2FormFields.OBJECTIVE_VALUE]:
-          serviceLevelObjective.spec?.serviceLevelIndicators?.[0]?.spec?.spec?.thresholdValue,
-        [SLOV2FormFields.OBJECTIVE_COMPARATOR]:
-          serviceLevelObjective.spec?.serviceLevelIndicators?.[0]?.spec?.spec?.thresholdType,
-        [SLOV2FormFields.SLI_MISSING_DATA_TYPE]:
-          serviceLevelObjective.spec?.serviceLevelIndicators?.[0]?.sliMissingDataType,
-
-        // SLO target
-        [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: serviceLevelObjective.sloTarget.sloTargetPercentage,
-        // SLO Notificaitons
-        [SLOV2FormFields.NOTIFICATION_RULE_REFS]: serviceLevelObjective?.notificationRuleRefs
-      }
+    if (sloType === SLOType.SIMPLE) {
+      return getSimpleSLOFormValue(serviceLevelObjective)
     } else {
-      return {
-        [SLOV2FormFields.TYPE]: serviceLevelObjective.type,
-        // SLO Name definition
-        [SLOV2FormFields.NAME]: serviceLevelObjective.name,
-        [SLOV2FormFields.IDENTIFIER]: serviceLevelObjective.identifier,
-        [SLOV2FormFields.DESCRIPTION]: serviceLevelObjective.description,
-        [SLOV2FormFields.TAGS]: serviceLevelObjective.tags,
-        [SLOV2FormFields.USER_JOURNEY_REF]: serviceLevelObjective.userJourneyRefs,
-        // SLO Period Type
-        [SLOV2FormFields.PERIOD_TYPE]: defaultTo(serviceLevelObjective.sloTarget.type, 'Rolling'),
-        // for Rolling
-        [SLOV2FormFields.PERIOD_LENGTH]: serviceLevelObjective?.sloTarget?.spec?.periodLength,
-        // for Calendar
-        [SLOV2FormFields.PERIOD_LENGTH_TYPE]: serviceLevelObjective?.sloTarget?.spec?.type,
-        [SLOV2FormFields.DAY_OF_MONTH]: serviceLevelObjective?.sloTarget?.spec?.spec?.dayOfMonth,
-        [SLOV2FormFields.DAY_OF_WEEK]: serviceLevelObjective?.sloTarget?.spec?.spec?.dayOfWeek,
-        // Add SLOs
-        [SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS]: serviceLevelObjective?.spec?.serviceLevelObjectivesDetails,
-        // SLO target
-        [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: serviceLevelObjective.sloTarget.sloTargetPercentage,
-        // SLO Notificaitons
-        [SLOV2FormFields.NOTIFICATION_RULE_REFS]: serviceLevelObjective?.notificationRuleRefs
-      }
+      return getCompositeSLOFormValue(serviceLevelObjective)
     }
   } else {
-    const featureFlagBasedProp = occurenceBased
-      ? {}
-      : {
-          [SLOV2FormFields.SERVICE_LEVEL_INDICATOR_TYPE]: SLITypes.AVAILABILITY
-        }
-    const simpleSLODefaults = {
-      ...featureFlagBasedProp,
-      [SLOV2FormFields.SLI_METRIC_TYPE]: SLIMetricTypes.RATIO,
-      [SLOV2FormFields.EVALUATION_TYPE]: EvaluationType.WINDOW
-    }
     let defaultValues = {}
-    if (sloType === 'Simple') {
-      defaultValues = simpleSLODefaults
+    if (sloType === SLOType.SIMPLE) {
+      defaultValues = getSimpleSLOInitialFormValues(occurenceBased)
     }
     return {
       ...defaultValues,
-      [SLOV2FormFields.TYPE]: sloType,
-      [SLOV2FormFields.NAME]: '',
-      [SLOV2FormFields.IDENTIFIER]: '',
-      [SLOV2FormFields.USER_JOURNEY_REF]: [],
-      [SLOV2FormFields.MONITORED_SERVICE_REF]: '',
-      [SLOV2FormFields.HEALTH_SOURCE_REF]: '',
-      [SLOV2FormFields.PERIOD_TYPE]: PeriodTypes.ROLLING,
-      [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: 99,
-      [SLOV2FormFields.NOTIFICATION_RULE_REFS]: []
+      ...getCommonInitialFormValue(sloType)
     }
   }
 }
@@ -564,31 +559,6 @@ export const getCustomOptionsForSLOTargetChart = (
           }
         }
       ]
-    }
-  }
-}
-
-export const convertSLOFormDataToServiceLevelIndicatorDTO_Old = (values: SLOV2Form): ServiceLevelIndicatorDTO => {
-  const metric = getMetricValuesBySLIMetricType({
-    evaluationType: values.evaluationType,
-    sliMetricType: values.SLIMetricType,
-    goodRequestMetric: values.goodRequestMetric,
-    validRequestMetric: values.validRequestMetric
-  })
-  return {
-    name: values.name,
-    type: values.evaluationType,
-    identifier: values.identifier,
-    healthSourceRef: values.healthSourceRef,
-    sliMissingDataType: values.SLIMissingDataType as any,
-    spec: {
-      type: values.SLIMetricType,
-      spec: {
-        eventType: values.SLIMetricType === SLIMetricTypes.RATIO ? values.eventType : undefined,
-        ...metric,
-        thresholdValue: values.objectiveValue,
-        thresholdType: values.objectiveComparator
-      } as ThresholdSLIMetricSpec & RatioSLIMetricSpec
     }
   }
 }
