@@ -93,9 +93,9 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
     const [_stageId, _executionId] = getActiveStageForPipeline(pipelineExecutionSummary)
 
     // stage selection
-    if (!queryParams.stage && !queryParams.collapsedNode) {
-      stageId = _stageId
-    }
+    // if (!queryParams.stage && !queryParams.collapsedNode) {
+    //   stageId = _stageId
+    // }
 
     // matrix stage selection
     if (

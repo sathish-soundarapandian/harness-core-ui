@@ -5,11 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Select } from '@harness/uicore'
+import { DropDown, Select } from '@harness/uicore'
 import qs from 'qs'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useQueryParams } from '@common/hooks'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import css from './ExecutionArtifactsView.module.scss'
@@ -17,29 +17,42 @@ import css from './ExecutionArtifactsView.module.scss'
 export function StageSelector(props: {
   layoutNodeMap?: PipelineExecutionSummary['layoutNodeMap']
 }): React.ReactElement {
+  const { updateQueryParams } = useUpdateQueryParams<{ stage?: string }>()
   const history = useHistory()
   const params = useParams<any>()
   const query = useQueryParams<any>()
   const setupIds = Object.keys(props?.layoutNodeMap ?? {})
-  const options = setupIds.map(value => ({
-    value,
-    label: props.layoutNodeMap![value].name!
-  }))
-  const selectedOption = options.find(option => option.value === query.stage)
+  const options = [
+    { label: 'All stages', value: '' },
+    ...setupIds.map(value => ({
+      value,
+      label: props.layoutNodeMap![value].name!
+    }))
+  ]
+  const selectedOption = options.find(option => option.value === query.stage)?.value
 
-  // Need to have a selected change by default when we are opening a page
-  if (!selectedOption && options.length > 0) {
-    history.push(routes.toExecutionArtifactsView(params) + '?' + qs.stringify({ ...query, stage: options[0].value }))
-  }
+  useEffect(() => {
+    if (query.stage) {
+      // By default keep All stages
+      updateQueryParams({
+        stage: undefined
+      })
+    }
+  }, [])
 
   return (
-    <Select
-      className={css.stageSelector}
+    <DropDown
       value={selectedOption}
-      items={options}
-      onChange={val => {
-        history.push(routes.toExecutionArtifactsView(params) + '?' + qs.stringify({ ...query, stage: val.value }))
+      onChange={({ value }) => {
+        updateQueryParams({
+          stage: value ? value.toString() : undefined
+        })
       }}
+      items={options}
+      filterable={false}
+      addClearBtn={true}
+      placeholder="All stages"
+      className={css.stageSelector}
     />
   )
 }
