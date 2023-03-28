@@ -18,13 +18,13 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   if (Array.isArray(formikProps.values?.stagesToExecute) && !formikProps.values?.stagesToExecute.length) {
     stagesArr.push(getAllStageItem(getString))
   } else {
-    for (const stage of formikProps.values.originalPipeline.stages) {
+    for (const stage of formikProps.values.resolvedPipeline.stages) {
       if (formikProps.values?.stagesToExecute?.includes(stage.stage.identifier)) {
         stagesArr.push({ label: stage.stage.name, value: stage.stage.identifier })
       }
     }
   }
-  const executionStageList = formikProps.values?.originalPipeline?.stages?.map((stage: any) => {
+  const executionStageList = formikProps.values?.resolvedPipeline?.stages?.map((stage: any) => {
     return {
       label: defaultTo(stage?.stage?.name, ''),
       value: defaultTo(stage?.stage?.identifier, '')
