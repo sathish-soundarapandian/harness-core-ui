@@ -62,7 +62,7 @@ const SelectDeploymentTypeRef = (
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const { disableNextBtn, enableNextBtn, onSuccess } = props
-  const { GITOPS_HOSTED } = useFeatureFlags()
+  const { GITOPS_HOSTED, CD_ONBOARDING_HELP_ENABLED } = useFeatureFlags()
   const {
     state: { service: serviceData },
     saveServiceData
@@ -216,7 +216,7 @@ const SelectDeploymentTypeRef = (
         </Formik>
       </Layout.Vertical>
       <Container className={css.helpPanelContainer}>
-        <HelpPanel referenceId="cdOnboardSelectDeploymentType" />
+        {CD_ONBOARDING_HELP_ENABLED && <HelpPanel referenceId="cdOnboardSelectDeploymentType" />}
       </Container>
     </Container>
   )
