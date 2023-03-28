@@ -149,70 +149,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // 1000 milliseconds * 60 seconds * 1 minute
-  const POLL_VERSION_INTERVAL = 1000 * 60 * 1
-
   const { requestFeatures } = useFeaturesContext()
-
-  /*
-   * this is to poll versionMap every minute
-   * if versionMap changes, refresh license
-   * and refresh feature context
-   * if versionMap call fails, stop calling
-   */
-  useEffect(() => {
-    let getVersionTimeOut = setTimeout(() => {
-      pollVersionMap(state.versionMap)
-    }, POLL_VERSION_INTERVAL)
-
-    async function pollVersionMap(versionMap: VersionMap): Promise<void> {
-      try {
-        // We are using promise since mutate was rerendering the whole applications every 60 seconds
-        // even if no data change in store
-        const response = await getLastModifiedTimeForAllModuleTypesPromise({
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          queryParams: { accountIdentifier: accountId, routingId: accountId } as any,
-          body: undefined,
-          requestOptions: {
-            headers: {
-              'content-type': 'application/json'
-            }
-          }
-        })
-        const latestVersionMap = response.data
-        if (latestVersionMap && !isEqual(latestVersionMap, versionMap)) {
-          // refresh licenses
-          getAccountLicenses()
-
-          // refresh feature context
-          requestFeatures(
-            { featureName: FeatureIdentifier.BUILDS },
-            {
-              skipCache: true
-            }
-          )
-
-          // refresh versionMap
-          setState(prevState => ({
-            ...prevState,
-            versionMap: response.data || {}
-          }))
-        }
-
-        // set next poll
-        getVersionTimeOut = setTimeout(() => {
-          pollVersionMap(latestVersionMap || versionMap)
-        }, POLL_VERSION_INTERVAL)
-      } catch (_err) {
-        clearTimeout(getVersionTimeOut)
-      }
-    }
-
-    return () => {
-      clearTimeout(getVersionTimeOut)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const [isLoading, setIsLoading] = useState(true)
 
