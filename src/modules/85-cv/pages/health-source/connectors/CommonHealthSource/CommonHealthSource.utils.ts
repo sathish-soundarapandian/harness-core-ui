@@ -41,7 +41,6 @@ import {
 import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { LogFieldsMultiTypeState } from './components/CustomMetricForm/CustomMetricForm.types'
 import { HealthSourceTypes } from '../../types'
-import { getSelectedProductInfo } from '../../HealthSourceDrawer/component/customiseHealthSource/CustomiseHealthSource.utils'
 
 export const initHealthSourceCustomForm = () => {
   return {
@@ -631,4 +630,13 @@ export function getFieldName(
     default:
       return ''
   }
+}
+
+export const getSelectedProductInfo = (selectedProduct: string): string => {
+  let selectedProductInfo = selectedProduct
+  switch (selectedProduct) {
+    case HealthSourceTypes.Elk:
+      selectedProductInfo = HealthSourceTypes.ElasticSearch_Logs
+  }
+  return selectedProductInfo
 }

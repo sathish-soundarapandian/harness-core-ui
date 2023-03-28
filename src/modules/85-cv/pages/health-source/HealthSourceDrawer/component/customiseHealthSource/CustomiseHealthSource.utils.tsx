@@ -29,6 +29,7 @@ import { SplunkMetricsHealthSource } from '@cv/pages/health-source/connectors/Sp
 import CloudWatch from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch'
 import CommonHealthSourceContainer from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.container'
 import { healthSourcesConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/HealthSourceConfigs/HealthSourceConfigs'
+import { getSelectedProductInfo } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
 import type { SourceDataInterface, UpdatedHealthSource } from '../../HealthSourceDrawerContent.types'
 import { SplunkProduct } from '../defineHealthSource/DefineHealthSource.constant'
 import { CustomHealthMetric } from './CustomiseHealthSource.constant'
@@ -205,13 +206,4 @@ export const createHealthsourceList = (formData: any, healthSourcesPayload: Upda
     updatedHealthSources = [healthSourcesPayload]
   }
   return updatedHealthSources
-}
-
-export const getSelectedProductInfo = (selectedProduct: string): string => {
-  let selectedProductInfo = selectedProduct
-  switch (selectedProduct) {
-    case HealthSourceTypes.Elk:
-      selectedProductInfo = HealthSourceTypes.ElasticSearch_Logs
-  }
-  return selectedProductInfo
 }
