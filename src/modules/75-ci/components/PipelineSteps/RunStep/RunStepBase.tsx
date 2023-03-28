@@ -14,8 +14,7 @@ import {
   MultiTypeInputType,
   FormikForm,
   Accordion,
-  Container,
-  SelectOption
+  Container
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
@@ -69,7 +68,7 @@ export const RunStepBase = (
     (get(currentStage, 'stage.spec.runtime.type') as CIBuildInfrastructureType)
 
   const getScriptTypeForShell = useCallback((formik: FormikProps<RunStepData>): ScriptType => {
-    const selectedShell = (formik.values.spec.shell as SelectOption).value as Shell
+    const selectedShell = get(formik, 'values.spec.shell.value') as Shell
     switch (selectedShell) {
       case Shell.Pwsh:
       case Shell.Powershell:
