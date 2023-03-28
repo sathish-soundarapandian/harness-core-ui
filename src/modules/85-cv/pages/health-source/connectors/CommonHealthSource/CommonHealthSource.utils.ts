@@ -41,6 +41,7 @@ import {
 import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { LogFieldsMultiTypeState } from './components/CustomMetricForm/CustomMetricForm.types'
 import { HealthSourceTypes } from '../../types'
+import { getSelectedProductInfo } from '../../HealthSourceDrawer/component/customiseHealthSource/CustomiseHealthSource.utils'
 
 export const initHealthSourceCustomForm = () => {
   return {
@@ -397,8 +398,8 @@ export const createHealthSourcePayload = (
   },
   configureHealthSourceData: CommonHealthSourceConfigurations
 ): UpdatedHealthSource => {
-  const { product, healthSourceName, healthSourceIdentifier, connectorRef } = defineHealthSourcedata
-  const productValue = (product?.value ?? product) as string
+  const { product, healthSourceName, healthSourceIdentifier, connectorRef, sourceType } = defineHealthSourcedata
+  const productValue = ((product?.value ?? product) || getSelectedProductInfo(sourceType as string)) as string
   const healthSourceType = getHealthSourceType(productValue)
   const { queryMetricsMap = new Map(), ignoreThresholds, failFastThresholds } = configureHealthSourceData
 

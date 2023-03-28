@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { createHealthsourceList } from '../CustomiseHealthSource.utils'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
+import { createHealthsourceList, getSelectedProductInfo } from '../CustomiseHealthSource.utils'
 import { RowData, healthSourcesPayload } from './CustomiseHealthSource.mock'
 
 describe('Test Util functions', () => {
@@ -17,5 +18,15 @@ describe('Test Util functions', () => {
     RowData.healthSourceList[1].name = 'Splunk dev 14'
     // Updating existing healthsource
     expect(createHealthsourceList(RowData, healthSourcesPayload)).toEqual([...RowData.healthSourceList])
+  })
+
+  test('Test CreateHealthsourceList when selected product is ElasticSearch', () => {
+    const selectedProduct = HealthSourceTypes.Elk
+    expect(getSelectedProductInfo(selectedProduct)).toEqual(HealthSourceTypes.ElasticSearch_Logs)
+  })
+
+  test('Test CreateHealthsourceList when selected product is HealthSourceTypes SumologicMetrics', () => {
+    const selectedProduct = HealthSourceTypes.SumologicMetrics
+    expect(getSelectedProductInfo(selectedProduct)).toEqual(HealthSourceTypes.SumologicMetrics)
   })
 })

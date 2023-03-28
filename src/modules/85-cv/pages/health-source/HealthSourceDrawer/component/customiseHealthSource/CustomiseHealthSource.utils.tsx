@@ -57,7 +57,8 @@ export const LoadSourceByType = ({
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
   const selectedProduct = data?.product?.value || data?.existingMetricDetails?.type
-  const healthSourceConfig = healthSourcesConfig[selectedProduct]
+  const productInfo = getSelectedProductInfo(selectedProduct)
+  const healthSourceConfig = healthSourcesConfig[productInfo]
 
   switch (type) {
     case HealthSourceTypes.AppDynamics:
@@ -204,4 +205,13 @@ export const createHealthsourceList = (formData: any, healthSourcesPayload: Upda
     updatedHealthSources = [healthSourcesPayload]
   }
   return updatedHealthSources
+}
+
+export const getSelectedProductInfo = (selectedProduct: string): string => {
+  let selectedProductInfo = selectedProduct
+  switch (selectedProduct) {
+    case HealthSourceTypes.Elk:
+      selectedProductInfo = HealthSourceTypes.ElasticSearch_Logs
+  }
+  return selectedProductInfo
 }
