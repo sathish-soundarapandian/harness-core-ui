@@ -58,7 +58,7 @@ const TriggerOverviewPanel: React.FC<TriggerOverviewPanelPropsInterface> = ({
         />
       </Layout.Vertical>
 
-      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION && formikProps.values?.originalPipeline?.allowStageExecutions ? (
+      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION && formikProps.values?.resolvedPipeline?.allowStageExecutions ? (
         <StageSelection formikProps={formikProps} />
       ) : null}
     </Layout.Vertical>

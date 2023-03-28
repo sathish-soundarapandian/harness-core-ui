@@ -24,12 +24,13 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
       }
     }
   }
-  const executionStageList = formikProps.values?.resolvedPipeline?.stages?.map((stage: any) => {
-    return {
-      label: defaultTo(stage?.stage?.name, ''),
-      value: defaultTo(stage?.stage?.identifier, '')
-    }
-  })
+  const executionStageList =
+    formikProps.values?.resolvedPipeline?.stages?.map((stage: any) => {
+      return {
+        label: defaultTo(stage?.stage?.name, ''),
+        value: defaultTo(stage?.stage?.identifier, '')
+      }
+    }) || []
 
   executionStageList.unshift(getAllStageItem(getString))
 
