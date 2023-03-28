@@ -127,7 +127,6 @@ const ConfigureServiceRef = (
   const { getRBACErrorMessage } = useRBACError()
   const { disableNextBtn, enableNextBtn, onSuccess } = props
   const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-  const isHelpEnabled = useFeatureFlag(FeatureFlag.CD_ONBOARDING_HELP_ENABLED)
   const {
     state: { service: serviceData, delegate: delegateData },
     saveServiceData
@@ -656,7 +655,7 @@ const ConfigureServiceRef = (
         </Formik>
       </Layout.Vertical>
       <Container className={css.helpPanelContainer}>
-        {isHelpEnabled && <HelpPanel referenceId="cdOnboardConfigureService" />}
+        <HelpPanel referenceId="cdOnboardConfigureService" />
       </Container>
     </Container>
   )

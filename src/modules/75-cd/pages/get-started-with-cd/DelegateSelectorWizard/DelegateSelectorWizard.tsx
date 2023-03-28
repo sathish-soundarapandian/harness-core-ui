@@ -30,8 +30,6 @@ import { DelegateTypes } from '@delegates/constants'
 import { StringUtils } from '@common/exports'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/CreateDockerDelegate'
 import {
   cleanEnvironmentDataUtil,
@@ -103,7 +101,7 @@ const DelegateSelectorWizardRef = (
   const [environmentEntities, setEnvironmentEntities] = React.useState<EnvironmentEntities>(
     defaultTo(delegateData?.environmentEntities, {})
   )
-  const isHelpEnabled = useFeatureFlag(FeatureFlag.CD_ONBOARDING_HELP_ENABLED)
+
   useEffect(() => {
     if (!forwardRef) {
       return
@@ -402,7 +400,7 @@ const DelegateSelectorWizardRef = (
         </Layout.Vertical>
 
         <Container className={moduleCss.helpPanelContainer}>
-          {isHelpEnabled && <HelpPanel referenceId="cdOnboardConnecttoEnvironment" />}
+          <HelpPanel referenceId="cdOnboardConnecttoEnvironment" />
         </Container>
       </Layout.Horizontal>
     </Layout.Vertical>
