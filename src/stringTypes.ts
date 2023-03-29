@@ -3590,8 +3590,10 @@ export interface StringsMap {
   'pipeline.artifactsSelection.groupId': string
   'pipeline.artifactsSelection.groupIdPlaceholder': string
   'pipeline.artifactsSelection.groupPlaceholder': string
+  'pipeline.artifactsSelection.loadingArtifactIds': string
   'pipeline.artifactsSelection.loadingArtifactPaths': string
   'pipeline.artifactsSelection.loadingDigest': string
+  'pipeline.artifactsSelection.loadingGroupIds': string
   'pipeline.artifactsSelection.loadingRepository': string
   'pipeline.artifactsSelection.loadingTags': string
   'pipeline.artifactsSelection.orgNamePlaceholder': string

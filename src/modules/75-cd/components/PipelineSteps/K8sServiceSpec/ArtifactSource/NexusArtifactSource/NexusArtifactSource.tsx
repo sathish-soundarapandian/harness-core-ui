@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
-import { Layout, Text } from '@harness/uicore'
+import { Layout, SelectOption, Text } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { useMutateAsGet } from '@common/hooks'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
@@ -80,6 +80,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     stepViewType,
     artifacts
   } = props
+  const [groupIds, setGroupIds] = useState<SelectOption[]>([])
+  const [artifactIds, setArtifactIds] = useState<SelectOption[]>([])
 
   const { getString } = useStrings()
   const [lastQueryData, setLastQueryData] = useState<queryInterface>({
@@ -346,39 +348,55 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     return defaultTo(selectRepositoryItems, [])
   }
 
-  const selectGroupIdItems = useMemo(() => {
-    return groupData?.data?.map((group: string) => ({
-      value: defaultTo(group, ''),
-      label: defaultTo(group, '')
-    }))
+  useEffect(() => {
+    const groupOptions: SelectOption[] = (groupData?.data || [])?.map(group => {
+      return {
+        label: group,
+        value: group
+      } as SelectOption
+    }) || [
+      {
+        label: getString('common.loadingFieldOptions', {
+          fieldName: getString('common.subscriptions.tabs.plans')
+        }),
+        value: getString('common.loadingFieldOptions', {
+          fieldName: getString('common.subscriptions.overview.plan')
+        })
+      }
+    ]
+    setGroupIds(groupOptions)
   }, [groupData?.data])
 
-  const getGroupIds = (): { label: string; value: string }[] => {
-    if (fetchingGroups) {
-      const labelStr = getString('common.loadingFieldOptions', {
-        fieldName: getString('pipeline.artifactsSelection.groupId')
-      })
-      return [{ label: labelStr, value: labelStr }]
+  useEffect(() => {
+    if (groupError) {
+      setGroupIds([])
     }
-    return defaultTo(selectGroupIdItems, [])
-  }
+  }, [groupError])
 
-  const selectArtifactIdItems = useMemo(() => {
-    return artifactData?.data?.map((item: string) => ({
-      value: defaultTo(item, ''),
-      label: defaultTo(item, '')
-    }))
+  useEffect(() => {
+    if (artifactError) {
+      setArtifactIds([])
+    }
+  }, [artifactError])
+
+  useEffect(() => {
+    const artifactOptions: SelectOption[] = (artifactData?.data || [])?.map(item => {
+      return {
+        label: item,
+        value: item
+      } as SelectOption
+    }) || [
+      {
+        label: getString('common.loadingFieldOptions', {
+          fieldName: getString('common.subscriptions.tabs.plans')
+        }),
+        value: getString('common.loadingFieldOptions', {
+          fieldName: getString('common.subscriptions.overview.plan')
+        })
+      }
+    ]
+    setArtifactIds(artifactOptions)
   }, [artifactData?.data])
-
-  const getArtifactIds = (): { label: string; value: string }[] => {
-    if (fetchingRepository) {
-      const labelStr = getString('common.loadingFieldOptions', {
-        fieldName: getString('pipeline.artifactsSelection.artifactId')
-      })
-      return [{ label: labelStr, value: labelStr }]
-    }
-    return defaultTo(selectArtifactIdItems, [])
-  }
 
   useEffect(() => {
     if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
@@ -588,7 +606,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           <div className={css.inputFieldLayout}>
             {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.groupId`, template) && (
               <SelectInputSetView
-                selectItems={getGroupIds()}
+                selectItems={groupIds}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.groupId`)}
                 label={getString('pipeline.artifactsSelection.groupId')}
                 name={`${path}.artifacts.${artifactPath}.spec.spec.groupId`}
@@ -600,15 +618,15 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   expressions,
                   allowableTypes,
                   selectProps: {
-                    noResults: (
+                    noResults: !fetchingGroups ? (
                       <NoTagResults
                         tagError={groupError}
                         isServerlessDeploymentTypeSelected={false}
                         defaultErrorText={getString('pipeline.artifactsSelection.errors.noGroupIds')}
                       />
-                    ),
+                    ) : null,
                     itemRenderer: groupItemRenderer,
-                    items: getGroupIds(),
+                    items: groupIds,
                     allowCreatingNewItems: true
                   },
                   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
@@ -627,7 +645,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           <div className={css.inputFieldLayout}>
             {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.artifactId`, template) && (
               <SelectInputSetView
-                selectItems={getArtifactIds()}
+                selectItems={artifactIds}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactId`)}
                 label={getString('pipeline.artifactsSelection.artifactId')}
                 name={`${path}.artifacts.${artifactPath}.spec.spec.artifactId`}
@@ -639,15 +657,15 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   expressions,
                   allowableTypes,
                   selectProps: {
-                    noResults: (
+                    noResults: !fetchingArtifacts ? (
                       <NoTagResults
                         tagError={artifactError}
                         isServerlessDeploymentTypeSelected={false}
                         defaultErrorText={getString('pipeline.artifactsSelection.errors.noArtifactIds')}
                       />
-                    ),
+                    ) : null,
                     itemRenderer: artifactIdItemRenderer,
-                    items: getArtifactIds(),
+                    items: artifactIds,
                     allowCreatingNewItems: true
                   },
                   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
