@@ -5507,7 +5507,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.infraName': string
   'cd.getStartedWithCD.installDelegateToTargetEnv': string
   'cd.getStartedWithCD.installationInstructions': string
-  'cd.getStartedWithCD.ipWhitelist': string
+  'cd.getStartedWithCD.ipWhitelist1': string
+  'cd.getStartedWithCD.ipWhitelist2': string
   'cd.getStartedWithCD.main': string
   'cd.getStartedWithCD.managedCluster': string
   'cd.getStartedWithCD.manifestFile': string
@@ -5552,6 +5553,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.serviceName': string
   'cd.getStartedWithCD.setupDelegate': string
   'cd.getStartedWithCD.setupIPWhiteListing': string
+  'cd.getStartedWithCD.setupIPWhitelist': string
   'cd.getStartedWithCD.setupaNewDelegate': string
   'cd.getStartedWithCD.sourceDetails': string
   'cd.getStartedWithCD.sourceOrSampleCode': string

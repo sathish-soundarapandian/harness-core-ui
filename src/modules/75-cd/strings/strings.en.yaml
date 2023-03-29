@@ -627,7 +627,9 @@ getStartedWithCD:
   clusterSpecInfo: This specification is sufficient for you to host a basic hello world application
   clusterspec: Cluster Specifications
   managedCluster: Make use of our managed cluster to facilitate your deployment if you’re trying out Harness CD-GitOps for the first time, this will expire after X days! Learn more
-  ipWhitelist: You will be required to Set up IP Whitelisting for Harness to connect to your cluster
+  ipWhitelist1: 'You will be required to '
+  ipWhitelist2: ' for Harness to connect to your cluster'
+  setupIPWhitelist: Set up IP Whitelisting
   tryAnotherCreds: Not the right authentication? Switch account here!
   master: master
   targetRevision: Target Revision
