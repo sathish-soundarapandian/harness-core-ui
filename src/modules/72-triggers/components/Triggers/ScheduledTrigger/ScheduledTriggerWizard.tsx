@@ -108,7 +108,7 @@ export default function ScheduledTriggerWizard(
   const { isNewTrigger, baseType, triggerData } = props
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
-  const [selectedView, setSelectedView] = useTriggerView()
+  const [selectedView, setSelectedView] = useTriggerView(isNewTrigger)
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const history = useHistory()

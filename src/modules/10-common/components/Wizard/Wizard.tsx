@@ -120,7 +120,7 @@ const Wizard: React.FC<WizardProps> = ({
   const [touchedPanels, setTouchedPanels] = React.useState<number[]>([])
   const [validateOnChange, setValidateOnChange] = React.useState<boolean>(formikInitialProps.validateOnChange || false)
   const [selectedTabIndex, setSelectedTabIndex] = React.useState<number>(initialIndex)
-  const [selectedView, setSelectedView] = useTriggerView()
+  const [selectedView, setSelectedView] = useTriggerView(!isEdit)
   const layoutRef = useRef<HTMLDivElement>(null)
   const lastTab = selectedTabIndex === tabsMap.length - 1
   const {
