@@ -6,23 +6,24 @@
  */
 
 import React, { useEffect } from 'react'
-import { Heading, MultiSelectDropDown, SelectOption } from '@harness/uicore'
+import { Heading, Layout, MultiSelectDropDown, SelectOption } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { getAllStageItem } from '@pipeline/utils/runPipelineUtils'
 import { useStrings } from 'framework/strings'
+import css from './StageSelection.module.scss'
 
 const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   const { getString } = useStrings()
   const stagesArr = []
-  if (Array.isArray(formikProps.values?.stagesToExecute) && !formikProps.values?.stagesToExecute.length) {
-    stagesArr.push(getAllStageItem(getString))
-  } else if (formikProps.values?.resolvedPipeline?.stages && formikProps.values?.resolvedPipeline?.stages.length) {
+  if (formikProps.values?.resolvedPipeline?.stages && formikProps.values?.resolvedPipeline?.stages.length) {
     for (const stage of formikProps.values.resolvedPipeline.stages) {
       if (formikProps.values?.stagesToExecute?.includes(stage.stage.identifier)) {
         stagesArr.push({ label: stage.stage.name, value: stage.stage.identifier })
       }
     }
+  } else {
+    stagesArr.push(getAllStageItem(getString))
   }
   const executionStageList =
     formikProps.values?.resolvedPipeline?.stages?.map((stage: any) => {
@@ -39,13 +40,16 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   const [allStagesSelected, setAllStagesSelect] = React.useState<boolean[] | any>(false)
 
   useEffect(() => {
-    if (Array.isArray(formikProps.values?.stagesToExecute) && !formikProps.values?.stagesToExecute.length) {
+    if (
+      (Array.isArray(formikProps.values?.stagesToExecute) && !formikProps.values?.stagesToExecute.length) ||
+      !formikProps.values?.stagesToExecute
+    ) {
       setAllStagesSelect(true)
     }
   }, [])
 
   return (
-    <div>
+    <Layout.Vertical>
       <Heading level={5} font={{ variation: FontVariation.H5 }}>
         {getString('triggers.selectStagesToExecute')}
       </Heading>
@@ -76,9 +80,10 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
         items={executionStageList}
         minWidth={50}
         usePortal={true}
+        className={css.stageDropdown}
         placeholder={allStagesSelected ? getString('pipeline.allStages') : getString('stages')}
       />
-    </div>
+    </Layout.Vertical>
   )
 }
 
