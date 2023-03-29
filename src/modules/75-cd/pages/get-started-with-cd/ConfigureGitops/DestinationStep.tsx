@@ -52,6 +52,7 @@ import { APIError, ClusterInterface, getFullAgentWithScope, SUBMIT_HANDLER_MAP_F
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 import moduleCss from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
+export const GITOPS_IP_WHITELIST = 'https://developer.harness.io/docs/continuous-delivery/cd-gitops/gitops-allowlist'
 export const DestinationStep = (props: any) => {
   const { getString } = useStrings()
   const connectionStatus = false
@@ -529,7 +530,23 @@ export const DestinationStep = (props: any) => {
                               >
                                 {getString('cd.steps.common.clusterDetails').toLocaleUpperCase()}
                               </Text>
-                              <InfoContainer label="cd.getStartedWithCD.ipWhitelist" />
+                              <InfoContainer
+                                label="cd.getStartedWithCD.ipWhitelist1"
+                                labelElement={
+                                  <>
+                                    {getString('cd.getStartedWithCD.ipWhitelist1')}
+                                    <a
+                                      className="externalLink"
+                                      rel="noreferrer"
+                                      href={GITOPS_IP_WHITELIST}
+                                      target="_blank"
+                                    >
+                                      {getString('cd.getStartedWithCD.setupIPWhitelist')}
+                                    </a>
+                                    {getString('cd.getStartedWithCD.ipWhitelist2')}
+                                  </>
+                                }
+                              />
                               <div className={css.smallMarginBottomClass} />
                               <div className={moduleCss.width50}>
                                 <NameId nameLabel={getString('cd.getStartedWithCD.nameYourCluster')} />

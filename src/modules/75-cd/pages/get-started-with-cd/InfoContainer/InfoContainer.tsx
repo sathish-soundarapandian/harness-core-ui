@@ -11,13 +11,13 @@ import { Color, FontVariation } from '@harness/design-system'
 import { StringKeys, useStrings } from 'framework/strings'
 import css from './InfoContainer.module.scss'
 
-const InfoContainer: React.FC<{ label: StringKeys }> = ({ label }) => {
+const InfoContainer: React.FC<{ label: StringKeys; labelElement?: React.ReactNode }> = ({ label, labelElement }) => {
   const { getString } = useStrings()
   return (
     <Container className={css.container} flex={{ justifyContent: 'flex-start' }}>
       <Icon name="info-message" size={23} padding={{ right: 'medium' }} />
       <Text color={Color.GREY_900} font={{ variation: FontVariation.BODY }}>
-        {getString(label)}
+        {labelElement || getString(label)}
       </Text>
     </Container>
   )
