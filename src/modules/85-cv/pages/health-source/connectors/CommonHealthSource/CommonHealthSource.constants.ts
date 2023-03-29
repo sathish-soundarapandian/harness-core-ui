@@ -1,4 +1,3 @@
-import type { QueryRecordsRequest } from 'services/cv'
 import { ElkProduct } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 import { HealthSourceTypes } from '../../types'
 import type { CommonCustomMetricFormikInterface, HealthSourceProductsType } from './CommonHealthSource.types'
