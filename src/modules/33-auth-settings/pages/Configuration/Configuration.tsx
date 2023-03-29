@@ -15,7 +15,6 @@ import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import Authentication from './Authentication'
-import Allowlist from './Allowlist'
 import css from './Configuration.module.scss'
 
 export const VIEWS = {
@@ -47,11 +46,6 @@ const Configuration: React.FC = () => {
               id={VIEWS.AUTHENTICATION}
               title={<Text>{getString('authentication')}</Text>}
               panel={<Authentication />}
-            />
-            <Tab
-              id={VIEWS.ALLOWLIST}
-              title={<Text>{getString('authSettings.allowlist')}</Text>}
-              panel={<Allowlist />}
             />
           </Tabs>
         </Layout.Horizontal>
