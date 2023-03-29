@@ -104,6 +104,13 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
     setSelectedChangeTypes([])
     setSelectedSources([])
   }
+
+  const resetFilters = () => {
+    setTimeRange({ startTime: 0, endTime: 0 })
+    clearFilter()
+    setShowTimelineSlider(false)
+  }
+
   useEffect(() => {
     setLastUpdated(updateTime || new Date())
   }, [selectedServices, selectedEnvs, selectedChangeTypes, selectedSources, selectedTimePeriod])
@@ -262,10 +269,12 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
           <ChangesTable
             startTime={showTimelineSlider ? (timeRange?.startTime as number) : getStartTime}
             endTime={showTimelineSlider ? (timeRange?.endTime as number) : getEndTime}
+            isChangesPage
             hasChangeSource
             {...queryParams}
             recordsPerPage={25}
             customCols={columns}
+            resetFilters={resetFilters}
             dataTooltipId={'CVChangesTable'}
           />
         </Container>

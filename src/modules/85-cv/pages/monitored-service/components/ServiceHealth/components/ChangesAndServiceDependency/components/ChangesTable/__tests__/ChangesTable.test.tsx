@@ -43,6 +43,7 @@ describe('Change table', () => {
           endTime={1}
           serviceIdentifier={'srv'}
           environmentIdentifier={'env'}
+          resetFilters={() => void 0}
         />
       </TestWrapper>
     )
@@ -68,6 +69,7 @@ describe('Change table', () => {
           endTime={1}
           serviceIdentifier={'srv'}
           environmentIdentifier={'env'}
+          resetFilters={() => void 0}
         />
       </TestWrapper>
     )
@@ -94,6 +96,7 @@ describe('Change table', () => {
           endTime={1}
           serviceIdentifier={'srv'}
           environmentIdentifier={'env'}
+          resetFilters={() => void 0}
         />
       </TestWrapper>
     )
@@ -146,6 +149,7 @@ describe('Change table', () => {
           endTime={2}
           serviceIdentifier={'srv'}
           environmentIdentifier={'env'}
+          resetFilters={() => void 0}
         />
       </TestWrapper>
     )
@@ -197,6 +201,7 @@ describe('Change table', () => {
           endTime={2}
           serviceIdentifier={'srv'}
           environmentIdentifier={'env'}
+          resetFilters={() => void 0}
         />
       </TestWrapper>
     )
@@ -234,6 +239,7 @@ describe('Change table', () => {
           endTime={2}
           serviceIdentifier={'srv'}
           environmentIdentifier={'env'}
+          resetFilters={() => void 0}
         />
       </TestWrapper>
     )

@@ -98,3 +98,51 @@ export const mockPaginatedData = {
   },
   responseMessages: []
 }
+
+export const initialFilterPayload = {
+  queryParamStringifyOptions: { arrayFormat: 'repeat' },
+  queryParams: {
+    changeCategories: ['Deployment', 'Infrastructure', 'Alert', 'FeatureFlag', 'ChaosExperiment'],
+    changeSourceTypes: [
+      'HarnessCDNextGen',
+      'HarnessCD',
+      'K8sCluster',
+      'PagerDuty',
+      'HarnessFF',
+      'CustomDeploy',
+      'CustomInfrastructure',
+      'CustomIncident',
+      'CustomFF'
+    ],
+    endTime: expect.any(Number),
+    envIdentifiers: [],
+    pageIndex: 0,
+    pageSize: 25,
+    serviceIdentifiers: [],
+    startTime: expect.any(Number)
+  }
+}
+
+export const filterPayloadWithENV = {
+  queryParamStringifyOptions: { arrayFormat: 'repeat' },
+  queryParams: {
+    changeCategories: ['Deployment', 'Infrastructure', 'Alert', 'FeatureFlag', 'ChaosExperiment'],
+    changeSourceTypes: [
+      'HarnessCDNextGen',
+      'HarnessCD',
+      'K8sCluster',
+      'PagerDuty',
+      'HarnessFF',
+      'CustomDeploy',
+      'CustomInfrastructure',
+      'CustomIncident',
+      'CustomFF'
+    ],
+    endTime: expect.any(Number),
+    envIdentifiers: ['env1'],
+    pageIndex: 0,
+    pageSize: 25,
+    serviceIdentifiers: [],
+    startTime: expect.any(Number)
+  }
+}

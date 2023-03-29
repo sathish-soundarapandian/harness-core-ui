@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { defaultTo, noop } from 'lodash-es'
 import type { IDrawerProps } from '@blueprintjs/core'
 import { useParams, Link } from 'react-router-dom'
@@ -45,7 +45,9 @@ export default function ChangesTable({
   changeSourceTypes,
   recordsPerPage,
   dataTooltipId,
-  monitoredServiceDetails
+  monitoredServiceDetails,
+  resetFilters,
+  isChangesPage
 }: ChangesTableInterface): JSX.Element {
   const [page, setPage] = useState(0)
   const { getString } = useStrings()
@@ -53,6 +55,8 @@ export default function ChangesTable({
     ProjectPathProps & { identifier: string }
   >()
   const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
+
+  const projectRef = useRef(projectIdentifier)
 
   const drawerOptions = {
     size: '800px',
@@ -148,7 +152,7 @@ export default function ChangesTable({
   const wrapperProps: ChangesTableContentWrapper = { isCardView, totalItems, dataTooltipId }
 
   useEffect(() => {
-    if (startTime && endTime) {
+    if (startTime && endTime && projectRef.current === projectIdentifier) {
       refetch({
         queryParams: changeEventListQueryParams,
         queryParamStringifyOptions: {
@@ -158,6 +162,28 @@ export default function ChangesTable({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startTime, endTime, page, changeEventListQueryParams])
+
+  useEffect(() => {
+    if (projectRef.current !== projectIdentifier && isChangesPage) {
+      projectRef.current = projectIdentifier
+      resetFilters?.()
+      refetch({
+        queryParams: {
+          ...changeEventListQueryParams,
+          endTime: 0,
+          startTime: 0,
+          serviceIdentifiers: [],
+          envIdentifiers: [],
+          pageIndex: 0,
+          pageSize: defaultTo(recordsPerPage, PAGE_SIZE),
+          changeCategories: []
+        },
+        queryParamStringifyOptions: {
+          arrayFormat: 'repeat'
+        }
+      })
+    }
+  }, [projectIdentifier])
 
   const columns: Column<any>[] = useMemo(
     () =>

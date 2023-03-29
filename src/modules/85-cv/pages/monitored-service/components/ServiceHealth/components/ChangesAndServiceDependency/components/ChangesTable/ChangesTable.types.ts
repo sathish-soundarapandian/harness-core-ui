@@ -14,6 +14,7 @@ export interface ChangesTableInterface {
   startTime: number
   endTime: number
   hasChangeSource: boolean
+  isChangesPage?: boolean
   monitoredServiceIdentifier?: string
   serviceIdentifier?: string | string[]
   environmentIdentifier?: string | string[]
@@ -23,6 +24,7 @@ export interface ChangesTableInterface {
   recordsPerPage?: number
   dataTooltipId?: string
   monitoredServiceDetails?: MonitoredServiceDetail[]
+  resetFilters?: () => void
 }
 
 export interface ChangesTableContentWrapper {
