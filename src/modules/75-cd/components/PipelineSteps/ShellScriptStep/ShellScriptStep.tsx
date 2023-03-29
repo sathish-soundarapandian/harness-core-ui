@@ -341,11 +341,17 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
         },
 
         environmentVariables: Array.isArray(data.spec?.environmentVariables)
-          ? data.spec?.environmentVariables.filter(variable => variable.value).map(({ id, ...variable }) => variable)
+          ? data.spec?.environmentVariables.map(({ id, ...variable }) => ({
+              ...variable,
+              value: defaultTo(variable.value, '')
+            }))
           : undefined,
 
         outputVariables: Array.isArray(data.spec?.outputVariables)
-          ? data.spec?.outputVariables.filter(variable => variable.value).map(({ id, ...variable }) => variable)
+          ? data.spec?.outputVariables.map(({ id, ...variable }) => ({
+              ...variable,
+              value: defaultTo(variable.value, '')
+            }))
           : undefined
       }
     }
