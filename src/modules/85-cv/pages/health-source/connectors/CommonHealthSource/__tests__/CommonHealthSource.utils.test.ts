@@ -1,6 +1,7 @@
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { CommonHealthSourceConfigurations, HealthSourceConfig } from '../CommonHealthSource.types'
 import { metricThresholdsValidationMock } from './CommonHealthSource.mock'
-import { handleValidateHealthSourceConfigurationsForm } from '../CommonHealthSource.utils'
+import { getSelectedProductInfo, handleValidateHealthSourceConfigurationsForm } from '../CommonHealthSource.utils'
 
 describe('CommonHealthSource utils tests', () => {
   test('handleValidateHealthSourceConfigurationsForm performs correct validation if metric thresholds are empty', () => {
@@ -71,5 +72,15 @@ describe('CommonHealthSource utils tests', () => {
     })
 
     expect(result).toEqual({})
+  })
+
+  test('Test getSelectedProductInfo when selected product is ElasticSearch', () => {
+    const selectedProduct = HealthSourceTypes.Elk
+    expect(getSelectedProductInfo(selectedProduct)).toEqual(HealthSourceTypes.ElasticSearch_Logs)
+  })
+
+  test('Test getSelectedProductInfo when selected product is HealthSourceTypes SumologicMetrics', () => {
+    const selectedProduct = HealthSourceTypes.SumologicMetrics
+    expect(getSelectedProductInfo(selectedProduct)).toEqual(HealthSourceTypes.SumologicMetrics)
   })
 })

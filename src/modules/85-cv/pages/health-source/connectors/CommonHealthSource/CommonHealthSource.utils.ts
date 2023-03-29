@@ -18,7 +18,8 @@ import {
   initCustomForm,
   FIELD_ENUM,
   DEFAULT_HEALTH_SOURCE_QUERY,
-  CustomMetricFormFieldNames
+  CustomMetricFormFieldNames,
+  PRODUCT_MAP
 } from './CommonHealthSource.constants'
 import type {
   HealthSourcePayload,
@@ -397,8 +398,8 @@ export const createHealthSourcePayload = (
   },
   configureHealthSourceData: CommonHealthSourceConfigurations
 ): UpdatedHealthSource => {
-  const { product, healthSourceName, healthSourceIdentifier, connectorRef } = defineHealthSourcedata
-  const productValue = (product?.value ?? product) as string
+  const { product, healthSourceName, healthSourceIdentifier, connectorRef, sourceType } = defineHealthSourcedata
+  const productValue = ((product?.value ?? product) || getSelectedProductInfo(sourceType as string)) as string
   const healthSourceType = getHealthSourceType(productValue)
   const { queryMetricsMap = new Map(), ignoreThresholds, failFastThresholds } = configureHealthSourceData
 
@@ -630,4 +631,8 @@ export function getFieldName(
     default:
       return ''
   }
+}
+
+export const getSelectedProductInfo = (selectedProduct: string): string => {
+  return PRODUCT_MAP[selectedProduct] || selectedProduct
 }

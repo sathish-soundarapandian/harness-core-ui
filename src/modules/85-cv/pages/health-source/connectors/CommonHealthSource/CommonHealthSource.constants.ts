@@ -88,6 +88,7 @@ export enum FieldMappingInputTypes {
 export const logsTableDefaultConfigs = {
   size: '40%'
 }
-export const ProviderTypes: Record<string, QueryRecordsRequest['providerType']> = {
-  SUMOLOGIC_LOG: 'SUMOLOGIC_LOG'
+
+export const PRODUCT_MAP: { [key: string]: HealthSourceTypes } = {
+  [HealthSourceTypes.Elk]: HealthSourceTypes.ElasticSearch_Logs
 }

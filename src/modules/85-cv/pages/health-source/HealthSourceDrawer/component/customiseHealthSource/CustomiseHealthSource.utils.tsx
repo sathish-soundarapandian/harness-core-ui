@@ -29,6 +29,7 @@ import { SplunkMetricsHealthSource } from '@cv/pages/health-source/connectors/Sp
 import CloudWatch from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch'
 import CommonHealthSourceContainer from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.container'
 import { healthSourcesConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/HealthSourceConfigs/HealthSourceConfigs'
+import { getSelectedProductInfo } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
 import type { SourceDataInterface, UpdatedHealthSource } from '../../HealthSourceDrawerContent.types'
 import { SplunkProduct } from '../defineHealthSource/DefineHealthSource.constant'
 import { CustomHealthMetric } from './CustomiseHealthSource.constant'
@@ -57,7 +58,8 @@ export const LoadSourceByType = ({
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
   const selectedProduct = data?.product?.value || data?.existingMetricDetails?.type
-  const healthSourceConfig = healthSourcesConfig[selectedProduct]
+  const productInfo = getSelectedProductInfo(selectedProduct)
+  const healthSourceConfig = healthSourcesConfig[productInfo]
 
   switch (type) {
     case HealthSourceTypes.AppDynamics:
