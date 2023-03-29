@@ -10,6 +10,7 @@ import { Layout, Container, Heading, PillToggle, PillToggleProps, Text, Card, us
 import { Color, FontVariation } from '@harness/design-system'
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import UserHint from '@cv/pages/components/UserHint/UserHint'
 import type { SLODashboardWidget } from 'services/cv'
@@ -19,6 +20,7 @@ import TimeRangeFilter from './TimeRangeFilter'
 import ErrorBudgetGauge from './ErrorBudgetGauge'
 import SLOTargetChartWithChangeTimeline from './SLOTargetChartWithChangeTimeline'
 import { getDefaultOffSet } from './SLOCardContent.utils'
+import { EvaluationType } from '../components/CVCreateSLOV2/CVCreateSLOV2.types'
 import css from '../CVSLOsListingPage.module.scss'
 
 const SLOCardContent: React.FC<SLOCardContentProps> = props => {
@@ -34,6 +36,9 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
   const { notificationTime } = useQueryParams<{ notificationTime?: number }>()
   const location = useLocation()
   const history = useHistory()
+  const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
+  const isRequestBased = serviceLevelObjective?.evaluationType === EvaluationType.REQUEST
+  const hideErrorBudgetGauge = !(enableRequestSLO && isRequestBased)
 
   const resetSlider = useCallback(() => {
     setShowTimelineSlider(false)
@@ -189,21 +194,23 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
         {toggle === SLOCardToggleViews.ERROR_BUDGET && (
           <Layout.Horizontal spacing="medium">
             {renderRecalculation(serviceLevelObjective)}
-            <Container height={200} className={css.errorBudgetGaugeContainer}>
-              <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetRemaining'}>
-                {getString('cv.errorBudgetRemainingWithMins')}
-              </Heading>
-              <ErrorBudgetGauge customChartOptions={getErrorBudgetGaugeOptions(serviceLevelObjective)} />
-              <Text
-                font={{ variation: FontVariation.SMALL }}
-                className={css.errorBudgetRemaining}
-                width={175}
-                data-testid="errorBudgetRemaining"
-              >
-                {serviceLevelObjective.errorBudgetRemaining}
-                <span style={{ display: 'block' }}>{getString('cv.minutesRemaining')}</span>
-              </Text>
-            </Container>
+            {hideErrorBudgetGauge && (
+              <Container height={200} className={css.errorBudgetGaugeContainer}>
+                <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetRemaining'}>
+                  {getString('cv.errorBudgetRemainingWithMins')}
+                </Heading>
+                <ErrorBudgetGauge customChartOptions={getErrorBudgetGaugeOptions(serviceLevelObjective)} />
+                <Text
+                  font={{ variation: FontVariation.SMALL }}
+                  className={css.errorBudgetRemaining}
+                  width={175}
+                  data-testid="errorBudgetRemaining"
+                >
+                  {serviceLevelObjective.errorBudgetRemaining}
+                  <span style={{ display: 'block' }}>{getString('cv.minutesRemaining')}</span>
+                </Text>
+              </Container>
+            )}
             <Container className={css.flexGrowOne} style={{ overflow: 'auto' }}>
               <Container flex={{ alignItems: 'flex-start' }} margin={{ bottom: 'small' }}>
                 <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetBurnDown'}>

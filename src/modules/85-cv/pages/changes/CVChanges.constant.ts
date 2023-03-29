@@ -9,8 +9,11 @@ import { Connectors } from '@connectors/constants'
 import type { UseStringsReturn } from 'framework/strings'
 import { ChangeSourceTypes } from '../ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 
-export const ChangeSourceConnectorOptions = (getString: UseStringsReturn['getString']) => {
-  return [
+export const ChangeSourceConnectorOptions = (
+  getString: UseStringsReturn['getString'],
+  isChaosExperimentCSEnabled?: boolean
+) => {
+  const changeSourceList = [
     {
       label: getString('cv.onboarding.changeSourceTypes.HarnessCDNextGen.name'),
       value: ChangeSourceTypes.HarnessCDNextGen
@@ -27,7 +30,10 @@ export const ChangeSourceConnectorOptions = (getString: UseStringsReturn['getStr
     {
       label: getString('cv.changeSource.FeatureFlag.label'),
       value: ChangeSourceTypes.HarnessFF
-    },
+    }
+  ]
+
+  const customChangeSourcesList = [
     {
       label: `${getString('common.repo_provider.customLabel')} - ${getString('deploymentsText')}`,
       value: ChangeSourceTypes.CustomDeploy
@@ -45,4 +51,13 @@ export const ChangeSourceConnectorOptions = (getString: UseStringsReturn['getStr
       value: ChangeSourceTypes.CustomFF
     }
   ]
+
+  if (isChaosExperimentCSEnabled) {
+    changeSourceList.push({
+      label: getString('cv.changeSource.chaosExperiment.label'),
+      value: ChangeSourceTypes.HarnessCE
+    })
+  }
+
+  return [...changeSourceList, ...customChangeSourcesList]
 }

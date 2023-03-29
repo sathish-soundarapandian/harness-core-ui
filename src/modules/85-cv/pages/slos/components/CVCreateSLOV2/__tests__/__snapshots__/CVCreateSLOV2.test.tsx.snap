@@ -761,7 +761,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                 style="cursor: not-allowed;"
               >
                 <span
-                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
+                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder defaultState StyledProps--margin-small StyledProps--color"
                   icon="ring"
                 >
                   <svg
@@ -780,7 +780,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-grey500"
                 >
                   cv.slos.configureSLI
                    
@@ -813,7 +813,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                 style="cursor: not-allowed;"
               >
                 <span
-                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
+                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder defaultState StyledProps--margin-small StyledProps--color"
                   icon="ring"
                 >
                   <svg
@@ -832,7 +832,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-grey500"
                 >
                   Set your SLO
                    
@@ -865,7 +865,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                 style="cursor: not-allowed;"
               >
                 <span
-                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
+                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder defaultState StyledProps--margin-small StyledProps--color"
                   icon="ring"
                 >
                   <svg
@@ -884,7 +884,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-grey500"
                 >
                   cv.CompositeSLO.ErrorBudgetPolicy
                    

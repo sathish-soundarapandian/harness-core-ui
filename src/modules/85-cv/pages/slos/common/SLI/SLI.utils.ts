@@ -100,3 +100,6 @@ export const getSLIChartContainerProps = (
   const chartPositionProp = !showSLIMetricChart ? { flex: { alignItems: 'center' as any } } : undefined
   return { chartPositionProp, chartContainerBorder }
 }
+
+export const getEvaluationTitle = (getString: UseStringsReturn['getString'], enableRequestSLO?: boolean): string =>
+  enableRequestSLO ? getString('cv.slos.evaluationType') : getString('cv.slos.sliType')

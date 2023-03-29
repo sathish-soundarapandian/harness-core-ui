@@ -131,7 +131,7 @@ exports[`CVCreateDowntime should render create flow 1`] = `
                 style="cursor: not-allowed;"
               >
                 <span
-                  class="bp3-icon StyledProps--main iconNoBorder editIcon StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
+                  class="bp3-icon StyledProps--main iconNoBorder editIcon StyledProps--margin-small StyledProps--color"
                   data-icon="Edit"
                 >
                   <svg
@@ -156,7 +156,7 @@ exports[`CVCreateDowntime should render create flow 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-grey500"
                 >
                   cv.sloDowntime.steps.identification
                    
@@ -489,7 +489,7 @@ exports[`CVCreateDowntime should render create flow 1`] = `
                 style="cursor: not-allowed;"
               >
                 <span
-                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
+                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder defaultState StyledProps--margin-small StyledProps--color"
                   icon="ring"
                 >
                   <svg
@@ -508,7 +508,7 @@ exports[`CVCreateDowntime should render create flow 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-grey500"
                 >
                   cv.sloDowntime.steps.downtimeWindow
                    
@@ -532,7 +532,7 @@ exports[`CVCreateDowntime should render create flow 1`] = `
                 style="cursor: not-allowed;"
               >
                 <span
-                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
+                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder defaultState StyledProps--margin-small StyledProps--color"
                   icon="ring"
                 >
                   <svg
@@ -551,7 +551,7 @@ exports[`CVCreateDowntime should render create flow 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-primary10"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-grey500"
                 >
                   cv.sloDowntime.steps.monitoredServices
                    

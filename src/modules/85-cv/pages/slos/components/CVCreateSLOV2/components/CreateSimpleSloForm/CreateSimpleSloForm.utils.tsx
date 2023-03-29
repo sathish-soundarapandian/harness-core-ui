@@ -231,7 +231,7 @@ export const createMetricGraphPayload = ({
 export const getSLIDerivedProps = ({
   value,
   sliGraphData,
-  isOccurenceBased
+  enableRequestSLO
 }: GetSLIDerivedProps): GetSLIDerivedValues => {
   const {
     eventType,
@@ -251,7 +251,7 @@ export const getSLIDerivedProps = ({
     ? [eventType, validRequestMetric, goodRequestMetric]
     : [validRequestMetric]
 
-  const ffBasedProp = isOccurenceBased ? [serviceLevelIndicatorType] : []
+  const ffBasedProp = enableRequestSLO ? [serviceLevelIndicatorType] : []
   const valuesToDetermineReload = !isWindow
     ? [healthSourceRef, ...metricsByType]
     : [

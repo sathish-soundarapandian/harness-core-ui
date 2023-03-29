@@ -326,12 +326,12 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
       </p>
     </div>
     <div
-      class="StyledProps--font StyledProps--main"
+      class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
     >
       <div
         class="StyledProps--font StyledProps--main main"
         data-testid="TimelineChartContainer"
-        style="height: 150px;"
+        style="height: 165px;"
       >
         <div
           class="main slider"

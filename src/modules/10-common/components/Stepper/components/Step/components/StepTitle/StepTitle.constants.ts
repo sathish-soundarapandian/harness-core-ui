@@ -25,6 +25,6 @@ export const ErrorState = {
 export const DefaultState = {
   cursor: 'not-allowed',
   icon: 'ring' as IconName,
-  iconColor: 'primary9',
-  labelColor: Color.PRIMARY_10
+  iconColor: 'var(--grey-400)',
+  labelColor: Color.GREY_500
 }

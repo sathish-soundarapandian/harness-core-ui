@@ -401,6 +401,7 @@ describe('Unit tests for CVChanges', () => {
             'K8sCluster',
             'PagerDuty',
             'HarnessFF',
+            'HarnessCE',
             'CustomDeploy',
             'CustomInfrastructure',
             'CustomIncident',

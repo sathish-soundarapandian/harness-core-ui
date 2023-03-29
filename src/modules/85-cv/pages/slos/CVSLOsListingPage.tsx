@@ -79,6 +79,7 @@ import SLODashbordFilters from './components/SLODashbordFilters/SLODashbordFilte
 import { SLOType } from './components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import SLOActions from './components/SLOActions/SLOActions'
 import { SLODetailsPageTabIds } from './CVSLODetailsPage/CVSLODetailsPage.types'
+import { EvaluationType } from './components/CVCreateSLOV2/CVCreateSLOV2.types'
 import css from './CVSLOsListingPage.module.scss'
 
 const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService }) => {
@@ -445,6 +446,18 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   const RenderEvaluationType: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row?.original
     const { evaluationType = '' } = slo || {}
+    let evaluationLabel = ''
+    switch (evaluationType) {
+      case EvaluationType.WINDOW:
+        evaluationLabel = getString('cv.slos.slis.evaluationType.window')
+        break
+      case EvaluationType.REQUEST:
+        evaluationLabel = getString('common.request')
+        break
+      default:
+        break
+    }
+
     return (
       <Text
         className={css.titleInSloTable}
@@ -452,7 +465,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         font={{ align: 'left', size: 'normal', weight: 'light' }}
         color={Color.GREY_900}
       >
-        {evaluationType}
+        {evaluationLabel}
       </Text>
     )
   }
@@ -538,7 +551,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     ? [
         {
           Header: getString('common.policy.evaluations').toUpperCase(),
-          width: '7%',
+          width: '9%',
           Cell: RenderEvaluationType
         }
       ]
@@ -552,7 +565,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     },
     {
       Header: getString('cv.slos.monitoredService').toUpperCase(),
-      width: SRM_ENABLE_REQUEST_SLO ? '12%' : '19%',
+      width: SRM_ENABLE_REQUEST_SLO ? '10%' : '19%',
       Cell: RenderMonitoredService
     },
     ...evaluationColumn,

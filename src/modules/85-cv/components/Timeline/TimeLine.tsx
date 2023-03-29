@@ -125,7 +125,7 @@ export const TimeLine = ({
             setShowTimelineSlider(true)
           }
         }}
-        height={150}
+        height={165}
         className={css.main}
         data-testid={'TimelineChartContainer'}
         ref={containerRef}

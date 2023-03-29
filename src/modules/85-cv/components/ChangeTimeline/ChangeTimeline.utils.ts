@@ -125,7 +125,7 @@ export const createTooltipLabel = (
       }`
     case ChangeSourceTypes.ChaosExperiment:
       return `${count} ${
-        count !== 1 ? getString('chaos.chaosExperiment') : getString('chaos.navLabels.chaosExperiments')
+        count == 1 ? getString('chaos.chaosExperiment') : getString('chaos.navLabels.chaosExperiments')
       }`
     default:
       return ''
@@ -143,7 +143,7 @@ export const labelByCategory = (categoryType: string, getString: UseStringsRetur
     case ChangeSourceTypes.Alert:
       return getString('cv.changeSource.tooltip.incidents')
     case ChangeSourceTypes.ChaosExperiment:
-      return getString('chaos.chaosExperiment')
+      return getString('chaos.navLabels.chaosExperiments')
     default:
       return ''
   }

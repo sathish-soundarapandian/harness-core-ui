@@ -779,7 +779,7 @@ describe('Simple SLO V2', () => {
     expect(container.querySelector('input[value="Good"]')).toBeChecked()
 
     act(() => {
-      userEvent.click(getByText('cv.slos.slis.type.latency'))
+      userEvent.click(getByText('cv.slos.slis.type.latency'.toUpperCase()))
     })
 
     act(() => {

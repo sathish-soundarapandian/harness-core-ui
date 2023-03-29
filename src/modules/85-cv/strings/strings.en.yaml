@@ -706,6 +706,8 @@ changeSource:
   FeatureFlag:
     noDataAvailableForYAMLDiff: No data available for YAML Difference
     label: Harness FF
+  chaosExperiment:
+    label: Harness CE
 Dependency:
   serviceList: Service list
   noData: No Data For Dependency Graph

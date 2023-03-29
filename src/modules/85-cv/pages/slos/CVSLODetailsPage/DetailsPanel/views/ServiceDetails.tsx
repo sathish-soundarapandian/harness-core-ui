@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import moment from 'moment'
 import { Link, useParams } from 'react-router-dom'
 import { Card, Container, Heading, Layout, Text } from '@harness/uicore'
@@ -13,11 +13,12 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import { PeriodTypeEnum } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.constants'
-import { SLITypeEnum } from '@cv/pages/slos/common/SLI/SLI.constants'
 import type { KeyValuePairProps, ServiceDetailsProps } from '../DetailsPanel.types'
+import { getEvaluationTitleAndValue } from '../DetailsPanel.utils'
 import css from '../DetailsPanel.module.scss'
 
 export const KeyValuePair: React.FC<KeyValuePairProps> = ({ label, value }) => {
@@ -35,6 +36,7 @@ export const KeyValuePair: React.FC<KeyValuePairProps> = ({ label, value }) => {
 
 const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) => {
   const { getString } = useStrings()
+  const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { sloType } = useQueryParams<{ sloType?: string }>()
   const isCompositeSLO = sloType === SLOType.COMPOSITE
@@ -45,6 +47,11 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
     projectIdentifier,
     identifier: sloDashboardWidget.monitoredServiceIdentifier
   })
+
+  const { title: Evaluationlabel, value: EvaluationValue } = useMemo(
+    () => getEvaluationTitleAndValue(getString, sloDashboardWidget, enableRequestSLO),
+    [sloDashboardWidget.type, enableRequestSLO]
+  )
 
   return (
     <Card className={css.serviceDetailsCard}>
@@ -77,16 +84,7 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
           </Container>
         )}
 
-        {!isCompositeSLO && (
-          <KeyValuePair
-            label={getString('cv.slos.sliType')}
-            value={getString(
-              sloDashboardWidget.type === SLITypeEnum.AVAILABILITY
-                ? 'cv.slos.slis.type.availability'
-                : 'cv.slos.slis.type.latency'
-            )}
-          />
-        )}
+        {!isCompositeSLO && <KeyValuePair label={Evaluationlabel} value={EvaluationValue} />}
         {!isCompositeSLO && sloDashboardWidget?.healthSourceName && (
           <KeyValuePair
             label={getString('pipeline.verification.healthSourceLabel')}

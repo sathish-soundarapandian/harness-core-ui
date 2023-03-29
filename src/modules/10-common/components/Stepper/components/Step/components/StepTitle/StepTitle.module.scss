@@ -18,3 +18,8 @@
 .iconNoBorder {
   margin: 0 var(--spacing-small) !important;
 }
+
+.defaultState {
+  border-radius: 10px;
+  background-color: var(--grey-200) !important;
+}

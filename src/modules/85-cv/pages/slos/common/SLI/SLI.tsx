@@ -26,7 +26,7 @@ import { createHealthsourceList } from '@cv/pages/health-source/HealthSourceTabl
 import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import PickMetric from './views/PickMetric'
-import { getHealthSourceToEdit, getSLIChartContainerProps } from './SLI.utils'
+import { getEvaluationTitle, getHealthSourceToEdit, getSLIChartContainerProps } from './SLI.utils'
 import {
   convertSLOFormDataToServiceLevelIndicatorDTO,
   getHealthSourceOptions
@@ -42,7 +42,7 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
   const FLEX_START = 'flex-start'
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const { SRM_ENABLE_REQUEST_SLO } = useFeatureFlags()
+  const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & { identifier: string }>()
   const { showSLIMetricChart } = useConfigureSLIContext()
 
@@ -153,7 +153,6 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
   }, [monitoredService, serviceRef, environmentRef, healthSources, changeSources, formikProps])
 
   const { chartPositionProp, chartContainerBorder } = getSLIChartContainerProps(showSLIMetricChart)
-
   return (
     <>
       <Layout.Horizontal flex={{ justifyContent: FLEX_START, alignItems: 'stretch' }}>
@@ -198,20 +197,23 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
           {values.healthSourceRef && (
             <Layout.Vertical spacing="small">
               <Text
+                className={sliCss.eventType}
                 color={Color.PRIMARY_10}
                 font={{ size: 'normal', weight: 'semi-bold' }}
-                margin={{ bottom: 'small', top: 'xxlarge' }}
+                margin={{ bottom: 'small', top: 'xlarge' }}
               >
-                {getString('cv.slos.sliType')}
+                {getEvaluationTitle(getString, enableRequestSLO)}
               </Text>
               <Container>
                 <EvaluationTypePillToggle
                   values={values}
                   onChange={setFieldValue}
-                  occurenceBased={SRM_ENABLE_REQUEST_SLO || false}
+                  occurenceBased={enableRequestSLO || false}
                 />
               </Container>
-              <Text font={{ size: 'normal', weight: 'light' }}>{getString('cv.slos.sliTypeSubtitle')}</Text>
+              <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'light' }}>
+                {getString('cv.slos.sliTypeSubtitle')}
+              </Text>
               <img src={SliFormula} />
               <PickMetric
                 formikProps={formikProps}

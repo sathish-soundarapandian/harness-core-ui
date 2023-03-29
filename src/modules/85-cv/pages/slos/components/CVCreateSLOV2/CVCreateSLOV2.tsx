@@ -52,7 +52,7 @@ import css from './components/CreateCompositeSloForm/CreateCompositeSloForm.modu
 const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element => {
   const history = useHistory()
   const { getString } = useStrings()
-  const { SRM_ENABLE_REQUEST_SLO } = useFeatureFlags()
+  const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
   useDocumentTitle([getString('cv.srmTitle'), getString('cv.slos.title')])
 
   const { showSuccess, showError } = useToaster()
@@ -211,7 +211,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
   const initialFormData = getSLOV2InitialFormData(
     sloType,
     SLODataResponse?.resource?.serviceLevelObjectiveV2,
-    SRM_ENABLE_REQUEST_SLO
+    enableRequestSLO
   )
   return (
     <Container margin={{ bottom: 'large' }}>

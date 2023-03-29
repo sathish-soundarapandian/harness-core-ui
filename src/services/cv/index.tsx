@@ -847,7 +847,7 @@ export interface ClusteredLog {
   verificationTaskId?: string
 }
 
-export interface CompositeServiceLevelObjectiveSpec {
+export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
 }
 
@@ -5834,6 +5834,7 @@ export interface SLODashboardWidget {
   errorBudgetRemaining: number
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
+  evaluationType?: 'Window' | 'Request'
   healthSourceIdentifier?: string
   healthSourceName?: string
   monitoredServiceDetails?: MonitoredServiceDetail[]

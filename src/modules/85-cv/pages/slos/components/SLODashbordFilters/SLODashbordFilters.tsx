@@ -32,7 +32,7 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
   isAccountLevel
 }) => {
   const { getString } = useStrings()
-  const SRM_ENABLE_REQUEST_SLO = useFeatureFlag(FeatureFlag.SRM_ENABLE_REQUEST_SLO)
+  const enableRequestSLO = useFeatureFlag(FeatureFlag.SRM_ENABLE_REQUEST_SLO)
   const resetFilters = useCallback(() => {
     dispatch(SLODashboardFilterActions.resetFilters())
   }, [])
@@ -115,7 +115,7 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
           />
         </Layout.Vertical>
       )}
-      {!isAccountLevel && SRM_ENABLE_REQUEST_SLO && (
+      {!isAccountLevel && enableRequestSLO && (
         <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="evaluationType-filter">
           <Select
             value={{
