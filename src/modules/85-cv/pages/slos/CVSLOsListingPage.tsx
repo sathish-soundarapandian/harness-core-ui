@@ -172,7 +172,8 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   useEffect(() => {
     setPageNumber(0)
-    if (projectIdentifier) {
+
+    if (projectIdentifier || isAccountLevel) {
       // Resets all the filter
       dispatch(SLODashboardFilterActions.resetFilters())
 
