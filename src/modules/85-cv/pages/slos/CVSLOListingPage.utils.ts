@@ -558,13 +558,15 @@ export const getSLODashboardWidgetsParams = (
   pathParams: PathParams,
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   filterState: SLOFilterState,
-  pageNumber?: number
+  pageNumber?: number,
+  monitoredServiceIdentifier?: string
 ): SLODashboardWidgetsParams => {
   const { monitoredService, search, sliTypes, sloRiskFilter, targetTypes, userJourney } = filterState
   return {
     queryParams: {
       ...pathParams,
-      monitoredServiceIdentifier: getMonitoredServiceSLODashboardParams(getString, monitoredService),
+      monitoredServiceIdentifier:
+        monitoredServiceIdentifier || getMonitoredServiceSLODashboardParams(getString, monitoredService),
       pageNumber,
       pageSize: PAGE_SIZE_DASHBOARD_WIDGETS,
       userJourneyIdentifiers: getFilterValueForSLODashboardParams(getString, userJourney),

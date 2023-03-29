@@ -117,8 +117,8 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   }, [accountId, orgIdentifier, projectIdentifier])
 
   const sloDashboardWidgetsParams = useMemo(() => {
-    return getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber)
-  }, [pathParams, filterState, pageNumber])
+    return getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber, monitoredServiceIdentifier)
+  }, [pathParams, filterState, pageNumber, monitoredServiceIdentifier])
 
   const {
     data: dashboardWidgetsResponse,
