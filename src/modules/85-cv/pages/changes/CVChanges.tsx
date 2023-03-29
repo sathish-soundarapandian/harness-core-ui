@@ -105,11 +105,11 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
     setSelectedSources([])
   }
 
-  const resetFilters = () => {
+  const resetFilters = useCallback(() => {
     setTimeRange({ startTime: 0, endTime: 0 })
     clearFilter()
     setShowTimelineSlider(false)
-  }
+  }, [])
 
   useEffect(() => {
     setLastUpdated(updateTime || new Date())
