@@ -18,7 +18,8 @@ import {
   initCustomForm,
   FIELD_ENUM,
   DEFAULT_HEALTH_SOURCE_QUERY,
-  CustomMetricFormFieldNames
+  CustomMetricFormFieldNames,
+  PRODUCT_MAP
 } from './CommonHealthSource.constants'
 import type {
   HealthSourcePayload,
@@ -633,10 +634,5 @@ export function getFieldName(
 }
 
 export const getSelectedProductInfo = (selectedProduct: string): string => {
-  let selectedProductInfo = selectedProduct
-  switch (selectedProduct) {
-    case HealthSourceTypes.Elk:
-      selectedProductInfo = HealthSourceTypes.ElasticSearch_Logs
-  }
-  return selectedProductInfo
+  return PRODUCT_MAP[selectedProduct] || selectedProduct
 }
