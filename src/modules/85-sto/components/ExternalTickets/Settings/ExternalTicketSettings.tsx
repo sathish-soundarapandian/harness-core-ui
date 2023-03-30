@@ -15,6 +15,7 @@ import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { MetadataListProjectsResponseBody, Setting } from 'services/ticket-service/ticketServiceSchemas'
 import {
+  SettingsSaveSettingVariables,
   useMetadataListProjects,
   useSettingsGetSetting,
   useSettingsSaveSetting
@@ -39,9 +40,12 @@ const ExternalTicketSettings: React.FC = () => {
 
   const [ticketSettings, setTicketSettings] = useState<Settings | undefined>(undefined)
 
-  const { data: settingsData, isLoading: isLoadingSettings } = useSettingsGetSetting<Setting>({
-    queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier, module: module || 'sto' }
-  })
+  const { data: settingsData, isLoading: isLoadingSettings } = useSettingsGetSetting<Setting>(
+    {
+      queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier, module: module || 'sto' }
+    },
+    { retry: false }
+  )
 
   useEffect(() => {
     if (settingsData && !ticketSettings) {
@@ -53,12 +57,17 @@ const ExternalTicketSettings: React.FC = () => {
     }
   }, [settingsData, ticketSettings, setTicketSettings])
 
-  const { data: projectData, isLoading: isLoadingProjects } = useMetadataListProjects<MetadataListProjectsResponseBody>(
+  // Refetching still has a race condition. Retrying once is a temporary workaround.
+  const {
+    data: projectData,
+    isLoading: isLoadingProjects,
+    refetch: refetchProjects
+  } = useMetadataListProjects<MetadataListProjectsResponseBody>(
     {
       queryParams: { accountId, module: 'sto' }
     },
     {
-      retry: false
+      retry: 1
     }
   )
 
@@ -87,10 +96,13 @@ const ExternalTicketSettings: React.FC = () => {
             type="Jira"
             selected={ticketSettings?.connector}
             disabled={isLoadingSettings}
-            onChange={(value, scope) => {
-              updateTicketSettings({
-                connector: scope !== Scope.PROJECT ? `${scope}.${value.identifier}` : value.identifier
+            onChange={async (value, scope) => {
+              await updateTicketSettings({
+                connector: scope !== Scope.PROJECT ? `${scope}.${value.identifier}` : value.identifier,
+                projectKey: undefined,
+                issueType: undefined
               })
+              await refetchProjects()
             }}
           />
         </div>
@@ -103,8 +115,8 @@ const ExternalTicketSettings: React.FC = () => {
             items={projectItems}
             value={ticketSettings?.projectKey}
             disabled={isLoadingSettings || isLoadingProjects}
-            onChange={item => {
-              updateTicketSettings({ projectKey: item.value as string })
+            onChange={async item => {
+              await updateTicketSettings({ projectKey: item.value as string })
             }}
           />
         </div>
@@ -118,8 +130,8 @@ const ExternalTicketSettings: React.FC = () => {
               jiraProjectId={ticketSettings?.projectKey}
               value={ticketSettings?.issueType}
               disabled={isLoadingSettings || isLoadingProjects}
-              onChange={item => {
-                updateTicketSettings({ issueType: item.value as string })
+              onChange={async item => {
+                await updateTicketSettings({ issueType: item.value as string })
               }}
             />
           ) : (
@@ -138,24 +150,23 @@ const ExternalTicketSettings: React.FC = () => {
     </Container>
   )
 
-  function updateTicketSettings(settings: Partial<Settings>): void {
+  async function updateTicketSettings(settings: Partial<Settings>): Promise<void> {
     const newSettings = { ...ticketSettings, ...settings }
     setTicketSettings(newSettings)
-    if (newSettings.connector && newSettings.projectKey && newSettings.issueType) {
+    if (newSettings.connector) {
       const connectorId =
         typeof newSettings.connector === 'string' ? newSettings.connector : newSettings.connector.value
-      mutate(
-        {
-          queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier },
-          body: {
-            additional: { projectKey: newSettings.projectKey, issueType: newSettings.issueType },
-            connectorId,
-            module,
-            service: 'Jira'
-          }
-        },
-        {}
-      )
+
+      const saveSettings = {
+        queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier },
+        body: {
+          additional: { projectKey: newSettings.projectKey, issueType: newSettings.issueType },
+          connectorId,
+          module,
+          service: 'Jira'
+        }
+      } as SettingsSaveSettingVariables
+      await mutate(saveSettings, {})
     }
   }
 }

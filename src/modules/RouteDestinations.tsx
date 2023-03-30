@@ -95,11 +95,9 @@ export default function RouteDestinations(): React.ReactElement {
       {isCVModuleEnabled ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
       {IDP_ENABLED ? IDPRoutes.props.children : null}
-      {licenseInformation['STO']?.status === 'ACTIVE' ? (
-        <Route path="/account/:accountId/:module(sto)">
-          <STORoutes />
-        </Route>
-      ) : null}
+      <Route path="/account/:accountId/:module(sto)">
+        <STORoutes />
+      </Route>
       <Route path="/account/:accountId/settings">
         <AuthSettingsRoutes />
       </Route>
