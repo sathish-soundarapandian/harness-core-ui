@@ -98,6 +98,23 @@ export const NmapStepBase = (
         // This is required
         setFormikRef?.(formikRef, formik)
 
+        const scanConfigItems =
+          formik.values.spec.mode === 'orchestration'
+            ? [
+                NMAP_DEFAULT_CONFIG,
+                NMAP_NO_DEFAULT_CLI_FLAGS,
+                NMAP_FIREWALL_BYPASS_CONFIG,
+                NMAP_UNUSUAL_PORT_CONFIG,
+                NMAP_SMB_SECURITY_MODE_CONFIG,
+                NMAP_VULN_CONFIG,
+                NMAP_EXPLOIT_CONFIG
+              ]
+            : [NMAP_DEFAULT_CONFIG]
+
+        if (formik.values.spec.mode === 'ingestion' && formik.values.spec.config !== NMAP_DEFAULT_CONFIG.value) {
+          formik.setFieldValue('spec.config', NMAP_DEFAULT_CONFIG.value)
+        }
+
         return (
           <FormikForm>
             <CIStep
@@ -114,32 +131,21 @@ export const NmapStepBase = (
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               scanModeSelectItems={scanModeSelectItems}
-              scanConfigSelectItems={[
-                NMAP_DEFAULT_CONFIG,
-                NMAP_NO_DEFAULT_CLI_FLAGS,
-                NMAP_FIREWALL_BYPASS_CONFIG,
-                NMAP_UNUSUAL_PORT_CONFIG,
-                NMAP_SMB_SECURITY_MODE_CONFIG,
-                NMAP_VULN_CONFIG,
-                NMAP_EXPLOIT_CONFIG
-              ]}
+              scanConfigSelectItems={scanConfigItems}
             />
 
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               targetTypeSelectItems={[INSTANCE_TARGET_TYPE]}
             />
 
-            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
 
             <SecurityInstanceFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               showFields={{ domain: true, protocol: true, path: true, port: true }}
             />
 

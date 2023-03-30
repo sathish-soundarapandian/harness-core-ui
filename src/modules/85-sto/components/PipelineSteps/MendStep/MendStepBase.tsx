@@ -167,7 +167,6 @@ export const MendStepBase = (
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               scanConfigReadonly
               scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, EXTRACTION_SCAN_MODE, INGESTION_SCAN_MODE]}
             />
@@ -175,13 +174,12 @@ export const MendStepBase = (
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               targetTypeSelectItems={[REPOSITORY_TARGET_TYPE, CONTAINER_TARGET_TYPE]}
             />
 
-            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} />
 
-            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
 
             <SecurityAuthFields
               showFields={{
@@ -191,12 +189,10 @@ export const MendStepBase = (
               }}
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               authDomainPlaceHolder="https://saas.whitesourcesoftware.com/"
             />
             <>
               <SecurityField
-                stepViewType={stepViewType}
                 allowableTypes={allowableTypes}
                 formik={formik}
                 enableFields={{

@@ -97,7 +97,6 @@ export const AWSECRStepBase = (
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               scanConfigReadonly
               scanModeSelectItems={[EXTRACTION_SCAN_MODE]}
             />
@@ -105,14 +104,12 @@ export const AWSECRStepBase = (
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               targetTypeSelectItems={[CONTAINER_TARGET_TYPE]}
             />
 
             <SecurityField
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               enableFields={{
                 header: {
                   label: 'sto.stepField.image.fieldsHeading'
@@ -129,7 +126,6 @@ export const AWSECRStepBase = (
             <SecurityAuthFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               showFields={{ access_id: true, region: true }}
             />
 

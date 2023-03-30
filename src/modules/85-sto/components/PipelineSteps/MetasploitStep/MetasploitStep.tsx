@@ -45,7 +45,7 @@ export class MetasploitStep extends PipelineStep<MetasploitStepData> {
 
   protected type = StepType.Metasploit
   protected stepName = 'Configure Metasploit'
-  protected stepIcon: IconName = 'security-ci-step'
+  protected stepIcon: IconName = 'metasploit'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.Metasploit'
   protected stepPaletteVisible = false
 
