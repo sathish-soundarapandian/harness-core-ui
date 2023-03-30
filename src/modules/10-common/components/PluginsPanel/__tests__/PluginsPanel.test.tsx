@@ -7,8 +7,9 @@
 
 import React from 'react'
 import { act, screen, fireEvent, render, waitFor } from '@testing-library/react'
+import { useListPlugins } from 'services/ci'
 import { PluginsPanel } from '../PluginsPanel'
-import * as pluginsListMock from './mocks.json'
+import { pluginsWithRequiredField, pluginsWithoutRequiredField } from './mocks'
 
 jest.mock('framework/strings', () => ({
   useStrings: () => ({
@@ -16,14 +17,14 @@ jest.mock('framework/strings', () => ({
   })
 }))
 
-const mockFetch = jest.fn()
+const mockFetch = jest.fn(() => Promise.resolve(pluginsWithRequiredField))
 
 jest.mock('services/ci', () => ({
-  useListPlugins: () => ({
+  useListPlugins: jest.fn().mockImplementation(() => ({
     loading: false,
-    data: pluginsListMock,
+    data: pluginsWithoutRequiredField,
     refetch: mockFetch
-  })
+  }))
 }))
 
 describe('Test PluginsPanel component', () => {
@@ -154,6 +155,7 @@ describe('Test PluginsPanel component', () => {
     await act(async () => {
       fireEvent.click(getByText('AWS CloudFormation')!)
     })
+    expect(screen.queryByText('common.optionalConfig')).toBeNull()
     await waitFor(() => expect(screen.queryByText('select common.plugin.label')).toBeNull())
 
     // go back to list view
@@ -167,5 +169,21 @@ describe('Test PluginsPanel component', () => {
       fireEvent.click(container.querySelector('span[icon="arrow-left"]')!)
     })
     expect(screen.queryByText('common.bitrise common.plugins')).toBeNull()
+  })
+
+  test('Should show Optional configuration section if the plugin has optional fields', () => {
+    ;(useListPlugins as jest.Mock).mockImplementation(() => ({
+      loading: false,
+      data: pluginsWithRequiredField,
+      refetch: mockFetch
+    }))
+    const { getByText } = render(<PluginsPanel onPluginAddUpdate={jest.fn()} onPluginDiscard={jest.fn()} />)
+    act(() => {
+      fireEvent.click(getByText('harness common.plugins'))
+    })
+    act(() => {
+      fireEvent.click(getByText('AWS CloudFormation')!)
+    })
+    expect(getByText('common.optionalConfig')).toBeInTheDocument()
   })
 })

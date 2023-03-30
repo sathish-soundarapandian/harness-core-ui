@@ -85,8 +85,8 @@ const getId = (
   projectIdentifier: string,
   templateIdentifier: string,
   versionLabel: string,
-  repoIdentifier = '',
-  branch = ''
+  repoIdentifier = /* istanbul ignore next */ '',
+  branch = /* istanbul ignore next */ ''
 ): string =>
   `${accountIdentifier}_${orgIdentifier}_${projectIdentifier}_${templateIdentifier}_${encodeURIComponent(
     versionLabel
@@ -336,6 +336,7 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
           {
             ...queryParams,
             templateListType: TemplateListType.All,
+            size: 100,
             ...(repoName && branch ? { repoName, branch } : {})
           },
           templateIdentifier,
@@ -377,6 +378,7 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
           template = defaultTo(parse(templateYamlStr)?.template, {})
         } catch (e) {
           // It is assumed that execution will come here, if there are only syntatical errors in yaml string
+          /* istanbul ignore next */
           template = {
             name: defaultTo(templateWithGitDetails?.name, ''),
             identifier: defaultTo(templateWithGitDetails?.identifier, ''),
@@ -534,6 +536,7 @@ const _fetchTemplateV1 = async (props: FetchTemplateBoundProps, params: FetchTem
           template = defaultTo(parse(templateYamlStr)?.template, {})
         } catch (e) {
           // It is assumed that execution will come here, if there are only syntatical errors in yaml string
+          /* istanbul ignore next */
           template = {
             name: defaultTo(templateWithGitDetails?.name, ''),
             identifier: defaultTo(templateWithGitDetails?.identifier, ''),
@@ -741,10 +744,10 @@ const _deleteTemplateCache = async (
   if (IdbTemplate) {
     const id = getId(
       queryParams.accountIdentifier,
-      queryParams.orgIdentifier || '',
-      queryParams.projectIdentifier || '',
+      queryParams.orgIdentifier || /* istanbul ignore next */ '',
+      queryParams.projectIdentifier || /* istanbul ignore next */ '',
       identifier,
-      versionLabel || '',
+      defaultTo(versionLabel, ''),
       defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier ?? ''),
       defaultTo(gitDetails?.branch, '')
     )
@@ -755,8 +758,8 @@ const _deleteTemplateCache = async (
   if (IdbTemplate) {
     const defaultId = getId(
       queryParams.accountIdentifier,
-      queryParams.orgIdentifier || '',
-      queryParams.projectIdentifier || '',
+      queryParams.orgIdentifier || /* istanbul ignore next */ '',
+      queryParams.projectIdentifier || /* istanbul ignore next */ '',
       DefaultNewTemplateId,
       DefaultNewVersionLabel,
       defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier ?? ''),

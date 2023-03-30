@@ -11,6 +11,7 @@ specifyArtifactRepo: 'Specify Artifact {{ $.repository }}'
 newArtifactRepository: 'New Artifact Repository Connector'
 selectConnectorLabel: Select Artifact Repository Connector
 stepThreeName: '{{$.common.labelTestConnection}}'
+connectorConnectionTest: 'connectorConnectionTestId'
 stepFourName: 'Artifact Location'
 name: Connector Name
 updating: 'Updating Connector {{name}}'

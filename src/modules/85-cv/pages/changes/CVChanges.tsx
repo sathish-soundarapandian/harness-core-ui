@@ -55,8 +55,8 @@ import { ChangeSourceConnectorOptions } from './CVChanges.constant'
 import css from './CVChanges.module.scss'
 
 export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element => {
-  const { serviceOptions } = useGetHarnessServices()
-  const { environmentOptions } = useGetHarnessEnvironments()
+  const { serviceOptions } = useGetHarnessServices(true)
+  const { environmentOptions } = useGetHarnessEnvironments(true)
   const { getString } = useStrings()
   const isChaosExperimentCSEnabled = useFeatureFlag(FeatureFlag.SRM_INTERNAL_CHANGE_SOURCE_CE)
 
@@ -71,7 +71,7 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
     })
   }, [])
   const connectorOptions = useMemo(() => {
-    return ChangeSourceConnectorOptions(getString)
+    return ChangeSourceConnectorOptions(getString, isChaosExperimentCSEnabled)
   }, [])
   const [selectedTimePeriod, setSelectedTimePeriod] = useState<SelectOption>({
     value: TimePeriodEnum.TWENTY_FOUR_HOURS,
@@ -244,7 +244,7 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
             'lll'
           )}`}</Text>
         </HorizontalLayout>
-        <Container>
+        <Container margin={{ top: 'large', bottom: 'large' }}>
           <TimeLine
             {...queryParams}
             selectedTimePeriod={selectedTimePeriod}

@@ -15,6 +15,7 @@ import { mockTemplates, mockTemplatesSuccessResponse } from '@templates-library/
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { mockTemplatesInputYaml } from '@pipeline/components/PipelineStudio/PipelineStudioTestHelper'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
+import * as commonHooks from '@common/hooks'
 import { templatePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import { mockBranches } from '@gitsync/components/GitSyncForm/__tests__/mockdata'
@@ -90,79 +91,6 @@ function ComponentWrapper(props: TemplateDetailsProps): React.ReactElement {
   )
 }
 
-describe('<TemplateDetails /> tests', () => {
-  beforeAll(() => {
-    templateFactory.registerTemplate(new StepTemplate())
-  })
-  const baseProps = {
-    template: defaultTo(mockTemplates?.data?.content?.[0], {})
-  }
-  test('should match snapshot', async () => {
-    const { container } = render(
-      <TestWrapper>
-        <ComponentWrapper {...baseProps} />
-      </TestWrapper>
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should match snapshot - when reference by tab is selected', async () => {
-    const { container, queryByText } = render(
-      <TestWrapper>
-        <ComponentWrapper {...baseProps} />
-      </TestWrapper>
-    )
-
-    await act(async () => {
-      fireEvent.click(queryByText('templatesLibrary.referencedBy')!)
-    })
-
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should show selected version label', async () => {
-    const { getByTestId } = render(
-      <TestWrapper>
-        <ComponentWrapper {...baseProps} isStandAlone />
-      </TestWrapper>
-    )
-    const dropValue = getByTestId('dropdown-value')
-    expect(dropValue).toHaveTextContent('v4COMMON.STABLE')
-  })
-
-  test('should show always use stable version of the template ', async () => {
-    const newBaseProps = produce(baseProps, draft => {
-      unset(draft, 'template.versionLabel')
-    })
-    const { getByTestId } = render(
-      <TestWrapper>
-        <ComponentWrapper {...newBaseProps} isStandAlone />
-      </TestWrapper>
-    )
-    const dropValue = getByTestId('dropdown-value')
-    expect(dropValue).toHaveTextContent('templatesLibrary.alwaysUseStableVersion')
-  })
-
-  test('should open template studio on clicking open in template studio', async () => {
-    const { getByRole, getByTestId } = render(
-      <TestWrapper>
-        <ComponentWrapper {...baseProps} />
-      </TestWrapper>
-    )
-
-    await act(async () => {
-      fireEvent.click(getByRole('button', { name: 'templatesLibrary.openInTemplateStudio' }))
-    })
-    expect(getByTestId('location')).toMatchInlineSnapshot(`
-      <div
-        data-testid="location"
-      >
-        /account/kmpySmUISimoRrJL6NL73w/home/orgs/default/projects/Templateproject/setup/resources/template-studio/Step/template/manjutesttemplate/?versionLabel=v4
-      </div>
-    `)
-  })
-})
-
 describe('<TemplateDetails /> git experience', () => {
   afterEach(() => {
     useGetTemplateMock.mockReset()
@@ -234,5 +162,91 @@ describe('<TemplateDetails /> git experience', () => {
       },
       templateIdentifier: 'manjutesttemplate'
     })
+  })
+})
+
+describe('<TemplateDetails /> tests', () => {
+  beforeAll(() => {
+    templateFactory.registerTemplate(new StepTemplate())
+  })
+
+  const baseProps = {
+    template: defaultTo(mockTemplates?.data?.content?.[0], {})
+  }
+  test('should match snapshot', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <ComponentWrapper {...baseProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should match snapshot - when reference by tab is selected', async () => {
+    const { container, queryByText } = render(
+      <TestWrapper>
+        <ComponentWrapper {...baseProps} />
+      </TestWrapper>
+    )
+
+    await act(async () => {
+      fireEvent.click(queryByText('templatesLibrary.referencedBy')!)
+    })
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should show selected version label', async () => {
+    const { getByTestId } = render(
+      <TestWrapper defaultAppStoreValues={{ isGitSyncEnabled: true }}>
+        <ComponentWrapper {...baseProps} isStandAlone />
+      </TestWrapper>
+    )
+    const dropValue = getByTestId('dropdown-value')
+    expect(dropValue).toHaveTextContent('v4COMMON.STABLE')
+  })
+
+  test('should show always use stable version of the template ', async () => {
+    const newBaseProps = produce(baseProps, draft => {
+      unset(draft, 'template.versionLabel')
+    })
+    const { getByTestId } = render(
+      <TestWrapper>
+        <ComponentWrapper {...newBaseProps} isStandAlone />
+      </TestWrapper>
+    )
+    const dropValue = getByTestId('dropdown-value')
+    expect(dropValue).toHaveTextContent('templatesLibrary.alwaysUseStableVersion')
+  })
+
+  test('should open template studio on clicking open in template studio', async () => {
+    const { getByRole, getByTestId } = render(
+      <TestWrapper>
+        <ComponentWrapper {...baseProps} />
+      </TestWrapper>
+    )
+
+    await act(async () => {
+      fireEvent.click(getByRole('button', { name: 'templatesLibrary.openInTemplateStudio' }))
+    })
+    expect(getByTestId('location')).toMatchInlineSnapshot(`
+      <div
+        data-testid="location"
+      >
+        /account/kmpySmUISimoRrJL6NL73w/home/orgs/default/projects/Templateproject/setup/resources/template-studio/Step/template/manjutesttemplate/?versionLabel=v4
+      </div>
+    `)
+  })
+
+  test('should match snapshot when error occurs in useMutateAsGet', async () => {
+    jest.spyOn(commonHooks, 'useMutateAsGet').mockImplementation(() => {
+      return { loading: false, error: 'Some error occurred', data: undefined, refetch: jest.fn() } as any
+    })
+    const { container } = render(
+      <TestWrapper>
+        <ComponentWrapper {...baseProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
   })
 })

@@ -5,9 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { omit } from 'lodash-es'
 import type { GetMetricOnboardingGraphQueryParams } from 'services/cv'
-import { SLIMetricTypes } from '../../../CVCreateSLOV2.types'
-import { validateConfigureServiceLevelIndicatiors, createMetricGraphPayload } from '../CreateSimpleSloForm.utils'
+import { SLIMetricTypes, SLOV2Form } from '../../../CVCreateSLOV2.types'
+import {
+  validateConfigureServiceLevelIndicatiors,
+  createMetricGraphPayload,
+  getSLIDerivedProps
+} from '../CreateSimpleSloForm.utils'
+import {
+  mockDerivedProps,
+  SLOV2FormMock,
+  valuesToDetermineReloadThresholdBased,
+  valuesToDetermineReloadRatoBased
+} from './CreateSimpleSloForm.utils.mock'
 
 describe('validateConfigureServiceLevelIndicatiors', () => {
   test('should return true when all required fields have valid input', () => {
@@ -182,5 +193,24 @@ describe('validateConfigureServiceLevelIndicatiors', () => {
     expect(payloadMetricBased.body).toEqual([params.goodRequestMetric, params.validRequestMetric])
     expect(payloadMetricBased.pathParams.monitoredServiceIdentifier).toEqual(params.monitoredServiceIdentifier)
     expect(payloadMetricBased.queryParams.healthSourceRef).toEqual(params.healthSourceRef)
+  })
+
+  test('validate getSLIDerivedProps', () => {
+    const ratioBasedProps = { value: SLOV2FormMock as SLOV2Form, sliGraphData: null, enableRequestSLO: true }
+    expect(getSLIDerivedProps({ ...ratioBasedProps })).toEqual({ ...mockDerivedProps })
+    expect(getSLIDerivedProps({ ...ratioBasedProps, enableRequestSLO: false })).toEqual({
+      ...mockDerivedProps,
+      valuesToDetermineReload: [...valuesToDetermineReloadRatoBased, 'Availability']
+    })
+    const thresholdBasedProp = {
+      value: { ...omit(SLOV2FormMock, ['goodRequestMetric']), SLIMetricType: 'Threshold' } as SLOV2Form,
+      sliGraphData: null,
+      enableRequestSLO: true
+    }
+    expect(getSLIDerivedProps({ ...thresholdBasedProp })).toEqual({
+      ...mockDerivedProps,
+      isRatioBased: false,
+      valuesToDetermineReload: valuesToDetermineReloadThresholdBased
+    })
   })
 })

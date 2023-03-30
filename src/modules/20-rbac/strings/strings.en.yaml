@@ -294,6 +294,7 @@ notifications:
   labelEmailUserGroups: Alternatively Notify the individual users in a user group via their respective email addresses
   buttonSend: Send
   labelSlackUserGroups: Alternatively Notify the Slack Channels associated with these user groups
+  labelPagerDutyUserGroups: Alternatively Notify the PageDuty groups associated with these user groups
   labelMSTeamsUserGroups: Alternatively, Harness can notify the Microsoft Teams Channel associated with the user group(s) selected below (Optional)
   validationWebhook: Webhook URL is required
   labelPDKey: PagerDuty Key

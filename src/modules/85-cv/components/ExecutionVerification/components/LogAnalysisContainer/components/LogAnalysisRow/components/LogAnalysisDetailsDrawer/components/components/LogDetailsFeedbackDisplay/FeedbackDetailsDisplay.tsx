@@ -30,7 +30,7 @@ export default function FeedbackDetailsDisplay({
     return null
   }
 
-  const { feedbackScore, updatedby, updatedAt } = feedbackDetails
+  const { feedbackScore, updatedBy, updatedAt } = feedbackDetails
 
   const userMessage = isUpdatedFeedback
     ? getString('cv.logs.feedbackUpdatedMessage')
@@ -58,7 +58,7 @@ export default function FeedbackDetailsDisplay({
         <Text
           data-testid={isUpdatedFeedback ? 'updatedFeedbackDetails' : 'appliedFeedbackDetails'}
           font={{ variation: FontVariation.BODY }}
-        >{` ${getString('common.updatedBy')} ${updatedby} ${getString('common.on')} ${moment(updatedAt).format(
+        >{` ${getString('cv.logs.updatedBy')} ${updatedBy} ${getString('common.on')} ${moment(updatedAt).format(
           'L h:mm A'
         )}`}</Text>
       </Container>

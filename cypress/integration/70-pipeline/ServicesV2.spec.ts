@@ -197,6 +197,7 @@ describe('Service V2', () => {
         .then(() => {
           cy.contains('span', 'Runtime input').click()
         })
+      cy.wait(100)
     })
     cy.get('input[name="identifier"]').type('test_artifact_source_name')
     cy.clickSubmit()
@@ -262,6 +263,7 @@ describe('Service V2', () => {
         .then(() => {
           cy.contains('span', 'Runtime input').click()
         })
+      cy.wait(100)
     })
     cy.get('input[name="identifier"]').type('test_artifact_source_name')
     cy.clickSubmit()

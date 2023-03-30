@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -105,7 +105,7 @@ export interface FolderErrorResponse {
 }
 
 export interface FolderModel {
-  Children?: FolderChildren
+  Children?: FolderChildren[]
   child_count: number
   created_at: string
   id: string
@@ -134,13 +134,6 @@ export interface GetFolderResponse {
   responseMessages?: string
 }
 
-export interface GetFoldersResponse {
-  items: number
-  pages: number
-  resource?: FolderModel[]
-  responseMessages?: string
-}
-
 export interface GetOotbFolderIdResponse {
   resource?: string
 }
@@ -158,6 +151,13 @@ export interface PatchFolderResponseResource {
   accountId: string
   folderId: string
   name: string
+}
+
+export interface SearchFoldersResponse {
+  items: number
+  pages: number
+  resource?: FolderModel[]
+  responseMessages?: string
 }
 
 export interface SearchResponse {
@@ -349,7 +349,6 @@ export const generatePublicDashboardSignedUrlPromise = (
 export interface GetFolderQueryParams {
   page?: number
   accountId: string
-  isAdmin?: boolean
   pageSize?: number
 }
 
@@ -602,6 +601,56 @@ export const getFolderDetailPromise = (
     signal
   )
 
+export interface GetFoldersWithHiddenQueryParams {
+  page?: number
+  accountId: string
+  pageSize?: number
+}
+
+export type GetFoldersWithHiddenProps = Omit<
+  GetProps<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all folders for account.
+ */
+export const GetFoldersWithHidden = (props: GetFoldersWithHiddenProps) => (
+  <Get<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>
+    path={`/folders/with-hidden`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseGetFoldersWithHiddenProps = Omit<
+  UseGetProps<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all folders for account.
+ */
+export const useGetFoldersWithHidden = (props: UseGetFoldersWithHiddenProps) =>
+  useGet<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>(`/folders/with-hidden`, {
+    base: getConfig('dashboard/'),
+    ...props
+  })
+
+/**
+ * Get all folders for account.
+ */
+export const getFoldersWithHiddenPromise = (
+  props: GetUsingFetchProps<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>(
+    getConfig('dashboard/'),
+    `/folders/with-hidden`,
+    props,
+    signal
+  )
+
 export interface DeleteDashboardQueryParams {
   folderId: string
   accountId: string
@@ -660,7 +709,7 @@ export const deleteDashboardPromise = (
     signal
   )
 
-export interface GetFoldersQueryParams {
+export interface SearchFoldersQueryParams {
   page: number
   pageSize: number
   searchTerm?: string
@@ -669,29 +718,32 @@ export interface GetFoldersQueryParams {
   sortBy?: string
 }
 
-export type GetFoldersProps = Omit<GetProps<GetFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>, 'path'>
-
-/**
- * Get a list of folders filtered by search parameters.
- */
-export const GetFolders = (props: GetFoldersProps) => (
-  <Get<GetFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>
-    path={`/v1/folders`}
-    base={getConfig('dashboard/')}
-    {...props}
-  />
-)
-
-export type UseGetFoldersProps = Omit<
-  UseGetProps<GetFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>,
+export type SearchFoldersProps = Omit<
+  GetProps<SearchFoldersResponse, ErrorResponse, SearchFoldersQueryParams, void>,
   'path'
 >
 
 /**
  * Get a list of folders filtered by search parameters.
  */
-export const useGetFolders = (props: UseGetFoldersProps) =>
-  useGet<GetFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>(`/v1/folders`, {
+export const SearchFolders = (props: SearchFoldersProps) => (
+  <Get<SearchFoldersResponse, ErrorResponse, SearchFoldersQueryParams, void>
+    path={`/v1/folders`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseSearchFoldersProps = Omit<
+  UseGetProps<SearchFoldersResponse, ErrorResponse, SearchFoldersQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get a list of folders filtered by search parameters.
+ */
+export const useSearchFolders = (props: UseSearchFoldersProps) =>
+  useGet<SearchFoldersResponse, ErrorResponse, SearchFoldersQueryParams, void>(`/v1/folders`, {
     base: getConfig('dashboard/'),
     ...props
   })
@@ -699,11 +751,11 @@ export const useGetFolders = (props: UseGetFoldersProps) =>
 /**
  * Get a list of folders filtered by search parameters.
  */
-export const getFoldersPromise = (
-  props: GetUsingFetchProps<GetFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>,
+export const searchFoldersPromise = (
+  props: GetUsingFetchProps<SearchFoldersResponse, ErrorResponse, SearchFoldersQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<GetFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>(
+  getUsingFetch<SearchFoldersResponse, ErrorResponse, SearchFoldersQueryParams, void>(
     getConfig('dashboard/'),
     `/v1/folders`,
     props,

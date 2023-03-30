@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import type { Breadcrumb } from '@harness/uicore'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { FolderModel, useGetFolders } from 'services/custom-dashboards'
+import { FolderModel, useSearchFolders } from 'services/custom-dashboards'
 
 export interface DashboardsContextProps {
   breadcrumbs: Breadcrumb[]
@@ -28,7 +28,7 @@ export function DashboardsContextProvider(props: React.PropsWithChildren<unknown
     setBreadcrumbs(breadcrumbsToAdd)
   }
 
-  const { data: folderResponse } = useGetFolders({
+  const { data: folderResponse } = useSearchFolders({
     queryParams: { accountId, page: 1, pageSize: 100, permission: PermissionIdentifier.EDIT_DASHBOARD }
   })
 

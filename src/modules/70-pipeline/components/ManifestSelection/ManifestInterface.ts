@@ -242,6 +242,7 @@ export interface KustomizeWithGITDataType {
   patchesPaths?: any
   optimizedKustomizeManifestCollection?: boolean
   kustomizeYamlFolderPath?: string
+  commandFlags: Array<CommandFlags>
 }
 export interface OpenShiftParamDataType {
   identifier: string
@@ -296,6 +297,7 @@ export interface KustomizeWithHarnessStorePropTypeDataType extends HarnessFileSt
       }
   pluginPath?: string
   patchesPaths?: string[] | string
+  commandFlags: Array<CommandFlags>
 }
 export interface CustomManifestManifestDataType {
   identifier: string

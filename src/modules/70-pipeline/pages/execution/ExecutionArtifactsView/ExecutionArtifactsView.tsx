@@ -37,9 +37,13 @@ export const getStageNodesWithArtifacts: (data: ExecutionGraph | undefined, stag
   return Object.values(data?.nodeMap ?? {}).filter(entry => {
     const { setupId = '', outcomes = [] } = entry
     const outcomeWithArtifacts = Array.isArray(outcomes)
-      ? outcomes?.some((outcome: any) => outcome.fileArtifacts?.length || outcome.imageArtifacts?.length)
+      ? outcomes?.some(
+          (outcome: any) =>
+            outcome.fileArtifacts?.length || outcome.imageArtifacts?.length || outcome.sbomArtifacts?.length
+        )
       : outcomes?.integrationStageOutcome?.fileArtifacts?.length ||
-        outcomes?.integrationStageOutcome?.imageArtifacts?.length
+        outcomes?.integrationStageOutcome?.imageArtifacts?.length ||
+        outcomes?.integrationStageOutcome?.sbomArtifacts?.length
     return stageIds.includes(setupId) && outcomeWithArtifacts
   })
 }

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import {
@@ -64,9 +64,11 @@ const MonitoredService: React.FC = () => {
   const [search, setSearch] = useState<string>('')
   const [selectedFilter, setSelectedFilter] = useState<FilterTypes>(FilterTypes.ALL)
 
+  const projectRef = useRef(projectIdentifier)
+
   useEffect(() => {
     setPage(0)
-  }, [projectIdentifier, search])
+  }, [search])
 
   const { data: environmentDataList, loading: loadingEnvironments } = useGetMonitoredServiceListEnvironments({
     queryParams: pathParams
@@ -80,9 +82,21 @@ const MonitoredService: React.FC = () => {
   } = useGetCountOfServices({
     queryParams: {
       ...pathParams,
-      environmentIdentifier: getEnvironmentIdentifier(environment)
-    }
+      environmentIdentifier: getEnvironmentIdentifier(environment),
+      filter: search
+    },
+    lazy: true
   })
+
+  useEffect(() => {
+    if (projectRef.current !== projectIdentifier) {
+      projectRef.current = projectIdentifier
+      setPage(0)
+      setSearch('')
+      setEnvironment({ label: getString('all'), value: getString('all') })
+      setSelectedFilter(FilterTypes.ALL)
+    }
+  }, [projectIdentifier])
 
   useEffect(() => {
     /* istanbul ignore else */ if (serviceCountData) {
@@ -95,7 +109,6 @@ const MonitoredService: React.FC = () => {
     /* istanbul ignore else */ if (type !== selectedFilter) {
       setPage(0)
       setSelectedFilter(type)
-      refetchServiceCountData()
     }
   }
 
@@ -182,6 +195,8 @@ const MonitoredService: React.FC = () => {
                 width={250}
                 alwaysExpanded
                 throttle={500}
+                key={search}
+                defaultValue={search}
                 onChange={setSearch}
                 placeholder={getString('cv.monitoredServices.searchMonitoredServices')}
               />

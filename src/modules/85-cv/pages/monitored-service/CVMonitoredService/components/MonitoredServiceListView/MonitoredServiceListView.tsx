@@ -203,7 +203,6 @@ const MonitoredServiceListView: React.FC<MonitoredServiceListViewProps> = ({
   onDeleteService,
   onToggleService,
   healthMonitoringFlagLoading,
-  refetchServiceCountData,
   setPage
 }) => {
   const { getString } = useStrings()
@@ -419,7 +418,6 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
               itemCount: totalItems,
               gotoPage: nextPage => {
                 setPage(nextPage)
-                refetchServiceCountData()
               }
             }}
           />

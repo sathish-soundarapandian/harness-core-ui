@@ -114,7 +114,7 @@ const scheduledTriggerCategoryItems = [
 
 describe('Test util methods', () => {
   test('Test getCategoryItems method', () => {
-    const triggerCategories = getCategoryItems(getString, true, true, true).categories
+    const triggerCategories = getCategoryItems(getString, true, true, true, true).categories
     let webhookTriggerCategories = triggerCategories.find((item: CategoryInterface) => item.categoryValue === 'Webhook')
     expect(triggerCategories.length).toBe(5)
     webhookTriggerCategories = triggerCategories.find((item: CategoryInterface) => item.categoryValue === 'Webhook')

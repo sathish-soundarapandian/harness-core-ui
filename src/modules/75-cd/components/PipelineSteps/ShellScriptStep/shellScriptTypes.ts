@@ -20,7 +20,7 @@ export const variableSchema = (
 ): Yup.NotRequiredArraySchema<
   | {
       name: string
-      value: string
+      value?: string
       type: string
     }
   | undefined
@@ -28,7 +28,7 @@ export const variableSchema = (
   Yup.array().of(
     Yup.object({
       name: Yup.string().required(getString('common.validation.nameIsRequired')),
-      value: Yup.string().required(getString('common.validation.valueIsRequired')),
+      value: Yup.string().optional(),
       type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
     })
   )

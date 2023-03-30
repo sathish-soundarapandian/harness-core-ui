@@ -47,7 +47,7 @@ function NotificationMethods({
 
       <Layout.Vertical height={500} width={550} spacing="large">
         <Layout.Vertical spacing="xsmall">
-          <Text tooltipProps={{ dataTooltipId: 'rbac.notificationMethod' }}>
+          <Text tooltipProps={{ dataTooltipId: 'notifications.notificationMethod' }}>
             {getString('rbac.notifications.notificationMethod')}
           </Text>
           <Select

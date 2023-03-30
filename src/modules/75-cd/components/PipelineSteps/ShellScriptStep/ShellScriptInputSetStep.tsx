@@ -139,7 +139,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly
+                              disabled: readonly,
+                              defaultValueToReset: ''
                             }}
                             label=""
                             placeholder={getString('valueLabel')}
@@ -199,7 +200,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly
+                              disabled: readonly,
+                              defaultValueToReset: ''
                             }}
                             label=""
                             placeholder={getString('valueLabel')}

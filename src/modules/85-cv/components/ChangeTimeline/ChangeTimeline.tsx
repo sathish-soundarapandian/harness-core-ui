@@ -11,6 +11,7 @@ import { useStrings } from 'framework/strings'
 import { getErrorMessage, getMonitoredServiceIdentifierProp } from '@cv/utils/CommonUtils'
 import type { TimePeriodEnum } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   useChangeEventTimeline,
   useChangeEventTimelineForAccount,
@@ -18,7 +19,11 @@ import {
 } from 'services/cv'
 import type { ChangeTimelineProps } from './ChangeTimeline.types'
 import { Timeline } from './components/Timeline/Timeline'
-import { ChangeSourceTypes, defaultCategoryTimeline } from './ChangeTimeline.constants'
+import {
+  ChangeSourceTypes,
+  defaultCategoryTimeline,
+  defaultCategoryTimelineWithChaos
+} from './ChangeTimeline.constants'
 import {
   createChangeInfoCardData,
   createTimelineSeriesData,
@@ -29,6 +34,7 @@ import ChangeTimelineError from './components/ChangeTimelineError/ChangeTimeline
 
 export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element {
   const { getString } = useStrings()
+  const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const {
@@ -204,16 +210,18 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
     return <ChangeTimelineError error={getErrorMessage(error) || ''} />
   }
 
+  const skeletenLoadingCategory = enableRequestSLO ? defaultCategoryTimelineWithChaos : defaultCategoryTimeline
+
   return (
     <Timeline
       isLoading={loading}
       rowOffset={90}
-      timelineRows={Object.entries(categoryTimeline || defaultCategoryTimeline).map(timeline => ({
+      timelineRows={Object.entries(categoryTimeline || skeletenLoadingCategory).map(timeline => ({
         labelName: labelByCategory(timeline[0], getString),
         data: createTimelineSeriesData(timeline[0] as ChangeSourceTypes, getString, timeline[1])
       }))}
       timestamps={[startTimeRoundedOffToNearest30min, endTimeRoundedOffToNearest30min]}
-      labelWidth={90}
+      labelWidth={115}
       hideTimeline={hideTimeline}
       addAnnotation={addAnnotation}
       sloWidgetsData={sloWidgetsData}

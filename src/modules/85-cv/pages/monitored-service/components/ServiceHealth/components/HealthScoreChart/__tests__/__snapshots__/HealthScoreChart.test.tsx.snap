@@ -10,7 +10,7 @@ exports[`Unit tests for HealthScoreChart Verify if all the fields are rendered c
     >
       <p
         class="StyledProps--font StyledProps--main rowLabel"
-        style="width: 90px;"
+        style="width: 115px;"
       >
         cv.monitoredServices.serviceHealth.overallHealthScore
       </p>

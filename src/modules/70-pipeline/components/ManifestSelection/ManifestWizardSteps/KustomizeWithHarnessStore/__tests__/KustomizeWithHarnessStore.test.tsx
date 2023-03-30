@@ -29,6 +29,10 @@ jest.mock('services/portal', () => ({
     .mockImplementation(() => ['delegate-selector', 'delegate1', 'delegate2'])
 }))
 
+jest.mock('services/cd-ng', () => ({
+  useKustomizeCmdFlags: jest.fn().mockImplementation(() => ({ data: { data: ['Build'] }, refetch: jest.fn() }))
+}))
+
 const props = {
   stepName: 'Manifest details',
   expressions: [],
@@ -51,7 +55,8 @@ const initialValues = {
   overlayConfiguration: '',
   skipResourceVersioning: false,
   patchesPaths: [],
-  pluginPath: ''
+  pluginPath: '',
+  commandFlags: [{ commandType: undefined, flag: undefined, id: 'id2' }]
 }
 
 describe('Harness File Store with Kustomize Manifest tests', () => {
@@ -137,6 +142,7 @@ describe('Harness File Store with Kustomize Manifest tests', () => {
           overlayConfiguration: 'scope',
           patchesPaths: ['test-path'],
           pluginPath: 'pluginPath',
+          commandFlags: [{ commandType: 'Build', flag: 'flag', id: 'a1' }],
           store: {
             spec: {
               files: ['file path']
@@ -175,6 +181,7 @@ describe('Harness File Store with Kustomize Manifest tests', () => {
           overlayConfiguration: RUNTIME_INPUT_VALUE,
           skipResourceVersioning: RUNTIME_INPUT_VALUE,
           pluginPath: RUNTIME_INPUT_VALUE,
+          commandFlags: [{ commandType: 'Build', flag: RUNTIME_INPUT_VALUE, id: 'id2' }],
           store: {
             spec: {
               files: RUNTIME_INPUT_VALUE

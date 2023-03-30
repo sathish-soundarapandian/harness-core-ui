@@ -23,7 +23,7 @@ import css from './CDExecutionSummary.module.scss'
 const LIMIT = 2
 
 export function CDExecutionSummary(props: ExecutionSummaryProps<CDPipelineModuleInfo>): React.ReactElement {
-  const { nodeMap } = props
+  const { nodeMap, className } = props
 
   const { services, environments } = React.useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -57,7 +57,7 @@ export function CDExecutionSummary(props: ExecutionSummaryProps<CDPipelineModule
   }, [nodeMap])
 
   return (
-    <div className={css.main}>
+    <div className={className ?? css.main}>
       <Icon name="cd-main" size={18} />
       <ServicesList services={services} limit={LIMIT} />
       <EnvironmentsList environments={environments} limit={LIMIT} />

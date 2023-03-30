@@ -308,7 +308,7 @@
 }
 
 .overflowScroll {
-  overflow: scroll;
+  overflow: auto;
   max-height: 630px;
 }
 
@@ -348,7 +348,7 @@
 .artifactViewEnvList {
   margin-top: var(--spacing-4);
   height: 100px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .artifactViewEnvDetail {
@@ -395,7 +395,7 @@
 }
 
 .overflowOpenTasks {
-  overflow: scroll;
+  overflow: auto;
   max-height: 860px;
 }
 
@@ -411,6 +411,6 @@
 }
 
 .overflowScrollPipelineIdList {
-  overflow: scroll;
+  overflow: auto;
   max-height: 680px;
 }

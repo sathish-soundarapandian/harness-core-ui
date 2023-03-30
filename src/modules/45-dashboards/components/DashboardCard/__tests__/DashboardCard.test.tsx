@@ -27,7 +27,7 @@ const mockFolderOne: customDashboardServices.FolderModel = {
   created_at: '01/01/2022'
 }
 
-const mockGetFolderResponse: customDashboardServices.GetFoldersResponse = {
+const mockGetFolderResponse: customDashboardServices.SearchFoldersResponse = {
   resource: [mockFolderOne],
   items: 1,
   pages: 1
@@ -81,12 +81,12 @@ describe('DashboardCard', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest
-      .spyOn(customDashboardServices, 'useGetFolders')
+      .spyOn(customDashboardServices, 'useSearchFolders')
       .mockImplementation(() => ({ data: mockGetFolderResponse } as any))
   })
 
   test('it should show read only dashboard card for a shared dashboard', async () => {
-    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: {} } as any)
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: {} } as any)
 
     const { container } = renderComponent(defaultProps)
 
@@ -100,7 +100,7 @@ describe('DashboardCard', () => {
   })
 
   test('it should show editable dashboard card for an account dashboard', async () => {
-    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: {} } as any)
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: {} } as any)
     const viewCount = 5678
 
     const testDashboard: DashboardModel = {

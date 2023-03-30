@@ -28,17 +28,24 @@ jest.mock('idb', () => ({
   }))
 }))
 
-const wrapper = ({ children }: React.PropsWithChildren<unknown>) => (
-  <TestWrapper
-    pathParams={{
-      accountId: '1234',
-      folderId: '5678',
-      projectIdentifier: 'projectIdentifier',
-      orgIdentifier: 'orgIdentifier',
-      connectorId: 'connectorId'
-    }}
-    queryParams={{ repoIdentifier: 'firstRepo', branch: 'master' }}
-  >
+const DEFAULT_PATH_PARAMS = {
+  accountId: '1234',
+  folderId: '5678',
+  projectIdentifier: 'projectIdentifier',
+  orgIdentifier: 'orgIdentifier',
+  connectorId: 'connectorId'
+}
+
+const DEFAULT_QUERY_PARAMS = {
+  accountId: '1234',
+  folderId: '5678',
+  projectIdentifier: 'projectIdentifier',
+  orgIdentifier: 'orgIdentifier',
+  connectorId: 'connectorId'
+}
+
+const TemplateProviderComponent = ({ children }: React.PropsWithChildren<unknown>) => {
+  return (
     <TemplateProvider
       queryParams={{
         accountIdentifier: '1234',
@@ -54,6 +61,31 @@ const wrapper = ({ children }: React.PropsWithChildren<unknown>) => (
     >
       {children}
     </TemplateProvider>
+  )
+}
+
+const wrapper = ({ children }: React.PropsWithChildren<unknown>) => (
+  <TestWrapper pathParams={DEFAULT_PATH_PARAMS} queryParams={DEFAULT_QUERY_PARAMS}>
+    <TemplateProviderComponent>{children}</TemplateProviderComponent>
+  </TestWrapper>
+)
+
+const gitAppStoreValues = {
+  featureFlags: {},
+  isGitSyncEnabled: false,
+  isGitSimplificationEnabled: true,
+  supportingGitSimplification: true,
+  gitSyncEnabledOnlyForFF: false,
+  supportingTemplatesGitx: true
+}
+
+const wrapperWithGitx = ({ children }: React.PropsWithChildren<unknown>) => (
+  <TestWrapper
+    pathParams={DEFAULT_PATH_PARAMS}
+    queryParams={DEFAULT_QUERY_PARAMS}
+    defaultAppStoreValues={gitAppStoreValues}
+  >
+    <TemplateProviderComponent>{children}</TemplateProviderComponent>
   </TestWrapper>
 )
 
@@ -117,6 +149,99 @@ describe('TemplateContext', () => {
     })
 
     const { result } = renderHook(() => useTemplateContext(), { wrapper })
+
+    await act(async () => {
+      result.current.updateTemplateView({
+        isDrawerOpened: true,
+        isYamlEditable: false,
+        drawerData: {
+          type: 'TemplateInputs'
+        }
+      } as TemplateViewData)
+
+      await result.current.updateTemplate({
+        identifier: 'templateIdentifier',
+        name: 'template name',
+        orgIdentifier: 'someOrgIdentifier',
+        projectIdentifier: 'someProjectIdentifier',
+        type: 'Stage',
+        versionLabel: 'someVersionLabel'
+      })
+
+      result.current.setYamlHandler({
+        getLatestYaml: jest.fn(),
+        getYAMLValidationErrorMap: () => new Map(),
+        setLatestYaml: () => ''
+      })
+
+      await result.current.fetchTemplate({
+        branch: 'main',
+        repoIdentifier: 'repoIdentifier',
+        forceUpdate: true
+      })
+
+      await result.current.deleteTemplateCache({
+        branch: 'main',
+        filePath: '/main/test',
+        objectId: 'someObjectId',
+        repoIdentifier: 'repoIdentifier',
+        repoName: 'testing',
+        rootFolder: 'src'
+      })
+
+      await result.current.updateGitDetails({
+        branch: 'main',
+        filePath: '/main/test',
+        objectId: 'someObjectId',
+        repoIdentifier: 'repoIdentifier',
+        repoName: 'testing',
+        rootFolder: 'src'
+      })
+
+      await waitFor(() =>
+        expect(result.current.state).toMatchObject({
+          templateView: {
+            isDrawerOpened: true,
+            isYamlEditable: false,
+            drawerData: {
+              type: 'TemplateInputs'
+            }
+          },
+          gitDetails: {
+            branch: 'main',
+            filePath: '/main/test',
+            objectId: 'someObjectId',
+            repoIdentifier: 'repoIdentifier',
+            repoName: 'testing',
+            rootFolder: 'src'
+          }
+        })
+      )
+    })
+  })
+
+  test('should update the context with desired values when corresponding methods are called when content is present for gitx behaviour', async () => {
+    jest.spyOn(templateServices, 'getTemplateListPromise').mockImplementation(() => {
+      return Promise.resolve({
+        status: 'SUCCESS',
+        data: {
+          content: [
+            {
+              accountId: 'accountId',
+              createdAt: 1602062958274,
+              orgIdentifier: 'orgIdentifier',
+              projectIdentifier: 'projectIdentifier'
+            }
+          ]
+        }
+      })
+    })
+
+    jest.spyOn(templateServices, 'getTemplateMetadataListPromise').mockImplementation(() => Promise.resolve({}))
+
+    jest.spyOn(templateServices, 'getTemplatePromise').mockImplementation(() => Promise.resolve({}))
+
+    const { result } = renderHook(() => useTemplateContext(), { wrapper: wrapperWithGitx })
 
     await act(async () => {
       result.current.updateTemplateView({

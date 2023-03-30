@@ -390,6 +390,7 @@ describe('Test TerraformPlan', () => {
             value: 'sercet-1',
             scope: 'account'
           },
+          skipRefreshCommand: false,
           configFiles: {
             store: {
               type: 'Git',

@@ -69,6 +69,28 @@ describe('SLOTargetChart Utils', () => {
     })
   })
 
+  test('Should return min and max values if min value is less than divider 10', () => {
+    const dataPoints: Point[] = [
+      {
+        timestamp: 101,
+        value: 9
+      },
+      {
+        timestamp: 105,
+        value: 82
+      }
+    ]
+
+    expect(getDataPointsWithMinMaxXLimit(dataPoints)).toStrictEqual({
+      dataPoints: [
+        [101, 9],
+        [105, 82]
+      ],
+      minXLimit: 9,
+      maxXLimit: 90
+    })
+  })
+
   test('Should handle NaN and string types', () => {
     const dataPoints: Point[] = [
       {

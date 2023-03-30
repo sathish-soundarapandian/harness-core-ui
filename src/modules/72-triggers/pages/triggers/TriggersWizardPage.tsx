@@ -288,8 +288,9 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   const { isGithubWebhookAuthenticationEnabled } = useIsGithubWebhookAuthenticationEnabled()
 
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {
+    let res
     if (values.triggerType === TriggerTypes.WEBHOOK) {
-      const res = getWebhookTriggerYaml({ values, persistIncomplete: true })
+      res = getWebhookTriggerYaml({ values, persistIncomplete: true })
       // remove invalid values
       if (res?.source?.spec?.spec && !res.source.spec.spec.actions) {
         delete res.source.spec.spec.actions
@@ -297,26 +298,10 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       if (res?.source?.spec?.spec && !res.source.spec.spec.event) {
         delete res.source.spec.spec.event
       }
-
-      if (isNewGitSyncRemotePipeline) {
-        delete res.inputYaml
-        if (values.inputSetSelected?.length) {
-          res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
-        }
-      }
-
-      return { trigger: res }
     } else if (values.triggerType === TriggerTypes.SCHEDULE) {
-      const res = getScheduleTriggerYaml({ values })
-      if (isNewGitSyncRemotePipeline) {
-        delete res.inputYaml
-        if (values.inputSetSelected?.length) {
-          res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
-        }
-      }
-      return { trigger: res }
+      res = getScheduleTriggerYaml({ values })
     } else if (values.triggerType === TriggerTypes.MANIFEST || values.triggerType === TriggerTypes.ARTIFACT) {
-      const res = getArtifactManifestTriggerYaml({
+      res = getArtifactManifestTriggerYaml({
         values,
         persistIncomplete: true,
         manifestType,
@@ -326,12 +311,17 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         pipelineIdentifier,
         gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
       })
-      if (isNewGitSyncRemotePipeline) {
+    }
+
+    if (res) {
+      if (values.inputSetRefs?.length || values.inputSetSelected?.length) {
         delete res.inputYaml
-        if (values.inputSetSelected?.length) {
-          res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
-        }
       }
+
+      if (values.inputSetSelected?.length) {
+        res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
+      }
+
       return { trigger: res }
     }
   }
@@ -638,7 +628,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         },
         inputYaml: stringifyPipelineRuntimeInput,
         pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : null,
-        inputSetRefs: isNewGitSyncRemotePipeline ? inputSetRefs : null
+        inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
       } as NGTriggerConfigV2
       if (triggerYaml.source?.spec?.spec) {
         triggerYaml.source.spec.spec.spec.payloadConditions = persistIncomplete
@@ -684,7 +674,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         },
         inputYaml: stringifyPipelineRuntimeInput,
         pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : null,
-        inputSetRefs: isNewGitSyncRemotePipeline ? inputSetRefs : null
+        inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
       } as NGTriggerConfigV2
 
       if (triggerYaml.source?.spec) {
@@ -738,7 +728,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
             description,
             tags,
             inputYaml,
-            inputSetRefs = [],
+            inputSetRefs,
             source: {
               pollInterval,
               webhookId,
@@ -885,7 +875,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
             tags,
             inputYaml,
             pipelineBranchName = getDefaultPipelineReferenceBranch(),
-            inputSetRefs = [],
+            inputSetRefs,
             source: {
               spec: {
                 type: sourceRepo,
@@ -958,7 +948,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           tags,
           inputYaml,
           pipelineBranchName = getDefaultPipelineReferenceBranch(),
-          inputSetRefs = [],
+          inputSetRefs,
           source: {
             spec: {
               spec: { expression }
@@ -1029,7 +1019,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           tags,
           inputYaml,
           pipelineBranchName = getDefaultPipelineReferenceBranch(),
-          inputSetRefs = [],
+          inputSetRefs,
           source: { type },
           source
         }
@@ -1168,7 +1158,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       },
       inputYaml: stringifyPipelineRuntimeInput,
       pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : undefined,
-      inputSetRefs: isNewGitSyncRemotePipeline ? inputSetRefs : undefined
+      inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
     })
   }
 
@@ -1255,9 +1245,11 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
     setErrorToasterMessage('')
 
-    if (isNewGitSyncRemotePipeline) {
+    if (triggerYaml.inputSetRefs?.length) {
       delete triggerYaml.inputYaml
+    }
 
+    if (isNewGitSyncRemotePipeline) {
       // Set pipelineBranchName to proper expression when it's left empty
       if (!(triggerYaml.pipelineBranchName || '').trim()) {
         triggerYaml.pipelineBranchName = getDefaultPipelineReferenceBranch(
@@ -1273,7 +1265,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -1302,7 +1294,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           )
         }
       } catch (err) {
-        if (err?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (err?.data?.status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
         } else {
           setErrorToasterMessage(getErrorMessage(err))
@@ -1317,7 +1309,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -1346,7 +1338,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           )
         }
       } catch (err) {
-        if (err?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (err?.data?.status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
         } else {
           setErrorToasterMessage(err?.data?.message)

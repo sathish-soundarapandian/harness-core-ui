@@ -75,7 +75,7 @@ export default function HealthScoreChart(props: HealthScoreChartProps): JSX.Elem
     >
       <Container className={css.timelineRow}>
         {!isChangeEventView && (
-          <Text width={90} className={css.rowLabel}>
+          <Text width={115} className={css.rowLabel}>
             {getString('cv.monitoredServices.serviceHealth.overallHealthScore')}
           </Text>
         )}

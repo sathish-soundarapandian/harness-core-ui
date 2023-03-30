@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as ceService from 'services/ce'
 import { SortMethod } from '@common/utils/sortUtils'
@@ -42,7 +42,7 @@ describe('Connector Resource Modal Body test', () => {
       </TestWrapper>
     )
 
-    expect(container.querySelector('table[role="table"]')).toBeDefined()
+    expect(await screen.findByText('Out of the box Folder')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 

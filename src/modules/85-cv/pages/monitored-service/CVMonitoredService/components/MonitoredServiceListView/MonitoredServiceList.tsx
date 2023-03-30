@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { Page, useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useListMonitoredService, useSetHealthMonitoringFlag, useDeleteMonitoredService } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useDeepCompareEffect } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import noServiceAvailableImage from '@cv/assets/noMonitoredServices.svg'
 import { getErrorMessage, getCVMonitoringServicesSearchParam } from '@cv/utils/CommonUtils'
@@ -43,12 +44,15 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
     projectIdentifier
   }
 
+  const projectRef = useRef(projectIdentifier)
+
   const {
     data: monitoredServiceListData,
     loading: monitoredServiceListLoading,
     refetch: refetchMonitoredServiceList,
     error: monitoredServiceListError
   } = useListMonitoredService({
+    lazy: true,
     queryParams: {
       offset: page,
       pageSize: 10,
@@ -58,6 +62,45 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
       servicesAtRiskFilter: selectedFilter === FilterTypes.RISK
     }
   })
+
+  useDeepCompareEffect(() => {
+    // On mount call and filter update happens here
+    if (projectRef.current === projectIdentifier) {
+      refetchServiceCountData()
+      refetchMonitoredServiceList({
+        queryParams: {
+          offset: page,
+          pageSize: 10,
+          ...pathParams,
+          filter: search,
+          environmentIdentifier,
+          servicesAtRiskFilter: selectedFilter === FilterTypes.RISK
+        }
+      })
+    }
+  }, [page, search, selectedFilter, environmentIdentifier])
+
+  useDeepCompareEffect(() => {
+    // Call during project change happens here
+    if (projectRef.current !== projectIdentifier) {
+      projectRef.current = projectIdentifier
+      refetchServiceCountData({
+        queryParams: {
+          ...pathParams,
+          filter: ''
+        }
+      })
+      refetchMonitoredServiceList({
+        queryParams: {
+          offset: 0,
+          pageSize: 10,
+          ...pathParams,
+          filter: '',
+          servicesAtRiskFilter: false
+        }
+      })
+    }
+  }, [projectIdentifier])
 
   const { mutate: setHealthMonitoringFlag, loading: healthMonitoringFlagLoading } = useSetHealthMonitoringFlag({
     identifier: ''

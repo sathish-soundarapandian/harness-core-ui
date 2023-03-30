@@ -223,7 +223,7 @@ function FormComponent({
             fieldName: getString('common.subscriptions.tabs.plans')
           }),
           value: getString('common.loadingFieldOptions', {
-            fieldName: getString('common.subscriptions.tabs.plans')
+            fieldName: getString('common.subscriptions.overview.plan')
           })
         }
       ]
@@ -263,7 +263,7 @@ function FormComponent({
             placeholder={
               loadingPlans
                 ? getString('common.loadingFieldOptions', {
-                    fieldName: getString('common.subscriptions.tabs.plans')
+                    fieldName: getString('common.subscriptions.overview.plan')
                   })
                 : getString('pipeline.planNamePlaceholder')
             }

@@ -39,6 +39,7 @@ import sloReviewChange from '@cv/assets/sloReviewChange.svg'
 import {
   createSLOV2RequestPayload,
   getIsUserUpdatedSLOData,
+  getServiceLevelIndicatorsIdentifierFromResponse,
   getSimpleSLOV2FormValidationSchema,
   getSLOV2FormValidationSchema,
   getSLOV2InitialFormData
@@ -52,7 +53,7 @@ import css from './components/CreateCompositeSloForm/CreateCompositeSloForm.modu
 const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element => {
   const history = useHistory()
   const { getString } = useStrings()
-  const { SRM_ENABLE_REQUEST_SLO } = useFeatureFlags()
+  const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
   useDocumentTitle([getString('cv.srmTitle'), getString('cv.slos.title')])
 
   const { showSuccess, showError } = useToaster()
@@ -163,8 +164,17 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
       : history.push(routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }))
   }
 
+  const serviceLevelIndicatorsIdentifierFromResponse = getServiceLevelIndicatorsIdentifierFromResponse(
+    SLODataResponse,
+    isComposite
+  )
   const handleSLOV2Submit = async (values: SLOV2Form): Promise<void> => {
-    const sloCreateRequestPayload = createSLOV2RequestPayload(values, orgIdentifier, projectIdentifier)
+    const sloCreateRequestPayload = createSLOV2RequestPayload(
+      values,
+      orgIdentifier,
+      projectIdentifier,
+      serviceLevelIndicatorsIdentifierFromResponse
+    )
 
     try {
       if (identifier) {
@@ -211,7 +221,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
   const initialFormData = getSLOV2InitialFormData(
     sloType,
     SLODataResponse?.resource?.serviceLevelObjectiveV2,
-    SRM_ENABLE_REQUEST_SLO
+    enableRequestSLO
   )
   return (
     <Container margin={{ bottom: 'large' }}>

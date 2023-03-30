@@ -175,8 +175,8 @@ describe('Verify step', () => {
     cy.findByTestId(/updatedFeedbackRisk/).should('have.text', 'Medium risk')
     cy.findByTestId(/appliedFeedbackRisk/).should('have.text', 'High risk')
 
-    cy.findByTestId(/updatedFeedbackDetails/).should('include.text', ' Updated By pranesh@harness.io on 02/26/2023')
-    cy.findByTestId(/appliedFeedbackDetails/).should('include.text', ' Updated By pranesh@harness.io on 02/26/2023')
+    cy.findByTestId(/updatedFeedbackDetails/).should('include.text', ' Updated by pranesh@harness.io on 02/26/2023')
+    cy.findByTestId(/appliedFeedbackDetails/).should('include.text', ' Updated by pranesh@harness.io on 02/26/2023')
 
     cy.findByTestId(/updateEventPreferenceButton-Drawer/).click()
 

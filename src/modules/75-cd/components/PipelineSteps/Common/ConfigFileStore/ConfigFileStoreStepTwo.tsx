@@ -227,7 +227,7 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                 <div className={cx(stepCss.formGroup, stepCss.md)}>
                   <FormInput.MultiTextInput
                     label={getString('common.git.folderPath')}
-                    placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                    placeholder={getString('pipeline.manifestType.folderPathPlaceholder')}
                     name={formInputNames(path).folderPath}
                     multiTextInputProps={{ expressions, allowableTypes }}
                     tooltipProps={{ dataTooltipId: 'configFolderPath' }}

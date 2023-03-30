@@ -28,7 +28,7 @@ const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactEle
 describe('DashboardsContext', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.spyOn(customDashboardServices, 'useGetFolders').mockImplementation(() => ({ data: {} } as any))
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockImplementation(() => ({ data: {} } as any))
   })
   test('it should provide no default breadcrumbs', async () => {
     const { result } = renderHook(() => useDashboardsContext(), { wrapper })
@@ -57,14 +57,14 @@ describe('DashboardsContext', () => {
       created_at: '01/01/2022'
     }
 
-    const mockGetFolderResponse: customDashboardServices.GetFoldersResponse = {
+    const mockGetFolderResponse: customDashboardServices.SearchFoldersResponse = {
       resource: [mockFolderOne],
       items: 1,
       pages: 1
     }
 
     jest
-      .spyOn(customDashboardServices, 'useGetFolders')
+      .spyOn(customDashboardServices, 'useSearchFolders')
       .mockImplementation(() => ({ data: mockGetFolderResponse } as any))
 
     const { result } = renderHook(() => useDashboardsContext(), { wrapper })

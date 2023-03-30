@@ -2341,7 +2341,7 @@ export const getArtifactManifestTriggerYaml = ({
     },
     inputYaml: stringifyPipelineRuntimeInput,
     pipelineBranchName: _gitAwareForTriggerEnabled ? pipelineBranchName : null,
-    inputSetRefs: _gitAwareForTriggerEnabled ? inputSetRefs : null
+    inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
   }
   if (artifactType) {
     if (triggerYaml?.source?.spec && Object.getOwnPropertyDescriptor(triggerYaml?.source?.spec, 'manifestRef')) {

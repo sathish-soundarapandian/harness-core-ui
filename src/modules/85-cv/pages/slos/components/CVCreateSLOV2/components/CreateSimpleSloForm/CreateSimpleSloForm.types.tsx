@@ -90,7 +90,7 @@ export enum CreateSimpleSLOSteps {
 export interface GetSLIDerivedProps {
   value: SLOV2Form
   sliGraphData: RestResponseSLIOnboardingGraphs | null
-  isOccurenceBased?: boolean
+  enableRequestSLO?: boolean
 }
 
 export interface GetSLIDerivedValues {

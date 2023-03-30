@@ -52,6 +52,7 @@ export interface ExecutionCardInfoRegister {
 export interface ExecutionSummaryProps<T = any> {
   data: T
   nodeMap: Map<string, GraphLayoutNode>
+  className?: string
 }
 
 export interface ExecutionSummaryRegister {

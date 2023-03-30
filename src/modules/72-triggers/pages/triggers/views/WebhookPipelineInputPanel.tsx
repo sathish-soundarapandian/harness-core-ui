@@ -384,10 +384,10 @@ function WebhookPipelineInputPanelForm({
           inputSetReferences: selectedInputSets.map(item => item.value as string)
         })
         if (!data?.data?.errorResponse && data?.data?.pipelineYaml) {
-          const parsedInputSets = clearRuntimeInput(memoizedParse<Pipeline>(data.data.pipelineYaml).pipeline)
+          const parsedInputSets = memoizedParse<Pipeline>(data.data.pipelineYaml).pipeline
 
           const newPipelineObject = clearRuntimeInput(
-            merge(pipeline, applySelectedArtifactToPipelineObject(pipelineObject.pipeline, formikProps))
+            merge(resolvedPipeline, applySelectedArtifactToPipelineObject(pipelineObject.pipeline, formikProps))
           )
 
           const mergedPipeline = mergeTemplateWithInputSetData({
@@ -537,13 +537,11 @@ function WebhookPipelineInputPanelForm({
                     onChange={value => {
                       setInputSetError('')
                       setSelectedInputSets(value)
-                      if (gitAwareForTriggerEnabled) {
-                        formikProps.setValues({
-                          ...formikProps.values,
-                          inputSetRefs: (value || []).map(v => v.value),
-                          inputSetSelected: value
-                        })
-                      }
+                      formikProps.setValues({
+                        ...formikProps.values,
+                        inputSetRefs: (value || []).map(v => v.value),
+                        inputSetSelected: value
+                      })
                     }}
                     value={selectedInputSets}
                     selectedValueClass={css.inputSetSelectedValue}
@@ -610,7 +608,7 @@ function WebhookPipelineInputPanelForm({
                   viewType={StepViewType.InputSet}
                   maybeContainerClass={css.pipelineInputSetForm}
                   viewTypeMetadata={{ isTrigger: true }}
-                  readonly={gitAwareForTriggerEnabled}
+                  readonly={gitAwareForTriggerEnabled || !isEmpty(selectedInputSets)}
                   gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
                   disableRuntimeInputConfigureOptions
                 />

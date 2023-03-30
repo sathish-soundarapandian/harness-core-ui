@@ -8,9 +8,12 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { SLITypeEnum } from '@cv/pages/slos/common/SLI/SLI.constants'
+import { EvaluationType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { mockedSecondaryEventsResponse } from '@cv/pages/slos/__tests__/CVSLOsListingPage.mock'
 import DetailsPanel from '../DetailsPanel'
 import { slowidgetAPI } from './DetailsPanel.mock'
+import { getEvaluationTitleAndValue } from '../DetailsPanel.utils'
 
 const mockAPI = {
   data: {},
@@ -90,5 +93,26 @@ describe('Test DetailsPanel', () => {
     expect(getByTestId('SLOCard_UserHint_SLO')).toBeInTheDocument()
     expect(getByTestId('timeline-slider-container')).toBeInTheDocument()
     expect(getByText('common.purpose.cf.continuous')).toBeInTheDocument()
+  })
+
+  test('validate getEvaluationTitleAndValue', () => {
+    const defaultValue = {
+      title: 'cv.slos.sliType',
+      value: 'cv.slos.slis.type.latency'
+    }
+    expect(getEvaluationTitleAndValue(str => str)).toEqual(defaultValue)
+    expect(getEvaluationTitleAndValue(str => str, {} as any, false)).toEqual(defaultValue)
+    expect(getEvaluationTitleAndValue(str => str, { type: SLITypeEnum.AVAILABILITY } as any, false)).toEqual({
+      ...defaultValue,
+      value: 'cv.slos.slis.type.availability'
+    })
+    expect(getEvaluationTitleAndValue(str => str, { evaluationType: EvaluationType.REQUEST } as any, true)).toEqual({
+      title: 'cv.slos.evaluationType',
+      value: 'common.request'
+    })
+    expect(getEvaluationTitleAndValue(str => str, { evaluationType: EvaluationType.WINDOW } as any, true)).toEqual({
+      title: 'cv.slos.evaluationType',
+      value: 'cv.slos.slis.evaluationType.window'
+    })
   })
 })

@@ -84,7 +84,9 @@ export const getDataPointsWithMinMaxXLimit = (
   const minValueReminder = minValue % divider
   const maxValueReminder = maxValue % divider
 
-  const minXLimit = minValue - minValueReminder
+  // modulo of a number equal the number itself we need to consider the number
+  // e.g -9 % 10 gives -9
+  const minXLimit = minValue === minValueReminder ? minValue : minValue - minValueReminder
   const maxXLimit = maxValueReminder ? maxValue + divider - maxValueReminder : maxValue
 
   return {

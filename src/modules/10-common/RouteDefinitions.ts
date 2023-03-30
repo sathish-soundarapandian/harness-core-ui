@@ -2113,9 +2113,29 @@ const routes = {
   // Error Tracking
   toET: withAccountId(() => '/et'),
   toETHome: withAccountId(() => '/et/home'),
-  toETPlaceholder: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
+  toETEventsSummary: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/et/eventsummary`
+  ),
+
+  toETAgents: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/agents`
+  ),
+
+  toETAgentsTokens: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/tokens`
+  ),
+
+  toETCriticalEvents: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/criticalevents`
+  ),
+
+  toETSettings: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et`
   )
 }
 

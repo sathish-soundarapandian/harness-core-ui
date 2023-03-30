@@ -56,7 +56,9 @@ jest.spyOn(cvServices, 'useDeleteMonitoredService').mockImplementation(() => ({ 
 jest
   .spyOn(cvServices, 'useGetMonitoredServiceListEnvironments')
   .mockImplementation(() => ({ data: ['new_env_test', 'AppDTestEnv1', 'AppDTestEnv2'] } as any))
-jest.spyOn(cvServices, 'useListMonitoredService').mockImplementation(() => ({ data: MSListData } as any))
+jest
+  .spyOn(cvServices, 'useListMonitoredService')
+  .mockImplementation(() => ({ data: MSListData, refetch: jest.fn() } as any))
 jest.spyOn(cvServices, 'useGetServiceDependencyGraph').mockImplementation(() => ({ data: graphData } as any))
 jest
   .spyOn(cvServices, 'useGetCountOfServices')
@@ -242,7 +244,7 @@ describe('Monitored Service list', () => {
     userEvent.click(container.querySelectorAll('[data-name="on-btn"]')[0])
 
     expect(mutate).toHaveBeenCalled()
-    expect(refetchServiceCountData).toBeCalledTimes(1)
+    expect(refetchServiceCountData).toBeCalledTimes(2)
     await waitFor(() => expect(screen.queryByText('Something went wrong')).toBeInTheDocument())
   })
 
@@ -257,11 +259,13 @@ describe('Monitored Service list', () => {
       updatedServiceCountData.allServicesCount!
     )
 
-    jest.spyOn(cvServices, 'useListMonitoredService').mockImplementation(() => ({ data: riskMSListData } as any))
+    jest
+      .spyOn(cvServices, 'useListMonitoredService')
+      .mockImplementation(() => ({ data: riskMSListData, refetch: jest.fn() } as any))
 
     userEvent.click(container.querySelector('[data-icon="offline-outline"]')!)
 
-    expect(refetchServiceCountData).toBeCalledTimes(2)
+    expect(refetchServiceCountData).toBeCalledTimes(3)
     expect(screen.queryByText(`cv.monitoredServices.showingServiceAtRisk`)).toBeInTheDocument()
     expect(container.querySelectorAll('.TableV2--body [role="row"]')).toHaveLength(
       updatedServiceCountData.servicesAtRiskCount!
@@ -275,15 +279,19 @@ describe('Monitored Service list', () => {
       </TestWrapper>
     )
 
-    jest.spyOn(cvServices, 'useListMonitoredService').mockImplementation(() => ({} as any))
+    jest.spyOn(cvServices, 'useListMonitoredService').mockImplementation(() => ({ refetch: jest.fn() } as any))
     userEvent.click(container.querySelector('[data-icon="offline-outline"]')!)
 
-    expect(refetchServiceCountData).toBeCalledTimes(2)
+    expect(refetchServiceCountData).toBeCalledTimes(3)
     expect(screen.queryByText(`cv.monitoredServices.showingServiceAtRisk`)).not.toBeInTheDocument()
     expect(screen.queryByText('cv.monitoredServices.youHaveNoMonitoredServices')).not.toBeInTheDocument()
   })
 
   test('should confirm that searching the expandable search input calls the api', async () => {
+    jest
+      .spyOn(cvServices, 'useListMonitoredService')
+      .mockImplementation(() => ({ data: MSListData, refetch: jest.fn() } as any))
+
     const { container } = render(
       <TestWrapper {...testWrapperProps}>
         <CVMonitoredService />
@@ -313,7 +321,10 @@ describe('Monitored Service list', () => {
         servicesAtRiskFilter: false
       }
     }
-    expect(cvServices.useListMonitoredService).toBeCalledWith({ queryParams: expectedResponse.queryParams })
+    expect(cvServices.useListMonitoredService).toBeCalledWith({
+      lazy: true,
+      queryParams: { ...expectedResponse.queryParams, environmentIdentifier: undefined }
+    })
     await act(async () => {
       fireEvent.click(searchIcon!)
     })
@@ -336,7 +347,7 @@ describe('Monitored Service list', () => {
       const checkFeatureReturnMock2 = {
         enabled: true
       }
-      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData } as any)
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData, refetch: jest.fn() } as any)
       jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
 
       render(
@@ -359,7 +370,7 @@ describe('Monitored Service list', () => {
       const checkFeatureReturnMock2 = {
         enabled: true
       }
-      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData } as any)
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData, refetch: jest.fn() } as any)
       jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
 
       render(
@@ -382,7 +393,7 @@ describe('Monitored Service list', () => {
       const checkFeatureReturnMock2 = {
         enabled: true
       }
-      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData } as any)
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData, refetch: jest.fn() } as any)
       jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
 
       render(
@@ -404,7 +415,7 @@ describe('Monitored Service list', () => {
       const checkFeatureReturnMock2 = {
         enabled: true
       }
-      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData } as any)
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData, refetch: jest.fn() } as any)
       jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
 
       render(
@@ -427,7 +438,9 @@ describe('Monitored Service list', () => {
       const checkFeatureReturnMock2 = {
         enabled: false
       }
-      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListDataMock } as any)
+      jest
+        .spyOn(cvServices, 'useListMonitoredService')
+        .mockReturnValue({ data: MSListDataMock, refetch: jest.fn() } as any)
       jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
 
       render(
@@ -450,7 +463,9 @@ describe('Monitored Service list', () => {
       const checkFeatureReturnMock2 = {
         enabled: true
       }
-      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListDataMock } as any)
+      jest
+        .spyOn(cvServices, 'useListMonitoredService')
+        .mockReturnValue({ data: MSListDataMock, refetch: jest.fn() } as any)
       jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
 
       render(
@@ -473,7 +488,7 @@ describe('Monitored Service list', () => {
       const checkFeatureReturnMock2 = {
         enabled: false
       }
-      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData } as any)
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData, refetch: jest.fn() } as any)
       jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
 
       render(
@@ -496,7 +511,9 @@ describe('Monitored Service list', () => {
       const checkFeatureReturnMock2 = {
         enabled: false
       }
-      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListDataMock } as any)
+      jest
+        .spyOn(cvServices, 'useListMonitoredService')
+        .mockReturnValue({ data: MSListDataMock, refetch: jest.fn() } as any)
       jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
 
       render(

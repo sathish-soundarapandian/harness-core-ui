@@ -19,6 +19,8 @@ import type {
   HelmWithGITDataType,
   HelmWithHTTPDataType,
   HelmWithOCIDataType,
+  KustomizeWithGITDataType,
+  KustomizeWithHarnessStorePropTypeDataType,
   ManifestTypes
 } from '../ManifestInterface'
 import { allowedManifestForSingleAddition } from './CommonManifestDetails/utils'
@@ -30,6 +32,8 @@ type formDataType =
   | HelmWithOCIDataType
   | HelmHarnessFileStoreFormData
   | CustomManifestManifestDataType
+  | KustomizeWithGITDataType
+  | KustomizeWithHarnessStorePropTypeDataType
 
 const getRepoNameBasedonScope = (initialValues: ManifestConfig, prevStepData: any): string => {
   const connectorScope = getScopeFromValue(initialValues?.spec.store?.spec.connectorRef)

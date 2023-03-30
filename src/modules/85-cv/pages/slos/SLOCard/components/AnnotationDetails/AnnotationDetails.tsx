@@ -87,9 +87,7 @@ export default function AnnotationDetails(props: AnnotationDetailsProps): JSX.El
       <Formik<AnnotationDetailsForm>
         initialValues={getAnnotationDetailsFormInitialValues(annotationMessage)}
         onSubmit={handleSubmitAnnotation}
-        validate={data => {
-          return validateAnnotationDetailsForm(data, getString)
-        }}
+        validate={data => validateAnnotationDetailsForm(data, getString)}
       >
         {formikProps => {
           const { startDateTime, endDateTime } = formikProps?.values || {}
@@ -106,7 +104,7 @@ export default function AnnotationDetails(props: AnnotationDetailsProps): JSX.El
                 />
                 {isDisabled ? (
                   <Layout.Vertical padding={{ bottom: 'medium' }}>
-                    <Text color={Color.GREY_700}>
+                    <Text color={Color.GREY_700} padding={{ bottom: 'xsmall' }}>
                       {getString('cv.slos.sloDetailsChart.startDate').toLocaleUpperCase()}
                     </Text>
                     <Text color={Color.GREY_700}>{moment(new Date(startDateTime)).format(DATE_PARSE_FORMAT)}</Text>
@@ -121,7 +119,7 @@ export default function AnnotationDetails(props: AnnotationDetailsProps): JSX.El
                 )}
                 {isDisabled ? (
                   <Layout.Vertical padding={{ bottom: 'medium' }}>
-                    <Text color={Color.GREY_700}>
+                    <Text color={Color.GREY_700} padding={{ bottom: 'xsmall' }}>
                       {getString('cv.slos.sloDetailsChart.endDate').toLocaleUpperCase()}
                     </Text>
                     <Text color={Color.GREY_700}>{moment(new Date(endDateTime)).format(DATE_PARSE_FORMAT)}</Text>

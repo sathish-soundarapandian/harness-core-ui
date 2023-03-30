@@ -28,8 +28,8 @@ describe('Validate EvaluationType', () => {
         />
       </TestWrapper>
     )
-    expect(getByText('cv.slos.slis.type.availability')).toBeInTheDocument()
-    expect(getByText('cv.slos.slis.type.latency')).toBeInTheDocument()
+    expect(getByText('cv.slos.slis.type.availability'.toUpperCase())).toBeInTheDocument()
+    expect(getByText('cv.slos.slis.type.latency'.toUpperCase())).toBeInTheDocument()
     expect(container.querySelector('[data-name="toggle-option-one"]')).toHaveClass('PillToggle--selected')
     act(() => {
       fireEvent.click(container.querySelector('[data-name="toggle-option-two"]')!)
@@ -48,8 +48,8 @@ describe('Validate EvaluationType', () => {
         />
       </TestWrapper>
     )
-    expect(getByText('cv.slos.slis.evaluationType.window')).toBeInTheDocument()
-    expect(getByText('common.request')).toBeInTheDocument()
+    expect(getByText('cv.slos.slis.evaluationType.window'.toUpperCase())).toBeInTheDocument()
+    expect(getByText('common.request'.toUpperCase())).toBeInTheDocument()
     expect(container.querySelector('[data-name="toggle-option-one"]')).toHaveClass('PillToggle--selected')
     fireEvent.click(container.querySelector('[data-name="toggle-option-two"]')!)
     expect(onChange).toHaveBeenLastCalledWith(SLOV2FormFields.EVALUATION_TYPE, EvaluationType.REQUEST)

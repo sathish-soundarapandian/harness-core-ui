@@ -8,7 +8,7 @@
 import {
   templatesListRoute,
   gitSyncEnabledCall,
-  templateListMetaDataWithListType,
+  templateListMetaDataWithListTypeAndSize,
   templateReferencesCall,
   templateMetadataCall
 } from '../../support/70-pipeline/constants'
@@ -21,7 +21,7 @@ describe('Template Reference By', () => {
       gitSimplificationEnabled: false
     })
     cy.intercept('POST', templateMetadataCall, { fixture: 'template/api/templatesList' }).as('templateMetadataCall')
-    cy.intercept('POST', templateListMetaDataWithListType, { fixture: 'template/api/templatesList' }).as(
+    cy.intercept('POST', templateListMetaDataWithListTypeAndSize, { fixture: 'template/api/templatesList' }).as(
       'templatesListMetadataCallForDrawer'
     )
     cy.initializeRoute()

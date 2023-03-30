@@ -46,9 +46,6 @@ import routes from '@common/RouteDefinitions'
 import { NGTemplateInfoConfig, useUpdateStableTemplate } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
 import type { UseSaveSuccessResponse } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
-import RbacButton from '@rbac/components/Button/Button'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
@@ -62,6 +59,21 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import css from './TemplateStudioSubHeaderLeftView.module.scss'
+
+/**
+ * While creating no field should be disabled.
+ * Without permission, all fields should be disabled.
+ * With edit  permission, only Identifier and VersionLabel should be disabled.
+ */
+const getDisabledFields = (templateIdentifier: string, isReadonly: boolean): Array<Fields> => {
+  if (templateIdentifier === DefaultNewTemplateId) {
+    return []
+  } else if (isReadonly) {
+    return [Fields.VersionLabel, Fields.Identifier, Fields.Name, Fields.Description, Fields.Tags]
+  } else {
+    return [Fields.VersionLabel, Fields.Identifier]
+  }
+}
 
 export interface TemplateStudioSubHeaderLeftViewProps {
   onGitBranchChange?: (selectedFilter: GitFilterScope) => void
@@ -304,8 +316,8 @@ export function TemplateStudioSubHeaderLeftView(
                 entityType={getString('common.template.label')}
               />
             )}
-            {!isYaml && !isReadonly && (
-              <RbacButton
+            {!isYaml && (
+              <Button
                 variation={ButtonVariation.ICON}
                 icon="Edit"
                 iconProps={{
@@ -321,19 +333,12 @@ export function TemplateStudioSubHeaderLeftView(
                       entity: templateFactory.getTemplateLabel(template.type)
                     }),
                     intent: templateIdentifier === DefaultNewTemplateId ? Intent.START : Intent.EDIT,
-                    disabledFields:
-                      templateIdentifier === DefaultNewTemplateId ? [] : [Fields.VersionLabel, Fields.Identifier],
+                    disabledFields: getDisabledFields(templateIdentifier, isReadonly),
                     allowScopeChange: templateIdentifier === DefaultNewTemplateId,
                     storeMetadata,
                     gitDetails
                   })
                   showConfigModal()
-                }}
-                permission={{
-                  permission: PermissionIdentifier.EDIT_TEMPLATE,
-                  resource: {
-                    resourceType: ResourceType.TEMPLATE
-                  }
                 }}
               />
             )}

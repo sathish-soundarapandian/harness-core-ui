@@ -7,7 +7,6 @@
 
 import { isEqual, defaultTo, pick } from 'lodash-es'
 import * as Yup from 'yup'
-import { v4 as uuid } from 'uuid'
 import { SelectOption, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
@@ -18,6 +17,7 @@ import type {
   MonitoredServiceWithHealthSources,
   RatioSLIMetricSpec,
   RequestBasedServiceLevelIndicatorSpec,
+  RestResponseServiceLevelObjectiveV2Response,
   RollingSLOTargetSpec,
   ServiceLevelIndicatorDTO,
   ServiceLevelObjectiveDetailsDTO,
@@ -319,16 +319,34 @@ export const convertSLOFormDataToServiceLevelIndicatorDTO = (values: SLOV2Form):
   }
 }
 
+export const getServiceLevelIndicatorsIdentifierFromResponse = (
+  SLODataResponse: RestResponseServiceLevelObjectiveV2Response | null,
+  isComposite?: boolean
+): string | undefined =>
+  isComposite
+    ? undefined
+    : SLODataResponse?.resource?.serviceLevelObjectiveV2?.spec?.serviceLevelIndicators?.[0]?.identifier
+
+export const getServiceLevelIndicatorsIdentifier = (values: SLOV2Form, prvSLIIdentifier?: string): string => {
+  const { identifier, validRequestMetric } = values
+  return prvSLIIdentifier ?? `${identifier}_${validRequestMetric}`
+}
+
 export const createSLOV2RequestPayload = (
   values: SLOV2Form,
   orgIdentifier: string,
-  projectIdentifier: string
+  projectIdentifier: string,
+  serviceLevelIndicatorsIdentifierFromResponse?: string
 ): ServiceLevelObjectiveV2DTO => {
   const sloType = values.type
   if (sloType === 'Simple') {
+    const serviceLevelIndicatorsIdentifier = getServiceLevelIndicatorsIdentifier(
+      values,
+      serviceLevelIndicatorsIdentifierFromResponse
+    )
     const serviceLevelIndicators = {
-      name: `${values.monitoredServiceRef}_${values.healthSourceRef}_${values.identifier}_${uuid()}}`,
-      identifier: `${values.monitoredServiceRef}_${values.healthSourceRef}_${values.identifier}_${uuid()}`,
+      name: serviceLevelIndicatorsIdentifier,
+      identifier: serviceLevelIndicatorsIdentifier,
       type: values.evaluationType,
       spec: getSpecData(values)
     }

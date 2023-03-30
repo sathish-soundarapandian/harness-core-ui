@@ -24,12 +24,11 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import { defaultTo, get, isBoolean, isEmpty, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import { FormMultiTypeCheckboxField } from '@common/components'
 import type { KustomizeWithGITDataType, KustomizeWithGITManifestLastStepPrevStepData } from '../../ManifestInterface'
 import {
   getSkipResourceVersioningBasedOnDeclarativeRollback,
@@ -41,8 +40,14 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
+import {
+  filePathWidth,
+  getRepositoryName,
+  handleCommandFlagsSubmitData,
+  removeEmptyFieldsFromStringArray
+} from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
+import KustomizeAdvancedStepSelection from '../KustomizeAdvancedStepSelection'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 
@@ -93,6 +98,7 @@ function KustomizeWithGIT({
 
   const getInitialValues = (): KustomizeWithGITDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
+    const defaultCommandFlags = [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
 
     if (specValues) {
       return {
@@ -111,6 +117,11 @@ function KustomizeWithGIT({
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
         enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         optimizedKustomizeManifestCollection: !!kustomizeYamlFolderPath,
+        commandFlags:
+          initialValues.spec?.commandFlags?.map((commandFlag: { commandType: string; flag: string }) => ({
+            commandType: commandFlag.commandType,
+            flag: commandFlag.flag
+          })) || defaultCommandFlags,
         kustomizeYamlFolderPath
       }
     }
@@ -125,7 +136,8 @@ function KustomizeWithGIT({
       repoName: getRepositoryName(modifiedPrevStepData, initialValues),
       pluginPath: '',
       optimizedKustomizeManifestCollection: false,
-      kustomizeYamlFolderPath: ''
+      kustomizeYamlFolderPath: '',
+      commandFlags: defaultCommandFlags
     }
   }
 
@@ -175,7 +187,7 @@ function KustomizeWithGIT({
         set(manifestObj, 'manifest.spec.store.spec.commitId', formData?.commitId)
       }
     }
-
+    handleCommandFlagsSubmitData(manifestObj, formData)
     handleSubmit(manifestObj)
   }
 
@@ -226,7 +238,15 @@ function KustomizeWithGIT({
           kustomizeYamlFolderPath: Yup.string().when('optimizedKustomizeManifestCollection', {
             is: true,
             then: Yup.string().trim().required(getString('pipeline.manifestType.kustomizeYamlFolderPathRequired'))
-          })
+          }),
+          commandFlags: Yup.array().of(
+            Yup.object().shape({
+              flag: Yup.string().when('commandType', {
+                is: val => !isEmpty(val),
+                then: Yup.string().required(getString('pipeline.manifestType.commandFlagRequired'))
+              })
+            })
+          )
         })}
         onSubmit={formData => {
           submitFormData({
@@ -243,9 +263,6 @@ function KustomizeWithGIT({
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: KustomizeWithGITDataType }) => {
-          const isSkipVersioningDisabled =
-            isBoolean(formik?.values?.enableDeclarativeRollback) && !!formik?.values?.enableDeclarativeRollback
-
           return (
             <FormikForm>
               <div className={helmcss.helmGitForm}>
@@ -437,101 +454,13 @@ function KustomizeWithGIT({
                     addDomId={true}
                     summary={getString('advancedTitle')}
                     details={
-                      <>
-                        {
-                          <Layout.Vertical margin={{ bottom: 'small' }}>
-                            <FormInput.CheckBox
-                              name="optimizedKustomizeManifestCollection"
-                              label={getString('pipeline.manifestType.optimizedKustomizeManifestCollection')}
-                            />
-                            {!!formik.values.optimizedKustomizeManifestCollection && (
-                              <Layout.Horizontal
-                                flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-                                margin={{ left: 'xlarge' }}
-                                width={430}
-                              >
-                                <FormInput.MultiTextInput
-                                  className={css.kustomizeYamlFolderPath}
-                                  label={getString('pipeline.manifestType.kustomizeYamlFolderPath')}
-                                  placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-                                  name="kustomizeYamlFolderPath"
-                                  multiTextInputProps={{ expressions, allowableTypes }}
-                                />
-                                {getMultiTypeFromValue(formik.values?.kustomizeYamlFolderPath) ===
-                                  MultiTypeInputType.RUNTIME && (
-                                  <ConfigureOptions
-                                    style={{ alignSelf: 'center', marginBottom: 4 }}
-                                    value={formik.values?.kustomizeYamlFolderPath || ''}
-                                    type="String"
-                                    variableName="kustomizeYamlFolderPath"
-                                    showRequiredField={false}
-                                    showDefaultField={false}
-                                    onChange={value => formik.setFieldValue('kustomizeYamlFolderPath', value)}
-                                    isReadonly={isReadonly}
-                                  />
-                                )}
-                              </Layout.Horizontal>
-                            )}
-                          </Layout.Vertical>
-                        }
-
-                        <Layout.Horizontal
-                          flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-                          margin={{ bottom: 'small' }}
-                        >
-                          <FormMultiTypeCheckboxField
-                            name="enableDeclarativeRollback"
-                            label={getString('pipeline.manifestType.enableDeclarativeRollback')}
-                            multiTypeTextbox={{ expressions, allowableTypes }}
-                            tooltipProps={{
-                              dataTooltipId: 'kustomizeEnableDeclarativeRollback'
-                            }}
-                            className={cx(helmcss.checkbox, helmcss.halfWidth)}
-                          />
-                          {getMultiTypeFromValue(formik.values?.enableDeclarativeRollback) ===
-                            MultiTypeInputType.RUNTIME && (
-                            <ConfigureOptions
-                              value={(formik.values?.enableDeclarativeRollback || '') as string}
-                              type="String"
-                              variableName="enableDeclarativeRollback"
-                              showRequiredField={false}
-                              showDefaultField={false}
-                              onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
-                              style={{ alignSelf: 'center', marginTop: 11 }}
-                              className={css.addmarginTop}
-                              isReadonly={isReadonly}
-                            />
-                          )}
-                        </Layout.Horizontal>
-
-                        <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-                          <FormMultiTypeCheckboxField
-                            key={isSkipVersioningDisabled.toString()}
-                            name="skipResourceVersioning"
-                            label={getString('skipResourceVersion')}
-                            multiTypeTextbox={{ expressions, allowableTypes, disabled: isSkipVersioningDisabled }}
-                            tooltipProps={{
-                              dataTooltipId: 'helmSkipResourceVersion'
-                            }}
-                            disabled={isSkipVersioningDisabled}
-                            className={cx(helmcss.checkbox, helmcss.halfWidth)}
-                          />
-                          {getMultiTypeFromValue(formik.values?.skipResourceVersioning) ===
-                            MultiTypeInputType.RUNTIME && (
-                            <ConfigureOptions
-                              value={(formik.values?.skipResourceVersioning || '') as string}
-                              type="String"
-                              variableName="skipResourceVersioning"
-                              showRequiredField={false}
-                              showDefaultField={false}
-                              onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
-                              style={{ alignSelf: 'center', marginTop: 11 }}
-                              className={css.addmarginTop}
-                              isReadonly={isReadonly}
-                            />
-                          )}
-                        </Layout.Horizontal>
-                      </>
+                      <KustomizeAdvancedStepSelection
+                        expressions={expressions}
+                        allowableTypes={allowableTypes}
+                        formik={formik}
+                        isReadonly={isReadonly}
+                        storeType={defaultTo(modifiedPrevStepData?.store, '')}
+                      />
                     }
                   />
                 </Accordion>

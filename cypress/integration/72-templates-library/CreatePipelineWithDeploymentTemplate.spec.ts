@@ -49,12 +49,6 @@ describe('Pipeline Template creation and assertion', { scrollBehavior: false }, 
             name: 'NG_DEPLOYMENT_TEMPLATE',
             enabled: true,
             lastUpdatedAt: 0
-          },
-          {
-            uuid: null,
-            name: 'USE_OLD_GIT_SYNC',
-            enabled: true,
-            lastUpdatedAt: 0
           }
         ]
       }).as('enableFeatureFlag')

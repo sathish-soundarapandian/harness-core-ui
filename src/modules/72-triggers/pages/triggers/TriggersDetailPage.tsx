@@ -232,7 +232,7 @@ const renderSwitch = ({
 
 export default function TriggersDetailPage(): JSX.Element {
   const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
-  const [selectedView, setSelectedView] = useTriggerView()
+  const [selectedView, setSelectedView] = useTriggerView(false)
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, triggerIdentifier, module } = useParams<
     PipelineType<
       PipelinePathProps & {
@@ -378,7 +378,7 @@ export default function TriggersDetailPage(): JSX.Element {
   const isTriggerRbacDisabled = !isExecutable || isPipelineInvalid
 
   let pipelineInputSet
-  if (isNewGitSyncRemotePipeline) {
+  if (get(triggerObj, 'inputSetRefs')?.length) {
     pipelineInputSet = yamlStringify(
       pickBy(
         {

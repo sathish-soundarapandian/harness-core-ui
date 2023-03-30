@@ -98,6 +98,7 @@ export default function useMigrateTemplateResource(
       projectIdentifier: template.projectIdentifier,
       module,
       templateListType: TemplateListType.All,
+      size: 100,
       ...(isGitSyncEnabled
         ? { repoIdentifier: template.gitDetails?.repoIdentifier, branch: template.gitDetails?.branch }
         : {})

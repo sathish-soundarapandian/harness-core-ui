@@ -140,12 +140,12 @@ exports[`ET Sidenav render with project 1`] = `
     </div>
     <a
       class="link"
-      href="/account/dummy/et/orgs/dummy/projects/dummy/"
+      href="/account/dummy/et/orgs/dummy/projects/dummy/et/eventsummary"
     >
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        Nav List Item 1
+        Events Summary
       </p>
     </a>
     <div>

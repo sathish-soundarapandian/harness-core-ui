@@ -848,116 +848,130 @@ exports[`ConfigureNotifications PagerDuty 1`] = `
       >
         rbac.notifications.infoPagerDuty
       </p>
-      <form
-        action="#"
-        class="FormikForm--main"
+      <div
+        class="OverlaySpinner--overlaySpinner"
       >
-        <div>
-          <div
-            class="bp3-form-group"
-            data-id="key-0"
-          >
-            <label
-              class="bp3-label"
-              for="key"
-            >
-              rbac.notifications.labelPDKey
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
+        <form
+          action="#"
+          class="FormikForm--main"
+        >
+          <div>
             <div
-              class="bp3-form-content"
+              class="bp3-form-group"
+              data-id="key-0"
             >
-              <div
-                class="bp3-input-group"
+              <label
+                class="bp3-label"
+                for="key"
               >
-                <input
-                  autocomplete="off"
-                  class="bp3-input"
-                  name="key"
-                  type="text"
-                  value="testKey"
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="configurePagerDutyNotifications_key"
+                >
+                  rbac.notifications.labelPDKey
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
                 />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="key"
+                    type="text"
+                    value="testKey"
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-xxlarge"
-            style="align-items: center;"
-          >
-            <button
-              aria-label="test"
-              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
-              type="button"
-            >
-              <span
-                class="bp3-button-text"
-              >
-                test
-              </span>
-            </button>
-          </div>
-          <div
-            class="bp3-form-group"
-            data-id="undefined-1"
-          >
             <div
-              class="bp3-form-content"
+              class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-xxlarge"
+              style="align-items: center;"
+            >
+              <button
+                aria-label="test"
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
+                type="button"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  test
+                </span>
+              </button>
+            </div>
+            <div
+              class="bp3-form-group"
+              data-id="undefined-1"
             >
               <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                class="bp3-form-content"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
-                >
-                  rbac.notifications.labelSlackUserGroups
-                </p>
                 <div
-                  class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
                 >
                   <div
-                    class="StyledProps--font StyledProps--main pointer"
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="configurePagerDutyNotifications_userGroups"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main selectBtn StyledProps--color StyledProps--color-primary7 StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--flex-inline StyledProps--padding-xsmall"
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
                     >
-                      common.selectUserGroups
+                      rbac.notifications.labelPagerDutyUserGroups
                     </p>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main pointer"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main selectBtn StyledProps--color StyledProps--color-primary7 StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--flex-inline StyledProps--padding-xsmall"
+                      >
+                        common.selectUserGroups
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-xxlarge"
-          >
-            <button
-              aria-label="submit"
-              class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
-              type="submit"
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-xxlarge"
             >
-              <span
-                class="bp3-button-text"
+              <button
+                aria-label="submit"
+                class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+                type="submit"
               >
-                submit
-              </span>
-            </button>
-            <button
-              aria-label="cancel"
-              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
-              type="button"
-            >
-              <span
-                class="bp3-button-text"
+                <span
+                  class="bp3-button-text"
+                >
+                  submit
+                </span>
+              </button>
+              <button
+                aria-label="cancel"
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
+                type="button"
               >
-                cancel
-              </span>
-            </button>
+                <span
+                  class="bp3-button-text"
+                >
+                  cancel
+                </span>
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 </div>

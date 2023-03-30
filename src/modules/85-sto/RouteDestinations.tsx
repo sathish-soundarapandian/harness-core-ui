@@ -59,6 +59,7 @@ import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from
 import { ModuleName } from 'framework/types/ModuleName'
 import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/ExternalTicketSettings'
+import STOTrialHomePage from '@sto/pages/home/trialPage/STOTrialHomePage'
 
 const STOSideNavProps: SidebarContext = {
   navComponent: STOSideNav,
@@ -297,6 +298,14 @@ const RouteDestinations: React.FC = () => {
         ]}
       >
         <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ ExecutionCard, CardRailView }} />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        layout={MinimalLayout}
+        path={routes.toModuleTrialHome({ ...accountPathProps, module: 'sto' })}
+        exact
+      >
+        <STOTrialHomePage />
       </RouteWithLayout>
 
       <RouteWithLayout

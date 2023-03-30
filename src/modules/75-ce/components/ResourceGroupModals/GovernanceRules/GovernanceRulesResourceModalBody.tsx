@@ -18,11 +18,11 @@ import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 import { RuleNameCell } from './GovernanceRulesResourceCells'
 
-import css from '../ResourceGroupModals/PerspectiveResourceModalBody.module.scss'
+import css from '../Perspective/PerspectiveResourceModalBody.module.scss'
 
 type ParsedColumnContent = Rule & { identifier: string }
 
-const PerspectiveResourceModalBody: React.FC<RbacResourceModalProps> = ({
+const GovernanceRulesResourceModalBody: React.FC<RbacResourceModalProps> = ({
   searchTerm,
   resourceScope,
   onSelectChange,
@@ -105,4 +105,4 @@ const PerspectiveResourceModalBody: React.FC<RbacResourceModalProps> = ({
   )
 }
 
-export default PerspectiveResourceModalBody
+export default GovernanceRulesResourceModalBody

@@ -105,6 +105,7 @@ import { ConfigFileStoreStepOne } from '../Common/ConfigFileStore/ConfigFileStor
 import { ArtifactoryForm } from '../Common/VarFile/ArtifactoryForm'
 import { formatArtifactoryData } from '../Common/VarFile/helper'
 import VarFileList from '../Common/VarFile/VarFileList'
+import TerraformCommandFlags from '../Common/TerraformCommandFlags/TerraformCommandFlags'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../Common/Terraform/TerraformStep.module.scss'
 
@@ -120,7 +121,8 @@ function TerraformPlanWidget(
 ): React.ReactElement {
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep, readonly = false, stepViewType } = props
   const { getString } = useStrings()
-  const { CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG, CD_TERRAFORM_CLOUD_CLI_NG } = useFeatureFlags()
+  const { CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG, CD_TERRAFORM_CLOUD_CLI_NG, CDS_TERRAFORM_CLI_OPTIONS_NG } =
+    useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
@@ -893,6 +895,54 @@ function TerraformPlanWidget(
                     </>
                   }
                 />
+                {CDS_TERRAFORM_CLI_OPTIONS_NG && (
+                  <Accordion.Panel
+                    id="step-2"
+                    summary={getString('cd.commandLineOptions')}
+                    details={
+                      <>
+                        {!enableCloudCli && (
+                          <div className={cx(stepCss.formGroup, css.addMarginTop)}>
+                            <FormMultiTypeCheckboxField
+                              formik={formik as FormikProps<unknown>}
+                              name={'spec.configuration.skipRefreshCommand'}
+                              label={getString('cd.skipRefreshCommand')}
+                              multiTypeTextbox={{ expressions, allowableTypes }}
+                              disabled={readonly}
+                              setToFalseWhenEmpty
+                            />
+                            {getMultiTypeFromValue(formik.values?.spec?.configuration?.skipRefreshCommand) ===
+                              MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                value={(formik.values?.spec?.configuration?.skipRefreshCommand || '') as string}
+                                type="String"
+                                variableName="spec.configuration.skipRefreshCommand"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={
+                                  /* istanul ignore next */
+                                  value => formik.setFieldValue('spec.configuration.skipRefreshCommand', value)
+                                }
+                                style={{ alignSelf: 'center' }}
+                                isReadonly={readonly}
+                              />
+                            )}
+                          </div>
+                        )}
+
+                        <div>
+                          <TerraformCommandFlags
+                            formik={formik}
+                            stepType="PLAN"
+                            configType={fieldPath}
+                            allowableTypes={allowableTypes}
+                            path={`spec.${fieldPath}.commandFlags`}
+                          />
+                        </div>
+                      </>
+                    }
+                  />
+                )}
               </Accordion>
             </>
             {showRemoteWizard && (

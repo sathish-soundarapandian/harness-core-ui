@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { useGet } from 'restful-react'
 
 import { Layout, Text, Icon } from '@harness/uicore'
 import type { CellProps, Renderer } from 'react-table'
@@ -15,27 +14,25 @@ import { Color } from '@harness/design-system'
 import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
 import { PageSpinner } from '@common/components'
 import routes from '@common/RouteDefinitions'
+import { FolderModel, useGetFoldersWithHidden } from 'services/custom-dashboards'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 import StaticResourceRenderer from '../StaticResourceRenderer/StaticResourceRenderer'
 
 import css from '../DashboardResourceModalBody/DashboardResourceModalBody.module.scss'
 
-interface FolderList {
-  id?: string
+interface FolderModelWithIdentifier extends FolderModel {
   identifier: string
-  name?: string
-  Children: { id: string; name: string }[]
 }
 
-export const RenderColumnSecret: Renderer<CellProps<FolderList>> = ({ row }) => {
+export const RenderColumnSecret: Renderer<CellProps<FolderModelWithIdentifier>> = ({ row }) => {
   const data = row.original
   const { accountId } = useParams<{ accountId: string }>()
 
   return (
     <Layout.Vertical padding={{ left: 'small', top: 'medium' }}>
       <Text color={Color.BLACK} lineClamp={1}>
-        {data.name} ({data.Children.length}){'  '}
+        {data.name} ({data.Children?.length}){'  '}
         <Link
           target="_blank"
           to={routes.toCustomDashboardHome({
@@ -47,7 +44,7 @@ export const RenderColumnSecret: Renderer<CellProps<FolderList>> = ({ row }) => 
         </Link>
       </Text>
       <Layout.Horizontal spacing="medium">
-        {data.Children.map((dashboards: { id: string; name: string }) => {
+        {data.Children?.slice(0, 3).map((dashboards: { id: string; name: string }) => {
           return (
             <Layout.Horizontal className={css.dashboardDetail} key={dashboards?.name + '_' + dashboards?.id}>
               {dashboards.name}{' '}
@@ -77,22 +74,21 @@ const DashboardResourceRenderer: React.FC<RbacResourceRendererProps> = ({
 }) => {
   const { accountId } = useParams<AccountPathProps>()
 
-  const { data: foldersListResponse, loading: fethingFolders } = useGet({
-    // Inferred from RestfulProvider in index.js
-    path: 'gateway/dashboard/folder',
-    queryParams: { accountId: accountId, page: 1, pageSize: 1000, isAdmin: true }
+  const { data: foldersListResponse, loading: fethingFolders } = useGetFoldersWithHidden({
+    queryParams: { accountId: accountId, page: 1, pageSize: 1000 }
   })
 
-  const parsedFolders = foldersListResponse?.resource
-    ?.map((folder: { id?: string; name: string; identifier?: string }) => ({
-      identifier: folder['id'],
-      ...folder
-    }))
-    .filter((v: FolderList) => {
-      if (identifiers.indexOf(v.identifier) !== -1) {
-        return v
-      }
-    })
+  const parsedFolders =
+    foldersListResponse?.resource
+      ?.map((folder: FolderModel) => ({
+        identifier: folder['id'],
+        ...folder
+      }))
+      .filter((v: FolderModelWithIdentifier) => {
+        if (identifiers.indexOf(v.identifier) !== -1) {
+          return v
+        }
+      }) || []
 
   return !fethingFolders ? (
     <div className={css.container}>

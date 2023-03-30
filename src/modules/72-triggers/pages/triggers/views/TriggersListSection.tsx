@@ -376,7 +376,10 @@ const RenderWebhookIcon = ({
         <Button
           minimal
           className={cx(css.webhookUrl, column.isTriggerRbacDisabled ? css.disabledOption : '')}
-          icon="main-link"
+          icon="webhook"
+          iconProps={{
+            size: 20
+          }}
           onClick={e => {
             e.stopPropagation()
             if (column.isTriggerRbacDisabled) {
@@ -416,7 +419,10 @@ const RenderWebhookIcon = ({
     return (
       <Button
         className={css.webhookUrl}
-        icon="main-link"
+        icon="webhook"
+        iconProps={{
+          size: 20
+        }}
         color={Color.BLUE_500}
         minimal
         onClick={e => {

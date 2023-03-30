@@ -48,7 +48,7 @@ export interface SscaOrchestrationStepSpec {
   infrastructure?: {
     type: string
     spec: {
-      connector: string
+      connectorRef: string
       namespace: string
       resources: {
         limits: {

@@ -29,13 +29,7 @@ export default function ETSideNav(): React.ReactElement {
   const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
     updateAppStore({ selectedProject: data })
 
-    history.push(
-      routes.toETPlaceholder({
-        projectIdentifier: data.identifier,
-        orgIdentifier: data.orgIdentifier || '',
-        accountId
-      })
-    )
+    history.push(routes.toET({ accountId }))
   }
 
   return (
@@ -45,28 +39,84 @@ export default function ETSideNav(): React.ReactElement {
         onSelect={projectSelectHandler}
       />
       {projectIdentifier && orgIdentifier && (
-        <>
+        <React.Fragment>
           <SidebarLink
-            label="Nav List Item 1"
-            to={routes.toETPlaceholder({
+            label="Events Summary"
+            to={routes.toETEventsSummary({
               projectIdentifier,
               orgIdentifier,
               accountId
             })}
           />
+          {/*
+          <SidebarLink
+            label="Getting Started"
+            to={routes.toETHome({
+              accountId
+            })}
+          />
+          */}
           <NavExpandable title={getString('common.projectSetup')} route={'undefined'}>
             <Layout.Vertical spacing="small">
+              {/*
               <SidebarLink
-                label={getString('et.nav.settings')}
-                to={routes.toETPlaceholder({
+                label={'Connectors'}
+                to={routes.toETHome({
+                  accountId
+                })}
+              />
+              <SidebarLink
+                label={'Secrets'}
+                to={routes.toETHome({
+                  accountId
+                })}
+              />
+              <SidebarLink
+                label={'Variables'}
+                to={routes.toETHome({
+                  accountId
+                })}
+              />
+              <SidebarLink
+                label={'Access Control'}
+                to={routes.toETHome({
+                  accountId
+                })}
+              />
+              <SidebarLink
+                label={'Delegates'}
+                to={routes.toETHome({
+                  accountId
+                })}
+              />
+              */}
+              <SidebarLink
+                label={'Tokens'}
+                to={routes.toETAgentsTokens({
                   projectIdentifier,
                   orgIdentifier,
                   accountId
                 })}
               />
+              <SidebarLink
+                label={'Agents'}
+                to={routes.toETAgents({
+                  projectIdentifier,
+                  orgIdentifier,
+                  accountId
+                })}
+              />
+              {/*
+              <SidebarLink
+                label={'Settings'}
+                to={routes.toETHome({
+                  accountId
+                })}
+              />
+              */}
             </Layout.Vertical>
           </NavExpandable>
-        </>
+        </React.Fragment>
       )}
     </Layout.Vertical>
   )

@@ -8,7 +8,17 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { StepsProgress, Layout, Button, Text, StepProps, Container, ButtonVariation, ButtonSize } from '@harness/uicore'
+import {
+  StepsProgress,
+  Layout,
+  Button,
+  Text,
+  StepProps,
+  Container,
+  ButtonVariation,
+  ButtonSize,
+  HarnessDocTooltip
+} from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { useGetDelegateFromId } from 'services/portal'
 import {
@@ -203,7 +213,7 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
     }, [])
 
     const { getString } = useStrings()
-
+    const connectionTestTooltipId = getString('connectors.connectorConnectionTest')
     /* istanbul ignore next */
     const getPermissionsLink = (): string => {
       switch (props.type) {
@@ -478,8 +488,9 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
     return (
       <Layout.Vertical>
         <Layout.Vertical>
-          <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_800}>
+          <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_800} data-tooltip-id={connectionTestTooltipId}>
             {getString('connectors.stepThreeName')}
+            <HarnessDocTooltip tooltipId={connectionTestTooltipId} useStandAlone={true} />
           </Text>
           {prevStepData?.delegateType === DelegateTypes.DELEGATE_IN_CLUSTER ? null : (
             <RenderUrlInfo type={props.type} prevStepData={prevStepData} url={props.url} />

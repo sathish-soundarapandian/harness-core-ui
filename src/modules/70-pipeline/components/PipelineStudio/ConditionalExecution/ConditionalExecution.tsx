@@ -7,13 +7,12 @@
 
 import React from 'react'
 import { Container, Formik } from '@harness/uicore'
-import { debounce, isEqual, noop } from 'lodash-es'
+import { debounce, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { StageWhenCondition } from 'services/cd-ng'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import ConditionalExecutionPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanel'
-import { useDeepCompareEffect } from '@common/hooks'
 
 export interface ConditionalExecutionProps {
   selectedStage: StageElementWrapper
@@ -42,14 +41,14 @@ export default function ConditionalExecution(props: ConditionalExecutionProps): 
     [onUpdate]
   )
 
-  useDeepCompareEffect(() => {
-    if (formikRef.current && !isEqual(formikRef.current.values, { when: stage?.when })) {
-      formikRef.current.setValues({ when: stage?.when })
-    }
-  }, [stage?.when])
-
   return (
-    <Formik initialValues={{ when: stage?.when }} formName="condExecStudio" onSubmit={noop} validate={debouncedUpdate}>
+    <Formik
+      initialValues={{ when: stage?.when }}
+      enableReinitialize
+      formName="condExecStudio"
+      onSubmit={noop}
+      validate={debouncedUpdate}
+    >
       {(formik: FormikProps<FormState>) => {
         formikRef.current = formik
 

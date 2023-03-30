@@ -6,7 +6,12 @@
  */
 
 import type { FontVariation, Color } from '@harness/design-system'
-import type { CountServiceDTO, PageMonitoredServiceListItemDTO, RiskData } from 'services/cv'
+import type {
+  CountServiceDTO,
+  GetCountOfServicesQueryParams,
+  PageMonitoredServiceListItemDTO,
+  RiskData
+} from 'services/cv'
 
 import type { PermissionsRequest } from '@rbac/hooks/usePermission'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -40,6 +45,10 @@ export enum FilterTypes {
 
 // MonitoredServiceListView
 
+interface ServiceCountQueryParamType {
+  queryParams?: GetCountOfServicesQueryParams
+}
+
 export interface MonitoredServiceListProps {
   page: number
   setPage: (n: number) => void
@@ -50,7 +59,7 @@ export interface MonitoredServiceListProps {
   serviceCountData: CountServiceDTO | null
   serviceCountLoading?: boolean
   serviceCountErrorMessage?: string
-  refetchServiceCountData: () => Promise<void>
+  refetchServiceCountData: (query?: ServiceCountQueryParamType) => Promise<void>
   search?: string
 }
 

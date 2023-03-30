@@ -108,7 +108,7 @@ export default function ScheduledTriggerWizard(
   const { isNewTrigger, baseType, triggerData } = props
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
-  const [selectedView, setSelectedView] = useTriggerView()
+  const [selectedView, setSelectedView] = useTriggerView(isNewTrigger)
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const history = useHistory()
@@ -477,7 +477,7 @@ export default function ScheduledTriggerWizard(
           tags,
           inputYaml,
           pipelineBranchName = '',
-          inputSetRefs = [],
+          inputSetRefs,
           source: {
             spec: {
               spec: { expression }
@@ -588,18 +588,21 @@ export default function ScheduledTriggerWizard(
       },
       inputYaml: stringifyPipelineRuntimeInput,
       pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : undefined,
-      inputSetRefs: isNewGitSyncRemotePipeline ? inputSetRefs : undefined
+      inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
     })
   }
 
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {
     const res = getScheduleTriggerYaml({ values })
-    if (isNewGitSyncRemotePipeline) {
+
+    if (values.inputSetRefs?.length || values.inputSetSelected?.length) {
       delete res.inputYaml
-      if (values.inputSetSelected?.length) {
-        res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
-      }
     }
+
+    if (values.inputSetSelected?.length) {
+      res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
+    }
+
     return { trigger: res }
   }
 
@@ -809,7 +812,7 @@ export default function ScheduledTriggerWizard(
   }, [])
 
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
-    if (isNewGitSyncRemotePipeline) {
+    if (triggerYaml.inputSetRefs?.length) {
       delete triggerYaml.inputYaml
     }
 
@@ -819,7 +822,7 @@ export default function ScheduledTriggerWizard(
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -836,7 +839,7 @@ export default function ScheduledTriggerWizard(
         }
       } catch (err) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((err as any)?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if ((err as any)?.data?.status === ResponseStatus.ERROR) {
           retryTriggerSubmit({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: getErrorMessage((err as any)?.data) || getString('triggers.retryTriggerSave')
@@ -855,7 +858,7 @@ export default function ScheduledTriggerWizard(
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -872,7 +875,7 @@ export default function ScheduledTriggerWizard(
         }
       } catch (err) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((err as any)?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if ((err as any)?.data?.status === ResponseStatus.ERROR) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           retryTriggerSubmit({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -900,9 +903,9 @@ export default function ScheduledTriggerWizard(
       parse(latestYaml)
       const errorsYaml =
         (yamlHandler?.getYAMLValidationErrorMap() as unknown as Map<number, string>) || /* istanbul ignore next */ ''
+      /* istanbul ignore next */
       if (errorsYaml?.size > 0) {
-        //? Do we want to add this
-        // showError(getString('common.validation.invalidYamlText'))
+        showError(getString('common.validation.invalidYamlText'))
         return
       }
       // handleModeSwitch?.(mode, yamlHandler)

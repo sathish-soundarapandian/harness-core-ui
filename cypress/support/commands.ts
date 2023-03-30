@@ -39,6 +39,7 @@ import {
   servicesCall,
   servicesResponse,
   environmentsCall,
+  gitSyncEnabledCall,
   environmentResponse
 } from './85-cv/monitoredService/constants'
 import {
@@ -94,7 +95,7 @@ declare global {
       visitExecutionsList(): void
       visitChangeIntelligence(): void
       visitChangeIntelligenceForSLOs(): void
-      visitSRMTemplate(): void
+      visitSRMTemplate(oldGitEnabled?: boolean): void
       addNewSRMTemplate(): void
       populateTemplateDetails(name: string, version: string): void
       visitSRMMonitoredServicePage(): void
@@ -253,7 +254,10 @@ Cypress.Commands.add('visitChangeIntelligenceForSLOs', () => {
   cy.contains('p', 'Project 1').click()
 })
 
-Cypress.Commands.add('visitSRMTemplate', () => {
+Cypress.Commands.add('visitSRMTemplate', (oldGitEnabled?: boolean) => {
+  if (oldGitEnabled) {
+    cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: 'MANAGER', gitSyncEnabled: true })
+  }
   cy.visitPageAssertion('[class^=SideNav-module_main]')
   cy.contains('span', 'Service Reliability').click()
   cy.get('[data-tab-id="ProjectTab"]').click()

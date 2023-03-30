@@ -266,6 +266,7 @@ export type AwsCodeCommitSecretKeyAccessKeyDTO = AwsCodeCommitHttpsCredentialsSp
 }
 
 export type AwsConnector = ConnectorConfigDTO & {
+  awsSdkClientBackOffStrategyOverride?: AwsSdkClientBackoffStrategy
   credential: AwsCredential
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
@@ -287,6 +288,23 @@ export interface AwsCurAttributes {
   reportName: string
   s3BucketName: string
   s3Prefix?: string
+}
+
+export type AwsEqualJitterBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  baseDelay?: number
+  maxBackoffTime?: number
+  retryCount?: number
+}
+
+export type AwsFixedDelayBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  fixedBackoff?: number
+  retryCount?: number
+}
+
+export type AwsFullJitterBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  baseDelay?: number
+  maxBackoffTime?: number
+  retryCount?: number
 }
 
 export interface AwsKmsConnectorCredential {
@@ -351,6 +369,15 @@ export type AwsSMCredentialSpecAssumeSTS = AwsSecretManagerCredentialSpec & {
 export type AwsSMCredentialSpecManualConfig = AwsSecretManagerCredentialSpec & {
   accessKey: string
   secretKey: string
+}
+
+export interface AwsSdkClientBackOffStrategySpec {
+  [key: string]: any
+}
+
+export interface AwsSdkClientBackoffStrategy {
+  spec?: AwsSdkClientBackOffStrategySpec
+  type: 'FixedDelayBackoffStrategy' | 'EqualJitterBackoffStrategy' | 'FullJitterBackoffStrategy'
 }
 
 export interface AwsSecretManagerCredential {
@@ -847,7 +874,7 @@ export interface ClusteredLog {
   verificationTaskId?: string
 }
 
-export interface CompositeServiceLevelObjectiveSpec {
+export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
 }
 
@@ -3243,7 +3270,7 @@ export interface LogFeedback {
   sampleMessage?: string
   serviceIdentifier?: string
   updatedAt?: number
-  updatedby?: string
+  updatedBy?: string
   verificationJobInstanceId?: string
 }
 
@@ -4122,6 +4149,7 @@ export interface PartialSchemaDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -5834,6 +5862,7 @@ export interface SLODashboardWidget {
   errorBudgetRemaining: number
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
+  evaluationType?: 'Window' | 'Request'
   healthSourceIdentifier?: string
   healthSourceName?: string
   monitoredServiceDetails?: MonitoredServiceDetail[]
@@ -6834,6 +6863,7 @@ export interface YamlSchemaMetadata {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -6858,6 +6888,7 @@ export interface YamlSchemaWithDetails {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata

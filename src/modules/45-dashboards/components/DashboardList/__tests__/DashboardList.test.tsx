@@ -26,7 +26,7 @@ const mockFolderOne: customDashboardServices.FolderModel = {
   created_at: '01/01/2022'
 }
 
-const mockGetFolderResponse: customDashboardServices.GetFoldersResponse = {
+const mockGetFolderResponse: customDashboardServices.SearchFoldersResponse = {
   resource: [mockFolderOne],
   items: 1,
   pages: 1
@@ -70,7 +70,7 @@ describe('DashboardList', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: mockGetFolderResponse } as any)
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: mockGetFolderResponse } as any)
   })
   afterAll(() => {
     jest.clearAllMocks()
@@ -85,7 +85,7 @@ describe('DashboardList', () => {
   }
 
   test('it should show an empty dashboard list with no dashboard data', () => {
-    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: {} } as any)
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: {} } as any)
     renderComponent(defaultProps)
 
     const headerName: StringKeys = 'name'
@@ -98,7 +98,7 @@ describe('DashboardList', () => {
   })
 
   test('it should show dashboard list with dashboard data', () => {
-    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: {} } as any)
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: {} } as any)
     const testProps: DashboardListProps = {
       ...defaultProps,
       dashboards: [testDashboard]
@@ -108,7 +108,7 @@ describe('DashboardList', () => {
   })
 
   test('it should allow for opening of read only context menu on shared dashboard data', async () => {
-    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: {} } as any)
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: {} } as any)
     const testProps: DashboardListProps = {
       ...defaultProps,
       dashboards: [testDashboard]
@@ -123,7 +123,7 @@ describe('DashboardList', () => {
   })
 
   test('it should allow for opening of editable context menu on account dashboard data', async () => {
-    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: {} } as any)
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: {} } as any)
     const testAccountDashboard: customDashboardServices.DashboardModel = {
       ...testDashboard,
       resourceIdentifier: 'shared',

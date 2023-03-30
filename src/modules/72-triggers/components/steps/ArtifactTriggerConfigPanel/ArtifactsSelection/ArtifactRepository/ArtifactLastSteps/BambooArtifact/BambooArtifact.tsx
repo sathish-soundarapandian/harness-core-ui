@@ -16,7 +16,6 @@ import {
   ButtonVariation,
   MultiTypeInputType,
   SelectOption,
-  getMultiTypeFromValue,
   FormInput,
   MultiSelectOption,
   FormikForm
@@ -74,7 +73,6 @@ function FormComponent(
 
   const connectorRefValue = getConnectorIdValue(prevStepData)
   const planNameValue = get(formik.values, 'spec.planKey', '')
-  const [planValue, setPlanValue] = useState<SelectOption>(planNameValue)
 
   const {
     data: plansResponse,
@@ -124,10 +122,10 @@ function FormComponent(
   })
 
   useEffect(() => {
-    if (planValue) {
+    if (planNameValue) {
       refetchArtifactPaths()
     }
-  }, [planValue])
+  }, [planNameValue])
 
   useEffect(() => {
     if (artifactPathsResponse?.data) {
@@ -182,10 +180,10 @@ function FormComponent(
       }) || [
         {
           label: getString('common.loadingFieldOptions', {
-            fieldName: getString('common.subscriptions.tabs.plans')
+            fieldName: getString('common.subscriptions.overview.plan')
           }),
           value: getString('common.loadingFieldOptions', {
-            fieldName: getString('common.subscriptions.tabs.plans')
+            fieldName: getString('common.subscriptions.overview.plan')
           })
         }
       ]
@@ -223,7 +221,7 @@ function FormComponent(
             placeholder={
               loadingPlans
                 ? getString('common.loadingFieldOptions', {
-                    fieldName: getString('common.subscriptions.tabs.plans')
+                    fieldName: getString('common.subscriptions.overview.plan')
                   })
                 : getString('pipeline.planNamePlaceholder')
             }
@@ -243,9 +241,7 @@ function FormComponent(
                   />
                 )
               },
-              onChange: (val: any) => {
-                setPlanValue(get(val, 'value', ''))
-              },
+
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 onFocus(e, refetchPlans)
               },
@@ -322,35 +318,6 @@ export function BambooArtifact(
   const { getString } = useStrings()
   const { handleSubmit, initialValues, prevStepData } = props
 
-  const submitFormData = (formData: BambooRegistrySpec, connectorId?: string): void => {
-    const planKey = get(formData, 'spec.planKey', '')
-    const artifactPaths = get(formData, 'spec.artifactPaths', [])
-    const build = get(formData, 'spec.build', '')
-
-    handleSubmit({
-      spec: {
-        connectorRef: connectorId,
-        artifactPaths:
-          getMultiTypeFromValue(artifactPaths) === MultiTypeInputType.FIXED
-            ? (artifactPaths || []).map((artifactPath: any) => artifactPath.value) || []
-            : artifactPaths,
-        build,
-        planKey
-      }
-    })
-  }
-
-  const schemaObject = {
-    spec: Yup.object().shape({
-      planKey: Yup.lazy(value =>
-        typeof value === 'object'
-          ? Yup.object().required(getString('pipeline.bambooStep.validations.planName')) // typeError is necessary here, otherwise we get a bad-looking yup error
-          : Yup.string().required(getString('pipeline.bambooStep.validations.planName'))
-      ),
-      artifactPaths: Yup.string()
-    })
-  }
-
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
@@ -360,14 +327,17 @@ export function BambooArtifact(
       <Formik
         initialValues={initialValues}
         formName="bambooTriggerForm"
-        validationSchema={schemaObject}
+        validationSchema={Yup.object().shape({
+          spec: Yup.object().shape({
+            planKey: Yup.string().required(getString('pipeline.bambooStep.validations.planName')),
+            artifactPaths: Yup.string()
+          })
+        })}
         onSubmit={formData => {
-          submitFormData(
-            {
-              ...formData
-            },
-            getConnectorIdValue(prevStepData)
-          )
+          handleSubmit({
+            ...formData,
+            connectorRef: getConnectorIdValue(prevStepData)
+          })
         }}
       >
         {formik => {

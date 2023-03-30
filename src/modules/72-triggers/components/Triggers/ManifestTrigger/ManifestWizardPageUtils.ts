@@ -663,7 +663,7 @@ export const getArtifactManifestTriggerYaml = ({
     source,
     inputYaml: stringifyPipelineRuntimeInput,
     pipelineBranchName: _gitAwareForTriggerEnabled ? pipelineBranchName : null,
-    inputSetRefs: _gitAwareForTriggerEnabled ? inputSetRefs : null
+    inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
   }
 
   replaceEventConditions({ values: val, persistIncomplete, triggerYaml })

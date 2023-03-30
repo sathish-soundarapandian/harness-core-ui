@@ -122,7 +122,7 @@ exports[`Test SLI component should render SLI component 1`] = `
             class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-semi-bold StyledProps--margin-bottom-small StyledProps--margin-top-xxlarge"
+              class="StyledProps--font StyledProps--main eventType StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-semi-bold StyledProps--margin-bottom-small StyledProps--margin-top-xlarge"
             >
               cv.slos.sliType
             </p>
@@ -138,7 +138,7 @@ exports[`Test SLI component should render SLI component 1`] = `
                   role="button"
                   tabindex="0"
                 >
-                  cv.slos.slis.type.availability
+                  CV.SLOS.SLIS.TYPE.AVAILABILITY
                 </div>
                 <div
                   class="PillToggle--item"
@@ -146,12 +146,12 @@ exports[`Test SLI component should render SLI component 1`] = `
                   role="button"
                   tabindex="0"
                 >
-                  cv.slos.slis.type.latency
+                  CV.SLOS.SLIS.TYPE.LATENCY
                 </div>
               </div>
             </div>
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-light"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-light"
             >
               cv.slos.sliTypeSubtitle
             </p>
@@ -159,16 +159,11 @@ exports[`Test SLI component should render SLI component 1`] = `
               src="test-file-stub"
             />
             <div
-              class="StyledProps--font StyledProps--main cardPickMetric StyledProps--border StyledProps--padding-xlarge"
+              class="StyledProps--font StyledProps--main cardPickMetric StyledProps--border StyledProps--padding-large"
             >
               <div
                 class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
-                >
-                  cv.slos.evaluationMethod
-                </p>
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-light"
                 >
@@ -842,7 +837,7 @@ exports[`Test SLI component should render SLI metric chart component for Ratio a
             class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-semi-bold StyledProps--margin-bottom-small StyledProps--margin-top-xxlarge"
+              class="StyledProps--font StyledProps--main eventType StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-semi-bold StyledProps--margin-bottom-small StyledProps--margin-top-xlarge"
             >
               cv.slos.sliType
             </p>
@@ -858,7 +853,7 @@ exports[`Test SLI component should render SLI metric chart component for Ratio a
                   role="button"
                   tabindex="0"
                 >
-                  cv.slos.slis.type.availability
+                  CV.SLOS.SLIS.TYPE.AVAILABILITY
                 </div>
                 <div
                   class="PillToggle--item"
@@ -866,12 +861,12 @@ exports[`Test SLI component should render SLI metric chart component for Ratio a
                   role="button"
                   tabindex="0"
                 >
-                  cv.slos.slis.type.latency
+                  CV.SLOS.SLIS.TYPE.LATENCY
                 </div>
               </div>
             </div>
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-light"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-light"
             >
               cv.slos.sliTypeSubtitle
             </p>
@@ -879,16 +874,11 @@ exports[`Test SLI component should render SLI metric chart component for Ratio a
               src="test-file-stub"
             />
             <div
-              class="StyledProps--font StyledProps--main cardPickMetric StyledProps--border StyledProps--padding-xlarge"
+              class="StyledProps--font StyledProps--main cardPickMetric StyledProps--border StyledProps--padding-large"
             >
               <div
                 class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
-                >
-                  cv.slos.evaluationMethod
-                </p>
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-light"
                 >
@@ -1751,7 +1741,7 @@ exports[`Test SLI component should render SLI metric chart component for Ratio a
             class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-semi-bold StyledProps--margin-bottom-small StyledProps--margin-top-xxlarge"
+              class="StyledProps--font StyledProps--main eventType StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-semi-bold StyledProps--margin-bottom-small StyledProps--margin-top-xlarge"
             >
               cv.slos.sliType
             </p>
@@ -1767,7 +1757,7 @@ exports[`Test SLI component should render SLI metric chart component for Ratio a
                   role="button"
                   tabindex="0"
                 >
-                  cv.slos.slis.type.availability
+                  CV.SLOS.SLIS.TYPE.AVAILABILITY
                 </div>
                 <div
                   class="PillToggle--item"
@@ -1775,12 +1765,12 @@ exports[`Test SLI component should render SLI metric chart component for Ratio a
                   role="button"
                   tabindex="0"
                 >
-                  cv.slos.slis.type.latency
+                  CV.SLOS.SLIS.TYPE.LATENCY
                 </div>
               </div>
             </div>
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-light"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-light"
             >
               cv.slos.sliTypeSubtitle
             </p>
@@ -1788,16 +1778,11 @@ exports[`Test SLI component should render SLI metric chart component for Ratio a
               src="test-file-stub"
             />
             <div
-              class="StyledProps--font StyledProps--main cardPickMetric StyledProps--border StyledProps--padding-xlarge"
+              class="StyledProps--font StyledProps--main cardPickMetric StyledProps--border StyledProps--padding-large"
             >
               <div
                 class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
-                >
-                  cv.slos.evaluationMethod
-                </p>
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-light"
                 >

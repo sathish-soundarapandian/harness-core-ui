@@ -12,8 +12,13 @@ declare const styles: {
   readonly addNewManifest: string
   readonly addmarginTop: string
   readonly advancedStepOpen: string
+  readonly advancesSteps: string
   readonly alignSelf: string
   readonly checkbox: string
+  readonly commandFlagType: string
+  readonly commandFlags: string
+  readonly commandType: string
+  readonly commandTypeSelect: string
   readonly configureOptions: string
   readonly connectorContainer: string
   readonly disabled: string
@@ -25,6 +30,7 @@ declare const styles: {
   readonly formContainer: string
   readonly halfWidth: string
   readonly headerContainer: string
+  readonly helmCommandFlags: string
   readonly helmToolTip: string
   readonly kustomizeYamlFolderPath: string
   readonly manifestForm: string

@@ -79,6 +79,7 @@ import SLODashbordFilters from './components/SLODashbordFilters/SLODashbordFilte
 import { SLOType } from './components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import SLOActions from './components/SLOActions/SLOActions'
 import { SLODetailsPageTabIds } from './CVSLODetailsPage/CVSLODetailsPage.types'
+import { EvaluationType } from './components/CVCreateSLOV2/CVCreateSLOV2.types'
 import css from './CVSLOsListingPage.module.scss'
 
 const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService }) => {
@@ -116,8 +117,8 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   }, [accountId, orgIdentifier, projectIdentifier])
 
   const sloDashboardWidgetsParams = useMemo(() => {
-    return getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber)
-  }, [pathParams, filterState, pageNumber])
+    return getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber, monitoredServiceIdentifier)
+  }, [pathParams, filterState, pageNumber, monitoredServiceIdentifier])
 
   const {
     data: dashboardWidgetsResponse,
@@ -171,7 +172,8 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   useEffect(() => {
     setPageNumber(0)
-    if (projectIdentifier) {
+
+    if (projectIdentifier || isAccountLevel) {
       // Resets all the filter
       dispatch(SLODashboardFilterActions.resetFilters())
 
@@ -445,6 +447,18 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   const RenderEvaluationType: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row?.original
     const { evaluationType = '' } = slo || {}
+    let evaluationLabel = ''
+    switch (evaluationType) {
+      case EvaluationType.WINDOW:
+        evaluationLabel = getString('cv.slos.slis.evaluationType.window')
+        break
+      case EvaluationType.REQUEST:
+        evaluationLabel = getString('common.request')
+        break
+      default:
+        break
+    }
+
     return (
       <Text
         className={css.titleInSloTable}
@@ -452,7 +466,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         font={{ align: 'left', size: 'normal', weight: 'light' }}
         color={Color.GREY_900}
       >
-        {evaluationType}
+        {evaluationLabel}
       </Text>
     )
   }
@@ -492,8 +506,8 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   const RenderRemainingErrorBudget: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row?.original
-    const { errorBudgetRemainingPercentage = '', errorBudgetRemaining = '' } = slo || {}
-
+    const { errorBudgetRemainingPercentage = '', errorBudgetRemaining = '', evaluationType = '' } = slo || {}
+    const isRequest = evaluationType === EvaluationType.REQUEST
     return (
       <Layout.Horizontal className={css.errorBudgetParent}>
         <Text
@@ -503,19 +517,21 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           padding={{ right: 'small' }}
           color={Color.GREY_900}
         >
-          {` ${Number(errorBudgetRemainingPercentage || 0).toFixed(2)}%`}
+          {isRequest ? getString('na') : ` ${Number(errorBudgetRemainingPercentage || 0).toFixed(2)}%`}
         </Text>
-        <Container className={css.errorBudgetRemainingContainer}>
-          <Text
-            font={{ variation: FontVariation.SMALL }}
-            lineClamp={1}
-            title={`${errorBudgetRemaining} m`}
-            color={Color.GREY_700}
-            className={css.errorBudgetRemaining}
-          >
-            {`${errorBudgetRemaining} m`}
-          </Text>
-        </Container>
+        {!isRequest && (
+          <Container className={css.errorBudgetRemainingContainer}>
+            <Text
+              font={{ variation: FontVariation.SMALL }}
+              lineClamp={1}
+              title={`${errorBudgetRemaining} m`}
+              color={Color.GREY_700}
+              className={css.errorBudgetRemaining}
+            >
+              {`${errorBudgetRemaining} m`}
+            </Text>
+          </Container>
+        )}
       </Layout.Horizontal>
     )
   }
@@ -538,7 +554,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     ? [
         {
           Header: getString('common.policy.evaluations').toUpperCase(),
-          width: '7%',
+          width: '9%',
           Cell: RenderEvaluationType
         }
       ]
@@ -552,7 +568,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     },
     {
       Header: getString('cv.slos.monitoredService').toUpperCase(),
-      width: SRM_ENABLE_REQUEST_SLO ? '12%' : '19%',
+      width: SRM_ENABLE_REQUEST_SLO ? '10%' : '19%',
       Cell: RenderMonitoredService
     },
     ...evaluationColumn,

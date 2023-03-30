@@ -326,12 +326,12 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
       </p>
     </div>
     <div
-      class="StyledProps--font StyledProps--main"
+      class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
     >
       <div
         class="StyledProps--font StyledProps--main main"
         data-testid="TimelineChartContainer"
-        style="height: 150px;"
+        style="height: 165px;"
       >
         <div
           class="main slider"
@@ -348,7 +348,7 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
             >
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main rowLabel"
-                style="--text-line-clamp: 1; width: 90px;"
+                style="--text-line-clamp: 1; width: 115px;"
               >
                 deploymentsText
               </p>
@@ -367,26 +367,7 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
             >
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main rowLabel"
-                style="--text-line-clamp: 1; width: 90px;"
-              >
-                infrastructureText
-              </p>
-              <div
-                class="StyledProps--font StyledProps--main timeline"
-              >
-                <hr />
-              </div>
-            </div>
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main main"
-          >
-            <div
-              class="StyledProps--font StyledProps--main timelineRow"
-            >
-              <p
-                class="StyledProps--font Text--lineclamp StyledProps--main rowLabel"
-                style="--text-line-clamp: 1; width: 90px;"
+                style="--text-line-clamp: 1; width: 115px;"
               >
                 common.purpose.cf.continuous
               </p>
@@ -405,9 +386,28 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
             >
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main rowLabel"
-                style="--text-line-clamp: 1; width: 90px;"
+                style="--text-line-clamp: 1; width: 115px;"
               >
                 cv.changeSource.tooltip.incidents
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main timeline"
+              >
+                <hr />
+              </div>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main main"
+          >
+            <div
+              class="StyledProps--font StyledProps--main timelineRow"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main rowLabel"
+                style="--text-line-clamp: 1; width: 115px;"
+              >
+                infrastructureText
               </p>
               <div
                 class="StyledProps--font StyledProps--main timeline"
@@ -421,7 +421,7 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
           >
             <p
               class="StyledProps--font StyledProps--main timelineLabel"
-              style="width: 90px;"
+              style="width: 115px;"
             >
               CV.TIMELINE
             </p>

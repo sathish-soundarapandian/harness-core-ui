@@ -131,7 +131,7 @@ export default function WebhookTriggerWizard(
     useFeatureFlags()
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
-  const [selectedView, setSelectedView] = useTriggerView()
+  const [selectedView, setSelectedView] = useTriggerView(isNewTrigger)
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const history = useHistory()
@@ -580,7 +580,7 @@ export default function WebhookTriggerWizard(
             description,
             tags,
             inputYaml,
-            inputSetRefs = [],
+            inputSetRefs,
             source: {
               pollInterval,
               webhookId,
@@ -729,7 +729,7 @@ export default function WebhookTriggerWizard(
             tags,
             inputYaml,
             pipelineBranchName = getDefaultPipelineReferenceBranch(),
-            inputSetRefs = [],
+            inputSetRefs,
             source: {
               spec: {
                 type: sourceRepoForCustomYaml,
@@ -931,7 +931,7 @@ export default function WebhookTriggerWizard(
         },
         inputYaml: stringifyPipelineRuntimeInput,
         pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : null,
-        inputSetRefs: isNewGitSyncRemotePipeline ? inputSetRefs : null
+        inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
       } as NGTriggerConfigV2
       if (triggerYaml.source?.spec?.spec) {
         triggerYaml.source.spec.spec.spec.payloadConditions = persistIncomplete
@@ -977,7 +977,7 @@ export default function WebhookTriggerWizard(
         },
         inputYaml: stringifyPipelineRuntimeInput,
         pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : null,
-        inputSetRefs: isNewGitSyncRemotePipeline ? inputSetRefs : null
+        inputSetRefs
       } as NGTriggerConfigV2
 
       if (secureToken && triggerYaml.source?.spec) {
@@ -1020,11 +1020,12 @@ export default function WebhookTriggerWizard(
       delete res.source.spec.spec.event
     }
 
-    if (isNewGitSyncRemotePipeline) {
+    if (values.inputSetRefs?.length || values.inputSetSelected?.length) {
       delete res.inputYaml
-      if (values.inputSetSelected?.length) {
-        res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
-      }
+    }
+
+    if (values.inputSetSelected?.length) {
+      res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
     }
 
     return { trigger: res }
@@ -1228,9 +1229,11 @@ export default function WebhookTriggerWizard(
   }, [])
 
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
-    if (isNewGitSyncRemotePipeline) {
+    if (triggerYaml.inputSetRefs?.length) {
       delete triggerYaml.inputYaml
+    }
 
+    if (isNewGitSyncRemotePipeline) {
       // Set pipelineBranchName to proper expression when it's left empty
       if (!(triggerYaml.pipelineBranchName || '').trim()) {
         triggerYaml.pipelineBranchName = getDefaultPipelineReferenceBranch(triggerYaml?.source?.spec?.spec?.type)
@@ -1243,7 +1246,7 @@ export default function WebhookTriggerWizard(
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -1260,7 +1263,7 @@ export default function WebhookTriggerWizard(
         }
       } catch (err) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((err as any)?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if ((err as any)?.data?.status === ResponseStatus.ERROR) {
           retryTriggerSubmit({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: getErrorMessage((err as any)?.data) || getString('triggers.retryTriggerSave')
@@ -1279,7 +1282,7 @@ export default function WebhookTriggerWizard(
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if (status === ResponseStatus.ERROR) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -1296,7 +1299,7 @@ export default function WebhookTriggerWizard(
         }
       } catch (err) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((err as any)?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+        if ((err as any)?.data?.status === ResponseStatus.ERROR) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           retryTriggerSubmit({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1324,9 +1327,9 @@ export default function WebhookTriggerWizard(
       parse(latestYaml)
       const errorsYaml =
         (yamlHandler?.getYAMLValidationErrorMap() as unknown as Map<number, string>) || /* istanbul ignore next */ ''
+      /* istanbul ignore next */
       if (errorsYaml?.size > 0) {
-        //? Do we want to add this
-        // showError(getString('common.validation.invalidYamlText'))
+        showError(getString('common.validation.invalidYamlText'))
         return
       }
       // handleModeSwitch?.(mode, yamlHandler)

@@ -72,7 +72,8 @@ const triggerDrawerMap = (
   getString: (key: StringKeys) => string,
   isNewService: boolean,
   allowV2Artifacts: boolean | undefined,
-  isGoogleCloudStorageEnabled: boolean | undefined
+  isGoogleCloudStorageEnabled: boolean | undefined,
+  isBambooArtifactNg: boolean | undefined
 ): AddDrawerMapInterface => ({
   drawerLabel: getString('common.triggersLabel'),
   showAllLabel: getString('triggers.showAllTriggers'),
@@ -182,12 +183,7 @@ const triggerDrawerMap = (
                 iconName: ArtifactIconByType.Jenkins as IconName,
                 disabled: isNewService
               },
-              {
-                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Bamboo]),
-                value: ENABLED_ARTIFACT_TYPES.Bamboo,
-                iconName: ArtifactIconByType.Bamboo as IconName,
-                disabled: isNewService
-              },
+
               {
                 itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AzureArtifacts]),
                 value: ENABLED_ARTIFACT_TYPES.AzureArtifacts,
@@ -204,6 +200,16 @@ const triggerDrawerMap = (
                 itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonMachineImage]),
                 value: ENABLED_ARTIFACT_TYPES.AmazonMachineImage,
                 iconName: ArtifactIconByType.AmazonMachineImage as IconName,
+                disabled: isNewService
+              }
+            ]
+          : []),
+        ...(isBambooArtifactNg
+          ? [
+              {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Bamboo]),
+                value: ENABLED_ARTIFACT_TYPES.Bamboo,
+                iconName: ArtifactIconByType.Bamboo as IconName,
                 disabled: isNewService
               }
             ]
@@ -258,8 +264,10 @@ export const getCategoryItems = (
   getString: (key: StringKeys) => string,
   isNewService: boolean,
   allowV2Artifacts: boolean | undefined,
-  isGoogleCloudStorageEnabled: boolean | undefined
-): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService, allowV2Artifacts, isGoogleCloudStorageEnabled)
+  isGoogleCloudStorageEnabled: boolean | undefined,
+  isBambooArtifactNg: boolean | undefined
+): AddDrawerMapInterface =>
+  triggerDrawerMap(getString, isNewService, allowV2Artifacts, isGoogleCloudStorageEnabled, isBambooArtifactNg)
 
 export interface ItemInterface {
   itemLabel: string

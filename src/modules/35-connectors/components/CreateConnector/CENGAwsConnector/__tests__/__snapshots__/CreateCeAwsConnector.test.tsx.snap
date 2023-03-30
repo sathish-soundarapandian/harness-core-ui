@@ -2310,6 +2310,7 @@ exports[`Create Secret Manager Wizard should render form 5`] = `
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--color StyledProps--color-grey800"
+                data-tooltip-id="connectors.connectorConnectionTest"
               >
                 connectors.stepThreeName
               </p>

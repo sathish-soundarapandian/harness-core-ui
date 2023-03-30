@@ -639,7 +639,7 @@ exports[`testing notification method selecting slack as notification method from
       >
         <div
           class="Text--withDocsTooltip"
-          data-tooltip-id="rbac.notificationMethod"
+          data-tooltip-id="notifications.notificationMethod"
         >
           <p
             class="StyledProps--font StyledProps--main"

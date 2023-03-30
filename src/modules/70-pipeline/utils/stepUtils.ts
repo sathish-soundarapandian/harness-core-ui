@@ -217,11 +217,18 @@ export function getStepPaletteModuleInfosFromStage(
                 shouldShowCommonSteps: false
               }
             ]
-      stepPalleteInfo.push({
-        module: 'cd',
-        category: 'Chaos',
-        shouldShowCommonSteps: false
-      })
+      stepPalleteInfo.push(
+        {
+          module: 'cd',
+          category: 'Chaos',
+          shouldShowCommonSteps: false
+        },
+        {
+          module: 'pms',
+          category: 'ssca',
+          shouldShowCommonSteps: false
+        }
+      )
       return stepPalleteInfo
     }
     default:

@@ -30,8 +30,15 @@ import {
   editFormData,
   ratioBasedSLO
 } from './CVCreateSLOV2.mock'
-import { getSLOTarget, getSLOV2InitialFormData } from '../CVCreateSLOV2.utils'
+import {
+  getServiceLevelIndicatorsIdentifier,
+  getServiceLevelIndicatorsIdentifierFromResponse,
+  getSLOTarget,
+  getSLOV2InitialFormData
+} from '../CVCreateSLOV2.utils'
 import { SLOType } from '../CVCreateSLOV2.constants'
+import { SLOV2FormMock } from '../components/CreateSimpleSloForm/__tests__/CreateSimpleSloForm.utils.mock'
+import type { SLOV2Form } from '../CVCreateSLOV2.types'
 
 jest.useFakeTimers()
 
@@ -779,7 +786,7 @@ describe('Simple SLO V2', () => {
     expect(container.querySelector('input[value="Good"]')).toBeChecked()
 
     act(() => {
-      userEvent.click(getByText('cv.slos.slis.type.latency'))
+      userEvent.click(getByText('cv.slos.slis.type.latency'.toUpperCase()))
     })
 
     act(() => {
@@ -880,5 +887,30 @@ describe('Simple SLO V2', () => {
       omit(initialData, ['serviceLevelIndicatorType'])
     )
     expect(getSLOV2InitialFormData(SLOType.SIMPLE, serviceLevelObjectiveV2 as any, false)).toEqual(editFormData)
+  })
+
+  test('validate getServiceLevelIndicatorsIdentifierFromResponse', () => {
+    expect(getServiceLevelIndicatorsIdentifierFromResponse(null)).toEqual(undefined)
+    expect(getServiceLevelIndicatorsIdentifierFromResponse(null, false)).toEqual(undefined)
+    expect(getServiceLevelIndicatorsIdentifierFromResponse(null, true)).toEqual(undefined)
+    expect(
+      getServiceLevelIndicatorsIdentifierFromResponse(
+        ratioBasedSLO as cvServices.RestResponseServiceLevelObjectiveV2Response,
+        true
+      )
+    ).toEqual(undefined)
+    expect(
+      getServiceLevelIndicatorsIdentifierFromResponse(
+        ratioBasedSLO as cvServices.RestResponseServiceLevelObjectiveV2Response,
+        false
+      )
+    ).toEqual(ratioBasedSLO.resource.serviceLevelObjectiveV2.spec.serviceLevelIndicators[0].identifier)
+  })
+
+  test('validate getServiceLevelIndicatorsIdentifier', () => {
+    expect(getServiceLevelIndicatorsIdentifier(SLOV2FormMock as SLOV2Form)).toEqual('Ratio_Based_Exceptions_per_Minute')
+    expect(getServiceLevelIndicatorsIdentifier(SLOV2FormMock as SLOV2Form, 'prvSLIIdentifier')).toEqual(
+      'prvSLIIdentifier'
+    )
   })
 })

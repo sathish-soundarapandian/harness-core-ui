@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { AllowedTypes, Formik, FormInput, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import {
+  Accordion,
+  AllowedTypes,
+  Formik,
+  FormInput,
+  getMultiTypeFromValue,
+  IconName,
+  MultiTypeInputType
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 
@@ -35,7 +43,12 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { FormMultiTypeCheckboxField } from '@common/components'
+import { isValueRuntimeInput } from '@common/utils/utils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type { TerraformCliOptionFlag } from 'services/cd-ng'
 import type { TFRollbackData } from '../Common/Terraform/TerraformInterfaces'
+import TerraformCommandFlags from '../Common/TerraformCommandFlags/TerraformCommandFlags'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -66,7 +79,14 @@ const setInitialValues = (data: TFRollbackData): TFRollbackData => {
     ...data,
     spec: {
       ...data.spec,
-      provisionerIdentifier: data?.spec?.provisionerIdentifier
+      provisionerIdentifier: data?.spec?.provisionerIdentifier,
+      skipRefreshCommand: data?.spec?.skipRefreshCommand || false,
+      commandFlags: data?.spec?.commandFlags?.map(
+        (commandFlag: { commandType: TerraformCliOptionFlag['commandType']; flag: string }) => ({
+          commandType: commandFlag.commandType,
+          flag: commandFlag.flag
+        })
+      )
     }
   }
 }
@@ -77,7 +97,7 @@ function TerraformRollbackWidget(
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, isNewStep = true, readonly = false } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-
+  const { CDS_TERRAFORM_CLI_OPTIONS_NG } = useFeatureFlags()
   return (
     <>
       <Formik<TFRollbackData>
@@ -161,6 +181,52 @@ function TerraformRollbackWidget(
                   />
                 )}
               </div>
+              {CDS_TERRAFORM_CLI_OPTIONS_NG && (
+                <Accordion className={stepCss.accordion}>
+                  <Accordion.Panel
+                    id="step-1"
+                    summary={getString('cd.commandLineOptions')}
+                    details={
+                      <>
+                        <div className={cx(stepCss.formGroup, stepCss.md)}>
+                          <FormMultiTypeCheckboxField
+                            formik={formik as FormikProps<unknown>}
+                            name={'spec.skipRefreshCommand'}
+                            label={getString('cd.skipRefreshCommand')}
+                            multiTypeTextbox={{ expressions, allowableTypes }}
+                            disabled={readonly}
+                          />
+                          {getMultiTypeFromValue(formik.values?.spec?.skipRefreshCommand) ===
+                            MultiTypeInputType.RUNTIME && (
+                            <ConfigureOptions
+                              value={(formik.values?.spec?.skipRefreshCommand || '') as string}
+                              type="String"
+                              variableName="spec.skipRefreshCommand"
+                              showRequiredField={false}
+                              showDefaultField={false}
+                              onChange={
+                                /* istanul ignore next */
+                                value => formik.setFieldValue('spec.skipRefreshCommand', value)
+                              }
+                              style={{ alignSelf: 'center' }}
+                              isReadonly={readonly}
+                            />
+                          )}
+                        </div>
+                        <div>
+                          <TerraformCommandFlags
+                            formik={formik}
+                            stepType="ROLLBACK"
+                            configType={'configuration'}
+                            allowableTypes={allowableTypes}
+                            path={'spec.commandFlags'}
+                          />
+                        </div>
+                      </>
+                    }
+                  />
+                </Accordion>
+              )}
             </>
           )
         }}
@@ -216,6 +282,19 @@ const TerraformRollbackInputStep: React.FC<TerraformRollbackProps> = ({
           className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
+      {isValueRuntimeInput(inputSetData?.template?.spec?.skipRefreshCommand) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipRefreshCommand`}
+            label={getString('cd.skipRefreshCommand')}
+            multiTypeTextbox={{ expressions, allowableTypes }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+          />
+        </div>
+      )}
     </>
   )
 }
@@ -251,7 +330,8 @@ export class TerraformRollback extends PipelineStep<TFRollbackData> {
     timeout: '10m',
     spec: {
       provisionerIdentifier: '',
-      delegateSelectors: []
+      delegateSelectors: [],
+      skipRefreshCommand: false
     }
   }
   protected stepIcon: IconName = 'terraform-rollback'

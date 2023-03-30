@@ -48,7 +48,7 @@ export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepD
       infrastructure: {
         type: 'KubernetesDirect',
         spec: {
-          connector: '',
+          connectorRef: '',
           namespace: '',
           resources: {
             limits: {

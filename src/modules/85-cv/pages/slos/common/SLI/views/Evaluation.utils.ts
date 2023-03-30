@@ -20,11 +20,13 @@ export const getPillToggleOptions = (getString: UseStringsReturn['getString'], o
   const { AVAILABILITY, LATENCY } = SLITypes
   const options: [PillToggleOption<EvaluationType | SLITypes>, PillToggleOption<EvaluationType | SLITypes>] = [
     {
-      label: getString(occurenceBased ? 'cv.slos.slis.evaluationType.window' : 'cv.slos.slis.type.availability'),
+      label: getString(
+        occurenceBased ? 'cv.slos.slis.evaluationType.window' : 'cv.slos.slis.type.availability'
+      ).toUpperCase(),
       value: occurenceBased ? WINDOW : AVAILABILITY
     },
     {
-      label: getString(occurenceBased ? 'common.request' : 'cv.slos.slis.type.latency'),
+      label: getString(occurenceBased ? 'common.request' : 'cv.slos.slis.type.latency').toUpperCase(),
       value: occurenceBased ? REQUEST : LATENCY
     }
   ]

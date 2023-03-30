@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import * as ceService from 'services/ce'
@@ -58,28 +58,5 @@ describe('Create Perspective folders Resource table', () => {
 
     expect(container.querySelector('.PageSpinner--spinner')).toBeDefined()
     expect(container).toMatchSnapshot()
-  })
-
-  test('Call selector change fn on click of delete icon', async () => {
-    jest.spyOn(ceService, 'useGetFolders').mockImplementation((): any => {
-      return { data: FoldersData, loading: false }
-    })
-    const { container } = render(
-      <TestWrapper>
-        <PerspectiveResourceRenderer {...props} />
-      </TestWrapper>
-    )
-
-    const tableElm = container.querySelector('.TableV2--table')
-    expect(tableElm).toBeInTheDocument()
-
-    const deleteIcon = container.querySelector('[data-test-id="deleteIcon_yVi1Q8cgQnaq-y1YqmELFQ"]')
-    expect(deleteIcon).toBeDefined()
-
-    act(() => {
-      fireEvent.click(deleteIcon!)
-    })
-
-    expect(props.onResourceSelectionChange).toBeCalled()
   })
 })

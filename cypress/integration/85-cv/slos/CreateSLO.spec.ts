@@ -143,7 +143,7 @@ describe('Create SLO', () => {
     cy.contains('p', 'SLI Type').should('be.visible')
 
     cy.get('input[name="healthSourceRef"]').should('have.value', 'appd_cvng_prod')
-    cy.get('div.PillToggle--selected').should('have.text', 'Latency')
+    cy.get('div.PillToggle--selected').should('have.text', 'Latency'.toUpperCase())
     cy.get('input[name="SLIMetricType"][value="Ratio"]').should('be.checked')
     cy.get('input[name="eventType"]').should('have.value', 'Good')
     cy.get('input[name="goodRequestMetric"]').should('have.value', 'https_errors_per_min')
@@ -215,7 +215,7 @@ describe('Create SLO', () => {
     cy.get('input[name="goodRequestMetric"]').should('be.enabled')
     cy.get('input[name="validRequestMetric"]').should('be.enabled')
 
-    cy.get('div.PillToggle--selected').should('have.text', 'Availability')
+    cy.get('div.PillToggle--selected').should('have.text', 'Availability'.toUpperCase())
 
     cy.get('input[name="SLIMetricType"][value="Ratio"]').should('be.checked')
 

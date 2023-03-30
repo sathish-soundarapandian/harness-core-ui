@@ -32,7 +32,8 @@ import type {
   GarSpec,
   AzureArtifactsRegistrySpec,
   AMIRegistrySpec,
-  GoolgeCloudStorageRegistrySpec
+  GoolgeCloudStorageRegistrySpec,
+  BambooRegistrySpec
 } from 'services/pipeline-ng'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -2007,7 +2008,7 @@ export const getArtifactManifestTriggerYaml = ({
     },
     inputYaml: stringifyPipelineRuntimeInput,
     pipelineBranchName: _gitAwareForTriggerEnabled ? pipelineBranchName : null,
-    inputSetRefs: _gitAwareForTriggerEnabled ? inputSetRefs : null
+    inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
   }
   if (artifactType) {
     if (triggerYaml?.source?.spec && Object.getOwnPropertyDescriptor(triggerYaml?.source?.spec, 'manifestRef')) {
@@ -2039,6 +2040,15 @@ export const getTriggerArtifactInitialSpec = (
         registryHostname: '',
         tag
       } as GcrSpec
+    }
+    case 'Bamboo': {
+      return {
+        artifactPaths: [],
+        build: '',
+        connectorRef,
+        eventConditions,
+        planKey: ''
+      } as BambooRegistrySpec
     }
     case 'Ecr': {
       return {

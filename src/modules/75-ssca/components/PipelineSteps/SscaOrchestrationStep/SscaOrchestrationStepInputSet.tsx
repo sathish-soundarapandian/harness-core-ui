@@ -66,13 +66,13 @@ export default function SscaOrchestrationStepInputSet(props: SscaOrchestrationSt
       )}
       {stepType === StepType.CdSscaOrchestration ? (
         <>
-          {isValueRuntimeInput(template?.spec?.infrastructure?.spec?.connector) && (
+          {isValueRuntimeInput(template?.spec?.infrastructure?.spec?.connectorRef) && (
             <div className={cx(stepCss.formGroup, stepCss.md)}>
               <FormMultiTypeConnectorField
                 accountIdentifier={accountId}
                 projectIdentifier={projectIdentifier}
                 orgIdentifier={orgIdentifier}
-                name={`${path}.spec.infrastructure.spec.connector`}
+                name={`${path}.spec.infrastructure.spec.connectorRef`}
                 label={getString('connector')}
                 placeholder={getString('common.entityPlaceholderText')}
                 disabled={readonly}
@@ -82,7 +82,7 @@ export default function SscaOrchestrationStepInputSet(props: SscaOrchestrationSt
                 gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
                 templateProps={{
                   isTemplatizedView: true,
-                  templateValue: template?.spec?.infrastructure?.spec?.connector
+                  templateValue: template?.spec?.infrastructure?.spec?.connectorRef
                 }}
                 width={388}
               />

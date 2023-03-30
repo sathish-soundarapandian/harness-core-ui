@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, get, isEmpty, unset } from 'lodash-es'
+import { defaultTo, get, isEmpty, isUndefined, unset } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
 import * as Yup from 'yup'
 import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
@@ -20,6 +20,7 @@ import type {
   StringNGVariable,
   TerraformApplyStepInfo,
   TerraformBackendConfig,
+  TerraformCliOptionFlag,
   TerraformCloudCliPlanExecutionData,
   TerraformConfigFilesWrapper,
   TerraformDestroyStepInfo,
@@ -207,12 +208,13 @@ export interface TerraformData extends StepElementConfig {
     provisionerIdentifier?: string
     configuration?: {
       type?: 'Inline' | 'InheritFromPlan' | 'InheritFromApply'
+      skipRefreshCommand?: boolean
+      commandFlags?: TerraformCliOptionFlag[]
       spec?: TFDataSpec
     }
-
-    cloudCliConfiguration?: Omit<TerraformCloudCliPlanExecutionData, 'environmentVariables' | 'targets'> & {
-      targets?: Array<{ id: string; value: string }> | string[] | string
-      environmentVariables?: Array<{ key: string; id: string; value: string }> | string
+    cloudCliConfiguration?: {
+      commandFlags?: TerraformCliOptionFlag[]
+      spec?: TFDataSpec
     }
   }
 }
@@ -309,6 +311,18 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
   const fieldPath = values.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
   const envVars = get(values.spec, `${fieldPath}.spec.environmentVariables`)
   const targets = get(values.spec, `${fieldPath}.spec.targets`) as MultiTypeInputType
+  const cmdFlags = get(values.spec, `${fieldPath}.commandFlags`)
+  const processCmdFlags = cmdFlags?.map((commandFlag: TerraformCliOptionFlag) =>
+    commandFlag.commandType && commandFlag.flag
+      ? {
+          commandType: commandFlag.commandType,
+          flag: commandFlag.flag
+        }
+      : {
+          commandType: '',
+          flag: ''
+        }
+  )
 
   if (values?.spec?.configuration?.type === 'Inline' || values?.spec?.cloudCliConfiguration) {
     const envMap: StringNGVariable[] = []
@@ -428,6 +442,8 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
           ...values.spec,
           configuration: {
             type: values?.spec?.configuration?.type,
+            skipRefreshCommand: values?.spec?.configuration?.skipRefreshCommand,
+            commandFlags: cmdFlags?.length && cmdFlags[0].commandType && processCmdFlags,
             spec: {
               ...configObject
             }
@@ -441,6 +457,7 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
         spec: {
           ...values.spec,
           cloudCliConfiguration: {
+            commandFlags: cmdFlags?.length && cmdFlags[0].commandType && processCmdFlags,
             spec: {
               ...configObject
             }
@@ -449,14 +466,15 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
       }
     }
   }
-
   return {
     ...values,
     spec: {
       ...values.spec,
       provisionerIdentifier: values?.spec?.provisionerIdentifier,
       configuration: {
-        type: values?.spec?.configuration?.type
+        type: values?.spec?.configuration?.type,
+        skipRefreshCommand: values?.spec?.configuration?.skipRefreshCommand,
+        commandFlags: cmdFlags?.length && cmdFlags[0].commandType && processCmdFlags
       }
     }
   }
@@ -550,6 +568,22 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
     configObject['targets'] = get(values.spec, `${fieldPath}.targets`)
   }
 
+  const cmdFlags = get(values.spec, `${fieldPath}.commandFlags`)
+
+  if (cmdFlags?.length && cmdFlags[0].commandType) {
+    configObject['commandFlags'] = cmdFlags?.map((commandFlag: TerraformCliOptionFlag) =>
+      commandFlag.commandType && commandFlag.flag
+        ? {
+            commandType: commandFlag.commandType,
+            flag: commandFlag.flag
+          }
+        : {
+            commandType: '',
+            flag: ''
+          }
+    )
+  }
+
   if (get(values.spec, `${fieldPath}.varFiles`)?.length) {
     configObject['varFiles'] = get(values.spec, `${fieldPath}.varFiles`)
   }
@@ -585,16 +619,16 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
     configObject['workspace'] = values?.spec?.configuration?.workspace ? values?.spec?.configuration?.workspace : ''
   }
 
-  if (values?.spec?.configuration?.exportTerraformPlanJson) {
+  if (!isUndefined(values?.spec?.configuration?.exportTerraformPlanJson)) {
     configObject['exportTerraformPlanJson'] = values?.spec?.configuration?.exportTerraformPlanJson
-      ? values?.spec?.configuration?.exportTerraformPlanJson
-      : false
   }
 
-  if (values?.spec?.configuration?.exportTerraformHumanReadablePlan) {
+  if (!isUndefined(values?.spec?.configuration?.exportTerraformHumanReadablePlan)) {
     configObject['exportTerraformHumanReadablePlan'] = values?.spec?.configuration?.exportTerraformHumanReadablePlan
-      ? values?.spec?.configuration?.exportTerraformHumanReadablePlan
-      : false
+  }
+
+  if (!isUndefined(values?.spec?.configuration?.skipRefreshCommand)) {
+    configObject['skipRefreshCommand'] = values?.spec?.configuration?.skipRefreshCommand
   }
 
   if (values.spec?.configuration) {
@@ -637,9 +671,9 @@ export const getTFPlanInitialValues = (data: TFPlanFormData): TFPlanFormData => 
   const envVars = get(data, `${path}.environmentVariables`) as StringNGVariable[]
   const isEnvRunTime = getMultiTypeFromValue(envVars as any) === MultiTypeInputType.RUNTIME
   const isTargetRunTime = getMultiTypeFromValue(get(data, `${path}.targets`) as any) === MultiTypeInputType.RUNTIME
-
   const tfPlanSpec = {
     ...get(data, path),
+    skipRefreshCommand: get(data, `${path}.skipRefreshCommand`, false),
     command: get(data, `${path}.command`, CommandTypes.Apply),
     targets: !isTargetRunTime
       ? Array.isArray(get(data, `${path}.targets`))
@@ -657,7 +691,11 @@ export const getTFPlanInitialValues = (data: TFPlanFormData): TFPlanFormData => 
             id: uuid()
           }))
         : [{ key: '', value: '', id: uuid() }]
-      : get(data, `${path}.environmentVariables`)
+      : get(data, `${path}.environmentVariables`),
+    commandFlags: get(data, `${path}.commandFlags`)?.map((commandFlag: { commandType: string; flag: string }) => ({
+      commandType: commandFlag.commandType,
+      flag: commandFlag.flag
+    }))
   }
 
   return {
@@ -682,6 +720,7 @@ export const getTerraformInitialValues = (data: any): TerraformData => {
   const envVars = get(data, `${path}.spec.environmentVariables`) as StringNGVariable[]
   const terraformSpec = {
     ...get(data, `${path}.spec`),
+
     targets: Array.isArray(get(data, `${path}.spec.targets`))
       ? get(data, `${path}.spec.targets`).map((target: any) => ({
           value: target,
@@ -706,10 +745,27 @@ export const getTerraformInitialValues = (data: any): TerraformData => {
           ? {
               configuration: {
                 type: defaultTo(data.spec?.configuration?.type, ConfigurationTypes.Inline),
+                skipRefreshCommand: data.spec?.configuration?.skipRefreshCommand,
+                commandFlags: get(data, `${path}.commandFlags`)?.map(
+                  (commandFlag: { commandType: string; flag: string }) => ({
+                    commandType: commandFlag.commandType,
+                    flag: commandFlag.flag
+                  })
+                ),
                 spec: { ...terraformSpec }
               }
             }
-          : { cloudCliConfiguration: { spec: { ...terraformSpec } } })
+          : {
+              cloudCliConfiguration: {
+                commandFlags: get(data, `${path}.commandFlags`)?.map(
+                  (commandFlag: { commandType: string; flag: string }) => ({
+                    commandType: commandFlag.commandType,
+                    flag: commandFlag.flag
+                  })
+                ),
+                spec: { ...terraformSpec }
+              }
+            })
       }
     })
   }

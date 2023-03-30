@@ -165,7 +165,7 @@ const processParallelNodeData = ({
     status: parentNodeData?.status as ExecutionStatus,
     data: {
       ...iconData,
-      ...(parentNodeData?.stepType === StepNodeType.STEP_GROUP
+      ...(parentNodeData?.stepType === StepNodeType.STEP_GROUP || parentNodeData?.stepType === StepNodeType.GROUP
         ? {
             isNestedGroup,
             stepGroup: {
@@ -274,7 +274,7 @@ const processStepGroupSteps = ({
             rootNodes,
             isNestedGroup
           })
-        : nodeStrategyType === StepNodeType.STEP_GROUP
+        : nodeStrategyType === StepNodeType.STEP_GROUP || nodeStrategyType === StepNodeType.GROUP
         ? processStepGroupSteps({
             nodeAdjacencyListMap,
             id: nodeData?.uuid as string,
@@ -295,7 +295,9 @@ const processStepGroupSteps = ({
           matrixNodeName,
           type: nodeStrategyType,
           nodeType: nodeStrategyType,
-          ...(isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === StepNodeType.STEP_GROUP
+          ...(isNodeTypeMatrixOrFor(nodeStrategyType) ||
+          nodeStrategyType === StepNodeType.STEP_GROUP ||
+          nodeStrategyType === StepNodeType.GROUP
             ? {
                 data: {
                   ...nodeData?.progressData,
@@ -383,7 +385,7 @@ const processSingleItem = ({
     data: {
       ...iconData,
       graphType: PipelineGraphType.STEP_GRAPH,
-      ...(nodeData?.stepType === StepNodeType.STEP_GROUP
+      ...(nodeData?.stepType === StepNodeType.STEP_GROUP || nodeData?.stepType === StepNodeType.GROUP
         ? {
             stepGroup: {
               ...item,
@@ -428,6 +430,7 @@ export const processNodeDataV1 = (
       processParallelNodeData({ items, id: item, nodeAdjacencyListMap, nodeMap, rootNodes, isNestedGroup })
     } else if (
       nodeData?.stepType === StepNodeType.STEP_GROUP ||
+      nodeData?.stepType === StepNodeType.GROUP ||
       nodeData?.stepType === StepNodeType.NG_SECTION ||
       nodeData?.stepType === StepNodeType.STRATEGY ||
       (nodeData && isRollback)
@@ -502,7 +505,9 @@ ProcessGroupItemArgs): void => {
                 : (stepNodeData?.stepType as string)
 
             const stepData =
-              isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === StepNodeType.STEP_GROUP
+              isNodeTypeMatrixOrFor(nodeStrategyType) ||
+              nodeStrategyType === StepNodeType.STEP_GROUP ||
+              nodeStrategyType === StepNodeType.GROUP
                 ? processStepGroupSteps({
                     nodeAdjacencyListMap,
                     id: stepNodeData?.uuid as string,
@@ -526,7 +531,9 @@ ProcessGroupItemArgs): void => {
                   ...stepNodeData,
                   graphType: PipelineGraphType.STEP_GRAPH,
                   conditionalExecutionEnabled: getConditionalExecutionFlag(stepNodeData?.nodeRunInfo),
-                  ...((isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === StepNodeType.STEP_GROUP) && {
+                  ...((isNodeTypeMatrixOrFor(nodeStrategyType) ||
+                    nodeStrategyType === StepNodeType.STEP_GROUP ||
+                    nodeStrategyType === StepNodeType.GROUP) && {
                     isNestedGroup: true, // strategy in step_group
                     type: nodeStrategyType,
                     nodeType: nodeStrategyType,
@@ -553,7 +560,7 @@ ProcessGroupItemArgs): void => {
         childStep?.status as ExecutionStatus,
         ExecutionPipelineNodeType.NORMAL
       )
-      if (childStep?.stepType === StepNodeType.STEP_GROUP) {
+      if (childStep?.stepType === StepNodeType.STEP_GROUP || childStep?.stepType === StepNodeType.GROUP) {
         steps.push({
           step: {
             ...childStepIconData,
@@ -676,6 +683,7 @@ ProcessGroupItemArgs): void => {
     ...getNodeConditions(nodeData),
     data: {
       ...(nodeData?.stepType === StepNodeType.STEP_GROUP ||
+      nodeData?.stepType === StepNodeType.GROUP ||
       nodeData.stepType === StepNodeType.ROLLBACK_OPTIONAL_CHILD_CHAIN
         ? {
             graphType: PipelineGraphType.STEP_GRAPH,
@@ -742,7 +750,11 @@ export const processNextNodes = ({
     const isRollbackNext = nodeDataNext?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
     if (nodeDataNext?.stepType === StepNodeType.FORK) {
       processParallelNodeData({ items: result, id, nodeAdjacencyListMap, nodeMap, rootNodes, isNestedGroup })
-    } else if (nodeDataNext?.stepType === StepNodeType.STEP_GROUP || (isRollbackNext && nodeDataNext)) {
+    } else if (
+      nodeDataNext?.stepType === StepNodeType.STEP_GROUP ||
+      nodeDataNext?.stepType === StepNodeType.GROUP ||
+      (isRollbackNext && nodeDataNext)
+    ) {
       processGroupItem({ items: result, id, isRollbackNext, nodeMap, nodeAdjacencyListMap, rootNodes, isNestedGroup })
     } else {
       processSingleItem({ id, items: result, nodeMap, nodeAdjacencyListMap, rootNodes })
@@ -845,14 +857,26 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
             }
           }
         } else if (nodeData.stepType === StepNodeType.FORK) {
-          items.push({
-            parallel: processNodeDataV1(
-              nodeAdjacencyListMap[nodeId].children || /* istanbul ignore next */ [],
-              graph?.nodeMap,
-              graph?.nodeAdjacencyListMap,
-              items
-            )
+          processParallelNodeData({
+            items,
+            id: nodeData.uuid as string,
+            nodeAdjacencyListMap,
+            nodeMap: graph.nodeMap,
+            rootNodes: items
           })
+        } else if (nodeData.identifier === LITE_ENGINE_TASK) {
+          // handle lite engine task seperately for V1 yaml and process next nodes accordingly since NG_EXECUTION node is not available for V! yaml execution
+          const parentNodeId =
+            Object.keys(nodeAdjacencyListMap || {}).find(key => {
+              const val = nodeAdjacencyListMap[key]
+              return val?.children?.includes(nodeData.uuid!)
+            }) || ''
+          processLiteEngineTask(nodeData, items as any, graph?.nodeMap?.[parentNodeId])
+          const nextIds = nodeAdjacencyListMap?.[nodeId].nextIds || /* istanbul ignore next */ []
+          const nodeMap = graph?.nodeMap
+          const processedNodes = processNextNodes({ nodeMap, nodeAdjacencyListMap, nextIds, rootNodes: items })
+          items.push(...processedNodes)
+          break
         } else {
           const iconData = getIconDataBasedOnType(nodeData)
 

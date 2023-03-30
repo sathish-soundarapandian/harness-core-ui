@@ -262,11 +262,13 @@ export default function ManifestTriggerWizard(
       pipelineIdentifier,
       gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
     })
-    if (isNewGitSyncRemotePipeline) {
+
+    if (values.inputSetRefs?.length || values.inputSetSelected?.length) {
       delete res.inputYaml
-      if (values.inputSetSelected?.length) {
-        res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
-      }
+    }
+
+    if (values.inputSetSelected?.length) {
+      res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
     }
 
     return { trigger: res }
@@ -442,7 +444,7 @@ export default function ManifestTriggerWizard(
           tags,
           inputYaml,
           pipelineBranchName = getDefaultPipelineReferenceBranch(),
-          inputSetRefs = [],
+          inputSetRefs,
           source
         }
       } = triggerResponseJson
@@ -589,9 +591,11 @@ export default function ManifestTriggerWizard(
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
     setErrorToasterMessage('')
 
-    if (isNewGitSyncRemotePipeline) {
+    if (triggerYaml.inputSetRefs?.length) {
       delete triggerYaml.inputYaml
+    }
 
+    if (isNewGitSyncRemotePipeline) {
       // Set pipelineBranchName to proper expression when it's left empty
       if (!(triggerYaml.pipelineBranchName || '').trim()) {
         triggerYaml.pipelineBranchName = getDefaultPipelineReferenceBranch(
@@ -601,7 +605,7 @@ export default function ManifestTriggerWizard(
       }
     }
     const successCallback = ({ status, data, message }: ResponseNGTriggerResponseWithMessage): void => {
-      if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+      if (status === ResponseStatus.ERROR) {
         retryTriggerSubmit({ message })
       } else if (data?.errors && !isEmpty(data?.errors)) {
         const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -632,7 +636,7 @@ export default function ManifestTriggerWizard(
     }
 
     const errorCallback = (err: any): void => {
-      if (err?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+      if (err?.data?.status === ResponseStatus.ERROR) {
         retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
       } else {
         setErrorToasterMessage(getErrorMessage(err))

@@ -189,7 +189,7 @@ function BambooStepInputSet(
               placeholder={
                 loadingPlans
                   ? getString('common.loadingFieldOptions', {
-                      fieldName: getString('common.subscriptions.tabs.plans')
+                      fieldName: getString('common.subscriptions.overview.plan')
                     })
                   : getString('pipeline.planNamePlaceholder')
               }

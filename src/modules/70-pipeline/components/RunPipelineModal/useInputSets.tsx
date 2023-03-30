@@ -132,6 +132,19 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
   // Reason for sending repoIdentifier and pipelineRepoID both as same values
   // input sets are only saved in same repo and same branch that of pipeline's or default branch of other repos
   // getDefaultFromOtherRepo: true takes care of fetching input sets from other repo, default branches
+
+  const getLastYamlToMerge = () => {
+    if (!inputSetSelected?.length) {
+      if (rerunInputSetYaml) {
+        return rerunInputSetYaml
+      } else if (!isUndefined(currentYAML)) {
+        return yamlStringify({ pipeline: currentYAML })
+      } else {
+        return undefined
+      }
+    }
+  }
+
   const {
     data: inputSetData,
     loading: loadingInputSetsData,
@@ -141,11 +154,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     body: {
       inputSetReferences: inputSetSelected?.map(row => row.value),
       stageIdentifiers: getStageIdentifierFromStageData(selectedStageData),
-      lastYamlToMerge: rerunInputSetYaml
-        ? rerunInputSetYaml
-        : !isUndefined(currentYAML)
-        ? yamlStringify({ pipeline: currentYAML })
-        : undefined
+      lastYamlToMerge: getLastYamlToMerge()
     },
     queryParams: {
       accountIdentifier: accountId,

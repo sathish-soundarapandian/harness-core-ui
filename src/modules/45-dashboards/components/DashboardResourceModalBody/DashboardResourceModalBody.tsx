@@ -15,7 +15,7 @@ import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/Resource
 import { PageSpinner } from '@common/components'
 
 import routes from '@common/RouteDefinitions'
-import { useGetFolder, useGetOotbFolderId } from 'services/custom-dashboards'
+import { useGetFoldersWithHidden } from 'services/custom-dashboards'
 
 import { useStrings } from 'framework/strings'
 
@@ -49,7 +49,7 @@ export const RenderColumnSecret: Renderer<CellProps<FolderList>> = ({ row }) => 
         </Link>
       </Text>
       <Container flex={{ justifyContent: 'start' }} className={css.dashboardShortcutList}>
-        {data.Children.map((dashboards: { id: string; name: string }) => {
+        {data.Children.slice(0, 3).map((dashboards: { id: string; name: string }) => {
           return (
             <Layout.Horizontal className={css.dashboardDetail} key={dashboards?.name + '_' + dashboards?.id}>
               {dashboards.name}
@@ -89,23 +89,9 @@ const DashboardResourceModalBody: React.FC<DashboardResourceModalBodyProps> = ({
   const [page, setPage] = React.useState(0)
   const { getString } = useStrings()
 
-  const { data: folders, loading: fetchingFolders } = useGetFolder({
-    queryParams: { accountId: accountIdentifier, page: page + 1, pageSize: PAGE_SIZE, isAdmin: true }
+  const { data: folders, loading: fetchingFolders } = useGetFoldersWithHidden({
+    queryParams: { accountId: accountIdentifier, page: page + 1, pageSize: PAGE_SIZE }
   })
-
-  const { data: ootbFolder, loading: fetchingOotbFolder } = useGetOotbFolderId({
-    queryParams: { accountId: accountIdentifier }
-  })
-
-  const includeOotbBeforeOnChange = (items: string[]): void => {
-    if (ootbFolder?.resource) {
-      items = items.filter((val: string) => val !== ootbFolder.resource)
-      if (items.length > 0) {
-        items.push(ootbFolder.resource)
-      }
-    }
-    onSelectChange(items)
-  }
 
   const parsedFolders =
     folders?.resource?.map((folder: { id: string; name: string }) => ({
@@ -113,7 +99,9 @@ const DashboardResourceModalBody: React.FC<DashboardResourceModalBodyProps> = ({
       ...folder
     })) || []
 
-  if (fetchingFolders || fetchingOotbFolder) return <PageSpinner />
+  if (fetchingFolders) {
+    return <PageSpinner />
+  }
   return parsedFolders?.length > 0 ? (
     <Container className={css.container}>
       <ResourceHandlerTable
@@ -135,7 +123,7 @@ const DashboardResourceModalBody: React.FC<DashboardResourceModalBodyProps> = ({
           pageIndex: page || 0,
           gotoPage: pageNumber => setPage(pageNumber)
         }}
-        onSelectChange={includeOotbBeforeOnChange}
+        onSelectChange={onSelectChange}
       />
     </Container>
   ) : (

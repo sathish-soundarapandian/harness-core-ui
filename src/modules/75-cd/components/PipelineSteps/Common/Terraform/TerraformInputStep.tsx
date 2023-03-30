@@ -8,10 +8,15 @@
 import React from 'react'
 import cx from 'classnames'
 import { get, isEmpty } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text, Label } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text, Label, FormInput } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikContextType } from 'formik'
-import type { TerraformVarFileWrapper } from 'services/cd-ng'
+import type {
+  TerraformBackendConfigSpec,
+  TerraformCliOptionFlag,
+  TerraformStepConfiguration,
+  TerraformVarFileWrapper
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
@@ -19,6 +24,8 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { isValueRuntimeInput } from '@common/utils/utils'
+import { FormMultiTypeCheckboxField } from '@common/components'
 import { TerraformData, TerraformProps, TerraformStoreTypes } from './TerraformInterfaces'
 import ConfigInputs from './InputSteps/ConfigSection'
 import TFRemoteSection from './InputSteps/TFRemoteSection'
@@ -112,7 +119,8 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
         return <></>
       })}
 
-      {getMultiTypeFromValue(inputSetDataSpec?.spec?.backendConfig?.spec?.content) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue((inputSetDataSpec?.spec?.backendConfig as TerraformBackendConfigSpec)?.spec?.content) ===
+        MultiTypeInputType.RUNTIME && (
         <div
           className={cx(stepCss.formGroup, stepCss.md)}
           // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
@@ -121,7 +129,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
           }}
         >
           <MultiTypeFieldSelector
-            name={`${path}.spec.${fieldPath}.backendConfig.spec.content`}
+            name={`${path}.spec.${fieldPath}.spec.backendConfig.spec.content`}
             label={getString('cd.backEndConfig')}
             defaultValueToReset=""
             allowedTypes={allowableTypes}
@@ -131,7 +139,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
               /* istanbul ignore next */
               return (
                 <TFMonaco
-                  name={`${path}.spec.${fieldPath}.backendConfig.spec.content`}
+                  name={`${path}.spec.${fieldPath}.spec.backendConfig.spec.content`}
                   formik={formik!}
                   expressions={expressions}
                   title={getString('tagsLabel')}
@@ -140,7 +148,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
             }}
           >
             <TFMonaco
-              name={`${path}.spec.${fieldPath}.backendConfig.spec.content`}
+              name={`${path}.spec.${fieldPath}.spec.backendConfig.spec.content`}
               formik={formik!}
               expressions={expressions}
               title={getString('tagsLabel')}
@@ -163,6 +171,41 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
           />
         </div>
       )}
+
+      {isValueRuntimeInput((inputSetDataSpec as TerraformStepConfiguration)?.skipRefreshCommand) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.skipRefreshCommand`}
+            label={getString('cd.skipRefreshCommand')}
+            multiTypeTextbox={{ expressions, allowableTypes }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+          />
+        </div>
+      )}
+
+      {inputSetDataSpec?.commandFlags?.map((terraformCommandFlag: TerraformCliOptionFlag, terraformFlagIdx: number) => {
+        if (
+          isValueRuntimeInput(get(inputSetData?.template, `spec.${fieldPath}.commandFlags[${terraformFlagIdx}].flag`))
+        ) {
+          return (
+            <div className={cx(stepCss.formGroup, stepCss.md)} key={terraformFlagIdx}>
+              <FormInput.MultiTextInput
+                name={`${
+                  isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+                }spec.${fieldPath}.commandFlags[${terraformFlagIdx}].flag`}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                label={`${terraformCommandFlag.commandType}: ${getString('flag')}`}
+              />
+            </div>
+          )
+        }
+      })}
     </FormikForm>
   )
 }

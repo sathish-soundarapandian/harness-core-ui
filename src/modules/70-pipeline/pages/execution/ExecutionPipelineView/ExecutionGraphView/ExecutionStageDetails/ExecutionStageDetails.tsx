@@ -53,6 +53,7 @@ diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as React.FC<
 diagram.registerNode(NodeType.EndNode, EndNodeStep)
 diagram.registerNode(NodeType.StartNode, StartNodeStep)
 diagram.registerNode('STEP_GROUP', DiagramNodes[NodeType.StepGroupNode])
+diagram.registerNode('GROUP', DiagramNodes[NodeType.StepGroupNode])
 diagram.registerNode([NodeType.MatrixNode, NodeType.LoopNode, NodeType.PARALLELISM], MatrixStepNode)
 diagram.registerNode('Approval', DiamondNodeWidget)
 diagram.registerNode('JiraApproval', DiamondNodeWidget)

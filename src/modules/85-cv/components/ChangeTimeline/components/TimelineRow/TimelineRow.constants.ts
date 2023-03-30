@@ -11,3 +11,5 @@ export enum SLO_WIDGETS {
   DOWNTIME = 'Downtime',
   ANNOTATION = 'Annotation'
 }
+
+export const INITIAL_MESSAGE_DETAILS = { message: '', id: '' }

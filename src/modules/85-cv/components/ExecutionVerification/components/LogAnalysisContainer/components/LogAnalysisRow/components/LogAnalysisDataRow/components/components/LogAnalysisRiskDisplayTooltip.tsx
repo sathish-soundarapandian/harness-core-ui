@@ -27,7 +27,7 @@ export default function LogAnalysisRiskDisplayTooltip(props: LogAnalysisRiskDisp
     )
   }
 
-  const { description, feedbackScore, updatedby, updatedAt } = feedback
+  const { description, feedbackScore, updatedBy, updatedAt } = feedback
 
   return (
     <Container className={css.feedbackTooltip}>
@@ -47,7 +47,7 @@ export default function LogAnalysisRiskDisplayTooltip(props: LogAnalysisRiskDisp
         <Layout.Vertical className={css.feedbackTooltipDescription}>
           <Text>{description}</Text>
           <Text data-testid="logAnalysisRiskTooltip-updatedAt">
-            {updatedby} {getString('common.on')} {moment(updatedAt).format('L h:mm A')}
+            {updatedBy} {getString('common.on')} {moment(updatedAt).format('L h:mm A')}
           </Text>
         </Layout.Vertical>
       </Container>

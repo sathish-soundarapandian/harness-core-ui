@@ -73,6 +73,7 @@ export enum StepNodeType {
   INFRASTRUCTURE = 'INFRASTRUCTURE',
   GENERIC_SECTION = 'GENERIC_SECTION',
   STEP_GROUP = 'STEP_GROUP',
+  GROUP = 'GROUP',
   NG_SECTION = 'NG_SECTION',
   ROLLBACK_OPTIONAL_CHILD_CHAIN = 'ROLLBACK_OPTIONAL_CHILD_CHAIN',
   FORK = 'NG_FORK',
@@ -103,6 +104,7 @@ export const NonSelectableStepNodes: StepNodeType[] = [
   StepNodeType.PIPELINE_STAGE,
   StepNodeType.STRATEGY,
   StepNodeType.STEP_GROUP,
+  StepNodeType.GROUP,
   StepNodeType.NG_SECTION_WITH_ROLLBACK_INFO,
   StepNodeType.ROLLBACK_OPTIONAL_CHILD_CHAIN,
   StepNodeType.INTEGRATION_STAGE_STEP_PMS
@@ -127,6 +129,7 @@ export const StepTypeIconsMap: { [key in StepNodeType]: IconName } = {
   ROLLBACK_OPTIONAL_CHILD_CHAIN: 'step-group',
   INFRASTRUCTURE_SECTION: 'step-group',
   STEP_GROUP: 'step-group',
+  GROUP: 'step-group',
   INFRASTRUCTURE: 'infrastructure',
   INFRASTRUCTURE_V2: 'infrastructure',
   INFRASTRUCTURE_TASKSTEP_V2: 'infrastructure',
@@ -606,6 +609,7 @@ const processNodeData = (
       })
     } else if (
       nodeStrategyType === StepNodeType.STEP_GROUP ||
+      nodeStrategyType === StepNodeType.GROUP ||
       nodeStrategyType === StepNodeType.NG_SECTION ||
       isNodeTypeMatrixOrFor(nodeStrategyType) ||
       (nodeData && isRollback)
@@ -672,6 +676,7 @@ const processNodeData = (
         })
       } else if (
         nodeNextStrategyType === StepNodeType.STEP_GROUP ||
+        nodeStrategyType === StepNodeType.GROUP ||
         isNodeTypeMatrixOrFor(nodeNextStrategyType) ||
         (isRollbackNext && nodeDataNext)
       ) {

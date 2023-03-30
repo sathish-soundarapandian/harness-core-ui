@@ -228,25 +228,26 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     }
   })
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {
-    if (values.triggerType === TriggerTypes.MANIFEST || values.triggerType === TriggerTypes.ARTIFACT) {
-      const res = getArtifactManifestTriggerYaml({
-        values,
-        persistIncomplete: true,
-        manifestType,
-        enabledStatus,
-        orgIdentifier,
-        projectIdentifier,
-        pipelineIdentifier,
-        gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
-      })
-      if (isNewGitSyncRemotePipeline) {
-        delete res.inputYaml
-        if (values.inputSetSelected?.length) {
-          res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
-        }
-      }
-      return { trigger: res }
+    const res = getArtifactManifestTriggerYaml({
+      values,
+      persistIncomplete: true,
+      manifestType,
+      enabledStatus,
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
+    })
+
+    if (values.inputSetRefs?.length || values.inputSetSelected?.length) {
+      delete res.inputYaml
     }
+
+    if (values.inputSetSelected?.length) {
+      res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
+    }
+
+    return { trigger: res }
   }
 
   const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -424,7 +425,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
           tags,
           inputYaml,
           pipelineBranchName = getDefaultPipelineReferenceBranch(),
-          inputSetRefs = [],
+          inputSetRefs,
           source: { type },
           source
         }
@@ -592,9 +593,11 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
     setErrorToasterMessage('')
 
-    if (isNewGitSyncRemotePipeline) {
+    if (triggerYaml.inputSetRefs?.length) {
       delete triggerYaml.inputYaml
+    }
 
+    if (isNewGitSyncRemotePipeline) {
       // Set pipelineBranchName to proper expression when it's left empty
       if (!(triggerYaml.pipelineBranchName ?? '').trim()) {
         triggerYaml.pipelineBranchName = getDefaultPipelineReferenceBranch(
@@ -605,7 +608,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     }
 
     const successCallback = ({ status, data, message }: ResponseNGTriggerResponseWithMessage): void => {
-      if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+      if (status === ResponseStatus.ERROR) {
         retryTriggerSubmit({ message })
       } else if (data?.errors && !isEmpty(data?.errors)) {
         const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -637,7 +640,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     }
 
     const errorCallback = (err: any): void => {
-      if (err?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
+      if (err?.data?.status === ResponseStatus.ERROR) {
         retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
       } else {
         setErrorToasterMessage(err?.data?.message)

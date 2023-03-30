@@ -30,12 +30,15 @@ import {
   buildGcpPayload,
   buildJenkinsPayload,
   buildGithubPayload,
-  buildNexusPayload
+  buildNexusPayload,
+  buildBambooPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import ConnectivityModeStep from '@connectors/components/CreateConnector/commonSteps/ConnectivityModeStep/ConnectivityModeStep'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import StepAzureArtifactAuthentication from '@connectors/components/CreateConnector/AzureArtifactConnector/StepAuth/StepAzureArtifactAuthentication'
+import StepBambooAuthentication from '@connectors/components/CreateConnector/BambooConnector/StepAuth/StepBambooAuthentication'
+
 import { ArtifactoryRepoType } from '../ArtifactRepository/ArtifactoryRepoType'
 import { ArtifactConnector } from '../ArtifactRepository/ArtifactConnector'
 import type { InitialArtifactDataType, ConnectorRefLabelType, ArtifactType } from '../ArtifactInterface'
@@ -120,6 +123,8 @@ function ArtifactWizard({
         return <GcrAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Jenkins:
         return <StepJenkinsAuthentication name={getString('details')} {...newConnectorProps.auth} />
+      case ENABLED_ARTIFACT_TYPES.Bamboo:
+        return <StepBambooAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Ecr:
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
       case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
@@ -187,6 +192,8 @@ function ArtifactWizard({
         return buildAzurePayload
       case ENABLED_ARTIFACT_TYPES.Jenkins:
         return buildJenkinsPayload
+      case ENABLED_ARTIFACT_TYPES.Bamboo:
+        return buildBambooPayload
       case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
         return buildGithubPayload
       case ENABLED_ARTIFACT_TYPES.AzureArtifacts:

@@ -31,7 +31,7 @@ const renderComponent = (): RenderResult => {
   )
 }
 
-const mockEmptyGetFolderResponse: customDashboardServices.GetFoldersResponse = {
+const mockEmptyGetFolderResponse: customDashboardServices.SearchFoldersResponse = {
   resource: [],
   items: 0,
   pages: 0
@@ -49,12 +49,12 @@ const mockFolderOne: customDashboardServices.FolderModel = {
 describe('FoldersPage', () => {
   beforeEach(() => {
     jest
-      .spyOn(customDashboardServices, 'useGetFolders')
+      .spyOn(customDashboardServices, 'useSearchFolders')
       .mockImplementation(() => ({ data: mockEmptyGetFolderResponse, loading: false } as any))
     jest.spyOn(customDashboardServices, 'useCreateFolder').mockImplementation(() => ({ mutate: jest.fn() } as any))
   })
   afterEach(() => {
-    jest.spyOn(customDashboardServices, 'useGetFolders').mockReset()
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReset()
     jest.spyOn(customDashboardServices, 'useCreateFolder').mockReset()
   })
 
@@ -66,13 +66,13 @@ describe('FoldersPage', () => {
   })
 
   test('it should display a series of FolderCards if Folders are returned', async () => {
-    const mockGetFolderResponse: customDashboardServices.GetFoldersResponse = {
+    const mockGetFolderResponse: customDashboardServices.SearchFoldersResponse = {
       resource: [mockFolderOne],
       items: 1,
       pages: 1
     }
     jest
-      .spyOn(customDashboardServices, 'useGetFolders')
+      .spyOn(customDashboardServices, 'useSearchFolders')
       .mockImplementation(() => ({ data: mockGetFolderResponse, loading: false } as any))
     const { container } = renderComponent()
 
@@ -94,5 +94,82 @@ describe('FoldersPage', () => {
 
     const newFolderComponent = screen.getByText(result.current.getString('dashboards.folderForm.stepOne'))
     await waitFor(() => expect(newFolderComponent).toBeInTheDocument())
+  })
+
+  test('it should display a list of Folders in a table when the list layout is selected', async () => {
+    const mockGetFolderResponse: customDashboardServices.SearchFoldersResponse = {
+      resource: [mockFolderOne],
+      items: 1,
+      pages: 1
+    }
+    jest
+      .spyOn(customDashboardServices, 'useSearchFolders')
+      .mockImplementation(() => ({ data: mockGetFolderResponse, loading: false } as any))
+    renderComponent()
+
+    const button = screen.getByLabelText('dashboards.switchToListView')
+    act(() => {
+      fireEvent.click(button)
+    })
+
+    await waitFor(() => expect(screen.getAllByRole('cell').pop()).toBeInTheDocument())
+  })
+
+  test('it should display Folder cards when the grid layout is selected', async () => {
+    const mockGetFolderResponse: customDashboardServices.SearchFoldersResponse = {
+      resource: [mockFolderOne],
+      items: 1,
+      pages: 1
+    }
+    jest
+      .spyOn(customDashboardServices, 'useSearchFolders')
+      .mockImplementation(() => ({ data: mockGetFolderResponse, loading: false } as any))
+    const { container } = renderComponent()
+
+    const button = screen.getByLabelText('dashboards.switchToGridView')
+    act(() => {
+      fireEvent.click(button)
+    })
+
+    await waitFor(() => expect(container.querySelector('.Card--card')).toBeInTheDocument())
+  })
+
+  test('it should open a Folder when clicked in the list layout', async () => {
+    const mockGetFolderResponse: customDashboardServices.SearchFoldersResponse = {
+      resource: [mockFolderOne],
+      items: 1,
+      pages: 1
+    }
+    jest
+      .spyOn(customDashboardServices, 'useSearchFolders')
+      .mockImplementation(() => ({ data: mockGetFolderResponse, loading: false } as any))
+    renderComponent()
+    const createButton = screen.getByLabelText('dashboards.switchToListView')
+    act(() => {
+      fireEvent.click(createButton)
+    })
+
+    const cell = screen.getAllByRole('cell').pop()!
+    act(() => {
+      fireEvent.click(cell)
+    })
+
+    expect(screen.getByText('/account/undefined/dashboards/folder/1')).toBeInTheDocument()
+  })
+
+  test('it should sort the folders when I change the sort order', async () => {
+    renderComponent()
+
+    const sortMenu = screen.getByText('dashboards.sortBy Select Option')
+    act(() => {
+      fireEvent.click(sortMenu)
+    })
+
+    const sortMenuItem = screen.getByText('Name (Z-A)')
+    act(() => {
+      fireEvent.click(sortMenuItem)
+    })
+
+    expect(screen.getByText('dashboards.homePage.noFolderAvailable')).toBeInTheDocument()
   })
 })

@@ -264,10 +264,10 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
       }) || [
         {
           label: getString('common.loadingFieldOptions', {
-            fieldName: getString('common.subscriptions.tabs.plans')
+            fieldName: getString('common.subscriptions.overview.plan')
           }),
           value: getString('common.loadingFieldOptions', {
-            fieldName: getString('common.subscriptions.tabs.plans')
+            fieldName: getString('common.subscriptions.overview.plan')
           })
         }
       ]
@@ -358,10 +358,10 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                   ? [
                       {
                         label: getString('common.loadingFieldOptions', {
-                          fieldName: getString('common.subscriptions.tabs.plans')
+                          fieldName: getString('common.subscriptions.overview.plan')
                         }),
                         value: getString('common.loadingFieldOptions', {
-                          fieldName: getString('common.subscriptions.tabs.plans')
+                          fieldName: getString('common.subscriptions.overview.plan')
                         })
                       }
                     ]
@@ -385,17 +385,17 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                     ? [
                         {
                           label: getString('common.loadingFieldOptions', {
-                            fieldName: getString('common.subscriptions.tabs.plans')
+                            fieldName: getString('common.subscriptions.overview.plan')
                           }),
                           value: getString('common.loadingFieldOptions', {
-                            fieldName: getString('common.subscriptions.tabs.plans')
+                            fieldName: getString('common.subscriptions.overview.plan')
                           })
                         }
                       ]
                     : planDetails,
                   usePortal: true,
                   addClearBtn: !readonly,
-                  noResults: (
+                  noResults: loadingPlans ? (
                     <Text lineClamp={1} width={500} height={35} padding="small">
                       {plansError
                         ? get(plansError, 'data.message', '')
@@ -403,7 +403,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                             fieldName: getString('pipeline.bamboo.planName')
                           })}
                     </Text>
-                  ),
+                  ) : null,
                   itemRenderer,
                   allowCreatingNewItems: true,
                   popoverClassName: css.selectPopover,
@@ -465,7 +465,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                       })
                     }
                   ]),
-                  noResults: (
+                  noResults: loadingArtifacts ? (
                     <Text lineClamp={1} width={500} height={35} padding="small">
                       {artifactPathError
                         ? get(artifactPathError, 'data.message', '')
@@ -473,7 +473,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                             fieldName: getString('cd.artifactPaths')
                           })}
                     </Text>
-                  )
+                  ) : null
                 }
               }}
               selectItems={artifactPaths || []}
@@ -522,7 +522,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                       })
                     }
                   ]),
-                  noResults: (
+                  noResults: fetchingBuild ? (
                     <Text lineClamp={1} width={500} height={35} padding="small">
                       {buildError
                         ? get(buildError, 'data.message', '')
@@ -530,7 +530,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                             fieldName: getString('buildsText')
                           })}
                     </Text>
-                  )
+                  ) : null
                 }
               }}
               selectItems={builds || []}

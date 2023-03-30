@@ -12,6 +12,7 @@ import { Color, Intent } from '@harness/design-system'
 import type { SLOErrorBudgetResetDTO } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -22,6 +23,7 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useErrorBudgetRestHook } from '@cv/hooks/useErrorBudgetRestHook/useErrorBudgetRestHook'
 import { useLogContentHook } from '@cv/hooks/useLogContentHook/useLogContentHook'
 import { LogTypes } from '@cv/hooks/useLogContentHook/useLogContentHook.types'
+import { EvaluationType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { PeriodTypeEnum } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.constants'
 import { SLODetailsPageTabIds } from '../../CVSLODetailsPage.types'
 import type { TabToolbarProps } from '../DetailsPanel.types'
@@ -41,6 +43,9 @@ const TabToolbar: React.FC<TabToolbarProps> = ({
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { monitoredServiceIdentifier } = useQueryParams<{ monitoredServiceIdentifier?: string }>()
   const [errorBudgetResetData, setErrorBudgetResetData] = useState<SLOErrorBudgetResetDTO | null>()
+  const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
+  const isRequestBased = sloDashboardWidget?.evaluationType === EvaluationType.REQUEST
+  const disableErrorBudgetReset = enableRequestSLO && isRequestBased
 
   const { sloIdentifier, title, serviceName, environmentName } = sloDashboardWidget
 
@@ -152,6 +157,7 @@ const TabToolbar: React.FC<TabToolbarProps> = ({
           icon="reset"
           withoutCurrentColor
           size={ButtonSize.SMALL}
+          disabled={disableErrorBudgetReset}
           text={getString('cv.resetErrorBudget')}
           iconProps={{ color: Color.GREY_700, size: 12 }}
           onClick={() => openErrorBudgetReset(sloDashboardWidget)}

@@ -91,7 +91,8 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
       module,
       templateListType: TemplateListType.All,
       repoIdentifier: template.gitDetails?.repoIdentifier,
-      branch: template.gitDetails?.branch
+      branch: template.gitDetails?.branch,
+      size: 100
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
@@ -128,7 +129,9 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
         const templateNameWithVersions = getTemplateNameWithVersions(template.name as string, versions as string[])
         showSuccess(
           areMultipleVersionsSelected
-            ? getString('common.template.deleteTemplate.templatesDeleted', { name: templateNameWithVersions })
+            ? /* istanbul ignore next */ getString('common.template.deleteTemplate.templatesDeleted', {
+                name: templateNameWithVersions
+              })
             : getString('common.template.deleteTemplate.templateDeleted', { name: templateNameWithVersions })
         )
         onSuccess?.()
@@ -136,6 +139,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
         throw getString('somethingWentWrong')
       }
     } catch (err) {
+      /* istanbul ignore next */
       if (isForceDeletedAllowed && err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         openReferenceErrorDialog()
         return
@@ -144,7 +148,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
         getRBACErrorMessage(err as RBACError),
         undefined,
         areMultipleVersionsSelected
-          ? 'common.template.deleteTemplate.errorWhileDeletingTemplates'
+          ? /* istanbul ignore next */ 'common.template.deleteTemplate.errorWhileDeletingTemplates'
           : 'common.template.deleteTemplate.errorWhileDeletingTemplate'
       )
     }
@@ -162,7 +166,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
     hideReferencedByButton: true,
     redirectToReferencedBy: redirectToReferencedBy,
     forceDeleteCallback: isForceDeletedAllowed
-      ? () => performDelete(commitMessage, templateVersionsToDelete, true)
+      ? /* istanbul ignore next */ () => performDelete(commitMessage, templateVersionsToDelete, true)
       : undefined
   })
 

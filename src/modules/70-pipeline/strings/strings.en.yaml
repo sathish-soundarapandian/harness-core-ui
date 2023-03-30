@@ -405,6 +405,7 @@ manifestType:
   kustomizeBasePath: Kustomize Base Path
   kustomizeFolderPathPlaceholder: Enter Kustomize Folder Path
   kustomizePluginPathPlaceholder: Enter Kustomize Plugin Path
+  kustomizeCommandFlagLabel: Kustomize Command Flags (optional)
   repoNamePlaceholder: Enter Repository Name
   packagePlaceholder: Enter Package Name
   serverlessConfigFilePath: Serverless Config File Path

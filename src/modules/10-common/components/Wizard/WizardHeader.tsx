@@ -64,6 +64,7 @@ export const WizardHeader = ({
                   (yamlHandler?.getYAMLValidationErrorMap() as unknown as Map<number, string>) ||
                   /* istanbul ignore next */ ''
                 if (errorsYaml?.size > 0) {
+                  showError(getString('common.validation.invalidYamlText'))
                   return
                 }
                 setSelectedView(mode)

@@ -11,6 +11,8 @@ export const servicesCall =
 export const environmentsCall =
   '/ng/api/environments?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1'
 
+export const gitSyncEnabledCall = '/ng/api/git-sync/git-sync-enabled?*'
+
 export const servicesResponse = {
   status: 'SUCCESS',
   data: {
@@ -681,7 +683,7 @@ export const newRelicServiceResponse = {
 }
 
 export const countOfServiceAPI =
-  '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1'
+  '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&filter='
 
 export const validations = {
   groupName: 'Group Name is required',

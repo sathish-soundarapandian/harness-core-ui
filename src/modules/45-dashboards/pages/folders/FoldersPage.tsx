@@ -36,7 +36,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { PAGE_SIZE } from '@dashboards/pages/home/HomePage'
 import FolderCard from '@dashboards/components/FolderCard/FolderCard'
 import { useStrings } from 'framework/strings'
-import { ErrorResponse, FolderModel, useGetFolders } from 'services/custom-dashboards'
+import { ErrorResponse, FolderModel, useSearchFolders } from 'services/custom-dashboards'
 import CreateFolder from './form/CreateFolder'
 import { useDashboardsContext } from '../DashboardsContext'
 
@@ -144,7 +144,7 @@ const FoldersPage: React.FC = () => {
     loading,
     error,
     refetch: reloadFolders
-  } = useGetFolders({
+  } = useSearchFolders({
     queryParams: {
       accountId,
       searchTerm,

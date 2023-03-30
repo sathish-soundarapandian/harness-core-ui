@@ -1330,6 +1330,7 @@ export interface StringsMap {
   'rbac.notifications.labelPDKey': string
   'rbac.notifications.labelPDUserGroups': string
   'rbac.notifications.labelPagerDuty': string
+  'rbac.notifications.labelPagerDutyUserGroups': string
   'rbac.notifications.labelSlackUserGroups': string
   'rbac.notifications.labelWebhookUrl': string
   'rbac.notifications.msTestSuccess': string
@@ -2700,6 +2701,7 @@ export interface StringsMap {
   'connectors.connectivityMode.title': string
   'connectors.connectivityMode.validation': string
   'connectors.connectorAlreadyExist': string
+  'connectors.connectorConnectionTest': string
   'connectors.connectorDetails': string
   'connectors.connectorDetailsHeader': string
   'connectors.connectorEmptyState': string
@@ -4259,6 +4261,7 @@ export interface StringsMap {
   'pipeline.manifestType.http.noResultsChartVersion': string
   'pipeline.manifestType.httpHelmRepoConnectorLabel': string
   'pipeline.manifestType.kustomizeBasePath': string
+  'pipeline.manifestType.kustomizeCommandFlagLabel': string
   'pipeline.manifestType.kustomizeFolderPath': string
   'pipeline.manifestType.kustomizeFolderPathPlaceholder': string
   'pipeline.manifestType.kustomizeFolderPathRequired': string
@@ -5336,6 +5339,7 @@ export interface StringsMap {
   'cd.cloudFormation.urls': string
   'cd.clusterVerify': string
   'cd.clustersSelected': string
+  'cd.commandLineOptions': string
   'cd.componentsInstalled': string
   'cd.configFileDetails': string
   'cd.configFilePlaceHolder': string
@@ -5520,7 +5524,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.infraName': string
   'cd.getStartedWithCD.installDelegateToTargetEnv': string
   'cd.getStartedWithCD.installationInstructions': string
-  'cd.getStartedWithCD.ipWhitelist': string
+  'cd.getStartedWithCD.ipWhitelist1': string
+  'cd.getStartedWithCD.ipWhitelist2': string
   'cd.getStartedWithCD.main': string
   'cd.getStartedWithCD.managedCluster': string
   'cd.getStartedWithCD.manifestFile': string
@@ -5565,6 +5570,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.serviceName': string
   'cd.getStartedWithCD.setupDelegate': string
   'cd.getStartedWithCD.setupIPWhiteListing': string
+  'cd.getStartedWithCD.setupIPWhitelist': string
   'cd.getStartedWithCD.setupaNewDelegate': string
   'cd.getStartedWithCD.sourceDetails': string
   'cd.getStartedWithCD.sourceOrSampleCode': string
@@ -5880,6 +5886,7 @@ export interface StringsMap {
   'cd.setupGitOpsServerStep': string
   'cd.since': string
   'cd.skipMatchingLabel': string
+  'cd.skipRefreshCommand': string
   'cd.skipRendering': string
   'cd.specifyTargetHost': string
   'cd.specifyTfVarStore': string
@@ -8069,6 +8076,9 @@ export interface StringsMap {
   'cv.changeSource.changeSourceCard.viewChaosExpriment': string
   'cv.changeSource.changeSourceCard.viewDeployment': string
   'cv.changeSource.changeSourceCard.viewFeatureFlag': string
+  'cv.changeSource.chaosExperiment.event': string
+  'cv.changeSource.chaosExperiment.events': string
+  'cv.changeSource.chaosExperiment.label': string
   'cv.changeSource.configureChangeSource': string
   'cv.changeSource.connectChangeSource': string
   'cv.changeSource.defineChangeSource': string
@@ -9150,6 +9160,9 @@ export interface StringsMap {
   'sto.stepField.toolInclude': string
   'sto.stoExemption': string
   'sto.targets.testTargets': string
+  'sto.trial.comingSoon': string
+  'sto.trial.description': string
+  'sto.trial.learnMore': string
   'sto.zeroNorthImagePlaceholder': string
   /**
    * @deprecated migrate this string to module level file

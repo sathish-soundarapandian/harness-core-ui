@@ -38,7 +38,7 @@ describe('module overview grid test', () => {
         <ModuleOverviewGrid timeRange={DEFAULT_TIME_RANGE} />
       </TestWrapper>
     )
-    expect(queryAllByText('moduleOverview').length).toEqual(7)
+    expect(queryAllByText('moduleOverview').length).toEqual(8)
   })
 
   test('on module click', () => {

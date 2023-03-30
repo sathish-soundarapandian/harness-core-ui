@@ -10,12 +10,23 @@ import { act, getByText, render, waitFor } from '@testing-library/react'
 import { fireEvent } from '@testing-library/dom'
 import { defaultTo } from 'lodash-es'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
-import { mockTemplates, mockTemplatesSuccessResponse } from '@templates-library/TemplatesTestHelper'
+import {
+  mockTemplates,
+  mockTemplatesSuccessResponse,
+  mockTemplatesMultipleVersions
+} from '@templates-library/TemplatesTestHelper'
 import * as commonHooks from '@common/hooks'
 import * as templateServices from 'services/template-ng'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import { DeleteTemplateModal } from '../DeleteTemplateModal'
+
+const mockTemplatesSuccessResponseUpdated = {
+  ...mockTemplatesSuccessResponse,
+  data: {
+    ...mockTemplatesMultipleVersions
+  }
+}
 
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
@@ -182,6 +193,32 @@ describe('<DeleteTemplateModal /> tests', () => {
 
     const { container } = render(
       <TestWrapper defaultAppStoreValues={{ isGitSyncEnabled: true }}>
+        <DeleteTemplateModal {...baseProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should match snapshot when loading is true', async () => {
+    jest.spyOn(commonHooks, 'useMutateAsGet').mockImplementation(() => {
+      return { loading: true, data: undefined, refetch: jest.fn() } as any
+    })
+
+    const { container } = render(
+      <TestWrapper defaultAppStoreValues={{ isGitSyncEnabled: true, supportingTemplatesGitx: true }}>
+        <DeleteTemplateModal {...baseProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should match snapshot when multiple versions are present', async () => {
+    jest.spyOn(commonHooks, 'useMutateAsGet').mockImplementation(() => {
+      return mockTemplatesSuccessResponseUpdated as any
+    })
+
+    const { container } = render(
+      <TestWrapper>
         <DeleteTemplateModal {...baseProps} />
       </TestWrapper>
     )

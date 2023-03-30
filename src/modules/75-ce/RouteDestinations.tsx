@@ -68,10 +68,10 @@ import CommitmentOrchestrationSetup from './pages/CommitmentOrchestration/Commit
 import CloudIntegrationPage from './pages/cloud-integration/CloudIntegrationPage'
 import AnomaliesFilter from './components/AnomaliesFilter/AnomaliesFilter'
 import GatewayListFilters from './components/COGatewayList/GatewayListFilters'
-import PerspectiveResourceModalBody from './components/ResourceGroupModals/PerspectiveResourceModalBody'
-import PerspectiveResourceRenderer from './components/ResourceGroupModals/PerspectiveResourceRenderer'
-import GovernanceRulesResourceModalBody from './components/GovernanceResourceGroupModals/GovernanceRulesResourceModalBody'
-import GovernanceRulesResourceRenderer from './components/GovernanceResourceGroupModals/GovernanceRulesResourceRenderer'
+import PerspectiveResourceModalBody from './components/ResourceGroupModals/Perspective/PerspectiveResourceModalBody'
+import PerspectiveResourceRenderer from './components/ResourceGroupModals/Perspective/PerspectiveResourceRenderer'
+import GovernanceRulesResourceModalBody from './components/ResourceGroupModals/GovernanceRules/GovernanceRulesResourceModalBody'
+import GovernanceRulesResourceRenderer from './components/ResourceGroupModals/GovernanceRules/GovernanceRulesResourceRenderer'
 
 RbacFactory.registerResourceCategory(ResourceCategory.CLOUD_COSTS, {
   icon: 'ccm-solid',

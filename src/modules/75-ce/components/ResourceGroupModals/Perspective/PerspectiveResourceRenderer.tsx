@@ -6,12 +6,15 @@
  */
 
 import React, { useMemo } from 'react'
-import { Button, Text, Icon, Layout, PageSpinner, TableV2 } from '@harness/uicore'
+import { Text, Icon, Layout, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { CellProps, Column } from 'react-table'
-import { defaultTo } from 'lodash-es'
 import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
 import { CEViewFolder, useGetFolders } from 'services/ce'
+import StaticResourceRenderer from '@rbac/components/StaticResourceRenderer/StaticResourceRenderer'
+import type { ResourceHandlerTableData } from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
+
+type CEViewFolderWithIdentifier = CEViewFolder & ResourceHandlerTableData
 
 const PerspectiveResourceRenderer: React.FC<RbacResourceRendererProps> = ({
   identifiers,
@@ -26,11 +29,16 @@ const PerspectiveResourceRenderer: React.FC<RbacResourceRendererProps> = ({
       accountIdentifier: accountIdentifier
     }
   })
-  const data = defaultTo(foldersListResult?.data, [])
 
-  const filteredFoldersData = data.filter(item => item.uuid && identifiers.includes(item.uuid))
+  const filteredFoldersData =
+    foldersListResult?.data
+      ?.map(folder => ({
+        identifier: folder.uuid as string,
+        ...folder
+      }))
+      ?.filter(item => identifiers.includes(item.identifier)) || []
 
-  const columns: Column<CEViewFolder>[] = useMemo(
+  const columns: Column<CEViewFolderWithIdentifier>[] = useMemo(
     () => [
       {
         id: 'name',
@@ -47,32 +55,21 @@ const PerspectiveResourceRenderer: React.FC<RbacResourceRendererProps> = ({
             </Layout.Horizontal>
           )
         }
-      },
-      {
-        id: 'removeBtn',
-        width: '5%',
-        disableSortBy: true,
-        Cell: ({ row }: CellProps<CEViewFolder>) => {
-          return (
-            <Button
-              data-test-id={`deleteIcon_${row.original.uuid}`}
-              icon="trash"
-              minimal
-              onClick={() => {
-                onResourceSelectionChange(resourceType, false, [row.original.uuid || ''])
-              }}
-            />
-          )
-        }
       }
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 
   if (foldersLoading) return <PageSpinner />
 
-  return <TableV2 columns={columns} data={filteredFoldersData} hideHeaders={true} />
+  return filteredFoldersData?.length ? (
+    <StaticResourceRenderer<CEViewFolderWithIdentifier>
+      data={filteredFoldersData}
+      resourceType={resourceType}
+      onResourceSelectionChange={onResourceSelectionChange}
+      columns={columns}
+    />
+  ) : null
 }
 
 export default PerspectiveResourceRenderer

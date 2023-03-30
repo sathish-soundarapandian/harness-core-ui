@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text, FormInput } from '@harness/uicore'
 
 import { get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -28,6 +28,8 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { TerraformBackendConfigSpec } from 'services/cd-ng'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { isValueRuntimeInput } from '@common/utils/utils'
+import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { TFMonaco } from '../Common/Terraform/Editview/TFMonacoEditor'
 import type { TerraformPlanProps } from '../Common/Terraform/TerraformInterfaces'
 import ConfigInputs from './InputSteps/TfConfigSection'
@@ -47,6 +49,8 @@ export default function TfPlanInputStep(
   }>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
+  const cmdFlagPath = get(inputSetData?.template?.spec, `${fieldPath}.commandFlags`)
+
   return (
     <FormikForm>
       {getMultiTypeFromValue(inputSetData?.template?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
@@ -211,6 +215,41 @@ export default function TfPlanInputStep(
           />
         </div>
       )}
+
+      {isValueRuntimeInput(inputSetData?.template?.spec?.configuration?.skipRefreshCommand) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.skipRefreshCommand`}
+            label={getString('cd.skipRefreshCommand')}
+            multiTypeTextbox={{ expressions, allowableTypes }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+          />
+        </div>
+      )}
+
+      {cmdFlagPath?.map((terraformCommandFlag: CommandFlags, terraformFlagIdx: number) => {
+        if (
+          isValueRuntimeInput(get(inputSetData?.template, `spec.${fieldPath}.commandFlags[${terraformFlagIdx}].flag`))
+        ) {
+          return (
+            <div className={cx(stepCss.formGroup, stepCss.md)} key={terraformFlagIdx}>
+              <FormInput.MultiTextInput
+                name={`${
+                  isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+                }spec.${fieldPath}.commandFlags[${terraformFlagIdx}].flag`}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                label={`${terraformCommandFlag.commandType}: ${getString('flag')}`}
+              />
+            </div>
+          )
+        }
+      })}
     </FormikForm>
   )
 }

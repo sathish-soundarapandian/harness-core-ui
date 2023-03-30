@@ -62,6 +62,7 @@ import DelegateSelectorStep from '@connectors/components/CreateConnector/commonS
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { FormMultiTypeCheckboxField } from '@common/components'
 import { TFMonaco } from './TFMonacoEditor'
 
 import {
@@ -84,6 +85,7 @@ import {
 import { ArtifactoryForm } from '../../VarFile/ArtifactoryForm'
 import VarFileList from '../../VarFile/VarFileList'
 import { formatArtifactoryData } from '../../VarFile/helper'
+import TerraformCommandFlags from '../../TerraformCommandFlags/TerraformCommandFlags'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../TerraformStep.module.scss'
 
@@ -104,7 +106,8 @@ export default function TerraformEditView(
   const { stepType, isNewStep = true } = props
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, readonly = false } = props
   const { getString } = useStrings()
-  const { CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG, CD_TERRAFORM_CLOUD_CLI_NG } = useFeatureFlags()
+  const { CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG, CD_TERRAFORM_CLOUD_CLI_NG, CDS_TERRAFORM_CLI_OPTIONS_NG } =
+    useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -458,6 +461,37 @@ export default function TerraformEditView(
     </div>
   )
 
+  const skipRefreshCommandComponent = (formik: FormikProps<unknown>) => {
+    return (
+      <div className={cx(stepCss.formGroup, css.addMarginTop)}>
+        <FormMultiTypeCheckboxField
+          formik={formik}
+          name={'spec.configuration.skipRefreshCommand'}
+          label={getString('cd.skipRefreshCommand')}
+          multiTypeTextbox={{ expressions, allowableTypes }}
+          disabled={readonly}
+          setToFalseWhenEmpty
+        />
+        {getMultiTypeFromValue((formik?.values as TerraformData)?.spec?.configuration?.skipRefreshCommand) ===
+          MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            value={((formik?.values as TerraformData)?.spec?.configuration?.skipRefreshCommand || '') as string}
+            type="String"
+            variableName="spec.configuration.skipRefreshCommand"
+            showRequiredField={false}
+            showDefaultField={false}
+            onChange={
+              /* istanul ignore next */
+              value => formik?.setFieldValue('spec.configuration.skipRefreshCommand', value)
+            }
+            style={{ alignSelf: 'center' }}
+            isReadonly={readonly}
+          />
+        )}
+      </div>
+    )
+  }
+
   const [enableCloudCli, setEnableCloudCli] = React.useState<boolean | undefined>(undefined)
 
   useEffect(() => {
@@ -809,9 +843,58 @@ export default function TerraformEditView(
                         </div>
                       }
                     />
+                    {CDS_TERRAFORM_CLI_OPTIONS_NG && (
+                      <Accordion.Panel
+                        id="step-2"
+                        summary={getString('cd.commandLineOptions')}
+                        details={
+                          <div>
+                            {!enableCloudCli && skipRefreshCommandComponent(formik as FormikProps<unknown>)}
+                            <div>
+                              <TerraformCommandFlags
+                                formik={formik}
+                                stepType={initialValues?.type === StepType.TerraformDestroy ? 'DESTROY' : 'APPLY'}
+                                configType={fieldPath}
+                                allowableTypes={allowableTypes}
+                                path={`spec.${fieldPath}.commandFlags`}
+                              />
+                            </div>
+                          </div>
+                        }
+                      />
+                    )}
                   </Accordion>
                 </>
               )}
+
+              {CDS_TERRAFORM_CLI_OPTIONS_NG &&
+                (values?.spec?.configuration?.type === ConfigurationTypes.InheritFromApply ||
+                  values?.spec?.configuration?.type === ConfigurationTypes.InheritFromPlan) && (
+                  <Accordion className={stepCss.accordion}>
+                    <Accordion.Panel
+                      id="step-1"
+                      summary={getString('cd.commandLineOptions')}
+                      details={
+                        <div>
+                          {initialValues?.type === StepType.TerraformDestroy &&
+                            values?.spec?.configuration?.type === ConfigurationTypes.InheritFromApply &&
+                            skipRefreshCommandComponent(formik as FormikProps<unknown>)}
+
+                          <div>
+                            <TerraformCommandFlags
+                              formik={formik}
+                              stepType={initialValues?.type === StepType.TerraformDestroy ? 'DESTROY' : 'APPLY'}
+                              configType={fieldPath}
+                              allowableTypes={allowableTypes}
+                              path={`spec.${fieldPath}.commandFlags`}
+                            />
+                          </div>
+                        </div>
+                      }
+                    />
+                  </Accordion>
+                )}
+
               {showModal && (
                 <Dialog
                   {...DIALOG_PROPS}

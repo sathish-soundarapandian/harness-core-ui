@@ -6,10 +6,10 @@
  */
 
 .evaluationType {
-  height: var(--spacing-xlarge);
-  line-height: var(--spacing-large);
+  height: var(--spacing-large);
+  line-height: var(--spacing-medium);
   :global(.PillToggle--item) {
-    height: var(--spacing-xlarge) !important;
+    height: var(--spacing-large) !important;
     width: 120px;
   }
 }

@@ -249,7 +249,7 @@ const SscaOrchestrationStepEdit = (
 
                   <div className={cx(stepCss.formGroup, stepCss.lg)}>
                     <FormMultiTypeConnectorField
-                      name="spec.infrastructure.spec.connector"
+                      name="spec.infrastructure.spec.connectorRef"
                       label={getString('connector')}
                       placeholder={getString('common.entityPlaceholderText')}
                       disabled={readonly}
@@ -261,12 +261,12 @@ const SscaOrchestrationStepEdit = (
                       setRefValue
                       gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                     />
-                    {getMultiTypeFromValue(formik.values.spec.infrastructure?.spec.connector) ===
+                    {getMultiTypeFromValue(formik.values.spec.infrastructure?.spec.connectorRef) ===
                       MultiTypeInputType.RUNTIME &&
                       !readonly && (
                         <ConnectorConfigureOptions
                           style={{ marginTop: 10 }}
-                          value={formik.values.spec.infrastructure?.spec.connector as string}
+                          value={formik.values.spec.infrastructure?.spec.connectorRef as string}
                           type={
                             <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
                               <Icon name={getIconByType('K8sCluster')}></Icon>

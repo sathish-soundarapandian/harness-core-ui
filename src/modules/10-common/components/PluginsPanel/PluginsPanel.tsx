@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { capitalize, get, isEmpty } from 'lodash-es'
+import { capitalize, get, groupBy, isEmpty } from 'lodash-es'
 import { Classes, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { Color, FontVariation } from '@harness/design-system'
@@ -24,7 +24,8 @@ import {
   ButtonVariation,
   FormInput,
   Popover,
-  IconName
+  IconName,
+  Accordion
 } from '@harness/uicore'
 import { Input, PluginMetadataResponse, useListPlugins } from 'services/ci'
 import { useStrings } from 'framework/strings'
@@ -502,34 +503,69 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     )
   }, [selectedPlugin])
 
+  const renderPluginCongigurationFormField = useCallback(
+    ({ field, index }: { field: Input; index: number }): JSX.Element => {
+      const { name, type, default: defaultValue } = field
+      return name ? (
+        <Layout.Horizontal padding="xmall" key={index}>
+          {type === 'Textarea' ? (
+            <FormInput.TextArea
+              name={name}
+              label={generateLabelForPluginField(field)}
+              style={{ width: '100%' }}
+              placeholder={defaultValue}
+            />
+          ) : (
+            <FormInput.Text
+              name={name}
+              label={generateLabelForPluginField(field)}
+              style={{ width: '100%' }}
+              placeholder={defaultValue}
+            />
+          )}
+        </Layout.Horizontal>
+      ) : (
+        <></>
+      )
+    },
+    []
+  )
+
   const renderPluginCongigurationForm = useCallback((): JSX.Element => {
     const { inputs: formFields = [] } = selectedPlugin || {}
-    return formFields.length > 0 ? (
-      <Layout.Vertical height="100%">
-        {formFields.map((input: Input, index: number) => {
-          const { name, type } = input
-          return name ? (
-            <Layout.Horizontal padding="xmall" key={index}>
-              {type === 'Textarea' ? (
-                <FormInput.TextArea
-                  name={name}
-                  label={generateLabelForPluginField(input)}
-                  style={{ width: '100%' }}
-                  placeholder={formFields?.find((item: Input) => item.name === name)?.default}
-                />
-              ) : (
-                <FormInput.Text
-                  name={name}
-                  label={generateLabelForPluginField(input)}
-                  style={{ width: '100%' }}
-                  placeholder={formFields?.find((item: Input) => item.name === name)?.default}
-                />
-              )}
-            </Layout.Horizontal>
-          ) : null
-        })}
-      </Layout.Vertical>
-    ) : (
+    if (formFields.length > 0) {
+      const partitionedFields = groupBy(formFields, 'required')
+      const requiredFields = partitionedFields['true'] || []
+      const optionalFields = partitionedFields['false'] || []
+      const optionalFieldsSection = optionalFields.map((input: Input, index: number) => {
+        return renderPluginCongigurationFormField({ field: input, index })
+      })
+      return (
+        <Layout.Vertical height="100%">
+          {requiredFields.length > 0 ? (
+            requiredFields.map((input: Input, index: number) => {
+              return renderPluginCongigurationFormField({ field: input, index })
+            })
+          ) : (
+            <></>
+          )}
+          {requiredFields.length > 0 && optionalFields.length > 0 ? (
+            <Accordion>
+              <Accordion.Panel
+                id="optional-config"
+                summary={getString('common.optionalConfig')}
+                details={optionalFieldsSection}
+              />
+            </Accordion>
+          ) : optionalFields.length > 0 ? (
+            <>{optionalFieldsSection}</>
+          ) : (
+            <></>
+          )}
+        </Layout.Vertical>
+      )
+    }
+    return (
       <Layout.Vertical flex={{ justifyContent: 'center' }} spacing="large" height="100%">
         <Icon name="plugin-inputs" size={35} />
         <Text font={{ variation: FontVariation.BODY2 }}>{getString('common.noPluginInputsRequired')}</Text>

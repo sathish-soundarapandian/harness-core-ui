@@ -30,33 +30,31 @@ import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health
 import { variablesResponse, variablesResponseWithAppDVariable } from '../../../support/85-cv/Templates/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
+const setUpForMonitoredService = (oldGitEnabled?: boolean): void => {
+  cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+    cy.intercept('GET', featureFlagsCall, {
+      ...featureFlagsData,
+      resource: [
+        ...featureFlagsData.resource,
+        {
+          uuid: null,
+          name: 'CVNG_TEMPLATE_MONITORED_SERVICE',
+          enabled: true,
+          lastUpdatedAt: 0
+        }
+      ]
+    })
+  })
+  cy.login('test', 'test')
+  cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
+  cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
+  cy.intercept('POST', templatesListCall, { fixture: 'cv/templates/templateList' }).as('templatesListCall')
+  cy.visitSRMTemplate(oldGitEnabled)
+}
+
 describe('Create empty monitored service', () => {
   beforeEach(() => {
-    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
-      cy.intercept('GET', featureFlagsCall, {
-        ...featureFlagsData,
-        resource: [
-          ...featureFlagsData.resource,
-          {
-            uuid: null,
-            name: 'CVNG_TEMPLATE_MONITORED_SERVICE',
-            enabled: true,
-            lastUpdatedAt: 0
-          },
-          {
-            uuid: null,
-            name: 'USE_OLD_GIT_SYNC',
-            enabled: true,
-            lastUpdatedAt: 0
-          }
-        ]
-      })
-    })
-    cy.login('test', 'test')
-    cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
-    cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
-    cy.intercept('POST', templatesListCall, { fixture: 'cv/templates/templateList' }).as('templatesListCall')
-    cy.visitSRMTemplate()
+    setUpForMonitoredService(false)
   })
 
   it('Add new AppDynamics monitored service with fixed and expression value', () => {
@@ -395,6 +393,11 @@ describe('Create empty monitored service', () => {
     // Saving modal.
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')
+  })
+})
+describe('Edit AppDynamics template', () => {
+  beforeEach(() => {
+    setUpForMonitoredService(true)
   })
 
   it('Edit AppDynamics template', () => {

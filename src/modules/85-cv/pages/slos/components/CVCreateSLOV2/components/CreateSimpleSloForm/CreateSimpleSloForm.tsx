@@ -74,7 +74,7 @@ export default function CreateSimpleSLOForm({
   const compositeSloPayloadRef = useRef<SLOV2Form | null>()
   const prevStepDataRef = useRef<SLOV2Form | null>()
   const [notificationsInTable, setNotificationsInTable] = useState<NotificationRuleResponse[]>([])
-  const { SRM_ENABLE_REQUEST_SLO } = useFeatureFlags()
+  const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
 
   const [openSaveCancelModal] = useCreateCompositeSloWarningModal({
     handleRedirect,
@@ -204,12 +204,11 @@ export default function CreateSimpleSLOForm({
 
   const serviceLevelIndicator = convertSLOFormDataToServiceLevelIndicatorDTO(formikProps.values)
   const { eventType, healthSourceRef, validRequestMetric, goodRequestMetric } = formikProps.values
-
   const { shouldFetchSliGraph, valuesToDetermineReload, showSLIMetricChart, isWindow, isRatioBased, sliAreaGraphData } =
     getSLIDerivedProps({
       sliGraphData,
       value: formikProps.values,
-      isOccurenceBased: SRM_ENABLE_REQUEST_SLO
+      enableRequestSLO
     })
 
   useEffect(() => {

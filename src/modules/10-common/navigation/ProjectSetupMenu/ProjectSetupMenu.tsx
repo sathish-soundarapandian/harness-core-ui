@@ -37,7 +37,6 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   const {
     CVNG_TEMPLATE_MONITORED_SERVICE,
     NG_SETTINGS,
-    USE_OLD_GIT_SYNC,
     SRM_ET_EXPERIMENTAL,
     NEW_LEFT_NAVBAR_SETTINGS,
     SRM_DOWNTIME,
@@ -68,8 +67,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   //Supporting GIT_SIMPLIFICATION by default, old GitSync will be selected only for selected accounts
   // isGitSimplificationEnabled will true if any customers using old GitSync enabled Git SImplification using API
   const isGitSyncSupported =
-    (isGitSyncEnabled && !gitSyncEnabledOnlyForFF) ||
-    (USE_OLD_GIT_SYNC && (isCIorCDorSTO || !module) && !isGitSimplificationEnabled)
+    (isGitSyncEnabled && !gitSyncEnabledOnlyForFF) || ((isCIorCDorSTO || !module) && !isGitSimplificationEnabled)
 
   const showTemplates = isCIorCDorSTO || (!module && NEW_LEFT_NAVBAR_SETTINGS)
   const showFileStore = isCIorCD || !module

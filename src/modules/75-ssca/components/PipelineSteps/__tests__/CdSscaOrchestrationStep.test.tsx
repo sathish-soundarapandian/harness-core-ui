@@ -38,7 +38,7 @@ const runtimeValues = {
     },
     infrastructure: {
       spec: {
-        connector: RUNTIME_INPUT_VALUE,
+        connectorRef: RUNTIME_INPUT_VALUE,
         namespace: RUNTIME_INPUT_VALUE,
         resources: {
           limits: {
@@ -71,7 +71,7 @@ const fixedValues = {
     infrastructure: {
       type: 'KubernetesDirect',
       spec: {
-        connector: '',
+        connectorRef: '',
         namespace: '',
         resources: {
           limits: {

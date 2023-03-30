@@ -111,10 +111,10 @@ function FormContent({
       }) || [
         {
           label: getString('common.loadingFieldOptions', {
-            fieldName: getString('common.subscriptions.tabs.plans')
+            fieldName: getString('common.subscriptions.overview.plan')
           }),
           value: getString('common.loadingFieldOptions', {
-            fieldName: getString('common.subscriptions.tabs.plans')
+            fieldName: getString('common.subscriptions.overview.plan')
           })
         }
       ]
@@ -205,7 +205,7 @@ function FormContent({
             connectorRefFixedValue && getMultiTypeFromValue(connectorRefFixedValue) === MultiTypeInputType.FIXED
               ? loadingPlans
                 ? getString('common.loadingFieldOptions', {
-                    fieldName: getString('common.subscriptions.tabs.plans')
+                    fieldName: getString('common.subscriptions.overview.plan')
                   })
                 : plansError?.message
                 ? plansError?.message
@@ -225,7 +225,7 @@ function FormContent({
                 <NoTagResults
                   tagError={plansError}
                   isServerlessDeploymentTypeSelected={false}
-                  defaultErrorText={getString('pipeline.bambooStep.noPlans')}
+                  defaultErrorText={loadingPlans ? getString('loading') : getString('pipeline.bambooStep.noPlans')}
                 />
               )
             },

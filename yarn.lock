@@ -1721,10 +1721,10 @@
     "@contentful/rich-text-react-renderer" "^15.12.0"
     contentful "^9.1.20"
 
-"@harness/icons@1.121.0":
-  version "1.121.0"
-  resolved "https://npm.pkg.github.com/download/@harness/icons/1.121.0/e3f2d48268513aebf354e47e8434d95023c699be#e3f2d48268513aebf354e47e8434d95023c699be"
-  integrity sha512-rt/1oAXVtsGWTxKmp4lTmm9ux/QWakRb1iHCdm2O9WSmh14OCmpTZqUMpBOcUj8vPKbOq89bKvfpX6IGMwGrKg==
+"@harness/icons@1.124.0":
+  version "1.124.0"
+  resolved "https://npm.pkg.github.com/download/@harness/icons/1.124.0/95242cb01a31632ffd2c3f1dbac4da78f29c5c58#95242cb01a31632ffd2c3f1dbac4da78f29c5c58"
+  integrity sha512-fPz+/JgiCu7WPueOT5lfTtp/BXeU4h+CRmW5it7rMhUnvCsR/h8X5HJGzXMc2rmsuk2r90BGGCVaS2jTRsHzMQ==
 
 "@harness/jarvis@0.16.0":
   version "0.16.0"
@@ -1756,10 +1756,10 @@
     vscode-languageserver "^5.2.1"
     vscode-uri "^2.1.1"
 
-"@harness/ng-tooltip@^1.31.100":
-  version "1.31.100"
-  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.100/90f69a2000d986e88ddf58ec59d8c10de7a203b4#90f69a2000d986e88ddf58ec59d8c10de7a203b4"
-  integrity sha512-PreHk6FR8v+6/8PS6J8Dg13ke7RT09qf2rpKwbXYp69BOCOLuxwkme+FZz2YdPHVf3Nq0wW6kfCqaFBpoc5+yA==
+"@harness/ng-tooltip@^1.31.101":
+  version "1.31.101"
+  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.101/323c9a327485a7d4975106d7e7fc13fba53b9fec#323c9a327485a7d4975106d7e7fc13fba53b9fec"
+  integrity sha512-+NU1h2zcJWxYSLQ6+qzr21D/3RFtnrAkFEBWqgz7n3CqehfkiwFOauUjwUxHObYOGjh4eZPD4nH9mrNdTxfptA==
 
 "@harness/telemetry@^1.0.42":
   version "1.0.42"

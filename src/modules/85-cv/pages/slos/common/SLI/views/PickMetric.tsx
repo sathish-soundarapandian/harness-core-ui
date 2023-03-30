@@ -8,7 +8,6 @@
 import React, { FormEvent, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Container, FormInput, Layout, Text, useToaster, SelectOption, ButtonVariation, Card } from '@harness/uicore'
-import { Color } from '@harness/design-system'
 import type { RadioButtonProps } from '@harness/uicore/dist/components/RadioButton/RadioButton'
 import { ResponseMonitoredServiceResponse, useGetSloMetrics } from 'services/cv'
 import { useStrings } from 'framework/strings'
@@ -128,11 +127,8 @@ const PickMetric: React.FC<PickMetricProps> = props => {
 
   return (
     <>
-      <Container className={css.cardPickMetric} border padding={'xlarge'}>
+      <Container className={css.cardPickMetric} border padding={'large'}>
         <Layout.Vertical margin={{ bottom: 'medium' }} spacing="tiny">
-          <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }}>
-            {getString('cv.slos.evaluationMethod')}
-          </Text>
           <Text font={{ size: 'normal', weight: 'light' }}>{getString('cv.slos.evaluationMethodSubtitle')}</Text>
         </Layout.Vertical>
         {isWindowBased && (

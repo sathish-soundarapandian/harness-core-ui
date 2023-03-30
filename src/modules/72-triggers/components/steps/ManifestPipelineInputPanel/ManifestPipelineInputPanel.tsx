@@ -294,9 +294,9 @@ function ManifestTriggerInputPanelForm({
           inputSetReferences: selectedInputSets.map(item => item.value as string)
         })
         if (!data?.data?.errorResponse && data?.data?.pipelineYaml) {
-          const parsedInputSets = clearRuntimeInput(memoizedParse<Pipeline>(data.data.pipelineYaml).pipeline)
+          const parsedInputSets = memoizedParse<Pipeline>(data.data.pipelineYaml).pipeline
 
-          const newPipelineObject = clearRuntimeInput(merge(pipeline, pipelineObject.pipeline))
+          const newPipelineObject = clearRuntimeInput(merge(resolvedPipeline, pipelineObject.pipeline))
 
           const mergedPipeline = mergeTemplateWithInputSetData({
             inputSetPortion: { pipeline: parsedInputSets },
@@ -445,13 +445,11 @@ function ManifestTriggerInputPanelForm({
                     onChange={value => {
                       setInputSetError('')
                       setSelectedInputSets(value)
-                      if (isNewGitSyncRemotePipeline) {
-                        formikProps.setValues({
-                          ...formikProps.values,
-                          inputSetRefs: (value || []).map(v => v.value),
-                          inputSetSelected: value
-                        })
-                      }
+                      formikProps.setValues({
+                        ...formikProps.values,
+                        inputSetRefs: (value || []).map(v => v.value),
+                        inputSetSelected: value
+                      })
                     }}
                     value={selectedInputSets}
                     selectedValueClass={css.inputSetSelectedValue}
@@ -518,7 +516,7 @@ function ManifestTriggerInputPanelForm({
                     viewType={StepViewType.InputSet}
                     maybeContainerClass={css.pipelineInputSetForm}
                     viewTypeMetadata={{ isTrigger: true }}
-                    readonly={isNewGitSyncRemotePipeline}
+                    readonly={isNewGitSyncRemotePipeline || !isEmpty(selectedInputSets)}
                     gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
                     disableRuntimeInputConfigureOptions
                   />

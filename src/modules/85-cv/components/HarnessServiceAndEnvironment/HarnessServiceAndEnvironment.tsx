@@ -15,8 +15,7 @@ import { useStrings } from 'framework/strings'
 import {
   useGetServiceListForProject,
   GetServiceListForProjectQueryParams,
-  useGetEnvironmentListForProject,
-  GetEnvironmentListForProjectQueryParams
+  useGetEnvironmentListForProject
 } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
 import {
@@ -35,20 +34,19 @@ import {
   ServiceMultiSelectOrCreate,
   ServiceMultiSelectOrCreateProps
 } from './components/ServiceMultiSelectOrCreate/ServiceMultiSelectOrCreate'
+import { getQueryParams, getScopedServiceEnvironmentOption } from './HarnessServiceAndEnvironment.utils'
 import css from './HarnessServiceAndEnvironment.module.scss'
 
-export function useGetHarnessServices() {
+export function useGetHarnessServices(includeAccountAndOrgLevel?: boolean) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
   const [serviceOptions, setServiceOptions] = useState<SelectOption[]>([])
-  const { error, loading, data } = useGetServiceListForProject({
-    queryParams: {
-      accountId,
-      orgIdentifier,
-      projectIdentifier
-    } as GetServiceListForProjectQueryParams
+  const queryParams: GetServiceListForProjectQueryParams = getQueryParams({
+    includeAccountAndOrgLevel,
+    params: { accountId, orgIdentifier, projectIdentifier }
   })
+  const { error, loading, data } = useGetServiceListForProject({ queryParams })
 
   useEffect(() => {
     if (loading) {
@@ -58,15 +56,10 @@ export function useGetHarnessServices() {
       showError(error?.message, 7000)
       setServiceOptions([])
     } else if (data?.data?.content) {
-      const options = []
-      for (const service of data.data.content) {
-        if (service?.identifier && service.name) {
-          options.push({
-            label: service.name,
-            value: service.identifier
-          })
-        }
-      }
+      const options = getScopedServiceEnvironmentOption({
+        content: data.data.content,
+        scopedIdentifiers: includeAccountAndOrgLevel
+      })
       setServiceOptions(options)
     }
   }, [loading, error, data])
@@ -74,18 +67,16 @@ export function useGetHarnessServices() {
   return { serviceOptions, setServiceOptions }
 }
 
-export function useGetHarnessEnvironments() {
+export function useGetHarnessEnvironments(includeAccountAndOrgLevel?: boolean) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
   const [environmentOptions, setEnvironmentOptions] = useState<SelectOption[]>([])
-  const { error, loading, data } = useGetEnvironmentListForProject({
-    queryParams: {
-      accountId,
-      orgIdentifier,
-      projectIdentifier
-    } as GetEnvironmentListForProjectQueryParams
+  const queryParams: GetServiceListForProjectQueryParams = getQueryParams({
+    includeAccountAndOrgLevel,
+    params: { accountId, orgIdentifier, projectIdentifier }
   })
+  const { error, loading, data } = useGetEnvironmentListForProject({ queryParams })
 
   useEffect(() => {
     if (loading) {
@@ -95,15 +86,10 @@ export function useGetHarnessEnvironments() {
       showError(error?.message, 7000)
       setEnvironmentOptions([])
     } else if (data?.data?.content) {
-      const options = []
-      for (const service of data.data.content) {
-        if (service?.identifier && service.name) {
-          options.push({
-            label: service.name,
-            value: service.identifier
-          })
-        }
-      }
+      const options = getScopedServiceEnvironmentOption({
+        content: data.data.content,
+        scopedIdentifiers: includeAccountAndOrgLevel
+      })
       setEnvironmentOptions(options)
     }
   }, [loading, error, data])

@@ -34,12 +34,12 @@ const mockEmptyGetFolderResponse: customDashboardServices.GetFolderResponse = {
 describe('CloneDashboardForm', () => {
   beforeEach(() => {
     jest
-      .spyOn(customDashboardServices, 'useGetFolders')
+      .spyOn(customDashboardServices, 'useSearchFolders')
       .mockImplementation(() => ({ data: mockEmptyGetFolderResponse, loading: false } as any))
   })
   afterEach(() => {
     jest.spyOn(customDashboardServices, 'useCloneDashboard').mockReset()
-    jest.spyOn(customDashboardServices, 'useGetFolders').mockReset()
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReset()
   })
 
   test('it should display Clone Dashboard Form', () => {

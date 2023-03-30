@@ -247,7 +247,7 @@ describe('TerraformConfigForm StepTwo tests', () => {
     const fetchType = await screen.findByPlaceholderText('- pipeline.manifestType.gitFetchTypeLabel -')
     expect(fetchType).toBeInTheDocument()
 
-    const folderPath = await screen.findByPlaceholderText('pipeline.manifestType.pathPlaceholder')
+    const folderPath = await screen.findByPlaceholderText('pipeline.manifestType.folderPathPlaceholder')
     expect(folderPath).toBeInTheDocument()
     expect(screen).toMatchSnapshot()
   })
@@ -281,7 +281,7 @@ describe('TerraformConfigForm StepTwo tests', () => {
     const fetchType = await screen.findByPlaceholderText('- pipeline.manifestType.gitFetchTypeLabel -')
     expect(fetchType).toBeInTheDocument()
 
-    const folderPath = await screen.findByPlaceholderText('pipeline.manifestType.pathPlaceholder')
+    const folderPath = await screen.findByPlaceholderText('pipeline.manifestType.folderPathPlaceholder')
     expect(folderPath).toBeInTheDocument()
   })
 
@@ -446,7 +446,7 @@ describe('TerraformConfigForm StepTwo tests', () => {
     fireEvent.change(repoName!, { target: { value: 'test repo name' } })
     expect(screen).toMatchSnapshot()
 
-    const pathPlaceholder = await screen.queryByPlaceholderText('pipeline.manifestType.pathPlaceholder')
+    const pathPlaceholder = await screen.queryByPlaceholderText('pipeline.manifestType.folderPathPlaceholder')
     fireEvent.change(pathPlaceholder!, { target: { value: 'test path' } })
     expect(screen).toMatchSnapshot()
   })
@@ -556,7 +556,7 @@ describe('TerraformConfigForm StepTwo tests', () => {
     const fetchType = await screen.findByPlaceholderText('- pipeline.manifestType.gitFetchTypeLabel -')
     expect(fetchType).toBeInTheDocument()
 
-    const folderPath = await screen.findByPlaceholderText('pipeline.manifestType.pathPlaceholder')
+    const folderPath = await screen.findByPlaceholderText('pipeline.manifestType.folderPathPlaceholder')
     expect(folderPath).toBeInTheDocument()
 
     const githubbConnector = await screen.findByTestId('advanced-config-summary')

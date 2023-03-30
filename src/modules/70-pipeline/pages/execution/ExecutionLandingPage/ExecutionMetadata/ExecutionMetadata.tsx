@@ -208,7 +208,11 @@ export default function ExecutionMetadata(): React.ReactElement {
         {HAS_CD && cdData
           ? React.createElement(cdData.component, {
               data: pipelineExecutionSummary?.moduleInfo?.cd,
-              nodeMap: pipelineStagesMap
+              nodeMap: pipelineStagesMap,
+              ...(HAS_CI &&
+                ciData && {
+                  className: css.cdExecutionContainer
+                })
             })
           : null}
       </div>

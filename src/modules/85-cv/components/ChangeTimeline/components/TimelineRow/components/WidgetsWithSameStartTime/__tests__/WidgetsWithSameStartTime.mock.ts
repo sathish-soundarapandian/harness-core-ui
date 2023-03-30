@@ -23,3 +23,36 @@ export const mockedSecondaryEventsDetailsResponse = {
   },
   correlationId: 'c4e2c08f-726a-4a00-98d7-4b3cf994fb57'
 }
+
+export const mockedProps = {
+  index: 0,
+  widgets: [
+    {
+      endTime: 1679230800000,
+      startTime: 1679229000000,
+      icon: {
+        height: 16,
+        width: 16,
+        url: 'images/downtime'
+      },
+      type: 'Downtime',
+      identifiers: ['yEudIuKcQ_Cnd4TTzluxxg'],
+      leftOffset: 471.3019313602891
+    },
+    {
+      endTime: 1679580900000,
+      startTime: 1679229000000,
+      icon: {
+        height: 16,
+        width: 16,
+        url: '/images/d400ced.svg'
+      },
+      type: 'Annotation',
+      identifiers: ['2fq95fHDS_6If0_QRixu6w', 'YXrDFNNcSPC3kS9J1V8pPw'],
+      leftOffset: 471.3019313602891
+    }
+  ],
+  startTimeForWidgets: 1679229000000,
+  addAnnotation: jest.fn(),
+  fetchSecondaryEvents: jest.fn()
+}

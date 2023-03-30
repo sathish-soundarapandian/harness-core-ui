@@ -25,37 +25,35 @@ import {
 } from '../../../support/85-cv/monitoredService/health-sources/NewRelic/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
+const setUpForMonitoredService = (oldGitEnabled?: boolean): void => {
+  cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+    cy.intercept('GET', featureFlagsCall, {
+      ...featureFlagsData,
+      resource: [
+        ...featureFlagsData.resource,
+        {
+          uuid: null,
+          name: 'CVNG_TEMPLATE_MONITORED_SERVICE',
+          enabled: true,
+          lastUpdatedAt: 0
+        }
+      ]
+    })
+  })
+  cy.login('test', 'test')
+  cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
+  cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
+  cy.intercept(
+    'POST',
+    'template/api/templates/list?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&templateListType=LastUpdated&searchTerm=&page=0&sort=lastUpdatedAt%2CDESC&size=20',
+    { fixture: 'cv/templates/templateList' }
+  ).as('templatesListCall')
+  cy.visitSRMTemplate(oldGitEnabled)
+}
+
 describe('Create empty monitored service', () => {
   beforeEach(() => {
-    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
-      cy.intercept('GET', featureFlagsCall, {
-        ...featureFlagsData,
-        resource: [
-          ...featureFlagsData.resource,
-          {
-            uuid: null,
-            name: 'CVNG_TEMPLATE_MONITORED_SERVICE',
-            enabled: true,
-            lastUpdatedAt: 0
-          },
-          {
-            uuid: null,
-            name: 'USE_OLD_GIT_SYNC',
-            enabled: true,
-            lastUpdatedAt: 0
-          }
-        ]
-      })
-    })
-    cy.login('test', 'test')
-    cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
-    cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
-    cy.intercept(
-      'POST',
-      'template/api/templates/list?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&templateListType=LastUpdated&searchTerm=&page=0&sort=lastUpdatedAt%2CDESC&size=20',
-      { fixture: 'cv/templates/templateList' }
-    ).as('templatesListCall')
-    cy.visitSRMTemplate()
+    setUpForMonitoredService(false)
   })
 
   it('Add new NewRelic monitored service ', () => {
@@ -222,7 +220,7 @@ describe('Create empty monitored service', () => {
 
     cy.contains('div', 'Query Specifications and mapping').click({ force: true })
     cy.get('span[data-icon="expression-input"]').scrollIntoView().should('have.length', 1)
-    cy.get('span[data-icon="expression-input"]').first().should('be.visible').click()
+    cy.get('span[data-icon="expression-input"]').scrollIntoView().should('be.visible').click()
     cy.get('a.bp3-menu-item').should('have.length', 2).as('valueList')
     cy.get('@valueList').eq(0).should('contain.text', 'Runtime input').as('runtimeValue')
     cy.get('@valueList').eq(1).should('contain.text', 'Expression').as('expressionValue')
@@ -257,6 +255,12 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="continuousVerification"]').should('be.checked')
     cy.get('input[value="Performance_Throughput"]').should('be.checked')
     cy.get('input[name="higherBaselineDeviation"]').should('be.checked')
+  })
+})
+
+describe('Edit monitored service with old gitSync', () => {
+  beforeEach(() => {
+    setUpForMonitoredService(true)
   })
 
   it('Edit Newrelic template', () => {

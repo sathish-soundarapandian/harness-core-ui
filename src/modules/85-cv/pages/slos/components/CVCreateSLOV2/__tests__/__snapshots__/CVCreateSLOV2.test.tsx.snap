@@ -761,7 +761,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                 style="cursor: not-allowed;"
               >
                 <span
-                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
+                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder defaultState StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
                   icon="ring"
                 >
                   <svg
@@ -813,7 +813,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                 style="cursor: not-allowed;"
               >
                 <span
-                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
+                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder defaultState StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
                   icon="ring"
                 >
                   <svg
@@ -865,7 +865,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                 style="cursor: not-allowed;"
               >
                 <span
-                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
+                  class="bp3-icon bp3-icon-ring StyledProps--main iconNoBorder defaultState StyledProps--margin-small StyledProps--color StyledProps--color-primary9"
                   icon="ring"
                 >
                   <svg

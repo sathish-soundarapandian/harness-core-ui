@@ -6,7 +6,6 @@
  */
 
 import React, { useState } from 'react'
-import { Formik } from 'formik'
 import * as Yup from 'yup'
 import {
   FormikForm,
@@ -16,6 +15,7 @@ import {
   Icon,
   Text,
   Heading,
+  Formik,
   ButtonProps,
   MultiTypeInputType,
   getMultiTypeFromValue
@@ -122,6 +122,7 @@ const ConfigurePagerDutyNotifications: React.FC<ConfigurePagerDutyNotificationsP
         <Text>{getString('rbac.notifications.infoPagerDuty')}</Text>
         <Formik
           onSubmit={handleSubmit}
+          formName="configurePagerDutyNotifications"
           validationSchema={Yup.object().shape({
             key: Yup.string()
               .trim()
@@ -159,7 +160,7 @@ const ConfigurePagerDutyNotifications: React.FC<ConfigurePagerDutyNotificationsP
                     buttonProps={{ disabled: selectedInputType === MultiTypeInputType.EXPRESSION }}
                   />
                 </Layout.Horizontal>
-                <UserGroupsInput name="userGroups" label={getString('rbac.notifications.labelSlackUserGroups')} />
+                <UserGroupsInput name="userGroups" label={getString('rbac.notifications.labelPagerDutyUserGroups')} />
                 {props.isStep ? (
                   <Layout.Horizontal spacing="medium" margin={{ top: 'xlarge' }}>
                     <Button text={getString('back')} onClick={props.onBack} />
