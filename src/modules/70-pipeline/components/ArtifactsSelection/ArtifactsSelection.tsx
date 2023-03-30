@@ -67,7 +67,8 @@ import {
   isSidecarAllowed,
   isAllowedAzureArtifactDeploymentTypes,
   isAllowedAMIDeploymentTypes,
-  showArtifactStoreStepDirectly
+  showArtifactStoreStepDirectly,
+  isAllowedBambooArtifactDeploymentTypes
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -102,8 +103,14 @@ export default function ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CUSTOM_ARTIFACT_NG, AZURE_ARTIFACTS_NG, CD_AMI_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS } =
-    useFeatureFlags()
+  const {
+    CUSTOM_ARTIFACT_NG,
+    AZURE_ARTIFACTS_NG,
+    CD_AMI_ARTIFACTS_NG,
+    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS,
+    BAMBOO_ARTIFACT_NG
+  } = useFeatureFlags()
+
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -136,6 +143,13 @@ export default function ArtifactsSelection({
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Jenkins)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Jenkins)
+    }
+    if (
+      BAMBOO_ARTIFACT_NG &&
+      isAllowedBambooArtifactDeploymentTypes(deploymentType) &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Bamboo)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Bamboo)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])
