@@ -969,12 +969,17 @@ exports[`Sonarqube Step Edit View edit mode works 1`] = `
                 sto.stepField.tool.projectKey
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolTeamName"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -4503,12 +4508,17 @@ exports[`Sonarqube Step Edit View renders runtime inputs - Orchestration Reposit
                 sto.stepField.tool.projectKey
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolTeamName"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6350,12 +6360,17 @@ exports[`Sonarqube Step Edit View should render properly 1`] = `
                 sto.stepField.tool.projectKey
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolTeamName"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
