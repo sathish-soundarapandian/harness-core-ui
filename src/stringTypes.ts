@@ -9125,6 +9125,9 @@ export interface StringsMap {
   'sto.stepField.toolInclude': string
   'sto.stoExemption': string
   'sto.targets.testTargets': string
+  'sto.trial.comingSoon': string
+  'sto.trial.description': string
+  'sto.trial.learnMore': string
   'sto.zeroNorthImagePlaceholder': string
   /**
    * @deprecated migrate this string to module level file
