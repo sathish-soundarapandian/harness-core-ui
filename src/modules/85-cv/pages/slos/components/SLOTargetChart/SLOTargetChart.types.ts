@@ -15,7 +15,6 @@ export interface SLOTargetChartProps {
   topLabel?: JSX.Element
   bottomLabel?: JSX.Element
   dataPoints?: Highcharts.SeriesColumnOptions['data']
-  secondaryDataPoints?: Highcharts.SeriesColumnOptions['data']
   customChartOptions?: Highcharts.Options
 }
 

@@ -129,7 +129,6 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
               filteredServiceLevelObjective={data?.data?.sloDashboardWidget}
               timeRangeFilters={timeRangeFilters}
               showUserHint
-              downtimeInstanceUnavailability={downtimeInstanceUnavailability?.data}
             />
             <Container padding={{ bottom: 'xlarge' }} />
             {isCompositeSLO && (

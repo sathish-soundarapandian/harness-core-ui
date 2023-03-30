@@ -5,7 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useCallback, useMemo, useState } from 'react'
-import { defaultTo } from 'lodash-es'
 import { Button, ButtonVariation, Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { getMonitoredServiceIdentifiers } from '@cv/utils/CommonUtils'
@@ -43,7 +42,6 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
   showTimelineSlider,
   setShowTimelineSlider,
   setCustomTimeFilter,
-  downtimeInstanceUnavailability,
   defaultOffSetPercentage
 }) => {
   const {
@@ -122,19 +120,6 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
     [type, sloPerformanceTrend, errorBudgetBurndown]
   )
 
-  const downtimeSeries = useMemo(
-    () =>
-      downtimeInstanceUnavailability?.map(item => {
-        return {
-          x: defaultTo(item?.startTime, 0) * 1000,
-          y: maxXLimit * 0.95,
-          startTime: defaultTo(item?.startTime, 0) * 1000,
-          endTime: defaultTo(item?.endTime, 0) * 1000
-        }
-      }),
-    [downtimeInstanceUnavailability, maxXLimit]
-  )
-
   return (
     <>
       {isAnnotationsEnabled ? (
@@ -161,7 +146,6 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
         <Container padding={{ left: isCardView ? 'huge' : 'none' }}>
           <SLOTargetChart
             dataPoints={dataPoints}
-            secondaryDataPoints={downtimeSeries}
             customChartOptions={getSLOAndErrorBudgetGraphOptions({
               type,
               isCardView,

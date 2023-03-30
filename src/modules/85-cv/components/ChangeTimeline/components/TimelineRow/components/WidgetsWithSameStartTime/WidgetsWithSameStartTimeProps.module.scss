@@ -10,6 +10,7 @@
 .downTimeContainer {
   display: flex;
   flex-direction: column;
+  padding: var(--spacing-small) !important;
 }
 
 .downTimeTextElements {
@@ -41,6 +42,7 @@
 
 .annotationText {
   font-size: var(--font-size-small) !important;
+  font-weight: bold !important;
   line-height: 16px !important;
   color: var(--primary-5) !important;
   cursor: pointer;
@@ -68,6 +70,7 @@
   display: flex;
   flex-direction: column;
   width: 369px;
+  padding: var(--spacing-medium) !important;
 }
 
 .annotationTextElements {
