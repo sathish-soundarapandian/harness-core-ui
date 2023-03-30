@@ -3,7 +3,7 @@
 exports[`<DefaultLayout /> tests feature banner tests Level up banner 1`] = `
 <div>
   <div
-    class="main"
+    class="main flex"
     data-layout="default"
   >
     <div>
@@ -120,7 +120,7 @@ exports[`<DefaultLayout /> tests feature banner tests Level up banner 1`] = `
 exports[`<DefaultLayout /> tests feature banner tests Overuse banner 1`] = `
 <div>
   <div
-    class="main"
+    class="main flex"
     data-layout="default"
   >
     <div>
@@ -238,7 +238,7 @@ exports[`<DefaultLayout /> tests feature banner tests Overuse banner 1`] = `
 exports[`<DefaultLayout /> tests feature banner tests features banner is rendered 1`] = `
 <div>
   <div
-    class="main"
+    class="main flex"
     data-layout="default"
   >
     <div>
