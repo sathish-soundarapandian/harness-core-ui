@@ -51,6 +51,7 @@ stepField:
     productToken: Product Token
     productLookupType: Lookup Type
     exclude: Exclude
+    projectKey: Project Key
   container:
     containerAccessToken: Container Access Token
     containerRegion: Container Region
