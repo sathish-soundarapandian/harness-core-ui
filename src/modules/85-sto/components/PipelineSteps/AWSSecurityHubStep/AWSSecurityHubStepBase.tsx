@@ -110,7 +110,6 @@ export const AWSSecurityHubStepBase = (
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               scanConfigReadonly
               scanModeSelectItems={[EXTRACTION_SCAN_MODE, INGESTION_SCAN_MODE]}
             />
@@ -118,16 +117,14 @@ export const AWSSecurityHubStepBase = (
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               targetTypeSelectItems={[CONFIGURATION_TARGET_TYPE]}
             />
 
-            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
 
             <SecurityAuthFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               showFields={{
                 access_id: true
               }}

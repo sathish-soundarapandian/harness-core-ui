@@ -102,7 +102,6 @@ export const NiktoStepBase = (
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, INGESTION_SCAN_MODE]}
               scanConfigSelectItems={[NIKTO_DEFAULT_CONFIG]}
             />
@@ -110,16 +109,14 @@ export const NiktoStepBase = (
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               targetTypeSelectItems={[INSTANCE_TARGET_TYPE]}
             />
 
-            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
 
             <SecurityInstanceFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               showFields={{ domain: true, protocol: true, path: true, port: true }}
             />
 

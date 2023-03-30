@@ -17,9 +17,11 @@ import {
 } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { AllMultiTypeInputTypesForInputSet } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { getInputSetFieldName } from './constants'
 import { InputSetFields } from './SecurityFields'
 import type { SecurityStepData, SecurityStepSpec } from './types'
+import type { CustomTooltipFieldProps } from './SecurityField'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface SecurityStepProps {
@@ -33,15 +35,17 @@ export interface SecurityStepProps {
   onChange?: (data: SecurityStepData<SecurityStepSpec>) => void
   allowableTypes: AllowedTypes
   formik?: any
+  toolTipOverrides?: CustomTooltipFieldProps
 }
 
-export const SecurityStepInputSetBasic: React.FC<SecurityStepProps> = ({
+const SecurityStepInputSetBasic: React.FC<SecurityStepProps> = ({
   template,
   path,
   readonly,
   stepViewType,
   allowableTypes,
-  formik
+  formik,
+  toolTipOverrides
 }) => {
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -63,13 +67,15 @@ export const SecurityStepInputSetBasic: React.FC<SecurityStepProps> = ({
           })
         }}
         path={path || ''}
+        isInputSetView={true}
+        template={template}
       />
       <InputSetFields
-        stepViewType={stepViewType}
-        allowableTypes={allowableTypes}
+        allowableTypes={AllMultiTypeInputTypesForInputSet}
         formik={formik}
         prefix={prefix}
         template={template}
+        toolTipOverrides={toolTipOverrides}
       />
       <CIStepOptionalConfig
         readonly={readonly}

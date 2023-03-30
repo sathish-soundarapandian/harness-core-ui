@@ -112,7 +112,6 @@ export const CheckmarxStepBase = (
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               scanConfigReadonly
               scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, EXTRACTION_SCAN_MODE, INGESTION_SCAN_MODE]}
             />
@@ -120,13 +119,12 @@ export const CheckmarxStepBase = (
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               targetTypeSelectItems={[REPOSITORY_TARGET_TYPE]}
             />
 
-            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} />
 
-            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
 
             <SecurityAuthFields
               showFields={{
@@ -136,13 +134,11 @@ export const CheckmarxStepBase = (
               }}
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
             />
 
             {(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction') && (
               <>
                 <SecurityField
-                  stepViewType={stepViewType}
                   allowableTypes={allowableTypes}
                   formik={formik}
                   enableFields={{

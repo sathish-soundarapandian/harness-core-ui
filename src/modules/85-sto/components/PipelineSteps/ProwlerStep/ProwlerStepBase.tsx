@@ -110,7 +110,6 @@ export const ProwlerStepBase = (
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               scanConfigReadonly
               scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, INGESTION_SCAN_MODE]}
               scanConfigSelectItems={[
@@ -124,11 +123,10 @@ export const ProwlerStepBase = (
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               targetTypeSelectItems={[CONFIGURATION_TARGET_TYPE]}
             />
 
-            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
 
             <SecurityAuthFields
               showFields={{
@@ -136,7 +134,6 @@ export const ProwlerStepBase = (
               }}
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
             />
 
             <AdditionalFields
