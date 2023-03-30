@@ -652,10 +652,12 @@ export const getArtifactManifestTriggerYaml = ({
     pipeline: clearNullUndefined(newPipeline)
   })
 
+  const execStages = pipelineRuntimeInput?.allowStageExecutions ? stagesToExecute : []
+
   const triggerYaml: NGTriggerConfigV2 = {
     name,
     identifier,
-    stagesToExecute,
+    stagesToExecute: execStages,
     enabled: enabledStatus,
     description,
     tags,

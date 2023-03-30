@@ -689,6 +689,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
+
       gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
     })
     submitTrigger(triggerYaml)

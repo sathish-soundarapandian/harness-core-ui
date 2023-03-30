@@ -100,6 +100,12 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
     }
   }, [event, formikProps.errors])
 
+  useEffect(() => {
+    if (!formikProps.values?.resolvedPipeline?.allowStageExecutions) {
+      formikProps.setFieldValue('stagesToExecute', [])
+    }
+  }, [])
+
   return (
     <Layout.Vertical className={css.webhookConfigurationContainer} padding="xxlarge">
       {loading && (
@@ -156,9 +162,7 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
           {sourceRepo === GitSourceProviders.GITHUB.value && <WebhookSecretInputWithDialog formikProps={formikProps} />}
         </section>
       </div>
-      {isSelectiveStageExecEnabled && formikProps.values?.resolvedPipeline?.allowStageExecutions ? (
-        <StageSelection formikProps={formikProps} />
-      ) : null}
+      {isSelectiveStageExecEnabled ? <StageSelection formikProps={formikProps} /> : null}
     </Layout.Vertical>
   )
 }

@@ -1989,6 +1989,8 @@ export const getArtifactManifestTriggerYaml = ({
     )
   }
 
+  const execStages = pipelineRuntimeInput?.allowStageExecutions ? stagesToExecute : []
+
   const triggerYaml: NGTriggerConfigV2 = {
     name,
     identifier,
@@ -1998,7 +2000,7 @@ export const getArtifactManifestTriggerYaml = ({
     orgIdentifier,
     projectIdentifier,
     pipelineIdentifier,
-    stagesToExecute,
+    stagesToExecute: execStages,
     source: {
       type: triggerType as NGTriggerSourceV2['type'],
       spec: {

@@ -59,9 +59,7 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
       <div className={css.formContent}>
         <ArtifactsSelection formikProps={formikProps} />
       </div>
-      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION && formikProps.values?.originalPipeline?.allowStageExecutions ? (
-        <StageSelection formikProps={formikProps} />
-      ) : null}
+      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION ? <StageSelection formikProps={formikProps} /> : null}
       {/* console.log(formikProps.values.originalPipeline.allowStageExecutions, 'props') */}
     </Layout.Vertical>
   )

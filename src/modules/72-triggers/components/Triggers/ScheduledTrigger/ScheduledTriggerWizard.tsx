@@ -569,11 +569,13 @@ export default function ScheduledTriggerWizard(
     const stringifyPipelineRuntimeInput = yamlStringify({
       pipeline: clearNullUndefined(pipelineRuntimeInput)
     })
+
+    const execStages = pipelineRuntimeInput?.allowStageExecutions ? stagesToExecute : []
     return clearNullUndefined({
       name,
       identifier,
       enabled: enabledStatus,
-      stagesToExecute,
+      stagesToExecute: execStages,
       description,
       tags,
       orgIdentifier,

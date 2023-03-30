@@ -284,6 +284,12 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
     }
   }, [appliedArtifact, data, resolvedPipeline, selectedArtifact])
 
+  useEffect(() => {
+    if (!formikProps.values?.resolvedPipeline?.allowStageExecutions) {
+      formikProps.setFieldValue('stagesToExecute', [])
+    }
+  }, [])
+
   const loading = false
   const allowSelectArtifact = !!data?.length
   const artifactOrManifestText = isManifest ? getString('manifestsText') : getString(artifactStr)
@@ -381,9 +387,7 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
           </Text>
         )}
       </div>
-      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION && formikProps.values?.originalPipeline?.allowStageExecutions ? (
-        <StageSelection formikProps={formikProps} />
-      ) : null}
+      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION ? <StageSelection formikProps={formikProps} /> : null}
     </Layout.Vertical>
   )
 }

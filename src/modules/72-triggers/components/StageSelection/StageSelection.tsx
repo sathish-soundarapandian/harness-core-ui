@@ -38,15 +38,28 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   const [selectedStages, setStage] = React.useState<SelectOption[] | any>(stagesArr)
 
   const [allStagesSelected, setAllStagesSelect] = React.useState<boolean[] | any>(false)
+  const allowStageExecutions = formikProps.values?.resolvedPipeline?.allowStageExecutions
 
   useEffect(() => {
     if (
       (Array.isArray(formikProps.values?.stagesToExecute) && !formikProps.values?.stagesToExecute.length) ||
-      !formikProps.values?.stagesToExecute
+      !formikProps.values?.stagesToExecute ||
+      !allowStageExecutions
     ) {
       setAllStagesSelect(true)
     }
+
+    if (!allowStageExecutions) {
+      formikProps.setFieldValue('stagesToExecute', [])
+    }
   }, [])
+  const isDisabled = (): boolean => {
+    if (allowStageExecutions) {
+      return false
+    } else {
+      return true
+    }
+  }
 
   return (
     <Layout.Vertical>
@@ -55,11 +68,11 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
       </Heading>
       <MultiSelectDropDown
         hideItemCount={allStagesSelected}
-        disabled={false}
+        disabled={isDisabled()}
         buttonTestId={'stage-select'}
         onChange={(items: SelectOption[]) => {
           const hasAllStagesChecked = items.find(item => item.value === getAllStageItem(getString).value)
-          const allStagesChecked = items?.length === executionStageList?.length
+          const allStagesChecked = items?.length === formikProps.values?.resolvedPipeline?.stages?.length
           if (hasAllStagesChecked || allStagesChecked) {
             setStage([hasAllStagesChecked])
             setAllStagesSelect(true)

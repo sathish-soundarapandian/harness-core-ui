@@ -910,11 +910,12 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         } else if (isNewGitSyncRemotePipeline) {
           pipelineJson = resolvedMergedPipeline
         }
+        const execStages = pipelineJson?.allowStageExecutions ? pipelineJson?.stagesToExecute : []
 
         triggerValues = {
           name,
           identifier,
-          stagesToExecute,
+          stagesToExecute: execStages,
           description,
           tags,
           pipeline: pipelineJson,
@@ -1148,10 +1149,12 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     const stringifyPipelineRuntimeInput = yamlStringify({
       pipeline: clearNullUndefined(pipelineRuntimeInput)
     })
+
+    const execStages = pipelineRuntimeInput?.allowStageExecutions ? stagesToExecute : []
     return clearNullUndefined({
       name,
       identifier,
-      stagesToExecute,
+      stagesToExecute: execStages,
       enabled: enabledStatus,
       description,
       tags,
