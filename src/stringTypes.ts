@@ -2219,6 +2219,7 @@ export interface StringsMap {
   'authSettings.pricePreview.calculatedNextStep': string
   'authSettings.pricePreview.discount': string
   'authSettings.pricePreview.title': string
+  'authSettings.proRata': string
   'authSettings.publicOAuthLoginDisabled': string
   'authSettings.publicOAuthLoginEnabled': string
   'authSettings.recomendation': string
@@ -11282,6 +11283,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   pathStyle: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  payNow: string
   /**
    * @deprecated migrate this string to module level file
    */

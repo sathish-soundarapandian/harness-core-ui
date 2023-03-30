@@ -9,6 +9,19 @@
   color: var(--primary-6) !important;
 }
 
+.parentTimeChild1 {
+  height: 10px;
+  background-color: var(--primary-1) !important;
+  width: 100% !important;
+  border: 1px solid var(--primary-2);
+  border-radius: 10px 10px 10px 10px;
+}
+
+.parentTime {
+  display: flex;
+  width: auto;
+}
+
 .pricePreview {
   width: 40% !important;
   height: 60% !important;
