@@ -155,6 +155,7 @@ cdCommunityPlan:
     item5: Template Library & Custom Dashboards
 
 autoRenewal: Auto renewal on {{date}}
+proRata: Prorated amount covers for {{date}}
 salesTax: Plus sales tax
 unitPrice: Unit Price
 recomendation: Recomendation
