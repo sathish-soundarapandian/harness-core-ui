@@ -8,25 +8,19 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
-import { isEmpty, isEqual, cloneDeep } from 'lodash-es'
+import { isEmpty, cloneDeep } from 'lodash-es'
 
 import { PageSpinner } from '@harness/uicore'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
-import {
-  getLastModifiedTimeForAllModuleTypesPromise,
-  ModuleLicenseDTO,
-  useGetAccountLicenses,
-  useGetLastModifiedTimeForAllModuleTypes
-} from 'services/cd-ng'
+import { ModuleLicenseDTO, useGetAccountLicenses, useGetLastModifiedTimeForAllModuleTypes } from 'services/cd-ng'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import GenericErrorPage, { GENERIC_ERROR_CODES } from '@common/pages/GenericError/GenericErrorPage'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
-import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useFeaturesContext } from 'framework/featureStore/FeaturesContext'
 import { VersionMap, LICENSE_STATE_VALUES, defaultLicensesByModule } from './licenseStoreUtil'
 
@@ -115,7 +109,6 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
 
   const {
     data: accountLicensesData,
-    refetch: getAccountLicenses,
     error,
     loading: getAccountLicensesLoading
   } = useGetAccountLicenses({
@@ -148,8 +141,6 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const { requestFeatures } = useFeaturesContext()
 
   const [isLoading, setIsLoading] = useState(true)
 
