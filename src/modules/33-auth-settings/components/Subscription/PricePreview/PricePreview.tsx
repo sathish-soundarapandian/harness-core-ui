@@ -20,7 +20,9 @@ import {
   getSubscriptionBreakdownsByModuleAndFrequency,
   isSelectedPlan,
   PLAN_TYPES,
-  strToNumber
+  strToNumber,
+  getTodayDate,
+  getPreviousDate
 } from '../subscriptionUtils'
 import css from './PricePreview.module.scss'
 
@@ -70,18 +72,34 @@ const Footer: React.FC<{ totalAmount: number; payingFrequency: TimeType; taxAmou
   const { getString } = useStrings()
   const frequency = payingFrequency === TimeType.MONTHLY ? getString('common.perMonth') : getString('common.perYear')
   const renewDate = getRenewDate(payingFrequency)
+  const todayDate = getTodayDate()
+  const width = '320px'
+
   return (
     <Layout.Vertical>
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-        <Text font={{ variation: FontVariation.H2 }}>{getString('total')}</Text>
+        <Text font={{ variation: FontVariation.H2 }}>{getString('payNow')}</Text>
         <Text font={{ variation: FontVariation.H2 }}>
           {getAmountInCurrency(CurrencyType.USD, totalAmount)}
           {frequency}
         </Text>
       </Layout.Horizontal>
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-        <Text font={{ size: 'xsmall' }}>{getString('authSettings.autoRenewal', { date: renewDate })}</Text>
         {isNil(taxAmount) && <Text font={{ size: 'xsmall' }}>{getString('authSettings.salesTax')}</Text>}
+      </Layout.Horizontal>
+      <Layout.Horizontal flex={{ justifyContent: 'space-between' }} style={{ marginTop: '10px' }}>
+        <Text font={{ size: 'xsmall' }} style={{ marginLeft: '100px' }}>{`${todayDate}`}</Text>
+        <Text font={{ size: 'xsmall' }}>{`${renewDate}`}</Text>
+      </Layout.Horizontal>
+      <Layout.Horizontal className={css.parentTime}>
+        <Layout.Horizontal
+          className={css.parentTimeChild1}
+          style={{ borderRight: `${width} solid var(--primary-7)` }}
+        ></Layout.Horizontal>
+      </Layout.Horizontal>
+      <Layout.Horizontal>
+        <Text font={{ size: 'xsmall' }}>{getString('authSettings.proRata', { date: todayDate })}</Text>
+        <Text font={{ size: 'xsmall' }}>{`-${renewDate}`}</Text>
       </Layout.Horizontal>
     </Layout.Vertical>
   )
@@ -204,8 +222,11 @@ const PricePreview: React.FC<PricePreviewProps> = ({
         subscriptionDetails={subscriptionDetails}
         products={products}
         premiumSupportAmount={premiumSupportUnitPrice}
+        totalAmount={totalAmount}
       />
-      <Footer payingFrequency={paymentFreq} totalAmount={totalAmount} taxAmount={subscriptionDetails.taxAmount} />
+      {!isNil(taxAmount) ? (
+        <Footer payingFrequency={paymentFreq} totalAmount={totalAmount} taxAmount={subscriptionDetails.taxAmount} />
+      ) : null}
     </Layout.Vertical>
   )
 }

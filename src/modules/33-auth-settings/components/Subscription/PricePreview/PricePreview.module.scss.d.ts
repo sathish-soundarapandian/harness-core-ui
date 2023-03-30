@@ -10,6 +10,8 @@ declare const styles: {
   readonly cf: string
   readonly ci: string
   readonly line: string
+  readonly parentTime: string
+  readonly parentTimeChild1: string
   readonly paymentFrequency: string
   readonly pricePreview: string
   readonly selected: string

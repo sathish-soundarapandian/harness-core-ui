@@ -33,14 +33,22 @@ export function getRenewDate(time: TimeType): string {
   const today = new Date()
   if (time === TimeType.MONTHLY) {
     return new Date(today.setMonth(today.getMonth() + 1)).toLocaleDateString('en-us', {
-      weekday: 'long',
       year: 'numeric',
       month: 'short',
       day: 'numeric'
     })
   }
   return new Date(today.setFullYear(today.getFullYear() + 1)).toLocaleDateString('en-us', {
-    weekday: 'long',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
+}
+
+export function getTodayDate(): string {
+  const today = new Date()
+
+  return new Date(today.setFullYear(today.getFullYear())).toLocaleDateString('en-us', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
@@ -181,116 +189,120 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
   const { productPrices, quantities, paymentFreq } = subscriptionDetails
   const products: Product[] = []
   switch (module) {
-    case 'cf': {
-      if (paymentFreq === TimeType.MONTHLY) {
-        const developerUnitPrice = getDollarAmount(
-          productPrices.monthly?.find(product => {
-            return isSelectedPlan(product, false, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
-          })?.unitAmount
-        )
-        products.push({
-          paymentFrequency: paymentFreq,
-          description: 'common.subscriptions.usage.developers',
-          unitDescription: 'common.perDeveloper',
-          quantity: quantities?.featureFlag?.numberOfDevelopers || 0,
-          unitPrice: developerUnitPrice
-        })
+    case 'cf':
+      {
+        if (paymentFreq === TimeType.MONTHLY) {
+          const developerUnitPrice = getDollarAmount(
+            productPrices.monthly?.find(product => {
+              return isSelectedPlan(product, false, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
+            })?.unitAmount
+          )
+          products.push({
+            paymentFrequency: paymentFreq,
+            description: 'common.subscriptions.usage.developers',
+            unitDescription: 'common.perDeveloper',
+            quantity: quantities?.featureFlag?.numberOfDevelopers || 0,
+            unitPrice: developerUnitPrice
+          })
 
-        const numberOfMauMonthly = quantities?.featureFlag?.numberOfMau || 0
-        const mauUnitPrice = getDollarAmount(
-          productPrices.monthly?.find(productPrice => {
-            const isSamePlan = isSelectedPlan(productPrice, false, subscriptionDetails.edition, PLAN_TYPES.MAU)
-            if (isSamePlan) {
-              const numMausFromMap = numberOfMauMonthly * toInteger(productPrice.metaData?.sampleMultiplier)
-              const priceMin = strToNumber(productPrice.metaData?.min || '')
-              const priceMax = strToNumber(productPrice.metaData?.max || '')
-              const isValidRange = numMausFromMap >= priceMin && numMausFromMap <= priceMax
-              if (isValidRange) {
-                return productPrice
+          const numberOfMauMonthly = quantities?.featureFlag?.numberOfMau || 0
+          const mauUnitPrice = getDollarAmount(
+            productPrices.monthly?.find(productPrice => {
+              const isSamePlan = isSelectedPlan(productPrice, false, subscriptionDetails.edition, PLAN_TYPES.MAU)
+              if (isSamePlan) {
+                const numMausFromMap = numberOfMauMonthly * toInteger(productPrice.metaData?.sampleMultiplier)
+                const priceMin = strToNumber(productPrice.metaData?.min || '')
+                const priceMax = strToNumber(productPrice.metaData?.max || '')
+                const isValidRange = numMausFromMap >= priceMin && numMausFromMap <= priceMax
+                if (isValidRange) {
+                  return productPrice
+                }
               }
-            }
-          })?.unitAmount
-        )
-        products.push({
-          paymentFrequency: paymentFreq,
-          description: 'authSettings.costCalculator.maus',
-          unitDescription: 'authSettings.costCalculator.mau.perkMau',
-          underComment: 'authSettings.costCalculator.mau.kMauFree',
-          quantity: numberOfMauMonthly,
-          unitPrice: mauUnitPrice
-        })
-      }
-      if (paymentFreq === TimeType.YEARLY) {
-        const developerUnitPrice = getDollarAmount(
-          productPrices.yearly?.find(product => {
-            return isSelectedPlan(product, false, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
-          })?.unitAmount
-        )
+            })?.unitAmount
+          )
+          products.push({
+            paymentFrequency: paymentFreq,
+            description: 'authSettings.costCalculator.maus',
+            unitDescription: 'authSettings.costCalculator.mau.perkMau',
+            underComment: 'authSettings.costCalculator.mau.kMauFree',
+            quantity: numberOfMauMonthly,
+            unitPrice: mauUnitPrice
+          })
+        }
+        if (paymentFreq === TimeType.YEARLY) {
+          const developerUnitPrice = getDollarAmount(
+            productPrices.yearly?.find(product => {
+              return isSelectedPlan(product, false, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
+            })?.unitAmount
+          )
 
-        products.push({
-          paymentFrequency: paymentFreq,
-          description: 'common.subscriptions.usage.developers',
-          unitDescription: 'common.perDeveloper',
-          quantity: quantities?.featureFlag?.numberOfDevelopers || 0,
-          unitPrice: developerUnitPrice
-        })
-        const numberOfMauYearly = quantities?.featureFlag?.numberOfMau || 0
+          products.push({
+            paymentFrequency: paymentFreq,
+            description: 'common.subscriptions.usage.developers',
+            unitDescription: 'common.perDeveloper',
+            quantity: quantities?.featureFlag?.numberOfDevelopers || 0,
+            unitPrice: developerUnitPrice
+          })
+          const numberOfMauYearly = quantities?.featureFlag?.numberOfMau || 0
 
-        const mauUnitPrice = getDollarAmount(
-          productPrices.yearly?.find(productPrice => {
-            const isSamePlan = isSelectedPlan(productPrice, false, subscriptionDetails.edition, PLAN_TYPES.MAU)
-            if (isSamePlan) {
-              const numMausFromMap = numberOfMauYearly * toInteger(productPrice.metaData?.sampleMultiplier)
-              const priceMin = strToNumber(productPrice.metaData?.min || '')
-              const priceMax = strToNumber(productPrice.metaData?.max || '')
-              const isValidRange = numMausFromMap >= priceMin && numMausFromMap <= priceMax
-              if (isValidRange) {
-                return productPrice
+          const mauUnitPrice = getDollarAmount(
+            productPrices.yearly?.find(productPrice => {
+              const isSamePlan = isSelectedPlan(productPrice, false, subscriptionDetails.edition, PLAN_TYPES.MAU)
+              if (isSamePlan) {
+                const numMausFromMap = numberOfMauYearly * toInteger(productPrice.metaData?.sampleMultiplier)
+                const priceMin = strToNumber(productPrice.metaData?.min || '')
+                const priceMax = strToNumber(productPrice.metaData?.max || '')
+                const isValidRange = numMausFromMap >= priceMin && numMausFromMap <= priceMax
+                if (isValidRange) {
+                  return productPrice
+                }
               }
-            }
-          })?.unitAmount
-        )
-        products.push({
-          paymentFrequency: paymentFreq,
-          description: 'authSettings.costCalculator.maus',
-          unitDescription: 'authSettings.costCalculator.mau.permMau',
-          underComment: 'authSettings.costCalculator.mau.mMauFree',
-          quantity: numberOfMauYearly,
-          unitPrice: mauUnitPrice
-        })
+            })?.unitAmount
+          )
+          products.push({
+            paymentFrequency: paymentFreq,
+            description: 'authSettings.costCalculator.maus',
+            unitDescription: 'authSettings.costCalculator.mau.permMau',
+            underComment: 'authSettings.costCalculator.mau.mMauFree',
+            quantity: numberOfMauYearly,
+            unitPrice: mauUnitPrice
+          })
+        }
       }
-    }
-    case 'ci': {
-      if (paymentFreq === TimeType.MONTHLY) {
-        const developerUnitPrice = getDollarAmount(
-          productPrices.monthly?.find(product => {
-            return isSelectedPlan(product, false, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
-          })?.unitAmount
-        )
-        products.push({
-          paymentFrequency: paymentFreq,
-          description: 'common.subscriptions.usage.developers',
-          unitDescription: 'common.perDeveloper',
-          quantity: quantities?.ci?.numberOfDevelopers || 0,
-          unitPrice: developerUnitPrice
-        })
-      }
-      if (paymentFreq === TimeType.YEARLY) {
-        const developerUnitPrice = getDollarAmount(
-          productPrices.yearly?.find(product => {
-            return isSelectedPlan(product, false, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
-          })?.unitAmount
-        )
+      break
+    case 'ci':
+      {
+        if (paymentFreq === TimeType.MONTHLY) {
+          const developerUnitPrice = getDollarAmount(
+            productPrices.monthly?.find(product => {
+              return isSelectedPlan(product, false, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
+            })?.unitAmount
+          )
+          products.push({
+            paymentFrequency: paymentFreq,
+            description: 'common.subscriptions.usage.developers',
+            unitDescription: 'common.perDeveloper',
+            quantity: quantities?.ci?.numberOfDevelopers || 0,
+            unitPrice: developerUnitPrice
+          })
+        }
+        if (paymentFreq === TimeType.YEARLY) {
+          const developerUnitPrice = getDollarAmount(
+            productPrices.yearly?.find(product => {
+              return isSelectedPlan(product, false, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
+            })?.unitAmount
+          )
 
-        products.push({
-          paymentFrequency: paymentFreq,
-          description: 'common.subscriptions.usage.developers',
-          unitDescription: 'common.perDeveloper',
-          quantity: quantities?.ci?.numberOfDevelopers || 0,
-          unitPrice: developerUnitPrice
-        })
+          products.push({
+            paymentFrequency: paymentFreq,
+            description: 'common.subscriptions.usage.developers',
+            unitDescription: 'common.perDeveloper',
+            quantity: quantities?.ci?.numberOfDevelopers || 0,
+            unitPrice: developerUnitPrice
+          })
+        }
       }
-    }
+      break
   }
 
   return products
