@@ -21,7 +21,6 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import GenericErrorPage, { GENERIC_ERROR_CODES } from '@common/pages/GenericError/GenericErrorPage'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
-import { useFeaturesContext } from 'framework/featureStore/FeaturesContext'
 import { VersionMap, LICENSE_STATE_VALUES, defaultLicensesByModule } from './licenseStoreUtil'
 
 // Only keep GA modules for now
