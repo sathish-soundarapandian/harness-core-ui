@@ -59,7 +59,8 @@ export default function DeployEnvironmentGroupInputStep({
     updatingEnvironmentGroupsList,
     nonExistingEnvironmentGroupIdentifiers
   } = useGetEnvironmentGroupsData({
-    environmentGroupIdentifiers: isValueFixed(environmentGroupValue) ? [environmentGroupValue] : []
+    environmentGroupIdentifiers:
+      isValueFixed(environmentGroupValue) && !isEmpty(environmentGroupValue) ? [environmentGroupValue] : []
   })
 
   useDeepCompareEffect(() => {
