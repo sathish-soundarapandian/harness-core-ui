@@ -953,7 +953,7 @@ export const tooltipIds = {
   toolProjectVersion: `${tooltipPrefix}ToolProjectVersion`,
   toolExclude: `${tooltipPrefix}ToolExclude`,
   toolTeamName: `${tooltipPrefix}ToolTeamName`,
-  toolProjectKey: `${tooltipPrefix}ToolTeamName`
+  toolProjectKey: `${tooltipPrefix}ToolProjectKey`
 }
 
 export function getCustomTooltipPrefix(step: StepType): StepType {
