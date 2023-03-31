@@ -451,8 +451,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   useEffect(() => {
     if (triggerResponse?.data?.yaml && triggerResponse.data.type === TriggerTypes.WEBHOOK) {
       const newOnEditInitialValues = getWebhookTriggerValues({
-        triggerResponseYaml: triggerResponse.data.yaml,
-        pipeline: resolvedMergedPipeline
+        triggerResponseYaml: triggerResponse.data.yaml
       })
 
       setOnEditInitialValues({
@@ -716,7 +715,6 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   }: {
     triggerResponseYaml?: string
     triggerYaml?: { trigger: NGTriggerConfigV2 }
-    pipeline: PipelineInfoConfig
   }): FlatOnEditValuesInterface | undefined => {
     // triggerResponseYaml comes from onEdit render, triggerYaml comes from visualYaml toggle
     let triggerValues: FlatOnEditValuesInterface | undefined
