@@ -478,13 +478,11 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
           (eventCondition: AddConditionInterface) => eventCondition.key === EventConditionTypes.BUILD
         ) || {}
 
-      const execStages = resolvedMergedPipeline?.allowStageExecutions ? stagesToExecute : []
-
       newOnEditInitialValues = {
         name,
         identifier,
         description,
-        stagesToExecute: execStages,
+        stagesToExecute,
         tags,
         source,
         pipeline: pipelineJson,

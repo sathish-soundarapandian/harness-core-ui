@@ -9,7 +9,7 @@ import React, { useEffect } from 'react'
 import { Heading, Layout, MultiSelectDropDown, SelectOption } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
-import { getAllStageItem } from '@pipeline/utils/runPipelineUtils'
+import { clearRuntimeInput, getAllStageItem } from '@pipeline/utils/runPipelineUtils'
 import { useStrings } from 'framework/strings'
 import css from './StageSelection.module.scss'
 
@@ -72,10 +72,12 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
         disabled={isDisabled()}
         buttonTestId={'stage-select'}
         onChange={(items: SelectOption[]) => {
-          const hasAllStagesChecked = items.find(item => item.value === getAllStageItem(getString).value)
           const allStagesChecked = items?.length === formikProps.values?.resolvedPipeline?.stages?.length
+          const hasAllStagesChecked =
+            items.find(item => item.value === getAllStageItem(getString).value) || allStagesChecked
+
           if (hasAllStagesChecked || allStagesChecked) {
-            setStage([hasAllStagesChecked])
+            setStage([])
             setAllStagesSelect(true)
           } else {
             setAllStagesSelect(false)
@@ -84,11 +86,23 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
         }}
         onPopoverClose={() => {
           setStage(selectedStages)
-          const stages = selectedStages.map((stage: SelectOption) => stage.value)
+
           const hasAllStagesChecked = selectedStages.find(
             (item: SelectOption) => item.value === getAllStageItem(getString).value
           )
+          const stages = hasAllStagesChecked ? [] : selectedStages.map((stage: SelectOption) => stage.value)
           formikProps.setFieldValue('stagesToExecute', hasAllStagesChecked ? [] : stages)
+          if (formikProps.values.pipeline) {
+            const { identifier } = formikProps.values.pipeline
+            const filteredStages = allStagesSelected
+              ? formikProps.values.resolvedPipeline.stages
+              : formikProps.values.resolvedPipeline.stages.filter((stg: any) => stages.includes(stg.stage.identifier))
+            const modifiedPipeline = {
+              identifier,
+              stages: [...filteredStages]
+            }
+            formikProps.setFieldValue('pipeline', clearRuntimeInput(modifiedPipeline))
+          }
         }}
         value={allStagesSelected ? [getAllStageItem(getString)] : selectedStages}
         items={executionStageList}
