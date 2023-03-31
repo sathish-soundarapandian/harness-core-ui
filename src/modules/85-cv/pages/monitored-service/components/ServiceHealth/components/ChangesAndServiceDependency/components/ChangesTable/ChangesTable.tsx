@@ -14,6 +14,7 @@ import { Icon, Container, NoDataCard, PageError, TableV2, Pagination, Layout } f
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useChangeEventList, useChangeEventListForAccount } from 'services/cv'
+import { useDeepCompareEffect } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getCVMonitoringServicesSearchParam,
@@ -68,10 +69,6 @@ export default function ChangesTable({
     showConfirmationDuringClose: false
   })
 
-  useEffect(() => {
-    setPage(0)
-  }, [startTime, endTime])
-
   const monitoredServiceIdentifiers = useMemo(
     () => getMonitoredServiceIdentifiers(isAccountLevel, monitoredServiceDetails),
     [isAccountLevel, monitoredServiceDetails]
@@ -109,6 +106,14 @@ export default function ChangesTable({
     changeCategories,
     page
   ])
+
+  const { pageIndex: _, ...changeEventListQueryParamsExceptPage } = changeEventListQueryParams
+
+  useDeepCompareEffect(() => {
+    if (projectRef.current === projectIdentifier) {
+      setPage(0)
+    }
+  }, [changeEventListQueryParamsExceptPage])
 
   const {
     data: accountLevelChangeEventListData,
@@ -166,22 +171,8 @@ export default function ChangesTable({
   useEffect(() => {
     if (projectRef.current !== projectIdentifier && isChangesPage) {
       projectRef.current = projectIdentifier
+      setPage(0)
       resetFilters?.()
-      refetch({
-        queryParams: {
-          ...changeEventListQueryParams,
-          endTime: 0,
-          startTime: 0,
-          serviceIdentifiers: [],
-          envIdentifiers: [],
-          pageIndex: 0,
-          pageSize: defaultTo(recordsPerPage, PAGE_SIZE),
-          changeCategories: []
-        },
-        queryParamStringifyOptions: {
-          arrayFormat: 'repeat'
-        }
-      })
     }
   }, [projectIdentifier])
 

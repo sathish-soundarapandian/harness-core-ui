@@ -109,6 +109,7 @@ export const initialFilterPayload = {
       'K8sCluster',
       'PagerDuty',
       'HarnessFF',
+      'HarnessCE',
       'CustomDeploy',
       'CustomInfrastructure',
       'CustomIncident',
@@ -133,6 +134,7 @@ export const filterPayloadWithENV = {
       'K8sCluster',
       'PagerDuty',
       'HarnessFF',
+      'HarnessCE',
       'CustomDeploy',
       'CustomInfrastructure',
       'CustomIncident',
@@ -142,7 +144,7 @@ export const filterPayloadWithENV = {
     envIdentifiers: ['env1'],
     pageIndex: 0,
     pageSize: 25,
-    serviceIdentifiers: [],
+    serviceIdentifiers: ['AppDService101'],
     startTime: expect.any(Number)
   }
 }
