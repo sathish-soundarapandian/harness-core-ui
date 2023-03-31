@@ -381,9 +381,7 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
           </Text>
         )}
       </div>
-      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION && formikProps.values?.originalPipeline?.allowStageExecutions ? (
-        <StageSelection formikProps={formikProps} />
-      ) : null}
+      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION ? <StageSelection formikProps={formikProps} /> : null}
     </Layout.Vertical>
   )
 }

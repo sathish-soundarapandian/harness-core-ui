@@ -451,8 +451,10 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   useEffect(() => {
     if (triggerResponse?.data?.yaml && triggerResponse.data.type === TriggerTypes.WEBHOOK) {
       const newOnEditInitialValues = getWebhookTriggerValues({
-        triggerResponseYaml: triggerResponse.data.yaml
+        triggerResponseYaml: triggerResponse.data.yaml,
+        pipeline: resolvedMergedPipeline
       })
+
       setOnEditInitialValues({
         ...onEditInitialValues,
         ...newOnEditInitialValues
@@ -599,6 +601,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         })
       }
 
+      const execStages = val?.resolvedPipeline?.allowStageExecutions ? stagesToExecute : []
       // actions will be required thru validation
       const actionsValues = (actions as unknown as SelectOption[])?.map(action => action.value)
       const triggerYaml: NGTriggerConfigV2 = {
@@ -611,7 +614,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         description,
         tags,
         orgIdentifier,
-        stagesToExecute,
+        stagesToExecute: execStages,
         projectIdentifier,
         pipelineIdentifier,
         source: {
@@ -657,13 +660,15 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       }
       return clearNullUndefined(triggerYaml)
     } else {
+      const execStages = originalPipeline?.allowStageExecutions ? stagesToExecute : []
+
       const triggerYaml: NGTriggerConfigV2 = {
         name,
         identifier,
         enabled: enabledStatus,
         description,
         tags,
-        stagesToExecute,
+        stagesToExecute: execStages,
         orgIdentifier,
         projectIdentifier,
         pipelineIdentifier,
@@ -711,6 +716,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   }: {
     triggerResponseYaml?: string
     triggerYaml?: { trigger: NGTriggerConfigV2 }
+    pipeline: PipelineInfoConfig
   }): FlatOnEditValuesInterface | undefined => {
     // triggerResponseYaml comes from onEdit render, triggerYaml comes from visualYaml toggle
     let triggerValues: FlatOnEditValuesInterface | undefined
@@ -877,6 +883,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           trigger: {
             name,
             identifier,
+            stagesToExecute,
             description,
             tags,
             inputYaml,
@@ -914,8 +921,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         triggerValues = {
           name,
           identifier,
-          stagesToExecute,
           description,
+          stagesToExecute,
           tags,
           pipeline: pipelineJson,
           sourceRepo,
@@ -1148,10 +1155,12 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     const stringifyPipelineRuntimeInput = yamlStringify({
       pipeline: clearNullUndefined(pipelineRuntimeInput)
     })
+    const execStages = originalPipeline?.allowStageExecutions ? stagesToExecute : []
+
     return clearNullUndefined({
       name,
       identifier,
-      stagesToExecute,
+      stagesToExecute: execStages,
       enabled: enabledStatus,
       description,
       tags,

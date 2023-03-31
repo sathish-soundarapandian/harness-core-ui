@@ -2224,8 +2224,10 @@ export const getArtifactManifestTriggerYaml = ({
     name,
     identifier,
     description,
+    stagesToExecute,
     tags,
     pipeline: pipelineRuntimeInput,
+    originalPipeline,
     triggerType: formikValueTriggerType,
     event,
     selectedArtifact,
@@ -2321,10 +2323,13 @@ export const getArtifactManifestTriggerYaml = ({
     )
   }
 
+  const execStages = originalPipeline?.allowStageExecutions ? stagesToExecute : []
+
   const triggerYaml: NGTriggerConfigV2 = {
     name,
     identifier,
     enabled: enabledStatus,
+    stagesToExecute: execStages,
     description,
     tags,
     orgIdentifier,

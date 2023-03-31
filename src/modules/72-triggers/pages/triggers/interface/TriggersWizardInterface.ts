@@ -123,6 +123,7 @@ export interface FlatValidWebhookFormikValuesInterface {
   target?: string
   targetIdentifier?: string
   pipeline: PipelineInfoConfig
+  originalPipeline: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
   sourceRepo: string
   triggerType: NGTriggerSourceV2['type']

@@ -156,9 +156,7 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
           {sourceRepo === GitSourceProviders.GITHUB.value && <WebhookSecretInputWithDialog formikProps={formikProps} />}
         </section>
       </div>
-      {isSelectiveStageExecEnabled && formikProps.values?.resolvedPipeline?.allowStageExecutions ? (
-        <StageSelection formikProps={formikProps} />
-      ) : null}
+      {isSelectiveStageExecEnabled ? <StageSelection formikProps={formikProps} /> : null}
     </Layout.Vertical>
   )
 }
