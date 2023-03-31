@@ -46,7 +46,8 @@ import {
   isNewServiceEnvEntity,
   resetTags,
   getValidInitialValuePath,
-  getYamlData
+  getYamlData,
+  DefaultParam
 } from '../artifactSourceUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -261,6 +262,56 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }
   })
 
+  const groupQueryParams: any = {
+    ...commonParams,
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    repository: getFinalQueryParamValue(repositoryValue),
+    pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+    fqnPath: getFqnPath(
+      path as string,
+      !!isPropagatedStage,
+      stageIdentifier,
+      defaultTo(
+        isSidecar
+          ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+          : artifactPath,
+        ''
+      ),
+      'spec.groupId'
+    )
+  }
+
+  if (repositoryFormatValue !== DefaultParam) {
+    groupQueryParams['repositoryFormat'] = repositoryFormatValue
+  }
+
+  const artifactQueryParams: any = {
+    ...commonParams,
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    repository: repositoryValue,
+    groupId: groupIdValue,
+    nexusSourceType: 'Nexus3Registry',
+    pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+    fqnPath: getFqnPath(
+      path as string,
+      !!isPropagatedStage,
+      stageIdentifier,
+      defaultTo(
+        isSidecar
+          ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+          : artifactPath,
+        ''
+      ),
+      'spec.artifactId'
+    )
+  }
+
+  if (repositoryFormatValue !== DefaultParam) {
+    artifactQueryParams['repositoryFormat'] = repositoryFormatValue
+  }
+
   const {
     data: groupData,
     loading: fetchingGroups,
@@ -273,26 +324,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         'content-type': 'application/json'
       }
     },
-    queryParams: {
-      ...commonParams,
-      connectorRef: getFinalQueryParamValue(connectorRefValue),
-      repository: getFinalQueryParamValue(repositoryValue),
-      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
-      repositoryFormat: repositoryFormatValue,
-      fqnPath: getFqnPath(
-        path as string,
-        !!isPropagatedStage,
-        stageIdentifier,
-        defaultTo(
-          isSidecar
-            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
-            : artifactPath,
-          ''
-        ),
-        'spec.groupId'
-      )
-    },
+    queryParams: groupQueryParams,
     lazy: true,
     debounce: 300
   })
@@ -309,28 +341,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         'content-type': 'application/json'
       }
     },
-    queryParams: {
-      ...commonParams,
-      connectorRef: getFinalQueryParamValue(connectorRefValue),
-      repository: repositoryValue,
-      groupId: groupIdValue,
-      nexusSourceType: 'Nexus3Registry',
-      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
-      repositoryFormat: repositoryFormatValue,
-      fqnPath: getFqnPath(
-        path as string,
-        !!isPropagatedStage,
-        stageIdentifier,
-        defaultTo(
-          isSidecar
-            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
-            : artifactPath,
-          ''
-        ),
-        'spec.artifactId'
-      )
-    },
+    queryParams: artifactQueryParams,
     lazy: true,
     debounce: 300
   })
