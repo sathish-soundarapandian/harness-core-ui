@@ -60,6 +60,7 @@ src/modules/70-pipeline/interfaces/STOApp.ts @harness/ui-sto
 src/modules/70-pipeline/pages/execution/ExecutionSecurityView @harness/ui-sto
 src/modules/70-pipeline/components/PipelineInputSetForm/EnvironmentsInputSetForm @vkbansal-harness @AshwinBhatkal-Harness
 src/modules/70-pipeline/components/PipelineInputSetForm/ServicesInputSetForm @vkbansal-harness @AshwinBhatkal-Harness
+src/modules/70-pipeline/pages/execution/ExecutionArtifactsView @harness/ui-pipeline
 src/modules/72-templates-library @harness/ui-templates
 src/modules/72-freeze-windows @harness/ui-pipeline
 src/modules/75-cd @harness/ui-pipeline
@@ -85,7 +86,6 @@ src/modules/72-triggers @harness/ui-triggers
 src/modules/70-pipeline/pages/execution/ExecutionTestView @harness/ui-ci
 src/modules/70-pipeline/components/Volumes @harness/ui-ci
 src/modules/70-pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm @harness/ui-ci
-src/modules/70-pipeline/pages/execution/ExecutionArtifactsView @harness/ui-ci
 src/modules/75-ce/modals/CETrialModal @harness/ui-plg
 src/modules/75-ce/pages/home @harness/ui-plg
 src/modules/75-cf/modals/FFTrial @harness/ui-plg
