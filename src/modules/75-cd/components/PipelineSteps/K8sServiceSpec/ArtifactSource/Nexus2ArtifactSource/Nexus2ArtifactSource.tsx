@@ -207,6 +207,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       repository: getFinalQueryParamValue(repositoryValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      repositoryFormat: repositoryFormatValue,
       fqnPath: getFqnPath(
         path as string,
         !!isPropagatedStage,
@@ -240,6 +241,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       ...commonParams,
       connectorRef: getFinalQueryParamValue(connectorRefValue),
       repository: repositoryValue,
+      //repositoryFormat: repositoryFormatValue,
       groupId: groupIdValue,
       nexusSourceType: 'Nexus2Registry',
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
