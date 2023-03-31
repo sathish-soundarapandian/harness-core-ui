@@ -49,7 +49,7 @@ const PremiumSupportLine: React.FC<{ premiumSupportAmount: number }> = ({ premiu
       padding={{ top: 'small', bottom: 'small' }}
     >
       <Text>{getString('authSettings.costCalculator.premiumSupport')}</Text>
-      <Text>{premiumSupportAmountDescr}</Text>
+      <Text>{`${premiumSupportAmountDescr}`}</Text>
     </Layout.Horizontal>
   )
 }
