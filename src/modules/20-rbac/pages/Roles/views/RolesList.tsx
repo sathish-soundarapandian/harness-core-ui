@@ -43,8 +43,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from '../Roles.module.scss'
 
 const ROLES_PAGE_SIZE_OPTIONS = [12, 24, 48, 96]
-const DEFAULT_ROLES_PAGE_SIZE = ROLES_PAGE_SIZE_OPTIONS.at(0) as number
-const NEW_DEFAULT_ROLES_PAGE_SIZE = ROLES_PAGE_SIZE_OPTIONS.at(-1) as number
+const DEFAULT_ROLES_PAGE_SIZE = ROLES_PAGE_SIZE_OPTIONS[0]
+const NEW_DEFAULT_ROLES_PAGE_SIZE = ROLES_PAGE_SIZE_OPTIONS[3]
 
 export const useRolesQueryParamOptions = <Rest,>(): UseQueryParamsOptions<ProcessedRbacQueryParams<Rest>> => {
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
