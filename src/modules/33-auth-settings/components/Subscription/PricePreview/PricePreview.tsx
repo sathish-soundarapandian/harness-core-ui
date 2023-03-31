@@ -13,8 +13,10 @@ import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { TimeType, SubscriptionProps, CurrencyType } from '@common/constants/SubscriptionTypes'
 import type { Module } from 'framework/types/ModuleName'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { getAmountInCurrency, getDollarAmount } from '@auth-settings/utils'
 import SubcriptionDetails from './SubscriptionDetails'
+import type { InvoiceDetailDTO } from 'services/cd-ng'
 import {
   getRenewDate,
   getSubscriptionBreakdownsByModuleAndFrequency,
@@ -22,7 +24,8 @@ import {
   PLAN_TYPES,
   strToNumber,
   getTodayDate,
-  getPreviousDate
+  getOtherRenewDate,
+  getOtherRenewPrevDate
 } from '../subscriptionUtils'
 import css from './PricePreview.module.scss'
 
@@ -31,6 +34,7 @@ interface PricePreviewProps {
   setSubscriptionDetails: (value: SubscriptionProps) => void
   module: Module
   canChangePaymentFrequency?: boolean
+  invoiceData?: InvoiceDetailDTO
 }
 
 const PaymentFrequencyToggle: React.FC<{
@@ -70,9 +74,31 @@ const Footer: React.FC<{ totalAmount: number; payingFrequency: TimeType; taxAmou
   taxAmount
 }) => {
   const { getString } = useStrings()
+
+  const { licenseInformation } = useLicenseStore()
   const frequency = payingFrequency === TimeType.MONTHLY ? getString('common.perMonth') : getString('common.perYear')
   const renewDate = getRenewDate(payingFrequency)
   const todayDate = getTodayDate()
+  let otherSubStartDate
+  if (licenseInformation['CF']?.edition !== 'FREE' && licenseInformation['CF']?.startTime) {
+    otherSubStartDate = new Date(licenseInformation['CF']?.startTime)
+  }
+  if (licenseInformation['CI']?.edition !== 'FREE' && licenseInformation['CI']?.startTime) {
+    otherSubStartDate = new Date(licenseInformation['CI']?.startTime)
+  }
+
+  let otherRenewDate = ''
+  if (otherSubStartDate !== undefined) {
+    otherRenewDate = getOtherRenewDate(payingFrequency, otherSubStartDate)
+    if (licenseInformation['CF']?.edition !== 'FREE' && licenseInformation['CF']?.startTime) {
+      otherSubStartDate = new Date(licenseInformation['CF']?.startTime)
+    }
+    if (licenseInformation['CI']?.edition !== 'FREE' && licenseInformation['CI']?.startTime) {
+      otherSubStartDate = new Date(licenseInformation['CI']?.startTime)
+    }
+    otherSubStartDate = getOtherRenewPrevDate(payingFrequency, otherSubStartDate)
+  }
+
   const width = '320px'
 
   return (
@@ -87,20 +113,25 @@ const Footer: React.FC<{ totalAmount: number; payingFrequency: TimeType; taxAmou
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
         {isNil(taxAmount) && <Text font={{ size: 'xsmall' }}>{getString('authSettings.salesTax')}</Text>}
       </Layout.Horizontal>
-      <Layout.Horizontal flex={{ justifyContent: 'space-between' }} style={{ marginTop: '10px' }}>
-        <Text font={{ size: 'xsmall' }} style={{ marginLeft: '100px' }}>{`${todayDate}`}</Text>
-        <Text font={{ size: 'xsmall' }}>{`${renewDate}`}</Text>
-      </Layout.Horizontal>
-      <Layout.Horizontal className={css.parentTime}>
-        <Layout.Horizontal
-          className={css.parentTimeChild1}
-          style={{ borderRight: `${width} solid var(--primary-7)` }}
-        ></Layout.Horizontal>
-      </Layout.Horizontal>
-      <Layout.Horizontal>
-        <Text font={{ size: 'xsmall' }}>{getString('authSettings.proRata', { date: todayDate })}</Text>
-        <Text font={{ size: 'xsmall' }}>{`-${renewDate}`}</Text>
-      </Layout.Horizontal>
+      {otherRenewDate !== '' && renewDate !== otherRenewDate ? (
+        <>
+          <Layout.Horizontal flex={{ justifyContent: 'space-between' }} style={{ marginTop: '10px' }}>
+            <Text font={{ size: 'xsmall' }}>{`${otherSubStartDate}`}</Text>
+            <Text font={{ size: 'xsmall' }} style={{ marginRight: '128px' }}>{`${todayDate}`}</Text>
+            <Text font={{ size: 'xsmall' }}>{`${otherRenewDate}`}</Text>
+          </Layout.Horizontal>
+          <Layout.Horizontal className={css.parentTime}>
+            <Layout.Horizontal
+              className={css.parentTimeChild1}
+              style={{ borderRight: `${width} solid var(--primary-7)` }}
+            ></Layout.Horizontal>
+          </Layout.Horizontal>
+          <Layout.Horizontal>
+            <Text font={{ size: 'xsmall' }}>{getString('authSettings.proRata', { date: todayDate })}</Text>
+            <Text font={{ size: 'xsmall' }}>{`-${otherRenewDate}`}</Text>
+          </Layout.Horizontal>
+        </>
+      ) : null}
     </Layout.Vertical>
   )
 }
@@ -121,7 +152,8 @@ const PricePreview: React.FC<PricePreviewProps> = ({
   module,
   subscriptionDetails,
   setSubscriptionDetails,
-  canChangePaymentFrequency
+  canChangePaymentFrequency,
+  invoiceData
 }) => {
   const { getString } = useStrings()
   const { paymentFreq, productPrices, premiumSupport, quantities, taxAmount } = subscriptionDetails
@@ -224,8 +256,12 @@ const PricePreview: React.FC<PricePreviewProps> = ({
         premiumSupportAmount={premiumSupportUnitPrice}
         totalAmount={totalAmount}
       />
-      {!isNil(taxAmount) ? (
-        <Footer payingFrequency={paymentFreq} totalAmount={totalAmount} taxAmount={subscriptionDetails.taxAmount} />
+      {!isNil(taxAmount) && invoiceData?.totalAmount !== undefined ? (
+        <Footer
+          payingFrequency={paymentFreq}
+          totalAmount={invoiceData?.totalAmount / 100}
+          taxAmount={subscriptionDetails.taxAmount}
+        />
       ) : null}
     </Layout.Vertical>
   )

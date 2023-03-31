@@ -643,6 +643,7 @@ export interface StringsMap {
   'common.moduleOverviewLabel.sto': string
   'common.moduleTitles.cd': string
   'common.moduleTitles.cf': string
+  'common.moduleTitles.ci': string
   'common.monitoredServices': string
   'common.monthly': string
   'common.monthlyPeak': string

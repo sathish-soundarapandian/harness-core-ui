@@ -16979,7 +16979,7 @@ export interface SvcEnvMigrationResponseDto {
 
 export interface SyncOptions {
   applyOutOfSyncOnly: boolean
-  autoCreateNamespace: boolean
+  autoCreateNamespace: booleanHEAD
   prunePropagationPolicy: 'foreground' | 'background' | 'orphan'
   pruneResourcesAtLast: boolean
   replaceResources: boolean
@@ -16987,10 +16987,10 @@ export interface SyncOptions {
 }
 
 export interface SyncRetryStrategy {
-  baseBackoffDuration?: string
-  increaseBackoffByFactor?: number
-  limit?: number
-  maxBackoffDuration?: string
+  baseBackoffDuration: string
+  increaseBackoffByFactor: number
+  limit: number
+  maxBackoffDuration: string
 }
 
 export type SyncStepInfo = StepSpecType & {
@@ -18354,6 +18354,8 @@ export type DelegateGroupTagsRequestBody = DelegateGroupTags
 
 export type DelegateProfileDetailsNgRequestBody = DelegateProfileDetailsNg
 
+export type DelegateResponseDataRequestBody = DelegateResponseData
+
 export type DockerRequestDTORequestBody = DockerRequestDTO
 
 export type EOLBannerRequestDTORequestBody = EOLBannerRequestDTO
@@ -18442,6 +18444,14 @@ export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
+export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
+
+export type DeleteManyFreezesBodyRequestBody = string[]
+
+export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
+
+export type GetEKSClusterNamesViaExpressionResolutionBodyRequestBody = string
+
 export type ListTagsForAMIArtifactBodyRequestBody = string
 
 export type UpdateFreezeStatusBodyRequestBody = string[]
@@ -18449,7 +18459,6 @@ export type UpdateFreezeStatusBodyRequestBody = string[]
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
 export type UploadSamlMetaDataRequestBody = void
-
 export interface GetAccountSettingQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -46549,7 +46558,7 @@ export type GetInstanceSyncPerpetualTaskResponseProps = Omit<
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseData,
+    DelegateResponseDataRequestBody,
     void
   >,
   'path' | 'verb'
@@ -46559,7 +46568,13 @@ export type GetInstanceSyncPerpetualTaskResponseProps = Omit<
  * Get instance sync perpetual task response
  */
 export const GetInstanceSyncPerpetualTaskResponse = (props: GetInstanceSyncPerpetualTaskResponseProps) => (
-  <Mutate<ResponseBoolean, Failure | Error, GetInstanceSyncPerpetualTaskResponseQueryParams, DelegateResponseData, void>
+  <Mutate<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseQueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >
     verb="POST"
     path={`/instancesync/response`}
     base={getConfig('ng/api')}
@@ -46572,7 +46587,7 @@ export type UseGetInstanceSyncPerpetualTaskResponseProps = Omit<
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseData,
+    DelegateResponseDataRequestBody,
     void
   >,
   'path' | 'verb'
@@ -46586,7 +46601,7 @@ export const useGetInstanceSyncPerpetualTaskResponse = (props: UseGetInstanceSyn
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseData,
+    DelegateResponseDataRequestBody,
     void
   >('POST', `/instancesync/response`, { base: getConfig('ng/api'), ...props })
 
@@ -46598,7 +46613,7 @@ export const getInstanceSyncPerpetualTaskResponsePromise = (
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseData,
+    DelegateResponseDataRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -46607,9 +46622,87 @@ export const getInstanceSyncPerpetualTaskResponsePromise = (
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseData,
+    DelegateResponseDataRequestBody,
     void
   >('POST', getConfig('ng/api'), `/instancesync/response`, props, signal)
+
+export interface GetInstanceSyncPerpetualTaskResponseV2QueryParams {
+  accountIdentifier: string
+  perpetualTaskId: string
+}
+
+export type GetInstanceSyncPerpetualTaskResponseV2Props = Omit<
+  MutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get instance sync perpetual task response
+ */
+export const GetInstanceSyncPerpetualTaskResponseV2 = (props: GetInstanceSyncPerpetualTaskResponseV2Props) => (
+  <Mutate<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/instancesync/v2/response`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInstanceSyncPerpetualTaskResponseV2Props = Omit<
+  UseMutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get instance sync perpetual task response
+ */
+export const useGetInstanceSyncPerpetualTaskResponseV2 = (props: UseGetInstanceSyncPerpetualTaskResponseV2Props) =>
+  useMutate<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >('POST', `/instancesync/v2/response`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get instance sync perpetual task response
+ */
+export const getInstanceSyncPerpetualTaskResponseV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseBoolean,
+    Failure | Error,
+    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
+    DelegateResponseDataRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/instancesync/v2/response`, props, signal)
 
 export interface GetInvitesQueryParams {
   accountIdentifier: string

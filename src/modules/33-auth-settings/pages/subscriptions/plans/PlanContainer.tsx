@@ -258,7 +258,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       handleUpgrade: () => {
         switch (moduleName) {
           case ModuleName.CI:
-            openSubscribeModalCI({
+            openSubscribeModal({
               _module: moduleName.toLowerCase() as ModuleType,
               _time: timeType,
               _plan: planEdition || Editions.FREE

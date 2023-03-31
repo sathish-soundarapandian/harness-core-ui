@@ -45,6 +45,35 @@ export function getRenewDate(time: TimeType): string {
   })
 }
 
+export function getOtherRenewDate(time: TimeType, prevDate: any): string {
+  if (time === TimeType.MONTHLY) {
+    return new Date(prevDate.setMonth(prevDate.getMonth() + 1)).toLocaleDateString('en-us', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    })
+  }
+  return new Date(prevDate.setFullYear(prevDate.getFullYear() + 1)).toLocaleDateString('en-us', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
+}
+export function getOtherRenewPrevDate(time: TimeType, prevDate: any): string {
+  if (time === TimeType.MONTHLY) {
+    return new Date(prevDate.setMonth(prevDate.getMonth())).toLocaleDateString('en-us', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    })
+  }
+  return new Date(prevDate.setFullYear(prevDate.getFullYear())).toLocaleDateString('en-us', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
+}
+
 export function getTodayDate(): string {
   const today = new Date()
 
@@ -151,7 +180,7 @@ export function getTitleByModule(module: Module): { icon?: string; description?:
     case 'ci': {
       icon = 'ci-solid'
       description = 'common.purpose.ci.continuous'
-
+      title = 'common.moduleTitles.ci'
       break
     }
     case 'ce': {
