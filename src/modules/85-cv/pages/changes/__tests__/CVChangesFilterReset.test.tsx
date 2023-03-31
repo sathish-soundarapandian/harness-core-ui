@@ -7,12 +7,10 @@
 
 import React, { useEffect, useState } from 'react'
 import { act, findByText, fireEvent, render, waitFor } from '@testing-library/react'
-import { Container } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { RiskValues } from '@cv/utils/CommonUtils'
 import { mockedHealthScoreData } from '@cv/pages/monitored-service/components/ServiceHealth/__tests__/ServiceHealth.mock'
 import { changeSummaryWithPositiveChange } from '@cv/pages/monitored-service/CVMonitoredService/__test__/CVMonitoredService.mock'
-import Button from '@rbac/components/Button/Button'
 
 import { mockedSecondaryEventsResponse } from '@cv/pages/slos/__tests__/CVSLOsListingPage.mock'
 import { filterPayloadWithENV, initialFilterPayload, mockData } from './data-mocks/ChangeEventListMock'
@@ -79,26 +77,6 @@ jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironm
       { label: 'AppDService101', value: 'AppDService101' }
     ]
   }),
-  HarnessServiceAsFormField: function MockComponent(props: any) {
-    return (
-      <Container>
-        <Button
-          className="addService"
-          onClick={() => props.serviceProps.onNewCreated({ name: 'newService', identifier: 'newService' })}
-        />
-      </Container>
-    )
-  },
-  HarnessEnvironmentAsFormField: function MockComponent(props: any) {
-    return (
-      <Container>
-        <Button
-          className="addEnv"
-          onClick={() => props.environmentProps.onNewCreated({ name: 'newEnv', identifier: 'newEnv' })}
-        />
-      </Container>
-    )
-  },
   useGetHarnessEnvironments: () => {
     return {
       environmentOptions: [
