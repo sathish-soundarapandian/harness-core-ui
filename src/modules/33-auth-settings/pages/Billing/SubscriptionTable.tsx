@@ -170,7 +170,7 @@ const TableRow = ({ name, using = '-', module, data }: TableRowProps): JSX.Eleme
   return (
     <div className={css.tableRow}>
       <Text font={{ variation: FontVariation.BODY }} iconProps={{ size: 22 }} icon={getModuleIcon(module)}>
-        {getString(getTitleByModule(name as Module).title as keyof StringsMap)}
+        {getString(getTitleByModule(name as Module)?.title as keyof StringsMap)}
       </Text>
       <Text font={{ variation: FontVariation.BODY }}>{`${priceDetails.developers?.quantity} ${getString(
         'common.subscriptions.usage.developers'
@@ -259,18 +259,19 @@ const PriceBreakdownTooltipFF = ({
             }`}</Text>
           </Layout.Horizontal>
         </Layout.Vertical>
-        <Layout.Vertical flex className={css.breakdownRow} data-testid="maus">
-          <Layout.Horizontal className={cx(css.fullWidth, css.alignSpace)}>
-            <Text color={Color.BLACK} width={200}>{`${getQuantityFromValue(
-              priceDetails.maus?.price?.metaData?.max as string,
-              priceDetails.maus?.price?.metaData?.sampleMultiplier as string,
-              priceDetails.maus?.price?.metaData?.sampleUnit as string
-            )} ${getString('authSettings.costCalculator.maus')}`}</Text>
-            <Text color={Color.BLACK} className={css.right}>
-              ${toDollars(priceDetails.maus?.amount)}
-            </Text>
-          </Layout.Horizontal>
-          {/* <Layout.Horizontal flex className={css.fullWidth}>
+        {moduleName.toLowerCase() === 'cf' ? (
+          <Layout.Vertical flex className={css.breakdownRow} data-testid="maus">
+            <Layout.Horizontal className={cx(css.fullWidth, css.alignSpace)}>
+              <Text color={Color.BLACK} width={200}>{`${getQuantityFromValue(
+                priceDetails.maus?.price?.metaData?.max as string,
+                priceDetails.maus?.price?.metaData?.sampleMultiplier as string,
+                priceDetails.maus?.price?.metaData?.sampleUnit as string
+              )} ${getString('authSettings.costCalculator.maus')}`}</Text>
+              <Text color={Color.BLACK} className={css.right}>
+                ${toDollars(priceDetails.maus?.amount)}
+              </Text>
+            </Layout.Horizontal>
+            {/* <Layout.Horizontal flex className={css.fullWidth}>
             <Text color={Color.BLACK} font={{ size: 'small' }} width={200}>
               {`${getQuantityFromValue(
                 priceDetails.maus?.price?.metaData?.max as string,
@@ -283,7 +284,8 @@ const PriceBreakdownTooltipFF = ({
               )}  ${isMonthly ? getString('common.perMonth') : getString('common.perYearWithoutSlash')}`}
             </Text>
           </Layout.Horizontal> */}
-        </Layout.Vertical>
+          </Layout.Vertical>
+        ) : null}
         {toDollars(priceDetails.premiumSupport) > 0 && (
           <Layout.Horizontal flex className={css.breakdownRow} data-testid="support">
             <Text color={Color.BLACK} width={200}>
