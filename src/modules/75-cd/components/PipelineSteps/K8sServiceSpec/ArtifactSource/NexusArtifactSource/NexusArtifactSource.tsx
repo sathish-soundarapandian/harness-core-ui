@@ -24,7 +24,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
-import { checkIfQueryParamsisNotEmpty } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { checkIfQueryParamsisNotEmpty, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type {
@@ -367,16 +367,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         label: group,
         value: group
       } as SelectOption
-    }) || [
-      {
-        label: getString('common.loadingFieldOptions', {
-          fieldName: getString('common.subscriptions.tabs.plans')
-        }),
-        value: getString('common.loadingFieldOptions', {
-          fieldName: getString('common.subscriptions.overview.plan')
-        })
-      }
-    ]
+    })
     setGroupIds(groupOptions)
   }, [groupData?.data])
 
@@ -398,16 +389,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         label: item,
         value: item
       } as SelectOption
-    }) || [
-      {
-        label: getString('common.loadingFieldOptions', {
-          fieldName: getString('common.subscriptions.tabs.plans')
-        }),
-        value: getString('common.loadingFieldOptions', {
-          fieldName: getString('common.subscriptions.overview.plan')
-        })
-      }
-    ]
+    })
     setArtifactIds(artifactOptions)
   }, [artifactData?.data])
 
@@ -590,8 +572,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 template={template}
                 multiTypeInputProps={{
                   expressions,
+
                   allowableTypes,
                   selectProps: {
+                    usePortal: true,
                     noResults: (
                       <NoTagResults
                         tagError={errorFetchingRepository}
@@ -611,6 +595,12 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                       return
                     }
                     refetchRepositoryDetails()
+                  },
+                  onChange: (val: any) => {
+                    if (repositoryValue !== (val as any)?.value) {
+                      resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.spec.groupId`)
+                      resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.spec.artifactId`)
+                    }
                   }
                 }}
               />
@@ -619,27 +609,53 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           <div className={css.inputFieldLayout}>
             {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.groupId`, template) && (
               <SelectInputSetView
-                selectItems={groupIds}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.groupId`)}
+                selectItems={
+                  fetchingGroups
+                    ? [
+                        {
+                          label: getString('common.loadingFieldOptions', {
+                            fieldName: getString('pipeline.artifactsSelection.groupId')
+                          }),
+                          value: getString('common.loadingFieldOptions', {
+                            fieldName: getString('pipeline.artifactsSelection.groupId')
+                          })
+                        }
+                      ]
+                    : groupIds
+                }
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.spec.groupId`)}
                 label={getString('pipeline.artifactsSelection.groupId')}
                 name={`${path}.artifacts.${artifactPath}.spec.spec.groupId`}
                 placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
                 useValue
-                fieldPath={`artifacts.${artifactPath}.spec.groupId`}
+                fieldPath={`artifacts.${artifactPath}.spec.spec.groupId`}
                 template={template}
                 multiTypeInputProps={{
                   expressions,
                   allowableTypes,
                   selectProps: {
-                    noResults: !fetchingGroups ? (
+                    usePortal: true,
+                    noResults: (
                       <NoTagResults
                         tagError={groupError}
                         isServerlessDeploymentTypeSelected={false}
-                        defaultErrorText={getString('pipeline.artifactsSelection.errors.noGroupIds')}
+                        defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
                       />
-                    ) : null,
+                    ),
+
+                    items: fetchingGroups
+                      ? [
+                          {
+                            label: getString('common.loadingFieldOptions', {
+                              fieldName: getString('pipeline.artifactsSelection.groupId')
+                            }),
+                            value: getString('common.loadingFieldOptions', {
+                              fieldName: getString('pipeline.artifactsSelection.groupId')
+                            })
+                          }
+                        ]
+                      : groupIds,
                     itemRenderer: groupItemRenderer,
-                    items: groupIds,
                     allowCreatingNewItems: true
                   },
                   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
@@ -658,7 +674,20 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           <div className={css.inputFieldLayout}>
             {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.artifactId`, template) && (
               <SelectInputSetView
-                selectItems={artifactIds}
+                selectItems={
+                  fetchingArtifacts
+                    ? [
+                        {
+                          label: getString('common.loadingFieldOptions', {
+                            fieldName: getString('pipeline.artifactsSelection.artifactId')
+                          }),
+                          value: getString('common.loadingFieldOptions', {
+                            fieldName: getString('pipeline.artifactsSelection.artifactId')
+                          })
+                        }
+                      ]
+                    : artifactIds
+                }
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactId`)}
                 label={getString('pipeline.artifactsSelection.artifactId')}
                 name={`${path}.artifacts.${artifactPath}.spec.spec.artifactId`}
@@ -670,16 +699,23 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   expressions,
                   allowableTypes,
                   selectProps: {
-                    noResults: !fetchingArtifacts ? (
-                      <NoTagResults
-                        tagError={artifactError}
-                        isServerlessDeploymentTypeSelected={false}
-                        defaultErrorText={getString('pipeline.artifactsSelection.errors.noArtifactIds')}
-                      />
-                    ) : null,
+                    usePortal: true,
                     itemRenderer: artifactIdItemRenderer,
-                    items: artifactIds,
-                    allowCreatingNewItems: true
+                    items: fetchingArtifacts
+                      ? [
+                          {
+                            label: getString('common.loadingFieldOptions', {
+                              fieldName: getString('pipeline.artifactsSelection.artifactId')
+                            }),
+                            value: getString('common.loadingFieldOptions', {
+                              fieldName: getString('pipeline.artifactsSelection.artifactId')
+                            })
+                          }
+                        ]
+                      : artifactIds,
+                    allowCreatingNewItems: true,
+                    popoverClassName: css.selectPopover,
+                    loadingItems: fetchingArtifacts
                   },
                   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                     if (

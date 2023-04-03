@@ -39,6 +39,8 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { repositoryPortOrServer } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { isValueFixed } from '@common/utils/utils'
+
 import { ImagePathProps, RepositoryPortOrServer } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -57,8 +59,6 @@ export function NexusArtifact({
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [groupIds, setGroupIds] = useState<SelectOption[]>([])
-  const [artifactIds, setArtifactIds] = useState<SelectOption[]>([])
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -66,6 +66,8 @@ export function NexusArtifact({
     repoIdentifier,
     branch
   }
+  const [groupIds, setGroupIds] = useState<SelectOption[]>([])
+  const [artifactIds, setArtifactIds] = useState<SelectOption[]>([])
   const validationSchema = Yup.object().shape({
     repositoryFormat: Yup.string().required(getString('pipeline.artifactsSelection.validation.repositoryFormat')),
     repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
@@ -184,16 +186,8 @@ export function NexusArtifact({
         label: group,
         value: group
       } as SelectOption
-    }) || [
-      {
-        label: getString('common.loadingFieldOptions', {
-          fieldName: getString('common.subscriptions.tabs.plans')
-        }),
-        value: getString('common.loadingFieldOptions', {
-          fieldName: getString('common.subscriptions.overview.plan')
-        })
-      }
-    ]
+    })
+
     setGroupIds(groupOptions)
   }, [groupData?.data])
 
@@ -215,16 +209,7 @@ export function NexusArtifact({
         label: artifact,
         value: artifact
       } as SelectOption
-    }) || [
-      {
-        label: getString('common.loadingFieldOptions', {
-          fieldName: getString('common.subscriptions.tabs.plans')
-        }),
-        value: getString('common.loadingFieldOptions', {
-          fieldName: getString('common.subscriptions.overview.plan')
-        })
-      }
-    ]
+    })
     setArtifactIds(artifactOptions)
   }, [artifactData?.data])
 
@@ -309,6 +294,16 @@ export function NexusArtifact({
                             repositoryFormat: formik.values?.repositoryFormat
                           }
                         })
+                      },
+                      onChange: (val: any) => {
+                        if (isValueFixed(val)) {
+                          formik.setValues({
+                            ...formik.values,
+                            repository: val.value,
+                            groupId: '',
+                            artifactId: ''
+                          })
+                        }
                       }
                     }}
                   />
@@ -326,12 +321,12 @@ export function NexusArtifact({
                         multiTypeInputProps={{
                           allowableTypes: [MultiTypeInputType.FIXED],
                           selectProps: {
-                            noResults: !fetchingGroups ? (
+                            noResults: (
                               <NoTagResults
                                 tagError={groupError}
                                 defaultErrorText={getString('pipeline.artifactsSelection.errors.noGroupIds')}
                               />
-                            ) : null,
+                            ),
                             itemRenderer: groupIdItemRenderer,
                             items: groupIds,
                             allowCreatingNewItems: true
@@ -365,12 +360,12 @@ export function NexusArtifact({
                         multiTypeInputProps={{
                           allowableTypes: [MultiTypeInputType.FIXED],
                           selectProps: {
-                            noResults: !fetchingArtifacts ? (
+                            noResults: (
                               <NoTagResults
                                 tagError={artifactError}
                                 defaultErrorText={getString('pipeline.artifactsSelection.errors.noArtifactIds')}
                               />
-                            ) : null,
+                            ),
                             itemRenderer: artifactIdItemRenderer,
                             items: artifactIds,
                             allowCreatingNewItems: true
