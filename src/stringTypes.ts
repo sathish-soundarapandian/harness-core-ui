@@ -372,6 +372,8 @@ export interface StringsMap {
   'common.freezeWindows': string
   'common.frequency': string
   'common.friendlyMessage': string
+  'common.friendlyName': string
+  'common.friendlyNamePlaceholder': string
   'common.gcp': string
   'common.genericErrors.inviteExpired': string
   'common.genericErrors.licenseCallFailed': string
@@ -2020,6 +2022,7 @@ export interface StringsMap {
   'authSettings.accountOrOAuthLogin': string
   'authSettings.accountOrOAuthLoginEnabledSuccessfully': string
   'authSettings.addSAMLProvider': string
+  'authSettings.additionalFunctions': string
   'authSettings.allowLoginFromTheseDomains': string
   'authSettings.allowUsersWithEmails': string
   'authSettings.atLeastNChars': string
@@ -2160,6 +2163,7 @@ export interface StringsMap {
   'authSettings.haveOneSpecialChar': string
   'authSettings.haveOneUppercase': string
   'authSettings.identityProvider': string
+  'authSettings.identityProviderLabel': string
   'authSettings.keepAtLeastOneProviderEnabled': string
   'authSettings.ldap.addGroupQueryDescription': string
   'authSettings.ldap.addGroupQueryHeading': string
@@ -2237,6 +2241,7 @@ export interface StringsMap {
   'authSettings.multipleOrganizations': string
   'authSettings.multipleProjects': string
   'authSettings.newMembersWillNeedToSetUpTwoFADuringSignup': string
+  'authSettings.newSamlProvider': string
   'authSettings.notifyUsersWhenTheyLocked': string
   'authSettings.notifyUsersWhenUserLocked': string
   'authSettings.oauthSettingsHaveBeenUpdated': string
@@ -2272,10 +2277,12 @@ export interface StringsMap {
   'authSettings.samlLoginEnabled': string
   'authSettings.samlProviderAddedSuccessfully': string
   'authSettings.samlProviderDeleted': string
+  'authSettings.samlProviderOverview': string
   'authSettings.samlProviderUpdatedSuccessfully': string
   'authSettings.samlSupport': string
   'authSettings.samlTestFailed': string
   'authSettings.samlTestSuccessful': string
+  'authSettings.selectProvider': string
   'authSettings.selectSAMLProvider': string
   'authSettings.sessionTimOutSaved': string
   'authSettings.sessionTimeOut': string
@@ -2296,6 +2303,7 @@ export interface StringsMap {
   'authSettings.unitPrice': string
   'authSettings.updating': string
   'authSettings.uploadIdentityProvider': string
+  'authSettings.urlIdentityProvider': string
   'authSettings.useHarnessUsernameAndPassword': string
   'authSettings.usePublicOAuth': string
   'authSettings.whitelistedDomainsDisabled': string
