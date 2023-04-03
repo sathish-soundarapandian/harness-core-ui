@@ -139,7 +139,7 @@ const verifyYAML = (args: {
 }
 
 /*  Find all (x: lineNumber, y: colNumber) coordinates for matching keys in editor content */
-const findPositionsForMatchingKeys = (editor: editor.IStandaloneCodeEditor, textToFind: string): Position[] => {
+const findPositionsForMatchingKeys = (editor: editor.IStandaloneCodeEditor | null, textToFind: string): Position[] => {
   const matches = editor?.getModel()?.findMatches(textToFind, true, true, false, null, true) as editor.FindMatch[]
   return matches?.map((match: editor.FindMatch) => {
     const { endLineNumber, endColumn } = match.range
@@ -164,10 +164,10 @@ const getDefaultStageForModule = (module: Module): Record<string, any> => {
   }
 }
 
-const getValidStepPositions = (editor: editor.IStandaloneCodeEditor): Position[] => {
+const getValidStepPositions = (editor: editor.IStandaloneCodeEditor | null): Position[] => {
   const allStageMatches = findPositionsForMatchingKeys(editor, StageMatchRegex) || []
   const allStepMatches = findPositionsForMatchingKeys(editor, StepMatchRegex) || []
-  const currentYAML = editor.getValue()
+  const currentYAML = editor?.getValue()
   if (currentYAML && allStageMatches.length && allStepMatches.length) {
     let currentYAMLAsJSON = {}
     try {
