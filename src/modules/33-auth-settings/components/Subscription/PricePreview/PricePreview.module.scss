@@ -8,6 +8,10 @@
 .selected {
   color: var(--primary-6) !important;
 }
+.footerStyle {
+  position: relative;
+  top: 120px;
+}
 
 .parentTimeChild1 {
   height: 10px;
@@ -24,7 +28,8 @@
 
 .pricePreview {
   width: 40% !important;
-  height: 60% !important;
+  height: 60vh;
+  background: linear-gradient(180deg, white 80%, var(--primary-1) 20%) !important;
   padding: var(--spacing-large) !important;
   border: 6px solid;
   border-radius: 12px;

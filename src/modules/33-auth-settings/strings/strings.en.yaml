@@ -171,11 +171,13 @@ costCalculator:
   comparePlans: Compare plans
   next: 'Next: Billing information'
   switchTooltip: Switch to Yearly subscription to enable premium support
-  premiumSupport: Premium Support
+  premiumSupport: Premier Support
   premSupport:
-    title: Add Premium Support
-    onCallSupport: 24/7 on call support
-    includedByDefault: Standard included by default
+    title: Add Premier Support
+    onCallSupport: (24/7 on call support)
+    includedByDefault: Standard support included by default
+    premierSupport: What is a premier support?
+    premierSupportDefinition: Premier support includes coverage 24 hours a day, 7 days a week.
   developer:
     title: How many developers will use Feature Flags?
     developer: Who is a developer?
@@ -285,7 +287,7 @@ billingInfo:
   paymentMethods: Payment Methods
   billingAdmin: '{{$.common.billing}} Admin'
   saveCardWarning: By providing your card information, you allow Harness Inc. to charge your card for future payments in accordance with our Terms of Use.
-  emailWarning: This billing email will recieve billing notifications. Change this in Billing.
+  emailWarning: This billing email will recieve billing notifications. Change this in
   nobills: There are no Team / Enterprise subscriptions in your Account
   firstSubscription: Let’s get started with your first subscription.
   explorePlans: Explore Plans

@@ -91,6 +91,9 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
       {premiumSupport && <PremiumSupportLine premiumSupportAmount={premiumSupportAmount} />}
       {<TotalAmount totalAmount={totalAmount || 0} />}
       {!isNil(subscriptionDetails.taxAmount) && <TaxLine taxAmount={subscriptionDetails.taxAmount} />}
+      {isNil(subscriptionDetails.taxAmount) && (
+        <Text font={{ size: 'xsmall' }}>{getString('authSettings.salesTax')}</Text>
+      )}
     </Layout.Vertical>
   )
 }
