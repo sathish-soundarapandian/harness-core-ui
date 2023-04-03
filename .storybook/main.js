@@ -60,7 +60,7 @@ module.exports = {
           'governance/EvaluationModal': false,
           'governance/PipelineGovernanceView': false,
           'monaco-editor/.*': false,
-          '@harness/monaco-yaml/.*': false
+          'monaco-yaml/.*': false
         }
       },
       plugins: [

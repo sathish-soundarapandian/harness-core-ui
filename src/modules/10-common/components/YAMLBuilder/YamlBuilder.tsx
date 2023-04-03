@@ -8,7 +8,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import type { EditorWillMount, MonacoEditorProps } from 'react-monaco-editor'
 import MonacoEditor, { MonacoEditorRef } from '@common/components/MonacoEditor/MonacoEditor'
-import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
+import 'monaco-editor/esm/vs/language/json/monaco.contribution'
 import { IKeyboardEvent, languages, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor, IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
 import { CompletionItemKind } from 'vscode-languageserver-types'
@@ -90,9 +90,11 @@ import {
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
-
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
+import yaml from 'js-yaml'
 import css from './YamlBuilder.module.scss'
 import './resizer.scss'
+import { setDiagnosticsOptions } from 'monaco-yaml'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
@@ -101,7 +103,6 @@ defaultOptions.indent = 4
 const getTheme = (theme: Theme) => (theme === 'DARK' ? EDITOR_BASE_DARK_THEME : EDITOR_BASE_LIGHT_THEME)
 
 const setUpEditor = (theme: Theme): void => {
-  //@ts-ignore
   monaco.editor.defineTheme(getTheme(theme), {
     base: getTheme(theme),
     inherit: theme === 'DARK',
@@ -119,7 +120,7 @@ const setUpEditor = (theme: Theme): void => {
           }
         : { 'editor.background': `#${EDITOR_LIGHT_BG}` }
   })
-  //@ts-ignore
+
   monaco.editor.setTheme(getTheme(theme))
 }
 
@@ -262,9 +263,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [schema])
 
   const setUpYAMLBuilderWithLanguageSettings = (languageSettings: string | Record<string, any>): void => {
-    //@ts-ignore
-    const { yaml } = defaultTo(languages, {})
-    yaml?.yamlDefaults.setDiagnosticsOptions(languageSettings)
+    setDiagnosticsOptions(languageSettings)
   }
 
   /* #endregion */

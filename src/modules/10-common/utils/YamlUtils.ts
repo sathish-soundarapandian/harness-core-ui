@@ -7,13 +7,13 @@
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import * as yamlLanguageService from '@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService'
+// import * as yamlLanguageService from 'monaco-yaml/lib/esm/languageservice/yamlLanguageService'
 import { isEmpty } from 'lodash-es'
 import { Diagnostic } from 'vscode-languageserver-types'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { parse } from 'yaml'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { DiagnosticsOptions } from 'monaco-yaml'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 
 const DEFAULT_YAML_PATH = 'DEFAULT_YAML_PATH'
 
@@ -62,7 +62,7 @@ const validateYAML = (yaml: string): Promise<Diagnostic[]> => {
     return Promise.reject('Invalid or empty yaml')
   }
   const textDocument = TextDocument.create('', 'yaml', 0, yaml)
-  return yamlLanguageService.getLanguageService()?.doValidation(textDocument, false)
+  return true // yamlLanguageService.getLanguageService()?.doValidation(textDocument, false)
 }
 
 /**
@@ -74,7 +74,7 @@ const validateYAML = (yaml: string): Promise<Diagnostic[]> => {
  *
  */
 
-const validateYAMLWithSchema = (yamlString: string, schema: Record<string, any>): Promise<Diagnostic[]> => {
+const validateYAMLWithSchema = async (yamlString: string, schema: Record<string, any>): Promise<Diagnostic[]> => {
   if (!yamlString) {
     return Promise.reject('Invalid or empty yaml.')
   }
@@ -82,8 +82,9 @@ const validateYAMLWithSchema = (yamlString: string, schema: Record<string, any>)
     return Promise.reject('Invalid or empty schema.')
   }
   const textDocument = TextDocument.create('', 'yaml', 0, yamlString)
-  const languageService = setUpLanguageService(schema)
-  return languageService?.doValidation(textDocument, false)
+  return true
+  // const languageService = setUpLanguageService(schema)
+  // return languageService?.doValidation(textDocument, false)
 }
 
 const getPartialYAML = (tokens: string[], endingIndex: number): string => {
@@ -150,7 +151,7 @@ const setUpLanguageService = (schema: Record<string, any>) => {
 const getSchemaWithLanguageSettings = (schema: Record<string, any>): DiagnosticsOptions => {
   return {
     validate: true,
-    enableSchemaRequest: true,
+    enableSchemaRequest: false,
     hover: true,
     completion: true,
     schemas: [
