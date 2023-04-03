@@ -271,3 +271,60 @@ export const mockedSecondaryEventsResponse = {
   ],
   correlationId: '672837ee-7f1e-40ff-8edc-2b52abaa956d'
 }
+
+export const riskCountQueryParamsParametersMock = {
+  pathParams: {
+    accountId: '-k53qRQAQ1O7DBLb9ACnjQ',
+    orgIdentifier: 'cvng',
+    projectIdentifier: 'SRM_QA_Sign_Off_Automation'
+  },
+  filterState: {
+    userJourney: {
+      label: 'All',
+      value: 'All'
+    },
+    monitoredService: {
+      label: 'All',
+      value: 'All'
+    },
+    sliTypes: {
+      label: 'All',
+      value: 'All'
+    },
+    targetTypes: {
+      label: 'All',
+      value: 'All'
+    },
+    sloRiskFilter: null,
+    search: ''
+  },
+  monitoredServiceIdentifier: 'CD_prod',
+  getString: (a: string) => a
+}
+
+export const riskCountQueryParamsParametersWithoutDefaultMock = {
+  ...riskCountQueryParamsParametersMock,
+  monitoredServiceIdentifier: undefined
+}
+
+export const riskCountQueryParamsExpectedResult = {
+  queryParamStringifyOptions: { arrayFormat: 'repeat' },
+  queryParams: {
+    accountId: '-k53qRQAQ1O7DBLb9ACnjQ',
+    filter: '',
+    monitoredServiceIdentifier: 'CD_prod',
+    orgIdentifier: 'cvng',
+    projectIdentifier: 'SRM_QA_Sign_Off_Automation',
+    sliTypes: ['All'],
+    targetTypes: ['All'],
+    userJourneyIdentifiers: ['All']
+  }
+}
+
+export const riskCountQueryParamsWithAllMonitoredServiceResult = {
+  ...riskCountQueryParamsExpectedResult,
+  queryParams: {
+    ...riskCountQueryParamsExpectedResult.queryParams,
+    monitoredServiceIdentifier: 'All'
+  }
+}

@@ -133,7 +133,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     refetch: refetchRiskCount,
     error: dashboardRiskCountError
   } = useGetServiceLevelObjectivesRiskCount({
-    ...getServiceLevelObjectivesRiskCountParams(pathParams, getString, filterState),
+    ...getServiceLevelObjectivesRiskCountParams({ pathParams, getString, filterState, monitoredServiceIdentifier }),
     lazy: true
   })
 

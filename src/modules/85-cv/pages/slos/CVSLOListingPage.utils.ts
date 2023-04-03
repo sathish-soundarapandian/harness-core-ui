@@ -584,16 +584,24 @@ export const getSLODashboardWidgetsParams = (
   }
 }
 
-export const getServiceLevelObjectivesRiskCountParams = (
-  pathParams: PathParams,
-  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
+export const getServiceLevelObjectivesRiskCountParams = ({
+  pathParams,
+  getString,
+  filterState,
+  monitoredServiceIdentifier
+}: {
+  pathParams: PathParams
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
   filterState: SLOFilterState
-): SLODashboardWidgetsParams => {
+  monitoredServiceIdentifier?: string
+}): SLODashboardWidgetsParams => {
   const { monitoredService, search, sliTypes, targetTypes, userJourney } = filterState
+
   return {
     queryParams: {
       ...pathParams,
-      monitoredServiceIdentifier: getMonitoredServiceSLODashboardParams(getString, monitoredService),
+      monitoredServiceIdentifier:
+        monitoredServiceIdentifier || getMonitoredServiceSLODashboardParams(getString, monitoredService),
       userJourneyIdentifiers: getFilterValueForSLODashboardParams(getString, userJourney),
       targetTypes: getFilterValueForSLODashboardParams(getString, targetTypes) as TargetTypesParams[],
       sliTypes: getFilterValueForSLODashboardParams(getString, sliTypes) as SLITypesParams[],

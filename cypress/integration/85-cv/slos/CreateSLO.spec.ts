@@ -36,7 +36,8 @@ import {
   listMonitoredServicesCallResponseForSLOs,
   createSloV2,
   accountsSLOCall,
-  accountsSLORiskCall
+  accountsSLORiskCall,
+  getSLORiskCountWithCVNGProdFilter
 } from '../../../support/85-cv/slos/constants'
 
 describe('Create SLO', () => {
@@ -407,7 +408,7 @@ describe('Create SLO', () => {
 
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse).as('getMonitoredService')
     cy.intercept('GET', listSLOsCallWithCVNGProd, updatedListSLOsCallResponse)
-    cy.intercept('GET', getSLORiskCountWithCVNGProd, getSLORiskCountResponse)
+    cy.intercept('GET', getSLORiskCountWithCVNGProdFilter, getSLORiskCountResponse)
     cy.intercept('GET', getServiceLevelObjective, getServiceLevelObjectiveResponse)
 
     cy.contains('p', 'prod').click()
@@ -507,7 +508,7 @@ describe('Create SLO', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetail)
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse).as('getMonitoredService')
     cy.intercept('GET', listSLOsCallWithCVNGProd, updatedListSLOsCallResponse)
-    cy.intercept('GET', getSLORiskCountWithCVNGProd, getSLORiskCountResponse)
+    cy.intercept('GET', getSLORiskCountWithCVNGProdFilter, getSLORiskCountResponse)
     cy.intercept('GET', getServiceLevelObjective, getServiceLevelObjectiveResponse).as
 
     cy.contains('p', 'SLOs').click()
