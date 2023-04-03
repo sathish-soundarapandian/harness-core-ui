@@ -179,7 +179,7 @@ const RolesList: React.FC = () => {
     pageSizeOptions: ROLES_PAGE_SIZE_OPTIONS
   })
 
-  const [view, setView] = useState<Views>(Views.LIST)
+  const [view, setView] = useState<Views>(Views.GRID)
 
   const RenderColumnMenu: Renderer<CellProps<RoleResponse>> = ({ row: { original: _data } }) => {
     const [menuOpen, setMenuOpen] = useState(false)
@@ -235,6 +235,7 @@ const RolesList: React.FC = () => {
         width: '30px'
       }
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 
