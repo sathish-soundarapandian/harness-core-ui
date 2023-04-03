@@ -9,6 +9,7 @@
 declare const styles: {
   readonly cf: string
   readonly ci: string
+  readonly footerStyle: string
   readonly line: string
   readonly parentTime: string
   readonly parentTimeChild1: string

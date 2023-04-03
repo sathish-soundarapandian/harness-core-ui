@@ -102,16 +102,13 @@ const Footer: React.FC<{ totalAmount: number; payingFrequency: TimeType; taxAmou
   const width = '320px'
 
   return (
-    <Layout.Vertical>
+    <Layout.Vertical className={css.footerStyle}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
         <Text font={{ variation: FontVariation.H2 }}>{getString('payNow')}</Text>
         <Text font={{ variation: FontVariation.H2 }}>
           {getAmountInCurrency(CurrencyType.USD, totalAmount)}
           {frequency}
         </Text>
-      </Layout.Horizontal>
-      <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-        {isNil(taxAmount) && <Text font={{ size: 'xsmall' }}>{getString('authSettings.salesTax')}</Text>}
       </Layout.Horizontal>
       {otherRenewDate !== '' && renewDate !== otherRenewDate ? (
         <>

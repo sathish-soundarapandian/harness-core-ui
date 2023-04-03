@@ -22,7 +22,7 @@ import { Success } from '@auth-settings/components/Subscription/Success/Success'
 import { BillingInfo } from '@auth-settings/components/Subscription/BillingInfo/BillingInfo'
 import type { Module } from 'framework/types/ModuleName'
 import { Editions, SubscribeViews, SubscriptionProps, TimeType } from '@common/constants/SubscriptionTypes'
-import type { InvoiceDetailDTO } from 'services/cd-ng'
+import type { InvoiceDetailDTO, LicensesWithSummaryDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import PricePreview from '@auth-settings/components/Subscription/PricePreview/PricePreview'
 import SubscriptionPoll from '@auth-settings/components/Subscription/PaymentMethod/SubscriptionPoll'
@@ -34,7 +34,7 @@ import { SubscriptionProvider, useSubscriptionContext, getSkewsMap } from './Sub
 import css from './useSubscriptionModal.module.scss'
 
 interface UseSubscribeModalReturns {
-  openSubscribeModal: ({ _plan, _module, _time }: OpenSubscribeModalProps) => void
+  openSubscribeModal: ({ _plan, _module, _time, _licenseData }: OpenSubscribeModalProps) => void
   closeSubscribeModal: () => void
 }
 type SetStateMethod = (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
@@ -289,6 +289,7 @@ export const useSubscribeModal = ({ onClose }: { onClose?: () => void }): UseSub
       setNewPlan(_plan)
       setTime(_time)
       setModule(_module)
+
       openModal()
     },
     [openModal]

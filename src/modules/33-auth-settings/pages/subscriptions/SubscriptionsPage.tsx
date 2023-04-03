@@ -157,8 +157,9 @@ const SubscriptionsPage: React.FC = () => {
       selectedModuleCard?.module?.toString() as Module,
       latestModuleLicense
     )
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [licenseData])
+  }, [licenseData, latestModuleLicense])
 
   if (accountError || licenseError) {
     const message =
