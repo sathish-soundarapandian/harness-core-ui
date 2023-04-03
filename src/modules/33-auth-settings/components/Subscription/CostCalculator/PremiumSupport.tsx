@@ -64,13 +64,24 @@ export const PremiumSupport: React.FC<PremiumSupportProps> = ({ premiumSupport, 
     <Checkbox size={12} checked={premiumSupport} onChange={() => onChange(!premiumSupport)} className={css.checkbox} />
   )
   return (
-    <Layout.Horizontal
-      className={css.premSupport}
-      padding={'small'}
-      flex={{ alignItems: 'baseline', justifyContent: 'start' }}
-    >
-      {checkbox}
-      <PremLabel />
-    </Layout.Horizontal>
+    <>
+      <Layout.Horizontal
+        className={css.premSupport}
+        padding={'small'}
+        flex={{ alignItems: 'baseline', justifyContent: 'start' }}
+      >
+        {checkbox}
+        <PremLabel />
+      </Layout.Horizontal>
+      <Layout.Horizontal spacing={'small'}>
+        <Text
+          color={Color.PRIMARY_7}
+          tooltip={getString('authSettings.costCalculator.developer.developerDefinition')}
+          font={{ size: 'xsmall' }}
+        >
+          {getString('authSettings.costCalculator.premSupport.premierSupport')}
+        </Text>
+      </Layout.Horizontal>
+    </>
   )
 }

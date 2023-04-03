@@ -2066,6 +2066,8 @@ export interface StringsMap {
   'authSettings.costCalculator.next': string
   'authSettings.costCalculator.premSupport.includedByDefault': string
   'authSettings.costCalculator.premSupport.onCallSupport': string
+  'authSettings.costCalculator.premSupport.premierSupport': string
+  'authSettings.costCalculator.premSupport.premierSupportDefinition': string
   'authSettings.costCalculator.premSupport.title': string
   'authSettings.costCalculator.premiumSupport': string
   'authSettings.costCalculator.switchTooltip': string
