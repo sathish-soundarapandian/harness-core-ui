@@ -10,6 +10,7 @@ import { AuthenticationMechanisms } from '@rbac/utils/utils'
 import type { UseStringsReturn } from 'framework/strings'
 export interface FormValues {
   displayName: string
+  friendlyName?: string
   authorizationEnabled: boolean
   groupMembershipAttr: string
   entityIdEnabled: boolean
