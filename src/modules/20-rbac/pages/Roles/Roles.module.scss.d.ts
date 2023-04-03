@@ -7,8 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly listHeader: string
+  readonly listTable: string
   readonly masonry: string
   readonly pagination: string
+  readonly search: string
   readonly warning: string
 }
 export default styles

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import {
   ButtonVariation,
   Container,
@@ -13,14 +13,25 @@ import {
   Layout,
   Pagination,
   PageHeader,
-  PageBody
+  PageBody,
+  GridListToggle,
+  Views,
+  TableV2,
+  Icon,
+  TagsPopover,
+  Text,
+  Button,
+  Popover
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { useHistory, useParams } from 'react-router-dom'
+import { Classes, Position } from '@blueprintjs/core'
+import type { CellProps, Column, Renderer } from 'react-table'
 import { useStrings } from 'framework/strings'
 import { Role, RoleResponse, useGetRoleList } from 'services/rbac'
 import RoleCard from '@rbac/components/RoleCard/RoleCard'
-import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useRoleModal } from '@rbac/modals/RoleModal/useRoleModal'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import RbacButton from '@rbac/components/Button/Button'
@@ -29,7 +40,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import { isAccountBasicRole } from '@rbac/utils/utils'
+import { getRoleIcon, isAccountBasicRole, ProcessedRbacQueryParams } from '@rbac/utils/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
@@ -39,7 +50,8 @@ import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-
+import RoleMenu from '@rbac/components/RoleMenu/RoleMenu'
+import useDeleteRoleDialog from '@rbac/hooks/useDeleteRoleDialog'
 import css from '../Roles.module.scss'
 
 const ROLES_PAGE_SIZE_OPTIONS = [12, 24, 48, 96]
@@ -57,8 +69,36 @@ export const useRolesQueryParamOptions = (): UseQueryParamsOptions<
   })
 }
 
+const RenderColumnIcon: Renderer<CellProps<RoleResponse>> = ({
+  row: {
+    original: { role }
+  }
+}) => {
+  return <Icon name={getRoleIcon(role.identifier)} size={30} />
+}
+
+const RenderColumnRole: Renderer<CellProps<RoleResponse>> = ({
+  row: {
+    original: { role }
+  }
+}) => {
+  return (
+    <Layout.Horizontal spacing="small">
+      <Text>{role.name}</Text>
+      {role.tags && Object.keys(role.tags || {}).length ? (
+        <TagsPopover
+          tags={role.tags}
+          iconProps={{ size: 12, color: Color.GREY_600 }}
+          // popoverProps={{ className: Classes.DARK }}
+          // className={css.tags}
+        />
+      ) : null}
+    </Layout.Horizontal>
+  )
+}
+
 const RolesList: React.FC = () => {
-  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
+  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
   const history = useHistory()
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
@@ -138,6 +178,66 @@ const RolesList: React.FC = () => {
     pageIndex: data?.data?.pageIndex || 0,
     pageSizeOptions: ROLES_PAGE_SIZE_OPTIONS
   })
+
+  const [view, setView] = useState<Views>(Views.LIST)
+
+  const RenderColumnMenu: Renderer<CellProps<RoleResponse>> = ({ row: { original: _data } }) => {
+    const [menuOpen, setMenuOpen] = useState(false)
+    const { openDeleteDialog } = useDeleteRoleDialog({ refetch, role: _data.role })
+
+    return (
+      <Popover
+        isOpen={menuOpen}
+        onInteraction={nextOpenState => {
+          setMenuOpen(nextOpenState)
+        }}
+        className={Classes.DARK}
+        position={Position.BOTTOM_RIGHT}
+      >
+        <Button
+          minimal
+          icon="Options"
+          withoutBoxShadow
+          onClick={e => {
+            e.stopPropagation()
+            setMenuOpen(true)
+          }}
+        />
+        <RoleMenu
+          role={_data.role}
+          harnessManaged={_data.harnessManaged}
+          setMenuOpen={setMenuOpen}
+          editRoleModal={editRoleModal}
+          openDeleteModal={openDeleteDialog}
+        />
+      </Popover>
+    )
+  }
+  const columns: Column<RoleResponse>[] = useMemo(
+    () => [
+      {
+        id: 'identifier',
+        accessor: row => row.role.identifier,
+        Cell: RenderColumnIcon,
+        width: '50px'
+      },
+      {
+        Header: 'Role',
+        id: 'name',
+        accessor: row => row.role.name,
+        width: '100%',
+        Cell: RenderColumnRole
+      },
+      {
+        id: 'menu',
+        accessor: row => row.role.identifier,
+        Cell: RenderColumnMenu,
+        width: '30px'
+      }
+    ],
+    []
+  )
+
   return (
     <>
       <PageHeader
@@ -152,7 +252,9 @@ const RolesList: React.FC = () => {
                 updateQueryParams({ search: text.trim(), page: 0 })
               }}
               width={250}
+              className={css.search}
             />
+            <GridListToggle onViewToggle={setView} initialSelectedView={view} />
           </Layout.Horizontal>
         }
       />
@@ -182,22 +284,45 @@ const RolesList: React.FC = () => {
             setSortPreference(option.value as SortMethod)
           }}
           totalCount={data?.data?.totalItems}
+          className={css.listHeader}
         />
-        <div className={css.masonry}>
-          {data?.data?.content?.map((roleResponse: RoleResponse) =>
-            isAccountBasicRole(roleResponse.role.identifier) ? null : (
-              <RoleCard
-                key={roleResponse.role.identifier}
-                data={roleResponse}
-                reloadRoles={refetch}
-                editRoleModal={editRoleModal}
-              />
-            )
-          )}
-        </div>
-        <Container className={css.pagination}>
-          <Pagination {...paginationProps} />
-        </Container>
+        {view === Views.GRID ? (
+          <>
+            <div className={css.masonry}>
+              {data?.data?.content?.map((roleResponse: RoleResponse) =>
+                isAccountBasicRole(roleResponse.role.identifier) ? null : (
+                  <RoleCard
+                    key={roleResponse.role.identifier}
+                    data={roleResponse}
+                    reloadRoles={refetch}
+                    editRoleModal={editRoleModal}
+                  />
+                )
+              )}
+            </div>
+            <Container className={css.pagination}>
+              <Pagination {...paginationProps} />
+            </Container>
+          </>
+        ) : (
+          <TableV2
+            columns={columns}
+            data={data?.data?.content?.filter(roleResponse => !isAccountBasicRole(roleResponse.role.identifier)) || []}
+            className={css.listTable}
+            onRowClick={({ role }) => {
+              history.push(
+                routes.toRoleDetails({
+                  accountId: accountId,
+                  orgIdentifier: orgIdentifier,
+                  projectIdentifier: projectIdentifier,
+                  roleIdentifier: role.identifier,
+                  module: module
+                })
+              )
+            }}
+            pagination={paginationProps}
+          />
+        )}
       </PageBody>
     </>
   )

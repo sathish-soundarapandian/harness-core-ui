@@ -20,6 +20,18 @@
   padding: var(--spacing-xxlarge) var(--spacing-xxxlarge) !important ;
 }
 
+.listHeader {
+  margin-bottom: 0 !important;
+}
+
+.search {
+  margin-right: var(--spacing-medium);
+}
+
+.listTable {
+  padding: 0 var(--spacing-xxlarge);
+}
+
 .warning {
   background-color: var(--white) !important;
   box-shadow: var(--card-shadow);

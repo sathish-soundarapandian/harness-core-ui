@@ -6,85 +6,30 @@
  */
 
 import React, { useState } from 'react'
-import { Card, CardBody, Icon, Layout, Text, useConfirmationDialog, useToaster } from '@harness/uicore'
+import { Card, CardBody, Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
-import { Classes, Intent, Menu } from '@blueprintjs/core'
-import { Role, RoleResponse, useDeleteRole } from 'services/rbac'
+import { Classes } from '@blueprintjs/core'
+import type { Role, RoleResponse } from 'services/rbac'
 import routes from '@common/RouteDefinitions'
-import { useStrings } from 'framework/strings'
 import { getRoleIcon } from '@rbac/utils/utils'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import OpenInNewTab from '@rbac/components/MenuItem/OpenInNewTab'
+import useDeleteRoleDialog from '@rbac/hooks/useDeleteRoleDialog'
+import RoleMenu from '../RoleMenu/RoleMenu'
+
 import css from './RoleCard.module.scss'
 
 interface RoleCardProps {
   data: RoleResponse
-  reloadRoles?: () => void
-  editRoleModal?: (role: Role) => void
+  reloadRoles: () => void
+  editRoleModal: (role: Role) => void
 }
 
 const RoleCard: React.FC<RoleCardProps> = ({ data, reloadRoles, editRoleModal }) => {
   const { role, harnessManaged } = data
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const history = useHistory()
-  const { showSuccess, showError } = useToaster()
-  const { getString } = useStrings()
   const [menuOpen, setMenuOpen] = useState(false)
-  const { mutate: deleteRole } = useDeleteRole({
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
-  })
-
-  const permissionRequest = {
-    resourceScope: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    },
-    resource: {
-      resourceType: ResourceType.ROLE,
-      resourceIdentifier: role.identifier
-    }
-  }
-
-  const { openDialog: openDeleteDialog } = useConfirmationDialog({
-    contentText: getString('rbac.roleCard.confirmDelete', { name: role.name }),
-    titleText: getString('rbac.roleCard.confirmDeleteTitle'),
-    confirmButtonText: getString('delete'),
-    cancelButtonText: getString('cancel'),
-    intent: Intent.DANGER,
-    buttonIntent: Intent.DANGER,
-    onCloseDialog: async (isConfirmed: boolean) => {
-      /* istanbul ignore else */ if (isConfirmed) {
-        try {
-          const deleted = await deleteRole(role.identifier, { headers: { 'content-type': 'application/json' } })
-          /* istanbul ignore else */ if (deleted) {
-            showSuccess(getString('rbac.roleCard.successMessage', { name: role.name }))
-            reloadRoles?.()
-          } else {
-            showError(getString('deleteError'))
-          }
-        } catch (err) {
-          /* istanbul ignore next */
-          showError(err?.data?.message || err?.message)
-        }
-      }
-    }
-  })
-  const handleEdit = (e: React.MouseEvent): void => {
-    e.stopPropagation()
-    setMenuOpen(false)
-    editRoleModal?.(role)
-  }
-
-  const handleDelete = async (e: React.MouseEvent): Promise<void> => {
-    e.stopPropagation()
-    setMenuOpen(false)
-    openDeleteDialog()
-  }
 
   const roleDetailsUrl = routes.toRoleDetails({
     roleIdentifier: role.identifier,
@@ -93,6 +38,8 @@ const RoleCard: React.FC<RoleCardProps> = ({ data, reloadRoles, editRoleModal })
     projectIdentifier,
     module
   })
+
+  const { openDeleteDialog } = useDeleteRoleDialog({ role, refetch: reloadRoles })
 
   return (
     <Card
@@ -105,31 +52,13 @@ const RoleCard: React.FC<RoleCardProps> = ({ data, reloadRoles, editRoleModal })
     >
       <CardBody.Menu
         menuContent={
-          <Menu>
-            <li>
-              <OpenInNewTab url={roleDetailsUrl} />
-            </li>
-            <RbacMenuItem
-              icon="edit"
-              text={getString('edit')}
-              onClick={handleEdit}
-              disabled={harnessManaged}
-              permission={{
-                ...permissionRequest,
-                permission: PermissionIdentifier.UPDATE_ROLE
-              }}
-            />
-            <RbacMenuItem
-              icon="trash"
-              text={getString('delete')}
-              onClick={handleDelete}
-              disabled={harnessManaged}
-              permission={{
-                ...permissionRequest,
-                permission: PermissionIdentifier.DELETE_ROLE
-              }}
-            />
-          </Menu>
+          <RoleMenu
+            role={role}
+            setMenuOpen={setMenuOpen}
+            harnessManaged={harnessManaged}
+            openDeleteModal={openDeleteDialog}
+            editRoleModal={editRoleModal}
+          />
         }
         menuPopoverProps={{
           className: Classes.DARK,
