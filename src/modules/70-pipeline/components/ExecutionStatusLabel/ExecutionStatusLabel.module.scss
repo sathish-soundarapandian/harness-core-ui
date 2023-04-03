@@ -9,11 +9,15 @@
   --execution-status-bg-color: var(--grey-350);
   --execution-status-color: var(--white);
   white-space: nowrap !important;
+  font-size: var(--font-size-xsmall);
+  color: var(--execution-status-color) !important;
   border: none;
   background-color: var(--execution-status-bg-color) !important;
   border-radius: var(--spacing-2);
   padding: var(--spacing-1) var(--spacing-3) !important;
   height: 18px;
+  line-height: var(--font-size-normal) !important;
+  font-weight: bold !important;
   display: inline-flex !important;
   justify-content: center;
   align-items: center;

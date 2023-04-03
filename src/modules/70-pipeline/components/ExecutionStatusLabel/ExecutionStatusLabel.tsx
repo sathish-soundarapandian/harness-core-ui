@@ -80,6 +80,8 @@ export interface ExecutionStatusLabelProps {
   withoutIcon?: boolean
 }
 
+const StatusesWithCustomTooltip: ExecutionStatus[] = ['AbortedByFreeze']
+
 export default function ExecutionStatusLabel({
   status,
   className,
@@ -87,6 +89,8 @@ export default function ExecutionStatusLabel({
   withoutIcon = false
 }: ExecutionStatusLabelProps): React.ReactElement | null {
   const { getString } = useStrings()
+  const disableTooltip = React.useMemo(() => status && StatusesWithCustomTooltip.includes(status), [status])
+
   if (!status) return null
 
   return (
@@ -95,7 +99,7 @@ export default function ExecutionStatusLabel({
       {label ? (
         label
       ) : (
-        <Text className={css.text} lineClamp={1}>
+        <Text className={css.text} lineClamp={1} tooltipProps={{ disabled: disableTooltip }}>
           {getString(stringsMap[status] || 'pipeline.executionStatus.Unknown')}
         </Text>
       )}
