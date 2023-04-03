@@ -597,9 +597,11 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                     refetchRepositoryDetails()
                   },
                   onChange: (val: any) => {
-                    if (repositoryValue !== (val as any)?.value) {
+                    if (repositoryValue !== (val as SelectOption)?.value) {
                       resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.spec.groupId`)
                       resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.spec.artifactId`)
+                      setGroupIds([])
+                      setArtifactIds([])
                     }
                   }
                 }}
