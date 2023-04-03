@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Role Details Page render data 1`] = `
+exports[`Role Details Page render grid view 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
@@ -49,7 +49,7 @@ exports[`Role Details Page render data 1`] = `
       class="Layout--horizontal StyledProps--main StyledProps--margin-right-small"
     >
       <div
-        class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+        class="bp3-input-group ui-search-box ExpandingSearchInput--main search  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
         data-name=""
         style="width: 250px; max-width: 250px;"
       >
@@ -81,6 +81,62 @@ exports[`Role Details Page render data 1`] = `
           value=""
         />
       </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <button
+          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main GridListToggle--gridButton StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
+          data-testid="grid-view"
+          data-tooltip-id="grid-view"
+          type="button"
+        >
+          <span
+            class="bp3-icon bp3-icon-grid-view StyledProps--main"
+            icon="grid-view"
+          >
+            <svg
+              data-icon="grid-view"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                grid-view
+              </desc>
+              <path
+                d="M0 1v6h7V0H1C.45 0 0 .45 0 1zm0 14c0 .55.45 1 1 1h6V9H0v6zM15 0H9v7h7V1c0-.55-.45-1-1-1zM9 16h6c.55 0 1-.45 1-1V9H9v7z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+        <button
+          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main GridListToggle--listUnselected GridListToggle--listButton Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          data-testid="list-view"
+          data-tooltip-id="list-view"
+          type="button"
+        >
+          <span
+            class="bp3-icon bp3-icon-list StyledProps--main"
+            icon="list"
+          >
+            <svg
+              data-icon="list"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                list
+              </desc>
+              <path
+                d="M1 3h14c.55 0 1-.45 1-1s-.45-1-1-1H1c-.55 0-1 .45-1 1s.45 1 1 1zm14 10H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zm0-4H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zm0-4H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+      </div>
     </div>
   </div>
   <div
@@ -90,7 +146,7 @@ exports[`Role Details Page render data 1`] = `
   >
     
     <div
-      class="Layout--horizontal StyledProps--main listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+      class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"

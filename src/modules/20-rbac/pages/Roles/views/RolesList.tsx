@@ -202,6 +202,7 @@ const RolesList: React.FC = () => {
             e.stopPropagation()
             setMenuOpen(true)
           }}
+          data-testid={`row-options-${_data.role.identifier}`}
         />
         <RoleMenu
           role={_data.role}
