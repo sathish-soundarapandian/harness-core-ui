@@ -125,10 +125,10 @@ export function NexusArtifact({
   })
 
   const {
-    data: groupData,
-    loading: fetchingGroups,
-    error: groupError,
-    refetch: refetchGroups
+    data: groupIdData,
+    loading: fetchingGroupIds,
+    error: groupIdError,
+    refetch: refetchGroupIds
   } = useMutateAsGet(useGetGroupIds, {
     requestOptions: {
       headers: {
@@ -146,10 +146,10 @@ export function NexusArtifact({
   })
 
   const {
-    data: artifactData,
-    loading: fetchingArtifacts,
-    error: artifactError,
-    refetch: refetchArtifacts
+    data: artifactIdData,
+    loading: fetchingArtifactIds,
+    error: artifactIdError,
+    refetch: refetchArtifactIds
   } = useMutateAsGet(useArtifactIds, {
     requestOptions: {
       headers: {
@@ -181,7 +181,7 @@ export function NexusArtifact({
   }
 
   useEffect(() => {
-    const groupOptions: SelectOption[] = (groupData?.data || [])?.map(group => {
+    const groupOptions: SelectOption[] = (groupIdData?.data || [])?.map(group => {
       return {
         label: group,
         value: group
@@ -189,40 +189,40 @@ export function NexusArtifact({
     })
 
     setGroupIds(groupOptions)
-  }, [groupData?.data])
+  }, [groupIdData?.data])
 
   useEffect(() => {
-    if (groupError) {
+    if (groupIdError) {
       setGroupIds([])
     }
-  }, [groupError])
+  }, [groupIdError])
 
   useEffect(() => {
-    if (artifactError) {
+    if (artifactIdError) {
       setArtifactIds([])
     }
-  }, [artifactError])
+  }, [artifactIdError])
 
   useEffect(() => {
-    const artifactOptions: SelectOption[] = (artifactData?.data || [])?.map(artifact => {
+    const artifactOptions: SelectOption[] = (artifactIdData?.data || [])?.map(artifact => {
       return {
         label: artifact,
         value: artifact
       } as SelectOption
     })
     setArtifactIds(artifactOptions)
-  }, [artifactData?.data])
+  }, [artifactIdData?.data])
 
   const itemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingRepository} />
   ))
 
   const groupIdItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
-    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingGroups} />
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingGroupIds} />
   ))
 
   const artifactIdItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
-    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingArtifacts} />
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingArtifactIds} />
   ))
 
   return (
@@ -323,7 +323,7 @@ export function NexusArtifact({
                           selectProps: {
                             noResults: (
                               <NoTagResults
-                                tagError={groupError}
+                                tagError={groupIdError}
                                 defaultErrorText={getString('pipeline.artifactsSelection.errors.noGroupIds')}
                               />
                             ),
@@ -338,7 +338,7 @@ export function NexusArtifact({
                             ) {
                               return
                             }
-                            refetchGroups({
+                            refetchGroupIds({
                               queryParams: {
                                 ...commonParams,
                                 connectorRef: getConnectorIdValue(prevStepData),
@@ -362,7 +362,7 @@ export function NexusArtifact({
                           selectProps: {
                             noResults: (
                               <NoTagResults
-                                tagError={artifactError}
+                                tagError={artifactIdError}
                                 defaultErrorText={getString('pipeline.artifactsSelection.errors.noArtifactIds')}
                               />
                             ),
@@ -378,7 +378,7 @@ export function NexusArtifact({
                               return
                             }
 
-                            refetchArtifacts({
+                            refetchArtifactIds({
                               queryParams: {
                                 ...commonParams,
                                 connectorRef: getConnectorIdValue(prevStepData),

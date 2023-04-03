@@ -208,10 +208,10 @@ export function Nexus3Artifact({
   })
 
   const {
-    data: groupData,
-    loading: fetchingGroups,
-    error: groupError,
-    refetch: refetchGroups
+    data: groupIdData,
+    loading: fetchingGroupIds,
+    error: groupIdError,
+    refetch: refetchGroupIds
   } = useMutateAsGet(useGetGroupIds, {
     requestOptions: {
       headers: {
@@ -230,9 +230,9 @@ export function Nexus3Artifact({
   })
 
   const {
-    data: artifactData,
-    loading: fetchingArtifacts,
-    error: artifactError,
+    data: artifactIdData,
+    loading: fetchingArtifactIds,
+    error: artifactIdError,
     refetch: refetchArtifacts
   } = useMutateAsGet(useArtifactIds, {
     requestOptions: {
@@ -291,7 +291,7 @@ export function Nexus3Artifact({
   }
 
   useEffect(() => {
-    const groupOptions: SelectOption[] = (groupData?.data || [])?.map(group => {
+    const groupOptions: SelectOption[] = (groupIdData?.data || [])?.map(group => {
       return {
         label: group,
         value: group
@@ -307,22 +307,22 @@ export function Nexus3Artifact({
       }
     ]
     setGroupIds(groupOptions)
-  }, [groupData?.data])
+  }, [groupIdData?.data])
 
   useEffect(() => {
-    if (groupError) {
+    if (groupIdError) {
       setGroupIds([])
     }
-  }, [groupError])
+  }, [groupIdError])
 
   useEffect(() => {
-    if (artifactError) {
+    if (artifactIdError) {
       setArtifactIds([])
     }
-  }, [artifactError])
+  }, [artifactIdError])
 
   useEffect(() => {
-    const artifactOptions: SelectOption[] = (artifactData?.data || [])?.map(artifact => {
+    const artifactOptions: SelectOption[] = (artifactIdData?.data || [])?.map(artifact => {
       return {
         label: artifact,
         value: artifact
@@ -338,7 +338,7 @@ export function Nexus3Artifact({
       }
     ]
     setArtifactIds(artifactOptions)
-  }, [artifactData?.data])
+  }, [artifactIdData?.data])
 
   useEffect(() => {
     /* istanbul ignore next */
@@ -371,11 +371,11 @@ export function Nexus3Artifact({
   ))
 
   const groupIdItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
-    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingGroups} />
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingGroupIds} />
   ))
 
   const artifactIdItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
-    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingArtifacts} />
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingArtifactIds} />
   ))
 
   const canFetchTags = useCallback(
@@ -739,7 +739,7 @@ export function Nexus3Artifact({
                       label={getString('pipeline.artifactsSelection.groupId')}
                       name="spec.groupId"
                       placeholder={
-                        fetchingGroups
+                        fetchingGroupIds
                           ? getString('common.loadingFieldOptions', {
                               fieldName: getString('pipeline.artifactsSelection.groupId')
                             })
@@ -752,13 +752,13 @@ export function Nexus3Artifact({
                         selectProps: {
                           itemRenderer: groupIdItemRenderer,
                           items: groupIds,
-                          loadingItems: fetchingGroups,
+                          loadingItems: fetchingGroupIds,
                           allowCreatingNewItems: true,
-                          noResults: !fetchingGroups ? (
+                          noResults: !fetchingGroupIds ? (
                             <NoTagResults
-                              tagError={groupError}
+                              tagError={groupIdError}
                               defaultErrorText={
-                                fetchingGroups ? getString('loading') : getString('common.filters.noResultsFound')
+                                fetchingGroupIds ? getString('loading') : getString('common.filters.noResultsFound')
                               }
                             />
                           ) : null
@@ -772,7 +772,7 @@ export function Nexus3Artifact({
                           ) {
                             return
                           }
-                          refetchGroups({
+                          refetchGroupIds({
                             queryParams: {
                               ...commonParams,
                               connectorRef: getConnectorRefQueryData(),
@@ -812,9 +812,9 @@ export function Nexus3Artifact({
                         selectProps: {
                           noResults: (
                             <NoTagResults
-                              tagError={artifactError}
+                              tagError={artifactIdError}
                               defaultErrorText={
-                                fetchingArtifacts ? getString('loading') : getString('common.filters.noResultsFound')
+                                fetchingArtifactIds ? getString('loading') : getString('common.filters.noResultsFound')
                               }
                             />
                           ),

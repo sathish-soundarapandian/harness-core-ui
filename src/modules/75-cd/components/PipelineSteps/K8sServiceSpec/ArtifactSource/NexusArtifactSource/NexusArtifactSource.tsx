@@ -313,10 +313,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   }
 
   const {
-    data: groupData,
-    loading: fetchingGroups,
-    error: groupError,
-    refetch: refetchGroups
+    data: groupIdData,
+    loading: fetchingGroupIds,
+    error: groupIdError,
+    refetch: refetchGroupIds
   } = useMutateAsGet(useGetGroupIds, {
     body: pipelineRuntimeYaml,
     requestOptions: {
@@ -330,9 +330,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   })
 
   const {
-    data: artifactData,
-    loading: fetchingArtifacts,
-    error: artifactError,
+    data: artifactIdData,
+    loading: fetchingArtifactIds,
+    error: artifactIdError,
     refetch: refetchArtifacts
   } = useMutateAsGet(useArtifactIds, {
     body: pipelineRuntimeYaml,
@@ -362,36 +362,36 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   }
 
   useEffect(() => {
-    const groupOptions: SelectOption[] = (groupData?.data || [])?.map(group => {
+    const groupOptions: SelectOption[] = (groupIdData?.data || [])?.map(group => {
       return {
         label: group,
         value: group
       } as SelectOption
     })
     setGroupIds(groupOptions)
-  }, [groupData?.data])
+  }, [groupIdData?.data])
 
   useEffect(() => {
-    if (groupError) {
+    if (groupIdError) {
       setGroupIds([])
     }
-  }, [groupError])
+  }, [groupIdError])
 
   useEffect(() => {
-    if (artifactError) {
+    if (artifactIdError) {
       setArtifactIds([])
     }
-  }, [artifactError])
+  }, [artifactIdError])
 
   useEffect(() => {
-    const artifactOptions: SelectOption[] = (artifactData?.data || [])?.map(item => {
+    const artifactOptions: SelectOption[] = (artifactIdData?.data || [])?.map(item => {
       return {
         label: item,
         value: item
       } as SelectOption
     })
     setArtifactIds(artifactOptions)
-  }, [artifactData?.data])
+  }, [artifactIdData?.data])
 
   useEffect(() => {
     if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
@@ -507,7 +507,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             <Text>{item.label}</Text>
           </Layout.Horizontal>
         }
-        disabled={fetchingGroups}
+        disabled={fetchingGroupIds}
         onClick={handleClick}
       />
     </div>
@@ -521,7 +521,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             <Text>{item.label}</Text>
           </Layout.Horizontal>
         }
-        disabled={fetchingArtifacts}
+        disabled={fetchingArtifactIds}
         onClick={handleClick}
       />
     </div>
@@ -612,7 +612,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.groupId`, template) && (
               <SelectInputSetView
                 selectItems={
-                  fetchingGroups
+                  fetchingGroupIds
                     ? [
                         {
                           label: getString('common.loadingFieldOptions', {
@@ -639,13 +639,13 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                     usePortal: true,
                     noResults: (
                       <NoTagResults
-                        tagError={groupError}
+                        tagError={groupIdError}
                         isServerlessDeploymentTypeSelected={false}
                         defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
                       />
                     ),
 
-                    items: fetchingGroups
+                    items: fetchingGroupIds
                       ? [
                           {
                             label: getString('common.loadingFieldOptions', {
@@ -667,7 +667,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                     ) {
                       return
                     }
-                    refetchGroups()
+                    refetchGroupIds()
                   }
                 }}
               />
@@ -677,7 +677,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.artifactId`, template) && (
               <SelectInputSetView
                 selectItems={
-                  fetchingArtifacts
+                  fetchingArtifactIds
                     ? [
                         {
                           label: getString('common.loadingFieldOptions', {
@@ -703,7 +703,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   selectProps: {
                     usePortal: true,
                     itemRenderer: artifactIdItemRenderer,
-                    items: fetchingArtifacts
+                    items: fetchingArtifactIds
                       ? [
                           {
                             label: getString('common.loadingFieldOptions', {
@@ -717,7 +717,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                       : artifactIds,
                     allowCreatingNewItems: true,
                     popoverClassName: css.selectPopover,
-                    loadingItems: fetchingArtifacts
+                    loadingItems: fetchingArtifactIds
                   },
                   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                     if (
