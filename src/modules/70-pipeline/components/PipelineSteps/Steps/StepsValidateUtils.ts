@@ -113,7 +113,7 @@ function generateSchemaForIdentifier({
   )
 }
 
-function generateSchemaForName({ getString }: GenerateSchemaDependencies): StringSchema {
+export function generateSchemaForName({ getString }: GenerateSchemaDependencies): StringSchema {
   return yup
     .string()
     .trim()
