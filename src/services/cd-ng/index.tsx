@@ -1225,7 +1225,9 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -1308,6 +1310,7 @@ export type AwsCodeCommitSecretKeyAccessKeyDTO = AwsCodeCommitHttpsCredentialsSp
 }
 
 export type AwsConnector = ConnectorConfigDTO & {
+  awsSdkClientBackOffStrategyOverride?: AwsSdkClientBackoffStrategy
   credential: AwsCredential
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
@@ -1329,6 +1332,23 @@ export interface AwsCurAttributes {
   reportName: string
   s3BucketName: string
   s3Prefix?: string
+}
+
+export type AwsEqualJitterBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  baseDelay?: number
+  maxBackoffTime?: number
+  retryCount?: number
+}
+
+export type AwsFixedDelayBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  fixedBackoff?: number
+  retryCount?: number
+}
+
+export type AwsFullJitterBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  baseDelay?: number
+  maxBackoffTime?: number
+  retryCount?: number
 }
 
 export interface AwsInstanceFilter {
@@ -1477,6 +1497,15 @@ export type AwsSamRollbackStepInfo = StepSpecType & {
 }
 
 export type AwsSamServiceSpec = ServiceSpec & {}
+
+export interface AwsSdkClientBackOffStrategySpec {
+  [key: string]: any
+}
+
+export interface AwsSdkClientBackoffStrategy {
+  spec?: AwsSdkClientBackOffStrategySpec
+  type: 'FixedDelayBackoffStrategy' | 'EqualJitterBackoffStrategy' | 'FullJitterBackoffStrategy'
+}
 
 export interface AwsSecretManagerCredential {
   spec?: AwsSecretManagerCredentialSpec
@@ -2106,7 +2135,6 @@ export interface CDPipelineModuleInfo {
 
 export interface CDStageMetaDataDTO {
   environmentRef?: string
-  filteredProvisionerRefs?: string[]
   serviceEnvRefList?: ServiceEnvRef[]
   serviceRef?: string
 }
@@ -2168,6 +2196,10 @@ export type CELicenseSummaryDTO = LicensesWithSummaryDTO & {
 
 export type CEModuleLicenseDTO = ModuleLicenseDTO & {
   spendLimit?: number
+}
+
+export type CETModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfAgents?: number
 }
 
 export type CFLicenseSummaryDTO = LicensesWithSummaryDTO & {
@@ -5817,7 +5849,9 @@ export interface FeatureRestrictionDetailsDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -5933,7 +5967,9 @@ export interface FeatureRestrictionMetadataDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -6044,7 +6080,9 @@ export interface FeedbackFormDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   score?: number
   suggestion?: string
 }
@@ -6724,7 +6762,9 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
 }
 
@@ -6939,6 +6979,7 @@ export interface GitEntityFilterProperties {
     | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
+
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6956,7 +6997,9 @@ export interface GitEntityFilterProperties {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
 }
 
@@ -8308,7 +8351,9 @@ export interface GitSyncRepoFilesList {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface GitSyncSettingsDTO {
@@ -9835,7 +9880,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -9843,6 +9888,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -10084,7 +10130,9 @@ export interface LicensesWithSummaryDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface LoadBalancer {
@@ -10243,7 +10291,9 @@ export interface ModuleLicenseDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   premiumSupport?: boolean
   selfService?: boolean
   startTime?: number
@@ -10605,7 +10655,9 @@ export interface OAuthSignupDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   name?: string
   referer?: string
   signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
@@ -11359,7 +11411,9 @@ export interface PartialSchemaDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -11578,8 +11632,9 @@ export interface Project {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
-    | 'ET'
+    | 'IDP'
   )[]
   name: string
   orgIdentifier?: string
@@ -11663,6 +11718,7 @@ export interface RecommendationRequest {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   usageMap?: {
@@ -12015,7 +12071,6 @@ export interface ResourceDTO {
     | 'PIPELINE_EXECUTION'
     | 'IP_ALLOWLIST_CONFIG'
     | 'NODE_EXECUTION'
-
 }
 
 export interface ResourceGroup {
@@ -13580,6 +13635,15 @@ export interface ResponseMapStringString {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseMapUsageKeyLong {
+  correlationId?: string
+  data?: {
+    [key: string]: number
+  }
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseMessage {
   code?:
     | 'DEFAULT_ERROR_CODE'
@@ -15038,6 +15102,14 @@ export interface RestResponseString {
     [key: string]: { [key: string]: any }
   }
   resource?: string
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseSupportedDelegateVersion {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: SupportedDelegateVersion
   responseMessages?: ResponseMessage[]
 }
 
@@ -16519,7 +16591,9 @@ export interface StartTrialDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface StartupCommandConfiguration {
@@ -16788,7 +16862,9 @@ export interface SubscriptionDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   paymentMethodId?: string
 }
 
@@ -16848,7 +16924,9 @@ export interface SubscriptionRequest {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   paymentFrequency?: string
   premiumSupport?: boolean
 }
@@ -16858,6 +16936,11 @@ export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
   accessKeyRef: string
   delegateSelectors?: string[]
   url: string
+}
+
+export interface SupportedDelegateVersion {
+  latestSupportedMinimalVersion?: string
+  latestSupportedVersion?: string
 }
 
 export interface SvcEnvMigrationProjectWrapperRequestDto {
@@ -16885,6 +16968,7 @@ export interface SvcEnvMigrationRequestDto {
     [key: string]: string
   }
   infraIdentifierFormat: string
+  newBranch?: boolean
   orgIdentifier: string
   pipelineIdentifier: string
   projectIdentifier: string
@@ -16915,10 +16999,10 @@ export interface SyncOptions {
 }
 
 export interface SyncRetryStrategy {
-  baseBackoffDuration: string
-  increaseBackoffByFactor: number
-  limit: number
-  maxBackoffDuration: string
+  baseBackoffDuration?: string
+  increaseBackoffByFactor?: number
+  limit?: number
+  maxBackoffDuration?: string
 }
 
 export type SyncStepInfo = StepSpecType & {
@@ -16973,6 +17057,7 @@ export type TanzuApplicationServiceSpec = ServiceSpec & {}
 
 export type TasAppResizeStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  ignoreInstanceCountManifest?: boolean
   newAppInstances: TasInstanceSelectionWrapper
   oldAppInstances?: TasInstanceSelectionWrapper
 }
@@ -18211,7 +18296,9 @@ export interface YamlSchemaMetadata {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -18236,7 +18323,9 @@ export interface YamlSchemaWithDetails {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -18278,8 +18367,6 @@ export type DelegateDownloadRequestRequestBody = DelegateDownloadRequest
 export type DelegateGroupTagsRequestBody = DelegateGroupTags
 
 export type DelegateProfileDetailsNgRequestBody = DelegateProfileDetailsNg
-
-export type DelegateResponseDataRequestBody = DelegateResponseData
 
 export type DockerRequestDTORequestBody = DockerRequestDTO
 
@@ -18337,9 +18424,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = void
+export type SecretRequestWrapperRequestBody = SecretRequestWrapper
 
-export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
+export type SecretRequestWrapper2RequestBody = void
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -18375,13 +18462,13 @@ export type DeleteManyFreezesBodyRequestBody = string[]
 
 export type GetEKSClusterNamesViaExpressionResolutionBodyRequestBody = string
 
+export type DeleteManyFreezesBodyRequestBody = string[]
+
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetEKSClusterNamesViaExpressionResolutionBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
-
-export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -20869,7 +20956,9 @@ export interface GetProjectAggregateDTOListQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -31342,8 +31431,6 @@ export const getConnectorCataloguePromise = (
   )
 
 export interface GetCCMK8SConnectorListQueryParams {
-  pageIndex?: number
-  pageSize?: number
   accountIdentifier?: string
   searchTerm?: string
   orgIdentifier?: string
@@ -31360,6 +31447,10 @@ export interface GetCCMK8SConnectorListQueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   getDistinctFromBranches?: boolean
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetCCMK8SConnectorListProps = Omit<
@@ -31585,8 +31676,6 @@ export const getCEAwsTemplatePromise = (
   )
 
 export interface GetConnectorListV2QueryParams {
-  pageIndex?: number
-  pageSize?: number
   accountIdentifier?: string
   searchTerm?: string
   orgIdentifier?: string
@@ -31603,6 +31692,10 @@ export interface GetConnectorListV2QueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   getDistinctFromBranches?: boolean
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetConnectorListV2Props = Omit<
@@ -35751,6 +35844,108 @@ export const generateNgHelmValuesYamlPromise = (
     'POST',
     getConfig('ng/api'),
     `/delegate-setup/generate-helm-values`,
+    props,
+    signal
+  )
+
+export interface PublishedDelegateVersionQueryParams {
+  accountIdentifier: string
+}
+
+export type PublishedDelegateVersionProps = Omit<
+  GetProps<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets the latest supported delegate version
+ */
+export const PublishedDelegateVersion = (props: PublishedDelegateVersionProps) => (
+  <Get<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>
+    path={`/delegate-setup/latest-supported-version`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UsePublishedDelegateVersionProps = Omit<
+  UseGetProps<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets the latest supported delegate version
+ */
+export const usePublishedDelegateVersion = (props: UsePublishedDelegateVersionProps) =>
+  useGet<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>(
+    `/delegate-setup/latest-supported-version`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets the latest supported delegate version
+ */
+export const publishedDelegateVersionPromise = (
+  props: GetUsingFetchProps<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>(
+    getConfig('ng/api'),
+    `/delegate-setup/latest-supported-version`,
+    props,
+    signal
+  )
+
+export interface OverrideDelegateImageTagQueryParams {
+  accountIdentifier?: string
+  delegateTag?: string
+  validTillNextRelease?: boolean
+  validForDays?: number
+}
+
+export type OverrideDelegateImageTagProps = Omit<
+  MutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Overrides delegate image tag for account
+ */
+export const OverrideDelegateImageTag = (props: OverrideDelegateImageTagProps) => (
+  <Mutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>
+    verb="PUT"
+    path={`/delegate-setup/override-delegate-tag`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseOverrideDelegateImageTagProps = Omit<
+  UseMutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Overrides delegate image tag for account
+ */
+export const useOverrideDelegateImageTag = (props: UseOverrideDelegateImageTagProps) =>
+  useMutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
+    'PUT',
+    `/delegate-setup/override-delegate-tag`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Overrides delegate image tag for account
+ */
+export const overrideDelegateImageTagPromise = (
+  props: MutateUsingFetchProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
+    'PUT',
+    getConfig('ng/api'),
+    `/delegate-setup/override-delegate-tag`,
     props,
     signal
   )
@@ -41065,7 +41260,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -41079,7 +41274,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -41094,7 +41289,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -41108,7 +41303,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -41120,7 +41315,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -41129,7 +41324,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -41187,6 +41382,7 @@ export interface ShouldDisableDeploymentQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  pipelineIdentifier?: string
 }
 
 export type ShouldDisableDeploymentProps = Omit<
@@ -41691,7 +41887,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -41705,7 +41901,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -41720,7 +41916,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -41734,7 +41930,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -41746,7 +41942,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -41755,7 +41951,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -43565,14 +43761,13 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'TasRouteMapping'
       | 'AWSSecurityHub'
       | 'CustomIngest'
-
       | 'BackstageEnvironmentVariable'
       | 'Fossa'
       | 'CodeQL'
       | 'Gitleaks'
       | 'DeployCloudFunctionGenOne'
       | 'RollbackCloudFunctionGenOne'
-
+      | 'BackstageEnvironmentVariable'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -46475,7 +46670,7 @@ export type GetInstanceSyncPerpetualTaskResponseProps = Omit<
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >,
   'path' | 'verb'
@@ -46485,13 +46680,7 @@ export type GetInstanceSyncPerpetualTaskResponseProps = Omit<
  * Get instance sync perpetual task response
  */
 export const GetInstanceSyncPerpetualTaskResponse = (props: GetInstanceSyncPerpetualTaskResponseProps) => (
-  <Mutate<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >
+  <Mutate<ResponseBoolean, Failure | Error, GetInstanceSyncPerpetualTaskResponseQueryParams, DelegateResponseData, void>
     verb="POST"
     path={`/instancesync/response`}
     base={getConfig('ng/api')}
@@ -46504,7 +46693,7 @@ export type UseGetInstanceSyncPerpetualTaskResponseProps = Omit<
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >,
   'path' | 'verb'
@@ -46518,7 +46707,7 @@ export const useGetInstanceSyncPerpetualTaskResponse = (props: UseGetInstanceSyn
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >('POST', `/instancesync/response`, { base: getConfig('ng/api'), ...props })
 
@@ -46530,7 +46719,7 @@ export const getInstanceSyncPerpetualTaskResponsePromise = (
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >,
   signal?: RequestInit['signal']
@@ -46539,87 +46728,9 @@ export const getInstanceSyncPerpetualTaskResponsePromise = (
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >('POST', getConfig('ng/api'), `/instancesync/response`, props, signal)
-
-export interface GetInstanceSyncPerpetualTaskResponseV2QueryParams {
-  accountIdentifier: string
-  perpetualTaskId: string
-}
-
-export type GetInstanceSyncPerpetualTaskResponseV2Props = Omit<
-  MutateProps<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get instance sync perpetual task response
- */
-export const GetInstanceSyncPerpetualTaskResponseV2 = (props: GetInstanceSyncPerpetualTaskResponseV2Props) => (
-  <Mutate<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/instancesync/v2/response`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetInstanceSyncPerpetualTaskResponseV2Props = Omit<
-  UseMutateProps<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get instance sync perpetual task response
- */
-export const useGetInstanceSyncPerpetualTaskResponseV2 = (props: UseGetInstanceSyncPerpetualTaskResponseV2Props) =>
-  useMutate<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >('POST', `/instancesync/v2/response`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get instance sync perpetual task response
- */
-export const getInstanceSyncPerpetualTaskResponseV2Promise = (
-  props: MutateUsingFetchProps<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/instancesync/v2/response`, props, signal)
 
 export interface GetInvitesQueryParams {
   accountIdentifier: string
@@ -48395,7 +48506,9 @@ export interface GetEditionActionsQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export type GetEditionActionsProps = Omit<
@@ -48459,7 +48572,9 @@ export interface StartCommunityLicenseQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export type StartCommunityLicenseProps = Omit<
@@ -48589,7 +48704,9 @@ export interface StartFreeLicenseQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   referer?: string
   gaClientId?: string
 }
@@ -48657,7 +48774,9 @@ export interface GetModuleLicensesByAccountAndModuleTypeQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface GetModuleLicensesByAccountAndModuleTypePathParams {
@@ -48888,7 +49007,9 @@ export interface GetLicensesAndSummaryQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface GetLicensesAndSummaryPathParams {
@@ -50836,7 +50957,9 @@ export interface GetProjectListQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -50966,7 +51089,9 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -56300,6 +56425,62 @@ export const upsertServiceV2Promise = (
     void
   >('PUT', getConfig('ng/api'), `/servicesV2/upsert`, props, signal)
 
+export interface ValidateTemplateInputsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  identifier?: string
+}
+
+export type ValidateTemplateInputsProps = Omit<
+  GetProps<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>,
+  'path'
+>
+
+/**
+ * This validates inputs for templates like artifact sources for service yaml
+ */
+export const ValidateTemplateInputs = (props: ValidateTemplateInputsProps) => (
+  <Get<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>
+    path={`/servicesV2/validate-template-inputs`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseValidateTemplateInputsProps = Omit<
+  UseGetProps<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>,
+  'path'
+>
+
+/**
+ * This validates inputs for templates like artifact sources for service yaml
+ */
+export const useValidateTemplateInputs = (props: UseValidateTemplateInputsProps) =>
+  useGet<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>(
+    `/servicesV2/validate-template-inputs`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * This validates inputs for templates like artifact sources for service yaml
+ */
+export const validateTemplateInputsPromise = (
+  props: GetUsingFetchProps<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>(
+    getConfig('ng/api'),
+    `/servicesV2/validate-template-inputs`,
+    props,
+    signal
+  )
+
 export interface DeleteServiceV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -58078,7 +58259,9 @@ export interface RetrieveProductPricesQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export type RetrieveProductPricesProps = Omit<
@@ -58244,7 +58427,6 @@ export const retrieveRecommendationRcPromise = (
     void
   >('POST', getConfig('ng/api'), `/subscriptions/recommendation-rc`, props, signal)
 
-
 export type SyncStripeEventProps = Omit<
   MutateProps<RestResponseVoid, Failure | Error, void, GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody, void>,
   'path' | 'verb'
@@ -58291,6 +58473,23 @@ export const syncStripeEventPromise = (
 
 export interface CancelSubscriptionQueryParams {
   accountIdentifier: string
+  moduleType:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'SRM'
+    | 'IACM'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'CET'
+    | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export type CancelSubscriptionProps = Omit<
@@ -59329,6 +59528,56 @@ export const getDelegateInstallStatusPromise = (
   getUsingFetch<ResponseDelegateStatus, Failure | Error, GetDelegateInstallStatusQueryParams, void>(
     getConfig('ng/api'),
     `/trial-signup/delegate-install-status`,
+    props,
+    signal
+  )
+
+export interface GenerateYamlQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  connectorIdentifier?: string
+  repo?: string
+  yamlVersion?: string
+}
+
+export type GenerateYamlProps = Omit<GetProps<ResponseString, Failure | Error, GenerateYamlQueryParams, void>, 'path'>
+
+/**
+ * generate yaml
+ */
+export const GenerateYaml = (props: GenerateYamlProps) => (
+  <Get<ResponseString, Failure | Error, GenerateYamlQueryParams, void>
+    path={`/trial-signup/generate-yaml`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGenerateYamlProps = Omit<
+  UseGetProps<ResponseString, Failure | Error, GenerateYamlQueryParams, void>,
+  'path'
+>
+
+/**
+ * generate yaml
+ */
+export const useGenerateYaml = (props: UseGenerateYamlProps) =>
+  useGet<ResponseString, Failure | Error, GenerateYamlQueryParams, void>(`/trial-signup/generate-yaml`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * generate yaml
+ */
+export const generateYamlPromise = (
+  props: GetUsingFetchProps<ResponseString, Failure | Error, GenerateYamlQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseString, Failure | Error, GenerateYamlQueryParams, void>(
+    getConfig('ng/api'),
+    `/trial-signup/generate-yaml`,
     props,
     signal
   )
@@ -63113,7 +63362,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -63123,7 +63372,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -63136,7 +63385,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -63150,7 +63399,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -63162,7 +63411,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -63171,7 +63420,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -63566,7 +63815,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -63580,7 +63829,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >
     verb="POST"
@@ -63595,7 +63844,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -63609,7 +63858,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -63621,7 +63870,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -63630,7 +63879,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -63766,7 +64015,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -63781,7 +64030,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -63796,7 +64045,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -63811,7 +64060,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -63830,7 +64079,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -63839,7 +64088,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -63858,7 +64107,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -63873,7 +64122,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -63888,7 +64137,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -63903,7 +64152,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -63922,7 +64171,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -63931,7 +64180,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -64542,60 +64791,6 @@ export const getVariablePromise = (
   getUsingFetch<ResponseVariableResponseDTO, Failure | Error, GetVariableQueryParams, GetVariablePathParams>(
     getConfig('ng/api'),
     `/variables/${identifier}`,
-    props,
-    signal
-  )
-
-export interface OverrideDelegateImageTagQueryParams {
-  accountIdentifier?: string
-  delegateTag?: string
-  validTillNextRelease?: boolean
-  validForDays?: number
-}
-
-export type OverrideDelegateImageTagProps = Omit<
-  MutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
-  'path' | 'verb'
->
-
-/**
- * Overrides delegate image tag for account
- */
-export const OverrideDelegateImageTag = (props: OverrideDelegateImageTagProps) => (
-  <Mutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>
-    verb="PUT"
-    path={`/version-override/delegate-tag`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseOverrideDelegateImageTagProps = Omit<
-  UseMutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
-  'path' | 'verb'
->
-
-/**
- * Overrides delegate image tag for account
- */
-export const useOverrideDelegateImageTag = (props: UseOverrideDelegateImageTagProps) =>
-  useMutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
-    'PUT',
-    `/version-override/delegate-tag`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Overrides delegate image tag for account
- */
-export const overrideDelegateImageTagPromise = (
-  props: MutateUsingFetchProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
-    'PUT',
-    getConfig('ng/api'),
-    `/version-override/delegate-tag`,
     props,
     signal
   )
