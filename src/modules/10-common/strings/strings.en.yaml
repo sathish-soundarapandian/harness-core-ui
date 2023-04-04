@@ -1118,7 +1118,6 @@ stepName: 'Step: {{ name }}'
 moduleTitles:
   cf: Feature Flag
   cd: Continuous Devlivery
-  ci: Continuous Integration
 ignore: Ignore
 serviceDetails: Service Details
 serviceName: Service Name

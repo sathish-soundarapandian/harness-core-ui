@@ -180,7 +180,7 @@ export function getTitleByModule(module: Module): { icon?: string; description?:
     case 'ci': {
       icon = 'ci-solid'
       description = 'common.purpose.ci.continuous'
-      title = 'common.moduleTitles.ci'
+      title = 'common.purpose.ci.continuous'
       break
     }
     case 'ce': {
