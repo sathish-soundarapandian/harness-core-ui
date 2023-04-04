@@ -57,6 +57,8 @@ permissionLabels:
   approveReject: Approve / Reject
   copy: '{{$.common.copy}}'
   toggleFlag: Toggle Feature Flag
+  deleteFFSDKKey: Delete FF SDK Key
+  createFFSDKKey: Create FF SDK Key
 categoryLabels:
   sharedResources: Shared Resources
 roleBindings: Role Bindings

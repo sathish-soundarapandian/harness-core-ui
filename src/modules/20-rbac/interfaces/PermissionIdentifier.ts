@@ -79,6 +79,8 @@ export enum PermissionIdentifier {
   TOGGLE_FF_FEATUREFLAG = 'ff_featureflag_toggle',
   DELETE_FF_TARGETGROUP = 'ff_targetgroup_delete',
   EDIT_FF_TARGETGROUP = 'ff_targetgroup_edit',
+  CREATE_FF_SDK_KEY = 'ff_environment_apiKeyCreate',
+  DELETE_FF_SDK_KEY = 'ff_environment_apiKeyDelete',
 
   // Dashboard Permissions
   VIEW_DASHBOARD = 'core_dashboards_view',
