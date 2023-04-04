@@ -135,11 +135,7 @@ const StepBambooAuthentication: React.FC<StepProps<StepBambooAuthenticationProps
                     stringId="username"
                     type={formikProps.values.username ? get(formikProps.values.username, 'type', '') : ValueType.TEXT}
                   />
-                  <SecretInput
-                    name={'password'}
-                    label={getString('connectors.jenkins.passwordAPIToken')}
-                    scope={scope}
-                  />
+                  <SecretInput name={'password'} label={getString('password')} scope={scope} />
                 </>
               </Layout.Vertical>
               <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">

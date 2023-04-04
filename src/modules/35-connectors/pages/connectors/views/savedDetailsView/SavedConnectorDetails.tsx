@@ -344,6 +344,27 @@ const getJenkinsSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRow
   ]
 }
 
+const getBambooSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectors.bamboo.bambooUrl',
+      value: connector?.spec?.bambooUrl
+    },
+    {
+      label: 'credType',
+      value: 'Password'
+    },
+    {
+      label: 'username',
+      value: connector?.spec?.auth?.spec?.username || connector?.spec?.auth?.spec?.usernameRef
+    },
+    {
+      label: 'connectors.jenkins.passwordAPIToken',
+      value: connector?.spec?.auth?.spec?.passwordRef
+    }
+  ]
+}
+
 const getGcpSMSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {
@@ -964,6 +985,9 @@ const getSchemaByType = (
       return getAzureSchema(connector)
     case Connectors.JENKINS:
       return getJenkinsSchema(connector)
+    case Connectors.Bamboo:
+      return getBambooSchema(connector)
+
     case Connectors.CUSTOM_SECRET_MANAGER:
       return getCustomSMSchema(connector)
     case Connectors.GcpSecretManager:
