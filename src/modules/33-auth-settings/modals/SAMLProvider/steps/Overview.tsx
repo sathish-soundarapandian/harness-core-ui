@@ -7,10 +7,7 @@ import { String, useStrings } from 'framework/strings'
 import type { FormValues } from '../utils'
 import css from '../useSAMLProvider.module.scss'
 
-interface OverviewForm {
-  displayName: string
-  friendlyName?: string
-}
+type OverviewForm = Pick<FormValues, 'displayName' | 'friendlyName'>
 
 const Overview: React.FC<StepProps<FormValues>> = props => {
   const { getString } = useStrings()

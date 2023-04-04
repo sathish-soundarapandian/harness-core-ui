@@ -7,9 +7,7 @@ import { useStrings } from 'framework/strings'
 import { FormValues, Providers, SAMLProviderType } from '../utils'
 import css from '../useSAMLProvider.module.scss'
 
-interface SelectProviderForm {
-  samlProviderType?: Providers
-}
+type SelectProviderForm = Pick<FormValues, 'samlProviderType'>
 
 const SelectProvider: React.FC<StepProps<FormValues>> = props => {
   const { getString } = useStrings()
@@ -47,7 +45,6 @@ const SelectProvider: React.FC<StepProps<FormValues>> = props => {
       })}
       onSubmit={values => {
         props.nextStep?.({ ...props.prevStepData, ...values } as FormValues)
-        // handle on submit
       }}
     >
       <FormikForm className={css.form}>
