@@ -1,5 +1,5 @@
 import React from 'react'
-import CIDeveloperCard from './CostCalculatorCI/CIDeveloperCard'
+import CIDeveloperCard from './CostCalculator/CIDeveloperCard'
 import { Layout } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
 
