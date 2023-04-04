@@ -209,19 +209,6 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
       })}
       onSubmit={(values: InitialBillingInfo): void => {
         handleSubmitData(values)
-        // createNewSubscriptionFF(values).then((subscriptionId?: string) => {
-        //   updateSubscriptionProps(values, subscriptionId)
-        // })
-        // switch (module) {
-        //   case 'cf':
-        //     createNewSubscriptionFF(values).then((subscriptionId?: string) => {
-        //       updateSubscriptionProps(values, subscriptionId)
-        //     })
-        //   case 'ci':
-        //     createNewSubscriptionCI(values).then((subscriptionId?: string) => {
-        //       updateSubscriptionProps(values, subscriptionId)
-        //     })
-        // }
       }}
       formName="subscriptionUserInfo"
     >
