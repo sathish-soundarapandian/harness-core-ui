@@ -77,6 +77,7 @@ import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStor
 import { ModuleName } from 'framework/types/ModuleName'
 import { RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { Duration } from '@common/exports'
+import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
@@ -672,7 +673,8 @@ export default function ChaosRoutes(): React.ReactElement {
             ConnectorReferenceField,
             OverviewChartsWithToggle,
             Duration,
-            NavigationCheck
+            NavigationCheck,
+            SchedulePanel
           }}
           customFunctions={{ validateYAMLWithSchema }}
         />

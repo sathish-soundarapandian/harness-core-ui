@@ -23,7 +23,7 @@ import CustomTab from './components/CustomTab/CustomTab'
 
 import css from './SchedulePanel.module.scss'
 
-interface SchedulePanelPropsInterface {
+export interface SchedulePanelPropsInterface {
   formikProps?: any
   /**
    * Renders only the custom tab in panel

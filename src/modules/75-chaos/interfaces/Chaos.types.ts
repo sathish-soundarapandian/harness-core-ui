@@ -9,6 +9,7 @@ import type React from 'react'
 import type { Diagnostic } from 'vscode-languageserver-types'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { OverviewChartsWithToggleProps } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
+import type { SchedulePanelPropsInterface } from '@common/components/SchedulePanel/SchedulePanel'
 import type { NavigationCheckProps } from '@common/components/NavigationCheck/NavigationCheck'
 import type { DurationProps } from '@common/exports'
 
@@ -18,6 +19,7 @@ export interface ChaosCustomMicroFrontendProps {
     OverviewChartsWithToggle?: React.ComponentType<OverviewChartsWithToggleProps>
     Duration?: React.ComponentType<DurationProps>
     NavigationCheck?: React.ComponentType<NavigationCheckProps>
+    SchedulePanel?: React.ComponentType<SchedulePanelPropsInterface>
   }
   customFunctions?: {
     validateYAMLWithSchema?: (yamlString: string, schema: Record<string, any>) => Promise<Diagnostic[]>
