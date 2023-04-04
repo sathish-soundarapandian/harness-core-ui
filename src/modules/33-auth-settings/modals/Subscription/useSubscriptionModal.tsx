@@ -88,7 +88,7 @@ const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose, c
     subscriptionId: '',
     quantities: {
       featureFlag: {
-        numberOfMau: 100,
+        numberOfMau: plan === 'TEAM' ? 100 : 1,
         numberOfDevelopers: 1
       }
     },
