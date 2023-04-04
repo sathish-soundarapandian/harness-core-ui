@@ -41,7 +41,6 @@ const BillingContact: React.FC<BillingContactProp> = ({ billingInfo, countries, 
     label: state.name,
     value: state.code
   }))
-
   return (
     <>
       <Layout.Vertical spacing={'large'}>
