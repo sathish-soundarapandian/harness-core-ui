@@ -196,6 +196,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       )
     }
   })
+  const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
 
   const groupQueryParams: any = {
     ...commonParams,
@@ -213,7 +214,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           : artifactPath,
         ''
       ),
-      'spec.groupId'
+      'spec.groupId',
+      serviceId || '',
+      false
     )
   }
 
@@ -239,7 +242,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           : artifactPath,
         ''
       ),
-      'spec.artifactId'
+      'spec.artifactId',
+      serviceId || '',
+      false
     )
   }
 

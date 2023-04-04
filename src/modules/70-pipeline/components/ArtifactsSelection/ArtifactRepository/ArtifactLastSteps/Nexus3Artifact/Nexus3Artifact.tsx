@@ -805,7 +805,13 @@ export function Nexus3Artifact({
                       useValue
                       label={getString('pipeline.artifactsSelection.artifactId')}
                       name="spec.artifactId"
-                      placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
+                      placeholder={
+                        fetchingArtifactIds
+                          ? getString('common.loadingFieldOptions', {
+                              fieldName: getString('pipeline.artifactsSelection.artifactId')
+                            })
+                          : getString('pipeline.artifactsSelection.artifactIdPlaceholder')
+                      }
                       multiTypeInputProps={{
                         expressions,
                         allowableTypes,

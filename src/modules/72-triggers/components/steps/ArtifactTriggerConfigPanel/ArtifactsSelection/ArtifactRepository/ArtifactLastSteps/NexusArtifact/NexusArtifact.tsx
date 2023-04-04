@@ -316,7 +316,13 @@ export function NexusArtifact({
                         selectItems={groupIds}
                         label={getString('pipeline.artifactsSelection.groupId')}
                         name="groupId"
-                        placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
+                        placeholder={
+                          fetchingGroupIds
+                            ? getString('common.loadingFieldOptions', {
+                                fieldName: getString('pipeline.artifactsSelection.groupId')
+                              })
+                            : getString('pipeline.artifactsSelection.groupIdPlaceholder')
+                        }
                         useValue
                         multiTypeInputProps={{
                           allowableTypes: [MultiTypeInputType.FIXED],
@@ -324,7 +330,9 @@ export function NexusArtifact({
                             noResults: (
                               <NoTagResults
                                 tagError={groupIdError}
-                                defaultErrorText={getString('pipeline.artifactsSelection.errors.noGroupIds')}
+                                defaultErrorText={
+                                  fetchingGroupIds ? getString('loading') : getString('common.filters.noResultsFound')
+                                }
                               />
                             ),
                             itemRenderer: groupIdItemRenderer,
@@ -356,14 +364,24 @@ export function NexusArtifact({
                         useValue
                         label={getString('pipeline.artifactsSelection.artifactId')}
                         name="artifactId"
-                        placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
+                        placeholder={
+                          fetchingArtifactIds
+                            ? getString('common.loadingFieldOptions', {
+                                fieldName: getString('pipeline.artifactsSelection.artifactId')
+                              })
+                            : getString('pipeline.artifactsSelection.artifactIdPlaceholder')
+                        }
                         multiTypeInputProps={{
                           allowableTypes: [MultiTypeInputType.FIXED],
                           selectProps: {
                             noResults: (
                               <NoTagResults
                                 tagError={artifactIdError}
-                                defaultErrorText={getString('pipeline.artifactsSelection.errors.noArtifactIds')}
+                                defaultErrorText={
+                                  fetchingArtifactIds
+                                    ? getString('loading')
+                                    : getString('common.filters.noResultsFound')
+                                }
                               />
                             ),
                             itemRenderer: artifactIdItemRenderer,
