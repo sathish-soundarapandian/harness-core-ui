@@ -5,10 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React from 'react'
-import { Layout } from '@harness/uicore'
-import { defaultTo, get, toInteger } from 'lodash-es'
-import FFSubUtils from './FFSubutils'
-import CISubUtils from './CISubUtils'
+import { get, toInteger } from 'lodash-es'
+import FFSubutils from './FFSubutils'
+import CISubutils from './CISubutils'
 import type { PriceDTO, SubscriptionDetailDTO } from 'services/cd-ng/index'
 import type {
   Editions,
@@ -132,7 +131,7 @@ export function getCostCalculatorBodyByModule({
   switch (module) {
     case 'cf':
       return (
-        <FFSubUtils
+        <FFSubutils
           currentPlan={currentPlan}
           recommendation={recommendation}
           usageAndLimitInfo={usageAndLimitInfo}
@@ -141,11 +140,11 @@ export function getCostCalculatorBodyByModule({
           productPrices={productPrices}
           setSubscriptionDetails={setSubscriptionDetails}
           paymentFrequency={paymentFrequency}
-        ></FFSubUtils>
+        ></FFSubutils>
       )
     case 'ci': {
       return (
-        <CISubUtils
+        <CISubutils
           currentPlan={currentPlan}
           recommendation={recommendation}
           usageAndLimitInfo={usageAndLimitInfo}
@@ -154,7 +153,7 @@ export function getCostCalculatorBodyByModule({
           productPrices={productPrices}
           setSubscriptionDetails={setSubscriptionDetails}
           paymentFrequency={paymentFrequency}
-        ></CISubUtils>
+        ></CISubutils>
       )
     }
   }

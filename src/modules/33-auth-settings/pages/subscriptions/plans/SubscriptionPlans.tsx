@@ -82,7 +82,7 @@ const PlanTabs: React.FC<PlanTabsProps> = ({ module, plans }) => {
 }
 
 const SubscriptionPlans: React.FC<SubscriptionPlansProps> = ({ module }) => {
-  const [result, executeQuery] = useFetchPlansQuery()
+  const [result] = useFetchPlansQuery()
   const { data, fetching, error } = result
   const { getString } = useStrings()
   if (useGetCommunity()) {
