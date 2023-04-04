@@ -34,7 +34,7 @@ import { SubscriptionProvider, useSubscriptionContext, getSkewsMap } from './Sub
 import css from './useSubscriptionModal.module.scss'
 
 interface UseSubscribeModalReturns {
-  openSubscribeModal: ({ _plan, _module, _time, _licenseData }: OpenSubscribeModalProps) => void
+  openSubscribeModal: ({ _plan, _module, _time }: OpenSubscribeModalProps) => void
   closeSubscribeModal: () => void
 }
 type SetStateMethod = (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
@@ -73,8 +73,7 @@ interface LeftViewProps {
 interface KVPair {
   [key: string]: any
 }
-window.stripeApiKey =
-  'pk_test_51IykZ0Iqk5P9Eha3IBFZLLo5m9YkWOrIEsclvgUDs92WFW6UUd8IyjPj60HNHq796hEAM1wkdKa3Sa8RbhBsJ4ml00I3412IT3'
+
 const stripePromise = window.stripeApiKey ? loadStripe(window.stripeApiKey) : Promise.resolve(null)
 
 const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose, countries, states }) => {

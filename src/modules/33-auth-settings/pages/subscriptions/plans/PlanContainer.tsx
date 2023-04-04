@@ -197,12 +197,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       history.push(routes.toSubscriptions({ accountId, moduleCard: module, tab: SubscriptionTabNames.PLANS }))
     }
   })
-  // const { openSubscribeModalCI } = useSubscribeModalCI({
-  //   // refresh to fetch new license after subscribe
-  //   onClose: () => {
-  //     history.push(routes.toSubscriptions({ accountId, moduleCard: module, tab: SubscriptionTabNames.PLANS }))
-  //   }
-  // })
+
   const isSelfService = licenseInformation?.[moduleType]?.selfService === true
   const isSelfServiceEnabled = !isOnPrem() && isSelfService
 

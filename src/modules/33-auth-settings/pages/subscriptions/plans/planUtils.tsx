@@ -65,11 +65,11 @@ export function getBtnProps({
   const planEdition = plan?.title && (plan?.title?.toUpperCase() as Editions)
   let planActions = (planEdition && actions?.[planEdition]) || []
   // for March's launch, we hide manage subscription, upgrade, subscribe until the functions are fullfilled
-  // if (!isSelfServiceEnabled) {
-  //   planActions = planActions.filter(
-  //     action => action.action && !['MANAGE', 'SUBSCRIBE', 'UPGRADE'].includes(action.action)
-  //   )
-  // }
+  if (!isSelfServiceEnabled) {
+    planActions = planActions.filter(
+      action => action.action && !['MANAGE', 'SUBSCRIBE', 'UPGRADE'].includes(action.action)
+    )
+  }
 
   planActions.forEach(action => {
     let onClick,

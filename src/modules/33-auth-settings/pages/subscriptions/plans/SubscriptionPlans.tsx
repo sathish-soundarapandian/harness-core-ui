@@ -94,16 +94,7 @@ const SubscriptionPlans: React.FC<SubscriptionPlansProps> = ({ module }) => {
   }
 
   if (error) {
-    return (
-      <PageError
-        message={error.message || getString('somethingWentWrong')}
-        // onClick={() =>
-        //   executeQuery({
-        //     requestPolicy: 'cache-and-network'
-        //   })
-        // }
-      />
-    )
+    return <PageError message={error.message || getString('somethingWentWrong')} />
   }
 
   return (
