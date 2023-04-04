@@ -1,11 +1,11 @@
 import React from 'react'
 import CIDeveloperCard from './CostCalculator/CIDeveloperCard'
 import { Layout } from '@harness/uicore'
-import { defaultTo, get } from 'lodash-es'
+import { get } from 'lodash-es'
 
 import { TimeType, Editions, SubscriptionProps, ProductPricesProp } from '@common/constants/SubscriptionTypes'
 import { getDollarAmount } from '@auth-settings/utils'
-import { getRecommendedNumbers, getProductPrices, getPlanType, getSampleData, PLAN_TYPES } from './subscriptionUtils'
+import { getProductPrices, getPlanType, getSampleData, PLAN_TYPES } from './subscriptionUtils'
 import type { UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
 
 interface CISubutilsProps {

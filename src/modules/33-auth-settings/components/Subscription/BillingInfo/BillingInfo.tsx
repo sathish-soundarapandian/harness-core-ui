@@ -22,7 +22,6 @@ import { Header } from '../Header'
 import type { Module } from 'framework/types/ModuleName'
 import { PLAN_TYPES } from '../subscriptionUtils'
 import css from './BillingInfo.module.scss'
-import { handleCommandFlagsSubmitData } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ManifestUtils'
 
 interface BillingInfoProp {
   subscriptionProps: SubscriptionProps

@@ -79,10 +79,10 @@ const DeveloperSubscriptionInfo: React.FC<DeveloperSubscriptionInfoProps> = ({
   const recommendedNumber = defaultTo(recommended, Math.max(Math.ceil(usage * 1.2), currentSubscribed))
   return (
     <Layout.Horizontal flex={{ justifyContent: 'space-between' }} className={css.subscriptionInfo}>
-      <Layout.Horizontal className={css.currentSubscribed}>
+      <Layout.Horizontal>
         <Item title={getString('authSettings.costCalculator.currentSubscribed')} value={currentPlanDescr} />
       </Layout.Horizontal>
-      <Layout.Horizontal className={css.using}>
+      <Layout.Horizontal>
         <Item
           title={getString('authSettings.costCalculator.using')}
           value={<Text font={{ weight: 'bold' }}>{usage}</Text>}
