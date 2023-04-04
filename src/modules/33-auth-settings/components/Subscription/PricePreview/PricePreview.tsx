@@ -132,7 +132,7 @@ const PricePreview: React.FC<PricePreviewProps> = ({
     })?.unitAmount
   )
   const colorBorder = getColorByModule(module)
-  const premiumSupportUnitPrice = premiumSupportUnitPriceForMau + premiumSupportUnitPriceForDevs
+  const premiumSupportUnitPrice = premiumSupportUnitPriceForMau + premiumSupportUnitPriceForDevs * products[0].quantity
   const devAmount = products[0].quantity * products[0].unitPrice
   let totalAmount = devAmount
   if (paymentFreq === TimeType.YEARLY) {
