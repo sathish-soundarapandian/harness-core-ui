@@ -159,7 +159,7 @@ const SubscriptionsPage: React.FC = () => {
     )
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [licenseData, latestModuleLicense])
+  }, [licenseData])
 
   if (accountError || licenseError) {
     const message =
