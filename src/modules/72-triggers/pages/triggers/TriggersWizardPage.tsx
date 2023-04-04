@@ -400,10 +400,14 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   useDeepCompareEffect(() => {
     if (shouldRenderWizard && template?.data?.inputSetTemplateYaml !== undefined) {
       if (onEditInitialValues?.pipeline && !isMergedPipelineReady) {
-        let newOnEditPipeline = merge(
-          parse(template?.data?.inputSetTemplateYaml)?.pipeline,
-          onEditInitialValues.pipeline || {}
-        )
+        const parsedPipeline = parse(template?.data?.inputSetTemplateYaml)?.pipeline
+        const filteredStages = onEditInitialValues?.stagesToExecute
+          ? parsedPipeline?.stages?.filter(
+              (stage: any) => !onEditInitialValues.stagesToExecute?.includes(stage?.stage?.identifier)
+            )
+          : parsedPipeline?.stages
+        parsedPipeline['stages'] = filteredStages
+        let newOnEditPipeline = merge(parsedPipeline, onEditInitialValues.pipeline || {})
 
         /*this check is needed as when trigger is already present with 1 stage and then tries to add parallel stage,
       we need to have correct yaml with both stages as a part of parallel*/

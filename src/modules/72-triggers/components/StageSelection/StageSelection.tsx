@@ -92,16 +92,28 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
           )
           const stages = hasAllStagesChecked ? [] : selectedStages.map((stage: SelectOption) => stage.value)
           formikProps.setFieldValue('stagesToExecute', hasAllStagesChecked ? [] : stages)
+
+          /*
+            1. merge trigger api ->  pass stageIdentifier (s1/s2)
+            op: triger 
+          */
           if (formikProps.values.pipeline) {
-            const { identifier } = formikProps.values.pipeline
+            // const { identifier } = formikProps.values.pipeline
+            // const pipeObj = formikProps.values.pipeline
+
+            const oldPipeline = formikProps.values.pipeline
+
             const filteredStages = allStagesSelected
               ? formikProps.values.resolvedPipeline.stages
               : formikProps.values.resolvedPipeline.stages.filter((stg: any) => stages.includes(stg.stage.identifier))
-            const modifiedPipeline = {
-              identifier,
-              stages: [...filteredStages]
-            }
-            formikProps.setFieldValue('pipeline', clearRuntimeInput(modifiedPipeline))
+            oldPipeline['stages'] = filteredStages
+
+            formikProps.setFieldValue('pipeline', clearRuntimeInput(oldPipeline))
+            // const modifiedPipeline = {
+            //   identifier,
+            //   stages: [...filteredStages]
+            // }
+            // formikProps.setFieldValue('pipeline', clearRuntimeInput(modifiedPipeline))
           }
         }}
         value={allStagesSelected ? [getAllStageItem(getString)] : selectedStages}
