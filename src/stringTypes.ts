@@ -703,6 +703,7 @@ export interface StringsMap {
   'common.pagerDuty': string
   'common.paste': string
   'common.path': string
+  'common.payNow': string
   'common.payload': string
   'common.pendingInvitation': string
   'common.per': string
@@ -11269,10 +11270,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   pathStyle: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  payNow: string
   /**
    * @deprecated migrate this string to module level file
    */
