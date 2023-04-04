@@ -13,8 +13,7 @@ import type { Module, ModuleName } from 'framework/types/ModuleName'
 import {
   RetrieveProductPricesQueryParams,
   useRetrieveProductPrices,
-  useRetrieveRecommendation,
-  LicensesWithSummaryDTO
+  useRetrieveRecommendation
 } from 'services/cd-ng/index'
 import {
   Editions,
