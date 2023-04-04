@@ -39,7 +39,6 @@ import { getModuleToDefaultURLMap } from 'framework/LicenseStore/licenseStoreUti
 import { getBtnProps } from './planUtils'
 import type { PlanData, PlanProp } from './planUtils'
 import Plan from './Plan'
-import { useSubscribeModalCI } from '@auth-settings/modals/Subscription/useSubscriptionModalCI'
 
 type plansType = 'ciSaasPlans' | 'ffPlans' | 'cdPlans' | 'ccPlans'
 interface PlanProps {
