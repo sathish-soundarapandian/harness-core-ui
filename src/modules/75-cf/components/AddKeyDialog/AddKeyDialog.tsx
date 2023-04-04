@@ -268,7 +268,7 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
       intent="primary"
       permission={{
         resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: environment.identifier },
-        permission: PermissionIdentifier.EDIT_ENVIRONMENT
+        permission: PermissionIdentifier.CREATE_FF_SDK_KEY
       }}
       {...buttonProps}
     />

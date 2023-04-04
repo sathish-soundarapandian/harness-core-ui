@@ -152,7 +152,7 @@ const DeleteCell = withApiKey(({ apiKey }) => {
         onClick={deleteSDKKey}
         permission={{
           resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: environmentIdentifier },
-          permission: PermissionIdentifier.EDIT_ENVIRONMENT
+          permission: PermissionIdentifier.DELETE_FF_SDK_KEY
         }}
       />
     </div>

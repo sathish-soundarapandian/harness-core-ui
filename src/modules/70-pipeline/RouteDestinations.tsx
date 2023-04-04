@@ -129,7 +129,9 @@ RbacFactory.registerResourceTypeHandler(ResourceType.ENVIRONMENT, {
     // these are required for the FF module to restrict flag toggling and editing based on permissions
     // against specific environments
     [PermissionIdentifier.TOGGLE_FF_FEATUREFLAG]: <String stringID="rbac.permissionLabels.toggleFlag" />,
-    [PermissionIdentifier.EDIT_FF_FEATUREFLAG]: <String stringID="rbac.permissionLabels.edit" />
+    [PermissionIdentifier.EDIT_FF_FEATUREFLAG]: <String stringID="rbac.permissionLabels.edit" />,
+    [PermissionIdentifier.CREATE_FF_SDK_KEY]: <String stringID="rbac.permissionLabels.createFFSDKKey" />,
+    [PermissionIdentifier.DELETE_FF_SDK_KEY]: <String stringID="rbac.permissionLabels.deleteFFSDKKey" />
   },
   resourceModalSortingEnabled: true,
   // eslint-disable-next-line react/display-name

@@ -58,6 +58,8 @@ permissionLabels:
   copy: '{{$.common.copy}}'
   push: Push
   toggleFlag: Toggle Feature Flag
+  deleteFFSDKKey: Delete FF SDK Key
+  createFFSDKKey: Create FF SDK Key
 categoryLabels:
   sharedResources: Shared Resources
 roleBindings: Role Bindings

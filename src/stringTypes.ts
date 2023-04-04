@@ -1365,7 +1365,9 @@ export interface StringsMap {
   'rbac.permissionLabels.copy': string
   'rbac.permissionLabels.create': string
   'rbac.permissionLabels.createEdit': string
+  'rbac.permissionLabels.createFFSDKKey': string
   'rbac.permissionLabels.delete': string
+  'rbac.permissionLabels.deleteFFSDKKey': string
   'rbac.permissionLabels.edit': string
   'rbac.permissionLabels.evaluate': string
   'rbac.permissionLabels.execute': string
