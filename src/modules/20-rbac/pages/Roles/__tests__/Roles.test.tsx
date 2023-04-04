@@ -14,8 +14,7 @@ import {
   queryByText,
   render,
   RenderResult,
-  waitFor,
-  screen
+  waitFor
 } from '@testing-library/react'
 
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
