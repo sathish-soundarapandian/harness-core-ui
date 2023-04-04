@@ -11,6 +11,7 @@ import { getFqnPath, getYamlData } from '@cd/components/PipelineSteps/K8sService
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { K8SDirectServiceStep } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecInterface'
+import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 
 export interface Params {
   connectorRef?: string
@@ -79,6 +80,8 @@ export function useGetBuildDetailsForAcrArtifact(params: Params) {
     lazy: true
   })
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const {
     data: acrV2TagsData,
     loading: fetchingV2Tags,
@@ -113,7 +116,9 @@ export function useGetBuildDetailsForAcrArtifact(params: Params) {
             : artifactPath,
           ''
         ),
-        'tag'
+        'tag',
+        serviceId as string,
+        isMultiService
       )
     },
     lazy: true

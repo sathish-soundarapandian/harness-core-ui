@@ -257,7 +257,7 @@ export const StatusCell: CellType = ({ row }) => {
         disabled={!isAbortedByFreeze || drawerOpen}
         position={Position.TOP}
       >
-        <ExecutionStatusLabel status={row.original.status as ExecutionStatus} />
+        <ExecutionStatusLabel status={row.original.status as ExecutionStatus} disableTooltip={isAbortedByFreeze} />
       </Popover>
       {drawerOpen && (
         <FrozenExecutionDrawer

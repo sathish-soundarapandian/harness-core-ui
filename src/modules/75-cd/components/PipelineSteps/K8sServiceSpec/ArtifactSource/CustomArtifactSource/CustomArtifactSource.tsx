@@ -32,6 +32,7 @@ import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSt
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   getFqnPath,
   getValidInitialValuePath,
@@ -123,6 +124,8 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const {
     data: buildDetails,
     refetch: refetchBuildDetails,
@@ -160,7 +163,9 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'version'
+        'version',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })

@@ -49,6 +49,10 @@ export const transformValuesFieldsConfig = (stepType: StepType) => [
   ...(stepType === StepType.CdSscaOrchestration
     ? [
         {
+          name: 'spec.infrastructure.type',
+          type: TransformValuesTypes.Text
+        },
+        {
           name: 'spec.infrastructure.spec.connectorRef',
           type: TransformValuesTypes.ConnectorRef
         },
@@ -124,6 +128,10 @@ export const editViewValidateFieldsConfig = (stepType: StepType) => [
   ...(stepType === StepType.CdSscaOrchestration
     ? [
         {
+          name: 'spec.infrastructure.type',
+          type: ValidationFieldTypes.Text
+        },
+        {
           name: 'spec.infrastructure.spec.connectorRef',
           type: ValidationFieldTypes.Text,
           label: 'connector',
@@ -197,6 +205,10 @@ export const getInputSetViewValidateFieldsConfig =
       },
       ...(stepType === StepType.CdSscaOrchestration
         ? [
+            {
+              name: 'spec.infrastructure.type',
+              type: ValidationFieldTypes.Text
+            },
             {
               name: 'spec.infrastructure.spec.connectorRef',
               type: ValidationFieldTypes.Text,

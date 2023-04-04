@@ -34,10 +34,7 @@ export default function ETSideNav(): React.ReactElement {
 
   return (
     <Layout.Vertical spacing="small">
-      <ProjectSelector
-        moduleFilter={ModuleName.CV} // CET-1024: support ModuleName.ET in src/services/cd-ng/index.tsx Project interface
-        onSelect={projectSelectHandler}
-      />
+      <ProjectSelector moduleFilter={ModuleName.CET} onSelect={projectSelectHandler} />
       {projectIdentifier && orgIdentifier && (
         <React.Fragment>
           <SidebarLink

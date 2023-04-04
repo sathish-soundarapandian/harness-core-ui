@@ -25,7 +25,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
-import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { isArtifactInMultiService, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { isFixedNonEmptyValue } from '@pipeline/utils/stageHelpers'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import {
@@ -84,6 +84,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     project: ''
   })
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   // Project
   const {
     data: projectsData,
@@ -112,7 +114,9 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
             : artifactPath,
           ''
         ),
-        'project'
+        'project',
+        serviceIdentifier as string,
+        isMultiService
       )
     },
     lazy: true
@@ -175,7 +179,9 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
           : artifactPath,
         ''
       ),
-      'bucket'
+      'bucket',
+      serviceIdentifier as string,
+      isMultiService
     )
   }
 

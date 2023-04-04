@@ -58,7 +58,7 @@ export interface DashboardFolderModel {
 
 export interface DashboardModel {
   created_at: string
-  data_source: ('CI' | 'STO' | 'CE' | 'CD' | 'CF')[]
+  data_source: ('CD' | 'CE' | 'CF' | 'CI' | 'SRM' | 'STO')[]
   description: string
   favorite_count: number
   folder: DashboardFolderModel
@@ -351,8 +351,8 @@ export const generatePublicDashboardSignedUrlPromise = (
   )
 
 export interface GetFolderQueryParams {
-  page?: number
   accountId: string
+  page?: number
   pageSize?: number
 }
 
@@ -557,8 +557,8 @@ export const getOotbFolderIdPromise = (
   )
 
 export interface GetFolderDetailQueryParams {
-  folderId: string
   accountId: string
+  folderId: string
 }
 
 export type GetFolderDetailProps = Omit<
@@ -606,8 +606,8 @@ export const getFolderDetailPromise = (
   )
 
 export interface GetFoldersWithHiddenQueryParams {
-  page?: number
   accountId: string
+  page?: number
   pageSize?: number
 }
 
@@ -704,8 +704,8 @@ export const getModelTagsPromise = (
   )
 
 export interface DeleteDashboardQueryParams {
-  folderId: string
   accountId: string
+  folderId: string
 }
 
 export type DeleteDashboardProps = Omit<
@@ -762,12 +762,12 @@ export const deleteDashboardPromise = (
   )
 
 export interface SearchFoldersQueryParams {
+  accountId: string
   page: number
   pageSize: number
   searchTerm?: string
-  accountId: string
-  permission?: 'core_dashboards_view' | 'core_dashboards_edit'
   sortBy?: string
+  permission?: 'core_dashboards_view' | 'core_dashboards_edit'
 }
 
 export type SearchFoldersProps = Omit<
@@ -815,13 +815,13 @@ export const searchFoldersPromise = (
   )
 
 export interface SearchQueryParams {
-  page: number
-  folderId: string
-  customTag: string
-  tags: string
-  pageSize: number
-  searchTerm?: string
   accountId: string
+  folderId: string
+  page: number
+  pageSize: number
+  tags: string
+  searchTerm?: string
+  customTag: string
   sortBy?: string
 }
 
@@ -864,9 +864,9 @@ export const searchPromise = (
   )
 
 export interface CreateSignedUrlQueryParams {
-  src: string
   accountId: string
   dashboardId: string
+  src: string
   timezone?: string
 }
 

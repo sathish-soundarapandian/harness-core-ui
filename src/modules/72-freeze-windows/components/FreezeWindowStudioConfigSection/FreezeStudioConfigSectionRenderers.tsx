@@ -121,12 +121,14 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
         items={allOrgs}
         className={css.tagInputStyle}
         label={getString('orgLabel')}
+        usePortal
         tagInputProps={{ rightElement: renderSearchLoading(loadingOrgs) } as unknown as ITagInputProps}
         multiSelectProps={{
           onQueryChange(query: string) {
             query ? fetchOrgByQuery(query) : fetchOrgResetQuery()
           },
-          resetOnSelect: false
+          resetOnSelect: false,
+          resetOnQuery: false
         }}
         onChange={
           /* istanbul ignore next */ (selected?: SelectOption[]) => {
@@ -181,12 +183,14 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
           name={excludeOrgName}
           items={organizations}
           className={css.tagInputStyle}
+          usePortal
           tagInputProps={{ rightElement: renderSearchLoading(loadingOrgs) } as unknown as ITagInputProps}
           multiSelectProps={{
             onQueryChange(query: string) {
               query ? fetchOrgByQuery(query) : fetchOrgResetQuery()
             },
-            resetOnSelect: false
+            resetOnSelect: false,
+            resetOnQuery: false
           }}
           style={{ marginLeft: '24px' }}
         />
@@ -260,13 +264,15 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
         items={allProj}
         label={getString('projectsText')}
         className={css.tagInputStyle}
+        usePortal
         tagInputProps={{ rightElement: renderSearchLoading(loadingProjects) } as unknown as ITagInputProps}
         multiSelectProps={{
           onQueryChange(query: string) {
             const orgId = isAccLevel ? orgValue[0].value : ''
             query ? fetchProjectsByQuery(query, orgId) : fetchProjectsResetQuery(orgId)
           },
-          resetOnSelect: false
+          resetOnSelect: false,
+          resetOnQuery: false
         }}
         // enabled only if org value is single select, and not All Organizations
         disabled={!isSingleOrgValue}
@@ -298,13 +304,15 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
       {isCheckBoxEnabled && excludeProjValue ? (
         <FormInput.MultiSelect
           className={css.tagInputStyle}
+          usePortal
           tagInputProps={{ rightElement: renderSearchLoading(loadingProjects) } as unknown as ITagInputProps}
           multiSelectProps={{
             onQueryChange(query: string) {
               const orgId = isAccLevel ? orgValue[0].value : ''
               query ? fetchProjectsByQuery(query, orgId) : fetchProjectsResetQuery(orgId)
             },
-            resetOnSelect: false
+            resetOnSelect: false,
+            resetOnQuery: false
           }}
           disabled={isOrgValueAll}
           name={excludeProjName}

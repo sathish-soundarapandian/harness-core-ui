@@ -295,7 +295,7 @@ describe('Freeze Window Studio Config Section', () => {
     expect(excludeProject).toHaveValue('v2')
 
     userEvent.click(document.querySelector('input[name="entity[0].EnvType"]') as HTMLElement)
-    const envTypeDropdownOptions = document.querySelectorAll('.bp3-popover-content')?.[1] as HTMLElement
+    const envTypeDropdownOptions = document.querySelector('.bp3-popover-content') as HTMLElement
     const prodType = await within(envTypeDropdownOptions).findByText('production')
     userEvent.click(prodType)
 

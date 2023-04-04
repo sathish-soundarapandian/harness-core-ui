@@ -65,6 +65,12 @@ const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, set
         'common.purpose.sto.continuous',
         modelTags.includes(DashboardTags.STO)
       )}
+      {renderTagsFilter(
+        DashboardTags.SRM,
+        moduleTagCss.srmTag,
+        'common.purpose.cv.serviceReliability',
+        modelTags.includes(DashboardTags.SRM)
+      )}
     </>
   )
 }

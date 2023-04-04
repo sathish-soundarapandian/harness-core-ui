@@ -31,6 +31,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -125,6 +126,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }
   })
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const {
     data: buildsV2Detail,
     refetch: refetchBuildV2Details,
@@ -157,7 +160,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'version'
+        'version',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })

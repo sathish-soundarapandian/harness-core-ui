@@ -82,7 +82,6 @@ export interface TemplateDetailsProps {
   isStandAlone?: boolean
   disableVersionChange?: boolean
   loadFromFallbackBranch?: boolean
-  onClose?: () => void
 }
 
 export enum TemplateTabs {
@@ -103,8 +102,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     storeMetadata,
     isStandAlone = false,
     disableVersionChange = false,
-    loadFromFallbackBranch = false,
-    onClose
+    loadFromFallbackBranch = false
   } = props
   const { getString } = useStrings()
   const history = useHistory()
@@ -606,7 +604,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                                 <TemplateReferenceByTabPanel
                                   selectedTemplate={selectedTemplate}
                                   templates={templates}
-                                  onClose={onClose}
                                 />
                               }
                             />

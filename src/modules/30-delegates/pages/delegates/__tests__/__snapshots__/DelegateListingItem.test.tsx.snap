@@ -29,7 +29,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 5%;"
+          style="width: 2%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -41,7 +41,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 27%;"
+          style="width: 24%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -65,7 +65,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 11%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -77,7 +77,19 @@ exports[`Delegates Listing With Groups render data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 18%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            delegates.instanceStatus
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 14%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -89,7 +101,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 12%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -101,7 +113,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 5%;"
+          style="width: 1%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -159,7 +171,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 5%;"
+              style="width: 2%;"
             >
               <div
                 class="delegateItemIcon"
@@ -200,7 +212,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 27%;"
+              style="width: 24%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main"
@@ -267,7 +279,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 11%;"
             >
               <p
                 class="StyledProps--font StyledProps--main"
@@ -276,14 +288,25 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 18%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 14%;"
             >
               dummy date
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 12%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
@@ -318,7 +341,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 5%;"
+              style="width: 1%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main itemActionContainer"
@@ -415,7 +438,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 5%;"
+              style="width: 2%;"
             >
               <div
                 class="delegateItemIcon"
@@ -456,7 +479,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 27%;"
+              style="width: 24%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main"
@@ -502,7 +525,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 11%;"
             >
               <p
                 class="StyledProps--font StyledProps--main"
@@ -511,14 +534,25 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 18%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 14%;"
             >
               dummy date
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 12%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
@@ -558,7 +592,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 5%;"
+              style="width: 1%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main itemActionContainer"
@@ -655,7 +689,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 5%;"
+              style="width: 2%;"
             >
               <div
                 class="delegateItemIcon"
@@ -696,7 +730,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 27%;"
+              style="width: 24%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main"
@@ -751,7 +785,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 11%;"
             >
               <p
                 class="StyledProps--font StyledProps--main"
@@ -762,14 +796,25 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 18%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                latest
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 14%;"
             >
               dummy date
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 12%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
@@ -804,7 +849,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 5%;"
+              style="width: 1%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main itemActionContainer"
@@ -901,7 +946,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 5%;"
+              style="width: 2%;"
             >
               <div
                 class="delegateItemIcon"
@@ -942,7 +987,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 27%;"
+              style="width: 24%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main"
@@ -997,7 +1042,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 11%;"
             >
               <p
                 class="StyledProps--font StyledProps--main"
@@ -1008,14 +1053,25 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 18%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                Upgrade Required
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 14%;"
             >
               dummy date
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 12%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
@@ -1050,7 +1106,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 5%;"
+              style="width: 1%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main itemActionContainer"

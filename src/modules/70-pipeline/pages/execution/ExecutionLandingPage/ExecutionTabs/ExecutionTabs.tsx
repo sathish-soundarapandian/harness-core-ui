@@ -64,6 +64,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
   const isChaosEnabled = useFeatureFlag(FeatureFlag.CHAOS_ENABLED)
   const isIACMEnabled = useFeatureFlag(FeatureFlag.IACM_ENABLED)
+  const isSSCAEnabled = useFeatureFlag(FeatureFlag.SSCA_ENABLED)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
 
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
@@ -205,7 +206,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (isCI || isCIInPipeline) {
+  if (isCI || isCIInPipeline || (isSSCAEnabled && (isCD || isCDInPipeline))) {
     tabList.push({
       id: TAB_ID_MAP.ARTIFACTS,
       title: (

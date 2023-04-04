@@ -311,9 +311,12 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                             items={stagesOptions || []}
                             name={event.value}
                             label={''}
+                            usePortal
                             multiSelectProps={{
                               placeholder: getString('rbac.notifications.selectStagesPlaceholder'),
-                              allowCreatingNewItems: false
+                              allowCreatingNewItems: false,
+                              resetOnSelect: false,
+                              resetOnQuery: false
                             }}
                           />
                         )}

@@ -24,7 +24,11 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
-import { checkIfQueryParamsisNotEmpty, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import {
+  checkIfQueryParamsisNotEmpty,
+  resetFieldValue,
+  isArtifactInMultiService
+} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type {
@@ -182,6 +186,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.artifactPath`, '')
   )
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const {
     data,
     loading: nexusBuildDetailsLoading,
@@ -222,7 +228,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'tag'
+        'tag',
+        serviceIdentifier as string,
+        isMultiService
       )
     },
     lazy: true
@@ -257,7 +265,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'repository'
+        'repository',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })

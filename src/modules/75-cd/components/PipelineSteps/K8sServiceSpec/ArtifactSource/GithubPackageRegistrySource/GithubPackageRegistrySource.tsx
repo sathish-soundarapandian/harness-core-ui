@@ -31,6 +31,7 @@ import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getFqnPath,
@@ -114,6 +115,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }
   })
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const {
     data: packageV2Details,
     refetch: refetchPackageV2Details,
@@ -144,7 +147,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'packageName'
+        'packageName',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })
@@ -212,7 +217,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'version'
+        'version',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })

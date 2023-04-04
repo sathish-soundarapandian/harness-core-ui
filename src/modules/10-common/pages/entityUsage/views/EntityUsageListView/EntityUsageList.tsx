@@ -6,7 +6,6 @@
  */
 
 import React, { useMemo } from 'react'
-import { useHistory } from 'react-router-dom'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { Text, Layout, Icon, TableV2 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -25,6 +24,7 @@ import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { getScopeLabelfromScope } from '@common/components/EntityReference/EntityReference'
 import type { StringKeys } from 'framework/strings'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { getScopeFromDTO } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import css from './EntityUsageList.module.scss'
@@ -33,14 +33,6 @@ interface EntityUsageListProps {
   entityData: ResponsePageEntitySetupUsageDTO | null
   gotoPage: (pageNumber: number) => void
   withNoSpaceAroundTable?: boolean
-  showSpinner?: (loading: boolean) => void
-  onClose?: () => void
-}
-
-type CustomColumn = Column<EntitySetupUsageDTOColumnData> & {
-  history?: any
-  showSpinner?: (loading: boolean) => void
-  onClose?: () => void
 }
 
 interface ReferredByEntity extends EntityDetail {
@@ -95,11 +87,8 @@ const RenderColumnEntity: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = (
             onClick={async e => {
               e.preventDefault()
               e.stopPropagation()
-              ;(column as CustomColumn)?.showSpinner?.(true)
               const targetUrl = await entityData.getEntityURL()
-              ;(column as CustomColumn)?.showSpinner?.(false)
-              ;(column as CustomColumn)?.onClose?.()
-              ;(column as CustomColumn)?.history?.push(targetUrl)
+              window.open(`${windowLocationUrlPartBeforeHash()}#${targetUrl}`, '_blank')
             }}
           >
             {getReferredByEntityName(data.referredByEntity)}
@@ -170,11 +159,8 @@ export const RenderScope: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = (
             onClick={async e => {
               e.preventDefault()
               e.stopPropagation()
-              ;(column as CustomColumn)?.showSpinner?.(true)
               const targetUrl = await entityData.getEntityURL()
-              ;(column as CustomColumn)?.showSpinner?.(false)
-              ;(column as CustomColumn)?.onClose?.()
-              ;(column as CustomColumn)?.history?.push(targetUrl)
+              window.open(`${windowLocationUrlPartBeforeHash()}#${targetUrl}`, '_blank')
             }}
           >
             {scopeId || scopeName}
@@ -207,30 +193,20 @@ export const RenderGitDetails: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row
   ) : null
 }
 
-const EntityUsageList: React.FC<EntityUsageListProps> = ({
-  entityData,
-  gotoPage,
-  withNoSpaceAroundTable = false,
-  showSpinner,
-  onClose
-}) => {
+const EntityUsageList: React.FC<EntityUsageListProps> = ({ entityData, gotoPage, withNoSpaceAroundTable = false }) => {
   const data: EntitySetupUsageDTO[] = entityData?.data?.content || []
   const { getString } = useStrings()
-  const history = useHistory()
 
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const columns: CustomColumn[] = useMemo(
+  const columns: Column<EntitySetupUsageDTOColumnData>[] = useMemo(
     () => [
       {
         Header: getString('entity'),
         accessor: 'referredByEntity',
         width: isGitSyncEnabled ? '25%' : '30%',
         Cell: RenderColumnEntity,
-        getString: getString,
-        history: history,
-        showSpinner: showSpinner,
-        onClose: onClose
+        getString: getString
       },
       {
         Header: getString('common.gitSync.repoDetails').toUpperCase(),
@@ -255,10 +231,7 @@ const EntityUsageList: React.FC<EntityUsageListProps> = ({
         width: isGitSyncEnabled ? '10%' : '20%',
         Cell: RenderScope,
         getString: getString,
-        enableURLLinkToScope: true,
-        history: history,
-        showSpinner: showSpinner,
-        onClose: onClose
+        enableURLLinkToScope: true
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps

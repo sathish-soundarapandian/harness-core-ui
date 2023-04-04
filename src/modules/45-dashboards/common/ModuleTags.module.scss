@@ -47,6 +47,11 @@
   background: var(--ff-background);
   border: 1px solid var(--ff-border);
 }
+.srmTag {
+  color: var(--srm-foreground);
+  background: var(--srm-background);
+  border: 1px solid var(--srm-border);
+}
 .stoTag {
   color: var(--sto-foreground);
   background: var(--sto-background);
@@ -64,51 +69,6 @@
 }
 
 .predefinedTags {
-  // Continuous Delivery
-  --cd-foreground: #30841f;
-  --cd-border: #5fb34e;
-  --cd-background: #f6fff2;
-
-  // Continuous Integration
-  --ci-foreground: #0672b6;
-  --ci-border: #2bb1f2;
-  --ci-background: #e2f5ff;
-
-  // Cloud Cost Management
-  --ccm-foreground: #24807f;
-  --ccm-border: #01c9cc;
-  --ccm-background: #ecffff;
-
-  // Feature Flag Management
-  --ff-foreground: #c05809;
-  --ff-border: #ee8625;
-  --ff-background: #fcf4e3;
-
-  // Service Reliability Management
-  --srm-foreground: #6938c0;
-  --srm-border: #ae82fc;
-  --srm-background: #f6f1ff;
-
-  // Security Test Orchestration
-  --sto-foreground: #1947ec;
-  --sto-border: #4791ff;
-  --sto-background: #ebefff;
-
-  // Chaos Engineering
-  --ce-foreground: #9a0041;
-  --ce-border: #ff006a;
-  --ce-background: #fff1f7;
-
-  // Software Supply Chain Assurance
-  --ssca-foreground: #1947ec;
-  --ssca-border: #4791ff;
-  --ssca-background: #ebefff;
-
-  // Internal Developer Portal
-  --idp-foreground: #36baa2;
-  --idp-border: #36baa2;
-  --idp-background: #ebefff;
-
   margin-top: var(--spacing-4);
   section,
   button {

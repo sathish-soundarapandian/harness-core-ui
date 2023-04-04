@@ -37,6 +37,7 @@ const runtimeValues = {
       privateKey: RUNTIME_INPUT_VALUE
     },
     infrastructure: {
+      type: 'KubernetesDirect',
       spec: {
         connectorRef: RUNTIME_INPUT_VALUE,
         namespace: RUNTIME_INPUT_VALUE,

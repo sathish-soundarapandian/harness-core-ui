@@ -78,19 +78,17 @@ export interface ExecutionStatusLabelProps {
   className?: string
   label?: string
   withoutIcon?: boolean
+  disableTooltip?: boolean
 }
-
-const StatusesWithCustomTooltip: ExecutionStatus[] = ['AbortedByFreeze']
 
 export default function ExecutionStatusLabel({
   status,
   className,
   label,
+  disableTooltip = false,
   withoutIcon = false
 }: ExecutionStatusLabelProps): React.ReactElement | null {
   const { getString } = useStrings()
-  const disableTooltip = React.useMemo(() => status && StatusesWithCustomTooltip.includes(status), [status])
-
   if (!status) return null
 
   return (

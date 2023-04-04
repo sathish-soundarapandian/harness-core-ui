@@ -52,3 +52,17 @@ export const useLogout = (): UseLogoutReturn => {
 
   return { forceLogout }
 }
+// source https://medium.com/@ddevinda/decode-jwt-token-6c75fa9aba6f
+export const parseJwtToken = (token: string) => {
+  let returnPayload = undefined
+  const base64UrlArray = token.split('.')
+  if (base64UrlArray.length > 2) {
+    const base64Url = base64UrlArray[1]
+    try {
+      returnPayload = JSON.parse(window.atob(base64Url))
+    } catch (_err) {
+      returnPayload = undefined
+    }
+  }
+  return returnPayload
+}

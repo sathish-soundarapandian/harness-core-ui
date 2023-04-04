@@ -66,7 +66,9 @@ describe('Entity Usage', () => {
   })
 
   test('render for connector data with gitSync', async () => {
-    const { container, findByTestId } = render(
+    const windowOpenMock = jest.fn()
+    window.open = windowOpenMock
+    const { container } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ ...projectPathProps, ...connectorPathProps })}
         pathParams={{
@@ -94,9 +96,11 @@ describe('Entity Usage', () => {
       fireEvent.click(queryByText(container, 'Refer test')!)
     })
     expect(getPipelineSummryMock).toBeCalledTimes(1)
-    const location = await findByTestId('location')
-    // Redirecting to list page with no Pipeline summary data
-    expect(location.innerHTML).toEqual('/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/AaTestOrg/projects/dev7/pipelines')
+    // Redirecting to list page with no Pipeline summary data in a new tab
+    expect(windowOpenMock).toHaveBeenCalledWith(
+      expect.stringContaining('/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/AaTestOrg/projects/dev7/pipelines'),
+      '_blank'
+    )
   })
 
   test('render for connector data with details', async () => {

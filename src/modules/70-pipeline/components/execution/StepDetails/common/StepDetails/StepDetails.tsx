@@ -33,6 +33,7 @@ export interface StepLabels {
   label: string
   value: React.ReactNode
 }
+
 export interface StepDetailsProps {
   step: ExecutionNode
   executionMetadata: ExecutionGraph['executionMetadata']
@@ -69,6 +70,8 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
   const delegateListContainsTask = (delegateList: DelegateInfo[] | undefined, taskId: string): boolean => {
     return !!delegateList?.find((item: DelegateInfo) => item.taskId === taskId)
   }
+
+  const delegateLogsAvailable = step.startTs !== undefined && step.delegateInfoList && step.delegateInfoList.length > 0
 
   return (
     <table className={css.detailsTable}>
@@ -219,17 +222,16 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                       </div>
                     )
                   )}
-                {DELEGATE_TASK_LOGS_ENABLED &&
-                !isOnPrem() &&
-                step.startTs &&
-                step.delegateInfoList &&
-                step.delegateInfoList.length > 0 ? (
+                {DELEGATE_TASK_LOGS_ENABLED && !isOnPrem() ? (
                   <>
                     <Button
                       variation={ButtonVariation.SECONDARY}
                       size={ButtonSize.SMALL}
                       onClick={openDelegateTaskLogsModal}
                       width={210}
+                      disabled={!delegateLogsAvailable}
+                      tooltip={getString('common.noDelegateLogs')}
+                      tooltipProps={{ disabled: delegateLogsAvailable }}
                     >
                       {getString('common.viewText')} {getString('common.logs.delegateTaskLogs')}
                     </Button>

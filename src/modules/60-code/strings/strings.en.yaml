@@ -3,3 +3,4 @@ learnMore: Learn more about Harness Code
 branches: Branches
 pullRequests: Pull Requests
 webhooks: Webhooks
+missingPermission: You are missing the permission for this action.

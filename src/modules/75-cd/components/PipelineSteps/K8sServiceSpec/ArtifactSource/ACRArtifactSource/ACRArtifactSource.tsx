@@ -36,6 +36,7 @@ import { getScopeAppendedToIdentifier } from '@common/utils/StringUtils'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -108,8 +109,19 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       : artifactPath,
     ''
   )
+
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const getFqnPathForEntity = (entityName: string): string =>
-    getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, resolvedArtifactPath, entityName)
+    getFqnPath(
+      path as string,
+      !!isPropagatedStage,
+      stageIdentifier,
+      resolvedArtifactPath,
+      entityName,
+      serviceIdentifier as string,
+      isMultiService
+    )
   const subscriptionsFqnPath = getFqnPathForEntity('subscriptionId')
   const registryFqnPath = getFqnPathForEntity('registry')
   const repositoryFqnPath = getFqnPathForEntity('repository')

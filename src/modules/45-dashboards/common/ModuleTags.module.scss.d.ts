@@ -18,6 +18,7 @@ declare const styles: {
   readonly idpTag: string
   readonly moduleTag: string
   readonly predefinedTags: string
+  readonly srmTag: string
   readonly sscaTag: string
   readonly stoTag: string
 }

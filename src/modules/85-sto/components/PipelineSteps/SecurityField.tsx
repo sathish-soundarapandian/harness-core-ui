@@ -11,7 +11,6 @@ import { MultiTypeInputProps, Container, SelectOption, AllowedTypes, Text } from
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { capitalize } from 'lodash-es'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -48,7 +47,6 @@ export interface SecurityFieldProps<T> {
     }
   }
   formik?: FormikProps<T>
-  stepViewType: StepViewType
   isInputSetView?: boolean
   allowableTypes?: AllowedTypes
   template?: Record<string, any>
@@ -90,7 +88,7 @@ const renderLabel = (props: LabelProps) => {
 }
 
 function SecurityField<T>(props: SecurityFieldProps<T>) {
-  const { enableFields, stepViewType, formik, allowableTypes, customTooltipFields } = props
+  const { enableFields, formik, allowableTypes, customTooltipFields } = props
   const fields = Object.entries(enableFields)
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -98,89 +96,88 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
   if (!enableFields) return null
   return (
     <>
-      {stepViewType !== StepViewType.Template &&
-        fields.map(([fieldName, fieldProps]) => {
-          const {
-            label,
-            optional = false,
-            selectItems = [],
-            hide,
-            multiTypeInputProps,
-            tooltipId: _tooltipId = '',
-            inputProps,
-            fieldType,
-            readonly
-          } = fieldProps
+      {fields.map(([fieldName, fieldProps]) => {
+        const {
+          label,
+          optional = false,
+          selectItems = [],
+          hide,
+          multiTypeInputProps,
+          tooltipId: _tooltipId = '',
+          inputProps,
+          fieldType,
+          readonly
+        } = fieldProps
 
-          const tooltipId = customTooltipFields?.fields[fieldName]
-            ? `${customTooltipFields.prefix}${capitalize(_tooltipId)}`
-            : _tooltipId
+        const tooltipId = customTooltipFields?.fields[fieldName]
+          ? `${customTooltipFields.prefix}${capitalize(_tooltipId)}`
+          : _tooltipId
 
-          if (hide) return null
+        if (hide) return null
 
-          if (fieldName === 'header') return <SectionHeader text={label} />
+        if (fieldName === 'header') return <SectionHeader text={label} />
 
-          if (fieldType === 'dropdown' || selectItems.length) {
-            return (
-              <Container key={fieldName} className={cx(stepCss.formGroup, stepCss.lg, stepCss.bottomMargin5)}>
-                <MultiTypeSelectField
-                  label={renderLabel({ label, optional, tooltipId, getString })}
-                  name={fieldName}
-                  useValue
-                  formik={formik}
-                  multiTypeInputProps={{
-                    selectItems: selectItems,
-                    placeholder: getString('select'),
-                    multiTypeInputProps: {
-                      expressions,
-                      allowableTypes,
-                      selectProps: { items: selectItems }
-                    },
-                    width: 384,
-                    disabled: readonly || selectItems?.length === 1,
-                    ...multiTypeInputProps
-                  }}
-                />
-              </Container>
-            )
-          }
-
-          if (fieldType === 'checkbox') {
-            return (
-              <Container key={fieldName} className={cx(stepCss.formGroup, stepCss.lg, stepCss.bottomMargin3)}>
-                <FormMultiTypeCheckboxField
-                  disabled={readonly}
-                  name={fieldName}
-                  formik={formik}
-                  tooltipProps={{ dataTooltipId: tooltipId }}
-                  label={getString(label)}
-                  setToFalseWhenEmpty={true}
-                  multiTypeTextbox={{
-                    expressions,
-                    allowableTypes
-                  }}
-                />
-              </Container>
-            )
-          }
-
+        if (fieldType === 'dropdown' || selectItems.length) {
           return (
             <Container key={fieldName} className={cx(stepCss.formGroup, stepCss.lg, stepCss.bottomMargin5)}>
-              <MultiTypeTextField
-                name={fieldName}
-                formik={formik}
+              <MultiTypeSelectField
                 label={renderLabel({ label, optional, tooltipId, getString })}
-                multiTextInputProps={{
-                  ...inputProps,
-                  multiTextInputProps: {
+                name={fieldName}
+                useValue
+                formik={formik}
+                multiTypeInputProps={{
+                  selectItems: selectItems,
+                  placeholder: getString('select'),
+                  multiTypeInputProps: {
+                    expressions,
                     allowableTypes,
-                    expressions
-                  }
+                    selectProps: { items: selectItems }
+                  },
+                  width: 384,
+                  disabled: readonly || selectItems?.length === 1,
+                  ...multiTypeInputProps
                 }}
               />
             </Container>
           )
-        })}
+        }
+
+        if (fieldType === 'checkbox') {
+          return (
+            <Container key={fieldName} className={cx(stepCss.formGroup, stepCss.lg, stepCss.bottomMargin3)}>
+              <FormMultiTypeCheckboxField
+                disabled={readonly}
+                name={fieldName}
+                formik={formik}
+                tooltipProps={{ dataTooltipId: tooltipId }}
+                label={getString(label)}
+                setToFalseWhenEmpty={true}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes
+                }}
+              />
+            </Container>
+          )
+        }
+
+        return (
+          <Container key={fieldName} className={cx(stepCss.formGroup, stepCss.lg, stepCss.bottomMargin5)}>
+            <MultiTypeTextField
+              name={fieldName}
+              formik={formik}
+              label={renderLabel({ label, optional, tooltipId, getString })}
+              multiTextInputProps={{
+                ...inputProps,
+                multiTextInputProps: {
+                  allowableTypes,
+                  expressions
+                }
+              }}
+            />
+          </Container>
+        )
+      })}
     </>
   )
 }

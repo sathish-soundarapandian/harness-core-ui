@@ -98,7 +98,7 @@ const moduleLabelMap: Record<NavModuleName, IModuleOverviewMap> = {
     label: 'common.purpose.idp.name',
     Component: () => null
   },
-  [ModuleName.ET]: {
+  [ModuleName.CET]: {
     label: 'common.purpose.errorTracking.title',
     Component: () => null
   }

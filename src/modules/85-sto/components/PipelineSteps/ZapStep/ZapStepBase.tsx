@@ -126,7 +126,6 @@ export const ZapStepBase = (
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, INGESTION_SCAN_MODE]}
               scanConfigSelectItems={scanConfigItems}
             />
@@ -134,25 +133,22 @@ export const ZapStepBase = (
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               targetTypeSelectItems={[INSTANCE_TARGET_TYPE]}
             />
 
-            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} />
 
-            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
 
             <SecurityInstanceFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               showFields={{ domain: true, path: true, port: true, protocol: true }}
             />
 
             {formik.values.spec.mode === 'orchestration' && (
               <>
                 <SecurityField
-                  stepViewType={stepViewType}
                   allowableTypes={allowableTypes}
                   formik={formik}
                   enableFields={{
@@ -178,7 +174,6 @@ export const ZapStepBase = (
 
             <>
               <SecurityField
-                stepViewType={stepViewType}
                 allowableTypes={allowableTypes}
                 formik={formik}
                 enableFields={{

@@ -132,6 +132,22 @@ export default function CODESideNav(): React.ReactElement {
               })}
             />
           )}
+          {repoName && (
+            <SidebarLink
+              data-code-repo-section="settings"
+              className={cx(css.subNav, css.webhooks)}
+              icon="code-settings"
+              textProps={{
+                iconProps: {
+                  size: 20
+                }
+              }}
+              label={getString('settingsLabel')}
+              to={routes.toCODESettings({
+                repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
+              })}
+            />
+          )}
         </>
       )}
     </Layout.Vertical>

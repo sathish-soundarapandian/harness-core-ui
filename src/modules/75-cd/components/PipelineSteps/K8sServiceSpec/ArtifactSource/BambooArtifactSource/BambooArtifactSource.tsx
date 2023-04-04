@@ -37,6 +37,7 @@ import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/compon
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
+import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useMutateAsGet } from '@common/hooks'
@@ -96,6 +97,9 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
     branch
   }
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
+
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const getFqnPathForEntity = (entityName: string): string =>
     getFqnPath(
       path as string,
@@ -108,7 +112,9 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
           : artifactPath,
         ''
       ),
-      entityName
+      entityName,
+      serviceIdentifier as string,
+      isMultiService
     )
 
   const planFqnPath = getFqnPathForEntity('planKey')

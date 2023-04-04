@@ -1037,7 +1037,7 @@ exports[`Configuration Configuration page 1`] = `
                           <input
                             class="bp3-input"
                             max="4320"
-                            min="480"
+                            min="30"
                             name="timeout"
                             type="number"
                             value="530"

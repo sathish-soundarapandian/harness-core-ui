@@ -21,7 +21,8 @@ const DEFAULT_FILTER: MappedDashboardTagOptions = {
   CD: false,
   CI: false,
   CF: false,
-  STO: false
+  STO: false,
+  SRM: false
 }
 
 const DEFAULT_CONTEXT: DashboardsContextProps = {
@@ -101,7 +102,8 @@ describe('ModuleTagsFilter', () => {
       CI: true,
       CD: false,
       CF: false,
-      STO: false
+      STO: false,
+      SRM: false
     }
     renderComponent({ selectedFilter })
 

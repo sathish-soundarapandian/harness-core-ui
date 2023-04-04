@@ -725,3 +725,8 @@ export const canFetchAMITags = (repository: string, groupId?: string, artifactId
     getMultiTypeFromValue(artifactId) !== MultiTypeInputType.RUNTIME
   )
 }
+
+export const isArtifactInMultiService = (services?: string[], path?: string): boolean => {
+  // The first condition is for TemplateUsage and the second condition is for all other templatized views
+  return !isEmpty(services) || !!path?.includes('services.values')
+}

@@ -29,7 +29,11 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { checkIfQueryParamsisNotEmpty, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import {
+  checkIfQueryParamsisNotEmpty,
+  isArtifactInMultiService,
+  resetFieldValue
+} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
@@ -107,6 +111,8 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     get(initialValues?.artifacts, `${artifactPath}.spec.region`, '')
   )
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   // Image Path
   const imagesListAPIQueryParams: GetImagesListForEcrQueryParams = {
     accountIdentifier: accountId,
@@ -128,7 +134,9 @@ const Content = (props: ECRRenderContent): JSX.Element => {
           : artifactPath,
         ''
       ),
-      'imagePath'
+      'imagePath',
+      serviceIdentifier as string,
+      isMultiService
     )
   }
 
@@ -249,7 +257,9 @@ const Content = (props: ECRRenderContent): JSX.Element => {
             : artifactPath,
           ''
         ),
-        'tag'
+        'tag',
+        serviceIdentifier as string,
+        isMultiService
       )
     },
     lazy: true

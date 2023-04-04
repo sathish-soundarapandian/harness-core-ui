@@ -8,22 +8,36 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly bodyIcon: string
+  readonly bodyText: string
   readonly card: string
   readonly cardContainer: string
+  readonly cardShadow: string
   readonly changeSelection: string
   readonly container: string
   readonly continueButton: string
   readonly cvIconText: string
+  readonly harnessLogo: string
   readonly icon: string
   readonly iconContainer: string
   readonly iconDescription: string
+  readonly iconSidecard: string
+  readonly moduleCards: string
   readonly moduleInfo: string
   readonly moduleInfoDescription: string
   readonly moduleInfoLeft: string
   readonly moduleInfoRight: string
   readonly moduleInfoTitle: string
   readonly moduleList: string
+  readonly noBorder: string
+  readonly normalCard: string
+  readonly onboardingCard: string
+  readonly onboardingCards: string
+  readonly onboardingContainer: string
+  readonly onboardingHead: string
   readonly selectedModuleInfoCard: string
+  readonly sidecard: string
   readonly titleIcon: string
+  readonly width50: string
+  readonly width80: string
 }
 export default styles

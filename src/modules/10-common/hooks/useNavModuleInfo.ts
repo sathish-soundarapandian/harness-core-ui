@@ -29,7 +29,7 @@ export type NavModuleName =
   | ModuleName.IACM
   | ModuleName.SSCA
   | ModuleName.IDP
-  | ModuleName.ET
+  | ModuleName.CET
 
 // Default order of modules on side nav, please add modules to this list accordingly.
 // For any module to be visible on side nav, it has to be added in this list
@@ -45,7 +45,7 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.IACM,
   ModuleName.SSCA,
   ModuleName.IDP,
-  ModuleName.ET
+  ModuleName.CET
 ]
 
 export interface useNavModuleInfoReturnType {
@@ -150,7 +150,7 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     featureFlagName: FeatureFlag.IDP_ENABLED,
     color: '--default-module-border'
   },
-  [ModuleName.ET]: {
+  [ModuleName.CET]: {
     icon: 'cet',
     label: 'common.purpose.errorTracking.longTitle',
     getHomePageUrl: (accountId: string) => routes.toETHome({ accountId }),
@@ -176,7 +176,7 @@ export const moduleGroupConfig: GroupConfig[] = [
   },
   {
     label: 'common.moduleList.manageImpact',
-    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCA, ModuleName.ET]
+    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCA, ModuleName.CET]
   },
   {
     label: 'common.moduleList.optimizeProcesses',

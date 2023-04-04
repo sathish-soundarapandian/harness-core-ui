@@ -36,7 +36,7 @@ const RedirectToETControl = (): React.ReactElement => {
   const params = useParams<ProjectPathProps>()
   const { selectedProject } = useAppStore()
 
-  if (selectedProject && selectedProject?.modules?.includes(ModuleName.ET)) {
+  if (selectedProject && selectedProject?.modules?.includes(ModuleName.CET)) {
     return (
       <Redirect
         to={routes.toETAgents({

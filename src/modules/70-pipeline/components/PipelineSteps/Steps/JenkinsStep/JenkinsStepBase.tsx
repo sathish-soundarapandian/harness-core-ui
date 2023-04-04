@@ -534,7 +534,6 @@ function FormContent({
           key={getMultiTypeFromValue(formik.values.spec.jobParameter as string)}
           label={getString('pipeline.jenkinsStep.jobParameter')}
           isOptional
-          allowedTypes={allowableTypes}
           optionalLabel={getString('titleOptional')}
           defaultValueToReset={[]}
           disableTypeSelection={false}

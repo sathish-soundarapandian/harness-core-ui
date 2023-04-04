@@ -30,6 +30,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   getDefaultQueryParam,
   getFinalQueryParamValue,
@@ -131,6 +132,8 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     return defaultTo(items, [])
   }
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const {
     refetch: refetchProjects,
     data: projectsResponse,
@@ -153,7 +156,9 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'project'
+        'project',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })
@@ -194,7 +199,9 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'feed'
+        'feed',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })
@@ -237,7 +244,9 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'package'
+        'package',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })
@@ -295,7 +304,9 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'version'
+        'version',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })

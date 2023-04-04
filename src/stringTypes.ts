@@ -662,6 +662,7 @@ export interface StringsMap {
   'common.noAvailableTags': string
   'common.noConnectorAvailable': string
   'common.noDelegateForTask': string
+  'common.noDelegateLogs': string
   'common.noDeployments': string
   'common.noInfo': string
   'common.noNotifications': string
@@ -1255,6 +1256,29 @@ export interface StringsMap {
   'common.warning': string
   'common.webhookURL': string
   'common.welcome': string
+  'common.welcomePage.allusecases': string
+  'common.welcomePage.cd.bodyText': string
+  'common.welcomePage.cd.points': string
+  'common.welcomePage.cd.subTitle': string
+  'common.welcomePage.cd.title': string
+  'common.welcomePage.ce.bodyText': string
+  'common.welcomePage.ce.subTitle': string
+  'common.welcomePage.ce.title': string
+  'common.welcomePage.cf.bodyText': string
+  'common.welcomePage.cf.subTitle': string
+  'common.welcomePage.cf.title': string
+  'common.welcomePage.chaos.bodyText': string
+  'common.welcomePage.chaos.subTitle': string
+  'common.welcomePage.chaos.title': string
+  'common.welcomePage.ci.bodyText': string
+  'common.welcomePage.ci.points': string
+  'common.welcomePage.ci.subTitle': string
+  'common.welcomePage.ci.title': string
+  'common.welcomePage.cv.bodyText': string
+  'common.welcomePage.cv.subTitle': string
+  'common.welcomePage.cv.title': string
+  'common.welcomePage.improveText': string
+  'common.welcomePage.selectusecase': string
   'common.whatIsActiveService': string
   'common.whose': string
   'common.with': string
@@ -1364,13 +1388,16 @@ export interface StringsMap {
   'rbac.permissionLabels.copy': string
   'rbac.permissionLabels.create': string
   'rbac.permissionLabels.createEdit': string
+  'rbac.permissionLabels.createFFSDKKey': string
   'rbac.permissionLabels.delete': string
+  'rbac.permissionLabels.deleteFFSDKKey': string
   'rbac.permissionLabels.edit': string
   'rbac.permissionLabels.evaluate': string
   'rbac.permissionLabels.execute': string
   'rbac.permissionLabels.invite': string
   'rbac.permissionLabels.manage': string
   'rbac.permissionLabels.pipelineExecution': string
+  'rbac.permissionLabels.push': string
   'rbac.permissionLabels.toggleFlag': string
   'rbac.permissionLabels.view': string
   'rbac.permissionOn': string
@@ -3427,6 +3454,7 @@ export interface StringsMap {
   'code.branches': string
   'code.homepageHeading': string
   'code.learnMore': string
+  'code.missingPermission': string
   'code.pullRequests': string
   'code.webhooks': string
   'et.homepage.learnMore': string

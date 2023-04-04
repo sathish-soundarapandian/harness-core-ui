@@ -21,7 +21,7 @@ const modulesOrder: NavModuleName[] = [
   ModuleName.CV,
   ModuleName.CE,
   ModuleName.CHAOS,
-  ModuleName.ET
+  ModuleName.CET
 ]
 
 export interface ModuleOverviewBaseProps {

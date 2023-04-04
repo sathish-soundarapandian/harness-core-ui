@@ -19,11 +19,10 @@ import css from '@templates-library/components/TemplateDetails/TemplateDetails.m
 interface Props {
   selectedTemplate: TemplateSummaryResponse
   templates: TemplateSummaryResponse[]
-  onClose?: () => void
 }
 
 export function TemplateReferenceByTabPanel(props: Props): React.ReactElement {
-  const { selectedTemplate, templates, onClose } = props
+  const { selectedTemplate, templates } = props
 
   const { accountId } = useParams<ProjectPathProps>()
   const [searchTerm, setSearchTerm] = useState<string>('')
@@ -55,7 +54,6 @@ export function TemplateReferenceByTabPanel(props: Props): React.ReactElement {
       searchTerm={searchTerm}
       setSearchTerm={setSearchTerm}
       setPage={setPage}
-      onClose={onClose}
       apiReturnProps={{
         data,
         loading,

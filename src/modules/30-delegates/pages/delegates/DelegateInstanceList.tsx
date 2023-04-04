@@ -16,36 +16,20 @@ import { useStrings } from 'framework/strings'
 import { getInstanceStatus } from './utils/DelegateHelper'
 import css from './DelegatesPage.module.scss'
 
-export function DelegateInstanceList({
-  row,
-  canUseImmutableDelegate
-}: {
-  row: Row<DelegateGroupDetails>
-  canUseImmutableDelegate: boolean
-}): ReactElement {
+export function DelegateInstanceList({ row }: { row: Row<DelegateGroupDetails> }): ReactElement {
   const data = row.original
   const { getString } = useStrings()
 
-  const columnWidths = canUseImmutableDelegate
-    ? /*istanbul ignore next */ {
-        icon: '5%',
-        name: '24%',
-        tags: '15%',
-        version: '11%',
-        instanceStatus: '18%',
-        heartbeat: '14%',
-        status: '12%',
-        actions: '1%'
-      }
-    : {
-        icon: '8%',
-        name: '27%',
-        tags: '15%',
-        version: '15%',
-        heartbeat: '15%',
-        status: '15%',
-        actions: '5%'
-      }
+  const columnWidths = {
+    icon: '5%',
+    name: '24%',
+    tags: '15%',
+    version: '11%',
+    instanceStatus: '18%',
+    heartbeat: '14%',
+    status: '12%',
+    actions: '1%'
+  }
   return (
     <div role="list" onClick={killEvent}>
       <Fragment key={data.delegateGroupIdentifier}>
@@ -66,11 +50,9 @@ export function DelegateInstanceList({
                     <Layout.Horizontal width={columnWidths.version}>
                       <Text>{del.version}</Text>
                     </Layout.Horizontal>
-                    {canUseImmutableDelegate && (
-                      <Layout.Horizontal width={columnWidths?.instanceStatus}>
-                        {getInstanceStatus(data)}
-                      </Layout.Horizontal>
-                    )}
+                    <Layout.Horizontal width={columnWidths?.instanceStatus}>
+                      {getInstanceStatus(data)}
+                    </Layout.Horizontal>
                     <Layout.Horizontal width={columnWidths.heartbeat}>
                       <Text>
                         {del.lastHeartbeat ? <ReactTimeago date={del.lastHeartbeat} live /> : getString('na')}

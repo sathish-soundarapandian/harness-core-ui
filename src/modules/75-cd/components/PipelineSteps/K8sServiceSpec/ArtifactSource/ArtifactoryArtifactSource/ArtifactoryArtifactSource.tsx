@@ -41,7 +41,7 @@ import {
 } from 'services/cd-ng'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import { repositoryFormat } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { isArtifactInMultiService, repositoryFormat } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -398,6 +398,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   const getFQNFieldName = (): string =>
     isGenericArtifactory ? 'artifactPath' : isFieldRuntime(getTagRegexFieldName(), template) ? 'tagRegex' : 'tag'
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const {
     data: imagePathV2Data,
     loading: imagePathV2Loading,
@@ -428,7 +430,9 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             : artifactPath,
           ''
         ),
-        getFQNFieldName()
+        getFQNFieldName(),
+        serviceIdentifier as string,
+        isMultiService
       )
     },
     lazy: true
@@ -520,7 +524,9 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               : artifactPath,
             ''
           ),
-          'artifactPath'
+          'artifactPath',
+          serviceIdentifier as string,
+          isMultiService
         )
       }
     }
@@ -550,7 +556,9 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             : artifactPath,
           ''
         ),
-        'tag'
+        'tag',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   }, [
@@ -568,7 +576,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     isPropagatedStage,
     stageIdentifier,
     artifacts,
-    isSidecar
+    isSidecar,
+    isMultiService
   ])
 
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', artifactPaths: '', repository: '' })
@@ -757,7 +766,9 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                     : artifactPath,
                   ''
                 ),
-                'connectorRef'
+                'connectorRef',
+                serviceIdentifier as string,
+                isMultiService
               )}
               stepViewType={stepViewType}
             />

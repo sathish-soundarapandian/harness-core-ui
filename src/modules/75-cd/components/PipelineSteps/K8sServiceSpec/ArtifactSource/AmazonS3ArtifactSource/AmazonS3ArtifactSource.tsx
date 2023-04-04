@@ -34,7 +34,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
-import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { isArtifactInMultiService, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
@@ -128,6 +128,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     setRegions(regionValues as SelectOption[])
   }, [regionData?.resource])
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   // Bucket related code
   const bucketListAPIQueryParams = {
     accountIdentifier: accountId,
@@ -147,7 +149,9 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
           : artifactPath,
         ''
       ),
-      'bucketName'
+      'bucketName',
+      serviceIdentifier as string,
+      isMultiService
     )
   }
 
@@ -276,7 +280,9 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
           : artifactPath,
         ''
       ),
-      'filePath'
+      'filePath',
+      serviceIdentifier as string,
+      isMultiService
     )
   }
 

@@ -107,7 +107,7 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     homePageUrl: '',
     color: 'green'
   },
-  ET: {
+  CET: {
     shouldVisible: true,
     icon: 'cet',
     label: 'common.purpose.errorTracking.title',

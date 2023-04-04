@@ -15,8 +15,8 @@ import SessionToken from 'framework/utils/SessionToken'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 import commonRoutes from '@common/RouteDefinitions'
+import { PermissionsRequest, usePermission } from '@rbac/hooks/usePermission'
 import routes from './RouteDefinitions'
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RemoteViewProps = Record<string, any>
 
@@ -81,7 +81,8 @@ const CODERemoteComponentMounter: React.FC<{
           }}
           routes={omit(routes, ['toCODE', 'toCODEHome'])}
           hooks={{
-            useGetToken
+            useGetToken,
+            usePermissionTranslate
           }}
           currentUserProfileURL={commonRoutes.toUserProfile({ accountId: params.accountId })}
         >
@@ -90,6 +91,20 @@ const CODERemoteComponentMounter: React.FC<{
       </AppErrorBoundary>
     </Suspense>
   )
+}
+
+// return tooltip from here and can be more specific or generic
+function usePermissionTranslate(
+  usePermissionResult?: PermissionsRequest | undefined,
+  deps?: any[],
+  tooltip?: JSX.Element | string
+): { disabled: boolean; tooltip: JSX.Element | string } | undefined {
+  const res = usePermission(usePermissionResult, deps)
+  const { getString } = useStrings()
+  if (!res[0]) {
+    return { disabled: !res[0], tooltip: tooltip ? tooltip : getString('code.missingPermission') }
+  }
+  return undefined
 }
 
 export const Repositories: React.FC<RemoteViewProps> = props => (

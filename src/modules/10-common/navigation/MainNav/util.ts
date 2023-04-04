@@ -34,7 +34,7 @@ export const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {
   [ModuleName.IACM]: IACNavItem,
   [ModuleName.SSCA]: SSCANavItem,
   [ModuleName.IDP]: IDPNavItem,
-  [ModuleName.ET]: ETNavItem
+  [ModuleName.CET]: ETNavItem
 }
 
 export const filterNavModules = (

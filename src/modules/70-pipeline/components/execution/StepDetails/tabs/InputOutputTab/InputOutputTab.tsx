@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { isPlainObject, toPairs, startCase, isEmpty, isNil, toString } from 'lodash-es'
+import { isPlainObject, toPairs, startCase, isEmpty, isNil, toString, truncate } from 'lodash-es'
 import { Collapse as BPCollapse, Icon } from '@blueprintjs/core'
 import cx from 'classnames'
 
@@ -18,6 +18,7 @@ import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import css from './InputOutputTab.module.scss'
 
 const blackListKeys = ['step', 'parallel']
+const MAX_VALUE_LENGTH = 3_000
 
 function Collapse(props: React.PropsWithChildren<{ title: string }>): React.ReactElement {
   const [isOpen, setIsOpen] = React.useState(true)
@@ -43,6 +44,8 @@ export interface InputOutputTabRowProps {
   level: number
   prefix: string
   isMultiline: boolean
+  /** The maximum length of the rendered value of each entry in `data` */
+  maxValueLength: number
 }
 
 export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactElement {
@@ -69,7 +72,13 @@ export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactEle
 
           return (
             <Collapse key={key} title={startCase(key)}>
-              <InputOutputTabRow prefix={newKey} data={value} level={props.level + 1} isMultiline={props.isMultiline} />
+              <InputOutputTabRow
+                prefix={newKey}
+                data={value}
+                level={props.level + 1}
+                isMultiline={props.isMultiline}
+                maxValueLength={props.maxValueLength}
+              />
             </Collapse>
           )
         }
@@ -78,13 +87,18 @@ export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactEle
           if (isEmpty(value)) return null
 
           if (value.every(e => typeof e === 'string')) {
+            const joinedValue = value.join(', ')
+            const valueToRender = truncate(joinedValue, {
+              length: props.maxValueLength
+            })
+
             return (
               <div className={css.ioRow} key={key}>
                 <div className={css.key}>
                   <CopyText textToCopy={toVariableStr(newKey)}>{key}</CopyText>
                 </div>
                 <div className={css.value}>
-                  <CopyText textToCopy={value.join(', ')}>{value.join(', ')}</CopyText>
+                  <CopyText textToCopy={joinedValue}>{valueToRender}</CopyText>
                 </div>
               </div>
             )
@@ -101,6 +115,7 @@ export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactEle
                       data={item}
                       level={props.level + 1}
                       isMultiline={props.isMultiline}
+                      maxValueLength={props.maxValueLength}
                     />
                   </Collapse>
                 )
@@ -108,6 +123,10 @@ export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactEle
             </Collapse>
           )
         }
+
+        const valueToRender = truncate(toString(value), {
+          length: props.maxValueLength
+        })
 
         return (
           <div className={css.ioRow} key={key}>
@@ -117,7 +136,7 @@ export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactEle
             <div className={css.value}>
               <CopyText textToCopy={value.toString()} className={css.valueText}>
                 <LinkifyText
-                  content={toString(value)}
+                  content={valueToRender}
                   textProps={
                     isDescriptionField && props.isMultiline
                       ? { style: { wordBreak: 'break-word', whiteSpace: 'pre-wrap' } }
@@ -139,10 +158,12 @@ export interface InputOutputTabProps {
   mode: 'input' | 'output'
   baseFqn?: string
   isMultiline?: boolean
+  /** The maximum length of the rendered value of each entry in `data` */
+  maxValueLength?: number
 }
 
 export function InputOutputTab(props: InputOutputTabProps): React.ReactElement {
-  const { mode, baseFqn = '', data, isMultiline } = props
+  const { mode, baseFqn = '', data, isMultiline, maxValueLength = MAX_VALUE_LENGTH } = props
   const { getString } = useStrings()
 
   if (!data || isEmpty(data)) {
@@ -161,7 +182,13 @@ export function InputOutputTab(props: InputOutputTabProps): React.ReactElement {
         <div>{getString(mode === 'input' ? 'inputName' : 'outputName')}</div>
         <div>{getString(mode === 'input' ? 'inputValue' : 'outputValue')}</div>
       </div>
-      <InputOutputTabRow prefix={baseFqn} data={data} level={0} isMultiline={!!isMultiline} />
+      <InputOutputTabRow
+        prefix={baseFqn}
+        data={data}
+        level={0}
+        isMultiline={!!isMultiline}
+        maxValueLength={maxValueLength}
+      />
     </div>
   )
 }

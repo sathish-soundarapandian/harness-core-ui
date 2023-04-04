@@ -7,6 +7,7 @@
 
 import type { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectedMultiTypeSecretInputProps } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { useGetUserGroupAggregateList } from 'services/cd-ng'
 
 export interface IDPCustomMicroFrontendProps {
@@ -15,6 +16,7 @@ export interface IDPCustomMicroFrontendProps {
   }
   customComponents: {
     ConnectorReferenceField: React.ComponentType<ConnectorReferenceFieldProps>
+    MultiTypeSecretInput: React.ComponentType<ConnectedMultiTypeSecretInputProps>
   }
   customHooks: {
     useQueryParams: typeof useQueryParams

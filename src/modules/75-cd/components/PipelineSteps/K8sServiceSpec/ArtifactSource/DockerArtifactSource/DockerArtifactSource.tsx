@@ -25,6 +25,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
@@ -94,6 +95,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const getFqnPathForEntity = (entityName: string): string =>
     getFqnPath(
       path as string,
@@ -105,7 +108,9 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
           : artifactPath,
         ''
       ),
-      entityName
+      entityName,
+      serviceIdentifier as string,
+      isMultiService
     )
   const tagFqnPath = getFqnPathForEntity('tag')
   const digestFqnPath = getFqnPathForEntity('digest')

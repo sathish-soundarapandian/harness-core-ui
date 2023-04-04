@@ -17,9 +17,9 @@ import { HarnessReactAPIClient as AuditServiceClient } from '@harnessio/react-au
 import { IDPServiceAPIClient } from '@harnessio/react-idp-service-client'
 import { PipelineServiceAPIClient } from '@harnessio/react-pipeline-service-client'
 import { setAutoFreeze, enableMapSet } from 'immer'
-import SessionToken from 'framework/utils/SessionToken'
+import { debounce } from 'lodash-es'
+import SessionToken, { TokenTimings } from 'framework/utils/SessionToken'
 import { queryClient } from 'services/queryClient'
-
 import { AppStoreProvider } from 'framework/AppStore/AppStoreContext'
 import { PreferenceStoreProvider, PREFERENCES_TOP_LEVEL_KEY } from 'framework/PreferenceStore/PreferenceStoreContext'
 
@@ -61,7 +61,9 @@ interface AppProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   strings: Record<string, any>
 }
-
+const LEAST_REFRESH_TIME_MINUTES = 15
+const MAX_REFRESH_TIME_MINUTES = 120
+const REFRESH_TIME_PERCENTAGE_IN_MINUTES = 5
 export const getRequestOptions = (): Partial<RequestInit> => {
   const token = SessionToken.getToken()
   const headers: RequestInit['headers'] = {}
@@ -120,14 +122,34 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     }
   }, [refreshTokenResponse])
 
-  const checkAndRefreshToken = (): void => {
+  //  calling Refreshtoken api on REFRESH_TIME_PERCENTAGE of token expiry time,
+  // like if the token expiry time (i.e, difference between expiry time  and issued time ) is
+  // 24 hours we would be calling the refresh token api on every 1.2 hours, if refresh time  is below LEAST_REFRESH_TIME
+  // we would round it off to LEAST_REFRESH_TIME of  if more than MAX_REFRESH_TIME then will round it off to MAX_REFRESH_TIME
+  const checkAndRefreshToken = debounce(function checkAndRefreshTokenFun() {
     const currentTime = Date.now()
-    const lastTokenSetTime = SessionToken.getLastTokenSetTime() as number
-    const refreshInterval = 60 * 60 * 1000 // one hour in milliseconds
-    if (currentTime - lastTokenSetTime > refreshInterval && !refreshingToken) {
-      refreshToken()
+    const milliSecondsToMinutes = 1000 * 60 // 1000 milliseconds is equal to 1 second, 60 seconds equal to one minute
+    const lastTokenSetTime = SessionToken.getLastTokenTimings(TokenTimings.Creation) as number
+    const lastTokenExpiryTime = SessionToken.getLastTokenTimings(TokenTimings.Expiration) as number
+    let refreshInterval = (lastTokenExpiryTime - lastTokenSetTime) / milliSecondsToMinutes
+    refreshInterval = (refreshInterval / 100) * REFRESH_TIME_PERCENTAGE_IN_MINUTES
+    const differenceInMinutes = (currentTime - lastTokenSetTime) / milliSecondsToMinutes
+    refreshInterval = Math.min(Math.max(refreshInterval, LEAST_REFRESH_TIME_MINUTES), MAX_REFRESH_TIME_MINUTES)
+    if (differenceInMinutes > refreshInterval && !refreshingToken) {
+      refreshToken({ queryParams: getQueryParams() as any })
     }
-  }
+  }, 2000)
+  useEffect(() => {
+    // considering user to be active when user is either doing mouse or key board events
+    document?.addEventListener('mousedown', checkAndRefreshToken)
+    document?.addEventListener('keypress', checkAndRefreshToken)
+
+    const removeEventListners = () => {
+      document?.removeEventListener('mousedown', checkAndRefreshToken)
+      document?.removeEventListener('keypress', checkAndRefreshToken)
+    }
+    return removeEventListners
+  }, [])
 
   const globalResponseHandler = (response: Response): void => {
     if (!response.ok) {
@@ -176,7 +198,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
         }
       }
     }
-    checkAndRefreshToken()
   }
 
   useGlobalEventListener('PROMISE_API_RESPONSE', ({ detail }) => {

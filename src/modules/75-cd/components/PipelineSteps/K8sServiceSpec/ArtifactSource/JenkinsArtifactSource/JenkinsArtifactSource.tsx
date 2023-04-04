@@ -43,6 +43,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ConnectorRefType, getScopedConnectorValue } from '@pipeline/utils/stepUtils'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
@@ -158,6 +159,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }
   })
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const {
     refetch: refetchV2Jobs,
     data: jobsV2Response,
@@ -186,7 +189,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'jobName'
+        'jobName',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })
@@ -232,7 +237,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'artifactPath'
+        'artifactPath',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })
@@ -278,7 +285,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             : artifactPath,
           ''
         ),
-        'build'
+        'build',
+        serviceIdentifier as string,
+        isMultiService
       )
     }
   })

@@ -5,20 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import ReactTimeago from 'react-timeago'
 import { defaultTo, set } from 'lodash-es'
 import { useParams, useHistory } from 'react-router-dom'
-import {
-  Button,
-  Text,
-  Layout,
-  Popover,
-  useToaster,
-  useConfirmationDialog,
-  ButtonVariation,
-  PageSpinner
-} from '@harness/uicore'
+import { Button, Text, Layout, Popover, useToaster, useConfirmationDialog, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Menu, MenuItem, Classes, Position, Dialog } from '@blueprintjs/core'
 import type { CellProps, Renderer, UseExpandedRowProps } from 'react-table'
@@ -34,7 +25,6 @@ import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
 import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
 import { Table } from '@common/components'
 import { killEvent } from '@common/utils/eventUtils'
-import { useIsImmutableDelegateEnabled } from 'services/cd-ng'
 import { DelegateInstanceList } from './DelegateInstanceList'
 import { getAutoUpgradeTextColor, getInstanceStatus } from './utils/DelegateHelper'
 import DelegateConnectivityStatus from './DelegateConnectivityStatus'
@@ -300,144 +290,78 @@ export const DelegateListingItem: React.FC<DelegateProps> = props => {
       history.push(routes.toDelegatesDetails(params))
     }
   }
-  const { showError } = useToaster()
-  const {
-    data: useImmutableDelegate,
-    error,
-    loading
-  } = useIsImmutableDelegateEnabled({
-    accountIdentifier: accountId
-  })
-  useEffect(() => {
-    if (error) {
-      showError(error.message)
-    }
-  }, [error])
-  const columns = useMemo(() => {
-    const columnsArray = useImmutableDelegate?.data
-      ? [
-          {
-            Header: '',
-            id: 'rowSelectOrExpander',
-            width: '3%',
-            Cell: ToggleAccordionCell
-          },
-          {
-            Header: '',
-            id: 'delegateIcon',
-            width: '2%',
-            Cell: RenderDelegateIcon
-          },
-          {
-            Header: getString('delegate.DelegateName'),
-            id: 'delegateName',
-            width: '24%',
-            Cell: RenderDelegateName
-          },
-          {
-            Header: getString('tagsLabel'),
-            id: 'tags',
-            width: '15%',
-            Cell: RenderTags
-          },
-          {
-            Header: getString('version'),
-            id: 'version',
-            width: '11%',
-            Cell: RenderVersion
-          },
-          {
-            Header: getString('delegates.instanceStatus'),
-            id: 'instanceStatus',
-            width: '18%',
-            Cell: RenderInstanceStatus
-          },
-          {
-            Header: getString('delegate.LastHeartBeat'),
-            id: 'heartbeat',
-            width: '14%',
-            Cell: RenderHeartbeat
-          },
-          {
-            Header: getString('connectivityStatus'),
-            id: 'connectivityStatus',
-            width: '12%',
-            Cell: RenderConnectivityStatus
-          },
-          {
-            Header: '',
-            id: 'actions',
-            width: '1%',
-            Cell: RenderColumnMenu
-          }
-        ]
-      : [
-          {
-            Header: '',
-            id: 'rowSelectOrExpander',
-            width: '3%',
-            Cell: ToggleAccordionCell
-          },
-          {
-            Header: '',
-            id: 'delegateIcon',
-            width: '5%',
-            Cell: RenderDelegateIcon
-          },
-          {
-            Header: getString('delegate.DelegateName'),
-            id: 'delegateName',
-            width: '27%',
-            Cell: RenderDelegateName
-          },
-          {
-            Header: getString('tagsLabel'),
-            id: 'tags',
-            width: '15%',
-            Cell: RenderTags
-          },
-          {
-            Header: getString('version'),
-            id: 'version',
-            width: '15%',
-            Cell: RenderVersion
-          },
 
-          {
-            Header: getString('delegate.LastHeartBeat'),
-            id: 'heartbeat',
-            width: '15%',
-            Cell: RenderHeartbeat
-          },
-          {
-            Header: getString('connectivityStatus'),
-            id: 'connectivityStatus',
-            width: '15%',
-            Cell: RenderConnectivityStatus
-          },
-          {
-            Header: '',
-            id: 'actions',
-            width: '5%',
-            Cell: RenderColumnMenu
-          }
-        ]
-    return columnsArray
-  }, [useImmutableDelegate?.data])
+  const columns = useMemo(() => {
+    return [
+      {
+        Header: '',
+        id: 'rowSelectOrExpander',
+        width: '3%',
+        Cell: ToggleAccordionCell
+      },
+      {
+        Header: '',
+        id: 'delegateIcon',
+        width: '2%',
+        Cell: RenderDelegateIcon
+      },
+      {
+        Header: getString('delegate.DelegateName'),
+        id: 'delegateName',
+        width: '24%',
+        Cell: RenderDelegateName
+      },
+      {
+        Header: getString('tagsLabel'),
+        id: 'tags',
+        width: '15%',
+        Cell: RenderTags
+      },
+      {
+        Header: getString('version'),
+        id: 'version',
+        width: '11%',
+        Cell: RenderVersion
+      },
+      {
+        Header: getString('delegates.instanceStatus'),
+        id: 'instanceStatus',
+        width: '18%',
+        Cell: RenderInstanceStatus
+      },
+      {
+        Header: getString('delegate.LastHeartBeat'),
+        id: 'heartbeat',
+        width: '14%',
+        Cell: RenderHeartbeat
+      },
+      {
+        Header: getString('connectivityStatus'),
+        id: 'connectivityStatus',
+        width: '12%',
+        Cell: RenderConnectivityStatus
+      },
+      {
+        Header: '',
+        id: 'actions',
+        width: '1%',
+        Cell: RenderColumnMenu
+      }
+    ]
+  }, [])
 
   const renderRowSubComponent = React.useCallback(
     ({ row }) => (
       <>
         <Layout.Horizontal className={css.podDetailsSeparator}></Layout.Horizontal>
-        <DelegateInstanceList row={row} canUseImmutableDelegate={!!useImmutableDelegate?.data}></DelegateInstanceList>
+        <DelegateInstanceList row={row}></DelegateInstanceList>
       </>
     ),
-    [useImmutableDelegate?.data]
+    []
   )
 
   return (
     <Layout.Horizontal width={'100%'}>
-      {loading ? <PageSpinner /> : null}
       <Table<DelegateGroupDetails>
         columns={columns}
         className={css.instanceTable}

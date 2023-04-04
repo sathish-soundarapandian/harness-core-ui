@@ -49,7 +49,6 @@ interface SelectItems extends SelectOption {
 }
 
 type SecurityFieldsProps<T> = {
-  stepViewType: StepViewType
   allowableTypes: AllowedTypes
   formik: FormikProps<T>
   toolTipOverrides?: CustomTooltipFieldProps
@@ -66,20 +65,12 @@ interface ISecurityTargetFields extends SecurityFieldsProps<SecurityStepData<Sec
 }
 
 export function SecurityScanFields(props: ISecurityScanFields) {
-  const {
-    allowableTypes,
-    formik,
-    stepViewType,
-    scanModeSelectItems,
-    scanConfigReadonly,
-    toolTipOverrides,
-    scanConfigSelectItems
-  } = props
+  const { allowableTypes, formik, scanModeSelectItems, scanConfigReadonly, toolTipOverrides, scanConfigSelectItems } =
+    props
 
   return (
     <>
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<ISecurityScanFields>}
         customTooltipFields={toolTipOverrides}
@@ -108,11 +99,10 @@ export function SecurityScanFields(props: ISecurityScanFields) {
 }
 
 export function SecurityTargetFields(props: ISecurityTargetFields) {
-  const { allowableTypes, formik, stepViewType, targetTypeSelectItems, toolTipOverrides } = props
+  const { allowableTypes, formik, targetTypeSelectItems, toolTipOverrides } = props
   return (
     <>
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<ISecurityTargetFields>}
         customTooltipFields={toolTipOverrides}
@@ -155,12 +145,11 @@ export function SecurityTargetFields(props: ISecurityTargetFields) {
 }
 
 export function SecurityIngestionFields(props: SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>) {
-  const { allowableTypes, formik, stepViewType, toolTipOverrides } = props
+  const { allowableTypes, formik, toolTipOverrides } = props
   if (formik.values.spec.mode !== 'ingestion') return null
   return (
     <>
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
         customTooltipFields={toolTipOverrides}
@@ -177,13 +166,12 @@ export function SecurityIngestionFields(props: SecurityFieldsProps<SecurityStepD
 }
 
 export function SecurityAdvancedFields(props: SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>) {
-  const { allowableTypes, formik, stepViewType, toolTipOverrides } = props
+  const { allowableTypes, formik, toolTipOverrides } = props
   const { getString } = useStrings()
 
   return (
     <>
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
         customTooltipFields={toolTipOverrides}
@@ -229,20 +217,11 @@ interface ISecurityAuthFields extends SecurityFieldsProps<SecurityStepData<Secur
 }
 
 export function SecurityAuthFields(props: ISecurityAuthFields) {
-  const {
-    allowableTypes,
-    formik,
-    stepViewType,
-    initialAuthDomain,
-    showFields,
-    authDomainPlaceHolder,
-    toolTipOverrides
-  } = props
+  const { allowableTypes, formik, initialAuthDomain, showFields, authDomainPlaceHolder, toolTipOverrides } = props
   if (formik.values.spec.mode === 'ingestion') return null
   return (
     <>
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
         customTooltipFields={toolTipOverrides}
@@ -304,7 +283,7 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
 }
 
 export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>) {
-  const { allowableTypes, formik, stepViewType, toolTipOverrides } = props
+  const { allowableTypes, formik, toolTipOverrides } = props
   if (!(formik.values.spec.target.type === 'container' && formik.values.spec.mode === 'orchestration')) return null
   const hideNonLocalImageFields = !(
     formik.values.spec.target.type === 'container' && formik.values.spec.image?.type !== 'local_image'
@@ -313,7 +292,6 @@ export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<
   return (
     <>
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
         customTooltipFields={toolTipOverrides}
@@ -394,9 +372,7 @@ export const AdditionalFields = (props: AdditionalFieldsProps) => {
 
   return (
     <>
-      {showAdvancedFields && (
-        <SecurityAdvancedFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
-      )}
+      {showAdvancedFields && <SecurityAdvancedFields allowableTypes={allowableTypes} formik={formik} />}
 
       <CIStepOptionalConfig
         stepViewType={stepViewType}
@@ -449,7 +425,7 @@ interface SecurityInstanceFieldsProps extends SecurityFieldsProps<SecurityStepDa
 }
 
 export function SecurityInstanceFields(props: SecurityInstanceFieldsProps) {
-  const { allowableTypes, formik, stepViewType, toolTipOverrides, showFields } = props
+  const { allowableTypes, formik, toolTipOverrides, showFields } = props
 
   if (formik.values.spec.mode !== 'orchestration') {
     return null
@@ -458,7 +434,6 @@ export function SecurityInstanceFields(props: SecurityInstanceFieldsProps) {
   return (
     <>
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
         customTooltipFields={toolTipOverrides}
@@ -502,18 +477,16 @@ export function SecurityInstanceFields(props: SecurityInstanceFieldsProps) {
 type InputSetFieldsProps<T> = {
   prefix: string
   template?: SecurityStepData<SecurityStepSpec>
-  stepViewType: StepViewType
   allowableTypes: AllowedTypes
   formik: FormikProps<T>
   toolTipOverrides?: CustomTooltipFieldProps
 }
 export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<SecurityStepSpec>>) {
-  const { allowableTypes, formik, stepViewType, template, prefix, toolTipOverrides } = props
+  const { allowableTypes, formik, template, prefix, toolTipOverrides } = props
   const { getString } = useStrings()
   return (
     <>
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
         customTooltipFields={toolTipOverrides}
@@ -521,7 +494,6 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
       />
 
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
         customTooltipFields={toolTipOverrides}
@@ -535,7 +507,6 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
       />
 
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
         customTooltipFields={toolTipOverrides}
@@ -545,7 +516,6 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
       />
 
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
         customTooltipFields={toolTipOverrides}
@@ -559,7 +529,6 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
       />
 
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
         customTooltipFields={toolTipOverrides}
@@ -573,7 +542,6 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
       />
 
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
         customTooltipFields={toolTipOverrides}
@@ -587,7 +555,6 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
       />
 
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
         customTooltipFields={toolTipOverrides}
@@ -601,7 +568,6 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
       />
 
       <SecurityField
-        stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
         customTooltipFields={toolTipOverrides}

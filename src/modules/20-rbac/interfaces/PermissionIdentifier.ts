@@ -79,6 +79,8 @@ export enum PermissionIdentifier {
   TOGGLE_FF_FEATUREFLAG = 'ff_featureflag_toggle',
   DELETE_FF_TARGETGROUP = 'ff_targetgroup_delete',
   EDIT_FF_TARGETGROUP = 'ff_targetgroup_edit',
+  CREATE_FF_SDK_KEY = 'ff_environment_apiKeyCreate',
+  DELETE_FF_SDK_KEY = 'ff_environment_apiKeyDelete',
 
   // Dashboard Permissions
   VIEW_DASHBOARD = 'core_dashboards_view',
@@ -221,5 +223,12 @@ export enum PermissionIdentifier {
   DELETE_STREAMING_DESTINATION = 'core_streamingDestination_delete',
 
   //IDP Permisssions
-  IDP_SETTINGS_MANAGE = 'idp_idpsettings_manage'
+  IDP_SETTINGS_MANAGE = 'idp_idpsettings_manage',
+
+  //Harness Code permissions
+  CODE_REPO_EDIT = 'code_repo_edit',
+  CODE_REPO_CREATE = 'code_repo_create',
+  CODE_REPO_DELETE = 'code_repo_delete',
+  CODE_REPO_VIEW = 'code_repo_view',
+  CODE_REPO_PUSH = 'code_repo_push'
 }

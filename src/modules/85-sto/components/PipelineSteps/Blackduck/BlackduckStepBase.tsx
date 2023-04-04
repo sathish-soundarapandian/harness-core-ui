@@ -125,7 +125,6 @@ export const BlackduckStepBase = (
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               scanConfigReadonly
               scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, EXTRACTION_SCAN_MODE, INGESTION_SCAN_MODE]}
             />
@@ -133,13 +132,12 @@ export const BlackduckStepBase = (
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               targetTypeSelectItems={targetTypeSelectItems}
             />
 
-            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} />
 
-            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
 
             <SecurityAuthFields
               showFields={{
@@ -151,13 +149,11 @@ export const BlackduckStepBase = (
               }}
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
             />
 
             {formik.values.spec.mode !== INGESTION_SCAN_MODE.value && (
               <>
                 <SecurityField
-                  stepViewType={stepViewType}
                   allowableTypes={allowableTypes}
                   formik={formik}
                   enableFields={{

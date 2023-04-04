@@ -194,10 +194,16 @@ export function getFqnPath(
   isPropagatedStage: boolean,
   stageIdentifier: string,
   artifactPath: string,
-  fieldName: string
+  fieldName: string,
+  serviceIdentifier: string,
+  isMultiService: boolean
 ): string {
   if (isNewServiceEnvEntity(path)) {
-    return `pipeline.stages.${stageIdentifier}.spec.service.serviceInputs.serviceDefinition.spec.artifacts.${artifactPath}.spec.${fieldName}`
+    if (isMultiService) {
+      return `pipeline.stages.${stageIdentifier}.spec.services.values.${serviceIdentifier}.serviceInputs.serviceDefinition.spec.artifacts.${artifactPath}.spec.${fieldName}`
+    } else {
+      return `pipeline.stages.${stageIdentifier}.spec.service.serviceInputs.serviceDefinition.spec.artifacts.${artifactPath}.spec.${fieldName}`
+    }
   } else {
     if (isPropagatedStage) {
       return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.${fieldName}`

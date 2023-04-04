@@ -123,7 +123,6 @@ export const PrismaCloudStepBase = (
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               scanConfigReadonly
               scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, INGESTION_SCAN_MODE, EXTRACTION_SCAN_MODE]}
             />
@@ -131,26 +130,23 @@ export const PrismaCloudStepBase = (
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               targetTypeSelectItems={[CONTAINER_TARGET_TYPE]}
             />
 
-            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} />
 
-            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
 
             <SecurityAuthFields
               showFields={{ access_id: true, domain: true }}
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               authDomainPlaceHolder="https://us-west1.cloud.twistlock.com/us-3-123456789"
             />
 
             {formik.values.spec.mode === 'extraction' && (
               <>
                 <SecurityField
-                  stepViewType={stepViewType}
                   allowableTypes={allowableTypes}
                   formik={formik}
                   enableFields={{

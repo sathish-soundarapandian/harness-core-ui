@@ -225,7 +225,7 @@ exports[`Create Delegate Wizard render data 1`] = `
                     />
                   </svg>
                 </span>
-                delegate.kubernetes.permissions_info2
+                delegate.kubernetes.permissions_info3
               </p>
             </div>
           </div>

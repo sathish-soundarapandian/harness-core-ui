@@ -18,6 +18,7 @@ import { useGetUserGroupAggregateList } from 'services/cd-ng'
 import { MinimalLayout } from '@common/layouts'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -88,7 +89,7 @@ export default (
     >
       <ChildAppMounter<IDPCustomMicroFrontendProps>
         ChildApp={IDPAdminMicroFrontend}
-        customComponents={{ ConnectorReferenceField }}
+        customComponents={{ ConnectorReferenceField, MultiTypeSecretInput }}
         customHooks={{ useQueryParams, useUpdateQueryParams }}
         idpServices={{ useGetUserGroupAggregateList }}
       />

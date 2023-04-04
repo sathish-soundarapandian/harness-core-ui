@@ -18,10 +18,15 @@ import { ECSBlueGreenCreateServiceStep } from '../ECSBlueGreenCreateServiceStep'
 import { elasticLoadBalancersResponse, listenerRulesList, listenersResponse } from './helpers/mocks'
 
 const fetchListeners = jest.fn().mockReturnValue(listenersResponse)
-const fetchLoadBalancers = jest.fn().mockReturnValue(elasticLoadBalancersResponse)
+const fetchLoadBalancers = jest.fn(_arg => Promise.resolve(elasticLoadBalancersResponse))
 jest.mock('services/cd-ng', () => ({
-  useElasticLoadBalancers: jest.fn().mockImplementation(() => {
-    return { data: elasticLoadBalancersResponse, error: null, loading: false, refetch: fetchLoadBalancers }
+  useElasticLoadBalancers: jest.fn().mockImplementation(arg => {
+    return {
+      data: elasticLoadBalancersResponse,
+      error: null,
+      loading: false,
+      refetch: () => fetchLoadBalancers(arg)
+    }
   }),
   useListeners: jest.fn().mockImplementation(() => {
     return { data: listenersResponse, refetch: fetchListeners, error: null, loading: false }
@@ -48,6 +53,7 @@ describe('ECSRollingDeployStep tests', () => {
   beforeEach(() => {
     onUpdate.mockReset()
     onChange.mockReset()
+    fetchLoadBalancers.mockReset()
   })
 
   test('Edit view renders fine when Service / Env V2 FF is OFF', async () => {
@@ -591,6 +597,22 @@ describe('ECSRollingDeployStep tests', () => {
     const loadBalancerSelect = queryByNameAttribute('spec.loadBalancer', container) as HTMLInputElement
     const loadBalancerDropdownIcon = dropdownIcons[0].parentElement
     userEvent.click(loadBalancerDropdownIcon!)
+
+    await waitFor(() => expect(fetchLoadBalancers).toHaveBeenCalledTimes(1))
+    expect(fetchLoadBalancers).toHaveBeenCalledWith({
+      debounce: 300,
+      lazy: false,
+      queryParams: {
+        accountIdentifier: undefined,
+        awsConnectorRef: undefined,
+        envId: 'Env_1',
+        infraDefinitionId: 'Infra_Def_1',
+        orgIdentifier: undefined,
+        projectIdentifier: undefined,
+        region: undefined
+      }
+    })
+
     await waitFor(() => expect(portalDivs.length).toBe(1))
     const loadBalancerOption1 = await findByText('Load_Balancer_1')
     expect(loadBalancerOption1).toBeInTheDocument()
@@ -759,5 +781,115 @@ describe('ECSRollingDeployStep tests', () => {
     expect(getByText('timeout')).toBeVisible()
     expect(getByText('Step 1')).toBeVisible()
     expect(getByText('20m')).toBeVisible()
+  })
+
+  test('it should make load balancers API call in runtime view when Env and Infra are marked as Runtime inputs in pipeline', async () => {
+    const initialValues = {
+      stages: [
+        {
+          stage: {
+            identifier: 'Stage_1',
+            name: 'Stage',
+            spec: {
+              service: {
+                serviceRef: 'Service_1'
+              },
+              environment: {
+                environmentRef: 'ECS_Env_1',
+                infrastructureDefinitions: [{ identifier: 'ECS_Infra_1' }]
+              },
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      identifier: 'Step_1',
+                      name: 'Step 1',
+                      timeout: '10m',
+                      spec: {
+                        loadBalancer: 'Load_Balancer_2',
+                        prodListener: 'abc-ghi-def',
+                        prodListenerRuleArn: '',
+                        stageListener: 'abc-def-ghi',
+                        stageListenerRuleArn: ''
+                      },
+                      type: StepType.EcsBlueGreenCreateService
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+    const { container, findByText } = render(
+      <TestStepWidget
+        testWrapperProps={{ defaultFeatureFlagValues: { NG_SVC_ENV_REDESIGN: true } }}
+        initialValues={initialValues}
+        template={{
+          identifier: 'Step_1',
+          name: 'Step 1',
+          timeout: '10m',
+          spec: {
+            loadBalancer: RUNTIME_INPUT_VALUE,
+            prodListener: RUNTIME_INPUT_VALUE,
+            prodListenerRuleArn: RUNTIME_INPUT_VALUE,
+            stageListener: RUNTIME_INPUT_VALUE,
+            stageListenerRuleArn: RUNTIME_INPUT_VALUE
+          },
+          type: StepType.EcsBlueGreenCreateService
+        }}
+        type={StepType.EcsBlueGreenCreateService}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={onUpdate}
+        customStepProps={{
+          stageIdentifier: 'Stage_1',
+          selectedStage: {
+            stage: {
+              spec: {
+                environment: {
+                  environmentRef: RUNTIME_INPUT_VALUE,
+                  infrastructureDefinitions: [
+                    {
+                      identifier: RUNTIME_INPUT_VALUE
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }}
+      />
+    )
+
+    const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
+    expect(dropdownIcons.length).toBe(5)
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+
+    const loadBalancerSelect = queryByNameAttribute('spec.loadBalancer', container) as HTMLInputElement
+    const loadBalancerDropdownIcon = dropdownIcons[0].parentElement
+    userEvent.click(loadBalancerDropdownIcon!)
+
+    await waitFor(() => expect(fetchLoadBalancers).toHaveBeenCalledTimes(1))
+    expect(fetchLoadBalancers).toHaveBeenCalledWith({
+      debounce: 300,
+      lazy: false,
+      queryParams: {
+        accountIdentifier: undefined,
+        awsConnectorRef: undefined,
+        envId: 'ECS_Env_1',
+        infraDefinitionId: 'ECS_Infra_1',
+        orgIdentifier: undefined,
+        projectIdentifier: undefined,
+        region: undefined
+      }
+    })
+
+    await waitFor(() => expect(portalDivs.length).toBe(1))
+    const loadBalancerOption1 = await findByText('Load_Balancer_1')
+    expect(loadBalancerOption1).toBeInTheDocument()
+    userEvent.click(loadBalancerOption1)
+    await waitFor(() => expect(loadBalancerSelect.value).toBe('Load_Balancer_1'))
   })
 })

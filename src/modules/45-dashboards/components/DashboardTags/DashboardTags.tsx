@@ -9,7 +9,7 @@ import React from 'react'
 import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { DashboardModel } from 'services/custom-dashboards'
-import { DashboardType } from '@dashboards/types/DashboardTypes.types'
+import { DashboardTags as ModuleTags, DashboardType } from '@dashboards/types/DashboardTypes.types'
 import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
 export interface DashboardTagProps {
@@ -26,38 +26,45 @@ const DashboardTags: React.FC<DashboardTagProps> = ({ dashboard }) => {
         </section>
       )}
       {dashboard?.data_source.map(tag => {
-        if (tag === 'CE') {
+        if (tag === ModuleTags.CE) {
           return (
             <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.ceTag}>
               {getString('common.purpose.ce.cloudCost')}
             </section>
           )
         }
-        if (tag === 'CI') {
+        if (tag === ModuleTags.CI) {
           return (
             <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.ciTag}>
               {getString('buildsText')}
             </section>
           )
         }
-        if (tag === 'CD') {
+        if (tag === ModuleTags.CD) {
           return (
             <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.cdTag}>
               {getString('deploymentsText')}
             </section>
           )
         }
-        if (tag === 'CF') {
+        if (tag === ModuleTags.CF) {
           return (
             <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.cfTag}>
               {getString('common.purpose.cf.continuous')}
             </section>
           )
         }
-        if (tag === 'STO') {
+        if (tag === ModuleTags.STO) {
           return (
             <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.stoTag}>
               {getString('common.purpose.sto.continuous')}
+            </section>
+          )
+        }
+        if (tag === ModuleTags.SRM) {
+          return (
+            <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.srmTag}>
+              {getString('common.purpose.cv.serviceReliability')}
             </section>
           )
         }

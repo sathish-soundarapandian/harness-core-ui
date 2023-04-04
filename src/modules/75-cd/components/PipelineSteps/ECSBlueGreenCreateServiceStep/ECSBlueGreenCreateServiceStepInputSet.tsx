@@ -67,26 +67,34 @@ const ECSBlueGreenCreateServiceStepInputSet = (
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
-  // These are to be passed in API calls after Service/Env V2 redesign
-  const environmentRef = defaultTo(
-    defaultTo(
-      selectedStage?.stage?.spec?.environment?.environmentRef,
-      selectedStage?.stage?.spec?.infrastructure?.environmentRef
-    ),
-    ''
-  )
-  const infrastructureRef = defaultTo(
-    selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0].identifier,
-    ''
-  )
-
+  const pathFirstPart = path?.split('stages')[0]
   // Find out initial values of the fields which are fixed and required to fetch options of other fields
-  const pathPrefix = path?.split('stages')[0]
+  const pathPrefix = !isEmpty(pathFirstPart) ? pathFirstPart : undefined
   // Used get from lodash and finding stages conditionally because formik.values has different strcuture
   // when coming from Input Set view and Run Pipeline Form. Ideally, it should be consistent.
   const currentStageFormik = get(formik?.values, pathPrefix ? `${pathPrefix}stages` : 'stages')?.find(
     (currStage: StageElementWrapperConfig) => currStage.stage?.identifier === stageIdentifier
   )
+
+  // These are to be passed in API calls after Service/Env V2 redesign
+  const environmentRef = defaultTo(
+    defaultTo(
+      currentStageFormik?.stage?.spec?.environment?.environmentRef,
+      defaultTo(
+        selectedStage?.stage?.spec?.environment?.environmentRef,
+        selectedStage?.stage?.spec?.infrastructure?.environmentRef
+      )
+    ),
+    ''
+  )
+  const infrastructureRef = defaultTo(
+    defaultTo(
+      currentStageFormik?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier,
+      selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier
+    ),
+    ''
+  )
+
   const awsConnRef = defaultTo(
     (currentStageFormik?.stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition?.spec
       .connectorRef,

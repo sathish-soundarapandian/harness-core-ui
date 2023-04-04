@@ -18,6 +18,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
@@ -111,6 +112,8 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     lazy: true
   })
 
+  const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
   const {
     data: gcrTagsV2Data,
     loading: fetchingV2Tags,
@@ -144,7 +147,9 @@ const Content = (props: GCRRenderContent): JSX.Element => {
             : artifactPath,
           ''
         ),
-        'tag'
+        'tag',
+        serviceIdentifier as string,
+        isMultiService
       )
     },
     lazy: true

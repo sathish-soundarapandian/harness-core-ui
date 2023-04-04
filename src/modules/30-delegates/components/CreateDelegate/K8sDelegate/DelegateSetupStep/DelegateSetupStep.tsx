@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { set } from 'lodash-es'
 import {
@@ -19,10 +19,7 @@ import {
   Text,
   StepProps,
   SelectOption,
-  Tag,
-  HarnessDocTooltip,
-  useToaster,
-  PageSpinner
+  HarnessDocTooltip
 } from '@harness/uicore'
 import type { FormikProps, FormikHelpers } from 'formik'
 import {
@@ -33,12 +30,7 @@ import {
   DelegateTokenDetails
 } from 'services/portal'
 
-import {
-  useListDelegateProfilesNg,
-  useGetDelegateTokens,
-  GetDelegateTokensQueryParams,
-  useIsImmutableDelegateEnabled
-} from 'services/cd-ng'
+import { useListDelegateProfilesNg, useGetDelegateTokens, GetDelegateTokensQueryParams } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
 import type { DelegateProfile } from '@delegates/DelegateInterface'
@@ -69,16 +61,6 @@ export interface K8sDelegateWizardData {
   name: string
   replicas?: number
 }
-const formatProfileList = (data: any): Array<SelectOption> => {
-  const profiles: Array<DelegateProfile> = data?.resource?.response
-
-  const options: Array<SelectOption> = profiles
-    ? profiles.map((item: DelegateProfile) => {
-        return { label: item.name || '', value: item.uuid || '' }
-      })
-    : []
-  return options
-}
 
 const formatTokenOptions = (data: any): Array<SelectOption> => {
   const profiles: Array<DelegateTokenDetails> = data?.resource
@@ -93,12 +75,6 @@ const formatTokenOptions = (data: any): Array<SelectOption> => {
 const getDefaultDelegateConfiguration = (data: any) => {
   const configurations: DelegateProfile[] = data?.resource?.response
   return configurations ? configurations.find((item: DelegateProfile) => item.primary) : null
-}
-
-const getProfile = (data: any, configId: any) => {
-  const configs: DelegateProfile[] = data?.resource?.response
-  const selProfile = configs ? configs.find(item => item.uuid == configId) : null
-  return selProfile?.selectors
 }
 
 const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupStepProps> = props => {
@@ -130,19 +106,6 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const IS_HELM_DELEGATE_ENABLED: boolean = isHelmDelegateEnabled(true)
-  const { showError } = useToaster()
-  const {
-    data: useImmutableDelegate,
-    error,
-    loading
-  } = useIsImmutableDelegateEnabled({
-    accountIdentifier: accountId
-  })
-  useEffect(() => {
-    if (error) {
-      showError(error.message)
-    }
-  }, [error])
   const { mutate: createKubernetesYaml } = useValidateKubernetesYaml({
     queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier }
   })
@@ -155,7 +118,6 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
     queryParams: { accountId, orgId: orgIdentifier, projectId: projectIdentifier }
   })
   const defaultProfile = getDefaultDelegateConfiguration(data)
-  const profileOptions: SelectOption[] = formatProfileList(data)
 
   const { data: tokensResponse, refetch: getTokens } = useGetDelegateTokens({
     queryParams: {
@@ -259,7 +221,6 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
 
   return (
     <Layout.Vertical padding="xxlarge">
-      {loading ? <PageSpinner /> : null}
       <Container padding="small">
         <Formik
           initialValues={formData}
@@ -271,7 +232,6 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
           validationSchema={validateDelegateSetupSchema}
         >
           {(formikProps: FormikProps<DelegateSetupDetails>) => {
-            const selectors: any = getProfile(data, formikProps.values.delegateConfigurationId)
             return (
               <FormikForm>
                 <Container className={css.delegateForm}>
@@ -301,26 +261,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                           formikProps={formikProps as unknown as FormikProps<FormikForSelectDelegateType>}
                         />
                       )}
-                      {!useImmutableDelegate?.data && profileOptions?.length > 0 && (
-                        <div className={`${css.formGroup} ${css.profileSelect}`}>
-                          <FormInput.Select
-                            items={profileOptions}
-                            label={getString('delegate.delegateConfigurations')}
-                            name={'delegateConfigurationId'}
-                          />
-                        </div>
-                      )}
 
-                      {!useImmutableDelegate?.data && formikProps.values.delegateConfigurationId && selectors && (
-                        <Container className={css.profileSelectors}>
-                          <Text>{getString('delegate.tagsFromDelegateConfig')}</Text>
-                          <div className={css.profileSelectorsItemsContainer}>
-                            {selectors.map((item: string) => (
-                              <Tag key={item}>{item}</Tag>
-                            ))}
-                          </div>
-                        </Container>
-                      )}
                       <Layout.Horizontal className={css.tokensSelectContainer} spacing="small">
                         <FormInput.Select
                           items={delegateTokenOptions}
@@ -340,15 +281,14 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                           text={getString('add')}
                         />
                       </Layout.Horizontal>
-                      {useImmutableDelegate?.data ? (
-                        <Layout.Horizontal className={css.runAsRootCheckbox}>
-                          <FormInput.CheckBox
-                            name="runAsRoot"
-                            label={getString('delegates.runAsRoot')}
-                            onChange={() => setRootAccess(!rootAccess)}
-                          />
-                        </Layout.Horizontal>
-                      ) : null}
+
+                      <Layout.Horizontal className={css.runAsRootCheckbox}>
+                        <FormInput.CheckBox
+                          name="runAsRoot"
+                          label={getString('delegates.runAsRoot')}
+                          onChange={() => setRootAccess(!rootAccess)}
+                        />
+                      </Layout.Horizontal>
                     </Layout.Vertical>
                     <Layout.Vertical className={css.rightPanel}>
                       <div className={css.permissionsTitle} data-tooltip-id="delegatePermissions">
