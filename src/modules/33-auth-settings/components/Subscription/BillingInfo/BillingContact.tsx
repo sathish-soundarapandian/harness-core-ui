@@ -9,15 +9,13 @@ import React from 'react'
 import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { FormikContextType, useFormikContext } from 'formik'
-import { Link, useParams } from 'react-router-dom'
 import { Card, Layout, Text, DropDown, SelectOption, FormInput } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { BillingContactProps, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
+import type { BillingContactProps } from '@common/constants/SubscriptionTypes'
 import UserLabelBilling from '@auth-settings/pages/Billing/UserLabelBilling'
 import type { State, StateByCountryMap } from '@common/hooks/useRegionList'
 import css from './BillingInfo.module.scss'
-import routes from '@common/RouteDefinitions'
 
 export interface InitialBillingInfo {
   companyName: string
@@ -43,7 +41,7 @@ const BillingContact: React.FC<BillingContactProp> = ({ billingInfo, countries, 
     label: state.name,
     value: state.code
   }))
-  const { accountId } = useParams<AccountPathProps>()
+
   return (
     <>
       <Layout.Vertical spacing={'large'}>
@@ -63,11 +61,6 @@ const BillingContact: React.FC<BillingContactProp> = ({ billingInfo, countries, 
                 className={css.warning}
               >
                 {getString('authSettings.billingInfo.emailWarning')}
-                <Link to={routes.toSubscriptions({ accountId, tab: SubscriptionTabNames.PLANS })} target="_blank">
-                  <Text color={Color.PRIMARY_7} font={{ size: 'xsmall' }}>
-                    {'Billing'}
-                  </Text>
-                </Link>
               </Text>
             </Layout.Horizontal>
           </Layout.Vertical>
