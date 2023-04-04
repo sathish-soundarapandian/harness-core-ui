@@ -389,7 +389,6 @@ closeSelection: 'Close Selection'
 mapApplications: 'Map Applications to Harness Services'
 mapApplicationsToEnvs: Map Applications to Harness Environments
 total: 'Total'
-payNow: 'Pay Now'
 credentials: Credentials
 editCredentials: Edit Credentials
 createProject: 'Create Project'

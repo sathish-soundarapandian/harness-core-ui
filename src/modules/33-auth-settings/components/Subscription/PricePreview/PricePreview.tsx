@@ -104,7 +104,7 @@ const Footer: React.FC<{ totalAmount: number; payingFrequency: TimeType; taxAmou
   return (
     <Layout.Vertical className={css.footerStyle}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-        <Text font={{ variation: FontVariation.H2 }}>{getString('payNow')}</Text>
+        <Text font={{ variation: FontVariation.H2 }}>{getString('common.payNow')}</Text>
         <Text font={{ variation: FontVariation.H2 }}>
           {getAmountInCurrency(CurrencyType.USD, totalAmount)}
           {frequency}
