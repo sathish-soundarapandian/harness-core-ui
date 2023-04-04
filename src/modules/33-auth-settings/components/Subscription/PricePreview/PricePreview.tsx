@@ -68,10 +68,9 @@ const PaymentFrequencyToggle: React.FC<{
   )
 }
 
-const Footer: React.FC<{ totalAmount: number; payingFrequency: TimeType; taxAmount?: number }> = ({
+const Footer: React.FC<{ totalAmount: number; payingFrequency: TimeType }> = ({
   totalAmount,
-  payingFrequency,
-  taxAmount
+  payingFrequency
 }) => {
   const { getString } = useStrings()
 
