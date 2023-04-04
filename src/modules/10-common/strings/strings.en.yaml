@@ -1409,3 +1409,33 @@ userGroupsWarningMessage: 'Some of the User Groups referenced in this scope have
 pipelineStage: Pipeline Stage
 violations: Violations
 sbom: SBOM
+welcomePage:
+  allusecases: All Usecases
+  selectusecase: What use case do you want to start with?
+  improveText: Improve All Phases of Software Delivery
+  cd:
+    title: '{{ $.common.cdAndGitops }}'
+    subTitle: Fast & secure deployments
+    bodyText: Deliver software faster, with visibility and control. Eliminate scripting and manual deployments with declarative GitOps and powerful, easy to use pipelines.
+    points: Seamless Integration With Your DevOps Toolchain, Developer Friendly Pipeline-As-Code Experience, Visibility and Control at Every Deployment Stage
+  ci:
+    title: '{{ $.common.purpose.ci.continuous }}'
+    subTitle: Intelligent build & test
+    bodyText: Optimizing performance through hosted builds, caching, and proprietary Test Intelligence™.
+    points: Up to 4X faster than Other Solutions, Fastest managed build cloud service, Reduce build cycles by up to 90% with ML
+  cf:
+    title: '{{ $.common.purpose.cf.continuous }}'
+    subTitle: Manage Features within Pipelines
+    bodyText: Ship features 60% faster and reduce deployment risk with the control and governance enterprises require - all without breaking things, even while in production.
+  cv:
+    title: '{{ $.common.serviceReliabilityManagement }}'
+    subTitle: SLO-driven software delivery
+    bodyText: Save time, reduce effort, and save up to 70% on your cloud bill with intelligent cloud cost automation. Detect and stop cloud cost anomalies as they occur to avoid unpleasant billing surprises.
+  chaos:
+    title: '{{ $.common.purpose.chaos.continuous }}'
+    subTitle: Build & validate resilience
+    bodyText: Run real-world, controlled experiments that will reveal your systems' weaknesses to avoid disasters, improve customer experience, maintain competitive advantage, accelerate digital transformation, boost developer experience, and achieve Continuous Resilience™.
+  ce:
+    title: Cloud Cost Mgmt
+    subTitle: Manage & optimize cloud costs
+    bodyText: '{{ $.common.welcomePage.cv.bodyText }}'

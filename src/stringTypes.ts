@@ -1256,6 +1256,29 @@ export interface StringsMap {
   'common.warning': string
   'common.webhookURL': string
   'common.welcome': string
+  'common.welcomePage.allusecases': string
+  'common.welcomePage.cd.bodyText': string
+  'common.welcomePage.cd.points': string
+  'common.welcomePage.cd.subTitle': string
+  'common.welcomePage.cd.title': string
+  'common.welcomePage.ce.bodyText': string
+  'common.welcomePage.ce.subTitle': string
+  'common.welcomePage.ce.title': string
+  'common.welcomePage.cf.bodyText': string
+  'common.welcomePage.cf.subTitle': string
+  'common.welcomePage.cf.title': string
+  'common.welcomePage.chaos.bodyText': string
+  'common.welcomePage.chaos.subTitle': string
+  'common.welcomePage.chaos.title': string
+  'common.welcomePage.ci.bodyText': string
+  'common.welcomePage.ci.points': string
+  'common.welcomePage.ci.subTitle': string
+  'common.welcomePage.ci.title': string
+  'common.welcomePage.cv.bodyText': string
+  'common.welcomePage.cv.subTitle': string
+  'common.welcomePage.cv.title': string
+  'common.welcomePage.improveText': string
+  'common.welcomePage.selectusecase': string
   'common.whatIsActiveService': string
   'common.whose': string
   'common.with': string

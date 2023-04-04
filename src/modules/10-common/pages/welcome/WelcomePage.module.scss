@@ -9,7 +9,29 @@
   min-height: 100vh;
   width: 100vw;
 }
-
+.harnessLogo {
+  margin-top: var(--spacing-xxlarge) !important;
+  margin-left: var(--spacing-12);
+}
+.onboardingContainer {
+  min-height: 100vh;
+  width: 100vw;
+  flex-direction: column !important;
+  padding: var(--spacing-12) !important;
+  padding-top: var(--huge) !important;
+  background: var(--primary-bg) !important;
+  .width80 {
+    width: 80% !important;
+  }
+  .moduleCards {
+    gap: var(--spacing-medium);
+    display: flex;
+    flex-direction: column;
+    .bodyText {
+      line-height: 24px;
+    }
+  }
+}
 .card {
   &:hover {
     cursor: pointer;
@@ -125,5 +147,46 @@
     width: 200px;
     padding-top: 15px;
     transform: scale(0.75);
+  }
+}
+
+.onboardingCards {
+  gap: var(--spacing-large);
+  align-items: stretch !important;
+  flex-wrap: wrap;
+  .onboardingCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--spacing-xxxlarge);
+  }
+  .cardShadow {
+    box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+  }
+
+  .width50 {
+    width: 49%;
+  }
+  .normalCard {
+    height: 330px;
+    max-width: 32%;
+  }
+}
+.onboardingHead {
+  display: flex;
+}
+
+.sidecard {
+  cursor: pointer;
+  &:hover {
+    background: var(--primary-1);
+  }
+  border-bottom: var(--grey-200) 1px solid;
+  .noBorder {
+    border-bottom: unset !important;
+  }
+  .iconSidecard {
+    display: flex;
+    align-items: center;
   }
 }
