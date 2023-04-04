@@ -164,7 +164,6 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     let getVersionTimeOut = setTimeout(() => {
       pollVersionMap(state.versionMap)
     }, POLL_VERSION_INTERVAL)
-
     async function pollVersionMap(versionMap: VersionMap): Promise<void> {
       try {
         // We are using promise since mutate was rerendering the whole applications every 60 seconds
