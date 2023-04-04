@@ -7,8 +7,7 @@
 
 import { renderHook } from '@testing-library/react-hooks'
 import { act } from 'react-dom/test-utils'
-import { getLoginPageURL, useLogout } from '../SessionUtils'
-
+import { getLoginPageURL, useLogout, parseJwtToken } from '../SessionUtils'
 const mockHistoryPush = jest.fn()
 // eslint-disable-next-line jest-no-mock
 jest.mock('react-router-dom', () => ({
@@ -52,5 +51,36 @@ describe('Session Utils', () => {
       result.current.forceLogout()
     })
     expect(mockHistoryPush).toBeCalledTimes(1)
+  })
+
+  test('parseJwtToken working code', () => {
+    expect(
+      parseJwtToken(
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdXRoVG9rZW4iOiI2NDJhOTljMzY5MTExOTJkZWEzMzY3NGYiLCJpc3MiOiJIYXJuZXNzIEluYyIsImV4cCI6MTY4MDYwNDE5MSwiZW52IjoiZ2F0ZXdheSIsImlhdCI6MTY4MDUxNzczMX0.bl-q6J-pcgA1PkAxSah7QLO9VDkxhoKvt9ojElSjFu0'
+      )
+    ).toHaveProperty('exp', 1680604191)
+  })
+  test('parseJwtToken wrong jwt code undefined code', () => {
+    expect(
+      parseJwtToken(
+        'eyJ0eXAiOiJKV1QiLCJhbGciOdfdsfdsfdiJIUzI1NiJ9.eyJhdXRoVG9rZW4iOiI2NDJhOTljMzY5MTExOTJkZWEzMzY3NGYiLCJpc3MiOiJIYXJuZXNzIEluYyIsImV4cCI6MTY4MDYwNDE5MSwiZW52IjoiZ2F0dfdsfdsfdsfdsfZXdheSIsImlhdCI6MTY4MDUxNzczMX0.bl-q6J-pcgA1PkAxSah7QLO9VDkxhoKvt9ojElSjFu0'
+      )
+    ).toEqual(undefined)
+  })
+  test('parseJwtToken empty string undefined code', () => {
+    expect(parseJwtToken('')).toEqual(undefined)
+  })
+  test('parseJwtToken empty spaces string undefined code', () => {
+    expect(parseJwtToken('     ')).toEqual(undefined)
+  })
+  test('parseJwtToken gibbersh string undefined code', () => {
+    expect(parseJwtToken('  fdsfdsfdsfdsfdsf   ')).toEqual(undefined)
+  })
+  test('parseJwtToken with two dots string undefined code', () => {
+    expect(
+      parseJwtToken(
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdXRoVG9rZW4iOiIdd.2NDJhOTljMzY5MTExOTJkZWEzMzY3NGYiLCJpc3MiOiJIYXJuZXNzIEluYyIsImV4cCI6MTY4MDYwNDE5MSwiZW52IjoiZ2F0ZXdheSIsImlhdCI6MTY4MDUxNzczMX0.bl-q6J-pcgA1PkAxSah7QLO9VDkxhoKvt9ojElSjFu0'
+      )
+    ).toEqual(undefined)
   })
 })

@@ -26,7 +26,7 @@ interface SessionTimeOutProps {
   timeout: number | undefined
 }
 type FromikSessionTimeOut = Omit<SessionTimeOutProps, 'onSaveStart' | 'onSaveComplete'>
-export const MINIMUM_SESSION_TIME_OUT_IN_MINUTES = 480 // 8 hours
+export const MINIMUM_SESSION_TIME_OUT_IN_MINUTES = 30 // 30 minutes
 export const MAXIMUM_SESSION_TIME_OUT_IN_MINUTES = 4320 // 72 hours
 const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout }) => {
   const params = useParams<AccountPathProps>()
