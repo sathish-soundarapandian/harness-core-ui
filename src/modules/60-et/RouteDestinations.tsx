@@ -9,12 +9,13 @@ import React, { FC } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
-import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { ETMonitoredServices } from './pages/ETMonitoredServices'
 import SideNav from './components/SideNav/SideNav'
 import ETHomePage from './pages/ETHomePage'
 import { ETEventsSummary } from './pages/events-summary/ETEventsSummary'
@@ -129,6 +130,13 @@ const ETRoutes: FC = () => {
         <ETSettings>
           <ETAgents pathComponentLocation={'/criticalevents'} />
         </ETSettings>
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        sidebarProps={ETSideNavProps}
+        path={routes.toETMonitoredServices({ ...accountPathProps, ...projectPathProps, ...orgPathProps })}
+      >
+        <ETMonitoredServices />
       </RouteWithLayout>
     </>
   )

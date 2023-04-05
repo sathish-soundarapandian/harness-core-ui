@@ -45,6 +45,14 @@ export default function ETSideNav(): React.ReactElement {
               accountId
             })}
           />
+          <SidebarLink
+            label="Monitored Services"
+            to={routes.toETMonitoredServices({
+              projectIdentifier,
+              orgIdentifier,
+              accountId
+            })}
+          />
           {/*
           <SidebarLink
             label="Getting Started"

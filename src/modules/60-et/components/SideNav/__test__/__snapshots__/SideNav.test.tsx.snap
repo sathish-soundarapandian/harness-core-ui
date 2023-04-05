@@ -148,6 +148,16 @@ exports[`ET Sidenav render with project 1`] = `
         Events Summary
       </p>
     </a>
+    <a
+      class="link"
+      href="/account/dummy/et/orgs/dummy/projects/dummy/etmonitoredservices"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        Monitored Services
+      </p>
+    </a>
     <div>
       <div
         class="border"

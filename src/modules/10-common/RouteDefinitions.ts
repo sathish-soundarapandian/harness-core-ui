@@ -2118,6 +2118,12 @@ const routes = {
       `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/et/eventsummary`
   ),
 
+  toETMonitoredServices: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module = 'et' }: Partial<ProjectPathProps & { module?: string }>) => {
+      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/etmonitoredservices`
+    }
+  ),
+
   toETAgents: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
       `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/agents`
