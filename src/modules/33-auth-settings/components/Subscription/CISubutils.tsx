@@ -1,12 +1,11 @@
 import React from 'react'
-import CIDeveloperCard from './CostCalculator/CIDeveloperCard'
 import { Layout } from '@harness/uicore'
 import { get } from 'lodash-es'
-
 import { TimeType, Editions, SubscriptionProps, ProductPricesProp } from '@common/constants/SubscriptionTypes'
 import { getDollarAmount } from '@auth-settings/utils'
-import { getProductPrices, getPlanType, getSampleData, PLAN_TYPES } from './subscriptionUtils'
 import type { UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
+import CIDeveloperCard from './CostCalculator/CIDeveloperCard'
+import { getProductPrices, getPlanType, getSampleData, PLAN_TYPES } from './subscriptionUtils'
 
 interface CISubutilsProps {
   currentPlan: Editions
@@ -51,13 +50,13 @@ const CISubutils: React.FC<CISubutilsProps> = ({
         newPlan={edition}
         recommended={get(recommendation, 'data.NUMBER_OF_COMMITTERS', null)}
         currentSubscribed={
-          usageAndLimitInfo.limitData.limit?.ci?.activeCommitters !== undefined &&
-          usageAndLimitInfo.limitData.limit?.ci?.activeCommitters > 0
-            ? usageAndLimitInfo.limitData.limit?.ci?.activeCommitters
+          usageAndLimitInfo.limitData.limit?.ci?.totalDevelopers !== undefined &&
+          usageAndLimitInfo.limitData.limit?.ci?.totalDevelopers > 0
+            ? usageAndLimitInfo.limitData.limit?.ci?.totalDevelopers
             : 0
         }
         unitPrice={licenseUnitPrice}
-        usage={usageAndLimitInfo.usageData.usage?.ci?.activeCommitters?.count || 0}
+        usage={usageAndLimitInfo.usageData.usage?.ci?.totalDevelopers?.count || 0}
         toggledNumberOfDevelopers={subscriptionDetails.quantities?.ci?.numberOfDevelopers}
         setNumberOfDevelopers={(value: number) => {
           updateQuantities({

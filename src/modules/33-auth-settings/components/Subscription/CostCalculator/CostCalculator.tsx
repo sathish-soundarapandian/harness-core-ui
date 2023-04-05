@@ -25,13 +25,15 @@ import {
 } from '@common/constants/SubscriptionTypes'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
+import { useGetUsageAndLimit, UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
 import { useDeepCompareEffect, useMutateAsGet } from '@common/hooks'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { getCostCalculatorBodyByModule, PLAN_TYPES } from '@auth-settings/components/Subscription/subscriptionUtils'
+import { PLAN_TYPES } from '@auth-settings/components/Subscription/subscriptionUtils'
 import ChoosePlan from './ChoosePlan'
 import { Footer } from './Footer'
 import { PremiumSupport } from './PremiumSupport'
+import FFSubutils from '../FFSubutils'
+import CISubutils from '../CISubutils'
 import { Header } from '../Header'
 import css from './CostCalculator.module.scss'
 
@@ -42,6 +44,17 @@ interface CostCalculatorProps {
   subscriptionProps: SubscriptionProps
   className: string
   onPriceSkewsLoad: (skews: { [key: string]: any }[]) => void
+}
+interface GetCostCalculatorBodyByModuleProps {
+  module: Module
+  currentPlan: Editions
+  paymentFrequency: TimeType
+  usageAndLimitInfo: UsageAndLimitReturn
+  productPrices: ProductPricesProp
+  subscriptionDetails: SubscriptionProps
+  setSubscriptionDetails: (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
+  recommendation: { [key: string]: number } | null
+  updateQuantities: ({ maus, devs }: { maus?: number; devs?: number  }) => void
 }
 
 export const CostCalculator: React.FC<CostCalculatorProps> = ({
@@ -59,6 +72,49 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   const [quantities, setQuantities] = useState<SubscriptionProps['quantities'] | undefined>(
     subscriptionProps.quantities
   )
+  function getCostCalculatorBodyByModule({
+    module,
+    currentPlan,
+    usageAndLimitInfo,
+    productPrices,
+    paymentFrequency,
+    subscriptionDetails,
+    setSubscriptionDetails,
+    recommendation,
+    updateQuantities
+  }: GetCostCalculatorBodyByModuleProps): React.ReactElement {
+    switch (module) {
+      case 'cf':
+        return (
+          <FFSubutils
+            currentPlan={currentPlan}
+            recommendation={recommendation}
+            usageAndLimitInfo={usageAndLimitInfo}
+            subscriptionDetails={subscriptionDetails}
+            updateQuantities={updateQuantities}
+            productPrices={productPrices}
+            setSubscriptionDetails={setSubscriptionDetails}
+            paymentFrequency={paymentFrequency}
+          ></FFSubutils>
+        )
+      case 'ci': {
+        return (
+          <CISubutils
+            currentPlan={currentPlan}
+            recommendation={recommendation}
+            usageAndLimitInfo={usageAndLimitInfo}
+            subscriptionDetails={subscriptionDetails}
+            updateQuantities={updateQuantities}
+            productPrices={productPrices}
+            setSubscriptionDetails={setSubscriptionDetails}
+            paymentFrequency={paymentFrequency}
+          ></CISubutils>
+        )
+      }
+    }
+
+    return <></>
+  }
   const {
     data,
     loading: retrievingProductPrices,
