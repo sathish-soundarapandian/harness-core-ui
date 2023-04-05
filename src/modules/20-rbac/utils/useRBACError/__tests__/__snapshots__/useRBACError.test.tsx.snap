@@ -6,7 +6,7 @@ exports[`useRbacError testRBACError rbac errors 1`] = `
   padding="small"
   spacing="small"
 >
-  <m
+  <p
     color="grey800"
     font={
       Object {
@@ -26,8 +26,8 @@ exports[`useRbacError testRBACError rbac errors 1`] = `
     >
        pipelines.
     </span>
-  </m>
-  <m
+  </p>
+  <p
     color="grey800"
     font={
       Object {
@@ -36,8 +36,8 @@ exports[`useRbacError testRBACError rbac errors 1`] = `
     }
   >
     rbac.youAreMissingTheFollowingPermission
-  </m>
-  <m
+  </p>
+  <p
     color="grey800"
     font={
       Object {
@@ -56,7 +56,7 @@ exports[`useRbacError testRBACError rbac errors 1`] = `
     <span>
        rbac.in rbac.project "test"
     </span>
-  </m>
+  </p>
 </Layout.Vertical>
 `;
 
@@ -66,7 +66,7 @@ exports[`useRbacError testRBACError rbac errors 2`] = `
   padding="small"
   spacing="small"
 >
-  <m
+  <p
     color="grey800"
     font={
       Object {
@@ -86,8 +86,8 @@ exports[`useRbacError testRBACError rbac errors 2`] = `
     >
        pipelines.
     </span>
-  </m>
-  <m
+  </p>
+  <p
     color="grey800"
     font={
       Object {
@@ -96,8 +96,8 @@ exports[`useRbacError testRBACError rbac errors 2`] = `
     }
   >
     rbac.youAreMissingTheFollowingPermission
-  </m>
-  <m
+  </p>
+  <p
     color="grey800"
     font={
       Object {
@@ -116,7 +116,7 @@ exports[`useRbacError testRBACError rbac errors 2`] = `
     <span>
        rbac.in rbac.accountScope
     </span>
-  </m>
+  </p>
 </Layout.Vertical>
 `;
 
@@ -126,7 +126,7 @@ exports[`useRbacError testRBACError rbac errors 3`] = `
   padding="small"
   spacing="small"
 >
-  <m
+  <p
     color="grey800"
     font={
       Object {
@@ -146,8 +146,8 @@ exports[`useRbacError testRBACError rbac errors 3`] = `
     >
        pipelines.
     </span>
-  </m>
-  <m
+  </p>
+  <p
     color="grey800"
     font={
       Object {
@@ -156,8 +156,8 @@ exports[`useRbacError testRBACError rbac errors 3`] = `
     }
   >
     rbac.youAreMissingTheFollowingPermission
-  </m>
-  <m
+  </p>
+  <p
     color="grey800"
     font={
       Object {
@@ -176,13 +176,13 @@ exports[`useRbacError testRBACError rbac errors 3`] = `
     <span>
        rbac.in rbac.org "testOrg"
     </span>
-  </m>
+  </p>
 </Layout.Vertical>
 `;
 
 exports[`useRbacError testRBACError with multiple errors 1`] = `
 <Layout.Vertical>
-  <m
+  <p
     color="grey800"
     font={
       Object {
@@ -192,13 +192,13 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
     }
   >
     rbac.unauthorizedText 
-  </m>
+  </p>
   <Layout.Vertical
     className="main"
     padding="small"
     spacing="small"
   >
-    <m
+    <p
       color="grey800"
       font={
         Object {
@@ -215,14 +215,14 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
       <span>
          rbac.in rbac.org "testOrg"
       </span>
-    </m>
+    </p>
   </Layout.Vertical>
   <Layout.Vertical
     className="main"
     padding="small"
     spacing="small"
   >
-    <m
+    <p
       color="grey800"
       font={
         Object {
@@ -239,14 +239,14 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
       <span>
          rbac.in rbac.project "proj123"
       </span>
-    </m>
+    </p>
   </Layout.Vertical>
   <Layout.Vertical
     className="main"
     padding="small"
     spacing="small"
   >
-    <m
+    <p
       color="grey800"
       font={
         Object {
@@ -263,7 +263,7 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
       <span>
          rbac.in rbac.org "testOrg3"
       </span>
-    </m>
+    </p>
   </Layout.Vertical>
 </Layout.Vertical>
 `;

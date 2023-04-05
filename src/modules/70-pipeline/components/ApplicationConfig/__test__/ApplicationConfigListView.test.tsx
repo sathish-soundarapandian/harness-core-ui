@@ -86,7 +86,12 @@ describe('ApplicationConfigListView', () => {
     const editBtn = container.querySelectorAll('[data-icon="Edit"]')[0]
     expect(editBtn).toBeDefined()
     fireEvent.click(editBtn)
-    const portal = document.getElementsByClassName('bp3-dialog')[0]
+
+    const portal = await waitFor(() => {
+      const el = document.querySelector('.bp3-dialog')
+      expect(el).toBeInTheDocument()
+      return el as Element
+    })
 
     const closeButton = portal.querySelector("button[class*='crossIcon']") as Element
     fireEvent.click(closeButton)
