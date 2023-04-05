@@ -12,8 +12,8 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Editions } from '@common/constants/SubscriptionTypes'
 import SliderBar from './SliderBar'
-import { Item, generateRangeArray } from './FFDeveloperCard'
-import { Header } from '../Header'
+import { Item, generateRangeArray, Header } from './FFDeveloperCard'
+
 import css from './CostCalculator.module.scss'
 
 interface DeveloperSubscriptionInfoProps {
