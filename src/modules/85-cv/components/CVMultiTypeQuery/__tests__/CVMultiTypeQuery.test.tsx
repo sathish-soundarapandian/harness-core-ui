@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Button, Formik } from '@harness/uicore'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import CVMultiTypeQuery from '../CVMultiTypeQuery'
 
@@ -99,5 +100,27 @@ describe('Validate CVMultiTypeQuery', () => {
     const submitBtn = await getByText('Submit Dummy Form')
     fireEvent.click(submitBtn)
     await waitFor(() => expect(getByText(queryErrorMessage)).toBeInTheDocument())
+  })
+
+  test('should have modal title as Query', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <Formik formName="" initialValues={{ query: '' }} onSubmit={() => undefined}>
+          <CVMultiTypeQuery
+            name={'query'}
+            expressions={['exp1']}
+            fetchRecords={jest.fn()}
+            disableFetchButton={false}
+            runQueryBtnTooltip={''}
+          />
+        </Formik>
+      </TestWrapper>
+    )
+
+    act(() => {
+      userEvent.click(container.querySelector('[icon="fullscreen"]')!)
+    })
+
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'cv.query' })).toBeInTheDocument())
   })
 })

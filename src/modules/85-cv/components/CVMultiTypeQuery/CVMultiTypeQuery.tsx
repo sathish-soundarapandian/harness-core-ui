@@ -50,12 +50,18 @@ export default function CVMultiTypeQuery({
               scriptType={'Bash'}
               expressions={expressions}
               editorOptions={{ lineNumbers: 'off' }}
+              title={getString('cv.query')}
             />
           </>
         )
       }}
     >
-      <ShellScriptMonacoField name={name} scriptType={'Bash'} editorOptions={{ lineNumbers: 'off' }} />
+      <ShellScriptMonacoField
+        name={name}
+        scriptType={'Bash'}
+        title={getString('cv.query')}
+        editorOptions={{ lineNumbers: 'off' }}
+      />
       <Button
         intent="primary"
         text={getString('cv.monitoringSources.gcoLogs.fetchRecords')}
