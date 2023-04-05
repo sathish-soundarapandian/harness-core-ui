@@ -11,11 +11,14 @@ import { Color } from '@harness/design-system'
 import { Checkbox, Container, DropDown, Layout, SelectOption, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
-import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { MetadataListProjectsResponseBody, Setting } from 'services/ticket-service/ticketServiceSchemas'
+import type {
+  MetadataListProjectsResponseBody,
+  SaveSettingRequestBody,
+  Setting
+} from 'services/ticket-service/ticketServiceSchemas'
 import {
-  SettingsSaveSettingVariables,
   useMetadataListProjects,
   useSettingsGetSetting,
   useSettingsSaveSetting
@@ -33,8 +36,12 @@ type Settings = {
 }
 const ExternalTicketSettings: React.FC = () => {
   const { getString } = useStrings()
-  const { accountId, projectIdentifier, orgIdentifier, module } =
-    useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
+  const {
+    accountId,
+    projectIdentifier: projectId,
+    orgIdentifier: orgId,
+    module
+  } = useParams<ProjectPathProps & Optional<ModulePathParams>>()
 
   const { mutate } = useSettingsSaveSetting()
 
@@ -42,7 +49,7 @@ const ExternalTicketSettings: React.FC = () => {
 
   const { data: settingsData, isLoading: isLoadingSettings } = useSettingsGetSetting<Setting>(
     {
-      queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier, module: module || 'sto' }
+      queryParams: { accountId, orgId, projectId, module }
     },
     { retry: false }
   )
@@ -64,11 +71,9 @@ const ExternalTicketSettings: React.FC = () => {
     refetch: refetchProjects
   } = useMetadataListProjects<MetadataListProjectsResponseBody>(
     {
-      queryParams: { accountId, module: 'sto' }
+      queryParams: { accountId, orgId, projectId, module: module || 'sto' }
     },
-    {
-      retry: 1
-    }
+    { retry: false }
   )
 
   const projectItems: SelectOption[] | undefined = projectData?.projects.map(proj => ({
@@ -91,18 +96,17 @@ const ExternalTicketSettings: React.FC = () => {
             className={css.connector}
             placeholder={getString('common.tickets.selectConnector')}
             accountIdentifier={accountId}
-            projectIdentifier={projectIdentifier}
-            orgIdentifier={orgIdentifier}
+            orgIdentifier={orgId}
+            projectIdentifier={projectId}
             type="Jira"
             selected={ticketSettings?.connector}
             disabled={isLoadingSettings}
-            onChange={async (value, scope) => {
-              await updateTicketSettings({
+            onChange={(value, scope) => {
+              updateTicketSettings({
                 connector: scope !== Scope.PROJECT ? `${scope}.${value.identifier}` : value.identifier,
                 projectKey: undefined,
                 issueType: undefined
               })
-              await refetchProjects()
             }}
           />
         </div>
@@ -115,8 +119,8 @@ const ExternalTicketSettings: React.FC = () => {
             items={projectItems}
             value={ticketSettings?.projectKey}
             disabled={isLoadingSettings || isLoadingProjects}
-            onChange={async item => {
-              await updateTicketSettings({ projectKey: item.value as string })
+            onChange={item => {
+              updateTicketSettings({ projectKey: String(item.value) })
             }}
           />
         </div>
@@ -130,12 +134,12 @@ const ExternalTicketSettings: React.FC = () => {
               jiraProjectId={ticketSettings?.projectKey}
               value={ticketSettings?.issueType}
               disabled={isLoadingSettings || isLoadingProjects}
-              onChange={async item => {
-                await updateTicketSettings({ issueType: item.value as string })
+              onChange={item => {
+                updateTicketSettings({ issueType: String(item.value) })
               }}
             />
           ) : (
-            <DropDown items={[]} disabled={isLoadingSettings || isLoadingProjects} onChange={() => undefined} />
+            <DropDown items={[]} disabled onChange={() => undefined} />
           )}
         </div>
       </Layout.Horizontal>
@@ -150,23 +154,29 @@ const ExternalTicketSettings: React.FC = () => {
     </Container>
   )
 
-  async function updateTicketSettings(settings: Partial<Settings>): Promise<void> {
+  function updateTicketSettings(settings: Partial<Settings>) {
     const newSettings = { ...ticketSettings, ...settings }
     setTicketSettings(newSettings)
+
+    const additional: SaveSettingRequestBody['additional'] = {
+      ...(newSettings.projectKey ? { projectKey: newSettings.projectKey } : {}),
+      ...(newSettings.issueType ? { issueType: newSettings.issueType } : {})
+    }
+
     if (newSettings.connector) {
       const connectorId =
         typeof newSettings.connector === 'string' ? newSettings.connector : newSettings.connector.value
 
-      const saveSettings = {
-        queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier },
-        body: {
-          additional: { projectKey: newSettings.projectKey, issueType: newSettings.issueType },
-          connectorId,
-          module,
-          service: 'Jira'
+      mutate(
+        {
+          queryParams: { accountId, projectId, orgId, module },
+          // Remove "module" and "as SaveSettingRequestBody" when API stabilizes:
+          body: { additional, connectorId, module, service: 'Jira' } as SaveSettingRequestBody
+        },
+        {
+          onSuccess: async () => await refetchProjects()
         }
-      } as SettingsSaveSettingVariables
-      await mutate(saveSettings, {})
+      )
     }
   }
 }

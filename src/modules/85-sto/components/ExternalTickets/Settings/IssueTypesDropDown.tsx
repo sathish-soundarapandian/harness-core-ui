@@ -11,10 +11,10 @@ import { DropDown } from '@harness/uicore'
 import type { DropDownProps, SelectOption } from '@harness/uicore'
 import { useMetadataGetProject } from 'services/ticket-service/ticketServiceComponents'
 import type { Project } from 'services/ticket-service/ticketServiceSchemas'
-import type { AccountPathProps, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 type IssueTypesDropDownProps = Omit<DropDownProps, 'items'> & {
-  jiraProjectId?: string
+  jiraProjectId: string
   value?: string
 }
 
@@ -22,14 +22,15 @@ const IssueTypesDropDown: React.FC<IssueTypesDropDownProps> = ({ jiraProjectId, 
   const {
     accountId,
     orgIdentifier: orgId,
-    projectIdentifier: projectId
-  } = useParams<PipelinePathProps & AccountPathProps>()
+    projectIdentifier: projectId,
+    module = 'sto'
+  } = useParams<ProjectPathProps & Optional<ModulePathParams>>()
   const [items, setItems] = useState<SelectOption[] | undefined>()
 
   const { data } = useMetadataGetProject<Project>(
     {
-      pathParams: { id: jiraProjectId || '' },
-      queryParams: { accountId, orgId, projectId, module: 'sto' }
+      pathParams: { id: jiraProjectId },
+      queryParams: { accountId, orgId, projectId, module }
     },
     {
       retry: false,

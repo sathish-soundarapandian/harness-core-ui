@@ -1974,9 +1974,9 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, issueId }: ProjectPathProps & { issueId: string }) =>
       `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/ticket-summary/${issueId}`
   ),
-  toSTOProjectTicketSettings: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
-      `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/tickets`
+  toProjectTicketSettings: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: ProjectPathProps & ModulePathParams) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/tickets`
   ),
   /********************************************************************************************************************/
   toOldCustomDashboard: withAccountId(() => '/home/dashboards*'),
