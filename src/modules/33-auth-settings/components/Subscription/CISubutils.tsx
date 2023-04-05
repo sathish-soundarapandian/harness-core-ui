@@ -49,11 +49,11 @@ const CISubutils: React.FC<CISubutilsProps> = ({
       <CIDeveloperCard
         currentPlan={currentPlan}
         newPlan={edition}
-        recommended={get(recommendation, 'data.NUMBER_OF_USERS', null)}
+        recommended={get(recommendation, 'data.NUMBER_OF_COMMITTERS', null)}
         currentSubscribed={
-          usageAndLimitInfo.limitData.limit?.ci?.totalDevelopers !== undefined &&
-          usageAndLimitInfo.limitData.limit?.ci?.totalDevelopers > 0
-            ? usageAndLimitInfo.limitData.limit?.ci?.totalDevelopers
+          usageAndLimitInfo.limitData.limit?.ci?.activeCommitters !== undefined &&
+          usageAndLimitInfo.limitData.limit?.ci?.activeCommitters > 0
+            ? usageAndLimitInfo.limitData.limit?.ci?.activeCommitters
             : 0
         }
         unitPrice={licenseUnitPrice}
