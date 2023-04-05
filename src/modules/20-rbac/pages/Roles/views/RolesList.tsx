@@ -24,9 +24,9 @@ import {
   Popover
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-
+import { identity, uniq } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
-import { Classes, Position } from '@blueprintjs/core'
+import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { useStrings } from 'framework/strings'
 import { Role, RoleResponse, useGetRoleList } from 'services/rbac'
@@ -52,6 +52,7 @@ import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RoleMenu from '@rbac/components/RoleMenu/RoleMenu'
 import useDeleteRoleDialog from '@rbac/hooks/useDeleteRoleDialog'
+import RbacFactory from '@rbac/factories/RbacFactory'
 import css from '../Roles.module.scss'
 
 const ROLES_PAGE_SIZE_OPTIONS = [12, 24, 48, 96]
@@ -93,6 +94,39 @@ const RenderColumnRole: Renderer<CellProps<RoleResponse>> = ({
           // className={css.tags}
         />
       ) : null}
+    </Layout.Horizontal>
+  )
+}
+
+const RenderSelectedResources: Renderer<CellProps<RoleResponse>> = ({
+  row: {
+    original: { role }
+  }
+}) => {
+  const { getString } = useStrings()
+  const resources = uniq(
+    role.permissions?.map(permission => RbacFactory.permissionToResourceTypeMap.get(permission as PermissionIdentifier))
+  ).filter(identity)
+
+  const showResources = resources.slice(0, 5)
+  const remainingResources = resources.length - showResources.length
+  return (
+    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'left' }} spacing="xsmall">
+      {showResources.map(resourceType => {
+        if (!resourceType) return
+        const resourceHandler = RbacFactory.getResourceTypeHandler(resourceType)
+        if (!resourceHandler) return
+        return (
+          <Popover
+            key={resourceType}
+            content={<Text padding="small">{getString(resourceHandler.label)}</Text>}
+            interactionKind={PopoverInteractionKind.HOVER}
+          >
+            <Icon name={resourceHandler.icon} size={24} />
+          </Popover>
+        )
+      })}
+      {remainingResources > 0 ? <span className={css.resourceCount}>+{remainingResources}</span> : null}
     </Layout.Horizontal>
   )
 }
@@ -220,20 +254,27 @@ const RolesList: React.FC = () => {
         id: 'identifier',
         accessor: row => row.role.identifier,
         Cell: RenderColumnIcon,
-        width: '50px'
+        width: '5%'
       },
       {
-        Header: 'Role',
+        Header: 'Roles',
         id: 'name',
         accessor: row => row.role.name,
-        width: '100%',
+        width: '30%',
         Cell: RenderColumnRole
+      },
+      {
+        Header: 'Selected Resources',
+        id: 'selectedResources',
+        accessor: row => row.role.identifier,
+        Cell: RenderSelectedResources,
+        width: '61%'
       },
       {
         id: 'menu',
         accessor: row => row.role.identifier,
         Cell: RenderColumnMenu,
-        width: '30px'
+        width: '4%'
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps

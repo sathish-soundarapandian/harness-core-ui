@@ -64,10 +64,12 @@ export interface ResourceCategoryHandler {
 class RbacFactory {
   private map: Map<ResourceType, ResourceHandler>
   private resourceCategoryMap: Map<ResourceCategory, ResourceCategoryHandler>
+  permissionToResourceTypeMap: Map<PermissionIdentifier, ResourceType>
 
   constructor() {
     this.map = new Map()
     this.resourceCategoryMap = new Map()
+    this.permissionToResourceTypeMap = new Map()
   }
 
   registerResourceCategory(resourceCategory: ResourceCategory, handler: ResourceCategoryHandler): void {
@@ -76,6 +78,11 @@ class RbacFactory {
 
   registerResourceTypeHandler(resourceType: ResourceType, handler: ResourceHandler): void {
     this.map.set(resourceType, handler)
+    if (handler.permissionLabels) {
+      Object.keys(handler.permissionLabels).forEach(permissionIdentifier => {
+        this.permissionToResourceTypeMap.set(permissionIdentifier as PermissionIdentifier, resourceType)
+      })
+    }
   }
 
   getResourceCategoryList(resources: ResourceType[]): Map<ResourceCategory | ResourceType, ResourceType[] | undefined> {

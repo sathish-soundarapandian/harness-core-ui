@@ -11,6 +11,7 @@ declare const styles: {
   readonly listTable: string
   readonly masonry: string
   readonly pagination: string
+  readonly resourceCount: string
   readonly search: string
   readonly warning: string
 }

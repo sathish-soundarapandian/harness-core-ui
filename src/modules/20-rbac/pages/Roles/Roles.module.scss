@@ -24,6 +24,17 @@
   margin-bottom: 0 !important;
 }
 
+.resourceCount {
+  background-color: var(--primary-1);
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 24px;
+  text-align: center;
+}
+
 .search {
   margin-right: var(--spacing-medium);
 }
