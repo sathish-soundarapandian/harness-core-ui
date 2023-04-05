@@ -30,7 +30,7 @@ export interface JenkinsStepSpec {
   jobName: SelectWithBiLevelOption | string
   childJobName?: SelectWithSubmenuOption | string
   jobParameter: jobParameterInterface[] | string
-  delegateSelectors: string[]
+  delegateSelectors?: string[]
   unstableStatusAsSuccess?: boolean
   useConnectorUrlForJobExecution?: boolean
 }

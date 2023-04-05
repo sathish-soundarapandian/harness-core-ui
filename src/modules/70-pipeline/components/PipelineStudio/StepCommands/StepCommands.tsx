@@ -12,6 +12,7 @@ import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { defaultTo, isEmpty, noop, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import stableStringify from 'fast-json-stable-stringify'
 import { HelpPanel, HelpPanelType, FloatingButton } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import { StepWidgetWithFormikRef } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -123,6 +124,15 @@ export function StepCommands(
     },
     isDirty() {
       if (activeTab === StepCommandTabs.StepConfiguration && stepRef.current) {
+        const currentStep = stepsFactory.getStep(stepType) as PipelineStep<any>
+        const processFormData = currentStep?.processFormData
+        if (processFormData) {
+          const processedInitialValues = processFormData(stepRef.current.initialValues)
+          const processedValues = processFormData(stepRef.current.values)
+
+          return stableStringify(processedInitialValues) !== stableStringify(processedValues)
+        }
+
         return stepRef.current.dirty
       }
 

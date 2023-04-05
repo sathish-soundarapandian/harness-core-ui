@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { IconName, SelectOption, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import * as Yup from 'yup'
 import { connect, FormikErrors, yupToFormErrors } from 'formik'
 import { isArray, isEmpty } from 'lodash-es'
@@ -76,34 +76,45 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
       connectorRef: '',
       jobName: '',
       jobParameter: [],
-      delegateSelectors: [],
       unstableStatusAsSuccess: false,
       useConnectorUrlForJobExecution: false
     }
   }
 
   /* istanbul ignore next */
-  processFormData(data: any): JenkinsStepData {
+  processFormData(data: JenkinsStepData): JenkinsStepData {
+    const { identifier, name, type, timeout, failureStrategies, spec } = data
+    const {
+      connectorRef,
+      jobName,
+      childJobName,
+      jobParameter,
+      delegateSelectors,
+      unstableStatusAsSuccess,
+      useConnectorUrlForJobExecution
+    } = spec
+
     const processedData = {
-      ...data,
+      identifier,
+      name,
+      type,
+      timeout,
+      failureStrategies,
       spec: {
-        ...data.spec,
-        connectorRef:
-          getMultiTypeFromValue(data.spec.connectorRef as SelectOption) === MultiTypeInputType.FIXED
-            ? (data.spec.connectorRef as SelectOption)?.value?.toString()
-            : data.spec.connectorRef,
-        jobName:
-          ((data.spec.jobName as unknown as SelectOption)?.label as string) || (data.spec.jobName as unknown as string)
+        connectorRef,
+        jobName: childJobName
+          ? typeof childJobName === 'string'
+            ? childJobName
+            : childJobName.label
+          : typeof jobName === 'string'
+          ? jobName
+          : jobName.label,
+        jobParameter,
+        delegateSelectors,
+        unstableStatusAsSuccess,
+        useConnectorUrlForJobExecution
       }
     } as JenkinsStepData
-
-    if (processedData.spec.childJobName) {
-      processedData.spec.jobName =
-        typeof processedData.spec.childJobName === 'string'
-          ? processedData.spec.childJobName
-          : processedData.spec.childJobName?.label
-      delete processedData.spec.childJobName
-    }
 
     return processedData
   }
@@ -199,8 +210,8 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
           inputSetData={inputSetData}
           readonly={!!inputSetData?.readonly}
           stepViewType={stepViewType}
-          onUpdate={(values: any) => onUpdate?.(this.processFormData(values))}
-          onChange={(values: any) => onChange?.(this.processFormData(values))}
+          onUpdate={(values: JenkinsStepData) => onUpdate?.(this.processFormData(values))}
+          onChange={(values: JenkinsStepData) => onChange?.(this.processFormData(values))}
           ref={formikRef}
           allowableTypes={allowableTypes}
         />
@@ -210,7 +221,7 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
         <JenkinsStepVariables
           {...(customStepProps as JenkinsStepVariablesProps)}
           initialValues={initialValues}
-          onUpdate={(values: any) => onUpdate?.(this.processFormData(values))}
+          onUpdate={(values: JenkinsStepData) => onUpdate?.(this.processFormData(values))}
         />
       )
     }
@@ -219,9 +230,9 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
       <JenkinsStepBaseWithRef
         initialValues={initialValues}
         allowableTypes={allowableTypes}
-        onChange={(values: any) => onChange?.(this.processFormData(values))}
+        onChange={(values: JenkinsStepData) => onChange?.(this.processFormData(values))}
         stepViewType={stepViewType || StepViewType.Edit}
-        onUpdate={(values: any) => onUpdate?.(this.processFormData(values))}
+        onUpdate={(values: JenkinsStepData) => onUpdate?.(this.processFormData(values))}
         ref={formikRef}
         isNewStep={isNewStep}
         readonly={readonly}

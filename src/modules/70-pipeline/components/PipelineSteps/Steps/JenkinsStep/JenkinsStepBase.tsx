@@ -381,6 +381,7 @@ function FormContent({
             }
             lastOpenedJob.current = null
           }}
+          setRefValue
           disabled={readonly}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
         />
@@ -643,7 +644,7 @@ function FormContent({
   )
 }
 
-export function JenkinsStepBase(
+function JenkinsStepBase(
   { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType, onChange }: JenkinsStepProps,
   formikRef: StepFormikFowardRef<JenkinsStepData>
 ): React.ReactElement {
