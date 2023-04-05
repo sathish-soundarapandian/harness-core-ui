@@ -9,23 +9,26 @@
   height: fit-content;
   width: inherit !important;
 
-  .detailsSection {
-    height: fit-content;
-    width: 45%;
-    min-width: 240px;
+  .detailsSectionContainerColumn {
+    width: 45% !important;
 
-    .detailsSectionRowWrapper {
-      &:not(:last-child) {
-        border-bottom: 1px solid var(--grey-200);
-      }
+    .detailsSection {
+      height: fit-content;
+      min-width: 240px;
 
-      .detailsSectionRow {
-        display: flex;
-        justify-content: space-between;
+      .detailsSectionRowWrapper {
+        &:not(:last-child) {
+          border-bottom: 1px solid var(--grey-200);
+        }
 
-        .detailsValue {
-          white-space: break-spaces;
-          word-break: break-all;
+        .detailsSectionRow {
+          display: flex;
+          justify-content: space-between;
+
+          .detailsValue {
+            white-space: break-spaces;
+            word-break: break-all;
+          }
         }
       }
     }

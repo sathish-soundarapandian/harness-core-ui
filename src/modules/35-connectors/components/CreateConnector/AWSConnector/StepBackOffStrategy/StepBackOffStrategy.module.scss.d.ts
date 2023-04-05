@@ -7,11 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly detailsSection: string
-  readonly detailsSectionContainer: string
-  readonly detailsSectionContainerColumn: string
-  readonly detailsSectionRow: string
-  readonly detailsSectionRowWrapper: string
-  readonly detailsValue: string
+  readonly backOffStrategySelectionCardWrapper: string
 }
 export default styles

@@ -362,6 +362,20 @@ aws:
   testRegion: Test Region
   assumeIAMRole: Assume IAM role on Delegate
   useIRSA: Use IRSA
+  awsBackOffStrategy: AWS Backoff Strategy
+  strategyType: Strategy Type
+  selectBackOffStrategyTypeLabel: Select backoff strategy type
+  fixedDelay: Fixed Delay
+  equalJitter: Equal Jitter
+  fullJitter: Full Jitter
+  fixedBackoff: Fixed Backoff
+  retryCount: Retry Count
+  baseDelay: Base Delay
+  maxBackoffTime: Max Backoff Time
+  fixedBackoffPlaceholder: Enter Fixed backoff (in ms)
+  retryCountPlaceholder: Enter Retry Count (in ms)
+  baseDelayPlaceholder: Enter Base Delay (in ms)
+  maxBackoffTimePlaceholder: Enter Max Backoff Time
   validation:
     delegateSelector: 'Delegate Tag is required'
     secretKeyRef: 'Secret key is required'

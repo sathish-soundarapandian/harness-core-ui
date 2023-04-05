@@ -834,22 +834,30 @@ exports[`Connector Details Page Rendering connector details with DockerRegistry:
             class="Layout--horizontal Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainer"
           >
             <div
-              class="bp3-card bp3-elevation-0 Card--card detailsSection"
+              class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainerColumn"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              <div
+                class="bp3-card bp3-elevation-0 Card--card detailsSection"
               >
-                overview
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+                >
+                  overview
+                </p>
+              </div>
             </div>
             <div
-              class="bp3-card bp3-elevation-0 Card--card detailsSection"
+              class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainerColumn"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              <div
+                class="bp3-card bp3-elevation-0 Card--card detailsSection"
               >
-                credentials
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+                >
+                  credentials
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -1012,22 +1020,30 @@ exports[`Connector Details Page Rendering connector details with K8sCluster: K8s
             class="Layout--horizontal Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainer"
           >
             <div
-              class="bp3-card bp3-elevation-0 Card--card detailsSection"
+              class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainerColumn"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              <div
+                class="bp3-card bp3-elevation-0 Card--card detailsSection"
               >
-                overview
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+                >
+                  overview
+                </p>
+              </div>
             </div>
             <div
-              class="bp3-card bp3-elevation-0 Card--card detailsSection"
+              class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainerColumn"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              <div
+                class="bp3-card bp3-elevation-0 Card--card detailsSection"
               >
-                credentials
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+                >
+                  credentials
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -1190,22 +1206,30 @@ exports[`Connector Details Page Rendering connector details: view text 1`] = `
             class="Layout--horizontal Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainer"
           >
             <div
-              class="bp3-card bp3-elevation-0 Card--card detailsSection"
+              class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainerColumn"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              <div
+                class="bp3-card bp3-elevation-0 Card--card detailsSection"
               >
-                overview
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+                >
+                  overview
+                </p>
+              </div>
             </div>
             <div
-              class="bp3-card bp3-elevation-0 Card--card detailsSection"
+              class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainerColumn"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              <div
+                class="bp3-card bp3-elevation-0 Card--card detailsSection"
               >
-                credentials
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+                >
+                  credentials
+                </p>
+              </div>
             </div>
           </div>
         </div>

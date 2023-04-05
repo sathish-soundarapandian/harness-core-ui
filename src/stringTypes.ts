@@ -2281,10 +2281,24 @@ export interface StringsMap {
   'connectors.aws.accessKey': string
   'connectors.aws.assumeIAMRole': string
   'connectors.aws.awsAccessKey': string
+  'connectors.aws.awsBackOffStrategy': string
+  'connectors.aws.baseDelay': string
+  'connectors.aws.baseDelayPlaceholder': string
   'connectors.aws.crossAccURN': string
   'connectors.aws.enableCrossAcc': string
+  'connectors.aws.equalJitter': string
   'connectors.aws.externalId': string
+  'connectors.aws.fixedBackoff': string
+  'connectors.aws.fixedBackoffPlaceholder': string
+  'connectors.aws.fixedDelay': string
+  'connectors.aws.fullJitter': string
+  'connectors.aws.maxBackoffTime': string
+  'connectors.aws.maxBackoffTimePlaceholder': string
+  'connectors.aws.retryCount': string
+  'connectors.aws.retryCountPlaceholder': string
   'connectors.aws.secretKey': string
+  'connectors.aws.selectBackOffStrategyTypeLabel': string
+  'connectors.aws.strategyType': string
   'connectors.aws.testRegion': string
   'connectors.aws.useIRSA': string
   'connectors.aws.validation.accessKey': string

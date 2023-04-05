@@ -368,173 +368,181 @@ exports[`Connector DetailsPage Page Test Initial snapshot should match render 1`
                     class="Layout--horizontal Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainer"
                   >
                     <div
-                      class="bp3-card bp3-elevation-0 Card--card detailsSection"
+                      class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainerColumn"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
-                      >
-                        overview
-                      </p>
                       <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+                        class="bp3-card bp3-elevation-0 Card--card detailsSection"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                          class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                         >
-                          connectors.name_labels.Docker
+                          overview
                         </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
                         >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                           >
-                            Sample
-                          </span>
-                        </div>
-                      </div>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                        >
-                          identifier
-                        </p>
-                        <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
-                        >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
-                          >
-                            Sample
-                          </span>
-                        </div>
-                      </div>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                        >
-                          tagsLabel
-                        </p>
-                        <div
-                          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                        >
-                          <span
-                            class="Tag--main"
+                            connectors.name_labels.Docker
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
                           >
                             <span
-                              class="bp3-tag"
-                              style="max-width: 240px;"
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              Sample
+                            </span>
+                          </div>
+                        </div>
+                        <div
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                          >
+                            identifier
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              Sample
+                            </span>
+                          </div>
+                        </div>
+                        <div
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                          >
+                            tagsLabel
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                          >
+                            <span
+                              class="Tag--main"
                             >
                               <span
-                                class="bp3-text-overflow-ellipsis bp3-fill"
+                                class="bp3-tag"
+                                style="max-width: 240px;"
                               >
-                                connector:dx
+                                <span
+                                  class="bp3-text-overflow-ellipsis bp3-fill"
+                                >
+                                  connector:dx
+                                </span>
                               </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div
-                      class="bp3-card bp3-elevation-0 Card--card detailsSection"
+                      class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainerColumn"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
-                      >
-                        credentials
-                      </p>
                       <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+                        class="bp3-card bp3-elevation-0 Card--card detailsSection"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                          class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                         >
-                          connectors.docker.dockerProvideType
+                          credentials
                         </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
                         >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                           >
-                            DockerHub
-                          </span>
+                            connectors.docker.dockerProvideType
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              DockerHub
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                        >
-                          connectors.docker.dockerRegistryURL
-                        </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
                         >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                           >
-                            Sample
-                          </span>
+                            connectors.docker.dockerRegistryURL
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              Sample
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                        >
-                          credType
-                        </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
                         >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                           >
-                            Username and Password
-                          </span>
+                            credType
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              Username and Password
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                        >
-                          username
-                        </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
                         >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                           >
-                            Sample
-                          </span>
+                            username
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              Sample
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                        >
-                          password
-                        </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
                         >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                           >
-                            account.Sample
-                          </span>
+                            password
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              account.Sample
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -994,173 +1002,181 @@ exports[`Connector DetailsPage Page Test Initial snapshot should match render at
                     class="Layout--horizontal Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainer"
                   >
                     <div
-                      class="bp3-card bp3-elevation-0 Card--card detailsSection"
+                      class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainerColumn"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
-                      >
-                        overview
-                      </p>
                       <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+                        class="bp3-card bp3-elevation-0 Card--card detailsSection"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                          class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                         >
-                          connectors.name_labels.Docker
+                          overview
                         </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
                         >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                           >
-                            Sample
-                          </span>
-                        </div>
-                      </div>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                        >
-                          identifier
-                        </p>
-                        <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
-                        >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
-                          >
-                            Sample
-                          </span>
-                        </div>
-                      </div>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                        >
-                          tagsLabel
-                        </p>
-                        <div
-                          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                        >
-                          <span
-                            class="Tag--main"
+                            connectors.name_labels.Docker
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
                           >
                             <span
-                              class="bp3-tag"
-                              style="max-width: 240px;"
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              Sample
+                            </span>
+                          </div>
+                        </div>
+                        <div
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                          >
+                            identifier
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              Sample
+                            </span>
+                          </div>
+                        </div>
+                        <div
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                          >
+                            tagsLabel
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                          >
+                            <span
+                              class="Tag--main"
                             >
                               <span
-                                class="bp3-text-overflow-ellipsis bp3-fill"
+                                class="bp3-tag"
+                                style="max-width: 240px;"
                               >
-                                connector:dx
+                                <span
+                                  class="bp3-text-overflow-ellipsis bp3-fill"
+                                >
+                                  connector:dx
+                                </span>
                               </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div
-                      class="bp3-card bp3-elevation-0 Card--card detailsSection"
+                      class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainerColumn"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
-                      >
-                        credentials
-                      </p>
                       <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+                        class="bp3-card bp3-elevation-0 Card--card detailsSection"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                          class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                         >
-                          connectors.docker.dockerProvideType
+                          credentials
                         </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
                         >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                           >
-                            DockerHub
-                          </span>
+                            connectors.docker.dockerProvideType
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              DockerHub
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                        >
-                          connectors.docker.dockerRegistryURL
-                        </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
                         >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                           >
-                            Sample
-                          </span>
+                            connectors.docker.dockerRegistryURL
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              Sample
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                        >
-                          credType
-                        </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
                         >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                           >
-                            Username and Password
-                          </span>
+                            credType
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              Username and Password
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                        >
-                          username
-                        </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
                         >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                           >
-                            Sample
-                          </span>
+                            username
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              Sample
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                        >
-                          password
-                        </p>
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
                         >
-                          <span
-                            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                           >
-                            account.Sample
-                          </span>
+                            password
+                          </p>
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+                            >
+                              account.Sample
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>

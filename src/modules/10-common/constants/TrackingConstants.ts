@@ -52,6 +52,8 @@ export enum ConnectorActions {
   ConnectorDetailsStepSubmit = 'Connector Details Step Submitted',
   AuthenticationStepLoad = 'Connector Authentication Step Loaded',
   AuthenticationStepSubmit = 'Connector Authentication Step Submitted',
+  BackOffStrategyStepLoad = 'Connector Back Off Strategy Step Loaded',
+  BackOffStrategyStepSubmit = 'Connector Back Off Strategy Step Submitted',
   DetailsStepLoad = 'Details Step Loaded',
   DetailsStepSubmit = 'Details Step Submitted',
   ConfigLoad = 'Connector Config Loaded',

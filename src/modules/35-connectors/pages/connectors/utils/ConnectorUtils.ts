@@ -7,7 +7,7 @@
 
 import { pick, isString, get } from 'lodash-es'
 import type { IconName, StepProps } from '@harness/uicore'
-import { Connectors, ElkAuthType, EntityTypes } from '@connectors/constants'
+
 import type {
   ConnectorInfoDTO,
   GetSecretV2QueryParams,
@@ -29,18 +29,19 @@ import type {
   TasConnector,
   TerraformCloudConnector
 } from 'services/cd-ng'
-import { FormData, CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
+import { useStrings } from 'framework/strings'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { ConnectivityModeType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { ValueType } from '@secrets/components/TextReference/TextReference'
-import { useStrings } from 'framework/strings'
 import { setSecretField } from '@secrets/utils/SecretField'
-import { ConnectivityModeType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
+import { Connectors, ElkAuthType, EntityTypes } from '@connectors/constants'
+import { FormData, CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import { transformStepHeadersAndParamsForPayloadForPrometheus } from '@connectors/components/CreateConnector/PrometheusConnector/utils'
 import { transformStepHeadersAndParamsForPayload } from '@connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthHeadersAndParams/CustomHealthHeadersAndParams.utils'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import type { BambooFormInterface } from '@connectors/components/CreateConnector/BambooConnector/StepAuth/StepBambooAuthentication'
-
-import { AuthTypes, GitAuthTypes, GitAPIAuthTypes } from './ConnectorHelper'
+import type { AWSBackOffStrategyValues } from '@connectors/components/CreateConnector/AWSConnector/StepBackOffStrategy/StepBackOffStrategy'
+import { AuthTypes, GitAuthTypes, GitAPIAuthTypes, BackOffStrategy } from './ConnectorHelper'
 import { useConnectorWizard } from '../../../components/CreateConnectorWizard/ConnectorWizardContext'
 
 export interface DelegateCardInterface {
@@ -835,6 +836,35 @@ export const setupAWSFormData = async (connectorInfo: ConnectorInfoDTO, accountI
   return formData
 }
 
+export const setupBackOffStrategyFormData = (connectorInfo: ConnectorInfoDTO): AWSBackOffStrategyValues => {
+  const backOffStategyType = connectorInfo.spec.awsSdkClientBackOffStrategyOverride?.type as BackOffStrategy
+
+  let specObj: AWSBackOffStrategyValues['spec'] = {
+    fixedBackoff: connectorInfo.spec.awsSdkClientBackOffStrategyOverride?.spec?.fixedBackoff,
+    retryCount: connectorInfo.spec.awsSdkClientBackOffStrategyOverride?.spec?.retryCount
+  }
+
+  const formData: AWSBackOffStrategyValues = {
+    type: backOffStategyType,
+    spec: specObj
+  }
+
+  if (
+    backOffStategyType === BackOffStrategy.EqualJitterBackoffStrategy ||
+    backOffStategyType === BackOffStrategy.FullJitterBackoffStrategy
+  ) {
+    specObj = {
+      baseDelay: connectorInfo.spec.awsSdkClientBackOffStrategyOverride?.spec?.baseDelay,
+      maxBackoffTime: connectorInfo.spec.awsSdkClientBackOffStrategyOverride?.spec?.maxBackoffTime,
+      retryCount: connectorInfo.spec.awsSdkClientBackOffStrategyOverride?.spec?.retryCount
+    }
+  }
+
+  formData.spec = specObj
+
+  return formData
+}
+
 export const setupDockerFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
   const scopeQueryParams: GetSecretV2QueryParams = {
     accountIdentifier: accountId,
@@ -1199,9 +1229,13 @@ export const buildAWSPayload = (formData: FormData) => {
               externalId: formData.externalId?.length ? formData.externalId : null
             }
           : null
-      }
+      },
+      awsSdkClientBackOffStrategyOverride: formData.awsSdkClientBackOffStrategyOverride?.type
+        ? formData.awsSdkClientBackOffStrategyOverride
+        : undefined
     }
   }
+
   return { connector: savedData }
 }
 

@@ -7,9 +7,11 @@
 
 import type { IconName } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
-import { Connectors } from '@connectors/constants'
-import { StringUtils } from '@common/exports'
+
 import type { StringKeys } from 'framework/strings'
+import type { StringsMap } from 'stringTypes'
+import { StringUtils } from '@common/exports'
+import { Connectors } from '@connectors/constants'
 
 export const AuthTypes = {
   CLIENT_KEY_CERT: 'ClientKeyCert',
@@ -322,4 +324,21 @@ export const getLabelForAuthType = (type: string) => {
     default:
       return ''
   }
+}
+
+export enum BackOffStrategy {
+  FixedDelayBackoffStrategy = 'FixedDelayBackoffStrategy',
+  EqualJitterBackoffStrategy = 'EqualJitterBackoffStrategy',
+  FullJitterBackoffStrategy = 'FullJitterBackoffStrategy'
+}
+
+export interface IBackoffStrategyTypeLabelMapping {
+  [BackOffStrategy.FixedDelayBackoffStrategy]: keyof StringsMap
+  [BackOffStrategy.EqualJitterBackoffStrategy]: keyof StringsMap
+  [BackOffStrategy.FullJitterBackoffStrategy]: keyof StringsMap
+}
+export const backoffStrategyTypeLabelMapping: IBackoffStrategyTypeLabelMapping = {
+  [BackOffStrategy.FixedDelayBackoffStrategy]: 'connectors.aws.fixedDelay',
+  [BackOffStrategy.EqualJitterBackoffStrategy]: 'connectors.aws.equalJitter',
+  [BackOffStrategy.FullJitterBackoffStrategy]: 'connectors.aws.fullJitter'
 }

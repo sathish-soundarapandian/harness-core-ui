@@ -9,6 +9,7 @@ import React from 'react'
 import { StepWizard } from '@harness/uicore'
 import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import {
@@ -25,6 +26,7 @@ import StepAWSAuthentication from './StepAuth/StepAWSAuthentication'
 import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
 import awsPlatform from './ConnectivityModeStepImages/awsPlatform.svg'
 import awsDelegate from './ConnectivityModeStepImages/awsDelegate.svg'
+import StepBackOffStrategy from './StepBackOffStrategy/StepBackOffStrategy'
 
 const CreateAWSConnector: React.FC<CreateConnectorModalProps> = props => {
   const { getString } = useStrings()
@@ -39,6 +41,8 @@ const CreateAWSConnector: React.FC<CreateConnectorModalProps> = props => {
     'connectivityMode',
     'setConnectivityMode'
   ])
+
+  const { CDS_AWS_BACKOFF_STRATEGY } = useFeatureFlags()
 
   return (
     <>
@@ -64,6 +68,14 @@ const CreateAWSConnector: React.FC<CreateConnectorModalProps> = props => {
           connectorInfo={props.connectorInfo}
           helpPanelReferenceId="AwsConnectorCredentials"
         />
+        {CDS_AWS_BACKOFF_STRATEGY ? (
+          <StepBackOffStrategy
+            name={getString('connectors.aws.awsBackOffStrategy')}
+            {...commonProps}
+            connectorInfo={props.connectorInfo}
+            helpPanelReferenceId="AwsConnectorBackOffStrategy"
+          />
+        ) : null}
         <ConnectivityModeStep
           name={getString('connectors.selectConnectivityMode')}
           type={Connectors.AWS}

@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
-import { Layout, Text, Icon, IconName, Card } from '@harness/uicore'
 import moment from 'moment'
+import { Layout, Text, Icon, IconName, Card } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { Connectors } from '@connectors/constants'
+
 import type {
   ConnectorInfoDTO,
   VaultConnectorDTO,
@@ -18,15 +18,22 @@ import type {
   AzureKeyVaultConnectorDTO,
   GcpKmsConnectorDTO
 } from 'services/cd-ng'
-import { StringUtils } from '@common/exports'
-import type { TagsInterface } from '@common/interfaces/ConnectorsInterface'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { StringKeys } from 'framework/strings'
-import { HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
+import { StringUtils } from '@common/exports'
+import type { TagsInterface } from '@common/interfaces/ConnectorsInterface'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
-import { accessTypeOptionsMap } from '@connectors/components/CreateConnector/HashiCorpVault/views/VaultConnectorFormFields'
 import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
-import { getLabelForAuthType, GitAuthTypes } from '../../utils/ConnectorHelper'
+import { Connectors } from '@connectors/constants'
+import { HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
+import { accessTypeOptionsMap } from '@connectors/components/CreateConnector/HashiCorpVault/views/VaultConnectorFormFields'
+import {
+  BackOffStrategy,
+  backoffStrategyTypeLabelMapping,
+  getLabelForAuthType,
+  GitAuthTypes,
+  IBackoffStrategyTypeLabelMapping
+} from '../../utils/ConnectorHelper'
 import { AzureSecretKeyType } from '../../utils/ConnectorUtils'
 import css from './SavedConnectorDetails.module.scss'
 
@@ -1037,6 +1044,52 @@ const getSchema = (props: SavedConnectorDetailsProps): Array<ActivityDetailsRowI
   ]
 }
 
+const getBackoffStrategySchema = (
+  connector: ConnectorInfoDTO,
+  getString: UseStringsReturn['getString']
+): Array<ActivityDetailsRowInterface> => {
+  const backoffStrategyOverride = connector.spec?.awsSdkClientBackOffStrategyOverride
+  const backoffStrategyType: keyof IBackoffStrategyTypeLabelMapping = backoffStrategyOverride?.type
+  if (backoffStrategyType) {
+    if (backoffStrategyType === BackOffStrategy.FixedDelayBackoffStrategy) {
+      return [
+        {
+          label: 'connectors.aws.strategyType',
+          value: getString(backoffStrategyTypeLabelMapping[backoffStrategyType])
+        },
+        {
+          label: 'connectors.aws.fixedBackoff',
+          value: backoffStrategyOverride?.spec.fixedBackoff
+        },
+        {
+          label: 'connectors.aws.retryCount',
+          value: backoffStrategyOverride?.spec.retryCount
+        }
+      ]
+    } else {
+      return [
+        {
+          label: 'connectors.aws.strategyType',
+          value: getString(backoffStrategyTypeLabelMapping[backoffStrategyType])
+        },
+        {
+          label: 'connectors.aws.baseDelay',
+          value: backoffStrategyOverride?.spec.baseDelay
+        },
+        {
+          label: 'connectors.aws.maxBackoffTime',
+          value: backoffStrategyOverride?.spec.maxBackoffTime
+        },
+        {
+          label: 'connectors.aws.retryCount',
+          value: backoffStrategyOverride?.spec.retryCount
+        }
+      ]
+    }
+  }
+  return []
+}
+
 const getDate = (value?: number): string | null => {
   return value ? moment.unix(value / 1000).format(StringUtils.DEFAULT_DATE_FORMAT) : null
 }
@@ -1144,29 +1197,79 @@ const getPDCConnectorHosts = (connector: ConnectorInfoDTO) => {
     : []
 }
 
+enum SectionType {
+  overview = 'overview',
+  credentials = 'credentials',
+  hosts = 'hosts',
+  backoffStrategy = 'backoffStrategy'
+}
+interface SectionTitleMapping {
+  [SectionType.overview]: string
+  [SectionType.credentials]: string
+  [SectionType.hosts]: string
+  [SectionType.backoffStrategy]: string
+}
+
 const SavedConnectorDetails: React.FC<SavedConnectorDetailsProps> = props => {
   const { getString } = useStrings()
   const connectorDetailsSchema = getSchema(props)
   const credenatialsDetailsSchema = getSchemaByType(props.connector, props.connector?.type, getString)
+  const backoffStrategyDetailsSchema = getBackoffStrategySchema(props.connector, getString)
   const commonCredentialsDetailsSchema = getCommonCredentialsDetailsSchema(props.connector)
+
+  const getRenderDetailsData = (sectionName: string) => {
+    if (sectionName === SectionType.overview) {
+      return connectorDetailsSchema
+    }
+    if (sectionName === SectionType.credentials) {
+      return [...credenatialsDetailsSchema, ...commonCredentialsDetailsSchema]
+    }
+    if (sectionName === SectionType.hosts) {
+      return [...getPDCConnectorHosts(props.connector)]
+    }
+    if (sectionName === SectionType.backoffStrategy) {
+      return backoffStrategyDetailsSchema
+    }
+    return []
+  }
+
+  const sectionList: SectionType[] = [SectionType.overview]
+  if (props.connector?.type !== Connectors.PDC) {
+    sectionList.push(SectionType.credentials)
+  }
+  if (props.connector?.type === Connectors.PDC) {
+    sectionList.push(SectionType.hosts)
+  }
+  if (!!props.connector?.spec?.awsSdkClientBackOffStrategyOverride?.type && backoffStrategyDetailsSchema?.length) {
+    sectionList.push(SectionType.backoffStrategy)
+  }
+
+  const sectionTitleMapping: SectionTitleMapping = {
+    overview: getString('overview'),
+    credentials: getString('credentials'),
+    hosts: getString('connectors.pdc.hosts'),
+    backoffStrategy: getString('connectors.aws.awsBackOffStrategy')
+  }
 
   return (
     <Layout.Horizontal className={css.detailsSectionContainer} spacing="xlarge">
-      <RenderDetailsSection title={getString('overview')} data={connectorDetailsSchema} />
+      <Layout.Vertical className={css.detailsSectionContainerColumn} spacing="xlarge">
+        {sectionList.map(
+          (currSection: SectionType, index: number) =>
+            index % 2 === 0 && (
+              <RenderDetailsSection title={sectionTitleMapping[currSection]} data={getRenderDetailsData(currSection)} />
+            )
+        )}
+      </Layout.Vertical>
 
-      {props.connector?.type !== Connectors.PDC && (
-        <RenderDetailsSection
-          title={getString('credentials')}
-          data={[...credenatialsDetailsSchema, ...commonCredentialsDetailsSchema]}
-        />
-      )}
-
-      {props.connector?.type === Connectors.PDC && (
-        <RenderDetailsSection
-          title={getString('connectors.pdc.hosts')}
-          data={[...getPDCConnectorHosts(props.connector)]}
-        />
-      )}
+      <Layout.Vertical className={css.detailsSectionContainerColumn} spacing="xlarge">
+        {sectionList.map(
+          (currSection: SectionType, index: number) =>
+            index % 2 === 1 && (
+              <RenderDetailsSection title={sectionTitleMapping[currSection]} data={getRenderDetailsData(currSection)} />
+            )
+        )}
+      </Layout.Vertical>
     </Layout.Horizontal>
   )
 }
