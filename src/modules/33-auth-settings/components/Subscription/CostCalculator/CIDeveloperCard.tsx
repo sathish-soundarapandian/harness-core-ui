@@ -11,8 +11,8 @@ import { Card, Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Editions } from '@common/constants/SubscriptionTypes'
-import SliderBar from '../CostCalculator/SliderBar'
-import css from '../CostCalculator/CostCalculator.module.scss'
+import SliderBar from './SliderBar'
+import css from './CostCalculator.module.scss'
 
 export const generateRangeArray = (min: number, max: number, stepSize: number): number[] => {
   const rangeArray = []
