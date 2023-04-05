@@ -78,11 +78,7 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   const usageMapCI = {
     NUMBER_OF_COMMITTERS: usageAndLimitInfo.usageData.usage?.ci?.activeCommitters || 0
   }
-  const {
-    data: recommendation,
-    refetch: fetchRecommendations,
-    loading
-  } = useMutateAsGet(useRetrieveRecommendationRc, {
+  const { data: recommendation, refetch: fetchRecommendations } = useMutateAsGet(useRetrieveRecommendationRc, {
     body: {
       moduleType: module.toUpperCase(),
       usageMap: module.toUpperCase() === 'CF' ? usageMapCF : usageMapCI

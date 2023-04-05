@@ -24,10 +24,6 @@ export const generateRangeArray = (min: number, max: number, stepSize: number): 
 
 const Header: React.FC<{ unitPrice: number }> = () => {
   const { getString } = useStrings()
-  // const unitPriceDescr = `${getString('authSettings.unitPrice')}: ${getAmountInCurrency(
-  //   CurrencyType.USD,
-  //   unitPrice
-  // )} ${getString('common.perDeveloper')} ${getString('common.perMonth')}`
   return (
     <Layout.Vertical padding={{ bottom: 'medium' }}>
       <Text font={{ variation: FontVariation.H5 }}>{getString('authSettings.costCalculatorCI.developer.title')}</Text>
@@ -39,7 +35,6 @@ const Header: React.FC<{ unitPrice: number }> = () => {
         >
           {getString('authSettings.costCalculator.developer.developer')}
         </Text>
-        {/* <Text font={{ size: 'xsmall' }}>{unitPriceDescr}</Text> */}
       </Layout.Horizontal>
     </Layout.Vertical>
   )

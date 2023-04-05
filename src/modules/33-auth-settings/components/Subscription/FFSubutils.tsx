@@ -14,7 +14,7 @@ interface FFSubutilsProps {
   recommendation: { [key: string]: number } | null
   usageAndLimitInfo: UsageAndLimitReturn
   subscriptionDetails: SubscriptionProps
-  updateQuantities: ({ maus, devs }: { maus?: number; devs?: number | undefined }) => void
+  updateQuantities: ({ maus, devs }: { maus?: number; devs?: number }) => void
   productPrices: ProductPricesProp
   setSubscriptionDetails: (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
   paymentFrequency: TimeType
