@@ -150,39 +150,25 @@ exports[`PricePreview render 1`] = `
           authSettings.pricePreview.calculatedNextStep
         </p>
       </div>
-    </div>
-    <div
-      class="Layout--vertical StyledProps--main"
-    >
       <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        class="Layout--horizontal StyledProps--main line StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small"
       >
         <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h2"
+          class="StyledProps--font StyledProps--main"
         >
           total
         </p>
         <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h2"
+          class="StyledProps--font StyledProps--main"
         >
           $0.00
-          common.perYear
         </p>
       </div>
-      <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
-        >
-          authSettings.autoRenewal
-        </p>
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
-        >
-          authSettings.salesTax
-        </p>
-      </div>
+        authSettings.salesTax
+      </p>
     </div>
   </div>
 </div>

@@ -13,8 +13,7 @@ import {
   getRenewDate,
   getTitleByModule,
   getSubscriptionBreakdownsByModuleAndFrequency,
-  getProductPrices,
-  getCostCalculatorBodyByModule
+  getProductPrices
 } from '../subscriptionUtils'
 
 const billingContactInfo = {
@@ -236,116 +235,6 @@ describe.skip('subscriptionUtils', () => {
         icon: 'chaos-solid',
         description: 'common.purpose.chaos.continuous',
         title: ''
-      })
-    })
-  })
-
-  describe.skip('getCostCalculatorBodyByModule', () => {
-    test('cf', async () => {
-      const body = getCostCalculatorBodyByModule({
-        module: 'cf',
-        currentPlan: Editions.FREE,
-        paymentFrequency: TimeType.YEARLY,
-        productPrices,
-        subscriptionDetails,
-        setSubscriptionDetails: jest.fn(),
-        usageAndLimitInfo: {
-          limitData: {
-            limit: {
-              ff: {
-                totalClientMAUs: 100,
-                totalFeatureFlagUnits: 20
-              }
-            }
-          },
-          usageData: {
-            usage: {
-              ff: {
-                activeClientMAUs: {
-                  count: 1
-                },
-                activeFeatureFlagUsers: {
-                  count: 1
-                }
-              }
-            }
-          }
-        },
-        updateQuantities: jest.fn(),
-        recommendation: null
-      })
-      const { container } = render(<TestWrapper>{body}</TestWrapper>)
-      await waitFor(() => {
-        expect(container).toMatchSnapshot()
-      })
-    })
-
-    test('cf monthly', async () => {
-      const body = getCostCalculatorBodyByModule({
-        module: 'cf',
-        currentPlan: Editions.FREE,
-        paymentFrequency: TimeType.MONTHLY,
-        productPrices,
-        subscriptionDetails: {
-          ...subscriptionDetails,
-          quantities: {}
-        },
-        setSubscriptionDetails: jest.fn(),
-        usageAndLimitInfo: {
-          limitData: {
-            limit: {}
-          },
-          usageData: {
-            usage: {
-              ff: {}
-            }
-          }
-        },
-        updateQuantities: jest.fn(),
-        recommendation: null
-      })
-      const { container } = render(<TestWrapper>{body}</TestWrapper>)
-      await waitFor(() => {
-        expect(container).toMatchSnapshot()
-      })
-    })
-
-    test('default', async () => {
-      const body = getCostCalculatorBodyByModule({
-        module: 'cd',
-        currentPlan: Editions.FREE,
-        paymentFrequency: TimeType.YEARLY,
-        productPrices,
-        subscriptionDetails,
-        setSubscriptionDetails: jest.fn(),
-        usageAndLimitInfo: {
-          limitData: {
-            limit: {
-              cd: {
-                totalServiceInstances: 100,
-                totalWorkload: 20
-              }
-            }
-          },
-          usageData: {
-            usage: {
-              cd: {
-                activeServices: {
-                  count: 1
-                },
-                activeServiceInstances: {
-                  count: 1
-                }
-              }
-            }
-          }
-        },
-        updateQuantities: jest.fn(),
-        recommendation: null
-      })
-      const { container } = render(<TestWrapper>{body}</TestWrapper>)
-      await waitFor(() => {
-        expect(container).toMatchSnapshot()
       })
     })
   })
