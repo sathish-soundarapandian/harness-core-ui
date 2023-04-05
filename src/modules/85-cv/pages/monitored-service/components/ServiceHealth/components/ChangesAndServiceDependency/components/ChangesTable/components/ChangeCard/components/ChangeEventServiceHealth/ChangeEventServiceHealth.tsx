@@ -34,7 +34,9 @@ export default function ChangeEventServiceHealth(props: ChangeEventServiceHealth
   const { getString } = useStrings()
   return (
     <Container className={css.main}>
-      <Text className={css.status}>{defaultTo(title, getString('status'))}</Text>
+      <Text data-testid="changeEventServiceHealth_title" className={css.status}>
+        {defaultTo(title, getString('status'))}
+      </Text>
       <Text className={css.healthTrend}>{getString('cv.serviceHealthTrend')}</Text>
       <Layout.Horizontal margin={{ top: 'medium', bottom: 'medium' }}>
         {verifyStepSummaries?.map(item => {

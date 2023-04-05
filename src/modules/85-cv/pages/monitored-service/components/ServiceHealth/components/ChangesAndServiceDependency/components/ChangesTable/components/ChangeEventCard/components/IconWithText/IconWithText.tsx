@@ -1,14 +1,12 @@
 import React from 'react'
-import { Container, Icon, Layout, Text } from '@harness/uicore'
+import { Container, Icon, IconName, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
-import type { IconName } from '@blueprintjs/core'
-
-export const IconWithText = ({ icon, text = '' }: { icon?: string; text?: string }) => {
+export const IconWithText = ({ icon, text = '' }: { icon?: IconName; text?: string }): JSX.Element => {
   return (
     <Container>
       <Layout.Horizontal spacing={'small'}>
-        {icon && <Icon name={icon as unknown as IconName} size={15} />}
+        {icon && <Icon name={icon} size={15} />}
         {text && (
           <Text font={{ size: 'small' }} color={Color.GREY_800}>
             {text}

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import type { UseGetReturn } from 'restful-react'
 import * as cvService from 'services/cv'
 import * as pipelineNgService from 'services/pipeline-ng'
@@ -147,6 +147,10 @@ describe('Validate ChangeCard', () => {
     )
     await waitFor(() =>
       expect(getByText(mockedExecutionSummary.data.pipelineExecutionSummary.pipelineIdentifier)).toBeInTheDocument()
+    )
+
+    expect(screen.getByTestId(/changeEventServiceHealth_title/)).toHaveTextContent(
+      'cv.monitoredServices.monitoredServiceTabs.serviceHealth'
     )
 
     // Card details title

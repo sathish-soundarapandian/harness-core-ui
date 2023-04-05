@@ -113,7 +113,7 @@ export default function InternalCSEventCard({ data }: { data: ChangeEventDTO }):
             eventType={data.type}
             timeStamps={timeStamps}
             setTimestamps={setTimestamps}
-            title={getString('cv.changeSource.changeSourceCard.deploymentHealth')}
+            title={getString('cv.monitoredServices.monitoredServiceTabs.serviceHealth')}
           />
           <SLOAndErrorBudget
             monitoredServiceIdentifier={data.monitoredServiceIdentifier}

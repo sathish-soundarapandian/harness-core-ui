@@ -228,6 +228,7 @@ exports[`Validate ChangeCard should render Pager Duty card 1`] = `
     >
       <p
         class="StyledProps--font StyledProps--main status"
+        data-testid="changeEventServiceHealth_title"
       >
         status
       </p>

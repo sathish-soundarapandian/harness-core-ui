@@ -130,7 +130,7 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
             eventType={data.type}
             timeStamps={timeStamps}
             setTimestamps={setTimestamps}
-            title={getString('cv.changeSource.changeSourceCard.deploymentHealth')}
+            title={getString('cv.monitoredServices.monitoredServiceTabs.serviceHealth')}
             verifyStepSummaries={verifyStepSummaries}
           />
           <SLOAndErrorBudget

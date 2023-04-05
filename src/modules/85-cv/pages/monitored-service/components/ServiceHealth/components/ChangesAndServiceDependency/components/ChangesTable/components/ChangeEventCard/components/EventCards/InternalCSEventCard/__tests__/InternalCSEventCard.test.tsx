@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import type { UseGetReturn } from 'restful-react'
 import * as cvService from 'services/cv'
 import * as cfService from 'services/cf'
@@ -48,7 +48,7 @@ describe('Validate Internal Change Source Card', () => {
           loading: false
         } as any)
     )
-    const { getByText, getAllByText } = render(
+    const { getByText, getAllByText, container } = render(
       <TestWrapper>
         <InternalCSEventCard data={HarnessFFMockData.resource} />
       </TestWrapper>
@@ -60,6 +60,14 @@ describe('Validate Internal Change Source Card', () => {
     await waitFor(() => expect(getAllByText('details')).toHaveLength(1))
     await waitFor(() => expect(getAllByText('action')).toHaveLength(1))
     await waitFor(() => expect(getAllByText('auditTrail.yamlDifference')).toHaveLength(1))
+
+    expect(screen.getByTestId(/changeEventServiceHealth_title/)).toHaveTextContent(
+      'cv.monitoredServices.monitoredServiceTabs.serviceHealth'
+    )
+
+    const featureFlagIcon = container.querySelector('[data-icon="ff-solid"]')
+
+    expect(featureFlagIcon).toBeInTheDocument()
   })
 
   test('should render Feature flag card YAML Diff component in loading state', async () => {
