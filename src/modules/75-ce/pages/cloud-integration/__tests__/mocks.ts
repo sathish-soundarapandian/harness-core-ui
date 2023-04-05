@@ -5,8 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import metadataRes from '@ce/pages/anomalies-overview/__test__/CCMMetaDataResponse.json'
-
 export const ccmK8sListResponse = {
   status: 'SUCCESS',
   data: {
@@ -291,7 +289,28 @@ export const listV2Response = {
   }
 }
 
-export const ccmMetadataResponse = { ...metadataRes, loading: false }
+export const ccmMetadataResponse = {
+  data: {
+    ccmMetaData: {
+      k8sClusterConnectorPresent: false,
+      cloudDataPresent: true,
+      awsConnectorsPresent: true,
+      gcpConnectorsPresent: true,
+      azureConnectorsPresent: true,
+      applicationDataPresent: true,
+      inventoryDataPresent: false,
+      clusterDataPresent: true,
+      isSampleClusterPresent: false,
+      defaultAzurePerspectiveId: 'fm8sOmxJS-OlRnEpqpX9ag',
+      defaultAwsPerspectiveId: 'quBogQWFTCSqpUq5xPxLLA',
+      defaultGcpPerspectiveId: '8MbIXei5TdCapSxlwru4UQ',
+      defaultClusterPerspectiveId: 'XondUCZ7RbyBx147-CyXzA',
+      __typename: 'CCMMetaData'
+    }
+  },
+  loading: false
+}
+
 export const noConnectorsRes = {
   data: {
     ccmMetaData: {

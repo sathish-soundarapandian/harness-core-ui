@@ -53,7 +53,6 @@ import PerspectiveDetailsPage from './pages/perspective-details/PerspectiveDetai
 import CreatePerspectivePage from './pages/perspective-builder/CreatePerspectivePage'
 import PerspectiveListPage from './pages/perspective-list/PerspectiveListPage'
 import OverviewPage from './pages/overview/OverviewPage'
-import AnomaliesOverviewPage from './pages/anomalies-overview/AnomaliesOverviewPage'
 import formatCost from './utils/formatCost'
 import BusinessMapping from './pages/business-mapping/BusinessMapping'
 import OverviewAddCluster from './components/OverviewPage/OverviewAddCluster'
@@ -476,17 +475,6 @@ const CENonMFERoutes = (
       pageName={PAGE_NAME.CEPerspectiveListPage}
     >
       <PerspectiveListPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCEAnomalyDetection({
-        ...accountPathProps
-      })}
-      exact
-      pageName={PAGE_NAME.CEAnomaliesOverviewPage}
-    >
-      <AnomaliesOverviewPage />
     </RouteWithLayout>
     <RouteWithLayout
       licenseRedirectData={licenseRedirectData}

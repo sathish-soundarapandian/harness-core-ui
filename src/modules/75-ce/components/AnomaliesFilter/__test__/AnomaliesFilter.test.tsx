@@ -13,7 +13,7 @@ import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import type { CcmMetaData } from 'services/ce/services'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
 import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
-import CCMMetaDataResponse from '@ce/pages/anomalies-overview/__test__/CCMMetaDataResponse.json'
+import { ccmMetadataResponse } from '@ce/pages/cloud-integration/__tests__/mocks'
 import AnomaliesFilter from '../AnomaliesFilter'
 import SavedFilterData from './SavedFilterData.json'
 import FilterValues from './FilterValues.json'
@@ -74,7 +74,7 @@ const defaultProps = {
   },
   setTimeRange: jest.fn(),
   applyFilters: jest.fn(),
-  ccmMetaData: CCMMetaDataResponse.data.ccmMetaData as CcmMetaData,
+  ccmMetaData: ccmMetadataResponse.data.ccmMetaData as CcmMetaData,
   appliedFilter: {
     identifier: getIdentifierFromName(UNSAVED_FILTER),
     filterProperties: {}

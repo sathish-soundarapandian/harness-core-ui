@@ -21,7 +21,7 @@ import { anomalyFilterValueColumns } from '@ce/utils/anomaliesUtils'
 import type { CcmMetaData } from 'services/ce/services'
 import AnomaliesFilterDrawer from './FilterDrawer/FilterDrawer'
 
-import css from '../../pages/anomalies-overview/AnomaliesOverviewPage.module.scss'
+import css from './AnomaliesFilter.module.scss'
 
 export interface AnomalyFiltersProps {
   timeRange: {
