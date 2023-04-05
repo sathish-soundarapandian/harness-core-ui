@@ -6,8 +6,8 @@
  */
 
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
-import { getBasePathValue, getMetricPathValue } from '../AppDCustomMetricForm.utils'
-import { appdMetric, mappedMetricsMap } from './AppDCustomMetricForm.mock'
+import { getBasePathValue, getDerivedCompleteMetricPath, getMetricPathValue } from '../AppDCustomMetricForm.utils'
+import { appdMetric, formMockData, mappedMetricsMap } from './AppDCustomMetricForm.mock'
 
 describe('Validate  utils functions', () => {
   test('should validate getBasePathValue and getMetricPathValue', () => {
@@ -21,5 +21,10 @@ describe('Validate  utils functions', () => {
       { label: 'g1', value: 'g1' },
       { label: 'g2', value: 'g2' }
     ])
+  })
+
+  test('getDerivedCompleteMetricPath should not break if null values are passed', () => {
+    const result = getDerivedCompleteMetricPath(formMockData)
+    expect(result).toBe('')
   })
 })

@@ -426,6 +426,9 @@ describe('Edit AppDynamics template', () => {
     cy.contains('p', 'Open/Edit Template').click()
     cy.wait('@applyTemplates')
     cy.wait('@listIndv')
+
+    cy.findByText(/Unsaved changes/i).should('not.exist')
+
     cy.contains('div', 'AppDynamics').click()
     cy.wait(1000)
     cy.contains('span', 'Next').click({ force: true })
@@ -482,6 +485,9 @@ describe('Edit AppDynamics template', () => {
     cy.get('@fixedValue').click()
     cy.get('input[name="completeMetricPath"]').type('Overall Application Performance | docker-tier | Calls per Minute')
     cy.contains('span', 'Submit').click({ force: true })
+
+    cy.findByText(/Unsaved changes/i).should('exist')
+
     cy.contains('div', 'AppDynamics').click()
     cy.wait(1000)
     cy.contains('span', 'Next').click({ force: true })

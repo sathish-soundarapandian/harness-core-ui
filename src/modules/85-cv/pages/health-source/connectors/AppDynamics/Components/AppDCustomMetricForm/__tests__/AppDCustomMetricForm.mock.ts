@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { AppDynamicsFomikFormInterface } from '../../../AppDHealthSource.types'
+
 export const appdMetric = {
   metricPath: {
     metricPathDropdown_0: { path: '', value: 'Calls per Minute' },
@@ -135,3 +137,10 @@ const exectedNewMetricData = {
 }
 expectedMappedMetrics.set('appdMetric', exectedMetricData)
 expectedMappedMetrics.set('appdMetric new', exectedNewMetricData)
+
+export const formMockData = {
+  basePath: { path: 'test basepath' },
+  metricPath: { path: 'test metricPath' },
+  appDTier: 'appDTier test',
+  pathType: 'dropdownPath'
+} as unknown as AppDynamicsFomikFormInterface
