@@ -34,6 +34,7 @@ import type { FormikContextType } from 'formik'
 import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { FormGroup, Label } from '@blueprintjs/core'
+import { HelpPanel } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
 import type { ResponseMessage } from 'services/cd-ng'
@@ -523,575 +524,583 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   })
 
   return (
-    <Layout.Vertical width={'100%'} margin={{ left: 'small' }}>
-      <Layout.Horizontal>
-        <Layout.Vertical width={'55%'}>
-          <Container>
-            <Text
-              font={{ variation: FontVariation.H3, weight: 'semi-bold' }}
-              margin={{ bottom: 'small' }}
-              color={Color.GREY_600}
-              data-tooltip-id="cdOnboardingConfigureStep"
-            >
-              {getString('cd.getStartedWithCD.gitopsOnboardingConfigureStep')}
-              <HarnessDocTooltip tooltipId="cdOnboardingConfigureStep" useStandAlone={true} />
-            </Text>
-            <div className={css.borderBottomClass} />
-            <Accordion
-              activeId="application-repo-source-step"
-              ref={accordionRef}
-              collapseProps={{ keepChildrenMounted: false }}
-              panelClassName={moduleCss.configureGitopsPanel}
-              summaryClassName={moduleCss.configureGitopsPanelSummary}
-            >
-              <Accordion.Panel
-                details={
-                  <Formik<RepositoryInterface>
-                    initialValues={{
-                      ...repositoryData
-                    }}
-                    validationSchema={getValidationSchema}
-                    formName="select-deployment-type-cd"
-                    onSubmit={noop}
-                  >
-                    {formikProps => {
-                      formikRef.current = formikProps
-                      const selectedRepoType: RepoTypeItem | undefined = repositoryTypes?.find(
-                        repoType => repoType.value === formikProps.values?.type
-                      )
-                      const connectionType: string | undefined = formikProps.values?.connectionType
-                      const authType: string | undefined = formikProps.values?.authType
-                      const sourceCodeType: string | undefined = formikProps.values?.sourceCodeType
-                      const isNewRepository: boolean | undefined = formikProps.values?.isNewRepository
+    <>
+      <Layout.Vertical width={'100%'}>
+        <Layout.Horizontal>
+          <Layout.Vertical width={'55%'}>
+            <Container>
+              <Text
+                font={{ variation: FontVariation.H3, weight: 'semi-bold' }}
+                margin={{ bottom: 'small' }}
+                color={Color.GREY_600}
+                data-tooltip-id="cdOnboardingConfigureStep"
+              >
+                {getString('cd.getStartedWithCD.gitopsOnboardingConfigureStep')}
+                <HarnessDocTooltip tooltipId="cdOnboardingConfigureStep" useStandAlone={true} />
+              </Text>
+              <div className={css.borderBottomClass} />
+              <Accordion
+                activeId="application-repo-source-step"
+                ref={accordionRef}
+                collapseProps={{ keepChildrenMounted: false }}
+                panelClassName={moduleCss.configureGitopsPanel}
+                summaryClassName={moduleCss.configureGitopsPanelSummary}
+              >
+                <Accordion.Panel
+                  details={
+                    <Formik<RepositoryInterface>
+                      initialValues={{
+                        ...repositoryData
+                      }}
+                      validationSchema={getValidationSchema}
+                      formName="select-deployment-type-cd"
+                      onSubmit={noop}
+                    >
+                      {formikProps => {
+                        formikRef.current = formikProps
+                        const selectedRepoType: RepoTypeItem | undefined = repositoryTypes?.find(
+                          repoType => repoType.value === formikProps.values?.type
+                        )
+                        const connectionType: string | undefined = formikProps.values?.connectionType
+                        const authType: string | undefined = formikProps.values?.authType
+                        const sourceCodeType: string | undefined = formikProps.values?.sourceCodeType
+                        const isNewRepository: boolean | undefined = formikProps.values?.isNewRepository
 
-                      return (
-                        <FormikForm>
-                          <Layout.Vertical>
-                            <Container padding={{ bottom: 'xxlarge' }}>
-                              <Container padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
-                                <CardSelect
-                                  data={repositoryTypes as RepoTypeItem[]}
-                                  cornerSelected={true}
-                                  className={moduleCss.icons}
-                                  cardClassName={moduleCss.serviceDeploymentTypeSmallCard}
-                                  renderItem={(item: RepoTypeItem) => (
-                                    <>
-                                      <Layout.Vertical flex>
-                                        <Icon
-                                          name={item.icon}
-                                          size={24}
-                                          flex
-                                          className={moduleCss.serviceDeploymentTypeIcon}
-                                        />
-                                        <Text font={{ variation: FontVariation.BODY2 }} className={moduleCss.text1}>
-                                          {item.label}
-                                        </Text>
-                                      </Layout.Vertical>
-                                    </>
-                                  )}
-                                  selected={selectedRepoType}
-                                  onChange={(item: RepoTypeItem) => {
-                                    formikProps.setFieldValue('type', item.value)
-                                    trackEvent(CDOnboardingActions.SelectSourceType, { selectedSourceType: item.value })
-                                  }}
-                                />
-                              </Container>
-                            </Container>
-                            {formikProps.values.type === REPO_TYPES.GIT ? (
-                              <Layout.Vertical margin={{ bottom: 'large' }}>
-                                <Text
-                                  font={{ variation: FontVariation.H6, weight: 'semi-bold' }}
-                                  className={css.secondaryHeader}
-                                >
-                                  {getString('cd.getStartedWithCD.sourceOrSampleCode').toLocaleUpperCase()}
-                                </Text>
-                                <Layout.Horizontal spacing="medium" margin={{ bottom: 'xxlarge' }}>
-                                  <Button
-                                    onClick={() => {
-                                      handleSourceCodeTypeChange(SourceCodeType.USE_SAMPLE)
-                                      trackEvent(CDOnboardingActions.SelectSourceRepoType, {
-                                        sourceRepo: SourceCodeType.USE_SAMPLE
-                                      })
-                                    }}
-                                    className={cx(
-                                      css.docker,
-                                      sourceCodeType === SourceCodeType.USE_SAMPLE ? css.active : undefined
-                                    )}
-                                  >
-                                    {getString('cd.getStartedWithCD.useSample')}
-                                  </Button>
-                                  <Button
-                                    onClick={() => {
-                                      handleSourceCodeTypeChange(SourceCodeType.PROVIDE_MY_OWN)
-                                      trackEvent(CDOnboardingActions.SelectSourceRepoType, {
-                                        sourceRepo: SourceCodeType.PROVIDE_MY_OWN
-                                      })
-                                    }}
-                                    className={cx(
-                                      css.kubernetes,
-                                      sourceCodeType === SourceCodeType.PROVIDE_MY_OWN ? css.active : undefined
-                                    )}
-                                  >
-                                    {getString('cd.getStartedWithCD.provideMyOwn')}
-                                  </Button>
-                                </Layout.Horizontal>
-                                <ul className={css.progress}>
-                                  <li className={`${css.progressItem} ${css.progressItemActive}`}>
-                                    <Text
-                                      font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
-                                      className={css.subHeading}
-                                    >
-                                      {getString('authentication').toLocaleUpperCase()}
-                                    </Text>
-                                    {testConnectionStatus === TestStatus.SUCCESS && formikProps.values.repo ? (
-                                      <Layout.Vertical>
-                                        <Layout.Vertical className={css.success} margin={{ bottom: 'medium' }}>
-                                          <Layout.Horizontal padding={{ top: 'medium', bottom: 'medium' }}>
-                                            <Icon name="success-tick" size={25} className={css.iconPadding} />
-                                            <Text
-                                              className={css.success}
-                                              font={{ variation: FontVariation.H6 }}
-                                              color={Color.GREEN_800}
-                                            >
-                                              {`${getString('cd.getStartedWithCD.successfullyAuthenticated')} ${
-                                                formikRef.current?.values.repo
-                                              }`}
-                                            </Text>
-                                          </Layout.Horizontal>
-                                        </Layout.Vertical>
-                                        <Text
-                                          style={{ cursor: 'pointer' }}
-                                          onClick={() => setTestConnectionStatus(TestStatus.NOT_INITIATED)}
-                                          color={Color.PRIMARY_7}
-                                        >
-                                          {getString('cd.getStartedWithCD.tryAnotherCreds')}
-                                        </Text>
-                                      </Layout.Vertical>
-                                    ) : (
+                        return (
+                          <FormikForm>
+                            <Layout.Vertical>
+                              <Container padding={{ bottom: 'xxlarge' }}>
+                                <Container padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
+                                  <CardSelect
+                                    data={repositoryTypes as RepoTypeItem[]}
+                                    cornerSelected={true}
+                                    className={moduleCss.icons}
+                                    cardClassName={moduleCss.serviceDeploymentTypeSmallCard}
+                                    renderItem={(item: RepoTypeItem) => (
                                       <>
-                                        {testConnectionStatus === TestStatus.FAILED && (
-                                          <Layout.Vertical className={css.danger} margin={{ bottom: 'medium' }}>
-                                            <Layout.Horizontal className={css.textPadding}>
-                                              <Icon name="danger-icon" size={25} className={css.iconPadding} />
+                                        <Layout.Vertical flex>
+                                          <Icon
+                                            name={item.icon}
+                                            size={24}
+                                            flex
+                                            className={moduleCss.serviceDeploymentTypeIcon}
+                                          />
+                                          <Text font={{ variation: FontVariation.BODY2 }} className={moduleCss.text1}>
+                                            {item.label}
+                                          </Text>
+                                        </Layout.Vertical>
+                                      </>
+                                    )}
+                                    selected={selectedRepoType}
+                                    onChange={(item: RepoTypeItem) => {
+                                      formikProps.setFieldValue('type', item.value)
+                                      trackEvent(CDOnboardingActions.SelectSourceType, {
+                                        selectedSourceType: item.value
+                                      })
+                                    }}
+                                  />
+                                </Container>
+                              </Container>
+                              {formikProps.values.type === REPO_TYPES.GIT ? (
+                                <Layout.Vertical margin={{ bottom: 'large' }}>
+                                  <Text
+                                    font={{ variation: FontVariation.H6, weight: 'semi-bold' }}
+                                    className={css.secondaryHeader}
+                                  >
+                                    {getString('cd.getStartedWithCD.sourceOrSampleCode').toLocaleUpperCase()}
+                                  </Text>
+                                  <Layout.Horizontal spacing="medium" margin={{ bottom: 'xxlarge' }}>
+                                    <Button
+                                      onClick={() => {
+                                        handleSourceCodeTypeChange(SourceCodeType.USE_SAMPLE)
+                                        trackEvent(CDOnboardingActions.SelectSourceRepoType, {
+                                          sourceRepo: SourceCodeType.USE_SAMPLE
+                                        })
+                                      }}
+                                      className={cx(
+                                        css.docker,
+                                        sourceCodeType === SourceCodeType.USE_SAMPLE ? css.active : undefined
+                                      )}
+                                    >
+                                      {getString('cd.getStartedWithCD.useSample')}
+                                    </Button>
+                                    <Button
+                                      onClick={() => {
+                                        handleSourceCodeTypeChange(SourceCodeType.PROVIDE_MY_OWN)
+                                        trackEvent(CDOnboardingActions.SelectSourceRepoType, {
+                                          sourceRepo: SourceCodeType.PROVIDE_MY_OWN
+                                        })
+                                      }}
+                                      className={cx(
+                                        css.kubernetes,
+                                        sourceCodeType === SourceCodeType.PROVIDE_MY_OWN ? css.active : undefined
+                                      )}
+                                    >
+                                      {getString('cd.getStartedWithCD.provideMyOwn')}
+                                    </Button>
+                                  </Layout.Horizontal>
+                                  <ul className={css.progress}>
+                                    <li className={`${css.progressItem} ${css.progressItemActive}`}>
+                                      <Text
+                                        font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
+                                        className={css.subHeading}
+                                      >
+                                        {getString('authentication').toLocaleUpperCase()}
+                                      </Text>
+                                      {testConnectionStatus === TestStatus.SUCCESS && formikProps.values.repo ? (
+                                        <Layout.Vertical>
+                                          <Layout.Vertical className={css.success} margin={{ bottom: 'medium' }}>
+                                            <Layout.Horizontal padding={{ top: 'medium', bottom: 'medium' }}>
+                                              <Icon name="success-tick" size={25} className={css.iconPadding} />
                                               <Text
-                                                className={css.dangerColor}
+                                                className={css.success}
                                                 font={{ variation: FontVariation.H6 }}
-                                                color={Color.RED_600}
+                                                color={Color.GREEN_800}
                                               >
-                                                {`${getString('cd.getStartedWithCD.failedToAuthenticate')} ${
-                                                  formikProps.values.repo
+                                                {`${getString('cd.getStartedWithCD.successfullyAuthenticated')} ${
+                                                  formikRef.current?.values.repo
                                                 }`}
                                               </Text>
                                             </Layout.Horizontal>
-                                            <Layout.Vertical width={'83%'}>
-                                              <Text style={{ marginLeft: '20px' }} className={css.dangerColor}>
-                                                {(error?.data as any)?.message}
-                                              </Text>
-                                              <ul>
-                                                <li>
-                                                  <Text className={css.textPadding}>
-                                                    {getString('cd.getStartedWithCD.checkAnnonymously')}
-                                                  </Text>
-                                                </li>
-                                                <li>
-                                                  <Text className={css.textPadding}>
-                                                    {getString('cd.getStartedWithCD.checkAuthSettings')}
-                                                  </Text>
-                                                </li>
-                                              </ul>
-                                            </Layout.Vertical>
                                           </Layout.Vertical>
-                                        )}
-                                        {sourceCodeType === SourceCodeType.USE_SAMPLE ? (
-                                          <Layout.Vertical>
-                                            <FormInput.Text
-                                              name="repo"
-                                              style={{ width: '400px' }}
-                                              placeholder={getString('UrlLabel')}
-                                              label={getString('UrlLabel')}
-                                            />
-                                          </Layout.Vertical>
-                                        ) : (
-                                          sourceCodeType === SourceCodeType.PROVIDE_MY_OWN &&
-                                          (isNewRepository || repositoryListdata.length === 0 ? (
-                                            <Layout.Vertical>
-                                              {repositoryListdata.length !== 0 && (
+                                          <Text
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => setTestConnectionStatus(TestStatus.NOT_INITIATED)}
+                                            color={Color.PRIMARY_7}
+                                          >
+                                            {getString('cd.getStartedWithCD.tryAnotherCreds')}
+                                          </Text>
+                                        </Layout.Vertical>
+                                      ) : (
+                                        <>
+                                          {testConnectionStatus === TestStatus.FAILED && (
+                                            <Layout.Vertical className={css.danger} margin={{ bottom: 'medium' }}>
+                                              <Layout.Horizontal className={css.textPadding}>
+                                                <Icon name="danger-icon" size={25} className={css.iconPadding} />
                                                 <Text
-                                                  style={{ cursor: 'pointer' }}
-                                                  className={css.marginBottomClass}
-                                                  onClick={() => formikProps.setFieldValue('isNewRepository', false)}
-                                                  color={Color.PRIMARY_7}
+                                                  className={css.dangerColor}
+                                                  font={{ variation: FontVariation.H6 }}
+                                                  color={Color.RED_600}
                                                 >
-                                                  {getString('cd.getStartedWithCD.backToRepoList')}
+                                                  {`${getString('cd.getStartedWithCD.failedToAuthenticate')} ${
+                                                    formikProps.values.repo
+                                                  }`}
                                                 </Text>
-                                              )}
+                                              </Layout.Horizontal>
+                                              <Layout.Vertical width={'83%'}>
+                                                <Text style={{ marginLeft: '20px' }} className={css.dangerColor}>
+                                                  {(error?.data as any)?.message}
+                                                </Text>
+                                                <ul>
+                                                  <li>
+                                                    <Text className={css.textPadding}>
+                                                      {getString('cd.getStartedWithCD.checkAnnonymously')}
+                                                    </Text>
+                                                  </li>
+                                                  <li>
+                                                    <Text className={css.textPadding}>
+                                                      {getString('cd.getStartedWithCD.checkAuthSettings')}
+                                                    </Text>
+                                                  </li>
+                                                </ul>
+                                              </Layout.Vertical>
+                                            </Layout.Vertical>
+                                          )}
+                                          {sourceCodeType === SourceCodeType.USE_SAMPLE ? (
+                                            <Layout.Vertical>
                                               <FormInput.Text
                                                 name="repo"
                                                 style={{ width: '400px' }}
                                                 placeholder={getString('UrlLabel')}
                                                 label={getString('UrlLabel')}
                                               />
-                                              <Text font="normal" className={css.smallMarginBottomClass}>
-                                                {getString('cd.getStartedWithCD.selectAuthType')}
-                                              </Text>
-                                              <Layout.Horizontal spacing="medium" margin={{ bottom: 'medium' }}>
-                                                <Button
-                                                  onClick={() => handleConnectionTypeChange(getString('HTTPS'))}
-                                                  className={cx(
-                                                    css.kubernetes,
-                                                    connectionType === getString('HTTPS') ? css.active : undefined
-                                                  )}
-                                                >
-                                                  {getString('HTTPS')}
-                                                </Button>
-                                                <Button
-                                                  onClick={() => {
-                                                    handleConnectionTypeChange(getString('SSH'))
-                                                  }}
-                                                  className={cx(
-                                                    css.docker,
-                                                    connectionType === getString('SSH') ? css.active : undefined
-                                                  )}
-                                                >
-                                                  {getString('SSH')}
-                                                </Button>
-                                              </Layout.Horizontal>
-                                              {connectionType === getString('HTTPS') && (
-                                                <>
-                                                  <Text font="normal" className={css.smallMarginBottomClass}>
-                                                    {getString('authentication')}
-                                                  </Text>
-                                                  <Layout.Horizontal spacing="medium" margin={{ bottom: 'medium' }}>
-                                                    <Button
-                                                      onClick={() => handleAuthTypeChange(AUTH_TYPES.ANONYMOUS)}
-                                                      className={cx(
-                                                        css.kubernetes,
-                                                        authType === AUTH_TYPES.ANONYMOUS ? css.active : undefined
-                                                      )}
-                                                    >
-                                                      {getString('cd.getStartedWithCD.anonymous')}
-                                                    </Button>
-                                                    <Button
-                                                      onClick={() => {
-                                                        handleAuthTypeChange(AUTH_TYPES.USERNAME_AND_PASSWORD)
-                                                      }}
-                                                      className={cx(
-                                                        css.docker,
-                                                        authType === AUTH_TYPES.USERNAME_AND_PASSWORD
-                                                          ? css.active
-                                                          : undefined
-                                                      )}
-                                                    >
-                                                      {getString('cd.getStartedWithCD.usernameAndPassword')}
-                                                    </Button>
-                                                  </Layout.Horizontal>
-                                                  {authType === AUTH_TYPES.USERNAME_AND_PASSWORD && (
-                                                    <Layout.Vertical>
-                                                      <FormInput.Text
-                                                        className={css.inputWidth}
-                                                        name="username"
-                                                        label={getString('username')}
-                                                        tooltipProps={{ dataTooltipId: `username` }}
-                                                      />
-                                                      <FormInput.Text
-                                                        className={css.inputWidth}
-                                                        inputGroup={{ type: 'password' }}
-                                                        name="password"
-                                                        tooltipProps={{ dataTooltipId: `password` }}
-                                                        label={getString('password')}
-                                                      />
-                                                    </Layout.Vertical>
-                                                  )}
-                                                </>
-                                              )}
-                                              {connectionType === getString('SSH') && (
-                                                <Text className={css.textPadding}>
-                                                  {getString('common.comingSoon2')}
-                                                </Text>
-                                              )}
                                             </Layout.Vertical>
                                           ) : (
-                                            <Layout.Vertical>
-                                              <Text
-                                                font={{ variation: FontVariation.BODY2 }}
-                                                className={moduleCss.text}
-                                                margin={{ bottom: 'medium' }}
-                                              >
-                                                {`You currently have ${repositoryListdata?.length} repository(s), would you like to connect it to?`}
-                                              </Text>
-                                              <Layout.Horizontal margin={{ bottom: 'medium' }}>
-                                                <ExpandingSearchInput
-                                                  alwaysExpanded
-                                                  width={300}
-                                                  onChange={searchTerm => {
-                                                    getRepositories({
-                                                      accountIdentifier: accountId,
-                                                      searchTerm,
-                                                      agentIdentifier: fullAgentName
-                                                    }).then(response => {
-                                                      setRepositoryListData(defaultTo(response?.content, []))
+                                            sourceCodeType === SourceCodeType.PROVIDE_MY_OWN &&
+                                            (isNewRepository || repositoryListdata.length === 0 ? (
+                                              <Layout.Vertical>
+                                                {repositoryListdata.length !== 0 && (
+                                                  <Text
+                                                    style={{ cursor: 'pointer' }}
+                                                    className={css.marginBottomClass}
+                                                    onClick={() => formikProps.setFieldValue('isNewRepository', false)}
+                                                    color={Color.PRIMARY_7}
+                                                  >
+                                                    {getString('cd.getStartedWithCD.backToRepoList')}
+                                                  </Text>
+                                                )}
+                                                <FormInput.Text
+                                                  name="repo"
+                                                  style={{ width: '400px' }}
+                                                  placeholder={getString('UrlLabel')}
+                                                  label={getString('UrlLabel')}
+                                                />
+                                                <Text font="normal" className={css.smallMarginBottomClass}>
+                                                  {getString('cd.getStartedWithCD.selectAuthType')}
+                                                </Text>
+                                                <Layout.Horizontal spacing="medium" margin={{ bottom: 'medium' }}>
+                                                  <Button
+                                                    onClick={() => handleConnectionTypeChange(getString('HTTPS'))}
+                                                    className={cx(
+                                                      css.kubernetes,
+                                                      connectionType === getString('HTTPS') ? css.active : undefined
+                                                    )}
+                                                  >
+                                                    {getString('HTTPS')}
+                                                  </Button>
+                                                  <Button
+                                                    onClick={() => {
+                                                      handleConnectionTypeChange(getString('SSH'))
+                                                    }}
+                                                    className={cx(
+                                                      css.docker,
+                                                      connectionType === getString('SSH') ? css.active : undefined
+                                                    )}
+                                                  >
+                                                    {getString('SSH')}
+                                                  </Button>
+                                                </Layout.Horizontal>
+                                                {connectionType === getString('HTTPS') && (
+                                                  <>
+                                                    <Text font="normal" className={css.smallMarginBottomClass}>
+                                                      {getString('authentication')}
+                                                    </Text>
+                                                    <Layout.Horizontal spacing="medium" margin={{ bottom: 'medium' }}>
+                                                      <Button
+                                                        onClick={() => handleAuthTypeChange(AUTH_TYPES.ANONYMOUS)}
+                                                        className={cx(
+                                                          css.kubernetes,
+                                                          authType === AUTH_TYPES.ANONYMOUS ? css.active : undefined
+                                                        )}
+                                                      >
+                                                        {getString('cd.getStartedWithCD.anonymous')}
+                                                      </Button>
+                                                      <Button
+                                                        onClick={() => {
+                                                          handleAuthTypeChange(AUTH_TYPES.USERNAME_AND_PASSWORD)
+                                                        }}
+                                                        className={cx(
+                                                          css.docker,
+                                                          authType === AUTH_TYPES.USERNAME_AND_PASSWORD
+                                                            ? css.active
+                                                            : undefined
+                                                        )}
+                                                      >
+                                                        {getString('cd.getStartedWithCD.usernameAndPassword')}
+                                                      </Button>
+                                                    </Layout.Horizontal>
+                                                    {authType === AUTH_TYPES.USERNAME_AND_PASSWORD && (
+                                                      <Layout.Vertical>
+                                                        <FormInput.Text
+                                                          className={css.inputWidth}
+                                                          name="username"
+                                                          label={getString('username')}
+                                                          tooltipProps={{ dataTooltipId: `username` }}
+                                                        />
+                                                        <FormInput.Text
+                                                          className={css.inputWidth}
+                                                          inputGroup={{ type: 'password' }}
+                                                          name="password"
+                                                          tooltipProps={{ dataTooltipId: `password` }}
+                                                          label={getString('password')}
+                                                        />
+                                                      </Layout.Vertical>
+                                                    )}
+                                                  </>
+                                                )}
+                                                {connectionType === getString('SSH') && (
+                                                  <Text className={css.textPadding}>
+                                                    {getString('common.comingSoon2')}
+                                                  </Text>
+                                                )}
+                                              </Layout.Vertical>
+                                            ) : (
+                                              <Layout.Vertical>
+                                                <Text
+                                                  font={{ variation: FontVariation.BODY2 }}
+                                                  className={moduleCss.text}
+                                                  margin={{ bottom: 'medium' }}
+                                                >
+                                                  {`You currently have ${repositoryListdata?.length} repository(s), would you like to connect it to?`}
+                                                </Text>
+                                                <Layout.Horizontal margin={{ bottom: 'medium' }}>
+                                                  <ExpandingSearchInput
+                                                    alwaysExpanded
+                                                    width={300}
+                                                    onChange={searchTerm => {
+                                                      getRepositories({
+                                                        accountIdentifier: accountId,
+                                                        searchTerm,
+                                                        agentIdentifier: fullAgentName
+                                                      }).then(response => {
+                                                        setRepositoryListData(defaultTo(response?.content, []))
+                                                      })
+                                                    }}
+                                                  />
+                                                  <Button
+                                                    variation={ButtonVariation.LINK}
+                                                    onClick={() => formikProps.setFieldValue('isNewRepository', true)}
+                                                  >
+                                                    {getString('common.addNewRepo')}
+                                                  </Button>
+                                                </Layout.Horizontal>
+                                                <CardSelect
+                                                  data={repositoryListdata as Servicev1Repository[]}
+                                                  cornerSelected={true}
+                                                  className={moduleCss.icons}
+                                                  cardClassName={moduleCss.repositoryListCard}
+                                                  renderItem={(item: Servicev1Repository) => (
+                                                    <>
+                                                      <Layout.Vertical
+                                                        spacing={'small'}
+                                                        className={moduleCss.repositoryListItem}
+                                                      >
+                                                        <Layout.Horizontal className={moduleCss.repositoryHeader}>
+                                                          <Icon
+                                                            name={'service-github'}
+                                                            size={24}
+                                                            flex
+                                                            className={moduleCss.repositoriesIcon}
+                                                          />
+                                                          <Text
+                                                            font={{ variation: FontVariation.BODY2 }}
+                                                            className={moduleCss.text3}
+                                                          >
+                                                            {item?.repository?.name}
+                                                          </Text>
+                                                        </Layout.Horizontal>
+                                                        <Text font="normal">{item?.repository?.repo}</Text>
+                                                      </Layout.Vertical>
+                                                    </>
+                                                  )}
+                                                  selected={selectedRepo}
+                                                  onChange={(item: Servicev1Repository) => {
+                                                    setSelectedRepo(item)
+                                                    formikProps.setValues({
+                                                      ...formikProps.values,
+                                                      repo: item?.repository?.repo,
+                                                      identifier: item?.identifier
                                                     })
                                                   }}
                                                 />
-                                                <Button
-                                                  variation={ButtonVariation.LINK}
-                                                  onClick={() => formikProps.setFieldValue('isNewRepository', true)}
-                                                >
-                                                  {getString('common.addNewRepo')}
-                                                </Button>
-                                              </Layout.Horizontal>
-                                              <CardSelect
-                                                data={repositoryListdata as Servicev1Repository[]}
-                                                cornerSelected={true}
-                                                className={moduleCss.icons}
-                                                cardClassName={moduleCss.repositoryListCard}
-                                                renderItem={(item: Servicev1Repository) => (
-                                                  <>
-                                                    <Layout.Vertical
-                                                      spacing={'small'}
-                                                      className={moduleCss.repositoryListItem}
-                                                    >
-                                                      <Layout.Horizontal className={moduleCss.repositoryHeader}>
-                                                        <Icon
-                                                          name={'service-github'}
-                                                          size={24}
-                                                          flex
-                                                          className={moduleCss.repositoriesIcon}
-                                                        />
-                                                        <Text
-                                                          font={{ variation: FontVariation.BODY2 }}
-                                                          className={moduleCss.text3}
-                                                        >
-                                                          {item?.repository?.name}
-                                                        </Text>
-                                                      </Layout.Horizontal>
-                                                      <Text font="normal">{item?.repository?.repo}</Text>
-                                                    </Layout.Vertical>
-                                                  </>
-                                                )}
-                                                selected={selectedRepo}
-                                                onChange={(item: Servicev1Repository) => {
-                                                  setSelectedRepo(item)
-                                                  formikProps.setValues({
-                                                    ...formikProps.values,
-                                                    repo: item?.repository?.repo,
-                                                    identifier: item?.identifier
-                                                  })
-                                                }}
+                                              </Layout.Vertical>
+                                            ))
+                                          )}
+
+                                          <Layout.Vertical padding={{ top: 'small' }}>
+                                            <Container padding={{ top: 'medium' }}>
+                                              <TestConnection />
+                                            </Container>
+                                          </Layout.Vertical>
+                                        </>
+                                      )}
+                                      <div className={css.spacing} />
+                                    </li>
+                                    <li className={`${css.progressItem} ${css.progressItemActive}`}>
+                                      <Text
+                                        font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
+                                        className={css.subHeading}
+                                      >
+                                        {getString('pipeline.gitDetails').toLocaleUpperCase()}
+                                      </Text>
+                                      {testConnectionStatus === TestStatus.SUCCESS && (
+                                        <div>
+                                          <FormGroup>
+                                            <Label className={css.formLabel}>
+                                              <HarnessDocTooltip
+                                                tooltipId={'source-step_targetRevision'}
+                                                labelText={getString('cd.getStartedWithCD.targetRevision')}
                                               />
-                                            </Layout.Vertical>
-                                          ))
-                                        )}
+                                            </Label>
 
-                                        <Layout.Vertical padding={{ top: 'small' }}>
-                                          <Container padding={{ top: 'medium' }}>
-                                            <TestConnection />
-                                          </Container>
-                                        </Layout.Vertical>
-                                      </>
-                                    )}
-                                    <div className={css.spacing} />
-                                  </li>
-                                  <li className={`${css.progressItem} ${css.progressItemActive}`}>
-                                    <Text
-                                      font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
-                                      className={css.subHeading}
-                                    >
-                                      {getString('pipeline.gitDetails').toLocaleUpperCase()}
-                                    </Text>
-                                    {testConnectionStatus === TestStatus.SUCCESS && (
-                                      <div>
-                                        <FormGroup>
-                                          <Label className={css.formLabel}>
-                                            <HarnessDocTooltip
-                                              tooltipId={'source-step_targetRevision'}
-                                              labelText={getString('cd.getStartedWithCD.targetRevision')}
-                                            />
-                                          </Label>
-
-                                          <div style={{ display: 'flex', gap: '8px', paddingTop: '5px' }}>
-                                            <div style={{ width: '30%' }}>
+                                            <div style={{ display: 'flex', gap: '8px', paddingTop: '5px' }}>
+                                              <div style={{ width: '30%' }}>
+                                                <Select
+                                                  inputProps={{
+                                                    placeholder: loadingRevisions ? 'Loading' : '- Select -'
+                                                  }}
+                                                  allowCreatingNewItems
+                                                  usePortal
+                                                  value={
+                                                    !loadingRevisions
+                                                      ? {
+                                                          label: get(formikProps, 'values.targetRevision'),
+                                                          value: get(formikProps, 'values.targetRevision')
+                                                        }
+                                                      : null
+                                                  }
+                                                  addClearBtn
+                                                  name="targetRevision"
+                                                  items={getTargetRevisionItems()}
+                                                  disabled={loadingRevisions}
+                                                  onChange={item => {
+                                                    if (item.value !== formikProps?.values?.targetRevision) {
+                                                      formikProps.setFieldValue('targetRevision', item.value)
+                                                      formikProps.setFieldValue('path', '')
+                                                      if (item) {
+                                                        fetchAppsList({
+                                                          pathParams: {
+                                                            agentIdentifier: getFullAgentWithScope(
+                                                              agentIdentifier,
+                                                              scope
+                                                            ),
+                                                            identifier: getLastURLPathParam(defaultTo(repoURL, ''))
+                                                          },
+                                                          queryParams: {
+                                                            ...defaultQueryParams,
+                                                            projectIdentifier,
+                                                            orgIdentifier,
+                                                            'query.revision': item.value as string
+                                                          }
+                                                        })
+                                                      }
+                                                    }
+                                                  }}
+                                                />
+                                              </div>
+                                              <div className={css.revisionTypeWrapper}>
+                                                <Select
+                                                  className={css.revisionTypeNewApp}
+                                                  name="revisionType"
+                                                  value={revisionTypeArray.find(item => item.value == revisionType)}
+                                                  items={revisionTypeArray}
+                                                  onChange={item => {
+                                                    formikProps.setFieldValue('targetRevision', '')
+                                                    formikProps.setFieldValue('path', '')
+                                                    setRevisionType(item.value as string)
+                                                    props?.setAppDetails({})
+                                                  }}
+                                                  data-tooltip-id="app-details-revision-type"
+                                                />
+                                              </div>
+                                            </div>
+                                          </FormGroup>
+                                          <Layout.Horizontal className={css.pathContainer}>
+                                            <FormGroup style={{ width: '100%' }}>
+                                              <Label className={css.formLabel}>
+                                                <HarnessDocTooltip
+                                                  tooltipId={'source-step_targetPath'}
+                                                  labelText={getString('common.path')}
+                                                />
+                                              </Label>
                                               <Select
-                                                inputProps={{
-                                                  placeholder: loadingRevisions ? 'Loading' : '- Select -'
-                                                }}
+                                                addClearBtn
                                                 allowCreatingNewItems
+                                                items={pathsArr}
+                                                className={css.pathInput}
                                                 usePortal
+                                                inputProps={{
+                                                  placeholder: loadingPaths ? 'Loading' : '- Select -'
+                                                }}
                                                 value={
-                                                  !loadingRevisions
+                                                  !loadingPaths
                                                     ? {
-                                                        label: get(formikProps, 'values.targetRevision'),
-                                                        value: get(formikProps, 'values.targetRevision')
+                                                        label: defaultTo(formikProps.values?.path, ''),
+                                                        value: defaultTo(formikProps.values?.path, '')
                                                       }
                                                     : null
                                                 }
-                                                addClearBtn
-                                                name="targetRevision"
-                                                items={getTargetRevisionItems()}
+                                                name="path"
                                                 disabled={loadingRevisions}
                                                 onChange={item => {
-                                                  if (item.value !== formikProps?.values?.targetRevision) {
-                                                    formikProps.setFieldValue('targetRevision', item.value)
-                                                    formikProps.setFieldValue('path', '')
-                                                    if (item) {
-                                                      fetchAppsList({
-                                                        pathParams: {
-                                                          agentIdentifier: getFullAgentWithScope(
-                                                            agentIdentifier,
-                                                            scope
-                                                          ),
-                                                          identifier: getLastURLPathParam(defaultTo(repoURL, ''))
-                                                        },
-                                                        queryParams: {
-                                                          ...defaultQueryParams,
-                                                          projectIdentifier,
-                                                          orgIdentifier,
-                                                          'query.revision': item.value as string
-                                                        }
-                                                      })
-                                                    }
+                                                  if (item.value !== formikProps?.values?.path) {
+                                                    formikProps.setFieldValue('path', item.value)
+                                                  }
+                                                  if (item.value) {
+                                                    fetchAppDetails({
+                                                      pathParams: {
+                                                        agentIdentifier: fullAgentName,
+                                                        querySourceRepoUrl: encodeURIComponent(defaultTo(repoURL, '')),
+                                                        identifier: getLastURLPathParam(defaultTo(repoURL, ''))
+                                                      },
+                                                      queryParams: {
+                                                        ...defaultQueryParams,
+                                                        projectIdentifier,
+                                                        orgIdentifier,
+                                                        'query.source.path': item.value as string,
+                                                        'query.source.targetRevision':
+                                                          formikProps?.values?.targetRevision
+                                                      }
+                                                    })
                                                   }
                                                 }}
                                               />
-                                            </div>
-                                            <div className={css.revisionTypeWrapper}>
-                                              <Select
-                                                className={css.revisionTypeNewApp}
-                                                name="revisionType"
-                                                value={revisionTypeArray.find(item => item.value == revisionType)}
-                                                items={revisionTypeArray}
-                                                onChange={item => {
-                                                  formikProps.setFieldValue('targetRevision', '')
-                                                  formikProps.setFieldValue('path', '')
-                                                  setRevisionType(item.value as string)
-                                                  props?.setAppDetails({})
-                                                }}
-                                                data-tooltip-id="app-details-revision-type"
-                                              />
-                                            </div>
-                                          </div>
-                                        </FormGroup>
-                                        <Layout.Horizontal className={css.pathContainer}>
-                                          <FormGroup style={{ width: '100%' }}>
-                                            <Label className={css.formLabel}>
-                                              <HarnessDocTooltip
-                                                tooltipId={'source-step_targetPath'}
-                                                labelText={getString('common.path')}
-                                              />
-                                            </Label>
-                                            <Select
-                                              addClearBtn
-                                              allowCreatingNewItems
-                                              items={pathsArr}
-                                              className={css.pathInput}
-                                              usePortal
-                                              inputProps={{
-                                                placeholder: loadingPaths ? 'Loading' : '- Select -'
-                                              }}
-                                              value={
-                                                !loadingPaths
-                                                  ? {
-                                                      label: defaultTo(formikProps.values?.path, ''),
-                                                      value: defaultTo(formikProps.values?.path, '')
-                                                    }
-                                                  : null
-                                              }
-                                              name="path"
-                                              disabled={loadingRevisions}
-                                              onChange={item => {
-                                                if (item.value !== formikProps?.values?.path) {
-                                                  formikProps.setFieldValue('path', item.value)
-                                                }
-                                                if (item.value) {
-                                                  fetchAppDetails({
-                                                    pathParams: {
-                                                      agentIdentifier: fullAgentName,
-                                                      querySourceRepoUrl: encodeURIComponent(defaultTo(repoURL, '')),
-                                                      identifier: getLastURLPathParam(defaultTo(repoURL, ''))
-                                                    },
-                                                    queryParams: {
-                                                      ...defaultQueryParams,
-                                                      projectIdentifier,
-                                                      orgIdentifier,
-                                                      'query.source.path': item.value as string,
-                                                      'query.source.targetRevision': formikProps?.values?.targetRevision
-                                                    }
-                                                  })
-                                                }
-                                              }}
-                                            />
-                                          </FormGroup>
-                                        </Layout.Horizontal>
-                                      </div>
-                                    )}
-                                  </li>
-                                </ul>
-                              </Layout.Vertical>
-                            ) : (
-                              <div>{getString('common.comingSoon')}</div>
-                            )}
-                          </Layout.Vertical>
-                          {formikProps.values.type === REPO_TYPES.GIT ? (
-                            <Button
-                              variation={ButtonVariation.SECONDARY}
-                              rightIcon="chevron-right"
-                              disabled={testConnectionStatus !== TestStatus.SUCCESS}
-                              style={{ marginTop: '20px' }}
-                              minimal
-                              onClick={() => {
-                                saveRepositoryData({
-                                  ...formikProps.values,
-                                  identifier: getLastURLPathParam(defaultTo(repoURL, ''))
-                                })
-                                setDestinationStepEnabled(false)
-                                accordionRef.current.open('application-repo-destination-step')
-                                trackEvent(CDOnboardingActions.NextStepClicked, {})
-                              }}
-                            >
-                              {getString('common.nextStep')}
-                            </Button>
-                          ) : null}
-                          <div className={css.marginTopClass} />
-                        </FormikForm>
-                      )
-                    }}
-                  </Formik>
-                }
-                id={'application-repo-source-step'}
-                summary={
-                  <Text
-                    font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
-                    margin={{ bottom: 'small' }}
-                    color={Color.GREY_600}
-                    data-tooltip-id="gitopsOnboardingSource"
-                  >
-                    {getString('cd.getStartedWithCD.gitopsOnboardingSource')}
-                    <HarnessDocTooltip tooltipId="gitopsOnboardingSource" useStandAlone={true} />
-                  </Text>
-                }
-              />
-              <Accordion.Panel
-                details={<DestinationStep {...props} />}
-                disabled={isDestinationStepEnabled}
-                id={'application-repo-destination-step'}
-                summary={
-                  <Text
-                    font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
-                    margin={{ bottom: 'small' }}
-                    color={Color.GREY_600}
-                  >
-                    {getString('cd.getStartedWithCD.gitopsOnboardingDestination')}
-                    <HarnessDocTooltip tooltipId="gitopsOnboardingDestination" useStandAlone={true} />
-                  </Text>
-                }
-              />
-            </Accordion>
+                                            </FormGroup>
+                                          </Layout.Horizontal>
+                                        </div>
+                                      )}
+                                    </li>
+                                  </ul>
+                                </Layout.Vertical>
+                              ) : (
+                                <div>{getString('common.comingSoon')}</div>
+                              )}
+                            </Layout.Vertical>
+                            {formikProps.values.type === REPO_TYPES.GIT ? (
+                              <Button
+                                variation={ButtonVariation.SECONDARY}
+                                rightIcon="chevron-right"
+                                disabled={testConnectionStatus !== TestStatus.SUCCESS}
+                                style={{ marginTop: '20px' }}
+                                minimal
+                                onClick={() => {
+                                  saveRepositoryData({
+                                    ...formikProps.values,
+                                    identifier: getLastURLPathParam(defaultTo(repoURL, ''))
+                                  })
+                                  setDestinationStepEnabled(false)
+                                  accordionRef.current.open('application-repo-destination-step')
+                                  trackEvent(CDOnboardingActions.NextStepClicked, {})
+                                }}
+                              >
+                                {getString('common.nextStep')}
+                              </Button>
+                            ) : null}
+                            <div className={css.marginTopClass} />
+                          </FormikForm>
+                        )
+                      }}
+                    </Formik>
+                  }
+                  id={'application-repo-source-step'}
+                  summary={
+                    <Text
+                      font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
+                      margin={{ bottom: 'small' }}
+                      color={Color.GREY_600}
+                      data-tooltip-id="gitopsOnboardingSource"
+                    >
+                      {getString('cd.getStartedWithCD.gitopsOnboardingSource')}
+                      <HarnessDocTooltip tooltipId="gitopsOnboardingSource" useStandAlone={true} />
+                    </Text>
+                  }
+                />
+                <Accordion.Panel
+                  details={<DestinationStep {...props} />}
+                  disabled={isDestinationStepEnabled}
+                  id={'application-repo-destination-step'}
+                  summary={
+                    <Text
+                      font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
+                      margin={{ bottom: 'small' }}
+                      color={Color.GREY_600}
+                    >
+                      {getString('cd.getStartedWithCD.gitopsOnboardingDestination')}
+                      <HarnessDocTooltip tooltipId="gitopsOnboardingDestination" useStandAlone={true} />
+                    </Text>
+                  }
+                />
+              </Accordion>
 
-            <div className={css.marginTopClass} />
-          </Container>
-        </Layout.Vertical>
-      </Layout.Horizontal>
-    </Layout.Vertical>
+              <div className={css.marginTopClass} />
+            </Container>
+          </Layout.Vertical>
+        </Layout.Horizontal>
+      </Layout.Vertical>
+      <Container className={moduleCss.helpPanelContainer}>
+        <HelpPanel referenceId="gitOpsPlgConfigureApp" />
+      </Container>
+    </>
   )
 }
 
