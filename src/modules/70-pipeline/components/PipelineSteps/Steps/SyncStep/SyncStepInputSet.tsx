@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import {
@@ -15,9 +15,11 @@ import {
   FormInput,
   SelectOption,
   MultiSelectOption,
-  MultiSelectTypeInput
+  MultiSelectTypeInput,
+  Label
 } from '@harness/uicore'
-import { defaultTo, get, isEmpty, memoize, pick } from 'lodash-es'
+import { Color } from '@harness/design-system'
+import { cloneDeep, defaultTo, get, isEmpty, memoize, pick, set } from 'lodash-es'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -87,7 +89,7 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
   const { expressions } = useVariablesExpression()
 
   const getAppValue = () => {
-    const applicationItems = defaultTo(get(formik, `values.${prefix}spec.applicationsList`), [])
+    const applicationItems = get(formik, `values.${prefix}spec.applicationsList`) || []
     return getMultiTypeFromValue(applicationItems) === MultiTypeInputType.FIXED
       ? applicationItems?.map((app: applicationListItemInterface) => {
           return {
@@ -102,6 +104,73 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={loading} />
   ))
 
+  useEffect(() => {
+    const clonedFormikValue = cloneDeep(formik.values)
+    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME)
+      set(clonedFormikValue, `${prefix}timeout`, get(formik, `values.${prefix}timeout`) || '10m')
+
+    if (getMultiTypeFromValue(template?.spec?.applicationsList) === MultiTypeInputType.RUNTIME)
+      set(
+        clonedFormikValue,
+        `${prefix}spec.applicationsList`,
+        get(formik, `values.${prefix}spec.applicationsList`) || []
+      )
+
+    if (getMultiTypeFromValue(template?.spec?.prune) === MultiTypeInputType.RUNTIME)
+      set(clonedFormikValue, `${prefix}spec.prune`, get(formik, `values.${prefix}spec.prune`) || false)
+
+    if (getMultiTypeFromValue(template?.spec?.dryRun) === MultiTypeInputType.RUNTIME)
+      set(clonedFormikValue, `${prefix}spec.dryRun`, get(formik, `values.${prefix}spec.dryRun`) || false)
+
+    if (getMultiTypeFromValue(template?.spec?.applyOnly) === MultiTypeInputType.RUNTIME)
+      set(clonedFormikValue, `${prefix}spec.applyOnly`, get(formik, `values.${prefix}spec.applyOnly`) || false)
+
+    if (getMultiTypeFromValue(template?.spec?.forceApply) === MultiTypeInputType.RUNTIME)
+      set(clonedFormikValue, `${prefix}spec.forceApply`, get(formik, `values.${prefix}spec.forceApply`) || false)
+
+    if (getMultiTypeFromValue(template?.spec?.syncOptions?.skipSchemaValidation) === MultiTypeInputType.RUNTIME)
+      set(
+        clonedFormikValue,
+        `${prefix}spec.syncOptions.skipSchemaValidation`,
+        get(formik, `values.${prefix}spec.syncOptions.skipSchemaValidation`) || false
+      )
+
+    if (getMultiTypeFromValue(template?.spec?.syncOptions?.autoCreateNamespace) === MultiTypeInputType.RUNTIME)
+      set(
+        clonedFormikValue,
+        `${prefix}spec.syncOptions.autoCreateNamespace`,
+        get(formik, `values.${prefix}spec.syncOptions.autoCreateNamespac`) || false
+      )
+
+    if (getMultiTypeFromValue(template?.spec?.syncOptions?.pruneResourcesAtLast) === MultiTypeInputType.RUNTIME)
+      set(
+        clonedFormikValue,
+        `${prefix}spec.syncOptions.pruneResourcesAtLast`,
+        get(formik, `values.${prefix}spec.syncOptions.pruneResourcesAtLast`) || false
+      )
+
+    if (getMultiTypeFromValue(template?.spec?.syncOptions?.applyOutOfSyncOnly) === MultiTypeInputType.RUNTIME)
+      set(
+        clonedFormikValue,
+        `${prefix}spec.syncOptions.applyOutOfSyncOnly`,
+        get(formik, `values.${prefix}spec.syncOptions.applyOutOfSyncOnly`) || false
+      )
+
+    if (getMultiTypeFromValue(template?.spec?.syncOptions?.replaceResources) === MultiTypeInputType.RUNTIME)
+      set(
+        clonedFormikValue,
+        `${prefix}spec.syncOptions.replaceResources`,
+        get(formik, `values.${prefix}spec.syncOptions.replaceResources`) || false
+      )
+
+    if (getMultiTypeFromValue(template?.spec?.retry) === MultiTypeInputType.RUNTIME) {
+      set(clonedFormikValue, `${prefix}spec.retry`, get(formik, `values.${prefix}spec.retry`) || false)
+      set(clonedFormikValue, `${prefix}spec.retryStrategy`, get(formik, `values.${prefix}spec.retryStrategy`) || {})
+    }
+
+    formik.setValues({ ...clonedFormikValue })
+  }, [])
+
   const retryValue = get(formik, `values.${prefix}spec.retry`)
 
   return (
@@ -109,6 +178,7 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
       <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
         {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
           <TimeoutFieldInputSetView
+            shallAppendSpace={false}
             multiTypeDurationProps={{
               width: 400,
               configureOptionsProps: {
@@ -128,7 +198,8 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
         )}
 
         {getMultiTypeFromValue(template?.spec?.applicationsList) === MultiTypeInputType.RUNTIME ? (
-          <div className={cx(css.formGroup, css.lg)}>
+          <div className={css.bottomSpacing}>
+            <Label style={{ color: Color.GREY_900 }}>{getString('pipeline.applicationName')}</Label>
             <MultiSelectTypeInput
               name={`${prefix}spec.applicationsList`}
               disabled={readonly}
@@ -138,6 +209,7 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 allowCreatingNewItems: false,
                 itemRender: itemRenderer
               }}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
               width={400}
               value={getAppValue()}
               onChange={items => {
@@ -288,12 +360,30 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
         {getMultiTypeFromValue(template?.spec?.retry) === MultiTypeInputType.RUNTIME ? (
           <>
             <div className={cx(css.formGroup, css.lg)}>
-              <FormInput.MultiTextInput
+              <FormMultiTypeCheckboxField
                 label={getString('retry')}
-                style={{ flexGrow: 1, marginBottom: 0 }}
                 name={`${prefix}spec.retry`}
-                multiTextInputProps={{
-                  allowableTypes,
+                disabled={readonly}
+                onChange={value => {
+                  if (value === true) {
+                    const clonedFormik = cloneDeep(formik.values)
+                    set(clonedFormik, `${prefix}spec.retryStrategy.limit`, 2)
+                    set(clonedFormik, `${prefix}spec.retryStrategy.baseBackoffDuration`, '5s')
+                    set(clonedFormik, `${prefix}spec.retryStrategy.increaseBackoffByFactor`, 2)
+                    set(clonedFormik, `${prefix}spec.retryStrategy.maxBackoffDuration`, '3m5s')
+                    set(clonedFormik, `${prefix}spec.retry`, true)
+                    formik.setValues({ ...clonedFormik })
+                  } else {
+                    const clonedFormik = cloneDeep(formik.values)
+                    set(clonedFormik, `${prefix}spec.retryStrategy`, {})
+                    set(clonedFormik, `${prefix}spec.retry`, value)
+                    formik.setValues({ ...clonedFormik })
+                  }
+                }}
+                checkboxStyle={{ flexGrow: 'unset' }}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
                   width: 400
                 }}
               />
@@ -319,6 +409,7 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
           retryValue === true ? (
             <div className={cx(css.formGroup, css.lg)}>
               <TimeoutFieldInputSetView
+                shallAppendSpace={false}
                 multiTypeDurationProps={{
                   configureOptionsProps: {
                     isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -341,6 +432,7 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
           retryValue === true ? (
             <div className={cx(css.formGroup, css.lg)}>
               <TimeoutFieldInputSetView
+                shallAppendSpace={false}
                 multiTypeDurationProps={{
                   width: 400,
                   configureOptionsProps: {

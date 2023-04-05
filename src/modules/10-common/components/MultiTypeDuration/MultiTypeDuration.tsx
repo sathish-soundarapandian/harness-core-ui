@@ -106,7 +106,6 @@ export function MultiTypeDuration(props: MultiTypeDurationProps): React.ReactEle
               showRequiredField={false}
               showDefaultField={false}
               onChange={val => onChange?.(val, MultiTypeInputValue.STRING, MultiTypeInputType.RUNTIME)}
-              style={{ marginLeft: 'var(--spacing-medium)' }}
               allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
               {...configureOptionsProps}
               isExecutionTimeFieldDisabled
@@ -131,6 +130,7 @@ export interface FormMultiTypeDurationProps extends Omit<IFormGroupProps, 'label
   onChange?: MultiTypeDurationProps['onChange']
   tooltipProps?: DataTooltipInterface
   isOptional?: boolean
+  shallAppendSpace?: boolean
 }
 
 export function FormMultiTypeDuration(props: FormMultiTypeDurationProps): React.ReactElement {
@@ -142,6 +142,7 @@ export function FormMultiTypeDuration(props: FormMultiTypeDurationProps): React.
     onChange,
     skipErrorsIf,
     isOptional = false,
+    shallAppendSpace = true,
     ...restProps
   } = props
   const { getString } = useStrings()
@@ -180,7 +181,7 @@ export function FormMultiTypeDuration(props: FormMultiTypeDurationProps): React.
     }
 
     const time = parseStringToTime(value)
-    const strVal = timeToDisplayText(time)
+    const strVal = shallAppendSpace ? timeToDisplayText(time) : value
 
     formik?.setFieldValue(name, strVal)
   }

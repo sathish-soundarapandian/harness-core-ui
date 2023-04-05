@@ -159,7 +159,7 @@ export const FormMultiTypeCheckbox: React.FC<FormMultiTypeTextboxProps> = props 
               formik?.setFieldValue(name, val)
             }
             setType(typeVal)
-            onChange?.(val, valueType, type)
+            onChange?.(val, valueType, typeVal)
           }}
         />
         {!labelToBePassed ? (

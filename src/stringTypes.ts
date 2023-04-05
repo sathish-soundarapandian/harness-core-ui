@@ -4819,9 +4819,19 @@ export interface StringsMap {
   'pipeline.syncStep.replaceResources': string
   'pipeline.syncStep.skipSchemaValidation': string
   'pipeline.syncStep.syncOptionsLabel': string
+  'pipeline.syncStep.validation.applicationsList': string
+  'pipeline.syncStep.validation.applyOnly': string
+  'pipeline.syncStep.validation.applyOutOfSyncOnly': string
+  'pipeline.syncStep.validation.autoCreateNamespace': string
+  'pipeline.syncStep.validation.dryRun': string
+  'pipeline.syncStep.validation.forceApply': string
   'pipeline.syncStep.validation.increaseBackoffByFactor': string
   'pipeline.syncStep.validation.limit': string
   'pipeline.syncStep.validation.maxBackoffDuration': string
+  'pipeline.syncStep.validation.prune': string
+  'pipeline.syncStep.validation.pruneResourcesAtLast': string
+  'pipeline.syncStep.validation.replaceResources': string
+  'pipeline.syncStep.validation.skipSchemaValidation': string
   'pipeline.tagDependencyRequired': string
   'pipeline.targets.title': string
   'pipeline.templateInputs': string

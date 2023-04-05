@@ -73,6 +73,7 @@ export class SyncStep extends PipelineStep<SyncStepData> {
     identifier: '',
     type: StepType.GitOpsSync as string,
     name: '',
+    timeout: '10m',
     spec: {
       prune: false,
       dryRun: false,
@@ -85,6 +86,7 @@ export class SyncStep extends PipelineStep<SyncStepData> {
         increaseBackoffByFactor: 2,
         maxBackoffDuration: '3m5s'
       },
+      retry: false,
       syncOptions: {
         skipSchemaValidation: false,
         autoCreateNamespace: false,
@@ -109,6 +111,39 @@ export class SyncStep extends PipelineStep<SyncStepData> {
           }
         }
       )
+    }
+    if (clonedValues.spec && !clonedValues.spec?.prune) {
+      clonedValues.spec.prune = false
+    }
+    if (clonedValues.spec && !clonedValues.spec?.dryRun) {
+      clonedValues.spec.dryRun = false
+    }
+    if (clonedValues.spec && !clonedValues.spec?.applyOnly) {
+      clonedValues.spec.applyOnly = false
+    }
+    if (clonedValues.spec && !clonedValues.spec?.forceApply) {
+      clonedValues.spec.forceApply = false
+    }
+    if (clonedValues.spec?.syncOptions && !clonedValues.spec?.syncOptions?.applyOutOfSyncOnly) {
+      clonedValues.spec.syncOptions.applyOutOfSyncOnly = false
+    }
+    if (clonedValues.spec?.syncOptions && !clonedValues.spec?.syncOptions?.skipSchemaValidation) {
+      clonedValues.spec.syncOptions.skipSchemaValidation = false
+    }
+    if (clonedValues.spec?.syncOptions && !clonedValues.spec?.syncOptions?.autoCreateNamespace) {
+      clonedValues.spec.syncOptions.autoCreateNamespace = false
+    }
+    if (clonedValues.spec?.syncOptions && !clonedValues.spec?.syncOptions?.pruneResourcesAtLast) {
+      clonedValues.spec.syncOptions.pruneResourcesAtLast = false
+    }
+    if (clonedValues.spec?.syncOptions && !clonedValues.spec?.syncOptions?.replaceResources) {
+      clonedValues.spec.syncOptions.replaceResources = false
+    }
+    if (values?.spec?.retry !== true) {
+      delete clonedValues.spec?.retryStrategy?.limit
+      delete clonedValues.spec?.retryStrategy?.baseBackoffDuration
+      delete clonedValues.spec?.retryStrategy?.increaseBackoffByFactor
+      delete clonedValues.spec?.retryStrategy?.maxBackoffDuration
     }
     return clonedValues
   }

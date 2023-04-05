@@ -43,6 +43,7 @@ declare const styles: {
   readonly noLookDivider: string
   readonly removeBpLabelMargin: string
   readonly removeBpPopoverWrapperTopMargin: string
+  readonly rowGap: string
   readonly shellScriptMonacoField: string
   readonly sm: string
   readonly stepPanel: string

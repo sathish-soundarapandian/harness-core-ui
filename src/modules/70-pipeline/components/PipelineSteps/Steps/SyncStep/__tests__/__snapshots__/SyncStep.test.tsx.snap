@@ -158,7 +158,7 @@ exports[`Sync step tests Basic functions - edit stage view validations 1`] = `
                       name="timeout"
                       placeholder="Enter w/d/h/m/s/ms"
                       type="text"
-                      value=""
+                      value="10m"
                     />
                   </div>
                   <span
@@ -355,7 +355,7 @@ exports[`Sync step tests Basic functions - edit stage view validations and submi
           class="formGroup sm"
         >
           <div
-            class="bp3-form-group"
+            class="bp3-form-group bp3-intent-danger"
             data-id="timeout-1"
           >
             <label
@@ -422,6 +422,37 @@ exports[`Sync step tests Basic functions - edit stage view validations and submi
                         </span>
                       </button>
                     </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="bp3-form-helper-text"
+              >
+                <div
+                  class="FormError--errorDiv"
+                  data-name="timeout"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+                    data-icon="circle-cross"
+                  >
+                    <svg
+                      height="12"
+                      viewBox="0 0 13 13"
+                      width="12"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    class="FormError--error"
+                  >
+                    Value must be greater than or equal to "1m"
                   </span>
                 </div>
               </div>
@@ -1305,7 +1336,7 @@ exports[`Sync step tests Basic functions - edit stage view validations and submi
                       </div>
                     </div>
                     <div
-                      class="grid2Coloumns"
+                      class="grid2Coloumns rowGap"
                     >
                       <div
                         class="md flex"
@@ -1342,6 +1373,78 @@ exports[`Sync step tests Basic functions - edit stage view validations and submi
                                   autocomplete="off"
                                   class="bp3-input"
                                   name="spec.retryStrategy.limit"
+                                  type="text"
+                                  value="2"
+                                />
+                              </div>
+                              <span
+                                class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <button
+                                    class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                    data-testid="multi-type-button"
+                                  >
+                                    <span
+                                      class="bp3-icon StyledProps--main"
+                                      data-icon="fixed-input"
+                                    >
+                                      <svg
+                                        height="12"
+                                        viewBox="0 0 9 9"
+                                        width="12"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                          fill="currentColor"
+                                        />
+                                      </svg>
+                                    </span>
+                                  </button>
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="md flex"
+                      >
+                        <div
+                          class="bp3-form-group"
+                          style="flex-grow: 1; margin-bottom: 0px;"
+                        >
+                          <label
+                            class="bp3-label"
+                            for="spec.retryStrategy.increaseBackoffByFactor"
+                          >
+                            <span
+                              class="Tooltip--acenter"
+                              data-tooltip-id="SyncStep_spec.retryStrategy.increaseBackoffByFactor"
+                            >
+                              pipeline.syncStep.increaseBackoffByFactor
+                            </span>
+                             
+                            <span
+                              class="bp3-text-muted"
+                            />
+                          </label>
+                          <div
+                            class="bp3-form-content"
+                          >
+                            <div
+                              class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                            >
+                              <div
+                                class="bp3-input-group MultiTypeInput--input"
+                              >
+                                <input
+                                  autocomplete="off"
+                                  class="bp3-input"
+                                  name="spec.retryStrategy.increaseBackoffByFactor"
                                   type="text"
                                   value="2"
                                 />
@@ -1531,78 +1634,6 @@ exports[`Sync step tests Basic functions - edit stage view validations and submi
                           </div>
                         </div>
                       </div>
-                      <div
-                        class="md flex"
-                      >
-                        <div
-                          class="bp3-form-group"
-                          style="flex-grow: 1; margin-bottom: 0px;"
-                        >
-                          <label
-                            class="bp3-label"
-                            for="spec.retryStrategy.increaseBackoffByFactor"
-                          >
-                            <span
-                              class="Tooltip--acenter"
-                              data-tooltip-id="SyncStep_spec.retryStrategy.increaseBackoffByFactor"
-                            >
-                              pipeline.syncStep.increaseBackoffByFactor
-                            </span>
-                             
-                            <span
-                              class="bp3-text-muted"
-                            />
-                          </label>
-                          <div
-                            class="bp3-form-content"
-                          >
-                            <div
-                              class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                            >
-                              <div
-                                class="bp3-input-group MultiTypeInput--input"
-                              >
-                                <input
-                                  autocomplete="off"
-                                  class="bp3-input"
-                                  name="spec.retryStrategy.increaseBackoffByFactor"
-                                  type="text"
-                                  value="2"
-                                />
-                              </div>
-                              <span
-                                class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                              >
-                                <span
-                                  class="bp3-popover-target"
-                                >
-                                  <button
-                                    class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                                    data-testid="multi-type-button"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main"
-                                      data-icon="fixed-input"
-                                    >
-                                      <svg
-                                        height="12"
-                                        viewBox="0 0 9 9"
-                                        width="12"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                          fill="currentColor"
-                                        />
-                                      </svg>
-                                    </span>
-                                  </button>
-                                </span>
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -1774,7 +1805,7 @@ exports[`Sync step tests Basic functions - edit stage view validations with empt
                       name="timeout"
                       placeholder="Enter w/d/h/m/s/ms"
                       type="text"
-                      value=""
+                      value="10m"
                     />
                   </div>
                   <span
@@ -2007,7 +2038,7 @@ exports[`Sync step tests Basic functions - edit stage view validations with runt
                       name="timeout"
                       placeholder="Enter w/d/h/m/s/ms"
                       type="text"
-                      value=""
+                      value="10m"
                     />
                   </div>
                   <span
@@ -2132,7 +2163,7 @@ exports[`Sync step tests Basic snapshot - deploymentform mode 1`] = `
                       name="timeout"
                       placeholder="Enter w/d/h/m/s/ms"
                       type="text"
-                      value=""
+                      value="10m"
                     />
                   </div>
                   <span
@@ -2170,8 +2201,13 @@ exports[`Sync step tests Basic snapshot - deploymentform mode 1`] = `
           </div>
         </div>
         <div
-          class="formGroup lg"
+          class="bottomSpacing"
         >
+          <label
+            class="Label--main"
+          >
+            pipeline.applicationName
+          </label>
           <div
             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
             data-testid=".spec.configuration.capabilities"
@@ -3229,7 +3265,7 @@ exports[`Sync step tests Basic snapshot - inputset mode 1`] = `
                       name="timeout"
                       placeholder="Enter w/d/h/m/s/ms"
                       type="text"
-                      value=""
+                      value="10m"
                     />
                   </div>
                   <span
@@ -3267,8 +3303,13 @@ exports[`Sync step tests Basic snapshot - inputset mode 1`] = `
           </div>
         </div>
         <div
-          class="formGroup lg"
+          class="bottomSpacing"
         >
+          <label
+            class="Label--main"
+          >
+            pipeline.applicationName
+          </label>
           <div
             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
             data-testid=".spec.configuration.capabilities"
@@ -4318,7 +4359,7 @@ exports[`Sync step tests Basic snapshot - inputset mode but no runtime values 1`
                       name="timeout"
                       placeholder="Enter w/d/h/m/s/ms"
                       type="text"
-                      value=""
+                      value="10m"
                     />
                   </div>
                   <span
@@ -4356,8 +4397,13 @@ exports[`Sync step tests Basic snapshot - inputset mode but no runtime values 1`
           </div>
         </div>
         <div
-          class="formGroup lg"
+          class="bottomSpacing"
         >
+          <label
+            class="Label--main"
+          >
+            pipeline.applicationName
+          </label>
           <div
             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
             data-testid=".spec.configuration.capabilities"
@@ -5407,7 +5453,7 @@ exports[`Sync step tests deploymentform mode - readonly 1`] = `
                       name="timeout"
                       placeholder="Enter w/d/h/m/s/ms"
                       type="text"
-                      value=""
+                      value="10m"
                     />
                   </div>
                   <span
@@ -5445,8 +5491,13 @@ exports[`Sync step tests deploymentform mode - readonly 1`] = `
           </div>
         </div>
         <div
-          class="formGroup lg"
+          class="bottomSpacing"
         >
+          <label
+            class="Label--main"
+          >
+            pipeline.applicationName
+          </label>
           <div
             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
             data-testid=".spec.configuration.capabilities"

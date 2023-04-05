@@ -177,6 +177,16 @@ syncStep:
   maxBackoffDuration: Max Duration
   increaseBackoffByFactor: Factor
   validation:
+    prune: Prune is required when expression
+    dryRun: Dry Run is required when expression
+    applyOnly: Apply Only is required when expression
+    forceApply: Force Apply is required when expression
+    applicationsList: Applications list is required when expression
+    skipSchemaValidation: Skip Schema Validations is required when expression
+    autoCreateNamespace: Auto-Create Namespace is required when expression
+    pruneResourcesAtLast: Prune Last is required when expression
+    applyOutOfSyncOnly: Apply Out of Sync Only is required when expression
+    replaceResources: Replace is required when expression
     limit: Limit is required
     maxBackoffDuration: Max Duration is required
     increaseBackoffByFactor: Factor is required

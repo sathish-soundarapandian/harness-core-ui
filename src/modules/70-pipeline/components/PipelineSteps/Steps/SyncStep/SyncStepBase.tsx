@@ -118,6 +118,7 @@ function FormContent({
         <FormMultiTypeDurationField
           name="timeout"
           label={getString('pipelineSteps.timeoutLabel')}
+          shallAppendSpace={false}
           disabled={readonly}
           multiTypeDurationProps={{
             expressions,
@@ -143,22 +144,10 @@ function FormContent({
                       items: defaultTo(data, []),
                       onQueryChange: actions.search,
                       itemRender: itemRenderer
-                    }
+                    },
+                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
                   }}
                 />
-                {getMultiTypeFromValue(formik.values.spec?.applicationsList as string) ===
-                  MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    style={{ marginTop: -5 }}
-                    value={formik.values.spec?.applicationsList as string}
-                    type="String"
-                    variableName="spec.applicationsList"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    onChange={value => formik.setFieldValue('spec.applicationsList', value)}
-                    isReadonly={readonly}
-                  />
-                )}
               </div>
               <div className={stepCss.grid2Coloumns}>
                 <div className={cx(stepCss.md, stepCss.flex)}>
@@ -166,84 +155,64 @@ function FormContent({
                     name="spec.prune"
                     style={{ flex: 1 }}
                     label={getString('pipeline.syncStep.prune')}
+                    onChange={(value, _valueType, type) => {
+                      if (type === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.prune', value || false)
+                      } else {
+                        formik.setFieldValue('spec.prune', value)
+                      }
+                    }}
                     disabled={readonly}
                     multiTypeTextbox={{ expressions, allowableTypes }}
                   />
-                  {getMultiTypeFromValue(formik.values.spec?.prune as string) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      style={{ marginTop: -5 }}
-                      value={formik.values.spec?.prune as string}
-                      type="String"
-                      variableName="spec.prune"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => formik.setFieldValue('spec.prune', value)}
-                      isReadonly={readonly}
-                    />
-                  )}
                 </div>
                 <div className={cx(stepCss.md, stepCss.flex)}>
                   <FormMultiTypeCheckboxField
                     name="spec.dryRun"
                     style={{ flex: 1 }}
+                    onChange={(value, _valueType, type) => {
+                      if (type === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.dryRun', value || false)
+                      } else {
+                        formik.setFieldValue('spec.dryRun', value)
+                      }
+                    }}
                     disabled={readonly}
                     label={getString('pipeline.syncStep.dryRun')}
                     multiTypeTextbox={{ expressions, allowableTypes }}
                   />
-                  {getMultiTypeFromValue(formik.values.spec?.dryRun as string) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      style={{ marginTop: -5 }}
-                      value={formik.values.spec?.dryRun as string}
-                      type="String"
-                      variableName="spec.dryRun"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => formik.setFieldValue('spec.dryRun', value)}
-                      isReadonly={readonly}
-                    />
-                  )}
                 </div>
                 <div className={cx(stepCss.md, stepCss.flex)}>
                   <FormMultiTypeCheckboxField
                     name="spec.applyOnly"
                     style={{ flex: 1 }}
+                    onChange={(value, _valueType, type) => {
+                      if (type === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.applyOnly', value || false)
+                      } else {
+                        formik.setFieldValue('spec.applyOnly', value)
+                      }
+                    }}
                     label={getString('pipeline.syncStep.applyOnly')}
                     disabled={readonly}
                     multiTypeTextbox={{ expressions, allowableTypes }}
                   />
-                  {getMultiTypeFromValue(formik.values.spec?.applyOnly as string) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      style={{ marginTop: -5 }}
-                      value={formik.values.spec?.applyOnly as string}
-                      type="String"
-                      variableName="spec.applyOnly"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => formik.setFieldValue('spec.applyOnly', value)}
-                      isReadonly={readonly}
-                    />
-                  )}
                 </div>
                 <div className={cx(stepCss.md, stepCss.flex)}>
                   <FormMultiTypeCheckboxField
                     name="spec.forceApply"
                     style={{ flex: 1 }}
+                    onChange={(value, _valueType, type) => {
+                      if (type === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.forceApply', value || false)
+                      } else {
+                        formik.setFieldValue('spec.forceApply', value)
+                      }
+                    }}
                     label={getString('pipeline.syncStep.forceApply')}
                     disabled={readonly}
                     multiTypeTextbox={{ expressions, allowableTypes }}
                   />
-                  {getMultiTypeFromValue(formik.values.spec?.forceApply as string) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      style={{ marginTop: -5 }}
-                      value={formik.values.spec?.forceApply as string}
-                      type="String"
-                      variableName="spec.forceApply"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => formik.setFieldValue('spec.forceApply', value)}
-                      isReadonly={readonly}
-                    />
-                  )}
                 </div>
               </div>
               <div className={stepCss.md}>
@@ -253,89 +222,65 @@ function FormContent({
                     <FormMultiTypeCheckboxField
                       name="spec.syncOptions.skipSchemaValidation"
                       style={{ flex: 1 }}
+                      onChange={(value, _valueType, type) => {
+                        if (type === MultiTypeInputType.FIXED) {
+                          formik.setFieldValue('spec.syncOptions.skipSchemaValidation', value || false)
+                        } else {
+                          formik.setFieldValue('spec.syncOptions.skipSchemaValidation', value)
+                        }
+                      }}
                       label={getString('pipeline.syncStep.skipSchemaValidation')}
                       disabled={readonly}
                       multiTypeTextbox={{ expressions, allowableTypes }}
                     />
-                    {getMultiTypeFromValue(formik.values.spec?.syncOptions?.skipSchemaValidation as string) ===
-                      MultiTypeInputType.RUNTIME && (
-                      <ConfigureOptions
-                        style={{ marginTop: -5 }}
-                        value={formik.values.spec?.syncOptions?.skipSchemaValidation as string}
-                        type="String"
-                        variableName="spec.syncOptions.skipSchemaValidation"
-                        showRequiredField={false}
-                        showDefaultField={false}
-                        onChange={value => formik.setFieldValue('spec.syncOptions.skipSchemaValidation', value)}
-                        isReadonly={readonly}
-                      />
-                    )}
                   </div>
                   <div className={cx(stepCss.md, stepCss.flex)}>
                     <FormMultiTypeCheckboxField
                       name="spec.syncOptions.autoCreateNamespace"
                       label={getString('pipeline.syncStep.autoCreateNamespace')}
+                      onChange={(value, _valueType, type) => {
+                        if (type === MultiTypeInputType.FIXED) {
+                          formik.setFieldValue('spec.syncOptions.autoCreateNamespace', value || false)
+                        } else {
+                          formik.setFieldValue('spec.syncOptions.autoCreateNamespace', value)
+                        }
+                      }}
                       style={{ flex: 1 }}
                       disabled={readonly}
                       multiTypeTextbox={{ expressions, allowableTypes }}
                     />
-                    {getMultiTypeFromValue(formik.values.spec?.syncOptions?.autoCreateNamespace as string) ===
-                      MultiTypeInputType.RUNTIME && (
-                      <ConfigureOptions
-                        style={{ marginTop: -5 }}
-                        value={formik.values.spec?.syncOptions?.autoCreateNamespace as string}
-                        type="String"
-                        variableName="spec.syncOptions.autoCreateNamespace"
-                        showRequiredField={false}
-                        showDefaultField={false}
-                        onChange={value => formik.setFieldValue('spec.syncOptions.autoCreateNamespace', value)}
-                        isReadonly={readonly}
-                      />
-                    )}
                   </div>
                   <div className={cx(stepCss.md, stepCss.flex)}>
                     <FormMultiTypeCheckboxField
                       name="spec.syncOptions.pruneResourcesAtLast"
                       label={getString('pipeline.syncStep.pruneResourcesAtLast')}
+                      onChange={(value, _valueType, type) => {
+                        if (type === MultiTypeInputType.FIXED) {
+                          formik.setFieldValue('spec.syncOptions.pruneResourcesAtLast', value || false)
+                        } else {
+                          formik.setFieldValue('spec.syncOptions.pruneResourcesAtLast', value)
+                        }
+                      }}
                       style={{ flex: 1 }}
                       disabled={readonly}
                       multiTypeTextbox={{ expressions, allowableTypes }}
                     />
-                    {getMultiTypeFromValue(formik.values.spec?.syncOptions?.pruneResourcesAtLast as string) ===
-                      MultiTypeInputType.RUNTIME && (
-                      <ConfigureOptions
-                        style={{ marginTop: -5 }}
-                        value={formik.values.spec?.syncOptions?.pruneResourcesAtLast as string}
-                        type="String"
-                        variableName="spec.syncOptions.pruneResourcesAtLast"
-                        showRequiredField={false}
-                        showDefaultField={false}
-                        onChange={value => formik.setFieldValue('spec.syncOptions.pruneResourcesAtLast', value)}
-                        isReadonly={readonly}
-                      />
-                    )}
                   </div>
                   <div className={cx(stepCss.md, stepCss.flex)}>
                     <FormMultiTypeCheckboxField
                       name="spec.syncOptions.applyOutOfSyncOnly"
                       label={getString('pipeline.syncStep.applyOutOfSyncOnly')}
+                      onChange={(value, _valueType, type) => {
+                        if (type === MultiTypeInputType.FIXED) {
+                          formik.setFieldValue('spec.syncOptions.applyOutOfSyncOnly', value || false)
+                        } else {
+                          formik.setFieldValue('spec.syncOptions.applyOutOfSyncOnly', value)
+                        }
+                      }}
                       style={{ flex: 1 }}
                       disabled={readonly}
                       multiTypeTextbox={{ expressions, allowableTypes }}
                     />
-                    {getMultiTypeFromValue(formik.values.spec?.syncOptions?.applyOutOfSyncOnly as string) ===
-                      MultiTypeInputType.RUNTIME && (
-                      <ConfigureOptions
-                        style={{ marginTop: -5 }}
-                        value={formik.values.spec?.syncOptions?.applyOutOfSyncOnly as string}
-                        type="String"
-                        variableName="spec.syncOptions.applyOutOfSyncOnly"
-                        showRequiredField={false}
-                        showDefaultField={false}
-                        onChange={value => formik.setFieldValue('spec.syncOptions.applyOutOfSyncOnly', value)}
-                        isReadonly={readonly}
-                      />
-                    )}
                   </div>
                 </div>
                 <FormInput.Select
@@ -350,23 +295,17 @@ function FormContent({
                   <FormMultiTypeCheckboxField
                     name="spec.syncOptions.replaceResources"
                     label={getString('pipeline.syncStep.replaceResources')}
+                    onChange={(value, _valueType, type) => {
+                      if (type === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.syncOptions.replaceResources', value || false)
+                      } else {
+                        formik.setFieldValue('spec.syncOptions.replaceResources', value)
+                      }
+                    }}
                     style={{ flex: 1 }}
                     disabled={readonly}
                     multiTypeTextbox={{ expressions, allowableTypes }}
                   />
-                  {getMultiTypeFromValue(formik.values.spec?.syncOptions?.replaceResources as string) ===
-                    MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      style={{ marginTop: -5 }}
-                      value={formik.values.spec?.syncOptions?.replaceResources as string}
-                      type="String"
-                      variableName="spec.syncOptions.replaceResources"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => formik.setFieldValue('spec.syncOptions.replaceResources', value)}
-                      isReadonly={readonly}
-                    />
-                  )}
                 </div>
                 <div className={cx(stepCss.formGroup, stepCss.md, stepCss.flex)}>
                   <FormMultiTypeCheckboxField
@@ -374,23 +313,14 @@ function FormContent({
                     label={getString('retry')}
                     style={{ flex: 1 }}
                     disabled={readonly}
-                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                    }}
                   />
-                  {getMultiTypeFromValue(formik.values.spec?.retry as string) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      style={{ marginTop: -5 }}
-                      value={formik.values.spec?.retry as string}
-                      type="String"
-                      variableName="spec.retry"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => formik.setFieldValue('spec.retry', value)}
-                      isReadonly={readonly}
-                    />
-                  )}
                 </div>
                 {formik.values.spec?.retry === true && (
-                  <div className={stepCss.grid2Coloumns}>
+                  <div className={cx(stepCss.grid2Coloumns, stepCss.rowGap)}>
                     <div className={cx(stepCss.md, stepCss.flex)}>
                       <FormInput.MultiTextInput
                         label={getString('pipeline.syncStep.limit')}
@@ -413,30 +343,6 @@ function FormContent({
                           isReadonly={readonly}
                         />
                       )}
-                    </div>
-                    <div className={stepCss.md}>
-                      <FormMultiTypeDurationField
-                        name={'spec.retryStrategy.baseBackoffDuration'}
-                        label={getString('pipeline.duration')}
-                        disabled={readonly}
-                        multiTypeDurationProps={{
-                          expressions,
-                          enableConfigureOptions: true,
-                          allowableTypes
-                        }}
-                      />
-                    </div>
-                    <div className={stepCss.md}>
-                      <FormMultiTypeDurationField
-                        name={'spec.retryStrategy.maxBackoffDuration'}
-                        label={getString('pipeline.syncStep.maxBackoffDuration')}
-                        disabled={readonly}
-                        multiTypeDurationProps={{
-                          expressions,
-                          enableConfigureOptions: true,
-                          allowableTypes
-                        }}
-                      />
                     </div>
                     <div className={cx(stepCss.md, stepCss.flex)}>
                       <FormInput.MultiTextInput
@@ -461,6 +367,32 @@ function FormContent({
                         />
                       )}
                     </div>
+                    <div className={stepCss.md}>
+                      <FormMultiTypeDurationField
+                        name={'spec.retryStrategy.baseBackoffDuration'}
+                        shallAppendSpace={false}
+                        label={getString('pipeline.duration')}
+                        disabled={readonly}
+                        multiTypeDurationProps={{
+                          expressions,
+                          enableConfigureOptions: true,
+                          allowableTypes
+                        }}
+                      />
+                    </div>
+                    <div className={stepCss.md}>
+                      <FormMultiTypeDurationField
+                        name={'spec.retryStrategy.maxBackoffDuration'}
+                        shallAppendSpace={false}
+                        label={getString('pipeline.syncStep.maxBackoffDuration')}
+                        disabled={readonly}
+                        multiTypeDurationProps={{
+                          expressions,
+                          enableConfigureOptions: true,
+                          allowableTypes
+                        }}
+                      />
+                    </div>
                   </div>
                 )}
               </div>
@@ -478,18 +410,87 @@ export function SyncStepBase(
 ): React.ReactElement {
   const { getString } = useStrings()
   const validationSchema = Yup.object().shape({
-    timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
+    timeout: getDurationValidationSchema({ minimum: '1m' }).required(getString('validation.timeout10SecMinimum')),
     spec: Yup.object().shape({
-      retry: Yup.boolean(),
+      prune: Yup.lazy(value =>
+        getMultiTypeFromValue(value as string) === MultiTypeInputType.RUNTIME
+          ? Yup.string()
+          : typeof value === 'boolean'
+          ? Yup.boolean()
+          : Yup.string().required(getString('pipeline.syncStep.validation.prune'))
+      ),
+      dryRun: Yup.lazy(value =>
+        getMultiTypeFromValue(value as string) === MultiTypeInputType.RUNTIME
+          ? Yup.string()
+          : typeof value === 'boolean'
+          ? Yup.boolean()
+          : Yup.string().required(getString('pipeline.syncStep.validation.dryRun'))
+      ),
+      applyOnly: Yup.lazy(value =>
+        getMultiTypeFromValue(value as string) === MultiTypeInputType.RUNTIME
+          ? Yup.string()
+          : typeof value === 'boolean'
+          ? Yup.boolean()
+          : Yup.string().required(getString('pipeline.syncStep.validation.applyOnly'))
+      ),
+      forceApply: Yup.lazy(value =>
+        getMultiTypeFromValue(value as string) === MultiTypeInputType.RUNTIME
+          ? Yup.string()
+          : typeof value === 'boolean'
+          ? Yup.boolean()
+          : Yup.string().required(getString('pipeline.syncStep.validation.forceApply'))
+      ),
+      syncOptions: Yup.object().shape({
+        skipSchemaValidation: Yup.lazy(value =>
+          getMultiTypeFromValue(value as string) === MultiTypeInputType.RUNTIME
+            ? Yup.string()
+            : typeof value === 'boolean'
+            ? Yup.boolean()
+            : Yup.string().required(getString('pipeline.syncStep.validation.skipSchemaValidation'))
+        ),
+        autoCreateNamespace: Yup.lazy(value =>
+          getMultiTypeFromValue(value as string) === MultiTypeInputType.RUNTIME
+            ? Yup.string()
+            : typeof value === 'boolean'
+            ? Yup.boolean()
+            : Yup.string().required(getString('pipeline.syncStep.validation.autoCreateNamespace'))
+        ),
+        pruneResourcesAtLast: Yup.lazy(value =>
+          getMultiTypeFromValue(value as string) === MultiTypeInputType.RUNTIME
+            ? Yup.string()
+            : typeof value === 'boolean'
+            ? Yup.boolean()
+            : Yup.string().required(getString('pipeline.syncStep.validation.pruneResourcesAtLast'))
+        ),
+        applyOutOfSyncOnly: Yup.lazy(value =>
+          getMultiTypeFromValue(value as string) === MultiTypeInputType.RUNTIME
+            ? Yup.string()
+            : typeof value === 'boolean'
+            ? Yup.boolean()
+            : Yup.string().required(getString('pipeline.syncStep.validation.applyOutOfSyncOnly'))
+        ),
+        replaceResources: Yup.lazy(value =>
+          getMultiTypeFromValue(value as string) === MultiTypeInputType.RUNTIME
+            ? Yup.string()
+            : typeof value === 'boolean'
+            ? Yup.boolean()
+            : Yup.string().required(getString('pipeline.syncStep.validation.replaceResources'))
+        )
+      }),
+      retry: Yup.lazy(value =>
+        typeof value === 'boolean'
+          ? Yup.boolean() // typeError is necessary here, otherwise we get a bad-looking yup error
+          : Yup.string()
+      ),
       retryStrategy: Yup.object().when('retry', {
         is: true,
         then: Yup.object().shape({
-          limit: Yup.string().trim().required(getString('pipeline.syncStep.validation.limit')),
-          baseBackoffDuration: Yup.string().trim().required(getString('connectors.cdng.validations.durationRequired')),
-          increaseBackoffByFactor: Yup.string()
-            .trim()
-            .required(getString('pipeline.syncStep.validation.increaseBackoffByFactor')),
-          maxBackoffDuration: Yup.string().trim().required(getString('pipeline.syncStep.validation.maxBackoffDuration'))
+          baseBackoffDuration: getDurationValidationSchema().required(
+            getString('connectors.cdng.validations.durationRequired')
+          ),
+          maxBackoffDuration: getDurationValidationSchema().required(
+            getString('pipeline.syncStep.validation.maxBackoffDuration')
+          )
         })
       })
     }),
