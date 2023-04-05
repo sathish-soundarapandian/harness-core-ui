@@ -250,21 +250,11 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       handleExtendTrial,
       handleManageSubscription,
       handleUpgrade: () => {
-        switch (moduleName) {
-          case ModuleName.CI:
-            openSubscribeModal({
-              _module: moduleName.toLowerCase() as ModuleType,
-              _time: timeType,
-              _plan: planEdition || Editions.FREE
-            })
-            break
-          case ModuleName.CF:
-            openSubscribeModal({
-              _module: moduleName.toLowerCase() as ModuleType,
-              _time: timeType,
-              _plan: planEdition || Editions.FREE
-            })
-        }
+        openSubscribeModal({
+          _module: moduleName.toLowerCase() as ModuleType,
+          _time: timeType,
+          _plan: planEdition || Editions.FREE
+        })
       },
       btnLoading,
       actions: actions?.data,
