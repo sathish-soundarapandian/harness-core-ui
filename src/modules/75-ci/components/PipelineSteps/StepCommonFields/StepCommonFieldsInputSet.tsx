@@ -134,6 +134,24 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
           />
         </Container>
       )}
+      {isRunAsUserRuntime && !disableRunAsUser && (
+        <Container className={cx(css.formGroup, stepCss, css.topSpacingLarge, css.bottomMargin5)}>
+          {renderMultiTypeTextField({
+            name: `${isEmpty(path) ? '' : `${path}.`}spec.runAsUser`,
+            labelKey: 'pipeline.stepCommonFields.runAsUser',
+            tooltipId: 'runAsUser',
+            inputProps: {
+              multiTextInputProps: {
+                expressions,
+                allowableTypes: AllMultiTypeInputTypesForInputSet
+              },
+              disabled: readonly,
+              placeholder: '1000'
+            },
+            fieldPath: 'spec.runAsUser'
+          })}
+        </Container>
+      )}
       {/* Currently not implemented due to no support for enum value fields */}
       {enableFields.includes('spec.shell') && (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
@@ -161,24 +179,6 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
             disabled={readonly}
             configureOptionsProps={{ variableName: 'spec.shell' }}
           />
-        </Container>
-      )}
-      {isRunAsUserRuntime && !disableRunAsUser && (
-        <Container className={cx(css.formGroup, stepCss, css.topSpacingLarge, css.bottomMargin5)}>
-          {renderMultiTypeTextField({
-            name: `${isEmpty(path) ? '' : `${path}.`}spec.runAsUser`,
-            labelKey: 'pipeline.stepCommonFields.runAsUser',
-            tooltipId: 'runAsUser',
-            inputProps: {
-              multiTextInputProps: {
-                expressions,
-                allowableTypes: AllMultiTypeInputTypesForInputSet
-              },
-              disabled: readonly,
-              placeholder: '1000'
-            },
-            fieldPath: 'spec.runAsUser'
-          })}
         </Container>
       )}
       {(isLimitMemoryRuntime || isLimitCPURuntime) && (

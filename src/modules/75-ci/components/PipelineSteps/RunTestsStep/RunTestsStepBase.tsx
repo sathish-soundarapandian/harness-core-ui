@@ -57,6 +57,7 @@ import {
 } from '../CIStep/StepUtils'
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
+import { getCIStageInfraType } from '../../../utils/CIPipelineStudioUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface FieldRenderProps {
@@ -247,9 +248,7 @@ export const RunTestsStepBase = (
   const isQAEnvironment = window.location.origin === qaLocation
   const [mavenSetupQuestionAnswer, setMavenSetupQuestionAnswer] = React.useState('yes')
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
-  const buildInfrastructureType =
-    (get(currentStage, 'stage.spec.infrastructure.type') as CIBuildInfrastructureType) ||
-    (get(currentStage, 'stage.spec.runtime.type') as CIBuildInfrastructureType)
+  const buildInfrastructureType = getCIStageInfraType(currentStage)
   const { getString } = useStrings()
   const [buildToolOptions, setBuildToolOptions] = React.useState<SelectOption[]>(
     getBuildToolOptions(getString, initialValues?.spec?.language) || []
@@ -832,6 +831,7 @@ gradle.projectsEvaluated {
                       enableFields={['spec.shell', 'spec.imagePullPolicy']}
                       disabled={readonly}
                       buildInfrastructureType={buildInfrastructureType}
+                      stepViewType={stepViewType}
                     />
                   </Container>
                 }

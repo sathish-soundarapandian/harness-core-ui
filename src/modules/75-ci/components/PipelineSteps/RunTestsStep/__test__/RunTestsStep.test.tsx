@@ -14,6 +14,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { findPopoverContainer, UseGetReturnData } from '@common/utils/testUtils'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { RunTestsStep } from '../RunTestsStep'
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor')
@@ -51,6 +52,12 @@ export const ConnectorResponse: UseGetReturnData<ResponseConnectorResponse> = {
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse)
+}))
+
+jest.mock('../../CIStep/StepUtils', () => ({
+  useGetPropagatedStageById: jest.fn(() => ({
+    stage: { spec: { infrastructure: { type: CIBuildInfrastructureType.KubernetesDirect } } }
+  }))
 }))
 
 describe('RunTests Step', () => {

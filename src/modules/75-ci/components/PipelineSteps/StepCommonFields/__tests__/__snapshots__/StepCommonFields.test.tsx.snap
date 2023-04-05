@@ -11,7 +11,7 @@ exports[`<StepCommonFields /> tests Should render properly with no data 1`] = `
     >
       <div>
         <div
-          class="StyledProps--font StyledProps--main formGroup lg"
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
             <div
@@ -396,7 +396,7 @@ exports[`<StepCommonFields /> tests Should render properly with passed initial v
     >
       <div>
         <div
-          class="StyledProps--font StyledProps--main formGroup lg"
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
             <div

@@ -6,24 +6,34 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { Formik, FormikForm } from '@harness/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
 
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
-import StepCommonFields from '../StepCommonFields'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import StepCommonFields, { StepCommonFieldsProps } from '../StepCommonFields'
 
 interface TestProps {
   initialValues?: any
 }
 
-const TestComponent = ({ initialValues }: TestProps): React.ReactElement => (
+const TestComponent = ({
+  initialValues,
+  buildInfrastructureType,
+  stepViewType,
+  disableRunAsUser
+}: TestProps & StepCommonFieldsProps): React.ReactElement => (
   <TestWrapper>
     {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
     <Formik initialValues={initialValues} onSubmit={() => {}} formName="stepCommonFieldsForm">
       <FormikForm>
-        <StepCommonFields buildInfrastructureType={CIBuildInfrastructureType.KubernetesDirect} />
+        <StepCommonFields
+          buildInfrastructureType={buildInfrastructureType}
+          stepViewType={stepViewType}
+          disableRunAsUser={disableRunAsUser}
+        />
       </FormikForm>
     </Formik>
   </TestWrapper>
@@ -31,7 +41,7 @@ const TestComponent = ({ initialValues }: TestProps): React.ReactElement => (
 
 describe('<StepCommonFields /> tests', () => {
   test('Should render properly with no data', () => {
-    const { container } = render(<TestComponent />)
+    const { container } = render(<TestComponent buildInfrastructureType={CIBuildInfrastructureType.KubernetesDirect} />)
     expect(container).toMatchSnapshot()
   })
   test('Should render properly with passed initial values', () => {
@@ -44,8 +54,36 @@ describe('<StepCommonFields /> tests', () => {
             timeout: '120s'
           }
         }}
+        buildInfrastructureType={CIBuildInfrastructureType.KubernetesDirect}
       />
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('Conditional rendering of specific fields based on Infrastructure type', () => {
+    const { getByText, rerender } = render(
+      <TestComponent buildInfrastructureType={CIBuildInfrastructureType.KubernetesDirect} />
+    )
+    const setContainerResourcesSection = getByText('pipelineSteps.setContainerResources')
+    expect(getByText('pipeline.stepCommonFields.runAsUser')).toBeInTheDocument()
+    expect(setContainerResourcesSection).toBeInTheDocument()
+
+    rerender(
+      <TestComponent buildInfrastructureType={CIBuildInfrastructureType.KubernetesDirect} disableRunAsUser={true} />
+    )
+    expect(screen.queryByText('pipeline.stepCommonFields.runAsUser')).toBeNull()
+
+    rerender(<TestComponent buildInfrastructureType={CIBuildInfrastructureType.Cloud} />)
+    expect(getByText('pipeline.stepCommonFields.runAsUser')).toBeInTheDocument()
+    expect(screen.queryByText('pipelineSteps.setContainerResources')).toBeNull()
+
+    rerender(<TestComponent buildInfrastructureType={CIBuildInfrastructureType.Docker} />)
+    expect(screen.queryByText('pipeline.stepCommonFields.runAsUser')).toBeNull()
+    expect(screen.queryByText('pipelineSteps.setContainerResources')).toBeNull()
+
+    rerender(
+      <TestComponent buildInfrastructureType={CIBuildInfrastructureType.Docker} stepViewType={StepViewType.Template} />
+    )
+    expect(getByText('pipeline.stepCommonFields.runAsUser')).toBeInTheDocument()
   })
 })

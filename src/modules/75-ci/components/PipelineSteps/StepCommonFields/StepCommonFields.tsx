@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
+import cx from 'classnames'
 import { Text, Container, Layout, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import cx from 'classnames'
-import { connect } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { getCIShellOptions } from '@ci/utils/CIShellOptionsUtils'
@@ -19,6 +19,7 @@ import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeTe
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { PullOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { AllMultiTypeInputTypesForStep } from '../CIStep/StepUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -33,13 +34,15 @@ export const usePullOptions: () => PullOptions = () => {
   ]
 }
 
-interface StepCommonFieldsProps {
+export interface StepCommonFieldsProps {
   withoutTimeout?: boolean
   disabled?: boolean
   enableFields?: string[]
   buildInfrastructureType: CIBuildInfrastructureType
   allowableTypes?: AllowedTypes
   disableRunAsUser?: boolean
+  formik?: FormikContextType<any>
+  stepViewType?: StepViewType
 }
 
 const StepCommonFields = ({
@@ -47,16 +50,22 @@ const StepCommonFields = ({
   disabled,
   enableFields = [],
   buildInfrastructureType,
-  disableRunAsUser
+  disableRunAsUser,
+  stepViewType
 }: StepCommonFieldsProps): JSX.Element => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const isVMBuildInfraType = [
+  const shouldRenderContainerResourcesSection = ![
     CIBuildInfrastructureType.VM,
     CIBuildInfrastructureType.Cloud,
     CIBuildInfrastructureType.Docker
   ].includes(buildInfrastructureType)
+
+  const shouldRenderRunAsUser: boolean =
+    stepViewType === StepViewType.Template ||
+    ([CIBuildInfrastructureType.KubernetesDirect, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType) &&
+      !disableRunAsUser)
 
   return (
     <>
@@ -96,6 +105,35 @@ const StepCommonFields = ({
           />
         </Container>
       )}
+      {shouldRenderRunAsUser ? (
+        <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
+          <MultiTypeTextField
+            label={
+              <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
+                <Text className={css.inpLabel} color={Color.GREY_600} font={{ size: 'small', weight: 'semi-bold' }}>
+                  {getString('pipeline.stepCommonFields.runAsUser')}
+                </Text>
+                &nbsp;
+                <Text
+                  tooltipProps={{ dataTooltipId: 'runAsUser' }}
+                  className={css.inpLabel}
+                  color={Color.GREY_400}
+                  font={{ size: 'small', weight: 'semi-bold' }}
+                  style={{ textTransform: 'capitalize' }}
+                >
+                  {getString('common.optionalLabel')}
+                </Text>
+              </Layout.Horizontal>
+            }
+            name="spec.runAsUser"
+            multiTextInputProps={{
+              multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
+              disabled,
+              placeholder: '1000'
+            }}
+          />
+        </Container>
+      ) : null}
       {enableFields.includes('spec.shell') && (
         <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
           <MultiTypeSelectField
@@ -132,36 +170,7 @@ const StepCommonFields = ({
           />
         </Container>
       )}
-      {!isVMBuildInfraType && !disableRunAsUser ? (
-        <Container className={cx(css.formGroup, css.lg)}>
-          <MultiTypeTextField
-            label={
-              <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
-                <Text className={css.inpLabel} color={Color.GREY_600} font={{ size: 'small', weight: 'semi-bold' }}>
-                  {getString('pipeline.stepCommonFields.runAsUser')}
-                </Text>
-                &nbsp;
-                <Text
-                  tooltipProps={{ dataTooltipId: 'runAsUser' }}
-                  className={css.inpLabel}
-                  color={Color.GREY_400}
-                  font={{ size: 'small', weight: 'semi-bold' }}
-                  style={{ textTransform: 'capitalize' }}
-                >
-                  {getString('common.optionalLabel')}
-                </Text>
-              </Layout.Horizontal>
-            }
-            name="spec.runAsUser"
-            multiTextInputProps={{
-              multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
-              disabled,
-              placeholder: '1000'
-            }}
-          />
-        </Container>
-      ) : null}
-      {!isVMBuildInfraType ? (
+      {shouldRenderContainerResourcesSection ? (
         <Layout.Vertical className={cx(css.bottomMargin5, css.topMargin5)} spacing="medium">
           <Text
             className={css.inpLabel}

@@ -8,7 +8,6 @@
 import React from 'react'
 import { Formik, FormikForm, Accordion, Container } from '@harness/uicore'
 import type { FormikProps } from 'formik'
-import { get } from 'lodash-es'
 import { Connectors } from '@connectors/constants'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -28,6 +27,7 @@ import type { PluginStepProps, PluginStepData, PluginStepDataUI } from './Plugin
 import { CIStep } from '../CIStep/CIStep'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { AllMultiTypeInputTypesForStep, useGetPropagatedStageById } from '../CIStep/StepUtils'
+import { getCIStageInfraType } from '../../../utils/CIPipelineStudioUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const PluginStepBase = (
@@ -45,7 +45,7 @@ export const PluginStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
+  const buildInfrastructureType = getCIStageInfraType(currentStage)
 
   return (
     <Formik
@@ -136,6 +136,7 @@ export const PluginStepBase = (
                       enableFields={['spec.imagePullPolicy']}
                       disabled={readonly}
                       buildInfrastructureType={buildInfrastructureType}
+                      stepViewType={stepViewType}
                     />
                   </Container>
                 }

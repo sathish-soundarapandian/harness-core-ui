@@ -895,7 +895,7 @@ exports[`ZeroNorth Step Edit View edit mode works 1`] = `
           </div>
         </div>
         <div
-          class="StyledProps--font StyledProps--main formGroup lg"
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
             <div
@@ -1765,7 +1765,7 @@ exports[`ZeroNorth Step Edit View renders runtime inputs 1`] = `
           </div>
         </div>
         <div
-          class="StyledProps--font StyledProps--main formGroup lg"
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
             <div
@@ -3149,7 +3149,7 @@ exports[`ZeroNorth Step Edit View should render properly 1`] = `
           </div>
         </div>
         <div
-          class="StyledProps--font StyledProps--main formGroup lg"
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
             <div

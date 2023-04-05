@@ -46,6 +46,7 @@ import {
 } from '../CIStep/StepUtils'
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
+import { getCIStageInfraType } from '../../../utils/CIPipelineStudioUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const RunStepBase = (
@@ -63,9 +64,7 @@ export const RunStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const buildInfrastructureType =
-    (get(currentStage, 'stage.spec.infrastructure.type') as CIBuildInfrastructureType) ||
-    (get(currentStage, 'stage.spec.runtime.type') as CIBuildInfrastructureType)
+  const buildInfrastructureType = getCIStageInfraType(currentStage)
 
   const getScriptTypeForShell = useCallback((formik: FormikProps<RunStepData>): ScriptType => {
     const selectedShell = get(formik, 'values.spec.shell.value') as Shell
@@ -270,6 +269,7 @@ export const RunStepBase = (
                       enableFields={['spec.imagePullPolicy']}
                       disabled={readonly}
                       buildInfrastructureType={buildInfrastructureType}
+                      stepViewType={stepViewType}
                     />
                   </Container>
                 }

@@ -9,12 +9,20 @@ import React from 'react'
 import { render, act } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
+import mockImport from 'framework/utils/mockImport'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { ZeroNorthStep, ZeroNorthStepData } from '../ZeroNorthStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+
+mockImport('@ci/components/PipelineSteps/CIStep/StepUtils', {
+  useGetPropagatedStageById: jest.fn(() => ({
+    stage: { spec: { infrastructure: { type: CIBuildInfrastructureType.KubernetesDirect } } }
+  }))
+})
 
 describe('ZeroNorth Step', () => {
   beforeAll(() => {

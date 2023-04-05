@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, waitFor, queryByAttribute } from '@testing-library/react'
+import { render, act, fireEvent, waitFor, queryByAttribute, screen } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { ResponseConnectorResponse } from 'services/cd-ng'
+import mockImport from 'framework/utils/mockImport'
+import { findPopoverContainer, UseGetReturnData } from '@common/utils/testUtils'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { findPopoverContainer, UseGetReturnData } from '@common/utils/testUtils'
-import type { ResponseConnectorResponse } from 'services/cd-ng'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { Shell } from '@ci/utils/CIShellOptionsUtils'
 import { RunStep } from '../RunStep'
@@ -71,8 +73,8 @@ describe('Run Step', () => {
         fireEvent.click(getByText('common.optionalConfig'))
       })
       expect(getByText('pipelineSteps.limitCPULabel')).toBeTruthy()
-      expect(getByText('pipelineSteps.limitCPULabel')).toBeTruthy()
-      expect(getByText('pipeline.stepCommonFields.runAsUser')).toBeTruthy()
+      expect(getByText('pipelineSteps.limitMemoryLabel')).toBeTruthy()
+      expect(screen.queryByText('pipeline.stepCommonFields.runAsUser')).toBeNull()
       expect(getByText('pipeline.buildInfra.privileged (Common Optional Label)')).toBeTruthy()
       expect(getByText('common.shell')).toBeTruthy()
       const shellOptionsDropdownSelect = container.querySelector('[data-id="spec.shell-4"] [icon="chevron-down"]')!
@@ -540,6 +542,68 @@ describe('Run Step', () => {
       )
 
       expect(container).toMatchSnapshot()
+    })
+  })
+
+  describe('Infrastructure specific rendering', () => {
+    test('Test specific fields for K8s infra', async () => {
+      mockImport('@ci/components/PipelineSteps/CIStep/StepUtils', {
+        useGetPropagatedStageById: jest.fn(() => ({
+          stage: { spec: { infrastructure: { type: CIBuildInfrastructureType.KubernetesDirect } } }
+        }))
+      })
+
+      const { getByText } = render(
+        <TestStepWidget initialValues={{}} type={StepType.Run} stepViewType={StepViewType.Edit} />
+      )
+      act(() => {
+        fireEvent.click(getByText('common.optionalConfig'))
+      })
+      expect(screen.queryByText('pipeline.stepCommonFields.runAsUser')).not.toBeNull()
+      expect(screen.queryByText('pipelineSteps.pullLabel')).not.toBeNull()
+    })
+
+    test('Should show Run as User and Image Pull Policy both are specified for K8s/Cloud infra', async () => {
+      mockImport('@ci/components/PipelineSteps/CIStep/StepUtils', {
+        useGetPropagatedStageById: jest.fn(() => ({
+          stage: { spec: { infrastructure: { type: CIBuildInfrastructureType.KubernetesDirect } } }
+        }))
+      })
+
+      const { getByText } = render(
+        <TestStepWidget
+          initialValues={{ spec: { connectorRef: 'connectorRef', image: 'node' } }}
+          type={StepType.Run}
+          stepViewType={StepViewType.Edit}
+        />
+      )
+      act(() => {
+        fireEvent.click(getByText('common.optionalConfig'))
+      })
+
+      expect(getByText('pipeline.stepCommonFields.runAsUser')).toBeInTheDocument()
+      expect(getByText('pipelineSteps.pullLabel')).toBeInTheDocument()
+    })
+
+    test('Test specific fields for Cloud infra', async () => {
+      mockImport('@ci/components/PipelineSteps/CIStep/StepUtils', {
+        useGetPropagatedStageById: jest.fn(() => ({
+          stage: { spec: { runtime: { type: CIBuildInfrastructureType.Cloud } } }
+        }))
+      })
+
+      const { getByText } = render(
+        <TestStepWidget
+          initialValues={{ spec: { connectorRef: 'connectorRef', image: 'node' } }}
+          type={StepType.Run}
+          stepViewType={StepViewType.Edit}
+        />
+      )
+      act(() => {
+        fireEvent.click(getByText('common.optionalConfig'))
+      })
+      expect(getByText('pipeline.stepCommonFields.runAsUser')).toBeInTheDocument()
+      expect(screen.queryByText('pipelineSteps.setContainerResources')).toBeNull()
     })
   })
 })
