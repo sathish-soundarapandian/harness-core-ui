@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import * as Yup from 'yup'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, isUndefined } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { AwsPrometheusWorkspaceDTO, HealthSource, ResponseListString } from 'services/cv'
 import { Connectors } from '@connectors/constants'
@@ -101,9 +101,12 @@ export const getIsConnectorDisabled = ({
   isEdit,
   connectorRef,
   sourceType,
-  dataSourceType
+  dataSourceType,
+  isConnectorEnabled
 }: ConnectorDisableFunctionProps): boolean => {
-  if (isEdit && connectorRef) {
+  if (!isUndefined(isConnectorEnabled) && !isConnectorEnabled) {
+    return Boolean(isConnectorEnabled)
+  } else if (isEdit && connectorRef) {
     return true
   } else if (!isEdit && !sourceType) {
     return true

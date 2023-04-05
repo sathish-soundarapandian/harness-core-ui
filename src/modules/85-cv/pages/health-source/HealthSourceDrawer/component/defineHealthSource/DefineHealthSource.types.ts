@@ -32,6 +32,7 @@ export interface ConnectorDisableFunctionProps {
   connectorRef?: string
   sourceType?: string
   dataSourceType?: string
+  isConnectorEnabled?: boolean
 }
 
 export interface FormValidationFunctionProps {

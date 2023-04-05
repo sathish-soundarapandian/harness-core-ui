@@ -64,6 +64,12 @@ jest.mock('services/pipeline-ng', () => ({
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
+jest.mock('@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/useValidConnector', () => ({
+  useValidConnector: jest.fn().mockReturnValue({
+    isConnectorEnabled: true
+  })
+}))
+
 describe('Test ContinousVerificationStep Step', () => {
   beforeEach(() => {
     factory.registerStep(new ContinousVerificationStep())

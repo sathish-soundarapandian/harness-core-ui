@@ -76,6 +76,12 @@ jest.mock('@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetCon
   })
 }))
 
+jest.mock('@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/useValidConnector', () => ({
+  useValidConnector: jest.fn().mockReturnValue({
+    isConnectorEnabled: true
+  })
+}))
+
 describe('DefineHealthSource', () => {
   test('should have proper validation', async () => {
     const { getByText } = render(

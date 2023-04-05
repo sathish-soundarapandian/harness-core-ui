@@ -23,6 +23,12 @@ jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
   CVObjectStoreNames: {}
 }))
 
+jest.mock('@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/useValidConnector', () => ({
+  useValidConnector: jest.fn().mockReturnValue({
+    isConnectorEnabled: true
+  })
+}))
+
 const testWrapperProps: TestWrapperProps = {
   path: routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
   pathParams: {

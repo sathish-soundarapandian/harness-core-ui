@@ -8167,6 +8167,7 @@ export interface StringsMap {
   'cv.componentValidations.queryType': string
   'cv.componentValidations.queryTypeLabel': string
   'cv.componentValidations.requestMethod': string
+  'cv.connectorNotFound': string
   'cv.considerMissingMetricDataAs': string
   'cv.continuous': string
   'cv.copyURL': string

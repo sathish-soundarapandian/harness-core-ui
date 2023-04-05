@@ -63,6 +63,7 @@ import {
 import PrometheusDataSourceTypeSelector from './components/DataSourceTypeSelector/DataSourceTypeSelector'
 import DataInfoSelector from './components/DataInfoSelector/DataInfoSelector'
 import type { DefineHealthSourceFormInterface } from './DefineHealthSource.types'
+import { useValidConnector } from './useValidConnector'
 import css from './DefineHealthSource.module.scss'
 
 interface DefineHealthSourceProps {
@@ -74,6 +75,7 @@ interface DefineHealthSourceProps {
 function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const { onSubmit, isTemplate, expressions } = props
   const { getString } = useStrings()
+  const healthSourceFormik = useRef<FormikProps<DefineHealthSourceFormInterface>>()
   const { onNext, sourceData } = useContext(SetupSourceTabsContext)
   const { orgIdentifier, projectIdentifier, accountId, templateType } = useParams<
     ProjectPathProps & { identifier: string; templateType?: string }
@@ -106,6 +108,15 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceData?.healthSourceIdentifier])
 
+  const { isConnectorEnabled } = useValidConnector({
+    connectorRef: initialValues.connectorRef,
+    orgIdentifier,
+    projectIdentifier,
+    accountId,
+    resetConnectorRef: () => {
+      healthSourceFormik.current?.setFieldValue(ConnectorRefFieldName, undefined)
+    }
+  })
   const isCardSelected = useCallback((connectorTypeName, formik) => {
     const { product = {}, sourceType = '' } = formik?.values || {}
     const productValue = product.value
@@ -186,13 +197,14 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
             isEdit,
             connectorRef,
             sourceType,
-            dataSourceType
+            dataSourceType,
+            isConnectorEnabled
           })}
           tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}
         />
       )
     },
-    [templateType]
+    [templateType, isConnectorEnabled]
   )
 
   const getDetails = (value: string) => {
@@ -285,6 +297,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         innerRef={defineHealthSourceFormRef as Ref<FormikProps<any>>}
       >
         {formik => {
+          healthSourceFormik.current = formik
           const featureOption = getFeatureOption(formik?.values?.sourceType as string, getString, isSplunkMetricEnabled)
           return (
             <FormikForm className={css.formFullheight}>

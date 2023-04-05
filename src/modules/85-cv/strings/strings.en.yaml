@@ -74,6 +74,7 @@ seeYAML: See full event YAML
 addGroupName: Please Select Group Name
 minimum: Minimum
 notificationTimestampError: Notification timestamp greater than chart start time and less than chart end time
+connectorNotFound: We couldn't find the connector or it may have been removed.
 serviceDashboardPage:
   fiveMinutes: 5 Minutes
   fifteenMinutes: 15 Minutes

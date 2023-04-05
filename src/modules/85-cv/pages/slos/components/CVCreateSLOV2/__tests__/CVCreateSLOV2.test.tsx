@@ -133,6 +133,12 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ loading: false, error: null, data: healthSourceListResponse, refetch: jest.fn() }))
 }))
 
+jest.mock('@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/useValidConnector', () => ({
+  useValidConnector: jest.fn().mockReturnValue({
+    isConnectorEnabled: true
+  })
+}))
+
 describe('CVCreateSloV2', () => {
   beforeEach(() => {
     jest.setTimeout(30000)
