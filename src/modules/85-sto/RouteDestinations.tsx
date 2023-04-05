@@ -358,7 +358,7 @@ const RouteDestinations: React.FC = () => {
         exact
         sidebarProps={STOSideNavProps}
         licenseRedirectData={licenseRedirectData}
-        path={[routes.toSTOProjectTicketSettings({ ...accountPathProps, ...projectPathProps })]}
+        path={[routes.toProjectTicketSettings({ ...accountPathProps, ...projectPathProps, ...moduleParams })]}
       >
         <ExternalTicketSettings />
       </RouteWithLayout>

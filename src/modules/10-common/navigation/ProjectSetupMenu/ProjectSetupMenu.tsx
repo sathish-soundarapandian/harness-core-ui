@@ -130,10 +130,10 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
         {SRM_DOWNTIME && isCV && (
           <SidebarLink label={getString('common.sloDowntimeLabel')} to={routes.toCVSLODowntime({ ...params })} />
         )}
-        {STO_JIRA_INTEGRATION && isSTO && (
+        {STO_JIRA_INTEGRATION && module === 'sto' && (
           <SidebarLink
             label={getString('common.tickets.externalTickets')}
-            to={routes.toSTOProjectTicketSettings({ ...params })}
+            to={routes.toProjectTicketSettings({ ...params, module })}
           />
         )}
       </Layout.Vertical>
