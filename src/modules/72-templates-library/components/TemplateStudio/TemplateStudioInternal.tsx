@@ -172,7 +172,8 @@ export function TemplateStudioInternal(): React.ReactElement {
               module,
               branch: selectedBranch,
               repoIdentifier: repoIdentifier,
-              versionLabel: template?.versionLabel
+              versionLabel: template?.versionLabel,
+              templateType: template?.type
             })
           )
           location.reload()
