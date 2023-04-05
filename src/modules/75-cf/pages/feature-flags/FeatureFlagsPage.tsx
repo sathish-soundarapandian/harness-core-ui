@@ -5,16 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState, useCallback } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Container, ExpandingSearchInput, ExpandingSearchInputHandle, Pagination } from '@harness/uicore'
 import { defer } from 'lodash-es'
 import {
   FeatureMetric,
   GetAllFeaturesQueryParams,
-  getFeatureMetricsPromise,
+  GetFeatureMetricsQueryParams,
   useDeleteFeatureFlag,
-  useGetAllFeatures
+  useGetAllFeatures,
+  useGetFeatureMetrics
 } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { useToggleFeatureFlag } from '@cf/hooks/useToggleFeatureFlag'
@@ -48,9 +49,7 @@ const FeatureFlagsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useQueryParamsState('search', '')
   const [flagFilter, setFlagFilter] = useQueryParamsState<Optional<FilterProps>>('filter', {})
 
-  const enableMetricsEndpoint = useFeatureFlag(FeatureFlag.FFM_6610_ENABLE_METRICS_ENDPOINT)
-
-  const queryParams = useMemo<GetAllFeaturesQueryParams>(() => {
+  const queryParams = useMemo<GetAllFeaturesQueryParams | GetFeatureMetricsQueryParams>(() => {
     return {
       projectIdentifier,
       environmentIdentifier,
@@ -58,7 +57,7 @@ const FeatureFlagsPage: React.FC = () => {
       orgIdentifier,
       pageSize: CF_DEFAULT_PAGE_SIZE,
       pageNumber,
-      metrics: !enableMetricsEndpoint,
+      metrics: false,
       flagCounts: true,
       name: searchTerm,
       summary: true,
@@ -72,8 +71,7 @@ const FeatureFlagsPage: React.FC = () => {
     pageNumber,
     searchTerm,
     flagFilter.queryProps?.key,
-    flagFilter.queryProps?.value,
-    enableMetricsEndpoint
+    flagFilter.queryProps?.value
   ])
 
   const {
@@ -85,38 +83,12 @@ const FeatureFlagsPage: React.FC = () => {
     queryParams
   })
 
-  const [featureMetrics, setFeatureMetrics] = useState<FeatureMetric[]>()
-
-  useEffect(() => {
-    const loadMetrics = async (): Promise<void> => {
-      if (enableMetricsEndpoint) {
-        const metrics = await getFeatureMetricsPromise({
-          queryParams: {
-            accountIdentifier,
-            environmentIdentifier,
-            orgIdentifier,
-            projectIdentifier,
-            pageSize: CF_DEFAULT_PAGE_SIZE,
-            pageNumber,
-            [flagFilter.queryProps?.key]: flagFilter.queryProps?.value
-          }
-        })
-
-        setFeatureMetrics(metrics as FeatureMetric[])
-      }
+  const { data: featureMetrics, loading: featureMetricsLoading } = useGetFeatureMetrics({
+    queryParams: {
+      ...queryParams,
+      environmentIdentifier: environmentIdentifier
     }
-
-    loadMetrics()
-  }, [
-    accountIdentifier,
-    enableMetricsEndpoint,
-    environmentIdentifier,
-    flagFilter.queryProps?.key,
-    flagFilter.queryProps?.value,
-    orgIdentifier,
-    pageNumber,
-    projectIdentifier
-  ])
+  })
 
   const {
     EnvironmentSelect,
@@ -253,7 +225,8 @@ const FeatureFlagsPage: React.FC = () => {
           ) : (
             <FeatureFlagsListing
               features={features}
-              featureMetrics={featureMetrics}
+              featureMetrics={featureMetrics as FeatureMetric[]}
+              featureMetricsLoading={featureMetricsLoading}
               refetchFlags={refetchFlags}
               toggleFeatureFlag={toggleFeatureFlag}
               deleteFlag={deleteFlag.mutate}
