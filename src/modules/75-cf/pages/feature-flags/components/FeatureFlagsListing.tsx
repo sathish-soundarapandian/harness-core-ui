@@ -18,8 +18,6 @@ import {
   useFeatureFlagTypeToStringMapping
 } from '@cf/utils/CFUtils'
 import { FlagTypeVariations } from '@cf/components/CreateFlagDialog/FlagDialogUtils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { useStrings } from 'framework/strings'
 import { VariationTypeIcon } from '@cf/components/VariationTypeIcon/VariationTypeIcon'
@@ -35,6 +33,7 @@ export interface FeatureFlagsListingProps {
   features?: Features | null
   toggleFeatureFlag: UseToggleFeatureFlag
   featureMetrics?: FeatureMetric[]
+  featureMetricsLoading?: boolean
   numberOfEnvs?: number
   governance: UseGovernancePayload
   refetchFlags: () => void
@@ -50,6 +49,7 @@ const FeatureFlagsListing: React.FC<FeatureFlagsListingProps> = ({
   features,
   toggleFeatureFlag,
   featureMetrics,
+  featureMetricsLoading,
   numberOfEnvs,
   governance,
   refetchFlags,
@@ -59,7 +59,6 @@ const FeatureFlagsListing: React.FC<FeatureFlagsListingProps> = ({
 }) => {
   const gitSync = useFFGitSyncContext()
   const { getString } = useStrings()
-  const enableMetricsEndpoint = useFeatureFlag(FeatureFlag.FFM_6610_ENABLE_METRICS_ENDPOINT)
 
   const RenderColumnDetails: Renderer<CellProps<Feature>> = ({ row }) => {
     const data = row.original
@@ -133,19 +132,17 @@ const FeatureFlagsListing: React.FC<FeatureFlagsListingProps> = ({
         accessor: 'status',
         width: '21%',
         Cell: function StatusCell(cell: Cell<Feature>) {
-          const metrics = enableMetricsEndpoint
-            ? featureMetrics?.find(metric => metric.identifier === cell.row.original.identifier)
-            : cell.row.original
+          const metrics = featureMetrics?.find(metric => metric.identifier === cell.row.original.identifier)
 
-          return metrics ? (
+          return featureMetricsLoading ? (
+            <Text icon="spinner" iconProps={{ size: 14 }}>
+              {getString('cf.loading')}
+            </Text>
+          ) : (
             <FlagStatus
               status={metrics?.status?.status as FeatureFlagStatus}
               lastAccess={metrics?.status?.lastAccess as unknown as number}
             />
-          ) : (
-            <Text icon="spinner" iconProps={{ size: 14 }}>
-              {getString('cf.loading')}
-            </Text>
           )
         }
       },
@@ -154,16 +151,14 @@ const FeatureFlagsListing: React.FC<FeatureFlagsListingProps> = ({
         accessor: row => row.results,
         width: '12%',
         Cell: function ResultCell(cell: Cell<Feature>) {
-          const metrics = enableMetricsEndpoint
-            ? featureMetrics?.find(metric => metric.identifier === cell.row.original.identifier)
-            : cell.row.original
+          const metrics = featureMetrics?.find(metric => metric.identifier === cell.row.original.identifier)
 
-          return metrics ? (
-            <FlagResult feature={cell.row.original} metrics={metrics?.results} />
-          ) : (
+          return featureMetricsLoading ? (
             <Text icon="spinner" iconProps={{ size: 14 }}>
               {getString('cf.loading')}
             </Text>
+          ) : (
+            <FlagResult feature={cell.row.original} metrics={metrics?.results} />
           )
         }
       },
@@ -192,7 +187,7 @@ const FeatureFlagsListing: React.FC<FeatureFlagsListingProps> = ({
       gitSync.isGitSyncEnabled,
       features,
       featureMetrics,
-      enableMetricsEndpoint,
+      featureMetricsLoading,
       queryParams
     ]
   )

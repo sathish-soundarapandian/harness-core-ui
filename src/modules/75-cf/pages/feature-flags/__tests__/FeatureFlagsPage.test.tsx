@@ -28,8 +28,7 @@ const renderComponent = (): RenderResult =>
       defaultFeatureFlagValues={{
         STALE_FLAGS_FFM_1510: true,
         FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: true,
-        FFM_6683_ALL_ENVIRONMENTS_FLAGS: true,
-        FFM_6610_ENABLE_METRICS_ENDPOINT: true
+        FFM_6683_ALL_ENVIRONMENTS_FLAGS: true
       }}
     >
       <FeatureFlagsPage />
@@ -63,7 +62,7 @@ describe('FeatureFlagsPage', () => {
       useGetAllFeatures: () => ({ data: mockFeatureFlags, refetch: jest.fn() })
     })
     mockImport('services/cf', {
-      getFeatureMetricsPromise: () => Promise.resolve(undefined)
+      useGetFeatureMetrics: () => ({ data: [], refetch: jest.fn() })
     })
 
     mockEnvs()
@@ -98,8 +97,8 @@ describe('FeatureFlagsPage', () => {
     expect(document.querySelector('[data-icon="steps-spinner"]')).toBeDefined()
   })
 
-  test('It should render data correctly', async () => {
-    const metricsSpy = jest.spyOn(cfServices, 'getFeatureMetricsPromise')
+  test('It should render data correctly and call metrics', async () => {
+    const metricsSpy = jest.spyOn(cfServices, 'useGetFeatureMetrics')
     renderComponent()
 
     await waitFor(() => {
