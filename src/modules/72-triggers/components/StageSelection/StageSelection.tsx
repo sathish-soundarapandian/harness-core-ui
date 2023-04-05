@@ -9,36 +9,81 @@ import React, { useEffect } from 'react'
 import { Heading, Layout, MultiSelectDropDown, SelectOption } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
-import { clearRuntimeInput, getAllStageItem } from '@pipeline/utils/runPipelineUtils'
+import { useParams } from 'react-router-dom'
+
+import { ALL_STAGE_VALUE, clearRuntimeInput, getAllStageItem } from '@pipeline/utils/runPipelineUtils'
 import { useStrings } from 'framework/strings'
+import { useGetMergeInputSetFromPipelineTemplateWithListInput, useGetStagesExecutionList } from 'services/pipeline-ng'
+import type { PipelineType } from '@common/interfaces/RouteInterfaces'
+import { useMutateAsGet } from '@common/hooks'
+import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+
 import css from './StageSelection.module.scss'
 
 const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   const { getString } = useStrings()
-  const stagesArr = []
-  if (formikProps.values?.resolvedPipeline?.stages && formikProps.values?.resolvedPipeline?.stages.length) {
-    for (const stage of formikProps.values.resolvedPipeline.stages) {
-      if (formikProps.values?.stagesToExecute?.includes(stage.stage.identifier)) {
-        stagesArr.push({ label: stage.stage.name, value: stage.stage.identifier })
-      }
+
+  const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier } = useParams<
+    PipelineType<{
+      projectIdentifier: string
+      orgIdentifier: string
+      accountId: string
+      pipelineIdentifier: string
+      targetIdentifier: string
+      triggerIdentifier: string
+    }>
+  >()
+  const { data: stageExecutionData } = useGetStagesExecutionList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier
     }
-  } else {
-    stagesArr.push(getAllStageItem(getString))
-  }
+  })
+
   const executionStageList =
-    formikProps.values?.resolvedPipeline?.stages?.map((stage: any) => {
+    stageExecutionData?.data?.map((stage: any) => {
       return {
-        label: defaultTo(stage?.stage?.name, ''),
-        value: defaultTo(stage?.stage?.identifier, '')
+        label: defaultTo(stage?.stageIdentifier, ''),
+        value: defaultTo(stage?.stageName, '')
       }
     }) || []
 
   executionStageList.unshift(getAllStageItem(getString))
 
-  const [selectedStages, setStage] = React.useState<SelectOption[] | any>(stagesArr)
+  const [selectedStages, setStage] = React.useState<SelectOption[] | any>([])
 
   const [allStagesSelected, setAllStagesSelect] = React.useState<boolean[] | any>(false)
   const allowStageExecutions = formikProps.values?.originalPipeline?.allowStageExecutions
+
+  const {
+    data: inputSetData,
+    // loading: loadingInputSetsData,
+    refetch: refetchInputSetData
+    // error: inputSetError
+  } = useMutateAsGet(useGetMergeInputSetFromPipelineTemplateWithListInput, {
+    lazy: true,
+    body: {
+      inputSetReferences: [],
+      stageIdentifiers: selectedStages.map((stage: SelectOption) => stage.value),
+      lastYamlToMerge: yamlStringify(formikProps.values.inputSetTemplateYamlObj)
+    },
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+
+      getDefaultFromOtherRepo: true
+    }
+  })
+
+  useEffect(() => {
+    if (selectedStages.length || formikProps.values?.stagesToExecute) {
+      refetchInputSetData()
+    }
+  }, [selectedStages])
 
   useEffect(() => {
     if (
@@ -51,10 +96,27 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   }, [])
 
   useEffect(() => {
+    if (Array.isArray(formikProps.values?.stagesToExecute) && formikProps.values?.stagesToExecute.length) {
+      const stagesArr: SelectOption[] = []
+      if (stageExecutionData?.data && stageExecutionData?.data?.length) {
+        for (const stage of stageExecutionData.data) {
+          if (formikProps.values?.stagesToExecute?.includes(stage.stageIdentifier)) {
+            stagesArr.push({ label: stage.stageName || '', value: stage.stageIdentifier || '' })
+          }
+        }
+      } else {
+        stagesArr.push(getAllStageItem(getString))
+      }
+      setStage(stagesArr)
+    }
+  }, [formikProps.values?.stagesToExecute, stageExecutionData?.data])
+
+  useEffect(() => {
     if (formikProps.values?.originalPipeline && !allowStageExecutions) {
       formikProps.setFieldValue('stagesToExecute', [])
     }
   }, [allowStageExecutions])
+
   const isDisabled = (): boolean => {
     if (allowStageExecutions) {
       return false
@@ -73,20 +135,25 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
         buttonTestId={'stage-select'}
         onChange={(items: SelectOption[]) => {
           const allStagesChecked = items?.length === formikProps.values?.resolvedPipeline?.stages?.length
-          const hasAllStagesChecked =
-            items.find(item => item.value === getAllStageItem(getString).value) || allStagesChecked
+          const hasAllStagesChecked = items.find(item => item.value === ALL_STAGE_VALUE)
 
-          if (hasAllStagesChecked || allStagesChecked) {
+          // const hasAllStagesChecked =
+          //   items.find(item => item.value === getAllStageItem(getString).value) || allStagesChecked
+          const hasOnlyAllStagesUnChecked =
+            allStagesChecked && !items.find(item => item.value === getAllStageItem(getString).value)
+
+          if (hasOnlyAllStagesUnChecked || items?.length === 0 || (!allStagesSelected && hasAllStagesChecked)) {
             setStage([])
             setAllStagesSelect(true)
           } else {
+            const newItems = items.filter((option: SelectOption) => {
+              return option.value !== ALL_STAGE_VALUE
+            })
             setAllStagesSelect(false)
-            setStage(items)
+            setStage(newItems)
           }
         }}
         onPopoverClose={() => {
-          setStage(selectedStages)
-
           const hasAllStagesChecked = selectedStages.find(
             (item: SelectOption) => item.value === getAllStageItem(getString).value
           )
@@ -101,14 +168,17 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
             // const { identifier } = formikProps.values.pipeline
             // const pipeObj = formikProps.values.pipeline
 
-            const oldPipeline = formikProps.values.pipeline
+            // const oldPipeline = formikProps.values.pipeline
 
-            const filteredStages = allStagesSelected
-              ? formikProps.values.resolvedPipeline.stages
-              : formikProps.values.resolvedPipeline.stages.filter((stg: any) => stages.includes(stg.stage.identifier))
-            oldPipeline['stages'] = filteredStages
+            // const filteredStages = allStagesSelected
+            //   ? formikProps.values.resolvedPipeline.stages
+            //   : formikProps.values.resolvedPipeline.stages.filter((stg: any) => stages.includes(stg.stage.identifier))
+            // oldPipeline['stages'] = filteredStages
 
-            formikProps.setFieldValue('pipeline', clearRuntimeInput(oldPipeline))
+            formikProps.setFieldValue(
+              'pipeline',
+              clearRuntimeInput(memoizedParse<any>(inputSetData?.data?.pipelineYaml as any)?.pipeline)
+            )
             // const modifiedPipeline = {
             //   identifier,
             //   stages: [...filteredStages]
