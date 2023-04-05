@@ -28,6 +28,7 @@
 
   & > * {
     opacity: 0;
+    pointer-events: none;
   }
 
   &.sideNavExpanded {
@@ -35,6 +36,7 @@
     flex-shrink: 0;
     & > * {
       opacity: 1;
+      pointer-events: unset;
       transition: opacity 300ms linear;
     }
   }
@@ -133,6 +135,7 @@
   display: block !important;
   border-bottom-left-radius: 100%;
   border-top-left-radius: 100%;
+  pointer-events: unset !important;
 
   .triangle {
     transform: rotate(-90deg);

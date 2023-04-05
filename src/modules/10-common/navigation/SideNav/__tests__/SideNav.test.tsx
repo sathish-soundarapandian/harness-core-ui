@@ -10,7 +10,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useGetAccountNG } from 'services/cd-ng'
-import SideNav from '../SideNav'
+import SideNav, { SidebarLink } from '../SideNav'
 
 jest.mock('framework/PreferenceStore/PreferenceStoreContext')
 ;(usePreferenceStore as jest.Mock).mockImplementation(() => {
@@ -105,5 +105,35 @@ describe('Side nav', () => {
     await waitFor(() => {
       expect(container.querySelector('[class*="collapse"]')).toBeDefined()
     })
+  })
+
+  test('test launch button', async () => {
+    const { queryByText } = render(
+      <TestWrapper
+        defaultFeatureFlagValues={{
+          SPG_SIDENAV_COLLAPSE: true,
+          PLG_ENABLE_CROSS_GENERATION_ACCESS: true
+        }}
+      >
+        <SideNav collapseByDefault launchButtonText="launch button" launchButtonRedirectUrl="testUrl" />
+      </TestWrapper>
+    )
+    expect(queryByText('launch button')).not.toBeNull()
+  })
+
+  test('test sidebarlink', async () => {
+    const { container, queryByText } = render(
+      <TestWrapper
+        defaultFeatureFlagValues={{
+          SPG_SIDENAV_COLLAPSE: true,
+          PLG_ENABLE_CROSS_GENERATION_ACCESS: true
+        }}
+      >
+        <SidebarLink label="test" to="testUrl" />
+      </TestWrapper>
+    )
+
+    expect(queryByText('test')).not.toBeNull()
+    expect(container.querySelector('a[href="/testUrl"]')).not.toBeNull()
   })
 })
