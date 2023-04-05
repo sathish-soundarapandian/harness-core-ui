@@ -20,6 +20,7 @@ export interface FormValues {
   clientId?: string
   samlProviderType?: Providers
   enableClientIdAndSecret: boolean
+  files?: any[]
 }
 
 export enum Providers {

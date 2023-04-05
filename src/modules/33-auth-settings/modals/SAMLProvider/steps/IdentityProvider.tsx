@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import {
   Container,
@@ -22,21 +29,20 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { FormValues } from '../utils'
 import css from '../useSAMLProvider.module.scss'
 
-type IdentityProviderForm = Pick<FormValues, 'logoutUrl'> & { files: any }
-type IdentityProviderFormValues = FormValues & { files: any }
+type IdentityProviderForm = Pick<FormValues, 'logoutUrl' | 'files'>
 
-const IdentityProvider: React.FC<StepProps<FormValues & { files: any }>> = props => {
+const IdentityProvider: React.FC<StepProps<FormValues>> = props => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
 
   return (
     <Formik<IdentityProviderForm>
-      initialValues={{ ...props.prevStepData } as IdentityProviderFormValues}
+      initialValues={{ ...props.prevStepData } as IdentityProviderForm}
       validationSchema={yup.object().shape({
         files: yup.array().required(getString('common.validation.fileIsRequired'))
       })}
       onSubmit={values => {
-        props.nextStep?.({ ...props.prevStepData, ...values } as IdentityProviderFormValues)
+        props.nextStep?.({ ...props.prevStepData, ...values } as FormValues)
       }}
     >
       {() => (
@@ -79,7 +85,7 @@ const IdentityProvider: React.FC<StepProps<FormValues & { files: any }>> = props
                 text={getString('back')}
                 icon="chevron-left"
                 variation={ButtonVariation.SECONDARY}
-                onClick={() => props?.previousStep?.({ ...props.prevStepData } as IdentityProviderFormValues)}
+                onClick={() => props?.previousStep?.({ ...props.prevStepData } as FormValues)}
                 data-name="awsBackButton"
               />
               <Button

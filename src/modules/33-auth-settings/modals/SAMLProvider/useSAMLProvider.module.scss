@@ -40,8 +40,11 @@
 }
 
 .form {
-  display: flex;
   height: 100%;
+  & > div {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 .flex {
   flex: 1;

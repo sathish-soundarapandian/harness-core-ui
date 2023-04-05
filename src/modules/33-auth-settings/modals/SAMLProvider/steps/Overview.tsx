@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { Container, StepProps, Layout, Button, ButtonVariation, FormInput, FormikForm, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import React from 'react'
@@ -27,27 +34,27 @@ const Overview: React.FC<StepProps<FormValues>> = props => {
     >
       {() => (
         <FormikForm className={css.form}>
-          <Layout.Vertical flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <Container width={390}>
-              <Text font={{ variation: FontVariation.H3 }}>{getString('authSettings.samlProviderOverview')}</Text>
-              <Layout.Vertical margin={{ top: 'xlarge' }}>
-                <FormInput.Text
-                  placeholder={getString('common.namePlaceholder')}
-                  name="displayName"
-                  label={getString('name')}
-                />
-                <FormInput.Text
-                  placeholder={getString('common.friendlyNamePlaceholder')}
-                  name="friendlyName"
-                  label={getString('common.friendlyName')}
-                  isOptional
-                />
-              </Layout.Vertical>
-            </Container>
-            <Button type="submit" intent="primary" rightIcon="chevron-right" variation={ButtonVariation.PRIMARY}>
-              <String stringID="continue" />
-            </Button>
-          </Layout.Vertical>
+          {/* <Layout.Vertical flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}> */}
+          <Container width={390}>
+            <Text font={{ variation: FontVariation.H3 }}>{getString('authSettings.samlProviderOverview')}</Text>
+            <Layout.Vertical margin={{ top: 'xlarge' }}>
+              <FormInput.Text
+                placeholder={getString('common.namePlaceholder')}
+                name="displayName"
+                label={getString('name')}
+              />
+              <FormInput.Text
+                placeholder={getString('common.friendlyNamePlaceholder')}
+                name="friendlyName"
+                label={getString('common.friendlyName')}
+                isOptional
+              />
+            </Layout.Vertical>
+          </Container>
+          <Button type="submit" intent="primary" rightIcon="chevron-right" variation={ButtonVariation.PRIMARY}>
+            <String stringID="continue" />
+          </Button>
+          {/* </Layout.Vertical> */}
         </FormikForm>
       )}
     </Formik>
