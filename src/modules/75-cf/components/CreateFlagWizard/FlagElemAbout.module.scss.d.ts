@@ -9,7 +9,6 @@
 declare const styles: {
   readonly aboutFlagContainer: string
   readonly checkboxIcon: string
-  readonly optionalCollapse: string
   readonly tooltipAboutFlag: string
 }
 export default styles

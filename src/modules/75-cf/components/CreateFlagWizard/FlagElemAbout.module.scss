@@ -7,28 +7,8 @@
 
 .about-flag-container {
   position: relative;
-  height: 100%;
   display: flex;
   flex-direction: column;
-
-  .optional-collapse {
-    position: relative;
-    width: 60%;
-
-    & > p {
-      position: absolute;
-      color: var(--grey-450);
-    }
-
-    & > div {
-      border: 0 !important;
-      padding: 0 !important;
-    }
-
-    & > div:first-child {
-      margin-bottom: var(--spacing-xsmall);
-    }
-  }
 
   :global(.bp3-control-indicator) {
     margin-left: 0 !important;

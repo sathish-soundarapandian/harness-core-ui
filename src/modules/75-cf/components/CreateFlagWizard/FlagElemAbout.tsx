@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect } from 'react'
 import {
   Formik,
   FormikForm as Form,
@@ -15,13 +15,11 @@ import {
   StepProps,
   Button,
   ButtonVariation,
-  Collapse,
   Text,
   Utils
 } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { Color } from '@harness/design-system'
-import type { IconName } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 import { illegalIdentifiers } from '@common/utils/StringUtils'
@@ -30,26 +28,18 @@ import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import type { FlagWizardFormValues } from './FlagWizard'
 import css from './FlagElemAbout.module.scss'
 
-const collapseProps = {
-  collapsedIcon: 'plus' as IconName,
-  expandedIcon: 'minus' as IconName,
-  isOpen: false,
-  isRemovable: false
-}
-
 interface FlagElemAboutProps {
   goBackToTypeSelections: () => void
 }
 
 type AboutFormProps = FormikProps<any> & FlagElemAboutProps & { isEdit: boolean }
 
-const AboutForm: React.FC<AboutFormProps> = props => {
+const AboutForm: FC<AboutFormProps> = props => {
   const { getString } = useStrings()
-  const [descOpened, setDescOpened] = useState<boolean>(Boolean(props.values.description.length))
 
   return (
     <Form>
-      <Container className={css.aboutFlagContainer}>
+      <Container height="100%" className={css.aboutFlagContainer}>
         <Container style={{ flexGrow: 1, overflow: 'auto' }}>
           <Text style={{ fontSize: '18px', color: Color.GREY_700 }} margin={{ bottom: 'xlarge' }}>
             {getString('cf.creationModal.aboutFlag.aboutFlagHeading')}
@@ -64,18 +54,7 @@ const AboutForm: React.FC<AboutFormProps> = props => {
                 inputGroup: { autoFocus: true }
               }}
             />
-          </Container>
-          <Container>
-            <div className={css.optionalCollapse}>
-              <Collapse
-                {...collapseProps}
-                onToggleOpen={setDescOpened}
-                heading={getString('description')}
-                isOpen={Boolean(props.values.description.length) || descOpened}
-              >
-                <FormInput.TextArea name="description" />
-              </Collapse>
-            </div>
+            <FormInput.TextArea label={getString('description')} name="description" />
           </Container>
           <Container margin={{ top: 'xlarge' }}>
             <Layout.Horizontal>
@@ -116,7 +95,7 @@ const AboutForm: React.FC<AboutFormProps> = props => {
   )
 }
 
-const FlagElemAbout: React.FC<StepProps<Partial<FlagWizardFormValues>> & FlagElemAboutProps> = props => {
+const FlagElemAbout: FC<StepProps<Partial<FlagWizardFormValues>> & FlagElemAboutProps> = props => {
   const { getString } = useStrings()
   const { nextStep, prevStepData, goBackToTypeSelections } = props
   const isEdit = Boolean(prevStepData)
