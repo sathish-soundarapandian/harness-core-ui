@@ -22,7 +22,7 @@ export const generateRangeArray = (min: number, max: number, stepSize: number): 
   return rangeArray
 }
 
-const Header: React.FC<{ unitPrice: number }> = () => {
+export const Header: React.FC<{ unitPrice: number }> = () => {
   const { getString } = useStrings()
   return (
     <Layout.Vertical padding={{ bottom: 'medium' }}>
