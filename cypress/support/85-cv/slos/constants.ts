@@ -75,6 +75,8 @@ export const createNotification = `/cv/api/notification-rule?routingId=${account
 export const getServicesCall = `/ng/api/services?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getEnvironmentsCall = `/ng/api/environments?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const createSloV2 = `/cv/api/slo/v2?*`
+export const sliMetricGraph = `/cv/api/monitored-service/cvng_prod/sli/onboarding-metric-graphs?*`
+export const onboardingGraph = `/cv/api/monitored-service/cvng_prod/sli/onboarding-graphs*`
 
 // Accounts tab SLO calls
 export const accountsSLOCall =
