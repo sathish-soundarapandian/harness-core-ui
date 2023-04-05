@@ -2282,6 +2282,10 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         {getString('ci.buildInfra.info.localLink')}
       </a>
     )
+    // don't show info if infra type is not selectable
+    if (!BuildInfraTypes.some(item => item.value === infraType)) {
+      return null
+    }
     switch (infraType) {
       case CIBuildInfrastructureType.Cloud:
         return (
