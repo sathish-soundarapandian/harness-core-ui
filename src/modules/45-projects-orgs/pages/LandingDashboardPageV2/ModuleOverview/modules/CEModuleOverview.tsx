@@ -6,6 +6,9 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
+import { useGetCCMOverview } from 'services/ce'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
@@ -13,6 +16,13 @@ import DefaultFooter from '../EmptyState/DefaultFooter'
 import ModuleColumnChart from '../../ModuleColumnChart/ModuleColumnChart'
 
 const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmptyState }) => {
+  const { accountId } = useParams<AccountPathProps>()
+  const { data: ccmData } = useGetCCMOverview({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
   if (isEmptyState) {
     if (isExpanded) {
       return (
@@ -168,7 +178,7 @@ const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmp
     }
   ]
 
-  return <ModuleColumnChart count={1000} data={data} isExpanded={isExpanded} />
+  return <ModuleColumnChart count={ccmData?.data?.totalCost || 0} data={data} isExpanded={isExpanded} />
 }
 
 export default CEModuleOverview
