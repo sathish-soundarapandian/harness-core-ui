@@ -62,6 +62,22 @@ describe('GitSyncSetupModal', () => {
     })
   })
 
+  test('it should validate the YAML filepath field', async () => {
+    renderComponent()
+
+    const saveBtn = screen.getByRole('button', { name: 'save' })
+    const filePathField = screen.getByPlaceholderText('gitsync.gitSyncForm.enterYamlPath')
+
+    await userEvent.type(filePathField, './invalidPath.yaml', { allAtOnce: true })
+
+    userEvent.click(saveBtn)
+
+    await waitFor(() => {
+      expect(screen.getByText('gitsync.gitSyncForm.yamlPathInvalid')).toBeVisible()
+      expect(createGitRepo).not.toHaveBeenCalled()
+    })
+  })
+
   describe('submission', () => {
     const GitSyncFormSpy = jest.spyOn(GitSyncFormModule, 'GitSyncForm')
 

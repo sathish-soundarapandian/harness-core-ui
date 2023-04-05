@@ -75,7 +75,7 @@ export const yamlFileExtension = '.yaml'
 
 export const yamlPathRegex = /.*\.ya?ml$/
 
-export const fullYamlPathRegex = /^[\w\d./][\w\d\s\-_./]*\.{1}ya?ml$/
+export const fullYamlPathRegex = /^(?!\.\/)(?!.*\.\.{1,})(?!.*\/\/.*)(?!.*\/\.\/.*)[\w\-./ ]+\.yaml$/
 
 export const carriageReturnRegex = /(?:\\[rn])+/g
 
