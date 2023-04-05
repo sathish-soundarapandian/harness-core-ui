@@ -8,52 +8,19 @@
 import React, { useState, useEffect } from 'react'
 import { capitalize, defaultTo } from 'lodash-es'
 import { Card, Layout, Text } from '@harness/uicore'
-import { FontVariation, Color } from '@harness/design-system'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Editions } from '@common/constants/SubscriptionTypes'
 import SliderBar from './SliderBar'
+import { Item, generateRangeArray } from './FFDeveloperCard'
+import { Header } from '../Header'
 import css from './CostCalculator.module.scss'
-
-export const generateRangeArray = (min: number, max: number, stepSize: number): number[] => {
-  const rangeArray = []
-  for (let i = min; i <= max; i += stepSize) {
-    rangeArray[i] = i
-  }
-  return rangeArray
-}
-
-const Header: React.FC<{ unitPrice: number }> = () => {
-  const { getString } = useStrings()
-  return (
-    <Layout.Vertical padding={{ bottom: 'medium' }}>
-      <Text font={{ variation: FontVariation.H5 }}>{getString('authSettings.costCalculatorCI.developer.title')}</Text>
-      <Layout.Horizontal spacing={'small'}>
-        <Text
-          color={Color.PRIMARY_7}
-          tooltip={getString('authSettings.costCalculator.developer.developerDefinition')}
-          font={{ size: 'xsmall' }}
-        >
-          {getString('authSettings.costCalculator.developer.developer')}
-        </Text>
-      </Layout.Horizontal>
-    </Layout.Vertical>
-  )
-}
 
 interface DeveloperSubscriptionInfoProps {
   currentSubscribed: number
   usage: number
   currentPlan: Editions
   recommended: number | null
-}
-
-export const Item: React.FC<{ title: string; value: React.ReactElement }> = ({ title, value }) => {
-  return (
-    <Layout.Vertical spacing={'medium'}>
-      <Text>{title}</Text>
-      {value}
-    </Layout.Vertical>
-  )
 }
 
 const DeveloperSubscriptionInfo: React.FC<DeveloperSubscriptionInfoProps> = ({

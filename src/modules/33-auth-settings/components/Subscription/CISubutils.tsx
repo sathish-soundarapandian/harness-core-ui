@@ -56,7 +56,7 @@ const CISubutils: React.FC<CISubutilsProps> = ({
             : 0
         }
         unitPrice={licenseUnitPrice}
-        usage={usageAndLimitInfo.usageData.usage?.ci?.totalDevelopers?.count || 0}
+        usage={usageAndLimitInfo.usageData.usage?.ci?.activeCommitters?.count || 0}
         toggledNumberOfDevelopers={subscriptionDetails.quantities?.ci?.numberOfDevelopers}
         setNumberOfDevelopers={(value: number) => {
           updateQuantities({
