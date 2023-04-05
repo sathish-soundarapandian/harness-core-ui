@@ -64,10 +64,10 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   const showDeploymentFreeze = isEnterpriseEdition && isCD
 
   const canUsePolicyEngine = useAnyEnterpriseLicense()
-  //Supporting GIT_SIMPLIFICATION by default, old GitSync will be selected only for selected accounts
-  // isGitSimplificationEnabled will true if any customers using old GitSync enabled Git SImplification using API
+  // Supporting GIT_SIMPLIFICATION by default, old GitSync will be enabled only for already enabled projects
+  // isGitSimplificationEnabled will true if Git SImplification is enabled using API
   const isGitSyncSupported =
-    (isGitSyncEnabled && !gitSyncEnabledOnlyForFF) || ((isCIorCDorSTO || !module) && !isGitSimplificationEnabled)
+    isGitSyncEnabled && !gitSyncEnabledOnlyForFF && (isCIorCDorSTO || !module) && !isGitSimplificationEnabled
 
   const showTemplates = isCIorCDorSTO || (!module && NEW_LEFT_NAVBAR_SETTINGS)
   const showFileStore = isCIorCD || !module
