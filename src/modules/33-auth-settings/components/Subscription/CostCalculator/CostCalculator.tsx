@@ -13,7 +13,7 @@ import type { Module, ModuleName } from 'framework/types/ModuleName'
 import {
   RetrieveProductPricesQueryParams,
   useRetrieveProductPrices,
-  useRetrieveRecommendation
+  useRetrieveRecommendationRc
 } from 'services/cd-ng/index'
 import {
   Editions,
@@ -26,7 +26,7 @@ import {
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
-import { useDeepCompareEffect } from '@common/hooks'
+import { useDeepCompareEffect, useMutateAsGet } from '@common/hooks'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { getCostCalculatorBodyByModule, PLAN_TYPES } from '@auth-settings/components/Subscription/subscriptionUtils'
 import ChoosePlan from './ChoosePlan'
@@ -70,11 +70,25 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
       moduleType: module.toUpperCase() as RetrieveProductPricesQueryParams['moduleType']
     }
   })
-  const { data: recommendation, refetch: fetchRecommendations } = useRetrieveRecommendation({
+
+  const usageMapCF = {
+    NUMBER_OF_USERS: usageAndLimitInfo.usageData.usage?.ff?.activeFeatureFlagUsers || 0,
+    NUMBER_OF_MAUS: usageAndLimitInfo.usageData.usage?.ff?.activeClientMAUs || 0
+  }
+  const usageMapCI = {
+    NUMBER_OF_COMMITTERS: usageAndLimitInfo.usageData.usage?.ci?.activeCommitters || 0
+  }
+  const {
+    data: recommendation,
+    refetch: fetchRecommendations,
+    loading
+  } = useMutateAsGet(useRetrieveRecommendationRc, {
+    body: {
+      moduleType: module.toUpperCase(),
+      usageMap: module.toUpperCase() === 'CF' ? usageMapCF : usageMapCI
+    },
     queryParams: {
-      accountIdentifier: accountId,
-      numberOfMAUs: defaultTo(usageAndLimitInfo.usageData.usage?.ff?.activeClientMAUs?.count, 0),
-      numberOfUsers: defaultTo(usageAndLimitInfo.usageData.usage?.ff?.activeFeatureFlagUsers?.count, 0)
+      accountIdentifier: accountId
     },
     lazy: true
   })
