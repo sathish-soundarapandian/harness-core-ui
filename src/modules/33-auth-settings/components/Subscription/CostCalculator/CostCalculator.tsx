@@ -54,7 +54,7 @@ interface GetCostCalculatorBodyByModuleProps {
   subscriptionDetails: SubscriptionProps
   setSubscriptionDetails: (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
   recommendation: { [key: string]: number } | null
-  updateQuantities: ({ maus, devs }: { maus?: number; devs?: number  }) => void
+  updateQuantities: ({ maus, devs }: { maus?: number; devs?: number }) => void
 }
 
 export const CostCalculator: React.FC<CostCalculatorProps> = ({
