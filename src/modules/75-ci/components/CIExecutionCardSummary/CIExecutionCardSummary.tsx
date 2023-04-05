@@ -61,40 +61,49 @@ function getUIByType(
             branch={data?.ciExecutionInfoDTO?.pullRequest?.sourceBranch}
             targetBranch={data?.ciExecutionInfoDTO?.pullRequest?.targetBranch}
           />
-          <Layout.Horizontal className={css.alignSelfStart} flex spacing="small">
-            <Icon name="git-pull" size={14} />
-            <div style={{ fontSize: 0 }}>
-              <Text
-                font={{ size: 'small' }}
-                color="grey900"
-                style={{ maxWidth: 500, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}
-                title={data?.ciExecutionInfoDTO?.pullRequest?.title}
-              >
-                {data?.ciExecutionInfoDTO?.pullRequest?.title}
-              </Text>
-            </div>
-            <a
-              className={css.label}
-              href={data?.ciExecutionInfoDTO?.pullRequest?.link || ''}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleLinkClick}
-            >
-              {getString('ci.prSymbol')}
-              {typeof data?.ciExecutionInfoDTO?.pullRequest?.id === 'string' ||
-              typeof data?.ciExecutionInfoDTO?.pullRequest?.id === 'number'
-                ? data?.ciExecutionInfoDTO?.pullRequest?.id
-                : data?.ciExecutionInfoDTO?.pullRequest?.id?.['$numberLong']
-                ? data?.ciExecutionInfoDTO?.pullRequest?.id?.['$numberLong']
-                : ''}
-            </a>
-            <div className={css.state}>{data?.ciExecutionInfoDTO?.pullRequest?.state}</div>
-          </Layout.Horizontal>
-          {data?.ciExecutionInfoDTO?.pullRequest?.commits?.length > 0 && (
-            <CommitsInfo
-              commits={data?.ciExecutionInfoDTO?.pullRequest?.commits}
-              authorAvatar={data?.ciExecutionInfoDTO?.author?.avatar}
-            />
+          {data?.ciExecutionInfoDTO?.pullRequest && (
+            <>
+              {data?.ciExecutionInfoDTO?.pullRequest?.title &&
+                data?.ciExecutionInfoDTO?.pullRequest?.link &&
+                data?.ciExecutionInfoDTO?.pullRequest?.id && (
+                  <Layout.Horizontal className={css.alignSelfStart} flex spacing="small">
+                    <Icon name="git-pull" size={14} />
+                    <div style={{ fontSize: 0 }}>
+                      <Text
+                        font={{ size: 'small' }}
+                        color="grey900"
+                        style={{ maxWidth: 500, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}
+                        title={data?.ciExecutionInfoDTO?.pullRequest?.title}
+                      >
+                        {data?.ciExecutionInfoDTO?.pullRequest?.title}
+                      </Text>
+                    </div>
+                    <a
+                      className={css.label}
+                      href={data?.ciExecutionInfoDTO?.pullRequest?.link || ''}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={handleLinkClick}
+                    >
+                      {getString('ci.prSymbol')}
+                      {typeof data?.ciExecutionInfoDTO?.pullRequest?.id === 'string' ||
+                      typeof data?.ciExecutionInfoDTO?.pullRequest?.id === 'number'
+                        ? data?.ciExecutionInfoDTO?.pullRequest?.id
+                        : data?.ciExecutionInfoDTO?.pullRequest?.id?.['$numberLong']
+                        ? data?.ciExecutionInfoDTO?.pullRequest?.id?.['$numberLong']
+                        : ''}
+                    </a>
+                    <div className={css.state}>{data?.ciExecutionInfoDTO?.pullRequest?.state}</div>
+                  </Layout.Horizontal>
+                )}
+
+              {data?.ciExecutionInfoDTO?.pullRequest?.commits?.length > 0 && (
+                <CommitsInfo
+                  commits={data?.ciExecutionInfoDTO?.pullRequest?.commits}
+                  authorAvatar={data?.ciExecutionInfoDTO?.author?.avatar}
+                />
+              )}
+            </>
           )}
         </>
       )
