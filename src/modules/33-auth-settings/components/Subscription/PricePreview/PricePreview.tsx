@@ -15,8 +15,8 @@ import { TimeType, SubscriptionProps, CurrencyType } from '@common/constants/Sub
 import type { Module } from 'framework/types/ModuleName'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { getAmountInCurrency, getDollarAmount } from '@auth-settings/utils'
-import SubcriptionDetails from './SubscriptionDetails'
 import type { InvoiceDetailDTO } from 'services/cd-ng'
+import SubcriptionDetails from './SubscriptionDetails'
 import {
   getRenewDate,
   getSubscriptionBreakdownsByModuleAndFrequency,
@@ -104,6 +104,11 @@ const Footer: React.FC<{ totalAmount: number; payingFrequency: TimeType }> = ({ 
         <Text font={{ variation: FontVariation.H2 }}>
           {getAmountInCurrency(CurrencyType.USD, totalAmount)}
           {frequency}
+        </Text>
+      </Layout.Horizontal>
+      <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+        <Text font={{ size: 'xsmall' }}>
+          {getString('authSettings.autoRenewal', { date: otherRenewDate !== '' ? otherRenewDate : renewDate })}
         </Text>
       </Layout.Horizontal>
       {otherRenewDate !== '' && renewDate !== otherRenewDate ? (
@@ -248,11 +253,7 @@ const PricePreview: React.FC<PricePreviewProps> = ({
         totalAmount={totalAmount}
       />
       {!isNil(taxAmount) && invoiceData?.totalAmount !== undefined ? (
-        <Footer
-          payingFrequency={paymentFreq}
-          totalAmount={invoiceData?.totalAmount / 100}
-          taxAmount={subscriptionDetails.taxAmount}
-        />
+        <Footer payingFrequency={paymentFreq} totalAmount={invoiceData?.totalAmount / 100} />
       ) : null}
     </Layout.Vertical>
   )

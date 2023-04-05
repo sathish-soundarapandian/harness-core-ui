@@ -6,8 +6,6 @@
  */
 import React from 'react'
 import { get, toInteger } from 'lodash-es'
-import FFSubutils from './FFSubutils'
-import CISubutils from './CISubutils'
 import type { PriceDTO, SubscriptionDetailDTO } from 'services/cd-ng/index'
 import type {
   Editions,
@@ -19,7 +17,6 @@ import type {
 import { TimeType } from '@common/constants/SubscriptionTypes'
 import { getDollarAmount } from '@auth-settings/utils'
 import type { Module } from 'framework/types/ModuleName'
-import type { UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
 
 export const PLAN_TYPES: { [key: string]: string } = {
   DEVELOPERS: 'DEVELOPERS',
@@ -103,62 +100,6 @@ export function getProductPrices(plan: Editions, time: TimeType, productPrices: 
   }
 
   return prices
-}
-
-interface GetCostCalculatorBodyByModuleProps {
-  module: Module
-  currentPlan: Editions
-  paymentFrequency: TimeType
-  usageAndLimitInfo: UsageAndLimitReturn
-  productPrices: ProductPricesProp
-  subscriptionDetails: SubscriptionProps
-  setSubscriptionDetails: (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
-  recommendation: { [key: string]: number } | null
-  updateQuantities: ({ maus, devs }: { maus?: number; devs?: number | undefined }) => void
-}
-
-export function getCostCalculatorBodyByModule({
-  module,
-  currentPlan,
-  usageAndLimitInfo,
-  productPrices,
-  paymentFrequency,
-  subscriptionDetails,
-  setSubscriptionDetails,
-  recommendation,
-  updateQuantities
-}: GetCostCalculatorBodyByModuleProps): React.ReactElement {
-  switch (module) {
-    case 'cf':
-      return (
-        <FFSubutils
-          currentPlan={currentPlan}
-          recommendation={recommendation}
-          usageAndLimitInfo={usageAndLimitInfo}
-          subscriptionDetails={subscriptionDetails}
-          updateQuantities={updateQuantities}
-          productPrices={productPrices}
-          setSubscriptionDetails={setSubscriptionDetails}
-          paymentFrequency={paymentFrequency}
-        ></FFSubutils>
-      )
-    case 'ci': {
-      return (
-        <CISubutils
-          currentPlan={currentPlan}
-          recommendation={recommendation}
-          usageAndLimitInfo={usageAndLimitInfo}
-          subscriptionDetails={subscriptionDetails}
-          updateQuantities={updateQuantities}
-          productPrices={productPrices}
-          setSubscriptionDetails={setSubscriptionDetails}
-          paymentFrequency={paymentFrequency}
-        ></CISubutils>
-      )
-    }
-  }
-
-  return <></>
 }
 
 export function getTitleByModule(module: Module): { icon?: string; description?: string; title?: string } {
