@@ -50,12 +50,12 @@ import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@comm
 import ListHeader from '@common/components/ListHeader/ListHeader'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { usePermission } from '@rbac/hooks/usePermission'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import SecretsList from './views/SecretsListView/SecretsList'
 import SecretEmptyState from './secrets-empty-state.png'
 import { SECRETS_DEFAULT_PAGE_INDEX, SECRETS_DEFAULT_PAGE_SIZE } from './Constants'
 
 import css from './SecretsPage.module.scss'
-import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 
 interface CreateSecretBtnProp {
   size?: ButtonSize
