@@ -253,7 +253,7 @@ const PricePreview: React.FC<PricePreviewProps> = ({
         totalAmount={totalAmount}
       />
       {!isNil(taxAmount) && invoiceData?.totalAmount !== undefined ? (
-        <Footer payingFrequency={paymentFreq} totalAmount={invoiceData?.totalAmount / 100} />
+        <Footer payingFrequency={paymentFreq} totalAmount={totalAmount} />
       ) : null}
     </Layout.Vertical>
   )
