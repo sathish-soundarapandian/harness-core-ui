@@ -382,6 +382,7 @@ function WebhookPipelineInputPanelForm({
   useEffect(() => {
     if (template?.data?.inputSetTemplateYaml && selectedInputSets && selectedInputSets.length > 0) {
       const pipelineObject = memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)
+
       const fetchData = async (): Promise<void> => {
         const data = await mergeInputSet({
           inputSetReferences: selectedInputSets.map(item => item.value as string)
@@ -517,7 +518,6 @@ function WebhookPipelineInputPanelForm({
   const {
     state: { storeMetadata }
   } = usePipelineContext()
-
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
       {loading && !isPipelineBranchNameInFocus() ? (

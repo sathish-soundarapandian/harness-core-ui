@@ -23,6 +23,7 @@ import css from './StageSelection.module.scss'
 const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   const { getString } = useStrings()
 
+  const [callMerge, setCallMerge] = React.useState(false)
   const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier } = useParams<
     PipelineType<{
       projectIdentifier: string
@@ -47,7 +48,7 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
     stageExecutionData?.data?.map((stage: any) => {
       return {
         label: defaultTo(stage?.stageIdentifier, ''),
-        value: defaultTo(stage?.stageName, '')
+        value: defaultTo(stage?.stageIdentifier, '')
       }
     }) || []
 
@@ -55,12 +56,14 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
 
   const [selectedStages, setStage] = React.useState<SelectOption[] | any>([])
 
+  const [inputData, setInputSetData] = React.useState<any>({})
+
   const [allStagesSelected, setAllStagesSelect] = React.useState<boolean[] | any>(false)
-  const allowStageExecutions = formikProps.values?.originalPipeline?.allowStageExecutions
+  const allowStageExecutions = formikProps.values?.resolvedPipeline?.allowStageExecutions
 
   const {
     data: inputSetData,
-    // loading: loadingInputSetsData,
+    loading: loadingInputSetsData,
     refetch: refetchInputSetData
     // error: inputSetError
   } = useMutateAsGet(useGetMergeInputSetFromPipelineTemplateWithListInput, {
@@ -87,10 +90,16 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   }, [allowStageExecutions])
 
   useEffect(() => {
-    if (selectedStages.length || formikProps.values?.stagesToExecute) {
+    if (selectedStages.length && formikProps.values?.stagesToExecute && !loadingInputSetsData && callMerge) {
       refetchInputSetData()
     }
-  }, [selectedStages])
+  }, [selectedStages, formikProps.values?.stagesToExecute, callMerge])
+
+  useEffect(() => {
+    if (inputSetData?.data?.pipelineYaml) {
+      setInputSetData(inputSetData)
+    }
+  }, [inputSetData?.data?.pipelineYaml])
 
   useEffect(() => {
     if (
@@ -109,7 +118,7 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
         if (stageExecutionData?.data && stageExecutionData?.data?.length) {
           for (const stage of stageExecutionData.data) {
             if (formikProps.values?.stagesToExecute?.includes(stage.stageIdentifier)) {
-              stagesArr.push({ label: stage.stageName || '', value: stage.stageIdentifier || '' })
+              stagesArr.push({ label: stage.stageIdentifier || '', value: stage.stageIdentifier || '' })
             }
           }
         }
@@ -118,7 +127,14 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
       stagesArr.push(getAllStageItem(getString))
     }
     setStage(stagesArr)
-  }, [formikProps.values?.stagesToExecute, stageExecutionData?.data, allowStageExecutions])
+  }, [stageExecutionData?.data])
+
+  useEffect(() => {
+    if (inputData?.data?.pipelineYaml) {
+      const pipeObj = clearRuntimeInput(memoizedParse<any>(inputData?.data?.pipelineYaml as any)?.pipeline)
+      formikProps.setFieldValue('pipeline', pipeObj)
+    }
+  }, [inputData?.data?.pipelineYaml])
 
   useEffect(() => {
     if (formikProps.values?.originalPipeline && !allowStageExecutions) {
@@ -161,6 +177,8 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
             setAllStagesSelect(false)
             setStage(newItems)
           }
+
+          setCallMerge(true)
         }}
         onPopoverClose={() => {
           const hasAllStagesChecked = selectedStages.find(
@@ -168,32 +186,6 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
           )
           const stages = hasAllStagesChecked ? [] : selectedStages.map((stage: SelectOption) => stage.value)
           formikProps.setFieldValue('stagesToExecute', hasAllStagesChecked ? [] : stages)
-
-          /*
-            1. merge trigger api ->  pass stageIdentifier (s1/s2)
-            op: triger 
-          */
-          if (formikProps.values.pipeline) {
-            // const { identifier } = formikProps.values.pipeline
-            // const pipeObj = formikProps.values.pipeline
-
-            // const oldPipeline = formikProps.values.pipeline
-
-            // const filteredStages = allStagesSelected
-            //   ? formikProps.values.resolvedPipeline.stages
-            //   : formikProps.values.resolvedPipeline.stages.filter((stg: any) => stages.includes(stg.stage.identifier))
-            // oldPipeline['stages'] = filteredStages
-
-            formikProps.setFieldValue(
-              'pipeline',
-              clearRuntimeInput(memoizedParse<any>(inputSetData?.data?.pipelineYaml as any)?.pipeline)
-            )
-            // const modifiedPipeline = {
-            //   identifier,
-            //   stages: [...filteredStages]
-            // }
-            // formikProps.setFieldValue('pipeline', clearRuntimeInput(modifiedPipeline))
-          }
         }}
         value={allStagesSelected ? [getAllStageItem(getString)] : selectedStages}
         items={executionStageList}

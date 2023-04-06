@@ -1409,13 +1409,14 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     ) {
       newPipeline = getPipelineWithoutCodebaseInputs(newPipeline)
     }
-
+    const inputSetTemplateYamlObj = parse(template?.data?.inputSetTemplateYaml || '')
     if (triggerType === TriggerTypes.WEBHOOK) {
       return {
         triggerType: triggerTypeOnNew,
         sourceRepo: sourceRepoOnNew,
         identifier: '',
         tags: {},
+        inputSetTemplateYamlObj,
         ...(sourceRepoOnNew === GitSourceProviders.GITHUB.value && {
           encryptedWebhookSecretIdentifier: '',
           isGithubWebhookAuthenticationEnabled
@@ -1435,6 +1436,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       return {
         triggerType: triggerTypeOnNew,
         identifier: '',
+        inputSetTemplateYamlObj,
         tags: {},
         selectedScheduleTab: scheduleTabsId.MINUTES,
         pipeline: newPipeline,
@@ -1445,7 +1447,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         ...getDefaultExpressionBreakdownValues(scheduleTabsId.MINUTES)
       }
     } else if (isArtifactOrManifestTrigger(triggerType)) {
-      const inputSetTemplateYamlObj = parse(template?.data?.inputSetTemplateYaml || '')
+      // const inputSetTemplateYamlObj = parse(template?.data?.inputSetTemplateYaml || '')
 
       return {
         triggerType: triggerTypeOnNew,
