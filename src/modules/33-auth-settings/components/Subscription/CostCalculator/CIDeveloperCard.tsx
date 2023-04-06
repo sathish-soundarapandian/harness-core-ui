@@ -123,7 +123,7 @@ const CIDeveloperCard: React.FC<CIDeveloperCardProps> = ({
   return (
     <Card>
       <Layout.Vertical>
-        <Header unitPrice={unitPrice} module="ci" />
+        <Header unitPrice={unitPrice} />
         <SliderBar
           min={0}
           max={300}
