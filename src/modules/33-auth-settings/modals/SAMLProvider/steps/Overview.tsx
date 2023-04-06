@@ -34,27 +34,27 @@ const Overview: React.FC<StepProps<FormValues>> = props => {
     >
       {() => (
         <FormikForm className={css.form}>
-          {/* <Layout.Vertical flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}> */}
-          <Container width={390}>
-            <Text font={{ variation: FontVariation.H3 }}>{getString('authSettings.samlProviderOverview')}</Text>
-            <Layout.Vertical margin={{ top: 'xlarge' }}>
-              <FormInput.Text
-                placeholder={getString('common.namePlaceholder')}
-                name="displayName"
-                label={getString('name')}
-              />
-              <FormInput.Text
-                placeholder={getString('common.friendlyNamePlaceholder')}
-                name="friendlyName"
-                label={getString('common.friendlyName')}
-                isOptional
-              />
-            </Layout.Vertical>
-          </Container>
-          <Button type="submit" intent="primary" rightIcon="chevron-right" variation={ButtonVariation.PRIMARY}>
-            <String stringID="continue" />
-          </Button>
-          {/* </Layout.Vertical> */}
+          <Layout.Vertical flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Container width={390}>
+              <Text font={{ variation: FontVariation.H3 }}>{getString('authSettings.samlProviderOverview')}</Text>
+              <Layout.Vertical margin={{ top: 'xlarge' }}>
+                <FormInput.Text
+                  placeholder={getString('common.namePlaceholder')}
+                  name="displayName"
+                  label={getString('name')}
+                />
+                <FormInput.Text
+                  placeholder={getString('common.friendlyNamePlaceholder')}
+                  name="friendlyName"
+                  label={getString('common.friendlyName')}
+                  isOptional
+                />
+              </Layout.Vertical>
+            </Container>
+            <Button type="submit" intent="primary" rightIcon="chevron-right" variation={ButtonVariation.PRIMARY}>
+              <String stringID="continue" />
+            </Button>
+          </Layout.Vertical>
         </FormikForm>
       )}
     </Formik>
