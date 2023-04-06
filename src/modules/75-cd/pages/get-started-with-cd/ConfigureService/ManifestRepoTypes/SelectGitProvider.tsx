@@ -274,10 +274,12 @@ const SelectGitProviderRef = (
         GitAuthenticationMethod.UserNameAndApplicationPassword
       ].includes(authMethod)
     ) {
+      console.log('TEST----GIT', { authMethod, testConnectionStatus, oAuthStatus })
       if (testConnectionStatus === TestStatus.SUCCESS) {
         onSuccess(testConnectionStatus, connectorResponse)
       }
     } else if (authMethod === GitAuthenticationMethod.OAuth) {
+      console.log('TEST----OAuth', { authMethod, testConnectionStatus, oAuthStatus })
       if (oAuthStatus === Status.SUCCESS) {
         onSuccess(testConnectionStatus, connectorResponse)
       }

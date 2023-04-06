@@ -87,7 +87,7 @@ const config = {
         historyApiFallback: {
           disableDotRule: true
         },
-        port: 8181,
+        port: 8182,
         client: {
           overlay: !(isCypress || isCypressCoverage)
         },
