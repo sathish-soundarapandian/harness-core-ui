@@ -234,17 +234,31 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
           plan={subscriptionProps.edition}
           module={module}
           setPlan={(value: Editions) => {
+            let passedQuantities = {}
+            if (value === Editions.ENTERPRISE && subscriptionProps.quantities?.featureFlag?.numberOfMau === 100) {
+              passedQuantities = {
+                featureFlag: {
+                  numberOfMau: 1,
+                  numberOfDevelopers: subscriptionProps.quantities?.featureFlag?.numberOfDevelopers
+                }
+              }
+            } else if (value === Editions.TEAM && subscriptionProps.quantities?.featureFlag?.numberOfMau === 1) {
+              passedQuantities = {
+                featureFlag: {
+                  numberOfMau: 100,
+                  numberOfDevelopers: subscriptionProps.quantities?.featureFlag?.numberOfDevelopers
+                }
+              }
+            }
             setSubscriptionProps({
               ...subscriptionProps,
               edition: value,
-              sampleDetails: { sampleMultiplier: 0, sampleUnit: '', minValue: 0 }
+              sampleDetails: { sampleMultiplier: 0, sampleUnit: '', minValue: 0 },
+              quantities: passedQuantities
             })
           }}
         />
         {getCostCalculatorBodyByModule({
-          module,
-          currentPlan,
-          usageAndLimitInfo,
           productPrices: subscriptionProps.productPrices,
           paymentFrequency: subscriptionProps.paymentFreq,
           subscriptionDetails: subscriptionProps,
