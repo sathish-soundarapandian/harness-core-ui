@@ -19,7 +19,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import delegateErrorURL from '../../home/images/delegate-error.svg'
 import delegateSuccessURL from '../../home/images/cd-delegates-success.svg'
-import type { DelegateSuccessHandler } from '../CDOnboardingUtils'
+import { DelegateSuccessHandler, DeploymentType } from '../CDOnboardingUtils'
 import css from './CreateK8sDelegate.module.scss'
 
 interface StepDelegateData {
@@ -80,7 +80,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
         setShowError(true)
         trackEvent(CDOnboardingActions.HeartbeatFailedOnboardingYAML, {
           category: Category.DELEGATE,
-          data: { name: name, delegateType: delegateType }
+          data: { name: name, delegateType: delegateType, deployment_type: DeploymentType.K8s }
         })
       }
 
@@ -92,7 +92,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
       setShowSuccess(true)
       trackEvent(CDOnboardingActions.HeartbeatVerifiedOnboardingYAML, {
         category: Category.DELEGATE,
-        data: { name: name, delegateType: delegateType }
+        data: { name: name, delegateType: delegateType, deployment_type: DeploymentType.K8s }
       })
       onSuccessHandler && onSuccessHandler({ delegateCreated: true, delegateInstalled: true })
     }

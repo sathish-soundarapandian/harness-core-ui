@@ -47,7 +47,7 @@ export interface SelectDeploymentTypeInterface {
 interface SelectDeploymentTypeProps {
   disableNextBtn: () => void
   enableNextBtn: () => void
-  onSuccess: () => void
+  onSuccess: (deploymentType: string) => void
 }
 
 export type SelectDeploymentTypeForwardRef =
@@ -122,7 +122,7 @@ const SelectDeploymentTypeRef = (
       ServiceDeploymentType.Kubernetes
     )
     trackEvent(CDOnboardingActions.SelectDeploymentTypeDefault, {
-      selectedDeploymentType: initialSelectedDeploymentType
+      deployment_type: initialSelectedDeploymentType
     })
   }, [])
 
@@ -131,7 +131,7 @@ const SelectDeploymentTypeRef = (
       set(draft, 'serviceDefinition.type', selectedDeploymentType?.value as unknown as ServiceDefinition['type'])
     })
     saveServiceData(updatedContextService)
-    onSuccess()
+    onSuccess(selectedDeploymentType?.value as string)
   }
 
   return (
@@ -194,7 +194,7 @@ const SelectDeploymentTypeRef = (
                             formikProps.setFieldValue('selectedDeploymentType', item.value)
                             setSelectedDeploymentType(item)
                             trackEvent(CDOnboardingActions.SelectDeploymentType, {
-                              selectedDeploymentType: item.value
+                              deployment_type: item.value
                             })
                           }
                         }

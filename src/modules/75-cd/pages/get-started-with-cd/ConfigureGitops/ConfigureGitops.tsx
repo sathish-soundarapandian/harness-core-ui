@@ -58,6 +58,7 @@ import { getLastURLPathParam } from '@common/utils/utils'
 import { useDeepCompareEffect } from '@common/hooks'
 import {
   APIError,
+  DeploymentType,
   getFullAgentWithScope,
   RepositoryInterface,
   RevisionType,
@@ -299,7 +300,10 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    trackEvent(CDOnboardingActions.SelectSourceTypeDefault, { selectedSourceType: repositoryTypes[0].value })
+    trackEvent(CDOnboardingActions.SelectSourceTypeDefault, {
+      selectedSourceType: repositoryTypes[0].value,
+      deployment_type: DeploymentType.GitOps
+    })
   }, [])
 
   useEffect(() => {
@@ -423,16 +427,18 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                     ...defaultQueryParams,
                     identifier: getLastURLPathParam(defaultTo(repoURL, ''))
                   }
-                  trackEvent(CDOnboardingActions.TestConnectionClicked, {})
+                  trackEvent(CDOnboardingActions.TestConnectionClicked, { deployment_type: DeploymentType.GitOps })
                   createRepo({ inheritedCreds: false, ...repoPayload }, false)
                     .then((response: Servicev1Repository) => {
                       successRepoCreation(response)
-                      trackEvent(CDOnboardingActions.RepoCreatedSuccessfully, {})
+                      trackEvent(CDOnboardingActions.RepoCreatedSuccessfully, {
+                        deployment_type: DeploymentType.GitOps
+                      })
                     })
                     .catch(err => {
                       setTestConnectionStatus(TestStatus.FAILED)
                       setTestConnectionErrors((err?.data as any)?.responseMessages)
-                      trackEvent(CDOnboardingActions.RepoCreateFailure, {})
+                      trackEvent(CDOnboardingActions.RepoCreateFailure, { deployment_type: DeploymentType.GitOps })
                     })
                 }
               }}
@@ -595,7 +601,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                     onChange={(item: RepoTypeItem) => {
                                       formikProps.setFieldValue('type', item.value)
                                       trackEvent(CDOnboardingActions.SelectSourceType, {
-                                        selectedSourceType: item.value
+                                        selectedSourceType: item.value,
+                                        deployment_type: DeploymentType.GitOps
                                       })
                                     }}
                                   />
@@ -614,7 +621,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                       onClick={() => {
                                         handleSourceCodeTypeChange(SourceCodeType.USE_SAMPLE)
                                         trackEvent(CDOnboardingActions.SelectSourceRepoType, {
-                                          sourceRepo: SourceCodeType.USE_SAMPLE
+                                          sourceRepo: SourceCodeType.USE_SAMPLE,
+                                          deployment_type: DeploymentType.GitOps
                                         })
                                       }}
                                       className={cx(
@@ -628,7 +636,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                       onClick={() => {
                                         handleSourceCodeTypeChange(SourceCodeType.PROVIDE_MY_OWN)
                                         trackEvent(CDOnboardingActions.SelectSourceRepoType, {
-                                          sourceRepo: SourceCodeType.PROVIDE_MY_OWN
+                                          sourceRepo: SourceCodeType.PROVIDE_MY_OWN,
+                                          deployment_type: DeploymentType.GitOps
                                         })
                                       }}
                                       className={cx(
@@ -1050,7 +1059,9 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                   })
                                   setDestinationStepEnabled(false)
                                   accordionRef.current.open('application-repo-destination-step')
-                                  trackEvent(CDOnboardingActions.NextStepClicked, {})
+                                  trackEvent(CDOnboardingActions.NextStepClicked, {
+                                    deployment_type: DeploymentType.GitOps
+                                  })
                                 }}
                               >
                                 {getString('common.nextStep')}

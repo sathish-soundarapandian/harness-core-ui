@@ -20,6 +20,7 @@ import { useAgentServiceForServerCreate, V1AgentType, useAgentServiceForServerLi
 import { useCDOnboardingContext } from '@cd/pages/get-started-with-cd/CDOnboardingStore'
 import { GitOpsAgentCard } from './GitOpsAgentCard'
 import { AgentProvision } from './AgentProvision'
+import { DeploymentType } from '../CDOnboardingUtils'
 import css from '../GetStartedWithCD.module.scss'
 import createK8sCSS from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 import deployCSS from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
@@ -94,14 +95,18 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
       },
       accountIdentifier: accountId
     }
-    trackEvent(CDOnboardingActions.StartProvisionAgentClicked, {})
+    trackEvent(CDOnboardingActions.StartProvisionAgentClicked, { deployment_type: DeploymentType.GitOps })
     await createAgent(payload)
       .then(agent => {
         setProvisionedAgent(agent)
-        trackEvent(CDOnboardingActions.AgentCreatedAndStartedProvisioningInBackend, {})
+        trackEvent(CDOnboardingActions.AgentCreatedAndStartedProvisioningInBackend, {
+          deployment_type: DeploymentType.GitOps
+        })
       })
       .catch(() => {
-        trackEvent(CDOnboardingActions.AgentCreationFailedWithoutProvisioning, {})
+        trackEvent(CDOnboardingActions.AgentCreationFailedWithoutProvisioning, {
+          deployment_type: DeploymentType.GitOps
+        })
       })
   }
 
@@ -126,7 +131,10 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
       const agent = agentList.content[0]
       setSelectedAgent(agent)
       setIsProvisioningScreen(true)
-      trackEvent(CDOnboardingActions.SelectedExistingAgent, { selectedAgent: agent?.name })
+      trackEvent(CDOnboardingActions.SelectedExistingAgent, {
+        selectedAgent: agent?.name,
+        deployment_type: DeploymentType.GitOps
+      })
     }
   }, [loadingAgentsList])
 

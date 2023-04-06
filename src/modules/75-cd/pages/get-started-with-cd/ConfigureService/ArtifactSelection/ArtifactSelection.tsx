@@ -29,7 +29,8 @@ import {
   ArtifactIconByType,
   BinaryValue,
   ServiceDataType,
-  CustomType
+  CustomType,
+  DeploymentType
 } from '../../CDOnboardingUtils'
 import ArtifactoryAuthStep from './ArtifactAuthStep'
 import { StepStatus } from '../../DeployProvisioningWizard/Constants'
@@ -92,7 +93,10 @@ const ArtifactSelection = ({ isStepComplete }: ArtifactSelectionProps): JSX.Elem
 
       saveServiceData(updatedContextService)
     }
-    trackEvent(CDOnboardingActions.SelectArtifactType, { artifactType: selectedArtifact })
+    trackEvent(CDOnboardingActions.SelectArtifactType, {
+      artifactType: selectedArtifact,
+      deployment_type: DeploymentType.K8s
+    })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedArtifact])
@@ -102,16 +106,15 @@ const ArtifactSelection = ({ isStepComplete }: ArtifactSelectionProps): JSX.Elem
   }, [values])
 
   React.useEffect(() => {
-    isStepComplete(artifactStepStatus.get('ImagePath') !== StepStatus.ToDo)
-  }, [artifactStepStatus, isStepComplete])
-
-  React.useEffect(() => {
+    if (values?.artifactToDeploy === BinaryValue.YES) {
+      isStepComplete(artifactStepStatus.get('ImagePath') !== StepStatus.ToDo)
+    } else {
+      isStepComplete(true)
+    }
     if (selectedArtifact === CustomType.Custom) {
       isStepComplete(true)
-    } else {
-      isStepComplete(false)
     }
-  }, [selectedArtifact, isStepComplete])
+  }, [isStepComplete, values?.artifactToDeploy, artifactStepStatus, selectedArtifact])
 
   return (
     <>
@@ -144,6 +147,7 @@ const ArtifactSelection = ({ isStepComplete }: ArtifactSelectionProps): JSX.Elem
                   className={cx(css.buttonWrapper, css.radioButton)}
                   text={getString(option.label as keyof StringsMap)}
                   onClick={_e => {
+                    isStepComplete(option.value !== BinaryValue.YES)
                     setFieldValue('artifactToDeploy', option.value)
                   }}
                   intent={values?.artifactToDeploy === option.value ? Intent.PRIMARY : Intent.NONE}

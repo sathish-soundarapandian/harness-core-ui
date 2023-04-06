@@ -14,6 +14,7 @@ import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useAgentServiceForServerGet, V1Agent } from 'services/gitops'
 import { useStrings } from 'framework/strings'
+import { DeploymentType } from '../CDOnboardingUtils'
 import css from './GitOpsAgentCard.module.scss'
 import deployCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
@@ -50,7 +51,8 @@ export const AgentProvision = ({
   React.useEffect(() => {
     if (isHealthy) {
       trackEvent(CDOnboardingActions.AgentProvisionedSuccessfully, {
-        provisioningTime: `${(retryCount * pollingInterval) / oneSecondMs} seconds`
+        provisioningTime: `${(retryCount * pollingInterval) / oneSecondMs} seconds`,
+        deployment_type: DeploymentType.GitOps
       })
     }
     if (agentCreateLoading || agentCreateError || isHealthy || !agent?.identifier) return

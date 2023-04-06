@@ -824,7 +824,7 @@ function TerragruntPlanWidget(
                           disabled={readonly}
                         />
                       </div>
-                      {values?.spec?.configuration?.moduleConfig?.terragruntRunType === 'RunAll' && (
+                      {values?.spec?.configuration?.moduleConfig?.terragruntRunType === 'RunModule' && (
                         <div className={cx(stepCss.formGroup, css.addMarginTop)}>
                           <FormMultiTypeCheckboxField
                             formik={formik as FormikProps<unknown>}
