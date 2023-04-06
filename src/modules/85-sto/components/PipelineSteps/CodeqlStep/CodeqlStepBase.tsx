@@ -20,30 +20,14 @@ import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidate
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
 import { useGetPropagatedStageById } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
-import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './CustomIngestionStepFunctionConfigs'
-import type { CustomIngestionStepProps, CustomIngestionStepData } from './CustomIngestionStep'
+import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './CodeqlStepFunctionConfigs'
+import type { CodeqlStepProps, CodeqlStepData } from './CodeqlStep'
 import { AdditionalFields, SecurityIngestionFields, SecurityScanFields, SecurityTargetFields } from '../SecurityFields'
-import {
-  CONFIGURATION_TARGET_TYPE,
-  CONTAINER_TARGET_TYPE,
-  INGESTION_SCAN_MODE,
-  INSTANCE_TARGET_TYPE,
-  REPOSITORY_TARGET_TYPE,
-  CUSTOM_INGEST_DEFAULT_CONFIG,
-  CUSTOM_INGEST_SARIF_CONFIG
-} from '../constants'
+import { INGESTION_SCAN_MODE, REPOSITORY_TARGET_TYPE } from '../constants'
 
-export const CustomIngestionStepBase = (
-  {
-    initialValues,
-    onUpdate,
-    isNewStep = true,
-    readonly,
-    stepViewType,
-    allowableTypes,
-    onChange
-  }: CustomIngestionStepProps,
-  formikRef: StepFormikFowardRef<CustomIngestionStepData>
+export const CodeqlStepBase = (
+  { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, allowableTypes, onChange }: CodeqlStepProps,
+  formikRef: StepFormikFowardRef<CodeqlStepData>
 ): JSX.Element => {
   const {
     state: {
@@ -55,7 +39,7 @@ export const CustomIngestionStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const valuesInCorrectFormat = getInitialValuesInCorrectFormat<CustomIngestionStepData, CustomIngestionStepData>(
+  const valuesInCorrectFormat = getInitialValuesInCorrectFormat<CodeqlStepData, CodeqlStepData>(
     initialValues,
     transformValuesFieldsConfig(initialValues),
     { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
@@ -64,9 +48,9 @@ export const CustomIngestionStepBase = (
   return (
     <Formik
       initialValues={valuesInCorrectFormat}
-      formName="CustomIngestionStep"
+      formName="CodeqlStep"
       validate={valuesToValidate => {
-        const schemaValues = getFormValuesInCorrectFormat<CustomIngestionStepData, CustomIngestionStepData>(
+        const schemaValues = getFormValuesInCorrectFormat<CodeqlStepData, CodeqlStepData>(
           valuesToValidate,
           transformValuesFieldsConfig(valuesToValidate)
         )
@@ -83,8 +67,8 @@ export const CustomIngestionStepBase = (
           stepViewType
         )
       }}
-      onSubmit={(_values: CustomIngestionStepData) => {
-        const schemaValues = getFormValuesInCorrectFormat<CustomIngestionStepData, CustomIngestionStepData>(
+      onSubmit={(_values: CodeqlStepData) => {
+        const schemaValues = getFormValuesInCorrectFormat<CodeqlStepData, CodeqlStepData>(
           _values,
           transformValuesFieldsConfig(_values)
         )
@@ -92,11 +76,9 @@ export const CustomIngestionStepBase = (
         onUpdate?.(schemaValues)
       }}
     >
-      {(formik: FormikProps<CustomIngestionStepData>) => {
+      {(formik: FormikProps<CodeqlStepData>) => {
         // This is required
         setFormikRef?.(formikRef, formik)
-
-        const scanConfigItems = [CUSTOM_INGEST_DEFAULT_CONFIG, CUSTOM_INGEST_SARIF_CONFIG]
 
         return (
           <FormikForm>
@@ -116,18 +98,12 @@ export const CustomIngestionStepBase = (
               formik={formik}
               scanConfigReadonly
               scanModeSelectItems={[INGESTION_SCAN_MODE]}
-              scanConfigSelectItems={scanConfigItems}
             />
 
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              targetTypeSelectItems={[
-                REPOSITORY_TARGET_TYPE,
-                INSTANCE_TARGET_TYPE,
-                CONTAINER_TARGET_TYPE,
-                CONFIGURATION_TARGET_TYPE
-              ]}
+              targetTypeSelectItems={[REPOSITORY_TARGET_TYPE]}
             />
 
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
@@ -146,4 +122,4 @@ export const CustomIngestionStepBase = (
   )
 }
 
-export const CustomIngestionStepBaseWithRef = React.forwardRef(CustomIngestionStepBase)
+export const CodeqlStepBaseWithRef = React.forwardRef(CodeqlStepBase)

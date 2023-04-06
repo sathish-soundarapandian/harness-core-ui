@@ -9199,9 +9199,11 @@ export interface StringsMap {
   'sto.stepDescription.Brakeman': string
   'sto.stepDescription.Burp': string
   'sto.stepDescription.Checkmarx': string
+  'sto.stepDescription.CodeQL': string
   'sto.stepDescription.CustomIngestion': string
   'sto.stepDescription.Fortify': string
   'sto.stepDescription.FortifyOnDemand': string
+  'sto.stepDescription.Gitleaks': string
   'sto.stepDescription.Grype': string
   'sto.stepDescription.Mend': string
   'sto.stepDescription.Metasploit': string

@@ -4,7 +4,9 @@ stepDescription:
   Blackduck: Use Black Duck to test for vulnerabilities.
   Brakeman: Use Brakeman to test for vulnerabilities.
   Burp: Use Burp to test for vulnerabilities.
+  CodeQL: Use CodeQL to test for vulnerabilities.
   Grype: Use Anchore Grype to test for vulnerabilities.
+  Gitleaks: Use Gitleaks to test for vulnerabilities.
   Snyk: Use Snyk to test for vulnerabilities.
   Sonarqube: Use Sonarqube to test for vulnerabilities.
   AquaTrivy: Use Aqua Trivy to test for vulnerabilities.

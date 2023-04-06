@@ -11,12 +11,14 @@ import { AquatrivyStep } from './AquatrivyStep/AquatrivyStep'
 import { BanditStep } from './BanditStep/BanditStep'
 import { BlackduckStep } from './Blackduck/BlackduckStep'
 import { GrypeStep } from './GrypeStep/GrypeStep'
+import { GitleaksStep } from './GitleaksStep/GitleaksStep'
 import { SnykStep } from './SnykStep/SnykStep'
 import { SonarqubeStep } from './SonarqubeStep/SonarqubeStep'
 import { ZapStep } from './ZapStep/ZapStep'
 import { PrismaCloudStep } from './PrismaCloudStep/PrismaCloudStep'
 import { CheckmarxStep } from './CheckmarxStep/CheckmarxStep'
 import { MendStep } from './MendStep/MendStep'
+import { CodeqlStep } from './CodeqlStep/CodeqlStep'
 import { CustomIngestionStep } from './CustomIngestionStep/CustomIngestionStep'
 import { AWSSecurityHubStep } from './AWSSecurityHubStep/AWSSecurityHubStep'
 import { AWSECRStep } from './AWSECRStep/AWSECRStep'
@@ -32,12 +34,14 @@ factory.registerStep(new AquatrivyStep())
 factory.registerStep(new BlackduckStep())
 factory.registerStep(new BanditStep())
 factory.registerStep(new GrypeStep())
+factory.registerStep(new GitleaksStep())
 factory.registerStep(new SnykStep())
 factory.registerStep(new SonarqubeStep())
 factory.registerStep(new ZapStep())
 factory.registerStep(new PrismaCloudStep())
 factory.registerStep(new CheckmarxStep())
 factory.registerStep(new MendStep())
+factory.registerStep(new CodeqlStep())
 factory.registerStep(new CustomIngestionStep())
 factory.registerStep(new AWSSecurityHubStep())
 factory.registerStep(new AWSECRStep())

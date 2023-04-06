@@ -15,44 +15,44 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
-import { CustomIngestionStepBaseWithRef } from './CustomIngestionStepBase'
+import { GitleaksStepBaseWithRef } from './GitleaksStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { CustomIngestionStepVariables, CustomIngestionStepVariablesProps } from './CustomIngestionStepVariables'
-import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './CustomIngestionStepFunctionConfigs'
+import { GitleaksStepVariables, GitleaksStepVariablesProps } from './GitleaksStepVariables'
+import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './GitleaksStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 
-export type CustomIngestionStepData = SecurityStepData<SecurityStepSpec>
-export interface CustomIngestionStepProps {
-  initialValues: CustomIngestionStepData
-  template?: CustomIngestionStepData
+export type GitleaksStepData = SecurityStepData<SecurityStepSpec>
+export interface GitleaksStepProps {
+  initialValues: GitleaksStepData
+  template?: GitleaksStepData
   path?: string
   isNewStep?: boolean
   readonly?: boolean
   stepViewType: StepViewType
-  onUpdate?: (data: CustomIngestionStepData) => void
-  onChange?: (data: CustomIngestionStepData) => void
+  onUpdate?: (data: GitleaksStepData) => void
+  onChange?: (data: GitleaksStepData) => void
   allowableTypes: AllowedTypes
   formik?: any
 }
 
-export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
+export class GitleaksStep extends PipelineStep<GitleaksStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.CustomIngest
-  protected stepName = 'Configure CustomIngestion'
-  protected stepIcon: IconName = 'custom-ingest'
-  protected stepDescription: keyof StringsMap = 'sto.stepDescription.CustomIngestion'
+  protected type = StepType.Gitleaks
+  protected stepName = 'Configure Gitleaks'
+  protected stepIcon: IconName = 'gitleaks'
+  protected stepDescription: keyof StringsMap = 'sto.stepDescription.Gitleaks'
   protected stepPaletteVisible = false
 
-  protected defaultValues: CustomIngestionStepData = {
+  protected defaultValues: GitleaksStepData = {
     identifier: '',
-    type: StepType.CustomIngest as string,
+    type: StepType.Gitleaks as string,
     spec: {
-      mode: 'ingestion',
+      mode: 'orchestration',
       config: 'default',
       target: {
         type: 'repository',
@@ -69,7 +69,7 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
   }
 
   /* istanbul ignore next */
-  processFormData(data: CustomIngestionStepData): CustomIngestionStepData {
+  processFormData(data: GitleaksStepData): GitleaksStepData {
     return getFormValuesInCorrectFormat(data, transformValuesFieldsConfig(data))
   }
 
@@ -78,7 +78,7 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<CustomIngestionStepData>): FormikErrors<CustomIngestionStepData> {
+  }: ValidateInputSetProps<GitleaksStepData>): FormikErrors<GitleaksStepData> {
     if (getString) {
       return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(data), { getString }, viewType)
     }
@@ -86,7 +86,7 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
     return {}
   }
 
-  renderStep(props: StepProps<CustomIngestionStepData>): JSX.Element {
+  renderStep(props: StepProps<GitleaksStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -115,8 +115,8 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
       )
     } else if (stepViewType === StepViewType.InputVariable) {
       return (
-        <CustomIngestionStepVariables
-          {...(customStepProps as CustomIngestionStepVariablesProps)}
+        <GitleaksStepVariables
+          {...(customStepProps as GitleaksStepVariablesProps)}
           initialValues={initialValues}
           onUpdate={onUpdate}
         />
@@ -124,7 +124,7 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
     }
 
     return (
-      <CustomIngestionStepBaseWithRef
+      <GitleaksStepBaseWithRef
         initialValues={initialValues}
         allowableTypes={allowableTypes}
         onChange={onChange}

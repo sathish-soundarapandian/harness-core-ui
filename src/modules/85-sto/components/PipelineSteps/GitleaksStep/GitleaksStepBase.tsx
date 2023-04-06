@@ -20,30 +20,14 @@ import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidate
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
 import { useGetPropagatedStageById } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
-import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './CustomIngestionStepFunctionConfigs'
-import type { CustomIngestionStepProps, CustomIngestionStepData } from './CustomIngestionStep'
+import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './GitleaksStepFunctionConfigs'
+import type { GitleaksStepProps, GitleaksStepData } from './GitleaksStep'
 import { AdditionalFields, SecurityIngestionFields, SecurityScanFields, SecurityTargetFields } from '../SecurityFields'
-import {
-  CONFIGURATION_TARGET_TYPE,
-  CONTAINER_TARGET_TYPE,
-  INGESTION_SCAN_MODE,
-  INSTANCE_TARGET_TYPE,
-  REPOSITORY_TARGET_TYPE,
-  CUSTOM_INGEST_DEFAULT_CONFIG,
-  CUSTOM_INGEST_SARIF_CONFIG
-} from '../constants'
+import { INGESTION_SCAN_MODE, ORCHESTRATION_SCAN_MODE, REPOSITORY_TARGET_TYPE } from '../constants'
 
-export const CustomIngestionStepBase = (
-  {
-    initialValues,
-    onUpdate,
-    isNewStep = true,
-    readonly,
-    stepViewType,
-    allowableTypes,
-    onChange
-  }: CustomIngestionStepProps,
-  formikRef: StepFormikFowardRef<CustomIngestionStepData>
+export const GitleaksStepBase = (
+  { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, allowableTypes, onChange }: GitleaksStepProps,
+  formikRef: StepFormikFowardRef<GitleaksStepData>
 ): JSX.Element => {
   const {
     state: {
@@ -55,7 +39,7 @@ export const CustomIngestionStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const valuesInCorrectFormat = getInitialValuesInCorrectFormat<CustomIngestionStepData, CustomIngestionStepData>(
+  const valuesInCorrectFormat = getInitialValuesInCorrectFormat<GitleaksStepData, GitleaksStepData>(
     initialValues,
     transformValuesFieldsConfig(initialValues),
     { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
@@ -64,9 +48,9 @@ export const CustomIngestionStepBase = (
   return (
     <Formik
       initialValues={valuesInCorrectFormat}
-      formName="CustomIngestionStep"
+      formName="GitleaksStep"
       validate={valuesToValidate => {
-        const schemaValues = getFormValuesInCorrectFormat<CustomIngestionStepData, CustomIngestionStepData>(
+        const schemaValues = getFormValuesInCorrectFormat<GitleaksStepData, GitleaksStepData>(
           valuesToValidate,
           transformValuesFieldsConfig(valuesToValidate)
         )
@@ -83,8 +67,8 @@ export const CustomIngestionStepBase = (
           stepViewType
         )
       }}
-      onSubmit={(_values: CustomIngestionStepData) => {
-        const schemaValues = getFormValuesInCorrectFormat<CustomIngestionStepData, CustomIngestionStepData>(
+      onSubmit={(_values: GitleaksStepData) => {
+        const schemaValues = getFormValuesInCorrectFormat<GitleaksStepData, GitleaksStepData>(
           _values,
           transformValuesFieldsConfig(_values)
         )
@@ -92,11 +76,9 @@ export const CustomIngestionStepBase = (
         onUpdate?.(schemaValues)
       }}
     >
-      {(formik: FormikProps<CustomIngestionStepData>) => {
+      {(formik: FormikProps<GitleaksStepData>) => {
         // This is required
         setFormikRef?.(formikRef, formik)
-
-        const scanConfigItems = [CUSTOM_INGEST_DEFAULT_CONFIG, CUSTOM_INGEST_SARIF_CONFIG]
 
         return (
           <FormikForm>
@@ -115,19 +97,13 @@ export const CustomIngestionStepBase = (
               allowableTypes={allowableTypes}
               formik={formik}
               scanConfigReadonly
-              scanModeSelectItems={[INGESTION_SCAN_MODE]}
-              scanConfigSelectItems={scanConfigItems}
+              scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, INGESTION_SCAN_MODE]}
             />
 
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              targetTypeSelectItems={[
-                REPOSITORY_TARGET_TYPE,
-                INSTANCE_TARGET_TYPE,
-                CONTAINER_TARGET_TYPE,
-                CONFIGURATION_TARGET_TYPE
-              ]}
+              targetTypeSelectItems={[REPOSITORY_TARGET_TYPE]}
             />
 
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
@@ -146,4 +122,4 @@ export const CustomIngestionStepBase = (
   )
 }
 
-export const CustomIngestionStepBaseWithRef = React.forwardRef(CustomIngestionStepBase)
+export const GitleaksStepBaseWithRef = React.forwardRef(GitleaksStepBase)

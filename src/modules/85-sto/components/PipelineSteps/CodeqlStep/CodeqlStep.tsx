@@ -15,42 +15,42 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
-import { CustomIngestionStepBaseWithRef } from './CustomIngestionStepBase'
+import { CodeqlStepBaseWithRef } from './CodeqlStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { CustomIngestionStepVariables, CustomIngestionStepVariablesProps } from './CustomIngestionStepVariables'
-import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './CustomIngestionStepFunctionConfigs'
+import { CodeqlStepVariables, CodeqlStepVariablesProps } from './CodeqlStepVariables'
+import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './CodeqlStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 
-export type CustomIngestionStepData = SecurityStepData<SecurityStepSpec>
-export interface CustomIngestionStepProps {
-  initialValues: CustomIngestionStepData
-  template?: CustomIngestionStepData
+export type CodeqlStepData = SecurityStepData<SecurityStepSpec>
+export interface CodeqlStepProps {
+  initialValues: CodeqlStepData
+  template?: CodeqlStepData
   path?: string
   isNewStep?: boolean
   readonly?: boolean
   stepViewType: StepViewType
-  onUpdate?: (data: CustomIngestionStepData) => void
-  onChange?: (data: CustomIngestionStepData) => void
+  onUpdate?: (data: CodeqlStepData) => void
+  onChange?: (data: CodeqlStepData) => void
   allowableTypes: AllowedTypes
   formik?: any
 }
 
-export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
+export class CodeqlStep extends PipelineStep<CodeqlStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.CustomIngest
-  protected stepName = 'Configure CustomIngestion'
-  protected stepIcon: IconName = 'custom-ingest'
-  protected stepDescription: keyof StringsMap = 'sto.stepDescription.CustomIngestion'
+  protected type = StepType.CodeQL
+  protected stepName = 'Configure Codeql'
+  protected stepIcon: IconName = 'github'
+  protected stepDescription: keyof StringsMap = 'sto.stepDescription.CodeQL'
   protected stepPaletteVisible = false
 
-  protected defaultValues: CustomIngestionStepData = {
+  protected defaultValues: CodeqlStepData = {
     identifier: '',
-    type: StepType.CustomIngest as string,
+    type: StepType.CodeQL as string,
     spec: {
       mode: 'ingestion',
       config: 'default',
@@ -69,7 +69,7 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
   }
 
   /* istanbul ignore next */
-  processFormData(data: CustomIngestionStepData): CustomIngestionStepData {
+  processFormData(data: CodeqlStepData): CodeqlStepData {
     return getFormValuesInCorrectFormat(data, transformValuesFieldsConfig(data))
   }
 
@@ -78,7 +78,7 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<CustomIngestionStepData>): FormikErrors<CustomIngestionStepData> {
+  }: ValidateInputSetProps<CodeqlStepData>): FormikErrors<CodeqlStepData> {
     if (getString) {
       return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(data), { getString }, viewType)
     }
@@ -86,7 +86,7 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
     return {}
   }
 
-  renderStep(props: StepProps<CustomIngestionStepData>): JSX.Element {
+  renderStep(props: StepProps<CodeqlStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -115,8 +115,8 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
       )
     } else if (stepViewType === StepViewType.InputVariable) {
       return (
-        <CustomIngestionStepVariables
-          {...(customStepProps as CustomIngestionStepVariablesProps)}
+        <CodeqlStepVariables
+          {...(customStepProps as CodeqlStepVariablesProps)}
           initialValues={initialValues}
           onUpdate={onUpdate}
         />
@@ -124,7 +124,7 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
     }
 
     return (
-      <CustomIngestionStepBaseWithRef
+      <CodeqlStepBaseWithRef
         initialValues={initialValues}
         allowableTypes={allowableTypes}
         onChange={onChange}

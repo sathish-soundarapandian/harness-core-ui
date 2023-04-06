@@ -86,6 +86,16 @@ export const API_VERSION_4_2_0 = {
   label: '4.2.0'
 }
 
+export const CUSTOM_INGEST_DEFAULT_CONFIG = {
+  value: 'default',
+  label: 'Default'
+}
+
+export const CUSTOM_INGEST_SARIF_CONFIG = {
+  value: 'sarif',
+  label: 'SARIF'
+}
+
 export const ZAP_STANDARD_CONFIG = {
   value: 'standard',
   label: 'Standard'
