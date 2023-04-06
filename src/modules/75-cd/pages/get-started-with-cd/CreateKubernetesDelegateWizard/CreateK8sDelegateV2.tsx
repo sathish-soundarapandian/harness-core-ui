@@ -30,7 +30,7 @@ import HelmChartCommands from '@delegates/pages/delegates/delegateCommandLineCre
 import VerifyDelegateConnection from '@delegates/pages/delegates/delegateCommandLineCreation/components/VerifyDelegateConnection'
 import { delegateNameRegex } from '@delegates/components/CreateDelegate/DockerDelegate/Step1Setup/Step1Setup'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
-import type { DelegateSuccessHandler } from '../CDOnboardingUtils'
+import { DelegateSuccessHandler, DeploymentType } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import css from './CreateK8sDelegate.module.scss'
 export interface CreateK8sDelegateProps {
@@ -191,7 +191,9 @@ export const CreateK8sDelegateV2 = ({
                   variation={ButtonVariation.SECONDARY}
                   text={getString('verify')}
                   onClick={() => {
-                    trackEvent(CDOnboardingActions.StartOnboardingDelegateCreation, {})
+                    trackEvent(CDOnboardingActions.StartOnboardingDelegateCreation, {
+                      deployment_type: DeploymentType.K8s
+                    })
                     onSuccessHandler({
                       delegateCreated: true,
                       delegateInstalled: false

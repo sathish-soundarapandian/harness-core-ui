@@ -36,6 +36,7 @@ import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/CreateDocker
 import {
   cleanEnvironmentDataUtil,
   DelegateSuccessHandler,
+  DeploymentType,
   EnvironmentEntities,
   getUniqueEntityIdentifier,
   newDelegateState,
@@ -139,7 +140,8 @@ const DelegateSelectorWizardRef = (
   }, [disableBtn])
 
   const isHelpPanelVisible = (): void => {
-    !helpPanelVisible && trackEvent(CDOnboardingActions.PreviewHelpAndTroubleshooting, {})
+    !helpPanelVisible &&
+      trackEvent(CDOnboardingActions.PreviewHelpAndTroubleshooting, { deployment_type: DeploymentType.K8s })
     setHelpPanelVisible(!helpPanelVisible)
   }
 
@@ -310,7 +312,10 @@ const DelegateSelectorWizardRef = (
         })
         saveInfrastructureData(updatedContextInfra)
         saveDelegateData(updatedContextDelegate)
-        trackEvent(CDOnboardingActions.EnvironmentEntitiesCreation, envEntites)
+        trackEvent(CDOnboardingActions.EnvironmentEntitiesCreation, {
+          ...envEntites,
+          deployment_type: DeploymentType.K8s
+        })
         enableNextBtn()
         return Promise.resolve()
       } else {

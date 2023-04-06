@@ -145,8 +145,8 @@ const SelectGitProviderRef = (
           createConnector(
             set(
               getOAuthConnectorPayload({
-                tokenRef: ACCOUNT_SCOPE_PREFIX.concat(tokenRef),
-                refreshTokenRef: refreshTokenRef ? ACCOUNT_SCOPE_PREFIX.concat(refreshTokenRef) : '',
+                tokenRef: tokenRef,
+                refreshTokenRef: refreshTokenRef ? refreshTokenRef : '',
                 gitProviderType: selectedGitProvider.type as ConnectorInfoDTO['type']
               }),
               'connector.spec.url',
@@ -384,16 +384,11 @@ const SelectGitProviderRef = (
         case Connectors.GITLAB:
         case Connectors.GITHUB:
           updatedConnectorPayload = set(commonConnectorPayload, 'spec.authentication.spec.type', 'UsernameToken')
-          updatedConnectorPayload = set(
-            updatedConnectorPayload,
-            'spec.authentication.spec.spec.tokenRef',
-            `${ACCOUNT_SCOPE_PREFIX}${secretId}`
-          )
-          updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.type', 'Token')
           updatedConnectorPayload = set(updatedConnectorPayload, 'spec.authentication.spec.spec', {
-            username: formikRef.current?.values?.username,
+            username: formikRef.current?.values?.username || 'oauth2',
             tokenRef: `${ACCOUNT_SCOPE_PREFIX}${secretId}`
           })
+          updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.type', 'Token')
           updatedConnectorPayload = set(
             updatedConnectorPayload,
             'spec.apiAccess.spec.tokenRef',

@@ -48,7 +48,13 @@ import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { AuthTypeForm, CREDENTIALS_TYPE } from './AuthTypeForm'
 import InfoContainer from '../InfoContainer/InfoContainer'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import { APIError, ClusterInterface, getFullAgentWithScope, SUBMIT_HANDLER_MAP_FOR_CLUSTER } from '../CDOnboardingUtils'
+import {
+  APIError,
+  ClusterInterface,
+  DeploymentType,
+  getFullAgentWithScope,
+  SUBMIT_HANDLER_MAP_FOR_CLUSTER
+} from '../CDOnboardingUtils'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 import moduleCss from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
@@ -87,7 +93,10 @@ export const DestinationStep = (props: any) => {
   const { accountId } = useParams<ProjectPathProps>()
 
   useEffect(() => {
-    trackEvent(CDOnboardingActions.SelectClusterTypeDefault, { selectedClusterType: clustersTypes[0].label })
+    trackEvent(CDOnboardingActions.SelectClusterTypeDefault, {
+      selectedClusterType: clustersTypes[0].label,
+      deployment_type: DeploymentType.GitOps
+    })
   }, [])
 
   const { mutate, error } = useAgentClusterServiceCreate({
@@ -346,7 +355,7 @@ export const DestinationStep = (props: any) => {
               style={{ marginTop: '20px', width: '250px' }}
               minimal
               onClick={() => {
-                trackEvent(CDOnboardingActions.ConnectToClusterClicked, {})
+                trackEvent(CDOnboardingActions.ConnectToClusterClicked, { deployment_type: DeploymentType.GitOps })
                 setTestConnectionStatus(TestStatus.IN_PROGRESS)
                 createHostedCluster()
                   .then(response => {
@@ -355,7 +364,9 @@ export const DestinationStep = (props: any) => {
                       setSelectedCluster(response)
                       saveClusterData({ ...data, ...response?.cluster, identifier: response?.identifier })
                       setTestConnectionStatus(TestStatus.SUCCESS)
-                      trackEvent(CDOnboardingActions.ClusterCreatedSuccessfully, {})
+                      trackEvent(CDOnboardingActions.ClusterCreatedSuccessfully, {
+                        deployment_type: DeploymentType.GitOps
+                      })
                     } else {
                       setTestConnectionStatus(TestStatus.FAILED)
                       setTestConnectionErrors([
@@ -364,13 +375,13 @@ export const DestinationStep = (props: any) => {
                           message: (response as any)?.message
                         }
                       ])
-                      trackEvent(CDOnboardingActions.ClusterCreateFailure, {})
+                      trackEvent(CDOnboardingActions.ClusterCreateFailure, { deployment_type: DeploymentType.GitOps })
                     }
                   })
                   .catch(err => {
                     setTestConnectionStatus(TestStatus.FAILED)
                     setTestConnectionErrors((err?.data as any)?.responseMessages)
-                    trackEvent(CDOnboardingActions.ClusterCreateFailure, {})
+                    trackEvent(CDOnboardingActions.ClusterCreateFailure, { deployment_type: DeploymentType.GitOps })
                   })
               }}
             >
@@ -484,7 +495,10 @@ export const DestinationStep = (props: any) => {
                   onChange={item => {
                     setTestConnectionStatus(TestStatus.NOT_INITIATED)
                     formikProps.setFieldValue('clusterType', item.value)
-                    trackEvent(CDOnboardingActions.SelectClusterType, { selectedClusterType: item.label })
+                    trackEvent(CDOnboardingActions.SelectClusterType, {
+                      selectedClusterType: item.label,
+                      deployment_type: DeploymentType.GitOps
+                    })
                   }}
                 />
               </Container>

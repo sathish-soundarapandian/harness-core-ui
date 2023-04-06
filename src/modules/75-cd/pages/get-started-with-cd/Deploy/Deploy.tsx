@@ -25,6 +25,7 @@ import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import successSetup from '../../home/images/success_setup.svg'
 import {
+  DeploymentType,
   getApplicationPayloadForSync,
   getAppPayload,
   getFullAgentWithScope,
@@ -88,7 +89,7 @@ export const Deploy = ({ onBack, setSelectedSectionId, appDetails }: DeployProps
       isPLG: true
     }
 
-    trackEvent(CDOnboardingActions.CreateAndSyncAppClicked, {})
+    trackEvent(CDOnboardingActions.CreateAndSyncAppClicked, { deployment_type: DeploymentType.GitOps })
     createApplication(data, {
       queryParams: {
         clusterIdentifier: `account.${clusterData?.identifier}`,
@@ -107,7 +108,7 @@ export const Deploy = ({ onBack, setSelectedSectionId, appDetails }: DeployProps
           undefined
         )
         saveApplicationData(applicationResponse)
-        trackEvent(CDOnboardingActions.AppCreatedSuccessfully, {})
+        trackEvent(CDOnboardingActions.AppCreatedSuccessfully, { deployment_type: DeploymentType.GitOps })
         const sortedResources = new Map(
           sortBy(
             applicationResponse?.app?.status?.resources || [],
@@ -127,7 +128,7 @@ export const Deploy = ({ onBack, setSelectedSectionId, appDetails }: DeployProps
         }).then(() => {
           if (!syncError) {
             toast.showSuccess(getString('cd.getStartedWithCD.syncCompleteMessage'))
-            trackEvent(CDOnboardingActions.AppSyncedSuccessfully, {})
+            trackEvent(CDOnboardingActions.AppSyncedSuccessfully, { deployment_type: DeploymentType.GitOps })
           }
           history.push(
             routes.toGitOpsApplication({
@@ -143,7 +144,7 @@ export const Deploy = ({ onBack, setSelectedSectionId, appDetails }: DeployProps
       })
       .catch(err => {
         toast.showError(err?.data?.message || err?.message)
-        trackEvent(CDOnboardingActions.AppCreateOrSyncFailure, {})
+        trackEvent(CDOnboardingActions.AppCreateOrSyncFailure, { deployment_type: DeploymentType.GitOps })
       })
   }
 

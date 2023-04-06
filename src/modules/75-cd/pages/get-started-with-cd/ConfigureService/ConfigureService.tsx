@@ -67,6 +67,7 @@ import {
   cleanServiceDataUtil,
   CustomType,
   defaultManifestConfig,
+  DeploymentType,
   getUniqueEntityIdentifier,
   newServiceState,
   ONBOARDING_PREFIX,
@@ -259,7 +260,7 @@ const ConfigureServiceRef = (
         set(draft, 'serviceDefinition.spec.manifests[0]', manifestConfig)
         manifestType === 'K8sManifest' ? unset(draft, helmVersionPath) : set(draft, helmVersionPath, 'V2')
         // omit artifactConfig if artifact to deploy is no
-        formikRef.current?.values?.artifactToDeploy === BinaryValue.YES
+        formikRef.current?.values?.artifactToDeploy !== BinaryValue.YES
           ? set(draft, 'serviceDefinition.spec.artifacts', updatedArtifactObj)
           : unset(draft, 'serviceDefinition.spec.artifacts')
         set(draft, 'identifier', defaultTo(serviceIdentifier, serviceRefIdentifier))
@@ -379,7 +380,7 @@ const ConfigureServiceRef = (
     ) {
       setIsServiceStepComplete(false)
       formikRef?.current?.setFieldValue('manifestStoreType', Connectors.GITHUB)
-      trackEvent(CDOnboardingActions.SelectManifestType, { manifestType: type })
+      trackEvent(CDOnboardingActions.SelectManifestType, { manifestType: type, deployment_type: DeploymentType.K8s })
       formikRef?.current?.setFieldValue('artifactType', ENABLED_ARTIFACT_TYPES.DockerRegistry)
     }
   }
@@ -416,7 +417,7 @@ const ConfigureServiceRef = (
 
   const onManifestStoreSelection = (type: ManifestStores | ConnectorInfoDTO['type']): void => {
     formikRef?.current?.setFieldValue('manifestStoreType', type)
-    trackEvent(CDOnboardingActions.SelectManifestStore, { manifestStore: type })
+    trackEvent(CDOnboardingActions.SelectManifestStore, { manifestStore: type, deployment_type: DeploymentType.K8s })
     // reset connector details, artifact details
     setIsServiceStepComplete(false)
     setManifestStepStatus(DefaultManifestStepStatus)
@@ -563,6 +564,12 @@ const ConfigureServiceRef = (
   const getValidConnectorRef = (): string =>
     get(serviceData, 'data.connectorRef.identifier') ||
     `${selectGitProviderRef.current?.values?.gitProvider?.type}_${ONBOARDING_PREFIX}`
+
+  useEffect(() => {
+    if (formikRef?.current?.values?.manifestStoreType !== ManifestStoreMap.Harness) {
+      setIsServiceStepComplete(manifestStepStatus.get('ManifestDetails') !== StepStatus.ToDo)
+    }
+  }, [manifestStepStatus])
 
   return createLoading ? (
     <ContainerSpinner />
