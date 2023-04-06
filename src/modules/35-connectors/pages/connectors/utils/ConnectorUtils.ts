@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { pick, isString, get } from 'lodash-es'
-import type { IconName, StepProps } from '@harness/uicore'
+import { pick, isString, get, defaultTo } from 'lodash-es'
+import type { IconName, StepProps, SelectOption } from '@harness/uicore'
 
 import type {
   ConnectorInfoDTO,
@@ -27,9 +27,11 @@ import type {
   ErrorTrackingConnectorDTO,
   ELKConnectorDTO,
   TasConnector,
-  TerraformCloudConnector
+  TerraformCloudConnector,
+  AzureKeyVaultMetadataRequestSpecDTO,
+  SecretManagerMetadataRequestDTO
 } from 'services/cd-ng'
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { ConnectivityModeType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
@@ -61,9 +63,48 @@ export enum AzureManagedIdentityTypes {
   SYSTEM_MANAGED = 'SystemAssignedManagedIdentity'
 }
 
+export enum AzureEnvironments {
+  AZURE_GLOBAL = 'AZURE',
+  US_GOVERNMENT = 'AZURE_US_GOVERNMENT'
+}
+
+export const getAzureEnvironmentOptions = (getString: UseStringsReturn['getString']): SelectOption[] => {
+  return [
+    { label: getString('connectors.azure.environments.azureGlobal'), value: AzureEnvironments.AZURE_GLOBAL },
+    { label: getString('connectors.azure.environments.usGov'), value: AzureEnvironments.US_GOVERNMENT }
+  ]
+}
+
+export const getAzureManagedIdentityOptions = (getString: UseStringsReturn['getString']): SelectOption[] => {
+  return [
+    {
+      label: getString('connectors.azure.managedIdentities.systemAssigned'),
+      value: AzureManagedIdentityTypes.SYSTEM_MANAGED
+    },
+    {
+      label: getString('connectors.azure.managedIdentities.userAssigned'),
+      value: AzureManagedIdentityTypes.USER_MANAGED
+    }
+  ]
+}
+
 export const GCP_AUTH_TYPE = {
   DELEGATE: 'delegate',
   ENCRYPTED_KEY: 'encryptedKey'
+}
+
+export const getDelegateCards = (getString: UseStringsReturn['getString']): DelegateCardInterface[] => {
+  const delegateCards = [
+    {
+      type: DelegateTypes.DELEGATE_OUT_CLUSTER,
+      info: getString('connectors.GCP.delegateOutClusterInfo')
+    },
+    {
+      type: DelegateTypes.DELEGATE_IN_CLUSTER,
+      info: getString('connectors.azure.delegateInClusterInfo')
+    }
+  ]
+  return delegateCards
 }
 
 export const DelegateInClusterType = {
@@ -1824,13 +1865,69 @@ interface BuildAzureKeyVaultPayloadReturnType {
   }
 }
 
+export const buildAzureKeyVaultMetadataPayload = (
+  formData: FormData,
+  connectorInfo: ConnectorInfoDTO | void
+): SecretManagerMetadataRequestDTO => {
+  const delegateType = formData?.delegateType
+  const isDelegateOutCluster = delegateType === DelegateTypes.DELEGATE_OUT_CLUSTERR
+  const isDelegateInCluster = delegateType === DelegateTypes.DELEGATE_IN_CLUSTER
+  const delegateOutClusterFields = isDelegateOutCluster
+    ? {
+        secretKey: (connectorInfo as any)?.spec?.secretKey || formData.secretKey?.referenceString,
+        clientId: formData.clientId?.trim()
+      }
+    : {}
+  const delegateInClusterFields = isDelegateInCluster
+    ? {
+        useManagedIdentity: true,
+        azureManagedIdentityType: formData.managedIdentity,
+        managedClientId:
+          formData.managedIdentity === AzureManagedIdentityTypes.USER_MANAGED ? formData.clientId : undefined,
+        azureEnvironmentType: formData.azureEnvironmentType
+      }
+    : {}
+  return {
+    identifier: formData.identifier,
+    encryptionType: 'AZURE_VAULT',
+    orgIdentifier: formData.orgIdentifier,
+    projectIdentifier: formData.projectIdentifier,
+    spec: {
+      tenantId: formData.tenantId?.trim(),
+      subscription: formData.subscription?.trim(),
+      delegateSelectors: formData.delegateSelectors,
+      ...delegateOutClusterFields,
+      ...delegateInClusterFields
+    } as AzureKeyVaultMetadataRequestSpecDTO
+  }
+}
+
 export const buildAzureKeyVaultPayload = (formData: FormData): BuildAzureKeyVaultPayloadReturnType => {
+  const delegateType = formData?.delegateType
+  const isDelegateOutCluster = delegateType === DelegateTypes.DELEGATE_OUT_CLUSTERR
+  const isDelegateInCluster = delegateType === DelegateTypes.DELEGATE_IN_CLUSTER
+  const delegateOutClusterFields = isDelegateOutCluster
+    ? {
+        secretKey: formData.secretKey?.referenceString,
+        clientId: formData.clientId
+      }
+    : {}
+  const delegateInClusterFields = isDelegateInCluster
+    ? {
+        useManagedIdentity: true,
+        azureManagedIdentityType: formData.managedIdentity,
+        managedClientId:
+          formData.managedIdentity === AzureManagedIdentityTypes.USER_MANAGED ? formData.clientId : undefined,
+        azureEnvironmentType: formData.azureEnvironmentType
+      }
+    : {}
   const savedData = {
     ...pick(formData, ['name', 'description', 'projectIdentifier', 'identifier', 'orgIdentifier', 'tags']),
     type: Connectors.AZURE_KEY_VAULT,
     spec: {
-      ...pick(formData, ['clientId', 'tenantId', 'default', 'subscription', 'vaultName', 'delegateSelectors']),
-      secretKey: formData.secretKey?.referenceString
+      ...pick(formData, ['tenantId', 'default', 'subscription', 'vaultName', 'delegateSelectors']),
+      ...delegateOutClusterFields,
+      ...delegateInClusterFields
     }
   }
 
@@ -2331,12 +2428,26 @@ export const setupAzureKeyVaultFormData = async (
     orgIdentifier: connectorInfo.orgIdentifier
   }
   const secretKey = await setSecretField(connectorInfoSpec?.secretKey, scopeQueryParams)
+  const useManagedIdentity = connectorInfoSpec?.useManagedIdentity
+  const delegateInClusterFields = useManagedIdentity
+    ? {
+        delegateType: DelegateTypes.DELEGATE_IN_CLUSTER,
+        managedIdentity: connectorInfoSpec?.azureManagedIdentityType || undefined,
+        clientId:
+          connectorInfoSpec?.azureManagedIdentityType === AzureManagedIdentityTypes.USER_MANAGED
+            ? defaultTo(connectorInfoSpec?.managedClientId, undefined)
+            : undefined,
+        azureEnvironmentType: connectorInfoSpec?.azureEnvironmentType || undefined
+      }
+    : {}
   return {
     clientId: connectorInfoSpec?.clientId || undefined,
     secretKey: secretKey || undefined,
     tenantId: connectorInfoSpec?.tenantId || undefined,
     subscription: connectorInfoSpec?.subscription || undefined,
-    default: connectorInfoSpec?.default || false
+    default: connectorInfoSpec?.default || false,
+    delegateType: DelegateTypes.DELEGATE_OUT_CLUSTER,
+    ...delegateInClusterFields
   }
 }
 

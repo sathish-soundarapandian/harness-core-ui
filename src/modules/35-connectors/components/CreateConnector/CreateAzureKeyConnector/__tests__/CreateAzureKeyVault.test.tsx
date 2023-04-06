@@ -8,6 +8,7 @@
 import React, { useEffect, useMemo } from 'react'
 import { noop } from 'lodash-es'
 import { render, fireEvent, findByText, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { clickSubmit, fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
@@ -149,7 +150,7 @@ jest.mock('services/cd-ng', () => ({
 
 describe('Create Secret Manager Wizard', () => {
   test('should be able to render first step form', async () => {
-    const { container, getByText, getAllByText } = render(
+    const { container, getByText, getAllByText, findAllByText } = render(
       <TestWrapper path={routes.toConnectors({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
         <CreateAzureKeyVaultConnector {...commonProps} isEditMode={false} connectorInfo={undefined} />
       </TestWrapper>
@@ -172,7 +173,17 @@ describe('Create Secret Manager Wizard', () => {
     })
 
     // Step 2
-    expect(getAllByText('common.clientId')[0]).toBeTruthy()
+    const delegateOutClusterCard = container.querySelector('input[value="ManualConfig"]')
+    const delegateInClusterCard = container.querySelector('input[value="InheritFromDelegate"]')
+    expect(delegateOutClusterCard!).toBeInTheDocument()
+    expect(delegateInClusterCard!).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(delegateOutClusterCard!)
+    })
+    expect(delegateInClusterCard!).not.toBeInTheDocument()
+
+    const clientIds = await findAllByText('common.clientId')
+    expect(clientIds[0]).toBeTruthy()
 
     fillAtForm([
       {
@@ -227,6 +238,73 @@ describe('Create Secret Manager Wizard', () => {
     expect(container).toMatchSnapshot()
   })
 
+  test('should be able to render delegate_in_cluster and go to next step', async () => {
+    const { container, getByText, getAllByText } = render(
+      <TestWrapper path={routes.toConnectors({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
+        <CreateAzureKeyVaultConnector {...commonProps} isEditMode={false} connectorInfo={undefined} />
+      </TestWrapper>
+    )
+
+    // Step 1
+    fillAtForm([
+      {
+        container,
+        type: InputTypes.TEXTFIELD,
+        fieldId: 'name',
+        value: 'dummy name'
+      }
+    ])
+
+    expect(container).toMatchSnapshot()
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    // Step 2
+    const delegateOutClusterCard = container.querySelector('input[value="ManualConfig"]')
+    const delegateInClusterCard = container.querySelector('input[value="InheritFromDelegate"]')
+    expect(delegateOutClusterCard!).toBeInTheDocument()
+    expect(delegateInClusterCard!).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(delegateInClusterCard!)
+    })
+    expect(delegateOutClusterCard!).not.toBeInTheDocument()
+
+    const authenticationDropdown = container.querySelector('input[name="managedIdentity"]')
+    await userEvent.click(authenticationDropdown!)
+
+    const userAssignedManagedIdentity = getByText('connectors.azure.managedIdentities.userAssigned')
+    await userEvent.click(userAssignedManagedIdentity!)
+
+    fillAtForm([
+      {
+        container,
+        type: InputTypes.TEXTFIELD,
+        fieldId: 'subscription',
+        value: 'dummy subscription'
+      },
+      {
+        container,
+        type: InputTypes.TEXTFIELD,
+        fieldId: 'clientId',
+        value: 'dummy clientId'
+      }
+    ])
+
+    await userEvent.click(authenticationDropdown!)
+    const systemAssignedManagedIdentity = getByText('connectors.azure.managedIdentities.systemAssigned')
+    await userEvent.click(systemAssignedManagedIdentity!)
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    // Step 3
+    expect(getAllByText('delegate.DelegateselectionLabel')[1]).toBeTruthy()
+    expect(container).toMatchSnapshot()
+  })
+
   test('edit connector', async () => {
     const { container, getAllByText } = render(
       <TestWrapper path={routes.toConnectors({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
@@ -273,7 +351,7 @@ describe('Create Secret Manager Wizard', () => {
 
   test('when vault data fetching fails', async () => {
     vaultError = 'error message'
-    const { container, getByText, getAllByText } = render(
+    const { container, getByText, getAllByText, findAllByText } = render(
       <TestWrapper path={routes.toConnectors({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
         <CreateAzureKeyVaultConnector {...commonProps} isEditMode={false} connectorInfo={undefined} />
       </TestWrapper>
@@ -294,7 +372,17 @@ describe('Create Secret Manager Wizard', () => {
     })
 
     // Step 2
-    expect(getAllByText('common.clientId')[0]).toBeTruthy()
+    const delegateOutClusterCard = container.querySelector('input[value="ManualConfig"]')
+    const delegateInClusterCard = container.querySelector('input[value="InheritFromDelegate"]')
+    expect(delegateOutClusterCard!).toBeInTheDocument()
+    expect(delegateInClusterCard!).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(delegateOutClusterCard!)
+    })
+    expect(delegateInClusterCard!).not.toBeInTheDocument()
+
+    const clientIds = await findAllByText('common.clientId')
+    expect(clientIds[0]).toBeTruthy()
 
     fillAtForm([
       {

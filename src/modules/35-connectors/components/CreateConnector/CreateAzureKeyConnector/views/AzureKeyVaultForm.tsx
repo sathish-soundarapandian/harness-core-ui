@@ -7,18 +7,36 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
-import { StepProps, Container, Text, Formik, FormikForm, Layout, Button, ButtonVariation } from '@harness/uicore'
+
+import {
+  StepProps,
+  Container,
+  Text,
+  Formik,
+  FormikForm,
+  Layout,
+  Button,
+  ButtonVariation,
+  ThumbnailSelect
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { AzureKeyVaultConnectorDTO } from 'services/cd-ng'
 import { PageSpinner } from '@common/components'
-import { setupAzureKeyVaultFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import {
+  setupAzureKeyVaultFormData,
+  getDelegateCards,
+  AzureManagedIdentityTypes,
+  AzureEnvironments
+} from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import type { StepDetailsProps, ConnectorDetailsProps } from '@connectors/interfaces/ConnectorInterface'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import AzureKeyVaultFormFields from './AzureKeyVaultFormFields'
+import AzureKeyVaultFormFieldsForDelegateInCluster from './AzureKeyVaultFormFieldsForDelegateInCluster'
 import css from '../CreateAzureKeyVaultConnector.module.scss'
 
 export interface AzureKeyVaultFormData {
@@ -27,25 +45,37 @@ export interface AzureKeyVaultFormData {
   tenantId?: string
   subscription?: string
   default?: boolean
+  delegateType?: string
+  managedIdentity?: string
+  azureEnvironmentType?: string
 }
 
 const AzureKeyVaultForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> = props => {
   const { prevStepData, previousStep, isEditMode, nextStep, connectorInfo, accountId } = props
   const { getString } = useStrings()
 
+  const DelegateCards = getDelegateCards(getString)
+
+  const requiredString = 'common.validation.fieldIsRequired'
+
   const defaultInitialFormData: AzureKeyVaultFormData = {
     clientId: undefined,
     tenantId: undefined,
     subscription: undefined,
     secretKey: undefined,
-    default: false
+    default: false,
+    delegateType: undefined,
+    managedIdentity: AzureManagedIdentityTypes.SYSTEM_MANAGED,
+    azureEnvironmentType: AzureEnvironments.AZURE_GLOBAL
   }
 
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingFormData, setLoadingFormData] = useState(isEditMode)
+
   useConnectorWizard({
-    helpPanel: { referenceId: 'AzureKeyVaultDetails', contentWidth: 900 }
+    helpPanel: { referenceId: 'AzureKeyVaultDetails', contentWidth: 1180 }
   })
+
   React.useEffect(() => {
     if (isEditMode && connectorInfo) {
       setupAzureKeyVaultFormData(connectorInfo, accountId).then(data => {
@@ -62,7 +92,7 @@ const AzureKeyVaultForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetails
   })
 
   return (
-    <Container padding={{ top: 'medium' }}>
+    <Layout.Vertical spacing="medium" className={css.step}>
       <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xlarge' }}>
         {getString('details')}
       </Text>
@@ -71,12 +101,49 @@ const AzureKeyVaultForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetails
         enableReinitialize
         initialValues={{ ...initialValues, ...prevStepData }}
         validationSchema={Yup.object().shape({
-          clientId: Yup.string().required(getString('common.validation.clientIdIsRequired')),
-          tenantId: Yup.string().required(getString('connectors.azureKeyVault.validation.tenantId')),
+          clientId: Yup.string()
+            .when('delegateType', {
+              is: DelegateTypes.DELEGATE_OUT_CLUSTER,
+              then: Yup.string().required(getString('common.validation.clientIdIsRequired'))
+            })
+            .when(['delegateType', 'managedIdentity'], {
+              is: (delegateType, managedIdentity) => {
+                return (
+                  delegateType === DelegateTypes.DELEGATE_IN_CLUSTER &&
+                  managedIdentity === AzureManagedIdentityTypes.USER_MANAGED
+                )
+              },
+              then: Yup.string().required(getString('common.validation.clientIdIsRequired'))
+            }),
+          tenantId: Yup.string().when('delegateType', {
+            is: DelegateTypes.DELEGATE_OUT_CLUSTER,
+            then: Yup.string().required(getString('connectors.azureKeyVault.validation.tenantId'))
+          }),
           subscription: Yup.string().required(getString('connectors.azureKeyVault.validation.subscription')),
-          secretKey: Yup.string().when('vaultName', {
-            is: () => !(prevStepData?.spec as AzureKeyVaultConnectorDTO)?.vaultName,
+          secretKey: Yup.string().when(['delegateType', 'vaultName'], {
+            is: delegateType => {
+              return (
+                delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER &&
+                !(prevStepData?.spec as AzureKeyVaultConnectorDTO)?.vaultName
+              )
+            },
             then: Yup.string().trim().required(getString('common.validation.keyIsRequired'))
+          }),
+          azureEnvironmentType: Yup.string().when('delegateType', {
+            is: DelegateTypes.DELEGATE_IN_CLUSTER,
+            then: Yup.string().required(
+              getString(requiredString, {
+                name: getString('environment')
+              })
+            )
+          }),
+          managedIdentity: Yup.string().when('delegateType', {
+            is: DelegateTypes.DELEGATE_IN_CLUSTER,
+            then: Yup.string().required(
+              getString(requiredString, {
+                name: getString('connectors.azure.managedIdentity')
+              })
+            )
           })
         })}
         onSubmit={formData => {
@@ -86,29 +153,45 @@ const AzureKeyVaultForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetails
           nextStep?.({ ...connectorInfo, ...prevStepData, ...formData } as StepDetailsProps)
         }}
       >
-        <FormikForm>
-          <Container className={css.formHeight} margin={{ top: 'medium', bottom: 'xxlarge' }}>
-            <AzureKeyVaultFormFields />
-          </Container>
-          <Layout.Horizontal spacing="medium">
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              icon="chevron-left"
-              text={getString('back')}
-              onClick={() => previousStep?.(prevStepData)}
-            />
-            <Button
-              type="submit"
-              intent="primary"
-              rightIcon="chevron-right"
-              text={getString('continue')}
-              disabled={loadingFormData}
-            />
-          </Layout.Horizontal>
-        </FormikForm>
+        {formikProps => {
+          return (
+            <FormikForm>
+              <Container className={css.wrapper} margin={{ top: 'medium', bottom: 'xxlarge' }}>
+                <ThumbnailSelect
+                  items={DelegateCards.map(card => ({ label: card.info, value: card.type }))}
+                  name="delegateType"
+                  size="large"
+                />
+                <Container className={css.formElm}>
+                  {DelegateTypes.DELEGATE_OUT_CLUSTER === formikProps.values.delegateType ? (
+                    <AzureKeyVaultFormFields />
+                  ) : null}
+                  {DelegateTypes.DELEGATE_IN_CLUSTER === formikProps.values.delegateType ? (
+                    <AzureKeyVaultFormFieldsForDelegateInCluster formikProps={formikProps} />
+                  ) : null}
+                </Container>
+              </Container>
+              <Layout.Horizontal spacing="medium">
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  icon="chevron-left"
+                  text={getString('back')}
+                  onClick={() => previousStep?.(prevStepData)}
+                />
+                <Button
+                  type="submit"
+                  intent="primary"
+                  rightIcon="chevron-right"
+                  text={getString('continue')}
+                  disabled={loadingFormData}
+                />
+              </Layout.Horizontal>
+            </FormikForm>
+          )
+        }}
       </Formik>
       {loadingFormData ? <PageSpinner /> : null}
-    </Container>
+    </Layout.Vertical>
   )
 }
 

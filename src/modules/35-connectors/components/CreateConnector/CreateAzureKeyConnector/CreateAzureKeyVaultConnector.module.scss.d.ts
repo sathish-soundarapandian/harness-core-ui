@@ -7,7 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly formHeight: string
+  readonly formElm: string
+  readonly step: string
   readonly wizardNav: string
+  readonly wrapper: string
 }
 export default styles

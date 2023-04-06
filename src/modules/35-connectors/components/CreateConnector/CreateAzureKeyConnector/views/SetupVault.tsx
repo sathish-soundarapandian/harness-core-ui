@@ -28,7 +28,6 @@ import { useToaster } from '@common/exports'
 import {
   ConnectorConfigDTO,
   useGetMetadata,
-  AzureKeyVaultMetadataRequestSpecDTO,
   AzureKeyVaultMetadataSpecDTO,
   useCreateConnector,
   useUpdateConnector,
@@ -38,7 +37,8 @@ import type { StepDetailsProps, ConnectorDetailsProps } from '@connectors/interf
 import { PageSpinner } from '@common/components'
 import {
   buildAzureKeyVaultPayload,
-  setupAzureKeyVaultNameFormData
+  setupAzureKeyVaultNameFormData,
+  buildAzureKeyVaultMetadataPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
@@ -102,19 +102,8 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
   const handleFetchEngines = async (formData: ConnectorConfigDTO): Promise<void> => {
     modalErrorHandler?.hide()
     try {
-      const { data } = await getMetadata({
-        identifier: formData.identifier,
-        encryptionType: 'AZURE_VAULT',
-        orgIdentifier: formData.orgIdentifier,
-        projectIdentifier: formData.projectIdentifier,
-        spec: {
-          clientId: formData.clientId?.trim(),
-          tenantId: formData.tenantId?.trim(),
-          subscription: formData.subscription?.trim(),
-          secretKey: (connectorInfo as any)?.spec?.secretKey || formData.secretKey?.referenceString,
-          delegateSelectors: formData.delegateSelectors
-        } as AzureKeyVaultMetadataRequestSpecDTO
-      })
+      const metadataPayload = buildAzureKeyVaultMetadataPayload(formData, connectorInfo)
+      const { data } = await getMetadata(metadataPayload)
 
       setVaultNameOptions(
         (data?.spec as AzureKeyVaultMetadataSpecDTO)?.vaultNames?.map(vaultName => {

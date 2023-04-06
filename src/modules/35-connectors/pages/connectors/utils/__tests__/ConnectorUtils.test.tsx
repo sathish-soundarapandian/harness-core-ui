@@ -6,6 +6,7 @@
  */
 
 import { EntityTypes, Connectors } from '@connectors/constants'
+import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import {
   buildAWSPayload,
   buildArtifactoryPayload,
@@ -791,7 +792,8 @@ describe('Connector Utils', () => {
         },
         tenantId: '123',
         subscription: '123',
-        default: false
+        default: false,
+        delegateType: DelegateTypes.DELEGATE_OUT_CLUSTER
       })
     }),
     test('test buildAzureKeyVaultPayload', () => {

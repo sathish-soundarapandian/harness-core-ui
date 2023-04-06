@@ -8,6 +8,22 @@
 .wizardNav {
   grid-template-columns: 360px 1fr !important;
 }
-.formHeight {
-  min-height: 420px;
+
+.step {
+  height: 100%;
+  > div:last-child {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .wrapper {
+    min-height: 420px;
+    overflow: auto;
+  }
+}
+
+.formElm {
+  width: 444px;
 }

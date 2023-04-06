@@ -698,29 +698,53 @@ const getGcpKmsSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowI
 }
 
 const getAzureKeyVaultSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
-  const data = connector.spec as AzureKeyVaultConnectorDTO
-  return [
-    {
-      label: 'common.clientId',
-      value: data.clientId
-    },
+  const connectorInfoSpec = connector.spec as AzureKeyVaultConnectorDTO
+
+  const delegateInCluster = connectorInfoSpec?.useManagedIdentity
+  const authType = connectorInfoSpec?.managedIdentityType
+
+  const schema = [
     {
       label: 'connectors.azureKeyVault.labels.tenantId',
-      value: data.tenantId
+      value: connectorInfoSpec.tenantId
     },
     {
       label: 'connectors.azureKeyVault.labels.subscription',
-      value: data.subscription
+      value: connectorInfoSpec.subscription
     },
     {
       label: 'connectors.azureKeyVault.labels.vaultName',
-      value: data.vaultName
+      value: connectorInfoSpec.vaultName
     },
     {
       label: 'connectors.hashiCorpVault.default',
-      value: data.default ? YesOrNo.YES : YesOrNo.NO
+      value: connectorInfoSpec.default ? YesOrNo.YES : YesOrNo.NO
     }
   ]
+
+  return delegateInCluster
+    ? [
+        ...schema,
+        {
+          label: 'authentication',
+          value: authType
+        },
+        {
+          label: 'environment',
+          value: connectorInfoSpec?.azureEnvironmentType
+        },
+        {
+          label: 'common.clientId',
+          value: connectorInfoSpec.managedClientId
+        }
+      ]
+    : [
+        ...schema,
+        {
+          label: 'common.clientId',
+          value: connectorInfoSpec.clientId
+        }
+      ]
 }
 
 const getGCPSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {

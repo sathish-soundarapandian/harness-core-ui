@@ -26,10 +26,13 @@ import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 import {
-  DelegateCardInterface,
   setupAzureFormData,
   AzureSecretKeyType,
-  AzureManagedIdentityTypes
+  AzureManagedIdentityTypes,
+  getDelegateCards,
+  getAzureEnvironmentOptions,
+  getAzureManagedIdentityOptions,
+  AzureEnvironments
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { AzureFormInterface } from '@connectors/interfaces/ConnectorInterface'
@@ -71,26 +74,9 @@ function AzureAuthentication(
   const applicationId = getString('connectors.azure.applicationId')
   const whitespaceRegex = /^(\w+\S+)$/
 
-  enum environments {
-    AZURE_GLOBAL = 'AZURE',
-    US_GOVERNMENT = 'AZURE_US_GOVERNMENT'
-  }
-
-  const environmentOptions: SelectOption[] = [
-    { label: getString('connectors.azure.environments.azureGlobal'), value: environments.AZURE_GLOBAL },
-    { label: getString('connectors.azure.environments.usGov'), value: environments.US_GOVERNMENT }
-  ]
-
-  const DelegateCards: DelegateCardInterface[] = [
-    {
-      type: DelegateTypes.DELEGATE_OUT_CLUSTER,
-      info: getString('connectors.GCP.delegateOutClusterInfo')
-    },
-    {
-      type: DelegateTypes.DELEGATE_IN_CLUSTER,
-      info: getString('connectors.azure.delegateInClusterInfo')
-    }
-  ]
+  const DelegateCards = getDelegateCards(getString)
+  const environmentOptions = getAzureEnvironmentOptions(getString)
+  const managedIdentityOptions = getAzureManagedIdentityOptions(getString)
 
   const secretKeyOptions: SelectOption[] = [
     {
@@ -100,17 +86,6 @@ function AzureAuthentication(
     {
       label: getString('connectors.azure.auth.certificate'),
       value: AzureSecretKeyType.CERT
-    }
-  ]
-
-  const managedIdentityOptions: SelectOption[] = [
-    {
-      label: getString('connectors.azure.managedIdentities.systemAssigned'),
-      value: AzureManagedIdentityTypes.SYSTEM_MANAGED
-    },
-    {
-      label: getString('connectors.azure.managedIdentities.userAssigned'),
-      value: AzureManagedIdentityTypes.USER_MANAGED
     }
   ]
 
@@ -202,7 +177,7 @@ function AzureAuthentication(
 
   const defaultInitialFormData: AzureFormInterface = {
     delegateType: undefined,
-    azureEnvironmentType: environments.AZURE_GLOBAL,
+    azureEnvironmentType: AzureEnvironments.AZURE_GLOBAL,
     applicationId: undefined,
     tenantId: undefined,
     secretType: AzureSecretKeyType.SECRET,
