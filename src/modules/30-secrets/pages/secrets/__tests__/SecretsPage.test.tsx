@@ -34,6 +34,27 @@ describe('Secrets Page', () => {
     expect(container).toMatchSnapshot()
   })
 
+  test('create secret', async () => {
+    const { findByText, findAllByText } = render(
+      <TestWrapper path="/account/:accountId/resources/secrets" pathParams={{ accountId: 'dummy' }}>
+        <SecretsPage mock={{ loading: false, data: mockData as any }} />
+      </TestWrapper>
+    )
+    const createButton = await findByText('createSecretYAML.newSecret')
+    act(() => {
+      fireEvent.click(createButton)
+    })
+    const popover = findPopoverContainer()
+    expect(popover).toMatchSnapshot()
+
+    const createTextSecretButton = await findAllByText('secrets.secret.labelText')
+    act(() => {
+      fireEvent.click(createTextSecretButton[0])
+    })
+    const dialog = findDialogContainer()
+    expect(dialog).toBeDefined()
+  })
+
   test('search', async () => {
     const { getByPlaceholderText } = render(
       <TestWrapper path="/account/:accountId/resources/secrets" pathParams={{ accountId: 'dummy' }}>
