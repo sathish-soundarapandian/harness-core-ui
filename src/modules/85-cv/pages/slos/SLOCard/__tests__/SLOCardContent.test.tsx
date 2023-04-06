@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getDefaultOffSet } from '../SLOCardContent.utils'
+import { getDefaultOffSet, getLeftContainerOffset } from '../SLOCardContent.utils'
 
 describe('getDefaultOffSet', () => {
   test('should return DefaultOffSet if notificationTime is between currentPeriodStartTime and currentPeriodEndTime', () => {
@@ -53,5 +53,11 @@ describe('getDefaultOffSet', () => {
       })
     ).toBe(0)
     expect(showError).toHaveBeenCalled()
+  })
+  test('should validate getLeftContainerOffset', () => {
+    expect(getLeftContainerOffset(true, true)).toEqual(115)
+    expect(getLeftContainerOffset(false, true)).toEqual(120)
+    expect(getLeftContainerOffset(true, false)).toEqual(85)
+    expect(getLeftContainerOffset(false, false)).toEqual(85)
   })
 })

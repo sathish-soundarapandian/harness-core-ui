@@ -16,6 +16,7 @@ import type {
 import { EvaluationType, SLIMetricTypes, SLOV2Form, SLOV2FormFields } from '../../CVCreateSLOV2.types'
 import {
   validateErrorBudgetPolicy,
+  validateSetSLOTarget,
   validateSetSLOTimeWindow
 } from '../CreateCompositeSloForm/CreateCompositeSloForm.utils'
 import {
@@ -94,6 +95,14 @@ export const validateConfigureServiceLevelIndicatiors = (formikProps: FormikProp
   }
 }
 
+export const validateSetSimpleSLOTimeWindow = (formikProps: FormikProps<SLOV2Form>) => {
+  const timePeriodValid = validateSetSLOTimeWindow(formikProps)
+  if (timePeriodValid) {
+    return validateSetSLOTarget(formikProps)
+  }
+  return timePeriodValid
+}
+
 export const isFormDataValid = (formikProps: FormikProps<SLOV2Form>, selectedTabId: CreateSimpleSLOSteps): boolean => {
   switch (selectedTabId) {
     case CreateSimpleSLOSteps.Define_SLO_Identification:
@@ -101,7 +110,7 @@ export const isFormDataValid = (formikProps: FormikProps<SLOV2Form>, selectedTab
     case CreateSimpleSLOSteps.Configure_Service_Level_Indicatiors:
       return validateConfigureServiceLevelIndicatiors(formikProps)
     case CreateSimpleSLOSteps.Set_SLO:
-      return validateSetSLOTimeWindow(formikProps)
+      return validateSetSimpleSLOTimeWindow(formikProps)
     case CreateSimpleSLOSteps.Error_Budget_Policy:
       return validateErrorBudgetPolicy()
     default:
@@ -276,7 +285,7 @@ export const getSLIDerivedProps = ({
     eventType
   })
 
-  const sliAreaGraphData = shouldFetchSliGraph ? sliGraphData?.resource?.sliGraph : undefined
+  const sliAreaGraphData = shouldFetchSliGraph ? sliGraphData?.resource : undefined
   return { shouldFetchSliGraph, valuesToDetermineReload, showSLIMetricChart, isWindow, isRatioBased, sliAreaGraphData }
 }
 

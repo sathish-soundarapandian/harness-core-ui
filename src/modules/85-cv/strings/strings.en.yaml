@@ -874,6 +874,7 @@ slos:
   sloDeleted: '{{ name }} successfully deleted'
   sli: SLI
   ratioObjectiveValueCheck: Objective value should be between 0 and 100
+  sloTargetValueCheck: SLO target should be between 0 and 100
   backToSLI: Back to SLI
   sliMetricChartRatioBasedHeader: Metric for good requests vs valid requests
   sliMetricChartSubHeader: Using historical data and current parameters in the last 1 day
@@ -1107,8 +1108,8 @@ bad: Bad
 ignore: '{{ $.common.ignore }}'
 errorBudget: Error Budget
 mins: mins
-minValueN: 'Min value {{n}}'
-maxValue: 'Max value {{n}}'
+minValueN: 'Value should be greater than {{n}}'
+maxValue: 'Value should be less than  {{n}}'
 pleaseFillTheRequiredFieldsToSeeTheSLIData: Please fill the required fields to see the SLI data
 month: month
 week: week

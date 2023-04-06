@@ -19,7 +19,7 @@ import {
   useGetAllMonitoredServicesWithTimeSeriesHealthSources,
   useGetMetricOnboardingGraph,
   useGetNotificationRuleData,
-  useGetSliOnboardingGraphs
+  useGetSliGraph
 } from 'services/cv'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -163,7 +163,7 @@ export default function CreateSimpleSLOForm({
     refetch: fetchSliGraphData,
     loading: sliGraphLoading,
     error: sliGraphError
-  } = useMutateAsGet(useGetSliOnboardingGraphs, { lazy: true })
+  } = useMutateAsGet(useGetSliGraph, { lazy: true })
 
   const {
     data: sliMetricGraphData,
@@ -316,7 +316,7 @@ export default function CreateSimpleSLOForm({
                     >
                       <SLI
                         formikProps={formikProps}
-                        sliGraphData={sliGraphData?.resource?.sliGraph}
+                        sliGraphData={sliGraphData?.resource}
                         loading={sliGraphLoading}
                         error={getErrorMessage(sliGraphError)}
                         retryOnError={retryfetchSliGraphData}

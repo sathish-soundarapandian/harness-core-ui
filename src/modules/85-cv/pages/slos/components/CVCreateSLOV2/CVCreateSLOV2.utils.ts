@@ -42,7 +42,7 @@ import {
 } from './CVCreateSLOV2.types'
 import { serviceLevelObjectiveKeys } from './components/CreateCompositeSloForm/CreateCompositeSloForm.constant'
 import type { SLIForm } from './components/CreateSimpleSloForm/CreateSimpleSloForm.types'
-import { MAX_OBJECTIVE_PERCENTAGE, SLOType } from './CVCreateSLOV2.constants'
+import { SLOType } from './CVCreateSLOV2.constants'
 
 export const filterServiceLevelObjectivesDetailsFromSLOObjective = (
   serviceLevelObjectivesDetails?: SLOObjective[]
@@ -419,9 +419,21 @@ export const getIsUserUpdatedSLOData = (
   return isEqual(existingDataToVerify, formDataToVerify)
 }
 
-export const getSLOV2FormValidationSchema = (getString: UseStringsReturn['getString']): any => {
+const getSLOTargetSchemaValidation = (getString: UseStringsReturn['getString']) => {
   const REQUIRED = getString('cv.required')
+  return {
+    [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: Yup.number()
+      .typeError(REQUIRED)
+      .test('minSLOTarget', getString('cv.minValueN', { n: 0 }), function (SLOTargetPercentage) {
+        return SLOTargetPercentage && SLOTargetPercentage > 0
+      })
+      .test('maxSLOTarget', getString('cv.maxValue', { n: 100 }), function (SLOTargetPercentage) {
+        return SLOTargetPercentage && SLOTargetPercentage < 100
+      })
+  }
+}
 
+export const getSLOV2FormValidationSchema = (getString: UseStringsReturn['getString']): any => {
   return Yup.object().shape({
     [SLOV2FormFields.NAME]: Yup.string()
       .trim()
@@ -448,11 +460,7 @@ export const getSLOV2FormValidationSchema = (getString: UseStringsReturn['getStr
       is: periodLengthType => periodLengthType === PeriodLengthTypes.MONTHLY,
       then: Yup.string().nullable().required(getString('cv.windowsEndIsRequired'))
     }),
-    [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: Yup.number()
-      .typeError(REQUIRED)
-      .min(1, getString('cv.minValueN', { n: 1 }))
-      .max(100, getString('cv.maxValue', { n: 100 }))
-      .required(REQUIRED)
+    ...getSLOTargetSchemaValidation(getString)
   })
 }
 
@@ -498,12 +506,16 @@ export const getSimpleSLOV2FormValidationSchema = (getString: UseStringsReturn['
       is: evaluationType => evaluationType === EvaluationType.WINDOW,
       then: Yup.number()
         .typeError(REQUIRED)
-        .min(0, getString('cv.minValueN', { n: 0 }))
+        .test('minObjectiveValue', getString('cv.minValueN', { n: 0 }), function (objectiveValue) {
+          return objectiveValue && objectiveValue > 0
+        })
         .when([SLOV2FormFields.SLI_METRIC_TYPE], {
           is: SLIMetricType => SLIMetricType === SLIMetricTypes.RATIO,
           then: Yup.number()
             .typeError(REQUIRED)
-            .max(MAX_OBJECTIVE_PERCENTAGE, getString('cv.maxValue', { n: MAX_OBJECTIVE_PERCENTAGE }))
+            .test('maxObjectiveValue', getString('cv.maxValue', { n: 100 }), function (objectiveValue) {
+              return objectiveValue && objectiveValue < 100
+            })
         })
         .required(REQUIRED)
     }),
@@ -531,11 +543,7 @@ export const getSimpleSLOV2FormValidationSchema = (getString: UseStringsReturn['
       is: periodLengthType => periodLengthType === PeriodLengthTypes.MONTHLY,
       then: Yup.string().nullable().required(getString('cv.windowsEndIsRequired'))
     }),
-    [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: Yup.number()
-      .typeError(REQUIRED)
-      .min(0, getString('cv.minValueN', { n: 0 }))
-      .max(100, getString('cv.maxValue', { n: 100 }))
-      .required(REQUIRED)
+    ...getSLOTargetSchemaValidation(getString)
   })
 }
 

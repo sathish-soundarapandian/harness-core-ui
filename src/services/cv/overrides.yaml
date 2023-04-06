@@ -178,7 +178,7 @@ allowpaths:
   - /aws/regions
   - /slo-dashboard/widget/{identifier}/consumption
   - /slo/v2/composite-slo/onboarding-graph
-  - /monitored-service/{monitoredServiceIdentifier}/sli/onboarding-graphs
+  - /monitored-service/{monitoredServiceIdentifier}/sli/onboarding-graph
   - /monitored-service/{monitoredServiceIdentifier}/sli/onboarding-metric-graphs
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/log-records
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/metric-records

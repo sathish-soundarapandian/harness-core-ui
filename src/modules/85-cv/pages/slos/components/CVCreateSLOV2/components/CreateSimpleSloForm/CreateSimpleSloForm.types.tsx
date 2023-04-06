@@ -15,9 +15,9 @@ import type {
   CalenderSLOTargetSpec,
   WeeklyCalendarSpec,
   NotificationRuleRefDTO,
-  RestResponseSLIOnboardingGraphs,
   TimeGraphResponse,
-  GetMetricOnboardingGraphQueryParams
+  GetMetricOnboardingGraphQueryParams,
+  RestResponseTimeGraphResponse
 } from 'services/cv'
 import type { SLOTargetChartWithAPIGetSliGraphProps } from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart.types'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
@@ -89,7 +89,7 @@ export enum CreateSimpleSLOSteps {
 
 export interface GetSLIDerivedProps {
   value: SLOV2Form
-  sliGraphData: RestResponseSLIOnboardingGraphs | null
+  sliGraphData: RestResponseTimeGraphResponse | null
   enableRequestSLO?: boolean
 }
 

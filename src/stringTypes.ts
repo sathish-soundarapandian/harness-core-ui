@@ -9083,6 +9083,7 @@ export interface StringsMap {
   'cv.slos.sloTargetAndBudget.periodTypeOptions.rolling': string
   'cv.slos.sloTargetAndBudget.setSLOTarget': string
   'cv.slos.sloTargetAndBudgetPolicy': string
+  'cv.slos.sloTargetValueCheck': string
   'cv.slos.sloUpdated': string
   'cv.slos.status': string
   'cv.slos.subTitle': string

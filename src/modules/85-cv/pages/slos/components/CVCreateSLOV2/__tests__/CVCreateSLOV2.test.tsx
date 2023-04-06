@@ -127,7 +127,7 @@ jest.mock('services/cv', () => ({
   useGetAllMonitoredServicesWithTimeSeriesHealthSources: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: monitoredServicelist, error: null, refetch: jest.fn() })),
-  useGetSliOnboardingGraphs: jest.fn().mockImplementation(() => ({ loading: false, data: {}, error: null })),
+  useGetSliGraph: jest.fn().mockImplementation(() => ({ loading: false, data: {}, error: null })),
   useGetMonitoredService: jest
     .fn()
     .mockImplementation(() => ({ loading: false, error: null, data: healthSourceListResponse, refetch: jest.fn() }))

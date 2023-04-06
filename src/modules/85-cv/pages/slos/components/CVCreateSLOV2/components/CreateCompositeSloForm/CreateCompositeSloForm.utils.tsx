@@ -91,7 +91,9 @@ export const validateAddSLO = (formikProps: FormikProps<SLOV2Form>): boolean => 
 export const validateSetSLOTarget = (formikProps: FormikProps<SLOV2Form>): boolean => {
   formikProps.setFieldTouched(CompositeSLOFormFields.SLO_TARGET_PERCENTAGE, true)
   const { SLOTargetPercentage } = formikProps.values
-  if (SLOTargetPercentage) {
+  const shouldBeGreaterThanZero = SLOTargetPercentage > 0
+  const shouldBeLessThanHundred = SLOTargetPercentage < 100
+  if (SLOTargetPercentage && !isNaN(SLOTargetPercentage) && shouldBeGreaterThanZero && shouldBeLessThanHundred) {
     return true
   }
   return false

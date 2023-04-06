@@ -215,7 +215,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
       label: getString('cv.slos.title')
     }
   ]
-  // TODO: Update with swagger
+
   const sloType = isComposite ? SLOType.COMPOSITE : SLOType.SIMPLE
   const validationSchema = isComposite ? getSLOV2FormValidationSchema : getSimpleSLOV2FormValidationSchema
   const initialFormData = getSLOV2InitialFormData(

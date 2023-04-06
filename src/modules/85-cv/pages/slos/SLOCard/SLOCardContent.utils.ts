@@ -49,9 +49,9 @@ export const getDefaultOffSet = ({
 export const getLeftContainerOffset = (isSLOView: boolean, isCardView?: boolean) => {
   let leftContainerOffset = 85
   if (isCardView && !isSLOView) {
-    leftContainerOffset = 110
-  } else if (isCardView && isSLOView) {
     leftContainerOffset = 120
+  } else if (isCardView && isSLOView) {
+    leftContainerOffset = 115
   }
   return leftContainerOffset
 }

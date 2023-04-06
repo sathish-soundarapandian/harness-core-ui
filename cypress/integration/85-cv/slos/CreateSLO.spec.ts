@@ -234,12 +234,12 @@ describe('Create SLO', () => {
     cy.findAllByText(validations.metric).should('have.length', 0)
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
-    cy.findAllByText('Required').should('have.length', 2)
+    cy.findAllByText('Required').should('have.length', 1)
     cy.fillField('objectiveValue', '-200')
     cy.findAllByText('Required').should('have.length', 1)
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
-    cy.contains('span', 'Min value 0').should('be.visible')
+    cy.contains('span', 'Value should be greater than 0').should('be.visible')
     cy.fillField('objectiveValue', '200')
     cy.contains('span', 'Min value 0').should('not.exist')
 
@@ -271,7 +271,7 @@ describe('Create SLO', () => {
     cy.get('input[name="SLIMetricType"][value="Ratio"]').should('be.checked')
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
-    cy.findAllByText('Required').should('have.length', 2)
+    cy.findAllByText('Required').should('have.length', 1)
     cy.get('input[name="eventType"]').click()
     cy.contains('p', 'Good').click({ force: true })
 
@@ -288,14 +288,18 @@ describe('Create SLO', () => {
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
     cy.fillField('objectiveValue', '200')
-    cy.contains('span', 'Max value 100').should('be.visible')
+    cy.contains('span', 'Value should be less than 100').should('be.visible')
     cy.fillField('objectiveValue', '-20')
-    cy.contains('span', 'Max value 100').should('not.exist')
+    cy.contains('span', 'Value should be greater than 0').should('be.visible')
+    cy.fillField('objectiveValue', '0')
+    cy.contains('span', 'Value should be greater than 0').should('be.visible')
+    cy.fillField('objectiveValue', '100')
+    cy.contains('span', 'Value should be less than 100').should('be.visible')
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
-    cy.contains('span', 'Min value 0').should('be.visible')
+    cy.contains('span', 'Value should be less than 100').should('be.visible')
     cy.fillField('objectiveValue', '20')
-    cy.contains('span', 'Min value 0').should('not.exist')
+    cy.contains('span', 'Value should be less than 100').should('not.exist')
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('not.exist')
     cy.get('[data-icon="steps-spinner"]').should('be.visible')
@@ -313,6 +317,12 @@ describe('Create SLO', () => {
     cy.get('input[name="SLOTargetPercentage"]').clear()
     cy.contains('Required').should('be.visible')
     cy.fillField('SLOTargetPercentage', '99')
+    cy.fillField('SLOTargetPercentage', '0')
+    cy.contains('span', 'Value should be greater than 0').should('be.visible')
+    cy.fillField('SLOTargetPercentage', '100')
+    cy.contains('span', 'Value should be less than 100').should('be.visible')
+    cy.fillField('SLOTargetPercentage', '99')
+    cy.contains('span', 'Value should be less than 100').should('not.exist')
 
     cy.contains('span', 'Period Length is required').should('be.visible')
     cy.get('input[name="periodLength"]').click()
