@@ -304,7 +304,6 @@ describe('Create empty monitored service', () => {
       'Overall Application Performance | incorrect-tier | Calls per Minute'
     )
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Path should have Tier as well').should('be.visible')
     cy.get('input[name="completeMetricPath"]')
       .clear()
       .type('Overall Application Performance | docker-tier | Calls per Minute')

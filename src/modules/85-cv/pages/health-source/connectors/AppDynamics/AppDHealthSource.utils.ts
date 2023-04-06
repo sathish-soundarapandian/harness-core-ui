@@ -213,7 +213,7 @@ const validateCustomMetricFields = (
   }
 
   if (values.pathType === PATHTYPE.CompleteMetricPath) {
-    const { completeMetricPath = '', appDTier = '' } = values
+    const { completeMetricPath = '' } = values
     const isCompleteMetricPathEmpty = !completeMetricPath?.length
     const isCompleteMetricPathRuntimeOrExpression =
       Boolean(completeMetricPath) && getMultiTypeFromValue(completeMetricPath) !== MultiTypeInputType.FIXED
@@ -228,32 +228,15 @@ const validateCustomMetricFields = (
         )
       }
     } else {
-      const completeMetricPathContainsTierInfo = completeMetricPathArray
-        ?.map((item: string) => item.trim())
-        ?.includes(appDTier)
-      const indexOfTierInCompleteMetricPath = completeMetricPathArray
-        ?.map((item: string) => item.trim())
-        ?.indexOf(appDTier)
       const countOfSeparator = completeMetricPathArray?.length - 1
       const incorrectPairing = completeMetricPathArray?.filter((item: string) => !item?.trim()?.length)?.length
       if (!(countOfSeparator > 1)) {
         _error[PATHTYPE.CompleteMetricPath] = getString(
           'cv.healthSource.connectors.AppDynamics.validation.inCorrectMetricPath'
         )
-      } else if (
-        indexOfTierInCompleteMetricPath === 0 ||
-        indexOfTierInCompleteMetricPath === completeMetricPathArray.length - 1
-      ) {
-        _error[PATHTYPE.CompleteMetricPath] = getString(
-          'cv.healthSource.connectors.AppDynamics.validation.inCorrectOrderOfTierInPath'
-        )
       } else if (incorrectPairing) {
         _error[PATHTYPE.CompleteMetricPath] = getString(
           'cv.healthSource.connectors.AppDynamics.validation.inCorrectMetricPath'
-        )
-      } else if (!completeMetricPathContainsTierInfo) {
-        _error[PATHTYPE.CompleteMetricPath] = getString(
-          'cv.healthSource.connectors.AppDynamics.validation.missingTierInFullPath'
         )
       }
     }
