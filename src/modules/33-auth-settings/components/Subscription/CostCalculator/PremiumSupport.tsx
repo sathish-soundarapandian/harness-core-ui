@@ -76,7 +76,7 @@ export const PremiumSupport: React.FC<PremiumSupportProps> = ({ premiumSupport, 
       <Layout.Horizontal spacing={'small'}>
         <Text
           color={Color.PRIMARY_7}
-          tooltip={getString('authSettings.costCalculator.developer.developerDefinition')}
+          tooltip={getString('authSettings.costCalculator.premSupport.premierSupportDefinition')}
           font={{ size: 'xsmall' }}
         >
           {getString('authSettings.costCalculator.premSupport.premierSupport')}

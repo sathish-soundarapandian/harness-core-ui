@@ -214,7 +214,7 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
       {formik => (
         <FormikForm>
           {err && !subscriptionProps.subscriptionId ? (
-            <Container width={300}>
+            <Container width={300} margin={{ left: 'large' }}>
               <PageError message={err} onClick={formik.submitForm} />
             </Container>
           ) : (

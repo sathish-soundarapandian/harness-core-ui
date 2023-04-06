@@ -107,12 +107,7 @@ function SubscriptionTable({ data = [], frequency }: SubscriptionTableProps): JS
       </div>
       <TableHeader />
       {data.map(row => (
-        <TableRow
-          key={row.moduletype}
-          data={row}
-          module={row?.moduletype as ModuleName}
-          name={lowerCase(row.moduletype || '')}
-        />
+        <TableRow key={'ci'} data={row} module={'ci' as ModuleName} name={'ci'} />
       ))}
     </Card>
   )

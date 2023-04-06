@@ -46,10 +46,7 @@ interface CostCalculatorProps {
   onPriceSkewsLoad: (skews: { [key: string]: any }[]) => void
 }
 interface GetCostCalculatorBodyByModuleProps {
-  module: Module
-  currentPlan: Editions
   paymentFrequency: TimeType
-  usageAndLimitInfo: UsageAndLimitReturn
   productPrices: ProductPricesProp
   subscriptionDetails: SubscriptionProps
   setSubscriptionDetails: (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
@@ -73,9 +70,6 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
     subscriptionProps.quantities
   )
   function getCostCalculatorBodyByModule({
-    module,
-    currentPlan,
-    usageAndLimitInfo,
     productPrices,
     paymentFrequency,
     subscriptionDetails,
