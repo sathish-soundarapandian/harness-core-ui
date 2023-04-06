@@ -492,38 +492,49 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   const renderPluginCongigurationFormField = useCallback(
     ({ field, index }: { field: Input; index: number }): JSX.Element => {
-      const { name, type, default: defaultValue, secret: isFieldOfSecretType } = field
+      const { name, default: defaultValue, secret: isFieldOfSecretType } = field
       if (name) {
-        switch (type) {
-          case 'Textarea':
-            return (
-              <FormInput.TextArea
-                name={name}
-                label={generateLabelForPluginField(field)}
-                style={{ width: '100%' }}
-                placeholder={defaultValue}
-                key={index}
-              />
-            )
-          case 'String':
-          default:
-            return isFieldOfSecretType ? (
-              <MultiTypeSecretInput
-                name={name}
-                label={generateFriendlyPluginName(name)}
-                type={'SecretText'}
-                key={index}
-              />
-            ) : (
-              <FormInput.Text
-                name={name}
-                label={generateLabelForPluginField(field)}
-                style={{ width: '100%' }}
-                placeholder={defaultValue}
-                key={index}
-              />
-            )
-        }
+        // switch (type) {
+        //   case 'Textarea':
+        //     return (
+        //       <FormInput.TextArea
+        //         name={name}
+        //         label={generateLabelForPluginField(field)}
+        //         style={{ width: '100%' }}
+        //         placeholder={defaultValue}
+        //         key={index}
+        //       />
+        //     )
+        //   case 'String':
+        //   default:
+        //     return isFieldOfSecretType ? (
+        //       <MultiTypeSecretInput
+        //         name={name}
+        //         label={generateFriendlyPluginName(name)}
+        //         type={'SecretText'}
+        //         key={index}
+        //       />
+        //     ) : (
+        //       <FormInput.Text
+        //         name={name}
+        //         label={generateLabelForPluginField(field)}
+        //         style={{ width: '100%' }}
+        //         placeholder={defaultValue}
+        //         key={index}
+        //       />
+        //     )
+        // }
+        return isFieldOfSecretType ? (
+          <MultiTypeSecretInput name={name} label={generateFriendlyPluginName(name)} type={'SecretText'} key={index} />
+        ) : (
+          <FormInput.Text
+            name={name}
+            label={generateLabelForPluginField(field)}
+            style={{ width: '100%' }}
+            placeholder={defaultValue}
+            key={index}
+          />
+        )
       }
       return <></>
     },
