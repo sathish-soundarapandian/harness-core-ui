@@ -287,7 +287,7 @@ billingInfo:
   paymentMethods: Payment Methods
   billingAdmin: '{{$.common.billing}} Admin'
   saveCardWarning: By providing your card information, you allow Harness Inc. to charge your card for future payments in accordance with our Terms of Use.
-  emailWarning: This billing email will recieve billing notifications. Change this in Billing page.
+  emailWarning: This billing email will receive notifications, which can be configured in the Billing page.
   nobills: There are no Team / Enterprise subscriptions in your Account
   firstSubscription: Let’s get started with your first subscription.
   explorePlans: Explore Plans
