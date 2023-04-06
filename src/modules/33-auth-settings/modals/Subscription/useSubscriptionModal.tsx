@@ -73,6 +73,8 @@ interface LeftViewProps {
 interface KVPair {
   [key: string]: any
 }
+window.stripeApiKey =
+  'pk_test_51IykZ0Iqk5P9Eha3IBFZLLo5m9YkWOrIEsclvgUDs92WFW6UUd8IyjPj60HNHq796hEAM1wkdKa3Sa8RbhBsJ4ml00I3412IT3'
 
 const stripePromise = window.stripeApiKey ? loadStripe(window.stripeApiKey) : Promise.resolve(null)
 
