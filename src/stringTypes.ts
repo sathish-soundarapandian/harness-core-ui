@@ -4026,6 +4026,7 @@ export interface StringsMap {
   'pipeline.failureStrategies.errorTypeLabels.PolicyEvaluationFailure': string
   'pipeline.failureStrategies.errorTypeLabels.Timeout': string
   'pipeline.failureStrategies.errorTypeLabels.Unknown': string
+  'pipeline.failureStrategies.errorTypeLabels.UserMarkedFailure': string
   'pipeline.failureStrategies.errorTypeLabels.Verification': string
   'pipeline.failureStrategies.fieldLabels.onRetryFailureLabel': string
   'pipeline.failureStrategies.fieldLabels.onTimeoutLabel': string

@@ -519,6 +519,7 @@ failureStrategies:
     InputTimeoutError: Execution-time Inputs Timeout Errors
     ApprovalRejection: Approval Rejection
     DelegateRestart: Delegate Restart
+    UserMarkedFailure: User Marked Failure
   validation:
     arrayOrRuntime: Value must be an array or runtime input.
     strategyRequired: 'At least 1 strategy is required'

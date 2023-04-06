@@ -401,6 +401,9 @@ export interface AccessControlCheckError {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -619,7 +622,9 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -1558,6 +1563,9 @@ export interface Error {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1926,6 +1934,9 @@ export interface ErrorMetadata {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   errorMessage?: string
 }
 
@@ -2033,6 +2044,7 @@ export interface ExecutionMetaDataResponse {
   executionYaml?: string
   inputYaml?: string
   planExecutionId: string
+  resolvedYaml?: string
   triggerPayload?: TriggerPayload
 }
 
@@ -2146,6 +2158,17 @@ export interface ExecutorInfoDTO {
     | 'MANIFEST'
     | 'UNRECOGNIZED'
   username?: string
+}
+
+export interface ExpressionMetadataDTO {
+  expression?: string
+  fqn?: string
+}
+
+export interface ExpressionUsagesDTO {
+  accountIdentifier?: string
+  category?: 'ANY' | 'WHEN_CONDITION' | 'VARIABLE_VALUE' | 'COMMON_FIELD_VALUE'
+  expressions?: ExpressionMetadataDTO[]
 }
 
 export interface Failure {
@@ -2508,6 +2531,9 @@ export interface Failure {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2528,6 +2554,7 @@ export interface FailureInfoDTO {
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'DELEGATE_RESTART'
+    | 'USER_MARKED_FAILURE'
   )[]
   message?: string
   responseMessages?: ResponseMessage[]
@@ -2874,6 +2901,8 @@ export interface HttpHeaderConfig {
 
 export type HttpStepInfo = StepSpecType & {
   assertion?: string
+  certificate?: string
+  certificateKey?: string
   delegateSelectors?: string[]
   headers?: HttpHeaderConfig[]
   method: string
@@ -3041,6 +3070,7 @@ export interface InterruptEffectDTO {
     | 'CUSTOM_FAILURE'
     | 'EXPIRE_ALL'
     | 'PROCEED_WITH_DEFAULT'
+    | 'USER_MARKED_FAIL_ALL'
     | 'UNRECOGNIZED'
   tookEffectAt: number
 }
@@ -3099,6 +3129,9 @@ export interface JiraField {
 
 export interface JiraIssueKeyNG {
   key: string
+  ticketFields?: {
+    [key: string]: { [key: string]: any }
+  }
   url: string
 }
 
@@ -3437,6 +3470,7 @@ export interface OnFailureConfig {
     | 'InputTimeoutError'
     | 'ApprovalRejection'
     | 'DelegateRestart'
+    | 'UserMarkedFailure'
   )[]
 }
 
@@ -3988,6 +4022,7 @@ export interface PipelineValidationResponseDTO {
   policyEval?: GovernanceMetadata
   startTs?: number
   status?: string
+  templateValidationResponse?: TemplateValidationResponseDTO
 }
 
 export interface PipelineValidationUUIDResponseBody {
@@ -4255,7 +4290,6 @@ export interface ResourceDTO {
     | 'RESOURCE_GROUP'
     | 'USER'
     | 'ROLE'
-    | 'ROLE_ASSIGNMENT'
     | 'PIPELINE'
     | 'TRIGGER'
     | 'TEMPLATE'
@@ -4301,7 +4335,7 @@ export interface ResourceDTO {
     | 'FEATURE_FLAG'
     | 'NG_ACCOUNT_DETAILS'
     | 'BUDGET_GROUP'
-    | 'NODE_EXECUTION'
+    | 'PIPELINE_EXECUTION'
 }
 
 export interface ResourceScope {
@@ -4406,6 +4440,13 @@ export interface ResponseExecutionNode {
 export interface ResponseExecutionsCount {
   correlationId?: string
   data?: ExecutionsCount
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseExpressionUsagesDTO {
+  correlationId?: string
+  data?: ExpressionUsagesDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4990,6 +5031,9 @@ export interface ResponseMessage {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5004,6 +5048,7 @@ export interface ResponseMessage {
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'DELEGATE_RESTART'
+    | 'USER_MARKED_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -5574,6 +5619,9 @@ export type ServiceNowImportSetStepInfo = StepSpecType & {
 
 export interface ServiceNowTicketKeyNG {
   key: string
+  ticketFields?: {
+    [key: string]: string
+  }
   ticketType: string
   url: string
 }
@@ -6021,6 +6069,11 @@ export interface TemplateStepNode {
   template: TemplateLinkConfig
 }
 
+export interface TemplateValidationResponseDTO {
+  exceptionMessage?: string
+  validYaml?: boolean
+}
+
 export interface TemplatesResolvedPipelineResponseDTO {
   resolvedTemplatesPipelineYaml?: string
   yamlPipeline?: string
@@ -6355,6 +6408,7 @@ export interface PipelineExecutionInterrupt {
     | 'ExpireAll'
     | 'Retry'
     | 'MarkAsFailure'
+    | 'UserMarkedFailure'
 }
 
 export type FilterDTORequestBody = FilterDTO
@@ -6907,6 +6961,57 @@ export const fetchPipelineHealthPromise = (
   getUsingFetch<ResponseDashboardPipelineHealthInfo, Failure | Error, FetchPipelineHealthQueryParams, void>(
     getConfig('pipeline/api'),
     `/dashboard/pipelineHealth`,
+    props,
+    signal
+  )
+
+export interface FetchExpressionUsagesQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  category?: 'ANY' | 'WHEN_CONDITION' | 'VARIABLE_VALUE' | 'COMMON_FIELD_VALUE'
+}
+
+export type FetchExpressionUsagesProps = Omit<
+  GetProps<ResponseExpressionUsagesDTO, Failure | Error, FetchExpressionUsagesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Fetch the expression usages for an account
+ */
+export const FetchExpressionUsages = (props: FetchExpressionUsagesProps) => (
+  <Get<ResponseExpressionUsagesDTO, Failure | Error, FetchExpressionUsagesQueryParams, void>
+    path={`/expression-usages`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseFetchExpressionUsagesProps = Omit<
+  UseGetProps<ResponseExpressionUsagesDTO, Failure | Error, FetchExpressionUsagesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Fetch the expression usages for an account
+ */
+export const useFetchExpressionUsages = (props: UseFetchExpressionUsagesProps) =>
+  useGet<ResponseExpressionUsagesDTO, Failure | Error, FetchExpressionUsagesQueryParams, void>(`/expression-usages`, {
+    base: getConfig('pipeline/api'),
+    ...props
+  })
+
+/**
+ * Fetch the expression usages for an account
+ */
+export const fetchExpressionUsagesPromise = (
+  props: GetUsingFetchProps<ResponseExpressionUsagesDTO, Failure | Error, FetchExpressionUsagesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseExpressionUsagesDTO, Failure | Error, FetchExpressionUsagesQueryParams, void>(
+    getConfig('pipeline/api'),
+    `/expression-usages`,
     props,
     signal
   )
@@ -9511,6 +9616,7 @@ export interface HandleInterruptQueryParams {
     | 'ExpireAll'
     | 'Retry'
     | 'MarkAsFailure'
+    | 'UserMarkedFailure'
 }
 
 export interface HandleInterruptPathParams {
@@ -9615,6 +9721,7 @@ export interface HandleStageInterruptQueryParams {
     | 'ExpireAll'
     | 'Retry'
     | 'MarkAsFailure'
+    | 'UserMarkedFailure'
 }
 
 export interface HandleStageInterruptPathParams {
@@ -9814,6 +9921,7 @@ export interface HandleManualInterventionInterruptQueryParams {
     | 'ExpireAll'
     | 'Retry'
     | 'MarkAsFailure'
+    | 'UserMarkedFailure'
 }
 
 export interface HandleManualInterventionInterruptPathParams {
@@ -16692,6 +16800,10 @@ export interface GetSchemaYamlQueryParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
+    | 'BackstageEnvironmentVariable'
+    | 'DeployCloudFunctionGenOne'
+    | 'RollbackCloudFunctionGenOne'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -16995,6 +17107,10 @@ export interface GetStepYamlSchemaQueryParams {
     | 'CdSscaOrchestration'
     | 'TasRouteMapping'
     | 'AWSSecurityHub'
+    | 'CustomIngest'
+    | 'BackstageEnvironmentVariable'
+    | 'DeployCloudFunctionGenOne'
+    | 'RollbackCloudFunctionGenOne'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
