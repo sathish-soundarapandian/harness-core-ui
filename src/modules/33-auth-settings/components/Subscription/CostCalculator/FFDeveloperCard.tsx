@@ -22,11 +22,15 @@ export const generateRangeArray = (min: number, max: number, stepSize: number): 
   return rangeArray
 }
 
-export const Header: React.FC<{ unitPrice: number }> = () => {
+export const Header: React.FC<{ unitPrice: number }> = (module: string) => {
   const { getString } = useStrings()
   return (
     <Layout.Vertical padding={{ bottom: 'medium' }}>
-      <Text font={{ variation: FontVariation.H5 }}>{getString('authSettings.costCalculator.developer.title')}</Text>
+      <Text font={{ variation: FontVariation.H5 }}>
+        {module === 'cf'
+          ? getString('authSettings.costCalculator.developer.title')
+          : getString('authSettings.costCalculator.developer.titleCI')}
+      </Text>
       <Layout.Horizontal spacing={'small'}>
         <Text
           color={Color.PRIMARY_7}
@@ -156,7 +160,7 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
   return (
     <Card>
       <Layout.Vertical>
-        <Header unitPrice={unitPrice} />
+        <Header unitPrice={unitPrice} module="cf" />
         <DeveloperSubscriptionInfo
           recommended={recommended}
           currentSubscribed={currentSubscribed}
