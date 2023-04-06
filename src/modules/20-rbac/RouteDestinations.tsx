@@ -50,7 +50,6 @@ import UserGroupsResourceModalBody from '@rbac/components/UserGroupsRenderer/Use
 import UserGroupsResourceRenderer from '@rbac/components/UserGroupsRenderer/UserGroupsResourceRenderer'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ServiceAccountsResourceModalBody from './components/ServiceAccountsRenderer/ServiceAccountsResourceModalBody'
 import ServiceAccountsResourceRenderer from './components/ServiceAccountsRenderer/ServiceAccountsResourceRenderer'
 
@@ -230,7 +229,6 @@ const RedirectToAccessControlHome = (): React.ReactElement => {
 }
 
 export default function RbacRoutes(): React.ReactElement {
-  const { PL_SELECT_SPECIFIC_SERVICE_ACCOUNT_IN_RESOURCE_GROUP } = useFeatureFlags()
   RbacFactory.registerResourceTypeHandler(ResourceType.SERVICEACCOUNT, {
     icon: 'nav-settings',
     label: 'rbac.serviceAccounts.label',
@@ -242,12 +240,11 @@ export default function RbacRoutes(): React.ReactElement {
       [PermissionIdentifier.DELETE_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.delete" />,
       [PermissionIdentifier.MANAGE_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.manage" />
     },
-    ...(PL_SELECT_SPECIFIC_SERVICE_ACCOUNT_IN_RESOURCE_GROUP && {
-      // eslint-disable-next-line react/display-name
-      addResourceModalBody: props => <ServiceAccountsResourceModalBody {...props} />,
-      // eslint-disable-next-line react/display-name
-      staticResourceRenderer: props => <ServiceAccountsResourceRenderer {...props} />
-    })
+
+    // eslint-disable-next-line react/display-name
+    addResourceModalBody: props => <ServiceAccountsResourceModalBody {...props} />,
+    // eslint-disable-next-line react/display-name
+    staticResourceRenderer: props => <ServiceAccountsResourceRenderer {...props} />
   })
   return (
     <>
