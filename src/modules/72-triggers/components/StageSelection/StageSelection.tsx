@@ -33,13 +33,14 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
       triggerIdentifier: string
     }>
   >()
-  const { data: stageExecutionData } = useGetStagesExecutionList({
+  const { data: stageExecutionData, refetch } = useGetStagesExecutionList({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier
-    }
+    },
+    lazy: true
   })
 
   const executionStageList =
@@ -80,6 +81,12 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   })
 
   useEffect(() => {
+    if (allowStageExecutions) {
+      refetch()
+    }
+  }, [allowStageExecutions])
+
+  useEffect(() => {
     if (selectedStages.length || formikProps.values?.stagesToExecute) {
       refetchInputSetData()
     }
@@ -93,23 +100,25 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
     ) {
       setAllStagesSelect(true)
     }
-  }, [])
+  }, [formikProps.values?.stagesToExecute, allowStageExecutions, formikProps.values?.originalPipeline])
 
   useEffect(() => {
-    if (Array.isArray(formikProps.values?.stagesToExecute) && formikProps.values?.stagesToExecute.length) {
-      const stagesArr: SelectOption[] = []
-      if (stageExecutionData?.data && stageExecutionData?.data?.length) {
-        for (const stage of stageExecutionData.data) {
-          if (formikProps.values?.stagesToExecute?.includes(stage.stageIdentifier)) {
-            stagesArr.push({ label: stage.stageName || '', value: stage.stageIdentifier || '' })
+    const stagesArr: SelectOption[] = []
+    if (allowStageExecutions) {
+      if (Array.isArray(formikProps.values?.stagesToExecute) && formikProps.values?.stagesToExecute.length) {
+        if (stageExecutionData?.data && stageExecutionData?.data?.length) {
+          for (const stage of stageExecutionData.data) {
+            if (formikProps.values?.stagesToExecute?.includes(stage.stageIdentifier)) {
+              stagesArr.push({ label: stage.stageName || '', value: stage.stageIdentifier || '' })
+            }
           }
         }
-      } else {
-        stagesArr.push(getAllStageItem(getString))
       }
-      setStage(stagesArr)
+    } else {
+      stagesArr.push(getAllStageItem(getString))
     }
-  }, [formikProps.values?.stagesToExecute, stageExecutionData?.data])
+    setStage(stagesArr)
+  }, [formikProps.values?.stagesToExecute, stageExecutionData?.data, allowStageExecutions])
 
   useEffect(() => {
     if (formikProps.values?.originalPipeline && !allowStageExecutions) {
