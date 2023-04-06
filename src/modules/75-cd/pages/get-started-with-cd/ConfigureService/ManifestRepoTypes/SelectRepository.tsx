@@ -5,11 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { Text, Layout, Container, FormError, DropDown, SelectOption } from '@harness/uicore'
+import { Text, Layout, Container, FormError, DropDown, SelectOption, Button } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useGetListOfAllReposByRefConnector, UserRepoResponse } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -51,16 +51,20 @@ export const SelectRepository = (props: SelectRepositoryProps): React.ReactEleme
     lazy: true
   })
 
+  const fetchRepositoryList = useCallback((): void => {
+    fetchRepositories({
+      queryParams: {
+        accountIdentifier: accountId,
+        connectorRef: `${ACCOUNT_SCOPE_PREFIX}${validatedConnectorRef}`
+      }
+    })
+  }, [accountId, fetchRepositories, validatedConnectorRef])
+
   useEffect(() => {
     if (validatedConnectorRef) {
-      fetchRepositories({
-        queryParams: {
-          accountIdentifier: accountId,
-          connectorRef: `${ACCOUNT_SCOPE_PREFIX}${validatedConnectorRef}`
-        }
-      })
+      fetchRepositoryList()
     }
-  }, [accountId, fetchRepositories, orgIdentifier, projectIdentifier, validatedConnectorRef])
+  }, [accountId, fetchRepositoryList, orgIdentifier, projectIdentifier, validatedConnectorRef])
 
   useEffect(() => {
     if (selectedRepository) {
@@ -97,32 +101,42 @@ export const SelectRepository = (props: SelectRepositoryProps): React.ReactEleme
         {getString('common.selectYourRepo')}
       </Text>
       <Container padding={{ top: 'small' }} className={cx(css.repositories)}>
-        <DropDown
-          className={cx(css.repositorySearch, {
-            [css.disable]: fetchingRepositories
-          })}
-          items={selectOptions}
-          value={repository?.name as string}
-          onChange={item => {
-            setRepository((item as RepoOption).repository)
-          }}
-          disabled={fetchingRepositories}
-          usePortal={true}
-          popoverClassName={css.dropdownPopover}
-          addClearBtn={true}
-          onQueryChange={setQuery}
-          placeholder={fetchingRepositories ? getString('cd.fetchingRepository') : getString('cd.selectRepository')}
-        />
-        {showValidationErrorForRepositoryNotSelected ? (
-          <Container padding={{ top: 'xsmall' }}>
-            <FormError
-              name={'repository'}
-              errorMessage={getString('common.getStarted.plsChoose', {
-                field: getString('repository').toLowerCase()
-              })}
-            />
-          </Container>
-        ) : null}
+        <Layout.Horizontal>
+          <DropDown
+            className={cx(css.repositorySearch, {
+              [css.disable]: fetchingRepositories
+            })}
+            items={selectOptions}
+            value={repository?.name as string}
+            onChange={item => {
+              setRepository((item as RepoOption).repository)
+            }}
+            disabled={fetchingRepositories}
+            usePortal={true}
+            popoverClassName={css.dropdownPopover}
+            addClearBtn={true}
+            onQueryChange={setQuery}
+            placeholder={fetchingRepositories ? getString('cd.fetchingRepository') : getString('cd.selectRepository')}
+          />
+          {showValidationErrorForRepositoryNotSelected ? (
+            <Container padding={{ top: 'xsmall' }}>
+              <FormError
+                name={'repository'}
+                errorMessage={getString('common.getStarted.plsChoose', {
+                  field: getString('repository').toLowerCase()
+                })}
+              />
+            </Container>
+          ) : null}
+          <Button
+            icon="refresh"
+            onClick={fetchRepositoryList}
+            minimal
+            tooltipProps={{ isDark: true }}
+            tooltip={getString('common.refresh')}
+            disabled={fetchingRepositories}
+          />
+        </Layout.Horizontal>
       </Container>
     </Layout.Vertical>
   )

@@ -234,7 +234,7 @@ const InHarnessFileStore = ({
       <Container padding={{ bottom: 'large' }}>
         <Layout.Vertical>
           <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
-            <Icon name={'harness'} size={28} padding={{ right: 'medium' }} />
+            <Icon name={'kubernetes-harness'} size={48} padding={{ right: 'medium' }} />
             <Layout.Vertical>
               <Text
                 font={{ variation: FontVariation.H4 }}

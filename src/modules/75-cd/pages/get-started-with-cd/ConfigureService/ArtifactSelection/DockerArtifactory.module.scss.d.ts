@@ -11,6 +11,7 @@ declare const styles: {
   readonly authHeaderRow: string
   readonly connectorFormOverride: string
   readonly dockerProviderType: string
+  readonly label: string
   readonly stepWrapper: string
 }
 export default styles

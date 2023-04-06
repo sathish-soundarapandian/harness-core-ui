@@ -19,7 +19,8 @@ import {
   IconName,
   Icon,
   FormikForm,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  ButtonVariation
 } from '@harness/uicore'
 
 import { FontVariation, Color } from '@harness/design-system'
@@ -60,10 +61,13 @@ import { Connectors } from '@connectors/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { FeatureFlag } from '@common/featureFlags'
+import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import {
   BinaryValue,
   cleanServiceDataUtil,
+  CustomType,
   defaultManifestConfig,
+  DeploymentType,
   getUniqueEntityIdentifier,
   newServiceState,
   ONBOARDING_PREFIX,
@@ -90,7 +94,7 @@ export interface ConfigureServiceInterface {
   manifestConfig: ManifestConfigWrapper
   artifactToDeploy: string
   artifactData: ArtifactListConfig
-  artifactType: ArtifactSource['type']
+  artifactType: ArtifactSource['type'] | CustomType
   artifactConfig: ArtifactConfig
   fileNodesData: FileStoreNodeDTO[]
 }
@@ -136,6 +140,9 @@ const ConfigureServiceRef = (
   const [manifestStepStatus, setManifestStepStatus] = useState<Map<string, StepStatus>>(DefaultManifestStepStatus)
   const [serviceIdentifier, setServiceIdentifier] = useState<string | undefined>(get(serviceData, 'identifier'))
   const [editService, setEditService] = useState(false)
+  const [isServiceStepComplete, setIsServiceStepComplete] = React.useState(false)
+  const [isArtifactStepComplete, setIsArtifactStepComplete] = React.useState(false)
+
   const { loading: createLoading, mutate: createService } = useCreateServiceV2({
     queryParams: {
       accountIdentifier: accountId
@@ -151,6 +158,15 @@ const ConfigureServiceRef = (
       }
     }
   })
+
+  React.useEffect(() => {
+    if (isServiceStepComplete && isArtifactStepComplete) {
+      enableNextBtn()
+    } else {
+      disableNextBtn()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isServiceStepComplete, isArtifactStepComplete])
 
   const updateManifestStepStatus = React.useCallback((stepIds: string[], status: StepStatus) => {
     if (Array.isArray(stepIds)) {
@@ -216,14 +232,18 @@ const ConfigureServiceRef = (
       const artifactObj = get(serviceData, 'serviceDefinition.spec.artifacts') as ArtifactListConfig
       const updatedArtifactObj = produce(artifactObj, draft => {
         if (draft) {
+          const artifactType =
+            formikRef?.current?.values?.artifactType === CustomType.Custom
+              ? ENABLED_ARTIFACT_TYPES.DockerRegistry
+              : formikRef?.current?.values?.artifactType
           if (isSvcEnvEnabled) {
-            set(draft, 'primary.sources[0].type', formikRef?.current?.values?.artifactType)
+            set(draft, 'primary.sources[0].type', artifactType)
             set(draft, 'primary.sources[0].spec', formikRef?.current?.values?.artifactConfig?.spec)
             set(draft, 'primary.primaryArtifactRef', formikRef?.current?.values?.artifactConfig?.identifier)
             unset(draft, 'primary.spec')
             unset(draft, 'primary.identifier')
           } else {
-            set(draft, 'primary.type', formikRef?.current?.values?.artifactType)
+            set(draft, 'primary.type', artifactType)
             set(draft, 'primary.spec', formikRef?.current?.values?.artifactConfig?.spec)
             set(draft, 'primary.identifier', formikRef?.current?.values?.artifactConfig?.identifier)
             unset(draft, 'primary.primaryArtifactRef')
@@ -240,7 +260,7 @@ const ConfigureServiceRef = (
         set(draft, 'serviceDefinition.spec.manifests[0]', manifestConfig)
         manifestType === 'K8sManifest' ? unset(draft, helmVersionPath) : set(draft, helmVersionPath, 'V2')
         // omit artifactConfig if artifact to deploy is no
-        formikRef.current?.values?.artifactToDeploy === BinaryValue.YES
+        formikRef.current?.values?.artifactToDeploy !== BinaryValue.NO
           ? set(draft, 'serviceDefinition.spec.artifacts', updatedArtifactObj)
           : unset(draft, 'serviceDefinition.spec.artifacts')
         set(draft, 'identifier', defaultTo(serviceIdentifier, serviceRefIdentifier))
@@ -354,23 +374,28 @@ const ConfigureServiceRef = (
 
   const onManifestTypeSelection = (type: ManifestTypes): void => {
     formikRef?.current?.setFieldValue('manifestData.type', type)
-    if (type === ManifestDataType.HelmChart && formikRef?.current?.values?.manifestStoreType === 'Harness') {
+    if (
+      type === ManifestDataType.HelmChart &&
+      formikRef?.current?.values?.manifestStoreType === ManifestStoreMap.Harness
+    ) {
+      setIsServiceStepComplete(false)
       formikRef?.current?.setFieldValue('manifestStoreType', Connectors.GITHUB)
-      trackEvent(CDOnboardingActions.SelectManifestType, { manifestType: type })
+      trackEvent(CDOnboardingActions.SelectManifestType, { manifestType: type, deployment_type: DeploymentType.K8s })
+      formikRef?.current?.setFieldValue('artifactType', ENABLED_ARTIFACT_TYPES.DockerRegistry)
     }
   }
 
   const specifyManifestType = (formikProps: FormikProps<ConfigureServiceInterface>): JSX.Element | null => {
     return (
       <>
-        <Layout.Vertical padding={{ top: 'xxlarge' }}>
+        <Layout.Vertical padding={{ top: 'large' }}>
           <Text
-            font={{ variation: FontVariation.H4 }}
+            font={{ size: 'medium', weight: 'semi-bold' }}
             padding={{ bottom: 'large' }}
             color={Color.GREY_600}
             data-tooltip-id="cdOnboardingManifestType"
           >
-            {getString('cd.getStartedWithCD.manifestTypeSelection')}
+            {getString('typeLabel')}
             <HarnessDocTooltip tooltipId="cdOnboardingManifestType" useStandAlone={true} />
           </Text>
           <RadioButtonGroup
@@ -386,15 +411,15 @@ const ConfigureServiceRef = (
             className={css.radioButton}
           />
         </Layout.Vertical>
-        <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
       </>
     )
   }
 
   const onManifestStoreSelection = (type: ManifestStores | ConnectorInfoDTO['type']): void => {
     formikRef?.current?.setFieldValue('manifestStoreType', type)
-    trackEvent(CDOnboardingActions.SelectManifestStore, { manifestStore: type })
+    trackEvent(CDOnboardingActions.SelectManifestStore, { manifestStore: type, deployment_type: DeploymentType.K8s })
     // reset connector details, artifact details
+    setIsServiceStepComplete(false)
     setManifestStepStatus(DefaultManifestStepStatus)
     selectGitProviderRef.current = null
     const updatedContextService = produce(serviceData as ServiceDataType, draft => {
@@ -416,14 +441,14 @@ const ConfigureServiceRef = (
 
   const selectManifestStore = (formikProps: FormikProps<ConfigureServiceInterface>): JSX.Element | null => {
     return (
-      <Layout.Vertical padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
+      <Layout.Vertical padding={{ top: 'xlarge', bottom: 'xxlarge' }}>
         <Text
-          font={{ variation: FontVariation.H4 }}
+          font={{ size: 'medium', weight: 'semi-bold' }}
           padding={{ bottom: 'large' }}
           color={Color.GREY_600}
           data-tooltip-id="cdOnboardingManifestLocation"
         >
-          {getString('cd.getStartedWithCD.manifestStoreLabel')}
+          {getString('cd.azureArm.location')}
           <HarnessDocTooltip tooltipId="cdOnboardingManifestLocation" useStandAlone={true} />
         </Text>
         <Layout.Horizontal>
@@ -434,6 +459,7 @@ const ConfigureServiceRef = (
             onClick={() => {
               onManifestStoreSelection(ManifestStoreMap.Harness)
               formikProps?.setFieldValue('artifactToDeploy', BinaryValue.YES)
+              formikProps?.setFieldValue('artifactType', CustomType.Custom)
             }}
             padding="large"
             intent={formikProps?.values?.manifestStoreType === ManifestStoreMap.Harness ? 'primary' : 'none'}
@@ -441,6 +467,9 @@ const ConfigureServiceRef = (
           />
 
           <Container className={css.verticalSeparation} margin={{ left: 'medium' }} />
+          <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_500} className={moduleCss.manifestLabel}>
+            {getString('cd.getStartedWithCD.useOwnManifest')}
+          </Text>
           {AllSaaSGitProviders.map(manifestStore => {
             return (
               <Button
@@ -452,6 +481,7 @@ const ConfigureServiceRef = (
                 onClick={() => {
                   onManifestStoreSelection(manifestStore.type)
                   accessNextBtnOnStoreChange()
+                  formikProps?.setFieldValue('artifactType', ENABLED_ARTIFACT_TYPES.DockerRegistry)
                 }}
                 intent={formikProps?.values?.manifestStoreType === manifestStore.type ? 'primary' : 'none'}
               />
@@ -464,7 +494,7 @@ const ConfigureServiceRef = (
 
   const accessNextBtnOnStoreChange = (): void => {
     if (formikRef?.current?.values?.manifestStoreType !== ManifestStoreMap.Harness) {
-      isEmpty(formikRef?.current?.values?.repository) ? disableNextBtn() : enableNextBtn()
+      setIsServiceStepComplete(!isEmpty(formikRef?.current?.values?.repository))
     }
   }
 
@@ -520,7 +550,7 @@ const ConfigureServiceRef = (
       artifactConfig,
       manifestConfig,
       artifactData,
-      artifactType: defaultTo(artifactType, 'DockerRegistry'),
+      artifactType: defaultTo(artifactType, CustomType.Custom),
       fileNodesData: defaultTo(get(serviceData, 'data.fileNodesData'), [])
     }
   }, [get(serviceData, 'serviceDefinition.spec.manifests[0].manifest', {})])
@@ -528,12 +558,18 @@ const ConfigureServiceRef = (
   const onFileStoreSuccess = (): void => {
     updateManifestStepStatus(['Repository'], StepStatus.Success)
     updateManifestStepStatus(['ManifestDetails'], StepStatus.Success)
-    enableNextBtn()
+    setIsServiceStepComplete(true)
   }
 
   const getValidConnectorRef = (): string =>
     get(serviceData, 'data.connectorRef.identifier') ||
     `${selectGitProviderRef.current?.values?.gitProvider?.type}_${ONBOARDING_PREFIX}`
+
+  useEffect(() => {
+    if (formikRef?.current?.values?.manifestStoreType !== ManifestStoreMap.Harness) {
+      setIsServiceStepComplete(manifestStepStatus.get('ManifestDetails') !== StepStatus.ToDo)
+    }
+  }, [manifestStepStatus])
 
   return createLoading ? (
     <ContainerSpinner />
@@ -550,33 +586,54 @@ const ConfigureServiceRef = (
             formikRef.current = formikProps
             return (
               <FormikForm>
-                <Layout.Vertical width="70%">
-                  <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text
-                      font={{ variation: FontVariation.H3 }}
-                      color={Color.GREY_600}
-                      data-tooltip-id="cdOnboardingConfigureService"
-                    >
-                      {getString('common.configureService')}
-                      <HarnessDocTooltip tooltipId="cdOnboardingConfigureService" useStandAlone={true} />
-                    </Text>
-                    <Layout.Horizontal flex={{ alignItems: 'center' }}>
-                      {editService ? (
-                        <FormInput.Text name="serviceRef" className={css.formInput} style={{ marginBottom: 0 }} />
-                      ) : (
-                        <Text>{formikProps?.values?.serviceRef}</Text>
-                      )}
+                <Layout.Vertical width="70%" padding={{ bottom: 'huge' }}>
+                  <Layout.Vertical>
+                    <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Text
+                        font={{ variation: FontVariation.H3 }}
+                        color={Color.GREY_600}
+                        data-tooltip-id="cdOnboardingConfigureService"
+                      >
+                        {getString('common.configureService')}
+                        <HarnessDocTooltip tooltipId="cdOnboardingConfigureService" useStandAlone={true} />
+                      </Text>
+                      <Layout.Horizontal flex={{ alignItems: 'center' }}>
+                        {editService ? (
+                          <FormInput.Text name="serviceRef" className={css.formInput} style={{ marginBottom: 0 }} />
+                        ) : (
+                          <Text>{formikProps?.values?.serviceRef}</Text>
+                        )}
 
-                      <Button
-                        icon={editService ? 'tick' : 'Edit'}
-                        data-testid="edit-service-name"
-                        onClick={() => setEditService(!editService)}
-                        minimal
-                      />
+                        <Button
+                          icon={editService ? 'tick' : 'Edit'}
+                          data-testid="edit-service-name"
+                          onClick={() => setEditService(!editService)}
+                          variation={ButtonVariation.LINK}
+                        />
+                      </Layout.Horizontal>
                     </Layout.Horizontal>
-                  </Layout.Horizontal>
-                  <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
+                    <Text font="normal" padding={{ top: 'medium' }}>
+                      {getString('cd.getStartedWithCD.serviceDescription')}
+                    </Text>
+                  </Layout.Vertical>
 
+                  <Container className={css.borderBottomClass} padding={{ top: 'medium' }} />
+
+                  {/* Manifest Section */}
+                  <Layout.Vertical>
+                    <Text
+                      font={{ variation: FontVariation.H4 }}
+                      padding={{ bottom: 'medium', top: 'xxlarge' }}
+                      color={Color.GREY_600}
+                      data-tooltip-id="cdOnboardingManifestSection"
+                    >
+                      {getString('manifestsText')}
+                      <HarnessDocTooltip tooltipId="cdOnboardingManifestSection" useStandAlone={true} />
+                    </Text>
+                    <Text font="normal" margin={{ bottom: 'large' }}>
+                      {getString('cd.getStartedWithCD.manifestDescription')}
+                    </Text>
+                  </Layout.Vertical>
                   {specifyManifestType(formikProps)}
                   {formikProps?.values?.manifestData?.type && selectManifestStore(formikProps)}
                   {formikProps?.values?.manifestStoreType && (
@@ -647,7 +704,7 @@ const ConfigureServiceRef = (
                   )}
                   <>
                     <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
-                    <ArtifactSelection enableNextBtn={enableNextBtn} disableNextBtn={disableNextBtn} />
+                    <ArtifactSelection isStepComplete={setIsArtifactStepComplete} />
                   </>
                 </Layout.Vertical>
               </FormikForm>

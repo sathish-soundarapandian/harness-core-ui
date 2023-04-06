@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly connectorContainer: string
+  readonly manifestLabel: string
   readonly progress: string
   readonly progressInfo: string
   readonly progressItem: string

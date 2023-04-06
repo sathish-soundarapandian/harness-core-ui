@@ -74,3 +74,8 @@
   display: grid;
   grid-template-columns: 4fr 1fr;
 }
+
+.manifestLabel {
+  margin: auto 0 !important;
+  margin-right: var(--spacing-medium) !important;
+}

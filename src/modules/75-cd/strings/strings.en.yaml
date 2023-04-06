@@ -666,13 +666,15 @@ getStartedWithCD:
   manifestTypeSelection: Manifest type
   manifestStoreLabel: Manifest location
   selectAuthMethod: Select an authentication method
+  registryDetails: Registry details
+  repoDetails: Repository details
   gitopsRedirect:
     title: Deploy with Gitops
     subtitle: You will be redirected to Gitops section. Are you sure you want to leave this page?
   closeOnboarding:
     title: Leave Onboarding Process?
     subtitle: You are about to leave without having set up a pipeline for deployment. Are you sure you want to leave anyway?
-  inHarnessFileStore: Use the Harness provided manifests from your Harness account file store
+  inHarnessFileStore: Use the sample manifest files to deploy the sample service, or your own service.
   environmentDetails: Environment details
   entityCreationTitle: 'The following Harness entities have automatically been created for you:'
   delegateRunAs: Delegate run as
@@ -718,7 +720,9 @@ getStartedWithCD:
   testConnection: Test connection
   harnessFileStore: Harness Filestore
   sampleManifest: Sample manifest
-  sampleManifests: Sample Manifests
+  sampleManifests: Sample Kubernetes Manifest
+  sampleToDoListApp: Sample To Do List App
+  sampleAppOnDockerRegistry: Sample Artifact on DockerHub
   delegateSuccess: The delegate is installed. Next you can configure the service.
   connectHarnessEnv: Connect Harness to your environment
   installDelegateToTargetEnv: Install a Harness Delegate in your target environment.
@@ -757,6 +761,14 @@ getStartedWithCD:
   repoServerInstalled: Repo server installed
   redisCacheInstalled: Redis cache installed
   appControllerInstalled: Application controller installed
+  serviceDescription: A Service represents what you're deploying. It contains a code description of your deployment and a link to what you want to deploy.
+  artifactDescription: The artifact is the image you are deploying. If your Docker image location is hardcoded in your manifest files, you do not need to provide artifact details.
+  manifestDescription: A manifest is a YAML description of your deployment.
+  useOwnManifest: Use my own manifest
+  connectOwnArtifact: Connect my own artifact
+  artifactInManifest: No, it is hard-coded in my manifest
+  giveSample: Give me a Sample
+  artifactReferencedInManifest: Fantastic! If your artifact is already referenced in your manifest you are ready to continue to the next step.
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment

@@ -83,7 +83,7 @@ const ecrInitialFormData: ArtifactoryGenericInterface<AWSFormInterface> = {
   externalId: '',
   region: regionValues[0].value
 }
-interface DelegateSelectorStepData extends BuildPayloadProps {
+export interface DelegateSelectorStepData extends BuildPayloadProps {
   delegateSelectors: Array<string>
   connectivityMode: ConnectivityModeType | undefined
 }

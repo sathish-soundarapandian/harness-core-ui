@@ -19,6 +19,7 @@ import { useStrings } from 'framework/strings'
 import type { ArtifactConfig } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 import { ALLOWABLE_TYPES, getUniqueEntityIdentifier, ServiceDataType } from '../../CDOnboardingUtils'
 import type { ConfigureServiceInterface } from '../ConfigureService'
@@ -46,7 +47,7 @@ export default function ArtifactImagePath(): JSX.Element {
       spec: {
         ...artifactContextData
       },
-      type: formValues?.artifactType,
+      type: formValues?.artifactType as ArtifactType,
       identifier // CONNECTOR IDENTIFIER CHECK
     }
   }, [serviceData])
@@ -71,13 +72,13 @@ export default function ArtifactImagePath(): JSX.Element {
       prevStepData: get(serviceData, 'data.artifactData'),
       formClassName: css.connectorFormOverride,
       isMultiArtifactSource: true,
-      selectedArtifact: formValues?.artifactType || 'DockerRegistry'
+      selectedArtifact: (formValues?.artifactType as ArtifactType) || 'DockerRegistry'
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expressions, isReadonly, getString, formValues, setFieldValue, serviceData])
 
   const artifactSelectionLastSteps = useArtifactSelectionLastSteps({
-    selectedArtifact: formValues?.artifactType || 'DockerRegistry',
+    selectedArtifact: (formValues?.artifactType as ArtifactType) || 'DockerRegistry',
     artifactLastStepProps
   })
   return <>{artifactSelectionLastSteps}</>

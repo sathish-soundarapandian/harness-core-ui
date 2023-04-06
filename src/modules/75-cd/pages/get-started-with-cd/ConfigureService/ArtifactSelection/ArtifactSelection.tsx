@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { capitalize, get, isEmpty, unset } from 'lodash-es'
+import { get, isEmpty, unset } from 'lodash-es'
 import cx from 'classnames'
 import { IconName, Intent } from '@blueprintjs/core'
 import { Button, Container, HarnessDocTooltip, Icon, Layout, Text } from '@harness/uicore'
@@ -20,25 +20,27 @@ import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/Artif
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import type { StringsMap } from 'stringTypes'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 
 import type { ConfigureServiceInterface } from '../ConfigureService'
 import {
-  allowedArtifactTypesForOnboiarding,
+  allowedArtifactTypesForOnboarding,
   ArtifactIconByType,
   BinaryValue,
-  BinaryOptions,
-  ServiceDataType
+  ServiceDataType,
+  CustomType,
+  DeploymentType
 } from '../../CDOnboardingUtils'
 import ArtifactoryAuthStep from './ArtifactAuthStep'
 import { StepStatus } from '../../DeployProvisioningWizard/Constants'
 import ArtifactImagePath from './ArtifactImagePath'
+import SampleArtifact from './SampleArtifact'
 import css from '../../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 import moduleCss from '../ConfigureService.module.scss'
 
 interface ArtifactSelectionProps {
-  disableNextBtn: () => void
-  enableNextBtn: () => void
+  isStepComplete: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const DefaultArtifactStepStatus = new Map<string, StepStatus>([
@@ -46,7 +48,13 @@ const DefaultArtifactStepStatus = new Map<string, StepStatus>([
   ['ImagePath', StepStatus.ToDo]
 ])
 
-const ArtifactSelection = ({ enableNextBtn, disableNextBtn }: ArtifactSelectionProps): JSX.Element => {
+export const ArtifactOptions = [
+  { label: 'yes', value: BinaryValue.YES },
+  { label: 'cd.getStartedWithCD.artifactInManifest', value: BinaryValue.NO },
+  { label: 'cd.getStartedWithCD.giveSample', value: CustomType.Custom }
+]
+
+const ArtifactSelection = ({ isStepComplete }: ArtifactSelectionProps): JSX.Element => {
   const {
     state: { service: serviceData },
     saveServiceData
@@ -55,22 +63,19 @@ const ArtifactSelection = ({ enableNextBtn, disableNextBtn }: ArtifactSelectionP
   const { trackEvent } = useTelemetry()
   const { values, setFieldValue } = useFormikContext<ConfigureServiceInterface>()
   const [artifactStepStatus, setArtifactStepStatus] = React.useState<Map<string, StepStatus>>(DefaultArtifactStepStatus)
-  const [selectedArtifact, setSelectedArtifact] = React.useState<ArtifactType>(
-    values?.artifactType || ENABLED_ARTIFACT_TYPES.DockerRegistry
+  const [selectedArtifact, setSelectedArtifact] = React.useState<ArtifactType | CustomType>(
+    values?.artifactType || CustomType.Custom
   )
 
   const serviceDefinitionType =
     (get(serviceData, 'serviceDefinition.type') as ServiceDefinition['type']) || 'Kubernetes'
-  const artifactTypes = allowedArtifactTypesForOnboiarding[serviceDefinitionType]
+  const artifactTypes = allowedArtifactTypesForOnboarding[serviceDefinitionType]
   const supportedArtifactTypes = React.useMemo(
     () =>
       (artifactTypes || [])?.map(artifact => ({
         label: getString(ArtifactTitleIdByType[artifact]),
         icon: ArtifactIconByType[artifact] as IconName,
-        value: artifact,
-        disabled: ![ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry].includes(
-          artifact
-        )
+        value: artifact
       })),
     [artifactTypes, getString]
   )
@@ -88,64 +93,103 @@ const ArtifactSelection = ({ enableNextBtn, disableNextBtn }: ArtifactSelectionP
 
       saveServiceData(updatedContextService)
     }
-    trackEvent(CDOnboardingActions.SelectArtifactType, { artifactType: selectedArtifact })
+    trackEvent(CDOnboardingActions.SelectArtifactType, {
+      artifactType: selectedArtifact,
+      deployment_type: DeploymentType.K8s
+    })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedArtifact])
 
   React.useEffect(() => {
-    if (values?.artifactToDeploy === BinaryValue.NO) {
-      enableNextBtn()
-      return
+    values?.artifactType && setSelectedArtifact(values?.artifactType)
+  }, [values])
+
+  React.useEffect(() => {
+    if (values?.artifactToDeploy === BinaryValue.YES) {
+      isStepComplete(artifactStepStatus.get('ImagePath') !== StepStatus.ToDo)
+    } else {
+      isStepComplete(true)
     }
-    artifactStepStatus.get('ImagePath') !== StepStatus.ToDo ? enableNextBtn() : disableNextBtn()
-  }, [artifactStepStatus, disableNextBtn, enableNextBtn, values])
+    if (selectedArtifact === CustomType.Custom) {
+      isStepComplete(true)
+    }
+  }, [isStepComplete, values?.artifactToDeploy, artifactStepStatus, selectedArtifact])
 
   return (
     <>
+      {/* ARTIFACT HEADERS */}
+      <Layout.Vertical padding={{ top: 'xxlarge' }}>
+        <Text
+          font={{ variation: FontVariation.H4 }}
+          color={Color.GREY_600}
+          data-tooltip-id="cdOnboardingSelectArtifactRepo"
+        >
+          {getString('pipeline.artifactTriggerConfigPanel.artifact')}
+          <HarnessDocTooltip tooltipId="cdOnboardingSelectArtifactRepo" useStandAlone={true} />
+        </Text>
+        <Text font="normal" padding={{ top: 'medium', bottom: 'xxlarge' }}>
+          {getString('cd.getStartedWithCD.artifactDescription')}
+        </Text>
+      </Layout.Vertical>
+
       {/* ARTIFACT SELECTION */}
       {values?.manifestStoreType !== ManifestStoreMap.Harness && (
-        <>
-          <Layout.Vertical padding={{ top: 'xxlarge' }}>
-            <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'large' }} color={Color.GREY_600}>
-              {getString('cd.getStartedWithCD.artifactToDeploy')}
-            </Text>
-            <Layout.Horizontal>
-              {BinaryOptions.map(option => {
-                return (
-                  <Button
-                    key={option.label}
-                    className={cx(css.buttonWrapper, css.radioButton)}
-                    text={capitalize(option.label)}
-                    onClick={_e => {
-                      setFieldValue('artifactToDeploy', option.value)
-                    }}
-                    intent={values?.artifactToDeploy === option.label ? Intent.PRIMARY : Intent.NONE}
-                    margin={{ bottom: 'small' }}
-                    round
-                    inline
-                  />
-                )
-              })}
-            </Layout.Horizontal>
-          </Layout.Vertical>
-          <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
-        </>
+        <Layout.Vertical padding={{ top: 'xsmall', bottom: 'medium' }}>
+          <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'large' }} color={Color.GREY_600}>
+            {getString('cd.getStartedWithCD.artifactToDeploy')}
+          </Text>
+          <Layout.Horizontal>
+            {ArtifactOptions.map(option => {
+              return (
+                <Button
+                  key={option.value}
+                  className={cx(css.buttonWrapper, css.radioButton)}
+                  text={getString(option.label as keyof StringsMap)}
+                  onClick={_e => {
+                    isStepComplete(option.value !== BinaryValue.YES)
+                    setFieldValue('artifactToDeploy', option.value)
+                  }}
+                  intent={values?.artifactToDeploy === option.value ? Intent.PRIMARY : Intent.NONE}
+                  round
+                  inline
+                />
+              )
+            })}
+          </Layout.Horizontal>
+        </Layout.Vertical>
       )}
-      {values?.artifactToDeploy === BinaryValue.YES && (
+      {values?.artifactToDeploy === BinaryValue.YES ? (
         <>
           {/* ARTIFACT TYPE SELECTION */}
-          <Layout.Vertical padding={{ top: 'xxlarge' }}>
-            <Text
-              font={{ variation: FontVariation.H4 }}
-              padding={{ bottom: 'xxlarge' }}
-              color={Color.GREY_600}
-              data-tooltip-id="cdOnboardingSelectArtifactRepo"
-            >
-              {getString('cd.getStartedWithCD.selectArtifactRepo')}
-              <HarnessDocTooltip tooltipId="cdOnboardingSelectArtifactRepo" useStandAlone={true} />
+          <Layout.Vertical padding={{ bottom: 'medium' }}>
+            <Text font={{ size: 'medium', weight: 'semi-bold' }} padding={{ bottom: 'large' }} color={Color.GREY_600}>
+              {getString('cd.azureArm.location')}
             </Text>
             <Layout.Horizontal>
+              {values?.manifestStoreType === ManifestStoreMap.Harness && (
+                <>
+                  <Button
+                    className={css.authMethodBtn}
+                    round
+                    text={getString('cd.getStartedWithCD.sampleAppOnDockerRegistry')}
+                    onClick={() => {
+                      setSelectedArtifact(CustomType.Custom)
+                    }}
+                    padding="large"
+                    intent={values?.artifactType === CustomType.Custom ? Intent.PRIMARY : Intent.NONE}
+                  />
+
+                  <Container className={css.verticalSeparation} margin={{ left: 'medium' }} />
+                  <Text
+                    font={{ variation: FontVariation.BODY2 }}
+                    color={Color.GREY_500}
+                    className={moduleCss.manifestLabel}
+                  >
+                    {getString('cd.getStartedWithCD.connectOwnArtifact')}
+                  </Text>
+                </>
+              )}
               {supportedArtifactTypes.map(option => {
                 return (
                   <Button
@@ -157,7 +201,6 @@ const ArtifactSelection = ({ enableNextBtn, disableNextBtn }: ArtifactSelectionP
                     }}
                     intent={values?.artifactType === option.value ? Intent.PRIMARY : Intent.NONE}
                     margin={{ bottom: 'small' }}
-                    disabled={option?.disabled}
                     round
                     inline
                   />
@@ -165,49 +208,71 @@ const ArtifactSelection = ({ enableNextBtn, disableNextBtn }: ArtifactSelectionP
               })}
             </Layout.Horizontal>
           </Layout.Vertical>
-          <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
           {!isEmpty(values?.artifactType) && (
             <Container padding="large" className={moduleCss.connectorContainer}>
-              <Layout.Vertical margin={{ bottom: 'large' }}>
-                <Layout.Horizontal margin={{ bottom: 'large', top: 'large' }}>
-                  <Icon name={ArtifactIconByType[values?.artifactType as ArtifactType]} size={28} flex />
-                  <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'large' }}>
-                    {getString('cd.getStartedWithCD.connectTo', {
-                      entity: getString(ArtifactTitleIdByType[values?.artifactType as ArtifactType])
-                    })}
-                  </Text>
-                </Layout.Horizontal>
-                <ul className={moduleCss.progress}>
-                  <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
-                    <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'small', bottom: 'small' }}>
-                      {getString('cd.getStartedWithCD.selectAuthMethod')}
-                    </Text>
-                    <ArtifactoryAuthStep
-                      onSuccess={status => {
-                        setArtifactStepStatus(
-                          new Map<string, StepStatus>([
-                            ['Authentication', status],
-                            ['ImagePath', status !== StepStatus.Success ? StepStatus.ToDo : StepStatus.InProgress]
-                          ])
-                        )
-                      }}
-                      selectedArtifact={selectedArtifact}
-                    />
-                  </li>
-
-                  {artifactStepStatus.get('Authentication') === StepStatus.Success && (
-                    <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
-                      <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'small', bottom: 'small' }}>
-                        {getString('pipeline.imagePathLabel')}
+              <Layout.Vertical margin={{ top: 'large', bottom: 'large' }}>
+                {selectedArtifact === CustomType.Custom ? (
+                  <SampleArtifact />
+                ) : (
+                  <>
+                    <Layout.Horizontal margin={{ bottom: 'large', top: 'large' }}>
+                      <Icon name={ArtifactIconByType[selectedArtifact as ArtifactType]} size={28} flex />
+                      <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'large' }}>
+                        {getString('cd.getStartedWithCD.connectTo', {
+                          entity: getString(ArtifactTitleIdByType[selectedArtifact as ArtifactType])
+                        })}
                       </Text>
-                      <ArtifactImagePath />
-                    </li>
-                  )}
-                </ul>
+                    </Layout.Horizontal>
+                    <ul className={moduleCss.progress}>
+                      <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
+                        <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'small', bottom: 'small' }}>
+                          {values?.artifactType === ENABLED_ARTIFACT_TYPES.DockerRegistry
+                            ? getString('cd.getStartedWithCD.registryDetails')
+                            : getString('cd.getStartedWithCD.repoDetails')}
+                        </Text>
+                        <ArtifactoryAuthStep
+                          onSuccess={status => {
+                            setArtifactStepStatus(
+                              new Map<string, StepStatus>([
+                                ['Authentication', status],
+                                ['ImagePath', status !== StepStatus.Success ? StepStatus.ToDo : StepStatus.InProgress]
+                              ])
+                            )
+                          }}
+                          selectedArtifact={selectedArtifact as ArtifactType}
+                        />
+                      </li>
+
+                      {artifactStepStatus.get('Authentication') === StepStatus.Success && (
+                        <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
+                          <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'small', bottom: 'small' }}>
+                            {getString('pipeline.imagePathLabel')}
+                          </Text>
+                          <ArtifactImagePath />
+                        </li>
+                      )}
+                    </ul>
+                  </>
+                )}
               </Layout.Vertical>
             </Container>
           )}
         </>
+      ) : (
+        <Container padding="large" className={moduleCss.connectorContainer}>
+          <Layout.Vertical margin={{ top: 'large', bottom: 'large' }}>
+            {values?.artifactToDeploy === BinaryValue.NO ? (
+              <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} padding={{ bottom: 'large', left: 'xlarge' }}>
+                <Icon name={'coverage-status-success'} size={24} padding={{ right: 'medium' }} />
+                <Text font={{ size: 'medium', variation: FontVariation.BODY2 }}>
+                  {getString('cd.getStartedWithCD.artifactReferencedInManifest')}
+                </Text>
+              </Layout.Horizontal>
+            ) : (
+              <SampleArtifact />
+            )}
+          </Layout.Vertical>
+        </Container>
       )}
     </>
   )

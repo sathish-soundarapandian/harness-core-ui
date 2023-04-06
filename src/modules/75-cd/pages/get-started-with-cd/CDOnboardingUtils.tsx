@@ -46,6 +46,7 @@ import type {
   RepositoriesRepoAppDetailsResponse,
   Servicev1Application
 } from 'services/gitops'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { SelectAuthenticationMethodInterface } from './SelectInfrastructure/SelectAuthenticationMethod'
 import type { SelectGitProviderInterface } from './ConfigureService/ManifestRepoTypes/SelectGitProvider'
 import { CREDENTIALS_TYPE } from './ConfigureGitops/AuthTypeForm'
@@ -81,6 +82,11 @@ export enum DrawerMode {
   Preview = 'PREVIEW'
 }
 
+export enum DeploymentType {
+  K8s = 'K8s',
+  GitOps = 'GitOps'
+}
+
 export const ALLOWABLE_TYPES = [MultiTypeInputType.FIXED] as AllowedTypesWithRunTime[]
 
 // FILE STORE
@@ -94,10 +100,13 @@ export const DEFAULT_SAMPLE_REPO = 'https://github.com/harness-apps/hosted-gitop
 const DEFAULT_STAGE_ID = 'Stage'
 const DEFAULT_STAGE_TYPE = 'Deployment'
 
-export const BinaryOptions = [
-  { label: BinaryValue.YES, value: BinaryValue.YES },
-  { label: BinaryValue.NO, value: BinaryValue.NO }
-]
+export const SAMPLE_ARTIFACT_NAME = 'sample_artifact_source'
+export const SAMPLE_DOCKER_CONNECTOR_NAME = 'sample_docker_connector'
+
+export enum CustomType {
+  Custom = 'Custom'
+}
+
 export interface ServiceData {
   workloadType: string
   artifactType: string
@@ -737,6 +746,8 @@ const OAuthConnectorPayload: ConnectorRequestBody = {
     name: '',
     identifier: '',
     type: 'Github',
+    orgIdentifier: '',
+    projectIdentifier: '',
     spec: {
       authentication: {
         type: 'Http',
@@ -801,19 +812,9 @@ export const getOAuthConnectorPayload = ({
   }
 }
 
-export const allowedArtifactTypesForOnboiarding: Record<string, Array<ArtifactType>> = {
-  Kubernetes: [
-    ENABLED_ARTIFACT_TYPES.DockerRegistry,
-    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-    ENABLED_ARTIFACT_TYPES.Ecr,
-    ENABLED_ARTIFACT_TYPES.Acr
-  ],
-  NativeHelm: [
-    ENABLED_ARTIFACT_TYPES.DockerRegistry,
-    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-    ENABLED_ARTIFACT_TYPES.Ecr,
-    ENABLED_ARTIFACT_TYPES.Acr
-  ]
+export const allowedArtifactTypesForOnboarding: Record<string, Array<ArtifactType>> = {
+  Kubernetes: [ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry],
+  NativeHelm: [ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry]
 }
 
 export const ArtifactIconByType: Record<string, IconName> = {
@@ -974,4 +975,8 @@ export function getSyncBody(formData: FormValues, sortedResources: any, data: Ap
   }
 
   return body
+}
+
+export const getTelemetryDeploymentType = (selectedDeploymentType?: string): DeploymentType => {
+  return selectedDeploymentType === ServiceDeploymentType.KubernetesGitops ? DeploymentType.GitOps : DeploymentType.K8s
 }

@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 import { Button, ButtonVariation, Container, HarnessDocTooltip, Layout, PageSpinner, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
+import { HelpPanel } from '@harness/help-panel'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
@@ -19,6 +20,7 @@ import { useAgentServiceForServerCreate, V1AgentType, useAgentServiceForServerLi
 import { useCDOnboardingContext } from '@cd/pages/get-started-with-cd/CDOnboardingStore'
 import { GitOpsAgentCard } from './GitOpsAgentCard'
 import { AgentProvision } from './AgentProvision'
+import { DeploymentType } from '../CDOnboardingUtils'
 import css from '../GetStartedWithCD.module.scss'
 import createK8sCSS from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 import deployCSS from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
@@ -92,14 +94,18 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
       },
       accountIdentifier: accountId
     }
-    trackEvent(CDOnboardingActions.StartProvisionAgentClicked, {})
+    trackEvent(CDOnboardingActions.StartProvisionAgentClicked, { deployment_type: DeploymentType.GitOps })
     await createAgent(payload)
       .then(agent => {
         setProvisionedAgent(agent)
-        trackEvent(CDOnboardingActions.AgentCreatedAndStartedProvisioningInBackend, {})
+        trackEvent(CDOnboardingActions.AgentCreatedAndStartedProvisioningInBackend, {
+          deployment_type: DeploymentType.GitOps
+        })
       })
       .catch(() => {
-        trackEvent(CDOnboardingActions.AgentCreationFailedWithoutProvisioning, {})
+        trackEvent(CDOnboardingActions.AgentCreationFailedWithoutProvisioning, {
+          deployment_type: DeploymentType.GitOps
+        })
       })
   }
 
@@ -124,7 +130,10 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
       const agent = agentList.content[0]
       setSelectedAgent(agent)
       setIsProvisioningScreen(true)
-      trackEvent(CDOnboardingActions.SelectedExistingAgent, { selectedAgent: agent?.name })
+      trackEvent(CDOnboardingActions.SelectedExistingAgent, {
+        selectedAgent: agent?.name,
+        deployment_type: DeploymentType.GitOps
+      })
     }
   }, [loadingAgentsList])
 
@@ -177,6 +186,9 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
           </Text>
           {renderContent()}
         </Layout.Vertical>
+        <Container className={deployCSS.helpPanelContainer}>
+          <HelpPanel referenceId="gitOpsPlgConnectAgent" />
+        </Container>
       </Container>
       <Layout.Vertical className={classnames(deployCSS.footer, deployCSS.width70)}>
         <hr className={deployCSS.divider} />
