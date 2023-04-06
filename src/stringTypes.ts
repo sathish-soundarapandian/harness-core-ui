@@ -5057,6 +5057,12 @@ export interface StringsMap {
   'freezeWindows.globalFreeze.enabled': string
   'freezeWindows.globalFreeze.enabledWindow': string
   'freezeWindows.rbac.global': string
+  'freezeWindows.recurrenceConfig.Timezone': string
+  'freezeWindows.recurrenceConfig.doesNotRepeat': string
+  'freezeWindows.recurrenceConfig.endTime': string
+  'freezeWindows.recurrenceConfig.nMonthsValidationLessThan': string
+  'freezeWindows.recurrenceConfig.nMonthsValidationMoreThan': string
+  'freezeWindows.recurrenceConfig.recurrence': string
   'templatesLibrary.addNewTemplate': string
   'templatesLibrary.alwaysUseStableVersion': string
   'templatesLibrary.changeGitBranch': string

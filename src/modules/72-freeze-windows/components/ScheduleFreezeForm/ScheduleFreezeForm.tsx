@@ -5,14 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode } from 'react'
-import { FormikForm, Formik, Layout, FormInput, SelectOption } from '@harness/uicore'
+import React, { ReactNode, useState } from 'react'
+import { FormikForm, Formik, Layout, FormInput, SelectOption, Text, DropDown } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import * as Yup from 'yup'
-import { isNull, isUndefined, omit, omitBy } from 'lodash-es'
+import produce from 'immer'
+import { defaultTo, isNull, isUndefined, omit, omitBy, set } from 'lodash-es'
 import moment from 'moment'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import { ALL_TIME_ZONES } from '@common/utils/dateUtils'
-import { DOES_NOT_REPEAT, getMomentFormat, RECURRENCE } from '@freeze-windows/utils/freezeWindowUtils'
-import type { FreezeWindow } from 'services/cd-ng'
+import {
+  DOES_NOT_REPEAT,
+  getMomentFormat,
+  RECURRENCE,
+  RecurrenceTypeEnum
+} from '@freeze-windows/utils/freezeWindowUtils'
+import type { FreezeWindow, Recurrence } from 'services/cd-ng'
 import { useFreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { DateTimePicker, DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
@@ -67,29 +75,35 @@ function getRecurrenceEndDateValidationSchema(): Yup.StringSchema<string | undef
     })
 }
 
-const validationSchema = Yup.object().shape({
-  timeZone: Yup.string().required('Timezone is required'),
-  startTime: Yup.string().required('Start Time is required'),
-  endTimeMode: Yup.string().oneOf(['duration', 'date']),
-  duration: Yup.string().when('endTimeMode', {
-    is: 'duration',
-    then: getDurationValidationSchema({ minimum: '30m' }).required('Duration is required')
-  }),
-  endTime: Yup.string().when('endTimeMode', {
-    is: 'date',
-    then: getEndTimeValidationSchema()
-  }),
-  recurrence: Yup.object().shape({
-    type: Yup.string(),
-    spec: Yup.object().shape({
-      recurrenceEndMode: Yup.string().oneOf(['never', 'date']),
-      until: Yup.string().when('recurrenceEndMode', {
-        is: 'date',
-        then: getRecurrenceEndDateValidationSchema()
+const validationSchema = (getString: UseStringsReturn['getString']): Yup.ObjectSchema =>
+  Yup.object().shape({
+    timeZone: Yup.string().required(getString('common.validation.fieldIsRequired', { name: 'Timezone' })),
+    startTime: Yup.string().required(getString('common.validation.fieldIsRequired', { name: 'Start Time' })),
+    endTimeMode: Yup.string().oneOf(['duration', 'date']),
+    duration: Yup.string().when('endTimeMode', {
+      is: 'duration',
+      then: getDurationValidationSchema({ minimum: '30m' }).required(
+        getString('common.validation.fieldIsRequired', { name: 'Duration' })
+      )
+    }),
+    endTime: Yup.string().when('endTimeMode', {
+      is: 'date',
+      then: getEndTimeValidationSchema()
+    }),
+    recurrence: Yup.object().shape({
+      type: Yup.string(),
+      spec: Yup.object().shape({
+        recurrenceEndMode: Yup.string().oneOf(['never', 'date']),
+        until: Yup.string().when('recurrenceEndMode', {
+          is: 'date',
+          then: getRecurrenceEndDateValidationSchema()
+        }),
+        value: Yup.number()
+          .lessThan(12, getString('freezeWindows.recurrenceConfig.nMonthsValidationLessThan'))
+          .moreThan(1, getString('freezeWindows.recurrenceConfig.nMonthsValidationMoreThan'))
       })
     })
   })
-})
 
 const timeZoneList: SelectOption[] = ALL_TIME_ZONES.map(timeZone => ({ value: timeZone, label: timeZone }))
 const recurrenceList: SelectOption[] = [
@@ -112,7 +126,8 @@ const processInitialvalues = (freezeWindow: FreezeWindow): FreezeWindowFormData 
         until:
           freezeWindow?.recurrence?.spec?.until ??
           getMomentFormat(freezeWindow?.endTime).endOf('year').format(DATE_PARSE_FORMAT),
-        recurrenceEndMode: freezeWindow?.recurrence?.type && freezeWindow?.recurrence?.spec?.until ? 'date' : 'never'
+        recurrenceEndMode: freezeWindow?.recurrence?.type && freezeWindow?.recurrence?.spec?.until ? 'date' : 'never',
+        value: freezeWindow?.recurrence?.spec?.value
       }
     }
   } as FreezeWindowFormData
@@ -122,15 +137,26 @@ const processInitialvalues = (freezeWindow: FreezeWindow): FreezeWindowFormData 
 
 const processFormData = (form: FreezeWindowFormData): FreezeWindow => {
   const processedForm = omit(form, ['endTimeMode', 'recurrence.spec.recurrenceEndMode'])
+
+  const recurrenceSpec = {
+    ...(form.recurrence.spec.recurrenceEndMode === 'date' ? processedForm.recurrence?.spec : undefined),
+    value: processedForm.recurrence?.spec?.value ? processedForm.recurrence?.spec.value : undefined
+  }
+
+  const recurrenceValue = {
+    type: processedForm.recurrence?.type,
+    spec:
+      form.recurrence.spec.recurrenceEndMode === 'date' || processedForm.recurrence?.spec?.value
+        ? omitBy(recurrenceSpec, value => isUndefined(value) || isNull(value) || value === '')
+        : undefined
+  }
+
   const processedData = {
     ...processedForm,
     duration: form.endTimeMode === 'duration' ? processedForm.duration : undefined,
     endTime: form.endTimeMode === 'date' ? processedForm.endTime : undefined,
     recurrence: processedForm.recurrence?.type
-      ? {
-          type: processedForm.recurrence?.type,
-          spec: form.recurrence.spec.recurrenceEndMode === 'date' ? processedForm.recurrence.spec : undefined
-        }
+      ? omitBy(recurrenceValue, value => isUndefined(value) || isNull(value))
       : undefined
   }
 
@@ -144,7 +170,30 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
   formActions,
   isGlobalFreezeForm
 }) => {
+  const { getString } = useStrings()
   const { setFreezeFormError } = useFreezeWindowContext()
+  const freezeRecurrence = freezeWindow?.recurrence
+  const recurrenceInitialValue = defaultTo(freezeRecurrence?.spec?.value, 1)
+  const [recurrenceSelectOption, setRecurrenceSelectOption] = useState<SelectOption>({
+    label: recurrenceInitialValue.toString(),
+    value: recurrenceInitialValue
+  })
+
+  const [selectedRecurrenceType, setSelectedRecurrenceType] = useState<string | undefined>(
+    freezeRecurrence?.spec?.value
+      ? RecurrenceTypeEnum.Monthly
+      : defaultTo(freezeRecurrence?.type, RecurrenceTypeEnum.DoesNotRepeat)
+  )
+
+  const monthlySelectItems = React.useMemo(
+    () =>
+      [...Array(11)] //only 1 to 11 interger allowed and only Monthly type supported
+        .map((_, index): SelectOption => {
+          return { label: (index + 1).toString(), value: index + 1 }
+        }),
+    []
+  )
+
   return (
     <Formik<FreezeWindowFormData>
       enableReinitialize
@@ -153,7 +202,7 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
       onSubmit={values => onSubmit?.(processFormData(values))}
       formName="freezeWindowSchedule"
       initialValues={processInitialvalues(freezeWindow)}
-      validationSchema={validationSchema}
+      validationSchema={validationSchema(getString)}
     >
       {formikProps => {
         setFreezeFormError?.(formikProps.errors)
@@ -161,7 +210,7 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
           <FormikForm>
             <Layout.Vertical width={'320px'} className={css.scheduleFreezeForm}>
               <FormInput.DropDown
-                label="Timezone"
+                label={getString('freezeWindows.recurrenceConfig.Timezone')}
                 name="timeZone"
                 items={timeZoneList}
                 dropDownProps={{
@@ -172,7 +221,8 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
               <DateTimePicker name="startTime" label="Start Time" defaultToCurrentTime />
               <FormInput.RadioGroup
                 name="endTimeMode"
-                label="End Time"
+                label={getString('freezeWindows.recurrenceConfig.endTime')}
+                className={css.marginBottom8}
                 items={[
                   {
                     label: (
@@ -195,17 +245,62 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
               />
 
               {!isGlobalFreezeForm && (
-                <FormInput.DropDown
-                  placeholder="Does not repeat"
-                  label="Recurrence"
-                  name="recurrence.type"
-                  items={recurrenceList}
-                  dropDownProps={{
-                    filterable: false,
-                    minWidth: 200
-                  }}
-                  usePortal
-                />
+                <Layout.Vertical>
+                  <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_600} margin={{ bottom: 'xxsmall' }}>
+                    {getString('freezeWindows.recurrenceConfig.recurrence')}
+                  </Text>
+                  <Layout.Horizontal
+                    spacing="small"
+                    flex={{ alignItems: 'center' }}
+                    data-testid={'recurrenceType-selection'}
+                  >
+                    <DropDown
+                      placeholder={getString('freezeWindows.recurrenceConfig.doesNotRepeat')}
+                      items={recurrenceList}
+                      value={selectedRecurrenceType}
+                      minWidth={200}
+                      usePortal={true}
+                      filterable={false}
+                      className={css.marginBottom24}
+                      onChange={item => {
+                        const isMonthly = item.value === RecurrenceTypeEnum.Monthly
+                        setSelectedRecurrenceType(item.value as string)
+                        const recurrenceField = formikProps.values?.recurrence
+                        const recurrenceValue =
+                          isMonthly && (recurrenceField?.spec.value as number) > 1
+                            ? recurrenceField?.spec.value
+                            : undefined
+                        const newValues = produce(formikProps.values, draft => {
+                          set(draft, 'recurrence.type', item.value as Recurrence['type'])
+                          set(draft, 'recurrence.spec.value', recurrenceValue)
+                        })
+                        formikProps.setValues(newValues)
+                      }}
+                    />
+                    {selectedRecurrenceType === RecurrenceTypeEnum.Monthly && (
+                      <div className={css.marginBottom8}>
+                        <FormInput.Select
+                          name="recurrence.spec.value"
+                          placeholder={getString('select')}
+                          items={monthlySelectItems}
+                          value={recurrenceSelectOption}
+                          addClearButton={true}
+                          usePortal={true}
+                          className={css.selectDropdownWidth}
+                          onChange={item => {
+                            setRecurrenceSelectOption(item)
+                            const recurrenceValue = (item.value as number) > 1 ? (item.value as number) : undefined
+                            const newValues = produce(formikProps.values, draft => {
+                              set(draft, 'recurrence.type', RecurrenceTypeEnum.Monthly)
+                              set(draft, 'recurrence.spec.value', recurrenceValue)
+                            })
+                            formikProps.setValues(newValues)
+                          }}
+                        />
+                      </div>
+                    )}
+                  </Layout.Horizontal>
+                </Layout.Vertical>
               )}
 
               {formikProps.values?.recurrence?.type && (

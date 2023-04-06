@@ -53,3 +53,11 @@ freezeWindowConfig:
   accountLevelValidationMsg: 'Minimum of one Service or Environment or Organization is required at the Account Scope'
   orgLevelValidationMsg: 'Minimum of one Service or Environment or Project is required at the Organization Scope'
   projLevelValidationMsg: 'Minimum of one Service or Environment is required at the Project Scope'
+
+recurrenceConfig:
+  doesNotRepeat: Does not repeat
+  recurrence: Recurrence
+  endTime: 'End Time'
+  Timezone: Timezone
+  nMonthsValidationLessThan: 'Monthly value should be less than 12 months'
+  nMonthsValidationMoreThan: 'Monthly value should be more than 1 month'

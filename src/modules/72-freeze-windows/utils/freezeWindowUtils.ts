@@ -12,6 +12,14 @@ export const DATE_PARSE_FORMAT = 'YYYY-MM-DD hh:mm A'
 export const RECURRENCE = ['Daily', 'Weekly', 'Monthly', 'Yearly'] as const
 export const DOES_NOT_REPEAT = 'Does not repeat'
 
+export enum RecurrenceTypeEnum {
+  Daily = 'Daily',
+  Weekly = 'Weekly',
+  Monthly = 'Monthly',
+  Yearly = 'Yearly',
+  DoesNotRepeat = 'Does not repeat'
+}
+
 export type Scope = Exclude<FreezeDetailedResponse['freezeScope'], 'unknown' | undefined>
 
 export const scopeText: Record<Scope, string> = {

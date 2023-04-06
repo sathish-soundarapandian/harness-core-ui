@@ -7,9 +7,17 @@
  */
 
 import React from 'react'
-import { render, waitForElementToBeRemoved, screen, fireEvent, waitFor, within } from '@testing-library/react'
+import {
+  render,
+  waitForElementToBeRemoved,
+  screen,
+  fireEvent,
+  waitFor,
+  within,
+  getByTestId
+} from '@testing-library/react'
 import userEvent, { TargetElement } from '@testing-library/user-event'
-import { TestWrapper } from '@common/utils/testUtils'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { getOrganizationAggregateDTOListMockData } from '@projects-orgs/pages/organizations/__tests__/OrganizationsMockData'
 import serviceData from '@common/modals/HarnessServiceModal/__tests__/serviceMock'
@@ -100,7 +108,7 @@ describe('Freeze Window Studio Config Section', () => {
   })
 
   test('it should render Config section in create mode - ACCOUNT LEVEL', async () => {
-    const { container, getByText, getByTestId, getAllByText } = render(
+    const { container, getByText, getAllByText } = render(
       <TestWrapper
         path="/account/:accountId/settings/freeze-window-studio/window/:windowIdentifier/"
         pathParams={{ accountId, windowIdentifier: '-1' }}
@@ -173,7 +181,7 @@ describe('Freeze Window Studio Config Section', () => {
 
     expect(await screen.findByText('Rule Number 2')).toBeInTheDocument()
 
-    const secondRule = getByTestId('config-view-mode_1')
+    const secondRule = getByTestId(container, 'config-view-mode_1')
     const deleteButton = secondRule.querySelector('[data-icon="main-trash"]')
     expect(deleteButton).toBeInTheDocument()
     userEvent.click(deleteButton as TargetElement)
@@ -308,5 +316,53 @@ describe('Freeze Window Studio Config Section', () => {
 
     expect(await screen.findByText('Rule Number 1')).toBeInTheDocument()
     expect(getByText('envType: common.allEnvironments')).toBeInTheDocument()
+  })
+
+  test('test ScheduleSection recurrence', async () => {
+    const { container, getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
+        pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', windowIdentifier: '-1' }}
+      >
+        <FreezeWindowContext.Provider
+          value={{
+            ...defaultContext,
+            state: {
+              ...defaultContext.state,
+              isUpdated: true
+            }
+          }}
+        >
+          <FreezeWindowScheduleSection isReadOnly={false} onBack={jest.fn()} />
+        </FreezeWindowContext.Provider>
+      </TestWrapper>
+    )
+
+    expect(getByText('freezeWindows.recurrenceConfig.recurrence')).toBeTruthy()
+
+    //default values test
+
+    //default recurrence type
+    expect(getByText('freezeWindows.recurrenceConfig.doesNotRepeat')).toBeTruthy()
+
+    //change recurrence type and provide n months value
+    const recurrenceTypeSelection = getByTestId(container, 'recurrenceType-selection')
+    const dropdownButton = getByTestId(recurrenceTypeSelection, 'dropdown-button')
+    userEvent.click(dropdownButton)
+
+    const dropdownOptions = findPopoverContainer() as HTMLElement
+    const NMonths = await within(dropdownOptions).findByText('Monthly')
+    userEvent.click(NMonths)
+
+    //default n months recurrence value
+    const NMonthValueField = container.querySelector('input[name="recurrence.spec.value"]')
+    expect(NMonthValueField).toHaveValue('1')
+
+    //change value
+    userEvent.click(NMonthValueField!)
+    const valueDropdownOptions = document.querySelectorAll('.bp3-popover-content')?.[1] as HTMLElement
+    const firstOption = await within(valueDropdownOptions).findByText('2')
+    userEvent.click(firstOption)
+    expect(NMonthValueField).toHaveValue('2')
   })
 })
