@@ -222,7 +222,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           multiTypeInputProps={{
             selectProps: {
               addClearBtn: true,
-              allowCreatingNewItems: true,
+              allowCreatingNewItems: !!CDS_SERVICENOW_TICKET_TYPE_V2,
               items: ticketTypesLoading
                 ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                 : serviceNowTicketTypesOptions

@@ -4217,6 +4217,7 @@ export interface StringsMap {
   'pipeline.jiraCreateStep.fieldSelectorAdd': string
   'pipeline.jiraCreateStep.fields': string
   'pipeline.jiraCreateStep.fieldsSelectorPlaceholder': string
+  'pipeline.jiraCreateStep.projectIssueTypeDisclaimer': string
   'pipeline.jiraCreateStep.provideFieldList': string
   'pipeline.jiraCreateStep.selectFieldListHelp': string
   'pipeline.jiraCreateStep.selectFieldsHeading': string
@@ -4225,7 +4226,7 @@ export interface StringsMap {
   'pipeline.jiraCreateStep.unsupportedRequiredFieldsError': string
   'pipeline.jiraCreateStep.validations.summary': string
   'pipeline.jiraUpdateStep.fetchingStatus': string
-  'pipeline.jiraUpdateStep.projectIssueTypeDisclaimer': string
+  'pipeline.jiraUpdateStep.projectIssueKeyDisclaimer': string
   'pipeline.jiraUpdateStep.selectStatus': string
   'pipeline.jiraUpdateStep.statusTransitionAccordion': string
   'pipeline.jiraUpdateStep.transitionLabel': string

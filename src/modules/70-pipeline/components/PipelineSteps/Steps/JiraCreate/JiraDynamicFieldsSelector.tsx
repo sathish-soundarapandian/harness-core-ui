@@ -21,6 +21,7 @@ import {
   Text,
   TextInput
 } from '@harness/uicore'
+import { isEmpty } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -53,11 +54,13 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
     refetchProjectMetadata,
     projectMetaResponse,
     fetchingProjectMetadata,
+    projectMetadataFetchError,
     issueUpdateMetadataFetchError,
     jiraType,
     refetchIssueMetadata,
     issueMetaResponse,
     fetchingIssueMetadata,
+    issueMetadataFetchError,
     refetchIssueUpdateMetadata,
     issueUpdateMetaResponse,
     fetchingIssueUpdateMetadata,
@@ -261,6 +264,11 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
         ) : (
           <Text intent={Intent.DANGER}>{getRBACErrorMessage(issueUpdateMetadataFetchError)}</Text>
         )
+      ) : isEmpty(issueUpdateMetaResponse?.data) && !issueUpdateMetadataFetchError ? (
+        <Text intent="warning">{getString('pipeline.jiraUpdateStep.projectIssueKeyDisclaimer')}</Text>
+      ) : (isEmpty(projectMetaResponse?.data) && !projectMetadataFetchError) ||
+        (isEmpty(issueMetaResponse?.data) && !issueMetadataFetchError) ? (
+        <Text intent="warning">{getString('pipeline.jiraCreateStep.projectIssueTypeDisclaimer')}</Text>
       ) : (
         <JiraFieldSelector
           fields={fieldList}

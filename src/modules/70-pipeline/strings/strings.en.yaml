@@ -239,15 +239,14 @@ jiraCreateStep:
   unsupportedRequiredFieldsError: "Changes can't be saved as unsupported fields are present - {{ fields }}"
   validations:
     summary: Summary is required
+  projectIssueTypeDisclaimer: Only permitted projects or issue types are being displayed. Please check if there are sufficient permissions in Jira to perform this action
 jiraUpdateStep:
   statusTransitionAccordion: Status and Transition (optional)
   transitionLabel: Transition Name
   transitionPlaceholder: Enter Transition Name
   fetchingStatus: Fetching Status List...
   selectStatus: Select Status
-  projectIssueTypeDisclaimer:
-    Please ensure the values for your project and issuetype matches the values in your issue key. If the
-    values don’t match, there will be an error at runtime.
+  projectIssueKeyDisclaimer: Only permitted fields are being displayed. Please check if there are sufficient permissions in Jira to perform this action.
   validations:
     status: Status is required with transition.
 approvalCriteria:
