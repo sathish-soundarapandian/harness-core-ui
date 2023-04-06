@@ -12,9 +12,16 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Editions } from '@common/constants/SubscriptionTypes'
 import SliderBar from './SliderBar'
-import { Item, generateRangeArray, Header } from './FFDeveloperCard'
-
 import css from './CostCalculator.module.scss'
+import { Item, Header } from './FFDeveloperCard'
+
+const generateRangeArray = (min: number, max: number, stepSize: number): number[] => {
+  const rangeArray = []
+  for (let i = min; i <= max; i += stepSize) {
+    rangeArray[i] = i
+  }
+  return rangeArray
+}
 
 interface DeveloperSubscriptionInfoProps {
   currentSubscribed: number
