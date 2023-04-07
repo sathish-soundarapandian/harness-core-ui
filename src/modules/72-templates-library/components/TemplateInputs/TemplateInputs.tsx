@@ -121,7 +121,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({
     } catch (error) {
       showError(getRBACErrorMessage(error as RBACError), undefined, 'template.parse.inputSet.error')
     }
-  }, [templateInputYaml?.data])
+  }, [templateInputYaml])
 
   React.useEffect(() => {
     if (loading) {

@@ -135,6 +135,15 @@
 
 .gitBtn {
   gap: var(--spacing-2) !important;
+  max-height: var(--spacing-8) !important;
+  :global {
+    .bp3-button {
+      min-height: unset !important;
+      min-width: unset !important;
+      height: var(--spacing-5) !important;
+      width: var(--spacing-5) !important;
+    }
+  }
 }
 
 .cacheIcon {

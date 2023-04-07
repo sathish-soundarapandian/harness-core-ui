@@ -268,10 +268,11 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   }, [templateYamlError])
 
   React.useEffect(() => {
-    if (selectedTemplate) {
+    // This check ensures template inputs are fetched once complete template details are available - this is required especially for remote templates
+    if (selectedTemplate?.yaml) {
       refetchTemplateInputSetYaml()
     }
-  }, [selectedTemplate?.identifier, selectedTemplate?.versionLabel])
+  }, [selectedTemplate])
 
   useDeepCompareEffect(() => {
     if (selectedTemplateSpec && selectedTemplate?.templateEntityType === TemplateType.Pipeline) {
