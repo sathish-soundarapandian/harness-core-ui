@@ -25,8 +25,7 @@ import { useGetGCSBucketList } from 'services/cd-ng'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/components'
 import type { BuildStore, HelmManifestSpec } from 'services/pipeline-ng'
-import { helmVersions } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getConnectorRefOrConnectorId, helmVersions } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestStepInitData } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import type { ManifestLastStepProps, ManifestTriggerSource } from '../../ManifestInterface'
 import css from '../ManifestWizardSteps.module.scss'
@@ -44,7 +43,7 @@ function HelmWithGcs({
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
-  const connectorRef = getConnectorIdValue(prevStepData)
+  const connectorRef = getConnectorRefOrConnectorId(prevStepData)
 
   const {
     data: bucketData,

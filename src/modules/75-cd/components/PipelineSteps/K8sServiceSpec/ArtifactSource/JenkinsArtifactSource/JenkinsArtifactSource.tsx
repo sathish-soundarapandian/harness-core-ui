@@ -588,6 +588,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                         setArtifactPaths([])
                         setJenkinsBuilds([])
                       }
+                      setJobNameValue(typeof primaryValue === 'string' ? primaryValue : primaryValue?.label)
                       setChildJob(primaryValue)
                       formik.setFieldValue(
                         `${path}.artifacts.${artifactPath}.spec.jobName`,

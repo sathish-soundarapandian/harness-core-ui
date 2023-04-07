@@ -12,10 +12,8 @@ import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { BuildStore, HelmManifestSpec } from 'services/pipeline-ng'
-import { helmVersions } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getConnectorRefOrConnectorId, helmVersions } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestStepInitData } from '@pipeline/components/ManifestSelection/ManifestInterface'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { ManifestLastStepProps, ManifestTriggerSource } from '../../ManifestInterface'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from './Helm.module.scss'
@@ -41,8 +39,7 @@ function HelmWithHttp({
 
   const submitFormData = (formData: HelmManifestSpec): void => {
     const { store } = prevStepData ?? {}
-    const connectorRef =
-      getConnectorIdValue(prevStepData) || (prevStepData?.connectorRef as ConnectorSelectedValue).value
+    const connectorRef = getConnectorRefOrConnectorId(prevStepData)
     const manifestTriggerSource: ManifestTriggerSource = {
       type: 'Manifest',
       spec: {

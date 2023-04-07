@@ -19,8 +19,7 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useListAwsRegions } from 'services/portal'
 import type { BuildStore, HelmManifestSpec } from 'services/pipeline-ng'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { helmVersions } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getConnectorRefOrConnectorId, helmVersions } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestStepInitData } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import type { ManifestLastStepProps, ManifestTriggerSource } from '../../ManifestInterface'
 import css from '../ManifestWizardSteps.module.scss'
@@ -38,7 +37,7 @@ function HelmWithS3({
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const [regions, setRegions] = useState<SelectOption[]>([])
-  const connectorRef = getConnectorIdValue(prevStepData)
+  const connectorRef = getConnectorRefOrConnectorId(prevStepData)
 
   /* Code related to region */
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()

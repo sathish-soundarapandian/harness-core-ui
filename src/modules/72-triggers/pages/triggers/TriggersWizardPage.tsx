@@ -786,8 +786,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
             // set error
             setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
           }
-        } else if (isNewGitSyncRemotePipeline) {
-          pipelineJson = resolvedMergedPipeline
+        } else {
+          pipelineJson = clearRuntimeInput(yamlTemplate)
         }
 
         triggerValues = {
@@ -901,8 +901,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
             // set error
             setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
           }
-        } else if (isNewGitSyncRemotePipeline) {
-          pipelineJson = resolvedMergedPipeline
+        } else {
+          pipelineJson = clearRuntimeInput(yamlTemplate)
         }
 
         triggerValues = {
@@ -973,8 +973,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           // set error
           setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
-      } else if (isNewGitSyncRemotePipeline) {
-        pipelineJson = resolvedMergedPipeline
+      } else {
+        pipelineJson = clearRuntimeInput(yamlTemplate)
       }
       const expressionBreakdownValues = getBreakdownValues(expression)
       const newExpressionBreakdown = {
@@ -1068,8 +1068,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           // set error
           setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
-      } else if (isNewGitSyncRemotePipeline) {
-        pipelineJson = resolvedMergedPipeline
+      } else {
+        pipelineJson = clearRuntimeInput(yamlTemplate)
       }
       const eventConditions = source?.spec?.spec?.eventConditions || []
       const { value: versionValue, operator: versionOperator } =
@@ -1822,6 +1822,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     }
 
     const runPipelineFormErrors = isNewGitSyncRemotePipeline
+      ? null
+      : formikProps.values.inputSetRefs?.length
       ? null
       : await getFormErrors({
           latestPipeline: latestPipelineFromYamlView || latestPipeline,

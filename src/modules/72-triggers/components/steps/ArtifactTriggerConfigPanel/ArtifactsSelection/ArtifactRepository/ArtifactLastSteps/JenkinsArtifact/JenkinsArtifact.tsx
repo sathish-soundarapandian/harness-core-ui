@@ -44,7 +44,11 @@ import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/Art
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import { getJenkinsJobParentChildName, getJobValue } from '@pipeline/components/PipelineSteps/Steps/JenkinsStep/helper'
+import {
+  getJenkinsJobParentChildName,
+  getJobName,
+  getJobValue
+} from '@pipeline/components/PipelineSteps/Steps/JenkinsStep/helper'
 import type { ImagePathProps, JenkinsArtifactTriggerSpec } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -77,7 +81,7 @@ function FormComponent(
   }
 
   const connectorRefValue = getConnectorIdValue(prevStepData)
-  const jobNameValue = formik.values?.jobName
+  const jobNameValue = getJobName(formik.values?.jobName, formik.values?.childJobName)
   const artifactPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingArtifacts} />
   ))
@@ -136,7 +140,7 @@ function FormComponent(
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
     },
-    jobName: encodeURIComponent(encodeURIComponent((jobNameValue as any)?.label || ''))
+    jobName: encodeURIComponent(encodeURIComponent(jobNameValue || ''))
   })
 
   useEffect(() => {

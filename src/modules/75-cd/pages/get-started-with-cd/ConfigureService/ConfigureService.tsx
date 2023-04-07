@@ -260,7 +260,7 @@ const ConfigureServiceRef = (
         set(draft, 'serviceDefinition.spec.manifests[0]', manifestConfig)
         manifestType === 'K8sManifest' ? unset(draft, helmVersionPath) : set(draft, helmVersionPath, 'V2')
         // omit artifactConfig if artifact to deploy is no
-        formikRef.current?.values?.artifactToDeploy !== BinaryValue.YES
+        formikRef.current?.values?.artifactToDeploy !== BinaryValue.NO
           ? set(draft, 'serviceDefinition.spec.artifacts', updatedArtifactObj)
           : unset(draft, 'serviceDefinition.spec.artifacts')
         set(draft, 'identifier', defaultTo(serviceIdentifier, serviceRefIdentifier))

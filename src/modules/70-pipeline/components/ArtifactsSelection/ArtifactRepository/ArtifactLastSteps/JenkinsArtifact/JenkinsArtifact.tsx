@@ -55,7 +55,11 @@ import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraAp
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { getJenkinsJobParentChildName, getJobValue } from '@pipeline/components/PipelineSteps/Steps/JenkinsStep/helper'
+import {
+  getJenkinsJobParentChildName,
+  getJobName,
+  getJobValue
+} from '@pipeline/components/PipelineSteps/Steps/JenkinsStep/helper'
 import { isValueFixed } from '@common/utils/utils'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -103,7 +107,7 @@ function FormComponent({
   const connectorRefValue = getGenuineValue(
     modifiedPrevStepData?.connectorId?.value || modifiedPrevStepData?.identifier
   )
-  const jobNameValue = formValues?.spec?.jobName
+  const jobNameValue = getJobName(formValues?.spec?.jobName, formValues?.spec?.childJobName)
   const artifactValue = getGenuineValue(formValues?.spec?.artifactPath)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -146,7 +150,7 @@ function FormComponent({
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
     },
-    jobName: encodeURIComponent(encodeURIComponent(jobNameValue?.label || ''))
+    jobName: encodeURIComponent(encodeURIComponent(jobNameValue || ''))
   })
 
   const {
@@ -161,7 +165,7 @@ function FormComponent({
       connectorRef: connectorRefValue?.toString(),
       artifactPath: artifactValue || ''
     },
-    jobName: encodeURIComponent(encodeURIComponent(jobNameValue?.label || ''))
+    jobName: encodeURIComponent(encodeURIComponent(jobNameValue || ''))
   })
 
   useEffect(() => {

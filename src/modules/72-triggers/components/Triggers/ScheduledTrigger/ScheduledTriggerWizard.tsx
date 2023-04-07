@@ -502,8 +502,8 @@ export default function ScheduledTriggerWizard(
           // set error
           showError(getString('triggers.cannotParseInputValues'))
         }
-      } else if (isNewGitSyncRemotePipeline) {
-        pipelineJson = resolvedMergedPipeline
+      } else {
+        pipelineJson = clearRuntimeInput(yamlTemplate)
       }
       const expressionBreakdownValues = getBreakdownValues(expression)
       const newExpressionBreakdown = {
@@ -776,6 +776,8 @@ export default function ScheduledTriggerWizard(
     }
 
     const runPipelineFormErrors = isNewGitSyncRemotePipeline
+      ? null
+      : formikProps.values.inputSetRefs?.length
       ? null
       : await getFormErrors({
           latestPipeline: latestPipelineFromYamlView || latestPipeline,

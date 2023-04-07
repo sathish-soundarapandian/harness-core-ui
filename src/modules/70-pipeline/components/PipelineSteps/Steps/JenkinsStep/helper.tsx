@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@harness/uicore'
+import type { SelectOption, SelectWithSubmenuOption } from '@harness/uicore'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
@@ -82,5 +82,18 @@ export const getJobValue = (job: SelectWithBiLevelOption | string): SelectWithBi
   return {
     label,
     value: label
+  }
+}
+
+export const getJobName = (
+  jobName?: SelectWithBiLevelOption | string,
+  childJobName?: SelectWithSubmenuOption | string
+): string | undefined => {
+  if (childJobName) {
+    return typeof childJobName === 'string' ? childJobName : childJobName.label
+  }
+
+  if (jobName) {
+    return typeof jobName === 'string' ? jobName : jobName.label
   }
 }
