@@ -82,6 +82,7 @@ export type TemplatesQueryParams = {
   searchTerm?: string
   sort?: SortMethod
   view?: Views
+  filterIdentifier?: string
 } & CommonPaginationQueryParams
 export type TemplatesQueryParamsWithDefaults = RequiredPick<TemplatesQueryParams, 'page' | 'size' | 'view' | 'sort'>
 

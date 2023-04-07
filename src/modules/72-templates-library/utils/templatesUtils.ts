@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, omitBy, isArray } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type { Scope } from '@common/interfaces/SecretsInterface'
+import type { AnyArray } from 'immer/dist/internal'
 
 export enum TemplateType {
   Step = 'Step',
@@ -65,3 +66,18 @@ export const getVersionLabelText = (
 
 export const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any }): number =>
   (JSON.stringify(templateInfo).match(/<\+input>/g) || []).length
+
+export const prepareTemplateFiltersPayload = (filters: any) => {
+  if (isArray(filters?.tags)) {
+    const filtersTagsObject: any = {}
+    filters?.tags?.forEach(({ key, value }: any) => {
+      filtersTagsObject[key] = ''
+    })
+    filters.tags = filtersTagsObject
+  }
+  console.log('prepare', {
+    filters,
+    filtersOmit: omitBy(filters, isEmpty)
+  })
+  return omitBy(filters, isEmpty)
+}
