@@ -13,8 +13,8 @@ import OpenInNewTab from '../MenuItem/OpenInNewTab'
 interface RoleMenuProps {
   harnessManaged?: boolean
   role: Role
-  editRoleModal?: (role: Role) => void
-  openDeleteModal?: () => void
+  editRoleModal: (role: Role) => void
+  openDeleteModal: () => void
   setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -38,13 +38,13 @@ function RoleMenu(props: RoleMenuProps): JSX.Element {
   const handleEdit = (e: React.MouseEvent): void => {
     e.stopPropagation()
     setMenuOpen(false)
-    editRoleModal?.(role)
+    editRoleModal(role)
   }
 
   const handleDelete = (e: React.MouseEvent): void => {
     e.stopPropagation()
     setMenuOpen(false)
-    openDeleteModal?.()
+    openDeleteModal()
   }
 
   const roleDetailsUrl = routes.toRoleDetails({
