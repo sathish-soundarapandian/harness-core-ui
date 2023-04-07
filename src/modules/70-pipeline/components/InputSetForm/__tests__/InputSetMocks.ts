@@ -172,7 +172,12 @@ export const GetInputSetEdit: UseGetReturnData<ResponseInputSetResponse> = {
         rootFolder: '/rootFolderTest/.harness/'
       },
       connectorRef: 'ValidGithubRepo',
-      storeType: 'REMOTE'
+      storeType: 'REMOTE',
+      cacheResponse: {
+        cacheState: 'STALE_CACHE',
+        lastUpdatedAt: 1680782813372,
+        ttlLeft: 257890851
+      }
     },
     correlationId: 'fdb1358f-c3b8-459b-aa89-4e570b7ac6d0'
   }

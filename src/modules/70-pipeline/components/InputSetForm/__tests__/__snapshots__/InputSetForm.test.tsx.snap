@@ -375,6 +375,58 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view 1`] = `
               </div>
             </div>
           </div>
+          <div
+            class="cachedcopy"
+          >
+            <div
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <button
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
+                    tabindex="0"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="stale-cache"
+                    >
+                      <svg
+                        fill="currentColor"
+                        height="16"
+                        viewBox="0 0 12 12"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g
+                          clip-path="url(#stale-cache_svg__a)"
+                        >
+                          <path
+                            d="M5.5 8.5c0 .275.225.5.5.5s.5-.225.5-.5S6.275 8 6 8s-.5.225-.5.5zm0-7v2h1v-.96A3.498 3.498 0 016 9.5a3.497 3.497 0 01-2.71-5.71L6 6.5l.705-.705-3.4-3.4v.01A4.476 4.476 0 001.5 6 4.5 4.5 0 106 1.5h-.5zM9 6c0-.275-.225-.5-.5-.5S8 5.725 8 6s.225.5.5.5.5-.225.5-.5zM3 6c0 .275.225.5.5.5S4 6.275 4 6s-.225-.5-.5-.5-.5.225-.5.5z"
+                            fill="#FF7020"
+                          />
+                        </g>
+                        <defs>
+                          <clippath
+                            id="stale-cache_svg__a"
+                          >
+                            <path
+                              d="M0 0h12v12H0z"
+                            />
+                          </clippath>
+                        </defs>
+                      </svg>
+                    </span>
+                  </button>
+                </span>
+              </span>
+            </div>
+          </div>
         </div>
         <div
           class="optionBtns"
@@ -765,6 +817,58 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+          <div
+            class="cachedcopy"
+          >
+            <div
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <button
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
+                    tabindex="0"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="stale-cache"
+                    >
+                      <svg
+                        fill="currentColor"
+                        height="16"
+                        viewBox="0 0 12 12"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g
+                          clip-path="url(#stale-cache_svg__a)"
+                        >
+                          <path
+                            d="M5.5 8.5c0 .275.225.5.5.5s.5-.225.5-.5S6.275 8 6 8s-.5.225-.5.5zm0-7v2h1v-.96A3.498 3.498 0 016 9.5a3.497 3.497 0 01-2.71-5.71L6 6.5l.705-.705-3.4-3.4v.01A4.476 4.476 0 001.5 6 4.5 4.5 0 106 1.5h-.5zM9 6c0-.275-.225-.5-.5-.5S8 5.725 8 6s.225.5.5.5.5-.225.5-.5zM3 6c0 .275.225.5.5.5S4 6.275 4 6s-.225-.5-.5-.5-.5.225-.5.5z"
+                            fill="#FF7020"
+                          />
+                        </g>
+                        <defs>
+                          <clippath
+                            id="stale-cache_svg__a"
+                          >
+                            <path
+                              d="M0 0h12v12H0z"
+                            />
+                          </clippath>
+                        </defs>
+                      </svg>
+                    </span>
+                  </button>
+                </span>
+              </span>
             </div>
           </div>
         </div>

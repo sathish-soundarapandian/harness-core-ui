@@ -96,7 +96,8 @@ const OMITTED_FIELDS = [
   'repoName',
   'filePath',
   'storeType',
-  'inputSetErrorWrapper'
+  'inputSetErrorWrapper',
+  'cacheResponse'
 ]
 
 type InputSetDTOGitDetails = InputSetDTO & GitContextProps & StoreMetadata
