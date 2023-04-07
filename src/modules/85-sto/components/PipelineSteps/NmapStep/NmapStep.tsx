@@ -45,7 +45,7 @@ export class NmapStep extends PipelineStep<NmapStepData> {
 
   protected type = StepType.Nmap
   protected stepName = 'Configure Nmap'
-  protected stepIcon: IconName = 'security-ci-step'
+  protected stepIcon: IconName = 'nmap'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.Nmap'
   protected stepPaletteVisible = false
 

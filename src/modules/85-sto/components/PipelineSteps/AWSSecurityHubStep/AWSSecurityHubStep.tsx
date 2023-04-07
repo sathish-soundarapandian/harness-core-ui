@@ -44,7 +44,7 @@ export class AWSSecurityHubStep extends PipelineStep<AWSSecurityHubStepData> {
 
   protected type = StepType.AWSSecurityHub
   protected stepName = 'Configure AWSSecurityHub'
-  protected stepIcon: IconName = 'security-ci-step'
+  protected stepIcon: IconName = 'aws-security-hub'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.AWSSecurityHub'
   protected stepPaletteVisible = false
 

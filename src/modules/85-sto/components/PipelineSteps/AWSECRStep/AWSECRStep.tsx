@@ -44,7 +44,7 @@ export class AWSECRStep extends PipelineStep<AWSECRStepData> {
 
   protected type = StepType.AWSECR
   protected stepName = 'Configure AWSECR'
-  protected stepIcon: IconName = 'security-ci-step'
+  protected stepIcon: IconName = 'ecr-step'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.AWSECR'
   protected stepPaletteVisible = false
 

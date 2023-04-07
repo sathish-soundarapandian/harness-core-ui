@@ -45,7 +45,7 @@ export class ProwlerStep extends PipelineStep<ProwlerStepData> {
 
   protected type = StepType.Prowler
   protected stepName = 'Configure Prowler'
-  protected stepIcon: IconName = 'security-ci-step'
+  protected stepIcon: IconName = 'prowler'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.Prowler'
   protected stepPaletteVisible = false
 

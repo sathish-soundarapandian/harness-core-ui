@@ -45,7 +45,7 @@ export class NiktoStep extends PipelineStep<NiktoStepData> {
 
   protected type = StepType.Nikto
   protected stepName = 'Configure Nikto'
-  protected stepIcon: IconName = 'security-ci-step'
+  protected stepIcon: IconName = 'nikto'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.Nikto'
   protected stepPaletteVisible = false
 
