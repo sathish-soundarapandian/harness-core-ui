@@ -12,6 +12,7 @@ declare const styles: {
   readonly masonry: string
   readonly pagination: string
   readonly resourceCount: string
+  readonly roleRow: string
   readonly search: string
   readonly warning: string
 }

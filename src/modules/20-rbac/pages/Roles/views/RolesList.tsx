@@ -70,21 +70,14 @@ export const useRolesQueryParamOptions = (): UseQueryParamsOptions<
   })
 }
 
-const RenderColumnIcon: Renderer<CellProps<RoleResponse>> = ({
-  row: {
-    original: { role }
-  }
-}) => {
-  return <Icon name={getRoleIcon(role.identifier)} size={30} />
-}
-
 const RenderColumnRole: Renderer<CellProps<RoleResponse>> = ({
   row: {
     original: { role }
   }
 }) => {
   return (
-    <Layout.Horizontal spacing="small">
+    <Layout.Horizontal spacing="small" className={css.roleRow}>
+      <Icon name={getRoleIcon(role.identifier)} size={30} />
       <Text>{role.name}</Text>
       {role.tags && Object.keys(role.tags || {}).length ? (
         <TagsPopover
@@ -251,16 +244,10 @@ const RolesList: React.FC = () => {
   const columns: Column<RoleResponse>[] = useMemo(
     () => [
       {
-        id: 'identifier',
-        accessor: row => row.role.identifier,
-        Cell: RenderColumnIcon,
-        width: '5%'
-      },
-      {
         Header: 'Roles',
         id: 'name',
         accessor: row => row.role.name,
-        width: '30%',
+        width: '40%',
         Cell: RenderColumnRole
       },
       {
