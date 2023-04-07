@@ -44,7 +44,7 @@ export class OWASPStep extends PipelineStep<OWASPStepData> {
 
   protected type = StepType.OWASP
   protected stepName = 'Configure OWASP Dependency Check'
-  protected stepIcon: IconName = 'security-ci-step'
+  protected stepIcon: IconName = 'owasp'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.OWASP'
   protected stepPaletteVisible = false
 

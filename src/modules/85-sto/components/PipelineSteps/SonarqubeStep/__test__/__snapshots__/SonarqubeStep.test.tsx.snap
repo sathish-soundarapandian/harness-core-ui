@@ -971,7 +971,7 @@ exports[`Sonarqube Step Edit View edit mode works 1`] = `
                
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="securityStepToolTeamName"
+                data-tooltip-id="securityStepToolProjectKey"
               >
                 <p
                   class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
@@ -4510,7 +4510,7 @@ exports[`Sonarqube Step Edit View renders runtime inputs - Orchestration Reposit
                
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="securityStepToolTeamName"
+                data-tooltip-id="securityStepToolProjectKey"
               >
                 <p
                   class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
@@ -6362,7 +6362,7 @@ exports[`Sonarqube Step Edit View should render properly 1`] = `
                
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="securityStepToolTeamName"
+                data-tooltip-id="securityStepToolProjectKey"
               >
                 <p
                   class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
