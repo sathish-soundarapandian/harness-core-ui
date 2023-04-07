@@ -22,11 +22,26 @@ export const generateRangeArray = (min: number, max: number, stepSize: number): 
   return rangeArray
 }
 
-export const Header: React.FC<{ unitPrice: number; module: string }> = () => {
+export const Header: React.FC<{ unitPrice: number; module: string }> = props => {
   const { getString } = useStrings()
+  const { module } = props
+  const titleHeader = (module: string) => {
+    switch (module) {
+      case 'cf':
+        return (
+          <Text font={{ variation: FontVariation.H5 }}>{getString('authSettings.costCalculator.developer.title')}</Text>
+        )
+      case 'ci':
+        return (
+          <Text font={{ variation: FontVariation.H5 }}>
+            {getString('authSettings.costCalculator.developer.titleCI')}
+          </Text>
+        )
+    }
+  }
   return (
     <Layout.Vertical padding={{ bottom: 'medium' }}>
-      <Text font={{ variation: FontVariation.H5 }}>{getString('authSettings.costCalculator.developer.titleCI')}</Text>
+      {titleHeader(module)}
       <Layout.Horizontal spacing={'small'}>
         <Text
           color={Color.PRIMARY_7}

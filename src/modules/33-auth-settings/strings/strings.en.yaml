@@ -159,10 +159,7 @@ proRata: Prorated amount covers for {{date}}
 salesTax: Plus sales tax
 unitPrice: Unit Price
 recomendation: Recomendation
-priceBreakdown: Subscription Price Breakdown
-costCalculatorCI:
-  developer:
-    title: How many developers will build with Continuous Integration?
+priceBreakdown: Subscription Price Breakdown    
 costCalculator:
   tax: Tax
   using: Using
@@ -180,6 +177,7 @@ costCalculator:
     premierSupportDefinition: Premier support includes coverage 24 hours a day, 7 days a week.
   developer:
     title: How many developers will use Feature Flags?
+    titleCI: How many developers will build with Continuous Integration?
     developer: Who is a developer?
     developerDefinition: A Developer is an active Feature Flags user with create/edit/delete permissions on Feature Flags, Targets, or Segments.
   mau:
