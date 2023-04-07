@@ -17,7 +17,9 @@ import {
   Text,
   useToaster,
   VisualYamlSelectedView as SelectedView,
-  VisualYamlToggle
+  VisualYamlToggle,
+  shouldShowError,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -129,7 +131,11 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
   const pipelineCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
-  const { data: reconcileErrorData, refetch: reconcilePipeline } = useValidateTemplateInputsQuery(
+  const {
+    data: reconcileErrorData,
+    refetch: reconcilePipeline,
+    error: reconcileError
+  } = useValidateTemplateInputsQuery(
     {
       queryParams: {
         accountIdentifier: accountId,
@@ -154,6 +160,13 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
       }
     }
   )
+
+  React.useEffect(() => {
+    if (reconcileError && shouldShowError(reconcileError)) {
+      showError(getErrorInfoFromErrorObject(reconcileError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reconcileError])
 
   const updateEntity = React.useCallback(async (entityYaml: string) => {
     await savePipelineHandleRef.current?.updatePipeline(entityYaml)

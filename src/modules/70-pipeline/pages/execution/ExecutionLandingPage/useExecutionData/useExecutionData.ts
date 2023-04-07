@@ -91,32 +91,51 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
     const collapsedNode = defaultTo(queryParams.collapsedNode, '')
 
     const [_stageId, _executionId] = getActiveStageForPipeline(pipelineExecutionSummary)
+    const [_childStageId, _childExecutionId] = getActiveStageForPipeline(childGraph?.pipelineExecutionSummary)
 
     // stage selection
     if (!queryParams.stage && !queryParams.collapsedNode) {
       stageId = _stageId
     }
 
+    // set childStageId to auto selected id (`_childStageId`)
+    // if there's a childGraph and queryParams.childStage is falsy
+    if (childGraph && !queryParams.childStage && !queryParams.collapsedNode) {
+      childStageId = _childStageId
+    }
+
     // matrix stage selection
     if (
       !queryParams.stageExecId && // does not have stageExecId in query params
-      _executionId && // has _executionId
-      _stageId === stageId && // auto selected stage is same as current stage
+      (_executionId || _childExecutionId) && // has _executionId or _childExecutionId
+      (_stageId === stageId || _childStageId === childStageId) && // auto selected stage is same as current stage
       !queryParams.collapsedNode //  does not have collapsedNode in query params
     ) {
-      executionId = _executionId
+      executionId = _childExecutionId || _executionId
     } else if (queryParams.stageExecId) {
-      const stageIdForExecution = get(pipelineExecutionSummary, ['layoutNodeMap', queryParams.stageExecId, 'nodeUuid'])
+      // remove executionId
+      // if stageId/childStageId is not equal to stageId/childStageId of queryParams.stageExecId
+      if (childGraph) {
+        const childStageIdForExecution = get(childGraph.pipelineExecutionSummary, [
+          'layoutNodeMap',
+          queryParams.stageExecId,
+          'nodeUuid'
+        ])
 
-      if (stageIdForExecution !== stageId) {
-        executionId = ''
+        if (childStageIdForExecution !== childStageId) {
+          executionId = ''
+        }
+      } else {
+        const stageIdForExecution = get(pipelineExecutionSummary, [
+          'layoutNodeMap',
+          queryParams.stageExecId,
+          'nodeUuid'
+        ])
+
+        if (stageIdForExecution !== stageId) {
+          executionId = ''
+        }
       }
-    }
-
-    // get stage from child pipeline if it exists
-    if (childGraph && !queryParams.childStage && !queryParams.collapsedNode) {
-      const [_childStageId] = getActiveStageForPipeline(childGraph.pipelineExecutionSummary)
-      childStageId = _childStageId
     }
 
     // step selection
@@ -124,7 +143,7 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
       stepId = childGraph
         ? getActiveStepForStage(
             childGraph.executionGraph,
-            get(childGraph.pipelineExecutionSummary, ['layoutNodeMap', childStageId, 'status'])
+            get(childGraph.pipelineExecutionSummary, ['layoutNodeMap', executionId || childStageId, 'status'])
           )
         : getActiveStepForStage(
             executionGraph,

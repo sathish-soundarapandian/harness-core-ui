@@ -46,7 +46,6 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
   } = useExecutionContext()
   const { openExecutionTimeInputsForStep } = props
   const accordionRef = React.useRef<AccordionHandle | null>(null)
-  const childAccordionRef = React.useRef<AccordionHandle | null>(null)
   const containerRef = React.useRef<HTMLDivElement | null>(null)
   const prevSelectedStageIdRef = React.useRef(selectedStageId)
   const prevSelectedStageExecutionId = React.useRef(selectedStageExecutionId)
@@ -74,12 +73,6 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
           ? [selectedStageId, selectedStageExecutionId].join('|')
           : selectedStageId
       accordionRef.current.open(newIdentifier)
-      if (childAccordionRef.current && selectedChildStageId) {
-        const childAccordionIdentifier = isEmpty(selectedStageExecutionId)
-          ? selectedChildStageId
-          : [selectedChildStageId, selectedStageExecutionId].join('|')
-        childAccordionRef.current.open(childAccordionIdentifier)
-      }
       const scrollPanelIntoView = (): void => {
         const panel = document.querySelector(`[data-testid="${newIdentifier}-panel"]`)
         if (panel && containerRef.current) {
@@ -250,8 +243,12 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
                 isChainedPipelineStage ? (
                   shouldShowTree && !isEmpty(childPipelineEntries) ? (
                     <Accordion
-                      ref={childAccordionRef}
                       className={css.mainAccordion}
+                      activeId={
+                        isEmpty(selectedStageExecutionId)
+                          ? selectedChildStageId
+                          : [selectedChildStageId, selectedStageExecutionId].join('|')
+                      }
                       onChange={handleChildAccordionChange}
                       panelClassName={css.accordionChildPanel}
                       summaryClassName={css.accordionChildSummary}

@@ -139,12 +139,12 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
   })
 
   const selectedNodeId = React.useMemo(() => {
-    if (!isEmpty(childNodeData) && !isEmpty(selectedChildStageId)) {
-      return selectedChildStageId
-    }
-
     if (!isEmpty(selectedStageExecutionId)) {
       return selectedStageExecutionId
+    }
+
+    if (!isEmpty(childNodeData) && !isEmpty(selectedChildStageId)) {
+      return selectedChildStageId
     }
 
     return selectedStageId

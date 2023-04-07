@@ -14,7 +14,9 @@ import {
   Layout,
   useConfirmationDialog,
   useToaster,
-  VisualYamlSelectedView as SelectedView
+  VisualYamlSelectedView as SelectedView,
+  shouldShowError,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import classNames from 'classnames'
@@ -111,7 +113,11 @@ export function TemplateStudioInternal(): React.ReactElement {
 
   const { navigationContentText, navigationTitleText } = getContentAndTitleStringKeys(isYamlError)
 
-  const { data: errorData, refetch: validateTemplateInputs } = useValidateTemplateInputs({
+  const {
+    data: errorData,
+    refetch: validateTemplateInputs,
+    error: reconcileError
+  } = useValidateTemplateInputs({
     lazy: true
   })
 
@@ -272,6 +278,13 @@ export function TemplateStudioInternal(): React.ReactElement {
       templateIdentifier
     ]
   )
+
+  React.useEffect(() => {
+    if (reconcileError && shouldShowError(reconcileError)) {
+      showError(getErrorInfoFromErrorObject(reconcileError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reconcileError])
 
   React.useEffect(() => {
     if (!shouldShowOutOfSyncError) return
