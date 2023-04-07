@@ -9,21 +9,48 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
+
 import { Editions, TimeType } from '@common/constants/SubscriptionTypes'
 import * as useGetUsageAndLimit from '@common/hooks/useGetUsageAndLimit'
-import { useRetrieveProductPrices, useCreateSubscription, useRetrieveRecommendation } from 'services/cd-ng/index'
+import { useRetrieveProductPrices, useCreateSubscription, useGetAccountLicenses } from 'services/cd-ng/index'
 import { useSubscribeModal } from '../useSubscriptionModal'
 
 jest.mock('services/cd-ng')
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(() => {
+    return {
+      data: { data: { NUMBER_OF_USERS: 100, NUMBER_OF_MAUS: 200 } },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
+  })
+}))
+
+const useGetAccountLicensesMock = useGetAccountLicenses as jest.MockedFunction<any>
+useGetAccountLicensesMock.mockImplementation(() => {
+  return {
+    data: {
+      correlationId: '40d39b08-857d-4bd2-9418-af1aafc42d20',
+      data: {
+        accountId: 'HlORRJY8SH2IlwpAGWwkmg',
+        moduleLicenses: {}
+      },
+      metaData: null,
+      status: 'SUCCESS'
+    }
+  }
+})
+
 const useRetrieveProductPricesMock = useRetrieveProductPrices as jest.MockedFunction<any>
-const useRetrieveRecommendationMock = useRetrieveRecommendation as jest.MockedFunction<any>
 
 const subscriptionData = {
   clientSecret: 'pi_3L9E7qIqk5P9Eha30B1Vpt0Z_secret_qXFya58HXLP0e3rIQEVzK3iyd'
 }
 const createNewSubscriptionMock = jest.fn(() => Promise.resolve({ data: subscriptionData }))
-
 const useCreateFfSubscriptionMock = useCreateSubscription as jest.MockedFunction<any>
+
 useCreateFfSubscriptionMock.mockImplementation(() => {
   return {
     mutate: createNewSubscriptionMock,
@@ -154,14 +181,6 @@ useRetrieveProductPricesMock.mockImplementation(() => {
   return {
     refetch: jest.fn(),
     data: priceData,
-    loading: false
-  }
-})
-
-useRetrieveRecommendationMock.mockImplementation(() => {
-  return {
-    refetch: jest.fn(),
-    data: null,
     loading: false
   }
 })

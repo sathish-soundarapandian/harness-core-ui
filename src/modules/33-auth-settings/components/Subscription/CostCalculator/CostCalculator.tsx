@@ -25,7 +25,7 @@ import {
 } from '@common/constants/SubscriptionTypes'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetUsageAndLimit, UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
+import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { useDeepCompareEffect, useMutateAsGet } from '@common/hooks'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { PLAN_TYPES } from '@auth-settings/components/Subscription/subscriptionUtils'
