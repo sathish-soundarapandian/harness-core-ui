@@ -117,19 +117,17 @@ export const SonarqubeStepBase = (
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               scanConfigReadonly
               scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, EXTRACTION_SCAN_MODE, INGESTION_SCAN_MODE]}
             />
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               targetTypeSelectItems={targetTypeSelectItems}
             />
             {/* TODO REMOVE THE NEXT LINE, THIS IS NOT AN IMAGE SCANNER */}
-            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
-            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} />
+            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
             <SecurityAuthFields
               showFields={{
                 ssl: true,
@@ -137,12 +135,10 @@ export const SonarqubeStepBase = (
               }}
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
             />
             {/* product_project_key : optional product_project_key: required for extraction */}
             <>
               <SecurityField
-                stepViewType={stepViewType}
                 allowableTypes={allowableTypes}
                 formik={formik}
                 enableFields={{

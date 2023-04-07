@@ -110,7 +110,6 @@ export const CustomIngestionStepBase = (
             <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               scanConfigReadonly
               scanModeSelectItems={[INGESTION_SCAN_MODE]}
             />
@@ -118,7 +117,6 @@ export const CustomIngestionStepBase = (
             <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
               targetTypeSelectItems={[
                 REPOSITORY_TARGET_TYPE,
                 INSTANCE_TARGET_TYPE,
@@ -127,7 +125,7 @@ export const CustomIngestionStepBase = (
               ]}
             />
 
-            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
 
             <AdditionalFields
               readonly={readonly}
