@@ -159,7 +159,7 @@ proRata: Prorated amount covers for {{date}}
 salesTax: Plus sales tax
 unitPrice: Unit Price
 recomendation: Recomendation
-priceBreakdown: Subscription Price Breakdown    
+priceBreakdown: Subscription Price Breakdown
 costCalculator:
   tax: Tax
   using: Using

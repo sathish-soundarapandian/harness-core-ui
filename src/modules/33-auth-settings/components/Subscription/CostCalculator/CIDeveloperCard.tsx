@@ -12,8 +12,8 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Editions } from '@common/constants/SubscriptionTypes'
 import SliderBar from './SliderBar'
-import css from './CostCalculator.module.scss'
 import { Item, Header } from './FFDeveloperCard'
+import css from './CostCalculator.module.scss'
 
 const generateRangeArray = (min: number, max: number, stepSize: number): number[] => {
   const rangeArray = []
