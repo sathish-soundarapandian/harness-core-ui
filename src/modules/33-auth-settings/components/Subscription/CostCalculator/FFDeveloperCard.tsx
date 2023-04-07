@@ -25,7 +25,7 @@ export const generateRangeArray = (min: number, max: number, stepSize: number): 
 export const Header: React.FC<{ unitPrice: number; module: string }> = props => {
   const { getString } = useStrings()
   const { module } = props
-  const titleHeader = (module: string) => {
+  const titleHeader = () => {
     switch (module) {
       case 'cf':
         return (
@@ -41,7 +41,7 @@ export const Header: React.FC<{ unitPrice: number; module: string }> = props => 
   }
   return (
     <Layout.Vertical padding={{ bottom: 'medium' }}>
-      {titleHeader(module)}
+      {titleHeader()}
       <Layout.Horizontal spacing={'small'}>
         <Text
           color={Color.PRIMARY_7}

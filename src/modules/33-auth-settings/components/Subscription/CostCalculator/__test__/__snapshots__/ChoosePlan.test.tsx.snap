@@ -14,7 +14,7 @@ exports[`ChoosePlan render 1`] = `
       class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
     >
       <div
-        class="PillToggle--optionBtns plan"
+        class="PillToggle--optionBtns"
       >
         <div
           class="PillToggle--item"

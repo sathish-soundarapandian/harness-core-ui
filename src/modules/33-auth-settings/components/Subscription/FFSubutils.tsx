@@ -54,7 +54,7 @@ const FFSubutils: React.FC<FFSubutilsProps> = ({
       <FFDeveloperCard
         currentPlan={currentPlan}
         newPlan={edition}
-        recommended={get(recommendation, 'data.NUMBER_OF_USERS', null)}
+        recommended={get(recommendation, 'NUMBER_OF_USERS', null)}
         currentSubscribed={usageAndLimitInfo.limitData.limit?.ff?.totalFeatureFlagUnits || 0}
         unitPrice={licenseUnitPrice}
         usage={usageAndLimitInfo.usageData.usage?.ff?.activeFeatureFlagUsers?.count || 0}
@@ -76,7 +76,7 @@ const FFSubutils: React.FC<FFSubutilsProps> = ({
       />
       <FFMAUCard
         getRecommendedNumbers={getRecommendedNumbers}
-        recommended={get(recommendation, 'data.NUMBER_OF_MAUS', 0)}
+        recommended={get(recommendation, 'NUMBER_OF_MAUS', 0)}
         key={sampleData.minValue}
         minValue={sampleData.minValue}
         unit={sampleData.sampleUnit}
