@@ -16,5 +16,6 @@ declare const styles: {
   readonly paymentFrequency: string
   readonly pricePreview: string
   readonly selected: string
+  readonly totalAmountStyle: string
 }
 export default styles

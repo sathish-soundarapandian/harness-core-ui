@@ -2046,6 +2046,7 @@ export interface StringsMap {
   'authSettings.costCalculator.developer.developer': string
   'authSettings.costCalculator.developer.developerDefinition': string
   'authSettings.costCalculator.developer.title': string
+  'authSettings.costCalculator.developer.titleCI': string
   'authSettings.costCalculator.mau.kMauFree': string
   'authSettings.costCalculator.mau.mMauFree': string
   'authSettings.costCalculator.mau.mau': string
@@ -2064,7 +2065,6 @@ export interface StringsMap {
   'authSettings.costCalculator.switchTooltip': string
   'authSettings.costCalculator.tax': string
   'authSettings.costCalculator.using': string
-  'authSettings.costCalculatorCI.developer.title': string
   'authSettings.daysBeforePasswordExpires': string
   'authSettings.daysBeforeUserNotified': string
   'authSettings.deleteLdapProvider': string

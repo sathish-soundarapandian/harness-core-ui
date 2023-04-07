@@ -98,8 +98,8 @@ const Footer: React.FC<{ totalAmount: number; payingFrequency: TimeType }> = ({ 
   const width = '320px'
 
   return (
-    <Layout.Vertical className={css.footerStyle}>
-      <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+    <Layout.Vertical>
+      <Layout.Horizontal flex={{ justifyContent: 'space-between' }} className={css.footerStyle}>
         <Text font={{ variation: FontVariation.H2 }}>{getString('common.payNow')}</Text>
         <Text font={{ variation: FontVariation.H2 }}>
           {getAmountInCurrency(CurrencyType.USD, totalAmount)}
