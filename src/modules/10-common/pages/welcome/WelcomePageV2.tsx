@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import { upperCase } from 'lodash-es'
 import { useParams, useHistory } from 'react-router-dom'
 import cx from 'classnames'
@@ -26,7 +26,7 @@ import { Color } from '@harness/design-system'
 import { StringKeys, useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Editions } from '@common/constants/SubscriptionTypes'
-import { PurposeActions, Category } from '@common/constants/TrackingConstants'
+import { PurposeActions, Category, PLG_ELEMENTS } from '@common/constants/TrackingConstants'
 import { Experiences } from '@common/constants/Utils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -46,7 +46,15 @@ import css from './WelcomePage.module.scss'
 
 export default function WelcomePageV2(): JSX.Element {
   const HarnessLogo = HarnessIcons['harness-logo-black']
-  const { CREATE_DEFAULT_PROJECT, AUTO_FREE_MODULE_LICENSE } = useFeatureFlags()
+  const {
+    CREATE_DEFAULT_PROJECT,
+    AUTO_FREE_MODULE_LICENSE,
+    CVNG_ENABLED,
+    CING_ENABLED,
+    CFNG_ENABLED,
+    CENG_ENABLED,
+    CHAOS_ENABLED
+  } = useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
@@ -83,7 +91,28 @@ export default function WelcomePageV2(): JSX.Element {
       }
     })
   }
-  const getClickHandle = (moduleSelected: string): { clickHandle?: () => Promise<void>; disabled?: boolean } => {
+
+  const getModuleStatus = useCallback(
+    (moduleSelected: string) => {
+      const moduleStatusMap: { [key: string]: boolean | undefined } = {
+        cd: true,
+        cv: CVNG_ENABLED,
+        ci: CING_ENABLED,
+        cf: CFNG_ENABLED,
+        ce: CENG_ENABLED,
+        chaos: CHAOS_ENABLED
+      }
+      return Boolean(moduleStatusMap[moduleSelected])
+    },
+    [CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED, CHAOS_ENABLED]
+  )
+  const trackLearnMore = (moduleSelected: string): void =>
+    trackEvent(PurposeActions.LearnMoreClicked, { category: Category.SIGNUP, module: moduleSelected })
+
+  const getClickHandle = (
+    moduleSelected: string,
+    element: string
+  ): { clickHandle?: () => Promise<void>; disabled?: boolean } => {
     switch (moduleSelected) {
       case 'ci':
       case 'cd':
@@ -92,7 +121,11 @@ export default function WelcomePageV2(): JSX.Element {
       case 'cf':
         return {
           clickHandle: async () => {
-            trackEvent(PurposeActions.ModuleContinue, { category: Category.SIGNUP, module: moduleSelected })
+            trackEvent(PurposeActions.ModuleContinue, {
+              category: Category.SIGNUP,
+              module: moduleSelected,
+              element
+            })
             try {
               if (AUTO_FREE_MODULE_LICENSE) {
                 await updateDefaultExperience({
@@ -219,8 +252,8 @@ export default function WelcomePageV2(): JSX.Element {
                   <Layout.Horizontal padding={{ top: 'xxlarge' }}>
                     <Button
                       variation={ButtonVariation.PRIMARY}
-                      onClick={getClickHandle(modulesInfo.cd.module).clickHandle}
-                      disabled={getClickHandle(modulesInfo.cd.module).disabled}
+                      onClick={getClickHandle(modulesInfo.cd.module, PLG_ELEMENTS.MODULE_CARD).clickHandle}
+                      disabled={getClickHandle(modulesInfo.cd.module, PLG_ELEMENTS.MODULE_CARD).disabled}
                     >
                       {getString('getStarted')}
                     </Button>
@@ -229,98 +262,109 @@ export default function WelcomePageV2(): JSX.Element {
                       href={modulesInfo.cd.helpURL}
                       target="_blank"
                       withoutBoxShadow={true}
+                      onClick={() => trackLearnMore(modulesInfo.cd.module)}
                     >
                       {getString('learnMore')}
                     </Button>
                   </Layout.Horizontal>
                 </Card>
-                <Card className={cx(css.width50, css.onboardingCard, css.cardShadow)}>
-                  <Layout.Vertical>
-                    <Layout.Horizontal>
-                      <Heading
-                        color={Color.BLACK}
-                        font={{ size: 'medium', weight: 'bold' }}
-                        className={css.onboardingHead}
-                      >
-                        <Icon name={modulesInfo.ci.icon} size={20} padding={{ right: 'medium' }} />
-                        {getString(modulesInfo.ci.title)}
-                      </Heading>
-                    </Layout.Horizontal>
-                    <Text padding={{ top: 'medium', bottom: 'large' }} className={css.bodyText} color={Color.BLACK}>
-                      {getString(modulesInfo.ci.bodyText)}
-                    </Text>
-                    {getString(modulesInfo.ci.points as StringKeys)
-                      ?.split(',')
-                      .map((point: string, idx: number) => (
-                        <Text
-                          key={idx}
-                          icon="flash"
+                {getModuleStatus(modulesInfo.ci.module) && (
+                  <Card className={cx(css.width50, css.onboardingCard, css.cardShadow)}>
+                    <Layout.Vertical>
+                      <Layout.Horizontal>
+                        <Heading
                           color={Color.BLACK}
-                          iconProps={{ color: Color.BLACK, size: 18 }}
-                          className={css.bodyText}
+                          font={{ size: 'medium', weight: 'bold' }}
+                          className={css.onboardingHead}
                         >
-                          {point}
-                        </Text>
-                      ))}
-                  </Layout.Vertical>
-                  <Layout.Horizontal padding={{ top: 'xxlarge' }}>
-                    <Button
-                      variation={ButtonVariation.PRIMARY}
-                      onClick={getClickHandle(modulesInfo.ci.module).clickHandle}
-                      disabled={getClickHandle(modulesInfo.ci.module).disabled}
-                    >
-                      {getString('getStarted')}
-                    </Button>
-                    <Button
-                      variation={ButtonVariation.LINK}
-                      href={modulesInfo.ci.helpURL}
-                      target="_blank"
-                      withoutBoxShadow={true}
-                    >
-                      {getString('learnMore')}
-                    </Button>
-                  </Layout.Horizontal>
-                </Card>
+                          <Icon name={modulesInfo.ci.icon} size={20} padding={{ right: 'medium' }} />
+                          {getString(modulesInfo.ci.title)}
+                        </Heading>
+                      </Layout.Horizontal>
+                      <Text padding={{ top: 'medium', bottom: 'large' }} className={css.bodyText} color={Color.BLACK}>
+                        {getString(modulesInfo.ci.bodyText)}
+                      </Text>
+                      {getString(modulesInfo.ci.points as StringKeys)
+                        ?.split(',')
+                        .map((point: string, idx: number) => (
+                          <Text
+                            key={idx}
+                            icon="flash"
+                            color={Color.BLACK}
+                            iconProps={{ color: Color.BLACK, size: 18 }}
+                            className={css.bodyText}
+                          >
+                            {point}
+                          </Text>
+                        ))}
+                    </Layout.Vertical>
+                    <Layout.Horizontal padding={{ top: 'xxlarge' }}>
+                      <Button
+                        variation={ButtonVariation.PRIMARY}
+                        onClick={getClickHandle(modulesInfo.ci.module, PLG_ELEMENTS.MODULE_CARD).clickHandle}
+                        disabled={getClickHandle(modulesInfo.ci.module, PLG_ELEMENTS.MODULE_CARD).disabled}
+                      >
+                        {getString('getStarted')}
+                      </Button>
+                      <Button
+                        variation={ButtonVariation.LINK}
+                        href={modulesInfo.ci.helpURL}
+                        target="_blank"
+                        withoutBoxShadow={true}
+                        onClick={() => trackLearnMore(modulesInfo.ci.module)}
+                      >
+                        {getString('learnMore')}
+                      </Button>
+                    </Layout.Horizontal>
+                  </Card>
+                )}
               </Container>
               <Container padding={{ top: 'xlarge' }} flex={{ alignItems: 'start' }} className={cx(css.onboardingCards)}>
                 {Object.values(modulesInfo)
                   .slice(2)
-                  .map((moduleData: ModuleInfoValue) => (
-                    <Card key={moduleData.module} className={cx(css.normalCard, css.onboardingCard, css.cardShadow)}>
-                      <Layout.Vertical>
-                        <Layout.Horizontal>
-                          <Heading
+                  .map((moduleData: ModuleInfoValue) =>
+                    getModuleStatus(moduleData.module) ? (
+                      <Card key={moduleData.module} className={cx(css.normalCard, css.onboardingCard, css.cardShadow)}>
+                        <Layout.Vertical>
+                          <Layout.Horizontal>
+                            <Heading
+                              color={Color.BLACK}
+                              font={{ size: 'medium', weight: 'bold' }}
+                              className={css.onboardingHead}
+                            >
+                              <Icon name={moduleData.icon} size={20} padding={{ right: 'medium' }} />
+                              {getString(moduleData.title)}
+                            </Heading>
+                          </Layout.Horizontal>
+                          <Text
+                            padding={{ top: 'medium', bottom: 'large' }}
+                            className={css.bodyText}
                             color={Color.BLACK}
-                            font={{ size: 'medium', weight: 'bold' }}
-                            className={css.onboardingHead}
                           >
-                            <Icon name={moduleData.icon} size={20} padding={{ right: 'medium' }} />
-                            {getString(moduleData.title)}
-                          </Heading>
+                            {getString(moduleData.bodyText)}
+                          </Text>
+                        </Layout.Vertical>
+                        <Layout.Horizontal padding={{ top: 'xxlarge' }}>
+                          <Button
+                            variation={ButtonVariation.PRIMARY}
+                            onClick={getClickHandle(moduleData.module, PLG_ELEMENTS.MODULE_CARD).clickHandle}
+                            disabled={getClickHandle(moduleData.module, PLG_ELEMENTS.MODULE_CARD).disabled}
+                          >
+                            {getString('getStarted')}
+                          </Button>
+                          <Button
+                            variation={ButtonVariation.LINK}
+                            href={moduleData.helpURL}
+                            target="_blank"
+                            withoutBoxShadow={true}
+                            onClick={() => trackLearnMore(moduleData.module)}
+                          >
+                            {getString('learnMore')}
+                          </Button>
                         </Layout.Horizontal>
-                        <Text padding={{ top: 'medium', bottom: 'large' }} className={css.bodyText} color={Color.BLACK}>
-                          {getString(moduleData.bodyText)}
-                        </Text>
-                      </Layout.Vertical>
-                      <Layout.Horizontal padding={{ top: 'xxlarge' }}>
-                        <Button
-                          variation={ButtonVariation.PRIMARY}
-                          onClick={getClickHandle(moduleData.module).clickHandle}
-                          disabled={getClickHandle(moduleData.module).disabled}
-                        >
-                          {getString('getStarted')}
-                        </Button>
-                        <Button
-                          variation={ButtonVariation.LINK}
-                          href={moduleData.helpURL}
-                          target="_blank"
-                          withoutBoxShadow={true}
-                        >
-                          {getString('learnMore')}
-                        </Button>
-                      </Layout.Horizontal>
-                    </Card>
-                  ))}
+                      </Card>
+                    ) : null
+                  )}
               </Container>
             </Container>
             <Layout.Vertical padding={{ left: 'xxxlarge' }}>
@@ -329,15 +373,17 @@ export default function WelcomePageV2(): JSX.Element {
                   {getString('common.welcomePage.allusecases')}
                 </Text>
               </Layout.Vertical>
-              {Object.values(modulesInfo).map((moduleInfo: ModuleInfoValue, idx: number) => (
-                <ModuleSidecard
-                  onclick={getClickHandle(moduleInfo.module).clickHandle}
-                  key={idx}
-                  index={idx}
-                  getString={getString}
-                  moduleInfo={moduleInfo}
-                />
-              ))}
+              {Object.values(modulesInfo).map((moduleInfo: ModuleInfoValue, idx: number) =>
+                getModuleStatus(moduleInfo.module) ? (
+                  <ModuleSidecard
+                    onclick={getClickHandle(moduleInfo.module, PLG_ELEMENTS.RIGHT_COLUMN).clickHandle}
+                    key={idx}
+                    index={idx}
+                    getString={getString}
+                    moduleInfo={moduleInfo}
+                  />
+                ) : null
+              )}
             </Layout.Vertical>
           </Layout.Horizontal>
         </Container>

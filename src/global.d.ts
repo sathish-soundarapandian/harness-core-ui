@@ -53,6 +53,7 @@ declare interface Window {
   segmentToken: string
   HARNESS_ENABLE_NG_AUTH_UI: boolean
   HARNESS_ENABLE_CDN: boolean
+  HARNESS_PLG_FF_SDK_KEY: string
   bugsnagClient: any
   bugsnagToken: string
   Harness: {

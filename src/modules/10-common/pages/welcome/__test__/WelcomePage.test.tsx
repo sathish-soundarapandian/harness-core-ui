@@ -9,7 +9,7 @@ import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import WelcomePage from '../WelcomePage'
-
+jest.mock('@harnessio/ff-react-client-sdk')
 jest.mock('services/cd-ng', () => ({
   useUpdateAccountDefaultExperienceNG: jest.fn().mockImplementation(() => {
     return { mutate: () => Promise.resolve({ status: 'SUCCESS', data: { defaultExperience: 'NG' } }) }

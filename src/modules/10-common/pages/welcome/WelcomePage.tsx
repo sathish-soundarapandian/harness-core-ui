@@ -5,15 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useFeatureFlag } from '@harnessio/ff-react-client-sdk'
 import { HarnessIcons, Container, Text, Layout, Heading, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PageNames } from '@common/constants/TrackingConstants'
 import type { Module } from '@common/interfaces/RouteInterfaces'
+import { FeatureFlag } from '@common/featureFlags'
+import WithABFFProvider from '@common/components/WithFFProvider/WithFFProvider'
+import { EXPOSURE_EVENT, PLG_EXPERIMENTS } from '@common/components/WithFFProvider/PLGExperiments'
 
+import WelcomePageV2 from './WelcomePageV2'
 import SelectModuleList from './SelectModuleList'
 import ribbon from './images/ribbon.svg'
 import ribbon_ff from './images/ribbon_ff.svg'
@@ -31,13 +37,19 @@ interface ModuleProps {
   description: string
   className?: string
 }
+enum PAGE_TYPES {
+  OLD_PAGE = 'OLD_PAGE',
+  NEW_PAGE = 'NEW_PAGE'
+}
 
 const WelcomePage: React.FC = () => {
   const HarnessLogo = HarnessIcons['harness-logo-black']
   const { getString } = useStrings()
   const [ribbonImg, setRibbonImg] = useState<string>(ribbon_ci)
+  useTelemetry({ pageName: PageNames.Purpose })
 
   const { CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
+
   const CDNG_OPTIONS: ModuleProps = {
     enabled: true, // Continous delivery is enabled in CG
     titleIcon: 'cd-with-text',
@@ -118,8 +130,6 @@ const WelcomePage: React.FC = () => {
     return options
   }
 
-  useTelemetry({ pageName: PageNames.Purpose })
-
   const body = (
     <Layout.Vertical width={'80vw'}>
       <Heading color={Color.BLACK} font={{ size: 'large', weight: 'bold' }} padding={{ top: 'xxlarge' }}>
@@ -166,4 +176,32 @@ const WelcomePage: React.FC = () => {
   )
 }
 
-export default WelcomePage
+const WelcomePageWithAB: React.FC = () => {
+  const {
+    currentUserInfo: { uuid }
+  } = useAppStore()
+
+  return (
+    <WithABFFProvider
+      fallback={<WelcomePage />}
+      featureFlagsToken={window.HARNESS_PLG_FF_SDK_KEY}
+      config={{ experimentKey: PLG_EXPERIMENTS.NO_INTENT_TEST, identifier: uuid }}
+    >
+      <WelcomePageWithHooks />
+    </WithABFFProvider>
+  )
+}
+const WelcomePageWithHooks: React.FC = () => {
+  const PAGE_TYPE = useFeatureFlag(FeatureFlag.PLG_NO_INTENT_AB)
+  const trackExposure = useFeatureFlag(FeatureFlag.PLG_NO_INTENT_EXPOSURE_ENABLED)
+  const { trackEvent } = useTelemetry()
+  useEffect(() => {
+    trackExposure &&
+      trackEvent(EXPOSURE_EVENT, {
+        flag_key: FeatureFlag.PLG_NO_INTENT_AB,
+        variant: PAGE_TYPE
+      })
+  }, [])
+  return PAGE_TYPE === PAGE_TYPES.NEW_PAGE ? <WelcomePageV2 /> : <WelcomePage />
+}
+export default WelcomePageWithAB
