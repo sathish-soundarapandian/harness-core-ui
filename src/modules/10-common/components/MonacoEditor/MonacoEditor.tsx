@@ -26,7 +26,8 @@ export interface ExtendedMonacoEditorProps extends MonacoEditorProps {
 export type MonacoEditorRef = editor.IStandaloneCodeEditor
 
 const _MonacoEditor = React.forwardRef<MonacoEditorRef, ExtendedMonacoEditorProps>((props, _ref) => {
-  const ref = useRef<editor.IStandaloneCodeEditor>((_ref as any)?.current)
+  const fallbackRef = useRef<editor.IStandaloneCodeEditor>(null)
+  const ref = _ref || fallbackRef
 
   const _editorWillMount: EditorWillMount = monaco => {
     monaco?.editor?.defineTheme('disable-theme', {

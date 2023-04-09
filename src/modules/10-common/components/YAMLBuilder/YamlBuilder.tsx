@@ -680,7 +680,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             minimap: {
               enabled: false
             },
-            codeLens: codeLensRegistrations.current.size > 0
+            codeLens: codeLensRegistrations.current.size > 0,
+            automaticLayout: true
           } as MonacoEditorProps['options']
         }
         ref={editorRef}

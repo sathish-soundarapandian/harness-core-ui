@@ -13,6 +13,7 @@ import { Diagnostic } from 'vscode-languageserver-types'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { parse } from 'yaml'
 import type { DiagnosticsOptions } from 'monaco-yaml'
+import { yamlDefaults, createLanguageServiceDefaults } from 'monaco-yaml'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 
 const DEFAULT_YAML_PATH = 'DEFAULT_YAML_PATH'
@@ -62,7 +63,7 @@ const validateYAML = (yaml: string): Promise<Diagnostic[]> => {
     return Promise.reject('Invalid or empty yaml')
   }
   const textDocument = TextDocument.create('', 'yaml', 0, yaml)
-  return true // yamlLanguageService.getLanguageService()?.doValidation(textDocument, false)
+  return yamlDefaults.doValidation(textDocument, false)
 }
 
 /**
@@ -82,9 +83,8 @@ const validateYAMLWithSchema = async (yamlString: string, schema: Record<string,
     return Promise.reject('Invalid or empty schema.')
   }
   const textDocument = TextDocument.create('', 'yaml', 0, yamlString)
-  return true
-  // const languageService = setUpLanguageService(schema)
-  // return languageService?.doValidation(textDocument, false)
+  const languageService = setUpLanguageService(schema)
+  return languageService?.doValidation(textDocument, false)
 }
 
 const getPartialYAML = (tokens: string[], endingIndex: number): string => {
@@ -143,9 +143,7 @@ async function validateJSONWithSchema(
 }
 
 const setUpLanguageService = (schema: Record<string, any>) => {
-  const languageService = yamlLanguageService.getLanguageService()
-  languageService?.configure(schema)
-  return languageService
+  return createLanguageServiceDefaults(schema)
 }
 
 const getSchemaWithLanguageSettings = (schema: Record<string, any>): DiagnosticsOptions => {
