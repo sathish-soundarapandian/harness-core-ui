@@ -45,6 +45,7 @@ const PaymentFrequencyToggle: React.FC<{
   const { getString } = useStrings()
   const monthlyClassName = paymentFrequency === TimeType.MONTHLY ? css.selected : ''
   const yearlyClassName = paymentFrequency === TimeType.YEARLY ? css.selected : ''
+  console.log('here again')
   return (
     <Layout.Vertical padding={{ bottom: 'large' }} spacing="small">
       <Text>{getString('common.billed')}</Text>
@@ -55,6 +56,7 @@ const PaymentFrequencyToggle: React.FC<{
           data-testid="toggle"
           checked={paymentFrequency === TimeType.YEARLY}
           onToggle={isToggled => {
+            console.log('here')
             setPaymentFrequency(isToggled ? TimeType.YEARLY : TimeType.MONTHLY)
           }}
           className={css.paymentFrequency}
@@ -232,6 +234,7 @@ const PricePreview: React.FC<PricePreviewProps> = ({
         disabled={!canChangePaymentFrequency}
         paymentFrequency={paymentFreq}
         setPaymentFrequency={(value: TimeType) => {
+          console.log('hello here ')
           if (value === TimeType.MONTHLY) {
             setSubscriptionDetails({
               ...subscriptionDetails,
