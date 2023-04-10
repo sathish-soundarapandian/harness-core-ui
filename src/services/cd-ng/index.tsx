@@ -1224,6 +1224,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
   )[]
   principals?: Principal[]
@@ -11500,6 +11501,7 @@ export interface Project {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
     | 'ET'
   )[]
