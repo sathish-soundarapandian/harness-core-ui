@@ -79,6 +79,9 @@ const subscriptionDetails = {
     featureFlag: {
       numberOfDevelopers: 25,
       numberOfMau: 12
+    },
+     ci: {
+      numberOfDevelopers: 200
     }
   },
   isValid: false
@@ -142,3 +145,27 @@ describe('PricePreview', () => {
     })
   })
 })
+describe.only('PricePreview ci credit card', () => {
+  const setSubscriptionDetailsMock = jest.fn()
+  const props = {
+    subscriptionDetails,
+    setSubscriptionDetails: setSubscriptionDetailsMock,
+    module: 'ci' as Module
+  }
+
+  test('render ci', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <PricePreview {...props} />
+      </TestWrapper>
+    )
+    await waitFor(() => {
+      expect(container).toMatchSnapshot()
+    })
+  })
+
+
+
+ 
+})
+

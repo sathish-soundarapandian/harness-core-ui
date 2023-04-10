@@ -196,12 +196,34 @@ const TestComponent = (): React.ReactElement => {
     </>
   )
 }
+const TestComponentCI = (): React.ReactElement => {
+  const { openSubscribeModal } = useSubscribeModal({})
+  return (
+    <>
+      <button
+        className="open"
+        onClick={() => openSubscribeModal({ _plan: Editions.TEAM, _module: 'ci', _time: TimeType.MONTHLY })}
+      />
+    </>
+  )
+}
 
 describe('useSubscriptionModal', () => {
   test('render', async () => {
     const { container } = render(
       <TestWrapper defaultLicenseStoreValues={defaultLicenseStoreValues}>
         <TestComponent />
+      </TestWrapper>
+    )
+    userEvent.click(container.querySelector('.open')!)
+
+    const dialog = findDialogContainer() as HTMLElement
+    expect(dialog).toMatchSnapshot()
+  })
+  test('render CI credit card', async () => {
+    const { container } = render(
+      <TestWrapper defaultLicenseStoreValues={defaultLicenseStoreValues}>
+        <TestComponentCI />
       </TestWrapper>
     )
     userEvent.click(container.querySelector('.open')!)
