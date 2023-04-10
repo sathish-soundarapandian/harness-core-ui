@@ -110,36 +110,10 @@ export function getTitleByModule(module: Module): { icon?: string; description?:
       title = 'common.moduleTitles.cf'
       break
     }
-    case 'cd': {
-      icon = 'cd-solid'
-      description = 'common.purpose.cd.continuous'
-
-      break
-    }
     case 'ci': {
       icon = 'ci-solid'
       description = 'common.purpose.ci.continuous'
       title = 'common.purpose.ci.continuous'
-      break
-    }
-    case 'ce': {
-      icon = 'ccm-solid'
-      description = 'common.purpose.ce.continuous'
-      break
-    }
-    case 'cv': {
-      icon = 'cv-solid'
-      description = 'common.purpose.cv.continuous'
-      break
-    }
-    case 'sto': {
-      icon = 'sto-color-filled'
-      description = 'common.purpose.sto.continuous'
-      break
-    }
-    case 'chaos': {
-      icon = 'chaos-solid'
-      description = 'common.purpose.chaos.continuous'
       break
     }
   }
