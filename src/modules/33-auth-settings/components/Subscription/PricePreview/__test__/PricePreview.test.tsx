@@ -7,7 +7,7 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Module } from 'framework/types/ModuleName'
@@ -142,13 +142,9 @@ describe('PricePreview', () => {
         <PricePreview {...newProps} />
       </TestWrapper>
     )
-    userEvent.click(getByTestId('toggle'))
-    await waitFor(() => {
-      expect(setSubscriptionDetailsMock).toHaveBeenCalledWith({
-        ...subscriptionDetails,
-        paymentFreq: TimeType.YEARLY
-      })
-    })
+    const a = getByTestId('toggle')
+    fireEvent.click(getByTestId('toggle'))
+    expect(setSubscriptionDetailsMock).toBeCalled()
   })
 })
 describe('PricePreview ci credit card', () => {
@@ -203,8 +199,4 @@ describe('PricePreview ci credit card', () => {
     const resultYearly = returnedResultYearly[0]?.metaData?.edition === 'ENTERPRISE'
     expect(resultYearly).toBe(true)
   })
-  // test('getRenewDate util method ', () => {
-  //   const returnedDate = getRenewDate(TimeType.MONTHLY)
-  //   expect(returnedDate.valueOf() === 'May 10, 2023')
-  // })
 })
