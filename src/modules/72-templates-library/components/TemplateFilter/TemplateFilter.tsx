@@ -12,7 +12,6 @@ import { StringUtils, useToaster } from '@common/exports'
 import { useBooleanStatus, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import type { FilterDTO } from 'services/pipeline-ng'
 import {
@@ -39,6 +38,8 @@ interface TemplateListFilterProps {
   onFilterListUpdate: (filterList: FilterDTO[] | undefined) => void
 }
 
+type NgTagAcc = Record<string, string>
+
 const defaultParams = {
   page: DEFAULT_PAGE_INDEX,
   size: DEFAULT_PAGE_SIZE,
@@ -55,7 +56,6 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
   const filterDrawerOpenedRef = useRef(false)
   const queryParamOptions = useQueryParamsOptions(defaultParams)
   const queryParams = useQueryParams<any>(queryParamOptions)
-  const { selectedProject } = useAppStore()
 
   const { mutate: createFilter, loading: isCreateFilterLoading } = usePostFilter({
     queryParams: { accountIdentifier: accountId }
@@ -93,7 +93,7 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
           filterProperties: {
             ...queryParams.filters,
             tags: isArray(queryParams.filters.tags)
-              ? queryParams.filters.tags.reduce((acc, cur) => {
+              ? queryParams.filters.tags.reduce((acc: NgTagAcc, cur: NGTag) => {
                   return { ...acc, [cur.key]: '' }
                 }, {})
               : {}
@@ -109,8 +109,6 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
     appliedFilter?.filterProperties,
     fieldToLabelMapping
   )
-
-  /**Start Handlers */
 
   const handleFilterSelection = (
     option: SelectOption,
@@ -175,7 +173,7 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
         }
       }
 
-      const updatedFilter = await saveOrUpdateHandler(isUpdate, requestBodyPayload)
+      const updatedFilter = await saveOrUpdateHandler(isUpdate, requestBodyPayload as any)
       updateQueryParams({ filters: updatedFilter?.filterProperties || {} })
       refetchFilterList()
     }
