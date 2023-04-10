@@ -13,6 +13,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import type { Module } from 'framework/types/ModuleName'
 import { Editions, TimeType } from '@common/constants/SubscriptionTypes'
 import PricePreview from '../PricePreview'
+import { getOtherRenewDate, getOtherRenewPrevDate, getRenewDate, getProductPrices } from '../../subscriptionUtils'
 
 const billingContactInfo = {
   name: 'Jane Doe',
@@ -68,6 +69,7 @@ const subscriptionDetails = {
   paymentFreq: TimeType.YEARLY,
   subscriptionId: '1',
   billingContactInfo,
+  taxAmount: 1000,
   paymentMethodInfo,
   productPrices,
   sampleDetails: {
@@ -80,11 +82,15 @@ const subscriptionDetails = {
       numberOfDevelopers: 25,
       numberOfMau: 12
     },
-     ci: {
+    ci: {
       numberOfDevelopers: 200
     }
   },
   isValid: false
+}
+
+const invoiceData = {
+  totalAmount: 1000
 }
 
 describe('PricePreview', () => {
@@ -145,11 +151,12 @@ describe('PricePreview', () => {
     })
   })
 })
-describe.only('PricePreview ci credit card', () => {
+describe('PricePreview ci credit card', () => {
   const setSubscriptionDetailsMock = jest.fn()
   const props = {
     subscriptionDetails,
     setSubscriptionDetails: setSubscriptionDetailsMock,
+    invoiceData,
     module: 'ci' as Module
   }
 
@@ -164,8 +171,40 @@ describe.only('PricePreview ci credit card', () => {
     })
   })
 
-
-
- 
+  test('getOtherRenewDate util method ', () => {
+    const prevData = new Date()
+    const returnedDate = getOtherRenewDate(TimeType.MONTHLY, prevData)
+    expect(returnedDate.valueOf() === 'May 10, 2023')
+    const returnedDateYearly = getOtherRenewDate(TimeType.YEARLY, prevData)
+    expect(returnedDateYearly.valueOf() === 'May 10, 2024')
+  })
+  test('getOtherRenewPrevDate util method ', () => {
+    const prevData = new Date()
+    const returnedDate = getOtherRenewPrevDate(TimeType.MONTHLY, prevData)
+    expect(returnedDate.valueOf() === 'May 10, 2023')
+    const returnedDateYearly = getOtherRenewPrevDate(TimeType.YEARLY, prevData)
+    expect(returnedDateYearly.valueOf() === 'May 10, 2024')
+  })
+  test('getRenewDate util method ', () => {
+    const returnedDate = getRenewDate(TimeType.MONTHLY)
+    expect(returnedDate.valueOf() === 'May 10, 2023')
+  })
+  test('getProductPrices util method ', () => {
+    const returnedResult = getProductPrices(Editions.TEAM, TimeType.MONTHLY, {
+      monthly: [{ metaData: { edition: Editions.TEAM } }],
+      yearly: [{ metaData: { edition: Editions.TEAM } }]
+    })
+    const result = returnedResult[0]?.metaData?.edition === 'TEAM'
+    expect(result).toBe(true)
+    const returnedResultYearly = getProductPrices(Editions.ENTERPRISE, TimeType.YEARLY, {
+      monthly: [{ metaData: { edition: Editions.TEAM } }],
+      yearly: [{ metaData: { edition: Editions.ENTERPRISE, timeType: 'YEARLY' } }]
+    })
+    const resultYearly = returnedResultYearly[0]?.metaData?.edition === 'ENTERPRISE'
+    expect(resultYearly).toBe(true)
+  })
+  // test('getRenewDate util method ', () => {
+  //   const returnedDate = getRenewDate(TimeType.MONTHLY)
+  //   expect(returnedDate.valueOf() === 'May 10, 2023')
+  // })
 })
-
