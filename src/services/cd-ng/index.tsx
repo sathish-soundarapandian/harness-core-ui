@@ -40993,6 +40993,7 @@ export interface ShouldDisableDeploymentQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  pipelineIdentifier?: string
 }
 
 export type ShouldDisableDeploymentProps = Omit<
@@ -59113,6 +59114,56 @@ export const getDelegateInstallStatusPromise = (
   getUsingFetch<ResponseDelegateStatus, Failure | Error, GetDelegateInstallStatusQueryParams, void>(
     getConfig('ng/api'),
     `/trial-signup/delegate-install-status`,
+    props,
+    signal
+  )
+
+export interface GenerateYamlQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  connectorIdentifier?: string
+  repo?: string
+  yamlVersion?: string
+}
+
+export type GenerateYamlProps = Omit<GetProps<ResponseString, Failure | Error, GenerateYamlQueryParams, void>, 'path'>
+
+/**
+ * generate yaml
+ */
+export const GenerateYaml = (props: GenerateYamlProps) => (
+  <Get<ResponseString, Failure | Error, GenerateYamlQueryParams, void>
+    path={`/trial-signup/generate-yaml`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGenerateYamlProps = Omit<
+  UseGetProps<ResponseString, Failure | Error, GenerateYamlQueryParams, void>,
+  'path'
+>
+
+/**
+ * generate yaml
+ */
+export const useGenerateYaml = (props: UseGenerateYamlProps) =>
+  useGet<ResponseString, Failure | Error, GenerateYamlQueryParams, void>(`/trial-signup/generate-yaml`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * generate yaml
+ */
+export const generateYamlPromise = (
+  props: GetUsingFetchProps<ResponseString, Failure | Error, GenerateYamlQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseString, Failure | Error, GenerateYamlQueryParams, void>(
+    getConfig('ng/api'),
+    `/trial-signup/generate-yaml`,
     props,
     signal
   )
