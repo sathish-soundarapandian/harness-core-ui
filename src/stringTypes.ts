@@ -1594,6 +1594,7 @@ export interface StringsMap {
   'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
+  'defaultSettings.enforceGitExperience': string
   'defaultSettings.harnessDefault': string
   'defaultSettings.inheritedFrom': string
   'defaultSettings.mandateAuthorizationForCustomWebhookTriggers': string
