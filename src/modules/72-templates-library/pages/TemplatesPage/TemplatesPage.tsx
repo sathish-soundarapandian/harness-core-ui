@@ -102,9 +102,6 @@ export default function TemplatesPage(): React.ReactElement {
     }
   })
 
-  React.useEffect(() => {
-    console.log('filters', filters)
-  }, [filters])
   const allowedTemplateTypes = getAllowedTemplateTypes(scope, {
     [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE,
     [TemplateType.CustomDeployment]: !!NG_SVC_ENV_REDESIGN

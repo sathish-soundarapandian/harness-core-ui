@@ -2,8 +2,9 @@ import React from 'react'
 import { FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
-export const TemplateFilterFields = (props: any) => {
+export const TemplateFilterFields = (): React.ReactElement => {
   const { getString } = useStrings()
+
   return (
     <>
       <FormInput.Text

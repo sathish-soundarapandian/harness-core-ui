@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Layout, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty, isArray } from 'lodash-es'
@@ -9,19 +9,12 @@ import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterC
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import { isObjectEmpty, UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import { StringUtils, useToaster } from '@common/exports'
-import { useBooleanStatus, useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
-import { getBuildType, getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
-import {
-  createRequestBodyPayload,
-  getMultiSelectFormOptions,
-  getValidFilterArguments,
-  PipelineFormType
-} from '@pipeline/utils/PipelineFilterRequestUtils'
+import { useBooleanStatus, useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
+
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
-import { useGetServiceDefinitionTypes } from 'services/cd-ng'
-import type { FilterDTO, PipelineFilterProperties } from 'services/pipeline-ng'
+import type { FilterDTO } from 'services/pipeline-ng'
 import {
   useDeleteFilter,
   useGetFilterList,
@@ -31,13 +24,12 @@ import {
   NGTag
 } from 'services/template-ng'
 import { killEvent } from '@common/utils/eventUtils'
-import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
+import { useQueryParamsOptions } from '@common/hooks/useQueryParams'
 
 import {
   useFilterWithValidFieldsWithMetaInfo,
   usePipelineListFilterFieldToLabelMapping
 } from '@pipeline/pages/utils/Filters/filters'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, DEFAULT_PIPELINE_LIST_TABLE_SORT } from '@pipeline/utils/constants'
 import { TemplateFilterFields } from './TemplateFilterFields'
 
@@ -61,19 +53,9 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
   const { projectIdentifier, orgIdentifier, accountId } = useParams<any>()
   const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
   const filterDrawerOpenedRef = useRef(false)
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const queryParamOptions = useQueryParamsOptions(defaultParams)
   const queryParams = useQueryParams<any>(queryParamOptions)
   const { selectedProject } = useAppStore()
-  const isCDEnabled = !!selectedProject?.modules?.includes('CD')
-  const isCIEnabled = !!selectedProject?.modules?.includes('CI')
-
-  /**Start Data hooks */
-
-  const { data: deploymentTypeResponse, loading: isDeploymentTypesLoading } = useGetServiceDefinitionTypes({
-    queryParams: { accountId },
-    lazy: !filterDrawerOpenedRef.current
-  })
 
   const { mutate: createFilter, loading: isCreateFilterLoading } = usePostFilter({
     queryParams: { accountIdentifier: accountId }
@@ -99,7 +81,6 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
     onFilterListUpdate(filterList)
   }, [filterList, onFilterListUpdate])
 
-  const isMetaDataLoading = isDeploymentTypesLoading
   const isFilterCrudLoading =
     isCreateFilterLoading || isUpdateFilterLoading || isDeleteFilterLoading || isFilterListLoading
   const appliedFilter =
@@ -172,27 +153,24 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
     }
   }
 
-  const handleSaveOrUpdate = async (
-    isUpdate: boolean,
-    data: FilterDataInterface<PipelineFormType, FilterInterface>
-  ) => {
+  const handleSaveOrUpdate = async (isUpdate: boolean, data: FilterDataInterface<any, FilterInterface>) => {
     const saveOrUpdateHandler = filterRef.current?.saveOrUpdateFilterHandler
     if (typeof saveOrUpdateHandler === 'function') {
       const {
-        metadata: { name: _name, filterVisibility, identifier },
+        metadata: { name: _name, filterVisibility: _filterVisibility, identifier: _indetifier },
         formValues
       } = data
 
       const requestBodyPayload = {
         name: _name,
-        identifier: isUpdate ? identifier : StringUtils.getIdentifierFromName(_name),
-        filterVisibility: filterVisibility,
+        identifier: isUpdate ? _indetifier : StringUtils.getIdentifierFromName(_name),
+        filterVisibility: _filterVisibility,
         projectIdentifier,
         orgIdentifier,
         filterProperties: {
           filterType: 'Template',
           tags: formValues.tags || [],
-          description: formValues.description || data.metadata.description,
+          description: formValues.description,
           templateNames: [formValues.templateNames]
         }
       }
@@ -228,7 +206,7 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
         fieldToLabelMapping={fieldToLabelMapping}
         filterWithValidFields={filterWithValidFieldsWithMetaInfo}
       />
-      <Filter<PipelineFormType, FilterDTO>
+      <Filter<any, FilterDTO>
         isOpen={isFiltersDrawerOpen}
         formFields={<TemplateFilterFields />}
         initialFilter={{
@@ -240,7 +218,7 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
           metadata: { name, filterVisibility, identifier, filterProperties: {} }
         }}
         filters={filterList}
-        isRefreshingFilters={isFilterCrudLoading || isMetaDataLoading}
+        isRefreshingFilters={isFilterCrudLoading}
         onApply={onApply}
         onClose={hideFilterDrawer}
         onSaveOrUpdate={handleSaveOrUpdate}
