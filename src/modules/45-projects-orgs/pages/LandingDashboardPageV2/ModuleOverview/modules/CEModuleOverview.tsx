@@ -7,19 +7,24 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { useGetCCMOverview } from 'services/ce'
+import { GetCCMOverviewQueryParams, useGetCCMOverview } from 'services/ce'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
+import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
 import DefaultFooter from '../EmptyState/DefaultFooter'
 import ModuleColumnChart from '../../ModuleColumnChart/ModuleColumnChart'
 
-const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmptyState }) => {
+const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmptyState, timeRange }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { data: ccmData } = useGetCCMOverview({
     queryParams: {
-      accountIdentifier: accountId
+      accountIdentifier: accountId,
+      startTime: getGMTStartDateTime(timeRange?.from),
+      endTime: getGMTEndDateTime(timeRange?.to),
+      groupBy: getGroupByFromTimeRange(timeRange) as GetCCMOverviewQueryParams['groupBy']
     }
   })
 

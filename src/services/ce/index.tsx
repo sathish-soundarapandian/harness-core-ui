@@ -1193,6 +1193,13 @@ export interface CcmK8sMetaInfoResponseDTO {
   ccmK8sMeta?: CcmK8sMetaInfo[]
 }
 
+export interface CcmOverviewDTO {
+  costPerDay?: DataPoint[]
+  recommendationsCount?: number
+  totalCost?: number
+  totalCostTrend?: number
+}
+
 export interface CloneRuleDTO {
   ruleClone?: RuleClone
 }
@@ -3700,6 +3707,13 @@ export interface ResponseCEViewFolder {
 export interface ResponseCcmK8sMetaInfoResponseDTO {
   correlationId?: string
   data?: CcmK8sMetaInfoResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseCcmOverviewDTO {
+  correlationId?: string
+  data?: CcmOverviewDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8700,28 +8714,37 @@ export const useGetNotificationSettings = ({ perspectiveId, ...props }: UseGetNo
 
 export interface GetCCMOverviewQueryParams {
   accountIdentifier: string
+  startTime?: number
+  endTime?: number
+  groupBy?: 'HOUR' | 'DAY' | 'MONTH' | 'WEEK' | 'QUARTER' | 'YEAR'
 }
 
-export type GetCCMOverviewProps = Omit<GetProps<ResponseCEView, unknown, GetCCMOverviewQueryParams, void>, 'path'>
+export type GetCCMOverviewProps = Omit<
+  GetProps<ResponseCcmOverviewDTO, unknown, GetCCMOverviewQueryParams, void>,
+  'path'
+>
 
 /**
  * Get CCM Overview
  */
 export const GetCCMOverview = (props: GetCCMOverviewProps) => (
-  <Get<ResponseCEView, unknown, GetCCMOverviewQueryParams, void>
+  <Get<ResponseCcmOverviewDTO, unknown, GetCCMOverviewQueryParams, void>
     path={`/overview`}
     base={getConfig('ccm/api')}
     {...props}
   />
 )
 
-export type UseGetCCMOverviewProps = Omit<UseGetProps<ResponseCEView, unknown, GetCCMOverviewQueryParams, void>, 'path'>
+export type UseGetCCMOverviewProps = Omit<
+  UseGetProps<ResponseCcmOverviewDTO, unknown, GetCCMOverviewQueryParams, void>,
+  'path'
+>
 
 /**
  * Get CCM Overview
  */
 export const useGetCCMOverview = (props: UseGetCCMOverviewProps) =>
-  useGet<ResponseCEView, unknown, GetCCMOverviewQueryParams, void>(`/overview`, {
+  useGet<ResponseCcmOverviewDTO, unknown, GetCCMOverviewQueryParams, void>(`/overview`, {
     base: getConfig('ccm/api'),
     ...props
   })
