@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /*
  * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -44,7 +43,7 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
         validationSchema={Yup.object().shape({
           ticketDetails: Yup.string().required('Ticket Details are required')
         })}
-        onSubmit={(val: any) => {
+        onSubmit={() => {
           onCloseHandler()
         }}
       >
