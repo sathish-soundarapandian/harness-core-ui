@@ -69,6 +69,7 @@ import {
   PipelineContextActions,
   PipelineReducer,
   PipelineReducerState,
+  PipelineVersion,
   PipelineViewData,
   SelectionState
 } from './PipelineActions'
@@ -594,6 +595,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           error: '',
           remoteFetchError: undefined,
           pipeline: data.pipeline,
+          version: (pipeline as any).version as PipelineVersion,
           originalPipeline: cloneDeep(pipeline),
           isBEPipelineUpdated: comparePipelines(pipeline, data.originalPipeline),
           isUpdated: comparePipelines(pipeline, data.pipeline),

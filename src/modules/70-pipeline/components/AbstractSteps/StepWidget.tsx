@@ -10,13 +10,15 @@ import { AllowedTypes, Text } from '@harness/uicore'
 
 import { String } from 'framework/strings'
 import type { AbstractStepFactory } from './AbstractStepFactory'
-import { StepViewType } from './Step'
+import { Step, StepViewType } from './Step'
 import type { StepProps, StepFormikFowardRef } from './Step'
 import type { StepType } from '../PipelineSteps/PipelineStepInterface'
+import type { PipelineVersion } from '../PipelineStudio/PipelineContext/PipelineActions'
 
 export interface StepWidgetProps<T = unknown, U = unknown> extends Omit<StepProps<T, U>, 'path'> {
   factory: AbstractStepFactory
   type: StepType
+  version?: PipelineVersion
   isNewStep?: boolean
   allValues?: T
   template?: T
@@ -38,6 +40,7 @@ export function StepWidget<T = unknown, U = unknown>(
     template,
     isNewStep = true,
     path = '',
+    version = '',
     stepViewType = StepViewType.Edit,
     onUpdate,
     onChange,
@@ -47,7 +50,13 @@ export function StepWidget<T = unknown, U = unknown>(
   }: StepWidgetProps<T, U>,
   formikRef: StepFormikFowardRef<T>
 ): JSX.Element | null {
-  const step = factory?.getStep<T>(type)
+  let step: Step<T> | undefined
+  if (version === 'v1') {
+    step = factory?.getStepV1<T>(type)
+  }
+  if (!step) {
+    step = factory?.getStep<T>(type)
+  }
   if (!step) {
     return __DEV__ ? <Text intent="warning">Step not found</Text> : null
   } else if (stepViewType === StepViewType.InputVariable && !step.hasStepVariables) {

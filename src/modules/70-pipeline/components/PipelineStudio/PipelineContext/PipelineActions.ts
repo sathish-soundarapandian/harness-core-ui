@@ -130,8 +130,11 @@ export interface SelectionState {
   selectedSectionId?: string
 }
 
+export type PipelineVersion = 'v1' | ''
+
 export interface PipelineReducerState {
   pipeline: PipelineInfoConfig
+  version: PipelineVersion
   yamlHandler?: YamlBuilderHandlerBinding
   originalPipeline: PipelineInfoConfig
   pipelineView: PipelineViewData
@@ -174,6 +177,7 @@ export interface ActionResponse {
   isLoading?: boolean
   isDBInitializationFailed?: boolean
   modules?: string[]
+  version?: PipelineVersion
   storeMetadata?: StoreMetadata
   gitDetails?: EntityGitDetails
   entityValidityDetails?: EntityValidityDetails
@@ -290,6 +294,7 @@ export const PipelineContextActions = {
 
 export const initialState: PipelineReducerState = {
   pipeline: { ...DefaultPipeline },
+  version: '',
   originalPipeline: { ...DefaultPipeline },
   pipelineIdentifier: DefaultNewPipelineId,
   pipelineView: {

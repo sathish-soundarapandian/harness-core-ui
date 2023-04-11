@@ -10,6 +10,7 @@ import { isEmpty } from 'lodash-es'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import type { StringsMap } from 'stringTypes'
 import type { Step } from './Step'
+import type { PipelineVersion } from '../PipelineStudio/PipelineContext/PipelineActions'
 
 export interface StepData {
   name: string
@@ -26,7 +27,9 @@ export abstract class AbstractStepFactory {
   protected abstract type: string
 
   protected stepBank: Map<string, Step<unknown>>
+  protected stepBankV1: Map<string, Step<unknown>>
   protected stepIconMap: Map<string, StepData>
+  protected stepIconMapV1: Map<string, StepData>
   protected invocationMap: Map<
     RegExp,
     (path: string, yaml: string, params: Record<string, unknown>) => Promise<CompletionItemInterface[]>
@@ -35,10 +38,27 @@ export abstract class AbstractStepFactory {
   constructor() {
     this.stepBank = new Map()
     this.stepIconMap = new Map()
+    this.stepBankV1 = new Map()
+    this.stepIconMapV1 = new Map()
   }
 
   getType(): string {
     return this.type
+  }
+
+  registerStepV1<T>(step: Step<T>): void {
+    this.stepBankV1.set(step.getType(), step as Step<unknown>)
+    this.stepIconMapV1.set(step.getType(), {
+      name: step.getStepName(),
+      icon: step.getIconName(),
+      type: step.getType(),
+      visible: step.getStepPaletteVisibility(),
+      referenceId: step.getReferenceId()
+    })
+    const stepMap = step.getInvocationMap()
+    if (stepMap) {
+      this.invocationMap = new Map([...this.invocationMap, ...stepMap])
+    }
   }
 
   registerStep<T>(step: Step<T>): void {
@@ -53,6 +73,23 @@ export abstract class AbstractStepFactory {
     const stepMap = step.getInvocationMap()
     if (stepMap) {
       this.invocationMap = new Map([...this.invocationMap, ...stepMap])
+    }
+  }
+
+  deregisterStepV1(type: string): void {
+    const deletedStep = this.stepBankV1.get(type)
+    if (deletedStep) {
+      this.stepBankV1.delete(type)
+      this.stepIconMapV1.delete(type)
+      if (deletedStep.getInvocationMap()) {
+        this.invocationMap = new Map()
+        this.stepBankV1.forEach(step => {
+          const stepMap = step.getInvocationMap()
+          if (stepMap) {
+            this.invocationMap = new Map([...this.invocationMap, ...stepMap])
+          }
+        })
+      }
     }
   }
 
@@ -80,7 +117,17 @@ export abstract class AbstractStepFactory {
     return
   }
 
-  getStepDescription(type: string): keyof StringsMap | undefined {
+  getStepV1<T>(type?: string): Step<T> | undefined {
+    if (type && !isEmpty(type)) {
+      return this.stepBankV1.get(type) as Step<T>
+    }
+    return
+  }
+
+  getStepDescription(type: string, version: PipelineVersion = ''): keyof StringsMap | undefined {
+    if (version === 'v1') {
+      return this.stepBankV1.get(type)?.getDescription()
+    }
     return this.stepBank.get(type)?.getDescription()
   }
 
