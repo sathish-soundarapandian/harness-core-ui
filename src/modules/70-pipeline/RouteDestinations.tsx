@@ -38,6 +38,7 @@ import ResilienceView from '@pipeline/pages/execution/ResilienceView/ResilienceV
 import FullPageLogView from '@pipeline/pages/full-page-log-view/FullPageLogView'
 import InputSetList from '@pipeline/pages/inputSet-list/InputSetList'
 import PipelineDetails from '@pipeline/pages/pipeline-details/PipelineDetails'
+import PipelineIntelligence from '@pipeline/pages/pipeline-intelligence/PipelineIntelligence'
 import { PipelineListPage } from '@pipeline/pages/pipeline-list/PipelineListPage'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import '@pipeline/components/CommonPipelineStages/ApprovalStage'
@@ -453,6 +454,17 @@ export function PipelineRouteDestinations({
         pageName={pipelineStudioPageName}
       >
         <PipelineDetails>{PipelineStudioV1 ? <PipelineStudioV1 /> : <></>}</PipelineDetails>
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        path={routes.toPipelineIntelligence({ ...accountPathProps, ...pipelinePathProps, ...moduleParams })}
+        pageName={pipelineStudioPageName}
+      >
+        <PipelineDetails>
+          <PipelineIntelligence />
+        </PipelineDetails>
       </RouteWithLayout>
       <RouteWithLayout
         exact
