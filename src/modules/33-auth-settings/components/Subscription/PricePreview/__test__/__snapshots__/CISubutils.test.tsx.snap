@@ -1,0 +1,622 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SubscriptionDetails render for monthly subscription 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--margin-bottom-large"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card"
+    >
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+          >
+            authSettings.costCalculator.developer.titleCI
+          </p>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <span
+              class="bp3-popover-wrapper"
+            >
+              <span
+                class="bp3-popover-target Text--targetClass"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                  tabindex="0"
+                >
+                  authSettings.costCalculator.developer.developer
+                </p>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+        >
+          <div
+            class="bp3-slider slider"
+          >
+            <div
+              class="bp3-slider-track"
+            >
+              <div
+                class="bp3-slider-progress"
+                style="left: 0.00%; right: 100.00%; top: 0px;"
+              />
+              <div
+                class="bp3-slider-progress bp3-intent-primary"
+                style="left: 0.00%; right: 66.67%; top: 0px;"
+              />
+              <div
+                class="bp3-slider-progress"
+                style="left: 33.33%; right: 0.00%; top: 0px;"
+              />
+            </div>
+            <div
+              class="bp3-slider-axis"
+            >
+              <div
+                class="bp3-slider-label"
+                style="left: 0.00%;"
+              >
+                0
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 16.67%;"
+              >
+                50
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 33.33%;"
+              >
+                100
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 50.00%;"
+              >
+                150
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 66.67%;"
+              >
+                200
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 83.33%;"
+              >
+                250
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 100.00%;"
+              >
+                300
+              </div>
+            </div>
+            <span
+              class="bp3-slider-handle"
+              style="left: calc(33.33% - 0px);"
+              tabindex="0"
+            >
+              <span
+                class="bp3-slider-label"
+              >
+                100
+              </span>
+            </span>
+          </div>
+          <div
+            class="TextInput--main"
+          >
+            <div
+              class="bp3-input-group textInput"
+            >
+              <input
+                class="bp3-input"
+                data-testid="slider-input"
+                type="text"
+                value="100"
+              />
+            </div>
+          </div>
+        </div>
+        <br />
+        <div
+          class="Layout--horizontal StyledProps--main subscriptionInfo StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                authSettings.costCalculator.currentSubscribed
+              </p>
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                >
+                  100
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                >
+                  Team common.subscriptions.overview.plan
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                authSettings.costCalculator.using
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+              >
+                100
+              </p>
+            </div>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main subscriptionInfo"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                authSettings.recomendation
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
+              >
+                120
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`SubscriptionDetails render for monthly subscription without usage and limit 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--margin-bottom-large"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card"
+    >
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+          >
+            authSettings.costCalculator.developer.titleCI
+          </p>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <span
+              class="bp3-popover-wrapper"
+            >
+              <span
+                class="bp3-popover-target Text--targetClass"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                  tabindex="0"
+                >
+                  authSettings.costCalculator.developer.developer
+                </p>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+        >
+          <div
+            class="bp3-slider slider"
+          >
+            <div
+              class="bp3-slider-track"
+            >
+              <div
+                class="bp3-slider-progress bp3-intent-primary"
+                style="left: 0.00%; right: 100.00%; top: 0px;"
+              />
+              <div
+                class="bp3-slider-progress"
+                style="left: 0.00%; right: 100.00%; top: 0px;"
+              />
+              <div
+                class="bp3-slider-progress"
+                style="left: 0.00%; right: 0.00%; top: 0px;"
+              />
+            </div>
+            <div
+              class="bp3-slider-axis"
+            >
+              <div
+                class="bp3-slider-label"
+                style="left: 0.00%;"
+              >
+                0
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 16.67%;"
+              >
+                50
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 33.33%;"
+              >
+                100
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 50.00%;"
+              >
+                150
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 66.67%;"
+              >
+                200
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 83.33%;"
+              >
+                250
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 100.00%;"
+              >
+                300
+              </div>
+            </div>
+            <span
+              class="bp3-slider-handle"
+              style="left: calc(0.00% - 0px);"
+              tabindex="0"
+            >
+              <span
+                class="bp3-slider-label"
+              >
+                0
+              </span>
+            </span>
+          </div>
+          <div
+            class="TextInput--main"
+          >
+            <div
+              class="bp3-input-group textInput"
+            >
+              <input
+                class="bp3-input"
+                data-testid="slider-input"
+                type="text"
+                value="0"
+              />
+            </div>
+          </div>
+        </div>
+        <br />
+        <div
+          class="Layout--horizontal StyledProps--main subscriptionInfo StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                authSettings.costCalculator.currentSubscribed
+              </p>
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                >
+                  0
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                >
+                  Team common.subscriptions.overview.plan
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                authSettings.costCalculator.using
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+              >
+                -1
+              </p>
+            </div>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main subscriptionInfo"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                authSettings.recomendation
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
+              >
+                0
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`SubscriptionDetails render for yearly subscription: yearly subscription 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--margin-bottom-large"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card"
+    >
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+          >
+            authSettings.costCalculator.developer.titleCI
+          </p>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <span
+              class="bp3-popover-wrapper"
+            >
+              <span
+                class="bp3-popover-target Text--targetClass"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                  tabindex="0"
+                >
+                  authSettings.costCalculator.developer.developer
+                </p>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+        >
+          <div
+            class="bp3-slider slider"
+          >
+            <div
+              class="bp3-slider-track"
+            >
+              <div
+                class="bp3-slider-progress bp3-intent-primary"
+                style="left: 0.00%; right: 100.00%; top: 0px;"
+              />
+              <div
+                class="bp3-slider-progress"
+                style="left: 0.00%; right: 100.00%; top: 0px;"
+              />
+              <div
+                class="bp3-slider-progress"
+                style="left: 0.00%; right: 0.00%; top: 0px;"
+              />
+            </div>
+            <div
+              class="bp3-slider-axis"
+            >
+              <div
+                class="bp3-slider-label"
+                style="left: 0.00%;"
+              >
+                0
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 16.67%;"
+              >
+                50
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 33.33%;"
+              >
+                100
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 50.00%;"
+              >
+                150
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 66.67%;"
+              >
+                200
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 83.33%;"
+              >
+                250
+              </div>
+              <div
+                class="bp3-slider-label"
+                style="left: 100.00%;"
+              >
+                300
+              </div>
+            </div>
+            <span
+              class="bp3-slider-handle"
+              style="left: calc(0.00% - 0px);"
+              tabindex="0"
+            >
+              <span
+                class="bp3-slider-label"
+              >
+                0
+              </span>
+            </span>
+          </div>
+          <div
+            class="TextInput--main"
+          >
+            <div
+              class="bp3-input-group textInput"
+            >
+              <input
+                class="bp3-input"
+                data-testid="slider-input"
+                type="text"
+                value="0"
+              />
+            </div>
+          </div>
+        </div>
+        <br />
+        <div
+          class="Layout--horizontal StyledProps--main subscriptionInfo StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                authSettings.costCalculator.currentSubscribed
+              </p>
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                >
+                  0
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                >
+                  Team common.subscriptions.overview.plan
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                authSettings.costCalculator.using
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+              >
+                0
+              </p>
+            </div>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main subscriptionInfo"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                authSettings.recomendation
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
+              >
+                0
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
