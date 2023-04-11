@@ -14,7 +14,7 @@ import { usePreferenceStore, PreferenceScope } from 'framework/PreferenceStore/P
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import type { CDModuleLicenseDTO } from 'services/portal'
-import { ServiceLicenseTable } from './ServiceLicenseTable'
+import { ActiveDevelopersTableCI } from './ActiveDevelopersTableCI'
 import type { SelectOption } from '@harness/uicore'
 import type { ModuleName } from 'framework/types/ModuleName'
 
