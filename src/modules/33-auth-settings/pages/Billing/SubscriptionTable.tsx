@@ -106,9 +106,23 @@ function SubscriptionTable({ data = [], frequency }: SubscriptionTableProps): JS
         </Layout.Vertical>
       </div>
       <TableHeader />
-      {data.map(row => (
-        <TableRow key={'ci'} data={row} module={'ci' as ModuleName} name={'ci'} />
-      ))}
+      {data.map(row => {
+        let items = []
+        row?.latestInvoiceDetail?.items?.forEach(item => {
+          if (!item.description?.includes('Sales Tax') && item.amount !== 0) {
+            items.push(item)
+          }
+        })
+
+        return (
+          <TableRow
+            key={items[0]?.price?.metaData?.module?.toLowerCase()}
+            data={row}
+            module={items[0]?.price?.metaData?.module?.toLowerCase()}
+            name={items[0]?.price?.metaData?.module?.toLowerCase()}
+          />
+        )
+      })}
     </Card>
   )
 }
@@ -161,19 +175,20 @@ const TableRow = ({ name, using = '-', module, data }: TableRowProps): JSX.Eleme
       moduleName: name as Module
     })
   }
-
+  const ffString = `${priceDetails.developers?.quantity} ${getString(
+    'common.subscriptions.usage.developers'
+  )} / ${getQuantityFromValue(
+    priceDetails.maus?.price?.metaData?.max as string,
+    priceDetails.maus?.price?.metaData?.sampleMultiplier as string,
+    priceDetails.maus?.price?.metaData?.sampleUnit as string
+  )} ${getString('authSettings.costCalculator.maus')}`
+  const ciString = `${priceDetails.developers?.quantity} ${getString('common.subscriptions.usage.developers')}`
   return (
     <div className={css.tableRow}>
       <Text font={{ variation: FontVariation.BODY }} iconProps={{ size: 22 }} icon={getModuleIcon(module)}>
         {getString(getTitleByModule(name as Module)?.title as keyof StringsMap)}
       </Text>
-      <Text font={{ variation: FontVariation.BODY }}>{`${priceDetails.developers?.quantity} ${getString(
-        'common.subscriptions.usage.developers'
-      )} / ${getQuantityFromValue(
-        priceDetails.maus?.price?.metaData?.max as string,
-        priceDetails.maus?.price?.metaData?.sampleMultiplier as string,
-        priceDetails.maus?.price?.metaData?.sampleUnit as string
-      )} ${getString('authSettings.costCalculator.maus')}`}</Text>
+      <Text font={{ variation: FontVariation.BODY }}>{module === 'cf' ? ffString : ciString}</Text>
       <Text font={{ variation: FontVariation.BODY }}> {`${using}`}</Text>
       <Text font={{ variation: FontVariation.BODY }}>
         <RbacButton

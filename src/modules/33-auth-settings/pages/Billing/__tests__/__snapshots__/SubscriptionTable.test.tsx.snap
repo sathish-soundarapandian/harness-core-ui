@@ -86,12 +86,11 @@ exports[`useSubscriptionModal render 1`] = `
             />
           </svg>
         </span>
-        common.purpose.ci.continuous
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
       >
-        undefined common.subscriptions.usage.developers / NaNundefined authSettings.costCalculator.maus
+        undefined common.subscriptions.usage.developers
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-body"

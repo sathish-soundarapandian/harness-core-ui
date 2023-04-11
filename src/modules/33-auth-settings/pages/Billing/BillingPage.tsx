@@ -20,6 +20,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { openFileATicket } from '@common/components/ResourceCenter/utils'
 import routes from '@common/RouteDefinitions'
 import { usePage } from '@common/pages/pageContext/PageProvider'
+import SubscriptionTable from './SubscriptionTable'
 import { getSubscriptionByPaymentFrequency } from '@auth-settings/components/Subscription/subscriptionUtils'
 import NoBills from './images/noBills.svg'
 import BillingAdminsCard from './BillingAdminsCard'
@@ -103,8 +104,12 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
             <BillingAdminsCard />
           </Layout.Horizontal>
 
-          {subscriptions[TimeType.YEARLY]?.length > 0 && <></>}
-          {subscriptions[TimeType.MONTHLY]?.length > 0 && <></>}
+          {subscriptions[TimeType.YEARLY]?.length > 0 && (
+            <SubscriptionTable frequency={TimeType.YEARLY} data={subscriptions[TimeType.YEARLY]} />
+          )}
+          {subscriptions[TimeType.MONTHLY]?.length > 0 && (
+            <SubscriptionTable frequency={TimeType.MONTHLY} data={subscriptions[TimeType.MONTHLY]} />
+          )}
 
           {!loading && isEmpty(subscriptions[TimeType.YEARLY]) && isEmpty(subscriptions[TimeType.MONTHLY]) && (
             <NoSubscriptionsCard gotoSubscriptions={gotoSubscriptions} getString={getString} />
