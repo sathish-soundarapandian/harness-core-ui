@@ -8,9 +8,9 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import { TestWrappe, TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper } from '@common/utils/testUtils'
 
-import { Editions, TimeType } from '@common/constants/SubscriptionTypes'
+import { TimeType } from '@common/constants/SubscriptionTypes'
 
 import SubscriptionTable from '../SubscriptionTable'
 

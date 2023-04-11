@@ -142,7 +142,6 @@ describe('PricePreview', () => {
         <PricePreview {...newProps} />
       </TestWrapper>
     )
-    const a = getByTestId('toggle')
     fireEvent.click(getByTestId('toggle'))
     expect(setSubscriptionDetailsMock).toBeCalled()
   })
