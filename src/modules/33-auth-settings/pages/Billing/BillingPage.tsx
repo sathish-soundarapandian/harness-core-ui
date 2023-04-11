@@ -23,7 +23,6 @@ import { usePage } from '@common/pages/pageContext/PageProvider'
 import { getSubscriptionByPaymentFrequency } from '@auth-settings/components/Subscription/subscriptionUtils'
 import NoBills from './images/noBills.svg'
 import BillingAdminsCard from './BillingAdminsCard'
-import SubscriptionTable from './SubscriptionTable'
 import ActiveSubscriptionCard, { ActiveSubscriptionDetails } from './ActiveSubscriptionCard'
 import PaymentMethods from './PaymentMethods'
 import css from './BillingPage.module.scss'
@@ -104,12 +103,8 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
             <BillingAdminsCard />
           </Layout.Horizontal>
 
-          {subscriptions[TimeType.YEARLY]?.length > 0 && (
-            <SubscriptionTable frequency={TimeType.YEARLY} data={subscriptions[TimeType.YEARLY]} />
-          )}
-          {subscriptions[TimeType.MONTHLY]?.length > 0 && (
-            <SubscriptionTable frequency={TimeType.MONTHLY} data={subscriptions[TimeType.MONTHLY]} />
-          )}
+          {subscriptions[TimeType.YEARLY]?.length > 0 && <></>}
+          {subscriptions[TimeType.MONTHLY]?.length > 0 && <></>}
 
           {!loading && isEmpty(subscriptions[TimeType.YEARLY]) && isEmpty(subscriptions[TimeType.MONTHLY]) && (
             <NoSubscriptionsCard gotoSubscriptions={gotoSubscriptions} getString={getString} />
