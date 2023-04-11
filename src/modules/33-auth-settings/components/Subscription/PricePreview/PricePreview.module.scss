@@ -8,8 +8,11 @@
 .selected {
   color: var(--primary-6) !important;
 }
-.footerStyle {
-  margin-top: 50px !important;
+.footerStyleCi {
+  margin-top: 90px !important;
+}
+.footerStyleFf {
+  margin-top: 30px !important;
 }
 
 .totalAmountStyle {
@@ -32,7 +35,7 @@
 .pricePreview {
   width: 40% !important;
   height: 60vh;
-  background: linear-gradient(180deg, white 80%, var(--primary-1) 20%) !important;
+  background: linear-gradient(180deg, white 75%, var(--primary-1) 25%) !important;
   padding: var(--spacing-large) !important;
   border: 6px solid;
   border-radius: 12px;

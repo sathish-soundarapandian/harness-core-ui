@@ -12,7 +12,7 @@ import { Text, Layout, Toggle } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { TimeType, SubscriptionProps, CurrencyType } from '@common/constants/SubscriptionTypes'
-import type { Module } from 'framework/types/ModuleName'
+import { Module, ModuleName } from 'framework/types/ModuleName'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { getAmountInCurrency, getDollarAmount } from '@auth-settings/utils'
 import type { InvoiceDetailDTO } from 'services/cd-ng'
@@ -68,7 +68,12 @@ const PaymentFrequencyToggle: React.FC<{
   )
 }
 
-const Footer: React.FC<{ totalAmount: number; payingFrequency: TimeType }> = ({ totalAmount, payingFrequency }) => {
+const Footer: React.FC<{
+  invoiceData?: InvoiceDetailDTO
+  payingFrequency: TimeType
+  totalAmount: number
+  module: Module
+}> = ({ invoiceData, payingFrequency, totalAmount, module }) => {
   const { getString } = useStrings()
 
   const { licenseInformation } = useLicenseStore()
@@ -99,10 +104,16 @@ const Footer: React.FC<{ totalAmount: number; payingFrequency: TimeType }> = ({ 
 
   return (
     <Layout.Vertical>
-      <Layout.Horizontal flex={{ justifyContent: 'space-between' }} className={css.footerStyle}>
+      <Layout.Horizontal
+        flex={{ justifyContent: 'space-between' }}
+        className={module === ModuleName.CI.toLowerCase() ? css.footerStyleCi : css.footerStyleFf}
+      >
         <Text font={{ variation: FontVariation.H2 }}>{getString('common.payNow')}</Text>
         <Text font={{ variation: FontVariation.H2 }}>
-          {getAmountInCurrency(CurrencyType.USD, totalAmount)}
+          {getAmountInCurrency(
+            CurrencyType.USD,
+            invoiceData?.amountDue !== undefined ? invoiceData?.amountDue / 100 : totalAmount
+          )}
           {frequency}
         </Text>
       </Layout.Horizontal>
@@ -253,7 +264,7 @@ const PricePreview: React.FC<PricePreviewProps> = ({
         totalAmount={totalAmount}
       />
       {!isNil(taxAmount) && invoiceData?.totalAmount !== undefined ? (
-        <Footer payingFrequency={paymentFreq} totalAmount={totalAmount} />
+        <Footer payingFrequency={paymentFreq} invoiceData={invoiceData} totalAmount={totalAmount} module={module} />
       ) : null}
     </Layout.Vertical>
   )
