@@ -15,6 +15,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 
 import CDUsageTable from './CDUsageTable'
+import CIUsageTable from './CIUsageTable'
 
 import css from '../SubscriptionsPage.module.scss'
 
@@ -25,10 +26,12 @@ interface SubscriptionUsageViewProps {
 
 const getModuleUsagesTable = (props: SubscriptionUsageViewProps): React.ReactElement | undefined => {
   switch (props.module) {
-    // case ModuleName.CI:
-    //   return <CIUsageTable />
+    case ModuleName.CI:
+      return <CIUsageTable {...props} />
+      break
     case ModuleName.CD:
       return <CDUsageTable {...props} />
+      break
     default:
       return undefined
   }

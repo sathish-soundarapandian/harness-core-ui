@@ -38,6 +38,10 @@ export enum SubscriptionTabNames {
   PLANS = 'PLANS',
   BILLING = 'BILLING'
 }
+export enum CIUsageTabNames {
+  BREAKDOWN = 'BREAKDOWN',
+  TREND = 'TREND'
+}
 
 export enum CDLicenseType {
   SERVICES = 'SERVICES',

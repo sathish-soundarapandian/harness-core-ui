@@ -515,6 +515,8 @@ subscriptions:
   tabs:
     overview: Subscription Overview
     plans: Plans
+    breakdown: Breakdown
+    trend: Trend
   overview:
     details: Subscription Details
     plan: Plan

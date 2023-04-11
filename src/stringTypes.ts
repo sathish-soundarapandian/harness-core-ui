@@ -1087,8 +1087,10 @@ export interface StringsMap {
   'common.subscriptions.overview.trialExpiry': string
   'common.subscriptions.paid': string
   'common.subscriptions.sto.developers': string
+  'common.subscriptions.tabs.breakdown': string
   'common.subscriptions.tabs.overview': string
   'common.subscriptions.tabs.plans': string
+  'common.subscriptions.tabs.trend': string
   'common.subscriptions.title': string
   'common.subscriptions.trial': string
   'common.subscriptions.usage.activeDevelopers': string
