@@ -78,39 +78,7 @@ function SubscriptionTable({ data = [], frequency }: SubscriptionTableProps): JS
     return finalAmount
   }, [data])
 
-  return (
-    <Card className={css.subscriptionTable}>
-      <div className={cx(css.subscriptionGrid, css.tableTitle)}>
-        <div>
-          <Text font={{ variation: FontVariation.H4 }}>
-            {frequency === TimeType.YEARLY
-              ? getString('authSettings.billingInfo.annualSubscriptions')
-              : getString('authSettings.billingInfo.monthlySubscriptions')}
-          </Text>
-        </div>
-        <Layout.Vertical className={css.totalSpend}>
-          <Text font={{ variation: FontVariation.H4 }}>
-            {' '}
-            {frequency === TimeType.YEARLY
-              ? getString('authSettings.billingInfo.annualTotal')
-              : getString('authSettings.billingInfo.monthlyTotal')}
-            {`$${toDollars(annualTotal)}`}
-          </Text>
-          <Text font={{ variation: FontVariation.SMALL }}>
-            {getString('authSettings.billingInfo.nextBillingDate', {
-              billingDate: data[0]?.latestInvoiceDetail?.periodEnd
-                ? moment(data[0].latestInvoiceDetail?.periodEnd * 1000).format('MMMM d, YYYY')
-                : ''
-            })}
-          </Text>
-        </Layout.Vertical>
-      </div>
-      <TableHeader />
-      {data.map(row => (
-        <TableRow key={'ci'} data={row} module={'ci' as ModuleName} name={'ci'} />
-      ))}
-    </Card>
-  )
+  return <></>
 }
 
 const TableHeader = (): JSX.Element => {
