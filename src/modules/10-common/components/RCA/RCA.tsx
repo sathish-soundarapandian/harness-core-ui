@@ -83,7 +83,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
             <Layout.Vertical spacing="medium" className={css.errorDetails} padding="large">
               <Text>{errors[errorIndex].error?.message}</Text>
               {renderErrorDetailSeparator()}
-              <ReactMarkdown className={css.openAiResponse}>{response.choices[solutionIndex].text}</ReactMarkdown>
+              <ReactMarkdown className={css.openAiResponse}>{responses.choices[solutionIndex].text}</ReactMarkdown>
             </Layout.Vertical>
           </Layout.Vertical>
         ) : (
