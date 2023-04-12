@@ -29,7 +29,13 @@ export default function Assistant(props) {
     lazy: true
   })
 
+  let isFirstTime = true
+
   React.useEffect(() => {
+    if (isFirstTime) {
+      isFirstTime = false
+      return
+    }
     if (!loading) {
       setQuestionAndAnswers(items => [...items.slice(0, -1), { question: items.at(-1).question, answer: data?.data }])
     }
