@@ -231,6 +231,7 @@ export default function CDSideNav(): React.ReactElement {
             <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module })} />
           )}
           <SidebarLink label="Deployments" to={routes.toDeployments({ ...params, module })} />
+          <SidebarLink label="Tweety" to={routes.toTweety({ ...params, module })} />
           <SidebarLink label="Pipelines" to={routes.toPipelines({ ...params, module })} />
           <SidebarLink label="Services" to={routes.toServices({ ...params, module })} />
           <SidebarLink label="Environments" to={routes.toEnvironment({ ...params, module })} />

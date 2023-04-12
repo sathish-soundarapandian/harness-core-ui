@@ -69,6 +69,7 @@ export enum PAGE_NAME {
   ServiceDetails = 'ServiceDetails',
   ServiceStudio = 'ServiceStudio',
   Environments = 'Environments',
+  Tweety = 'Tweety',
   EnvironmentGroups = 'EnvironmentGroups',
   CDPipelineStudio = 'CDPipelineStudio',
   CDPipelineDeploymentList = 'CDPipelineDeploymentList',

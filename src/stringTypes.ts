@@ -886,6 +886,7 @@ export interface StringsMap {
   'common.resourceCenter.ticketmenu.tickets': string
   'common.resourceCenter.ticketmenu.ticketsDesc': string
   'common.resourceCenter.ticketmenu.title': string
+  'common.resourceCenter.ticketmenu.tweety': string
   'common.resourceCenter.ticketmenu.viewTicket': string
   'common.resourceCenter.title': string
   'common.resourceGroupLabel': string
@@ -9390,6 +9391,14 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
+  ask: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  askMeAnything: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
   assertionLabel: string
   /**
    * @deprecated migrate this string to module level file
@@ -10467,6 +10476,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   generalSettings: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  getHello: string
   /**
    * @deprecated migrate this string to module level file
    */
@@ -12571,6 +12584,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   total: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  tweety: string
   /**
    * @deprecated migrate this string to module level file
    */

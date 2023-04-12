@@ -778,6 +778,14 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/get-started`
   ),
+  toTweety: withAccountId(
+    () =>
+      `/tweety`
+  ),
+  toTweetyDrawer: withAccountId(
+    () =>
+      `/tweetyDrawer`
+  ),
   toCDOnboardingWizard: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/cd-onboarding`

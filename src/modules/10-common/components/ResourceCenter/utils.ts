@@ -7,6 +7,7 @@
 
 import moment from 'moment'
 import type { UserInfo } from 'services/cd-ng'
+import { render } from '@testing-library/react'
 
 export const ON_PREM_RELEASE_NODE_LINK = 'https://ngdocs.harness.io/article/556wy85kbo-harness-on-prem-release-notes'
 export const SAAS_RELEASE_NODE_LINK = 'https://ngdocs.harness.io/article/7zkchy5lhj-harness-saa-s-release-notes-2022'
@@ -25,6 +26,8 @@ export const timestamp = moment.now()
 export const HARNESS_SUPPORT_LINK =
   '/sso.html?action=login&brand_id=114095000394&locale_id=1&return_to=https%3A%2F%2Fsupport.harness.io%2Fhc%2Fen-us%2Frequests&src=zendesk&timestamp=' +
   timestamp
+export const HARNESS_TWEETY =
+  '/ng/account/kmpySmUISimoRrJL6NL73w/tweetyDrawer'
 
 export const WHATS_NEW_LINK = `https://docs.harness.io/article/ueeiji09do-what-s-new`
 export const EARLY_ACCESS_LINK = `https://docs.harness.io/article/w4krvu96i3-early-access`
@@ -33,6 +36,12 @@ export const openZendeskSupport = (e: React.MouseEvent<Element, MouseEvent>): vo
   e.stopPropagation()
   e.preventDefault()
   window.open(HARNESS_SUPPORT_LINK)
+}
+
+export const openTweety = (e: React.MouseEvent<Element, MouseEvent>): void => {
+  e.stopPropagation()
+  e.preventDefault()
+  window.open(HARNESS_TWEETY)
 }
 
 export function getReleaseNodeLink(): string {

@@ -26,6 +26,11 @@ import AccountResources from './pages/AccountResources/AccountResources'
 import SmtpDetails from './components/Smtp/SmtpDetails'
 import { useFeatureFlags } from './hooks/useFeatureFlag'
 import MainDashboardSideNav from './components/HomeSideNav/MainDashboardSideNav'
+import { PAGE_NAME } from './pages/pageContext/PageName'
+import { MinimalLayout } from './layouts/MinimalLayout'
+import TweetyChatPage from '@cd/pages/tweety/TweetyChatPage'
+import { ResourceCenterV2 } from './components/ResourceCenter/ResourceCenterV2'
+import TweetyChatPageDrawer from '@cd/pages/tweety/TweetyChatPageDrawer'
 
 const RedirectToHome = (): React.ReactElement => {
   const { selectedProject } = useAppStore()
@@ -91,7 +96,6 @@ export default (
     <Route exact path={routes.toHome({ ...accountPathProps })}>
       <RedirectToHome />
     </Route>
-
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toAccountResources({ ...accountPathProps })} exact>
       <AccountResources />
     </RouteWithLayout>

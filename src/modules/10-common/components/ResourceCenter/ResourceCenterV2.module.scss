@@ -1,0 +1,151 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+/* stylelint-disable color-no-hex */
+.resourceCenter {
+  background: var(--primary-9-dark) !important;
+  border-radius: var(--spacing-3);
+  box-shadow: rgb(40 41 61 / 4%) 0px 2px 8px, rgb(96 97 112 / 16%) 0px 16px 24px;
+  width: 520px !important;
+  height: fit-content !important;
+  top: unset !important;
+  bottom: 20px !important;
+  left: 300px !important;
+}
+
+.middleregion {
+  border-top: var(--grey-600) thin solid;
+  border-bottom: var(--grey-600) thin solid;
+}
+
+.bottombutton {
+  background: rgba(255, 255, 255, 0.05) !important;
+  min-width: 110px;
+  min-height: 110px;
+  max-width: 110px;
+  max-height: 110px;
+  border-radius: var(--spacing-2);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0) !important;
+    border: 1px solid var(--primary-7);
+  }
+}
+
+.title {
+  width: 100% !important;
+}
+
+.helpCenterIcon {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 88px !important;
+  height: 80px !important;
+  position: relative;
+  opacity: 0.6;
+  &:hover {
+    cursor: pointer;
+    opacity: 1;
+    background: var(--theme-light-nav-panel-bg) !important;
+  }
+  svg {
+    path {
+      fill: var(--grey-200);
+    }
+  }
+  text-transform: uppercase;
+}
+
+.contactLink {
+  align-items: flex-end;
+  padding-left: var(--spacing-xsmall) !important;
+  letter-spacing: normal !important;
+}
+
+.communityTooltip {
+  width: 250px !important;
+}
+
+.university {
+  path:nth-child(2) {
+    fill: none !important;
+  }
+}
+
+.iconSize {
+  svg {
+    margin: 3px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.marginTop {
+  margin-top: 18px !important;
+}
+
+.txtAlignCenter {
+  text-align: center;
+}
+
+.menuItem {
+  padding: var(--spacing-small) !important;
+  border-radius: var(--spacing-2);
+  background: rgba(255, 255, 255, 0.05) !important;
+  width: 100% !important;
+  justify-content: space-between;
+  &:hover {
+    background: rgba(255, 255, 255, 0) !important;
+    border: 1px solid var(--primary-7);
+    cursor: pointer;
+  }
+}
+
+.onHover {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.tileContainer {
+  padding: var(--spacing-small) var(--spacing-xlarge) !important;
+
+  .sectionTitle {
+    color: var(--white);
+  }
+  .tiles {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    .tile {
+      background: rgba(239, 251, 255, 0.05);
+      height: 52px;
+      width: 48%;
+      border-radius: 6px;
+      padding: var(--spacing-medium) !important;
+      color: var(--white);
+      cursor: pointer;
+      .icon {
+        margin-right: var(--spacing-small);
+      }
+      &:hover {
+        background: rgba(255, 255, 255, 0) !important;
+        border: 1px solid var(--primary-7);
+      }
+      .iconFilled {
+        > svg {
+          fill: #6ad5f8 !important;
+        }
+      }
+    }
+  }
+}
+.bottom {
+  margin-bottom: var(--spacing-small) !important;
+}

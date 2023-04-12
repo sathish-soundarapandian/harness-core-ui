@@ -88,7 +88,9 @@ import manifestSourceBaseFactory from './factory/ManifestSourceFactory/ManifestS
 import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 import GetStartedWithCD from './pages/get-started-with-cd/GetStartedWithCD'
+import TweetyChatPage from './pages/tweety/TweetyChatPage'
 import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizard'
+import TweetyChatPageDrawer from './pages/tweety/TweetyChatPageDrawer'
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
   icon: 'gitops-blue-circle',
@@ -284,6 +286,26 @@ export default (
       path={routes.toGetStartedWithCD({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
     >
       <GetStartedWithCD />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toTweety({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+      pageName={PAGE_NAME.Tweety}
+      layout={MinimalLayout}
+    >
+      <TweetyChatPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toTweetyDrawer({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+      pageName={PAGE_NAME.Tweety}
+      layout={MinimalLayout}
+    >
+      <TweetyChatPageDrawer />
     </RouteWithLayout>
     <RouteWithLayout
       exact

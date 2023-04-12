@@ -1,0 +1,244 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+ .resourceCenter {
+  // background: url('./images/DevOps Jedi Master front.svg'), var(--primary-9-dark) !important;
+  background: url('./images/DevOps Jedi Master front.svg') no-repeat, var(--primary-9-dark) !important;
+  border-radius: var(--spacing-3);
+  box-shadow: rgb(40 41 61 / 4%) 0px 2px 8px, rgb(96 97 112 / 16%) 0px 16px 24px;
+  width: 520px !important;
+  height: fit-content !important;
+  min-height: 300px;
+  top: unset !important;
+  bottom: 20px !important;
+  left: 300px !important;
+  background-size: 150px !important;
+  background-position: right bottom 5em !important;
+  // background-image: url('./images/DevOps Jedi Master front.svg') !important;
+}
+
+ .main {
+  $header-height: 80px;
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: $header-height;
+    background: var(--white);
+    border-bottom: 1px solid var(--grey-200);
+    padding: var(--spacing-medium) var(--spacing-large);
+
+    h2 {
+      margin: 0;
+    }
+  }
+}
+
+.topPage {
+  width: 90% !important;
+  position: relative;
+  margin: 100px 0px var(--spacing-small) 0px !important;
+  padding: var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-xxlarge) var(--spacing-11) !important;
+
+  .buttonRow {
+    margin-top: var(--spacing-large) !important;
+    align-items: center;
+  }
+}
+.chat-bubble {
+  display: inline-block;
+  max-width: 70%;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 16px;
+}
+
+.user-bubble {
+  background-color: #dcf8c6;
+  color: #000;
+  float: right;
+}
+
+.bot-bubble {
+  background-color: #fff;
+  color: #000;
+  float: left;
+}
+
+.searchBox {
+  display: flex;
+  padding: 30px;
+  border-radius: 30px;
+  .search {
+    flex: 1;
+    margin-bottom: unset;
+    border-radius: 30px;
+    > div {
+      > span {
+        > svg {
+          margin-top: 1px;
+          border-radius: 30px;
+        }
+      }
+      > input {
+        background-color: var(--grey-50) !important;
+        border-radius: 30px;
+        font-size: 15px;
+        padding: 'inherit';
+      }
+    }
+  }
+}
+
+.arrow {
+  margin: 0 var(--spacing-medium) !important;
+
+  svg {
+    path {
+      fill: var(--black) !important;
+    }
+  }
+}
+
+.paddingXSmall {
+  padding: var(--spacing-xsmall) !important;
+}
+
+.iconPaddingSmall {
+  padding: 3px !important;
+}
+
+.iconPadding {
+  padding: 6px !important;
+}
+
+.image {
+  width: 96%;
+  height: 60%;
+  padding-left: 415px !important;
+  padding-right: 10px !important;
+}
+
+.linkText {
+  margin-left: 30px !important;
+}
+
+.listItemCss {
+  > li {
+    margin-bottom: 25px;
+  }
+  padding-left: 20px;
+}
+
+.containerItemCss {
+  margin-bottom: 10px !important;
+}
+
+.listContainerCss {
+  margin-bottom: 15px !important;
+}
+
+.btn {
+  padding: 15px !important;
+  font-size: 14px !important;
+}
+
+// NEW
+.centerAlign {
+  align-items: center;
+}
+.samplePipeline {
+  width: 1133px;
+  height: 229px;
+}
+.separator {
+  width: 60%;
+  border: 1px solid var(--black);
+  margin: var(--spacing-xxlarge) var(--spacing-xxlarge) !important;
+  opacity: 0.1;
+}
+
+.close-wizard {
+  position: absolute;
+  right: var(--spacing-large);
+  top: var(--spacing-large);
+}
+
+/** GitOps **/
+.aboutHarnessAdapterAnswer {
+  font-weight: 600 !important;
+  color: var(--grey-800) !important;
+  font-size: var(--font-size-normal) !important;
+  line-height: 24px !important;
+}
+
+.installedComponent {
+  font-size: var(--form-input-font-size);
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: var(--grey-800);
+  padding-bottom: var(--spacing-xsmall);
+}
+
+.provisioningText {
+  color: var(--grey-900);
+  margin-top: var(--spacing-small);
+}
+
+.blueDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--teal-600);
+  margin-right: var(--spacing-small);
+}
+
+.agentFirstSection {
+  display: flex;
+  align-items: center;
+  margin-top: var(--spacing-xlarge);
+}
+
+.agentSecondSection {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-small);
+}
+
+.agentThirdSection {
+  display: flex;
+  align-items: center;
+  margin-top: var(--spacing-large);
+}
+
+.progressItem:after {
+  border-color: var(--primary-7) !important;
+  background-color: var(--primary-7) !important;
+}
+
+.provisioningInfo {
+  height: 32px;
+  margin-top: var(--spacing-xxxlarge);
+  display: flex;
+  font-weight: 500;
+  font-size: var(--form-input-font-size);
+  color: var(--grey-900);
+  align-items: center;
+}
+
+.provisioningSecondaryInfo {
+  margin: var(--spacing-medium) 0 var(--spacing-xxxlarge);
+  font-size: var(--font-size-normal);
+  color: var(--grey-900);
+  min-height: 40px;
+}
+
+.error {
+  color: var(--error);
+}

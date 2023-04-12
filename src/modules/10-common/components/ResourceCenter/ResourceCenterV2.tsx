@@ -37,9 +37,7 @@ import {
 } from './utils'
 import { CommunitySubmitTicket } from './MenuItems'
 import { useReleaseNotesModal } from './ReleaseNotesModal/useReleaseNotesModal'
-import css from './ResourceCenter.module.scss'
-import ChatbotDrawer from './ChatbotDrawer'
-import TweetyChatPageDrawer from '@cd/pages/tweety/TweetyChatPageDrawer'
+import css from './ResourceCenterV2.module.scss'
 
 const refinerProjectId = window.refinerProjectToken
 const refinerSurveryId = window.refinerFeedbackToken
@@ -48,7 +46,7 @@ interface ResourceCenterProps {
   link?: boolean
 }
 
-export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
+export const ResourceCenterV2: React.FC<ResourceCenterProps> = ({ link }) => {
   const { getString } = useStrings()
   const { currentUserInfo } = useAppStore()
   const [buttonDisabled, setButtonDisabled] = useState(false)
@@ -75,15 +73,7 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
   }, [])
 
   const releaseNodeLink = getReleaseNodeLink()
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isChatbotDrawerOpen, setIsChatbotDrawerOpen] = useState(false);
-  const toggleChatbotDrawer = (open) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
 
-    setIsChatbotDrawerOpen(open);
-  };
   const getContactUsTiles = React.useMemo((): Resource[] => {
     const refinerSurvey = (): void => {
       _refiner('identifyUser', {
@@ -112,7 +102,7 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
         title: getString('common.resourceCenter.ticketmenu.tweety'),
         icon: 'copy-doc',
         className: css.bottom,
-        onClick: (e: React.MouseEvent<Element, MouseEvent>) => setIsChatbotDrawerOpen(true),
+        onClick: (e: React.MouseEvent<Element, MouseEvent>) => openTweety(e),
         testId: 'view-ticket'
       }
     ]
@@ -193,7 +183,6 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
                 e.stopPropagation()
                 e.preventDefault()
                 setShow(false)
-                setIsChatbotDrawerOpen(false)
               }}
             />
           </Layout.Horizontal>
@@ -314,10 +303,6 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
           )}
         </Layout.Vertical>
       </Layout.Vertical>
-      {
-        isChatbotDrawerOpen?<TweetyChatPageDrawer />:<div></div>
-      }
-      
     </Drawer>
   )
 }
