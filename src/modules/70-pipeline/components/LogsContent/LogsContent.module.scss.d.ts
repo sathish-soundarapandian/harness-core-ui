@@ -24,6 +24,7 @@ declare const styles: {
   readonly main: string
   readonly newTab: string
   readonly noLogs: string
+  readonly openAiPanel: string
   readonly rhs: string
   readonly search: string
   readonly selectedSearchResult: string

@@ -7,6 +7,7 @@
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import cx from 'classnames'
+import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import {
   Button,
   ButtonSize,
@@ -17,7 +18,9 @@ import {
   Icon,
   Tab,
   Text,
-  Tabs
+  Tabs,
+  Popover,
+  Layout
 } from '@harness/uicore'
 import type { GroupedVirtuosoHandle, VirtuosoHandle } from 'react-virtuoso'
 import { Color } from '@harness/design-system'
@@ -296,36 +299,68 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
       {renderLogs({ hasLogs, isSingleSectionLogs, virtuosoRef, state, actions })}
       {mode === 'console-view' && hasError ? (
         <>
-          <div className={cx(css.errorMsgs, { [css.isWarning]: isWarning })}>
-            {errorObjects.map((errorObject, index) => {
-              const { error = {}, explanations = [], hints = [] } = errorObject
-              return (
-                <div key={index} className={css.errorMsgContainer}>
-                  <Container margin={{ bottom: 'medium' }}>
-                    <Icon className={css.errorIcon} name={isWarning ? 'warning-sign' : 'circle-cross'} />
-                    <LinkifyText
-                      content={error.message}
-                      textProps={{ font: { weight: 'bold' }, color: Color.RED_700 }}
-                      linkStyles={css.link}
+          <Layout.Horizontal
+            className={cx(css.errorMsgs, { [css.isWarning]: isWarning })}
+            flex={{ justifyContent: 'space-between' }}
+          >
+            <Layout.Vertical>
+              {errorObjects.map((errorObject, index) => {
+                const { error = {}, explanations = [], hints = [] } = errorObject
+                return (
+                  <div key={index} className={css.errorMsgContainer}>
+                    <Container margin={{ bottom: 'medium' }}>
+                      <Icon className={css.errorIcon} name={isWarning ? 'warning-sign' : 'circle-cross'} />
+                      <LinkifyText
+                        content={error.message}
+                        textProps={{ font: { weight: 'bold' }, color: Color.RED_700 }}
+                        linkStyles={css.link}
+                      />
+                    </Container>
+                    <ErrorList
+                      items={explanations}
+                      header={getString('common.errorHandler.issueCouldBe')}
+                      icon={'info'}
+                      color={Color.WHITE}
                     />
-                  </Container>
-                  <ErrorList
-                    items={explanations}
-                    header={getString('common.errorHandler.issueCouldBe')}
-                    icon={'info'}
-                    color={Color.WHITE}
+                    <ErrorList
+                      items={hints}
+                      header={getString('common.errorHandler.tryTheseSuggestions')}
+                      icon={'lightbulb'}
+                      color={Color.WHITE}
+                    />
+                  </div>
+                )
+              })}
+            </Layout.Vertical>
+            <Popover
+              position={Position.LEFT_TOP}
+              content={
+                <Container className={css.openAiPanel}>
+                  <OpenAIResponse
+                    errors={[
+                      {
+                        error: {
+                          message:
+                            'Failed to get harness-ng-ui/harnessci-build-y9f78y3p-image-step-2. Code: 0, Message: null \\n Cause: java.net.ConnectException: Failed to connect to /10.176.0.1:443'
+                        }
+                      },
+                      {
+                        error: {
+                          message: 'Something went wrong...'
+                        }
+                      }
+                    ]}
                   />
-                  <ErrorList
-                    items={hints}
-                    header={getString('common.errorHandler.tryTheseSuggestions')}
-                    icon={'lightbulb'}
-                    color={Color.WHITE}
-                  />
-                </div>
-              )
-            })}
-          </div>
-          <OpenAIResponse />
+                </Container>
+              }
+              interactionKind={PopoverInteractionKind.CLICK}
+              usePortal={true}
+              canEscapeKeyClose={true}
+              isOpen={true}
+            >
+              <Icon name="gear" size={40} />
+            </Popover>
+          </Layout.Horizontal>
         </>
       ) : null}
     </div>

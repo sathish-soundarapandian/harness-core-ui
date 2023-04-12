@@ -245,3 +245,9 @@
   color: var(--red-600);
   margin-bottom: var(--spacing-1);
 }
+
+.openAIPanel {
+  height: 75vh;
+  width: 35vw;
+  overflow: scroll;
+}

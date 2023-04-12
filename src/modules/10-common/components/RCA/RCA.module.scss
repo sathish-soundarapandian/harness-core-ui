@@ -1,13 +1,3 @@
-.openAIResponse {
-  background-color: #8aa6bc;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 10px;
-  font-family: Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.4;
-}
-
 .openAIResponse pre {
   background-color: #282c34;
   color: #f8f8f2;
@@ -17,7 +7,17 @@
 }
 
 .openAIResponse code {
-  font-family: monospace;
-  color: #f8f8f2;
-  font-weight: bold;
+  font-family: 'Roboto Mono', 'Monaco', 'Ubuntu Mono', monospace;
+  font-weight: bolder;
+}
+
+.errorDetails {
+  background: #ffffff !important;
+  border-radius: 4px;
+  // padding: 20px !important;
+}
+
+.main {
+  background: #f3f3f3 !important;
+  border-radius: 8px;
 }
