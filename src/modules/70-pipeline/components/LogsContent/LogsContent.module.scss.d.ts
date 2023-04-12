@@ -14,6 +14,7 @@ declare const styles: {
   readonly errorMsgContainer: string
   readonly errorMsgWrapper: string
   readonly errorMsgs: string
+  readonly errorSidePanel: string
   readonly errorTitle: string
   readonly fullScreen: string
   readonly hasErrorMessage: string
@@ -25,6 +26,7 @@ declare const styles: {
   readonly newTab: string
   readonly noLogs: string
   readonly openAiPanel: string
+  readonly popover: string
   readonly rhs: string
   readonly search: string
   readonly selectedSearchResult: string

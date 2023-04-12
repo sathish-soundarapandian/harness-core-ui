@@ -20,7 +20,8 @@ import {
   Text,
   Tabs,
   Popover,
-  Layout
+  Layout,
+  TextInput
 } from '@harness/uicore'
 import type { GroupedVirtuosoHandle, VirtuosoHandle } from 'react-virtuoso'
 import { Color } from '@harness/design-system'
@@ -335,28 +336,32 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
             <Popover
               position={Position.LEFT_TOP}
               content={
-                <Container className={css.openAiPanel}>
-                  <OpenAIResponse
-                    errors={[
-                      {
-                        error: {
-                          message:
-                            'Failed to get harness-ng-ui/harnessci-build-y9f78y3p-image-step-2. Code: 0, Message: null \\n Cause: java.net.ConnectException: Failed to connect to /10.176.0.1:443'
+                <Layout.Vertical spacing="medium" className={css.errorSidePanel}>
+                  <Container className={css.openAiPanel}>
+                    <OpenAIResponse
+                      errors={[
+                        {
+                          error: {
+                            message:
+                              'Failed to get harness-ng-ui/harnessci-build-y9f78y3p-image-step-2. Code: 0, Message: null \\n Cause: java.net.ConnectException: Failed to connect to /10.176.0.1:443'
+                          }
+                        },
+                        {
+                          error: {
+                            message: 'Something went wrong...'
+                          }
                         }
-                      },
-                      {
-                        error: {
-                          message: 'Something went wrong...'
-                        }
-                      }
-                    ]}
-                  />
-                </Container>
+                      ]}
+                    />
+                  </Container>
+                  <TextInput leftIcon="gear"></TextInput>
+                </Layout.Vertical>
               }
               interactionKind={PopoverInteractionKind.CLICK}
               usePortal={true}
               canEscapeKeyClose={true}
               isOpen={true}
+              popoverClassName={css.popover}
             >
               <Icon name="gear" size={40} />
             </Popover>

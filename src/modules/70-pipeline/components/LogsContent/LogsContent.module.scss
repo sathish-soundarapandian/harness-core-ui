@@ -246,8 +246,25 @@
   margin-bottom: var(--spacing-1);
 }
 
+.errorSidePanel {
+  background-color: var(--grey-800) !important;
+}
+
 .openAIPanel {
-  height: 75vh;
+  height: 85vh;
   width: 35vw;
   overflow: scroll;
+  background: #f3f3f3 !important;
+  border-top-left-radius: 1px;
+  border-top-right-radius: 1px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.popover {
+  :global {
+    .bp3-popover-arrow {
+      visibility: hidden;
+    }
+  }
 }

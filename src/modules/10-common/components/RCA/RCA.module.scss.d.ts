@@ -8,7 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly errorDetails: string
-  readonly main: string
   readonly openAiResponse: string
 }
 export default styles

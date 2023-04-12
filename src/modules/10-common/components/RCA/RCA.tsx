@@ -22,8 +22,8 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
 
   return (
     <Layout.Vertical
-      padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge', right: 'xxlarge' }}
       className={css.main}
+      padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge', right: 'xxlarge' }}
     >
       <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-start' }}>
         <Icon name="danger-icon" size={16} />
