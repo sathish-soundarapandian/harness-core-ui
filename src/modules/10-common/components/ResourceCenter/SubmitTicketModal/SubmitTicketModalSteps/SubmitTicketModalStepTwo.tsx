@@ -8,45 +8,46 @@
 import { Layout, Text, Formik, Button, ButtonVariation, StepProps, FormInput } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Form } from 'formik'
 import { useStrings } from 'framework/strings'
-import SuggestionsPanel from './SuggestionsPanel'
 import css from './SubmitTicketModalSteps.module.scss'
+
 interface SubmitTicketModalStepTwoProps {
   name: string
   stepName: string
   searchBoxController: any
   resultListController: any
 }
+
 export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketModalStepTwoProps) => {
-  const { stepName, nextStep, searchBoxController, resultListController } = props
+  const { stepName, nextStep } = props
   const { getString } = useStrings()
 
   // State Management for coveo controllers
 
-  const [state, setState] = useState(searchBoxController.state)
-
-  const [resultsState, setResultsState] = useState(resultListController.state)
-
-  const [suggestionItems, setSuggestionItems] = useState([])
+  // const [state, setState] = useState(searchBoxController.state)
+  //
+  // const [resultsState, setResultsState] = useState(resultListController.state)
+  //
+  // const [suggestionItems, setSuggestionItems] = useState([])
 
   // Subscribing to the controller states
 
-  useEffect(() => searchBoxController.subscribe(() => setState(searchBoxController.state)), [searchBoxController])
+  // useEffect(() => searchBoxController.subscribe(() => setState(searchBoxController.state)), [searchBoxController])
 
-  useEffect(
-    () => resultListController.subscribe(() => setResultsState(resultListController.state)),
-    [resultListController]
-  )
+  // useEffect(
+  //   () => resultListController.subscribe(() => setResultsState(resultListController.state)),
+  //   [resultListController]
+  // )
 
-  useEffect(() => {
-    setSuggestionItems(
-      state.suggestions?.map((suggestion: any) => {
-        return { label: suggestion.rawValue, value: suggestion.rawValue }
-      })
-    )
-  }, [state.suggestions])
+  // useEffect(() => {
+  //   setSuggestionItems(
+  //     state.suggestions?.map((suggestion: any) => {
+  //       return { label: suggestion.rawValue, value: suggestion.rawValue }
+  //     })
+  //   )
+  // }, [state.suggestions])
 
   return (
     <Layout.Vertical spacing="small" className={css.optionsViewContainer}>
@@ -68,24 +69,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
         {() => (
           <Form>
             <Layout.Vertical>
-              <FormInput.Select
-                name="subject"
-                label={'Ticket Subject'}
-                className={css.inputWidth}
-                items={suggestionItems}
-                onQueryChange={(val: any) => {
-                  searchBoxController.updateText(val)
-                }}
-                onChange={(val: any) => {
-                  searchBoxController.updateText(val)
-                  searchBoxController.submit()
-                }}
-              />
-              {state.value.length > 0 ? (
-                <SuggestionsPanel data={resultsState.results} />
-              ) : (
-                <div style={{ height: '500px' }} />
-              )}
+              <FormInput.Text name="subject" label="What's the issue?" className={css.inputWidth} />
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"
