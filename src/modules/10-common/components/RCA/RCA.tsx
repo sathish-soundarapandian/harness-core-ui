@@ -28,7 +28,9 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
         <Separator topSeparation={16} bottomSeparation={10} />
         <Layout.Horizontal spacing="small">
           <Icon name="gear" size={20} />
-          <Text>{getString('common.possibleSolution').concat(showDetailedView ? '' : 's')}</Text>
+          <Text color={Color.PRIMARY_7}>
+            {getString('common.possibleSolution').concat(showDetailedView ? '' : 's')}
+          </Text>
         </Layout.Horizontal>
       </Layout.Vertical>
     )
