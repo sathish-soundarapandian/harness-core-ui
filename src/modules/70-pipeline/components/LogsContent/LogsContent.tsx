@@ -368,6 +368,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                       leftIconProps={{ name: 'gear', size: 40 }}
                       className={css.search}
                       placeholder={getString('common.typeHere')}
+                      onClick={() => setShowErrorPanel((show: boolean) => !show)}
                     ></TextInput>
                   </Layout.Vertical>
                 }
@@ -376,6 +377,9 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                 canEscapeKeyClose={true}
                 popoverClassName={css.popover}
                 isOpen={showErrorPanel}
+                onInteraction={nextOpenState => {
+                  setShowErrorPanel(nextOpenState)
+                }}
               >
                 <Icon name="gear" size={40} className={css.openAiPanelIcon} />
               </Popover>
