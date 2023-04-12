@@ -38,6 +38,7 @@ import { addHotJarSuppressionAttribute } from '@common/utils/utils'
 import { ExecutionStatus, isExecutionComplete, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
+import OpenAIResponse from '@common/components/RCA/RCA'
 import { useLogsContent } from './useLogsContent'
 import { GroupedLogsWithRef as GroupedLogs } from './components/GroupedLogs'
 import { SingleSectionLogsWithRef as SingleSectionLogs } from './components/SingleSectionLogs'
@@ -294,35 +295,38 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
       </div>
       {renderLogs({ hasLogs, isSingleSectionLogs, virtuosoRef, state, actions })}
       {mode === 'console-view' && hasError ? (
-        <div className={cx(css.errorMsgs, { [css.isWarning]: isWarning })}>
-          {errorObjects.map((errorObject, index) => {
-            const { error = {}, explanations = [], hints = [] } = errorObject
-            return (
-              <div key={index} className={css.errorMsgContainer}>
-                <Container margin={{ bottom: 'medium' }}>
-                  <Icon className={css.errorIcon} name={isWarning ? 'warning-sign' : 'circle-cross'} />
-                  <LinkifyText
-                    content={error.message}
-                    textProps={{ font: { weight: 'bold' }, color: Color.RED_700 }}
-                    linkStyles={css.link}
+        <>
+          <div className={cx(css.errorMsgs, { [css.isWarning]: isWarning })}>
+            {errorObjects.map((errorObject, index) => {
+              const { error = {}, explanations = [], hints = [] } = errorObject
+              return (
+                <div key={index} className={css.errorMsgContainer}>
+                  <Container margin={{ bottom: 'medium' }}>
+                    <Icon className={css.errorIcon} name={isWarning ? 'warning-sign' : 'circle-cross'} />
+                    <LinkifyText
+                      content={error.message}
+                      textProps={{ font: { weight: 'bold' }, color: Color.RED_700 }}
+                      linkStyles={css.link}
+                    />
+                  </Container>
+                  <ErrorList
+                    items={explanations}
+                    header={getString('common.errorHandler.issueCouldBe')}
+                    icon={'info'}
+                    color={Color.WHITE}
                   />
-                </Container>
-                <ErrorList
-                  items={explanations}
-                  header={getString('common.errorHandler.issueCouldBe')}
-                  icon={'info'}
-                  color={Color.WHITE}
-                />
-                <ErrorList
-                  items={hints}
-                  header={getString('common.errorHandler.tryTheseSuggestions')}
-                  icon={'lightbulb'}
-                  color={Color.WHITE}
-                />
-              </div>
-            )
-          })}
-        </div>
+                  <ErrorList
+                    items={hints}
+                    header={getString('common.errorHandler.tryTheseSuggestions')}
+                    icon={'lightbulb'}
+                    color={Color.WHITE}
+                  />
+                </div>
+              )
+            })}
+          </div>
+          <OpenAIResponse />
+        </>
       ) : null}
     </div>
   )
