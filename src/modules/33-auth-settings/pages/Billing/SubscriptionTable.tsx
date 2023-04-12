@@ -13,7 +13,7 @@ import { defaultTo, lowerCase } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import moment from 'moment'
 import { getModuleIcon } from '@common/utils/utils'
-import type { Module, ModuleName } from 'framework/types/ModuleName'
+import { Module, ModuleName } from 'framework/types/ModuleName'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import type { InvoiceDetailDTO, ItemDTO, SubscriptionDetailDTO } from 'services/cd-ng'
@@ -107,7 +107,7 @@ function SubscriptionTable({ data = [], frequency }: SubscriptionTableProps): JS
       </div>
       <TableHeader />
       {data.map(row => {
-        let items = []
+        const items: ItemDTO[] = []
         row?.latestInvoiceDetail?.items?.forEach(item => {
           if (!item.description?.includes('Sales Tax') && item.amount !== 0) {
             items.push(item)
@@ -118,8 +118,8 @@ function SubscriptionTable({ data = [], frequency }: SubscriptionTableProps): JS
           <TableRow
             key={items[0]?.price?.metaData?.module?.toLowerCase()}
             data={row}
-            module={items[0]?.price?.metaData?.module?.toLowerCase()}
-            name={items[0]?.price?.metaData?.module?.toLowerCase()}
+            module={items[0]?.price?.metaData?.module?.toLowerCase() as ModuleName}
+            name={items[0]?.price?.metaData?.module?.toLowerCase() || ''}
           />
         )
       })}
@@ -140,7 +140,7 @@ const TableHeader = (): JSX.Element => {
   )
 }
 interface TableRowProps {
-  module: ModuleName
+  module?: ModuleName
   subscribed?: string
   using?: string
   name: string
@@ -188,7 +188,9 @@ const TableRow = ({ name, using = '-', module, data }: TableRowProps): JSX.Eleme
       <Text font={{ variation: FontVariation.BODY }} iconProps={{ size: 22 }} icon={getModuleIcon(module)}>
         {getString(getTitleByModule(name as Module)?.title as keyof StringsMap)}
       </Text>
-      <Text font={{ variation: FontVariation.BODY }}>{module === 'cf' ? ffString : ciString}</Text>
+      <Text font={{ variation: FontVariation.BODY }}>
+        {module === ModuleName.CF.toLowerCase() ? ffString : ciString}
+      </Text>
       <Text font={{ variation: FontVariation.BODY }}> {`${using}`}</Text>
       <Text font={{ variation: FontVariation.BODY }}>
         <RbacButton
