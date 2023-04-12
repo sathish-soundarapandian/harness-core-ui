@@ -4,6 +4,7 @@ import { Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ExtractedInfo } from '../ErrorHandler/ErrorHandler'
+import { Separator } from '../Separator/Separator'
 import response from './openai-response.json'
 import css from './RCA.module.scss'
 
@@ -14,7 +15,6 @@ interface OpenAIResponseInterface {
 function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const { getString } = useStrings()
   const { errors = [] } = props
-  const markdownText = response.choices[0].text
 
   if (!errors.length) {
     return <></>
@@ -34,7 +34,14 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
               index + 1
             }`}</Text>
             <Text>{error.message}</Text>
-            <ReactMarkdown className={css.openAiResponse}>{markdownText}</ReactMarkdown>
+            <Layout.Vertical>
+              <Separator topSeparation={16} bottomSeparation={10} />
+              <Layout.Horizontal spacing="small">
+                <Icon name="gear" size={20} />
+                <Text>{getString('common.possibleSolutions')}</Text>
+              </Layout.Horizontal>
+            </Layout.Vertical>
+            <ReactMarkdown className={css.openAiResponse}>{response.choices[index].text}</ReactMarkdown>
           </Layout.Vertical>
         )
       })}

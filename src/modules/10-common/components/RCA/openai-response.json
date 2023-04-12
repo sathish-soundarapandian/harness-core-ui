@@ -1,11 +1,18 @@
 {
-  "id": "some-request-id",
-  "model": "text-davinci-002",
-  "created": 1638423909,
+  "id": "some-id",
+  "model": "davinci:2022-10-10",
+  "object": "text_completion",
+  "created": 1669903739,
   "choices": [
     {
-      "text": "To deploy a pod in Kubernetes, you can create a YAML file that describes the pod and use the `kubectl apply` command to create the pod. Here are the steps to deploy a pod in Kubernetes:\n\n1. Create a YAML file that describes the pod: The YAML file should include the pod metadata, such as the name, labels, and annotations, as well as the pod specification, which includes the container images, ports, and other configuration options.\n\nFor example, you can create a YAML file named `my-pod.yaml` with the following contents:\n\n```\napiVersion: v1\nkind: Pod\nmetadata:\n  name: my-pod\nspec:\n  containers:\n  - name: my-container\n    image: nginx\n    ports:\n    - containerPort: 80\n```\n\n2. Use `kubectl apply` to create the pod: Run the following command to create the pod in Kubernetes:\n\n```\nkubectl apply -f my-pod.yaml\n```\n\nThis command will read the YAML file and create the pod in the Kubernetes cluster.\n\n3. Verify that the pod is running: Run the following command to see the status of the pod:\n\n```\nkubectl get pods\n```\n\nThis command will display the list of pods running in the Kubernetes cluster. Look for the pod named `my-pod` to make sure it is running.\n\nThat's it! You have now deployed a pod in Kubernetes using a YAML file.",
+      "text": "You can generate Fibonacci numbers in Ruby using a loop or recursion. Here's an example of each:\n\nUsing a loop:\n\n```\ndef fibonacci(n)\n  fib = [0, 1]\n  (n - 2).times do\n    fib << fib[-1] + fib[-2]\n  end\n  fib.take(n)\nend\n```\n\n# Example usage:\n```\nfibonacci(10) #=> [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]\n```\n\nThis implementation uses an array to store the Fibonacci sequence and a loop to generate the sequence up to the specified number of terms `n`.\n\nUsing recursion:\n\n```\ndef fibonacci(n)\n  if n <= 1\n    n\n  else\n    fibonacci(n - 1) + fibonacci(n - 2)\n  end\nend\n```\n\n# Example usage:\n```\n(0..10).map { |n| fibonacci(n) } #=> [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55]\n```\n\nThis implementation uses a recursive function to generate the nth Fibonacci number. The base case is when `n` is 0 or 1, in which case the function returns `n`. For larger values of `n`, the function calls itself recursively to calculate the sum of the two previous Fibonacci numbers. Note that this implementation can be less efficient than the loop version for large values of `n`, as it will perform redundant calculations.",
       "index": 0,
+      "logprobs": null,
+      "finish_reason": "length"
+    },
+    {
+      "text": "To deploy a pod in Kubernetes, you can create a YAML file that describes the pod and use the `kubectl apply` command to create the pod. Here are the steps to deploy a pod in Kubernetes:\n\n1. Create a YAML file that describes the pod: The YAML file should include the pod metadata, such as the name, labels, and annotations, as well as the pod specification, which includes the container images, ports, and other configuration options.\n\nFor example, you can create a YAML file named `my-pod.yaml` with the following contents:\n\n```\napiVersion: v1\nkind: Pod\nmetadata:\n  name: my-pod\nspec:\n  containers:\n  - name: my-container\n    image: nginx\n    ports:\n    - containerPort: 80\n```\n\n2. Use `kubectl apply` to create the pod: Run the following command to create the pod in Kubernetes:\n\n```\nkubectl apply -f my-pod.yaml\n```\n\nThis command will read the YAML file and create the pod in the Kubernetes cluster.\n\n3. Verify that the pod is running: Run the following command to see the status of the pod:\n\n```\nkubectl get pods\n```\n\nThis command will display the list of pods running in the Kubernetes cluster. Look for the pod named `my-pod` to make sure it is running.\n\nThat's it! You have now deployed a pod in Kubernetes using a YAML file.",
+      "index": 1,
       "logprobs": null,
       "finish_reason": "length"
     }

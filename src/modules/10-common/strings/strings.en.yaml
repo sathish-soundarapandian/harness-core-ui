@@ -1444,3 +1444,4 @@ welcomePage:
 successCount: 'Success {{count}}'
 failedCount: 'Failed {{count}}'
 typeHere: Type here
+possibleSolutions: Possible Solutions

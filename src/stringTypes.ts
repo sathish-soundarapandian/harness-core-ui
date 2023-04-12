@@ -760,6 +760,7 @@ export interface StringsMap {
   'common.policy.noSelectInput': string
   'common.policy.policySearch': string
   'common.policy.policysets': string
+  'common.possibleSolutions': string
   'common.powershell': string
   'common.preProduction': string
   'common.previewYAML': string
