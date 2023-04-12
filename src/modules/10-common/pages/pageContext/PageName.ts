@@ -6,6 +6,7 @@
  */
 
 export enum PAGE_NAME {
+  Intelligence = 'Intelligence',
   AccountResources = 'AccountResources',
   ProjectListing = 'ProjectListing',
   SmtpDetails = 'SmtpDetails',

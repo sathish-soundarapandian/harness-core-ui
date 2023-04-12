@@ -393,17 +393,17 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
                   storeType
                 }),
                 disabled: pipelineIdentifier === DefaultNewPipelineId
-              },
-              {
-                label: 'Intelligence',
-                to: routes.toPipelineIntelligence({
-                  orgIdentifier,
-                  projectIdentifier,
-                  pipelineIdentifier,
-                  accountId,
-                  module
-                })
               }
+              // {
+              //   label: 'Intelligence',
+              //   to: routes.toPipelineIntelligence({
+              //     orgIdentifier,
+              //     projectIdentifier,
+              //     pipelineIdentifier,
+              //     accountId,
+              //     module
+              //   })
+              // }
             ]}
           />
         }

@@ -455,17 +455,15 @@ export function PipelineRouteDestinations({
       >
         <PipelineDetails>{PipelineStudioV1 ? <PipelineStudioV1 /> : <></>}</PipelineDetails>
       </RouteWithLayout>
-      <RouteWithLayout
-        exact
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={sidebarProps}
-        path={routes.toPipelineIntelligence({ ...accountPathProps, ...pipelinePathProps, ...moduleParams })}
-        pageName={pipelineStudioPageName}
-      >
-        <PipelineDetails>
-          <PipelineIntelligence />
-        </PipelineDetails>
-      </RouteWithLayout>
+      {/*<RouteWithLayout*/}
+      {/*exact*/}
+      {/*licenseRedirectData={licenseRedirectData}*/}
+      {/*sidebarProps={sidebarProps}*/}
+      {/*path={routes.toPipelineIntelligence({ ...accountPathProps, ...projectPathProps, ...moduleParams })}*/}
+      {/*pageName={pipelineStudioPageName}*/}
+      {/*>*/}
+      {/*<PipelineIntelligence />*/}
+      {/*</RouteWithLayout>*/}
       <RouteWithLayout
         exact
         licenseRedirectData={licenseRedirectData}

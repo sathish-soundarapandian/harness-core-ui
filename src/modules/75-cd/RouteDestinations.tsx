@@ -89,6 +89,7 @@ import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 import GetStartedWithCD from './pages/get-started-with-cd/GetStartedWithCD'
 import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizard'
+import PipelineIntelligence from '@pipeline/pages/pipeline-intelligence/PipelineIntelligence'
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
   icon: 'gitops-blue-circle',
@@ -338,6 +339,15 @@ export default (
       pageName={PAGE_NAME.Services}
     >
       <Services />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toPipelineIntelligence({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+      pageName={PAGE_NAME.Intelligence}
+    >
+      <PipelineIntelligence />
     </RouteWithLayout>
     <RouteWithLayout
       exact

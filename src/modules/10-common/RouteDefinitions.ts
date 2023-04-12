@@ -820,25 +820,9 @@ const routes = {
       }
     }
   ),
-  toPipelineIntelligence: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      pipelineIdentifier,
-      accountId: _accountId,
-      module,
-      ...rest
-    }: PipelineType<PipelinePathProps> & PipelineStudioQueryParams & RunPipelineQueryParams) => {
-      const queryString = qs.stringify(rest, { skipNulls: true })
-      const basePath = module || 'home'
-
-      if (queryString.length > 0) {
-        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/intelligence/?${queryString}`
-      } else {
-        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/intelligence`
-      }
-    }
-  ),
+  toPipelineIntelligence: withAccountId(({ orgIdentifier, projectIdentifier, accountId: _accountId, module }) => {
+    return `/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/intelligence`
+  }),
   toPipelines: withAccountId(({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) => {
     return module
       ? `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`

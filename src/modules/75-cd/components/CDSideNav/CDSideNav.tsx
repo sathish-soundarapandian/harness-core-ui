@@ -241,6 +241,7 @@ export default function CDSideNav(): React.ReactElement {
           {!isCommunity && !hideGitopsOnPrem ? (
             <SidebarLink label={getString('cd.gitOps')} to={routes.toGitOps({ ...params, module })} />
           ) : null}
+          <SidebarLink label="Intelligence" to={routes.toPipelineIntelligence({ ...params, module })} />
           <ProjectSetupMenu module={module} />
         </React.Fragment>
       ) : null}
