@@ -48,7 +48,7 @@ module.exports = {
   },
   'pipeline-ng': {
     output: 'src/services/pipeline-ng/index.tsx',
-    url: 'http://localhost:12001/api/swagger.json',
+    url: 'https://cd.pr.harness.io/cds-58588-hack-jumbo-2/pipeline/api/swagger.json',
     transformer: 'scripts/swagger-transform.js',
     customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
     customProps: {

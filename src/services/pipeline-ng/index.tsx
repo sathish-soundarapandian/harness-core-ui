@@ -2746,6 +2746,10 @@ export type GitlabSpec = WebhookTriggerSpecV2 & {
   type?: 'MergeRequest' | 'Push' | 'MRComment'
 }
 
+export interface GoldenPipelineResponse {
+  policyRecommendations?: Policy[]
+}
+
 export type GoolgeCloudStorageRegistrySpec = ArtifactTypeSpec & {
   artifactPath?: string
   bucket?: string
@@ -3993,6 +3997,8 @@ export type PipelineRollbackFailureActionConfig = FailureStrategyActionConfig & 
   type: 'PipelineRollback'
 }
 
+export type PipelineRollbackStageConfig = StageInfoConfig & {}
+
 export interface PipelineSaveResponse {
   governanceMetadata?: GovernanceMetadata
   identifier?: string
@@ -4126,6 +4132,11 @@ export type PmsPagerDutyChannel = PmsNotificationChannel & {
 export type PmsSlackChannel = PmsNotificationChannel & {
   userGroups?: string[]
   webhookUrl?: string
+}
+
+export interface Policy {
+  regoCode?: string
+  response?: string
 }
 
 export interface PolicyConfig {
@@ -4454,6 +4465,13 @@ export interface ResponseExpressionUsagesDTO {
 export interface ResponseFilterDTO {
   correlationId?: string
   data?: FilterDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseGoldenPipelineResponse {
+  correlationId?: string
+  data?: GoldenPipelineResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9190,6 +9208,102 @@ export const getPipelineOpaContextFromEvaluationPromise = (
     GetPipelineOpaContextFromEvaluationQueryParams,
     GetPipelineOpaContextFromEvaluationPathParams
   >(getConfig('pipeline/api'), `/opa/getPipelineOpaContextFromEvaluation/${planExecutionId}`, props, signal)
+
+export interface GetTemplatesQueryParams {
+  query?: string
+}
+
+export type GetTemplatesProps = Omit<GetProps<ResponseString, Failure | Error, GetTemplatesQueryParams, void>, 'path'>
+
+/**
+ * Get Docs Query
+ */
+export const GetTemplates = (props: GetTemplatesProps) => (
+  <Get<ResponseString, Failure | Error, GetTemplatesQueryParams, void>
+    path={`/openai/docs`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetTemplatesProps = Omit<
+  UseGetProps<ResponseString, Failure | Error, GetTemplatesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Docs Query
+ */
+export const useGetTemplates = (props: UseGetTemplatesProps) =>
+  useGet<ResponseString, Failure | Error, GetTemplatesQueryParams, void>(`/openai/docs`, {
+    base: getConfig('pipeline/api'),
+    ...props
+  })
+
+/**
+ * Get Docs Query
+ */
+export const getTemplatesPromise = (
+  props: GetUsingFetchProps<ResponseString, Failure | Error, GetTemplatesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseString, Failure | Error, GetTemplatesQueryParams, void>(
+    getConfig('pipeline/api'),
+    `/openai/docs`,
+    props,
+    signal
+  )
+
+export interface OpenaiGoldenPipelineQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  goldenPipelineId?: string
+}
+
+export type OpenaiGoldenPipelineProps = Omit<
+  GetProps<ResponseGoldenPipelineResponse, Failure | Error, OpenaiGoldenPipelineQueryParams, void>,
+  'path'
+>
+
+/**
+ * Select Golden Pipeline to get Policies
+ */
+export const OpenaiGoldenPipeline = (props: OpenaiGoldenPipelineProps) => (
+  <Get<ResponseGoldenPipelineResponse, Failure | Error, OpenaiGoldenPipelineQueryParams, void>
+    path={`/openai/goldenPipeline`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseOpenaiGoldenPipelineProps = Omit<
+  UseGetProps<ResponseGoldenPipelineResponse, Failure | Error, OpenaiGoldenPipelineQueryParams, void>,
+  'path'
+>
+
+/**
+ * Select Golden Pipeline to get Policies
+ */
+export const useOpenaiGoldenPipeline = (props: UseOpenaiGoldenPipelineProps) =>
+  useGet<ResponseGoldenPipelineResponse, Failure | Error, OpenaiGoldenPipelineQueryParams, void>(
+    `/openai/goldenPipeline`,
+    { base: getConfig('pipeline/api'), ...props }
+  )
+
+/**
+ * Select Golden Pipeline to get Policies
+ */
+export const openaiGoldenPipelinePromise = (
+  props: GetUsingFetchProps<ResponseGoldenPipelineResponse, Failure | Error, OpenaiGoldenPipelineQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseGoldenPipelineResponse, Failure | Error, OpenaiGoldenPipelineQueryParams, void>(
+    getConfig('pipeline/api'),
+    `/openai/goldenPipeline`,
+    props,
+    signal
+  )
 
 export interface DebugPipelineExecuteWithInputSetYamlV2QueryParams {
   accountIdentifier: string
@@ -16802,6 +16916,9 @@ export interface GetSchemaYamlQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   projectIdentifier?: string
@@ -17109,6 +17226,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   scope?: 'account' | 'org' | 'project' | 'unknown'

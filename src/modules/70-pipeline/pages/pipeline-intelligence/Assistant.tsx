@@ -1,19 +1,45 @@
 import React from 'react'
-import { Color, FontVariation, Formik, FormikForm, FormInput, Heading, Layout, Text } from '@harness/uicore'
+import {
+  Color,
+  FontVariation,
+  Formik,
+  FormikForm,
+  FormInput,
+  Heading,
+  Layout,
+  PageSpinner,
+  Text
+} from '@harness/uicore'
 import { noop } from 'lodash-es'
+import { useGetTemplates } from 'services/pipeline-ng'
 
 import css from '@freeze-windows/components/FreezeWindowStudioBody/FreezeWindowStudioBody.module.scss'
+import { Spinner } from '@blueprintjs/core'
 
 export default function Assistant(props) {
   const [query, setQuery] = React.useState('')
   const [questionAndAnswers, setQuestionAndAnswers] = React.useState([
-    { question: 'Who are you', answer: 'I am Harness Assistant' },
-    { question: 'Which technology you use', answer: 'GPT' }
+    { question: 'Who are you', answer: 'I am Harness Assistant' }
   ])
+
+  const { data, refetch, loading } = useGetTemplates({
+    queryParams: {
+      query: ''
+    },
+    lazy: true
+  })
+
+  React.useEffect(() => {
+    if (!loading) {
+      setQuestionAndAnswers(items => [...items.slice(0, -1), { question: items.at(-1).question, answer: data?.data }])
+    }
+  }, [loading])
 
   const askQuestion = question => {
     // Make API call here
-    setQuestionAndAnswers(items => [...items, { question, answer: 'This is Answer from API' }])
+    refetch({ queryParams: { query: question } })
+
+    setQuestionAndAnswers(items => [...items, { question, loading: true }])
     setQuery('')
   }
 
@@ -43,14 +69,18 @@ export default function Assistant(props) {
                 return (
                   <Layout.Vertical margin={{ bottom: 'medium' }}>
                     <Text style={{ whiteSpace: 'pre-line' }}>{qNa.question}</Text>
-                    <Text
-                      style={{ whiteSpace: 'pre-line' }}
-                      color={Color.GREY_1000}
-                      font={{ size: 'medium', weight: '500' }}
-                      margin={{ top: '5px' }}
-                    >
-                      {qNa.answer}
-                    </Text>
+                    {qNa.loading ? (
+                      <Spinner size={16} className={css.spinnerAssistant} />
+                    ) : (
+                      <Text
+                        style={{ whiteSpace: 'pre-line' }}
+                        color={Color.GREY_1000}
+                        font={{ size: 'medium', weight: '500' }}
+                        margin={{ top: '5px' }}
+                      >
+                        {qNa.answer}
+                      </Text>
+                    )}
                   </Layout.Vertical>
                 )
               })}
