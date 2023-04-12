@@ -26,6 +26,7 @@ declare const styles: {
   readonly newTab: string
   readonly noLogs: string
   readonly openAiPanel: string
+  readonly openAiPanelIcon: string
   readonly popover: string
   readonly rhs: string
   readonly search: string

@@ -365,10 +365,9 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
               interactionKind={PopoverInteractionKind.CLICK}
               usePortal={true}
               canEscapeKeyClose={true}
-              isOpen={true}
               popoverClassName={css.popover}
             >
-              <Icon name="gear" size={40} />
+              <Icon name="gear" size={40} className={css.openAiPanelIcon} />
             </Popover>
           </Layout.Horizontal>
         </>

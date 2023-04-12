@@ -12,6 +12,8 @@ interface OpenAIResponseInterface {
   errors: ExtractedInfo[]
 }
 
+const SUMMARY_VIEW_CHAR_LIMIT = 500
+
 function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const { getString } = useStrings()
   const { errors = [] } = props
@@ -77,7 +79,11 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
                   {renderErrorDetailSeparator()}
                   {response.choices.map((item, _index) => (
                     <Layout.Vertical padding={{ top: 'small', bottom: 'small' }} spacing="xsmall" key={index}>
-                      <ReactMarkdown className={css.openAiResponse}>{item.text}</ReactMarkdown>
+                      <ReactMarkdown className={css.openAiResponse}>
+                        {item.text.length > SUMMARY_VIEW_CHAR_LIMIT
+                          ? item.text.slice(0, SUMMARY_VIEW_CHAR_LIMIT).concat('...')
+                          : item.text}
+                      </ReactMarkdown>
                       <Button
                         text={getString('common.readMore')}
                         round
