@@ -1,6 +1,7 @@
 .container {
   width: 400px;
-  height: 600px;
+  min-height: 300px;
+  max-height: 600px;
   padding: var(--spacing-small);
   display: grid;
   grid-template-rows: 1fr auto;
@@ -81,12 +82,23 @@
   }
 
   .inputContainer {
-    border-top: 1px solid var(--grey-300);
     padding: var(--spacing-small);
 
     .input {
       width: 100%;
+      padding: 0 15px;
+      border-radius: 25px;
+      resize: none;
       min-height: 42px;
+      border: 1px solid gray;
+    }
+
+    .submitButton {
+      border: 1px solid gray;
+      color: white;
+      height: 42px;
+      width: 47px;
+      border-radius: 50%;
     }
   }
 }

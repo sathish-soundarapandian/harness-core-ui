@@ -18,6 +18,7 @@ declare const styles: {
   readonly messageContainer: string
   readonly messagesContainer: string
   readonly right: string
+  readonly submitButton: string
   readonly user: string
 }
 export default styles

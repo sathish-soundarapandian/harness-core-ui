@@ -1,42 +1,75 @@
-import React, { useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
-import { Button, ButtonVariation, Layout } from '@harness/uicore'
+import { Icon, Layout } from '@harness/uicore'
 import css from './DocsChat.module.scss'
 
 interface Message {
   author: 'harness' | 'user'
   text: string
-  timestamp: number
+  timestamp?: number
 }
 
 const sampleMessages: Array<Message> = [
   {
-    author: 'user',
-    text: 'Can Harness deploye to Kubernetes? Is yes, how?',
-    timestamp: Date.now()
-  },
-  {
     author: 'harness',
-    text: 'Yes, Harness can deploy to Kubernetes. It requires the following: Kubernetes manifests and values YAML files, an artifact (if not hardcoded in manifests or values file), and a Kubernetes cluster. Harness takes the artifacts and Kubernetes manifests provided and deploys them to the target Kubernetes cluster. It can deploy Kubernetes objects via manifests, remote sources, and Helm charts. It supports different Kubernetes objects as managed and unmanaged workloads. The major steps of a Harness Kubernetes deployment involve installing the Harness Kubernetes Delegate in the target cluster, adding Harness Connectors, defining the Harness Service, defining the Harness Environment and Infrastructure Definition, and adding the Canary, Blue Green, or Rollout steps to the Deploy stage.',
-    timestamp: Date.now()
-  },
-  {
-    author: 'user',
-    text: 'Who can create a User Group?',
-    timestamp: Date.now()
-  },
-  {
-    author: 'harness',
-    text: 'Manage Permissions for User Groups is required to create a User Group.',
+    text: 'Hi, how can I help you?',
     timestamp: Date.now()
   }
 ]
 
 function DocsChat(): JSX.Element {
-  const [messages, setMessages] = useState<Array<Message>>(sampleMessages)
+  const [messages, setMessages] = useState<Array<Message>>([])
   const [userInput, setUserInput] = useState('')
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const messageList = useRef<HTMLDivElement>(null)
+
+  const getAnswer = (oldMessages: Array<Message>, query: string): void => {
+    setLoading(true)
+    fetch(window.getApiBaseUrl('/notifications/api/notifications/harness-bot'), {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        question: query
+      })
+    })
+      .then(res => res.json())
+      .then(res => {
+        setMessages([
+          ...oldMessages,
+          {
+            author: 'harness',
+            text: res?.data?.response || 'Something went wrong'
+          } as Message
+        ])
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+
+  // read first set of messages from local if available
+  useEffect(() => {
+    const _localMessages = sessionStorage.getItem('messages')
+    if (!_localMessages) return
+    try {
+      const localMessages = JSON.parse(_localMessages)
+      if (localMessages && localMessages.length > 0) {
+        setMessages(localMessages)
+      } else {
+        setMessages(sampleMessages)
+      }
+    } catch (_err) {
+      // something
+    }
+  }, [])
+
+  useEffect(() => {
+    if (messages.length > 1) {
+      sessionStorage.setItem('messages', JSON.stringify(messages))
+    }
+  }, [messages])
 
   const handleUserInput = e => {
     setUserInput(e.target.value)
@@ -54,7 +87,7 @@ function DocsChat(): JSX.Element {
 
     if (!userMessage) return
 
-    const newMessages = [
+    const newMessageList = [
       ...messages,
       {
         author: 'user',
@@ -62,7 +95,10 @@ function DocsChat(): JSX.Element {
         timestamp: Date.now()
       } as Message
     ]
-    setMessages(newMessages)
+    setMessages(newMessageList)
+
+    getAnswer(newMessageList, userMessage)
+
     setUserInput('')
   }
 
@@ -81,10 +117,10 @@ function DocsChat(): JSX.Element {
   return (
     <div className={css.container}>
       <div className={css.messagesContainer} ref={messageList}>
-        {messages.map(message => {
+        {messages.map((message, index) => {
           return (
             <div
-              key={message.text}
+              key={message.text + index}
               className={cx(css.messageContainer, {
                 [css.right]: message.author === 'harness',
                 [css.left]: message.author === 'user'
@@ -106,14 +142,18 @@ function DocsChat(): JSX.Element {
       <div className={css.inputContainer}>
         <form onSubmit={handleSubmit}>
           <Layout.Horizontal spacing="small">
-            <textarea
+            <input
+              type="text"
               name="user-input"
               className={css.input}
               value={userInput}
               onChange={handleUserInput}
               onKeyDown={handleKeyDown}
+              autoComplete="off"
             />
-            <Button type="submit" variation={ButtonVariation.SECONDARY} icon="key-enter" height={42} />
+            <button type="submit" className={css.submitButton}>
+              <Icon name="key-enter" />
+            </button>
           </Layout.Horizontal>
         </form>
       </div>
