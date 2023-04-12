@@ -1,0 +1,50 @@
+.container {
+  width: 400px;
+  height: 600px;
+  padding: var(--spacing-small);
+  display: grid;
+  grid-template-rows: 1fr auto;
+
+  .messagesContainer {
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .messageContainer {
+      margin: var(--spacing-medium) 0;
+      display: flex;
+
+      .message {
+        padding: var(--spacing-small) var(--spacing-medium);
+        display: inline-block;
+        max-width: 90%;
+        border-radius: 25px;
+
+        &.harness {
+          background: var(--primary-7);
+          color: white;
+        }
+        &.user {
+          background: var(--grey-200);
+          color: black;
+        }
+      }
+
+      &.right {
+        justify-content: right;
+      }
+      &.left {
+        justify-content: left;
+      }
+    }
+  }
+
+  .inputContainer {
+    border-top: 1px solid var(--grey-300);
+    padding: var(--spacing-small);
+
+    .input {
+      width: 100%;
+      min-height: 42px;
+    }
+  }
+}
