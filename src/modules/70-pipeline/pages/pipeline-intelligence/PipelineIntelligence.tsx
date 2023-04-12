@@ -1,5 +1,8 @@
 import React from 'react'
 import { Tab, Tabs } from '@harness/uicore'
+import Optimization from './Optimization'
+import Standardization from './Standardization'
+import Assistant from './Assistant'
 import css from '@freeze-windows/components/FreezeWindowStudioBody/FreezeWindowStudioBody.module.scss'
 
 enum IntelligenceTabs {
@@ -20,9 +23,9 @@ export default function PipelineIntelligence() {
         }}
         data-tabId={selectedTab}
       >
-        <Tab id={IntelligenceTabs.OPTIMIZATION} title={'Optimization'} panel={<div>OPTIMIZATION</div>} />
-        <Tab id={IntelligenceTabs.STANDARDIZATION} title={'Standardization'} panel={<div>STANDARDIZATION</div>} />
-        <Tab id={IntelligenceTabs.ASSISTANT} title={'Assistant'} panel={<div>ASSISTANT</div>} />
+        <Tab id={IntelligenceTabs.OPTIMIZATION} title={'Optimization'} panel={<Optimization />} />
+        <Tab id={IntelligenceTabs.STANDARDIZATION} title={'Standardization'} panel={<Standardization />} />
+        <Tab id={IntelligenceTabs.ASSISTANT} title={'Assistant'} panel={<Assistant />} />
       </Tabs>
     </section>
   )
