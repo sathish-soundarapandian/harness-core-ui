@@ -268,3 +268,12 @@
     }
   }
 }
+
+.search {
+  :global(.bp3-input) {
+    height: 58px;
+    padding-left: 60px !important;
+    font-size: 15px;
+    border-radius: 8px;
+  }
+}

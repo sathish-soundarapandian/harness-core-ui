@@ -354,7 +354,12 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                       ]}
                     />
                   </Container>
-                  <TextInput leftIcon="gear"></TextInput>
+                  <TextInput
+                    leftIcon="gear"
+                    leftIconProps={{ name: 'gear', size: 40 }}
+                    className={css.search}
+                    placeholder={getString('common.typeHere')}
+                  ></TextInput>
                 </Layout.Vertical>
               }
               interactionKind={PopoverInteractionKind.CLICK}

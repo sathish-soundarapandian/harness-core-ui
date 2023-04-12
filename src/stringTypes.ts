@@ -1189,6 +1189,7 @@ export interface StringsMap {
   'common.triggersLabel': string
   'common.true': string
   'common.tryAgain': string
+  'common.typeHere': string
   'common.types': string
   'common.unlimited': string
   'common.unsavedChanges': string

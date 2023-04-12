@@ -1443,3 +1443,4 @@ welcomePage:
     bodyText: '{{ $.common.welcomePage.cv.bodyText }}'
 successCount: 'Success {{count}}'
 failedCount: 'Failed {{count}}'
+typeHere: Type here
