@@ -365,7 +365,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                     </Container>
                     <TextInput
                       leftIcon="gear"
-                      leftIconProps={{ name: 'gear', size: 40 }}
+                      leftIconProps={{ name: 'gear', size: 40, padding: { left: 'small' } }}
                       className={css.search}
                       placeholder={getString('common.typeHere')}
                       onClick={() => setShowErrorPanel((show: boolean) => !show)}
