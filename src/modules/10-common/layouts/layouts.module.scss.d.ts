@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly btn: string
+  readonly chatButton: string
   readonly children: string
   readonly expired: string
   readonly featuresBanner: string

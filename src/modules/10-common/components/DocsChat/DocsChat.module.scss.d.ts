@@ -8,10 +8,12 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly container: string
+  readonly dotflashing: string
   readonly harness: string
   readonly input: string
   readonly inputContainer: string
   readonly left: string
+  readonly loader: string
   readonly message: string
   readonly messageContainer: string
   readonly messagesContainer: string

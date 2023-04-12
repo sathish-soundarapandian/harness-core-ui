@@ -8,6 +8,9 @@
 import React, { useEffect } from 'react'
 
 import cx from 'classnames'
+import { Icon } from '@harness/icons'
+import { Color, Popover } from '@harness/uicore'
+import { PopoverInteractionKind } from '@blueprintjs/core'
 import MainNav from '@common/navigation/MainNav'
 import SideNav from '@common/navigation/SideNav'
 
@@ -17,13 +20,10 @@ import { TrialLicenseBanner } from '@common/layouts/TrialLicenseBanner'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePage } from '@common/pages/pageContext/PageProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import DocsChat from '@common/components/DocsChat/DocsChat'
 import FeatureBanner from './FeatureBanner'
 
 import css from './layouts.module.scss'
-import { Icon } from '@harness/icons'
-import { Button, Popover } from '@harness/uicore'
-import DocsChat from '@common/components/DocsChat/DocsChat'
-import { PopoverInteractionKind } from '@blueprintjs/core'
 
 export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { title, subtitle, icon, navComponent: NavComponent, launchButtonText, launchButtonRedirectUrl } = useSidebar()
@@ -63,11 +63,11 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
         <div className={css.children}>{props.children}</div>
       </div>
 
-      <div style={{ position: 'absolute', bottom: '20px', right: '20px' }}>
-        <Popover interactionKind={PopoverInteractionKind.CLICK} defaultIsOpen={true}>
-          <Button intent="primary">
-            <Icon name="chat" size={32} />
-          </Button>
+      <div style={{ position: 'absolute', bottom: '24px', right: '24px' }}>
+        <Popover interactionKind={PopoverInteractionKind.CLICK}>
+          <div className={css.chatButton}>
+            <Icon name="code-chat" size={30} />
+          </div>
           <DocsChat />
         </Popover>
       </div>
