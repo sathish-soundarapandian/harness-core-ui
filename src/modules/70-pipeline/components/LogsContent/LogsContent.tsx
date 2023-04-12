@@ -335,13 +335,17 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
               })}
             </Layout.Vertical>
             <Layout.Horizontal spacing="medium">
-              <Button
-                round
-                text={getString('common.possibleReasons')}
-                rightIcon="arrow-right"
-                className={css.infoBtn}
-                onClick={() => setShowErrorPanel(true)}
-              />
+              {!showErrorPanel ? (
+                <Button
+                  round
+                  text={getString('common.possibleReasons')}
+                  rightIcon="arrow-right"
+                  className={css.infoBtn}
+                  onClick={() => setShowErrorPanel(true)}
+                />
+              ) : (
+                <></>
+              )}
               <Popover
                 position={Position.LEFT_TOP}
                 content={
@@ -368,7 +372,6 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                       leftIconProps={{ name: 'gear', size: 40, padding: { left: 'small' } }}
                       className={css.search}
                       placeholder={getString('common.typeHere')}
-                      onClick={() => setShowErrorPanel((show: boolean) => !show)}
                     ></TextInput>
                   </Layout.Vertical>
                 }
