@@ -27,23 +27,67 @@ function PrettyText({ text }) {
 }
 
 function prettyRender(text) {
-  if (!text) return ''
-  text = text.replace(/\s{2,}/g, ' ').trim()
-  text = text.replace(/(\*{1,3})\s+/g, '$1')
-  text = text.replace(/\s+(\*{1,3})/g, '$1')
-  text = text.replace(/(\|)\s+/g, '$1')
-  text = text.replace(/\s+(\|)/g, '$1')
-  text = text.replace(/\n/g, ' ')
-  text = text.replace(/(\.)(\s+)(\w)/g, '$1\n\n$3')
-  text = text.replace(/(\:)(\s+)(\|)/g, '$1\n\n$3')
-  text = text.replace(/(Reference:)/g, '\n\n$1')
-  text = text.replace(/(See the following:)/g, '\n\n$1')
-  text = text.replace(/(\#\s+Before You Begin)/g, '\n\n$1')
-  text = text.replace(/(\#\#\s+Stages)/g, '\n\n$1')
-  text = text.replace(/(\#\#\s+Pipelines)/g, '\n\n$1')
-  text = text.replace(/(http(s)?:\/\/[^\s]+)/g, '<a href="$1">$1</a>')
-  return text
+  if (!text) {
+    return ''
+  }
+
+  // Remove initial "Answer: "
+  text = text.trim().replace(/^Answer: /, '')
+
+  // Convert Markdown-style links to HTML links
+  text = text.replace(/\[([^\]]+)]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+
+  // Split text into lines and trim each line
+  const lines = text.split('\n').map(line => line.trim())
+
+  // Initialize an array to hold the formatted output
+  const formattedLines = []
+
+  // Iterate through the lines and format them
+  lines.forEach((line, index) => {
+    if (line.startsWith('#')) {
+      // Format headings
+      const level = line.lastIndexOf('#') + 1
+      const headingText = line.slice(level).trim()
+      formattedLines.push(`<h${level}>${headingText}</h${level}>`)
+    } else if (line.startsWith('*')) {
+      // Format lists
+      const listItem = line.replace(/^\*/, '').trim()
+      if (index === 0 || !lines[index - 1].startsWith('*')) {
+        formattedLines.push('<ul>')
+      }
+      formattedLines.push(`<li>${listItem}</li>`)
+      if (index === lines.length - 1 || !lines[index + 1].startsWith('*')) {
+        formattedLines.push('</ul>')
+      }
+    } else if (line.startsWith('|')) {
+      // Format tables
+      const tableCells = line.split('|').map(cell => cell.trim())
+      if (index === 0 || !lines[index - 1].startsWith('|')) {
+        formattedLines.push('<table>')
+      }
+      formattedLines.push('<tr>')
+      tableCells.forEach((cell, cellIndex) => {
+        if (cell) {
+          formattedLines.push(`<td>${cell}</td>`)
+        }
+      })
+      formattedLines.push('</tr>')
+      if (index === lines.length - 1 || !lines[index + 1].startsWith('|')) {
+        formattedLines.push('</table>')
+      }
+    } else if (line) {
+      // Format paragraphs
+      formattedLines.push(`<p>${line}</p>`)
+    }
+  })
+
+  // Join the formatted lines to get the final output
+  const prettyText = formattedLines.join('\n')
+
+  return prettyText
 }
+
 export default function Assistant(props) {
   const [query, setQuery] = React.useState('')
   const [questionAndAnswers, setQuestionAndAnswers] = React.useState([
