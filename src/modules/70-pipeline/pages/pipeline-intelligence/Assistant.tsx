@@ -135,6 +135,8 @@ export default function Assistant(props) {
                   if (keyEvent.shiftKey || formikProps.values.question?.trim() === '') {
                     return
                   }
+                  keyEvent.stopPropagation()
+                  keyEvent.preventDefault()
                   askQuestion(formikProps.values.question)
                   // make API call here
                 }
