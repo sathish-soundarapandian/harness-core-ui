@@ -840,6 +840,7 @@ export interface StringsMap {
   'common.purpose.welcome': string
   'common.pwsh': string
   'common.python': string
+  'common.readMore': string
   'common.readOnly': string
   'common.readonlyPermissions': string
   'common.readonlyPermissionsForFile': string
@@ -2976,7 +2977,6 @@ export interface StringsMap {
   'connectors.prometheus.urlValidation': string
   'connectors.prometheusConnectorDetails': string
   'connectors.prometheusLabel': string
-  'connectors.readMore': string
   'connectors.relinkToGitProvider': string
   'connectors.reportNameRequired': string
   'connectors.requestMethod': string

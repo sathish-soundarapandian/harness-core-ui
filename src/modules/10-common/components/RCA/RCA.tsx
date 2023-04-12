@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
-import { Icon, Layout, Text } from '@harness/uicore'
+import { Button, ButtonSize, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ExtractedInfo } from '../ErrorHandler/ErrorHandler'
@@ -41,7 +41,18 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
                 <Text>{getString('common.possibleSolutions')}</Text>
               </Layout.Horizontal>
             </Layout.Vertical>
-            <ReactMarkdown className={css.openAiResponse}>{response.choices[index].text}</ReactMarkdown>
+            {response.choices.map(item => (
+              <Layout.Vertical padding={{ top: 'small', bottom: 'small' }} spacing="xsmall">
+                <ReactMarkdown className={css.openAiResponse}>{item.text}</ReactMarkdown>
+                <Button
+                  text={getString('common.readMore')}
+                  round
+                  intent="primary"
+                  size={ButtonSize.SMALL}
+                  className={css.readMoreBtn}
+                />
+              </Layout.Vertical>
+            ))}
           </Layout.Vertical>
         )
       })}

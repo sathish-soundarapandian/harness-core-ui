@@ -17,7 +17,7 @@ export const renderBillingExportExtension = (getString: UseStringsReturn['getStr
         <h2>{getString('connectors.ceGcp.billingExtention.heading')}</h2>
         <div>
           <span className={css.prereq}>{getString('connectors.ceGcp.billingExtention.prerequisite')}</span>{' '}
-          <a>{getString('connectors.readMore')}</a>{' '}
+          <a>{getString('common.readMore')}</a>{' '}
         </div>
         <ol>
           <li>{getString('connectors.ceGcp.billingExtention.step1')}</li>

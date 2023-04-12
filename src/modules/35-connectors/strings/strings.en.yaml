@@ -68,7 +68,6 @@ k8sConnection: the cluster
 delegateInClusterInfo: 'Use the credentials of a specific Harness Delegate (IAM role, service account, etc)'
 createConnector: 'Create a Connector'
 connectorEmptyState: 'There are no connectors in your project'
-readMore: 'Read more'
 connectorsTitle: 'Resources: Connectors'
 parameters: Parameters
 validationPath: Validation Path

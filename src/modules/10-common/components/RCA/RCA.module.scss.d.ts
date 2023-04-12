@@ -9,5 +9,6 @@
 declare const styles: {
   readonly errorDetails: string
   readonly openAiResponse: string
+  readonly readMoreBtn: string
 }
 export default styles
