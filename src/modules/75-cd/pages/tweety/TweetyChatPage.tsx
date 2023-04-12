@@ -38,8 +38,9 @@ export default function TweetyChatPage(): React.ReactElement {
   };
 
   const handleSendMessage = async () => {
-    const response = await axios.post('http://127.0.0.1:5000/', { message }, { headers: { 'Content-Type': 'text/plain'} });
-    setChat([...chat, { message, sender: 'user' }, { message: message, sender: 'chatbot' }]);
+    const response = await axios.post('http://127.0.0.1:5002/ask', { 'message': message }, { headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" } });
+    setChat(oldChat => oldChat.concat([{ message, sender: 'user' }, {message: response.data.msg.response, sender: "chatbot"}]))
+    // setChat([...chat, { message, sender: 'user' }, { message: response.data.response, sender: 'chatbot' }]);
     setMessage('');
   };
 
