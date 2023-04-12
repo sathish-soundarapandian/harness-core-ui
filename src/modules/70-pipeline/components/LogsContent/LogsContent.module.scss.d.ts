@@ -19,6 +19,7 @@ declare const styles: {
   readonly fullScreen: string
   readonly hasErrorMessage: string
   readonly header: string
+  readonly infoBtn: string
   readonly isWarning: string
   readonly link: string
   readonly logViewer: string

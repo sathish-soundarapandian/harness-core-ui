@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
@@ -158,6 +158,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
   const hasLogs = state.units.length > 0
   const isSingleSectionLogs = state.units.length === 1
   const { openDialog } = useLogSettings()
+  const [showErrorPanel, setShowErrorPanel] = useState<boolean>(false)
 
   const virtuosoRef = React.useRef<null | GroupedVirtuosoHandle | VirtuosoHandle>(null)
   const { setPreference: setSavedExecutionView } = usePreferenceStore<string | undefined>(
@@ -304,7 +305,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
             className={cx(css.errorMsgs, { [css.isWarning]: isWarning })}
             flex={{ justifyContent: 'space-between' }}
           >
-            <Layout.Vertical>
+            <Layout.Vertical width="70%">
               {errorObjects.map((errorObject, index) => {
                 const { error = {}, explanations = [], hints = [] } = errorObject
                 return (
@@ -333,42 +334,52 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                 )
               })}
             </Layout.Vertical>
-            <Popover
-              position={Position.LEFT_TOP}
-              content={
-                <Layout.Vertical spacing="medium" className={css.errorSidePanel}>
-                  <Container className={css.openAiPanel}>
-                    <OpenAIResponse
-                      errors={[
-                        {
-                          error: {
-                            message:
-                              'Failed to get harness-ng-ui/harnessci-build-y9f78y3p-image-step-2. Code: 0, Message: null \\n Cause: java.net.ConnectException: Failed to connect to /10.176.0.1:443'
+            <Layout.Horizontal spacing="medium">
+              <Button
+                round
+                text={getString('common.possibleReasons')}
+                rightIcon="arrow-right"
+                className={css.infoBtn}
+                onClick={() => setShowErrorPanel(true)}
+              />
+              <Popover
+                position={Position.LEFT_TOP}
+                content={
+                  <Layout.Vertical spacing="medium" className={css.errorSidePanel}>
+                    <Container className={css.openAiPanel}>
+                      <OpenAIResponse
+                        errors={[
+                          {
+                            error: {
+                              message:
+                                'Failed to get harness-ng-ui/harnessci-build-y9f78y3p-image-step-2. Code: 0, Message: null \\n Cause: java.net.ConnectException: Failed to connect to /10.176.0.1:443'
+                            }
+                          },
+                          {
+                            error: {
+                              message: 'Something went wrong...'
+                            }
                           }
-                        },
-                        {
-                          error: {
-                            message: 'Something went wrong...'
-                          }
-                        }
-                      ]}
-                    />
-                  </Container>
-                  <TextInput
-                    leftIcon="gear"
-                    leftIconProps={{ name: 'gear', size: 40 }}
-                    className={css.search}
-                    placeholder={getString('common.typeHere')}
-                  ></TextInput>
-                </Layout.Vertical>
-              }
-              interactionKind={PopoverInteractionKind.CLICK}
-              usePortal={true}
-              canEscapeKeyClose={true}
-              popoverClassName={css.popover}
-            >
-              <Icon name="gear" size={40} className={css.openAiPanelIcon} />
-            </Popover>
+                        ]}
+                      />
+                    </Container>
+                    <TextInput
+                      leftIcon="gear"
+                      leftIconProps={{ name: 'gear', size: 40 }}
+                      className={css.search}
+                      placeholder={getString('common.typeHere')}
+                    ></TextInput>
+                  </Layout.Vertical>
+                }
+                interactionKind={PopoverInteractionKind.CLICK}
+                usePortal={true}
+                canEscapeKeyClose={true}
+                popoverClassName={css.popover}
+                isOpen={showErrorPanel}
+              >
+                <Icon name="gear" size={40} className={css.openAiPanelIcon} />
+              </Popover>
+            </Layout.Horizontal>
           </Layout.Horizontal>
         </>
       ) : null}

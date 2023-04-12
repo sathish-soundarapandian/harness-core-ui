@@ -278,3 +278,11 @@
 .openAIPanelIcon {
   cursor: pointer;
 }
+
+.infoBtn {
+  box-sizing: border-box;
+  height: 35px !important;
+  background: rgba(105, 56, 192, 0.5) !important;
+  border-radius: 100px !important;
+  color: var(--white) !important;
+}

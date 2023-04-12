@@ -28,11 +28,11 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
         <Separator topSeparation={16} bottomSeparation={10} />
         <Layout.Horizontal spacing="small">
           <Icon name="gear" size={20} />
-          <Text>{getString('common.possibleSolutions')}</Text>
+          <Text>{getString('common.possibleSolution').concat(showDetailedView ? '' : 's')}</Text>
         </Layout.Horizontal>
       </Layout.Vertical>
     )
-  }, [])
+  }, [showDetailedView])
 
   if (!errors.length) {
     return <></>
