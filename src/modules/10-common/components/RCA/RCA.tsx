@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { Button, ButtonSize, Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ExtractedInfo } from '../ErrorHandler/ErrorHandler'
 import { Separator } from '../Separator/Separator'
-import response from './openai-response.json'
+import mockedResponse from './openai-response.json'
 import css from './RCA.module.scss'
 
 interface OpenAIResponseInterface {
@@ -21,6 +21,28 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const [solutionIndex, setSolutionIndex] = useState<number>(0)
   const [showDetailedView, setShowDetailedView] = useState<boolean>(false)
   const scrollRef = useRef<Element | undefined>()
+  const [responses, setResponses] = useState<any>(mockedResponse)
+
+  const getBlobFromOpenAI = async (key: string, accountId: string) => {
+    const apiResponse = await (
+      await fetch(`https://rutvijlog.ngrok.io/blob/download/gpterrorresp?accountID=${accountId}&key=${key}`, {
+        headers: { 'x-harness-token': '', 'content-type': 'application/json' },
+        method: 'GET'
+      })
+    ).json()
+    return apiResponse
+  }
+
+  useEffect(() => {
+    try {
+      const temp_key =
+        'accountId%3AkmpySmUISimoRrJL6NL73w%2ForgId%3Adefault%2FprojectId%3Arutvijtest%2FpipelineId%3Ahostedvm%2FrunSequence%3A16%2Flevel0%3Apipeline%2Flevel1%3Astages%2Flevel2%3ABuild%2Flevel3%3Aspec%2Flevel4%3Aexecution%2Flevel5%3Asteps%2Flevel6%3ARun'
+      const temp_acct_id = 'kmpySmUISimoRrJL6NL73w'
+      getBlobFromOpenAI(temp_key, temp_acct_id).then((res: unknown) => {
+        setResponses(res)
+      })
+    } catch (e) {}
+  }, [])
 
   const renderErrorDetailSeparator = useCallback((): React.ReactElement => {
     return (
@@ -79,7 +101,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
                   }`}</Text>
                   <Text>{error.message}</Text>
                   {renderErrorDetailSeparator()}
-                  {response.choices.map((item, _index) => (
+                  {responses.choices.map((item: any, _index: any) => (
                     <Layout.Vertical padding={{ top: 'small', bottom: 'small' }} spacing="xsmall" key={index}>
                       <ReactMarkdown className={css.openAiResponse}>
                         {item.text.length > SUMMARY_VIEW_CHAR_LIMIT
