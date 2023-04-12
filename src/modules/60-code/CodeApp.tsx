@@ -61,7 +61,7 @@ const RemoteCompare = lazy(() => import('code/Compare'))
 
 const CODERemoteComponentMounter: React.FC<{
   component: JSX.Element
-}> = ({ component }) => {
+}> = React.memo(function CODERemoteComponentMounter({ component }) {
   const { getString } = useStrings()
   const { params } = useRouteMatch<ProjectPathProps>()
   const space = useMemo(
@@ -91,7 +91,7 @@ const CODERemoteComponentMounter: React.FC<{
       </AppErrorBoundary>
     </Suspense>
   )
-}
+})
 
 // return tooltip from here and can be more specific or generic
 function usePermissionTranslate(

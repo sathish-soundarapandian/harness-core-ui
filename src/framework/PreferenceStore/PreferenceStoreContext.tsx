@@ -76,7 +76,7 @@ const checkAccess = (
   if (!contextArr || /* istanbul ignore next */ contextArr?.some(val => val === undefined)) {
     const error = new Error(`PreferenceStore: Access to "${scope}" scope is not available in the current context.`)
     if (__DEV__) {
-      throw error
+      // throw error
     } else {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       window.bugsnagClient?.notify?.(error, function (event: any) {

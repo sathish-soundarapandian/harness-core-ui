@@ -114,6 +114,10 @@ module.exports = {
     pathRewrite: { '^/code': '' },
     target: process.env.CODE_API_URL || 'http://localhost:3020'
   },
+  '/code/genie': {
+    pathRewrite: { '^/code/genie': '' },
+    target: 'http://localhost:9005'
+  },
   '/code': {
     pathRewrite: { '^/code': '' },
     target: process.env.CODE_UI_URL || 'http://localhost:3020'

@@ -138,10 +138,12 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
   useEffect(() => {
     getVersionMap()
       .then(response => {
-        setState(prevState => ({
-          ...prevState,
-          versionMap: response.data || {}
-        }))
+        // TODO: Only update if there's change from response. Otherwise, other pages
+        // are getting refreshed unnecessarily
+        // setState(prevState => ({
+        //   ...prevState,
+        //   versionMap: response.data || {}
+        // }))
       })
       .catch(_err => {
         // do nothing
