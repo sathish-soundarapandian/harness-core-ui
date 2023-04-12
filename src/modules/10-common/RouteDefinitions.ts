@@ -1089,6 +1089,26 @@ const routes = {
       }
     }
   ),
+
+  toExpressionPlayGround: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      accountId: _accountId,
+      module,
+      ...rest
+    }: PipelineType<PipelinePathProps> & GitQueryParams) => {
+      const basePath = module || 'home'
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      if (queryString.length > 0) {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/expression?${queryString}`
+      } else {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/expression`
+      }
+    }
+  ),
+
   toPipelineDeploymentList: withAccountId(
     ({
       orgIdentifier,

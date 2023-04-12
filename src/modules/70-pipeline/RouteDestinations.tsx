@@ -81,6 +81,7 @@ import { ExecutionListPage } from './pages/execution-list-page/ExecutionListPage
 import EnvironmentResourceRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentResourceRenderer'
 import EnvironmentAttributeRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentAttributeRenderer'
 import { BuildCommits } from './pages/execution/ExecutionLandingPage/Commits/BuildCommits'
+import ExpressionPlayGround from './pages/expression-play-ground/ExpressionPlayGround'
 /**
  * Register RBAC resources
  */
@@ -867,6 +868,20 @@ export function PipelineRouteDestinations({
         </PipelineDetails>
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        path={routes.toExpressionPlayGround({
+          ...accountPathProps,
+          ...pipelinePathProps,
+          ...moduleParams
+        })}
+        pageName={PAGE_NAME.ExpressionPlayGround}
+      >
+        <PipelineDetails>
+          <ExpressionPlayGround />
+        </PipelineDetails>
+      </RouteWithLayout>
+      <RouteWithLayout
         exact
         licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
@@ -877,7 +892,7 @@ export function PipelineRouteDestinations({
         pageName={pipelineDeploymentListPageName}
       >
         <PipelineDetails>
-          <PipelineDeploymentList />
+          <ExpressionPlayGround />
         </PipelineDetails>
       </RouteWithLayout>
       <RouteWithLayout

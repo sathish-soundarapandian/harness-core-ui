@@ -379,6 +379,22 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
                 disabled: pipelineIdentifier === DefaultNewPipelineId || triggerTabDisabled
               },
               {
+                label: getString('common.expressionPlayGround'),
+                to: routes.toExpressionPlayGround({
+                  orgIdentifier,
+                  projectIdentifier,
+                  pipelineIdentifier,
+                  accountId,
+                  module,
+                  connectorRef,
+                  repoIdentifier,
+                  repoName,
+                  branch,
+                  storeType
+                }),
+                disabled: pipelineIdentifier === DefaultNewPipelineId || triggerTabDisabled
+              },
+              {
                 label: getString('executionHeaderText'),
                 to: routes.toPipelineDeploymentList({
                   orgIdentifier,

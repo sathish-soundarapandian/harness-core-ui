@@ -61,6 +61,7 @@ const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDelete
       orgIdentifier: data.orgIdentifier || /* istanbul ignore next */ ''
     }
   })
+  console.log('project data', { data })
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const onDeleteAction = async () => {

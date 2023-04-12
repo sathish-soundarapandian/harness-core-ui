@@ -62,7 +62,7 @@ const RenderDelegateName: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) 
     ? []
     : getAutoUpgradeTextColor(row.original?.autoUpgrade)
 
-  return (
+  return ( 
     <Layout.Horizontal>
       <Layout.Vertical width={'55%'} margin={{ right: 'large' }}>
         <Text color={Color.BLACK} font={{ variation: FontVariation.BODY2 }} lineClamp={1}>

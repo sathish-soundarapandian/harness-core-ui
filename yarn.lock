@@ -17203,6 +17203,11 @@ value-or-promise@1.0.11, value-or-promise@^1.0.11:
   resolved "https://registry.yarnpkg.com/value-or-promise/-/value-or-promise-1.0.11.tgz#3e90299af31dd014fe843fe309cefa7c1d94b140"
   integrity sha512-41BrgH+dIbCFXClcSapVs5M6GkENd3gQOJpEfPDNa71LsUGMXDL0jMWpI/Rh7WhX+Aalfz2TTS3Zt5pUsbnhLg==
 
+vanilla-jsoneditor@^0.16.1:
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/vanilla-jsoneditor/-/vanilla-jsoneditor-0.16.1.tgz#0408c02cc377dce72bd719439750cf24b581843e"
+  integrity sha512-Wirg6DoCrJpYwMHxkwyvgQ16gr4kgH9zzueHSSSovzQDvlg/XSqpY/stVsI5lz1vqJW1RAtr0Ilyyg1AbokRXA==
+
 vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"

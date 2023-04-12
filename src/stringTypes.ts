@@ -326,6 +326,7 @@ export interface StringsMap {
   'common.exploreAllPlans': string
   'common.explorePlans': string
   'common.exploreSaaSPlans': string
+  'common.expressionPlayGround': string
   'common.extendTrial.description': string
   'common.extendTrial.doItLater': string
   'common.extendTrial.expiryDate': string

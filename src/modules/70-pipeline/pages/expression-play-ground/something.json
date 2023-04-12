@@ -1,0 +1,21 @@
+{
+  "name": {
+    "first": "John",
+    "last": "Doe"
+  },
+  "age": 30,
+  "address": {
+    "street": "123 Main St",
+    "city": "Anytown",
+    "state": "CA",
+    "zip": "12345",
+    "abcd": [
+      { "abc": 23, "adfdf": 232 },
+      { "abc": 23, "adfdf": 232 }
+    ],
+    "coordinates": {
+      "latitude": 37.7749,
+      "longitude": -122.4194
+    }
+  }
+}

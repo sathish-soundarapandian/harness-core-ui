@@ -977,6 +977,7 @@ branchName: 'Branch Name'
 tagName: 'Tag Name'
 jexlCondition: 'JEXL Condition'
 triggersLabel: 'Triggers'
+expressionPlayGround: 'Expression Play Ground'
 with: with
 without: without
 by: by

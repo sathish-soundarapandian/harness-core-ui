@@ -2160,9 +2160,43 @@ export interface ExecutorInfoDTO {
   username?: string
 }
 
+export interface ExpressionDetailResponse {
+  expressionDetails?: ExpressionDetails[]
+}
+
+export interface ExpressionDetails {
+  description?: string
+  expressionBlock?: string
+  scope?: string
+}
+
+export interface ExpressionDryRunDetail {
+  expression?: string
+  resolved?: boolean
+  resolvedValue?: string
+}
+
+export interface ExpressionDryRunResponse {
+  expressionDryRunDetails?: ExpressionDryRunDetail[]
+  success?: boolean
+}
+
 export interface ExpressionMetadataDTO {
   expression?: string
   fqn?: string
+}
+
+export interface ExpressionTestDetails {
+  expressionBlock?: string
+  scope?: string
+}
+
+export interface ExpressionTestRequest {
+  expressionTestDetails?: ExpressionTestDetails[]
+}
+
+export interface ExpressionTestResponse {
+  expressionTestDetails?: ExpressionTestDetails[]
 }
 
 export interface ExpressionUsagesDTO {
@@ -3993,6 +4027,8 @@ export type PipelineRollbackFailureActionConfig = FailureStrategyActionConfig & 
   type: 'PipelineRollback'
 }
 
+export type PipelineRollbackStageConfig = StageInfoConfig & {}
+
 export interface PipelineSaveResponse {
   governanceMetadata?: GovernanceMetadata
   identifier?: string
@@ -4440,6 +4476,27 @@ export interface ResponseExecutionNode {
 export interface ResponseExecutionsCount {
   correlationId?: string
   data?: ExecutionsCount
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseExpressionDetailResponse {
+  correlationId?: string
+  data?: ExpressionDetailResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseExpressionDryRunResponse {
+  correlationId?: string
+  data?: ExpressionDryRunResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseExpressionTestResponse {
+  correlationId?: string
+  data?: ExpressionTestResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9539,6 +9596,237 @@ export const debugStagesWithRuntimeInputYamlPromise = (
     signal
   )
 
+export interface DryRunExpressionsQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface DryRunExpressionsPathParams {
+  pipelineIdentifier: string
+}
+
+export type DryRunExpressionsProps = Omit<
+  MutateProps<
+    ResponseExpressionDryRunResponse,
+    Failure | AccessControlCheckError | Error,
+    DryRunExpressionsQueryParams,
+    CreateTriggerBodyRequestBody,
+    DryRunExpressionsPathParams
+  >,
+  'path' | 'verb'
+> &
+  DryRunExpressionsPathParams
+
+/**
+ * Testing expression for given pipeline YAML
+ */
+export const DryRunExpressions = ({ pipelineIdentifier, ...props }: DryRunExpressionsProps) => (
+  <Mutate<
+    ResponseExpressionDryRunResponse,
+    Failure | AccessControlCheckError | Error,
+    DryRunExpressionsQueryParams,
+    CreateTriggerBodyRequestBody,
+    DryRunExpressionsPathParams
+  >
+    verb="POST"
+    path={`/pipeline/execute/dryRunExpressions/${pipelineIdentifier}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseDryRunExpressionsProps = Omit<
+  UseMutateProps<
+    ResponseExpressionDryRunResponse,
+    Failure | AccessControlCheckError | Error,
+    DryRunExpressionsQueryParams,
+    CreateTriggerBodyRequestBody,
+    DryRunExpressionsPathParams
+  >,
+  'path' | 'verb'
+> &
+  DryRunExpressionsPathParams
+
+/**
+ * Testing expression for given pipeline YAML
+ */
+export const useDryRunExpressions = ({ pipelineIdentifier, ...props }: UseDryRunExpressionsProps) =>
+  useMutate<
+    ResponseExpressionDryRunResponse,
+    Failure | AccessControlCheckError | Error,
+    DryRunExpressionsQueryParams,
+    CreateTriggerBodyRequestBody,
+    DryRunExpressionsPathParams
+  >(
+    'POST',
+    (paramsInPath: DryRunExpressionsPathParams) =>
+      `/pipeline/execute/dryRunExpressions/${paramsInPath.pipelineIdentifier}`,
+    { base: getConfig('pipeline/api'), pathParams: { pipelineIdentifier }, ...props }
+  )
+
+/**
+ * Testing expression for given pipeline YAML
+ */
+export const dryRunExpressionsPromise = (
+  {
+    pipelineIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseExpressionDryRunResponse,
+    Failure | AccessControlCheckError | Error,
+    DryRunExpressionsQueryParams,
+    CreateTriggerBodyRequestBody,
+    DryRunExpressionsPathParams
+  > & { pipelineIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseExpressionDryRunResponse,
+    Failure | AccessControlCheckError | Error,
+    DryRunExpressionsQueryParams,
+    CreateTriggerBodyRequestBody,
+    DryRunExpressionsPathParams
+  >('POST', getConfig('pipeline/api'), `/pipeline/execute/dryRunExpressions/${pipelineIdentifier}`, props, signal)
+
+export interface ExpandedJsonPathParams {
+  planExecutionId: string
+}
+
+export type ExpandedJsonProps = Omit<
+  GetProps<ResponseString, Failure | AccessControlCheckError | Error, void, ExpandedJsonPathParams>,
+  'path'
+> &
+  ExpandedJsonPathParams
+
+/**
+ * ExpandedJson for given planExecutionId
+ */
+export const ExpandedJson = ({ planExecutionId, ...props }: ExpandedJsonProps) => (
+  <Get<ResponseString, Failure | AccessControlCheckError | Error, void, ExpandedJsonPathParams>
+    path={`/pipeline/execute/expandedJson/${planExecutionId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseExpandedJsonProps = Omit<
+  UseGetProps<ResponseString, Failure | AccessControlCheckError | Error, void, ExpandedJsonPathParams>,
+  'path'
+> &
+  ExpandedJsonPathParams
+
+/**
+ * ExpandedJson for given planExecutionId
+ */
+export const useExpandedJson = ({ planExecutionId, ...props }: UseExpandedJsonProps) =>
+  useGet<ResponseString, Failure | AccessControlCheckError | Error, void, ExpandedJsonPathParams>(
+    (paramsInPath: ExpandedJsonPathParams) => `/pipeline/execute/expandedJson/${paramsInPath.planExecutionId}`,
+    { base: getConfig('pipeline/api'), pathParams: { planExecutionId }, ...props }
+  )
+
+/**
+ * ExpandedJson for given planExecutionId
+ */
+export const expandedJsonPromise = (
+  {
+    planExecutionId,
+    ...props
+  }: GetUsingFetchProps<ResponseString, Failure | AccessControlCheckError | Error, void, ExpandedJsonPathParams> & {
+    planExecutionId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseString, Failure | AccessControlCheckError | Error, void, ExpandedJsonPathParams>(
+    getConfig('pipeline/api'),
+    `/pipeline/execute/expandedJson/${planExecutionId}`,
+    props,
+    signal
+  )
+
+export interface FetchExpressionQueryParams {
+  expression: string
+}
+
+export interface FetchExpressionPathParams {
+  planExecutionId: string
+}
+
+export type FetchExpressionProps = Omit<
+  GetProps<
+    ResponseExpressionDetailResponse,
+    Failure | AccessControlCheckError | Error,
+    FetchExpressionQueryParams,
+    FetchExpressionPathParams
+  >,
+  'path'
+> &
+  FetchExpressionPathParams
+
+/**
+ * Fetch the expressions at various scopes for given planExecutionId and given expressionFQN
+ */
+export const FetchExpression = ({ planExecutionId, ...props }: FetchExpressionProps) => (
+  <Get<
+    ResponseExpressionDetailResponse,
+    Failure | AccessControlCheckError | Error,
+    FetchExpressionQueryParams,
+    FetchExpressionPathParams
+  >
+    path={`/pipeline/execute/fetchExpressions/${planExecutionId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseFetchExpressionProps = Omit<
+  UseGetProps<
+    ResponseExpressionDetailResponse,
+    Failure | AccessControlCheckError | Error,
+    FetchExpressionQueryParams,
+    FetchExpressionPathParams
+  >,
+  'path'
+> &
+  FetchExpressionPathParams
+
+/**
+ * Fetch the expressions at various scopes for given planExecutionId and given expressionFQN
+ */
+export const useFetchExpression = ({ planExecutionId, ...props }: UseFetchExpressionProps) =>
+  useGet<
+    ResponseExpressionDetailResponse,
+    Failure | AccessControlCheckError | Error,
+    FetchExpressionQueryParams,
+    FetchExpressionPathParams
+  >((paramsInPath: FetchExpressionPathParams) => `/pipeline/execute/fetchExpressions/${paramsInPath.planExecutionId}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { planExecutionId },
+    ...props
+  })
+
+/**
+ * Fetch the expressions at various scopes for given planExecutionId and given expressionFQN
+ */
+export const fetchExpressionPromise = (
+  {
+    planExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseExpressionDetailResponse,
+    Failure | AccessControlCheckError | Error,
+    FetchExpressionQueryParams,
+    FetchExpressionPathParams
+  > & { planExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseExpressionDetailResponse,
+    Failure | AccessControlCheckError | Error,
+    FetchExpressionQueryParams,
+    FetchExpressionPathParams
+  >(getConfig('pipeline/api'), `/pipeline/execute/fetchExpressions/${planExecutionId}`, props, signal)
+
 export interface GetPreflightCheckResponseQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -10921,6 +11209,92 @@ export const getStagesExecutionListPromise = (
     GetStagesExecutionListQueryParams,
     void
   >(getConfig('pipeline/api'), `/pipeline/execute/stagesExecutionList`, props, signal)
+
+export interface TestExpressionPathParams {
+  planExecutionId: string
+}
+
+export type TestExpressionProps = Omit<
+  MutateProps<
+    ResponseExpressionTestResponse,
+    Failure | AccessControlCheckError | Error,
+    void,
+    ExpressionTestRequest,
+    TestExpressionPathParams
+  >,
+  'path' | 'verb'
+> &
+  TestExpressionPathParams
+
+/**
+ * Testing expression for given planExecutionId
+ */
+export const TestExpression = ({ planExecutionId, ...props }: TestExpressionProps) => (
+  <Mutate<
+    ResponseExpressionTestResponse,
+    Failure | AccessControlCheckError | Error,
+    void,
+    ExpressionTestRequest,
+    TestExpressionPathParams
+  >
+    verb="POST"
+    path={`/pipeline/execute/testExpression/${planExecutionId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseTestExpressionProps = Omit<
+  UseMutateProps<
+    ResponseExpressionTestResponse,
+    Failure | AccessControlCheckError | Error,
+    void,
+    ExpressionTestRequest,
+    TestExpressionPathParams
+  >,
+  'path' | 'verb'
+> &
+  TestExpressionPathParams
+
+/**
+ * Testing expression for given planExecutionId
+ */
+export const useTestExpression = ({ planExecutionId, ...props }: UseTestExpressionProps) =>
+  useMutate<
+    ResponseExpressionTestResponse,
+    Failure | AccessControlCheckError | Error,
+    void,
+    ExpressionTestRequest,
+    TestExpressionPathParams
+  >(
+    'POST',
+    (paramsInPath: TestExpressionPathParams) => `/pipeline/execute/testExpression/${paramsInPath.planExecutionId}`,
+    { base: getConfig('pipeline/api'), pathParams: { planExecutionId }, ...props }
+  )
+
+/**
+ * Testing expression for given planExecutionId
+ */
+export const testExpressionPromise = (
+  {
+    planExecutionId,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseExpressionTestResponse,
+    Failure | AccessControlCheckError | Error,
+    void,
+    ExpressionTestRequest,
+    TestExpressionPathParams
+  > & { planExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseExpressionTestResponse,
+    Failure | AccessControlCheckError | Error,
+    void,
+    ExpressionTestRequest,
+    TestExpressionPathParams
+  >('POST', getConfig('pipeline/api'), `/pipeline/execute/testExpression/${planExecutionId}`, props, signal)
 
 export interface PostPipelineExecuteWithInputSetYamlQueryParams {
   accountIdentifier: string
@@ -16802,6 +17176,9 @@ export interface GetSchemaYamlQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'GitLeaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   projectIdentifier?: string
@@ -17109,6 +17486,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'GitLeaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   scope?: 'account' | 'org' | 'project' | 'unknown'

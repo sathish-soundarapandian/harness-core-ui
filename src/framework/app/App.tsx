@@ -136,7 +136,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     const differenceInMinutes = (currentTime - lastTokenSetTime) / milliSecondsToMinutes
     refreshInterval = Math.min(Math.max(refreshInterval, LEAST_REFRESH_TIME_MINUTES), MAX_REFRESH_TIME_MINUTES)
     if (differenceInMinutes > refreshInterval && !refreshingToken) {
-      refreshToken({ queryParams: getQueryParams() as any })
+      refreshToken({ queryParams: getQueryParams() as any, requestOptions: getRequestOptions() })
     }
   }, 2000)
   useEffect(() => {
