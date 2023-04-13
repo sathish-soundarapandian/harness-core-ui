@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import cx from 'classnames'
 import {
   Button,
@@ -19,8 +19,15 @@ import {
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
   shouldShowError,
-  getErrorInfoFromErrorObject
+  getErrorInfoFromErrorObject,
+  FontVariation,
+  Dialog,
+  ModalDialog,
+  TableV2,
+  PageSpinner
 } from '@harness/uicore'
+
+import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Classes, Menu, Position } from '@blueprintjs/core'
@@ -51,7 +58,7 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { Pipeline } from '@pipeline/utils/types'
-import type { CacheResponseMetadata, Error } from 'services/pipeline-ng'
+import { CacheResponseMetadata, Error, useDryRunExpressions } from 'services/pipeline-ng'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useValidateTemplateInputsQuery } from 'services/pipeline-rq'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
@@ -66,6 +73,7 @@ import { EntityCachedCopy, EntityCachedCopyHandle } from './EntityCachedCopy/Ent
 import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
 import { ValidationBadge } from '../AsyncValidation/ValidationBadge'
 import css from './PipelineCanvas.module.scss'
+import type { AnyNaptrRecord } from 'dns'
 
 export interface PipelineCanvasHeaderProps {
   isPipelineRemote: boolean
@@ -346,7 +354,108 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
       </Popover>
     )
   }
+  const [dryRunDialog, setDryRunDialog] = useState(false)
+  const [dryRunResult, setDryRunResult] = useState<AnyNaptrRecord>()
+  const { mutate: dryRun } = useDryRunExpressions({
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  })
+  const RenderStatusColumn: any = ({ row }) => {
+    return (
+      <Text
+        padding="medium"
+        width={100}
+        lineClamp={1}
+        font={{
+          variation: row.original.resolved ? FontVariation.FORM_MESSAGE_SUCCESS : FontVariation.FORM_MESSAGE_DANGER
+        }}
+      >
+        {row.original.resolved ? 'success' : 'failure'}
+      </Text>
+    )
+  }
+  const RenderExpressionColumn: any = ({ row }) => {
+    return (
+      <>
+        {row.original.suggestedExpression ? (
+          <MonacoDiffEditor
+            width="100%"
+            height="25px"
+            language="yaml"
+            original={row.original.expression}
+            value={row.original.suggestedExpression}
+          />
+        ) : (
+          <Text padding="medium" lineClamp={1} width={500}>
+            {row.original.expression}
+          </Text>
+        )}
+      </>
+    )
+  }
+  const RenderResolvedColumn: any = ({ row }) => {
+    return (
+      <Text padding="medium" lineClamp={1} width={200}>
+        {row.original.resolvedValue}
+      </Text>
+    )
+  }
+  const RenderSuggestedExpressionColumn: any = ({ row }) => {
+    return (
+      <Text padding="medium" lineClamp={1} width={200}>
+        {row.original.suggestedExpression}
+      </Text>
+    )
+  }
+  const DryRunResults = (result: any | string, success: boolean) => {
+    if (result.length) {
+      return (
+        <>
+          <Layout.Vertical spacing="large" height={600}>
+            <Layout.Horizontal spacing="medium" flex={{ justifyContent: 'flex-start' }}>
+              <Text font={{ variation: FontVariation.H5 }}>Overall Status:</Text>
+              <Text
+                font={{
+                  variation: success ? FontVariation.FORM_MESSAGE_SUCCESS : FontVariation.FORM_MESSAGE_DANGER
+                }}
+              >
+                {success ? 'success' : 'failure'}
+              </Text>
+            </Layout.Horizontal>
 
+            <TableV2
+              columns={[
+                {
+                  Header: 'Expression & Suggested Expression',
+                  accessor: function noRefCheck() {},
+                  id: 'expression',
+                  Cell: RenderExpressionColumn,
+                  width: '60%'
+                },
+
+                {
+                  Header: 'Resolved Value',
+                  accessor: function noRefCheck() {},
+                  id: 'resolvedValue',
+                  Cell: RenderResolvedColumn,
+                  width: '25%'
+                },
+                {
+                  Header: 'Status',
+                  accessor: function noRefCheck() {},
+                  id: 'resolved',
+
+                  Cell: RenderStatusColumn,
+                  width: '15%'
+                }
+              ]}
+              data={result}
+            />
+          </Layout.Vertical>
+        </>
+      )
+    }
+  }
+  const [dryRunLoading, SetDryRunLoading] = useState(false)
   return (
     <React.Fragment>
       {(remoteFetchError as Error)?.code === 'ENTITY_NOT_FOUND' ? null : (
@@ -471,6 +580,41 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     permission: PermissionIdentifier.EXECUTE_PIPELINE
                   }}
                 />
+                <Button
+                  margin="medium"
+                  text="Dry Run"
+                  intent="primary"
+                  onClick={() => {
+                    SetDryRunLoading(true)
+                    dryRun(`${yamlHandler?.getLatestYaml()}`, {
+                      pathParams: { pipelineIdentifier },
+                      headers: { 'content-type': 'application/yaml' }
+                    })
+                      .then(data => {
+                        setDryRunResult(DryRunResults(data.data?.expressionDryRunDetails, data.data?.success))
+                      })
+                      .catch(err => {
+                        setDryRunResult(getErrorInfoFromErrorObject(err))
+                      })
+                      .finally(() => {
+                        SetDryRunLoading(false)
+                        setDryRunDialog(true)
+                      })
+                    console.log('tsest', yamlHandler?.getLatestYaml())
+                  }}
+                ></Button>
+                {dryRunLoading && <PageSpinner message={'Fetching Dry run results'} />}
+                <ModalDialog
+                  isOpen={dryRunDialog}
+                  title={'Dry Run Results'}
+                  enforceFocus={false}
+                  width={950}
+                  height={800}
+                  onClose={() => setDryRunDialog(false)}
+                  lazy
+                >
+                  <Text>{dryRunResult}</Text>
+                </ModalDialog>
                 {renderPipelineMenuActions()}
               </div>
             </>

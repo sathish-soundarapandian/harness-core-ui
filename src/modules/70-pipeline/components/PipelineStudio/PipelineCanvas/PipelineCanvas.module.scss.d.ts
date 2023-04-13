@@ -18,6 +18,7 @@ declare const styles: {
   readonly dialog: string
   readonly dialogStyle: string
   readonly discardBtn: string
+  readonly dryTable: string
   readonly folderName: string
   readonly gitDetails: string
   readonly gitRemoteDetailsWrapper: string
