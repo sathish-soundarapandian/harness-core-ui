@@ -228,26 +228,27 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
                   {renderErrorDetailSeparator()}
                   {openAIResponses?.choices?.map((item: any, _index: any) => {
                     const content = get(item, 'message.content', '')
+                    const shouldTrim = content.length > SUMMARY_VIEW_CHAR_LIMIT
                     return (
                       <Layout.Vertical padding={{ top: 'small', bottom: 'small' }} spacing="xsmall" key={index}>
                         <ReactMarkdown className={css.openAiResponse}>
-                          {content.length > SUMMARY_VIEW_CHAR_LIMIT
-                            ? content.slice(0, SUMMARY_VIEW_CHAR_LIMIT).concat('...')
-                            : content}
+                          {shouldTrim ? content.slice(0, SUMMARY_VIEW_CHAR_LIMIT).concat('...') : content}
                         </ReactMarkdown>
-                        <Button
-                          text={getString('common.readMore')}
-                          round
-                          intent="primary"
-                          size={ButtonSize.SMALL}
-                          className={css.readMoreBtn}
-                          onClick={() => {
-                            setItemForDetailedView(item)
-                            setErrorIndex(index)
-                            setShowDetailedView(true)
-                            setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 0)
-                          }}
-                        />
+                        {shouldTrim ? (
+                          <Button
+                            text={getString('common.readMore')}
+                            round
+                            intent="primary"
+                            size={ButtonSize.SMALL}
+                            className={css.readMoreBtn}
+                            onClick={() => {
+                              setItemForDetailedView(item)
+                              setErrorIndex(index)
+                              setShowDetailedView(true)
+                              setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 0)
+                            }}
+                          />
+                        ) : null}
                       </Layout.Vertical>
                     )
                   })}
