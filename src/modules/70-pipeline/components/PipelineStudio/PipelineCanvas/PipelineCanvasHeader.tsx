@@ -379,10 +379,11 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
         {row.original.suggestedExpression ? (
           <MonacoDiffEditor
             width="100%"
-            height="25px"
+            height="40px"
             language="yaml"
             original={row.original.expression}
             value={row.original.suggestedExpression}
+            options={{ renderSideBySide: false }}
           />
         ) : (
           <Text padding="medium" lineClamp={1} width={500}>

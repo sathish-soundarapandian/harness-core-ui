@@ -8,7 +8,9 @@ import {
   TextInput,
   Button,
   Label,
-  getErrorInfoFromErrorObject
+  getErrorInfoFromErrorObject,
+  TableV2,
+  PageSpinner
 } from '@harness/uicore'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import {
@@ -58,7 +60,7 @@ export default function App() {
   })
 
   const [exp, setExp] = useState('')
-  const [output, setOutPut] = useState('')
+  const [output, setOutPut] = useState()
   const { refetch: getExpression, data: expData1 } = useFetchExpression({
     planExecutionId: '8njHdpXCTlKPh-KtUQO3MQ',
     queryParams: { expression: 'pipeline.stages.shell1.status' }
@@ -74,12 +76,16 @@ export default function App() {
     pathParams: { planExecutionId: exeId }
   })
   const testExpressionCall = () => {
+    setTestRunLoading(true)
     testExp({ expressionTestDetails: testExpressionList })
       .then(data => {
-        setOutPut(data.data?.expressionTestDetails)
+        setOutPut(TestRunResults(data.data.expressionTestDetails, data.data?.status))
       })
       .catch(err => {
         setOutPut(getErrorInfoFromErrorObject(err))
+      })
+      .finally(() => {
+        setTestRunLoading(false)
       })
   }
   const [testExpressionList, setTestExpressionList] = useState([])
@@ -126,6 +132,52 @@ export default function App() {
       return val + da.expressionBlock + '\n'
     })
   }
+  const RenderExpressionColumn: any = ({ row }) => {
+    return (
+      <Text padding="medium" lineClamp={1}>
+        {row.original.expressionBlock}
+      </Text>
+    )
+  }
+  const RenderScopeColumn: any = ({ row }) => {
+    return (
+      <Text padding="medium" lineClamp={1}>
+        {row.original.scope}
+      </Text>
+    )
+  }
+  const [testRunLoading, setTestRunLoading] = useState(false)
+  const TestRunResults = (result: any | string, success: boolean) => {
+    if (result.length) {
+      return (
+        <>
+          <Layout.Vertical spacing="large" height={600}>
+            <TableV2
+              columns={[
+                {
+                  Header: 'Expression Block',
+                  accessor: function noRefCheck() {},
+                  id: 'expressionBlock',
+                  Cell: RenderExpressionColumn,
+                  width: '60%'
+                },
+
+                {
+                  Header: 'Scope',
+                  accessor: function noRefCheck() {},
+                  id: 'scope',
+                  Cell: RenderScopeColumn,
+                  width: '40%'
+                }
+              ]}
+              data={result}
+            />
+          </Layout.Vertical>
+        </>
+      )
+    }
+  }
+
   return (
     <Layout.Horizontal
       spacing="large"
@@ -190,6 +242,7 @@ export default function App() {
           <Text font={{ variation: FontVariation.H2 }}>Output</Text>
           <Container width={500} height={500}>
             <Text font={{ variation: FontVariation.BODY1 }}>{output}</Text>
+            {testRunLoading && <PageSpinner message={'Fetching Test results'} />}
           </Container>
         </Container>
       </Layout.Vertical>
