@@ -18,6 +18,7 @@ declare const styles: {
   readonly sectionCard1: string
   readonly sectionCard2: string
   readonly separator: string
+  readonly separator2: string
   readonly tagInputStyle: string
   readonly tickButton: string
   readonly viewRowNode: string

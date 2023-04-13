@@ -161,7 +161,11 @@ export default function Optimization(props) {
                 style={{ width: '400px' }}
               />
               <Container margin={{ top: 'xxlarge' }}>
-                <Button onClick={onSubmit} variation={ButtonVariation.PRIMARY} text={'Click and see the magic'} />
+                <Button
+                  onClick={() => onSubmit(formikProps.values)}
+                  variation={ButtonVariation.PRIMARY}
+                  text={'Click and see the magic'}
+                />
               </Container>
             </FormikForm>
           )
@@ -187,7 +191,7 @@ export default function Optimization(props) {
 
       {templatesData?.data?.pipelineYaml1 ? (
         <Layout.Vertical style={{ whiteSpace: 'pre-line' }}>
-          <Container padding={{ top: 'xxlarge', right: 'xxlarge', bottom: 'xxlarge' }}>
+          <Container padding={{ right: 'xxlarge', bottom: 'xxlarge' }}>
             <Card className={css.sectionCard2}>
               <Heading
                 color={Color.GREY_700}
