@@ -159,7 +159,8 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.AllErrors,
     ErrorType.InputTimeoutError,
     ErrorType.ApprovalRejection,
-    ErrorType.DelegateRestart
+    ErrorType.DelegateRestart,
+    ErrorType.UserMarkedFailure
   ],
   [StageType.BUILD]: [
     ErrorType.Timeout,
@@ -167,7 +168,8 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.InputTimeoutError,
     ErrorType.AllErrors,
     ErrorType.ApprovalRejection,
-    ErrorType.DelegateRestart
+    ErrorType.DelegateRestart,
+    ErrorType.UserMarkedFailure
   ],
   [StageType.APPROVAL]: [
     ErrorType.Authentication,
@@ -181,10 +183,23 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.PolicyEvaluationFailure,
     ErrorType.InputTimeoutError,
     ErrorType.ApprovalRejection,
-    ErrorType.DelegateRestart
+    ErrorType.DelegateRestart,
+    ErrorType.UserMarkedFailure
   ],
-  [StageType.FEATURE]: [ErrorType.Timeout, ErrorType.Unknown, ErrorType.InputTimeoutError, ErrorType.AllErrors],
-  [StageType.SECURITY]: [ErrorType.Timeout, ErrorType.Unknown, ErrorType.InputTimeoutError, ErrorType.AllErrors],
+  [StageType.FEATURE]: [
+    ErrorType.Timeout,
+    ErrorType.Unknown,
+    ErrorType.InputTimeoutError,
+    ErrorType.AllErrors,
+    ErrorType.UserMarkedFailure
+  ],
+  [StageType.SECURITY]: [
+    ErrorType.Timeout,
+    ErrorType.Unknown,
+    ErrorType.InputTimeoutError,
+    ErrorType.AllErrors,
+    ErrorType.UserMarkedFailure
+  ],
   [StageType.PIPELINE]: [
     ErrorType.Authentication,
     ErrorType.Authorization,
@@ -197,7 +212,8 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.PolicyEvaluationFailure,
     ErrorType.InputTimeoutError,
     ErrorType.ApprovalRejection,
-    ErrorType.DelegateRestart
+    ErrorType.DelegateRestart,
+    ErrorType.UserMarkedFailure
   ],
   [StageType.CUSTOM]: [
     ErrorType.Authentication,
@@ -211,7 +227,8 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.PolicyEvaluationFailure,
     ErrorType.InputTimeoutError,
     ErrorType.ApprovalRejection,
-    ErrorType.DelegateRestart
+    ErrorType.DelegateRestart,
+    ErrorType.UserMarkedFailure
   ],
   [StageType.Template]: [],
   [StageType.MATRIX]: [],

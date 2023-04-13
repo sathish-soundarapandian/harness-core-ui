@@ -417,6 +417,7 @@ export function ECSWithS3({
                       name="identifier"
                       label={getString('pipeline.manifestType.manifestIdentifier')}
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
+                      isIdentifier={true}
                     />
                   </div>
                 )}

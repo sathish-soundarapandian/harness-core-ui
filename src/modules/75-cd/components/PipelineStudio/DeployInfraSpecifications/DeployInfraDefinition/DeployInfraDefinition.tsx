@@ -622,8 +622,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments,
                   delegateSelectors: value.delegateSelectors,
                   hostAttributes: value.hostAttributes,
-                  hostObjectArray: value.hostObjectArray,
-                  dynamicallyProvisioned: value.dynamicallyProvisioned
+                  hostObjectArray: value.hostObjectArray
                 },
                 InfraDeploymentType.PDC
               )

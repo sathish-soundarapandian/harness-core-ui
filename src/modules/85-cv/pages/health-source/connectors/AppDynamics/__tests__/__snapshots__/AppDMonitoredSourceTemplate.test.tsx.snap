@@ -75,7 +75,6 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                       <div
                         class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
                         data-testid="appdApplication"
-                        placeholder="cv.healthSource.connectors.AppDynamics.applicationPlaceholder"
                         style="width: 300px;"
                       >
                         <div
@@ -88,7 +87,7 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                               class="bp3-input"
                               disabled=""
                               name="appdApplication"
-                              placeholder="<+input>"
+                              placeholder="cv.healthSource.connectors.AppDynamics.applicationPlaceholder"
                               type="text"
                               value="<+input>"
                             />
@@ -137,7 +136,6 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                       <div
                         class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
                         data-testid="appDTier"
-                        placeholder="cv.healthSource.connectors.AppDynamics.tierPlaceholder"
                         style="width: 300px;"
                       >
                         <div
@@ -150,7 +148,7 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                               class="bp3-input"
                               disabled=""
                               name="appDTier"
-                              placeholder="<+input>"
+                              placeholder="cv.healthSource.connectors.AppDynamics.tierPlaceholder"
                               type="text"
                               value="<+input>"
                             />
@@ -1509,7 +1507,6 @@ exports[`Unit tests for createAppd monitoring source should render in  when conn
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   data-testid="appdApplication"
-                  placeholder="cv.healthSource.connectors.AppDynamics.applicationPlaceholder"
                   style="width: 300px;"
                 >
                   <div
@@ -1598,7 +1595,6 @@ exports[`Unit tests for createAppd monitoring source should render in  when conn
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   data-testid="appDTier"
-                  placeholder="cv.healthSource.connectors.AppDynamics.tierPlaceholder"
                   style="width: 300px;"
                 >
                   <div
@@ -2129,7 +2125,6 @@ exports[`Unit tests for createAppd monitoring source should render in  when conn
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   data-testid="appdApplication"
-                  placeholder="cv.healthSource.connectors.AppDynamics.applicationPlaceholder"
                   style="width: 300px;"
                 >
                   <div
@@ -2219,7 +2214,6 @@ exports[`Unit tests for createAppd monitoring source should render in  when conn
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   data-testid="appDTier"
-                  placeholder="cv.healthSource.connectors.AppDynamics.tierPlaceholder"
                   style="width: 300px;"
                 >
                   <div
@@ -2723,7 +2717,6 @@ exports[`Unit tests for createAppd monitoring source should render when connecto
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
                   data-testid="appdApplication"
-                  placeholder="cv.healthSource.connectors.AppDynamics.applicationPlaceholder"
                   style="width: 300px;"
                 >
                   <div
@@ -2736,7 +2729,7 @@ exports[`Unit tests for createAppd monitoring source should render when connecto
                         class="bp3-input"
                         disabled=""
                         name="appdApplication"
-                        placeholder="<+input>"
+                        placeholder="cv.healthSource.connectors.AppDynamics.applicationPlaceholder"
                         type="text"
                         value="<+input>"
                       />
@@ -2785,7 +2778,6 @@ exports[`Unit tests for createAppd monitoring source should render when connecto
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
                   data-testid="appDTier"
-                  placeholder="cv.healthSource.connectors.AppDynamics.tierPlaceholder"
                   style="width: 300px;"
                 >
                   <div
@@ -2798,7 +2790,7 @@ exports[`Unit tests for createAppd monitoring source should render when connecto
                         class="bp3-input"
                         disabled=""
                         name="appDTier"
-                        placeholder="<+input>"
+                        placeholder="cv.healthSource.connectors.AppDynamics.tierPlaceholder"
                         type="text"
                         value="<+input>"
                       />

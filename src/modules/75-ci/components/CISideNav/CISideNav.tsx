@@ -68,6 +68,10 @@ export default function CISideNav(): React.ReactElement {
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const { getString } = useStrings()
   const { showGetStartedTabInMainMenu, setShowGetStartedTabInMainMenu } = useSideNavContext()
+  // Get and set the visibility of the "ci" module
+  const isCIGetStartedVisible = showGetStartedTabInMainMenu['ci']
+  const setCIGetStartedVisible = (shouldShow: boolean): void => setShowGetStartedTabInMainMenu('ci', shouldShow)
+
   const {
     data: fetchPipelinesData,
     loading: fetchingPipelines,
@@ -89,14 +93,12 @@ export default function CISideNav(): React.ReactElement {
   useEffect(() => {
     if (!fetchingPipelines && fetchPipelinesData) {
       const { data, status } = fetchPipelinesData
-      setShowGetStartedTabInMainMenu(
-        status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0
-      )
+      setCIGetStartedVisible(status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0)
     }
   }, [fetchPipelinesData])
 
   useEffect(() => {
-    if (showGetStartedTabInMainMenu) {
+    if (isCIGetStartedVisible) {
       history.replace(
         routes.toGetStartedWithCI({
           projectIdentifier,
@@ -106,14 +108,14 @@ export default function CISideNav(): React.ReactElement {
         })
       )
     }
-  }, [showGetStartedTabInMainMenu, history, module, accountId, orgIdentifier, projectIdentifier])
+  }, [isCIGetStartedVisible, history, module, accountId, orgIdentifier, projectIdentifier])
 
   return (
     <Layout.Vertical spacing="small">
       <ProjectSelector
         moduleFilter={ModuleName.CI}
         onSelect={data => {
-          setShowGetStartedTabInMainMenu(false)
+          setCIGetStartedVisible(false)
           updateAppStore({ selectedProject: data })
           if (connectorId) {
             history.push(
@@ -179,7 +181,7 @@ export default function CISideNav(): React.ReactElement {
               })
             )
           } else if (projectIdentifier && !pipelineIdentifier) {
-            if (!showGetStartedTabInMainMenu) {
+            if (!isCIGetStartedVisible) {
               history.push(
                 compile(routeMatch.path)({
                   ...routeMatch.params,
@@ -226,13 +228,13 @@ export default function CISideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier ? (
         <React.Fragment>
-          {showGetStartedTabInMainMenu && (
+          {isCIGetStartedVisible && (
             <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
           )}
-          {!showGetStartedTabInMainMenu && CI_OVERVIEW_PAGE && (
+          {!isCIGetStartedVisible && CI_OVERVIEW_PAGE && (
             <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module })} />
           )}
-          {!(fetchingPipelines || showGetStartedTabInMainMenu) && (
+          {!(fetchingPipelines || isCIGetStartedVisible) && (
             <>
               <SidebarLink label={getString('buildsText')} to={routes.toDeployments({ ...params, module })} />
               <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module })} />

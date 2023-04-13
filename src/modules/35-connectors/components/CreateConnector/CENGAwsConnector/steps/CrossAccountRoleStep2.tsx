@@ -41,7 +41,12 @@ import { Features } from './CrossAccountRoleStep1'
 import type { CEAwsConnectorDTO } from './OverviewStep'
 import css from '../CreateCeAwsConnector.module.scss'
 
-const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
+interface CrossAccountRoleProps {
+  isEditMode?: boolean
+  setIsEditMode?: (val: boolean) => void
+}
+
+const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO> & CrossAccountRoleProps> = props => {
   const { getString } = useStrings()
 
   useStepLoadTelemetry(CE_AWS_CONNECTOR_CREATION_EVENTS.LOAD_CREATE_CROSS_ACCOUNT_ROLE)
@@ -109,7 +114,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
           ...pick(prevStepData, ['name', 'identifier', 'description', 'tags', 'spec', 'type'])
         }
 
-        const response = prevStepData.isEditMode
+        const response = props.isEditMode
           ? await updateConnector({ connector: connectorInfo })
           : await createConnector({ connector: connectorInfo })
         if (response.status != 'SUCCESS') {
@@ -121,6 +126,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
           })
         } else {
           nextStep?.(prevStepData)
+          props.setIsEditMode?.(true)
         }
       }
     } catch (e) {

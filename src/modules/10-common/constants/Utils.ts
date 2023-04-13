@@ -67,3 +67,19 @@ export enum Width {
   MEDIUM = 160,
   LARGE = 200
 }
+
+export enum SettingType {
+  TEST_SETTING_ID = 'test_setting_id',
+  ENABLE_GIT_COMMANDS = 'enable_git_commands',
+  ENFORCE_GIT_EXPERIENCE = 'enforce_git_experience',
+  ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS = 'allow_different_repo_for_pipeline_and_input_sets',
+  DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER = 'disable_harness_built_in_secret_manager',
+  WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION = 'mandate_webhook_secrets_for_github_triggers',
+  MANDATE_CUSTOM_WEBHOOK_AUTHORIZATION = 'mandate_custom_webhook_authorization',
+  ENABLE_FORCE_DELETE = 'enable_force_delete',
+  PIPELINE_TIMEOUT = 'pipeline_timeout',
+  STAGE_TIMEOUT = 'stage_timeout',
+  STEP_TIMEOUT = 'step_timeout',
+  CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS = 'concurrent_active_pipeline_executions',
+  ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY = 'allow_user_to_mark_step_as_failed_explicitly'
+}

@@ -24,10 +24,16 @@ export const transformValuesFieldsConfig = (data: AWSSecurityHubStepData): Field
   const config = [...transformValuesFieldsConfigValues(data), ...authFieldsTransformConfig(data)]
 
   if (data.spec.mode === 'extraction') {
-    config.push({
-      name: 'spec.auth.access_id',
-      type: TransformValuesTypes.Text
-    })
+    config.push(
+      {
+        name: 'spec.auth.access_id',
+        type: TransformValuesTypes.Text
+      },
+      {
+        name: 'spec.auth.region',
+        type: TransformValuesTypes.Text
+      }
+    )
   }
 
   return config
@@ -36,12 +42,20 @@ export const transformValuesFieldsConfig = (data: AWSSecurityHubStepData): Field
 const authAccessIdValidation = (
   data: AWSSecurityHubStepData,
   stepViewType?: StepViewType
-): InputSetViewValidateFieldsConfig => ({
-  name: 'spec.auth.access_id',
-  type: ValidationFieldTypes.Text,
-  label: 'sto.stepField.authAccessId',
-  isRequired: stepViewType === StepViewType.InputSet || data.spec.mode === 'extraction'
-})
+): InputSetViewValidateFieldsConfig[] => [
+  {
+    name: 'spec.auth.access_id',
+    type: ValidationFieldTypes.Text,
+    label: 'sto.stepField.authAccessId',
+    isRequired: stepViewType === StepViewType.InputSet || data.spec.mode === 'extraction'
+  },
+  {
+    name: 'spec.auth.region',
+    type: ValidationFieldTypes.Text,
+    label: 'sto.stepField.authRegion',
+    isRequired: stepViewType === StepViewType.InputSet || data.spec.mode === 'extraction'
+  }
+]
 
 export const editViewValidateFieldsConfig = (data: AWSSecurityHubStepData) => {
   const editViewValidationConfig = [
@@ -49,7 +63,7 @@ export const editViewValidateFieldsConfig = (data: AWSSecurityHubStepData) => {
     ...ingestionFieldValidationConfig(data),
     ...authFieldsValidationConfig(data),
     ...additionalFieldsValidationConfigEitView,
-    authAccessIdValidation(data)
+    ...authAccessIdValidation(data)
   ]
 
   return editViewValidationConfig
@@ -60,7 +74,7 @@ export function getInputSetViewValidateFieldsConfig(data: AWSSecurityHubStepData
     ...commonFieldsValidationConfig,
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet,
-    authAccessIdValidation(data, StepViewType.InputSet)
+    ...authAccessIdValidation(data, StepViewType.InputSet)
   ]
 
   return inputSetViewValidateFieldsConfig

@@ -19,8 +19,6 @@ import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import {
   EditOrDeleteCell,
@@ -44,7 +42,6 @@ export default function EnvironmentGroupsList({ environmentGroups, refetch }: En
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const [expandedSets, setExpandedSets] = useState<Set<string>>(new Set())
-  const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
   const [curGroupId, setCurGroupId] = useState('')
 
   const onEdit = (environmentGroupIdentifier: string) => {
@@ -71,7 +68,7 @@ export default function EnvironmentGroupsList({ environmentGroups, refetch }: En
       showSuccess(getString('common.environmentGroup.deleted', { identifier }))
       refetch()
     } catch (e: any) {
-      if (isForceDeletedAllowed && e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+      if (e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         setCurGroupId(identifier)
         openReferenceErrorDialog()
       } else {
@@ -91,7 +88,7 @@ export default function EnvironmentGroupsList({ environmentGroups, refetch }: En
     },
     hideReferencedByButton: true,
     redirectToReferencedBy: redirectToReferencedBy,
-    forceDeleteCallback: isForceDeletedAllowed ? () => onDelete(curGroupId, true) : undefined
+    forceDeleteCallback: () => onDelete(curGroupId, true)
   })
 
   return (

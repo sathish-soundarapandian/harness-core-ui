@@ -272,6 +272,7 @@ function HelmWithGIT({
                 label={getString('pipeline.manifestType.manifestIdentifier')}
                 placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                 className={helmcss.halfWidth}
+                isIdentifier={true}
               />
               {!!(connectionType === GitRepoName.Account || accountUrl) && (
                 <GitRepositoryName

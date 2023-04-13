@@ -10,7 +10,8 @@ import { defaultTo, flatMapDeep, identity, isEmpty, map, sortBy, sortedUniq } fr
 import type { VariableMergeServiceResponse, VariableResponseMapValue } from 'services/pipeline-ng'
 import { useTemplateVariables } from '../../TemplateVariablesContext/TemplateVariablesContext'
 import { usePipelineVariables } from '../../PipelineVariablesContext/PipelineVariablesContext'
-import { usePipelineContext } from '../PipelineContext/PipelineContext'
+import { usePipelineContext, PipelineContextType } from '../PipelineContext/PipelineContext'
+
 /**
  * Traverse over stage and find out all local fqn
  */
@@ -96,18 +97,35 @@ export function useVariablesExpression(): { expressions: string[] } {
   const [localStageKeys, setLocalStageKeys] = useState<string[]>([])
   const {
     state: { selectionState: { selectedStageId } = { selectedStageId: '' } },
-    getStageFromPipeline
+    getStageFromPipeline,
+    contextType
   } = usePipelineContext()
 
   useEffect(() => {
-    if (!initLoading && selectedStageId && !isEmpty(selectedStageId)) {
+    const loading = !initLoading || !templateInitLoading
+    if (loading && selectedStageId && !isEmpty(selectedStageId)) {
       const stage = getStageFromPipeline(selectedStageId, variablesPipeline).stage
+
+      if (contextType === PipelineContextType.StageTemplate) {
+        const stageTemplateKeys = traverseStageObject({ stage: { ...variablesTemplate } }, templateMetadataMap)
+        setLocalStageKeys(stageTemplateKeys)
+      }
       if (stage) {
         const keys = traverseStageObject(stage, metadataMap)
         setLocalStageKeys(keys)
       }
     }
-  }, [variablesPipeline, initLoading, selectedStageId, metadataMap, getStageFromPipeline])
+  }, [
+    variablesPipeline,
+    initLoading,
+    selectedStageId,
+    metadataMap,
+    getStageFromPipeline,
+    templateInitLoading,
+    variablesTemplate,
+    templateMetadataMap,
+    contextType
+  ])
 
   useEffect(() => {
     if (!templateInitLoading && originalTemplate.type === 'Pipeline' && selectedStageId && !isEmpty(selectedStageId)) {

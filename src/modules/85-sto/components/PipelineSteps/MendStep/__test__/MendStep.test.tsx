@@ -158,7 +158,7 @@ describe('Mend Step', () => {
         description: 'Description',
         timeout: '10s',
         spec: {
-          privileged: true,
+          privileged: false,
           target: {
             type: 'repository',
             name: 'Mend Test',

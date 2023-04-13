@@ -49,11 +49,11 @@ import { SelectConfigureOptions } from '@common/components/ConfigureOptions/Sele
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import {
   AzureInfrastructureSpecEditableProps,
-  getValue,
   getValidationSchema,
   subscriptionLabel,
   resourceGroupLabel
 } from './SshWinRmAzureInfrastructureInterface'
+import { getValue } from '../PipelineStepsUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './SshWinRmAzureInfrastructureSpec.module.scss'
 

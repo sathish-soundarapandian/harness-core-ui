@@ -2534,7 +2534,6 @@ exports[`Save Cache S3 Step InputSet View should render all fields 1`] = `
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                       data-testid="value-spec.sourcePaths-[0]"
-                      placeholder=""
                     >
                       <div
                         class="bp3-input-group MultiTypeInput--input"

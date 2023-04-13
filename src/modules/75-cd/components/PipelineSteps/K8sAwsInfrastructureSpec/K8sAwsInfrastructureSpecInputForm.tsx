@@ -8,13 +8,10 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { set, defaultTo } from 'lodash-es'
-import { useFormikContext } from 'formik'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { useGetEKSClusterNames, useGetEKSClusterNamesViaExpressionResolution } from 'services/cd-ng'
-import { useMutateAsGet } from '@common/hooks'
+import { set, defaultTo, isEmpty } from 'lodash-es'
+import { useGetEKSClusterNames } from 'services/cd-ng'
+import { useStrings } from 'framework/strings'
 import { CommonKuberetesInfraInputForm } from '../Common/CommonKuberetesInfraSpec/CommonKuberetesInfraInputForm'
-import { getYamlData } from '../K8sServiceSpec/ArtifactSource/artifactSourceUtils'
 import type { K8sAwsInfrastructureSpecEditableProps } from './K8sAwsInfrastructureSpec'
 
 export const K8sAwsInfrastructureSpecInputForm: React.FC<K8sAwsInfrastructureSpecEditableProps & { path: string }> = ({
@@ -32,8 +29,7 @@ export const K8sAwsInfrastructureSpecInputForm: React.FC<K8sAwsInfrastructureSpe
     orgIdentifier: string
     accountId: string
   }>()
-  const { values } = useFormikContext<any>()
-
+  const { getString } = useStrings()
   const [clusterOptions, setClusterOptions] = useState<SelectOption[]>([])
 
   const connectorRef = useMemo(
@@ -61,50 +57,19 @@ export const K8sAwsInfrastructureSpecInputForm: React.FC<K8sAwsInfrastructureSpe
     debounce: 300
   })
 
-  const clusterNamesAPIQueryParams = {
-    accountIdentifier: accountId,
-    projectIdentifier,
-    orgIdentifier,
-    pipelineIdentifier: defaultTo(values?.identifier, ''),
-    envId: environmentRef,
-    infraDefinitionId: infrastructureRef,
-    awsConnectorRef: connectorRef,
-    fqnPath: ''
-  }
-
-  const {
-    data: clusterNamesForInfraData,
-    refetch: refetchClusterNamesForInfra,
-    loading: loadingClusterNamesForInfra,
-    error: clustersForInfraError
-  } = useMutateAsGet(useGetEKSClusterNamesViaExpressionResolution, {
-    body: getYamlData(values, stepViewType as StepViewType, path as string),
-    requestOptions: {
-      headers: {
-        'content-type': 'application/json'
-      }
-    },
-    queryParams: {
-      ...clusterNamesAPIQueryParams
-    },
-    lazy: true,
-    debounce: 300
-  })
-
   useEffect(() => {
-    const options = defaultTo(clusterNamesData, (!connectorRef && clusterNamesForInfraData) || {})?.data?.map(name => ({
-      label: name,
-      value: name
-    }))
-    setClusterOptions(defaultTo(options, []))
-  }, [clusterNamesData, clusterNamesForInfraData, connectorRef])
+    if (loadingClusterNames) {
+      setClusterOptions([{ label: getString('loading'), value: getString('loading') }])
+    } else {
+      const options = defaultTo(clusterNamesData, {})?.data?.map(name => ({
+        label: name,
+        value: name
+      }))
+      setClusterOptions(defaultTo(options, []))
+    }
+  }, [clusterNamesData, connectorRef, getString, loadingClusterNames])
 
-  useEffect(() => {
-    fetchClusterNames(connectorRef)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connectorRef, environmentRef, infrastructureRef])
-
-  const fetchClusterNames = (connectorRefValue = ''): void => {
+  const fetchClusterNames = (connectorRefValue: string): void => {
     if (connectorRefValue && getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED) {
       refetchClusterNames({
         queryParams: {
@@ -125,22 +90,17 @@ export const K8sAwsInfrastructureSpecInputForm: React.FC<K8sAwsInfrastructureSpe
       }
     } else if (
       getMultiTypeFromValue(connectorRefValue) !== MultiTypeInputType.RUNTIME &&
-      environmentRef &&
-      getMultiTypeFromValue(environmentRef) === MultiTypeInputType.FIXED &&
-      infrastructureRef &&
-      getMultiTypeFromValue(infrastructureRef) === MultiTypeInputType.FIXED
+      ((environmentRef && getMultiTypeFromValue(environmentRef) === MultiTypeInputType.FIXED) ||
+        (infrastructureRef && getMultiTypeFromValue(infrastructureRef) === MultiTypeInputType.FIXED))
     ) {
-      refetchClusterNamesForInfra({
-        body: getYamlData(values, stepViewType as StepViewType, path as string),
+      refetchClusterNames({
         queryParams: {
           accountIdentifier: accountId,
           projectIdentifier,
           orgIdentifier,
-          pipelineIdentifier: defaultTo(values?.identifier, ''),
           envId: environmentRef,
           infraDefinitionId: infrastructureRef,
-          awsConnectorRef: connectorRefValue as string,
-          fqnPath: ''
+          ...(!isEmpty(connectorRefValue) && { awsConnectorRef: connectorRefValue as string })
         }
       })
 
@@ -161,8 +121,8 @@ export const K8sAwsInfrastructureSpecInputForm: React.FC<K8sAwsInfrastructureSpe
     <CommonKuberetesInfraInputForm
       template={template}
       allowableTypes={allowableTypes}
-      clusterError={clusterError || clustersForInfraError}
-      clusterLoading={loadingClusterNames || loadingClusterNamesForInfra}
+      clusterError={clusterError}
+      clusterLoading={loadingClusterNames}
       clusterOptions={clusterOptions}
       setClusterOptions={setClusterOptions}
       path={path}
@@ -170,6 +130,7 @@ export const K8sAwsInfrastructureSpecInputForm: React.FC<K8sAwsInfrastructureSpe
       stepViewType={stepViewType}
       fetchClusters={fetchClusterNames}
       connectorType={'Aws'}
+      connectorRef={connectorRef}
     />
   )
 }

@@ -10,7 +10,7 @@ import { Menu } from '@blueprintjs/core'
 import { Text, Layout, getMultiTypeFromValue, MultiTypeInputType, SelectOption, AllowedTypes } from '@harness/uicore'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { memoize, defaultTo } from 'lodash-es'
+import { memoize, defaultTo, isEmpty } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -30,6 +30,7 @@ import { useQueryParams } from '@common/hooks'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 import css from './CommonKuberetesInfraSpecEditable.module.scss'
@@ -48,6 +49,7 @@ interface CommonKuberetesInfraInputFormProps {
   clusterOptions: SelectOption[]
   setClusterOptions: React.Dispatch<React.SetStateAction<SelectOption[]>>
   connectorType: 'Aws' | 'Gcp'
+  connectorRef?: string
 }
 export function CommonKuberetesInfraInputForm({
   template,
@@ -60,7 +62,8 @@ export function CommonKuberetesInfraInputForm({
   clusterOptions,
   setClusterOptions,
   fetchClusters,
-  connectorType
+  connectorType,
+  connectorRef
 }: CommonKuberetesInfraInputFormProps): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -69,7 +72,6 @@ export function CommonKuberetesInfraInputForm({
   }>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
-
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
 
@@ -125,7 +127,7 @@ export function CommonKuberetesInfraInputForm({
         <SelectInputSetView
           className={cx(stepCss.formGroup, stepCss.md, css.clusterInputWrapper)}
           name={`${path}.cluster`}
-          disabled={clusterLoading || readonly}
+          disabled={readonly}
           placeholder={
             clusterLoading
               ? /* istanbul ignore next */ getString('loading')
@@ -142,17 +144,30 @@ export function CommonKuberetesInfraInputForm({
               addClearBtn: !(clusterLoading || readonly),
               noResults: (
                 <Text padding={'small'}>
-                  {defaultTo(
-                    getRBACErrorMessage(
-                      clusterError as RBACError // clusterError={clusterError || clustersForInfraError}
-                    ),
-                    getString('cd.pipelineSteps.infraTab.clusterError')
-                  )}
+                  {clusterLoading
+                    ? getString('loading')
+                    : defaultTo(
+                        getRBACErrorMessage(
+                          clusterError as RBACError // clusterError={clusterError || clustersForInfraError}
+                        ),
+                        getString('cd.pipelineSteps.infraTab.clusterError')
+                      )}
                 </Text>
               )
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+              if (
+                e?.target?.type !== 'text' ||
+                (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+              ) {
+                return
+              }
+              if (!clusterLoading && isEmpty(clusterOptions)) {
+                fetchClusters(connectorRef as string)
+              }
+            }
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

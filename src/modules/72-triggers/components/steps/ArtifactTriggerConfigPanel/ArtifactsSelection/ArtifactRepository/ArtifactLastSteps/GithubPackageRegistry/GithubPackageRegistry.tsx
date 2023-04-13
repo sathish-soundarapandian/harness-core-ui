@@ -35,7 +35,6 @@ import { useQueryParams } from '@common/hooks'
 import type { GithubPackagesSpec } from 'services/pipeline-ng'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import { ArtifactSourceIdentifier } from '../ArtifactIdentifier'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -48,15 +47,7 @@ export const packageTypes: SelectOption[] = [
   { label: 'container', value: 'container' }
 ]
 
-function FormComponent({
-  expressions,
-  prevStepData,
-  previousStep,
-  isReadonly = false,
-  formik,
-  isMultiArtifactSource,
-  initialValues
-}: any) {
+function FormComponent({ expressions, prevStepData, previousStep, isReadonly = false, formik, initialValues }: any) {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -127,7 +118,6 @@ function FormComponent({
   return (
     <FormikForm>
       <div className={css.connectorForm}>
-        {isMultiArtifactSource && <ArtifactSourceIdentifier />}
         <div className={css.jenkinsFieldContainer}>
           <div className={cx(stepCss.formGroup, stepCss.sm)}>
             <FormInput.Select

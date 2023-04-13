@@ -50,9 +50,12 @@ import {
   StreamingDestinationSpecDTOTypeMap
 } from '@audit-trail/interfaces/LogStreamingInterface'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import { buildUpdateSDPayload } from '@audit-trail/utils/RequestUtil'
+import { AUDIT_TRAIL_PAGE_SIZE, buildUpdateSDPayload } from '@audit-trail/utils/RequestUtil'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { CONNECTOR_TYPE } from '@audit-trail/components/CreateStreamingDestination/StepStreamingConnector/StepStreamingConnector'
 import type { UseCreateStreamingDestinationModalReturn } from '@audit-trail/modals/StreamingDestinationModal/useCreateStreamingDestinationModal'
 
@@ -65,7 +68,6 @@ interface AuditLogStreamingListViewProps {
   cardsData?: StreamingDestinationCards
   refetchListingPageAPIs?: () => void
   openStreamingDestinationModal: UseCreateStreamingDestinationModalReturn['openStreamingDestinationModal']
-  setPage: (page: number) => void
 }
 
 const RenderColumnStatus: Renderer<CellProps<StreamingDestinationResponse>> = ({ value, row, column }) => {
@@ -364,8 +366,7 @@ const AuditLogStreamingListView: React.FC<AuditLogStreamingListViewProps> = ({
   data,
   cardsData,
   refetchListingPageAPIs,
-  openStreamingDestinationModal,
-  setPage
+  openStreamingDestinationModal
 }) => {
   const { getString } = useStrings()
 
@@ -443,11 +444,22 @@ const AuditLogStreamingListView: React.FC<AuditLogStreamingListViewProps> = ({
     [refetchListingPageAPIs, openStreamingDestinationModal, getString]
   )
 
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const streamingDestinationsData = data?.content
   const total = defaultTo(data?.pagination?.total, 0)
-  const pageSize = defaultTo(data?.pagination?.pageSize, 10)
+  const pageSize = defaultTo(
+    data?.pagination?.pageSize,
+    PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : AUDIT_TRAIL_PAGE_SIZE
+  )
   const pageCount = Math.ceil(total / pageSize)
   const pageNumber = defaultTo(data?.pagination?.pageNumber, 0)
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: total,
+    pageSize: pageSize,
+    pageCount: pageCount,
+    pageIndex: pageNumber
+  })
 
   return (
     <>
@@ -457,13 +469,7 @@ const AuditLogStreamingListView: React.FC<AuditLogStreamingListViewProps> = ({
         data={streamingDestinationsData || []}
         columns={columns}
         renderRowSubComponent={renderRowSubComponent}
-        pagination={{
-          itemCount: total,
-          pageSize: pageSize,
-          pageCount: pageCount,
-          pageIndex: pageNumber,
-          gotoPage: setPage
-        }}
+        pagination={paginationProps}
       />
     </>
   )

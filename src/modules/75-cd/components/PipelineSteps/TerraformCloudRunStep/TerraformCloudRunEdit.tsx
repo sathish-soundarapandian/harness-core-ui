@@ -37,16 +37,8 @@ import OptionalConfiguration from './OptionalConfiguration'
 import { CommandTypes } from '../Common/Terraform/TerraformInterfaces'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import type { TerraformCloudRunEditProps, TerraformCloudRunFormData } from './types'
-import {
-  errorMessage,
-  getValidationSchema,
-  getValue,
-  organizationLabel,
-  runTypeLabel,
-  RunTypes,
-  workspaceLabel
-} from './helper'
-import { shouldFetchFieldData } from '../PipelineStepsUtil'
+import { errorMessage, getValidationSchema, organizationLabel, runTypeLabel, RunTypes, workspaceLabel } from './helper'
+import { getValue, shouldFetchFieldData } from '../PipelineStepsUtil'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TerraformCloudRunStep.module.scss'

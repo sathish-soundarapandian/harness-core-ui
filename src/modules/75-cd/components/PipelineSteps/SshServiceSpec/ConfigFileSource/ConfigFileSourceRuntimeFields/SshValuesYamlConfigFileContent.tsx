@@ -11,15 +11,16 @@ import { Label, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ConfigFileSourceRenderProps } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBase'
-import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import { FILE_TYPE_VALUES, ConfigFilesMap } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { MultiConfigSelectField } from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { isFieldRuntime } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecHelper'
+import GitConfigFileStoreRuntimeFields from './GitConfigFileRuntimeField'
 import css from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpec.module.scss'
 
-interface K8sValuesYamlConfigFileRenderProps extends ConfigFileSourceRenderProps {
+interface ConfigFileValuesYamlConfigFileRenderProps extends ConfigFileSourceRenderProps {
   formik?: any
 }
-const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProps): React.ReactElement => {
+const GithubStoreConfigFileSource = (props: ConfigFileValuesYamlConfigFileRenderProps): React.ReactElement => {
   const { template, path, configFilePath, configFile, readonly, formik, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -42,31 +43,35 @@ const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProp
       key={configFile?.identifier}
       className={cx(css.inputWidth, css.layoutVerticalSpacing)}
     >
-      {(isFieldRuntime(`${configFilePath}.spec.store.spec.files`, template) ||
-        isFieldRuntime(`${configFilePath}.spec.store.spec.secretFiles`, template)) && (
-        <div className={css.verticalSpacingInput}>
-          <MultiConfigSelectField
-            disabled={readonly}
-            name={`${path}.${configFilePath}.spec.store.spec.${filesType}`}
-            fileType={fieldType}
-            expressions={expressions}
-            formik={formik}
-            stepViewType={stepViewType}
-            multiTypeFieldSelectorProps={{
-              disableTypeSelection: false,
-              label: (
-                <Label htmlFor="files">
-                  {fieldType === FILE_TYPE_VALUES.ENCRYPTED
-                    ? getString('pipeline.configFiles.encryptedFiles')
-                    : getString('pipeline.configFiles.plainText')}
-                </Label>
-              )
-            }}
-          />
-        </div>
+      {props.configFile?.spec.store.type === ConfigFilesMap.Harness ? (
+        (isFieldRuntime(`${configFilePath}.spec.store.spec.files`, template) ||
+          isFieldRuntime(`${configFilePath}.spec.store.spec.secretFiles`, template)) && (
+          <div className={css.verticalSpacingInput}>
+            <MultiConfigSelectField
+              disabled={readonly}
+              name={`${path}.${configFilePath}.spec.store.spec.${filesType}`}
+              fileType={fieldType}
+              expressions={expressions}
+              formik={formik}
+              stepViewType={stepViewType}
+              multiTypeFieldSelectorProps={{
+                disableTypeSelection: false,
+                label: (
+                  <Label htmlFor="files">
+                    {fieldType === FILE_TYPE_VALUES.ENCRYPTED
+                      ? getString('pipeline.configFiles.encryptedFiles')
+                      : getString('pipeline.configFiles.plainText')}
+                  </Label>
+                )
+              }}
+            />
+          </div>
+        )
+      ) : (
+        <GitConfigFileStoreRuntimeFields {...props} />
       )}
     </Layout.Vertical>
   )
 }
 
-export default K8sValuesYamlConfigFileContent
+export default GithubStoreConfigFileSource

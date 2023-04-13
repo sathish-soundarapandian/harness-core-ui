@@ -93,7 +93,7 @@ describe('Blackduck Step', () => {
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          privileged: true,
+          privileged: false,
           target: {
             type: 'repository',
             name: RUNTIME_INPUT_VALUE,
@@ -361,7 +361,7 @@ describe('Blackduck Step', () => {
         description: 'Description',
         timeout: '10s',
         spec: {
-          privileged: true,
+          privileged: false,
           target: {
             type: 'repository',
             name: 'Blackduck Test',

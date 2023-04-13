@@ -16,17 +16,13 @@ import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import { getConnectorSchema } from '../PipelineStepsUtil'
+import { getConnectorSchema, getValue } from '../PipelineStepsUtil'
 import type { TerraformCloudRunFormData } from './types'
 
 export const runTypeLabel = 'pipeline.terraformStep.runTypeLabel'
 export const organizationLabel = 'orgLabel'
 export const workspaceLabel = 'pipeline.terraformStep.workspaceName'
 export const errorMessage = 'data.message'
-
-export const getValue = (item: { label?: string; value?: string } | string | any): string => {
-  return typeof item === 'string' ? (item as string) : item?.value
-}
 
 const getEntries = function <T>(object: T, prefix = ''): Array<any> {
   return flatMap(Object.entries(object), ([k, v]: { k: string; v: any }[]) =>

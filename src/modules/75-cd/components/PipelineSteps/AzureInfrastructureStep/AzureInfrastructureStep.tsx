@@ -64,11 +64,10 @@ import { SelectConfigureOptions } from '@common/components/ConfigureOptions/Sele
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
+import { getNameSpaceSchema, getReleaseNameSchema, getValue } from '../PipelineStepsUtil'
 import {
   AzureInfrastructureSpecEditableProps,
   AzureInfrastructureTemplate,
-  getValue,
   getValidationSchema,
   subscriptionLabel,
   clusterLabel,

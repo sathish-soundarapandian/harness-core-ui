@@ -10,6 +10,14 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { DEFAULT_TIME_RANGE } from '@common/utils/momentUtils'
 import CIModuleOverview from '../CIModuleOverview'
+import { buildsExecutionData } from './mocks'
+
+jest.mock('services/ci', () => ({
+  ...jest.requireActual('services/ci'),
+  useGetBuildExecution: jest.fn().mockImplementation(() => {
+    return { data: buildsExecutionData, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
 
 describe('ci module tests', () => {
   test('ci empty state collapsed', () => {
@@ -30,5 +38,16 @@ describe('ci module tests', () => {
     )
 
     expect(queryByText('common.moduleDetails.ci.expanded.title')).not.toBeNull()
+  })
+
+  test('ci collapsed with empty state', () => {
+    const { container } = render(
+      <TestWrapper>
+        <CIModuleOverview isExpanded={true} timeRange={DEFAULT_TIME_RANGE} isEmptyState={false} />
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('div[class*="countRow"]')?.textContent).toEqual('41')
+    expect(container.querySelector('div[class*="highcharts-container"]')).not.toBeNull()
   })
 })

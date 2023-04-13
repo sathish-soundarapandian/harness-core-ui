@@ -21,6 +21,7 @@ const DEFAULT_FILTER: MappedDashboardTagOptions = {
   CD: false,
   CI: false,
   CF: false,
+  CHAOS: false,
   STO: false,
   SRM: false
 }
@@ -102,6 +103,7 @@ describe('ModuleTagsFilter', () => {
       CI: true,
       CD: false,
       CF: false,
+      CHAOS: false,
       STO: false,
       SRM: false
     }

@@ -21,10 +21,6 @@ export type TASInterface = TanzuApplicationServiceInfrastructure
 export type TASInfrastructureTemplate = { [key in keyof TASInterface]: string }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getValue = (item: { label?: string; value?: string } | string | any): string => {
-  return typeof item === 'string' ? (item as string) : item?.value
-}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TASFieldTypes = { label?: string; value?: string } | string | any
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({

@@ -22,6 +22,7 @@ import {
   ButtonSize,
   MultiTypeInputType
 } from '@harness/uicore'
+import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
@@ -29,6 +30,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -41,7 +43,8 @@ import {
   ConfigFileTypeTitle,
   ConfigFileIconByType,
   ConfigFilesToConnectorMap,
-  ConfigFilesMap
+  ConfigFilesMap,
+  ConfigStoresBehindFeatureFlag
 } from '../../ConfigFilesHelper'
 import css from './ConfigFilesType.module.scss'
 
@@ -52,7 +55,7 @@ interface ConfigFileStorePropType {
   isReadonly: boolean
   configFilesStoreTypes: Array<ConfigFileType>
   initialValues: any
-  handleConnectorViewChange: () => void
+  handleConnectorViewChange: (status: boolean) => void
   handleStoreChange: (store: ConfigFileType) => void
   isNewFile: boolean
   configFileIndex?: number
@@ -73,6 +76,8 @@ function ConfigFileStore({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
+
+  const { CDS_GIT_CONFIG_FILES } = useFeatureFlags()
 
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
@@ -122,19 +127,31 @@ function ConfigFileStore({
 
   const getInitialValues = useCallback((): any => {
     const initValues = { ...initialValues, ...prevStepData }
-
     return { ...initValues, store: selectedStore }
   }, [initialValues, prevStepData, selectedStore])
 
   const supportedConfigFilesStores = useMemo(
-    () =>
-      configFilesStoreTypes.map((store: ConfigFileType) => ({
-        label: getString(ConfigFileTypeTitle[store]),
-        icon: ConfigFileIconByType[store] as IconName,
-        value: store
-      })),
-    [configFilesStoreTypes]
+    (): Item[] =>
+      configFilesStoreTypes
+        .map((store: ConfigFileType) => {
+          if (
+            (ConfigStoresBehindFeatureFlag.includes(store) && CDS_GIT_CONFIG_FILES) ||
+            store === ConfigFilesMap.Harness
+          ) {
+            return {
+              label: getString(ConfigFileTypeTitle[store]),
+              icon: ConfigFileIconByType[store] as IconName,
+              value: store
+            } as Item
+          }
+        })
+        ?.filter(store => !!store) as Item[],
+    [configFilesStoreTypes, getString]
   )
+
+  const isHarnessStore = React.useMemo(() => {
+    return selectedStore !== ConfigFilesMap.Harness
+  }, [selectedStore])
 
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
@@ -228,7 +245,9 @@ function ConfigFileStore({
                         icon="plus"
                         iconProps={{ size: 12 }}
                         onClick={() => {
-                          handleConnectorViewChange()
+                          if (isHarnessStore) {
+                            handleConnectorViewChange(true)
+                          }
                           nextStep?.({ ...prevStepData, store: selectedStore })
                         }}
                       />

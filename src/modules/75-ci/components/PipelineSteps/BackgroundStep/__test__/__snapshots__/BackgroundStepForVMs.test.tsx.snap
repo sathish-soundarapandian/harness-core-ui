@@ -4058,7 +4058,6 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                       data-testid="value-spec.reports.spec.paths-[0]"
-                      placeholder="pipelineSteps.reportPathsPlaceholder"
                     >
                       <div
                         class="bp3-input-group MultiTypeInput--input"

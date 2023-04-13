@@ -6,8 +6,8 @@
  */
 
 import { Container, Text } from '@harness/uicore'
-import { defaultTo } from 'lodash-es'
 import React from 'react'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
@@ -35,7 +35,7 @@ export const getStageNodesWithArtifacts: (data: ExecutionGraph | undefined, stag
   stageIds
 ) => {
   return Object.values(data?.nodeMap ?? {}).filter(entry => {
-    const { setupId = '', outcomes = [] } = entry
+    const { setupId = '', outcomes = [], stepDetails = {} } = entry
     const outcomeWithArtifacts = Array.isArray(outcomes)
       ? outcomes?.some(
           (outcome: any) =>
@@ -43,7 +43,8 @@ export const getStageNodesWithArtifacts: (data: ExecutionGraph | undefined, stag
         )
       : outcomes?.integrationStageOutcome?.fileArtifacts?.length ||
         outcomes?.integrationStageOutcome?.imageArtifacts?.length ||
-        outcomes?.integrationStageOutcome?.sbomArtifacts?.length
+        outcomes?.integrationStageOutcome?.sbomArtifacts?.length ||
+        (!isEmpty(stepDetails) && Object.values(stepDetails).some(item => !isEmpty(item.sbomArtifact))) // CD stage has data in stepDetails. Odd name but constraints on BE
     return stageIds.includes(setupId) && outcomeWithArtifacts
   })
 }
@@ -108,6 +109,15 @@ export const getArtifacts: (stages: ExecutionNode[]) => Artifact[] = stages => {
         node
       })) || []
 
+    // CD stage
+    if (node.stepDetails && !isEmpty(node.stepDetails)) {
+      Object.values(node.stepDetails).forEach(item => {
+        if (!isEmpty(item.sbomArtifact)) {
+          sbomArtifacts.push({ ...(item.sbomArtifact as any), type: 'Sbom', node })
+        }
+      })
+    }
+
     artifacts.push(...imageArtifacts, ...fileArtifacts, ...sbomArtifacts)
     return artifacts
   }, [])
@@ -120,6 +130,7 @@ export default function ExecutionArtifactsView(): React.ReactElement {
     context?.pipelineExecutionDetail,
     {} as PipelineExecutionDetail
   )
+
   const stageSetupIds = getStageSetupIds(pipelineExecutionSummary)
   const stageNodes = getStageNodesWithArtifacts(executionGraph, stageSetupIds)
   const artifactGroups = getArtifactGroups(stageNodes)

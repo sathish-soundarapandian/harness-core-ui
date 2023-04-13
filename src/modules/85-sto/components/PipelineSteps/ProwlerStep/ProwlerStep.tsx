@@ -20,7 +20,7 @@ import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { ProwlerStepVariables, ProwlerStepVariablesProps } from './ProwlerStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './ProwlerStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
-import { PROWLER_DEFAULT_CONFIG } from '../constants'
+import { AWS_ACCOUNT_AUTH_TYPE, PROWLER_DEFAULT_CONFIG } from '../constants'
 
 export type ProwlerStepData = SecurityStepData<SecurityStepSpec>
 export interface ProwlerStepProps {
@@ -64,7 +64,8 @@ export class ProwlerStep extends PipelineStep<ProwlerStepData> {
       auth: {
         domain: '',
         access_token: '',
-        ssl: true
+        ssl: true,
+        type: AWS_ACCOUNT_AUTH_TYPE.value
       },
       advanced: {
         log: {

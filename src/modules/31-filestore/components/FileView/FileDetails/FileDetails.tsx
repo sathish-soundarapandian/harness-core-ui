@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useRef } from 'react'
 import { Button, Container, Formik, FormikForm, Layout, Text, Icon, ButtonVariation, useToaster } from '@harness/uicore'
 import { Spinner } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
@@ -59,6 +59,7 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const [initialContent, setInitialContent] = useState(currentNode.content)
+  const detailsRef = useRef<HTMLDivElement>(null)
 
   const nodeFormModal = useNewNodeModal({
     type: FileStoreNodeTypes.FILE,
@@ -208,8 +209,10 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
     }
   }, [data, isCachedNode, currentNode.identifier])
 
+  const editorHeight = detailsRef?.current?.offsetHeight || 530
+
   return (
-    <Container style={{ width: '100%', height: '100%' }} className={css.fileDetails}>
+    <Container style={{ width: '100%', height: '100%' }} className={css.fileDetails} ref={detailsRef}>
       {downloadLoading && !isCachedNode(currentNode.identifier) ? (
         <Container flex={{ justifyContent: 'center', alignItems: 'center' }} style={{ width: '100%', height: '100%' }}>
           <Spinner />
@@ -361,7 +364,7 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
                 </Layout.Horizontal>
                 {!isUnsupported && (
                   <MonacoEditor
-                    height={!isModalView ? window.innerHeight - 218 : 350}
+                    height={!isModalView ? window.innerHeight - 218 : editorHeight}
                     value={get(formikProps.values, 'fileEditor')}
                     language={language}
                     options={{

@@ -415,7 +415,6 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      placeholder="1000"
                     >
                       <div
                         class="bp3-input-group MultiTypeInput--input"
@@ -1055,7 +1054,6 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      placeholder="1000"
                     >
                       <div
                         class="bp3-input-group MultiTypeInput--input"
@@ -1695,7 +1693,6 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      placeholder="1000"
                     >
                       <div
                         class="bp3-input-group MultiTypeInput--input"
@@ -2335,7 +2332,6 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      placeholder="1000"
                     >
                       <div
                         class="bp3-input-group MultiTypeInput--input"

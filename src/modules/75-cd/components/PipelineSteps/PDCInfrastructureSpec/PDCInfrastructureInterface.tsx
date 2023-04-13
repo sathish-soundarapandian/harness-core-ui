@@ -25,7 +25,6 @@ export interface PDCInfrastructureYAML {
   hostFilter: HostFilter
   sshKey: SecretReferenceInterface | void
   credentialsRef: string
-  dynamicallyProvisioned?: boolean
   hostObjectArray?: string
   hostAttributes?: MapUIType
 }
@@ -42,7 +41,6 @@ export interface PDCInfrastructureUI {
   sshKey?: SecretReferenceInterface | void
   credentialsRef: string
   serviceType?: string
-  dynamicallyProvisioned?: boolean
   hostObjectArray?: string
   hostAttributes?: MapUIType
 }

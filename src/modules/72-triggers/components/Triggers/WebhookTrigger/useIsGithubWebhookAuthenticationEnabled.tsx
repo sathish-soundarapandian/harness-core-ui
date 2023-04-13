@@ -11,7 +11,7 @@ import { useToaster } from '@harness/uicore'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSettingValue } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import { SettingType } from '@common/constants/Utils'
 import { getErrorMessage } from '../utils'
 
 const useIsGithubWebhookAuthenticationEnabled = (): {

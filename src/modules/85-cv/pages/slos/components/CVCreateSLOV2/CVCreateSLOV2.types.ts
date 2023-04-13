@@ -6,6 +6,7 @@
  */
 
 import type { FormikProps } from 'formik'
+import type { UseStringsReturn } from 'framework/strings'
 import type {
   ServiceLevelObjectiveV2DTO,
   SimpleServiceLevelObjectiveSpec,
@@ -18,7 +19,8 @@ import type {
   ProjectParams,
   ServiceLevelIndicatorDTO,
   ServiceLevelIndicatorSpec,
-  RatioSLIMetricSpec
+  RatioSLIMetricSpec,
+  ThresholdSLIMetricSpec
 } from 'services/cv'
 import type { SLOTargetChartWithAPIGetSliGraphProps } from '../SLOTargetChart/SLOTargetChart.types'
 
@@ -48,7 +50,9 @@ export const enum SLOV2FormFields {
   NOTIFICATION_RULE_REFS = 'notificationRuleRefs',
   TYPE = 'type',
   SERVICE_LEVEL_INDICATOR_TYPE = 'serviceLevelIndicatorType',
-  EVALUATION_TYPE = 'evaluationType'
+  EVALUATION_TYPE = 'evaluationType',
+  CONSIDER_CONSECUTIVE_MINUTES = 'considerConsecutiveMinutes',
+  CONSIDER_ALL_CONSECUTIVE_MINUTES_FROM_START_AS_BAD = 'considerAllConsecutiveMinutesFromStartAsBad'
 }
 
 export interface SLOObjective extends Partial<SLOHealthListView> {
@@ -86,6 +90,8 @@ export interface SLOV2Form {
   [SLOV2FormFields.OBJECTIVE_VALUE]?: RatioSLIMetricSpec['thresholdValue']
   [SLOV2FormFields.OBJECTIVE_COMPARATOR]?: RatioSLIMetricSpec['thresholdType']
   [SLOV2FormFields.EVALUATION_TYPE]?: ServiceLevelIndicatorDTO['type']
+  [SLOV2FormFields.CONSIDER_CONSECUTIVE_MINUTES]?: ThresholdSLIMetricSpec['considerConsecutiveMinutes']
+  [SLOV2FormFields.CONSIDER_ALL_CONSECUTIVE_MINUTES_FROM_START_AS_BAD]?: ThresholdSLIMetricSpec['considerAllConsecutiveMinutesFromStartAsBad']
 }
 
 export interface GetSLOIdentifierWithOrgAndProjectProps {
@@ -176,4 +182,17 @@ export interface ErrorBudgetInterface {
   periodLength: SLOV2Form['periodLength']
   periodLengthType: SLOV2Form['periodLengthType']
   SLOTargetPercentage: SLOV2Form['SLOTargetPercentage']
+}
+
+export interface GetSimpleSLOCustomErrorProps {
+  considerConsecutiveMinutes?: number
+  considerAllConsecutiveMinutesFromStartAsBad?: boolean
+  evaluationType?: string
+  getString?: UseStringsReturn['getString']
+  onlyStatus?: boolean
+}
+
+export interface GetSimpleSLOCustomErrorValues {
+  status: boolean
+  errorMessage?: Record<string, string>
 }

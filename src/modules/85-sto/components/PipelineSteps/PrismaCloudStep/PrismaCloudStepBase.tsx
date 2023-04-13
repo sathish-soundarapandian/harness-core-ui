@@ -103,7 +103,10 @@ export const PrismaCloudStepBase = (
           formik.values.spec.target.type === 'container'
         ) {
           formik.setFieldValue('spec.privileged', true)
-        } else if (formik.values.spec.privileged === true && formik.values.spec.mode !== 'orchestration') {
+        } else if (
+          formik.values.spec.privileged === true &&
+          (formik.values.spec.mode !== 'orchestration' || formik.values.spec.target.type !== 'container')
+        ) {
           formik.setFieldValue('spec.privileged', false)
         }
 

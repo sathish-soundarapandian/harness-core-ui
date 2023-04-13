@@ -23,7 +23,7 @@ import {
   updateStreamingDestination
 } from '@harnessio/react-audit-service-client'
 
-import { VIEWS } from '@audit-trail/pages/AuditTrails/AuditTrailsPage'
+import { View } from '@audit-trail/utils/RequestUtil'
 import {
   mockResponseCreateOrUpdateStreamingDestination,
   mockAggregateListResponse
@@ -73,7 +73,7 @@ describe('CreateStreamingDestinationWizard Create Flow', () => {
   beforeEach(async () => {
     const renderObj = render(
       <TestWrapper
-        queryParams={{ view: VIEWS.AUDIT_LOG_STREAMING }}
+        queryParams={{ view: View.AUDIT_LOG_STREAMING }}
         path={routes.toAuditTrail({ ...accountPathProps })}
         pathParams={{ accountId: 'testAcc' }}
       >
@@ -164,7 +164,7 @@ describe('CreateStreamingDestinationWizard edit flow', () => {
   beforeEach(async () => {
     const renderObj = render(
       <TestWrapper
-        queryParams={{ view: VIEWS.AUDIT_LOG_STREAMING }}
+        queryParams={{ view: View.AUDIT_LOG_STREAMING }}
         path={routes.toAuditTrail({ ...accountPathProps })}
         pathParams={{ accountId: 'testAcc' }}
       >

@@ -94,7 +94,11 @@ export function CommandList(props: CommandListProps): React.ReactElement {
                   return (
                     <>
                       {formik.values.spec.commandUnits?.map((command, i) => (
-                        <Draggable key={command.name} draggableId={defaultTo(command.name, '')} index={i}>
+                        <Draggable
+                          key={`${command.name}${i}`}
+                          draggableId={defaultTo(`${command.name}${i}`, '')}
+                          index={i}
+                        >
                           {(providedDrag, draggableSnapshot) => (
                             <Layout.Horizontal
                               spacing="medium"

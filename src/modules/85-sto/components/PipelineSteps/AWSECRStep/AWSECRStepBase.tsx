@@ -8,6 +8,7 @@
 import React from 'react'
 import { Formik, FormikForm } from '@harness/uicore'
 import type { FormikProps } from 'formik'
+import { Divider } from '@blueprintjs/core'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -23,7 +24,13 @@ import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './AWSECRStepFunctionConfigs'
 import type { AWSECRStepProps, AWSECRStepData } from './AWSECRStep'
 import { AdditionalFields, SecurityAuthFields, SecurityScanFields, SecurityTargetFields } from '../SecurityFields'
-import { CONTAINER_TARGET_TYPE, EXTRACTION_SCAN_MODE, tooltipIds } from '../constants'
+import {
+  AWS_ECR_CONTAINER_TYPE,
+  CONTAINER_TARGET_TYPE,
+  dividerBottomMargin,
+  EXTRACTION_SCAN_MODE,
+  tooltipIds
+} from '../constants'
 import SecurityField from '../SecurityField'
 
 export const AWSECRStepBase = (
@@ -107,21 +114,45 @@ export const AWSECRStepBase = (
               targetTypeSelectItems={[CONTAINER_TARGET_TYPE]}
             />
 
-            <SecurityField
-              allowableTypes={allowableTypes}
-              formik={formik}
-              enableFields={{
-                header: {
-                  label: 'sto.stepField.image.fieldsHeading'
-                },
-                'spec.image.domain': {
-                  label: 'secrets.winRmAuthFormFields.domain',
-                  optional: true,
-                  inputProps: { placeholder: '' },
-                  tooltipId: tooltipIds.imageDomain
-                }
-              }}
-            />
+            <>
+              <SecurityField
+                allowableTypes={allowableTypes}
+                formik={formik}
+                enableFields={{
+                  header: {
+                    label: 'sto.stepField.image.fieldsHeading'
+                  },
+                  'spec.image.type': {
+                    label: 'typeLabel',
+                    fieldType: 'dropdown',
+                    selectItems: [AWS_ECR_CONTAINER_TYPE],
+                    tooltipId: tooltipIds.imageType
+                  },
+                  'spec.image.domain': {
+                    label: 'secrets.winRmAuthFormFields.domain',
+                    optional: true,
+                    inputProps: { placeholder: 'docker.io' },
+                    tooltipId: tooltipIds.imageDomain
+                  },
+                  'spec.image.name': {
+                    label: 'name',
+                    inputProps: { placeholder: 'harness/todolist-sample' },
+                    tooltipId: tooltipIds.imageName
+                  },
+                  'spec.image.tag': {
+                    label: 'tagLabel',
+                    inputProps: { placeholder: 'latest' },
+                    tooltipId: tooltipIds.imageTag
+                  },
+                  'spec.image.region': {
+                    label: 'regionLabel',
+                    inputProps: { placeholder: 'us-east-1' },
+                    tooltipId: tooltipIds.imageRegion
+                  }
+                }}
+              />
+              <Divider style={{ marginBottom: dividerBottomMargin }} />
+            </>
 
             <SecurityAuthFields
               allowableTypes={allowableTypes}

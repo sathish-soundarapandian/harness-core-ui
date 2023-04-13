@@ -60,6 +60,12 @@ const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, set
         modelTags.includes(DashboardTags.CF)
       )}
       {renderTagsFilter(
+        DashboardTags.CHAOS,
+        moduleTagCss.chaosTag,
+        'common.purpose.chaos.chaos',
+        modelTags.includes(DashboardTags.CHAOS)
+      )}
+      {renderTagsFilter(
         DashboardTags.STO,
         moduleTagCss.stoTag,
         'common.purpose.sto.continuous',

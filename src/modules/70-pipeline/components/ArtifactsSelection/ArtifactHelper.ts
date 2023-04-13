@@ -330,9 +330,9 @@ export const ArtifactIdentifierValidation = (
   validationMsg: string
 ): { identifier: Schema<unknown> } => {
   const requiredErrorMsg = getString('common.validation.fieldIsRequired', {
-    name: getString('pipeline.artifactsSelection.artifactSourceName')
+    name: getString('pipeline.artifactsSelection.artifactSourceId')
   })
-  const regexErrorMsg = getString('pipeline.artifactsSelection.artifactSourceNameRegexErrorMsg')
+  const regexErrorMsg = getString('pipeline.artifactsSelection.artifactSourceIdRegexErrorMsg')
   if (!id) {
     return {
       identifier: IdentifierSchemaWithOutName(getString, { requiredErrorMsg, regexErrorMsg }).notOneOf(

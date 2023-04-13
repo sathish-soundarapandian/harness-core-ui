@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty } from 'lodash-es'
+import { isBoolean, isEmpty, isNumber } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type {
   GetMetricOnboardingGraphPathParams,
@@ -27,6 +27,7 @@ import {
   GetSLIDerivedValues
 } from './CreateSimpleSloForm.types'
 import { MAX_OBJECTIVE_PERCENTAGE } from '../../CVCreateSLOV2.constants'
+import { getSimpleSLOCustomError } from '../../CVCreateSLOV2.utils'
 
 export const validateDefineSLOSection = (formikProps: FormikProps<SLOV2Form>): boolean => {
   formikProps.setFieldTouched(SLOV2FormFields.NAME, true)
@@ -47,12 +48,15 @@ const isValidObjectivePercentage = (value: number) => value >= 0 && value < MAX_
 const validateWindowBased = (values: SLOV2Form): boolean => {
   const {
     eventType,
+    evaluationType,
     validRequestMetric,
     goodRequestMetric,
     SLIMetricType,
     objectiveComparator,
     objectiveValue,
-    SLIMissingDataType
+    SLIMissingDataType,
+    considerConsecutiveMinutes,
+    considerAllConsecutiveMinutesFromStartAsBad
   } = values
 
   if (!SLIMetricType) return false
@@ -64,6 +68,18 @@ const validateWindowBased = (values: SLOV2Form): boolean => {
     if (!isValidObjectivePercentage(objectiveValue)) return false
   }
   if (!SLIMissingDataType) return false
+
+  const optionalConfigHasError = getSimpleSLOCustomError({
+    evaluationType,
+    considerConsecutiveMinutes,
+    considerAllConsecutiveMinutesFromStartAsBad,
+    onlyStatus: true
+  })?.status
+
+  if (optionalConfigHasError) {
+    return false
+  }
+
   return true
 }
 
@@ -75,8 +91,17 @@ const validateRequestBased = (values: SLOV2Form): boolean => {
 }
 
 export const validateConfigureServiceLevelIndicatiors = (formikProps: FormikProps<SLOV2Form>): boolean => {
-  const { SLIMetricType, evaluationType } = formikProps.values
+  const { SLIMetricType, evaluationType, considerConsecutiveMinutes, considerAllConsecutiveMinutesFromStartAsBad } =
+    formikProps.values
 
+  const optionalConfigFieldTouched =
+    (isNumber(considerConsecutiveMinutes) && !isNaN(considerConsecutiveMinutes)) ||
+    isBoolean(considerAllConsecutiveMinutesFromStartAsBad)
+      ? {
+          [SLOV2FormFields.CONSIDER_CONSECUTIVE_MINUTES]: true,
+          [SLOV2FormFields.CONSIDER_ALL_CONSECUTIVE_MINUTES_FROM_START_AS_BAD]: true
+        }
+      : {}
   formikProps.setTouched({
     [SLOV2FormFields.EVENT_TYPE]: SLIMetricType === SLIMetricTypes.RATIO,
     [SLOV2FormFields.SLI_METRIC_TYPE]: true,
@@ -85,7 +110,8 @@ export const validateConfigureServiceLevelIndicatiors = (formikProps: FormikProp
     [SLOV2FormFields.OBJECTIVE_COMPARATOR]: true,
     [SLOV2FormFields.OBJECTIVE_VALUE]: true,
     [SLOV2FormFields.SLI_MISSING_DATA_TYPE]: true,
-    [SLOV2FormFields.HEALTH_SOURCE_REF]: true
+    [SLOV2FormFields.HEALTH_SOURCE_REF]: true,
+    ...optionalConfigFieldTouched
   })
 
   if (evaluationType === EvaluationType.WINDOW) {

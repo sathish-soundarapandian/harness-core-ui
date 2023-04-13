@@ -372,6 +372,23 @@ function FormContent({
     )
   }
 
+  function showWarningMessage(): React.ReactElement {
+    return (
+      <div className={css.marginTop}>
+        <Text
+          lineClamp={1}
+          width={350}
+          margin={{ bottom: 'medium' }}
+          intent={Intent.WARNING}
+          icon={'warning-sign'}
+          tooltipProps={{ isDark: true, popoverClassName: css.tooltip }}
+        >
+          {getString('pipeline.jiraCreateStep.projectIssueTypeDisclaimer')}
+        </Text>
+      </div>
+    )
+  }
+
   return (
     <React.Fragment>
       {stepViewType !== StepViewType.Template && (
@@ -489,7 +506,9 @@ function FormContent({
             />
           )}
         </div>
-        {projectsFetchError ? (
+        {!fetchingProjects && !projectsFetchError && isEmpty(projectsResponse?.data) ? (
+          showWarningMessage()
+        ) : projectsFetchError ? (
           <FormError
             className={css.marginTop}
             errorMessage={
@@ -549,6 +568,12 @@ function FormContent({
             />
           )}
         </div>
+
+        {!fetchingProjectMetadata &&
+          !projectMetadataFetchError &&
+          isEmpty(projectMetaResponse?.data) &&
+          showWarningMessage()}
+
         <div>
           <JiraFieldsRenderer
             selectedFields={formik.values.spec.selectedRequiredFields}

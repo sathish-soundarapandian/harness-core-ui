@@ -22,6 +22,10 @@ import type { StringKeys } from 'framework/strings'
 import type { OrganizationAggregateDTO, ProjectResponse } from 'services/cd-ng'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
+import { UseQueryParamsOptions, useQueryParamsOptions } from '@common/hooks/useQueryParams'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 
 export const actionToLabelMap: Record<AuditEventDTO['action'], StringKeys> = {
   CREATE: 'created',
@@ -352,4 +356,47 @@ export const buildCreateStreamingDestinationPayload = (
   }
 
   return payload
+}
+
+export enum View {
+  AUDIT_LOGS = 'auditLogs',
+  AUDIT_LOG_STREAMING = 'auditLogStreaming'
+}
+
+export interface AuditDateFilter {
+  startTime: string
+  endTime: string
+}
+
+export type AuditTrailQueryParams = {
+  view?: View
+  dateFilter?: AuditDateFilter
+  staticFilter?: AuditFilterProperties['staticFilter']
+} & CommonPaginationQueryParams
+export type AuditTrailQueryParamsWithDefaults = RequiredPick<
+  AuditTrailQueryParams,
+  'page' | 'size' | 'view' | 'dateFilter'
+>
+
+export const AUDIT_TRAIL_PAGE_INDEX = 0
+export const AUDIT_TRAIL_PAGE_SIZE = 25
+
+export const useAuditTrailQueryParamOptions = (): UseQueryParamsOptions<AuditTrailQueryParamsWithDefaults> => {
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+
+  const start = new Date()
+  start.setDate(start.getDate() - 7)
+  start.setHours(0, 0, 0, 0)
+  const end = new Date()
+  end.setHours(23, 59, 59, 999)
+
+  return useQueryParamsOptions({
+    page: AUDIT_TRAIL_PAGE_INDEX,
+    size: PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : AUDIT_TRAIL_PAGE_SIZE,
+    view: View.AUDIT_LOGS,
+    dateFilter: {
+      startTime: start.getTime().toString(),
+      endTime: end.getTime().toString()
+    }
+  })
 }

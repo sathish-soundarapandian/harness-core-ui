@@ -17,7 +17,8 @@ import {
   StepWizard,
   StepProps,
   Text,
-  Icon
+  Icon,
+  MultiTypeInputType
 } from '@harness/uicore'
 import type { IDialogProps } from '@blueprintjs/core'
 import { Dialog, Classes } from '@blueprintjs/core'
@@ -60,21 +61,24 @@ import {
   ConfigFilesMap
 } from '../ConfigFilesHelper'
 import { HarnessConfigStep } from '../ConfigFilesWizard/ConfigFilesSteps/HarnessConfigStep'
+import { GitConfigStep } from '../ConfigFilesWizard/ConfigFilesSteps/GitConfigStep'
+
 import { LocationValue } from './LocationValue'
 
 import css from '../ConfigFilesSelection.module.scss'
 
-function ConfigFilesListView({
-  updateStage,
-  stage,
-  isPropagating,
-  deploymentType,
-  isReadonly,
-  allowableTypes,
-  selectedConfig,
-  setSelectedConfig,
-  selectedServiceResponse
-}: ConfigFilesListViewProps): JSX.Element {
+function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
+  const {
+    updateStage,
+    stage,
+    isPropagating,
+    deploymentType,
+    isReadonly,
+    allowableTypes,
+    selectedConfig,
+    setSelectedConfig,
+    selectedServiceResponse
+  } = props
   const DIALOG_PROPS: IDialogProps = {
     isOpen: true,
     usePortal: true,
@@ -207,6 +211,23 @@ function ConfigFilesListView({
           />
         )
         break
+      case ConfigFilesToConnectorMap.Git:
+      case ConfigFilesToConnectorMap.Gitlab:
+      case ConfigFilesToConnectorMap.Bitbucket:
+      case ConfigFilesToConnectorMap.Github:
+        configDetailStep = (
+          <GitConfigStep
+            {...commonProps}
+            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+            stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
+            name={getString('pipeline.configFiles.title', { type: 'Details' })}
+            listOfConfigFiles={listOfConfigFiles}
+            selectedConfigFile={configStore}
+            {...commonLastStepProps}
+          />
+        )
+        break
+
       default:
         configDetailStep = (
           <HarnessConfigStep
@@ -239,6 +260,9 @@ function ConfigFilesListView({
           />
         )
       case ConfigFilesToConnectorMap.Git:
+      case ConfigFilesToConnectorMap.Gitlab:
+      case ConfigFilesToConnectorMap.Bitbucket:
+      case ConfigFilesToConnectorMap.Github:
         return (
           <StepWizard title={getString('connectors.createNewConnector')}>
             <ConnectorDetailsStep
@@ -345,7 +369,7 @@ function ConfigFilesListView({
             newConnectorView={newConnectorView}
             expressions={expressions}
             allowableTypes={allowableTypes}
-            handleConnectorViewChange={() => handleConnectorViewChange(true)}
+            handleConnectorViewChange={(status: boolean) => handleConnectorViewChange(status)}
             handleStoreChange={handleChangeStore}
             initialValues={getInitialValues()}
             newConnectorSteps={getNewConnectorSteps()}
@@ -355,6 +379,7 @@ function ConfigFilesListView({
             isReadonly={isReadonly}
             isNewFile={isNewFile}
             configFileIndex={configFileIndex}
+            isEditMode={isEditMode}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
@@ -401,7 +426,8 @@ function ConfigFilesListView({
                   : getString('encrypted')
                 const filesLocation = configFile?.spec?.store?.spec?.files?.length
                   ? configFile?.spec?.store?.spec?.files
-                  : configFile?.spec?.store?.spec?.secretFiles
+                  : configFile?.spec?.store?.spec?.secretFiles || configFile?.spec?.store?.spec?.paths
+
                 return (
                   <div className={css.rowItem} key={`${configFile?.identifier}-${index}`}>
                     <section className={css.configFilesList}>
@@ -410,7 +436,7 @@ function ConfigFilesListView({
                           {configFile?.identifier}
                         </Text>
                       </div>
-                      <div>{filesType}</div>
+                      <div>{configFile?.spec?.store?.type === ConfigFilesMap.Harness ? filesType : null}</div>
                       <div className={css.columnStore}>
                         <Icon
                           inline

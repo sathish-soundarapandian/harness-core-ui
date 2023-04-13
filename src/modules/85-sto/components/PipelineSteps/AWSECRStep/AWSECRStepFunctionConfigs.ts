@@ -14,17 +14,19 @@ import {
   authFieldsTransformConfig,
   authFieldsValidationConfig,
   commonFieldsTransformConfig,
-  commonFieldsValidationConfig
+  commonFieldsValidationConfig,
+  imageFieldsValidationConfig
 } from '../constants'
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
 import type { AWSECRStepData } from './AWSECRStep'
 
 const extraAuthFields: InputSetViewValidateFieldsConfig[] = [
-  {
-    name: 'spec.image.domain',
-    type: ValidationFieldTypes.Text,
-    label: 'secrets.winRmAuthFormFields.domain'
-  },
+  // {
+  //   name: 'spec.auth.access_token',
+  //   type: ValidationFieldTypes.Text,
+  //   label: 'common.getStarted.accessTokenLabel',
+  //   isRequired: true
+  // },
   {
     name: 'spec.auth.access_id',
     type: ValidationFieldTypes.Text,
@@ -48,12 +50,30 @@ export const transformValuesFieldsConfig = (data: AWSECRStepData): Field[] => {
       type: TransformValuesTypes.Text
     },
     {
-      name: 'spec.auth.access_id',
+      name: 'spec.image.type',
       type: TransformValuesTypes.Text
     },
     {
-      name: 'spec.auth.region',
+      name: 'spec.image.name',
       type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.image.region',
+      type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.image.tag',
+      type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.auth.access_id',
+      type: TransformValuesTypes.Text,
+      label: 'sto.stepField.authAccessId'
+    },
+    {
+      name: 'spec.auth.region',
+      type: TransformValuesTypes.Text,
+      label: 'sto.stepField.authRegion'
     }
   ]
 
@@ -64,6 +84,7 @@ export const editViewValidateFieldsConfig = (data: AWSECRStepData) => {
   const editViewValidationConfig = [
     ...commonFieldsValidationConfig,
     ...authFieldsValidationConfig(data),
+    ...imageFieldsValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigEitView,
     ...extraAuthFields
   ]
@@ -75,6 +96,7 @@ export function getInputSetViewValidateFieldsConfig(data: AWSECRStepData): Input
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
     ...authFieldsValidationConfig(data, StepViewType.InputSet),
+    ...imageFieldsValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet,
     ...extraAuthFields
   ]

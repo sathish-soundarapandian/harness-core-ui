@@ -30,6 +30,7 @@ import {
   SecurityTargetFields
 } from '../SecurityFields'
 import {
+  AWS_ACCOUNT_AUTH_TYPE,
   CONFIGURATION_TARGET_TYPE,
   INGESTION_SCAN_MODE,
   ORCHESTRATION_SCAN_MODE,
@@ -130,10 +131,13 @@ export const ProwlerStepBase = (
 
             <SecurityAuthFields
               showFields={{
+                type: true,
+                access_id: true,
                 region: true
               }}
               allowableTypes={allowableTypes}
               formik={formik}
+              authTypes={[AWS_ACCOUNT_AUTH_TYPE]}
             />
 
             <AdditionalFields

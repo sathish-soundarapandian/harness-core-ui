@@ -126,7 +126,8 @@ export const AWSSecurityHubStepBase = (
               allowableTypes={allowableTypes}
               formik={formik}
               showFields={{
-                access_id: true
+                access_id: true,
+                region: true
               }}
             />
 

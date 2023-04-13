@@ -61,7 +61,6 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
   const { getString } = useStrings()
   const history = useHistory()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-  const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
   const [hideReferencedByButton, setHideReferencedByButton] = useState(false)
   const [customErrorMessage, setCustomErrorMessage] = useState<string | undefined>()
 
@@ -150,7 +149,7 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
     hideReferencedByButton,
     customErrorMessage,
     redirectToReferencedBy,
-    forceDeleteCallback: isForceDeletedAllowed ? () => deleteHandler(true) : undefined
+    forceDeleteCallback: () => deleteHandler(true)
   })
 
   const { openDialog } = useConfirmationDialog({

@@ -23,7 +23,6 @@ import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { PipelineExecutionWarning } from '@pipeline/components/PipelineExecutionWarning/PipelineExecutionWarning'
 import { logsCache } from '@pipeline/components/LogsContent/LogsState/utils'
-import { PolicyManagementEvaluationModal } from '@governance/PolicyManagementEvaluationModal'
 import ExecutionContext from '@pipeline/context/ExecutionContext'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { usePolling } from '@common/hooks/usePolling'
@@ -38,6 +37,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
+import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import ExecutionTabs from './ExecutionTabs/ExecutionTabs'
 import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
 import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
@@ -364,7 +364,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
                 enforceFocus={false}
                 className={css.policyEvaluationDialog}
               >
-                <PolicyManagementEvaluationModal
+                <PolicyManagementEvaluationView
                   metadata={governanceEvaluations.governanceMetadata}
                   accountId={accountId}
                   module={module}

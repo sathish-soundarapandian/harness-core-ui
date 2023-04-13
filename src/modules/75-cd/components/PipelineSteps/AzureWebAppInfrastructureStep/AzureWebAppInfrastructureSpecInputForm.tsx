@@ -34,10 +34,10 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import {
   AzureWebAppInfrastructureSpecEditableProps,
-  getValue,
   subscriptionLabel,
   resourceGroupLabel
 } from './AzureWebAppInfrastructureInterface'
+import { getValue } from '../PipelineStepsUtil'
 import css from './AzureWebAppInfrastructureSpec.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
 import { Text } from '@harness/uicore'
@@ -24,13 +24,14 @@ export default function STOExecutionCardSummary(
   props: ExecutionCardInfoProps<PipelineExecutionSummary>
 ): React.ReactElement {
   const { data } = props
-  const { pipelineIdentifier = '', planExecutionId: executionId = '', status: pipelineStatus = '' } = data
+  const { pipelineIdentifier = '', planExecutionId: executionId = '', status: pipelineStatus } = data
 
   const { projectIdentifier: projectId, orgIdentifier: orgId, accountId } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const {
     data: issueCounts,
     isLoading,
+    refetch,
     error
   } = useFrontendExecutionIssueCounts<Record<string, IssueCounts>>({
     queryParams: {
@@ -40,6 +41,12 @@ export default function STOExecutionCardSummary(
       executionIds: executionId
     }
   })
+
+  useEffect(() => {
+    if (pipelineStatus !== 'Running') {
+      refetch()
+    }
+  }, [pipelineStatus, refetch])
 
   if (!pipelineIdentifier || !executionId || !pipelineStatus) {
     return <></>
@@ -54,22 +61,21 @@ export default function STOExecutionCardSummary(
     return (
       <div className={css.spinnerWrapper}>
         <Spinner size={Spinner.SIZE_SMALL} />
-        {RenderSecurityResults()}
+        <div className={css.main}>
+          <Text font={{ size: 'small' }}>{getString('sto.processingSecurityResults')}</Text>
+        </div>
       </div>
     )
   }
 
   function RenderSecurityResults(): React.ReactElement {
     if (isLoading) {
-      if (pipelineStatuses['Loading'].includes(pipelineStatus)) {
-        return <></>
-      } else {
-        return (
-          <div className={css.spinnerWrapper}>
-            <Spinner size={Spinner.SIZE_SMALL} />
-          </div>
-        )
-      }
+      return (
+        <div className={css.spinnerWrapper}>
+          <Spinner size={Spinner.SIZE_SMALL} />
+          <Text font={{ size: 'small' }}>{getString('sto.fetchingSecurityResults')}</Text>
+        </div>
+      )
     } else {
       if (!issueCounts || error) {
         return (
@@ -111,8 +117,13 @@ export default function STOExecutionCardSummary(
     }
   }
 }
+type PipelineStatuses = {
+  Loading: PipelineExecutionSummary['status'][]
+  Succeeded: PipelineExecutionSummary['status'][]
+  Failed: PipelineExecutionSummary['status'][]
+}
 
-const pipelineStatuses = {
+const pipelineStatuses: PipelineStatuses = {
   Loading: [
     'ApprovalWaiting',
     'AsyncWaiting',

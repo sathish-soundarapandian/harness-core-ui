@@ -564,6 +564,15 @@ const CENonMFERoutes = (
     >
       <CommitmentOrchestrationSetup />
     </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCECloudIntegration({ ...accountPathProps })}
+      pageName={PAGE_NAME.CECloudIntegration}
+      exact
+    >
+      <CloudIntegrationPage />
+    </RouteWithLayout>
   </>
 )
 
@@ -723,7 +732,8 @@ const CERoutes: React.FC = () => {
         routes.toClusterDetailsPage({ ...accountPathProps, id: ':id' }),
         routes.toClusterWorkloadsDetailsPage({ ...accountPathProps, id: ':id' }),
         routes.toClusterNodepoolDetailsPage({ ...accountPathProps, id: ':id' }),
-        routes.toComputeGroupsSetup({ ...accountPathProps, id: ':id' })
+        routes.toComputeGroupsSetup({ ...accountPathProps, id: ':id' }),
+        routes.toCECloudIntegration({ ...accountPathProps })
       ]
     : []
 
@@ -777,15 +787,6 @@ const CERoutes: React.FC = () => {
           exact
         >
           <RedirectToNewNodeRecommendationDetailsRoute />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCECloudIntegration({ ...accountPathProps })}
-          pageName={PAGE_NAME.CECloudIntegration}
-          exact
-        >
-          <CloudIntegrationPage />
         </RouteWithLayout>
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}

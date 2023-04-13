@@ -6,40 +6,38 @@
  */
 
 import React, { createContext, useContext, useState } from 'react'
-
-export interface SideNavContextProps {
-  showGetStartedTabInMainMenu: boolean
-  showGetStartedCDTabInMainMenu: boolean
-  setShowGetStartedTabInMainMenu: (shouldShow: boolean) => void
-  setShowGetStartedCDTabInMainMenu: (shouldShow: boolean) => void
+import type { Module } from 'framework/types/ModuleName'
+interface ModuleOnboardingMap {
+  [module: string]: boolean
 }
 
+export interface SideNavContextProps {
+  showGetStartedTabInMainMenu: ModuleOnboardingMap
+  setShowGetStartedTabInMainMenu: (module: Module, shouldShow: boolean) => void
+}
+
+const initialModuleVisibility = { ci: false, cd: false } as ModuleOnboardingMap
 export const SideNavContext = createContext<SideNavContextProps>({
-  showGetStartedTabInMainMenu: false,
-  showGetStartedCDTabInMainMenu: false,
-  setShowGetStartedTabInMainMenu: (_shouldShow: boolean) => void 0,
-  setShowGetStartedCDTabInMainMenu: (_shouldShow: boolean) => void 0
+  showGetStartedTabInMainMenu: initialModuleVisibility,
+  setShowGetStartedTabInMainMenu: (_module: Module, _shouldShow: boolean) => void 0
 })
 
 export function useSideNavContext(): SideNavContextProps {
   return useContext(SideNavContext)
 }
-interface ModuleOnboardingMap {
-  [module: string]: boolean
-}
 
 export function SideNavProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
-  const [show, setShow] = useState<ModuleOnboardingMap>({
-    ci: false,
-    cd: false
-  })
+  const [show, setShow] = useState<ModuleOnboardingMap>(initialModuleVisibility)
+
+  const setShowGetStartedTabInMainMenu = (module: Module, shouldShow: boolean): void => {
+    setShow({ ...show, [module]: shouldShow })
+  }
+
   return (
     <SideNavContext.Provider
       value={{
-        showGetStartedTabInMainMenu: show['ci'],
-        setShowGetStartedTabInMainMenu: (shouldShow: boolean) => setShow({ ...show, ci: shouldShow }),
-        showGetStartedCDTabInMainMenu: show['cd'],
-        setShowGetStartedCDTabInMainMenu: (shouldShow: boolean) => setShow({ ...show, cd: shouldShow })
+        showGetStartedTabInMainMenu: show,
+        setShowGetStartedTabInMainMenu: setShowGetStartedTabInMainMenu
       }}
     >
       {props.children}

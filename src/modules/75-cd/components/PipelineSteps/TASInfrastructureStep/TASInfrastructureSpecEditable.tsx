@@ -37,11 +37,11 @@ import { SelectConfigureOptions } from '@common/components/ConfigureOptions/Sele
 import type { TASInfrastructureUI } from './TASInfrastructureStep'
 import {
   TASInfrastructureSpecEditableProps,
-  getValue,
   getValidationSchema,
   organizationLabel,
   spaceGroupLabel
 } from './TASInfrastructureInterface'
+import { getValue } from '../PipelineStepsUtil'
 import css from './TASInfrastructureSpec.module.scss'
 
 const errorMessage = 'data.message'

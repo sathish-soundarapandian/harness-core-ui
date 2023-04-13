@@ -8,7 +8,7 @@
 import type { UseQueryResult } from '@tanstack/react-query'
 import React from 'react'
 import { render } from '@testing-library/react'
-import { screen } from '@testing-library/dom'
+import { screen, waitFor } from '@testing-library/dom'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CardVariant } from '@pipeline/utils/constants'
@@ -50,6 +50,12 @@ const successPipelineExecutionSummary = {
   status: 'Success'
 } as PipelineExecutionSummary
 
+const runningPipelineExecutionSummary = {
+  pipelineIdentifier: 'pipeline-id',
+  planExecutionId: 'execution-id',
+  status: 'Running'
+} as PipelineExecutionSummary
+
 const failedPipelineExecutionSummary = {
   pipelineIdentifier: 'pipeline-id',
   planExecutionId: 'execution-id',
@@ -61,8 +67,9 @@ describe('STOExecutionCardSummary', () => {
     jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: { 'execution-id': { critical: 1, high: 2, medium: 3, low: 4, info: 5, unassigned: 0 } },
       isLoading: false,
-      error: null
-    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
+      error: null,
+      refetch: jest.fn()
+    } as unknown as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     const { container } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
@@ -81,8 +88,9 @@ describe('STOExecutionCardSummary', () => {
     jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: { 'execution-id': { critical: 1, high: 0, medium: 0, low: 0, info: 0, unassigned: 0 } },
       isLoading: false,
-      error: null
-    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
+      error: null,
+      refetch: jest.fn()
+    } as unknown as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     const { queryByTestId } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
@@ -102,16 +110,18 @@ describe('STOExecutionCardSummary', () => {
     jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: { 'execution-id': { critical: 0, high: 11, medium: 0, low: 0, info: 0, unassigned: 0 } },
       isLoading: false,
-      error: null
-    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
+      error: null,
+      refetch: jest.fn()
+    } as unknown as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
   })
 
   test("only renders non-zero counts (cont'd)", () => {
     jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: { 'execution-id': { critical: 0, high: 11, medium: 0, low: 0, info: 0, unassigned: 0 } },
       isLoading: false,
-      error: null
-    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
+      error: null,
+      refetch: jest.fn()
+    } as unknown as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     const { queryByTestId } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
@@ -133,7 +143,8 @@ describe('STOExecutionCardSummary', () => {
     jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: null,
       isLoading: true,
-      error: null
+      error: null,
+      refetch: jest.fn()
     } as unknown as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     const { container } = render(
@@ -153,8 +164,9 @@ describe('STOExecutionCardSummary', () => {
     jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: null,
       isLoading: false,
-      error: { payload: { message: 'Error!', status: 500 } }
-    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
+      error: { payload: { message: 'Error!', status: 500 } },
+      refetch: jest.fn()
+    } as unknown as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     render(
       <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>
@@ -173,8 +185,9 @@ describe('STOExecutionCardSummary', () => {
     jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: {},
       isLoading: false,
-      error: null
-    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
+      error: null,
+      refetch: jest.fn()
+    } as unknown as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     render(
       <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>
@@ -193,8 +206,9 @@ describe('STOExecutionCardSummary', () => {
     jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: { 'execution-id': { critical: 1, high: 2, medium: 3, low: 4, info: 5, unassigned: 0 } },
       isLoading: false,
-      error: null
-    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
+      error: null,
+      refetch: jest.fn()
+    } as unknown as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     const { container } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
@@ -213,8 +227,9 @@ describe('STOExecutionCardSummary', () => {
     jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: { 'execution-id': { critical: 0, high: 0, medium: 0, low: 0, info: 0, unassigned: 0 } },
       isLoading: false,
-      error: null
-    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
+      error: null,
+      refetch: jest.fn()
+    } as unknown as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     render(
       <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>
@@ -227,5 +242,55 @@ describe('STOExecutionCardSummary', () => {
       </TestWrapper>
     )
     expect(screen.getByText('sto.noSecurityIssues')).toBeTruthy()
+  })
+
+  test('shows issue counts when pipeline completes', async () => {
+    const refetchFn = jest.fn()
+    jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
+      data: { 'execution-id': { critical: 10, high: 8, medium: 6, low: 4, info: 2, unassigned: 0 } },
+      isLoading: false,
+      error: null,
+      refetch: refetchFn
+    } as unknown as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
+
+    const { container, rerender, getByTestId, queryByText } = render(
+      <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>
+        <STOExecutionCardSummary
+          data={runningPipelineExecutionSummary}
+          nodeMap={{}}
+          startingNodeId={'foo'}
+          variant={CardVariant.Default}
+        />
+      </TestWrapper>
+    )
+
+    expect(queryByText('sto.processingSecurityResults')).toBeTruthy()
+
+    rerender(
+      <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>
+        <STOExecutionCardSummary
+          data={successPipelineExecutionSummary}
+          nodeMap={{}}
+          startingNodeId={'foo'}
+          variant={CardVariant.Default}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => {
+      expect(refetchFn).toHaveBeenCalledTimes(1)
+      expect(getByTestId('Critical')).toBeTruthy()
+      expect(getByTestId('High')).toBeTruthy()
+      expect(getByTestId('Medium')).toBeTruthy()
+      expect(getByTestId('Low')).toBeTruthy()
+      expect(getByTestId('Info')).toBeTruthy()
+      const allDataValueAttrs = container.querySelectorAll('[data-value]')
+      expect(allDataValueAttrs).toHaveLength(5)
+      expect(container.querySelector('div[data-value="10"]')).toBeTruthy()
+      expect(container.querySelector('div[data-value="8"]')).toBeTruthy()
+      expect(container.querySelector('div[data-value="6"]')).toBeTruthy()
+      expect(container.querySelector('div[data-value="4"]')).toBeTruthy()
+      expect(container.querySelector('div[data-value="2"]')).toBeTruthy()
+    })
   })
 })

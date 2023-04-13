@@ -42,7 +42,7 @@ import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/us
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import { SettingType } from '@common/constants/Utils'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { SECRETS_DEFAULT_PAGE_INDEX, SECRETS_DEFAULT_PAGE_SIZE } from '../../Constants'

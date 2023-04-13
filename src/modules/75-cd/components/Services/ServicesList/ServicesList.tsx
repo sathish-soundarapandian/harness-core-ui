@@ -50,7 +50,7 @@ import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/Deployme
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
@@ -351,7 +351,6 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const { getString } = useStrings()
   const history = useHistory()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-  const { CDS_FORCE_DELETE_ENTITIES } = useFeatureFlags()
   const [hideReferencedByButton, setHideReferencedByButton] = useState(false)
   const [customErrorMessage, setCustomErrorMessage] = useState<string | undefined>()
 
@@ -446,7 +445,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
     },
     redirectToReferencedBy,
     hideReferencedByButton,
-    forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES ? () => deleteHandler(true) : undefined,
+    forceDeleteCallback: () => deleteHandler(true),
     customErrorMessage
   })
 

@@ -71,8 +71,20 @@ export const K8sAwsInfrastructureSpecEditable: React.FC<K8sAwsInfrastructureSpec
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialValues.connectorRef])
+  }, [])
 
+  const fetchClusters = (connectorRef: string): void => {
+    if (getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.RUNTIME) {
+      refetchClusterNames({
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
+          awsConnectorRef: connectorRef
+        }
+      })
+    }
+  }
   const getInitialValues = (): K8sAwsInfrastructureUI => {
     const values: K8sAwsInfrastructureUI = {
       ...initialValues
@@ -132,6 +144,7 @@ export const K8sAwsInfrastructureSpecEditable: React.FC<K8sAwsInfrastructureSpec
                 clusterLoading={loadingClusterNames}
                 clusterOptions={clusterOptions}
                 setClusterOptions={setClusterOptions}
+                fetchClusters={fetchClusters}
               />
             </FormikForm>
           )

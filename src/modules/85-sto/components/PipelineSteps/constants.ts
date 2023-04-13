@@ -182,6 +182,7 @@ export const METASPLOIT_DYNAMIC_BY_CVE_CONFIG = {
   value: 'dynamic-by-cve',
   label: 'Dynamic by CVE'
 }
+export const AWS_ACCOUNT_AUTH_TYPE = { value: 'aws_account', label: 'AWS Account' }
 
 export const instanceProtocolSelectItems = [
   {

@@ -14,6 +14,9 @@ export enum SLOWeight {
 export const MinNumberOfSLO = 2
 export const MaxNumberOfSLO = 20
 
+export const MinConsecutiveStartTime = 1
+export const MaxConsecutiveStartTime = 30
+
 export const serviceLevelObjectiveKeys = [
   'accountId',
   'orgIdentifier',

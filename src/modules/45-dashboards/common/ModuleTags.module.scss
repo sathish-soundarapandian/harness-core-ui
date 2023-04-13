@@ -47,6 +47,11 @@
   background: var(--ff-background);
   border: 1px solid var(--ff-border);
 }
+.chaosTag {
+  color: var(--chaos-foreground);
+  background: var(--chaos-background);
+  border: 1px solid var(--chaos-border);
+}
 .srmTag {
   color: var(--srm-foreground);
   background: var(--srm-background);

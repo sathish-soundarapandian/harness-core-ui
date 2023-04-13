@@ -39,7 +39,7 @@ export default function IACMSideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier && (
         <>
-          <SidebarLink label={getString('iacm.stacks')} to={routes.toIACMStacks({ ...params })} />
+          <SidebarLink label={getString('iacm.workspaces')} to={routes.toIACMStacks({ ...params })} />
           <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module: 'iacm' })} />
           <ProjectSetupMenu module="iacm" />
         </>

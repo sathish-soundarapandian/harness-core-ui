@@ -306,7 +306,20 @@ function FormContent({
                 )}
               </div>
 
-              {statusFetchError ? (
+              {!fetchingStatuses && !statusFetchError && isEmpty(statusResponse?.data) ? (
+                <div className={css.marginTop}>
+                  <Text
+                    lineClamp={1}
+                    width={350}
+                    margin={{ bottom: 'medium' }}
+                    intent={Intent.WARNING}
+                    icon={'warning-sign'}
+                    tooltipProps={{ isDark: true, popoverClassName: css.tooltip }}
+                  >
+                    {getString('pipeline.jiraUpdateStep.statusDisclaimer')}
+                  </Text>
+                </div>
+              ) : statusFetchError ? (
                 <FormError
                   className={css.marginTop}
                   errorMessage={
@@ -348,6 +361,7 @@ function FormContent({
                   />
                 )}
               </div>
+
               <JiraFieldsRenderer
                 selectedFields={formik.values.spec.selectedOptionalFields}
                 readonly={readonly}

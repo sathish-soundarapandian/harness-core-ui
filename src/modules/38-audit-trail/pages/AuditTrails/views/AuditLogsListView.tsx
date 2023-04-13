@@ -13,12 +13,20 @@ import { Link, useParams } from 'react-router-dom'
 import { PopoverInteractionKind, Position, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
 import { defaultTo } from 'lodash-es'
-import { actionToLabelMap, getModuleNameFromAuditModule, moduleInfoMap } from '@audit-trail/utils/RequestUtil'
+import {
+  AUDIT_TRAIL_PAGE_SIZE,
+  actionToLabelMap,
+  getModuleNameFromAuditModule,
+  moduleInfoMap
+} from '@audit-trail/utils/RequestUtil'
 import type { AuditEventDTO, PageAuditEventDTO, ResourceDTO } from 'services/audit'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import EventSummary from '@audit-trail/components/EventSummary/EventSummary'
 
 import css from './AuditLogsListView.module.scss'
@@ -26,7 +34,6 @@ import css from './AuditLogsListView.module.scss'
 const DEFAULT_CELL_PLACEHOLDER = 'N/A'
 interface AuditLogsListViewProps {
   data: PageAuditEventDTO
-  setPage: (page: number) => void
 }
 
 const renderColumnTimeStamp: Renderer<CellProps<AuditEventDTO>> = ({ row }) => {
@@ -75,7 +82,7 @@ const getModuleIconAndLabel = (module: AuditEventDTO['module'], resourceType: Re
   return { label, icon }
 }
 
-const AuditLogsListView: React.FC<AuditLogsListViewProps> = ({ data, setPage }) => {
+const AuditLogsListView: React.FC<AuditLogsListViewProps> = ({ data }) => {
   const { orgIdentifier } = useParams<OrgPathProps>()
   const [showEventSummary, setShowEventSummary] = useState<boolean>(true)
   const [selectedAuditEvent, setSelectedAuditEvent] = useState<AuditEventDTO | undefined>()
@@ -239,20 +246,22 @@ const AuditLogsListView: React.FC<AuditLogsListViewProps> = ({ data, setPage }) 
     }
   ]
 
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: data?.totalItems || 0,
+    pageSize: data?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : AUDIT_TRAIL_PAGE_SIZE),
+    pageCount: data?.totalPages || 0,
+    pageIndex: data?.pageIndex || 0,
+    className: css.pagination
+  })
+
   return (
     <>
       <TableV2<AuditEventDTO>
         data={data.content || []}
         columns={columns}
         className={css.table}
-        pagination={{
-          itemCount: data?.totalItems || 0,
-          pageSize: data?.pageSize || 10,
-          pageCount: data?.totalPages || 0,
-          pageIndex: data?.pageIndex || 0,
-          gotoPage: setPage,
-          className: css.pagination
-        }}
+        pagination={paginationProps}
       />
       {showEventSummary && selectedAuditEvent && (
         <EventSummary auditEvent={selectedAuditEvent} onClose={() => setShowEventSummary(false)} />

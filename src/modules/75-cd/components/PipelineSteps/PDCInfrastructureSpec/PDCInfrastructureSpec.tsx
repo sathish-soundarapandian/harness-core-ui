@@ -134,13 +134,13 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
   const { showError } = useToaster()
   const [formikInitialValues, setFormikInitialValues] = useState<PDCInfrastructureUI>()
   const [selectionType, setSelectionType] = useState<HOSTS_TYPE>(
-    initialValues.dynamicallyProvisioned && CD_NG_DYNAMIC_PROVISIONING_ENV_V2
+    initialValues.provisioner && CD_NG_DYNAMIC_PROVISIONING_ENV_V2
       ? HOSTS_TYPE.DYNAMIC
       : initialValues.hosts
       ? HOSTS_TYPE.SPECIFIED
       : HOSTS_TYPE.PRECONFIGURED
   )
-  const [showPreviewHostBtn, setShowPreviewHostBtn] = useState(!initialValues.dynamicallyProvisioned)
+  const [showPreviewHostBtn, setShowPreviewHostBtn] = useState(!initialValues.provisioner)
   const [hostsScope, setHostsScope] = useState(defaultTo(initialValues.hostFilter?.type, 'All'))
 
   //table states
@@ -203,17 +203,14 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     if (selectionType === HOSTS_TYPE.PRECONFIGURED) {
       data.hosts = undefined
       data.connectorRef = get(initialValues, 'connectorRef', '')
-      data.dynamicallyProvisioned = false
     }
     if (selectionType === HOSTS_TYPE.SPECIFIED) {
       data.hosts = get(initialValues, 'hosts', '')
       data.connectorRef = undefined
-      data.dynamicallyProvisioned = false
     }
     if (selectionType === HOSTS_TYPE.DYNAMIC) {
       data.hostAttributes = getHostAttributes(initialValues) as MapUIType
       data.hostObjectArray = get(initialValues, 'hostObjectArray', '') as string
-      data.dynamicallyProvisioned = true
     }
 
     formikRef.current?.setValues({ ...initialValues, ...data })
@@ -504,8 +501,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                 allowSimultaneousDeployments: value.allowSimultaneousDeployments,
                 delegateSelectors: value.delegateSelectors,
                 sshKey: value.sshKey,
-                credentialsRef: (value.credentialsRef || value.sshKey) as string,
-                dynamicallyProvisioned: value.dynamicallyProvisioned
+                credentialsRef: (value.credentialsRef || value.sshKey) as string
               }
               if (selectionType === HOSTS_TYPE.SPECIFIED) {
                 data.hosts =

@@ -1333,6 +1333,7 @@ moduleDetails:
       title: '{{$.common.sloNoData}}'
       description: A Service Level Objective (SLO) is the sum of a collection of performance metrics (Service Level Indicator or SLI) such as uptime, response time, and error rate that are used to measure the services performance. To create SLO, you’ll need at least one Monitored Service, Health Source and a Metric.
 deploymentsIn: 'Deployments in {{value}}'
+buildsIn: 'Builds in {{value}}'
 harnessCommunityTitle: See what Harness Community is up to
 seeMore: 'See more'
 seeLess: 'See less'
@@ -1430,3 +1431,5 @@ welcomePage:
     title: Cloud Cost Mgmt
     subTitle: Manage & optimize cloud costs
     bodyText: '{{ $.common.welcomePage.cv.bodyText }}'
+successCount: 'Success {{count}}'
+failedCount: 'Failed {{count}}'

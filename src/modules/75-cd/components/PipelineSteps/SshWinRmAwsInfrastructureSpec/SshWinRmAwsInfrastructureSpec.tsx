@@ -61,9 +61,8 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { InfraDeploymentType } from '../PipelineStepsUtil'
+import { InfraDeploymentType, getValue } from '../PipelineStepsUtil'
 import { SshWimRmAwsInfrastructureSpecInputForm } from './SshWimRmAwsInfrastructureSpecInputForm'
-import { getValue } from '../SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfrastructureInterface'
 import css from './SshWinRmAwsInfrastructureSpec.module.scss'
 
 const logger = loggerFor(ModuleName.CD)

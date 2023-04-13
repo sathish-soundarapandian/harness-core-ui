@@ -36,10 +36,8 @@ import {
 import { TemplatePreview } from '@templates-library/components/TemplatePreview/TemplatePreview'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import useDeleteConfirmationDialog from '@pipeline/pages/utils/DeleteConfirmDialog'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
-import { FeatureFlag } from '@common/featureFlags'
 import css from './DeleteTemplateModal.module.scss'
 
 export interface DeleteTemplateProps {
@@ -76,7 +74,6 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { mutate: deleteTemplates, loading: deleteLoading } = useDeleteTemplateVersionsOfIdentifier({})
   const [templateVersionsToDelete, setTemplateVersionsToDelete] = React.useState<string[]>([])
-  const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
 
   const {
     data: templateData,
@@ -140,7 +137,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
       }
     } catch (err) {
       /* istanbul ignore next */
-      if (isForceDeletedAllowed && err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+      if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         openReferenceErrorDialog()
         return
       }
@@ -165,9 +162,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
     },
     hideReferencedByButton: true,
     redirectToReferencedBy: redirectToReferencedBy,
-    forceDeleteCallback: isForceDeletedAllowed
-      ? /* istanbul ignore next */ () => performDelete(commitMessage, templateVersionsToDelete, true)
-      : undefined
+    forceDeleteCallback: () => performDelete(commitMessage, templateVersionsToDelete, true)
   })
 
   const { confirmDelete } = useDeleteConfirmationDialog(

@@ -226,6 +226,7 @@ function OpenShiftTemplateWithGit({
                   label={getString('pipeline.manifestType.manifestIdentifier')}
                   placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                   className={templateCss.halfWidth}
+                  isIdentifier={true}
                 />
                 {!!(connectionType === GitRepoName.Account || accountUrl) && (
                   <GitRepositoryName

@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import { identity } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 
 import { Layout, Tabs, Tab, Text } from '@harness/uicore'
@@ -17,27 +16,21 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { AuditTrailQueryParams, View, useAuditTrailQueryParamOptions } from '@audit-trail/utils/RequestUtil'
 import AuditLogs from './AuditLogs'
 import AuditLogStreaming from './AuditLogStreaming'
 import css from './AuditTrailsPage.module.scss'
-
-export const VIEWS = {
-  AUDIT_LOGS: 'auditLogs',
-  AUDIT_LOG_STREAMING: 'auditLogStreaming'
-}
 
 const AuditTrailsPage: React.FC = () => {
   const { getString } = useStrings()
   const { PL_AUDIT_LOG_STREAMING_ENABLED: isAuditLogStreamingEnabled } = useFeatureFlags()
   const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const [view, setView] = useQueryParamsState<string>('view', '', {
-    serializer: identity,
-    deserializer: identity
-  })
+  const queryParamOptions = useAuditTrailQueryParamOptions()
+  const { view } = useQueryParams(queryParamOptions)
+  const { updateQueryParams } = useUpdateQueryParams<AuditTrailQueryParams>()
 
   const auditTrailTitle = getString('common.auditTrail')
-  const defaultSelectedTabId = Object.values(VIEWS).includes(view) ? view : VIEWS.AUDIT_LOGS
   const isOrgOrProjectScope = orgIdentifier || projectIdentifier
   const showAuditLogStreamingTab = isAuditLogStreamingEnabled && !isOrgOrProjectScope
 
@@ -60,15 +53,15 @@ const AuditTrailsPage: React.FC = () => {
         <Layout.Horizontal className={css.auditTabs}>
           <Tabs
             id="auditTabs"
-            defaultSelectedTabId={defaultSelectedTabId}
+            selectedTabId={view}
             onChange={newTabId => {
-              setView(newTabId as string)
+              updateQueryParams({ page: 0, view: newTabId as View })
             }}
           >
-            <Tab id={VIEWS.AUDIT_LOGS} title={<Text>{getString('auditTrail.auditLogs')}</Text>} panel={<AuditLogs />} />
+            <Tab id={View.AUDIT_LOGS} title={<Text>{getString('auditTrail.auditLogs')}</Text>} panel={<AuditLogs />} />
             {showAuditLogStreamingTab && (
               <Tab
-                id={VIEWS.AUDIT_LOG_STREAMING}
+                id={View.AUDIT_LOG_STREAMING}
                 title={<Text>{getString('auditTrail.auditLogStreaming')}</Text>}
                 panel={<AuditLogStreaming />}
               />

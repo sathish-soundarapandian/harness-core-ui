@@ -334,7 +334,6 @@ exports[`OpenshiftParamManifestSource tests Should match snapshot 1`] = `
                     >
                       <div
                         class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                        placeholder="pipeline.manifestType.pathPlaceholder"
                       >
                         <div
                           class="bp3-input-group MultiTypeInput--input"
@@ -759,7 +758,6 @@ exports[`OpenshiftParamManifestSource tests Should match snapshot with fromTrigg
                     >
                       <div
                         class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                        placeholder="pipeline.manifestType.pathPlaceholder"
                       >
                         <div
                           class="bp3-input-group MultiTypeInput--input"

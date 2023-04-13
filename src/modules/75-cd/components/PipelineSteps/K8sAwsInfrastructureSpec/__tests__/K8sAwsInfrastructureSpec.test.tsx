@@ -30,14 +30,10 @@ const ClusterNamesResponse: UseGetReturnData<ResponseListString> = {
   }
 }
 
-const fetchClusterNames = jest.fn().mockReturnValue(ClusterNamesResponse)
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
   useGetEKSClusterNames: jest.fn(() => ClusterNamesResponse),
-  useGetEKSClusterNamesViaExpressionResolution: jest.fn().mockImplementation(() => {
-    return { data: ClusterNamesResponse, refetch: fetchClusterNames, error: null, loading: false }
-  }),
 
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(ConnectorsResponse.data)),
   getEKSClusterNamesPromise: jest.fn(() => Promise.resolve(ClusterNamesResponse.data))

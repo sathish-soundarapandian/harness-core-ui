@@ -37,6 +37,7 @@ import type { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getValue } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -353,11 +354,6 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       return isTagsSelectionDisabled(props)
     }
     return false
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const getValue = /* istanbul ignore next */ (item: { label?: string; value?: string } | string | any): string => {
-    return typeof item === 'string' ? (item as string) : item?.value
   }
 
   const getItemRenderer = memoize((item: SelectOption, { handleClick }: IItemRendererProps, disabled: boolean) => {

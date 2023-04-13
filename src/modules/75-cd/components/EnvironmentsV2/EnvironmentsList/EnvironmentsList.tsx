@@ -13,14 +13,12 @@ import { defaultTo, get } from 'lodash-es'
 import { TableV2, useToaster } from '@harness/uicore'
 import { EnvironmentResponse, EnvironmentResponseDTO, useDeleteEnvironmentV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { FeatureFlag } from '@common/featureFlags'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import {
   EnvironmentMenu,
@@ -38,7 +36,6 @@ export default function EnvironmentsList({ response, refetch }: any): JSX.Elemen
   const { getString } = useStrings()
   const history = useHistory()
   const [environmentToDelete, setEnvironmentToDelete] = useState<EnvironmentResponseDTO>({})
-  const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
 
   const { mutate: deleteItem } = useDeleteEnvironmentV2({
     queryParams: {
@@ -73,7 +70,7 @@ export default function EnvironmentsList({ response, refetch }: any): JSX.Elemen
       showSuccess(getString('cd.environment.deleted'))
       refetch()
     } catch (e: any) {
-      if (isForceDeletedAllowed && e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+      if (e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         setEnvironmentToDelete(environment)
         openReferenceErrorDialog()
       } else {
@@ -101,9 +98,7 @@ export default function EnvironmentsList({ response, refetch }: any): JSX.Elemen
       name: environmentToDelete.name as string
     },
     redirectToReferencedBy,
-    forceDeleteCallback: isForceDeletedAllowed
-      ? () => handleEnvDelete(environmentToDelete as Required<EnvironmentResponseDTO>, true)
-      : undefined
+    forceDeleteCallback: () => handleEnvDelete(environmentToDelete as Required<EnvironmentResponseDTO>, true)
   })
 
   type CustomColumn<T extends Record<string, any>> = Column<T>

@@ -168,7 +168,7 @@ describe('Test SLI component', () => {
     expect(container.querySelector('input[name="eventType"]')).toHaveValue('cv.good')
 
     //  select metric validRequestMetric
-    expect(container.querySelectorAll('[data-icon="chevron-down"]').length).toEqual(5)
+    expect(container.querySelectorAll('[data-icon="chevron-down"]').length).toEqual(6)
     await act(() => {
       userEvent.click(container.querySelector('input[name="validRequestMetric"]')!)
     })

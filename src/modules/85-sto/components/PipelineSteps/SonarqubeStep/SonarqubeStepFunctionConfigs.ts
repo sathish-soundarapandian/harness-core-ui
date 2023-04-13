@@ -86,7 +86,8 @@ const extraAuthFieldsValidationConfig = (
         {
           name: 'spec.auth.domain',
           type: ValidationFieldTypes.Text,
-          label: 'secrets.winRmAuthFormFields.domain'
+          label: 'secrets.winRmAuthFormFields.domain',
+          isRequired: data.spec.mode !== 'ingestion' || stepViewType === StepViewType.InputSet
         },
         {
           name: 'spec.auth.ssl',

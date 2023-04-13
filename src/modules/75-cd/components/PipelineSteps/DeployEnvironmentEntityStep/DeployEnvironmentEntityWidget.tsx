@@ -320,7 +320,8 @@ export default function DeployEnvironmentEntityWidget({
   return (
     <>
       <Formik<DeployEnvironmentEntityFormState>
-        enableReinitialize
+        // ! Do not set enableReinitialize to true.
+        // enableReinitialize
         formName="deployEnvironmentEntityWidgetForm"
         onSubmit={noop}
         validate={(values: DeployEnvironmentEntityFormState) => {

@@ -17,7 +17,8 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import * as auditServices from 'services/audit'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
-import AuditTrailsPage, { VIEWS } from '../AuditTrailsPage'
+import { View } from '@audit-trail/utils/RequestUtil'
+import AuditTrailsPage from '../AuditTrailsPage'
 import { filters } from '../../../components/__tests__/mockData'
 import { mockAggregateListResponse, mockStreamingDestinationCards } from '../views/__tests__/mockAuditLogStreaming'
 
@@ -78,7 +79,7 @@ describe('Audit trail Page', () => {
     })
     const renderObj = render(
       <TestWrapper
-        queryParams={{ view: VIEWS.AUDIT_LOG_STREAMING }}
+        queryParams={{ view: View.AUDIT_LOG_STREAMING }}
         path={routes.toAuditTrail({ ...accountPathProps })}
         pathParams={{ accountId: 'testAcc' }}
       >

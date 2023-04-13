@@ -1,5 +1,4 @@
-stacks: Stacks
-createStack: Create Resource Stack
+workspaces: Workspaces
 navTitle: Infra as Code Management
 stageTitle: Infastructure as Code Management
 stageDescription: Description of IACM stage placeholder
@@ -8,24 +7,6 @@ pulumi: Pulumi
 cdk: CDK
 ansible: Ansible
 cloudformation: Cloud Formation
-stackWizard:
-  ttl: Time to live
-  provisionerVersion: Provisioner Version
-  provisionerType: Provisioner Type
-  provisionerDetails: Provisioner Details
-  selectGitConnector: Select Git Connector
-  repoDetails: Repository Details
-  scriptsPath: Scripts Path
-  autoApprove: Auto Approve
-  workspaceRequired: Workspace is required
-  ttlRequired: Time to live is required
-  connectorRequired: Git connector is required
-  autoApproveRequired: Auto approve is required
-  provisionerVersionRequired: Provisioner version is required
-  provisionerTypeRequired: Provisioner type is required
-  scriptsPathRequired: Scripts path is required
-  repoConnectorTypeRequired: Repository Connector type is required
-  gitFetchTypeRequired: Git Fetch Type is required
 permissions:
-  iacmStacks: IACM Resource Stacks
-  iacmStack: IACM Resource Stack
+  iacmWorkspaces: IACM Workspaces
+  iacmWorkspace: IACM Workspace

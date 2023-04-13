@@ -12,3 +12,4 @@ pipelineTimeout: Pipeline Timeout
 stageTimeout: Stage Timeout
 stepTimeout: Step Timeout
 concurrentActivePipelineExecutions: Concurrent Active Pipeline Executions
+allowUserToMarkStepAsFailedExplicitly: Allow user to mark step as failed explicitly

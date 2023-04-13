@@ -26,7 +26,6 @@ import type { SonarqubeStepProps, SonarqubeStepData } from './SonarqubeStep'
 import {
   AdditionalFields,
   SecurityAuthFields,
-  SecurityImageFields,
   SecurityIngestionFields,
   SecurityScanFields,
   SecurityTargetFields
@@ -125,8 +124,6 @@ export const SonarqubeStepBase = (
               formik={formik}
               targetTypeSelectItems={targetTypeSelectItems}
             />
-            {/* TODO REMOVE THE NEXT LINE, THIS IS NOT AN IMAGE SCANNER */}
-            <SecurityImageFields allowableTypes={allowableTypes} formik={formik} />
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
             <SecurityAuthFields
               showFields={{

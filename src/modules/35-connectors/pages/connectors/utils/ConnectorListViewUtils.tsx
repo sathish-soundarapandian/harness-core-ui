@@ -15,6 +15,10 @@ import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { String, StringKeys } from 'framework/strings'
 import { CredTypeValues } from '@connectors/interfaces/ConnectorInterface'
 import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
+import { UseQueryParamsOptions, useQueryParamsOptions } from '@common/hooks/useQueryParams'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import css from '../views/ConnectorsListView.module.scss'
 
 const textRenderer = (value: string): JSX.Element => {
@@ -178,4 +182,22 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
     default:
       return ''
   }
+}
+
+export type ConnectorsQueryParams = {
+  searchTerm?: string
+} & CommonPaginationQueryParams
+export type ConnectorsQueryParamsWithDefaults = RequiredPick<ConnectorsQueryParams, 'page' | 'size' | 'searchTerm'>
+
+export const CONNECTORS_PAGE_INDEX = 0
+export const CONNECTORS_PAGE_SIZE = 10
+
+export const useConnectorsQueryParamOptions = (): UseQueryParamsOptions<ConnectorsQueryParamsWithDefaults> => {
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+
+  return useQueryParamsOptions({
+    page: CONNECTORS_PAGE_INDEX,
+    size: PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : CONNECTORS_PAGE_SIZE,
+    searchTerm: ''
+  })
 }

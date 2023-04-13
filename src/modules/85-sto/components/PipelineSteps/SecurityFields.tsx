@@ -214,10 +214,12 @@ interface ISecurityAuthFields extends SecurityFieldsProps<SecurityStepData<Secur
     region?: boolean
   }
   authDomainPlaceHolder?: string
+  authTypes?: SelectItems[]
 }
 
 export function SecurityAuthFields(props: ISecurityAuthFields) {
-  const { allowableTypes, formik, initialAuthDomain, showFields, authDomainPlaceHolder, toolTipOverrides } = props
+  const { allowableTypes, formik, initialAuthDomain, showFields, authDomainPlaceHolder, toolTipOverrides, authTypes } =
+    props
   if (formik.values.spec.mode === 'ingestion') return null
   return (
     <>
@@ -255,7 +257,7 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
             label: 'typeLabel',
             hide: !showFields?.type,
             fieldType: 'dropdown',
-            selectItems: [API_KEY_AUTH_TYPE, USER_PASSWORD_AUTH_TYPE],
+            selectItems: authTypes ? authTypes : [API_KEY_AUTH_TYPE, USER_PASSWORD_AUTH_TYPE],
             tooltipId: tooltipIds.authType
           },
           'spec.auth.access_id': {

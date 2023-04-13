@@ -12,7 +12,6 @@ import { defaultTo } from 'lodash-es'
 import { ButtonVariation, Container, Heading, Layout, TableV2, useToaster } from '@harness/uicore'
 import { InfrastructureResponse, useDeleteInfrastructure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import type { EnvironmentPathProps, ProjectPathProps, EnvironmentQueryParams } from '@common/interfaces/RouteInterfaces'
 import { InfraDefinitionTabs } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
@@ -47,7 +46,6 @@ export default function InfrastructureList({
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { CDS_FORCE_DELETE_ENTITIES } = useFeatureFlags()
   const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams>()
   const [infraDetailsToBeDeleted, setInfraDetailsToBeDeleted] = React.useState<InfraDetails>()
 
@@ -66,7 +64,7 @@ export default function InfrastructureList({
         name: defaultTo(infraDetailsToBeDeleted?.name, '')
       },
       redirectToReferencedBy,
-      forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES ? () => deleteHandler(infraDetailsToBeDeleted!, true) : undefined
+      forceDeleteCallback: () => deleteHandler(infraDetailsToBeDeleted!, true)
     })
 
   const { mutate: deleteInfrastructure } = useDeleteInfrastructure({})

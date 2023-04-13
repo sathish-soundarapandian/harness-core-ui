@@ -7,8 +7,19 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addFileButton: string
+  readonly addNewManifest: string
+  readonly addmarginTop: string
+  readonly bp3PopoverTarget: string
   readonly configFileWizard: string
+  readonly configureOptions: string
+  readonly connectorContainer: string
   readonly formGroup: string
+  readonly halfWidth: string
+  readonly manifestForm: string
+  readonly manifestStepWidth: string
+  readonly optionsViewContainer: string
+  readonly saveBtn: string
   readonly subtitle: string
 }
 export default styles

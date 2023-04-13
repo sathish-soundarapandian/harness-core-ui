@@ -40,7 +40,7 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
-import { getConnectorSchema, getNameSpaceSchema, getReleaseNameSchema } from '../../PipelineStepsUtil'
+import { getConnectorSchema, getNameSpaceSchema, getReleaseNameSchema, getValue } from '../../PipelineStepsUtil'
 import css from './CommonKuberetesInfraSpecEditable.module.scss'
 
 export interface K8sGcpInfrastructureUI extends Omit<K8sGcpInfrastructure, 'cluster'> {
@@ -58,6 +58,7 @@ export interface CommonKuberetesInfraSpecEditableProps {
   clusterLoading: boolean
   clusterOptions: SelectOption[]
   setClusterOptions: React.Dispatch<React.SetStateAction<SelectOption[]>>
+  fetchClusters?: (connectorRef: string) => void
 }
 
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
@@ -91,8 +92,16 @@ const connectorDependentFields = {
   Gcp: 'pipelineSteps.gcpConnectorLabel' as keyof StringsMap
 }
 export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpecEditableProps): React.ReactElement {
-  const { readonly, allowableTypes, connectorType, clusterError, clusterLoading, clusterOptions, setClusterOptions } =
-    props
+  const {
+    readonly,
+    allowableTypes,
+    connectorType,
+    clusterError,
+    clusterLoading,
+    clusterOptions,
+    setClusterOptions,
+    fetchClusters
+  } = props
   const connectorTypeLowerCase = connectorType.toLowerCase()
   const formik = useFormikContext<K8sAwsInfrastructureUI | K8sGcpInfrastructureUI>()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -185,7 +194,7 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
           }}
           className={css.inputWidth}
           selectItems={clusterOptions}
-          disabled={clusterLoading || readonly}
+          disabled={readonly}
           placeholder={
             clusterLoading
               ? /* istanbul ignore next */ getString('loading')
@@ -201,12 +210,20 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
               addClearBtn: !(clusterLoading || readonly),
               noResults: (
                 <Text padding={'small'}>
-                  {getRBACErrorMessage(clusterError as RBACError) ||
-                    getString('cd.pipelineSteps.infraTab.clusterError')}
+                  {clusterLoading
+                    ? getString('loading')
+                    : getRBACErrorMessage(clusterError as RBACError) ||
+                      getString('cd.pipelineSteps.infraTab.clusterError')}
                 </Text>
               )
             },
-            allowableTypes
+            allowableTypes,
+            onFocus: /* istanbul ignore next */ () => {
+              const connectorValue = getValue(formik.values?.connectorRef)
+              if (getMultiTypeFromValue(formik.values?.cluster) === MultiTypeInputType.FIXED) {
+                fetchClusters?.(connectorValue)
+              }
+            }
           }}
           label={getString('common.cluster')}
         />

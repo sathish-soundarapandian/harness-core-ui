@@ -7,15 +7,11 @@
 
 import type React from 'react'
 import type { IconName } from '@harness/uicore'
-import type {
-  SettingCategory,
-  SettingGroups,
-  SettingType,
-  YupValidation
-} from '@default-settings/interfaces/SettingType.types'
+import type { SettingCategory, SettingGroups, YupValidation } from '@default-settings/interfaces/SettingType.types'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { SettingDTO } from 'services/cd-ng'
 import type { Module } from 'framework/types/ModuleName'
+import type { SettingType } from '@common/constants/Utils'
 
 export interface SettingRendererProps {
   identifier: string

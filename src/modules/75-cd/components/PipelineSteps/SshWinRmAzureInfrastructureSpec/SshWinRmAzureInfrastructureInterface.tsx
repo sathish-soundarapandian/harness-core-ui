@@ -20,10 +20,6 @@ export const clusterLabel = 'common.cluster'
 
 export type SshWinRmAzureInfrastructureTemplate = { [key in keyof SshWinRmAzureInfrastructure]: string }
 
-export const getValue = (item: { label?: string; value?: string } | string | any): string => {
-  return typeof item === 'string' ? (item as string) : item?.value
-}
-
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),

@@ -162,6 +162,7 @@ function TASWithHarnessStore({
                       name="identifier"
                       label={getString('pipeline.manifestType.manifestIdentifier')}
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
+                      isIdentifier={true}
                     />
                   </Container>
                   <Container className={css.halfWidth} margin={{ bottom: 'medium' }}>

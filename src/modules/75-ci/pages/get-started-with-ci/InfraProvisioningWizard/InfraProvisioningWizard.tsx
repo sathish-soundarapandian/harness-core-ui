@@ -125,6 +125,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     configuredGitConnector &&
     SupportedGitProvidersForCIOnboarding.includes(configuredGitConnector.type)
 
+  const setCIGetStartedVisible = (shouldShow: boolean): void => setShowGetStartedTabInMainMenu('ci', shouldShow)
+
   useEffect(() => {
     setCurrentWizardStepId(lastConfiguredWizardStepId)
   }, [lastConfiguredWizardStepId])
@@ -471,7 +473,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                   })
                   if (createPushTriggerResponse.status === Status.SUCCESS) {
                     wrapUpAPIOperation()
-                    setShowGetStartedTabInMainMenu(false)
+                    setCIGetStartedVisible(false)
                     if (createPipelineResponse?.data?.identifier) {
                       reRouteToPipelineStudio({
                         pipelineIdentifier: createPipelineResponse.data.identifier,
@@ -581,7 +583,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         const { status } = createPipelineResponse
         if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
           wrapUpAPIOperation()
-          setShowGetStartedTabInMainMenu(false)
+          setCIGetStartedVisible(false)
           if (createPipelineResponse?.data?.identifier) {
             reRouteToPipelineStudio({ pipelineIdentifier: createPipelineResponse.data.identifier })
           }
@@ -595,7 +597,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     accountId,
     orgIdentifier,
     projectIdentifier,
-    setShowGetStartedTabInMainMenu,
+    setCIGetStartedVisible,
     history,
     getString
   ])

@@ -36,7 +36,7 @@ exports[`Bamboo Artifact tests onclick of previous button 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_identifier"
                   >
-                    pipeline.artifactsSelection.artifactSourceName
+                    pipeline.artifactsSelection.artifactSourceId
                   </span>
                    
                   <span
@@ -53,7 +53,7 @@ exports[`Bamboo Artifact tests onclick of previous button 1`] = `
                       autocomplete="off"
                       class="bp3-input"
                       name="identifier"
-                      placeholder="pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder"
+                      placeholder="pipeline.artifactsSelection.artifactSourceIdPlaceholder"
                       type="text"
                       value="test-bamboo-artifact"
                     />
@@ -561,7 +561,7 @@ exports[`Bamboo Artifact tests renders fine for the NEW artifact 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_identifier"
                   >
-                    pipeline.artifactsSelection.artifactSourceName
+                    pipeline.artifactsSelection.artifactSourceId
                   </span>
                    
                   <span
@@ -578,7 +578,7 @@ exports[`Bamboo Artifact tests renders fine for the NEW artifact 1`] = `
                       autocomplete="off"
                       class="bp3-input"
                       name="identifier"
-                      placeholder="pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder"
+                      placeholder="pipeline.artifactsSelection.artifactSourceIdPlaceholder"
                       type="text"
                       value=""
                     />
@@ -992,7 +992,7 @@ exports[`Bamboo Artifact tests renders fine on the edit mode with all fixed valu
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_identifier"
                   >
-                    pipeline.artifactsSelection.artifactSourceName
+                    pipeline.artifactsSelection.artifactSourceId
                   </span>
                    
                   <span
@@ -1009,7 +1009,7 @@ exports[`Bamboo Artifact tests renders fine on the edit mode with all fixed valu
                       autocomplete="off"
                       class="bp3-input"
                       name="identifier"
-                      placeholder="pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder"
+                      placeholder="pipeline.artifactsSelection.artifactSourceIdPlaceholder"
                       type="text"
                       value="test-bamboo-artifact"
                     />
@@ -1489,7 +1489,7 @@ exports[`Bamboo Artifact tests renders fine on the edit mode with runtime values
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_identifier"
                   >
-                    pipeline.artifactsSelection.artifactSourceName
+                    pipeline.artifactsSelection.artifactSourceId
                   </span>
                    
                   <span
@@ -1506,7 +1506,7 @@ exports[`Bamboo Artifact tests renders fine on the edit mode with runtime values
                       autocomplete="off"
                       class="bp3-input"
                       name="identifier"
-                      placeholder="pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder"
+                      placeholder="pipeline.artifactsSelection.artifactSourceIdPlaceholder"
                       type="text"
                       value="test-bamboo-artifact"
                     />

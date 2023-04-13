@@ -25,8 +25,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String, useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
+import { SettingType } from '@common/constants/Utils'
 import DefaultSettingsFactory from './factories/DefaultSettingsFactory'
-import { SettingType } from './interfaces/SettingType.types'
 import {
   DefaultSettingCheckBoxWithTrueAndFalse,
   DefaultSettingDurationField,
@@ -67,6 +67,12 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.DISABLE_HARNESS_BUILT_
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.MANDATE_CUSTOM_WEBHOOK_AUTHORIZATION, {
   label: 'defaultSettings.mandateAuthorizationForCustomWebhookTriggers',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'PMS'
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY, {
+  label: 'defaultSettings.allowUserToMarkStepAsFailedExplicitly',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
   settingCategory: 'PMS'
 })

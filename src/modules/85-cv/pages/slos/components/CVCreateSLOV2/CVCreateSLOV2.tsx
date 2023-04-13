@@ -40,6 +40,7 @@ import {
   createSLOV2RequestPayload,
   getIsUserUpdatedSLOData,
   getServiceLevelIndicatorsIdentifierFromResponse,
+  getSimpleSLOCustomValidation,
   getSimpleSLOV2FormValidationSchema,
   getSLOV2FormValidationSchema,
   getSLOV2InitialFormData
@@ -218,6 +219,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
 
   const sloType = isComposite ? SLOType.COMPOSITE : SLOType.SIMPLE
   const validationSchema = isComposite ? getSLOV2FormValidationSchema : getSimpleSLOV2FormValidationSchema
+  const customValidations = isComposite ? undefined : getSimpleSLOCustomValidation
   const initialFormData = getSLOV2InitialFormData(
     sloType,
     SLODataResponse?.resource?.serviceLevelObjectiveV2,
@@ -250,6 +252,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
           handleSLOV2Submit(values)
         }}
         validationSchema={validationSchema(getString)}
+        validate={values => customValidations?.(values, getString)}
         enableReinitialize
       >
         {() =>

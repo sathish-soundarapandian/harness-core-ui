@@ -46,9 +46,16 @@ describe('AWSECR Step', () => {
           mode: 'extraction',
           config: 'default',
           auth: {
-            access_id: 'acc id',
-            access_token: 'acc token',
-            region: 'acc region'
+            access_id: RUNTIME_INPUT_VALUE,
+            access_token: RUNTIME_INPUT_VALUE,
+            region: RUNTIME_INPUT_VALUE
+          },
+          image: {
+            type: 'aws_ecr',
+            name: RUNTIME_INPUT_VALUE,
+            region: RUNTIME_INPUT_VALUE,
+            tag: RUNTIME_INPUT_VALUE,
+            domain: RUNTIME_INPUT_VALUE
           },
           settings: RUNTIME_INPUT_VALUE,
           advanced: {
@@ -88,7 +95,7 @@ describe('AWSECR Step', () => {
       expect(onUpdate).toHaveBeenCalledWith(initialValues)
     })
 
-    test('renders runtime inputs - Orchestration Repository', async () => {
+    test('renders runtime inputs - Extraction Repository', async () => {
       const initialValues = {
         identifier: 'My_AWSECR_Step',
         name: 'My AWSECR Step',
@@ -105,6 +112,13 @@ describe('AWSECR Step', () => {
             access_id: RUNTIME_INPUT_VALUE,
             access_token: RUNTIME_INPUT_VALUE,
             region: RUNTIME_INPUT_VALUE
+          },
+          image: {
+            type: 'aws_ecr',
+            name: RUNTIME_INPUT_VALUE,
+            region: RUNTIME_INPUT_VALUE,
+            tag: RUNTIME_INPUT_VALUE,
+            domain: RUNTIME_INPUT_VALUE
           },
           mode: 'extraction',
           config: 'default',
@@ -166,6 +180,13 @@ describe('AWSECR Step', () => {
             access_token: 'token',
             access_id: 'accessId',
             region: 'region'
+          },
+          image: {
+            type: 'aws_ecr',
+            name: 'container name',
+            region: 'region',
+            tag: 'tag',
+            domain: 'domain.io'
           },
           config: 'default',
           mode: 'extraction',

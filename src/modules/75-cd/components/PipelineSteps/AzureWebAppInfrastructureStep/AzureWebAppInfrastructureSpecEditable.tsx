@@ -44,11 +44,11 @@ import { SelectConfigureOptions } from '@common/components/ConfigureOptions/Sele
 import type { AzureWebAppInfrastructureUI } from './AzureWebAppInfrastructureStep'
 import {
   AzureWebAppInfrastructureSpecEditableProps,
-  getValue,
   getValidationSchema,
   subscriptionLabel,
   resourceGroupLabel
 } from './AzureWebAppInfrastructureInterface'
+import { getValue } from '../PipelineStepsUtil'
 import css from './AzureWebAppInfrastructureSpec.module.scss'
 
 const errorMessage = 'data.message'

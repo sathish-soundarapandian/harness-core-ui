@@ -26,6 +26,14 @@ const extraAuthFieldsTransformConfig = (data: ProwlerStepData) =>
         {
           name: 'spec.auth.region',
           type: TransformValuesTypes.Text
+        },
+        {
+          name: 'spec.auth.type',
+          type: TransformValuesTypes.Text
+        },
+        {
+          name: 'spec.auth.access_id',
+          type: TransformValuesTypes.Text
         }
       ]
     : []
@@ -40,6 +48,18 @@ const extraAuthFieldsValidationConfig = (
           name: 'spec.auth.region',
           type: ValidationFieldTypes.Text,
           label: 'sto.stepField.authRegion',
+          isRequired: true
+        },
+        {
+          name: 'spec.auth.type',
+          type: ValidationFieldTypes.Text,
+          label: 'typeLabel',
+          isRequired: true
+        },
+        {
+          name: 'spec.auth.access_id',
+          type: ValidationFieldTypes.Text,
+          label: 'sto.stepField.authAccessId',
           isRequired: true
         }
       ]

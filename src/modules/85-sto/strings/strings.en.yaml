@@ -81,6 +81,8 @@ exemptions: Exemptions
 noSecurityResults: No Security Results Processed
 failedToGetIssueCounts: Failed to get issue counts
 noSecurityIssues: No Security Issues
+processingSecurityResults: Processing Security Issues
+fetchingSecurityResults: Fetching Security Results
 Critical: Critical
 Info: Info
 Unassigned: Unassigned

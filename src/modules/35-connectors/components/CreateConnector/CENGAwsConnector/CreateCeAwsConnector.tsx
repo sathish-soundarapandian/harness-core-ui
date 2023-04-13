@@ -38,7 +38,11 @@ const CreateCeAwsConnector: React.FC<CreateConnectorModalProps> = props => {
         />
         <CostUsageStep name={getString('connectors.ceAws.steps.cur')} />
         <CrossAccountRoleStep1 name={getString('connectors.ceAws.steps.req')} />
-        <CrossAccountRoleStep2 name={getString('connectors.ceAws.steps.roleARN')} />
+        <CrossAccountRoleStep2
+          name={getString('connectors.ceAws.steps.roleARN')}
+          isEditMode={props.isEditMode}
+          setIsEditMode={props.setIsEditMode}
+        />
         <ConnectorTestConnection
           name={getString('connectors.ceAws.testConnection.heading')}
           connectorInfo={props.connectorInfo}

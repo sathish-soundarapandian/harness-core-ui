@@ -156,16 +156,8 @@ export const getInfrastructureDefaultValue = (
       }
     }
     case InfraDeploymentType.PDC: {
-      const {
-        connectorRef,
-        credentialsRef,
-        delegateSelectors,
-        hostFilter,
-        hosts,
-        hostAttributes,
-        hostObjectArray,
-        dynamicallyProvisioned
-      } = infrastructure?.spec || {}
+      const { connectorRef, credentialsRef, delegateSelectors, hostFilter, hosts, hostAttributes, hostObjectArray } =
+        infrastructure?.spec || {}
 
       return {
         connectorRef,
@@ -176,8 +168,7 @@ export const getInfrastructureDefaultValue = (
         hostFilter,
         serviceType,
         hostAttributes,
-        hostObjectArray,
-        dynamicallyProvisioned
+        hostObjectArray
       }
     }
     case InfraDeploymentType.SshWinRmAzure: {

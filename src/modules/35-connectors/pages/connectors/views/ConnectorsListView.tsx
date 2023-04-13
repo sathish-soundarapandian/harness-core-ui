@@ -45,9 +45,16 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import routes from '@common/RouteDefinitions'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { getIconByType, isSMConnector } from '../utils/ConnectorUtils'
-import { getConnectorDisplaySummary } from '../utils/ConnectorListViewUtils'
+import {
+  CONNECTORS_PAGE_INDEX,
+  CONNECTORS_PAGE_SIZE,
+  getConnectorDisplaySummary
+} from '../utils/ConnectorListViewUtils'
 import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
 import { ConnectorDetailsView } from '../utils/ConnectorHelper'
 import css from './ConnectorsListView.module.scss'
@@ -55,7 +62,6 @@ import css from './ConnectorsListView.module.scss'
 interface ConnectorListViewProps {
   data?: PageConnectorResponse
   reload?: () => Promise<void>
-  gotoPage: (pageNumber: number) => void
   openConnectorModal: UseCreateConnectorModalReturn['openConnectorModal']
   forceDeleteSupported?: boolean
 }
@@ -415,7 +421,7 @@ export const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, 
 }
 
 const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
-  const { data, reload, gotoPage, forceDeleteSupported = false } = props
+  const { data, reload, forceDeleteSupported = false } = props
   const params = useParams<PipelineType<ProjectPathProps>>()
   const history = useHistory()
   const { getString } = useStrings()
@@ -485,6 +491,14 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
     columns.splice(2, 1)
   }
 
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const paginationProps = useDefaultPaginationProps({
+    pageIndex: data?.pageIndex || CONNECTORS_PAGE_INDEX,
+    pageSize: data?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : CONNECTORS_PAGE_SIZE),
+    itemCount: data?.totalItems || 0,
+    pageCount: data?.totalPages || -1
+  })
+
   return (
     <>
       <HelpPanel referenceId="connectors" type={HelpPanelType.FLOATING_CONTAINER} />
@@ -497,13 +511,7 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
           const url = routes.toConnectorDetails({ ...params, connectorId: connector.connector?.identifier })
           history.push(connectorDetailsUrlWithGit(url, connector.gitDetails))
         }}
-        pagination={{
-          itemCount: data?.totalItems || 0,
-          pageSize: data?.pageSize || 10,
-          pageCount: data?.totalPages || -1,
-          pageIndex: data?.pageIndex || 0,
-          gotoPage
-        }}
+        pagination={paginationProps}
       />
     </>
   )

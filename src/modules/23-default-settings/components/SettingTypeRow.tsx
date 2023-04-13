@@ -12,11 +12,11 @@ import { useFormikContext } from 'formik'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import type { SettingHandler } from '@default-settings/factories/DefaultSettingsFactory'
-import type { SettingType } from '@default-settings/interfaces/SettingType.types'
 import { useStrings } from 'framework/strings'
 import type { SettingDTO, SettingRequestDTO } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { SettingType } from '@common/constants/Utils'
 import css from './SettingsCategorySection.module.scss'
 interface SettingTypeRowProps {
   settingTypeHandler: SettingHandler

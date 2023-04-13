@@ -8,12 +8,13 @@
 import React from 'react'
 import { Container, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import type { SettingCategory, SettingGroups, SettingType } from '@default-settings/interfaces/SettingType.types'
+import type { SettingCategory, SettingGroups } from '@default-settings/interfaces/SettingType.types'
 
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
 import type { SettingDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
+import type { SettingType } from '@common/constants/Utils'
 import SettingTypeRow, { SettingTypeRowHeader } from './SettingTypeRow'
 import css from './SettingsCategorySection.module.scss'
 interface SettingCategorySectionContentsProps {

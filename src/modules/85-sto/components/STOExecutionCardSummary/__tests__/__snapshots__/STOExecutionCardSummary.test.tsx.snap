@@ -66,6 +66,11 @@ exports[`STOExecutionCardSummary shows loading spinner 1`] = `
     <div
       data-testid="spinner"
     />
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+    >
+      sto.fetchingSecurityResults
+    </p>
   </div>
 </div>
 `;

@@ -31,6 +31,7 @@ import { getSLOMetricOptions } from '@cv/pages/slos/components/CVCreateSLOV2/CVC
 import { defaultOption } from '../SLI.constants'
 import { ObjectiveStatementBlock } from './ObjectiveStatementBlock'
 import { useConfigureSLIContext } from '../SLIContext'
+import OptionalConfig from './OptionalConfig/OptionalConfig'
 import css from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.module.scss'
 
 export interface PickMetricProps
@@ -233,6 +234,7 @@ const PickMetric: React.FC<PickMetricProps> = props => {
               />
             </Card>
           )}
+          {isWindowBased && <OptionalConfig />}
         </Layout.Vertical>
       </Container>
     </>

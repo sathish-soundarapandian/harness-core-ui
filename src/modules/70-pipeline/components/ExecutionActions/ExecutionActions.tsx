@@ -87,6 +87,7 @@ export interface ExecutionActionsProps {
 function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
   return {
     canAbort: isExecutionActive(executionStatus) && canExecute,
+    canRollback: isExecutionActive(executionStatus) && canExecute,
     canPause:
       isExecutionActive(executionStatus) &&
       !isExecutionPaused(executionStatus) &&
@@ -102,12 +103,14 @@ function getActionTexts(stageId?: string): {
   pauseText: StringKeys
   rerunText: StringKeys
   resumeText: StringKeys
+  UserMarkedFailure: StringKeys
 } {
   return {
     abortText: stageId ? 'pipeline.execution.actions.abortStage' : 'pipeline.execution.actions.abortPipeline',
     pauseText: stageId ? 'pipeline.execution.actions.pauseStage' : 'pipeline.execution.actions.pausePipeline',
     rerunText: stageId ? 'pipeline.execution.actions.rerunStage' : 'pipeline.execution.actions.rerunPipeline',
-    resumeText: stageId ? 'pipeline.execution.actions.resumeStage' : 'pipeline.execution.actions.resumePipeline'
+    resumeText: stageId ? 'pipeline.execution.actions.resumeStage' : 'pipeline.execution.actions.resumePipeline',
+    UserMarkedFailure: 'pipeline.failureStrategies.strategiesLabel.UserMarkedFailure'
   }
 }
 
@@ -130,6 +133,8 @@ function getSuccessMessage(
       ? getString('pipeline.execution.stageActionMessages.resumedMessage', {
           stageName
         })
+      : interruptType === 'UserMarkedFailure'
+      ? getString('pipeline.execution.stageActionMessages.userMarkFailedMessage', { stageName })
       : ''
   } else {
     return interruptType === 'AbortAll'
@@ -204,10 +209,25 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
       }
     }
   })
+
+  const { openDialog: openMarkAsFailedDialog } = useConfirmationDialog({
+    cancelButtonText: getString('cancel'),
+    contentText: getString('pipeline.execution.dialogMessages.markAsFailedConfirmation'),
+    titleText: getString('pipeline.execution.dialogMessages.markAsFailedTitle'),
+    confirmButtonText: getString('confirm'),
+    intent: Intent.WARNING,
+    onCloseDialog: async isConfirmed => {
+      /* istanbul ignore else */
+      if (isConfirmed) {
+        markStageAsFailed()
+      }
+    }
+  })
+
   const { CI_YAML_VERSIONING, PIE_DEPRECATE_PAUSE_INTERRUPT_NG } = useFeatureFlags()
 
-  const { canAbort, canPause, canRerun, canResume } = getValidExecutionActions(canExecute, executionStatus)
-  const { abortText, pauseText, rerunText, resumeText } = getActionTexts(stageId)
+  const { canAbort, canPause, canRerun, canResume, canRollback } = getValidExecutionActions(canExecute, executionStatus)
+  const { abortText, pauseText, rerunText, resumeText, UserMarkedFailure } = getActionTexts(stageId)
 
   const interruptMethod = stageId ? stageInterrupt : interrupt
 
@@ -258,6 +278,10 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
 
   async function resumePipeline(): Promise<void> {
     await executeAction('Resume')
+  }
+
+  async function markStageAsFailed(): Promise<void> {
+    await executeAction('UserMarkedFailure')
   }
 
   /*--------------------------------------Retry Pipeline---------------------------------------------*/
@@ -368,6 +392,17 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
               icon="stop"
               tooltip={getString(abortText)}
               onClick={openAbortDialog}
+              {...commonButtonProps}
+              disabled={!canExecute}
+            />
+          )}
+
+          {stageId && canRollback && (
+            <Button
+              size={ButtonSize.SMALL}
+              icon="main-rollback"
+              tooltip={getString(UserMarkedFailure)}
+              onClick={openMarkAsFailedDialog}
               {...commonButtonProps}
               disabled={!canExecute}
             />

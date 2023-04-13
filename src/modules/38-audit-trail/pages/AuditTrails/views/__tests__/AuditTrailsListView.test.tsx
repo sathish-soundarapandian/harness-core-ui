@@ -30,7 +30,7 @@ describe('Audit trail list view', () => {
   test('render', () => {
     const renderObj = render(
       <TestWrapper path={routes.toAuditTrail({ ...accountPathProps })} pathParams={{ accountId: 'testAcc' }}>
-        <AuditLogsListView data={data.data as any} setPage={jest.fn} />
+        <AuditLogsListView data={data.data as any} />
       </TestWrapper>
     )
     expect(renderObj.container).toMatchSnapshot()
@@ -42,7 +42,7 @@ describe('Audit trail list view', () => {
         path={routes.toAuditTrail({ ...orgPathProps })}
         pathParams={{ accountId: 'testAcc', orgIdentifier: 'orgdummy' }}
       >
-        <AuditLogsListView data={data.data as any} setPage={jest.fn} />
+        <AuditLogsListView data={data.data as any} />
       </TestWrapper>
     )
     expect(renderObj.container).toMatchSnapshot()
@@ -51,7 +51,7 @@ describe('Audit trail list view', () => {
   test('test event summary click', () => {
     render(
       <TestWrapper path={routes.toAuditTrail({ ...accountPathProps })} pathParams={{ accountId: 'testAcc' }}>
-        <AuditLogsListView data={data.data as any} setPage={jest.fn} />
+        <AuditLogsListView data={data.data as any} />
       </TestWrapper>
     )
     const notesIcon = document.body.querySelector('.notesIcon')

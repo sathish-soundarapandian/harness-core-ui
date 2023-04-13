@@ -46,7 +46,7 @@ import {
   GitErrorMetadataDTO
 } from 'services/pipeline-ng'
 import { useGetSettingValue } from 'services/cd-ng'
-import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import { SettingType } from '@common/constants/Utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useToaster } from '@common/exports'

@@ -31,8 +31,10 @@ import {
   ratioBasedSLO
 } from './CVCreateSLOV2.mock'
 import {
+  createOptionalConfigPayload,
   getServiceLevelIndicatorsIdentifier,
   getServiceLevelIndicatorsIdentifierFromResponse,
+  getSimpleSLOCustomValidation,
   getSLOTarget,
   getSLOV2InitialFormData
 } from '../CVCreateSLOV2.utils'
@@ -918,5 +920,85 @@ describe('Simple SLO V2', () => {
     expect(getServiceLevelIndicatorsIdentifier(SLOV2FormMock as SLOV2Form, 'prvSLIIdentifier')).toEqual(
       'prvSLIIdentifier'
     )
+  })
+
+  test('validate createOptionalConfigPayload', () => {
+    const mockOptionalConfig = { considerAllConsecutiveMinutesFromStartAsBad: false, considerConsecutiveMinutes: 10 }
+    expect(createOptionalConfigPayload(SLOV2FormMock as SLOV2Form)).toEqual({})
+    expect(
+      createOptionalConfigPayload({
+        ...SLOV2FormMock,
+        ...mockOptionalConfig
+      } as SLOV2Form)
+    ).toEqual(mockOptionalConfig)
+    expect(
+      createOptionalConfigPayload({
+        ...SLOV2FormMock,
+        ...mockOptionalConfig,
+        considerAllConsecutiveMinutesFromStartAsBad: true
+      } as SLOV2Form)
+    ).toEqual({ ...mockOptionalConfig, considerAllConsecutiveMinutesFromStartAsBad: true })
+    expect(
+      createOptionalConfigPayload({
+        ...SLOV2FormMock,
+        considerAllConsecutiveMinutesFromStartAsBad: true,
+        considerConsecutiveMinutes: undefined
+      } as SLOV2Form)
+    ).toEqual({})
+    expect(
+      createOptionalConfigPayload({
+        ...SLOV2FormMock,
+        considerAllConsecutiveMinutesFromStartAsBad: undefined,
+        considerConsecutiveMinutes: 10
+      } as SLOV2Form)
+    ).toEqual({})
+  })
+
+  test('validate getSimpleSLOCustomValidation', () => {
+    const mockOptionalConfig = { considerAllConsecutiveMinutesFromStartAsBad: false, considerConsecutiveMinutes: 10 }
+    expect(getSimpleSLOCustomValidation(SLOV2FormMock as SLOV2Form, str => str)).toEqual(undefined)
+    expect(getSimpleSLOCustomValidation({ ...SLOV2FormMock, ...mockOptionalConfig } as SLOV2Form, str => str)).toEqual(
+      {}
+    )
+    expect(
+      getSimpleSLOCustomValidation(
+        {
+          ...SLOV2FormMock,
+          ...mockOptionalConfig,
+          considerAllConsecutiveMinutesFromStartAsBad: undefined
+        } as SLOV2Form,
+        str => str
+      )
+    ).toEqual({ considerAllConsecutiveMinutesFromStartAsBad: 'cv.required' })
+    expect(
+      getSimpleSLOCustomValidation(
+        {
+          ...SLOV2FormMock,
+          ...mockOptionalConfig,
+          considerConsecutiveMinutes: undefined
+        } as SLOV2Form,
+        str => str
+      )
+    ).toEqual({ considerConsecutiveMinutes: 'cv.required' })
+    expect(
+      getSimpleSLOCustomValidation(
+        {
+          ...SLOV2FormMock,
+          ...mockOptionalConfig,
+          considerConsecutiveMinutes: 100
+        } as SLOV2Form,
+        str => str
+      )
+    ).toEqual({ considerConsecutiveMinutes: 'cv.slos.slis.optionalConfig.consecutiveMinsMax' })
+    expect(
+      getSimpleSLOCustomValidation(
+        {
+          ...SLOV2FormMock,
+          ...mockOptionalConfig,
+          considerConsecutiveMinutes: 0
+        } as SLOV2Form,
+        str => str
+      )
+    ).toEqual({ considerConsecutiveMinutes: 'cv.slos.slis.optionalConfig.consecutiveMinsMin' })
   })
 })

@@ -151,6 +151,7 @@ function HelmRepoOverrideManifest({
                   name="identifier"
                   label={getString('pipeline.manifestType.manifestIdentifier')}
                   placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
+                  isIdentifier={true}
                 />
               </div>
             </div>

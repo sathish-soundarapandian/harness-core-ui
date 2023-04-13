@@ -1675,7 +1675,6 @@ exports[`ServiceNow Update tests Edit Stage - readonly view for Template type: e
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                  placeholder="pipeline.serviceNowCreateStep.templateNamePlaceholder"
                 >
                   <div
                     class="bp3-input-group bp3-disabled MultiTypeInput--input"

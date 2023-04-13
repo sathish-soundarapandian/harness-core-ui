@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEqual, defaultTo, pick } from 'lodash-es'
+import { isEqual, defaultTo, pick, isUndefined, isBoolean, isNumber } from 'lodash-es'
 import * as Yup from 'yup'
 import { SelectOption, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -38,9 +38,14 @@ import {
   GetMetricFormValueBySLIMetricTypeProps,
   GetSLOIdentifierWithOrgAndProjectProps,
   GetMetricRequestValuesBySLIMetricTypeProps,
-  EvaluationType
+  EvaluationType,
+  GetSimpleSLOCustomErrorProps,
+  GetSimpleSLOCustomErrorValues
 } from './CVCreateSLOV2.types'
-import { serviceLevelObjectiveKeys } from './components/CreateCompositeSloForm/CreateCompositeSloForm.constant'
+import {
+  MaxConsecutiveStartTime,
+  serviceLevelObjectiveKeys
+} from './components/CreateCompositeSloForm/CreateCompositeSloForm.constant'
 import type { SLIForm } from './components/CreateSimpleSloForm/CreateSimpleSloForm.types'
 import { SLOType } from './CVCreateSLOV2.constants'
 
@@ -106,6 +111,16 @@ export const getSLOCommonFormValues = (serviceLevelObjective: ServiceLevelObject
   }
 }
 
+const getOptionalConfigWindowBased = (data: ServiceLevelIndicatorDTO) => {
+  return data?.type === EvaluationType.WINDOW
+    ? {
+        [SLOV2FormFields.CONSIDER_CONSECUTIVE_MINUTES]: data?.spec?.spec?.considerConsecutiveMinutes,
+        [SLOV2FormFields.CONSIDER_ALL_CONSECUTIVE_MINUTES_FROM_START_AS_BAD]:
+          data?.spec?.spec?.considerAllConsecutiveMinutesFromStartAsBad
+      }
+    : undefined
+}
+
 export const getSimpleSLOFormValue = (serviceLevelObjective: ServiceLevelObjectiveV2DTO) => {
   const { spec } = serviceLevelObjective
   const { monitoredServiceRef, healthSourceRef, serviceLevelIndicatorType, serviceLevelIndicators } = spec || {}
@@ -121,7 +136,8 @@ export const getSimpleSLOFormValue = (serviceLevelObjective: ServiceLevelObjecti
     ...populateMetricInSLOForm(serviceLevelObjective),
     [SLOV2FormFields.OBJECTIVE_VALUE]: data?.spec?.spec?.thresholdValue,
     [SLOV2FormFields.OBJECTIVE_COMPARATOR]: data?.spec?.spec?.thresholdType,
-    [SLOV2FormFields.SLI_MISSING_DATA_TYPE]: data?.spec?.sliMissingDataType
+    [SLOV2FormFields.SLI_MISSING_DATA_TYPE]: data?.spec?.sliMissingDataType,
+    ...getOptionalConfigWindowBased(data)
   }
 }
 
@@ -277,24 +293,46 @@ const createWindowBasedServiceLevelIndicatorSpec = (values: SLOV2Form): WindowBa
   return data
 }
 
+export const areOptionalFieldsFilled = (
+  considerConsecutiveMinutes?: number,
+  considerAllConsecutiveMinutesFromStartAsBad?: boolean
+): boolean => !isUndefined(considerAllConsecutiveMinutesFromStartAsBad) && !isUndefined(considerConsecutiveMinutes)
+
+export const createOptionalConfigPayload = (
+  values: SLOV2Form
+): { considerAllConsecutiveMinutesFromStartAsBad?: boolean; considerConsecutiveMinutes?: number } => {
+  const { considerConsecutiveMinutes, considerAllConsecutiveMinutesFromStartAsBad } = values
+
+  return areOptionalFieldsFilled(considerConsecutiveMinutes, considerAllConsecutiveMinutesFromStartAsBad)
+    ? {
+        considerAllConsecutiveMinutesFromStartAsBad,
+        considerConsecutiveMinutes
+      }
+    : {}
+}
+
 const createThresholdSLIMetricSpec = (values: SLOV2Form): ThresholdSLIMetricSpec => {
   const { validRequestMetric, objectiveComparator, objectiveValue } = values
+  const optionalConfig = createOptionalConfigPayload(values)
   const data = {
     metric1: validRequestMetric,
     thresholdType: objectiveComparator,
-    thresholdValue: objectiveValue
+    thresholdValue: objectiveValue,
+    ...optionalConfig
   }
   return data as ThresholdSLIMetricSpec
 }
 
 const createRatioSLIMetricSpec = (values: SLOV2Form): RatioSLIMetricSpec => {
   const { eventType, validRequestMetric, goodRequestMetric, objectiveComparator, objectiveValue } = values
+  const optionalConfig = createOptionalConfigPayload(values)
   const data = {
     eventType,
     metric1: goodRequestMetric,
     metric2: validRequestMetric,
     thresholdType: objectiveComparator,
-    thresholdValue: objectiveValue
+    thresholdValue: objectiveValue,
+    ...optionalConfig
   }
   return data as RatioSLIMetricSpec
 }
@@ -462,6 +500,87 @@ export const getSLOV2FormValidationSchema = (getString: UseStringsReturn['getStr
     }),
     ...getSLOTargetSchemaValidation(getString)
   })
+}
+
+export const getSimpleSLOCustomError = ({
+  considerConsecutiveMinutes,
+  considerAllConsecutiveMinutesFromStartAsBad,
+  evaluationType,
+  getString,
+  onlyStatus
+}: GetSimpleSLOCustomErrorProps): GetSimpleSLOCustomErrorValues => {
+  let error = {}
+  const considerConsecutiveMinutesValue = considerConsecutiveMinutes as number
+  const isValidMInutesFromStart = isBoolean(considerAllConsecutiveMinutesFromStartAsBad)
+  const isValidConsecutiveMinute = isNumber(considerConsecutiveMinutes) && !isNaN(considerConsecutiveMinutes)
+  if (evaluationType === EvaluationType.WINDOW && (isValidConsecutiveMinute || isValidMInutesFromStart)) {
+    if (isValidConsecutiveMinute && !isValidMInutesFromStart) {
+      if (onlyStatus) {
+        return { status: true }
+      } else {
+        error = {
+          ...error,
+          [SLOV2FormFields.CONSIDER_ALL_CONSECUTIVE_MINUTES_FROM_START_AS_BAD]: defaultTo(
+            getString?.('cv.required'),
+            ''
+          )
+        }
+      }
+    }
+    if (!isValidConsecutiveMinute && isValidMInutesFromStart) {
+      if (onlyStatus) {
+        return { status: true }
+      } else {
+        error = {
+          ...error,
+          [SLOV2FormFields.CONSIDER_CONSECUTIVE_MINUTES]: defaultTo(getString?.('cv.required'), '')
+        }
+      }
+    }
+    if (isValidConsecutiveMinute && !(considerConsecutiveMinutesValue > 0)) {
+      if (onlyStatus) {
+        return { status: true }
+      } else {
+        error = {
+          ...error,
+          [SLOV2FormFields.CONSIDER_CONSECUTIVE_MINUTES]: defaultTo(
+            getString?.('cv.slos.slis.optionalConfig.consecutiveMinsMin'),
+            ''
+          )
+        }
+      }
+    }
+    if (isValidConsecutiveMinute && !(considerConsecutiveMinutesValue <= MaxConsecutiveStartTime)) {
+      if (onlyStatus) {
+        return { status: true }
+      } else {
+        error = {
+          ...error,
+          [SLOV2FormFields.CONSIDER_CONSECUTIVE_MINUTES]: defaultTo(
+            getString?.('cv.slos.slis.optionalConfig.consecutiveMinsMax'),
+            ''
+          )
+        }
+      }
+    }
+    return { errorMessage: error, status: false }
+  }
+  return { errorMessage: {}, status: false }
+}
+
+export const getSimpleSLOCustomValidation = (values: SLOV2Form, getString: UseStringsReturn['getString']) => {
+  const { considerConsecutiveMinutes, considerAllConsecutiveMinutesFromStartAsBad, evaluationType } = values
+  if (
+    evaluationType === EvaluationType.WINDOW &&
+    (!isUndefined(considerConsecutiveMinutes) || isBoolean(considerAllConsecutiveMinutesFromStartAsBad))
+  ) {
+    return getSimpleSLOCustomError({
+      considerConsecutiveMinutes,
+      considerAllConsecutiveMinutesFromStartAsBad,
+      evaluationType,
+      getString
+    })?.errorMessage
+  }
 }
 
 export const getSimpleSLOV2FormValidationSchema = (getString: UseStringsReturn['getString']): any => {

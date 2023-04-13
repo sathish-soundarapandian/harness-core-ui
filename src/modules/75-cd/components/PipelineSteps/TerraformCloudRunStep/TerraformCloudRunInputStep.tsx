@@ -29,8 +29,9 @@ import { FormMultiTypeTextArea } from '@common/components/MultiTypeTextArea/Mult
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { TerraformCloudRunInputStepProps } from './types'
-import { getValue, organizationLabel, variableTypes, workspaceLabel } from './helper'
+import { organizationLabel, variableTypes, workspaceLabel } from './helper'
 
+import { getValue } from '../PipelineStepsUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TerraformCloudRunStep.module.scss'
 

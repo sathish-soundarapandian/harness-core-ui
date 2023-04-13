@@ -9,36 +9,29 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { DateRangePickerButton, Layout, DropDown, SelectOption } from '@harness/uicore'
 import type { DateRange } from '@blueprintjs/datetime'
-import { identity } from 'lodash-es'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
-import { useMutateAsGet } from '@common/hooks'
+import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { Page } from '@common/exports'
-import { ShowEventFilterType, showEventTypeMap } from '@audit-trail/utils/RequestUtil'
+import {
+  AuditTrailQueryParams,
+  ShowEventFilterType,
+  showEventTypeMap,
+  useAuditTrailQueryParamOptions
+} from '@audit-trail/utils/RequestUtil'
 import AuditTrailsFilters from '@audit-trail/components/AuditTrailsFilters'
 import { useStrings } from 'framework/strings'
 import type { AuditFilterProperties } from 'services/audit'
 import { useGetAuditEventList } from 'services/audit'
-import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import AuditLogsListView from './views/AuditLogsListView'
 import AuditTrailsEmptyState from './audit_trails_empty_state.png'
 import css from './AuditTrailsPage.module.scss'
 
-interface AuditDateFilter {
-  startTime: string
-  endTime: string
-}
 const AuditLogs: React.FC = () => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const [selectedFilterProperties, setSelectedFilterProperties] = useState<AuditFilterProperties>()
-  const [staticFilter, setStaticFilter] = useQueryParamsState<AuditFilterProperties['staticFilter'] | undefined>(
-    'staticFilter',
-    undefined,
-    {
-      serializer: identity,
-      deserializer: identity
-    }
-  )
-  const [page, setPage] = useQueryParamsState('page', 0)
+  const queryParamOptions = useAuditTrailQueryParamOptions()
+  const { staticFilter, page, dateFilter, size } = useQueryParams(queryParamOptions)
+  const { updateQueryParams } = useUpdateQueryParams<AuditTrailQueryParams>()
   const { getString } = useStrings()
 
   const start = new Date()
@@ -48,18 +41,6 @@ const AuditLogs: React.FC = () => {
   const end = new Date()
   end.setHours(23, 59, 59, 999)
 
-  const [dateFilter, setDateFilter] = useQueryParamsState<AuditDateFilter>(
-    'dateFilter',
-    {
-      startTime: start.getTime().toString(),
-      endTime: end.getTime().toString()
-    },
-    {
-      serializer: identity,
-      deserializer: identity
-    }
-  )
-
   const {
     data: auditData,
     loading,
@@ -68,7 +49,7 @@ const AuditLogs: React.FC = () => {
   } = useMutateAsGet(useGetAuditEventList, {
     queryParams: {
       accountIdentifier: accountId,
-      pageSize: 10,
+      pageSize: size,
       pageIndex: page
     },
     body: {
@@ -82,10 +63,12 @@ const AuditLogs: React.FC = () => {
   })
 
   const onDateChange = (selectedDates: [Date, Date]): void => {
-    setPage(0)
-    setDateFilter({
-      startTime: selectedDates[0].getTime().toString(),
-      endTime: selectedDates[1].getTime().toString()
+    updateQueryParams({
+      page: 0,
+      dateFilter: {
+        startTime: selectedDates[0].getTime().toString(),
+        endTime: selectedDates[1].getTime().toString()
+      }
     })
   }
 
@@ -127,14 +110,17 @@ const AuditLogs: React.FC = () => {
               value={staticFilter}
               width={170}
               onChange={selected => {
-                setStaticFilter(selected.value ? (selected.value as AuditFilterProperties['staticFilter']) : undefined)
+                updateQueryParams({
+                  page: 0,
+                  staticFilter: selected.value ? (selected.value as AuditFilterProperties['staticFilter']) : undefined
+                })
               }}
             />
           </Layout.Horizontal>
           <Layout.Horizontal flex>
             <AuditTrailsFilters
               applyFilters={(properties: AuditFilterProperties) => {
-                setPage(0)
+                updateQueryParams({ page: 0 })
                 setSelectedFilterProperties(properties)
               }}
             />
@@ -154,7 +140,7 @@ const AuditLogs: React.FC = () => {
         retryOnError={() => refetch()}
         loading={loading}
       >
-        <AuditLogsListView setPage={setPage} data={auditData?.data || {}} />
+        <AuditLogsListView data={auditData?.data || {}} />
       </Page.Body>
     </>
   )

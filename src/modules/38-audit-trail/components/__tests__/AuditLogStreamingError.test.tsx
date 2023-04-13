@@ -10,7 +10,7 @@ import { render, waitFor, getByText } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
-import { VIEWS } from '@audit-trail/pages/AuditTrails/AuditTrailsPage'
+import { View } from '@audit-trail/utils/RequestUtil'
 import AuditLogStreamingError from '../AuditLogStreamingError/AuditLogStreamingError'
 
 describe('AuditLogStreamingError', () => {
@@ -19,7 +19,7 @@ describe('AuditLogStreamingError', () => {
 
     render(
       <TestWrapper
-        queryParams={{ view: VIEWS.AUDIT_LOG_STREAMING }}
+        queryParams={{ view: View.AUDIT_LOG_STREAMING }}
         path={routes.toAuditTrail({ ...accountPathProps })}
         pathParams={{ accountId: 'testAcc' }}
       >

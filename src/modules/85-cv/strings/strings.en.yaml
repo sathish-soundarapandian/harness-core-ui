@@ -950,6 +950,11 @@ slos:
       badRequestsByValidRequest: Ratio of bad requests by valid requests
       selectMetric1: Select metric 1
       selectMetric2: Select metric 2
+    optionalConfig:
+      consecutiveDuration: Consecutive duration
+      consecutiveMinutesFromTheStartAs: Consecutive minutes from the start as
+      consecutiveMinsMin: Consecutive mins should be greater than 0 mins
+      consecutiveMinsMax: Consecutive mins should be less than 30 mins
   contextualHelp:
     sli:
       intro: Metrics such as response time, error rate etc. are used to evaluate the performance of the monitored service.

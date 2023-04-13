@@ -30,7 +30,7 @@ import {
   useYamlDiffForInputSet
 } from 'services/pipeline-ng'
 import { useGetSettingValue } from 'services/cd-ng'
-import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import { SettingType } from '@common/constants/Utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { InputSetGitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'

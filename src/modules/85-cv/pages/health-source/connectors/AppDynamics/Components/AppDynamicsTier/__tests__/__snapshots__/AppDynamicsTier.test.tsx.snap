@@ -10,7 +10,6 @@ exports[`AppDynamicsTier should render AppDynamicsTier with multiInputType Selec
   <div
     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
     data-testid="appDTier"
-    placeholder="cv.healthSource.connectors.AppDynamics.tierPlaceholder"
     style="width: 300px;"
   >
     <div
@@ -99,7 +98,6 @@ exports[`AppDynamicsTier should render AppDynamicsTier with multiInputType Selec
   <div
     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
     data-testid="appDTier"
-    placeholder="loading"
     style="width: 300px;"
   >
     <div
@@ -188,7 +186,6 @@ exports[`AppDynamicsTier should render AppDynamicsTier with multiInputType Selec
   <div
     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
     data-testid="appDTier"
-    placeholder="cv.healthSource.connectors.AppDynamics.tierPlaceholder"
     style="width: 300px;"
   >
     <div

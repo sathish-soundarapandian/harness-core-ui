@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import { identity } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { FlexExpander, ButtonVariation } from '@harness/uicore'
 import {
@@ -17,11 +16,12 @@ import {
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import useCreateStreamingDestinationModal from '@audit-trail/modals/StreamingDestinationModal/useCreateStreamingDestinationModal'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { useAuditTrailQueryParamOptions } from '@audit-trail/utils/RequestUtil'
+import { useQueryParams } from '@common/hooks'
 import AuditLogStreamingListView from './views/AuditLogStreamingListView'
 import AuditTrailsEmptyState from './audit_trails_empty_state.png'
 import css from './AuditTrailsPage.module.scss'
@@ -31,7 +31,8 @@ export const POLL_INTERVAL = 10 * 60 * 1000 // 10 minutes
 const AuditLogStreaming: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const [page, setPage] = useQueryParamsState<number>('page', 0, { serializer: identity, deserializer: identity })
+  const queryParamOptions = useAuditTrailQueryParamOptions()
+  const { page, size } = useQueryParams(queryParamOptions)
   const { openStreamingDestinationModal } = useCreateStreamingDestinationModal({
     onClose: () => {
       refetchListingPageAPIs()
@@ -45,7 +46,7 @@ const AuditLogStreaming: React.FC = () => {
   } = useGetStreamingDestinationsCardsQuery({}, { refetchInterval: POLL_INTERVAL })
 
   const { data, error, isFetching, refetch } = useGetStreamingDestinationsAggregateQuery(
-    { queryParams: { sort: 'created', page: page, limit: 25 } },
+    { queryParams: { sort: 'created', page: page, limit: size } },
     { refetchInterval: POLL_INTERVAL }
   )
 
@@ -100,7 +101,6 @@ const AuditLogStreaming: React.FC = () => {
           cardsData={cardsData}
           refetchListingPageAPIs={refetchListingPageAPIs}
           openStreamingDestinationModal={openStreamingDestinationModal}
-          setPage={setPage}
         />
       </Page.Body>
     </>

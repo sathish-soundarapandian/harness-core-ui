@@ -42,7 +42,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     SRM_DOWNTIME,
     STO_JIRA_INTEGRATION
   } = useFeatureFlags()
-  const { showGetStartedTabInMainMenu, showGetStartedCDTabInMainMenu } = useSideNavContext()
+  const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const { isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF, selectedProject } = useAppStore()
   const { orgIdentifier = orgIdentifierFromParams, identifier: projectIdentifier = projectIdentifierFromParams } =
@@ -53,6 +53,10 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     projectIdentifier,
     module
   }
+  // Get and set the visibility of the "cd" getStarted link
+  const isCDGetStartedVisible = showGetStartedTabInMainMenu['cd']
+  const isCIGetStartedVisible = showGetStartedTabInMainMenu['ci']
+
   const isCD = module === 'cd'
   const isCI = module === 'ci'
   const isCV = module === 'cv'
@@ -114,11 +118,11 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
           />
         ) : null}
         {showFileStore && <SidebarLink label={getString('resourcePage.fileStore')} to={routes.toFileStore(params)} />}
-        {enabledHostedBuildsForFreeUsers && !showGetStartedTabInMainMenu && module === 'ci' && (
+        {enabledHostedBuildsForFreeUsers && !isCIGetStartedVisible && module === 'ci' && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
         )}
 
-        {module === 'cd' && !showGetStartedCDTabInMainMenu && (
+        {module === 'cd' && !isCDGetStartedVisible && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
         )}
         {SRM_ET_EXPERIMENTAL && module === 'cv' && !showGetStartedTabInMainMenu && (

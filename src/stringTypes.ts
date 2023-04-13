@@ -129,6 +129,7 @@ export interface StringsMap {
   'common.blank': string
   'common.branchName': string
   'common.bucketName': string
+  'common.buildsIn': string
   'common.by': string
   'common.byType': string
   'common.cantDeleteEntity': string
@@ -328,6 +329,7 @@ export interface StringsMap {
   'common.extendTrial.feedback.suggestion': string
   'common.extendTrial.feedback.title': string
   'common.extendTrial.heading': string
+  'common.failedCount': string
   'common.failureRate': string
   'common.false': string
   'common.favorites': string
@@ -1104,6 +1106,7 @@ export interface StringsMap {
   'common.subscriptions.usage.stoScans': string
   'common.subscriptions.usage.stoScansTooltip': string
   'common.subtotal': string
+  'common.successCount': string
   'common.successfullCreate': string
   'common.successfullUpdate': string
   'common.successfullyAdded': string
@@ -1584,6 +1587,7 @@ export interface StringsMap {
   'rbac.youAreNotAuthorizedTo': string
   'defaultSettings.allowDifferentRepoForInputSets': string
   'defaultSettings.allowOverrides': string
+  'defaultSettings.allowUserToMarkStepAsFailedExplicitly': string
   'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
@@ -3606,8 +3610,9 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactId': string
   'pipeline.artifactsSelection.artifactIdPlaceholder': string
   'pipeline.artifactsSelection.artifactPathPlaceholder': string
-  'pipeline.artifactsSelection.artifactSourceName': string
-  'pipeline.artifactsSelection.artifactSourceNameRegexErrorMsg': string
+  'pipeline.artifactsSelection.artifactSourceId': string
+  'pipeline.artifactsSelection.artifactSourceIdPlaceholder': string
+  'pipeline.artifactsSelection.artifactSourceIdRegexErrorMsg': string
   'pipeline.artifactsSelection.artifactType': string
   'pipeline.artifactsSelection.artifactTyperequired': string
   'pipeline.artifactsSelection.artifactsArrayPath': string
@@ -3786,6 +3791,9 @@ export interface StringsMap {
   'pipeline.configFiles.error.identifier': string
   'pipeline.configFiles.fileType': string
   'pipeline.configFiles.identifierLabel': string
+  'pipeline.configFiles.name': string
+  'pipeline.configFiles.paths': string
+  'pipeline.configFiles.placeholder': string
   'pipeline.configFiles.plainText': string
   'pipeline.configFiles.selectFileType': string
   'pipeline.configFiles.source': string
@@ -3923,6 +3931,8 @@ export interface StringsMap {
   'pipeline.execution.currentExecution': string
   'pipeline.execution.dialogMessages.abortExecution': string
   'pipeline.execution.dialogMessages.abortTitle': string
+  'pipeline.execution.dialogMessages.markAsFailedConfirmation': string
+  'pipeline.execution.dialogMessages.markAsFailedTitle': string
   'pipeline.execution.elapsedTime': string
   'pipeline.execution.emptyStepGroup': string
   'pipeline.execution.ignoreFailedWarningText': string
@@ -3943,6 +3953,7 @@ export interface StringsMap {
   'pipeline.execution.stageActionMessages.abortedMessage': string
   'pipeline.execution.stageActionMessages.pausedMessage': string
   'pipeline.execution.stageActionMessages.resumedMessage': string
+  'pipeline.execution.stageActionMessages.userMarkFailedMessage': string
   'pipeline.execution.stageTitlePrefix': string
   'pipeline.execution.stagesExecuted': string
   'pipeline.execution.stepGroupTitlePrefix': string
@@ -4054,6 +4065,7 @@ export interface StringsMap {
   'pipeline.failureStrategies.strategiesLabel.Retry': string
   'pipeline.failureStrategies.strategiesLabel.StageRollback': string
   'pipeline.failureStrategies.strategiesLabel.StepGroupRollback': string
+  'pipeline.failureStrategies.strategiesLabel.UserMarkedFailure': string
   'pipeline.failureStrategies.tabHasErrors': string
   'pipeline.failureStrategies.title': string
   'pipeline.failureStrategies.validation.actionRequired': string
@@ -4234,6 +4246,7 @@ export interface StringsMap {
   'pipeline.jiraUpdateStep.fetchingStatus': string
   'pipeline.jiraUpdateStep.projectIssueKeyDisclaimer': string
   'pipeline.jiraUpdateStep.selectStatus': string
+  'pipeline.jiraUpdateStep.statusDisclaimer': string
   'pipeline.jiraUpdateStep.statusTransitionAccordion': string
   'pipeline.jiraUpdateStep.transitionLabel': string
   'pipeline.jiraUpdateStep.transitionPlaceholder': string
@@ -4721,8 +4734,10 @@ export interface StringsMap {
   'pipeline.stepDescription.Container': string
   'pipeline.stepDescription.CustomApproval': string
   'pipeline.stepDescription.DeployCloudFunction': string
+  'pipeline.stepDescription.DeployCloudFunctionGenOne': string
   'pipeline.stepDescription.DeployCloudFunctionNoTrafficShift': string
   'pipeline.stepDescription.DeployCloudFunctionRollback': string
+  'pipeline.stepDescription.DeployCloudFunctionRollbackGenOne': string
   'pipeline.stepDescription.DeployCloudFunctionTrafficShift': string
   'pipeline.stepDescription.DockerHub': string
   'pipeline.stepDescription.ECR': string
@@ -9072,6 +9087,10 @@ export interface StringsMap {
   'cv.slos.slis.evaluationType.window': string
   'cv.slos.slis.metricOptions.ratioBased': string
   'cv.slos.slis.metricOptions.thresholdBased': string
+  'cv.slos.slis.optionalConfig.consecutiveDuration': string
+  'cv.slos.slis.optionalConfig.consecutiveMinsMax': string
+  'cv.slos.slis.optionalConfig.consecutiveMinsMin': string
+  'cv.slos.slis.optionalConfig.consecutiveMinutesFromTheStartAs': string
   'cv.slos.slis.ratioMetricType.badRequestsByValidRequest': string
   'cv.slos.slis.ratioMetricType.badRequestsMetrics': string
   'cv.slos.slis.ratioMetricType.eventType': string
@@ -9167,42 +9186,26 @@ export interface StringsMap {
   'iacm.ansible': string
   'iacm.cdk': string
   'iacm.cloudformation': string
-  'iacm.createStack': string
   'iacm.navTitle': string
-  'iacm.permissions.iacmStack': string
-  'iacm.permissions.iacmStacks': string
+  'iacm.permissions.iacmWorkspace': string
+  'iacm.permissions.iacmWorkspaces': string
   'iacm.pulumi': string
-  'iacm.stackWizard.autoApprove': string
-  'iacm.stackWizard.autoApproveRequired': string
-  'iacm.stackWizard.connectorRequired': string
-  'iacm.stackWizard.gitFetchTypeRequired': string
-  'iacm.stackWizard.provisionerDetails': string
-  'iacm.stackWizard.provisionerType': string
-  'iacm.stackWizard.provisionerTypeRequired': string
-  'iacm.stackWizard.provisionerVersion': string
-  'iacm.stackWizard.provisionerVersionRequired': string
-  'iacm.stackWizard.repoConnectorTypeRequired': string
-  'iacm.stackWizard.repoDetails': string
-  'iacm.stackWizard.scriptsPath': string
-  'iacm.stackWizard.scriptsPathRequired': string
-  'iacm.stackWizard.selectGitConnector': string
-  'iacm.stackWizard.ttl': string
-  'iacm.stackWizard.ttlRequired': string
-  'iacm.stackWizard.workspaceRequired': string
-  'iacm.stacks': string
   'iacm.stageDescription': string
   'iacm.stageTitle': string
   'iacm.terragrunt': string
+  'iacm.workspaces': string
   'sto.Critical': string
   'sto.Info': string
   'sto.Unassigned': string
   'sto.continuous': string
   'sto.exemptions': string
   'sto.failedToGetIssueCounts': string
+  'sto.fetchingSecurityResults': string
   'sto.gettingStarted': string
   'sto.issues': string
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
+  'sto.processingSecurityResults': string
   'sto.scans': string
   'sto.securityStage.description': string
   'sto.stepDescription.AWSECR': string

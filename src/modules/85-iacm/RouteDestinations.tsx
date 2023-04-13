@@ -41,8 +41,8 @@ RbacFactory.registerResourceCategory(ResourceCategory.IACM, {
 
 RbacFactory.registerResourceTypeHandler(ResourceType.IAC_STACK, {
   icon: 'nav-settings',
-  label: 'iacm.permissions.iacmStacks',
-  labelSingular: 'iacm.permissions.iacmStack',
+  label: 'iacm.permissions.iacmWorkspaces',
+  labelSingular: 'iacm.permissions.iacmWorkspace',
   category: ResourceCategory.IACM,
   permissionLabels: {
     [PermissionIdentifier.IAC_VIEW_STACK]: <String stringID="rbac.permissionLabels.view" />,

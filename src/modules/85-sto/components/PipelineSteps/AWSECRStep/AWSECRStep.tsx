@@ -63,6 +63,13 @@ export class AWSECRStep extends PipelineStep<AWSECRStepData> {
       auth: {
         access_token: ''
       },
+      image: {
+        name: '',
+        tag: '',
+        access_token: '',
+        domain: '',
+        type: 'aws_ecr'
+      },
       advanced: {
         log: {
           level: 'info'

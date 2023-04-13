@@ -46,6 +46,6 @@ const renderComponent = (): RenderResult =>
 describe('Sidenav', () => {
   test('render', () => {
     const { getByText } = renderComponent()
-    expect(getByText('iacm.stacks')).toBeVisible()
+    expect(getByText('iacm.workspaces')).toBeVisible()
   })
 })

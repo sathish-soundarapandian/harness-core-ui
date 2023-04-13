@@ -15,7 +15,7 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import AuditLogStreamingCards from '@audit-trail/components/AuditLogStreamingCards/AuditLogStreamingCards'
 import AuditLogStreamingError from '@audit-trail/components/AuditLogStreamingError/AuditLogStreamingError'
-import { VIEWS } from '../../AuditTrailsPage'
+import { View } from '@audit-trail/utils/RequestUtil'
 import AuditLogStreamingListView from '../AuditLogStreamingListView'
 import { mockAggregateListResponse, mockResponseCreateOrUpdateStreamingDestination } from './mockAuditLogStreaming'
 
@@ -43,14 +43,13 @@ describe('AuditLogStreaming List View', () => {
   beforeEach(async () => {
     const renderObj = render(
       <TestWrapper
-        queryParams={{ view: VIEWS.AUDIT_LOG_STREAMING }}
+        queryParams={{ view: View.AUDIT_LOG_STREAMING }}
         path={routes.toAuditTrail({ ...accountPathProps })}
         pathParams={{ accountId: 'testAcc' }}
       >
         <AuditLogStreamingListView
           data={{ content: mockAggregateListResponse }}
           openStreamingDestinationModal={openStreamingDestinationModal}
-          setPage={jest.fn()}
         />
       </TestWrapper>
     )

@@ -10,7 +10,6 @@ exports[`AppDApplications should render AppDApplications with multiInputType Sel
   <div
     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
     data-testid="appdApplication"
-    placeholder="cv.healthSource.connectors.AppDynamics.applicationPlaceholder"
     style="width: 300px;"
   >
     <div
@@ -99,7 +98,6 @@ exports[`AppDApplications should render AppDApplications with multiInputType Sel
   <div
     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
     data-testid="appdApplication"
-    placeholder="loading"
     style="width: 300px;"
   >
     <div
@@ -188,7 +186,6 @@ exports[`AppDApplications should render AppDApplications with multiInputType Sel
   <div
     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
     data-testid="appdApplication"
-    placeholder="cv.healthSource.connectors.AppDynamics.applicationPlaceholder"
     style="width: 300px;"
   >
     <div

@@ -18,6 +18,7 @@ function SideCarArtifactIdentifier(): React.ReactElement {
         label={getString('pipeline.artifactsSelection.existingDocker.sidecarId')}
         placeholder={getString('pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder')}
         name="identifier"
+        isIdentifier={true}
       />
     </div>
   )
@@ -28,9 +29,10 @@ function ArtifactSourceIdentifier(): React.ReactElement {
   return (
     <div className={css.dockerSideCard}>
       <FormInput.Text
-        label={getString('pipeline.artifactsSelection.artifactSourceName')}
-        placeholder={getString('pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder')}
+        label={getString('pipeline.artifactsSelection.artifactSourceId')}
+        placeholder={getString('pipeline.artifactsSelection.artifactSourceIdPlaceholder')}
         name="identifier"
+        isIdentifier={true}
       />
     </div>
   )

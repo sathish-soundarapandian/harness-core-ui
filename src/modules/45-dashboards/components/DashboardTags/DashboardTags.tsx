@@ -54,10 +54,10 @@ const DashboardTags: React.FC<DashboardTagProps> = ({ dashboard }) => {
             </section>
           )
         }
-        if (tag === ModuleTags.STO) {
+        if (tag === ModuleTags.CHAOS) {
           return (
-            <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.stoTag}>
-              {getString('common.purpose.sto.continuous')}
+            <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.chaosTag}>
+              {getString('common.purpose.chaos.chaos')}
             </section>
           )
         }
@@ -65,6 +65,13 @@ const DashboardTags: React.FC<DashboardTagProps> = ({ dashboard }) => {
           return (
             <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.srmTag}>
               {getString('common.purpose.cv.serviceReliability')}
+            </section>
+          )
+        }
+        if (tag === ModuleTags.STO) {
+          return (
+            <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.stoTag}>
+              {getString('common.purpose.sto.continuous')}
             </section>
           )
         }

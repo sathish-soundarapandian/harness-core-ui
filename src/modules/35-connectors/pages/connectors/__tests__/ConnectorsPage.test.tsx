@@ -208,8 +208,7 @@ describe('Connectors Page Test', () => {
         orgIdentifier: 'orgId',
         pageIndex: 0,
         pageSize: 10,
-        projectIdentifier: 'projectId',
-        searchTerm: ''
+        projectIdentifier: 'projectId'
       }
     }
     expect(getConnectorsListV2).toBeCalledWith(

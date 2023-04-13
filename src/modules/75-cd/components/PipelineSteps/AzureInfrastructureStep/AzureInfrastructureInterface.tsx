@@ -21,10 +21,6 @@ export const clusterLabel = 'common.cluster'
 export type KubernetesAzureInterface = Omit<K8sAzureInfrastructure, 'useClusterAdminCredentials'>
 export type AzureInfrastructureTemplate = { [key in keyof KubernetesAzureInterface]: string }
 
-export const getValue = (item: { label?: string; value?: string } | string | any): string => {
-  return typeof item === 'string' ? (item as string) : item?.value
-}
-
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),

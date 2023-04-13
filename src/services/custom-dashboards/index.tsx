@@ -58,7 +58,7 @@ export interface DashboardFolderModel {
 
 export interface DashboardModel {
   created_at: string
-  data_source: ('CD' | 'CE' | 'CF' | 'CI' | 'SRM' | 'STO')[]
+  data_source: ('CD' | 'CE' | 'CF' | 'CHAOS' | 'CI' | 'SRM' | 'STO')[]
   description: string
   favorite_count: number
   folder: DashboardFolderModel

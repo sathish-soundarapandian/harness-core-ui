@@ -955,7 +955,6 @@ exports[`Http Step renders input sets 1`] = `
         >
           <div
             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-            placeholder="pipeline.utilitiesStep.url"
           >
             <div
               class="bp3-input-group MultiTypeInput--input"

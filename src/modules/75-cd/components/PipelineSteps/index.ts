@@ -129,6 +129,8 @@ import { TerraformCloudRun } from './TerraformCloudRunStep/TerraformCloudRun'
 import { TerraformCloudRollback } from './TerraformCloudRollbackStep/TerraformCloudRollback'
 import { RouteMappingStep } from './RouteMappingStep/RouteMappingStep'
 import { K8sAwsInfrastructureSpec } from './K8sAwsInfrastructureSpec/K8sAwsInfrastructureSpec'
+import { DeployCloudFunctionStepGenOne } from './GoogleCloudFunction/gen1/DeployCloudFunctionStepGenOne'
+import { DeployCloudFunctionRollbackStepGenOne } from './GoogleCloudFunction/gen1/DeployCloudFunctionRollbackStepGenOne'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -240,7 +242,9 @@ factory.registerStep(new AsgRollingDeploy())
 factory.registerStep(new GoogleCloudFunctionServiceSpec())
 factory.registerStep(new GoogleCloudFunctionInfraSpec())
 factory.registerStep(new DeployCloudFunctionStep())
+factory.registerStep(new DeployCloudFunctionStepGenOne())
 factory.registerStep(new DeployCloudFunctionRollbackStep())
+factory.registerStep(new DeployCloudFunctionRollbackStepGenOne())
 factory.registerStep(new DeployCloudFunctionNoTrafficShiftStep())
 factory.registerStep(new DeployCloudFunctionTrafficShiftStep())
 factory.registerStep(new AsgSwapService())

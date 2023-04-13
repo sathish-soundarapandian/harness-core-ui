@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { DashboardBuildExecutionInfo } from 'services/ci'
 import type { Error, Failure, ExecutionResponseDeploymentsStatsOverview } from 'services/dashboard-service'
 
 export const deploymentStatsSummaryResponse: {
@@ -114,5 +115,31 @@ export const noDeploymentData: {
     },
     executionStatus: 'SUCCESS',
     executionMessage: 'Successfully fetched data'
+  }
+}
+
+export const buildsExecutionData: {
+  correlationId?: string
+  data?: DashboardBuildExecutionInfo
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+} = {
+  data: {
+    buildExecutionInfoList: [
+      {
+        builds: {
+          success: 10,
+          failed: 5,
+          total: 15
+        }
+      },
+      {
+        builds: {
+          success: 20,
+          failed: 6,
+          total: 26
+        }
+      }
+    ]
   }
 }

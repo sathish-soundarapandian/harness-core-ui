@@ -367,3 +367,7 @@ export const SupportedInputTypesForListItems: AllowedTypesWithRunTime[] = [
   MultiTypeInputType.FIXED,
   MultiTypeInputType.EXPRESSION
 ]
+
+export const getValue = (item: { label?: string; value?: string } | string | any): string => {
+  return typeof item === 'string' ? (item as string) : item?.value
+}

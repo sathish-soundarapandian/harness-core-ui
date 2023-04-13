@@ -68,7 +68,11 @@ export default function CDSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isCommunity = useGetCommunity()
-  const { showGetStartedCDTabInMainMenu, setShowGetStartedCDTabInMainMenu } = useSideNavContext()
+  const { showGetStartedTabInMainMenu, setShowGetStartedTabInMainMenu } = useSideNavContext()
+
+  // Get and set the visibility of the "cd" getStarted link
+  const isCDGetStartedVisible = showGetStartedTabInMainMenu['cd']
+  const setCDGetStartedVisible = (shouldShow: boolean): void => setShowGetStartedTabInMainMenu('cd', shouldShow)
   const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
   const isOverviewPage = !!matchPath(location.pathname, {
     path: routes.toProjectOverview({ ...params, module })
@@ -98,7 +102,7 @@ export default function CDSideNav(): React.ReactElement {
       const { data, status } = fetchPipelinesData
       const isGettingStartedEnabled =
         status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0
-      setShowGetStartedCDTabInMainMenu(isGettingStartedEnabled)
+      setCDGetStartedVisible(isGettingStartedEnabled)
       /* istanbul ignore else */
       if (isGettingStartedEnabled) {
         isOverviewPage && history.replace(routes.toGetStartedWithCD({ ...params, module }))
@@ -113,7 +117,7 @@ export default function CDSideNav(): React.ReactElement {
       <ProjectSelector
         moduleFilter={ModuleName.CD}
         onSelect={data => {
-          setShowGetStartedCDTabInMainMenu(false)
+          setCDGetStartedVisible(false)
           updateAppStore({ selectedProject: data })
           if (connectorId) {
             history.push(
@@ -180,7 +184,7 @@ export default function CDSideNav(): React.ReactElement {
             )
           } else if (projectIdentifier && !pipelineIdentifier) {
             // changing project
-            if (!showGetStartedCDTabInMainMenu) {
+            if (!isCDGetStartedVisible) {
               history.push(
                 compile(routeMatch.path)({
                   ...routeMatch.params,
@@ -224,10 +228,10 @@ export default function CDSideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier ? (
         <React.Fragment>
-          {showGetStartedCDTabInMainMenu && (
+          {isCDGetStartedVisible && (
             <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
           )}
-          {!isCommunity && !showGetStartedCDTabInMainMenu && (
+          {!isCommunity && !isCDGetStartedVisible && (
             <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module })} />
           )}
           <SidebarLink label="Deployments" to={routes.toDeployments({ ...params, module })} />

@@ -12,7 +12,6 @@ import { defaultTo } from 'lodash-es'
 import { Container, Layout, useToaster } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { EnvironmentResponse, useDeleteEnvironmentV2 } from 'services/cd-ng'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -20,7 +19,6 @@ import routes from '@common/RouteDefinitions'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
-import { FeatureFlag } from '@common/featureFlags'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { EnvironmentCard } from './EnvironmentCard'
@@ -32,7 +30,6 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
-  const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
   const [curEnvId, setCurEnvId] = useState('')
 
   const { mutate: deleteItem } = useDeleteEnvironmentV2({
@@ -65,7 +62,7 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
       showSuccess(getString('cd.environment.deleted'))
       refetch()
     } catch (e: any) {
-      if (isForceDeletedAllowed && e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+      if (e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         setCurEnvId(id)
         openReferenceErrorDialog()
       } else {
@@ -93,7 +90,7 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
       name: curEnvId as string
     },
     redirectToReferencedBy,
-    forceDeleteCallback: isForceDeletedAllowed ? () => handleEnvDelete(curEnvId, true) : undefined
+    forceDeleteCallback: () => handleEnvDelete(curEnvId, true)
   })
 
   const handleOnClick = (id: string): void => {

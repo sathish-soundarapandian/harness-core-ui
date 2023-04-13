@@ -19,12 +19,8 @@ import { useQueryParams } from '@common/hooks'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { useGetTasOrganizations, useGetTasSpaces, useGetTasSpacesV2 } from 'services/cd-ng'
 import { getSelectedConnectorValue, SelectedConnectorType } from '@cd/utils/connectorUtils'
-import {
-  TASInfrastructureSpecEditableProps,
-  getValue,
-  organizationLabel,
-  spaceGroupLabel
-} from './TASInfrastructureInterface'
+import { TASInfrastructureSpecEditableProps, organizationLabel, spaceGroupLabel } from './TASInfrastructureInterface'
+import { getValue } from '../PipelineStepsUtil'
 import css from './TASInfrastructureSpec.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 

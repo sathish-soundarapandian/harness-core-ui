@@ -247,6 +247,7 @@ jiraUpdateStep:
   fetchingStatus: Fetching Status List...
   selectStatus: Select Status
   projectIssueKeyDisclaimer: Only permitted fields are being displayed. Please check if there are sufficient permissions in Jira to perform this action.
+  statusDisclaimer: Only permitted statuses are being displayed. Please check if there are sufficient permissions in Jira to perform this action.
   validations:
     status: Status is required with transition.
 approvalCriteria:
@@ -364,7 +365,7 @@ manifestType:
   InheritFromManifest: 'Inherit From Manifest'
   customRemote: 'Custom Remote'
   httpHelmRepoConnectorLabel: 'HTTP Helm'
-  manifestIdentifier: Manifest Name
+  manifestIdentifier: Manifest Identifier
   manifestIdentifierRegexErrorMsg: '{{$.pipeline.manifestType.manifestIdentifier}} must start with a letter or _ and can then be followed by alphanumerics, _, or $'
   manifestPlaceholder: Enter Manifest Name
   ociHelmConnectorLabel: OCI Helm
@@ -509,6 +510,7 @@ failureStrategies:
     ProceedWithDefaultValues: Proceed with Default Values
     StepGroupRollback: Rollback Step Group
     MarkAsFailure: Mark As Failure
+    UserMarkedFailure: Mark Stage As Failed
   errorTypeLabels:
     Authentication: Authentication Errors
     Authorization: Authorization Errors
@@ -608,6 +610,7 @@ execution:
     abortedMessage: Stage "{{stageName}}" has been aborted successfully
     pausedMessage: Stage "{{stageName}}" execution will pause once the currently running steps have completed.
     resumedMessage: Stage  "{{stageName}}" has been resumed successfully
+    userMarkFailedMessage: Stage "{{stageName}}" has been marked failed.
   actions:
     resumePipeline: Resume Pipeline
     rerunPipeline: Re-run Pipeline
@@ -629,6 +632,8 @@ execution:
   dialogMessages:
     abortExecution: Are you sure you want to abort the execution?
     abortTitle: Abort Execution?
+    markAsFailedTitle: Mark stage as failed?
+    markAsFailedConfirmation: Are you sure you want to mark this stage as failed? Doing so will mark the stage as failed and trigger the respective failure strategy.
 resourceConstraints:
   title: Resource Constraint
   infoText: You have {{executioncount}} Pipeline {{executiontext}} queued for this {{infraEntityText}}. Only one execution on the same {{infraEntityText}} is allowed at a time.
@@ -965,8 +970,9 @@ artifactsSelection:
   addSidecar: Add Sidecar
   feed: Feed
   feedPlaceholder: Select Feed
-  artifactSourceName: Artifact Source Name
-  artifactSourceNameRegexErrorMsg: '{{$.pipeline.artifactsSelection.artifactSourceName}} must start with a letter or _ and can then be followed by alphanumerics, _, or $'
+  artifactSourceId: Artifact Source Identifier
+  artifactSourceIdPlaceholder: Enter Artifact Source Identifier
+  artifactSourceIdRegexErrorMsg: '{{$.pipeline.artifactsSelection.artifactSourceId}} must start with a letter or _ and can then be followed by alphanumerics, _, or $'
   projectPlaceholder: Enter Project
   projectIDPlaceholder: Enter Project ID
   repositoryTypePlaceholder: Select Repository Type
@@ -998,8 +1004,8 @@ artifactsSelection:
   githubPackageRegistryTitle: Github Package Registry
   AmazonMachineImageTitle: Amazon Machine Image
   existingDocker:
-    sidecarId: Sidecar Name
-    sidecarIdPlaceholder: Enter Artifact Name
+    sidecarId: Sidecar Identifier
+    sidecarIdPlaceholder: Enter Sidecar Identifier
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
@@ -1216,6 +1222,8 @@ stepDescription:
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
   DeployCloudFunction: Deploy a Google function.
   DeployCloudFunctionRollback: Roll back the Google function.
+  DeployCloudFunctionGenOne: Deploy a Google function (Gen One).
+  DeployCloudFunctionRollbackGenOne: Roll back the Google function (Gen One).
   DeployCloudFunctionNoTrafficShift: Deploy a Google function and route traffic to it.
   DeployCloudFunctionTrafficShift: Shift traffic between the existing revision and the new revision of a Google function.
   createPR: Create PR
@@ -1533,6 +1541,9 @@ configFiles:
   fileType: 'File Type'
   encryptedLocation: 'Secrets Manager Name'
   addConfigFile: Add Config File
+  name: Config File Name,
+  placeholder: Enter Config File Name
+  paths: File Path for config files from Git
   error:
     fileType: 'File type is required'
     identifier: 'Config file identifier is required'

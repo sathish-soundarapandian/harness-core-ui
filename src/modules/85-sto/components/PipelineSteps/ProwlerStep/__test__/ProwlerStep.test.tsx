@@ -30,7 +30,7 @@ describe('Prowler Step', () => {
       expect(container).toMatchSnapshot()
     })
 
-    test('renders runtime inputs - Ingestion Container', async () => {
+    test('renders runtime inputs - Ingestion Configuration', async () => {
       const initialValues = {
         identifier: 'My_Prowler_Step',
         name: 'My Prowler Step',
@@ -101,8 +101,10 @@ describe('Prowler Step', () => {
             workspace: RUNTIME_INPUT_VALUE
           },
           auth: {
+            access_id: RUNTIME_INPUT_VALUE,
             region: RUNTIME_INPUT_VALUE,
-            access_token: RUNTIME_INPUT_VALUE
+            access_token: RUNTIME_INPUT_VALUE,
+            type: 'aws_account'
           },
           mode: 'orchestration',
           config: 'default',
@@ -162,6 +164,8 @@ describe('Prowler Step', () => {
             workspace: '~/workspace'
           },
           auth: {
+            type: 'aws_account',
+            access_id: 'access id',
             region: 'auth region',
             access_token: 'token'
           },
