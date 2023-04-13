@@ -53,7 +53,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
           //       message: {
           //         role: 'assistant',
           //         content:
-          //           '[ \n  { \n    "Error": "Traceback (most recent call last):",\n    "Cause": "Code error - ZeroDivisionError: division by zero",\n    "Possible Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "  File \\"\\u003cstring\\u003e\\", line 1, in \\u003cmodule\\u003e",\n    "Cause": "Code error - Syntax error",\n    "Possible Solution": "Check the syntax of the code at the specified line and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "ZeroDivisionError: division by zero",\n    "Cause": "Code error - Division by zero",\n    "Possible Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  }\n]'
+          //           '[ \n  { \n    "Error": "Traceback (most recent call last):",\n    "Cause": "Code error - ZeroDivisionError: division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "  File \\"\\u003cstring\\u003e\\", line 1, in \\u003cmodule\\u003e",\n    "Cause": "Code error - Syntax error",\n    "Solution": "Check the syntax of the code at the specified line and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "ZeroDivisionError: division by zero",\n    "Cause": "Code error - Division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  }\n]'
           //       },
           //       finish_reason: 'stop',
           //       index: 0
@@ -61,7 +61,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
           //   ]
           // }
           const choices = JSON.parse(get(res, 'choices.0.message.content')) as any[]
-          const possibleSolutions = choices.map(choice => choice['Possible Solution'])
+          const possibleSolutions = choices.map(choice => choice['Solution']).filter(item => !!item)
           const suitableResponses = possibleSolutions.map(solution => {
             return { message: { content: solution } }
           })
