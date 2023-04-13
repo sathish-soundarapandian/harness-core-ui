@@ -215,8 +215,10 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
         return (
           <>
             <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
-              <Icon name="danger-icon" size={16} />
-              <Text font={{ variation: FontVariation.LEAD }}>{`${getString('errors')} (${errors.length})`}</Text>
+              <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
+                <Icon name="danger-icon" size={16} />
+                <Text font={{ variation: FontVariation.LEAD }}>{`${getString('errors')} (${errors.length})`}</Text>
+              </Layout.Horizontal>
             </Layout.Horizontal>
             <Accordion activeId={'0'} className={css.accordion}>
               {errors?.map((err, index) => {
