@@ -147,7 +147,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
     if (isFetching) {
       return (
         <Layout.Vertical flex={{ justifyContent: 'center' }}>
-          <Icon name="steps-spinner" />
+          <Icon name="loading" size={40} color={Color.BLUE_600} />
           <Text font={{ variation: FontVariation.BODY }}>{getString('common.fetchingFromOpenAI')}</Text>
         </Layout.Vertical>
       )
@@ -252,8 +252,12 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   }, [showDetailedView, errors, openAIResponses, query, isFetching])
 
   return (
-    <Container ref={scrollRef}>
-      <Layout.Vertical padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge', right: 'xxlarge' }}>
+    <Container ref={scrollRef} height="100%">
+      <Layout.Vertical
+        padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge', right: 'xxlarge' }}
+        height="100%"
+        flex={isFetching ? { justifyContent: 'center' } : { justifyContent: 'flex-start' }}
+      >
         {renderView()}
       </Layout.Vertical>
     </Container>
