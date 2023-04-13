@@ -183,7 +183,9 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
           </Layout.Vertical>
         </Layout.Vertical>
       ) : (
-        <Text>{getString('noSearchResultsFoundPeriod')}</Text>
+        <Layout.Vertical flex={{ justifyContent: 'center' }} padding={{ top: 'huge' }} margin={{ top: 'huge' }}>
+          <Text>{getString('noSearchResultsFoundPeriod')}</Text>
+        </Layout.Vertical>
       )
     } else {
       if (showDetailedView) {
