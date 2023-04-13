@@ -19,7 +19,30 @@ interface OpenAIResponseInterface {
 }
 
 const SUMMARY_VIEW_CHAR_LIMIT = 500
-const OPENAI_KEY = 'Bearer *****'
+// const OPENAI_KEY = 'Bearer *****'
+
+const mock = {
+  id: 'chatcmpl-74fseKuRCYL3gSyfOcRhGD3UCgmJy',
+  object: 'chat.completion',
+  created: 1681348656,
+  model: 'gpt-3.5-turbo-0301',
+  usage: {
+    prompt_tokens: 543,
+    completion_tokens: 192,
+    total_tokens: 735
+  },
+  choices: [
+    {
+      message: {
+        role: 'assistant',
+        content:
+          '[ \n  { \n    "Error": "Traceback (most recent call last):",\n    "Cause": "Code error - ZeroDivisionError: division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "  File \\"\\u003cstring\\u003e\\", line 1, in \\u003cmodule\\u003e",\n    "Cause": "Code error - Syntax error",\n    "Solution": "Check the syntax of the code at the specified line and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "ZeroDivisionError: division by zero",\n    "Cause": "Code error - Division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  }\n]'
+      },
+      finish_reason: 'stop',
+      index: 0
+    }
+  ]
+}
 
 function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const { getString } = useStrings()
@@ -34,39 +57,21 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const [openAIResponses, setOpenAIResponses] = useState<any>([])
   const [errors, setErrors] = useState<any[]>([])
 
+  const prepareResponses = useCallback((input: any) => {
+    const choices = JSON.parse(get(input, 'choices.0.message.content')) as any[]
+    const possibleSolutions = choices.map(choice => choice['Solution']).filter(item => !!item)
+    const suitableResponses = possibleSolutions.map(solution => {
+      return { message: { content: solution } }
+    })
+    setOpenAIResponses({ choices: suitableResponses })
+    setErrors(choices.map(choice => choice.Error))
+  }, [])
+
   useEffect(() => {
     logKeysFromState.logKeys.map(logKey => {
       getBlobFromOpenAI(logKey, pathParams.accountId).then((res: unknown) => {
         if (res) {
-          const mock = {
-            id: 'chatcmpl-74fseKuRCYL3gSyfOcRhGD3UCgmJy',
-            object: 'chat.completion',
-            created: 1681348656,
-            model: 'gpt-3.5-turbo-0301',
-            usage: {
-              prompt_tokens: 543,
-              completion_tokens: 192,
-              total_tokens: 735
-            },
-            choices: [
-              {
-                message: {
-                  role: 'assistant',
-                  content:
-                    '[ \n  { \n    "Error": "Traceback (most recent call last):",\n    "Cause": "Code error - ZeroDivisionError: division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "  File \\"\\u003cstring\\u003e\\", line 1, in \\u003cmodule\\u003e",\n    "Cause": "Code error - Syntax error",\n    "Solution": "Check the syntax of the code at the specified line and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "ZeroDivisionError: division by zero",\n    "Cause": "Code error - Division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  }\n]'
-                },
-                finish_reason: 'stop',
-                index: 0
-              }
-            ]
-          }
-          const choices = JSON.parse(get(mock, 'choices.0.message.content')) as any[]
-          const possibleSolutions = choices.map(choice => choice['Solution']).filter(item => !!item)
-          const suitableResponses = possibleSolutions.map(solution => {
-            return { message: { content: solution } }
-          })
-          setOpenAIResponses({ choices: suitableResponses })
-          setErrors(choices.map(choice => choice.Error))
+          prepareResponses(mock)
         }
       })
     })
@@ -104,36 +109,59 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
     }
   }, [isFetching])
 
+  // const getOpenAISuggestions = async (_query: string) => {
+  //   try {
+  //     setIsFetching(true)
+  //     const fixedQuerySuffix =
+  //       'These error messages are seen when running a Harness Continuous Integration step in a Cloud environment on an Ubuntu 22.04 Virtual Machine'
+  //     const payload = {
+  //       model: 'gpt-3.5-turbo',
+  //       messages: [
+  //         {
+  //           role: 'user',
+  //           content: fixedQuerySuffix.concat(_query)
+  //         }
+  //       ],
+  //       temperature: 0.7
+  //     }
+  //     const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  //       method: 'POST',
+  //       headers: {
+  //         accept: 'application/json',
+  //         'Content-Type': 'application/json',
+  //         Authorization: OPENAI_KEY
+  //       },
+  //       body: JSON.stringify(payload)
+  //     })
+  //     if (response.ok) {
+  //       const jsonResponse = await response.json()
+  //       setOpenAIResponses(jsonResponse)
+  //     }
+  //   } catch (e) {}
+  //   setIsFetching(false)
+  // }
+
   const getOpenAISuggestions = async (_query: string) => {
-    try {
-      setIsFetching(true)
-      const fixedQuerySuffix =
-        'These error messages are seen when running a Harness Continuous Integration step in a Cloud environment on an Ubuntu 22.04 Virtual Machine'
-      const payload = {
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'user',
-            content: fixedQuerySuffix.concat(_query)
-          }
-        ],
-        temperature: 0.7
-      }
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: OPENAI_KEY
-        },
-        body: JSON.stringify(payload)
-      })
-      if (response.ok) {
-        const jsonResponse = await response.json()
-        setOpenAIResponses(jsonResponse)
-      }
-    } catch (e) {}
-    setIsFetching(false)
+    setIsFetching(true)
+    setTimeout(() => setIsFetching(false), 5000)
+    setOpenAIResponses({
+      id: 'chatcmpl-74mc6pgC126UTbBqmbpKH2k77m6pk',
+      object: 'chat.completion',
+      created: 1681374538,
+      model: 'gpt-3.5-turbo-0301',
+      usage: { prompt_tokens: 38, completion_tokens: 143, total_tokens: 181 },
+      choices: [
+        {
+          message: {
+            role: 'assistant',
+            content:
+              'To install pytest on an Ubuntu 22.04 Virtual Machine, you can follow these steps:\n\n1. Open the Terminal on your Ubuntu VM.\n2. Run the following command to update the package list:\n\n   ```\n   sudo apt update\n   ```\n\n3. Once the package list is updated, run the following command to install pytest:\n\n   ```\n   sudo apt install python3-pytest\n   ```\n\n4. After the installation is complete, you can verify the version of pytest by running the following command:\n\n   ```\n   pytest --version\n   ```\n\n   This should display the version of pytest installed on your Ubuntu VM.\n\n5. You can now use pytest to run tests in your Python projects.'
+          },
+          finish_reason: 'stop',
+          index: 0
+        }
+      ]
+    })
   }
 
   const renderErrorDetailSeparator = useCallback((): React.ReactElement => {
@@ -169,6 +197,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
             onClick={() => {
               setQuery('')
               setShowDetailedView(false)
+              prepareResponses(mock)
             }}
           />
           <Layout.Vertical spacing="medium" className={css.errorDetails} padding="large">
