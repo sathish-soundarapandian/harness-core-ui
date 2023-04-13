@@ -133,7 +133,8 @@ const getUpdatedTemplate = (
 
 export default function ServiceV2ArtifactsSelection({
   deploymentType,
-  readonly
+  readonly,
+  availableArtifactTypes
 }: ArtifactsSelectionProps): React.ReactElement | null {
   const {
     state: {
@@ -146,10 +147,21 @@ export default function ServiceV2ArtifactsSelection({
     allowableTypes
   } = usePipelineContext()
 
+  const getInitialSelectedArtifactValue = (): ArtifactType | null => {
+    if (availableArtifactTypes) {
+      if (availableArtifactTypes?.length === 1) {
+        return availableArtifactTypes[0]
+      }
+    } else {
+      if (allowedArtifactTypes[deploymentType]?.length === 1) {
+        return allowedArtifactTypes[deploymentType][0]
+      }
+    }
+    return null
+  }
+
   const [isEditMode, setIsEditMode] = useState(false)
-  const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(
-    allowedArtifactTypes[deploymentType]?.length === 1 ? allowedArtifactTypes[deploymentType][0] : null
-  )
+  const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(getInitialSelectedArtifactValue())
   const [connectorView, setConnectorView] = useState(false)
   const [artifactContext, setArtifactContext] = useState(ModalViewFor.PRIMARY)
   const [artifactIndex, setEditIndex] = useState(0)
@@ -499,6 +511,7 @@ export default function ServiceV2ArtifactsSelection({
     setConnectorView(false)
     const artifactObject = get(artifacts, getArtifactsPath(viewType))
     setEditIndex(defaultTo(artifactObject?.length, 0))
+    setSelectedArtifact(getInitialSelectedArtifactValue())
     showConnectorModal()
     refetchConnectorList()
   }
@@ -722,7 +735,7 @@ export default function ServiceV2ArtifactsSelection({
       <ArtifactWizard
         artifactInitialValue={getArtifactInitialValues}
         iconsProps={getIconProps}
-        types={allowedArtifactTypes[deploymentType]}
+        types={availableArtifactTypes ?? allowedArtifactTypes[deploymentType]}
         expressions={expressions}
         allowableTypes={allowableTypes}
         lastSteps={artifactSelectionLastSteps}

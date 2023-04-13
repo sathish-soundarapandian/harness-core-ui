@@ -141,6 +141,7 @@ export default function DeployServiceEntityWidget({
   serviceLabel,
   deploymentType,
   gitOpsEnabled,
+  deploymentMetadata,
   stageIdentifier,
   setupModeType
 }: DeployServiceEntityWidgetProps): React.ReactElement {
@@ -194,6 +195,7 @@ export default function DeployServiceEntityWidget({
     nonExistingServiceIdentifiers
   } = useGetServicesData({
     gitOpsEnabled,
+    deploymentMetadata,
     serviceIdentifiers: allServices,
     deploymentType: deploymentType as ServiceDefinition['type'],
     ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {}),
@@ -563,6 +565,7 @@ export default function DeployServiceEntityWidget({
                                 )}
                                 deploymentType={deploymentType as ServiceDeploymentType}
                                 gitOpsEnabled={gitOpsEnabled}
+                                deploymentMetadata={deploymentMetadata}
                                 disabled={readonly || (isFixed && loading)}
                                 placeholder={placeHolderForServices}
                                 openAddNewModal={openAddNewModal}
@@ -589,6 +592,7 @@ export default function DeployServiceEntityWidget({
                                 )}
                                 deploymentType={deploymentType as ServiceDeploymentType}
                                 gitOpsEnabled={gitOpsEnabled}
+                                deploymentMetadata={deploymentMetadata}
                                 placeholder={placeHolderForService}
                                 setRefValue={true}
                                 disabled={readonly || (isFixed && loading)}
@@ -670,6 +674,7 @@ export default function DeployServiceEntityWidget({
                     loading={loading || updatingData}
                     servicesData={allServices.length > 0 ? servicesData : []}
                     gitOpsEnabled={gitOpsEnabled}
+                    deploymentMetadata={deploymentMetadata}
                     readonly={readonly}
                     onRemoveServiceFormList={removeSvcfromList}
                     selectedDeploymentType={deploymentType as ServiceDeploymentType}
@@ -694,6 +699,7 @@ export default function DeployServiceEntityWidget({
         <ServiceEntityEditModal
           selectedDeploymentType={deploymentType as ServiceDeploymentType}
           gitOpsEnabled={gitOpsEnabled}
+          deploymentMetadata={deploymentMetadata}
           onCloseModal={closeAddNewModal}
           onServiceCreate={onServiceEntityCreate}
           isServiceCreateModalView={true}

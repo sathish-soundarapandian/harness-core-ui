@@ -55,6 +55,7 @@ export function DeployServiceEntityInputStep({
   allowableTypes,
   deploymentType,
   gitOpsEnabled,
+  deploymentMetadata,
   customDeploymentData
 }: DeployServiceEntityInputStepProps): React.ReactElement | null {
   const { getString } = useStrings()
@@ -99,6 +100,7 @@ export function DeployServiceEntityInputStep({
     nonExistingServiceIdentifiers
   } = useGetServicesData({
     gitOpsEnabled,
+    deploymentMetadata,
     deploymentType: deploymentType as ServiceDefinition['type'],
     serviceIdentifiers,
     ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {}),
@@ -276,6 +278,7 @@ export function DeployServiceEntityInputStep({
                 {...commonProps}
                 deploymentType={deploymentType as ServiceDeploymentType}
                 gitOpsEnabled={gitOpsEnabled}
+                deploymentMetadata={deploymentMetadata}
                 placeholder={getString('cd.pipelineSteps.serviceTab.selectService')}
                 setRefValue={true}
                 isNewConnectorLabelVisible={false}
@@ -314,6 +317,7 @@ export function DeployServiceEntityInputStep({
               {...commonProps}
               deploymentType={deploymentType as ServiceDeploymentType}
               gitOpsEnabled={gitOpsEnabled}
+              deploymentMetadata={deploymentMetadata}
               placeholder={getString('services')}
               isMultiSelect={true}
               onMultiSelectChange={handleServicesChange}

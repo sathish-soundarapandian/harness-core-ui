@@ -255,7 +255,7 @@ export class GoogleCloudFunctionServiceSpec extends Step<ServiceSpec> {
         errors,
         `${dataPathToField}.repository`,
         getString?.('fieldRequired', {
-          field: getString('common.artifacts.googleCloudSourceRepositories.cloudSourceRepository')
+          field: getString('pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepository')
         })
       )
     }
@@ -268,7 +268,7 @@ export class GoogleCloudFunctionServiceSpec extends Step<ServiceSpec> {
         errors,
         `${dataPathToField}.sourceDirectory`,
         getString?.('fieldRequired', {
-          field: getString('common.artifacts.googleCloudSourceRepositories.sourceDirectory')
+          field: getString('pipeline.artifacts.googleCloudSourceRepositories.sourceDirectory')
         })
       )
     }

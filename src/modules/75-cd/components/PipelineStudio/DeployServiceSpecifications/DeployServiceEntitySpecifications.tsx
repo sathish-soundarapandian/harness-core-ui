@@ -286,6 +286,7 @@ export default function DeployServiceEntitySpecifications({
             stageIdentifier: defaultTo(stage?.stage?.identifier, ''),
             deploymentType: stage?.stage?.spec?.deploymentType,
             gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false),
+            deploymentMetadata: stage?.stage?.spec?.deploymentMetadata,
             setupModeType
           }}
         />

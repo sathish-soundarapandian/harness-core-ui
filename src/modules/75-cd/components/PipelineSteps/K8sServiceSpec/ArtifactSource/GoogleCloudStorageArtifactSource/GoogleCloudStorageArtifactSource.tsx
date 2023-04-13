@@ -377,7 +377,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
             <SelectInputSetView
               name={`${path}.artifacts.${artifactPath}.spec.bucket`}
               label={getString('pipelineSteps.bucketLabel')}
-              placeholder={getString('common.artifacts.googleCloudStorage.bucketPlaceholder')}
+              placeholder={getString('pipeline.artifacts.googleCloudStorage.bucketPlaceholder')}
               selectItems={bucketOptions}
               disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucket`)}
               helperText={getBucketHelperText()}

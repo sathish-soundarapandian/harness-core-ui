@@ -8,7 +8,7 @@
 import React from 'react'
 import { PageSpinner } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
-import type { ServiceResponseDTO, ServiceYaml } from 'services/cd-ng'
+import type { DeploymentMetaData, ServiceResponseDTO, ServiceYaml } from 'services/cd-ng'
 import ServiceConfigurationWrapper from '@cd/components/Services/ServiceStudio/ServiceConfigWrapper/ServiceConfigWrapper'
 import { ServiceContextProvider } from '@cd/context/ServiceContext'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
@@ -22,6 +22,7 @@ export interface ServiceEntityEditModalProps {
   serviceCacheKey?: string
   selectedDeploymentType?: ServiceDeploymentType
   gitOpsEnabled?: boolean
+  deploymentMetadata?: DeploymentMetaData
 }
 function ServiceEntityEditModal({
   isServiceCreateModalView,
@@ -31,7 +32,8 @@ function ServiceEntityEditModal({
   isLoading,
   serviceCacheKey,
   selectedDeploymentType,
-  gitOpsEnabled
+  gitOpsEnabled,
+  deploymentMetadata
 }: ServiceEntityEditModalProps): React.ReactElement {
   if (isLoading) {
     return (
@@ -52,6 +54,7 @@ function ServiceEntityEditModal({
       serviceCacheKey={defaultTo(serviceCacheKey, '')}
       selectedDeploymentType={selectedDeploymentType as ServiceDeploymentType}
       gitOpsEnabled={defaultTo(gitOpsEnabled, false)}
+      deploymentMetadata={deploymentMetadata}
       isDeploymentTypeDisabled
     >
       <ServiceConfigurationWrapper />

@@ -12,16 +12,22 @@ import { useToaster, shouldShowError } from '@harness/uicore'
 import produce from 'immer'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
-import type { JsonNode, ServiceDefinition, ServiceInputsMergedResponseDto, ServiceYaml } from 'services/cd-ng'
+import type {
+  DeploymentMetaData,
+  JsonNode,
+  ServiceDefinition,
+  ServiceInputsMergedResponseDto,
+  ServiceYaml
+} from 'services/cd-ng'
 import { useGetServiceAccessListQuery, useGetServicesYamlAndRuntimeInputsQuery } from 'services/cd-ng-rq'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-
 import type { ServiceData } from './DeployServiceEntityUtils'
 
 export interface UseGetServicesDataProps {
   deploymentType: ServiceDefinition['type']
   gitOpsEnabled?: boolean
+  deploymentMetadata?: DeploymentMetaData
   serviceIdentifiers: string[]
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -68,6 +74,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
         gitOpsEnabled,
         deploymentTemplateIdentifier,
         versionLabel
+        // deploymentMetadataYaml: yamlStringify(deploymentMetadata)
       }
     },
     {

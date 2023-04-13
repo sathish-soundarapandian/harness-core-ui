@@ -18,6 +18,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   GetExecutionStrategyYamlQueryParams,
+  GoogleCloudFunctionDeploymentMetaData,
   StageElementConfig,
   useGetExecutionStrategyYaml,
   useGetFailureStrategiesYaml
@@ -44,7 +45,9 @@ import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemp
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
 import {
   getServiceDefinitionType,
+  GoogleCloudFunctionsEnvType,
   isCustomDeploymentType,
+  isGoogleCloudFuctionsDeploymentType,
   isServerlessDeploymentType,
   ServiceDeploymentType,
   StageType
@@ -108,6 +111,8 @@ export default function DeployStageSetupShell(): JSX.Element {
   const { stage: selectedStage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
   const { checkErrorsForTab } = React.useContext(StageErrorContext)
   const gitOpsEnabled = selectedStage?.stage?.spec?.gitOpsEnabled
+  // const environmentType = (selectedStage?.stage?.spec?.deploymentMetadata as GoogleCloudFunctionDeploymentMetaData)
+  //   ?.environmentType
   const isNewService = isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig)
   const isNewEnvDef = isNewEnvInfraDef(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig)
 
@@ -230,6 +235,15 @@ export default function DeployStageSetupShell(): JSX.Element {
     } else if (selectedDeploymentType === ServiceDeploymentType.CustomDeployment) {
       return ExecutionType.DEFAULT
     }
+    // else if (
+    //   selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions &&
+    //   environmentType === GoogleCloudFunctionsEnvType.GEN_ONE
+    // ) {
+    //   return ExecutionType.BasicGenOne
+    // }
+    else if (selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
+      return ExecutionType.BASIC
+    }
     return ExecutionType.ROLLING
   }
   const strategyType = getStrategyType()
@@ -340,6 +354,32 @@ export default function DeployStageSetupShell(): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setIncompleteTabs, selectedStage?.stage])
 
+  const shouldShowExecutionStrategies = () => {
+    const stageType = selectedStage?.stage?.type
+    const openExecutionStrategy = stageType ? stagesMap[stageType].openExecutionStrategy : true
+
+    // When deployment is of type serverless
+    const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
+
+    // When deployment type is GoogleCloudFunctions
+    const isGoogleCloudFunctionsDeploymentTypeSelected = isGoogleCloudFuctionsDeploymentType(selectedDeploymentType)
+    const googleCloudFunctionEnvType = (
+      selectedStage?.stage?.spec?.deploymentMetadata as GoogleCloudFunctionDeploymentMetaData
+    )?.environmentType
+    const isGoogleCloudFunctionGen1EnvTypeSelected =
+      isGoogleCloudFunctionsDeploymentTypeSelected && googleCloudFunctionEnvType === GoogleCloudFunctionsEnvType.GEN_ONE
+
+    // Show executiomn strategies when openExecutionStrategy is true
+    // and deployment type is not of type serverless/GoogleCloudFunctions and
+    // when gitOpsEnabled is false
+    return (
+      openExecutionStrategy &&
+      !isServerlessDeploymentTypeSelected &&
+      !gitOpsEnabled &&
+      !isGoogleCloudFunctionGen1EnvTypeSelected
+    )
+  }
+
   React.useEffect(() => {
     // if serviceDefinition not selected, redirect to SERVICE - preventing strategies drawer to be opened
     if (!isServiceDefinitionPresent) {
@@ -350,13 +390,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       /* istanbul ignore else */
       if (selectedStage?.stage && selectedStage?.stage.type === StageType.DEPLOY) {
         if (!selectedStage?.stage?.spec?.execution) {
-          const stageType = selectedStage?.stage?.type
-          const openExecutionStrategy = stageType ? stagesMap[stageType].openExecutionStrategy : true
-          const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType || '')
-
-          // Show executiomn strategies when openExecutionStrategy is true and deployment type is not serverless and
-          // when gitOpsEnabled to false
-          if (openExecutionStrategy && !isServerlessDeploymentTypeSelected && !gitOpsEnabled) {
+          if (shouldShowExecutionStrategies()) {
             updatePipelineView({
               ...pipelineView,
               isDrawerOpened: true,

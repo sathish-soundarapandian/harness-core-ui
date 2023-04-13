@@ -21,6 +21,7 @@ declare const styles: {
   readonly existingDocker: string
   readonly expanded: string
   readonly firstep: string
+  readonly halfWidth: string
   readonly headerContainer: string
   readonly heading: string
   readonly imagePathContainer: string
@@ -32,6 +33,7 @@ declare const styles: {
   readonly padSmall: string
   readonly panel: string
   readonly radioGroup: string
+  readonly runtimeInput: string
   readonly squareCardContainer: string
   readonly tagGroup: string
   readonly tagInputButton: string

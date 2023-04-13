@@ -13,7 +13,8 @@ import type {
   ServicesMetadata,
   ServiceDefinition,
   NGServiceV2InfoConfig,
-  TemplateLinkConfig
+  TemplateLinkConfig,
+  DeploymentMetaData
 } from 'services/cd-ng'
 import type { UseStringsReturn } from 'framework/strings'
 
@@ -53,6 +54,7 @@ export interface DeployServiceEntityCustomProps {
   stageIdentifier: string
   deploymentType?: ServiceDefinition['type']
   gitOpsEnabled?: boolean
+  deploymentMetadata?: DeploymentMetaData
   allValues?: DeployServiceEntityData
   customDeploymentData?: TemplateLinkConfig
   setupModeType: string

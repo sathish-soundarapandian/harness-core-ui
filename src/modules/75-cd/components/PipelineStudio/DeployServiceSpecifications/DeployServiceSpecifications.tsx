@@ -472,6 +472,7 @@ export default function DeployServiceSpecifications({
                 handleDeploymentTypeChange={handleDeploymentTypeChange}
                 shouldShowGitops={false}
                 onDeploymentTemplateSelect={noop}
+                shouldShowGCFEnvTypeDropdown={false}
               />
               <Layout.Horizontal>
                 <StepWidget<K8SDirectServiceStep>

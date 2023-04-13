@@ -133,6 +133,7 @@ function ExecutionStrategyRef(
     switch (serviceDefinitionType()) {
       case ServiceDeploymentType.ServerlessAwsLambda:
       case ServiceDeploymentType.AwsLambda:
+      case ServiceDeploymentType.GoogleCloudFunctions:
         setSelectedStrategy(ExecutionType.BASIC)
         break
       case ServiceDeploymentType.AzureWebApp:

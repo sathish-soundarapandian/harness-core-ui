@@ -25,7 +25,7 @@ import {
 } from '@harness/uicore'
 import { defaultTo, get, isArray } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import type { ResponsePageServiceResponse, ServiceResponseDTO } from 'services/cd-ng'
+import type { DeploymentMetaData, ResponsePageServiceResponse, ServiceResponseDTO } from 'services/cd-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
@@ -51,6 +51,7 @@ export interface ServiceReferenceFieldProps extends Omit<IFormGroupProps, 'label
   tooltipProps?: DataTooltipInterface
   deploymentType?: ServiceDeploymentType
   gitOpsEnabled?: boolean
+  deploymentMetadata?: DeploymentMetaData
   style?: React.CSSProperties
   openAddNewModal?: () => void
   disabled?: boolean
@@ -103,6 +104,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     createNewLabel,
     deploymentType,
     gitOpsEnabled,
+    deploymentMetadata,
     multitypeInputValue,
     multiTypeProps = {},
     setRefValue = false,
@@ -150,6 +152,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     isMultiSelect,
     deploymentType,
     gitOpsEnabled,
+    deploymentMetadata,
     setPagedServiceData,
     selectedServices: Array.isArray(selected) ? selected : [],
     getString

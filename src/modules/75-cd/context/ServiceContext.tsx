@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import type { ServiceResponseDTO, ServiceYaml } from 'services/cd-ng'
+import type { DeploymentMetaData, ServiceResponseDTO, ServiceYaml } from 'services/cd-ng'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 export interface ServiceContextValues {
@@ -20,6 +20,7 @@ export interface ServiceContextValues {
   serviceCacheKey: string
   selectedDeploymentType: ServiceDeploymentType
   gitOpsEnabled: boolean
+  deploymentMetadata?: DeploymentMetaData
   isDeploymentTypeDisabled: boolean
   setIsDeploymentTypeDisabled?(status: boolean): void
   drawerOpen?: boolean
@@ -38,6 +39,7 @@ export const ServiceContext = React.createContext<ServiceContextValues>({
   serviceCacheKey: '',
   selectedDeploymentType: '' as ServiceDeploymentType,
   gitOpsEnabled: false,
+  deploymentMetadata: undefined,
   isDeploymentTypeDisabled: false,
   drawerOpen: false,
   notificationPopoverVisibility: false
