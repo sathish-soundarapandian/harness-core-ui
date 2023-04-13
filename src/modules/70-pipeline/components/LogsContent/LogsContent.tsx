@@ -381,6 +381,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                       placeholder={getString('common.typeHere')}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
                       disabled={shouldDisable}
+                      value={query}
                     ></TextInput>
                   </Layout.Vertical>
                 }

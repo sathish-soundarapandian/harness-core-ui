@@ -37,10 +37,9 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
 
   useEffect(() => {
     logKeysFromState.logKeys.map(logKey => {
-          getBlobFromOpenAI(logKey, pathParams.accountId).then((res: unknown) => {
-            console.log(res)
-            setResponses(res)
-          })
+      getBlobFromOpenAI(logKey, pathParams.accountId).then((res: unknown) => {
+        setResponses(res)
+      })
     })
   }, [logKeysFromState.logKeys])
 
