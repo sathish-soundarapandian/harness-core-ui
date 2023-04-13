@@ -20,6 +20,7 @@ declare const styles: {
   readonly chatBubble: string
   readonly closeWizard: string
   readonly containerItemCss: string
+  readonly div: string
   readonly error: string
   readonly header: string
   readonly iconPadding: string
@@ -40,6 +41,7 @@ declare const styles: {
   readonly search: string
   readonly searchBox: string
   readonly separator: string
+  readonly submitButton: string
   readonly topPage: string
   readonly userBubble: string
 }

@@ -6,17 +6,18 @@
  */
  .resourceCenter {
   // background: url('./images/DevOps Jedi Master front.svg'), var(--primary-9-dark) !important;
-  background: url('./images/DevOps Jedi Master front.svg') no-repeat, var(--primary-9-dark) !important;
+  background: url('./images/bg3.png') !important;
   border-radius: var(--spacing-3);
   box-shadow: rgb(40 41 61 / 4%) 0px 2px 8px, rgb(96 97 112 / 16%) 0px 16px 24px;
   width: 520px !important;
-  height: fit-content !important;
-  min-height: 300px;
+  min-height: 800px;
+  max-height: 800px;
+  overflow-y: scroll;
   top: unset !important;
   bottom: 20px !important;
   left: 300px !important;
-  background-size: 150px !important;
-  background-position: right bottom 5em !important;
+  background-size: 520px !important;
+  // background-position: right bottom 5em !important;
   // background-image: url('./images/DevOps Jedi Master front.svg') !important;
 }
 
@@ -49,6 +50,11 @@
     align-items: center;
   }
 }
+
+.div {
+  margin-bottom: 100px;
+}
+
 .chat-bubble {
   display: inline-block;
   max-width: 70%;
@@ -72,11 +78,12 @@
 
 .searchBox {
   display: flex;
-  padding: 30px;
+  // padding: 30px;
   border-radius: 30px;
   .search {
     flex: 1;
     margin-bottom: unset;
+    margin-right: 20px;
     border-radius: 30px;
     > div {
       > span {
@@ -86,10 +93,10 @@
         }
       }
       > input {
-        background-color: var(--grey-50) !important;
+        // background-color: var(--grey-50) !important;
         border-radius: 30px;
         font-size: 15px;
-        padding: 'inherit';
+        // padding: 'inherit';
       }
     }
   }
@@ -126,6 +133,15 @@
 
 .linkText {
   margin-left: 30px !important;
+}
+.submit-button {
+  position: absolute;
+  background-color: #0077cc;
+  border: none;
+  cursor: pointer;
+  color: #0278D5;
+  border-radius: 0 20px 20px 0;
+  margin-left: -50px;
 }
 
 .listItemCss {

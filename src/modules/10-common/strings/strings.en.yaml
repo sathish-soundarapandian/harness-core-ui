@@ -949,7 +949,7 @@ resourceCenter:
     submitDesc: 'Get help from our expert system'
     submitTicket: Submit a ticket
     viewTicket: View my ticket
-    tweety: Tweety
+    tweety: Ask Tweety
   bottomlayout:
     desc: Other useful resources
     docs: Docs

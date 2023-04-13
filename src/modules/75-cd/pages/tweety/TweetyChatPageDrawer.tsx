@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState  } from 'react'
+import React, { useState } from 'react'
 import { Text, Icon, Layout, Button, ButtonVariation, ButtonSize, Color } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
@@ -14,6 +14,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import css from './TweetyChatPageDrawer.module.scss'
 import styled from 'styled-components'
 import { Drawer } from '@blueprintjs/core'
+import axios from 'axios';
 import { Position } from 'vscode-languageserver-types'
 
 export default function TweetyChatPageDrawer(): React.ReactElement {
@@ -21,15 +22,20 @@ export default function TweetyChatPageDrawer(): React.ReactElement {
   const [chat, setChat] = useState([]);
   const { getString } = useStrings()
   const [show, setShow] = useState<boolean>(true)
+  const KEY_CODE_FOR_ENTER_KEY = 13
 
   const handleInputChange = (e) => {
     setMessage(e.target.value);
   };
 
   const handleSendMessage = async () => {
+    console.log("Got event")
+    if (message.length != 0) {
+      const response = await axios.post('http://127.0.0.1:5002/ask', { 'message': message }, { headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" } });
+      setChat(oldChat => oldChat.concat([{ message, sender: 'user' }, { message: response.data.msg.response.replace(/\n/g, "<br/>").replace(/ /g, "\u00A0"), sender: "chatbot" }]))
+      // setChat([...chat, { message, sender: 'user' }, { message: "hello", sender: 'chatbot' }]);
+    }
     // const response = await axios.post('http://localhost:5000', { message }, { headers: { 'Content-Type': 'text/plain'} });
-    const response = "hello"
-    setChat([...chat, { message, sender: 'user' }, { message: message, sender: 'chatbot' }]);
     setMessage('');
   };
 
@@ -48,57 +54,66 @@ export default function TweetyChatPageDrawer(): React.ReactElement {
       }}
       className={css.resourceCenter}
     >
-    <Layout.Vertical>
-      <Layout.Horizontal
-            padding={{ bottom: 'medium' }}
-            className={css.title}
-            flex={{ alignItems: 'baseline' }}
+      <Layout.Vertical>
+        <Layout.Vertical>
+          <Layout.Horizontal
+            padding={{ bottom: 'medium', top: 'medium', left: 'small' }}
+            // className={css.title}
+            flex={{ justifyContent: 'flex-start' }}
+          // size={30}
           >
-            <Button
-              icon={'arrow-left'}
-              variation={ButtonVariation.ICON}
+            <Icon
+              name='chevron-left'
+              // variation={ButtonVariation.ICON}
+              size={30}
               onClick={e => {
                 e.stopPropagation()
                 e.preventDefault()
                 setShow(false)
               }}
             />
-            <Text color={Color.WHITE}>Tweety</Text>
-            <Icon name="canary" size={24}/>
+            <Text color={Color.WHITE} style={{ fontSize: 22, fontWeight: 'bold', paddingTop: "5px", paddingLeft: "5px" }}>Tweety</Text>
+            <Icon name="canary" size={30} style={{ paddingTop: "5px", paddingLeft: "5px" }} />
 
           </Layout.Horizontal>
-      <Layout.Vertical>
-      <ChatWindow>
-        {chat.map((item, index) => (
-          <ChatMessage key={index} sender={item.sender}>
-            {item.message}
-          </ChatMessage>
-        ))}
-      </ChatWindow>
+        </Layout.Vertical>
+        <Layout.Vertical>
+          <Text style={{ fontSize: 12, paddingLeft: "40px", color: "#F2E7D5" }}>AI Bot to help you Harness related</Text>
+        </Layout.Vertical>
+        <Layout.Vertical>
+          <div className={css.div}>
+            <ChatWindow>
+              {chat.map((item, index) => (
+                <ChatMessage key={index} sender={item.sender}>
+                  <div dangerouslySetInnerHTML={{ __html: item.message }}>
+                  </div>
+                </ChatMessage>
+              ))}
+            </ChatWindow>
+          </div>
+        </Layout.Vertical>
+        <Layout.Vertical>
+          <InputContainer>
+            <Input wrapperClassName={css.search} autoFocus
+              style={{ marginRight: "5px" }}
+              type="text" value={message} placeholder={getString('askMeAnything')} onChange={handleInputChange} />
+            <Icon
+              // width={"70px"}
+              // padding={{ left: 'small', bottom: 'small', top: 'small', right: 'large' }}
+              // margin={{ left: '-70px !important' }}
+              // variation={ButtonVariation.PRIMARY}
+              size={30}
+              color="blue500"
+              style={{ marginLeft: "-50px", marginRight: "25px" }}
+              // text={'Ask'}
+              name="arrow-right"
+              onClick={handleSendMessage}
+              className="submit-button"
+            />
+          </InputContainer>
+        </Layout.Vertical>
       </Layout.Vertical>
-      <Layout.Vertical>
-      <InputContainer>
-      <Input wrapperClassName={css.search} autoFocus type="text" value={message} placeholder={getString('askMeAnything')} onChange={handleInputChange} />
-        <RbacButton
-          width={"70px"}
-          padding={{ left:'small', bottom: 'small', top: 'small', right: 'large'}}
-          margin={{ left: 'xlarge', bottom: '0'}}
-          variation={ButtonVariation.PRIMARY}
-          size={ButtonSize.MEDIUM}
-          text={'Ask'}
-          rightIcon="chevron-right"
-          onClick={handleSendMessage}
-          permission={{
-            permission: PermissionIdentifier.EDIT_PIPELINE,
-            resource: {
-              resourceType: ResourceType.PIPELINE
-            }
-          }}
-                />
-      </InputContainer>
-      </Layout.Vertical>
-    </Layout.Vertical>
-    </Drawer>
+    </Drawer >
   );
 };
 
@@ -114,15 +129,19 @@ const ChatWindow = styled.div`
   flex-grow: 1;
   padding: 20px;
   overflow-y: auto;
+  margin-bottom: 30px;
 `;
 
 const ChatMessage = styled.div`
-  background-color: ${(props) => (props.sender === 'user' ? '#4CAF50' : '#2a578c')};
+  background-color: ${(props) => (props.sender === 'user' ? '#007AFF' : '#1B2E49')};
   color: #fff;
-  max-width: 50%;
+  max-width: 95%;
+  min-width: 40%;
+  width: fit-content;
   padding: 10px;
   margin-bottom: 10px;
-  border-radius: ${(props) => (props.sender === 'user' ? '10px 10px 0 10px' : '10px 10px 10px 0')};
+  overflow-wrap: anywhere;
+  border-radius: ${(props) => (props.sender === 'user' ? '25px 0px 25px 25px' : '16px 16px 16px 0px')};
   align-self: ${(props) => (props.sender === 'user' ? 'flex-end' : 'flex-start')};
   margin-left: ${(props) => (props.sender === 'user' ? 'auto' : 0)}; 
   margin-right: ${(props) => (props.sender === 'user' ? 0 : 'auto')}; 
@@ -131,8 +150,11 @@ const ChatMessage = styled.div`
 const InputContainer = styled.div`
   display: flex;
   align-items: center;
-  background-color: #f1f1f1;
+  background-color: #081B32;
   padding: 10px;
+  position: fixed;
+  bottom: 20px;
+  width: 520px;
 `;
 
 const Input = styled.input`
@@ -141,8 +163,7 @@ const Input = styled.input`
   outline: none;
   font-size: 16px;
   padding: 10px;
-  margin-right: 10px;
-  border-radius: 5px;
+  border-radius: 100px;
 `;
 
 // const Button = styled.button`
