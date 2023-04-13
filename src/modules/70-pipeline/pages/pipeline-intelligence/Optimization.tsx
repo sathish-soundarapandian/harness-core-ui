@@ -92,20 +92,22 @@ export default function Optimization(props) {
     lazy: true
   })
 
-  // const templatesData = {
-  //   status: 'SUCCESS',
-  //   data: {
-  //     templates: [
-  //       "Sure, here's a template for the ShellScript step:\n\n```\n- step:\n    type: ShellScript\n    name: ShellScript_1\n    identifier: ShellScript_1\n    spec:\n      shell: Bash\n      onDelegate: true\n      source:\n        type: Inline\n        spec:\n          script: <insert script here>\n      environmentVariables: []\n      outputVariables: []\n    timeout: 10m\n``` \n\nYou can replace `<insert script here>` with the actual script you want to run."
-  //     ],
-  //     pipelineYaml1:
-  //       "ChatMessage(role=assistant, content=I'm sorry, as an AI language model, I don't have access to any previous conversation or context. Can you please provide more information or context about the YAML file you are referring to?)",
-  //     pipelineYaml2:
-  //       'ChatMessage(role=assistant, content=Here is an example of a YAML file with templates linked:\n\n```yaml\nversion: \'3.7\'\n\nservices:\n  web:\n    image: nginx:latest\n    ports:\n      - "80:80"\n    volumes:\n      - ./templates:/etc/nginx/templates\n    environment:\n      - NGINX_TEMPLATE=example.conf.template\n```\n\nIn this example, we have a service called "web" that uses the latest version of the nginx image. We map port 80 on the host to port 80 in the container. We also mount a volume that contains our nginx template files at `/etc/nginx/templates` in the container. Finally, we set an environment variable called `NGINX_TEMPLATE` to the name of the template file we want to use (`example.conf.template`). This allows us to use the template in our nginx configuration file.)'
-  //   },
-  //   metaData: null,
-  //   correlationId: '7a70d162-edba-4a66-a467-89883df14bbb'
-  // }
+  const templatesData1 = {
+    status: 'SUCCESS',
+    data: {
+      templates: [
+        "Sure1, here's a template for the ShellScript step:\n\n```\n- step:\n    type: ShellScript\n    name: ShellScript_1\n    identifier: ShellScript_1\n    spec:\n      shell: Bash\n      onDelegate: true\n      source:\n        type: Inline\n        spec:\n          script: <insert script here>\n      environmentVariables: []\n      outputVariables: []\n    timeout: 10m\n``` \n\nYou can replace `<insert script here>` with the actual script you want to run.",
+        "Sure2, here's a template for the ShellScript step:\n\n```\n- step:\n    type: ShellScript\n    name: ShellScript_1\n    identifier: ShellScript_1\n    spec:\n      shell: Bash\n      onDelegate: true\n      source:\n        type: Inline\n        spec:\n          script: <insert script here>\n      environmentVariables: []\n      outputVariables: []\n    timeout: 10m\n``` \n\nYou can replace `<insert script here>` with the actual script you want to run.",
+        "Sure3, here's a template for the ShellScript step:\n\n```\n- step:\n    type: ShellScript\n    name: ShellScript_1\n    identifier: ShellScript_1\n    spec:\n      shell: Bash\n      onDelegate: true\n      source:\n        type: Inline\n        spec:\n          script: <insert script here>\n      environmentVariables: []\n      outputVariables: []\n    timeout: 10m\n``` \n\nYou can replace `<insert script here>` with the actual script you want to run."
+      ],
+      pipelineYaml1:
+        "ChatMessage(role=assistant, content=I'm sorry, as an AI language model, I don't have access to any previous conversation or context. Can you please provide more information or context about the YAML file you are referring to?)",
+      pipelineYaml2:
+        'ChatMessage(role=assistant, content=Here is an example of a YAML file with templates linked:\n\n```yaml\nversion: \'3.7\'\n\nservices:\n  web:\n    image: nginx:latest\n    ports:\n      - "80:80"\n    volumes:\n      - ./templates:/etc/nginx/templates\n    environment:\n      - NGINX_TEMPLATE=example.conf.template\n```\n\nIn this example, we have a service called "web" that uses the latest version of the nginx image. We map port 80 on the host to port 80 in the container. We also mount a volume that contains our nginx template files at `/etc/nginx/templates` in the container. Finally, we set an environment variable called `NGINX_TEMPLATE` to the name of the template file we want to use (`example.conf.template`). This allows us to use the template in our nginx configuration file.)'
+    },
+    metaData: null,
+    correlationId: '7a70d162-edba-4a66-a467-89883df14bbb'
+  }
   const fetchTemplates = () => {}
 
   const onSubmit = values => {
@@ -202,9 +204,13 @@ export default function Optimization(props) {
               >
                 Recommended Templates
               </Heading>
-              {templatesData?.data?.templates?.map(template => (
-                <PrettyText text={template} />
-              ))}
+              <ul>
+                {templatesData?.data?.templates?.map(template => (
+                  <li>
+                    <code>{template}</code>
+                  </li>
+                ))}
+              </ul>
             </Card>
             <Card className={css.sectionCard2}>
               <Heading
@@ -214,10 +220,14 @@ export default function Optimization(props) {
               >
                 Recommended Pipelines
               </Heading>
-              <b>Pipeline YAML 1</b>
-              <PrettyText text={templatesData?.data?.pipelineYaml1} />
-              <b>Pipeline YAML 2</b>
-              <PrettyText text={templatesData?.data?.pipelineYaml2} />
+              <ul>
+                <li>
+                  <code>{templatesData?.data?.pipelineYaml1}</code>
+                </li>
+                <li>
+                  <code>{templatesData?.data?.pipelineYaml2}</code>
+                </li>
+              </ul>
             </Card>
           </Container>
         </Layout.Vertical>
