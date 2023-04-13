@@ -40,6 +40,7 @@ export interface LogAnalysisDataRowProps {
     chartOptions: Highcharts.Options
   ) => void
   onDrawOpen: (index: number) => void
+  onAiDrawerOpen: (index: number) => void
   onUpdateEventPreferenceDrawer: (options: UpdateEventPreferenceOpenFn) => void
   index: number
   isSelected: boolean

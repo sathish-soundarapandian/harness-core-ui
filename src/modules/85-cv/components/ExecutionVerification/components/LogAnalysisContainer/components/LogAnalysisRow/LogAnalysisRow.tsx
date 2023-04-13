@@ -28,6 +28,7 @@ import LogAnalysisPagination from './components/LogAnalysisPagination'
 import UpdateEventPreferenceDrawer from './components/UpdateEventPreferenceDrawer/UpdateEventPreferenceDrawer'
 import type { LogAnalysisRowData } from '../../LogAnalysis.types'
 import css from './LogAnalysisRow.module.scss'
+import AIDrawer from './components/AIDrawer/AIDrawer'
 
 function ColumnHeaderRow(): JSX.Element {
   const { getString } = useStrings()
@@ -77,6 +78,14 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     selectedRowData: null,
     isOpenedViaLogsDrawer: false,
     isFetchUpdatedData: false
+  })
+
+  const [aiDrawer, setAiDrawer] = useState<{
+    showDrawer: boolean
+    selectedRowData: LogAnalysisRowData | null
+  }>({
+    showDrawer: false,
+    selectedRowData: null
   })
 
   const isLogFeedbackEnabled = useFeatureFlag(FeatureFlag.SRM_LOG_FEEDBACK_ENABLE_UI)
@@ -246,6 +255,16 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     })
   }, [])
 
+  const onAiDrawerOpen = useCallback((selectedIndex: number) => {
+    console.log('selectedIndex', selectedIndex)
+    console.log('data', data)
+
+    setAiDrawer({
+      showDrawer: true,
+      selectedRowData: data[selectedIndex]
+    })
+  }, [])
+
   const onUpdatePreferenceDrawerOpen = useCallback(
     ({ selectedIndex, isOpenedViaLogsDrawer, rowData }: UpdateEventPreferenceOpenFn) => {
       setUpdateEventPreferenceDrawer(currentData => ({
@@ -282,6 +301,17 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     [accountId, updateEventPreferenceDrawer, refetchLogAnalysis, fetchLogData]
   )
 
+  const onAiDrawerHide = useCallback(() => {
+    setAiDrawer({
+      showDrawer: false,
+      selectedRowData: null
+    })
+  }, [])
+
+  useEffect(() => {
+    console.log('inside')
+  }, [aiDrawer.showDrawer])
+
   return (
     <Container className={cx(css.main, props.className)}>
       <ColumnHeaderRow />
@@ -303,6 +333,14 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
           activityId={activityId as string}
         />
       ) : null}
+
+      {aiDrawer.showDrawer ? (
+        <AIDrawer
+          onHide={onAiDrawerHide}
+          rowData={aiDrawer.selectedRowData || ({} as LogAnalysisRowData)}
+          activityId={activityId as string}
+        />
+      ) : null}
       <Container className={css.dataContainer}>
         {data.map((row, index) => {
           if (!row || isEmpty(row)) return null
@@ -313,6 +351,7 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
               rowData={row}
               index={index}
               onDrawOpen={onDrawerOpen}
+              onAiDrawerOpen={onAiDrawerOpen}
               onUpdateEventPreferenceDrawer={onUpdatePreferenceDrawerOpen}
               isSelected={selectedIndices.has(index)}
               isErrorTracking={isErrorTracking}

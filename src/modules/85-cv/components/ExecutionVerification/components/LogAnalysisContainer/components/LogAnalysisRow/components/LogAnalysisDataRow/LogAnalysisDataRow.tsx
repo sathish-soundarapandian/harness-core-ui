@@ -19,7 +19,7 @@ import { getDisplayMessage } from './LogAnalysisDataRow.utils'
 import css from '../../LogAnalysisRow.module.scss'
 
 export default function LogAnalysisDataRow(props: LogAnalysisDataRowProps): JSX.Element | null {
-  const { rowData, isErrorTracking, onDrawOpen, index, onUpdateEventPreferenceDrawer } = props
+  const { rowData, isErrorTracking, onDrawOpen, index, onUpdateEventPreferenceDrawer, onAiDrawerOpen } = props
 
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
@@ -55,6 +55,10 @@ export default function LogAnalysisDataRow(props: LogAnalysisDataRowProps): JSX.
     })
   }
 
+  contextMenuItems.push({
+    displayText: '🚀 AI Analysis',
+    onClick: () => onAiDrawerOpen(index)
+  })
   const displayMessage = getDisplayMessage(message, isErrorTracking)
 
   return (
