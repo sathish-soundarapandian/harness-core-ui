@@ -59,6 +59,8 @@ allowpaths:
   - '/sso/ldap/iterations'
   - '/users/userAccounts'
   - '/delegate/taskslog'
+  - '/delegate/errorLog'
+  - '/delegate/dialogFlow'
   - '/delegate-feedbacks'
 operationIdOverrides:
   /setup/delegates.get: getDelegates

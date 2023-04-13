@@ -243,7 +243,7 @@ const FlagConfigurationStepWidget = forwardRef(
                 disabled={readonly}
                 multiTypeInputProps={{
                   disabled: readonly,
-                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
                   onInput: event =>
                     refetchFeatures({
                       queryParams: { ...featureQueryParams, name: (event.target as HTMLInputElement).value }
