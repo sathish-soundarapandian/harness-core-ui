@@ -371,6 +371,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                         enableSearch={() => setShouldDisable(false)}
                         disableSearch={() => setShouldDisable(true)}
                         setQuery={setQuery}
+                        logKeysFromState={state}
                       />
                     </Container>
                     <TextInput

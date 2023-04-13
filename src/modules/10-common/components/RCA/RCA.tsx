@@ -1,9 +1,12 @@
 import { debounce, get } from 'lodash-es'
 import React, { useState, useCallback, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
+import { useParams } from 'react-router-dom'
 import { Button, ButtonSize, Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import type { State } from '@pipeline/components/logsContent/LogsState/types'
+import type { ExecutionPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import type { ExtractedInfo } from '../ErrorHandler/ErrorHandler'
 import { Separator } from '../Separator/Separator'
 import css from './RCA.module.scss'
@@ -14,6 +17,7 @@ interface OpenAIResponseInterface {
   enableSearch: () => void
   disableSearch: () => void
   setQuery: (queryStr: string) => void
+  logKeysFromState: State
 }
 
 const SUMMARY_VIEW_CHAR_LIMIT = 500
@@ -21,7 +25,9 @@ const OPENAI_KEY = 'Bearer *****'
 
 function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const { getString } = useStrings()
-  const { errors = [], query, disableSearch, enableSearch, setQuery } = props
+  const pathParams = useParams<ExecutionPathProps & ModulePathParams>()
+
+  const { errors = [], query, disableSearch, enableSearch, setQuery, logKeysFromState } = props
   const [errorIndex, setErrorIndex] = useState<number>(0)
   const [solutionIndex, setSolutionIndex] = useState<number>(0)
   const [showDetailedView, setShowDetailedView] = useState<boolean>(false)
@@ -29,26 +35,24 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const [isFetching, setIsFetching] = useState<boolean>(false)
   const [openAIResponses, setResponses] = useState<any>([])
 
-  // const getBlobFromOpenAI = async (key: string, accountId: string) => {
-  //   const apiResponse = await (
-  //     await fetch(`https://rutvijlog.ngrok.io/blob/download/gpterrorresp?accountID=${accountId}&key=${key}`, {
-  //       headers: { 'x-harness-token': '', 'content-type': 'application/json' },
-  //       method: 'GET'
-  //     })
-  //   ).json()
-  //   return apiResponse
-  // }
+  useEffect(() => {
+    logKeysFromState.logKeys.map(logKey => {
+          getBlobFromOpenAI(logKey, pathParams.accountId).then((res: unknown) => {
+            console.log(res)
+            setResponses(res)
+          })
+    })
+  }, [logKeysFromState.logKeys])
 
-  // useEffect(() => {
-  //   try {
-  //     const temp_key =
-  //       'accountId%3AkmpySmUISimoRrJL6NL73w%2ForgId%3Adefault%2FprojectId%3Arutvijtest%2FpipelineId%3Ahostedvm%2FrunSequence%3A16%2Flevel0%3Apipeline%2Flevel1%3Astages%2Flevel2%3ABuild%2Flevel3%3Aspec%2Flevel4%3Aexecution%2Flevel5%3Asteps%2Flevel6%3ARun'
-  //     const temp_acct_id = 'kmpySmUISimoRrJL6NL73w'
-  //     getBlobFromOpenAI(temp_key, temp_acct_id).then((res: unknown) => {
-  //       setResponses(res)
-  //     })
-  //   } catch (e) {}
-  // }, [])
+  const getBlobFromOpenAI = async (key: string, accountId: string) => {
+    const apiResponse = await (
+      await fetch(`https://localhost:8181/log-service/blob/download/gpterrorresp?accountID=${accountId}&key=${key}`, {
+        headers: { 'x-harness-token': '', 'content-type': 'application/json' },
+        method: 'GET'
+      })
+    ).json()
+    return apiResponse
+  }
 
   const debounceFetchOpenAISuggestions = useCallback(
     debounce((query: string) => getOpenAISuggestions(query), 1000),
@@ -69,7 +73,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
     }
   }, [isFetching])
 
-  const getOpenAISuggestions = async (query: string) => {
+  const getOpenAISuggestions = async (_query: string) => {
     try {
       setIsFetching(true)
       const fixedQuerySuffix =
@@ -79,7 +83,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
         messages: [
           {
             role: 'user',
-            content: fixedQuerySuffix.concat(query)
+            content: fixedQuerySuffix.concat(_query)
           }
         ],
         temperature: 0.7
