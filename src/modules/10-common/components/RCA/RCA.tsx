@@ -21,28 +21,28 @@ interface OpenAIResponseInterface {
 const SUMMARY_VIEW_CHAR_LIMIT = 500
 // const OPENAI_KEY = 'Bearer *****'
 
-const mock = {
-  id: 'chatcmpl-74fseKuRCYL3gSyfOcRhGD3UCgmJy',
-  object: 'chat.completion',
-  created: 1681348656,
-  model: 'gpt-3.5-turbo-0301',
-  usage: {
-    prompt_tokens: 543,
-    completion_tokens: 192,
-    total_tokens: 735
-  },
-  choices: [
-    {
-      message: {
-        role: 'assistant',
-        content:
-          '[ \n  { \n    "Error": "Traceback (most recent call last):",\n    "Cause": "Code error - ZeroDivisionError: division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "  File \\"\\u003cstring\\u003e\\", line 1, in \\u003cmodule\\u003e",\n    "Cause": "Code error - Syntax error",\n    "Solution": "Check the syntax of the code at the specified line and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "ZeroDivisionError: division by zero",\n    "Cause": "Code error - Division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  }\n]'
-      },
-      finish_reason: 'stop',
-      index: 0
-    }
-  ]
-}
+// const mock = {
+//   id: 'chatcmpl-74fseKuRCYL3gSyfOcRhGD3UCgmJy',
+//   object: 'chat.completion',
+//   created: 1681348656,
+//   model: 'gpt-3.5-turbo-0301',
+//   usage: {
+//     prompt_tokens: 543,
+//     completion_tokens: 192,
+//     total_tokens: 735
+//   },
+//   choices: [
+//     {
+//       message: {
+//         role: 'assistant',
+//         content:
+//           '[ \n  { \n    "Error": "Traceback (most recent call last):",\n    "Cause": "Code error - ZeroDivisionError: division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "  File \\"\\u003cstring\\u003e\\", line 1, in \\u003cmodule\\u003e",\n    "Cause": "Code error - Syntax error",\n    "Solution": "Check the syntax of the code at the specified line and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "ZeroDivisionError: division by zero",\n    "Cause": "Code error - Division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  }\n]'
+//       },
+//       finish_reason: 'stop',
+//       index: 0
+//     }
+//   ]
+// }
 
 function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const { getString } = useStrings()
@@ -71,7 +71,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
     logKeysFromState.logKeys.map(logKey => {
       getBlobFromOpenAI(logKey, pathParams.accountId).then((res: unknown) => {
         if (res) {
-          prepareResponses(mock)
+          prepareResponses(res)
         }
       })
     })
@@ -197,7 +197,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
             onClick={() => {
               setQuery('')
               setShowDetailedView(false)
-              prepareResponses(mock)
+              // prepareResponses(mock)
             }}
           />
           <Layout.Vertical spacing="medium" className={css.errorDetails} padding="large">
