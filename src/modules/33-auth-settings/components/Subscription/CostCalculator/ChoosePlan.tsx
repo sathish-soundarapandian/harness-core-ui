@@ -21,6 +21,7 @@ interface ChoosePlanProps {
   plan: Editions
   setPlan: (value: Editions) => void
   module: Module
+  allLicenses: any
 }
 interface PlanToggleProps extends ChoosePlanProps {
   otherSubscriptions: any
@@ -71,15 +72,10 @@ const PlanToggle: React.FC<PlanToggleProps> = ({ plan, setPlan, module, otherSub
   )
 }
 
-const ChoosePlan: React.FC<ChoosePlanProps> = ({ plan, module, setPlan }) => {
+const ChoosePlan: React.FC<ChoosePlanProps> = ({ plan, module, setPlan, allLicenses }) => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { data: accountLicensesData } = useGetAccountLicenses({
-    queryParams: {
-      accountIdentifier: accountId
-    }
-  })
-  const allLicenses = accountLicensesData?.data?.allModuleLicenses || {}
+
   const currentExistingFFSubscription = allLicenses['CF']?.[0]?.edition
   const currentExistingCISubscription = allLicenses['CI']?.[0]?.edition
   let otherSubscriptions =

@@ -168,6 +168,7 @@ costCalculator:
   comparePlans: Compare plans
   next: 'Next: Billing information'
   switchTooltip: Switch to Yearly subscription to enable premium support
+  alreadySubscribed: Other subscription on this account already has Premium Support
   premiumSupport: Premier Support
   premSupport:
     title: Add Premier Support
