@@ -728,6 +728,7 @@ const CERoutes: React.FC = () => {
         routes.toCEGovernanceEvaluations({ ...accountPathProps }),
         routes.toCEGovernanceRuleEditor({ ...accountPathProps, ruleId: ':ruleId' }),
         routes.toCECurrencyPreferences({ ...accountPathProps }),
+        routes.toCECustomScripts({ ...accountPathProps }),
         routes.toClusterOrchestrator({ ...accountPathProps }),
         routes.toClusterDetailsPage({ ...accountPathProps, id: ':id' }),
         routes.toClusterWorkloadsDetailsPage({ ...accountPathProps, id: ':id' }),

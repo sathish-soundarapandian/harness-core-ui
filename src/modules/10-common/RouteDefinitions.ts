@@ -1946,6 +1946,7 @@ const routes = {
   toClusterNodepoolDetailsPage: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/${id}/nodepool`),
   toComputeGroupsSetup: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/setup/steps/${id}`),
   toCECurrencyPreferences: withAccountId(() => `/ce/currency-preferences`),
+  toCECustomScripts: withAccountId(() => `/ce/custom-scripts`),
   toCCMMFE: withAccountId(() => `/ce/new`),
   /********************************************************************************************************************/
   toSTO: withAccountId(() => `/sto`),

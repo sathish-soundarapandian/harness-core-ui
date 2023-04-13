@@ -265,6 +265,10 @@ const SideNavItems = () => {
             />
           </Layout.Vertical>
         </NavExpandable>
+        <SidebarLink
+          label={getString('ce.generateCustomScripts.sideNavText')}
+          to={routes.toCECustomScripts({ accountId })}
+        />
       </React.Fragment>
     </Layout.Vertical>
   )

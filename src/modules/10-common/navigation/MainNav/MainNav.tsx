@@ -26,6 +26,7 @@ import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfig
 
 import ModulesContainer from './ModulesContainer/ModulesContainer'
 import { moduleToNavItemsMap } from './util'
+import chatIcon from '../../images/chatchamp.svg'
 import css from './MainNav.module.scss'
 
 const commonLinkProps: Partial<NavLinkProps> = {
@@ -141,6 +142,20 @@ export default function L1Nav(): React.ReactElement {
           )}
         </ul>
         <ul className={css.navList}>
+          <li className={css.navItem}>
+            <Link
+              className={cx(css.navLink, css.settings, css.hoverNavLink)}
+              activeClassName={css.active}
+              to={paths.toCECustomScripts(params)}
+            >
+              <Layout.Vertical flex spacing="xsmall">
+                <img src={chatIcon} width={32} height={32} />
+                <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE} className={css.hoverText}>
+                  <String stringID="common.cloudChamp" />
+                </Text>
+              </Layout.Vertical>
+            </Link>
+          </li>
           <li className={css.navItem}>
             <ResourceCenter />
           </li>

@@ -5,6 +5,7 @@ help: Help
 copied: 'Copied'
 clear: Clear
 dashboards: Dashboards
+cloudChamp: CloudChamp
 setup: Setup
 HelmChartLabel: Helm Chart
 agent: Agent

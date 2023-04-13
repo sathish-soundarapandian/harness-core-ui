@@ -164,6 +164,7 @@ export interface StringsMap {
   'common.clickToKnowMore': string
   'common.clientId': string
   'common.clientSecret': string
+  'common.cloudChamp': string
   'common.cluster': string
   'common.clusterName': string
   'common.clusters': string
@@ -6886,6 +6887,7 @@ export interface StringsMap {
   'ce.enforcementMessage.exceededSpendLimitFreePlan': string
   'ce.enforcementMessage.perspectivesLimitMsg': string
   'ce.enforcementMessage.usageInfo': string
+  'ce.generateCustomScripts.sideNavText': string
   'ce.governance.enforcement': string
   'ce.governance.enforcements': string
   'ce.governance.rule': string

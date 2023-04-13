@@ -1367,3 +1367,5 @@ governance:
   rules: Cloud Asset Governance Rules
 currencyPreferences:
   sideNavText: Currency Preferences
+generateCustomScripts:
+  sideNavText: Custom Scripts
