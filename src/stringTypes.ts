@@ -353,6 +353,7 @@ export interface StringsMap {
   'common.feature.upgradeRequired.title': string
   'common.featureComingSoon': string
   'common.fetchingBranches': string
+  'common.fetchingFromOpenAI': string
   'common.file': string
   'common.files': string
   'common.filter': string
