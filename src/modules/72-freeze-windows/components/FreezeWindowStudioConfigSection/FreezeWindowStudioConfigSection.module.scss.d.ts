@@ -10,13 +10,17 @@ declare const styles: {
   readonly addNewRuleButton: string
   readonly allScvEnvCheckbox: string
   readonly badge: string
+  readonly code: string
+  readonly code1: string
   readonly configFormContainer: string
   readonly crossButton: string
   readonly isEditView: string
+  readonly makeCard: string
   readonly marginSmaller: string
   readonly sectionCard: string
   readonly sectionCard1: string
   readonly sectionCard2: string
+  readonly sectionCard3: string
   readonly separator: string
   readonly separator2: string
   readonly tagInputStyle: string
