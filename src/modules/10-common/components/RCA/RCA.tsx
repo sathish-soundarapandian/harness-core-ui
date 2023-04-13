@@ -2,7 +2,7 @@ import { debounce, get, isEmpty } from 'lodash-es'
 import React, { useState, useCallback, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
-import { Button, ButtonSize, Container, Icon, Layout, Text } from '@harness/uicore'
+import { Accordion, Button, ButtonSize, Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { State } from '@pipeline/components/logsContent/LogsState/types'
@@ -218,43 +218,59 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
               <Icon name="danger-icon" size={16} />
               <Text font={{ variation: FontVariation.LEAD }}>{`${getString('errors')} (${errors.length})`}</Text>
             </Layout.Horizontal>
-            {errors?.map((err, index) => {
-              return (
-                <Layout.Vertical key={index} spacing="medium" className={css.errorDetails} padding="large">
-                  <Text font={{ variation: FontVariation.LEAD }} color={Color.RED_500}>{`${getString('error')} ${
-                    index + 1
-                  }`}</Text>
-                  <Text>{err}</Text>
-                  {renderErrorDetailSeparator()}
-                  {openAIResponses?.choices?.map((item: any, _index: any) => {
-                    const content = get(item, 'message.content', '')
-                    const shouldTrim = content.length > SUMMARY_VIEW_CHAR_LIMIT
-                    return (
-                      <Layout.Vertical padding={{ top: 'small', bottom: 'small' }} spacing="xsmall" key={index}>
-                        <ReactMarkdown className={css.openAiResponse}>
-                          {shouldTrim ? content.slice(0, SUMMARY_VIEW_CHAR_LIMIT).concat('...') : content}
-                        </ReactMarkdown>
-                        {shouldTrim ? (
-                          <Button
-                            text={getString('common.readMore')}
-                            round
-                            intent="primary"
-                            size={ButtonSize.SMALL}
-                            className={css.readMoreBtn}
-                            onClick={() => {
-                              setItemForDetailedView(item)
-                              setErrorIndex(index)
-                              setShowDetailedView(true)
-                              setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 0)
-                            }}
-                          />
-                        ) : null}
+            <Accordion activeId={'0'} className={css.accordion}>
+              {errors?.map((err, index) => {
+                return (
+                  <Accordion.Panel
+                    id={index.toString()}
+                    summary={
+                      <Layout.Vertical key={index} spacing="medium" className={css.errorDetails} padding="large">
+                        <Text font={{ variation: FontVariation.LEAD }} color={Color.RED_500}>{`${getString('error')} ${
+                          index + 1
+                        }`}</Text>
+                        <Text>{err}</Text>
                       </Layout.Vertical>
-                    )
-                  })}
-                </Layout.Vertical>
-              )
-            })}
+                    }
+                    details={
+                      <Layout.Vertical key={index} spacing="medium" className={css.errorDetails} padding="large">
+                        <Layout.Horizontal spacing="small">
+                          <Icon name="gear" size={20} />
+                          <Text color={Color.PRIMARY_7}>
+                            {getString('common.possibleSolution').concat(showDetailedView ? '' : 's')}
+                          </Text>
+                        </Layout.Horizontal>
+                        {openAIResponses?.choices?.map((item: any, _index: any) => {
+                          const content = get(item, 'message.content', '')
+                          const shouldTrim = content.length > SUMMARY_VIEW_CHAR_LIMIT
+                          return (
+                            <Layout.Vertical padding={{ top: 'small', bottom: 'small' }} spacing="xsmall" key={index}>
+                              <ReactMarkdown className={css.openAiResponse}>
+                                {shouldTrim ? content.slice(0, SUMMARY_VIEW_CHAR_LIMIT).concat('...') : content}
+                              </ReactMarkdown>
+                              {shouldTrim ? (
+                                <Button
+                                  text={getString('common.readMore')}
+                                  round
+                                  intent="primary"
+                                  size={ButtonSize.SMALL}
+                                  className={css.readMoreBtn}
+                                  onClick={() => {
+                                    setItemForDetailedView(item)
+                                    setErrorIndex(index)
+                                    setShowDetailedView(true)
+                                    setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 0)
+                                  }}
+                                />
+                              ) : null}
+                            </Layout.Vertical>
+                          )
+                        })}
+                      </Layout.Vertical>
+                    }
+                  ></Accordion.Panel>
+                )
+              })}
+            </Accordion>
           </>
         )
       }

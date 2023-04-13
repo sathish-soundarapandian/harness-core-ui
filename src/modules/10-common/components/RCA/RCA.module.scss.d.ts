@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly accordion: string
   readonly backBtn: string
   readonly errorDetails: string
   readonly openAiResponse: string

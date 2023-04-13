@@ -23,3 +23,21 @@
 .backBtn {
   cursor: pointer;
 }
+
+.accordion {
+  :global(.Accordion--chevron) {
+    color: var(--grey-700);
+    position: absolute;
+    right: var(--spacing-large);
+    top: var(--spacing-xxlarge);
+  }
+  :global(.Accordion--panel) {
+    padding-top: var(--spacing-xsmall);
+    padding-bottom: var(--spacing-xsmall);
+  }
+  :global(.Accordion--summary) {
+    > div:first-child {
+      width: 100%;
+    }
+  }
+}
