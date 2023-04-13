@@ -31,7 +31,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const [showDetailedView, setShowDetailedView] = useState<boolean>(false)
   const scrollRef = useRef<Element | undefined>()
   const [isFetching, setIsFetching] = useState<boolean>(false)
-  const [openAIResponses, setResponses] = useState<any>([])
+  const [openAIResponses, setOpenAIResponses] = useState<any>([])
   const [errors, setErrors] = useState<any[]>([])
 
   useEffect(() => {
@@ -61,7 +61,11 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
             ]
           }
           const choices = JSON.parse(get(mock, 'choices.0.message.content')) as any[]
-          setResponses(choices)
+          const possibleSolutions = choices.map(choice => choice['Possible Solution'])
+          const suitableResponses = possibleSolutions.map(solution => {
+            return { message: { content: solution } }
+          })
+          setOpenAIResponses({ choices: suitableResponses })
           setErrors(choices.map(choice => choice.Error))
         }
       })
@@ -123,7 +127,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
       })
       if (response.ok) {
         const jsonResponse = await response.json()
-        setResponses(jsonResponse)
+        setOpenAIResponses(jsonResponse)
       }
     } catch (e) {}
     setIsFetching(false)
