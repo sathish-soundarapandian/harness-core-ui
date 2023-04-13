@@ -2050,6 +2050,7 @@ export interface StringsMap {
   'authSettings.confirmDisablePasswordStrength': string
   'authSettings.confirmDisableUserPasswordLogin': string
   'authSettings.confirmDisableWhitelistedDomains': string
+  'authSettings.costCalculator.alreadySubscribed': string
   'authSettings.costCalculator.comparePlans': string
   'authSettings.costCalculator.currentSubscribed': string
   'authSettings.costCalculator.developer.developer': string

@@ -146,7 +146,7 @@ interface TableRowProps {
   name: string
   data: SubscriptionDetailDTO
 }
-const TableRow = ({ name, using = '-', module=ModuleName.CF, data }: TableRowProps): JSX.Element => {
+const TableRow = ({ name, using = '-', module = ModuleName.CF, data }: TableRowProps): JSX.Element => {
   const { getString } = useStrings()
   const history = useHistory()
 

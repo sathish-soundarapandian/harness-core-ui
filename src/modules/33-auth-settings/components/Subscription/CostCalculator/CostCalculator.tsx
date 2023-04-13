@@ -9,11 +9,12 @@ import React, { useState } from 'react'
 import { Layout, PageError, Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { cloneDeep, defaultTo, isEmpty } from 'lodash-es'
-import type { Module, ModuleName } from 'framework/types/ModuleName'
+import { Module, ModuleName } from 'framework/types/ModuleName'
 import {
   RetrieveProductPricesQueryParams,
   useRetrieveProductPrices,
-  useRetrieveRecommendationRc
+  useRetrieveRecommendationRc,
+  useGetAccountLicenses
 } from 'services/cd-ng/index'
 import {
   Editions,
@@ -69,6 +70,13 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   const [quantities, setQuantities] = useState<SubscriptionProps['quantities'] | undefined>(
     subscriptionProps.quantities
   )
+  const [isPremiumSupported, setIsPremiumSupported] = useState<boolean>(false)
+  const { data: accountLicensesData } = useGetAccountLicenses({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+  const allLicenses = accountLicensesData?.data?.allModuleLicenses || {}
   function getCostCalculatorBodyByModule({
     productPrices,
     paymentFrequency,
@@ -143,7 +151,16 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
     if (usageAndLimitInfo.usageData.usage?.ff || usageAndLimitInfo.usageData.usage?.ci) {
       fetchRecommendations()
     }
-  }, [usageAndLimitInfo.usageData.usage?.ff, usageAndLimitInfo.usageData.usage?.ci])
+    if (Object.keys(allLicenses).length > 0) {
+      const premSupport = allLicenses['CF']?.[0]?.premiumSupport || allLicenses['CI']?.[0]?.premiumSupport || false
+      setSubscriptionProps({
+        ...subscriptionProps,
+        premiumSupport: premSupport
+      })
+      setIsPremiumSupported(premSupport)
+    }
+  }, [usageAndLimitInfo.usageData.usage?.ff, usageAndLimitInfo.usageData.usage?.ci, allLicenses])
+
   React.useEffect(() => {
     const newProductPrices: ProductPricesProp = { monthly: [], yearly: [] }
     if (prices) {
@@ -226,23 +243,33 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
         break
     }
   }
+
   return (
     <Layout.Vertical className={className}>
       <Header step={0} />
       <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} className={css.body}>
         <ChoosePlan
+          allLicenses={allLicenses}
           plan={subscriptionProps.edition}
           module={module}
           setPlan={(value: Editions) => {
             let passedQuantities = {}
-            if (value === Editions.ENTERPRISE && subscriptionProps.quantities?.featureFlag?.numberOfMau === 100) {
+            if (
+              value === Editions.ENTERPRISE &&
+              subscriptionProps.quantities?.featureFlag?.numberOfMau === 100 &&
+              module === ModuleName.CF.toLowerCase()
+            ) {
               passedQuantities = {
                 featureFlag: {
                   numberOfMau: 1,
                   numberOfDevelopers: subscriptionProps.quantities?.featureFlag?.numberOfDevelopers
                 }
               }
-            } else if (value === Editions.TEAM && subscriptionProps.quantities?.featureFlag?.numberOfMau === 1) {
+            } else if (
+              value === Editions.TEAM &&
+              subscriptionProps.quantities?.featureFlag?.numberOfMau === 1 &&
+              module === ModuleName.CF.toLowerCase()
+            ) {
               passedQuantities = {
                 featureFlag: {
                   numberOfMau: 100,
@@ -267,14 +294,15 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
           updateQuantities
         })}
         <PremiumSupport
-          premiumSupport={subscriptionProps.premiumSupport}
+          isAlreadyPrime={isPremiumSupported}
+          premiumSupport={subscriptionProps.premiumSupport || isPremiumSupported}
           onChange={(value: boolean) => {
             setSubscriptionProps({
               ...subscriptionProps,
               premiumSupport: value
             })
           }}
-          disabled={subscriptionProps.paymentFreq === TimeType.MONTHLY}
+          disabled={subscriptionProps.paymentFreq === TimeType.MONTHLY || isPremiumSupported}
         />
       </Layout.Vertical>
       <Footer setView={setView} disabled={isEmpty(subscriptionProps.quantities)} />
