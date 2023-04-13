@@ -159,6 +159,8 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
   const isSingleSectionLogs = state.units.length === 1
   const { openDialog } = useLogSettings()
   const [showErrorPanel, setShowErrorPanel] = useState<boolean>(false)
+  const [shouldDisable, setShouldDisable] = useState<boolean>(false)
+  const [query, setQuery] = useState<string>('')
 
   const virtuosoRef = React.useRef<null | GroupedVirtuosoHandle | VirtuosoHandle>(null)
   const { setPreference: setSavedExecutionView } = usePreferenceStore<string | undefined>(
@@ -365,6 +367,8 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                             }
                           }
                         ]}
+                        query={query}
+                        disableSearch={() => setShouldDisable(true)}
                       />
                     </Container>
                     <TextInput
@@ -372,6 +376,8 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                       leftIconProps={{ name: 'gear', size: 40, padding: { left: 'small' } }}
                       className={css.search}
                       placeholder={getString('common.typeHere')}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+                      disabled={shouldDisable}
                     ></TextInput>
                   </Layout.Vertical>
                 }

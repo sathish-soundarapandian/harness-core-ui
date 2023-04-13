@@ -1,3 +1,4 @@
+import { debounce, get } from 'lodash-es'
 import React, { useState, useCallback, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { Button, ButtonSize, Container, Icon, Layout, Text } from '@harness/uicore'
@@ -5,44 +6,98 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ExtractedInfo } from '../ErrorHandler/ErrorHandler'
 import { Separator } from '../Separator/Separator'
-import mockedResponse from './openai-response.json'
 import css from './RCA.module.scss'
 
 interface OpenAIResponseInterface {
   errors: ExtractedInfo[]
+  query?: string
+  disableSearch: () => void
 }
 
 const SUMMARY_VIEW_CHAR_LIMIT = 500
+const OPENAI_KEY = 'Bearer *****'
 
 function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const { getString } = useStrings()
-  const { errors = [] } = props
+  const { errors = [], query, disableSearch } = props
   const [errorIndex, setErrorIndex] = useState<number>(0)
   const [solutionIndex, setSolutionIndex] = useState<number>(0)
   const [showDetailedView, setShowDetailedView] = useState<boolean>(false)
   const scrollRef = useRef<Element | undefined>()
-  const [responses, setResponses] = useState<any>(mockedResponse)
+  const [isFetching, setIsFetching] = useState<boolean>(false)
+  const [openAIResponses, setResponses] = useState<any>([])
 
-  const getBlobFromOpenAI = async (key: string, accountId: string) => {
-    const apiResponse = await (
-      await fetch(`https://rutvijlog.ngrok.io/blob/download/gpterrorresp?accountID=${accountId}&key=${key}`, {
-        headers: { 'x-harness-token': '', 'content-type': 'application/json' },
-        method: 'GET'
-      })
-    ).json()
-    return apiResponse
-  }
+  // const getBlobFromOpenAI = async (key: string, accountId: string) => {
+  //   const apiResponse = await (
+  //     await fetch(`https://rutvijlog.ngrok.io/blob/download/gpterrorresp?accountID=${accountId}&key=${key}`, {
+  //       headers: { 'x-harness-token': '', 'content-type': 'application/json' },
+  //       method: 'GET'
+  //     })
+  //   ).json()
+  //   return apiResponse
+  // }
+
+  // useEffect(() => {
+  //   try {
+  //     const temp_key =
+  //       'accountId%3AkmpySmUISimoRrJL6NL73w%2ForgId%3Adefault%2FprojectId%3Arutvijtest%2FpipelineId%3Ahostedvm%2FrunSequence%3A16%2Flevel0%3Apipeline%2Flevel1%3Astages%2Flevel2%3ABuild%2Flevel3%3Aspec%2Flevel4%3Aexecution%2Flevel5%3Asteps%2Flevel6%3ARun'
+  //     const temp_acct_id = 'kmpySmUISimoRrJL6NL73w'
+  //     getBlobFromOpenAI(temp_key, temp_acct_id).then((res: unknown) => {
+  //       setResponses(res)
+  //     })
+  //   } catch (e) {}
+  // }, [])
+
+  const debounceFetchOpenAISuggestions = useCallback(
+    debounce((query: string) => getOpenAISuggestions(query), 1000),
+    []
+  )
 
   useEffect(() => {
+    if (query) {
+      debounceFetchOpenAISuggestions(query)
+    }
+  }, [query])
+
+  useEffect(() => {
+    if (isFetching) {
+      disableSearch()
+    }
+  }, [isFetching])
+
+  const getOpenAISuggestions = async (query: string) => {
     try {
-      const temp_key =
-        'accountId%3AkmpySmUISimoRrJL6NL73w%2ForgId%3Adefault%2FprojectId%3Arutvijtest%2FpipelineId%3Ahostedvm%2FrunSequence%3A16%2Flevel0%3Apipeline%2Flevel1%3Astages%2Flevel2%3ABuild%2Flevel3%3Aspec%2Flevel4%3Aexecution%2Flevel5%3Asteps%2Flevel6%3ARun'
-      const temp_acct_id = 'kmpySmUISimoRrJL6NL73w'
-      getBlobFromOpenAI(temp_key, temp_acct_id).then((res: unknown) => {
-        setResponses(res)
+      setIsFetching(true)
+      const fixedQuerySuffix =
+        'These error messages are seen when running a Harness Continuous Integration step in a Cloud environment on an Ubuntu 22.04 Virtual Machine'
+      const payload = {
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'user',
+            content: fixedQuerySuffix.concat(query)
+          }
+        ],
+        temperature: 0.7
+      }
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: OPENAI_KEY
+        },
+        body: JSON.stringify(payload)
       })
-    } catch (e) {}
-  }, [])
+      if (response.ok) {
+        const jsonResponse = await response.json()
+        setIsFetching(false)
+        setResponses(jsonResponse)
+      }
+    } catch (e) {
+      setIsFetching(false)
+    }
+  }
 
   const renderErrorDetailSeparator = useCallback((): React.ReactElement => {
     return (
@@ -83,7 +138,9 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
             <Layout.Vertical spacing="medium" className={css.errorDetails} padding="large">
               <Text>{errors[errorIndex].error?.message}</Text>
               {renderErrorDetailSeparator()}
-              <ReactMarkdown className={css.openAiResponse}>{responses.choices[solutionIndex].text}</ReactMarkdown>
+              <ReactMarkdown className={css.openAiResponse}>
+                {openAIResponses.choices[solutionIndex].text}
+              </ReactMarkdown>
             </Layout.Vertical>
           </Layout.Vertical>
         ) : (
@@ -92,7 +149,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
               <Icon name="danger-icon" size={16} />
               <Text font={{ variation: FontVariation.LEAD }}>{`${getString('errors')} (${errors.length})`}</Text>
             </Layout.Horizontal>
-            {errors.map((errorObject, index) => {
+            {errors?.map((errorObject, index) => {
               const { error = {} } = errorObject
               return (
                 <Layout.Vertical key={index} spacing="medium" className={css.errorDetails} padding="large">
@@ -101,28 +158,31 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
                   }`}</Text>
                   <Text>{error.message}</Text>
                   {renderErrorDetailSeparator()}
-                  {responses.choices.map((item: any, _index: any) => (
-                    <Layout.Vertical padding={{ top: 'small', bottom: 'small' }} spacing="xsmall" key={index}>
-                      <ReactMarkdown className={css.openAiResponse}>
-                        {item.text.length > SUMMARY_VIEW_CHAR_LIMIT
-                          ? item.text.slice(0, SUMMARY_VIEW_CHAR_LIMIT).concat('...')
-                          : item.text}
-                      </ReactMarkdown>
-                      <Button
-                        text={getString('common.readMore')}
-                        round
-                        intent="primary"
-                        size={ButtonSize.SMALL}
-                        className={css.readMoreBtn}
-                        onClick={() => {
-                          setErrorIndex(index)
-                          setSolutionIndex(_index)
-                          setShowDetailedView(true)
-                          setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 0)
-                        }}
-                      />
-                    </Layout.Vertical>
-                  ))}
+                  {openAIResponses?.choices?.map((item: any, _index: any) => {
+                    const content = get(item, 'message.content', '')
+                    return (
+                      <Layout.Vertical padding={{ top: 'small', bottom: 'small' }} spacing="xsmall" key={index}>
+                        <ReactMarkdown className={css.openAiResponse}>
+                          {content.length > SUMMARY_VIEW_CHAR_LIMIT
+                            ? content.slice(0, SUMMARY_VIEW_CHAR_LIMIT).concat('...')
+                            : content}
+                        </ReactMarkdown>
+                        <Button
+                          text={getString('common.readMore')}
+                          round
+                          intent="primary"
+                          size={ButtonSize.SMALL}
+                          className={css.readMoreBtn}
+                          onClick={() => {
+                            setErrorIndex(index)
+                            setSolutionIndex(_index)
+                            setShowDetailedView(true)
+                            setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 0)
+                          }}
+                        />
+                      </Layout.Vertical>
+                    )
+                  })}
                 </Layout.Vertical>
               )
             })}
