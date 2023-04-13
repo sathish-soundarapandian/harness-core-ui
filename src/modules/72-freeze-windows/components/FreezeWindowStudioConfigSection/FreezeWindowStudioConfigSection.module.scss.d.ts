@@ -15,6 +15,8 @@ declare const styles: {
   readonly isEditView: string
   readonly marginSmaller: string
   readonly sectionCard: string
+  readonly sectionCard1: string
+  readonly sectionCard2: string
   readonly separator: string
   readonly tagInputStyle: string
   readonly tickButton: string

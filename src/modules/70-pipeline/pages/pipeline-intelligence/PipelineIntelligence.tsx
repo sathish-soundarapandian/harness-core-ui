@@ -12,7 +12,7 @@ enum IntelligenceTabs {
 }
 
 export default function PipelineIntelligence() {
-  const [selectedTab, setSelectedTabId] = React.useState(IntelligenceTabs.ASSISTANT)
+  const [selectedTab, setSelectedTabId] = React.useState(IntelligenceTabs.OPTIMIZATION)
   return (
     <section className={css.stepTabs}>
       <Tabs

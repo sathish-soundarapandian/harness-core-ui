@@ -5310,6 +5310,13 @@ export interface ResponseRetryLatestExecutionResponseDto {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseSimilarityResponse {
+  correlationId?: string
+  data?: SimilarityResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseStepCategory {
   correlationId?: string
   data?: StepCategory
@@ -5320,6 +5327,13 @@ export interface ResponseStepCategory {
 export interface ResponseString {
   correlationId?: string
   data?: string
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseTemplateResponse {
+  correlationId?: string
+  data?: TemplateResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5717,6 +5731,11 @@ export type ShellScriptStepInfo = StepSpecType & {
   outputVariables?: NGVariable[]
   shell: 'Bash' | 'PowerShell'
   source: ShellScriptSourceWrapper
+}
+
+export interface SimilarityResponse {
+  pipelineSimilarityPercentage?: number
+  response?: string[]
 }
 
 export interface SkipInfo {
@@ -9209,33 +9228,30 @@ export const getPipelineOpaContextFromEvaluationPromise = (
     GetPipelineOpaContextFromEvaluationPathParams
   >(getConfig('pipeline/api'), `/opa/getPipelineOpaContextFromEvaluation/${planExecutionId}`, props, signal)
 
-export interface GetTemplatesQueryParams {
+export interface GetDocsQueryParams {
   query?: string
 }
 
-export type GetTemplatesProps = Omit<GetProps<ResponseString, Failure | Error, GetTemplatesQueryParams, void>, 'path'>
+export type GetDocsProps = Omit<GetProps<ResponseString, Failure | Error, GetDocsQueryParams, void>, 'path'>
 
 /**
  * Get Docs Query
  */
-export const GetTemplates = (props: GetTemplatesProps) => (
-  <Get<ResponseString, Failure | Error, GetTemplatesQueryParams, void>
+export const GetDocs = (props: GetDocsProps) => (
+  <Get<ResponseString, Failure | Error, GetDocsQueryParams, void>
     path={`/openai/docs`}
     base={getConfig('pipeline/api')}
     {...props}
   />
 )
 
-export type UseGetTemplatesProps = Omit<
-  UseGetProps<ResponseString, Failure | Error, GetTemplatesQueryParams, void>,
-  'path'
->
+export type UseGetDocsProps = Omit<UseGetProps<ResponseString, Failure | Error, GetDocsQueryParams, void>, 'path'>
 
 /**
  * Get Docs Query
  */
-export const useGetTemplates = (props: UseGetTemplatesProps) =>
-  useGet<ResponseString, Failure | Error, GetTemplatesQueryParams, void>(`/openai/docs`, {
+export const useGetDocs = (props: UseGetDocsProps) =>
+  useGet<ResponseString, Failure | Error, GetDocsQueryParams, void>(`/openai/docs`, {
     base: getConfig('pipeline/api'),
     ...props
   })
@@ -9243,11 +9259,11 @@ export const useGetTemplates = (props: UseGetTemplatesProps) =>
 /**
  * Get Docs Query
  */
-export const getTemplatesPromise = (
-  props: GetUsingFetchProps<ResponseString, Failure | Error, GetTemplatesQueryParams, void>,
+export const getDocsPromise = (
+  props: GetUsingFetchProps<ResponseString, Failure | Error, GetDocsQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseString, Failure | Error, GetTemplatesQueryParams, void>(
+  getUsingFetch<ResponseString, Failure | Error, GetDocsQueryParams, void>(
     getConfig('pipeline/api'),
     `/openai/docs`,
     props,
@@ -9301,6 +9317,110 @@ export const openaiGoldenPipelinePromise = (
   getUsingFetch<ResponseGoldenPipelineResponse, Failure | Error, OpenaiGoldenPipelineQueryParams, void>(
     getConfig('pipeline/api'),
     `/openai/goldenPipeline`,
+    props,
+    signal
+  )
+
+export interface StructureSimilarityQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  identifier1?: string
+  identifier2?: string
+}
+
+export type StructureSimilarityProps = Omit<
+  GetProps<ResponseSimilarityResponse, Failure | Error, StructureSimilarityQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get similarity
+ */
+export const StructureSimilarity = (props: StructureSimilarityProps) => (
+  <Get<ResponseSimilarityResponse, Failure | Error, StructureSimilarityQueryParams, void>
+    path={`/openai/similarity`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseStructureSimilarityProps = Omit<
+  UseGetProps<ResponseSimilarityResponse, Failure | Error, StructureSimilarityQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get similarity
+ */
+export const useStructureSimilarity = (props: UseStructureSimilarityProps) =>
+  useGet<ResponseSimilarityResponse, Failure | Error, StructureSimilarityQueryParams, void>(`/openai/similarity`, {
+    base: getConfig('pipeline/api'),
+    ...props
+  })
+
+/**
+ * Get similarity
+ */
+export const structureSimilarityPromise = (
+  props: GetUsingFetchProps<ResponseSimilarityResponse, Failure | Error, StructureSimilarityQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseSimilarityResponse, Failure | Error, StructureSimilarityQueryParams, void>(
+    getConfig('pipeline/api'),
+    `/openai/similarity`,
+    props,
+    signal
+  )
+
+export interface GetTemplatesQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  identifier1?: string
+  identifier2?: string
+}
+
+export type GetTemplatesProps = Omit<
+  GetProps<ResponseTemplateResponse, Failure | Error, GetTemplatesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Templates
+ */
+export const GetTemplates = (props: GetTemplatesProps) => (
+  <Get<ResponseTemplateResponse, Failure | Error, GetTemplatesQueryParams, void>
+    path={`/openai/templates`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetTemplatesProps = Omit<
+  UseGetProps<ResponseTemplateResponse, Failure | Error, GetTemplatesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Templates
+ */
+export const useGetTemplates = (props: UseGetTemplatesProps) =>
+  useGet<ResponseTemplateResponse, Failure | Error, GetTemplatesQueryParams, void>(`/openai/templates`, {
+    base: getConfig('pipeline/api'),
+    ...props
+  })
+
+/**
+ * Get Templates
+ */
+export const getTemplatesPromise = (
+  props: GetUsingFetchProps<ResponseTemplateResponse, Failure | Error, GetTemplatesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseTemplateResponse, Failure | Error, GetTemplatesQueryParams, void>(
+    getConfig('pipeline/api'),
+    `/openai/templates`,
     props,
     signal
   )

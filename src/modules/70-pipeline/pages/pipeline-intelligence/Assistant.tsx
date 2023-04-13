@@ -11,7 +11,7 @@ import {
   Text
 } from '@harness/uicore'
 import { noop } from 'lodash-es'
-import { useGetTemplates } from 'services/pipeline-ng'
+import { useGetDocs } from 'services/pipeline-ng'
 
 import css from '@freeze-windows/components/FreezeWindowStudioBody/FreezeWindowStudioBody.module.scss'
 import { Spinner } from '@blueprintjs/core'
@@ -94,7 +94,7 @@ export default function Assistant(props) {
     { question: 'Who are you', answer: 'I am Harness Assistant' }
   ])
 
-  const { data, refetch, loading } = useGetTemplates({
+  const { data, refetch, loading } = useGetDocs({
     queryParams: {
       query: ''
     },

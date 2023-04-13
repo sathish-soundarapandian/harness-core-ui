@@ -18,6 +18,7 @@ import { prepareFiltersPayload } from '@pipeline/pages/utils/Filters/filters'
 import { getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import { useParams } from 'react-router-dom'
 import { PipelineListPagePathParams } from '@pipeline/pages/pipeline-list/types'
+import { useOpenaiGoldenPipeline } from 'services/pipeline-ng'
 
 export default function Standardization(props) {
   const requestBody = {
@@ -46,9 +47,27 @@ export default function Standardization(props) {
     }
   })
 
+  const { data, loading, refetch } = useOpenaiGoldenPipeline({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier,
+      goldenPipelineId: ''
+    },
+    lazy: true
+  })
+
   const onSubmit = values => {
     const goldenPipeline = values.goldenPipeline
     // Make API call to
+    refetch({
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier: orgIdentifier,
+        projectIdentifier: projectIdentifier,
+        goldenPipelineId: goldenPipeline
+      }
+    })
   }
 
   return (
