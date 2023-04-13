@@ -140,8 +140,8 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
     return (
       <Layout.Vertical>
         <Separator topSeparation={16} bottomSeparation={10} />
-        <Layout.Horizontal spacing="small">
-          <Icon name="gear" size={20} />
+        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-start' }}>
+          <Icon name="ai" size={30} />
           <Text color={Color.PRIMARY_7}>
             {getString('common.possibleSolution').concat(showDetailedView ? '' : 's')}
           </Text>
@@ -233,8 +233,8 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
                     }
                     details={
                       <Layout.Vertical key={index} spacing="medium" className={css.errorDetails} padding="large">
-                        <Layout.Horizontal spacing="small">
-                          <Icon name="gear" size={20} />
+                        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-start' }}>
+                          <Icon name="ai" size={30} />
                           <Text color={Color.PRIMARY_7}>
                             {getString('common.possibleSolution').concat(showDetailedView ? '' : 's')}
                           </Text>

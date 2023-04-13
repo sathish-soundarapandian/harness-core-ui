@@ -362,8 +362,8 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                       />
                     </Container>
                     <TextInput
-                      leftIcon="gear"
-                      leftIconProps={{ name: 'gear', size: 40, padding: { left: 'small' } }}
+                      leftIcon="ai"
+                      leftIconProps={{ name: 'ai', size: 40, padding: { left: 'small', top: 'xsmall' } }}
                       className={css.search}
                       placeholder={getString('common.typeHere')}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
@@ -381,7 +381,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                   setShowErrorPanel(nextOpenState)
                 }}
               >
-                <Icon name="gear" size={40} className={css.openAiPanelIcon} />
+                <Icon name="ai" size={40} className={css.openAiPanelIcon} />
               </Popover>
             </Layout.Horizontal>
           </Layout.Horizontal>
