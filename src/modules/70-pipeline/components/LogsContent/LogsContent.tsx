@@ -369,7 +369,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
                       disabled={shouldDisable}
                       value={query}
-                    ></TextInput>
+                    />
                   </Layout.Vertical>
                 }
                 interactionKind={PopoverInteractionKind.CLICK}
