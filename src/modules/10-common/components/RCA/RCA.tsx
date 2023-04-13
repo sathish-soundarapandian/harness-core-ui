@@ -55,6 +55,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const scrollRef = useRef<Element | undefined>()
   const [isFetching, setIsFetching] = useState<boolean>(false)
   const [openAIResponses, setOpenAIResponses] = useState<any>([])
+  const openAIResponsesCache = useRef<any>([])
   const [errors, setErrors] = useState<any[]>([])
 
   const prepareResponses = useCallback((input: any) => {
@@ -144,6 +145,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const getOpenAISuggestions = async (_query: string) => {
     setIsFetching(true)
     setTimeout(() => setIsFetching(false), 5000)
+    openAIResponsesCache.current = openAIResponses
     setOpenAIResponses({
       id: 'chatcmpl-74mc6pgC126UTbBqmbpKH2k77m6pk',
       object: 'chat.completion',
@@ -197,7 +199,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
             onClick={() => {
               setQuery('')
               setShowDetailedView(false)
-              // prepareResponses(mock)
+              setOpenAIResponses(openAIResponsesCache.current)
             }}
           />
           <Layout.Vertical spacing="medium" className={css.errorDetails} padding="large">
