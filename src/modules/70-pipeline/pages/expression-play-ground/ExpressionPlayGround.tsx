@@ -98,6 +98,7 @@ export default function App() {
   useEffect(() => {
     if (pipelineExecution?.data?.content) {
       setOptions(getSelectOptions(pipelineExecution?.data?.content))
+      setExeId(pipelineExecution?.data?.content[0].planExecutionId)
     }
   }, [pipelineExecution])
   const [content, setContent] = useState<any>({
@@ -221,7 +222,12 @@ export default function App() {
           ))}
         </ul>
 
-        <div style={{ width: '700px', height: '500px', display: 'flex' }}>
+        <div
+          onClick={() => {
+            setExp('pipeline.stages.status')
+          }}
+          style={{ width: '700px', height: '500px', display: 'flex' }}
+        >
           <VanillaJSONEditor content={content} readOnly={false} onChange={setContent} />
         </div>
       </Layout.Vertical>
@@ -235,7 +241,8 @@ export default function App() {
         />
         <Container>
           <Text font={{ variation: FontVariation.H2 }}>Input</Text>
-          <MonacoEditor width={700} height={700} value={input} onChange={val => setInput(val)}></MonacoEditor>
+
+          <MonacoEditor width={700} height={300} value={input} onChange={val => setInput(val)}></MonacoEditor>
         </Container>
 
         <Container>
