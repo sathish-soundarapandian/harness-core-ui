@@ -139,6 +139,7 @@ export default function Standardization(props) {
               />
               <Container margin={{ top: 'xxlarge' }}>
                 <Button
+                  disabled={loading}
                   onClick={() => onSubmit(formikProps.values)}
                   variation={ButtonVariation.PRIMARY}
                   text={'Save'}

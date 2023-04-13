@@ -22,6 +22,7 @@ import { useParams } from 'react-router-dom'
 import { PipelineListPagePathParams } from '@pipeline/pages/pipeline-list/types'
 import { useStructureSimilarity, useGetTemplates } from 'services/pipeline-ng'
 import css from '@freeze-windows/components/FreezeWindowStudioConfigSection/FreezeWindowStudioConfigSection.module.scss'
+import { Spinner } from '@blueprintjs/core'
 
 function PrettyText({ text }) {
   return (
@@ -162,6 +163,7 @@ export default function Optimization(props) {
               />
               <Container margin={{ top: 'xxlarge' }}>
                 <Button
+                  disabled={similarityLoading || templatesLoading}
                   onClick={() => onSubmit(formikProps.values)}
                   variation={ButtonVariation.PRIMARY}
                   text={'Click and see the magic'}
@@ -220,6 +222,8 @@ export default function Optimization(props) {
           </Container>
         </Layout.Vertical>
       ) : null}
+
+      {similarityLoading || templatesLoading ? <Spinner size={24} className={css.spinnerAssistant} /> : null}
     </Layout.Vertical>
   )
 }

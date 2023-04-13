@@ -23,6 +23,7 @@ declare const styles: {
   readonly sectionCard3: string
   readonly separator: string
   readonly separator2: string
+  readonly spinnerAssistant: string
   readonly tagInputStyle: string
   readonly tickButton: string
   readonly viewRowNode: string
