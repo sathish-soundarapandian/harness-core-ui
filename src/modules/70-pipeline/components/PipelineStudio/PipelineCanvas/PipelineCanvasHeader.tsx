@@ -376,20 +376,9 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const RenderExpressionColumn: any = ({ row }) => {
     return (
       <>
-        {row.original.suggestedExpression ? (
-          <MonacoDiffEditor
-            width="100%"
-            height="40px"
-            language="yaml"
-            original={row.original.expression}
-            value={row.original.suggestedExpression}
-            options={{ renderSideBySide: false }}
-          />
-        ) : (
-          <Text padding="medium" lineClamp={1} width={500}>
-            {row.original.expression}
-          </Text>
-        )}
+        <Text padding="medium" lineClamp={1} width={300}>
+          {row.original.expression}
+        </Text>
       </>
     )
   }
@@ -402,9 +391,18 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   }
   const RenderSuggestedExpressionColumn: any = ({ row }) => {
     return (
-      <Text padding="medium" lineClamp={1} width={200}>
-        {row.original.suggestedExpression}
-      </Text>
+      <>
+        {row.original.suggestedExpression ? (
+          <MonacoDiffEditor
+            width="100%"
+            height="40px"
+            language="yaml"
+            original={row.original.expression}
+            value={row.original.suggestedExpression}
+            options={{ renderSideBySide: false }}
+          />
+        ) : null}
+      </>
     )
   }
   const DryRunResults = (result: any | string, success: boolean) => {
@@ -430,7 +428,14 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                   accessor: function noRefCheck() {},
                   id: 'expression',
                   Cell: RenderExpressionColumn,
-                  width: '60%'
+                  width: '30%'
+                },
+                {
+                  Header: ' Suggested Expression',
+                  accessor: function noRefCheck() {},
+                  id: 'suggestedExpression',
+                  Cell: RenderSuggestedExpressionColumn,
+                  width: '40%'
                 },
 
                 {
@@ -438,7 +443,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                   accessor: function noRefCheck() {},
                   id: 'resolvedValue',
                   Cell: RenderResolvedColumn,
-                  width: '25%'
+                  width: '15%'
                 },
                 {
                   Header: 'Status',
@@ -601,7 +606,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                         SetDryRunLoading(false)
                         setDryRunDialog(true)
                       })
-                    console.log('tsest', yamlHandler?.getLatestYaml())
                   }}
                 ></Button>
                 {dryRunLoading && <PageSpinner message={'Fetching Dry run results'} />}
@@ -609,7 +613,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                   isOpen={dryRunDialog}
                   title={'Dry Run Results'}
                   enforceFocus={false}
-                  width={950}
+                  width={1200}
                   height={800}
                   onClose={() => setDryRunDialog(false)}
                   lazy
