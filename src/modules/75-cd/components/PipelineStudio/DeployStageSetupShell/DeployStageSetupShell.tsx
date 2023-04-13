@@ -45,12 +45,12 @@ import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemp
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
 import {
   getServiceDefinitionType,
-  GoogleCloudFunctionsEnvType,
   isCustomDeploymentType,
   isGoogleCloudFuctionsDeploymentType,
   isServerlessDeploymentType,
   ServiceDeploymentType,
-  StageType
+  StageType,
+  GoogleCloudFunctionsEnvType
 } from '@pipeline/utils/stageHelpers'
 import { getCDStageValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
@@ -111,8 +111,8 @@ export default function DeployStageSetupShell(): JSX.Element {
   const { stage: selectedStage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
   const { checkErrorsForTab } = React.useContext(StageErrorContext)
   const gitOpsEnabled = selectedStage?.stage?.spec?.gitOpsEnabled
-  // const environmentType = (selectedStage?.stage?.spec?.deploymentMetadata as GoogleCloudFunctionDeploymentMetaData)
-  //   ?.environmentType
+  const environmentType = (selectedStage?.stage?.spec?.deploymentMetadata as GoogleCloudFunctionDeploymentMetaData)
+    ?.environmentType
   const isNewService = isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig)
   const isNewEnvDef = isNewEnvInfraDef(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig)
 
@@ -234,14 +234,12 @@ export default function DeployStageSetupShell(): JSX.Element {
       return ExecutionType.BASIC
     } else if (selectedDeploymentType === ServiceDeploymentType.CustomDeployment) {
       return ExecutionType.DEFAULT
-    }
-    // else if (
-    //   selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions &&
-    //   environmentType === GoogleCloudFunctionsEnvType.GEN_ONE
-    // ) {
-    //   return ExecutionType.BasicGenOne
-    // }
-    else if (selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
+    } else if (
+      selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions &&
+      environmentType === GoogleCloudFunctionsEnvType.GEN_ONE
+    ) {
+      return ExecutionType.ROLLING
+    } else if (selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
       return ExecutionType.BASIC
     }
     return ExecutionType.ROLLING
