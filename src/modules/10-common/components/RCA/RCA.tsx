@@ -1,4 +1,4 @@
-import { debounce, get } from 'lodash-es'
+import { debounce, get, isEmpty } from 'lodash-es'
 import React, { useState, useCallback, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
@@ -27,7 +27,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
 
   const { query, disableSearch, enableSearch, setQuery, logKeysFromState } = props
   const [errorIndex, setErrorIndex] = useState<number>(0)
-  const [solutionIndex, setSolutionIndex] = useState<number>(0)
+  const [itemForDetailedView, setItemForDetailedView] = useState<any>()
   const [showDetailedView, setShowDetailedView] = useState<boolean>(false)
   const scrollRef = useRef<Element | undefined>()
   const [isFetching, setIsFetching] = useState<boolean>(false)
@@ -38,29 +38,29 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
     logKeysFromState.logKeys.map(logKey => {
       getBlobFromOpenAI(logKey, pathParams.accountId).then((res: unknown) => {
         if (res) {
-          // const mock = {
-          //   id: 'chatcmpl-74fseKuRCYL3gSyfOcRhGD3UCgmJy',
-          //   object: 'chat.completion',
-          //   created: 1681348656,
-          //   model: 'gpt-3.5-turbo-0301',
-          //   usage: {
-          //     prompt_tokens: 543,
-          //     completion_tokens: 192,
-          //     total_tokens: 735
-          //   },
-          //   choices: [
-          //     {
-          //       message: {
-          //         role: 'assistant',
-          //         content:
-          //           '[ \n  { \n    "Error": "Traceback (most recent call last):",\n    "Cause": "Code error - ZeroDivisionError: division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "  File \\"\\u003cstring\\u003e\\", line 1, in \\u003cmodule\\u003e",\n    "Cause": "Code error - Syntax error",\n    "Solution": "Check the syntax of the code at the specified line and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "ZeroDivisionError: division by zero",\n    "Cause": "Code error - Division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  }\n]'
-          //       },
-          //       finish_reason: 'stop',
-          //       index: 0
-          //     }
-          //   ]
-          // }
-          const choices = JSON.parse(get(res, 'choices.0.message.content')) as any[]
+          const mock = {
+            id: 'chatcmpl-74fseKuRCYL3gSyfOcRhGD3UCgmJy',
+            object: 'chat.completion',
+            created: 1681348656,
+            model: 'gpt-3.5-turbo-0301',
+            usage: {
+              prompt_tokens: 543,
+              completion_tokens: 192,
+              total_tokens: 735
+            },
+            choices: [
+              {
+                message: {
+                  role: 'assistant',
+                  content:
+                    '[ \n  { \n    "Error": "Traceback (most recent call last):",\n    "Cause": "Code error - ZeroDivisionError: division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "  File \\"\\u003cstring\\u003e\\", line 1, in \\u003cmodule\\u003e",\n    "Cause": "Code error - Syntax error",\n    "Solution": "Check the syntax of the code at the specified line and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "ZeroDivisionError: division by zero",\n    "Cause": "Code error - Division by zero",\n    "Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  }\n]'
+                },
+                finish_reason: 'stop',
+                index: 0
+              }
+            ]
+          }
+          const choices = JSON.parse(get(mock, 'choices.0.message.content')) as any[]
           const possibleSolutions = choices.map(choice => choice['Solution']).filter(item => !!item)
           const suitableResponses = possibleSolutions.map(solution => {
             return { message: { content: solution } }
@@ -89,7 +89,10 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
 
   useEffect(() => {
     if (query) {
+      setShowDetailedView(false)
+      setItemForDetailedView(undefined)
       debounceFetchOpenAISuggestions(query)
+      setOpenAIResponses(undefined)
     }
   }, [query])
 
@@ -157,7 +160,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
       )
     }
     if (query) {
-      return (
+      return !isEmpty(openAIResponses) ? (
         <Layout.Vertical>
           <Icon
             className={css.backBtn}
@@ -179,6 +182,8 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
             })}
           </Layout.Vertical>
         </Layout.Vertical>
+      ) : (
+        <Text>{getString('noSearchResultsFoundPeriod')}</Text>
       )
     } else {
       if (showDetailedView) {
@@ -190,18 +195,16 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
                 name="arrow-left"
                 size={16}
                 onClick={() => {
-                  setErrorIndex(0)
-                  setSolutionIndex(0)
                   setShowDetailedView(false)
                 }}
               />
               <Text font={{ variation: FontVariation.LEAD }}>{`${getString('error')} ${errorIndex + 1}`}</Text>
             </Layout.Horizontal>
             <Layout.Vertical spacing="medium" className={css.errorDetails} padding="large">
-              <Text>{errors[errorIndex].error?.message}</Text>
+              <Text>{errors[errorIndex]}</Text>
               {renderErrorDetailSeparator()}
               <ReactMarkdown className={css.openAiResponse}>
-                {openAIResponses.choices[solutionIndex].text}
+                {get(itemForDetailedView, 'message.content', '')}
               </ReactMarkdown>
             </Layout.Vertical>
           </Layout.Vertical>
@@ -237,8 +240,8 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
                           size={ButtonSize.SMALL}
                           className={css.readMoreBtn}
                           onClick={() => {
+                            setItemForDetailedView(item)
                             setErrorIndex(index)
-                            setSolutionIndex(_index)
                             setShowDetailedView(true)
                             setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 0)
                           }}
