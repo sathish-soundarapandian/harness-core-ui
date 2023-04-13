@@ -32,12 +32,15 @@
     top: var(--spacing-xxlarge);
   }
   :global(.Accordion--panel) {
-    padding-top: var(--spacing-xsmall);
-    padding-bottom: var(--spacing-xsmall);
+    padding-top: var(--spacing-4);
+    padding-bottom: var(--spacing-4);
   }
   :global(.Accordion--summary) {
     > div:first-child {
       width: 100%;
     }
+  }
+  :global(.Accordion--details) {
+    padding-top: var(--spacing-xsmall);
   }
 }

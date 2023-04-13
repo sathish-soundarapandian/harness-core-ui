@@ -214,7 +214,7 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
       } else {
         return (
           <>
-            <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-start' }}>
+            <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
               <Icon name="danger-icon" size={16} />
               <Text font={{ variation: FontVariation.LEAD }}>{`${getString('errors')} (${errors.length})`}</Text>
             </Layout.Horizontal>

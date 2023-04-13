@@ -340,7 +340,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
               {!showErrorPanel ? (
                 <Button
                   round
-                  text={getString('common.possibleReasons')}
+                  text={getString('common.harnessAssist')}
                   rightIcon="arrow-right"
                   className={css.infoBtn}
                   onClick={() => setShowErrorPanel(true)}
@@ -365,7 +365,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                       leftIcon="ai"
                       leftIconProps={{ name: 'ai', size: 40, padding: { left: 'small', top: 'xsmall' } }}
                       className={css.search}
-                      placeholder={getString('common.typeHere')}
+                      placeholder={getString('common.needMoreHelp')}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
                       disabled={shouldDisable}
                       value={query}

@@ -502,6 +502,7 @@ export interface StringsMap {
   'common.googleCloudPlatform': string
   'common.governance': string
   'common.gpgkey': string
+  'common.harnessAssist': string
   'common.harnessClusterHostingAccount': string
   'common.harnessCommunityTitle': string
   'common.harnessDelegate': string
@@ -656,6 +657,7 @@ export interface StringsMap {
   'common.nameOnCard': string
   'common.namePlaceholder': string
   'common.namespace': string
+  'common.needMoreHelp': string
   'common.new': string
   'common.newLines': string
   'common.newName': string
@@ -761,7 +763,6 @@ export interface StringsMap {
   'common.policy.noSelectInput': string
   'common.policy.policySearch': string
   'common.policy.policysets': string
-  'common.possibleReasons': string
   'common.possibleSolution': string
   'common.powershell': string
   'common.preProduction': string
@@ -1193,7 +1194,6 @@ export interface StringsMap {
   'common.triggersLabel': string
   'common.true': string
   'common.tryAgain': string
-  'common.typeHere': string
   'common.types': string
   'common.unlimited': string
   'common.unsavedChanges': string
