@@ -7,12 +7,10 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { State } from '@pipeline/components/logsContent/LogsState/types'
 import type { ExecutionPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import type { ExtractedInfo } from '../ErrorHandler/ErrorHandler'
 import { Separator } from '../Separator/Separator'
 import css from './RCA.module.scss'
 
 interface OpenAIResponseInterface {
-  errors: ExtractedInfo[]
   query?: string
   enableSearch: () => void
   disableSearch: () => void
@@ -27,18 +25,45 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
   const { getString } = useStrings()
   const pathParams = useParams<ExecutionPathProps & ModulePathParams>()
 
-  const { errors = [], query, disableSearch, enableSearch, setQuery, logKeysFromState } = props
+  const { query, disableSearch, enableSearch, setQuery, logKeysFromState } = props
   const [errorIndex, setErrorIndex] = useState<number>(0)
   const [solutionIndex, setSolutionIndex] = useState<number>(0)
   const [showDetailedView, setShowDetailedView] = useState<boolean>(false)
   const scrollRef = useRef<Element | undefined>()
   const [isFetching, setIsFetching] = useState<boolean>(false)
   const [openAIResponses, setResponses] = useState<any>([])
+  const [errors, setErrors] = useState<any[]>([])
 
   useEffect(() => {
     logKeysFromState.logKeys.map(logKey => {
       getBlobFromOpenAI(logKey, pathParams.accountId).then((res: unknown) => {
-        setResponses(res)
+        if (res) {
+          // const mock = {
+          //   id: 'chatcmpl-74fseKuRCYL3gSyfOcRhGD3UCgmJy',
+          //   object: 'chat.completion',
+          //   created: 1681348656,
+          //   model: 'gpt-3.5-turbo-0301',
+          //   usage: {
+          //     prompt_tokens: 543,
+          //     completion_tokens: 192,
+          //     total_tokens: 735
+          //   },
+          //   choices: [
+          //     {
+          //       message: {
+          //         role: 'assistant',
+          //         content:
+          //           '[ \n  { \n    "Error": "Traceback (most recent call last):",\n    "Cause": "Code error - ZeroDivisionError: division by zero",\n    "Possible Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "  File \\"\\u003cstring\\u003e\\", line 1, in \\u003cmodule\\u003e",\n    "Cause": "Code error - Syntax error",\n    "Possible Solution": "Check the syntax of the code at the specified line and fix it",\n    "Category": "Code error"\n  },\n  {\n    "Error": "ZeroDivisionError: division by zero",\n    "Cause": "Code error - Division by zero",\n    "Possible Solution": "Check the code for any division by zero and fix it",\n    "Category": "Code error"\n  }\n]'
+          //       },
+          //       finish_reason: 'stop',
+          //       index: 0
+          //     }
+          //   ]
+          // }
+          const choices = JSON.parse(get(res, 'choices.0.message.content')) as any[]
+          setResponses(choices)
+          setErrors(choices.map(choice => choice.Error))
+        }
       })
     })
   }, [logKeysFromState.logKeys])
@@ -118,10 +143,6 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
     )
   }, [showDetailedView])
 
-  if (!errors.length) {
-    return <></>
-  }
-
   const renderView = useCallback((): JSX.Element => {
     if (isFetching) {
       return (
@@ -188,14 +209,13 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
               <Icon name="danger-icon" size={16} />
               <Text font={{ variation: FontVariation.LEAD }}>{`${getString('errors')} (${errors.length})`}</Text>
             </Layout.Horizontal>
-            {errors?.map((errorObject, index) => {
-              const { error = {} } = errorObject
+            {errors?.map((err, index) => {
               return (
                 <Layout.Vertical key={index} spacing="medium" className={css.errorDetails} padding="large">
                   <Text font={{ variation: FontVariation.LEAD }} color={Color.RED_500}>{`${getString('error')} ${
                     index + 1
                   }`}</Text>
-                  <Text>{error.message}</Text>
+                  <Text>{err}</Text>
                   {renderErrorDetailSeparator()}
                   {openAIResponses?.choices?.map((item: any, _index: any) => {
                     const content = get(item, 'message.content', '')

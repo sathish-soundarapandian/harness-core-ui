@@ -354,19 +354,6 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                   <Layout.Vertical spacing="medium" className={css.errorSidePanel}>
                     <Container className={css.openAiPanel}>
                       <OpenAIResponse
-                        errors={[
-                          {
-                            error: {
-                              message:
-                                'Failed to get harness-ng-ui/harnessci-build-y9f78y3p-image-step-2. Code: 0, Message: null \\n Cause: java.net.ConnectException: Failed to connect to /10.176.0.1:443'
-                            }
-                          },
-                          {
-                            error: {
-                              message: 'Something went wrong...'
-                            }
-                          }
-                        ]}
                         query={query}
                         enableSearch={() => setShouldDisable(false)}
                         disableSearch={() => setShouldDisable(true)}
