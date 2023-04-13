@@ -368,6 +368,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                           }
                         ]}
                         query={query}
+                        enableSearch={() => setShouldDisable(false)}
                         disableSearch={() => setShouldDisable(true)}
                       />
                     </Container>
