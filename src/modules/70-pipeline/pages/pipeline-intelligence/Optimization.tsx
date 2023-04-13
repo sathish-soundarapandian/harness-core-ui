@@ -168,7 +168,7 @@ export default function Optimization(props) {
                   disabled={similarityLoading || templatesLoading}
                   onClick={() => onSubmit(formikProps.values)}
                   variation={ButtonVariation.PRIMARY}
-                  text={'Click and see the magic'}
+                  text={'Process'}
                 />
               </Container>
             </FormikForm>

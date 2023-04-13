@@ -133,8 +133,8 @@ export default function Standardization(props) {
                     ? []
                     : pipelinesQuery.data?.data?.content?.map(a => ({ label: a.name, value: a.identifier })) || []
                 }
-                placeholder={'Select your Golder Pipeline'}
-                label={'Select your Golder Pipeline'}
+                placeholder={'Select your Golden Pipeline'}
+                label={'Select your Golden Pipeline'}
                 style={{ width: '400px' }}
               />
               <Container margin={{ top: 'xxlarge' }}>
@@ -142,7 +142,7 @@ export default function Standardization(props) {
                   disabled={loading}
                   onClick={() => onSubmit(formikProps.values)}
                   variation={ButtonVariation.PRIMARY}
-                  text={'Save'}
+                  text={'Process'}
                 />
               </Container>
             </FormikForm>
