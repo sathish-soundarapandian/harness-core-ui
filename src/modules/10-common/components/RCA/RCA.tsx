@@ -213,7 +213,8 @@ function OpenAIResponse(props: OpenAIResponseInterface): React.ReactElement {
         </Layout.Vertical>
       ) : (
         <Layout.Vertical flex={{ justifyContent: 'center' }} padding={{ top: 'huge' }} margin={{ top: 'huge' }}>
-          <Text>{getString('noSearchResultsFoundPeriod')}</Text>
+          <Icon name="loading" size={40} color={Color.BLUE_600} />
+          <Text font={{ variation: FontVariation.BODY }}>{getString('common.fetchingFromOpenAI')}</Text>
         </Layout.Vertical>
       )
     } else {
