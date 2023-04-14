@@ -35,7 +35,8 @@ describe('ChoosePlan', () => {
   const props = {
     plan: Editions.ENTERPRISE,
     setPlan: setPlanMock,
-    module: 'cf' as Module
+    module: 'cf' as Module,
+    allLicenses: {}
   }
 
   test('render', async () => {
