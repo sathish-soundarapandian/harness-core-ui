@@ -15,7 +15,6 @@ import type { Module } from 'framework/types/ModuleName'
 import { Editions, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetAccountLicenses } from 'services/cd-ng'
 
 interface ChoosePlanProps {
   plan: Editions
@@ -27,7 +26,7 @@ interface PlanToggleProps extends ChoosePlanProps {
   otherSubscriptions: any
 }
 
-const PlanToggle: React.FC<PlanToggleProps> = ({ plan, setPlan, module, otherSubscriptions }) => {
+const PlanToggle: React.FC<PlanToggleProps> = ({ plan, setPlan, module, otherSubscriptions, allLicenses }) => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const planText = otherSubscriptions === Editions.ENTERPRISE ? Editions.TEAM : Editions.ENTERPRISE
@@ -74,7 +73,6 @@ const PlanToggle: React.FC<PlanToggleProps> = ({ plan, setPlan, module, otherSub
 
 const ChoosePlan: React.FC<ChoosePlanProps> = ({ plan, module, setPlan, allLicenses }) => {
   const { getString } = useStrings()
-  const { accountId } = useParams<AccountPathProps>()
 
   const currentExistingFFSubscription = allLicenses['CF']?.[0]?.edition
   const currentExistingCISubscription = allLicenses['CI']?.[0]?.edition
@@ -91,7 +89,13 @@ const ChoosePlan: React.FC<ChoosePlanProps> = ({ plan, module, setPlan, allLicen
   return (
     <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center', justifyContent: 'start' }}>
       <Text font={{ variation: FontVariation.H4 }}>{getString('authSettings.choosePlan')}</Text>
-      <PlanToggle plan={plan} module={module} setPlan={setPlan} otherSubscriptions={otherSubscriptions} />
+      <PlanToggle
+        plan={plan}
+        module={module}
+        setPlan={setPlan}
+        otherSubscriptions={otherSubscriptions}
+        allLicenses={allLicenses}
+      />
     </Layout.Horizontal>
   )
 }
