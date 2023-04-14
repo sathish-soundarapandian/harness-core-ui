@@ -22,11 +22,14 @@ interface ChoosePlanProps {
   module: Module
   allLicenses: any
 }
-interface PlanToggleProps extends ChoosePlanProps {
+interface PlanToggleProps {
   otherSubscriptions: any
+  plan: Editions
+  setPlan: (value: Editions) => void
+  module: Module
 }
 
-const PlanToggle: React.FC<PlanToggleProps> = ({ plan, setPlan, module, otherSubscriptions, allLicenses }) => {
+const PlanToggle: React.FC<PlanToggleProps> = ({ plan, setPlan, module, otherSubscriptions }) => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const planText = otherSubscriptions === Editions.ENTERPRISE ? Editions.TEAM : Editions.ENTERPRISE
@@ -89,13 +92,7 @@ const ChoosePlan: React.FC<ChoosePlanProps> = ({ plan, module, setPlan, allLicen
   return (
     <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center', justifyContent: 'start' }}>
       <Text font={{ variation: FontVariation.H4 }}>{getString('authSettings.choosePlan')}</Text>
-      <PlanToggle
-        plan={plan}
-        module={module}
-        setPlan={setPlan}
-        otherSubscriptions={otherSubscriptions}
-        allLicenses={allLicenses}
-      />
+      <PlanToggle plan={plan} module={module} setPlan={setPlan} otherSubscriptions={otherSubscriptions} />
     </Layout.Horizontal>
   )
 }
