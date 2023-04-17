@@ -10,9 +10,11 @@ declare const styles: {
   readonly container: string
   readonly dotflashing: string
   readonly harness: string
+  readonly header: string
   readonly input: string
   readonly inputContainer: string
   readonly left: string
+  readonly link: string
   readonly loader: string
   readonly message: string
   readonly messageContainer: string

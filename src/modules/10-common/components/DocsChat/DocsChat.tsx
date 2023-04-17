@@ -12,10 +12,24 @@ interface Message {
 const sampleMessages: Array<Message> = [
   {
     author: 'harness',
-    text: 'Hi, how can I help you?',
+    text: 'Hi, I can search the Harness Docs for you. How can I help you?',
     timestamp: Date.now()
   }
 ]
+
+const URL_REGEX =
+  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
+
+const renderText = txt =>
+  txt.split(' ').map(part =>
+    URL_REGEX.test(part) ? (
+      <a href={part} className={css.link} target="_blank" rel="noreferrer">
+        {part}{' '}
+      </a>
+    ) : (
+      part + ' '
+    )
+  )
 
 function DocsChat(): JSX.Element {
   const [messages, setMessages] = useState<Array<Message>>([])
@@ -52,7 +66,10 @@ function DocsChat(): JSX.Element {
   // read first set of messages from local if available
   useEffect(() => {
     const _localMessages = sessionStorage.getItem('messages')
-    if (!_localMessages) return
+    if (!_localMessages) {
+      setMessages(sampleMessages)
+      return
+    }
     try {
       const localMessages = JSON.parse(_localMessages)
       if (localMessages && localMessages.length > 0) {
@@ -116,6 +133,7 @@ function DocsChat(): JSX.Element {
 
   return (
     <div className={css.container}>
+      <div className={css.header}>Harness DocsChat</div>
       <div className={css.messagesContainer} ref={messageList}>
         {messages.map((message, index) => {
           return (
@@ -132,7 +150,7 @@ function DocsChat(): JSX.Element {
                   [css.user]: message.author === 'user'
                 })}
               >
-                {message.text}
+                {renderText(message.text)}
               </div>
             </div>
           )
