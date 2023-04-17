@@ -212,7 +212,9 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
         initialValues={getInitialValues()}
         validate={value => {
           const data: Partial<AzureWebAppInfrastructure> = {
+            ...value,
             connectorRef: undefined,
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
             subscriptionId:
               getValue(value.subscriptionId) === ''
                 ? /* istanbul ignore next */ undefined

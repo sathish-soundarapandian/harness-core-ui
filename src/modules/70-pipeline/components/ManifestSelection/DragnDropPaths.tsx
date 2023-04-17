@@ -19,7 +19,7 @@ import {
   AllowedTypes
 } from '@harness/uicore'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isMultiTypeRuntime } from '@common/utils/utils'
@@ -58,7 +58,8 @@ function DragnDropPaths({
         if (!result.destination) {
           return
         }
-        const res = Array.from(formik.values[fieldPath])
+
+        const res = Array.from(get(formik.values, `${fieldPath}`))
         const [removed] = res.splice(result.source.index, 1)
         res.splice(result.destination.index, 0, removed)
         formik.setFieldValue(fieldPath, res)
@@ -81,47 +82,49 @@ function DragnDropPaths({
                 name={fieldPath}
                 render={arrayHelpers => (
                   <Layout.Vertical>
-                    {formik.values?.[fieldPath]?.map((draggablepath: { path: string; uuid: string }, index: number) => (
-                      <Draggable key={draggablepath.uuid} draggableId={draggablepath.uuid} index={index}>
-                        {providedDrag => (
-                          <Layout.Horizontal
-                            flex={{ distribution: 'space-between', alignItems: 'flex-start' }}
-                            key={draggablepath.uuid}
-                            ref={providedDrag.innerRef}
-                            {...providedDrag.draggableProps}
-                            {...providedDrag.dragHandleProps}
-                          >
-                            <Layout.Horizontal spacing="medium" style={{ alignItems: 'baseline' }}>
-                              {!allowOnlyOneFilePath && (
-                                <>
-                                  <Icon name="drag-handle-vertical" className={css.drag} />
-                                  <Text className={css.text}>{`${index + 1}.`}</Text>
-                                </>
-                              )}
-                              <FormInput.MultiTextInput
-                                label={''}
-                                placeholder={placeholder}
-                                name={`${fieldPath}[${index}].path`}
-                                style={{ width: defaultTo(dialogWidth, 275) }}
-                                multiTextInputProps={{
-                                  expressions,
-                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                    allowedType => !isMultiTypeRuntime(allowedType)
-                                  ) as AllowedTypes
-                                }}
-                              />
+                    {get(formik.values, `${fieldPath}`)?.map(
+                      (draggablepath: { path: string; uuid: string }, index: number) => (
+                        <Draggable key={draggablepath.uuid} draggableId={draggablepath.uuid} index={index}>
+                          {providedDrag => (
+                            <Layout.Horizontal
+                              flex={{ distribution: 'space-between', alignItems: 'flex-start' }}
+                              key={draggablepath.uuid}
+                              ref={providedDrag.innerRef}
+                              {...providedDrag.draggableProps}
+                              {...providedDrag.dragHandleProps}
+                            >
+                              <Layout.Horizontal spacing="medium" style={{ alignItems: 'baseline' }}>
+                                {!allowOnlyOneFilePath && (
+                                  <>
+                                    <Icon name="drag-handle-vertical" className={css.drag} />
+                                    <Text className={css.text}>{`${index + 1}.`}</Text>
+                                  </>
+                                )}
+                                <FormInput.MultiTextInput
+                                  label={''}
+                                  placeholder={placeholder}
+                                  name={`${fieldPath}[${index}].path`}
+                                  style={{ width: defaultTo(dialogWidth, 275) }}
+                                  multiTextInputProps={{
+                                    expressions,
+                                    allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                      allowedType => !isMultiTypeRuntime(allowedType)
+                                    ) as AllowedTypes
+                                  }}
+                                />
 
-                              {(formik.values[fieldPath]?.length > 1 || allowSinglePathDeletion) && (
-                                <Button minimal icon="main-trash" onClick={() => arrayHelpers.remove(index)} />
-                              )}
+                                {(get(formik.values, `${fieldPath}`)?.length > 1 || allowSinglePathDeletion) && (
+                                  <Button minimal icon="main-trash" onClick={() => arrayHelpers.remove(index)} />
+                                )}
+                              </Layout.Horizontal>
                             </Layout.Horizontal>
-                          </Layout.Horizontal>
-                        )}
-                      </Draggable>
-                    ))}
+                          )}
+                        </Draggable>
+                      )
+                    )}
                     {provided.placeholder}
 
-                    {allowOnlyOneFilePath && formik.values[fieldPath]?.length === 1 ? null : (
+                    {allowOnlyOneFilePath && get(formik.values, `${fieldPath}`)?.length === 1 ? null : (
                       <span>
                         <Button
                           text={getString('addFileText')}

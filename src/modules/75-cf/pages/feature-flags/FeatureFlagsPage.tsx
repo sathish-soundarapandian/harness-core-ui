@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useCallback } from 'react'
+import React, { useMemo, useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Container, ExpandingSearchInput, ExpandingSearchInputHandle, Pagination } from '@harness/uicore'
 import { defer } from 'lodash-es'
@@ -80,7 +80,8 @@ const FeatureFlagsPage: React.FC = () => {
     error: flagsError,
     refetch: refetchFlags
   } = useGetAllFeatures({
-    queryParams
+    queryParams,
+    lazy: true
   })
 
   const { data: featureMetrics, loading: featureMetricsLoading } = useGetFeatureMetrics({
@@ -96,10 +97,12 @@ const FeatureFlagsPage: React.FC = () => {
     error: envsError,
     refetch: refetchEnvironments,
     environments,
-    allEnvironmentsFlags
+    allEnvironmentsFlags,
+    refetchAllEnvironmentsFlags
   } = useEnvironmentSelectV2({
     selectedEnvironmentIdentifier: environmentIdentifier,
-    allowAllOption: true
+    allowAllOption: true,
+    searchTerm
   })
 
   const toggleFeatureFlag = useToggleFeatureFlag({
@@ -127,6 +130,14 @@ const FeatureFlagsPage: React.FC = () => {
     },
     [setSearchTerm, setPageNumber]
   )
+
+  useEffect(() => {
+    if (allEnvironmentsFlags) {
+      refetchAllEnvironmentsFlags()
+    } else {
+      refetchFlags()
+    }
+  }, [allEnvironmentsFlags, queryParams, refetchAllEnvironmentsFlags, refetchFlags])
 
   const emptyFeatureFlags = !features?.features?.length
   // use emptyFeatureFlags below as temp fallback to ensure FilterCards still display in case featureCounts is unavailable or flag STALE_FLAGS_FFM_1510 is toggled off on backend only
@@ -211,13 +222,13 @@ const FeatureFlagsPage: React.FC = () => {
           />
         </Container>
       )}
-      {!emptyFeatureFlags ? (
+      {!emptyFeatureFlags || !!allEnvironmentsFlags?.flags.length ? (
         <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
           {allEnvironmentsFlags && !!environments?.length ? (
             <AllEnvironmentsFlagsListing
               environments={environments}
               allEnvironmentsFlags={allEnvironmentsFlags}
-              refetchFlags={refetchFlags}
+              refetchFlags={refetchAllEnvironmentsFlags}
               deleteFlag={deleteFlag.mutate}
               queryParams={queryParams}
             />

@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import cx from 'classnames'
 import { get } from 'lodash-es'
 import { AllowedTypes, Container, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -16,7 +15,6 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface InlineVarFileInputSetProps<T> {
   varFilePath: string
@@ -40,7 +38,6 @@ export default function InlineVarFileInputSet<T>(props: InlineVarFileInputSetPro
 
       {isValueRuntimeInput(get(spec, 'content')) && (
         <div
-          className={cx(stepCss.formGroup, stepCss.md)}
           // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
           onKeyDown={
             /* istanbul ignore next */ e => {

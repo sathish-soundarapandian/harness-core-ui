@@ -31,6 +31,7 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConnectorRefSchema } from '@common/utils/Validation'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   AllowedTypes,
   ConnectorLabelMap,
@@ -66,6 +67,7 @@ export const RemoteVarStore: React.FC<StepProps<any> & RemoteVarStoreProps> = ({
 }) => {
   const [selectedType, setSelectedType] = React.useState('')
   const { getString } = useStrings()
+  const { CDS_TERRAFORM_S3_NG } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -94,7 +96,8 @@ export const RemoteVarStore: React.FC<StepProps<any> & RemoteVarStoreProps> = ({
     !!selectedType && getString(ConnectorLabelMap[selectedType as ConnectorTypes])
   } ${getString('connector')}`
 
-  const remoteStoreAllowedTypes = isTerragrunt ? TerragruntAllowedTypes : AllowedTypes
+  const S3Support = CDS_TERRAFORM_S3_NG ? [...AllowedTypes, 'S3'] : AllowedTypes
+  const remoteStoreAllowedTypes = isTerragrunt ? TerragruntAllowedTypes : S3Support
 
   return (
     <Layout.Vertical padding="small" className={css.tfVarStore}>
@@ -157,11 +160,11 @@ export const RemoteVarStore: React.FC<StepProps<any> & RemoteVarStoreProps> = ({
                       <FormMultiTypeConnectorField
                         label={
                           <Text style={{ display: 'flex', alignItems: 'center' }}>
-                            {selectedType} {getString('connector')}
+                            {ConnectorMap[selectedType]} {getString('connector')}
                             <Button
                               icon="question"
                               minimal
-                              tooltip={`${selectedType} ${getString('connector')}`}
+                              tooltip={`${ConnectorMap[selectedType]} ${getString('connector')}`}
                               iconProps={{ size: 14 }}
                             />
                           </Text>
@@ -169,7 +172,7 @@ export const RemoteVarStore: React.FC<StepProps<any> & RemoteVarStoreProps> = ({
                         type={ConnectorMap[selectedType]}
                         width={400}
                         name="varFile.spec.store.spec.connectorRef"
-                        placeholder={`${getString('select')} ${selectedType} ${getString('connector')}`}
+                        placeholder={getString('select')}
                         accountIdentifier={accountId}
                         projectIdentifier={projectIdentifier}
                         orgIdentifier={orgIdentifier}

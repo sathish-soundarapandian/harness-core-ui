@@ -56,6 +56,7 @@ export interface TerraformProps<T = TerraformData> {
   gitScope?: GitFilterScope
   allValues?: T
   isBackendConfig?: boolean
+  isConfig?: boolean
 }
 
 export interface TerraformPlanProps {
@@ -76,27 +77,26 @@ export interface TerraformPlanProps {
   stepType?: string
   allValues?: TFPlanFormData
   isBackendConfig?: boolean
+  isConfig?: boolean
 }
 
 export interface RemoteVar {
-  varFile: {
-    identifier?: string
+  varFile?: {
+    identifier: string
     spec?: {
       store?: {
+        type?: string
         spec?: {
           gitFetchType?: string
           repoName?: string
           branch?: string
           commitId?: string
-          connectorRef?: {
-            label: string
-            value: string
-            scope: Scope
-            live: boolean
-            connector: { type: string; spec: { val: string } }
-          }
+          connectorRef?: string | Connector
+          bucketName?: string
+          region?: string
           paths?: PathInterface[]
           content?: string
+          folderPath?: string
         }
       }
     }
@@ -163,13 +163,7 @@ export interface VarFileArray {
         repoName?: string
         branch?: string
         commitId?: string
-        connectorRef?: {
-          label: string
-          value: string
-          scope: Scope
-          live: boolean
-          connector: { type: string; spec: { val: string } }
-        }
+        connectorRef?: string | Connector
         paths?: PathInterface[]
         content?: string
       }
@@ -376,8 +370,8 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
               store: {
                 ...get(values.spec, `${fieldPath}.spec.backendConfig.spec.store`),
                 type:
-                  backendConfigConnectorValue?.connector?.type ||
-                  get(values.spec, `${fieldPath}.spec.backendConfig.spec.store.type`),
+                  get(values.spec, `${fieldPath}.spec.backendConfig.spec.store.type`) ||
+                  backendConfigConnectorValue?.connector?.type,
                 spec: {
                   ...get(values.spec, `${fieldPath}.spec.backendConfig.spec.store.spec`),
                   connectorRef:
@@ -533,8 +527,8 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
             store: {
               ...get(values.spec, `${fieldPath}.backendConfig.spec.store`),
               type:
-                backendConfigConnectorValue?.connector?.type ||
-                get(values.spec, `${fieldPath}.backendConfig.spec.store.type`),
+                get(values.spec, `${fieldPath}.backendConfig.spec.store.type`) ||
+                backendConfigConnectorValue?.connector?.type,
               spec: {
                 ...get(values.spec, `${fieldPath}.backendConfig.spec.store.spec`),
                 connectorRef:

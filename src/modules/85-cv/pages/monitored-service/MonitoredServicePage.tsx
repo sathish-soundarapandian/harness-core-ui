@@ -180,12 +180,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
             },
             {
               id: MonitoredServiceEnum.Configurations,
-              title: (
-                <MonitoredServiceTabTitle
-                  title={getString('cv.monitoredServices.monitoredServiceTabs.configurations')}
-                  isTabDisabled={false}
-                />
-              ),
+              title: <MonitoredServiceTabTitle title={getString('common.configurations')} isTabDisabled={false} />,
               panel: panelConfigurations
             }
           ]}

@@ -64,6 +64,27 @@ const template: any = {
     configuration: {
       command: 'Apply',
       workspace: RUNTIME_INPUT_VALUE,
+      backendConfig: {
+        spec: {
+          store: {
+            spec: {
+              branch: RUNTIME_INPUT_VALUE,
+              folderPath: RUNTIME_INPUT_VALUE,
+              connectorRef: {
+                label: 'test',
+                Scope: 'Account',
+                value: 'test',
+                connector: {
+                  type: 'GIT',
+                  spec: {
+                    val: 'test'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       configFiles: {
         store: {
           spec: {

@@ -2107,8 +2107,10 @@ const routes = {
   toGetStartedWithIDP: withAccountId(() => '/idp-admin/get-started'),
   toAdminHome: withAccountId(() => '/idp-admin/home'),
   toPluginsPage: withAccountId(() => '/idp-admin/plugins'),
+  toConfigurations: withAccountId(() => '/idp-admin/configurations'),
   toLayoutConfig: withAccountId(() => '/idp-admin/layout'),
   toIDPAccessControl: withAccountId(() => '/idp-admin/access-control'),
+  toConnectorsPage: withAccountId(() => '/idp-admin/connectors'),
 
   // Error Tracking
   toET: withAccountId(() => '/et'),

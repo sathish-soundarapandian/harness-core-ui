@@ -14,12 +14,13 @@ import {
   buildGithubPayload,
   buildGitlabPayload,
   buildGitPayload,
-  buildArtifactoryPayload
+  buildArtifactoryPayload,
+  buildAWSPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 
 export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Artifactory']
-export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Artifactory' | 'Harness'
+export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Artifactory' | 'Harness' | 'S3'
 
 export const TerragruntAllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket']
 
@@ -29,7 +30,8 @@ export const tfVarIcons: any = {
   GitLab: 'service-gotlab',
   Bitbucket: 'bitbucket',
   Artifactory: 'service-artifactory',
-  Harness: 'harness'
+  Harness: 'harness',
+  S3: 'service-service-s3'
 }
 
 export const ConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -37,7 +39,8 @@ export const ConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
   Github: Connectors.GITHUB,
   GitLab: AllowedTypes[2] as ConnectorInfoDTO['type'],
   Bitbucket: Connectors.BITBUCKET,
-  Artifactory: Connectors.ARTIFACTORY
+  Artifactory: Connectors.ARTIFACTORY,
+  S3: Connectors.AWS
 }
 
 export const ConnectorLabelMap: Record<ConnectorTypes, StringKeys> = {
@@ -46,7 +49,8 @@ export const ConnectorLabelMap: Record<ConnectorTypes, StringKeys> = {
   GitLab: 'common.repo_provider.gitlabLabel',
   Bitbucket: 'pipeline.manifestType.bitBucketLabel',
   Artifactory: 'connectors.artifactory.artifactoryLabel',
-  Harness: 'harness'
+  Harness: 'harness',
+  S3: 'pipeline.artifactsSelection.amazonS3Title'
 }
 
 export const getPath = (
@@ -81,6 +85,13 @@ export const getConfigFilePath = (configFile: any): string | undefined => {
           : get(configFile, 'store.spec.secretFiles[0]')
       }
       return undefined
+    case 'S3':
+      if (get(configFile, 'store.spec.paths')) {
+        return isString(get(configFile, 'store.spec.paths'))
+          ? get(configFile, 'store.spec.paths')
+          : configFile?.store.spec.paths[0]
+      }
+      return get(configFile, 'store.spec.folderPath')
     default:
       return get(configFile, 'store.spec.folderPath')
   }
@@ -121,6 +132,9 @@ export const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
   }
   if (type === Connectors.ARTIFACTORY) {
     return buildArtifactoryPayload
+  }
+  if (type === Connectors.AWS) {
+    return buildAWSPayload
   }
   return () => ({})
 }

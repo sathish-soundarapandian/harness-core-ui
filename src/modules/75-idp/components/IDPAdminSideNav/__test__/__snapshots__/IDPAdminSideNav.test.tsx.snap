@@ -54,6 +54,16 @@ exports[`IDP Sidenav render 1`] = `
     </a>
     <a
       class="link"
+      href="/account/accountId/idp-admin/configurations"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        common.configurations
+      </p>
+    </a>
+    <a
+      class="link"
       href="/account/accountId/idp-admin/layout"
     >
       <p
@@ -70,6 +80,16 @@ exports[`IDP Sidenav render 1`] = `
         class="StyledProps--font StyledProps--main text"
       >
         accessControl
+      </p>
+    </a>
+    <a
+      class="link"
+      href="/account/accountId/idp-admin/connectors"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        connectorsLabel
       </p>
     </a>
   </div>

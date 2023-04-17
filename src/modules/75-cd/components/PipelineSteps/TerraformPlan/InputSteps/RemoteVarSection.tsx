@@ -6,7 +6,6 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import cx from 'classnames'
 import { connect, FormikContextType } from 'formik'
 import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
@@ -33,7 +32,8 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { TerraformPlanProps } from '../../Common/Terraform/TerraformInterfaces'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import { AmazonS3RuntimeView } from '../../Common/ConfigFileStore/AmazonS3Store/AmazonS3StoreRuntimeView'
+import { ConnectorMap } from '../../Common/ConfigFileStore/ConfigFileStoreHelper'
 
 function TFRemoteSectionRef(
   props: TerraformPlanProps & {
@@ -120,27 +120,25 @@ function TFRemoteSectionRef(
       </Container>
 
       {getMultiTypeFromValue(remoteVar.varFile?.spec?.store?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeConnectorField
-            accountIdentifier={accountId}
-            selected={get(
-              initialValues,
-              `${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.connectorRef`,
-              ''
-            )}
-            projectIdentifier={projectIdentifier}
-            orgIdentifier={orgIdentifier}
-            width={388}
-            type={[remoteVar?.varFile?.spec?.store?.type]}
-            name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.connectorRef`}
-            label={getString('connector')}
-            placeholder={getString('select')}
-            disabled={readonly}
-            setRefValue
-            gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-            multiTypeProps={{ expressions, allowableTypes }}
-          />
-        </div>
+        <FormMultiTypeConnectorField
+          accountIdentifier={accountId}
+          selected={get(
+            initialValues,
+            `${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.connectorRef`,
+            ''
+          )}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          width={388}
+          type={ConnectorMap[storeType]}
+          name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.connectorRef`}
+          label={getString('connector')}
+          placeholder={getString('select')}
+          disabled={readonly}
+          setRefValue
+          gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          multiTypeProps={{ expressions, allowableTypes }}
+        />
       )}
 
       {isRepoRuntime && (
@@ -158,75 +156,77 @@ function TFRemoteSectionRef(
           }}
           template={inputSetData?.template}
           fieldPath={`spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.repoName`}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 
       {getMultiTypeFromValue(remoteVar.varFile?.spec?.store?.spec?.branch) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
-            name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.branch`}
-            label={getString('pipelineSteps.deploy.inputSet.branch')}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-          />
-        </div>
+        <FormInput.MultiTextInput
+          name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.branch`}
+          label={getString('pipelineSteps.deploy.inputSet.branch')}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+        />
       )}
       {getMultiTypeFromValue(remoteVar.varFile?.spec?.store?.spec?.commitId) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
-            name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.commitId`}
-            label={getString('pipeline.manifestType.commitId')}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-          />
-        </div>
+        <FormInput.MultiTextInput
+          name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.commitId`}
+          label={getString('pipeline.manifestType.commitId')}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+        />
+      )}
+      {storeType === 'S3' && (
+        <AmazonS3RuntimeView
+          initialValues={props?.initialValues}
+          template={remoteVar}
+          allowableTypes={allowableTypes}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          accountId={accountId}
+          path={`${path}.spec.${fieldPath}.varFiles[${index}]`}
+          formik={formik}
+          allValues={props?.allValues}
+        />
       )}
       {getMultiTypeFromValue(remoteVar.varFile?.spec?.store?.spec?.paths) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <List
-            label={getString('filePaths')}
-            name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.paths`}
-            disabled={readonly}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            isNameOfArrayType
-          />
-        </div>
+        <List
+          label={getString('filePaths')}
+          name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.paths`}
+          disabled={readonly}
+          style={{ marginBottom: 'var(--spacing-small)' }}
+          isNameOfArrayType
+        />
       )}
       {reposRequired && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTypeInput
-            label={getString('pipelineSteps.repoName')}
-            name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.repositoryName`}
-            placeholder={getString(ArtifactRepoLoading ? 'common.loading' : 'cd.selectRepository')}
-            disabled={readonly}
-            useValue
-            multiTypeInputProps={{
-              selectProps: {
-                allowCreatingNewItems: true,
-                items: connectorRepos ? connectorRepos : []
-              },
-              expressions,
-              allowableTypes
-            }}
-            selectItems={connectorRepos ? connectorRepos : []}
-          />
-        </div>
+        <FormInput.MultiTypeInput
+          label={getString('pipelineSteps.repoName')}
+          name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.repositoryName`}
+          placeholder={getString(ArtifactRepoLoading ? 'common.loading' : 'cd.selectRepository')}
+          disabled={readonly}
+          useValue
+          multiTypeInputProps={{
+            selectProps: {
+              allowCreatingNewItems: true,
+              items: connectorRepos ? connectorRepos : []
+            },
+            expressions,
+            allowableTypes
+          }}
+          selectItems={connectorRepos ? connectorRepos : []}
+        />
       )}
       {getMultiTypeFromValue(remoteVar.varFile?.spec?.store?.spec?.artifactPaths) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <List
-            label={getString('common.artifactPaths')}
-            name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.artifactPaths`}
-            disabled={readonly}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            isNameOfArrayType
-          />
-        </div>
+        <List
+          label={getString('common.artifactPaths')}
+          name={`${path}.spec.${fieldPath}.varFiles[${index}].varFile.spec.store.spec.artifactPaths`}
+          disabled={readonly}
+          style={{ marginBottom: 'var(--spacing-small)' }}
+          isNameOfArrayType
+        />
       )}
     </>
   )

@@ -296,7 +296,7 @@ describe('Unit tests for createting monitored source', () => {
     const tabTitle = [
       'cv.slos.title',
       'cv.monitoredServices.monitoredServiceTabs.serviceHealth',
-      'cv.monitoredServices.monitoredServiceTabs.configurations'
+      'common.configurations'
     ]
 
     getAllByRole('tab').forEach((tab, index) => {
@@ -306,7 +306,7 @@ describe('Unit tests for createting monitored source', () => {
     await waitFor(() => expect(container.querySelector('div[data-tab-id="ServiceHealth"]')).toBeTruthy())
     await waitFor(() => expect(container.querySelector('div[data-tab-id="SLOs"]')).toBeTruthy())
     await waitFor(() => expect(container.querySelector('div[data-tab-id="Configurations"]')).toBeTruthy())
-    await waitFor(() => expect(getByText('cv.monitoredServices.monitoredServiceTabs.configurations')).toBeTruthy())
+    await waitFor(() => expect(getByText('common.configurations')).toBeTruthy())
   })
 
   test('should return true when isProjectChangedOnMonitoredService method is called with the correct error message', () => {

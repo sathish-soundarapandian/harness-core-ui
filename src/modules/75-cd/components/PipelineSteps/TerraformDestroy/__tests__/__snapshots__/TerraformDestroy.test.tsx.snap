@@ -4206,11 +4206,11 @@ exports[`Test TerraformDestroy should render inputSet View 1`] = `
   >
     <form
       action="#"
-      class="FormikForm--main"
+      class="FormikForm--main inputWidth"
     >
       <div>
         <div
-          class="fieldAndOptions formGroup md"
+          class="fieldAndOptions"
         >
           <div
             class="bp3-form-group"
@@ -4359,6 +4359,8 @@ exports[`Test TerraformDestroy should render inputSet View 1`] = `
             </div>
           </div>
         </div>
+        <div />
+        <div />
       </div>
     </form>
     <p

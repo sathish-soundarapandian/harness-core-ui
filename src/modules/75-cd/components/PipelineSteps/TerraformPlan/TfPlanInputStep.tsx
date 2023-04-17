@@ -6,10 +6,7 @@
  */
 
 import React from 'react'
-import cx from 'classnames'
-
 import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text, FormInput } from '@harness/uicore'
-
 import { get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikContextType } from 'formik'
@@ -52,7 +49,7 @@ export default function TfPlanInputStep(
   const cmdFlagPath = get(inputSetData?.template?.spec, `${fieldPath}.commandFlags`)
 
   return (
-    <FormikForm>
+    <FormikForm className={stepCss.inputWidth}>
       {getMultiTypeFromValue(inputSetData?.template?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
         <TextFieldInputSetView
           name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.provisionerIdentifier`}
@@ -68,7 +65,6 @@ export default function TfPlanInputStep(
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
@@ -86,34 +82,49 @@ export default function TfPlanInputStep(
             expressions,
             disabled: readonly
           }}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 
       {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.secretManagerRef) ===
         MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeConnectorField
-            label={getString('connectors.title.secretManager')}
-            accountIdentifier={accountId}
-            selected={get(initialValues, 'spec.configuration.secretManagerRef', '')}
-            projectIdentifier={projectIdentifier}
-            orgIdentifier={orgIdentifier}
-            width={400}
-            multiTypeProps={{ allowableTypes, expressions }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            category={'SECRET_MANAGER'}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.secretManagerRef`}
-            placeholder={getString('select')}
-            disabled={readonly}
-            setRefValue
-            gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-          />
-        </div>
+        <FormMultiTypeConnectorField
+          label={getString('connectors.title.secretManager')}
+          accountIdentifier={accountId}
+          selected={get(initialValues, 'spec.configuration.secretManagerRef', '')}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          multiTypeProps={{ allowableTypes, expressions }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          category={'SECRET_MANAGER'}
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.secretManagerRef`}
+          placeholder={getString('select')}
+          disabled={readonly}
+          setRefValue
+          gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+        />
       )}
-      <ConfigInputs {...props} />
+      <ConfigInputs {...props} isConfig />
+
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.workspace) === MultiTypeInputType.RUNTIME && (
+        <TextFieldInputSetView
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.workspace`}
+          placeholder={getString('pipeline.terraformStep.workspace')}
+          label={getString('pipelineSteps.workspace')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          fieldPath={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.workspace`}
+        />
+      )}
+
       {get(inputSetData?.template?.spec, `${fieldPath}.varFiles`) &&
       get(inputSetData?.template?.spec, `${fieldPath}.varFiles`)?.length > 0 ? (
         <TfVarFiles {...props} />
@@ -124,7 +135,6 @@ export default function TfPlanInputStep(
           (get(inputSetData?.template?.spec, `${fieldPath}.backendConfig.spec`) as TerraformBackendConfigSpec)?.content
         ) === MultiTypeInputType.RUNTIME && (
           <div
-            className={cx(stepCss.formGroup, stepCss.md)}
             // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
             onKeyDown={e => {
               e.stopPropagation()
@@ -172,62 +182,54 @@ export default function TfPlanInputStep(
 
       {getMultiTypeFromValue(get(inputSetData?.template?.spec, `${fieldPath}.targets`) as string) ===
         MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <List
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.${fieldPath}.targets`}
-            label={<Text style={{ display: 'flex', alignItems: 'center' }}>{getString('pipeline.targets.title')}</Text>}
-            disabled={readonly}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            expressions={expressions}
-            isNameOfArrayType
-          />
-        </div>
+        <List
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.${fieldPath}.targets`}
+          label={<Text style={{ display: 'flex', alignItems: 'center' }}>{getString('pipeline.targets.title')}</Text>}
+          disabled={readonly}
+          style={{ marginBottom: 'var(--spacing-small)' }}
+          expressions={expressions}
+          isNameOfArrayType
+        />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.exportTerraformPlanJson) ===
         MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeCheckboxField
-            name={`${
-              isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
-            }spec.configuration.exportTerraformPlanJson`}
-            label={getString('cd.exportTerraformPlanJson')}
-            multiTypeTextbox={{ expressions, allowableTypes }}
-            enableConfigureOptions={true}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-          />
-        </div>
+        <FormMultiTypeCheckboxField
+          name={`${
+            isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+          }spec.configuration.exportTerraformPlanJson`}
+          label={getString('cd.exportTerraformPlanJson')}
+          multiTypeTextbox={{ expressions, allowableTypes }}
+          enableConfigureOptions={true}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+        />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.exportTerraformHumanReadablePlan) ===
         MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeCheckboxField
-            name={`${
-              isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
-            }spec.configuration.exportTerraformHumanReadablePlan`}
-            label={getString('cd.exportTerraformHumanReadablePlan')}
-            multiTypeTextbox={{ expressions, allowableTypes }}
-            enableConfigureOptions={true}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-          />
-        </div>
+        <FormMultiTypeCheckboxField
+          name={`${
+            isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+          }spec.configuration.exportTerraformHumanReadablePlan`}
+          label={getString('cd.exportTerraformHumanReadablePlan')}
+          multiTypeTextbox={{ expressions, allowableTypes }}
+          enableConfigureOptions={true}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+        />
       )}
 
       {isValueRuntimeInput(inputSetData?.template?.spec?.configuration?.skipRefreshCommand) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeCheckboxField
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.skipRefreshCommand`}
-            label={getString('cd.skipRefreshCommand')}
-            multiTypeTextbox={{ expressions, allowableTypes }}
-            enableConfigureOptions={true}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-          />
-        </div>
+        <FormMultiTypeCheckboxField
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.skipRefreshCommand`}
+          label={getString('cd.skipRefreshCommand')}
+          multiTypeTextbox={{ expressions, allowableTypes }}
+          enableConfigureOptions={true}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+        />
       )}
 
       {cmdFlagPath?.map((terraformCommandFlag: CommandFlags, terraformFlagIdx: number) => {
@@ -235,7 +237,7 @@ export default function TfPlanInputStep(
           isValueRuntimeInput(get(inputSetData?.template, `spec.${fieldPath}.commandFlags[${terraformFlagIdx}].flag`))
         ) {
           return (
-            <div className={cx(stepCss.formGroup, stepCss.md)} key={terraformFlagIdx}>
+            <div key={terraformFlagIdx}>
               <FormInput.MultiTextInput
                 name={`${
                   isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`

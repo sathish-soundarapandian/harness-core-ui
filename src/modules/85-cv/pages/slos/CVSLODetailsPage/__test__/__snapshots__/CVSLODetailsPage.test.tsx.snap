@@ -194,7 +194,7 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
           role="tab"
           tabindex="0"
         >
-          cv.monitoredServices.monitoredServiceTabs.configurations
+          common.configurations
         </div>
         <span
           style="flex-grow: 1;"

@@ -312,6 +312,11 @@ export const formatArtifactoryData = (prevStepData: any, data: any, configObject
     unset(configObject?.store?.spec, 'secretFiles')
   }
 
+  if (configObject?.store?.type === 'S3') {
+    unset(configObject?.store?.spec, 'region')
+    unset(configObject?.store?.spec, 'bucketName')
+  }
+
   const configFiles = get(data, `${path}.store.spec`)
   if (getMultiTypeFromValue(configFiles.artifactPaths) === MultiTypeInputType.FIXED) {
     configObject.store.spec.artifactPaths = configFiles.artifactPaths.map((item: PathInterface) => item.path)

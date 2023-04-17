@@ -28,7 +28,7 @@ import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { cloneDeep, set, unset, get, isUndefined, isEmpty } from 'lodash-es'
+import { cloneDeep, set, unset, get, isUndefined, isEmpty, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import type { TerraformVarFileWrapper } from 'services/cd-ng'
@@ -63,6 +63,7 @@ import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/c
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { FormMultiTypeCheckboxField } from '@common/components'
+import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 import { TFMonaco } from './TFMonacoEditor'
 
 import {
@@ -82,10 +83,12 @@ import {
   getConfigFilePath,
   getPath
 } from '../../ConfigFileStore/ConfigFileStoreHelper'
-import { ArtifactoryForm } from '../../VarFile/ArtifactoryForm'
 import VarFileList from '../../VarFile/VarFileList'
-import { formatArtifactoryData } from '../../VarFile/helper'
 import TerraformCommandFlags from '../../TerraformCommandFlags/TerraformCommandFlags'
+import { AmazonS3Store } from '../../ConfigFileStore/AmazonS3Store/AmazonS3Store'
+import { AmazonS3StoreDataType, formatAmazonS3Data } from '../../ConfigFileStore/AmazonS3Store/AmazonS3StoreHelper'
+import { formatArtifactoryData } from '../../VarFile/helper'
+import { ArtifactoryForm } from '../../VarFile/ArtifactoryForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../TerraformStep.module.scss'
 
@@ -153,6 +156,20 @@ export default function TerraformEditView(
   const getNewConnectorSteps = () => {
     const connectorType = ConnectorMap[selectedConnector]
     const buildPayload = getBuildPayload(ConnectorMap[selectedConnector])
+    const gitTypeStoreAuthenticationProps = {
+      name: getString('credentials'),
+      isEditMode,
+      setIsEditMode,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      connectorInfo: undefined,
+      onConnectorCreated: noop
+    }
+    const authenticationStepProps = {
+      ...gitTypeStoreAuthenticationProps,
+      identifier: CONNECTOR_CREDENTIALS_STEP_IDENTIFIER
+    }
     return (
       <StepWizard title={getString('connectors.createNewConnector')}>
         <ConnectorDetailsStep
@@ -161,7 +178,7 @@ export default function TerraformEditView(
           isEditMode={isEditMode}
           gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
         />
-        {connectorType !== Connectors.ARTIFACTORY ? (
+        {connectorType !== Connectors.ARTIFACTORY && connectorType !== Connectors.AWS ? (
           <GitDetailsStep
             type={connectorType}
             name={getString('details')}
@@ -169,75 +186,14 @@ export default function TerraformEditView(
             connectorInfo={undefined}
           />
         ) : null}
-        {connectorType === Connectors.GIT ? (
-          <StepGitAuthentication
-            name={getString('credentials')}
-            onConnectorCreated={() => {
-              // Handle on success
-            }}
-            isEditMode={isEditMode}
-            setIsEditMode={setIsEditMode}
-            connectorInfo={undefined}
-            accountId={accountId}
-            orgIdentifier={orgIdentifier}
-            projectIdentifier={projectIdentifier}
-          />
-        ) : null}
-        {connectorType === Connectors.GITHUB ? (
-          <StepGithubAuthentication
-            name={getString('credentials')}
-            onConnectorCreated={() => {
-              // Handle on success
-            }}
-            isEditMode={isEditMode}
-            setIsEditMode={setIsEditMode}
-            connectorInfo={undefined}
-            accountId={accountId}
-            orgIdentifier={orgIdentifier}
-            projectIdentifier={projectIdentifier}
-          />
-        ) : null}
-        {connectorType === Connectors.BITBUCKET ? (
-          <StepBitbucketAuthentication
-            name={getString('credentials')}
-            onConnectorCreated={() => {
-              // Handle on success
-            }}
-            isEditMode={isEditMode}
-            setIsEditMode={setIsEditMode}
-            connectorInfo={undefined}
-            accountId={accountId}
-            orgIdentifier={orgIdentifier}
-            projectIdentifier={projectIdentifier}
-          />
-        ) : null}
-        {connectorType === Connectors.GITLAB ? (
-          <StepGitlabAuthentication
-            name={getString('credentials')}
-            identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
-            onConnectorCreated={() => {
-              // Handle on success
-            }}
-            isEditMode={isEditMode}
-            setIsEditMode={setIsEditMode}
-            connectorInfo={undefined}
-            accountId={accountId}
-            orgIdentifier={orgIdentifier}
-            projectIdentifier={projectIdentifier}
-          />
-        ) : null}
+        {connectorType === Connectors.GIT ? <StepGitAuthentication {...authenticationStepProps} /> : null}
+        {connectorType === Connectors.GITHUB ? <StepGithubAuthentication {...authenticationStepProps} /> : null}
+        {connectorType === Connectors.BITBUCKET ? <StepBitbucketAuthentication {...authenticationStepProps} /> : null}
+        {connectorType === Connectors.GITLAB ? <StepGitlabAuthentication {...authenticationStepProps} /> : null}
         {connectorType === Connectors.ARTIFACTORY ? (
-          <StepArtifactoryAuthentication
-            name={getString('details')}
-            identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
-            isEditMode={isEditMode}
-            setIsEditMode={setIsEditMode}
-            connectorInfo={undefined}
-            accountId={accountId}
-            orgIdentifier={orgIdentifier}
-            projectIdentifier={projectIdentifier}
-          />
+          <StepArtifactoryAuthentication {...authenticationStepProps} />
         ) : null}
+        {connectorType === Connectors.AWS ? <StepAWSAuthentication {...authenticationStepProps} /> : null}
         <DelegateSelectorStep
           name={getString('delegate.DelegateselectionLabel')}
           isEditMode={isEditMode}
@@ -320,6 +276,8 @@ export default function TerraformEditView(
     isBackendConfig: boolean,
     fieldPath: string
   ): React.ReactElement => {
+    const stepTwoName = isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')
+
     return (
       <StepWizard title={getTitle(isBackendConfig)} className={css.configWizard} onStepChange={onStepChange}>
         <ConfigFileStoreStepOne
@@ -343,7 +301,7 @@ export default function TerraformEditView(
             isBackendConfig={isBackendConfig}
             allowableTypes={allowableTypes}
             fieldPath={fieldPath}
-            name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
+            name={stepTwoName}
             onSubmitCallBack={(data: any, prevStepData: any) => {
               const path = getPath(false, false, isBackendConfig, fieldPath)
               const configObject = get(prevStepData?.formValues, path)
@@ -362,9 +320,31 @@ export default function TerraformEditView(
               setShowBackendConfigRemoteWizard(false)
             }}
           />
+        ) : selectedConnector === 'S3' ? (
+          <AmazonS3Store
+            isConfig={isConfig}
+            isBackendConfig={isBackendConfig}
+            allowableTypes={allowableTypes}
+            fieldPath={fieldPath}
+            specFieldPath={`spec.${fieldPath}.spec`}
+            name={stepTwoName}
+            isReadonly={readonly}
+            onSubmitCallBack={(data: AmazonS3StoreDataType, prevStepData: any) => {
+              const path = getPath(false, false, isBackendConfig, fieldPath)
+              const configStoreObject = get(prevStepData?.formValues, path)
+
+              const valObj = formatAmazonS3Data(prevStepData, data, configStoreObject, formik, path)
+
+              set(valObj, path, { ...configStoreObject })
+              formik.setValues(valObj)
+              setConnectorView(false)
+              setShowModal(false)
+              setShowBackendConfigRemoteWizard(false)
+            }}
+          />
         ) : (
           <ConfigFileStoreStepTwo
-            name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
+            name={stepTwoName}
             isBackendConfig={isBackendConfig}
             isReadonly={readonly}
             allowableTypes={allowableTypes}
@@ -385,6 +365,13 @@ export default function TerraformEditView(
                 if (prevStepData.identifier && prevStepData.identifier !== data?.identifier) {
                   configObject.store.spec.connectorRef = prevStepData?.identifier
                 }
+
+                if (configObject?.store?.type === 'S3') {
+                  unset(configObject?.store?.spec, 'region')
+                  unset(configObject?.store?.spec, 'bucketName')
+                  unset(configObject?.store?.spec, 'paths')
+                }
+
                 if (configObject?.store.spec.gitFetchType === 'Branch') {
                   unset(configObject.store.spec, 'commitId')
                 } else if (configObject?.store.spec.gitFetchType === 'Commit') {

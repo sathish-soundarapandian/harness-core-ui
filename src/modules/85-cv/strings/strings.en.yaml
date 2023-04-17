@@ -631,7 +631,6 @@ monitoredServices:
         exhausted: Exhausted
   monitoredServiceTabs:
     serviceHealth: Service Health
-    configurations: Configurations
     disabledText: Enable the monitored service to view the tab
   table:
     lastestHealthTrend: Health trend (Last 24h)

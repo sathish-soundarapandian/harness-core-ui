@@ -24,6 +24,7 @@ export interface UseEnvironmentSelectV2Params {
   showCreateButton?: boolean
   noDefault?: boolean
   allowAllOption?: boolean
+  searchTerm?: string
 }
 
 export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => {
@@ -44,7 +45,8 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
     allowCreatingNewItems,
     showCreateButton,
     noDefault,
-    allowAllOption
+    allowAllOption,
+    searchTerm
   } = params
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
   const {
@@ -67,7 +69,8 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
   const queryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
-    projectIdentifier
+    projectIdentifier,
+    name: searchTerm
   }
   const {
     loading: loadingAllEnvironmentsFlags,
@@ -82,11 +85,11 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
 
   useEffect(() => {
     if (
-      typeof selectedEnvironment?.value === 'string' &&
-      preferredEnvironment !== selectedEnvironment.value &&
-      selectedEnvironment.value !== getString('common.allEnvironments')
+      selectedEnvironment?.value &&
+      preferredEnvironment !== selectedEnvironment?.value &&
+      selectedEnvironment?.value !== getString('common.allEnvironments')
     ) {
-      setPreferredEnvironment(selectedEnvironment.value)
+      setPreferredEnvironment(selectedEnvironment.value as string)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preferredEnvironment, selectedEnvironment?.value])
@@ -151,18 +154,18 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
           name="environmentSelectEl"
           allowCreatingNewItems={allowCreatingNewItems}
           onChange={opt => {
+            setSelectedEnvironment(opt)
+            if (opt.value === getString('common.allEnvironments')) {
+              refetchAllEnvironmentsFlags()
+              return
+            }
             if (selectedEnvironment?.value !== opt.value) {
-              setSelectedEnvironment(opt)
-              if (opt.value === getString('common.allEnvironments')) {
-                refetchAllEnvironmentsFlags()
-              } else {
-                onChange(
-                  opt,
-                  environmentList?.data?.content?.find(env => env.identifier === opt.value) as EnvironmentResponseDTO,
-                  true
-                )
-                setActiveEnvironment(opt.value as string)
-              }
+              onChange(
+                opt,
+                environmentList?.data?.content?.find(env => env.identifier === opt.value) as EnvironmentResponseDTO,
+                true
+              )
+              setActiveEnvironment(opt.value as string)
             }
           }}
           inputProps={{
@@ -183,6 +186,7 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
     refetch,
     environments: environmentList?.data?.content,
     allEnvironmentsFlags:
-      selectedEnvironment?.value === getString('common.allEnvironments') ? allEnvironmentsFlags : null
+      selectedEnvironment?.value === getString('common.allEnvironments') ? allEnvironmentsFlags : null,
+    refetchAllEnvironmentsFlags
   }
 }

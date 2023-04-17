@@ -120,12 +120,9 @@ describe('Test cases for CVSLODetailsPage', () => {
       })
     })
 
-    userEvent.click(screen.getByText('cv.monitoredServices.monitoredServiceTabs.configurations'))
+    userEvent.click(screen.getByText('common.configurations'))
 
-    expect(screen.getByText('cv.monitoredServices.monitoredServiceTabs.configurations')).toHaveAttribute(
-      'aria-selected',
-      'true'
-    )
+    expect(screen.getByText('common.configurations')).toHaveAttribute('aria-selected', 'true')
 
     userEvent.click(screen.getByText('Retry'))
 

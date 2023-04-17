@@ -2,24 +2,24 @@
 
 exports[`Config section tests initial render with basic data 1`] = `
 <div>
-  <label
-    class="Label--main"
-  >
-    cd.configurationFile
-  </label>
+  <div>
+    <label
+      class="Label--main"
+    >
+      cd.configurationFile
+    </label>
+  </div>
 </div>
 `;
 
 exports[`Config section tests render with artifactory data 1`] = `
 <div>
-  <label
-    class="Label--main"
-  >
-    cd.configurationFile
-  </label>
-  <div
-    class="formGroup md"
-  >
+  <div>
+    <label
+      class="Label--main"
+    >
+      cd.configurationFile
+    </label>
     <div
       class="bp3-form-group"
     >
@@ -115,10 +115,6 @@ exports[`Config section tests render with artifactory data 1`] = `
         </div>
       </div>
     </div>
-  </div>
-  <div
-    class="formGroup md"
-  >
     <div
       class="bp3-form-group"
     >

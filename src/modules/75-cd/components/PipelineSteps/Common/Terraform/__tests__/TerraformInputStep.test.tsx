@@ -61,9 +61,25 @@ const template: any = {
           }
         },
         backendConfig: {
-          type: 'Inline',
+          type: 'Remote',
           spec: {
-            content: RUNTIME_INPUT_VALUE
+            store: {
+              spec: {
+                branch: RUNTIME_INPUT_VALUE,
+                folderPath: RUNTIME_INPUT_VALUE,
+                connectorRef: {
+                  label: 'test',
+                  Scope: 'Account',
+                  value: 'test',
+                  connector: {
+                    type: 'GIT',
+                    spec: {
+                      val: 'test'
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         targets: RUNTIME_INPUT_VALUE,
@@ -112,6 +128,7 @@ describe('Test terraform input set', () => {
           backendConfig: {
             spec: {
               store: {
+                type: 'Remote',
                 spec: {
                   branch: RUNTIME_INPUT_VALUE,
                   folderPath: RUNTIME_INPUT_VALUE,

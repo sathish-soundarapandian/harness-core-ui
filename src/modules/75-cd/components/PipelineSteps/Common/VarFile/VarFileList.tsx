@@ -32,6 +32,7 @@ import { DIALOG_PROPS } from './helper'
 import { RemoteVarStore } from './RemoteVarStore'
 import { RemoteWizard } from './RemoteWizard'
 import { ArtifactoryForm } from './ArtifactoryForm'
+import { AmazonS3Store } from '../ConfigFileStore/AmazonS3Store/AmazonS3Store'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './VarFile.module.scss'
 
@@ -278,6 +279,14 @@ export default function VarFileList<T, U>(props: VarFileProps<T>): React.ReactEl
                                     allowableTypes={allowableTypes}
                                     name={getString('cd.varFileDetails')}
                                     onSubmitCallBack={(values: RemoteVar) => onSubmit(values, arrayHelpers)}
+                                  />
+                                ) : selectedConnector === 'S3' ? (
+                                  <AmazonS3Store
+                                    isTerraformPlan={!!isTerraformPlan}
+                                    allowableTypes={allowableTypes}
+                                    name={getString('cd.varFileDetails')}
+                                    onSubmitCallBack={(values: RemoteVar) => onSubmit(values, arrayHelpers)}
+                                    isReadonly={isReadonly}
                                   />
                                 ) : (
                                   <RemoteWizard

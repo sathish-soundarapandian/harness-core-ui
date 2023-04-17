@@ -30,6 +30,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useStrings } from 'framework/strings'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   AllowedTypes,
   tfVarIcons,
@@ -78,11 +79,10 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
     accountId: string
   }>()
 
-  const storeTypes = isTerragrunt
-    ? TerragruntAllowedTypes
-    : isBackendConfig
-    ? [...AllowedTypes, 'Harness']
-    : AllowedTypes
+  const { CDS_TERRAFORM_S3_NG } = useFeatureFlags()
+  const S3Support = CDS_TERRAFORM_S3_NG ? [...AllowedTypes, 'S3'] : AllowedTypes
+
+  const storeTypes = isTerragrunt ? TerragruntAllowedTypes : isBackendConfig ? [...S3Support, 'Harness'] : S3Support
   const path = getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig, fieldPath)
 
   useEffect(() => {

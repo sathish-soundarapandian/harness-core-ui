@@ -175,6 +175,7 @@ export interface StringsMap {
   'common.confictOccured': string
   'common.config': string
   'common.configDetails': string
+  'common.configurations': string
   'common.configureJfrog': string
   'common.configureModuleList': string
   'common.configureNav': string
@@ -8491,7 +8492,6 @@ export interface StringsMap {
   'cv.monitoredServices.monitoredServiceDeleted': string
   'cv.monitoredServices.monitoredServiceDetails': string
   'cv.monitoredServices.monitoredServiceName': string
-  'cv.monitoredServices.monitoredServiceTabs.configurations': string
   'cv.monitoredServices.monitoredServiceTabs.disabledText': string
   'cv.monitoredServices.monitoredServiceTabs.serviceHealth': string
   'cv.monitoredServices.monitoredServiceToggle': string

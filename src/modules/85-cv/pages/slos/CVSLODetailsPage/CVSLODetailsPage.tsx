@@ -153,7 +153,7 @@ const CVSLODetailsPage: React.FC = () => {
             },
             {
               id: SLODetailsPageTabIds.Configurations,
-              title: getString('cv.monitoredServices.monitoredServiceTabs.configurations'),
+              title: getString('common.configurations'),
               panel: (
                 <Page.Body
                   loading={loading}

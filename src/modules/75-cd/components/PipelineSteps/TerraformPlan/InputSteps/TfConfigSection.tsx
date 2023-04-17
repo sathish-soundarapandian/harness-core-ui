@@ -6,8 +6,6 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import cx from 'classnames'
-
 import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType, Label, SelectOption, useToaster, Layout } from '@harness/uicore'
@@ -28,17 +26,28 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { TerraformPlanProps } from '../../Common/Terraform/TerraformInterfaces'
-import { getPath } from '../../Common/ConfigFileStore/ConfigFileStoreHelper'
+import { ConnectorMap, getPath } from '../../Common/ConfigFileStore/ConfigFileStoreHelper'
+import { AmazonS3RuntimeView } from '../../Common/ConfigFileStore/AmazonS3Store/AmazonS3StoreRuntimeView'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.ReactElement {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType, isBackendConfig } = props
+  const {
+    inputSetData,
+    readonly,
+    initialValues,
+    path,
+    allowableTypes,
+    formik,
+    stepViewType,
+    isBackendConfig,
+    isConfig,
+    allValues
+  } = props
   const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
   const configPath = getPath(true, false, isBackendConfig, fieldPath)
-  const config = get(inputSetData?.template?.spec, `${fieldPath}`)
   const configSpec = get(inputSetData?.template, configPath)
   const store = configSpec?.store
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -103,55 +112,30 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
 
   return (
     <>
-      {(configSpec?.store?.spec || config?.workspace) && (
+      {configSpec?.store?.spec && (
         <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
           {isBackendConfig ? getString('pipelineSteps.backendConfig') : getString('cd.configurationFile')}
         </Label>
       )}
-      {getMultiTypeFromValue(config?.workspace) === MultiTypeInputType.RUNTIME && (
-        <TextFieldInputSetView
-          name={`${path}.spec.configuration.workspace`}
-          placeholder={getString('pipeline.terraformStep.workspace')}
-          label={getString('pipelineSteps.workspace')}
-          disabled={readonly}
-          multiTextInputProps={{
-            expressions,
-            allowableTypes
-          }}
+
+      {getMultiTypeFromValue(configSpec?.store?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && (
+        <FormMultiTypeConnectorField
+          accountIdentifier={accountId}
+          selected={get(initialValues, `${configPath}.store.spec.connectorRef`, '')}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          multiTypeProps={{ allowableTypes, expressions }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          template={inputSetData?.template}
-          fieldPath={`${path}.spec.configuration.workspace`}
-          className={cx(stepCss.formGroup, stepCss.md)}
+          type={ConnectorMap[store?.type]}
+          name={`${path}.${configPath}.store.spec.connectorRef`}
+          label={getString('connector')}
+          placeholder={getString('select')}
+          disabled={readonly}
+          setRefValue
+          gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
         />
-      )}
-      {getMultiTypeFromValue(configSpec?.store?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeConnectorField
-            accountIdentifier={accountId}
-            selected={get(initialValues, `${configPath}.store.spec.connectorRef`, '')}
-            projectIdentifier={projectIdentifier}
-            orgIdentifier={orgIdentifier}
-            multiTypeProps={{ allowableTypes, expressions }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            width={388}
-            type={
-              store?.type === Connectors.ARTIFACTORY
-                ? [Connectors.ARTIFACTORY]
-                : [Connectors.GIT, Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET]
-            }
-            name={`${path}.${configPath}.store.spec.connectorRef`}
-            label={getString('connector')}
-            placeholder={getString('select')}
-            disabled={readonly}
-            setRefValue
-            // setConnector={setConnector}
-            gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-          />
-        </div>
       )}
       {isRepoRuntime && (
         <TextFieldInputSetView
@@ -168,7 +152,6 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
           }}
           template={inputSetData?.template}
           fieldPath={`${path}.${configPath}.store.spec.repoName`}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 
@@ -187,7 +170,6 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
           }}
           template={inputSetData?.template}
           fieldPath={`${path}.${configPath}.store.spec.branch`}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 
@@ -206,7 +188,23 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
           }}
           template={inputSetData?.template}
           fieldPath={`${path}.${configPath}.store.spec.commitId`}
-          className={cx(stepCss.formGroup, stepCss.md)}
+        />
+      )}
+
+      {store?.type == 'S3' && (
+        <AmazonS3RuntimeView
+          initialValues={initialValues}
+          template={inputSetData?.template}
+          allowableTypes={allowableTypes}
+          accountId={accountId}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          specFieldPath={`spec.${fieldPath}`}
+          isConfig={isConfig}
+          isBackendConfig={isBackendConfig}
+          formik={formik}
+          path={path}
+          allValues={allValues}
         />
       )}
 
@@ -225,13 +223,11 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
           }}
           template={inputSetData?.template}
           fieldPath={`${path}.${configPath}.store.spec.folderPath`}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 
       {reposRequired && (
         <SelectInputSetView
-          className={cx(stepCss.formGroup, stepCss.md)}
           label={getString('pipelineSteps.repoName')}
           name={`${path}.${configPath}.store.spec.repositoryName`}
           placeholder={getString(ArtifactRepoLoading ? 'common.loading' : 'cd.selectRepository')}
@@ -271,13 +267,12 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
             template={inputSetData?.template}
             fieldPath={`${path}.${configPath}.store.spec.artifactPaths`}
             onChange={value => formik?.setFieldValue(`${path}.${configPath}.store.spec.artifactPaths`, [value])}
-            className={cx(stepCss.formGroup, stepCss.md)}
           />
         )}
 
       {store?.type === 'Harness' &&
         getMultiTypeFromValue(configSpec?.store?.spec?.files) === MultiTypeInputType.RUNTIME && (
-          <Layout.Vertical className={cx(stepCss.inputWidth, stepCss.layoutVerticalSpacing)}>
+          <Layout.Vertical className={stepCss.layoutVerticalSpacing}>
             <FileStoreList
               name={`${path}.${configPath}.store.spec.files`}
               type={fileTypes.FILE_STORE}
@@ -289,7 +284,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
 
       {store?.type === 'Harness' &&
         getMultiTypeFromValue(configSpec?.store?.spec?.secretFiles) === MultiTypeInputType.RUNTIME && (
-          <Layout.Vertical className={cx(stepCss.inputWidth, stepCss.layoutVerticalSpacing)}>
+          <Layout.Vertical className={stepCss.layoutVerticalSpacing}>
             <FileStoreList
               name={`${path}.${configPath}.store.spec.secretFiles`}
               type={fileTypes.ENCRYPTED}

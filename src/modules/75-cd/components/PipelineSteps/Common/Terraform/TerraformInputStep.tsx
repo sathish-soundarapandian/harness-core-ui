@@ -50,7 +50,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
   const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
   const inputSetDataSpec = get(inputSetData?.template?.spec, `${fieldPath}`)
   return (
-    <FormikForm>
+    <FormikForm className={stepCss.inputWidth}>
       {getMultiTypeFromValue((inputSetData?.template as TerraformData)?.spec?.provisionerIdentifier) ===
         MultiTypeInputType.RUNTIME && (
         <TextFieldInputSetView
@@ -67,7 +67,6 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
           }}
           fieldPath={'spec.provisionerIdentifier'}
           template={inputSetData?.template}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
@@ -88,7 +87,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
       )}
-      <ConfigInputs {...props} onUpdate={onUpdateRef} onChange={onChangeRef} />
+      <ConfigInputs {...props} onUpdate={onUpdateRef} onChange={onChangeRef} isConfig />
       {inputSetDataSpec?.spec?.varFiles?.length && (
         <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
           {getString('cd.terraformVarFiles')}
@@ -119,10 +118,28 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
         return <></>
       })}
 
+      {getMultiTypeFromValue(get(inputSetData?.template?.spec, `${fieldPath}.spec.workspace`)) ===
+        MultiTypeInputType.RUNTIME && (
+        <TextFieldInputSetView
+          name={`${path}.spec.configuration.spec.workspace`}
+          placeholder={getString('pipeline.terraformStep.workspace')}
+          label={getString('pipelineSteps.workspace')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          fieldPath={'spec.configuration.spec.workspace'}
+        />
+      )}
+
       {getMultiTypeFromValue((inputSetDataSpec?.spec?.backendConfig as TerraformBackendConfigSpec)?.spec?.content) ===
         MultiTypeInputType.RUNTIME && (
         <div
-          className={cx(stepCss.formGroup, stepCss.md)}
           // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
           onKeyDown={e => {
             e.stopPropagation()
@@ -160,30 +177,26 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
       <ConfigInputs {...props} isBackendConfig={true} onUpdate={onUpdateRef} onChange={onChangeRef} />
 
       {getMultiTypeFromValue(inputSetDataSpec?.spec?.targets as string) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <List
-            name={`${path}.spec.${fieldPath}.spec.targets`}
-            label={<Text style={{ display: 'flex', alignItems: 'center' }}>{getString('pipeline.targets.title')}</Text>}
-            disabled={readonly}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            expressions={expressions}
-            isNameOfArrayType
-          />
-        </div>
+        <List
+          name={`${path}.spec.${fieldPath}.spec.targets`}
+          label={<Text style={{ display: 'flex', alignItems: 'center' }}>{getString('pipeline.targets.title')}</Text>}
+          disabled={readonly}
+          style={{ marginBottom: 'var(--spacing-small)' }}
+          expressions={expressions}
+          isNameOfArrayType
+        />
       )}
 
       {isValueRuntimeInput((inputSetDataSpec as TerraformStepConfiguration)?.skipRefreshCommand) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeCheckboxField
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.skipRefreshCommand`}
-            label={getString('cd.skipRefreshCommand')}
-            multiTypeTextbox={{ expressions, allowableTypes }}
-            enableConfigureOptions={true}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-          />
-        </div>
+        <FormMultiTypeCheckboxField
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.skipRefreshCommand`}
+          label={getString('cd.skipRefreshCommand')}
+          multiTypeTextbox={{ expressions, allowableTypes }}
+          enableConfigureOptions={true}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+        />
       )}
 
       {inputSetDataSpec?.commandFlags?.map((terraformCommandFlag: TerraformCliOptionFlag, terraformFlagIdx: number) => {
@@ -191,7 +204,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
           isValueRuntimeInput(get(inputSetData?.template, `spec.${fieldPath}.commandFlags[${terraformFlagIdx}].flag`))
         ) {
           return (
-            <div className={cx(stepCss.formGroup, stepCss.md)} key={terraformFlagIdx}>
+            <div key={terraformFlagIdx}>
               <FormInput.MultiTextInput
                 name={`${
                   isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
