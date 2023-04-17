@@ -50,7 +50,8 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
     [filterState]
   )
 
-  const { updateUserJourney, updateMonitoredServices, updateTargetType, updateSliType } = SLODashboardFilterActions
+  const { updateUserJourney, updateMonitoredServices, updateTargetType, updateSliType, updateEvaluationType } =
+    SLODashboardFilterActions
 
   return (
     <Layout.Horizontal className={css.sloFilters}>
@@ -120,14 +121,14 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
           <Select
             value={{
               label: `${getString('common.policy.evaluations')}: ${defaultTo(
-                filterState?.sliTypes?.label,
+                filterState?.evaluationType?.label,
                 getString('all')
               )}`,
-              value: defaultTo(filterState?.sliTypes?.value, getString('all'))
+              value: defaultTo(filterState?.evaluationType?.value, getString('all'))
             }}
             items={getEvaluationTypeOptionsForFilter(getString)}
             onChange={item => {
-              dispatch(updateSliType({ sliTypes: item }))
+              dispatch(updateEvaluationType({ evaluationType: item }))
             }}
           />
         </Layout.Vertical>

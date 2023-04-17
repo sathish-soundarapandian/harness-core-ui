@@ -501,6 +501,11 @@ export default function TriggersDetailPage(): JSX.Element {
                     schema={pipelineSchema?.data}
                     onEnableEditMode={goToEditWizard}
                     isEditModeSupported={!isPipelineInvalid}
+                    yamlSanityConfig={{
+                      removeEmptyString: false,
+                      removeEmptyArray: false,
+                      removeEmptyObject: false
+                    }}
                     // isEditModeSupported={!isTriggerRbacDisabled}
                   />
                 )}

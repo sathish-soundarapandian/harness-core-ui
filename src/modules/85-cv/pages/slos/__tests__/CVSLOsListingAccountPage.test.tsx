@@ -92,7 +92,6 @@ describe('Filters reset on account page change assertions', () => {
         queryParamStringifyOptions: { arrayFormat: 'repeat' },
         queryParams: {
           accountId: 'accountId',
-          filter: '',
           monitoredServiceIdentifier: 'All',
           orgIdentifier: undefined,
           pageNumber: 0,
@@ -100,6 +99,7 @@ describe('Filters reset on account page change assertions', () => {
           projectIdentifier: undefined,
           sliTypes: ['All'],
           targetTypes: ['All'],
+          evaluationType: ['All'],
           userJourneyIdentifiers: ['All']
         }
       })

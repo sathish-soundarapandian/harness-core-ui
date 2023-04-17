@@ -9,6 +9,7 @@
 declare const styles: {
   readonly activity: string
   readonly almostFullScreenCloseBtn: string
+  readonly breakWord: string
   readonly connectivity: string
   readonly content: string
   readonly delegateContainer: string

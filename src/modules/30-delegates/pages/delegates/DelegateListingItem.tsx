@@ -132,7 +132,7 @@ const RenderColumnMenu: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) =>
   })
 
   const deleteDelegateDialogContent = (
-    <>
+    <div className={css.breakWord}>
       <Text font={{ variation: FontVariation.BODY }} margin={{ bottom: 'medium' }}>
         {getString('delegates.infoForDeleteDelegate')}
       </Text>
@@ -141,7 +141,7 @@ const RenderColumnMenu: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) =>
           name: delegate?.groupName
         })}
       </Text>
-    </>
+    </div>
   )
 
   const forceDeleteDialog = useConfirmationDialog({

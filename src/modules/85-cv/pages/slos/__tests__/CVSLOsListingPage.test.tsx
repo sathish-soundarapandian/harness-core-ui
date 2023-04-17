@@ -384,6 +384,7 @@ describe('CVSLOsListingPage', () => {
 
   describe('Filters', () => {
     test('should check whether all the filters are present', () => {
+      jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
       useGetSLODashboardWidgets.mockReturnValue({
         data: dashboardWidgetsResponse,
         loading: false,
@@ -396,11 +397,13 @@ describe('CVSLOsListingPage', () => {
       const monitoredServicesFilter = screen.getByTestId('monitoredServices-filter')
       const sloTargetAndBudgetFilter = screen.getByTestId('sloTargetAndBudget-filter')
       const sliTypeFilter = screen.getByTestId('sliType-filter')
+      const evaluationTypeFilter = screen.getByTestId('evaluationType-filter')
 
       expect(userJourneyFilter).toBeInTheDocument()
       expect(monitoredServicesFilter).toBeInTheDocument()
       expect(sloTargetAndBudgetFilter).toBeInTheDocument()
       expect(sliTypeFilter).toBeInTheDocument()
+      expect(evaluationTypeFilter).toBeInTheDocument()
     })
   })
 

@@ -19,5 +19,6 @@ export enum SLOActionTypes {
   sloRiskFilterAction = 'SLORiskFilter',
   reset = 'reset',
   resetFiltersInMonitoredServicePage = 'resetFiltersInMonitoredServicePage',
-  search = 'search'
+  search = 'search',
+  evaluationType = 'evaluationType'
 }

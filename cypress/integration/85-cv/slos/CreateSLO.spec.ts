@@ -37,7 +37,8 @@ import {
   createSloV2,
   accountsSLOCall,
   accountsSLORiskCall,
-  getSLORiskCountWithCVNGProdFilter
+  getSLORiskCountWithCVNGProdFilter,
+  listSLOsCallWithRolling
 } from '../../../support/85-cv/slos/constants'
 
 describe('Create SLO', () => {
@@ -417,7 +418,7 @@ describe('Create SLO', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetail)
 
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse).as('getMonitoredService')
-    cy.intercept('GET', listSLOsCallWithCVNGProd, updatedListSLOsCallResponse)
+    cy.intercept('GET', listSLOsCallWithCVNGProd, updatedListSLOsCallResponse).as('sloListService')
     cy.intercept('GET', getSLORiskCountWithCVNGProdFilter, getSLORiskCountResponse)
     cy.intercept('GET', getServiceLevelObjective, getServiceLevelObjectiveResponse)
 
@@ -543,6 +544,7 @@ describe('Create SLO', () => {
     cy.intercept('GET', listSLOsCallWithCVNGProd, updatedListSLOsCallResponse)
     cy.intercept('GET', getSLORiskCountWithCVNGProd, getSLORiskCountResponse)
     cy.intercept('GET', getServiceLevelObjective, getServiceLevelObjectiveResponse)
+    cy.intercept('GET', listSLOsCallWithRolling, updatedListSLOsCallResponse).as('listSLOsCallWithRolling')
 
     cy.intercept('GET', accountsSLOCall, updatedListSLOsCallResponse).as('accountsTabSloCall')
     cy.intercept('GET', accountsSLORiskCall, getSLORiskCountResponse).as('accountsRiskCall')
@@ -558,7 +560,7 @@ describe('Create SLO', () => {
 
     cy.get('[value="Period Type: Rolling"]').should('exist')
 
-    cy.wait('@updatedListSLOsCallResponse')
+    cy.wait('@listSLOsCallWithRolling')
 
     cy.get('div[data-tab-id="AccountTab"]').scrollIntoView().click()
 

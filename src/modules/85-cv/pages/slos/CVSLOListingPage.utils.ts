@@ -24,7 +24,8 @@ import type {
   GetAllJourneysQueryParams,
   ResponsePageMSDropdownResponse,
   GetSLOHealthListViewQueryParams,
-  ResponseSLORiskCountResponse
+  ResponseSLORiskCountResponse,
+  SLODashboardApiFilter
 } from 'services/cv'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
 import { DAYS, HOURS } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.constants'
@@ -44,7 +45,9 @@ import {
   SLOActionPayload,
   SLOFilterAction,
   SLOFilterState,
-  SLOTargetChartWithChangeTimelineProps
+  SLOTargetChartWithChangeTimelineProps,
+  GetSLOCommonQueryParamsProps,
+  PathParams
 } from './CVSLOsListingPage.types'
 import { getMonitoredServicesOptions } from './common/SLI/SLI.utils'
 import { getUserJourneyOptions } from './components/CVCreateSLOV2/CVCreateSLOV2.utils'
@@ -390,6 +393,7 @@ export const initialState: SLOFilterState = {
   sliTypes: defaultAllOption,
   targetTypes: defaultAllOption,
   sloRiskFilter: null,
+  evaluationType: defaultAllOption,
   search: ''
 }
 
@@ -413,6 +417,10 @@ const updateSloRiskType = (payload: SLOActionPayload): SLOFilterAction => ({
   type: SLOActionTypes.sloRiskFilterAction,
   payload
 })
+const updateEvaluationType = (payload: SLOActionPayload): SLOFilterAction => ({
+  type: SLOActionTypes.evaluationType,
+  payload
+})
 
 const resetFilters = (): SLOFilterAction => ({
   type: SLOActionTypes.reset
@@ -434,7 +442,8 @@ export const SLODashboardFilterActions = {
   updateSloRiskType,
   resetFilters,
   resetFiltersInMonitoredServicePageAction,
-  updatedSearchAction
+  updatedSearchAction,
+  updateEvaluationType
 }
 
 export const sloFilterReducer = (state = initialState, data: SLOFilterAction): SLOFilterState => {
@@ -455,6 +464,11 @@ export const sloFilterReducer = (state = initialState, data: SLOFilterAction): S
       return {
         ...state,
         sliTypes: payload.sliTypes as SelectOption
+      }
+    case SLOActionTypes.evaluationType:
+      return {
+        ...state,
+        evaluationType: payload.evaluationType as SelectOption
       }
     case SLOActionTypes.targetTypes:
       return {
@@ -493,6 +507,7 @@ export const getInitialFilterState = (
     monitoredService: getDefaultAllOption(getString),
     sliTypes: getDefaultAllOption(getString),
     targetTypes: getDefaultAllOption(getString),
+    evaluationType: getDefaultAllOption(getString),
     sloRiskFilter: null,
     search: ''
   }
@@ -548,10 +563,43 @@ interface SLODashboardWidgetsParams {
   queryParamStringifyOptions: QueryString.IStringifyOptions
 }
 
-interface PathParams {
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+const getEvaluationTypeOption = (
+  getString: UseStringsReturn['getString'],
+  evaluationType?: SelectOption
+): { evaluationType?: SLODashboardApiFilter['evaluationType'] } =>
+  evaluationType
+    ? {
+        evaluationType: getFilterValueForSLODashboardParams(
+          getString,
+          evaluationType
+        ) as SLODashboardApiFilter['evaluationType']
+      }
+    : {}
+
+export const getSLOCommonQueryParams = ({
+  pathParams,
+  getString,
+  filterState,
+  monitoredServiceIdentifier
+}: GetSLOCommonQueryParamsProps): SLODashboardWidgetsParams => {
+  const { monitoredService, search, sliTypes, targetTypes, userJourney, evaluationType } = filterState
+  const evaluationTypeOption = getEvaluationTypeOption(getString, evaluationType)
+  const filterParam = search ? { filter: search } : {}
+  return {
+    queryParams: {
+      ...pathParams,
+      monitoredServiceIdentifier:
+        monitoredServiceIdentifier || getMonitoredServiceSLODashboardParams(getString, monitoredService),
+      userJourneyIdentifiers: getFilterValueForSLODashboardParams(getString, userJourney),
+      targetTypes: getFilterValueForSLODashboardParams(getString, targetTypes) as TargetTypesParams[],
+      sliTypes: getFilterValueForSLODashboardParams(getString, sliTypes) as SLITypesParams[],
+      ...evaluationTypeOption,
+      ...filterParam
+    },
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    }
+  }
 }
 
 export const getSLODashboardWidgetsParams = (
@@ -561,26 +609,24 @@ export const getSLODashboardWidgetsParams = (
   pageNumber?: number,
   monitoredServiceIdentifier?: string
 ): SLODashboardWidgetsParams => {
-  const { monitoredService, search, sliTypes, sloRiskFilter, targetTypes, userJourney } = filterState
+  const { sloRiskFilter } = filterState
+  const { queryParams, queryParamStringifyOptions } = getSLOCommonQueryParams({
+    pathParams,
+    getString,
+    filterState,
+    monitoredServiceIdentifier
+  })
   return {
     queryParams: {
-      ...pathParams,
-      monitoredServiceIdentifier:
-        monitoredServiceIdentifier || getMonitoredServiceSLODashboardParams(getString, monitoredService),
-      pageNumber,
-      pageSize: PAGE_SIZE_DASHBOARD_WIDGETS,
-      userJourneyIdentifiers: getFilterValueForSLODashboardParams(getString, userJourney),
-      targetTypes: getFilterValueForSLODashboardParams(getString, targetTypes) as TargetTypesParams[],
-      sliTypes: getFilterValueForSLODashboardParams(getString, sliTypes) as SLITypesParams[],
-      filter: search,
+      ...queryParams,
       errorBudgetRisks: getRiskFilterForSLODashboardParams(
         getString,
         sloRiskFilter?.identifier as string | null
-      ) as RiskTypes[]
+      ) as RiskTypes[],
+      pageNumber,
+      pageSize: PAGE_SIZE_DASHBOARD_WIDGETS
     },
-    queryParamStringifyOptions: {
-      arrayFormat: 'repeat'
-    }
+    queryParamStringifyOptions
   }
 }
 
@@ -595,21 +641,15 @@ export const getServiceLevelObjectivesRiskCountParams = ({
   filterState: SLOFilterState
   monitoredServiceIdentifier?: string
 }): SLODashboardWidgetsParams => {
-  const { monitoredService, search, sliTypes, targetTypes, userJourney } = filterState
-
+  const { queryParams, queryParamStringifyOptions } = getSLOCommonQueryParams({
+    pathParams,
+    getString,
+    filterState,
+    monitoredServiceIdentifier
+  })
   return {
-    queryParams: {
-      ...pathParams,
-      monitoredServiceIdentifier:
-        monitoredServiceIdentifier || getMonitoredServiceSLODashboardParams(getString, monitoredService),
-      userJourneyIdentifiers: getFilterValueForSLODashboardParams(getString, userJourney),
-      targetTypes: getFilterValueForSLODashboardParams(getString, targetTypes) as TargetTypesParams[],
-      sliTypes: getFilterValueForSLODashboardParams(getString, sliTypes) as SLITypesParams[],
-      filter: search
-    },
-    queryParamStringifyOptions: {
-      arrayFormat: 'repeat'
-    }
+    queryParams,
+    queryParamStringifyOptions
   }
 }
 

@@ -1200,6 +1200,6 @@ export const monitoredServiceSLOsListResponse = {
 }
 
 export const monitoredServiceSLOsFetchCall =
-  '/cv/api/slo-dashboard/widgets/list?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&monitoredServiceIdentifier=appd_prod&pageNumber=0&pageSize=10&filter='
+  '/cv/api/slo-dashboard/widgets/list?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&monitoredServiceIdentifier=appd_prod&pageNumber=0&pageSize=10'
 export const monitoredServiceSLOsRiskCountCall =
-  '/cv/api/slo-dashboard/risk-count?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&monitoredServiceIdentifier=appd_prod&filter='
+  '/cv/api/slo-dashboard/risk-count?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&monitoredServiceIdentifier=appd_prod'

@@ -14,6 +14,7 @@ import type {
   TimeRangeFilter,
   UnavailabilityInstancesResponse
 } from 'services/cv'
+import type { UseStringsReturn } from 'framework/strings'
 import type { SLOActionTypes } from './CVSLOsListingPage.constants'
 
 export interface CVSLOsListingPageProps {
@@ -93,11 +94,24 @@ export interface SLOFilterState {
   targetTypes: SelectOption
   sloRiskFilter: SLORiskFilter | null
   search: string
+  evaluationType?: SelectOption
 }
 
 export interface SLOFilterAction {
   type: SLOActionTypes
   payload?: SLOActionPayload
+}
+
+export interface PathParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+export interface GetSLOCommonQueryParamsProps {
+  pathParams: PathParams
+  getString: UseStringsReturn['getString']
+  filterState: SLOFilterState
+  monitoredServiceIdentifier?: string
 }
 
 export type SLOActionPayload = Partial<SLOFilterState>

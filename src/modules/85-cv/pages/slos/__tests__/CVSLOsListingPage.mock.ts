@@ -311,7 +311,6 @@ export const riskCountQueryParamsExpectedResult = {
   queryParamStringifyOptions: { arrayFormat: 'repeat' },
   queryParams: {
     accountId: '-k53qRQAQ1O7DBLb9ACnjQ',
-    filter: '',
     monitoredServiceIdentifier: 'CD_prod',
     orgIdentifier: 'cvng',
     projectIdentifier: 'SRM_QA_Sign_Off_Automation',

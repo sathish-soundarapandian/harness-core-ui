@@ -115,7 +115,6 @@ describe('Filters reset on project change assertions', () => {
         queryParams: {
           accountId: 'accountId',
           errorBudgetRisks: ['HEALTHY'],
-          filter: '',
           monitoredServiceIdentifier: 'All',
           orgIdentifier: 'orgIdentifier',
           pageNumber: 0,
@@ -123,6 +122,7 @@ describe('Filters reset on project change assertions', () => {
           projectIdentifier: 'project1',
           sliTypes: ['All'],
           targetTypes: ['All'],
+          evaluationType: ['All'],
           userJourneyIdentifiers: ['All']
         }
       })
@@ -140,7 +140,6 @@ describe('Filters reset on project change assertions', () => {
         queryParams: {
           accountId: 'accountId',
           errorBudgetRisks: undefined,
-          filter: '',
           monitoredServiceIdentifier: 'All',
           orgIdentifier: 'orgIdentifier',
           pageNumber: 0,
@@ -148,6 +147,7 @@ describe('Filters reset on project change assertions', () => {
           projectIdentifier: 'project2',
           sliTypes: ['All'],
           targetTypes: ['All'],
+          evaluationType: ['All'],
           userJourneyIdentifiers: ['All']
         }
       })
