@@ -13,8 +13,15 @@ import { Layout, Button, PageError } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ApprovalInstanceResponse, ExecutionNode, ExecutionGraph } from 'services/pipeline-ng'
 import { useGetApprovalInstance, ResponseApprovalInstanceResponse } from 'services/pipeline-ng'
-import { isExecutionWaiting, isExecutionFailed, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
+import {
+  isExecutionWaiting,
+  isExecutionFailed,
+  isExecutionWaitingForInput,
+  isExecutionWaitingForIntervention
+} from '@pipeline/utils/statusHelpers'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
+import { ManualInterventionTab } from '@pipeline/components/execution/StepDetails/tabs/ManualInterventionTab/ManualInterventionTab'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
 import { PipelineDetailsTab } from '@pipeline/components/execution/StepDetails/tabs/PipelineDetailsTab/PipelineDetailsTab'
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
@@ -30,6 +37,7 @@ enum ApprovalStepTab {
   PIPELINE_DETAILS = 'PIPELINE_DETAILS',
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
+  MANUAL_INTERVENTION = 'MANUAL_INTERVENTION',
   STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS',
   POLICY_ENFORCEMENT = 'POLICY_ENFORCEMENT'
 }
@@ -56,13 +64,20 @@ export interface BaseApprovalViewProps extends StepDetailProps {
 }
 
 export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactElement | null {
-  const { step, mock, approvalTabComponent: ApprovalTabComponent, executionMetadata } = props
+  const {
+    step,
+    stageType = StageType.DEPLOY,
+    mock,
+    approvalTabComponent: ApprovalTabComponent,
+    executionMetadata
+  } = props
   const approvalInstanceId = get(step, 'executableResponses[0].async.callbackIds[0]') || ''
   const manuallySelected = React.useRef(false)
   const [activeTab, setActiveTab] = React.useState(ApprovalStepTab.APPROVAL)
   const isWaiting = isExecutionWaiting(step.status)
   const isStepExecutionFailed = isExecutionFailed(step.status)
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
+  const isManualInterruption = isExecutionWaitingForIntervention(step.status)
   const shouldShowExecutionInputs = !!step.executionInputConfigured
   const shouldShowPolicyEnforcement = !!step?.outcomes?.policyOutput?.policySetDetails
   const { message, responseMessages } = step.failureInfo || {}
@@ -110,10 +125,16 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
       let tab = ApprovalStepTab.APPROVAL
       if (isWaitingOnExecInputs) {
         tab = ApprovalStepTab.STEP_EXECUTION_INPUTS
+      } else if (isManualInterruption) {
+        tab = ApprovalStepTab.MANUAL_INTERVENTION
       }
       setActiveTab(tab)
     }
-  }, [step.identifier, isWaitingOnExecInputs])
+
+    return () => {
+      manuallySelected.current = false
+    }
+  }, [step.identifier, isWaitingOnExecInputs, isManualInterruption])
 
   if (error || (isStepExecutionFailed && failureErrorMessage)) {
     return (
@@ -186,6 +207,14 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
           />
         }
       />
+      {isManualInterruption && (
+        <Tabs.Tab
+          id={ApprovalStepTab.MANUAL_INTERVENTION}
+          key={ApprovalStepTab.MANUAL_INTERVENTION}
+          title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
+          panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
+        />
+      )}
       {shouldShowPolicyEnforcement ? (
         <Tabs.Tab
           id={ApprovalStepTab.POLICY_ENFORCEMENT}

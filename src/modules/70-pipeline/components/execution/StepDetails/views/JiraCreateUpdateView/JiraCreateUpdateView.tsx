@@ -14,7 +14,9 @@ import type { ExecutionNode, JiraIssueKeyNG } from 'services/pipeline-ng'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
 import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs/ExecutionInputs/ExecutionInputs'
-import { isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
+import { isExecutionWaitingForInput, isExecutionWaitingForIntervention } from '@pipeline/utils/statusHelpers'
+import { StageType } from '@pipeline/utils/stageHelpers'
+import { ManualInterventionTab } from '@pipeline/components/execution/StepDetails/tabs/ManualInterventionTab/ManualInterventionTab'
 
 import { StepDetailsTab } from '../../tabs/StepDetailsTab/StepDetailsTab'
 import { PolicyEvaluationContent } from '../../common/ExecutionContent/PolicyEvaluationContent/PolicyEvaluationContent'
@@ -26,6 +28,7 @@ enum ApprovalStepTab {
   STEP_DETAILS = 'STEP_DETAILS',
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
+  MANUAL_INTERVENTION = 'MANUAL_INTERVENTION',
   STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS',
   POLICY_ENFORCEMENT = 'POLICY_ENFORCEMENT'
 }
@@ -35,12 +38,13 @@ export interface JiraCreateUpdateViewProps extends StepDetailProps {
 }
 
 export function JiraCreateUpdateView(props: JiraCreateUpdateViewProps): React.ReactElement | null {
-  const { step, executionMetadata } = props
+  const { step, stageType = StageType.DEPLOY, executionMetadata } = props
   const issue = get(step, 'outcomes.issue', {}) as JiraIssueKeyNG
   const { getString } = useStrings()
   const manuallySelected = React.useRef(false)
   const [activeTab, setActiveTab] = React.useState(ApprovalStepTab.STEP_DETAILS)
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
+  const isManualInterruption = isExecutionWaitingForIntervention(step.status)
   const shouldShowExecutionInputs = !!step.executionInputConfigured
   const shouldShowPolicyEnforcement = !!step?.outcomes?.policyOutput?.policySetDetails
   const labels = []
@@ -60,10 +64,16 @@ export function JiraCreateUpdateView(props: JiraCreateUpdateViewProps): React.Re
       let tab = ApprovalStepTab.STEP_DETAILS
       if (isWaitingOnExecInputs) {
         tab = ApprovalStepTab.STEP_EXECUTION_INPUTS
+      } else if (isManualInterruption) {
+        tab = ApprovalStepTab.MANUAL_INTERVENTION
       }
       setActiveTab(tab)
     }
-  }, [step.identifier, isWaitingOnExecInputs])
+
+    return () => {
+      manuallySelected.current = false
+    }
+  }, [step.identifier, isWaitingOnExecInputs, isManualInterruption])
 
   return (
     <Tabs
@@ -105,6 +115,14 @@ export function JiraCreateUpdateView(props: JiraCreateUpdateViewProps): React.Re
           />
         }
       />
+      {isManualInterruption && (
+        <Tabs.Tab
+          id={ApprovalStepTab.MANUAL_INTERVENTION}
+          key={ApprovalStepTab.MANUAL_INTERVENTION}
+          title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
+          panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
+        />
+      )}
       {shouldShowPolicyEnforcement ? (
         <Tabs.Tab
           id={ApprovalStepTab.POLICY_ENFORCEMENT}
