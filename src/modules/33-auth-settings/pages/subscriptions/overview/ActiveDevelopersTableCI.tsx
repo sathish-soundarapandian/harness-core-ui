@@ -17,23 +17,15 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { PageActiveServiceDTO, LicenseUsageDTO, useDownloadActiveServiceCSVReport } from 'services/cd-ng'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'
-import ServiceDropdown from '@common/ServiceDropdown/ServiceDropdown'
+import DeveloperDropdown from '@common/DeveloperDropdown/DeveloperDropdown'
 
 import type { SortBy } from './types'
-import {
-  ServiceNameCell,
-  OrganizationCell,
-  ProjectCell,
-  LastModifiedServiceIdCell,
-  ServiceInstancesCell,
-  LastDeployedCell,
-  LicenseConsumedCell
-} from './ServiceLicenseTableCells'
+import { DeveloperNameCell, OrganizationCell, ProjectCell, LastBuildCell } from './CIusageTableCells'
 import { getInfoIcon } from './UsageInfoCard'
 import pageCss from '../SubscriptionsPage.module.scss'
 
 const DEFAULT_PAGE_INDEX = 0
-const DEFAULT_PAGE_SIZE = 30
+const DEFAULT_PAGE_SIZE = 10
 export interface ActiveDevelopersTableCI {
   data: PageActiveServiceDTO
   gotoPage: (pageNumber: number) => void
@@ -42,10 +34,9 @@ export interface ActiveDevelopersTableCI {
   updateFilters: (
     orgId: SelectOption | undefined,
     projId: SelectOption | undefined,
-    serviceId: SelectOption | undefined
+    developerId: SelectOption | undefined
   ) => void
   servicesLoading: boolean
-  licenseType: string
 }
 
 export function ActiveDevelopersTableCI({
@@ -54,8 +45,7 @@ export function ActiveDevelopersTableCI({
   sortBy,
   setSortBy,
   updateFilters,
-  servicesLoading,
-  licenseType
+  servicesLoading
 }: ActiveDevelopersTableCI): React.ReactElement {
   const { getString } = useStrings()
   const {
@@ -90,11 +80,11 @@ export function ActiveDevelopersTableCI({
     }
     return [
       {
-        Header: NameHeader('common.purpose.service', 'common.subscriptions.usage.cdServiceTooltip'),
+        Header: NameHeader('common.purpose.developer'),
         accessor: 'name',
         width: '14%',
         disableSortBy: true,
-        Cell: ServiceNameCell
+        Cell: DeveloperNameCell
       },
       {
         Header: NameHeader('common.organizations'),
@@ -111,66 +101,19 @@ export function ActiveDevelopersTableCI({
         Cell: ProjectCell
       },
       {
-        Header: NameHeader('common.serviceId'),
-        accessor: 'identifier',
-        disableSortBy: true,
-        width: '18%',
-        Cell: LastModifiedServiceIdCell
-      },
-      {
-        Header: NameHeader('common.servicesInstances'),
-        accessor: 'serviceInstances',
-        width: '15%',
-        Cell: ServiceInstancesCell,
-        serverSortProps: getServerSortProps('common.servicesInstances')
-      },
-      {
-        Header: NameHeader('common.lastDeployed'),
-        accessor: 'lastDeployed',
+        Header: NameHeader('common.lastBuildDate'),
+        accessor: 'lastBuildDate',
         width: '12%',
-        Cell: LastDeployedCell,
-        serverSortProps: getServerSortProps('common.lastDeployed')
-      },
-      ...(licenseType === 'SERVICES'
-        ? [
-            {
-              Header: NameHeader('common.licensesConsumed'),
-              accessor: 'licensesConsumed',
-              width: '15%',
-              Cell: LicenseConsumedCell,
-              serverSortProps: getServerSortProps('licensesConsumed')
-            }
-          ]
-        : [])
+        Cell: LastBuildCell,
+        serverSortProps: getServerSortProps('common.lastBuildDate')
+      }
     ] as unknown as Column<LicenseUsageDTO>[]
   }, [currentOrder, currentSort])
-  const { accountId } = useParams<AccountPathProps>()
   const [selectedOrg, setSelectedOrg] = useState<SelectOption | undefined>()
   const [selectedProj, setSelectedProj] = useState<SelectOption | undefined>()
-  const [selectedService, setSelectedService] = useState<SelectOption | undefined>()
-  const activeServiceText = `${totalElements}`
-  const [initialContent, setInitialContent] = useState<string>('')
+  const [selectedDeveloper, setSelectedDeveloper] = useState<SelectOption | undefined>()
   const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
-  const { data: dataInCsv, refetch } = useDownloadActiveServiceCSVReport({
-    queryParams: {
-      accountIdentifier: accountId
-    },
-    lazy: true
-  })
-  useEffect(() => {
-    if (dataInCsv) {
-      ;(dataInCsv as unknown as Response)
-        .clone()
-        .text()
-        .then((cont: string) => {
-          setInitialContent(cont)
-        })
-    }
-  }, [dataInCsv])
 
-  useEffect(() => {
-    refetch()
-  }, [refetch])
   const formattedTime = moment(timeValue).format('MMM DD YYYY hh:mm:ss')
   return (
     <Card className={pageCss.outterCard}>
@@ -200,11 +143,11 @@ export function ActiveDevelopersTableCI({
               setSelectedProj(proj)
             }}
           />
-          <ServiceDropdown
-            value={selectedService}
+          <DeveloperDropdown
+            value={selectedDeveloper}
             className={pageCss.orgDropdown}
-            onChange={service => {
-              setSelectedService(service)
+            onChange={developer => {
+              setSelectedDeveloper(developer)
             }}
           />
           <Text
@@ -212,7 +155,7 @@ export function ActiveDevelopersTableCI({
             font={{ variation: FontVariation.LEAD }}
             color={Color.PRIMARY_7}
             onClick={() => {
-              updateFilters(selectedOrg, selectedProj, selectedService)
+              updateFilters(selectedOrg, selectedProj, selectedDeveloper)
             }}
           >
             Update
@@ -239,7 +182,7 @@ export function ActiveDevelopersTableCI({
           />
         ) : (
           <NoDataCard
-            message={getString('common.noActiveServiceData')}
+            message={getString('common.noActiveDeveloperData')}
             className={pageCss.noDataCard}
             containerClassName={pageCss.noDataCardContainer}
           />

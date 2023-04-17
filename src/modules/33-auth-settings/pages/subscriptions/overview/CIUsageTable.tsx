@@ -8,7 +8,7 @@
 import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
-import { useLisCDActiveServices, LisCDActiveServicesQueryParams } from 'services/cd-ng'
+import { useCiLicenseUsage, CiLicenseUsageQueryParams } from 'services/ci'
 import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/hooks'
 import { usePreferenceStore, PreferenceScope } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -22,14 +22,14 @@ interface CDUsageTableProps {
   module: ModuleName
   licenseData: ModuleLicenseDTO
 }
-const DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT = ['serviceInstances', 'DESC']
+const DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT = ['lastBuild', 'DESC']
 const DEFAULT_PAGE_INDEX = 0
-const DEFAULT_PAGE_SIZE = 20
-type ProcessedActiveServiceListPageQueryParams = RequiredPick<LisCDActiveServicesQueryParams, 'page' | 'size' | 'sort'>
+const DEFAULT_PAGE_SIZE = 10
+type ProcessedCIUsageServiceListPageQueryParams = RequiredPick<CiLicenseUsageQueryParams, 'page' | 'size' | 'sort'>
 const queryParamOptions = {
   parseArrays: true,
   decoder: queryParamDecodeAll(),
-  processQueryParams(params: LisCDActiveServicesQueryParams): ProcessedActiveServiceListPageQueryParams {
+  processQueryParams(params: CiLicenseUsageQueryParams): ProcessedCIUsageServiceListPageQueryParams {
     return {
       ...params,
       page: params.page ?? DEFAULT_PAGE_INDEX,
@@ -41,27 +41,26 @@ const queryParamOptions = {
 
 const CIUsageTable: React.FC<CDUsageTableProps> = props => {
   const { licenseData } = props
-
-  const { updateQueryParams } = useUpdateQueryParams<Partial<LisCDActiveServicesQueryParams>>()
+  const { updateQueryParams } = useUpdateQueryParams<Partial<CiLicenseUsageQueryParams>>()
   const { accountId } = useParams<AccountPathProps>()
   const { preference: sortingPreference, setPreference: setSortingPreference } = usePreferenceStore<string | undefined>(
     PreferenceScope.USER,
-    'ActiveServiceSortingPreference'
+    'CIUsageTableSortingPreference'
   )
-  const queryParams = useQueryParams<LisCDActiveServicesQueryParams>(queryParamOptions)
+  const queryParams = useQueryParams<CiLicenseUsageQueryParams>(queryParamOptions)
   const { page, size } = queryParams
   const [orgName, setOrgName] = useState<string>('')
   const [projName, setProjName] = useState<string>('')
-  const [serviceName, setServiceName] = useState<string>('')
+  const [developer, setDeveloper] = useState<string>('')
   const sort = useMemo(
     () => (sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort),
     [queryParams.sort, sortingPreference]
   )
-  const { data: activeServiceList, loading } = useMutateAsGet(useLisCDActiveServices, {
+  const { data: activeDevelopersList, loading } = useMutateAsGet(useCiLicenseUsage, {
     body: {
       orgIdentifier: orgName,
       projectIdentifier: projName,
-      serviceIdentifier: serviceName
+      developer: developer
     },
     queryParams: {
       accountIdentifier: accountId,
@@ -74,16 +73,16 @@ const CIUsageTable: React.FC<CDUsageTableProps> = props => {
   const updateFilters = (
     orgId: SelectOption | undefined,
     projId: SelectOption | undefined,
-    serviceId: SelectOption | undefined
+    developerId: SelectOption | undefined
   ) => {
     setOrgName(orgId?.value as string)
     setProjName(projId?.value as string)
-    setServiceName(serviceId?.value as string)
+    setDeveloper(developerId?.value as string)
   }
   return (
     <ActiveDevelopersTableCI
       gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
-      data={activeServiceList?.data || {}}
+      data={activeDevelopersList?.data || {}}
       setSortBy={sortArray => {
         setSortingPreference(JSON.stringify(sortArray))
         updateQueryParams({ sort: sortArray })
@@ -91,7 +90,6 @@ const CIUsageTable: React.FC<CDUsageTableProps> = props => {
       sortBy={sort}
       updateFilters={updateFilters}
       servicesLoading={loading}
-      licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType || ''}
     />
   )
 }

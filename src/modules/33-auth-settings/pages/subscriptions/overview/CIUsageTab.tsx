@@ -93,11 +93,11 @@ const CIUsageTab = ({
   function getTabComponent(): React.ReactElement | null {
     switch (selectedCIUsageTab.name) {
       case CIUsageTabNames.BREAKDOWN:
-        return <SubscriptionPlans module={selectedModule} />
+        return <CIUsageTable module={selectedModule} />
       case CIUsageTabNames.TREND:
       default:
         return (
-          <SubscriptionOverview
+          <CIUsageTable
             accountName={accountData?.name}
             module={selectedModule}
             licenseData={licenseData}
