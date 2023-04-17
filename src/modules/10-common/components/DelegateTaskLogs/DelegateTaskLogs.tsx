@@ -22,10 +22,9 @@ import {
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import type { CellProps, Column, Renderer, Row, UseExpandedRowProps } from 'react-table'
-import { isEmpty, noop } from 'lodash-es'
+import { noop } from 'lodash-es'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetTasksLog, GetTasksLogQueryParams, DelegateStackDriverLog } from 'services/portal'
-import type { ExecutionNode } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { useTrackEvent } from '@common/hooks/useTelemetry'
 import { DelegateActions } from '@common/constants/TrackingConstants'
@@ -37,40 +36,34 @@ export enum TaskContext {
   ConnectorValidation = 'Connector_Validation'
 }
 
-interface Task {
-  taskId: string
-  taskName: string
+export interface DelegateTaskLogsTelemetry {
+  taskContext: TaskContext
+  hasError: boolean
 }
 
-interface DelegateTaskLogsProps {
-  step: ExecutionNode
-  telemetry: {
-    taskContext: TaskContext
-    hasError: boolean
-  }
-  taskList: Task[]
+export interface DelegateTaskLogsProps {
+  taskIds: string[]
+  startTime: number
+  endTime: number
+  telemetry: DelegateTaskLogsTelemetry
 }
 
-export default function DelegateTaskLogs({ step, telemetry, taskList }: DelegateTaskLogsProps): JSX.Element {
+export default function DelegateTaskLogs({
+  telemetry,
+  taskIds,
+  startTime,
+  endTime
+}: DelegateTaskLogsProps): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [currentPageToken, setCurrentPageToken] = useState<string | undefined>('')
   const { getString } = useStrings()
   const [previousPageStack, setPreviousPageStack] = useState<Array<string>>([])
   const pageSize = 100
-  const timePadding = 60 * 5 // 5 minutes
 
   useTrackEvent(DelegateActions.DelegateTaskLogsViewed, {
     task_context: telemetry.taskContext,
     has_error: telemetry.hasError
   })
-
-  const delegateInfoList = step.delegateInfoList?.map(delegate => delegate.taskId || '')?.filter(a => a)
-  const taskIdsFromProps = taskList.map(task => task.taskId)
-  const taskIds = !isEmpty(delegateInfoList) ? delegateInfoList : taskIdsFromProps
-  /* istanbul ignore next */
-  const startTime = Math.floor((step?.startTs as number) / 1000) - timePadding
-  /* istanbul ignore next */
-  const endTime = Math.floor((step?.endTs || Date.now()) / 1000) + timePadding
 
   const queryParams: GetTasksLogQueryParams = {
     accountId,

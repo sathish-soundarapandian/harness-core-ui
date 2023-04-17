@@ -14,7 +14,6 @@ import {
   Button,
   Text,
   StepProps,
-  Container,
   ButtonVariation,
   ButtonSize,
   HarnessDocTooltip
@@ -48,6 +47,8 @@ import { connectorsTrackEventMap } from '@connectors/utils/connectorEvents'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
+import DelegateTaskLogsButton from '@common/components/DelegateTaskLogs/DelegateTaskLogsButton'
+import { TaskContext } from '@common/components/DelegateTaskLogs/DelegateTaskLogs'
 import Suggestions from '../ErrorSuggestions/ErrorSuggestionsCe'
 import css from './ConnectorTestConnection.module.scss'
 
@@ -65,7 +66,7 @@ interface ConnectorTestConnectionProps {
   url?: string
   isLastStep?: boolean
   name?: string
-  connectorInfo: ConnectorInfoDTO | void
+  connectorInfo: ConnectorInfoDTO
   helpPanelReferenceId?: string
   gitDetails?: EntityGitDetails
   stepIndex?: number // will make this mandatory once all usages sends the value
@@ -489,6 +490,9 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
         refetchDelegateFromId()
       }
     }, [testConnectionResponse?.data?.delegateId])
+
+    const timePadding = 60 * 5 // 5 minutes
+
     return (
       <Layout.Vertical>
         <Layout.Vertical>
@@ -499,20 +503,35 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
           {prevStepData?.delegateType === DelegateTypes.DELEGATE_IN_CLUSTER ? null : (
             <RenderUrlInfo type={props.type} prevStepData={prevStepData} url={props.url} />
           )}
-          <Container className={cx(css.content, { [css.contentMinHeight]: props.isStep })} padding={{ top: 'xxlarge' }}>
+          <Layout.Vertical
+            className={cx(css.content, { [css.contentMinHeight]: props.isStep })}
+            padding={{ top: 'xxlarge' }}
+            spacing="large"
+          >
             <StepsProgress
               steps={[getStepOne()]}
               intent={stepDetails.intent}
               current={stepDetails.step}
               currentStatus={stepDetails.status}
             />
-
+            {connectorInfo?.spec?.executeOnDelegate ? (
+              <DelegateTaskLogsButton
+                startTime={(testConnectionResponse?.data?.testedAt || 0) - timePadding}
+                endTime={(testConnectionResponse?.data?.testedAt || 0) + timePadding * 2}
+                taskIds={[testConnectionResponse?.data?.taskId || '']}
+                telemetry={{
+                  taskContext: TaskContext.ConnectorValidation,
+                  hasError: testConnectionResponse?.data?.status !== 'SUCCESS'
+                }}
+                areLogsAvailable={!!(testConnectionResponse?.data?.delegateId && testConnectionResponse?.data?.taskId)}
+              />
+            ) : null}
             {stepDetails.status === 'DONE' ? (
-              <Text color={Color.GREEN_600} font={{ weight: 'bold' }} padding={{ top: 'large' }}>
+              <Text color={Color.GREEN_600} font={{ weight: 'bold' }}>
                 {getString('connectors.testConnectionStep.verificationSuccessful')}
               </Text>
             ) : null}
-          </Container>
+          </Layout.Vertical>
         </Layout.Vertical>
         {props.isStep ? (
           <Layout.Horizontal spacing="large" className={css.btnWrapper}>

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout, Icon, useToggleOpen, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
+import { Text, Layout, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Link } from 'react-router-dom'
 import { defaultTo, isArray, isEmpty, isNil, isUndefined } from 'lodash-es'
@@ -21,10 +21,8 @@ import {
   isExecutionComplete,
   isExecutionCompletedWithBadState
 } from '@pipeline/utils/statusHelpers'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-import { DelegateTaskLogsModal, TaskContext } from '@common/components/DelegateTaskLogs/DelegateTaskLogs'
-import { isOnPrem } from '@common/utils/utils'
+import { TaskContext } from '@common/components/DelegateTaskLogs/DelegateTaskLogs'
+import DelegateTaskLogsButton from '@common/components/DelegateTaskLogs/DelegateTaskLogsButton'
 import { encodeURIWithReservedChars } from './utils'
 
 import css from './StepDetails.module.scss'
@@ -60,8 +58,6 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
   const progressPercentage = step?.progressData?.progressPercentage
   const timeout = step?.stepParameters?.timeout as any
   const [taskList, setTaskList] = React.useState<Array<ExecutableResponse>>([])
-  const { isOpen, open: openDelegateTaskLogsModal, close: closeDelegateTaskLogsModal } = useToggleOpen(false)
-  const DELEGATE_TASK_LOGS_ENABLED = useFeatureFlag(FeatureFlag.DEL_FETCH_TASK_LOG_API)
   const { openDelegateSelectionLogsModal } = useDelegateSelectionLogsModal()
 
   React.useEffect(() => {
@@ -98,11 +94,11 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
     return !!delegateList?.find((item: DelegateInfo) => item.taskId === taskId)
   }
 
-  const delegateLogsAvailable =
-    (step.startTs !== undefined && step.delegateInfoList && step.delegateInfoList.length > 0) ||
-    (step.startTs !== undefined && step.stepDetails && Object.keys(step.stepDetails).length > 0)
-
-  const delegateInfoList = !isEmpty(step.delegateInfoList) ? step.delegateInfoList : taskList
+  const delegateLogsAvailable = step.startTs !== undefined && step.delegateInfoList && step.delegateInfoList.length > 0
+  const timePadding = 60 * 5 // 5 minutes
+  const taskIds = step.delegateInfoList?.map(delegate => delegate.taskId || '')?.filter(a => a)
+  const startTime = Math.floor((step?.startTs as number) / 1000) - timePadding
+  const endTime = Math.floor((step?.endTs || Date.now()) / 1000) + timePadding
 
   return (
     <table className={css.detailsTable}>
@@ -285,31 +281,16 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                     )
                   </div>
                 )}
-                {DELEGATE_TASK_LOGS_ENABLED && !isOnPrem() ? (
-                  <>
-                    <Button
-                      variation={ButtonVariation.SECONDARY}
-                      size={ButtonSize.SMALL}
-                      onClick={openDelegateTaskLogsModal}
-                      width={210}
-                      disabled={!delegateLogsAvailable}
-                      tooltip={getString('common.noDelegateLogs')}
-                      tooltipProps={{ disabled: delegateLogsAvailable }}
-                    >
-                      {getString('common.viewText')} {getString('common.logs.delegateTaskLogs')}
-                    </Button>
-                    <DelegateTaskLogsModal
-                      isOpen={isOpen}
-                      close={closeDelegateTaskLogsModal}
-                      step={step}
-                      taskList={taskList as Task[]}
-                      telemetry={{
-                        taskContext: TaskContext.PipelineStep,
-                        hasError: isExecutionCompletedWithBadState(step.status)
-                      }}
-                    />
-                  </>
-                ) : null}
+                <DelegateTaskLogsButton
+                  startTime={startTime}
+                  endTime={endTime}
+                  taskIds={taskIds || []}
+                  telemetry={{
+                    taskContext: TaskContext.PipelineStep,
+                    hasError: isExecutionCompletedWithBadState(step.status)
+                  }}
+                  areLogsAvailable={delegateLogsAvailable}
+                />
               </Layout.Vertical>
             </td>
           </tr>
