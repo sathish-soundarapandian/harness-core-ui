@@ -20,7 +20,7 @@ import type {
   ServiceYaml
 } from 'services/cd-ng'
 import { useGetServiceAccessListQuery, useGetServicesYamlAndRuntimeInputsQuery } from 'services/cd-ng-rq'
-import { yamlParse } from '@common/utils/YamlHelperMethods'
+import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ServiceData } from './DeployServiceEntityUtils'
 
@@ -50,8 +50,15 @@ export interface UseGetServicesDataReturn {
 const STALE_TIME = 60 * 1000 * 15
 
 export function useGetServicesData(props: UseGetServicesDataProps): UseGetServicesDataReturn {
-  const { deploymentType, gitOpsEnabled, serviceIdentifiers, deploymentTemplateIdentifier, versionLabel, lazyService } =
-    props
+  const {
+    deploymentType,
+    gitOpsEnabled,
+    serviceIdentifiers,
+    deploymentTemplateIdentifier,
+    versionLabel,
+    lazyService,
+    deploymentMetadata
+  } = props
   const [servicesList, setServicesList] = useState<ServiceYaml[]>([])
   const [servicesData, setServicesData] = useState<ServiceData[]>([])
   const [nonExistingServiceIdentifiers, setNonExistingServiceIdentifiers] = useState<string[]>([])
@@ -73,8 +80,8 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
         type: deploymentType as ServiceDefinition['type'],
         gitOpsEnabled,
         deploymentTemplateIdentifier,
-        versionLabel
-        // deploymentMetadataYaml: yamlStringify(deploymentMetadata)
+        versionLabel,
+        deploymentMetadataYaml: yamlStringify(deploymentMetadata)
       }
     },
     {

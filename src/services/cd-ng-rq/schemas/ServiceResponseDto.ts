@@ -17,5 +17,6 @@ export interface ServiceResponseDto {
   orgIdentifier?: string
   projectIdentifier?: string
   tags?: { [key: string]: string }
+  v2Service?: boolean
   yaml?: string
 }
