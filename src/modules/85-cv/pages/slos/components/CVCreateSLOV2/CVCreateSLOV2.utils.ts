@@ -708,10 +708,10 @@ export const getCustomOptionsForSLOTargetChart = (
 }
 
 export const convertServiceLevelIndicatorToSLIFormData = (serviceLevelIndicator: ServiceLevelIndicatorDTO): SLIForm => {
-  const { type, name, identifier, healthSourceRef, sliMissingDataType, spec } = serviceLevelIndicator
+  const { type, name, identifier, healthSourceRef, spec } = serviceLevelIndicator
   const isWindow = type === EvaluationType.WINDOW
   const { type: SLIMetricType, spec: SLIMetricSpec } = spec
-  const { eventType, metric1, metric2, thresholdValue, thresholdType } = isWindow
+  const { eventType, metric1, metric2, thresholdValue, thresholdType, sliMissingDataType } = isWindow
     ? ((SLIMetricSpec || {}) as ThresholdSLIMetricSpec & RatioSLIMetricSpec)
     : spec
 

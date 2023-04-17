@@ -20,7 +20,8 @@ import type {
   ServiceLevelIndicatorDTO,
   ServiceLevelIndicatorSpec,
   RatioSLIMetricSpec,
-  ThresholdSLIMetricSpec
+  ThresholdSLIMetricSpec,
+  WindowBasedServiceLevelIndicatorSpec
 } from 'services/cv'
 import type { SLOTargetChartWithAPIGetSliGraphProps } from '../SLOTargetChart/SLOTargetChart.types'
 
@@ -82,7 +83,7 @@ export interface SLOV2Form {
   [SLOV2FormFields.NOTIFICATION_RULE_REFS]: ServiceLevelObjectiveV2DTO['notificationRuleRefs']
   [SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS]?: SLOObjective[]
   [SLOV2FormFields.SERVICE_LEVEL_INDICATOR_TYPE]?: SimpleServiceLevelObjectiveSpec['serviceLevelIndicatorType']
-  [SLOV2FormFields.SLI_MISSING_DATA_TYPE]?: ServiceLevelIndicatorDTO['sliMissingDataType']
+  [SLOV2FormFields.SLI_MISSING_DATA_TYPE]?: WindowBasedServiceLevelIndicatorSpec['sliMissingDataType']
   [SLOV2FormFields.SLI_METRIC_TYPE]?: ServiceLevelIndicatorSpec['type']
   [SLOV2FormFields.EVENT_TYPE]?: RatioSLIMetricSpec['eventType']
   [SLOV2FormFields.GOOD_REQUEST_METRIC]?: RatioSLIMetricSpec['metric1']

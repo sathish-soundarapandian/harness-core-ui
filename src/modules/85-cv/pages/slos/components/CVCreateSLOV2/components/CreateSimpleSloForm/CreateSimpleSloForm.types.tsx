@@ -17,7 +17,8 @@ import type {
   NotificationRuleRefDTO,
   TimeGraphResponse,
   GetMetricOnboardingGraphQueryParams,
-  RestResponseTimeGraphResponse
+  RestResponseTimeGraphResponse,
+  WindowBasedServiceLevelIndicatorSpec
 } from 'services/cv'
 import type { SLOTargetChartWithAPIGetSliGraphProps } from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart.types'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
@@ -31,7 +32,7 @@ export interface SLIForm {
   [SLOV2FormFields.GOOD_REQUEST_METRIC]?: string
   [SLOV2FormFields.OBJECTIVE_VALUE]?: number
   [SLOV2FormFields.OBJECTIVE_COMPARATOR]?: ThresholdSLIMetricSpec['thresholdType']
-  [SLOV2FormFields.SLI_MISSING_DATA_TYPE]: ServiceLevelIndicatorDTO['sliMissingDataType']
+  [SLOV2FormFields.SLI_MISSING_DATA_TYPE]: WindowBasedServiceLevelIndicatorSpec['sliMissingDataType']
   [SLOV2FormFields.NAME]?: string
   [SLOV2FormFields.IDENTIFIER]?: string
   [SLOV2FormFields.HEALTH_SOURCE_REF]?: string

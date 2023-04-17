@@ -456,12 +456,15 @@ export type AzureInheritFromDelegateDetails = AzureCredentialSpec & {
 
 export type AzureKeyVaultConnectorDTO = ConnectorConfigDTO & {
   azureEnvironmentType?: 'AZURE' | 'AZURE_US_GOVERNMENT'
-  clientId: string
+  azureManagedIdentityType?: 'SystemAssignedManagedIdentity' | 'UserAssignedManagedIdentity'
+  clientId?: string
   default?: boolean
   delegateSelectors?: string[]
-  secretKey: string
+  managedClientId?: string
+  secretKey?: string
   subscription: string
-  tenantId: string
+  tenantId?: string
+  useManagedIdentity?: boolean
   vaultName: string
 }
 
@@ -1867,6 +1870,7 @@ export interface Error {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2303,6 +2307,7 @@ export interface Failure {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4144,11 +4149,11 @@ export interface PartialSchemaDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   namespace?: string
@@ -4899,6 +4904,7 @@ export interface ResponseMessage {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4913,6 +4919,7 @@ export interface ResponseMessage {
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'DELEGATE_RESTART'
+    | 'USER_MARKED_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -6040,7 +6047,6 @@ export interface ServiceLevelIndicatorDTO {
   healthSourceRef?: string
   identifier?: string
   name?: string
-  sliMissingDataType?: 'Good' | 'Bad' | 'Ignore'
   spec: ServiceLevelIndicatorSpec
   type?: 'Window' | 'Request'
 }
@@ -6860,11 +6866,11 @@ export interface YamlSchemaMetadata {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   )[]
@@ -6886,11 +6892,11 @@ export interface YamlSchemaWithDetails {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   schema?: JsonNode
