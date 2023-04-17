@@ -22,12 +22,6 @@
   flex-grow: 1;
   background: var(--form-bg) !important;
 }
-:global {
-  .FormikForm--main > div {
-    display: flex;
-    height: 100%;
-  }
-}
 
 .crossIcon {
   position: absolute;
@@ -42,6 +36,10 @@
 .form {
   display: flex;
   height: 100%;
+  > div > div {
+    display: flex;
+    height: 100%;
+  }
 }
 .flex {
   flex: 1;
