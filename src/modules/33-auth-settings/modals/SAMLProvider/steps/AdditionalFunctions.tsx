@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import {
   Button,
   ButtonVariation,
@@ -6,15 +13,23 @@ import {
   FormikForm,
   FormInput,
   Layout,
+  ModalErrorHandlerBinding,
   StepProps,
-  Text
+  Text,
+  ModalErrorHandler
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import * as yup from 'yup'
 import React from 'react'
 import { Formik } from 'formik'
+import { useParams } from 'react-router-dom'
+import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
+import { useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { FormValues, Providers } from '../utils'
+import { useUploadSamlMetaData } from 'services/cd-ng'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { createFormData, FormValues, Providers } from '../utils'
 import css from '../useSAMLProvider.module.scss'
 
 interface AdditionalFunctionsForm {
@@ -26,9 +41,29 @@ interface AdditionalFunctionsForm {
   entityIdentifier: string
 }
 
+const handleSuccess = (
+  successCallback: ToasterProps['showSuccess'],
+  isCreate: boolean,
+  createText: string,
+  updateText: string
+): void => {
+  successCallback(isCreate ? createText : updateText, 5000)
+}
+
 const AdditionalFunctions: React.FC<StepProps<FormValues>> = props => {
   const samlProviderType = props.prevStepData?.samlProviderType
   const { getString } = useStrings()
+  const { accountId } = useParams<AccountPathProps>()
+  const [modalErrorHandler, setModalErrorHandler] = React.useState<ModalErrorHandlerBinding>()
+  const { getRBACErrorMessage } = useRBACError()
+  const { showSuccess } = useToaster()
+
+  const { mutate: uploadSamlSettings, loading: uploadingSamlSettings } = useUploadSamlMetaData({
+    queryParams: {
+      accountId
+    }
+  })
+
   return (
     <Formik<AdditionalFunctionsForm>
       initialValues={{ ...props.prevStepData } as AdditionalFunctionsForm}
@@ -50,7 +85,21 @@ const AdditionalFunctions: React.FC<StepProps<FormValues>> = props => {
           then: yup.string().trim().required(getString('common.validation.clientSecretRequired'))
         })
       })}
-      onSubmit={_values => {
+      onSubmit={async values => {
+        try {
+          const response = await uploadSamlSettings(createFormData(values as FormValues) as any)
+
+          if (response) {
+            handleSuccess(
+              showSuccess,
+              true,
+              getString('authSettings.samlProviderAddedSuccessfully'),
+              getString('authSettings.samlProviderUpdatedSuccessfully')
+            )
+          }
+        } catch (e) {
+          /* istanbul ignore next */ modalErrorHandler?.showDanger(getRBACErrorMessage(e))
+        }
         // const formDataToSubmit = createFormData({ ...props.prevStepData, ...values } as FormValues)
         // handle submit here
       }}
@@ -63,6 +112,7 @@ const AdditionalFunctions: React.FC<StepProps<FormValues>> = props => {
             </Text>
             <Layout.Vertical className={css.flex} flex={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
               <Layout.Vertical>
+                <ModalErrorHandler bind={setModalErrorHandler} />
                 <Container>
                   <Checkbox
                     name="authorization"
@@ -129,8 +179,9 @@ const AdditionalFunctions: React.FC<StepProps<FormValues>> = props => {
                 <Button
                   type="submit"
                   variation={ButtonVariation.PRIMARY}
-                  text={getString('continue')}
+                  text={getString('submit')}
                   rightIcon="chevron-right"
+                  disabled={uploadingSamlSettings}
                 />
               </Layout.Horizontal>
             </Layout.Vertical>

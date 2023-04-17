@@ -19,6 +19,8 @@ import RestrictEmailDomains from '@auth-settings/pages/Configuration/RestrictEma
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import SAMLProviderV2 from '@auth-settings/pages/Configuration/SAMLProvider/SAMLProviderV2'
 import LDAPProvider from './LDAPProvider/LDAPProvider'
 import SessionTimeOut from './SessionTimeOut/SessionTimeOut'
 import css from './Configuration.module.scss'
@@ -36,6 +38,7 @@ const Configuration: React.FC = () => {
   const params = useParams<AccountPathProps>()
   const { accountId } = params
   const { getString } = useStrings()
+  const { PL_ENABLE_MULTIPLE_IDP_SUPPORT } = useFeatureFlags()
   const [updating, setUpdating] = React.useState(false)
 
   const permissionRequest = {
@@ -95,13 +98,23 @@ const Configuration: React.FC = () => {
               canEdit={canEdit}
               setUpdating={setUpdating}
             />
-            <SAMLProvider
-              authSettings={data.resource}
-              refetchAuthSettings={refetchAuthSettings}
-              permissionRequest={permissionRequest}
-              canEdit={canEdit}
-              setUpdating={setUpdating}
-            />
+            {PL_ENABLE_MULTIPLE_IDP_SUPPORT ? (
+              <SAMLProviderV2
+                authSettings={data.resource}
+                refetchAuthSettings={refetchAuthSettings}
+                permissionRequest={permissionRequest}
+                canEdit={canEdit}
+                setUpdating={setUpdating}
+              />
+            ) : (
+              <SAMLProvider
+                authSettings={data.resource}
+                refetchAuthSettings={refetchAuthSettings}
+                permissionRequest={permissionRequest}
+                canEdit={canEdit}
+                setUpdating={setUpdating}
+              />
+            )}
             <LDAPProvider
               authSettings={data.resource}
               refetchAuthSettings={refetchAuthSettings}

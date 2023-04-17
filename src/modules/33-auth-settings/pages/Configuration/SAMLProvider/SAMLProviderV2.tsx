@@ -27,7 +27,6 @@ import { useStrings, String } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { AuthenticationSettingsResponse, SAMLSettings } from 'services/cd-ng'
 import { useDeleteSamlMetaData, useUpdateAuthMechanism, useGetSamlLoginTest } from 'services/cd-ng'
-import { useSAMLProviderModal } from '@auth-settings/modals/SAMLProvider/useSAMLProvider'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { PermissionRequest } from '@auth-settings/pages/Configuration/Authentication'
@@ -36,6 +35,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { AuthenticationMechanisms } from '@rbac/utils/utils'
+import { useSAMLProviderModalV2 } from '@auth-settings/modals/SAMLProvider/useSAMLProviderModalV2'
 import css from './SAMLProvider.module.scss'
 import cssConfiguration from '@auth-settings/pages/Configuration/Configuration.module.scss'
 
@@ -47,7 +47,7 @@ interface Props {
   setUpdating: Dispatch<SetStateAction<boolean>>
 }
 
-const SAMLProvider: React.FC<Props> = ({
+const SAMLProviderV2: React.FC<Props> = ({
   authSettings,
   refetchAuthSettings,
   permissionRequest,
@@ -59,21 +59,22 @@ const SAMLProvider: React.FC<Props> = ({
   const { showSuccess, showError } = useToaster()
   const { accountId } = useParams<AccountPathProps>()
   const [childWindow, setChildWindow] = React.useState<Window | null>(null)
+  authSettings.authenticationMechanism = AuthenticationMechanisms.SAML
   const samlEnabled = authSettings.authenticationMechanism === AuthenticationMechanisms.SAML
-  const samlSettings = authSettings.ngAuthSettings?.find(
+  const samlSettings = authSettings.ngAuthSettings?.filter(
     settings => settings.settingsType === AuthenticationMechanisms.SAML
-  ) as SAMLSettings | undefined
+  ) as SAMLSettings[]
 
   const { enabled: featureEnabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.SAML_SUPPORT
     }
   })
-  const onSuccess = (): void => {
-    refetchAuthSettings()
-  }
+  //   const onSuccess = (): void => {
+  //     refetchAuthSettings()
+  //   }
 
-  const { openSAMlProvider } = useSAMLProviderModal({ onSuccess })
+  const { openSAMlProvider } = useSAMLProviderModalV2()
 
   const {
     data: samlLoginTestData,
@@ -107,11 +108,7 @@ const SAMLProvider: React.FC<Props> = ({
   const { openDialog: confirmSamlSettingsDelete } = useConfirmationDialog({
     titleText: getString('authSettings.deleteSamlProvider'),
     contentText: (
-      <String
-        stringID="authSettings.deleteSamlProviderDescription"
-        useRichText={true}
-        vars={{ displayName: samlSettings?.displayName }}
-      />
+      <String stringID="authSettings.deleteSamlProviderDescription" useRichText={true} vars={{ displayName: '' }} />
     ),
     confirmButtonText: getString('confirm'),
     cancelButtonText: getString('cancel'),
@@ -199,7 +196,7 @@ const SAMLProvider: React.FC<Props> = ({
 
   return (
     <Container margin="xlarge" background={Color.WHITE}>
-      {samlSettings ? (
+      {samlSettings.length > 0 ? (
         <Collapse
           isOpen={samlEnabled && featureEnabled}
           collapseHeaderClassName={cx(cssConfiguration.collapseHeaderClassName, cssConfiguration.height60)}
@@ -225,57 +222,61 @@ const SAMLProvider: React.FC<Props> = ({
             </Utils.WrapOptionalTooltip>
           }
         >
-          <Container padding={{ bottom: 'large' }}>
-            <Card className={css.card}>
-              <Text color={Color.GREY_800} font={{ weight: 'bold' }} width="30%">
-                {samlSettings.displayName}
-              </Text>
-              <Text color={Color.GREY_800} width="70%">
-                {samlSettings.authorizationEnabled ? (
-                  <span>
-                    {getString('authSettings.authorizationEnabledFor')}
-                    <Text font={{ weight: 'semi-bold' }} color={Color.GREY_800} inline>
-                      {samlSettings.groupMembershipAttr}
-                    </Text>
-                  </span>
-                ) : (
-                  getString('authSettings.authorizationNotEnabled')
-                )}
-              </Text>
-              <Button
-                text={getString('test')}
-                variation={ButtonVariation.SECONDARY}
-                disabled={!!childWindow || fetchingSamlLoginTestData}
-                onClick={() => {
-                  getSamlLoginTestData()
-                }}
-              />
-              <Popover
-                interactionKind="click"
-                position="left-top"
-                content={
-                  <Menu>
-                    <MenuItem
-                      text={getString('edit')}
-                      onClick={() => openSAMlProvider(samlSettings)}
-                      disabled={!canEdit}
-                    />
-                    <RbacMenuItem
-                      text={getString('delete')}
-                      onClick={confirmSamlSettingsDelete}
-                      permission={{
-                        ...permissionRequest,
-                        permission: PermissionIdentifier.DELETE_AUTHSETTING
-                      }}
-                      disabled={deletingSamlSettings}
-                    />
-                  </Menu>
-                }
-              >
-                <Button minimal icon="Options" data-testid="provider-button" variation={ButtonVariation.ICON} />
-              </Popover>
-            </Card>
-          </Container>
+          {samlSettings.map(samlSetting => {
+            return (
+              <Container padding={{ bottom: 'large' }} key={samlSetting.identifier}>
+                <Card className={css.card}>
+                  <Text color={Color.GREY_800} font={{ weight: 'bold' }} width="30%">
+                    {samlSetting.displayName}
+                  </Text>
+                  <Text color={Color.GREY_800} width="70%">
+                    {samlSetting.authorizationEnabled ? (
+                      <span>
+                        {getString('authSettings.authorizationEnabledFor')}
+                        <Text font={{ weight: 'semi-bold' }} color={Color.GREY_800} inline>
+                          {samlSetting.groupMembershipAttr}
+                        </Text>
+                      </span>
+                    ) : (
+                      getString('authSettings.authorizationNotEnabled')
+                    )}
+                  </Text>
+                  <Button
+                    text={getString('test')}
+                    variation={ButtonVariation.SECONDARY}
+                    disabled={!!childWindow || fetchingSamlLoginTestData}
+                    onClick={() => {
+                      getSamlLoginTestData()
+                    }}
+                  />
+                  <Popover
+                    interactionKind="click"
+                    position="left-top"
+                    content={
+                      <Menu>
+                        <MenuItem
+                          text={getString('edit')}
+                          onClick={() => openSAMlProvider(samlSetting)}
+                          disabled={!canEdit}
+                        />
+                        <RbacMenuItem
+                          text={getString('delete')}
+                          onClick={confirmSamlSettingsDelete}
+                          permission={{
+                            ...permissionRequest,
+                            permission: PermissionIdentifier.DELETE_AUTHSETTING
+                          }}
+                          disabled={deletingSamlSettings}
+                        />
+                      </Menu>
+                    }
+                  >
+                    <Button minimal icon="Options" data-testid="provider-button" variation={ButtonVariation.ICON} />
+                  </Popover>
+                </Card>
+              </Container>
+            )
+          })}
         </Collapse>
       ) : (
         <Utils.WrapOptionalTooltip
@@ -299,4 +300,4 @@ const SAMLProvider: React.FC<Props> = ({
   )
 }
 
-export default SAMLProvider
+export default SAMLProviderV2

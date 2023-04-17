@@ -17,10 +17,6 @@ import IdentityProvider from './steps/IdentityProvider'
 import AdditionalFunctions from './steps/AdditionalFunctions'
 import css from './useSAMLProvider.module.scss'
 
-// interface Props {
-//   onSuccess: () => void
-// }
-
 interface UseSAMLProviderReturn {
   openSAMlProvider: (_samlProvider?: SAMLSettings) => void
   closeSAMLProvider: () => void
