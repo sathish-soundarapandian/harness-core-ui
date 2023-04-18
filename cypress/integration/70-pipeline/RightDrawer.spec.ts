@@ -2,11 +2,12 @@ import {
   pipelineDetails,
   pipelineSaveCall,
   pipelineStudioRoute,
-  saveTemplateCall,
   stepLibrary
 } from '../../support/70-pipeline/constants'
 
 describe('RightDrawer test', () => {
+  const saveTemplateCallWithNewTemplateParam =
+    '/template/api/templates?accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&isNewTemplate=true'
   const visitExecutionStageWithAssertion = (): void => {
     cy.visit(pipelineStudioRoute, {
       timeout: 30000
@@ -79,7 +80,9 @@ describe('RightDrawer test', () => {
   })
 
   it('save step and template with same name', () => {
-    cy.intercept('POST', saveTemplateCall, { fixture: '/template/api/templateCreation' }).as('templates')
+    cy.intercept('POST', saveTemplateCallWithNewTemplateParam, { fixture: '/template/api/templateCreation' }).as(
+      'templates'
+    )
 
     cy.get(`div[data-testid="pipeline-studio"]`, { timeout: 5000 }).should('be.visible')
     cy.contains('p', 'testStage_Cypress').click({ force: true })

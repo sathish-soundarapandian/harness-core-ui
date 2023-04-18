@@ -59,7 +59,7 @@ steps:
     hostDataMapping: Host Data Mapping
     hostDataMappingEmptyKey: Field cannot have empty key entry
     hostnameRqrd: A hostname key attribute is required
-    hostObjectPath: Host Object Array Path
+    hostArrayPath: Host Array Path
     hostObjectPathPlaceholder: Path value
     previewHosts: Preview Hosts
     noHosts: No hosts provided

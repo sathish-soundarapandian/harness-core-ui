@@ -202,6 +202,7 @@ describe('Git experience', () => {
         },
         {
           isEdit: false,
+          saveAsNewVersionOfExistingTemplate: false,
           storeMetadata: {
             branch: undefined,
             connectorRef: undefined,
@@ -273,6 +274,7 @@ describe('Git experience', () => {
         },
         {
           isEdit: false,
+          saveAsNewVersionOfExistingTemplate: false,
           storeMetadata: {
             branch: 'branchTest',
             connectorRef: 'connectorRefTest',

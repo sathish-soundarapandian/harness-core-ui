@@ -16,6 +16,7 @@ import { useStrings } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import type { HostAttributesFilter, HostFilter, HostNamesFilter, PdcInfrastructure } from 'services/cd-ng'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Connectors } from '@connectors/constants'
@@ -43,6 +44,7 @@ interface PDCInfrastructureSpecInputProps {
   variablesData: PdcInfrastructure
   allowableTypes: AllowedTypes
   path: string
+  provisioner?: any[]
 }
 
 const FILTER_TYPE = {
@@ -109,7 +111,8 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
   initialValues,
   onUpdate,
   path,
-  stepViewType
+  stepViewType,
+  provisioner
 }): JSX.Element => {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -134,6 +137,11 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
       }}
     >
       <>
+        {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
+          <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <ProvisionerSelectField name={`${path}.provisioner`} path={path} provisioners={provisioner} />
+          </div>
+        )}
         {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md, css.connectorRuntime)}>
             <FormMultiTypeConnectorField
@@ -187,16 +195,17 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
             />
           </div>
         )}
-        {getMultiTypeFromValue(template?.hostObjectArray) === MultiTypeInputType.RUNTIME && (
+        {getMultiTypeFromValue(template?.hostArrayPath) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
             <FormInput.MultiTextInput
-              name={`${path}.hostObjectArray`}
+              name={`${path}.hostArrayPath`}
               placeholder={getString('cd.steps.pdcStep.hostObjectPathPlaceholder')}
               multiTextInputProps={{
-                allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
-                expressions
+                allowableTypes: [MultiTypeInputType.EXPRESSION],
+                expressions,
+                multitypeInputValue: MultiTypeInputType.EXPRESSION
               }}
-              label={getString('cd.steps.pdcStep.hostObjectPath')}
+              label={getString('cd.steps.pdcStep.hostArrayPath')}
             />
           </div>
         )}

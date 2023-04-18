@@ -25,6 +25,7 @@ import {
   TemplateConfigModalHandle
 } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
+import { useTemplateAlreadyExistsDialog } from '@templates-library/hooks/useTemplateAlreadyExistsDialog'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
 import type { EntityGitDetails, Failure, NGTemplateInfoConfig, TemplateSummaryResponse } from 'services/template-ng'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
@@ -86,6 +87,7 @@ function SaveTemplatePopover(
   const templateConfigModalHandler = React.useRef<TemplateConfigModalHandle>(null)
   const { getRBACErrorMessage } = useRBACError()
   const history = useHistory()
+  const [savedComment, setSavedComment] = React.useState('')
 
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
@@ -103,6 +105,23 @@ function SaveTemplatePopover(
     ),
     [modalProps, templateConfigModalHandler.current]
   )
+
+  const { openTemplateAlreadyExistsDialog } = useTemplateAlreadyExistsDialog({
+    onConfirmationCallback: async () => {
+      try {
+        await saveAndPublish(template, {
+          isEdit: templateIdentifier !== DefaultNewTemplateId,
+          comment: savedComment,
+          storeMetadata,
+          updatedGitDetails: gitDetails,
+          saveAsNewVersionOfExistingTemplate: true
+        })
+      } catch (err) {
+        onError(err, savedComment)
+      }
+    },
+    dialogClassName: css.templateAlreadyExistsWarningDialog
+  })
 
   const customDeleteTemplateCache = async (details?: EntityGitDetails) => {
     if (templateIdentifier === DefaultNewTemplateId) {
@@ -194,7 +213,12 @@ function SaveTemplatePopover(
         updatedGitDetails: gitDetails
       })
     } catch (error) {
-      onError(error, comment)
+      if (error?.code === 'TEMPLATE_ALREADY_EXISTS_EXCEPTION') {
+        setSavedComment(comment || '')
+        openTemplateAlreadyExistsDialog()
+      } else {
+        onError(error, comment)
+      }
     } finally {
       if (isEmpty(gitDetails?.branch)) {
         setLoading(false)

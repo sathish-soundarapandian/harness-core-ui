@@ -4859,6 +4859,9 @@ export interface StringsMap {
   'pipeline.syncStep.validation.skipSchemaValidation': string
   'pipeline.tagDependencyRequired': string
   'pipeline.targets.title': string
+  'pipeline.templateAlreadyExists.confirmation': string
+  'pipeline.templateAlreadyExists.content': string
+  'pipeline.templateAlreadyExists.title': string
   'pipeline.templateInputs': string
   'pipeline.templateSaved': string
   'pipeline.terraformStep.discardPendingRuns': string
@@ -6092,9 +6095,9 @@ export interface StringsMap {
   'cd.steps.pdcStep.dynamicProvision': string
   'cd.steps.pdcStep.filterHostAttributes': string
   'cd.steps.pdcStep.filterHostName': string
+  'cd.steps.pdcStep.hostArrayPath': string
   'cd.steps.pdcStep.hostDataMapping': string
   'cd.steps.pdcStep.hostDataMappingEmptyKey': string
-  'cd.steps.pdcStep.hostObjectPath': string
   'cd.steps.pdcStep.hostObjectPathPlaceholder': string
   'cd.steps.pdcStep.hostnameRqrd': string
   'cd.steps.pdcStep.hostsOptional': string

@@ -12,7 +12,7 @@ import {
 
 describe('Artifact Source Template creation and assertion', () => {
   const templateCreationCall =
-    '/template/api/templates?accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&comments='
+    '/template/api/templates?accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&comments=&isNewTemplate=true'
   const templatesListCall =
     '/template/api/templates/list?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true'
   const templateListCallAfterSelection =

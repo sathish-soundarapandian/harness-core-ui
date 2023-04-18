@@ -36,6 +36,7 @@ import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import {
   AzureInfrastructureSpecEditableProps,
@@ -48,7 +49,17 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 const errorMessage = 'data.message'
 
 const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureSpecEditableProps & { path: string }> =
-  ({ template, initialValues, readonly = false, path, onUpdate, allowableTypes, allValues, stepViewType }) => {
+  ({
+    template,
+    initialValues,
+    readonly = false,
+    path,
+    onUpdate,
+    allowableTypes,
+    allValues,
+    stepViewType,
+    provisioner
+  }) => {
     const { accountId, projectIdentifier, orgIdentifier } = useParams<{
       projectIdentifier: string
       orgIdentifier: string
@@ -273,6 +284,11 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
           }
         }}
       >
+        {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
+          <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <ProvisionerSelectField name={`${path}.provisioner`} path={path} provisioners={provisioner} />
+          </div>
+        )}
         {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}></div>
         )}

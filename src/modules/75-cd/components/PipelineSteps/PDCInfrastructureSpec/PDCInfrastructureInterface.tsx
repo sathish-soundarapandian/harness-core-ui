@@ -27,6 +27,8 @@ export interface PDCInfrastructureYAML {
   credentialsRef: string
   hostObjectArray?: string
   hostAttributes?: MapUIType
+  provisioner?: string
+  hostArrayPath?: string
 }
 
 export interface PDCInfrastructureUI {
@@ -43,6 +45,7 @@ export interface PDCInfrastructureUI {
   serviceType?: string
   hostObjectArray?: string
   hostAttributes?: MapUIType
+  hostArrayPath?: string
 }
 
 export interface HostAttribute {
@@ -113,6 +116,8 @@ export type PdcInfraTemplate = {
   hostAttributes?: string
   hostObjectArray?: string
   attributeFilters?: string
+  provisioner?: string
+  hostArrayPath?: string
 }
 
 export function getValidationSchemaNoPreconfiguredHosts(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
@@ -130,8 +135,9 @@ export function getValidationSchemaDynamic(
 ): Yup.ObjectSchema {
   return Yup.object().shape({
     credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('credentials') })),
-    hostObjectArray: Yup.string().required(
-      getString('common.validation.fieldIsRequired', { name: getString('cd.steps.pdcStep.hostObjectPath') })
+
+    hostArrayPath: Yup.string().required(
+      getString('common.validation.fieldIsRequired', { name: getString('cd.steps.pdcStep.hostArrayPath') })
     ),
     hostAttributes: Yup.lazy(value =>
       getMultiTypeFromValue(value as boolean) === MultiTypeInputType.FIXED

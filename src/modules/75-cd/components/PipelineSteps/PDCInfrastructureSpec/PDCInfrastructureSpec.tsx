@@ -21,7 +21,8 @@ import {
   Layout,
   MultiTypeInputType,
   Table,
-  Text
+  Text,
+  RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 
@@ -175,7 +176,8 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
         hosts: isArray(initialValues.hosts) ? initialValues.hosts.join(', ') : defaultTo(initialValues.hosts, ''),
         hostFilters: getHostNames(initialValues),
         attributeFilters: getAttributeFilters(initialValues),
-        hostAttributes: getHostAttributes(initialValues)
+        hostAttributes: getHostAttributes(initialValues),
+        hostArrayPath: initialValues?.hostArrayPath
       }
       set(values, 'sshKey', initialValues.credentialsRef)
       setFormikInitialValues(values as PDCInfrastructureUI)
@@ -210,7 +212,8 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     }
     if (selectionType === HOSTS_TYPE.DYNAMIC) {
       data.hostAttributes = getHostAttributes(initialValues) as MapUIType
-      data.hostObjectArray = get(initialValues, 'hostObjectArray', '') as string
+      data.hostArrayPath = get(initialValues, 'hostArrayPath', '') as string
+      data.provisioner = RUNTIME_INPUT_VALUE
     }
 
     formikRef.current?.setValues({ ...initialValues, ...data })
@@ -476,6 +479,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
       {formikInitialValues && (
         <>
           <Text font={{ variation: FontVariation.FORM_TITLE }}>{getString('cd.steps.pdcStep.title')}</Text>
+
           <RadioGroup
             className={css.specifyHostsRadioGroup}
             selectedValue={selectionType}
@@ -483,6 +487,13 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
               const type = e.currentTarget.value as HOSTS_TYPE
               setSelectionType(type)
               setShowPreviewHostBtn(!(type === HOSTS_TYPE.DYNAMIC))
+              if (
+                type === HOSTS_TYPE.DYNAMIC &&
+                CD_NG_DYNAMIC_PROVISIONING_ENV_V2 &&
+                !get(formikRef.current?.values, 'provisioner')
+              ) {
+                formikRef.current?.setFieldValue('provisioner', RUNTIME_INPUT_VALUE)
+              }
             }}
           >
             <Radio value={HOSTS_TYPE.SPECIFIED} label={getString('cd.steps.pdcStep.specifyHostsOption')} />
@@ -533,7 +544,8 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                 }
               }
               if (selectionType === HOSTS_TYPE.DYNAMIC) {
-                data.hostObjectArray = value.hostObjectArray
+                data.hostArrayPath = value.hostArrayPath
+                data.provisioner = RUNTIME_INPUT_VALUE
                 data.hostAttributes = !isValueRuntimeInput(value.hostAttributes as unknown as string)
                   ? getKeyValueHostAttributes(value.hostAttributes)
                   : value.hostAttributes
@@ -561,6 +573,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
             {formik => {
               window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.INFRASTRUCTURE }))
               formikRef.current = formik as FormikProps<unknown> | null
+
               return (
                 <FormikForm>
                   <Layout.Vertical className={css.formRow} spacing="none">
@@ -657,15 +670,32 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                     )}
                     {selectionType === HOSTS_TYPE.DYNAMIC && (
                       <>
+                        {CD_NG_DYNAMIC_PROVISIONING_ENV_V2 && (
+                          <div className={css.inputWrapper}>
+                            <FormInput.MultiTextInput
+                              multiTextInputProps={{
+                                allowableTypes: [MultiTypeInputType.RUNTIME]
+                              }}
+                              data-testid="provisioner-field"
+                              label={getString('common.provisioner')}
+                              disabled
+                              name="provisioner"
+                            />
+                          </div>
+                        )}
                         <div className={css.inputWrapper}>
                           <FormInput.MultiTextInput
-                            name="hostObjectArray"
+                            name="hostArrayPath"
                             placeholder={getString('cd.steps.pdcStep.hostObjectPathPlaceholder')}
                             multiTextInputProps={{
                               allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
-                              expressions
+                              expressions,
+                              multitypeInputValue:
+                                formik.values.hostArrayPath !== RUNTIME_INPUT_VALUE
+                                  ? MultiTypeInputType.EXPRESSION
+                                  : MultiTypeInputType.RUNTIME
                             }}
-                            label={getString('cd.steps.pdcStep.hostObjectPath')}
+                            label={getString('cd.steps.pdcStep.hostArrayPath')}
                           />
                         </div>
                         <div className={css.panel}>
@@ -1018,13 +1048,13 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
       errors.connectorRef = getString?.('common.validation.fieldIsRequired', { name: getString('connector') })
     }
     if (
-      isEmpty(data.hostObjectArray) &&
+      isEmpty(data.hostArrayPath) &&
       isRequired &&
-      typeof template?.hostObjectArray === 'string' &&
-      getMultiTypeFromValue(template?.hostObjectArray) === MultiTypeInputType.RUNTIME
+      typeof template?.hostArrayPath === 'string' &&
+      getMultiTypeFromValue(template?.hostArrayPath) === MultiTypeInputType.RUNTIME
     ) {
-      errors.hostObjectArray = getString?.('common.validation.fieldIsRequired', {
-        name: getString('cd.steps.pdcStep.hostObjectPath')
+      errors.hostArrayPath = getString?.('common.validation.fieldIsRequired', {
+        name: getString('cd.steps.pdcStep.hostArrayPath')
       })
     }
     if (

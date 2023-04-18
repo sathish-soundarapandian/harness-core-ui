@@ -43,6 +43,7 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
@@ -204,7 +205,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
         currentValues.resourceGroup = { label: initialValues.resourceGroup, value: initialValues.resourceGroup }
       }
     }
-
     return currentValues
   }
 
@@ -284,7 +284,8 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                 : getValue(value.resourceGroup),
             tags: value.tags,
             hostConnectionType: value.hostConnectionType,
-            allowSimultaneousDeployments: value.allowSimultaneousDeployments
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value?.provisioner
           }
           /* istanbul ignore else */ if (value.connectorRef) {
             data.connectorRef = value.connectorRef?.value || /* istanbul ignore next */ value.connectorRef
@@ -297,9 +298,20 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.INFRASTRUCTURE }))
           formikRef.current = formik
+          const subId = formik?.values?.subscriptionId?.value || typeof formik?.values?.subscriptionId === 'string'
+          if (subId && formik.errors?.subscriptionId) {
+            formik.setFieldError('subscriptionId', undefined)
+          }
           return (
             <FormikForm>
               <Layout.Vertical spacing="medium">
+                <Layout.Horizontal
+                  width={400}
+                  className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper, css.provisionerWrapper)}
+                  spacing="medium"
+                >
+                  <ProvisionerField name="provisioner" isReadonly />
+                </Layout.Horizontal>
                 <Layout.Horizontal className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
                   <FormMultiTypeConnectorField
                     name="connectorRef"

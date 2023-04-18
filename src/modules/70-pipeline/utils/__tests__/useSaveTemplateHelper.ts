@@ -32,6 +32,7 @@ export const createTemplatePromiseArg = {
     createPr: false,
     filePath: 'Test_Http_Template_v1.yaml',
     isNewBranch: false,
+    isNewTemplate: true,
     orgIdentifier: 'default',
     projectIdentifier: 'Yogesh_Test',
     repoIdentifier: 'gitSyncRepo',

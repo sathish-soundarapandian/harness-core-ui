@@ -64,6 +64,16 @@
     }
   }
 }
+.provisionerWrapper {
+  :global {
+    .bp3-input-group.bp3-disabled .bp3-input {
+      width: 400px !important;
+    }
+    .bp3-form-group.bp3-disabled {
+      width: 400px !important;
+    }
+  }
+}
 
 .addBtn {
   padding-left: 0px !important;

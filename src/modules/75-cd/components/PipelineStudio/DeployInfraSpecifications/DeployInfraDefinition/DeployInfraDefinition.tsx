@@ -622,7 +622,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments,
                   delegateSelectors: value.delegateSelectors,
                   hostAttributes: value.hostAttributes,
-                  hostObjectArray: value.hostObjectArray
+                  hostObjectArray: value.hostObjectArray,
+                  provisioner: value?.provisioner || undefined,
+                  hostArrayPath: value?.hostArrayPath
                 },
                 InfraDeploymentType.PDC
               )
@@ -647,7 +649,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   connectorRef: value.connectorRef,
                   region: value.region,
                   awsInstanceFilter: value.awsInstanceFilter,
-                  hostConnectionType: value.hostConnectionType
+                  hostConnectionType: value.hostConnectionType,
+                  provisioner: value?.provisioner || undefined
                 },
                 InfraDeploymentType.SshWinRmAws
               )
@@ -674,7 +677,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   resourceGroup: value.resourceGroup,
                   tags: value.tags,
                   hostConnectionType: value.hostConnectionType,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner || undefined
                 },
                 InfraDeploymentType.SshWinRmAzure
               )

@@ -136,11 +136,13 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
     updatedGitDetails?: SaveToGitFormInterface,
     lastObject?: LastRemoteObjectId,
     storeMetadata?: StoreMetadata,
-    saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
+    saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE,
+    saveAsNewVersionOfExistingTemplate?: boolean
   ): Promise<UseSaveSuccessResponse> => {
     if (isEdit) {
       return updateExistingLabel(latestTemplate, comments, updatedGitDetails, lastObject, storeMetadata, saveAsType)
     } else {
+      const isNewTemplateIdentifierCreation = saveAsType !== SaveTemplateAsType.NEW_LABEL_VERSION
       const response = await createTemplatePromise({
         body: stringifyTemplate(omit(cloneDeep(latestTemplate), 'repo', 'branch')),
         queryParams: {
@@ -148,6 +150,7 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
           projectIdentifier: latestTemplate.projectIdentifier,
           orgIdentifier: latestTemplate.orgIdentifier,
           comments,
+          ...(isNewTemplateIdentifierCreation && !saveAsNewVersionOfExistingTemplate ? { isNewTemplate: true } : {}),
           ...(updatedGitDetails ?? {}),
           ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {}),
           ...(updatedGitDetails && updatedGitDetails.isNewBranch
@@ -230,7 +233,15 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
     updatedTemplate: NGTemplateInfoConfig,
     extraInfo: PromiseExtraArgs
   ): Promise<UseSaveSuccessResponse> => {
-    const { isEdit, comment, updatedGitDetails, storeMetadata, disableCreatingNewBranch, saveAsType } = extraInfo
+    const {
+      isEdit,
+      comment,
+      updatedGitDetails,
+      storeMetadata,
+      disableCreatingNewBranch,
+      saveAsType,
+      saveAsNewVersionOfExistingTemplate
+    } = extraInfo
 
     // if Git sync enabled then display modal
     if ((isGitSyncEnabled && !isEmpty(updatedGitDetails)) || storeMetadata?.storeType === StoreType.REMOTE) {
@@ -249,7 +260,16 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
       return Promise.resolve({ status: 'SUCCESS' })
     }
 
-    return saveAndPublishTemplate(updatedTemplate, comment, isEdit, undefined, undefined, undefined, saveAsType)
+    return saveAndPublishTemplate(
+      updatedTemplate,
+      comment,
+      isEdit,
+      undefined,
+      undefined,
+      undefined,
+      saveAsType,
+      saveAsNewVersionOfExistingTemplate
+    )
   }
 
   return {

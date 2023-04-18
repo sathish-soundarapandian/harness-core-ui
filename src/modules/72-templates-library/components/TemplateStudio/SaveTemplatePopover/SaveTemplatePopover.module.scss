@@ -15,3 +15,9 @@
 .gitConfigDialog {
   width: 1160px;
 }
+
+.templateAlreadyExistsWarningDialog {
+  :global(p) {
+    word-break: break-word !important;
+  }
+}

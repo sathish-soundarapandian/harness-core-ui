@@ -70,4 +70,5 @@ export interface AzureInfrastructureSpecEditableProps {
   variablesData: SshWinRmAzureInfrastructure
   allowableTypes: AllowedTypes
   path: string
+  provisioner: any[]
 }

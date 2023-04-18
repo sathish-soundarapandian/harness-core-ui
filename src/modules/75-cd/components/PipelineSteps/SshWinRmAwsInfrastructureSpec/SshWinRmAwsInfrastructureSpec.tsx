@@ -36,7 +36,8 @@ import {
   SecretResponseWrapper,
   SshWinRmAwsInfrastructure,
   useRegionsForAws,
-  useTags
+  useTags,
+  ExecutionElementConfig
 } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -61,6 +62,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import { InfraDeploymentType, getValue } from '../PipelineStepsUtil'
 import { SshWimRmAwsInfrastructureSpecInputForm } from './SshWimRmAwsInfrastructureSpecInputForm'
 import css from './SshWinRmAwsInfrastructureSpec.module.scss'
@@ -94,6 +96,7 @@ interface SshWinRmAwsInfrastructureSpecEditableProps {
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: SshWinRmAwsInfrastructure
   allowableTypes: AllowedTypes
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureSpecEditableProps> = ({
@@ -231,7 +234,8 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                   : get(value, 'credentialsRef.referenceString', ''),
               region: typeof value.region === 'string' ? value.region : get(value, 'region.value', ''),
               awsInstanceFilter: value.awsInstanceFilter,
-              hostConnectionType: value.hostConnectionType
+              hostConnectionType: value.hostConnectionType,
+              provisioner: value?.provisioner
             }
 
             delayedOnUpdate(data as SshWinRmAwsInfrastructure)
@@ -243,6 +247,9 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
             formikRef.current = formik as FormikProps<unknown> | null
             return (
               <FormikForm>
+                <Layout.Horizontal className={css.formRow} spacing="medium">
+                  <ProvisionerField name="provisioner" isReadonly />
+                </Layout.Horizontal>
                 <Layout.Vertical className={css.formRow} spacing="medium" margin={{ bottom: 'large' }}>
                   <Layout.Vertical>
                     <FormMultiTypeConnectorField

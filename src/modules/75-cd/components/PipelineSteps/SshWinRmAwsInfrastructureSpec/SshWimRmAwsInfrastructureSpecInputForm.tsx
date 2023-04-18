@@ -17,10 +17,11 @@ import {
 } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { useParams } from 'react-router-dom'
-import { get, defaultTo } from 'lodash-es'
+import { get, defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { SshWinRmAwsInfrastructure, useRegionsForAws, useTagsV2 } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import { useStrings } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -40,6 +41,7 @@ interface AwsInfrastructureSpecEditableProps {
   template?: SshWinRmAwsInfrastructureTemplate
   allowableTypes: AllowedTypes
   path: string
+  provisioner?: any[]
 }
 
 const errorMessage = 'data.message'
@@ -50,7 +52,8 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
   allowableTypes,
   allValues,
   readonly,
-  path
+  path,
+  provisioner
 }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -62,6 +65,8 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
   const [tags, setTags] = useState<SelectOption[]>([])
   const { expressions } = useVariablesExpression()
   const formik = useFormikContext()
+
+  const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
 
   const { getString } = useStrings()
 
@@ -125,6 +130,11 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
         }
       }}
     >
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <ProvisionerSelectField name={provisionerName} path={path} provisioners={provisioner} />
+        </div>
+      )}
       {getMultiTypeFromValue(get(template, 'connectorRef', '')) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField

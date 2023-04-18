@@ -156,8 +156,17 @@ export const getInfrastructureDefaultValue = (
       }
     }
     case InfraDeploymentType.PDC: {
-      const { connectorRef, credentialsRef, delegateSelectors, hostFilter, hosts, hostAttributes, hostObjectArray } =
-        infrastructure?.spec || {}
+      const {
+        connectorRef,
+        credentialsRef,
+        delegateSelectors,
+        hostFilter,
+        hosts,
+        hostAttributes,
+        hostObjectArray,
+        provisioner,
+        hostArrayPath
+      } = infrastructure?.spec || {}
 
       return {
         connectorRef,
@@ -168,11 +177,13 @@ export const getInfrastructureDefaultValue = (
         hostFilter,
         serviceType,
         hostAttributes,
-        hostObjectArray
+        hostObjectArray,
+        provisioner,
+        hostArrayPath
       }
     }
     case InfraDeploymentType.SshWinRmAzure: {
-      const { credentialsRef, connectorRef, resourceGroup, tags, hostConnectionType, subscriptionId } =
+      const { credentialsRef, connectorRef, resourceGroup, tags, hostConnectionType, subscriptionId, provisioner } =
         infrastructure?.spec || {}
       return {
         credentialsRef,
@@ -182,18 +193,21 @@ export const getInfrastructureDefaultValue = (
         tags,
         hostConnectionType,
         allowSimultaneousDeployments,
-        serviceType
+        serviceType,
+        provisioner
       }
     }
     case InfraDeploymentType.SshWinRmAws: {
-      const { credentialsRef, connectorRef, region, awsInstanceFilter, hostConnectionType } = infrastructure?.spec || {}
+      const { credentialsRef, connectorRef, region, awsInstanceFilter, hostConnectionType, provisioner } =
+        infrastructure?.spec || {}
       return {
         credentialsRef,
         connectorRef,
         region,
         awsInstanceFilter,
         serviceType,
-        hostConnectionType
+        hostConnectionType,
+        provisioner
       }
     }
     case InfraDeploymentType.ECS: {

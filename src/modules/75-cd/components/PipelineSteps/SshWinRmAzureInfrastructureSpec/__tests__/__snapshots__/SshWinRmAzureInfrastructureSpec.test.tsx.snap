@@ -17,6 +17,10 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
             <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formGroup md inputWrapper provisionerWrapper"
+              style="width: 400px;"
+            />
+            <div
               class="Layout--horizontal StyledProps--main formGroup md inputWrapper"
             >
               <div>
@@ -710,6 +714,10 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
           <div
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formGroup md inputWrapper provisionerWrapper"
+              style="width: 400px;"
+            />
             <div
               class="Layout--horizontal StyledProps--main formGroup md inputWrapper"
             >
@@ -2569,6 +2577,10 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
             <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formGroup md inputWrapper provisionerWrapper"
+              style="width: 400px;"
+            />
+            <div
               class="Layout--horizontal StyledProps--main formGroup md inputWrapper"
             >
               <div>
@@ -3117,6 +3129,10 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
           <div
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formGroup md inputWrapper provisionerWrapper"
+              style="width: 400px;"
+            />
             <div
               class="Layout--horizontal StyledProps--main formGroup md inputWrapper"
             >
@@ -3686,6 +3702,10 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
           <div
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formGroup md inputWrapper provisionerWrapper"
+              style="width: 400px;"
+            />
             <div
               class="Layout--horizontal StyledProps--main formGroup md inputWrapper"
             >

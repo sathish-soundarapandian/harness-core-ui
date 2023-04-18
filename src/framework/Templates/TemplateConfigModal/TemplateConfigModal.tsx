@@ -43,9 +43,10 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { IdentifierSchema, NameSchema, TemplateVersionLabelSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getScopeFromDTO, getScopeLabelfromScope } from '@common/components/EntityReference/EntityReference'
+import { useTemplateAlreadyExistsDialog } from '@templates-library/hooks/useTemplateAlreadyExistsDialog'
 import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { CardInterface, InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
-import { StoreMetadata, StoreType as GitStoreType, SaveTemplateAsType } from '@common/constants/GitSyncTypes'
+import { SaveTemplateAsType, StoreMetadata, StoreType as GitStoreType } from '@common/constants/GitSyncTypes'
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
@@ -83,6 +84,7 @@ export interface PromiseExtraArgs {
   storeMetadata?: StoreMetadata
   disableCreatingNewBranch?: boolean
   saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
+  saveAsNewVersionOfExistingTemplate?: boolean
 }
 
 export enum Intent {
@@ -170,6 +172,8 @@ const BasicTemplateDetails = (
   const { isReadonly } = useContext(TemplateContext)
   const scope = getScopeFromDTO(pathParams)
   const [selectedScope, setSelectedScope] = React.useState<Scope>(scope)
+  const [savedTemplateConfigValues, setSavedTemplateConfigValues] = React.useState<TemplateConfigValues>()
+  const [saveAsNewVersionOfExistingTemplate, setSaveAsNewVersionOfExistingTemplate] = React.useState<boolean>(false)
   const allowedScopes = templateFactory.getTemplateAllowedScopes(initialValues.type)
   const isInlineRemoteSelectionApplicable = templateFactory.getTemplateIsRemoteEnabled(initialValues.type)
   const formikRef = useRef<FormikProps<TemplateConfigValues>>()
@@ -181,6 +185,19 @@ const BasicTemplateDetails = (
       })),
     [allowedScopes]
   )
+
+  const { openTemplateAlreadyExistsDialog } = useTemplateAlreadyExistsDialog({
+    onConfirmationCallback: async () => {
+      onSubmit(savedTemplateConfigValues!)
+
+      return Promise.resolve()
+    },
+    onCloseCallback: () => {
+      setSaveAsNewVersionOfExistingTemplate(false)
+      setSavedTemplateConfigValues(undefined)
+    },
+    dialogClassName: css.templateAlreadyExistsWarningDialog
+  })
 
   const cardDisabledStatus = React.useMemo(
     () => intent === Intent.EDIT || !!disabledFields?.includes(Fields.StoreType),
@@ -288,7 +305,8 @@ const BasicTemplateDetails = (
           updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
         }),
         ...(supportingTemplatesGitx ? { storeMetadata: storeMetadataValues } : {}),
-        ...(!isEmpty(values.comment?.trim()) && { comment: values.comment?.trim() })
+        ...(!isEmpty(values.comment?.trim()) && { comment: values.comment?.trim() }),
+        saveAsNewVersionOfExistingTemplate
       })
         .then(response => {
           setLoading(false)
@@ -300,10 +318,25 @@ const BasicTemplateDetails = (
         })
         .catch(error => {
           setLoading(false)
-          onFailure?.(error, updateTemplate)
+          if (error?.code === 'TEMPLATE_ALREADY_EXISTS_EXCEPTION') {
+            setSavedTemplateConfigValues(values)
+            setSaveAsNewVersionOfExistingTemplate(true)
+            openTemplateAlreadyExistsDialog()
+          } else {
+            onFailure?.(error, updateTemplate)
+          }
         })
     },
-    [setLoading, promise, gitDetails, onClose, saveAsType]
+    [
+      setLoading,
+      promise,
+      gitDetails,
+      onClose,
+      saveAsType,
+      saveAsNewVersionOfExistingTemplate,
+      setSavedTemplateConfigValues,
+      openTemplateAlreadyExistsDialog
+    ]
   )
 
   const onScopeChange = ({ value }: SelectOption) => {

@@ -17,6 +17,7 @@ declare const styles: {
   readonly inputWrapper: string
   readonly lastRow: string
   readonly marginTop: string
+  readonly provisionerWrapper: string
   readonly removeTagBtn: string
   readonly simultaneousDeployment: string
   readonly tagsSelect: string

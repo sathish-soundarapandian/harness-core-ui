@@ -17,5 +17,6 @@ declare const styles: {
   readonly inlineRemoteWrapper: string
   readonly lastPublishedVersionLabel: string
   readonly nameIdDescriptionTags: string
+  readonly templateAlreadyExistsWarningDialog: string
 }
 export default styles
