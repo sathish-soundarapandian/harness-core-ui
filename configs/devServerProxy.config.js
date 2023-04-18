@@ -104,11 +104,20 @@ module.exports = {
   },
   '/pm/api': {
     pathRewrite: { '^/pm': '' },
-    target: process.env.OPA_GOVERNANCE_API_URL || 'http://localhost:3001'
+    target: process.env.OPA_GOVERNANCE_API_URL || 'http://localhost:4001'
   },
   '/pm': {
     pathRewrite: { '^/pm': '' },
-    target: process.env.OPA_GOVERNANCE_UI_URL || 'http://localhost:3000'
+    target: process.env.OPA_GOVERNANCE_UI_URL || 'http://localhost:4000'
+  },
+  '/sugary/api': {
+    pathRewrite: { '^/sugary': '' },
+    target: 'http://localhost:3001'
+  },
+  '/sugary': {
+    pathRewrite: { '^/sugary': '' },
+    target: 'http://localhost:3000'
+    // target: 'http://localhost:8183'
   },
   '/code/api': {
     pathRewrite: { '^/code': '' },

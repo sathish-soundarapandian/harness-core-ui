@@ -289,3 +289,26 @@ export const ETNavItem = () => {
     </li>
   )
 }
+
+export const SugaryNavItem = () => {
+  const params = useParams<ProjectPathProps>()
+
+  return (
+    <li className={css.navItem}>
+      <Link {...commonLinkProps} to={routes.toSugary(params)}>
+        <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+          <Icon name="cet" size={30} />
+          <Text
+            font={{ weight: 'semi-bold', align: 'center' }}
+            margin="xsmall"
+            padding={{ bottom: 'xsmall' }}
+            color={Color.WHITE}
+            className={css.text}
+          >
+            Sugary
+          </Text>
+        </Layout.Vertical>
+      </Link>
+    </li>
+  )
+}

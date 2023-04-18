@@ -19,7 +19,7 @@ import {
   STONavItem,
   SSCANavItem,
   IDPNavItem,
-  ETNavItem
+  ETNavItem,
 } from './ModuleLinks'
 
 export const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {

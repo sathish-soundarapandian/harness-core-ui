@@ -16,6 +16,7 @@ import {
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
 import { filterNavModules, moduleToNavItemsMap } from '../util'
+import { SugaryNavItem } from '../ModuleLinks';
 import css from '../MainNav.module.scss'
 
 export const MODULES_WINDOW_SIZE = 3
@@ -138,6 +139,7 @@ const ModulesContainer = (): React.ReactElement => {
     <>
       <div className={cx(css.border, css.navBtn)} />
       {showChevronButtons && <ChevronButton handleClick={handleUpClick} disabled={moduleStartIndex === 0} />}
+      <SugaryNavItem />
       <Container onScroll={handleOnScroll} className={css.modules} style={{ height: modulesListHeight }}>
         {orderedModules
           .filter(moduleName => moduleMap[moduleName]?.shouldVisible && selectedModules.indexOf(moduleName) > -1)

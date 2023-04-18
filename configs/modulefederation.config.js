@@ -49,6 +49,8 @@ module.exports = ({
   remotes.governance = "governance@[window.getApiBaseUrl('pm/remoteEntry.js')]"
   // }
 
+  remotes.sugary = "sugary@[window.getApiBaseUrl('sugary/remoteEntry.js')]"
+
   if (enableIDP) {
     remotes.idp = "idp@[window.getIDPBaseUrl('idp/remoteEntry.js')]"
     remotes.idpadmin = "idpadmin@[window.getApiBaseUrl('idp-admin/remoteEntry.js')]"

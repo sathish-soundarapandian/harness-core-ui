@@ -43,6 +43,7 @@ import CODERouteDestinations from '@code/RouteDestinations'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import ETRoutes from '@et/RouteDestinations'
+import SugaryRoutes from '@sugary/RouteDestinations'
 
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
@@ -84,6 +85,7 @@ export default function RouteDestinations(): React.ReactElement {
       {projectsOrgsRoutes.props.children}
       {DASHBOARDRoutes.props.children}
       {GovernanceRoutes.props.children}
+      {SugaryRoutes.props.children}
       {CODE_ENABLED ? CODERouteDestinations().props.children : null}
       {connectorRoutes.props.children}
       {tempatesRoutes.props.children}

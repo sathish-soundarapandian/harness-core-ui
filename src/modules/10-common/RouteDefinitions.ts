@@ -2144,7 +2144,12 @@ const routes = {
   toETSettings: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
       `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et`
-  )
+  ),
+
+  toSugary: withAccountId(
+    () =>
+      `/sugary`
+  ),
 }
 
 export default routes
