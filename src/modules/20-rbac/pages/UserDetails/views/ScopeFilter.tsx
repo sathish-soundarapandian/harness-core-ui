@@ -171,6 +171,8 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData, onNewRoleAdde
   const [accountFilter, setAccountFilter] = useState(getDefaultSelectedFilter(scope))
   const [orgFilter, setOrgFilter] = useState<string | undefined>(orgIdentifier)
   const [orgFetchError, setOrgFetchError] = useState<boolean>(false)
+  const [pageForUserGroup, setPageForUserGroup] = useState<number>(0)
+  const [pageForUserRoleBinding, setPageForUserRoleBinding] = useState<number>(0)
   const getScopeDropDownItems = (): SelectOption[] => {
     switch (scope) {
       case Scope.ACCOUNT:
@@ -345,9 +347,24 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData, onNewRoleAdde
       )
     } else {
       if (view === UserDetailsViews.ROLE_BINDING) {
-        return <UserRoleBindings scopeFilters={scopeFilters} user={userData} onNewRoleAdded={onNewRoleAdded} />
+        return (
+          <UserRoleBindings
+            scopeFilters={scopeFilters}
+            user={userData}
+            onNewRoleAdded={onNewRoleAdded}
+            page={pageForUserRoleBinding}
+            setPage={setPageForUserRoleBinding}
+          />
+        )
       } else {
-        return <UserGroupTable user={userData} scopeFilters={scopeFilters} />
+        return (
+          <UserGroupTable
+            user={userData}
+            scopeFilters={scopeFilters}
+            page={pageForUserGroup}
+            setPage={setPageForUserGroup}
+          />
+        )
       }
     }
   }
@@ -374,6 +391,8 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData, onNewRoleAdde
           )}
           filterable={false}
           onChange={item => {
+            setPageForUserGroup(0)
+            setPageForUserRoleBinding(0)
             setOrgFetchError(false)
             setAccountFilter(item.value as ScopeFilterItems)
             if (scope === Scope.ACCOUNT) {

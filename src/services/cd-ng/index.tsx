@@ -1220,11 +1220,11 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   )[]
@@ -2960,11 +2960,11 @@ export interface CreditDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   purchaseTime?: number
@@ -4152,7 +4152,7 @@ export interface EntityDetail {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
 }
@@ -5843,11 +5843,11 @@ export interface FeatureRestrictionDetailsDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   name?:
@@ -5960,11 +5960,11 @@ export interface FeatureRestrictionMetadataDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   name?:
@@ -6072,11 +6072,11 @@ export interface FeedbackFormDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   score?: number
@@ -6739,7 +6739,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   )[]
@@ -6753,11 +6753,11 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   searchTerm?: string
@@ -6971,7 +6971,7 @@ export interface GitEntityFilterProperties {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   )[]
@@ -6986,11 +6986,11 @@ export interface GitEntityFilterProperties {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   searchTerm?: string
@@ -7280,7 +7280,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   errorMessage?: string
@@ -7504,7 +7504,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   )[]
@@ -7849,7 +7849,7 @@ export interface GitSyncEntityDTO {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   entityUrl?: string
@@ -8067,7 +8067,7 @@ export interface GitSyncEntityListDTO {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   gitSyncEntities?: GitSyncEntityDTO[]
@@ -8302,7 +8302,7 @@ export interface GitSyncErrorDTO {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
@@ -8339,11 +8339,11 @@ export interface GitSyncRepoFilesList {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
 }
@@ -8910,6 +8910,11 @@ export type IACMLicenseSummaryDTO = LicensesWithSummaryDTO & {
 
 export type IACMModuleLicenseDTO = ModuleLicenseDTO & {
   numberOfDevelopers?: number
+}
+
+export interface IconDTO {
+  deploymentType?: string
+  icon?: string
 }
 
 export type IdentifierRef = EntityReference & {
@@ -10112,11 +10117,11 @@ export interface LicensesWithSummaryDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
 }
@@ -10272,11 +10277,11 @@ export interface ModuleLicenseDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   premiumSupport?: boolean
@@ -10635,11 +10640,11 @@ export interface OAuthSignupDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   name?: string
@@ -11390,11 +11395,11 @@ export interface PartialSchemaDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   namespace?: string
@@ -11610,11 +11615,11 @@ export interface Project {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   )[]
@@ -11695,11 +11700,11 @@ export interface RecommendationRequest {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   usageMap?: {
@@ -11940,7 +11945,7 @@ export interface ReferencedByDTO {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
 }
@@ -12050,6 +12055,7 @@ export interface ResourceDTO {
     | 'NG_ACCOUNT_DETAILS'
     | 'BUDGET_GROUP'
     | 'PIPELINE_EXECUTION'
+    | 'IP_ALLOWLIST_CONFIG'
 }
 
 export interface ResourceGroup {
@@ -13298,7 +13304,7 @@ export interface ResponseListEntityType {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   )[]
@@ -15952,6 +15958,7 @@ export interface ServiceDetailsDTO {
 }
 
 export interface ServiceDetailsDTOV2 {
+  deploymentIconList?: IconDTO[]
   deploymentTypeList?: string[]
   description?: string
   failureRate?: number
@@ -15994,6 +16001,7 @@ export interface ServiceExecutionSummary {
 
 export interface ServiceHeaderInfo {
   createdAt?: number
+  deploymentIconList?: IconDTO[]
   deploymentTypes?: string[]
   description?: string
   identifier?: string
@@ -16569,11 +16577,11 @@ export interface StartTrialDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
 }
@@ -16839,11 +16847,11 @@ export interface SubscriptionDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   paymentMethodId?: string
@@ -16867,11 +16875,11 @@ export interface SubscriptionDetailDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   pendingUpdate?: PendingUpdateDetailDTO
@@ -16900,11 +16908,11 @@ export interface SubscriptionRequest {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   paymentFrequency?: string
@@ -17777,11 +17785,21 @@ export interface User {
   twoFactorAuthenticationEnabled?: boolean
   twoFactorAuthenticationMechanism?: 'TOTP'
   twoFactorJwtToken?: string
+  userAccountLevelDataMap?: {
+    [key: string]: UserAccountLevelData
+  }
   userGroups?: UserGroup[]
   userLocked?: boolean
   userLockoutInfo?: UserLockoutInfo
   utmInfo?: UtmInfo
   uuid: string
+}
+
+export interface UserAccountLevelData {
+  sourceOfProvisioning?: {
+    [key: string]: 'MANUAL' | 'LDAP' | 'SCIM'
+  }
+  userProvisionedTo?: ('CG' | 'NG')[]
 }
 
 export interface UserAggregate {
@@ -17939,6 +17957,13 @@ export interface UserInfo {
   twoFactorAuthenticationEnabled?: boolean
   utmInfo?: UtmInfo
   uuid: string
+}
+
+export interface UserInfoUpdateDTO {
+  email?: string
+  familyName?: string
+  givenName?: string
+  name?: string
 }
 
 export interface UserLockoutInfo {
@@ -18254,11 +18279,11 @@ export interface YamlSchemaMetadata {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   )[]
@@ -18280,11 +18305,11 @@ export interface YamlSchemaWithDetails {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   schema?: JsonNode
@@ -19255,7 +19280,7 @@ export interface ListActivitiesQueryParams {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   referredByEntityType?:
@@ -19465,7 +19490,7 @@ export interface ListActivitiesQueryParams {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
 }
@@ -19779,7 +19804,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   referredByEntityType?:
@@ -19989,7 +20014,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
 }
@@ -20903,11 +20928,11 @@ export interface GetProjectAggregateDTOListQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   searchTerm?: string
@@ -28968,101 +28993,6 @@ export const getEKSClusterNamesPromise = (
     signal
   )
 
-export interface GetEKSClusterNamesViaExpressionResolutionQueryParams {
-  awsConnectorRef?: string
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  envId?: string
-  infraDefinitionId?: string
-  pipelineIdentifier: string
-  fqnPath: string
-  branch?: string
-  repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
-  repoName?: string
-}
-
-export type GetEKSClusterNamesViaExpressionResolutionProps = Omit<
-  MutateProps<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get EKS clusters list with via expression resolution for eks connector
- */
-export const GetEKSClusterNamesViaExpressionResolution = (props: GetEKSClusterNamesViaExpressionResolutionProps) => (
-  <Mutate<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/aws/aws-helper/eks/clusters/v2`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetEKSClusterNamesViaExpressionResolutionProps = Omit<
-  UseMutateProps<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get EKS clusters list with via expression resolution for eks connector
- */
-export const useGetEKSClusterNamesViaExpressionResolution = (
-  props: UseGetEKSClusterNamesViaExpressionResolutionProps
-) =>
-  useMutate<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >('POST', `/aws/aws-helper/eks/clusters/v2`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get EKS clusters list with via expression resolution for eks connector
- */
-export const getEKSClusterNamesViaExpressionResolutionPromise = (
-  props: MutateUsingFetchProps<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/aws/aws-helper/eks/clusters/v2`, props, signal)
-
 export interface ElasticLoadBalancersQueryParams {
   awsConnectorRef?: string
   accountIdentifier: string
@@ -36998,7 +36928,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   searchTerm?: string
@@ -37269,7 +37199,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   searchTerm?: string
@@ -40751,7 +40681,7 @@ export interface GetReferencedByQueryParams {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   searchTerm?: string
@@ -43436,7 +43366,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
 }
@@ -43714,7 +43644,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'BackstageEnvironmentVariable'
       | 'Fossa'
       | 'CodeQL'
-      | 'GitLeaks'
+      | 'Gitleaks'
       | 'DeployCloudFunctionGenOne'
       | 'RollbackCloudFunctionGenOne'
   },
@@ -48450,11 +48380,11 @@ export interface GetEditionActionsQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
 }
@@ -48515,11 +48445,11 @@ export interface StartCommunityLicenseQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
 }
@@ -48646,11 +48576,11 @@ export interface StartFreeLicenseQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   referer?: string
@@ -48715,11 +48645,11 @@ export interface GetModuleLicensesByAccountAndModuleTypeQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
 }
@@ -48947,11 +48877,11 @@ export interface GetLicensesAndSummaryQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
 }
@@ -49997,7 +49927,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   yamlGroup?: string
@@ -50335,7 +50265,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
 }
@@ -50896,11 +50826,11 @@ export interface GetProjectListQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   searchTerm?: string
@@ -51027,11 +50957,11 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   searchTerm?: string
@@ -57609,11 +57539,11 @@ export interface ListSubscriptionsQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
 }
@@ -58196,11 +58126,11 @@ export interface RetrieveProductPricesQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
 }
@@ -62318,6 +62248,84 @@ export const removeUserPromise = (
     signal
   )
 
+export interface UpdateUserNameQueryParams {
+  accountIdentifier?: string
+}
+
+export interface UpdateUserNamePathParams {
+  userId: string
+}
+
+export type UpdateUserNameProps = Omit<
+  MutateProps<
+    ResponseUserInfo,
+    Failure | Error,
+    UpdateUserNameQueryParams,
+    UserInfoUpdateDTO,
+    UpdateUserNamePathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateUserNamePathParams
+
+/**
+ * update user information
+ */
+export const UpdateUserName = ({ userId, ...props }: UpdateUserNameProps) => (
+  <Mutate<ResponseUserInfo, Failure | Error, UpdateUserNameQueryParams, UserInfoUpdateDTO, UpdateUserNamePathParams>
+    verb="PUT"
+    path={`/user/${userId}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateUserNameProps = Omit<
+  UseMutateProps<
+    ResponseUserInfo,
+    Failure | Error,
+    UpdateUserNameQueryParams,
+    UserInfoUpdateDTO,
+    UpdateUserNamePathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateUserNamePathParams
+
+/**
+ * update user information
+ */
+export const useUpdateUserName = ({ userId, ...props }: UseUpdateUserNameProps) =>
+  useMutate<ResponseUserInfo, Failure | Error, UpdateUserNameQueryParams, UserInfoUpdateDTO, UpdateUserNamePathParams>(
+    'PUT',
+    (paramsInPath: UpdateUserNamePathParams) => `/user/${paramsInPath.userId}`,
+    { base: getConfig('ng/api'), pathParams: { userId }, ...props }
+  )
+
+/**
+ * update user information
+ */
+export const updateUserNamePromise = (
+  {
+    userId,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseUserInfo,
+    Failure | Error,
+    UpdateUserNameQueryParams,
+    UserInfoUpdateDTO,
+    UpdateUserNamePathParams
+  > & { userId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseUserInfo,
+    Failure | Error,
+    UpdateUserNameQueryParams,
+    UserInfoUpdateDTO,
+    UpdateUserNamePathParams
+  >('PUT', getConfig('ng/api'), `/user/${userId}`, props, signal)
+
 export interface ListDelegateConfigsNgV2QueryParams {
   offset?: string
   limit?: string
@@ -64906,7 +64914,7 @@ export interface GetYamlSchemaQueryParams {
     | 'BackstageEnvironmentVariable'
     | 'Fossa'
     | 'CodeQL'
-    | 'GitLeaks'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   subtype?:

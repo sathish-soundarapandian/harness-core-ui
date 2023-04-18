@@ -8,6 +8,7 @@
 import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import {
+  Button,
   ButtonSize,
   ButtonVariation,
   Container,
@@ -36,7 +37,7 @@ import { Page } from '@common/exports'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
-import { useTelemetry } from '@common/hooks/useTelemetry'
+import { useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
@@ -44,6 +45,12 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import { usePermission } from '@rbac/hooks/usePermission'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import SecretsList from './views/SecretsListView/SecretsList'
 import SecretEmptyState from './secrets-empty-state.png'
 import { SECRETS_DEFAULT_PAGE_INDEX, SECRETS_DEFAULT_PAGE_SIZE } from './Constants'
@@ -51,7 +58,6 @@ import { SECRETS_DEFAULT_PAGE_INDEX, SECRETS_DEFAULT_PAGE_SIZE } from './Constan
 import css from './SecretsPage.module.scss'
 
 interface CreateSecretBtnProp {
-  setOpenPopOverProp: (val: boolean) => void
   size?: ButtonSize
 }
 interface SecretsPageProps {
@@ -71,8 +77,8 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const { page: pageIndex, size: pageSize } = useQueryParams<CommonPaginationQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams>()
-  const [openPopOver, setOpenPopOver] = useState<boolean>(false)
-  const [emptyStateOpenPopOver, setEmptyStateOpenPopOver] = useState<boolean>(false)
+  const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.SecretsPage}`)
   useDocumentTitle(getString('common.secrets'))
 
   const {
@@ -87,8 +93,10 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
       pageIndex: pageIndex ?? SECRETS_DEFAULT_PAGE_INDEX,
       pageSize: pageSize ?? (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : SECRETS_DEFAULT_PAGE_SIZE),
       orgIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      sortOrders: [sortPreference]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300,
     mock
   })
@@ -108,35 +116,37 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
       refetch()
     }
   })
-  const CreateSecretBtn: React.FC<CreateSecretBtnProp> = ({ setOpenPopOverProp, size }) => {
+  const [canCreateSecret] = usePermission(
+    {
+      permissions: [PermissionIdentifier.UPDATE_SECRET],
+      resource: {
+        resourceType: ResourceType.SECRET
+      }
+    },
+    []
+  )
+
+  const CreateSecretBtn: React.FC<CreateSecretBtnProp> = ({ size }) => {
     return (
-      <RbacButton
+      <Button
         intent="primary"
         text={getString('createSecretYAML.newSecret')}
         icon="plus"
         rightIcon="chevron-down"
         size={size}
-        permission={{
-          permission: PermissionIdentifier.UPDATE_SECRET,
-          resource: {
-            resourceType: ResourceType.SECRET
-          }
-        }}
-        onClick={() => {
-          setOpenPopOverProp(true)
+        disabled={!canCreateSecret}
+        tooltip={<RBACTooltip permission={PermissionIdentifier.UPDATE_SECRET} resourceType={ResourceType.SECRET} />}
+        tooltipProps={{
+          disabled: canCreateSecret
         }}
         variation={ButtonVariation.PRIMARY}
       />
     )
   }
-  const { trackEvent } = useTelemetry()
   const CreateSecretBtnMenu: React.FC = () => {
-    React.useEffect(() => {
-      trackEvent(SecretActions.StartCreateSecret, {
-        category: Category.SECRET
-      })
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    useTrackEvent(SecretActions.StartCreateSecret, {
+      category: Category.SECRET
+    })
 
     return (
       <Menu large>
@@ -189,9 +199,14 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
       {secretsResponse?.data?.content?.length || searchTerm || loading || error ? (
         <Layout.Horizontal flex className={css.header}>
           <Layout.Horizontal spacing="small">
-            <Popover minimal position={Position.BOTTOM_LEFT} interactionKind={PopoverInteractionKind.CLICK_TARGET_ONLY}>
-              <CreateSecretBtn setOpenPopOverProp={setOpenPopOver} />
-              {openPopOver && <CreateSecretBtnMenu />}
+            <Popover
+              minimal
+              position={Position.BOTTOM_LEFT}
+              interactionKind={PopoverInteractionKind.CLICK}
+              disabled={!canCreateSecret}
+            >
+              <CreateSecretBtn />
+              <CreateSecretBtnMenu />
             </Popover>
 
             <RbacButton
@@ -236,9 +251,9 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
             ? getString('secrets.secret.noSecretsFound')
             : getString('secrets.noSecrets', { resourceName: scope }),
           button: !searchTerm ? (
-            <Popover minimal position={Position.BOTTOM_LEFT} interactionKind={PopoverInteractionKind.CLICK_TARGET_ONLY}>
-              <CreateSecretBtn size={ButtonSize.LARGE} setOpenPopOverProp={setEmptyStateOpenPopOver} />
-              {emptyStateOpenPopOver && <CreateSecretBtnMenu />}
+            <Popover minimal position={Position.BOTTOM_LEFT} interactionKind={PopoverInteractionKind.CLICK}>
+              <CreateSecretBtn size={ButtonSize.LARGE} />
+              <CreateSecretBtnMenu />
             </Popover>
           ) : undefined
         }}
@@ -255,7 +270,17 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
             />
           </div>
         ) : !secretsResponse?.data?.empty ? (
-          <SecretsList secrets={secretsResponse?.data} refetch={refetch} />
+          <>
+            <ListHeader
+              selectedSortMethod={sortPreference}
+              sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
+              onSortMethodChange={option => {
+                setSortPreference(option.value as SortMethod)
+              }}
+              totalCount={secretsResponse?.data?.totalItems}
+            />
+            <SecretsList secrets={secretsResponse?.data} refetch={refetch} />
+          </>
         ) : (
           <Container flex={{ align: 'center-center' }} padding="xxlarge">
             No Data

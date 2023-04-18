@@ -45,7 +45,7 @@ import { SortOption } from '@common/components/SortOption/SortOption'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 import { getFixed, INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { numberFormatter } from '@common/utils/utils'
-import { ChangeRate, ServiceDetailsDTOV2, useDeleteServiceV2 } from 'services/cd-ng'
+import { ChangeRate, IconDTO, ServiceDetailsDTOV2, useDeleteServiceV2 } from 'services/cd-ng'
 import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/DeploymentTypeIcons'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -75,6 +75,7 @@ export interface ServiceListItem {
     [key: string]: string
   }
   deploymentTypeList: string[]
+  deploymentIconList: IconDTO[]
   serviceInstances: {
     count: number
     prodCount: number
@@ -111,6 +112,7 @@ const transformServiceDetailsData = (data: ServiceDetailsDTOV2[]): ServiceListIt
     description: defaultTo(item.description, ''),
     tags: defaultTo(item.tags, {}),
     deploymentTypeList: defaultTo(item.deploymentTypeList, []),
+    deploymentIconList: defaultTo(item.deploymentIconList, []),
     serviceInstances: {
       count: defaultTo(item.instanceCountDetails?.totalInstances, 0),
       prodCount: defaultTo(item.instanceCountDetails?.prodInstances, 0),
@@ -164,8 +166,8 @@ const RenderServiceName: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
 }
 
 const RenderType: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
-  const { deploymentTypeList } = row.original
-  return <DeploymentTypeIcons deploymentTypes={deploymentTypeList} size={20} />
+  const { deploymentTypeList, deploymentIconList } = row.original
+  return <DeploymentTypeIcons deploymentTypes={deploymentTypeList} size={20} deploymentIconList={deploymentIconList} />
 }
 
 const TickerCard: React.FC<{ item: ChangeValue & { name: string } }> = props => {

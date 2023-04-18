@@ -39,7 +39,8 @@ export const deploymentTypeIcon: Record<ServiceTypes, IconName> = {
   ECS: 'service-amazon-ecs',
   Elastigroup: 'elastigroup',
   Tas: 'tas',
-  Asg: 'aws-asg'
+  Asg: 'aws-asg',
+  CustomDeployment: 'CustomDeployment'
 }
 
 // this is added for card names in execution strategies

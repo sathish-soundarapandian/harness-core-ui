@@ -6,23 +6,64 @@
  */
 
 import React from 'react'
-import { Icon, Layout, Text } from '@harness/uicore'
+import { Icon, IconName, Layout, Text } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
+import { Color, FontVariation } from '@harness/design-system'
 import { deploymentTypeIcon, ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
+import type { IconDTO } from 'services/cd-ng'
 
 export interface DeploymentTypeIconsProps {
   deploymentTypes: string[]
   limit?: number
   size?: number
+  deploymentIconList?: IconDTO[]
 }
 
-export const DeploymentTypeIcons: React.FC<DeploymentTypeIconsProps> = props => {
-  const { deploymentTypes, size = 18, limit = 2 } = props
+export const DeploymentTypeIcons: React.FC<DeploymentTypeIconsProps> = ({
+  deploymentTypes,
+  deploymentIconList = [],
+  size = 18,
+  limit = 2
+}) => {
+  const deploymentTypeToIconMap = React.useMemo(() => {
+    const map = new Map<string, IconName | string>()
+    deploymentIconList.forEach(item => {
+      if (item && item.deploymentType) {
+        const icon = defaultTo(item.icon, deploymentTypeIcon[item.deploymentType as ServiceTypes])
+        map.set(item.deploymentType, icon)
+      }
+    })
+    return map
+  }, [deploymentIconList])
+
+  const remainingTypesCount = deploymentTypes.length - limit
+  const shouldRenderRemainingTypesCount = remainingTypesCount > 0
+
   return (
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
       {deploymentTypes.slice(0, limit).map((deploymentType: string) => {
-        return <Icon key={deploymentType} name={deploymentTypeIcon[deploymentType as ServiceTypes]} size={size} />
+        const typeIcon = deploymentTypeToIconMap.get(deploymentType)
+        return typeIcon ? (
+          <ImagePreview
+            key={deploymentType}
+            size={size}
+            src={typeIcon}
+            alt={deploymentType}
+            fallbackIcon={deploymentTypeIcon[deploymentType as ServiceTypes]}
+          />
+        ) : (
+          <Icon key={deploymentType} name={deploymentTypeIcon[deploymentType as ServiceTypes]} size={size} />
+        )
       })}
-      {deploymentTypes.length > limit ? <Text>{`+ ${deploymentTypes.length - limit}`}</Text> : <></>}
+      {shouldRenderRemainingTypesCount ? (
+        <Text
+          key="remainingTypesCount"
+          font={{ variation: FontVariation.SMALL }}
+          color={Color.GREY_600}
+          padding={{ left: 'small' }}
+        >{` + ${remainingTypesCount}`}</Text>
+      ) : null}
     </Layout.Horizontal>
   )
 }

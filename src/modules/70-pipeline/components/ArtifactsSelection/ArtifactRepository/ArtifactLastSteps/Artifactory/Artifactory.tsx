@@ -51,7 +51,8 @@ import {
   shouldFetchFieldOptions,
   helperTextData,
   getConnectorRefQueryData,
-  shouldHideHeaderAndNavBtns
+  shouldHideHeaderAndNavBtns,
+  isTemplateView
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   getHelpeTextForTags,
@@ -120,6 +121,7 @@ function Artifactory({
 
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
+  const isArtifactTemplate = isTemplateView(context)
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const [error, setError] = useState<boolean>(false)
@@ -498,25 +500,23 @@ function Artifactory({
               <div className={cx(css.artifactForm, formClassName)}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-                {showRepositoryFormatForAllowedTypes && (
+                {(showRepositoryFormatForAllowedTypes || isArtifactTemplate) && (
                   <div className={css.imagePathContainer}>
                     <FormInput.Select
                       name="repositoryFormat"
                       label={getString('common.repositoryFormat')}
                       items={repositoryFormats}
                       onChange={value => {
-                        if (showRepositoryFormatForAllowedTypes) {
-                          selectedArtifact &&
-                            formik.setValues({
-                              ...defaultArtifactInitialValues(selectedArtifact),
-                              identifier: formik.values.identifier
-                            })
-                          formik.setFieldValue('repositoryFormat', value?.value)
-                          setRepositoryFormat(value?.value as string)
-                          setIsAzureWebAppGeneric(
-                            showRepositoryFormatForAllowedTypes && value?.value === RepositoryFormatTypes.Generic
-                          )
-                        }
+                        selectedArtifact &&
+                          formik.setValues({
+                            ...defaultArtifactInitialValues(selectedArtifact),
+                            identifier: formik.values.identifier
+                          })
+                        formik.setFieldValue('repositoryFormat', value?.value)
+                        setRepositoryFormat(value?.value as string)
+                        setIsAzureWebAppGeneric(
+                          showRepositoryFormatForAllowedTypes && value?.value === RepositoryFormatTypes.Generic
+                        )
                       }}
                     />
                   </div>

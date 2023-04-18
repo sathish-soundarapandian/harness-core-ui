@@ -172,16 +172,18 @@ const ResourceGroupColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ r
 interface UserGroupTableProps {
   user: UserAggregate
   scopeFilters: ScopeSelector[]
+  page: number
+  setPage: React.Dispatch<React.SetStateAction<number>>
 }
 
-const UserGroupTable: React.FC<UserGroupTableProps> = ({ user, scopeFilters }) => {
+const UserGroupTable: React.FC<UserGroupTableProps> = ({ user, scopeFilters, page, setPage }) => {
   const { accountId, orgIdentifier, projectIdentifier, userIdentifier } =
     useParams<PipelineType<ProjectPathProps & UserPathProps>>()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const { showSuccess, showError } = useToaster()
+
   const history = useHistory()
-  const [page, setPage] = useState(0)
   const {
     data: userGroupData,
     loading,

@@ -27,6 +27,10 @@ import { VARIABLES_DEFAULT_PAGE_INDEX, VARIABLES_DEFAULT_PAGE_SIZE } from '@vari
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useGetVariablesList } from 'services/cd-ng'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import ListHeader from '@common/components/ListHeader/ListHeader'
 import VariableListView from './views/VariableListView'
 import css from './VariablesPage.module.scss'
 
@@ -36,6 +40,8 @@ const VariablesPage: React.FC = () => {
   const variableLabel = getString('common.variables')
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.VariablesPage}`)
   const {
     page: pageIndex = VARIABLES_DEFAULT_PAGE_INDEX,
     size: pageSize = PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : VARIABLES_DEFAULT_PAGE_SIZE
@@ -56,8 +62,10 @@ const VariablesPage: React.FC = () => {
       projectIdentifier,
       orgIdentifier,
       accountIdentifier: accountId,
-      searchTerm
-    }
+      searchTerm,
+      sortOrders: [sortPreference]
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
 
   const { openCreateUpdateVariableModal } = useCreateEditVariableModal({
@@ -134,6 +142,14 @@ const VariablesPage: React.FC = () => {
           ) : undefined
         }}
       >
+        <ListHeader
+          selectedSortMethod={sortPreference}
+          sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
+          totalCount={variableResponse?.data?.totalItems}
+        />
         <VariableListView
           variables={variableResponse?.data}
           refetch={refetch}

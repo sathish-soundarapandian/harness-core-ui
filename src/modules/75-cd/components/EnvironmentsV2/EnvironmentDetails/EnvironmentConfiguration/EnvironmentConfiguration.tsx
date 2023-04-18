@@ -168,32 +168,50 @@ export default function EnvironmentConfiguration({
     }
   })
 
-  const handleYamlChange = useCallback((): void => {
-    const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
-    const yamlVisual = parse(yaml).environment as NGEnvironmentInfoConfig
-    if (yamlVisual) {
-      formikProps?.validateForm({
-        ...yamlVisual
-      })
-    }
+  const handleYamlChange = useCallback(
+    (): void => {
+      if (yamlHandler) {
+        try {
+          const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
+          const yamlVisual = parse(yaml).environment as NGEnvironmentInfoConfig
+
+          if (yamlVisual && yamlHandler.getYAMLValidationErrorMap()?.size === 0) {
+            formikProps?.validateForm({
+              ...yamlVisual
+            })
+          }
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.warn(e)
+        }
+      }
+    },
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [yamlHandler])
+    [yamlHandler]
+  )
 
   const handleModeSwitch = useCallback(
     /* istanbul ignore next */ (view: SelectedView) => {
       if (view === SelectedView.VISUAL) {
-        const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
-        const yamlVisual = parse(yaml).environment as NGEnvironmentInfoConfig
+        try {
+          const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
+          const yamlVisual = parse(yaml).environment as NGEnvironmentInfoConfig
 
-        if (isModified && yamlHandler?.getYAMLValidationErrorMap()?.size) {
-          showError(getString('common.validation.invalidYamlText'))
+          if (isModified && yamlHandler?.getYAMLValidationErrorMap()?.size) {
+            showError(getString('common.validation.invalidYamlText'))
+            return
+          }
+
+          if (yamlVisual) {
+            formikProps?.setValues({
+              ...yamlVisual
+            })
+          }
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.warn(e)
           return
-        }
-
-        if (yamlVisual) {
-          formikProps?.setValues({
-            ...yamlVisual
-          })
         }
       }
       setSelectedView(view)
@@ -206,8 +224,12 @@ export default function EnvironmentConfiguration({
 
   const isInvalidYaml = useCallback((): boolean => {
     if (yamlHandler) {
-      const parsedYaml = parse(yamlHandler.getLatestYaml())
-      if (!parsedYaml || yamlHandler.getYAMLValidationErrorMap()?.size > 0) {
+      try {
+        const parsedYaml = parse(yamlHandler.getLatestYaml())
+        if (!parsedYaml || yamlHandler.getYAMLValidationErrorMap()?.size > 0) {
+          return true
+        }
+      } catch (_) {
         return true
       }
     }

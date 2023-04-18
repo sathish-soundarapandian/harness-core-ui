@@ -12,6 +12,7 @@ import { Classes, Position } from '@blueprintjs/core'
 import { Button, ButtonSize, Icon, Layout, Popover, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useGetServiceHeaderInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
@@ -65,7 +66,11 @@ export const ServiceDetailsHeader = (
     data?.data && !loading && !error ? (
       <Layout.Horizontal padding={{ top: 'small', right: 'medium' }} width="100%">
         <Layout.Horizontal margin={{ right: 'small' }}>
-          <DeploymentTypeIcons deploymentTypes={data.data.deploymentTypes || []} size={38} />
+          <DeploymentTypeIcons
+            deploymentTypes={defaultTo(data.data.deploymentTypes, [])}
+            deploymentIconList={defaultTo(data.data.deploymentIconList, [])}
+            size={38}
+          />
         </Layout.Horizontal>
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }} className={css.serviceDetails}>
           <Layout.Vertical className={css.detailsSection} spacing={'small'}>

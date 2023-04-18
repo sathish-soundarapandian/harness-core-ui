@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { ButtonSize, ButtonVariation, Button, Container, Layout, PageSpinner, TableV2, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
@@ -28,6 +28,8 @@ interface UserRoleBindingsProps {
   scopeFilters: ScopeSelector[]
   user: UserAggregate
   onNewRoleAdded?: () => void
+  page: number
+  setPage: React.Dispatch<React.SetStateAction<number>>
 }
 const RenderColumnRoleAssignments: Renderer<CellProps<RoleAssignmentAggregate>> = ({ row }) => {
   const data = row.original
@@ -122,9 +124,8 @@ const RenderColumnAssignedThrough: Renderer<CellProps<RoleAssignmentAggregate>> 
   )
 }
 
-const UserRoleBindings: React.FC<UserRoleBindingsProps> = ({ user, scopeFilters, onNewRoleAdded }) => {
+const UserRoleBindings: React.FC<UserRoleBindingsProps> = ({ user, scopeFilters, onNewRoleAdded, page, setPage }) => {
   const { accountId, orgIdentifier, projectIdentifier, userIdentifier } = useParams<ProjectPathProps & UserPathProps>()
-  const [page, setPage] = useState(0)
   const { getString } = useStrings()
   const { data, loading, refetch } = useMutateAsGet(useGetFilteredRoleAssignmentByScopeList, {
     body: {

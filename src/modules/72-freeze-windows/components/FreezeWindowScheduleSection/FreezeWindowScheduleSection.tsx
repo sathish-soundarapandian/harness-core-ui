@@ -26,7 +26,7 @@ interface FreezeStudioOverviewSectionProps {
   onBack: () => void
 }
 
-export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionProps> = ({ onBack }) => {
+export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionProps> = ({ onBack, isReadOnly }) => {
   const { getString } = useStrings()
   const {
     state: { freezeObj },
@@ -51,6 +51,7 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
           freezeWindow={(freezeObj?.windows as FreezeWindow[])?.[0]}
           onSubmit={onSave}
           onChange={validate}
+          disabled={isReadOnly}
         />
       </Card>
       <Layout.Horizontal
@@ -74,7 +75,7 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
             onClick={onSave}
             margin={{ top: 'medium' }}
             type="submit"
-            disabled={isSaveDisabled}
+            disabled={isSaveDisabled || isReadOnly}
             variation={ButtonVariation.PRIMARY}
             text={getString('save')}
             icon="send-data"
