@@ -55,7 +55,6 @@ const ECSInfraSpecInputForm = ({
   formik,
   customStepProps
 }: ECSInfraSpecInputFormProps) => {
-  const { environmentRef, infrastructureRef } = customStepProps
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
@@ -64,6 +63,8 @@ const ECSInfraSpecInputForm = ({
 
   const [lastQueryData, setLastQueryData] = React.useState({ connectorRef: '', region: '', envId: '', infraId: '' })
 
+  const environmentRef = defaultTo(initialValues.environmentRef, allValues.environmentRef)
+  const infrastructureRef = defaultTo(initialValues.infrastructureRef, allValues.infrastructureRef)
   const initialConnectorValue = defaultTo(initialValues.connectorRef, allValues.connectorRef)
   const initialRegionValue = defaultTo(initialValues.region, allValues.region)
 

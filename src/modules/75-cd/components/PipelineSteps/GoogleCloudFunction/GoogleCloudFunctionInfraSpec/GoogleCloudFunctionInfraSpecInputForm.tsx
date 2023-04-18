@@ -57,10 +57,8 @@ const GoogleCloudFunctionInfraSpecInputForm = ({
   readonly = false,
   path,
   allowableTypes,
-  formik,
-  customStepProps
+  formik
 }: GoogleCloudFunctionInfraSpecInputFormProps) => {
-  const { environmentRef, infrastructureRef } = customStepProps
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
@@ -70,6 +68,8 @@ const GoogleCloudFunctionInfraSpecInputForm = ({
 
   const [lastQueryData, setLastQueryData] = React.useState({ connectorRef: '' })
 
+  const environmentRef = defaultTo(initialValues.environmentRef, allValues.environmentRef)
+  const infrastructureRef = defaultTo(initialValues.infrastructureRef, allValues.infrastructureRef)
   const initialConnectorValue = defaultTo(initialValues.connectorRef, allValues.connectorRef)
 
   // Project
