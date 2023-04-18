@@ -426,10 +426,10 @@ export function PipelineCanvas({
       delete (pipeline as PipelineWithGitContextFormProps).filePath
       delete (pipeline as PipelineWithGitContextFormProps).storeType
 
-      if (updatedAiDetails) {
-        pipeline.description = values?.aiPrompt
-      }
-      pipeline.description = updatedAiDetails?.aiprompt
+      // if (updatedAiDetails) {
+        // pipeline.description = values?.aiPrompt
+      // }
+      // pipeline.description = updatedAiDetails?.aiprompt
       console.info('PipelineCanvas pipeline')
       console.info(pipeline)
     
@@ -452,21 +452,25 @@ export function PipelineCanvas({
         //           '    location: "a pear tree"\n' +
         //           'turtle-doves: two';
 
-                  const y = 'pipeline:\n' +
-                  '  name: rolling\n' +
-                  '  identifier: rolling\n' +
-                  '  projectIdentifier: Kubernetes\n' +
-                  '  orgIdentifier: default\n' +
-                  '  tags: {}\n' +
-                  '  stages:\n' +
-                  '    - stage:\n' +
-                  '        name: test\n' +
-                  '        identifier: test\n' +
-                  '        description: ""\n' +
-                  '        type: Deployment';
-        console.info(y);
+        //           const y = 'pipeline:\n' +
+        //           '  name: rolling\n' +
+        //           '  identifier: rolling\n' +
+        //           '  projectIdentifier: Kubernetes\n' +
+        //           '  orgIdentifier: default\n' +
+        //           '  tags: {}\n' +
+        //           '  stages:\n' +
+        //           '    - stage:\n' +
+        //           '        name: test\n' +
+        //           '        identifier: test\n' +
+        //           '        description: ""\n' +
+        //           '        type: Deployment';
+        // console.info(y);
         
-        const parsedY = YAML.parse(y)
+
+      // const y = "pipeline:\n  name: nginx\n  identifier: nginx\n  projectIdentifier: Kubernetes\n  orgIdentifier: default\n  tags: {}\n  stages:\n    - stage:\n        name: Deploy\n        identifier: Deploy\n        description: \"\"\n        type: Deployment\n        spec:\n          deploymentType: Kubernetes\n          service:\n            serviceRef: nginx\n            serviceInputs:\n              serviceDefinition:\n                type: Kubernetes\n                spec:\n                  artifacts:\n                    primary:\n                      primaryArtifactRef: nginx\n          environment:\n            environmentRef: production\n            deployToAll: false\n            infrastructureDefinitions:\n              - identifier: prod\n          execution:\n            steps:\n              - step:\n                  type: ShellScript\n                  name: ShellScript_1\n                  identifier: ShellScript_1\n                  spec:\n                    shell: Bash\n                    onDelegate: true\n                    source:\n                      type: Inline\n                      spec:\n                        script: |-\n                          echo test\n                    environmentVariables: []\n                    outputVariables: []\n                  timeout: 10m\n              - step:\n                  name: Rollout Deployment\n                  identifier: rolloutDeployment\n                  type: K8sRollingDeploy\n                  timeout: 10m\n                  spec:\n                    skipDryRun: false\n                    pruningEnabled: false\n            rollbackSteps:\n              - step:\n                  name: Rollback Rollout Deployment\n                  identifier: rollbackRolloutDeployment\n                  type: K8sRollingRollback\n                  timeout: 10m\n                  spec:\n                    pruningEnabled: false\n        tags: {}\n        failureStrategies:\n          - onFailure:\n              errors:\n                - AllErrors\n              action:\n                type: StageRollback\n    - stage:\n        name: Deploy\n        identifier: Deploy\n        description: \"\"\n        type: Deployment\n        spec:\n          deploymentType: Kubernetes\n          service:\n            serviceRef: busybox\n            serviceInputs:\n              serviceDefinition:\n                type: Kubernetes\n                spec:\n                  artifacts:\n                    primary:\n                      primaryArtifactRef: busybox\n          environment:\n            environmentRef: staging\n            deployToAll: false\n            infrastructureDefinitions:\n              - identifier: staging\n          execution:\n            steps:\n              - step:\n                  name: Rollout Deployment\n                  identifier: rolloutDeployment\n                  type: K8sRollingDeploy\n                  timeout: 10m\n                  spec:\n                    skipDryRun: false\n                    pruningEnabled: false\n            rollbackSteps:\n              - step:\n                  name: Rollback Rollout Deployment\n                  identifier: rollbackRolloutDeployment\n                  type: K8sRollingRollback\n                  timeout: 10m\n                  spec:\n                    pruningEnabled: false\n        tags: {}\n        failureStrategies:\n          - onFailure:\n              errors:\n                - AllErrors\n              action:\n                type: StageRollback";
+      // const parsedY = YAML.parse(y)
+
+        const parsedY = YAML.parse(updatedAiDetails?.gptResponse)
         console.info(parsedY);
 
       pipeline.stages = parsedY.pipeline.stages;

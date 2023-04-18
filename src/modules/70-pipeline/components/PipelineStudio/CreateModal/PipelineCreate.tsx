@@ -183,8 +183,6 @@ export default function CreatePipelines({
         ? { repoIdentifier: values.repo, branch: values.branch }
         : undefined
     
-    const formAiDetails = values.storeType == StoreType.AI ? { aiprompt: values.aiPrompt } : undefined
-    console.info("FormAiDetails: " + formAiDetails)
   
     let token = SessionToken.getToken()
     console.info("Token: " + token)
@@ -207,10 +205,18 @@ export default function CreatePipelines({
     xhr.onerror = (e) => {
       console.error(xhr.statusText);
     };
-    xhr.send(formAiDetails?.aiprompt);
+    xhr.send(values.aiPrompt);
     // xhr.send(null);
 
+
     console.info("Rest call response: " + resp)
+    
+    const formAiDetails = values.storeType == StoreType.AI ? { 
+      aiprompt: values.aiPrompt,
+      gptResponse: resp
+    } : undefined
+    console.info("FormAiDetails: " + formAiDetails)
+
     closeLoadingGif();
     afterSave?.(
       omit(values, 'storeType', 'connectorRef', 'repo', 'branch', 'filePath', 'useTemplate'),
