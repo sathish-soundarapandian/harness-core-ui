@@ -734,9 +734,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
             <ServerlessArtifactoryRepository
-              connectorRef={
-                get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
-              }
+              connectorRef={getFinalQueryParamValue(connectorRefValue)}
               repoFormat={isGenericArtifactory ? 'generic' : repoFormat}
               expressions={expressions}
               allowableTypes={allowableTypes}
@@ -757,7 +755,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                     : artifactPath,
                   ''
                 ),
-                'connectorRef'
+                'repository'
               )}
               stepViewType={stepViewType}
             />

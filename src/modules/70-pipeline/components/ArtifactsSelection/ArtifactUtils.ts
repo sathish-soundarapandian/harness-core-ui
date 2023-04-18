@@ -699,6 +699,8 @@ export const getInSelectOptionForm = (data?: { [key: string]: string } | string)
 export const shouldHideHeaderAndNavBtns = (context: number): boolean =>
   [ModalViewFor.Template, ModalViewFor.CD_Onboarding].includes(context)
 
+export const isTemplateView = (context: number): boolean => context === ModalViewFor.Template
+
 export const hasFixedDefiniteValue = (value: any) => {
   return getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME || !value
 }

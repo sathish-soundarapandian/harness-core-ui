@@ -41,7 +41,7 @@ export interface ServerlessArtifactoryRepositoryProps {
   isReadonly?: boolean
   allowableTypes: AllowedTypes
   formik: FormikProps<ImagePathTypes>
-  connectorRef: string
+  connectorRef?: string
   fieldName: string
   serviceId?: string
   fqnPath?: string
