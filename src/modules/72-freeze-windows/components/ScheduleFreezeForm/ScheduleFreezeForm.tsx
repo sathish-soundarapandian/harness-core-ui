@@ -32,6 +32,7 @@ interface ScheduleFreezeFormProps {
   onChange?: (freezeWindow: FreezeWindow) => void
   formActions?: ReactNode
   isGlobalFreezeForm?: boolean
+  disabled?: boolean
 }
 
 export type FreezeWindowFormData = FreezeWindow & {
@@ -168,7 +169,8 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
   onSubmit,
   onChange,
   formActions,
-  isGlobalFreezeForm
+  isGlobalFreezeForm,
+  disabled
 }) => {
   const { getString } = useStrings()
   const { setFreezeFormError } = useFreezeWindowContext()
@@ -217,19 +219,21 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
                   minWidth: 200
                 }}
                 usePortal
+                disabled={disabled}
               />
-              <DateTimePicker name="startTime" label="Start Time" defaultToCurrentTime />
+              <DateTimePicker name="startTime" label="Start Time" defaultToCurrentTime disabled={disabled} />
               <FormInput.RadioGroup
                 name="endTimeMode"
                 label={getString('freezeWindows.recurrenceConfig.endTime')}
                 className={css.marginBottom8}
+                disabled={disabled}
                 items={[
                   {
                     label: (
                       <Layout.Horizontal spacing="small" flex={{ alignItems: 'baseline' }} className={css.endTime}>
                         <FormInput.DurationInput
                           name="duration"
-                          disabled={formikProps.values.endTimeMode === 'date'}
+                          disabled={formikProps.values.endTimeMode === 'date' || disabled}
                           inputProps={{ placeholder: 'Enter w/d/h/m' }}
                         />
                         <span className={css.text}>from start time</span>
@@ -238,7 +242,12 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
                     value: 'duration'
                   },
                   {
-                    label: <DateTimePicker name="endTime" disabled={formikProps.values.endTimeMode === 'duration'} />,
+                    label: (
+                      <DateTimePicker
+                        name="endTime"
+                        disabled={formikProps.values.endTimeMode === 'duration' || disabled}
+                      />
+                    ),
                     value: 'date'
                   }
                 ]}
@@ -260,6 +269,7 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
                       value={selectedRecurrenceType}
                       minWidth={200}
                       usePortal={true}
+                      disabled={disabled}
                       filterable={false}
                       className={css.marginBottom24}
                       onChange={item => {
@@ -283,6 +293,7 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
                           name="recurrence.spec.value"
                           placeholder={getString('select')}
                           items={monthlySelectItems}
+                          disabled={disabled}
                           value={recurrenceSelectOption}
                           addClearButton={true}
                           usePortal={true}
@@ -307,13 +318,14 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
                 <FormInput.RadioGroup
                   name="recurrence.spec.recurrenceEndMode"
                   label="Recurrence End Date"
+                  disabled={disabled}
                   items={[
                     { label: 'Never', value: 'never' },
                     {
                       label: (
                         <DateTimePicker
                           name="recurrence.spec.until"
-                          disabled={formikProps.values?.recurrence?.spec.recurrenceEndMode === 'never'}
+                          disabled={formikProps.values?.recurrence?.spec.recurrenceEndMode === 'never' || disabled}
                         />
                       ),
                       value: 'date'
