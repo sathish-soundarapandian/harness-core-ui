@@ -6,7 +6,11 @@
  */
 
 import React, { ReactElement, useMemo } from 'react'
+import type { DateRange } from '@blueprintjs/datetime'
+import { isUndefined } from 'lodash-es'
 import {
+  Button,
+  ButtonVariation,
   DateRangePickerButton,
   DropDown,
   ExpandingSearchInput,
@@ -25,13 +29,19 @@ import type { FreezeListUrlQueryParams } from '@freeze-windows/types'
 import { getDefaultCalenderFilter, getQueryParamOptions, STATUS_OPTIONS } from '@freeze-windows/utils/queryUtils'
 import css from './FreezeWindowListSubHeader.module.scss'
 
-function _FreezeWindowListSubHeader(_: any, ref: React.ForwardedRef<ExpandingSearchInputHandle>): ReactElement {
+function _FreezeWindowListSubHeader(
+  { resetFilter }: { resetFilter: () => void },
+  ref: React.ForwardedRef<ExpandingSearchInputHandle>
+): ReactElement {
   const { getString } = useStrings()
   const { updateQueryParams } = useUpdateQueryParams<Partial<FreezeListUrlQueryParams>>()
   const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())
-  const { searchTerm, freezeStatus } = queryParams
-  const defaultDateRangeValue = useMemo(() => getDefaultCalenderFilter(), [])
+  const { searchTerm, freezeStatus, startTime, endTime } = queryParams
+  const [start, end] = useMemo(() => getDefaultCalenderFilter(), [])
 
+  const dateRange: DateRange = [startTime ? new Date(startTime) : undefined, endTime ? new Date(endTime) : undefined]
+  const isLast7Days = dateRange[0]?.getTime() === start.getTime() && dateRange[1]?.getTime() === end.getTime()
+  const isNoRangeSelected = isUndefined(dateRange[0]) || isUndefined(dateRange[1])
   return (
     <Page.SubHeader className={css.subHeader}>
       <Layout.Horizontal spacing={'medium'} className={css.subHeaderActions}>
@@ -51,8 +61,14 @@ function _FreezeWindowListSubHeader(_: any, ref: React.ForwardedRef<ExpandingSea
         />
         <DateRangePickerButton
           className={css.dateRange}
-          initialButtonText={getString('freezeWindows.freezeWindowsPage.dateRangeLabel')}
-          dateRangePickerProps={{ defaultValue: defaultDateRangeValue }}
+          initialButtonText={
+            isNoRangeSelected
+              ? getString('freezeWindows.freezeWindowsPage.selectDateRange')
+              : isLast7Days
+              ? getString('freezeWindows.freezeWindowsPage.dateRangeLabel')
+              : `${dateRange[0]?.toLocaleDateString()} - ${dateRange[1]?.toLocaleDateString()}`
+          }
+          dateRangePickerProps={{ defaultValue: dateRange, allowSingleDayRange: false }}
           onChange={([selectedStartTime, selectedEndTime]) => {
             updateQueryParams({
               startTime: selectedStartTime.getTime(),
@@ -60,9 +76,14 @@ function _FreezeWindowListSubHeader(_: any, ref: React.ForwardedRef<ExpandingSea
               page: DEFAULT_PAGE_INDEX
             })
           }}
-          renderButtonText={([selectedstartTime, selectedendTime]) =>
-            `${selectedstartTime.toLocaleDateString()} - ${selectedendTime.toLocaleDateString()}`
+          renderButtonText={selectedDates =>
+            `${selectedDates[0].toLocaleDateString()} - ${selectedDates[1].toLocaleDateString()}`
           }
+        />
+        <Button
+          text={getString('common.filters.clearFilters')}
+          onClick={resetFilter}
+          variation={ButtonVariation.SECONDARY}
         />
         <FlexExpander />
         <ExpandingSearchInput

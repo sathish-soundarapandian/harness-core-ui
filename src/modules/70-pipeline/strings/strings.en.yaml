@@ -1724,11 +1724,18 @@ validation:
   validationSuccessfulText: No errors were found with your pipeline configurations. You can start running your pipeline! Click to view more.
   validationInProgressText: Click to view details of the pipeline configuration validation progress.
   nIssuesFound: '{{n}} issue(s) found'
+  nIssues: '{{n}} issue(s)'
   errorText: Click to view list of issues.
-  evaluatingPolicySets: Evaluating Policy Sets
   pipelineValidated: Pipeline validated
+  pipelineValidationFailed: Pipeline validation failed
   revalidate: Revalidate
   validationResultApiError: Unable to complete validation due to an error.
+  validationAreasTitle: 'Validation was conducted in the following areas:'
+  templateUsage: Template usage
+  policySetEvaluation: Policy set evaluation
+  pending: pending
+  templateIssuesN: Template issues ({{n}})
+  policySetIssuesN: Policy set issues ({{n}})
 bamboo:
   planName: Plan Name
 planNamePlaceholder: Enter or Select Plan

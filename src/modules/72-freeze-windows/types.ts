@@ -99,10 +99,7 @@ export interface ResourcesInterface {
 }
 
 type OptionalFreezeListUrlQueryParams = Pick<GetFreezeListQueryParams, 'page' | 'size'> &
-  Pick<FreezeFilterPropertiesDTO, 'freezeStatus' | 'searchTerm' | 'sort'> & {
-    startTime?: number
-    endTime?: number
-  }
+  Pick<FreezeFilterPropertiesDTO, 'freezeStatus' | 'searchTerm' | 'sort' | 'startTime' | 'endTime'>
 
 export type FreezeListUrlQueryParams = RequiredPick<OptionalFreezeListUrlQueryParams, 'page' | 'size' | 'sort'>
 

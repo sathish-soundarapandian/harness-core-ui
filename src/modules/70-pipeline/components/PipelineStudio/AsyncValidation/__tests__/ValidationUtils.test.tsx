@@ -6,12 +6,12 @@
  */
 
 import { getPolicySetsErrorCount } from '../ValidationUtils'
-import { failureValidationResult, successValidationResult } from './mock'
+import { policyEvalFailureValidationResult, successValidationResult } from './mock'
 
 describe('ValidationUtils', () => {
   test('getPolicySetsErrorCount should return correct count', () => {
     expect(getPolicySetsErrorCount()).toBe(0)
     expect(getPolicySetsErrorCount(successValidationResult.data?.policyEval)).toBe(0)
-    expect(getPolicySetsErrorCount(failureValidationResult.data?.policyEval)).toBe(2)
+    expect(getPolicySetsErrorCount(policyEvalFailureValidationResult.data?.policyEval)).toBe(2)
   })
 })

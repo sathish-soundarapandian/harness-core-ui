@@ -24,12 +24,12 @@ import type { Evaluation } from 'services/pm'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import {
   getIconPropsByStatus,
-  getPolicySetsErrorCount,
   isStatusError,
   isStatusFailure,
   isStatusLoading,
   isStatusSuccess,
   minimalTimeagoFormatter,
+  useValidationErrorCount,
   ValidationStatus
 } from './ValidationUtils'
 import { ValidationPopoverContent } from './ValidationPopoverContent'
@@ -94,10 +94,8 @@ export function ValidationBadge({ className }: ValidationBadgeProps): JSX.Elemen
   }, [validationResultData?.data?.status, validationResultError, validationResultLoading])
 
   const policyEval = validationResultData?.data?.policyEval as Evaluation | undefined
+  const templatesValidation = validationResultData?.data?.templateValidationResponse
   const endTs = validationResultData?.data?.endTs
-
-  const policySetsErrorCount = useMemo(() => getPolicySetsErrorCount(policyEval), [policyEval])
-  const errorCountToRender = status === 'FAILURE' ? policySetsErrorCount : 1
 
   const pollUntil = useMemo(() => {
     return !!validationUuid && !validationResultLoading && isStatusLoading(status)
@@ -152,6 +150,8 @@ export function ValidationBadge({ className }: ValidationBadgeProps): JSX.Elemen
     }
   }
 
+  const { totalErrorCount } = useValidationErrorCount({ policyEval, status, templatesValidation })
+
   const validationText = useMemo(() => {
     switch (true) {
       case isStatusLoading(status):
@@ -195,7 +195,7 @@ export function ValidationBadge({ className }: ValidationBadgeProps): JSX.Elemen
           )}
           {showTimeago && <ReactTimeago date={endTs as number} live formatter={minimalTimeagoFormatter} />}
         </div>
-        <ValidationPopoverContent status={status} errorCount={errorCountToRender} />
+        <ValidationPopoverContent status={status} errorCount={totalErrorCount} />
       </Popover>
 
       <ValidationResultModal
@@ -203,6 +203,7 @@ export function ValidationBadge({ className }: ValidationBadgeProps): JSX.Elemen
         endTs={endTs}
         policyEval={policyEval}
         status={status}
+        templatesValidation={templatesValidation}
         onClose={closeValidationResultModal}
         onRevalidate={onRevalidate}
       />

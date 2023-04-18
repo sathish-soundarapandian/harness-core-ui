@@ -16,9 +16,10 @@ import * as pipelineContext from '../../PipelineContext/PipelineContext'
 import {
   successValidationResult,
   errorValidationResult,
-  failureValidationResult,
+  policyEvalFailureValidationResult,
   inProgressValidationResult,
-  terminatedValidationResult
+  terminatedValidationResult,
+  templateFailureValidationResult
 } from './mock'
 
 mockImport('@governance/PolicyManagementEvaluationView', {
@@ -66,7 +67,8 @@ describe('ValidationBadge', () => {
     userEvent.click(validationBadge)
 
     expect(await screen.findByText('pipeline.validation.pipelineValidated')).toBeInTheDocument()
-    expect(screen.getByText('Evaluation View')).toBeInTheDocument()
+    expect(screen.getByTestId('template_success')).toBeInTheDocument()
+    expect(screen.getByTestId('policy_success')).toBeInTheDocument()
 
     const revalidateButton = screen.getByText('pipeline.validation.revalidate')
     userEvent.click(revalidateButton)
@@ -127,9 +129,9 @@ describe('ValidationBadge', () => {
     expect(await screen.findByText('retry')).toBeInTheDocument()
   })
 
-  test('renders relevant data when status is FAILURE', async () => {
+  test('renders relevant data when validation fails because of policy errors', async () => {
     jest.spyOn(pipelineServices, 'useGetPipelineValidateResult').mockReturnValue({
-      data: failureValidationResult,
+      data: policyEvalFailureValidationResult,
       loading: false,
       error: null,
       absolutePath: '',
@@ -158,8 +160,13 @@ describe('ValidationBadge', () => {
 
     userEvent.click(validationBadge)
 
-    expect(await screen.findByText('common.policiesSets.evaluations')).toBeInTheDocument()
-    expect(screen.getByText('Evaluation View')).toBeInTheDocument()
+    expect(await screen.findByText('pipeline.validation.pipelineValidationFailed')).toBeInTheDocument()
+    expect(screen.getByTestId('template_success')).toBeInTheDocument()
+    expect(screen.getByTestId('policy_failure')).toBeInTheDocument()
+
+    const issuesButton = screen.getByRole('button', { name: '(pipeline.validation.nIssues)' })
+    userEvent.click(issuesButton)
+    expect(await screen.findByText('Evaluation View')).toBeInTheDocument()
 
     const revalidateButton = screen.getByText('pipeline.validation.revalidate')
     userEvent.click(revalidateButton)
@@ -168,6 +175,41 @@ describe('ValidationBadge', () => {
     await waitFor(() => {
       expect(screen.getByText('something went wrong')).toBeInTheDocument()
     })
+  })
+
+  test('renders relevant data when validation fails because of template errors', async () => {
+    jest.spyOn(pipelineServices, 'useGetPipelineValidateResult').mockReturnValue({
+      data: templateFailureValidationResult,
+      loading: false,
+      error: null,
+      absolutePath: '',
+      cancel: jest.fn(),
+      refetch: jest.fn(),
+      response: null
+    })
+
+    const { baseElement } = renderValidationBadge()
+    const validationBadge = await screen.findByTestId('validation-badge')
+
+    expect(validationBadge).toBeInTheDocument()
+    expect(baseElement.querySelector('[data-icon="warning-sign"]')).toBeInTheDocument()
+    expect(screen.getByText('dummy date')).toBeInTheDocument()
+
+    fireEvent.mouseOver(validationBadge)
+
+    expect(await screen.findByText('pipeline.validation.nIssuesFound')).toBeInTheDocument()
+
+    userEvent.click(validationBadge)
+
+    expect(await screen.findByText('pipeline.validation.pipelineValidationFailed')).toBeInTheDocument()
+    expect(screen.getByTestId('template_failure')).toBeInTheDocument()
+    expect(screen.getByTestId('policy_pending')).toBeInTheDocument()
+
+    const issuesButton = screen.getByRole('button', { name: '(pipeline.validation.nIssues)' })
+    userEvent.click(issuesButton)
+    expect(
+      await screen.findByText('Template with template ID async_validation and version v1 not found.')
+    ).toBeInTheDocument()
   })
 
   test('renders relevant data when loading', async () => {

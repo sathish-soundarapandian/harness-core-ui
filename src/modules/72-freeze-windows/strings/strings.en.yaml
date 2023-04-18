@@ -12,6 +12,7 @@ freezeWindowsPage:
   updateStatusSuccess: Freeze Window(s) {{value}}
   updateStatusFailure: Failed to update Freeze Window(s)
   dateRangeLabel: 'Updated: Last 7 days'
+  selectDateRange: 'Select Date Range'
 freezeStudio:
   defineResources: Freeze any deployments that have the following resources defined in the rules below
   excludeOrgs: Exclude specific Organizations

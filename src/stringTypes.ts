@@ -4961,12 +4961,19 @@ export interface StringsMap {
   'pipeline.utilitiesStep.to': string
   'pipeline.utilitiesStep.url': string
   'pipeline.validation.errorText': string
-  'pipeline.validation.evaluatingPolicySets': string
+  'pipeline.validation.nIssues': string
   'pipeline.validation.nIssuesFound': string
+  'pipeline.validation.pending': string
   'pipeline.validation.pipelineValidated': string
+  'pipeline.validation.pipelineValidationFailed': string
+  'pipeline.validation.policySetEvaluation': string
+  'pipeline.validation.policySetIssuesN': string
   'pipeline.validation.revalidate': string
+  'pipeline.validation.templateIssuesN': string
+  'pipeline.validation.templateUsage': string
   'pipeline.validation.validated': string
   'pipeline.validation.validating': string
+  'pipeline.validation.validationAreasTitle': string
   'pipeline.validation.validationInProgressText': string
   'pipeline.validation.validationResultApiError': string
   'pipeline.validation.validationSuccessful': string
@@ -5072,6 +5079,7 @@ export interface StringsMap {
   'freezeWindows.freezeWindowsPage.freezeWindow': string
   'freezeWindows.freezeWindowsPage.newFreezeWindow': string
   'freezeWindows.freezeWindowsPage.noFreezeWindows': string
+  'freezeWindows.freezeWindowsPage.selectDateRange': string
   'freezeWindows.freezeWindowsPage.updateStatusFailure': string
   'freezeWindows.freezeWindowsPage.updateStatusSuccess': string
   'freezeWindows.globalFreeze.disableFreezeFailure': string

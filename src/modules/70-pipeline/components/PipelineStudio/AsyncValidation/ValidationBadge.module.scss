@@ -67,19 +67,39 @@
 }
 
 .validationResultModal {
-  width: 900px !important;
-  max-height: 600px !important;
-
-  .successTitle {
-    margin-top: 12px;
+  .title {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: var(--spacing-small);
   }
+}
 
-  .validationResultModalBody {
-    overflow: auto;
+.templateIssuesPanel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-small);
+}
+
+.policySetIssuesPanel {
+  padding: 0 !important;
+}
+
+.validationSummary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-medium);
+
+  .validationAreaItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-small);
+
+    .buttonLink {
+      padding: 0 !important;
+    }
   }
 }
 

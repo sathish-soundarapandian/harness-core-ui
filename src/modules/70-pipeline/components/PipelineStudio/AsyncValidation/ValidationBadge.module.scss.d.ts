@@ -7,17 +7,21 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly buttonLink: string
   readonly container: string
   readonly error: string
   readonly loading: string
+  readonly policySetIssuesPanel: string
   readonly popoverContent: string
   readonly retryLink: string
   readonly revalidateFooter: string
   readonly success: string
-  readonly successTitle: string
+  readonly templateIssuesPanel: string
+  readonly title: string
+  readonly validationAreaItem: string
   readonly validationBadge: string
   readonly validationErrorModal: string
   readonly validationResultModal: string
-  readonly validationResultModalBody: string
+  readonly validationSummary: string
 }
 export default styles

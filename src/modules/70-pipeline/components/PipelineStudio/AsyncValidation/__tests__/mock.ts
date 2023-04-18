@@ -57,6 +57,10 @@ export const successValidationResult: ResponsePipelineValidationResponseDTO = {
       type: 'pipeline',
       action: 'onsave',
       created: '1677240396581'
+    },
+    templateValidationResponse: {
+      validYaml: true,
+      exceptionMessage: undefined
     }
   },
   correlationId: 'correlationId'
@@ -91,7 +95,7 @@ export const errorValidationResult: GetDataError<Failure | Error> = {
   status: 404
 }
 
-export const failureValidationResult: ResponsePipelineValidationResponseDTO = {
+export const policyEvalFailureValidationResult: ResponsePipelineValidationResponseDTO = {
   status: 'SUCCESS',
   data: {
     status: 'FAILURE',
@@ -167,6 +171,24 @@ export const failureValidationResult: ResponsePipelineValidationResponseDTO = {
       type: 'pipeline',
       action: 'onsave',
       created: '1678790263016'
+    },
+    templateValidationResponse: {
+      validYaml: true,
+      exceptionMessage: undefined
+    }
+  },
+  correlationId: 'correlationId'
+}
+
+export const templateFailureValidationResult: ResponsePipelineValidationResponseDTO = {
+  status: 'SUCCESS',
+  data: {
+    status: 'FAILURE',
+    startTs: 1681541151590,
+    endTs: 1681541151687,
+    templateValidationResponse: {
+      validYaml: false,
+      exceptionMessage: 'Template with template ID async_validation and version v1 not found.'
     }
   },
   correlationId: 'correlationId'

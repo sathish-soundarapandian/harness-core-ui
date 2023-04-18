@@ -300,7 +300,7 @@ const UserGroupTable: React.FC<UserGroupTableProps> = ({ user, scopeFilters, pag
         userIdentifier
       }
     ],
-    []
+    [scopeFilters, refetch]
   )
 
   return (
