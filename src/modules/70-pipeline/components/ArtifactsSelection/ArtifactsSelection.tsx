@@ -37,7 +37,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { ServiceDeploymentType, getInitialSelectedArtifactValue } from '@pipeline/utils/stageHelpers'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import {
   ArtifactConnectorStepDataToLastStep,
   useArtifactSelectionLastSteps
@@ -73,7 +73,8 @@ import {
   isAllowedAzureArtifactDeploymentTypes,
   isAllowedAMIDeploymentTypes,
   showArtifactStoreStepDirectly,
-  isAllowedBambooArtifactDeploymentTypes
+  isAllowedBambooArtifactDeploymentTypes,
+  getInitialSelectedArtifactValue
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'

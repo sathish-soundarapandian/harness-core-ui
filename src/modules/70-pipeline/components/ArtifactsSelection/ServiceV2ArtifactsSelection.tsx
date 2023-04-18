@@ -53,7 +53,7 @@ import type {
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { ServiceDeploymentType, getInitialSelectedArtifactValue } from '@pipeline/utils/stageHelpers'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 // eslint-disable-next-line no-restricted-imports
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
@@ -81,6 +81,7 @@ import {
   ArtifactIconByType,
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES,
+  getInitialSelectedArtifactValue,
   isAllowedAMIDeploymentTypes,
   isAllowedAzureArtifactDeploymentTypes,
   isAllowedBambooArtifactDeploymentTypes,

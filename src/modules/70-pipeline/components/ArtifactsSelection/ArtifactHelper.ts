@@ -356,3 +356,19 @@ export const showArtifactStoreStepDirectly = (selectedArtifact: ArtifactType | n
     [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage, ENABLED_ARTIFACT_TYPES.GoogleCloudSource].includes(selectedArtifact)
   )
 }
+
+export const getInitialSelectedArtifactValue = (
+  deploymentType: ServiceDefinition['type'],
+  availableArtifactTypes?: ArtifactType[]
+): ArtifactType | null => {
+  if (availableArtifactTypes) {
+    if (availableArtifactTypes?.length === 1) {
+      return availableArtifactTypes[0]
+    }
+  } else {
+    if (allowedArtifactTypes[deploymentType]?.length === 1) {
+      return allowedArtifactTypes[deploymentType][0]
+    }
+  }
+  return null
+}
