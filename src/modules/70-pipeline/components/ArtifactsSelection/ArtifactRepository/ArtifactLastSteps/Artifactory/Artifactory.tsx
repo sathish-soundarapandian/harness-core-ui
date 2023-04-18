@@ -385,7 +385,7 @@ function Artifactory({
     merge(artifactObj.spec, {
       repository: getRepositoryValue(formData, isGenericArtifactory),
       repositoryUrl: formData?.repositoryUrl,
-      repositoryFormat
+      repositoryFormat: defaultTo(formData.repositoryFormat, repositoryFormat)
     })
 
     if (isAzureWebAppGeneric) {
@@ -506,16 +506,19 @@ function Artifactory({
                       name="repositoryFormat"
                       label={getString('common.repositoryFormat')}
                       items={repositoryFormats}
-                      onChange={value => {
-                        selectedArtifact &&
+                      onChange={selectedValue => {
+                        setRepositoryFormat(selectedValue.value as string)
+
+                        if (selectedArtifact) {
                           formik.setValues({
                             ...defaultArtifactInitialValues(selectedArtifact),
-                            identifier: formik.values.identifier
+                            ...getInitialValues(),
+                            identifier: formik.values.identifier,
+                            repositoryFormat: selectedValue.value
                           })
-                        formik.setFieldValue('repositoryFormat', value?.value)
-                        setRepositoryFormat(value?.value as string)
+                        }
                         setIsAzureWebAppGeneric(
-                          showRepositoryFormatForAllowedTypes && value?.value === RepositoryFormatTypes.Generic
+                          showRepositoryFormatForAllowedTypes && selectedValue.value === RepositoryFormatTypes.Generic
                         )
                       }}
                     />
