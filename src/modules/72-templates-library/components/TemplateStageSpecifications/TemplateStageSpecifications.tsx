@@ -35,7 +35,7 @@ import { useGlobalEventListener, useQueryParams } from '@common/hooks'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { useStageTemplateActions } from '@pipeline/utils/useStageTemplateActions'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
-import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { getTemplateErrorMessage, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -126,11 +126,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
 
   const updateFormValues = (newTemplateInputs?: StageElementConfig): void => {
     const updatedStage = produce(stage?.stage as StageElementConfig, draft => {
-      set(
-        draft,
-        'template.templateInputs',
-        !isEmpty(newTemplateInputs) ? replaceDefaultValues(newTemplateInputs) : undefined
-      )
+      set(draft, 'template.templateInputs', !isEmpty(newTemplateInputs) ? newTemplateInputs : undefined)
     })
     setFormValues(updatedStage)
     updateStage(updatedStage)

@@ -11,7 +11,6 @@ import { render } from '@testing-library/react'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as utils from '../templateUtils'
-import { replaceDefaultValues } from '../templateUtils'
 
 jest.mock('uuid')
 
@@ -90,20 +89,6 @@ describe('templateUtils', () => {
         timeout: '30s',
         type: 'Http'
       })
-    })
-  })
-
-  test('replaceDefaultValues test', () => {
-    const template = {
-      var1: '<+input>',
-      var2: { var3: { var4: '<+input>', var5: '<+input>.default(myDefaultValue)' } },
-      var6: '<+input>.default(myDefaultValue).executionInput()'
-    }
-
-    expect(replaceDefaultValues(template)).toEqual({
-      var1: '<+input>',
-      var2: { var3: { var4: '<+input>', var5: 'myDefaultValue' } },
-      var6: '<+input>.default(myDefaultValue).executionInput()'
     })
   })
 
