@@ -1180,6 +1180,7 @@ export interface EmptyDirYamlSpec {
 }
 export interface EntityAIDetails {
   aiPrompt?: string
+  gptResponse?: string
 }
 
 export interface EntityGitDetails {

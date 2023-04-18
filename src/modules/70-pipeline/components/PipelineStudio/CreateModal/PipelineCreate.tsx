@@ -185,11 +185,12 @@ export default function CreatePipelines({
     
   
     let token = SessionToken.getToken()
-    console.info("Token: " + token)
+    // console.info("Token: " + token)
 
     let resp;
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:12001/api/pipelines/generateWithAI?accountIdentifier=kmpySmUISimoRrJL6NL73w&projectIdentifier=" + values.projectIdentifier + "&orgIdentifier=" + values.orgIdentifier, false);
+    // xhr.open("GET", "https://api.ipify.org?format=json", false);
+    xhr.open("POST", "http://localhost:12001/api/pipelines/generateWithAI?identifier=" + values.identifier + "&name=" + values.name + "&accountIdentifier=kmpySmUISimoRrJL6NL73w&projectIdentifier=" + values.projectIdentifier + "&orgIdentifier=" + values.orgIdentifier, false);
     xhr.setRequestHeader('Authorization', 'Bearer ' + token);
     xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onload = (e) => {
@@ -210,7 +211,7 @@ export default function CreatePipelines({
 
 
     console.info("Rest call response: " + resp)
-    
+
     const formAiDetails = values.storeType == StoreType.AI ? { 
       aiprompt: values.aiPrompt,
       gptResponse: resp
