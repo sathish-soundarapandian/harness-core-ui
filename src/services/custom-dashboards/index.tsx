@@ -70,6 +70,14 @@ export interface DashboardModel {
   view_count: number
 }
 
+export interface DashboardPromptRequestBody {
+  prompt: string
+}
+
+export interface DashboardPromptResponse {
+  dashboard_id: string
+}
+
 export interface DeleteDashboardRequest {
   dashboardId: string
 }
@@ -299,6 +307,63 @@ export const cloneDashboardPromise = (
     props,
     signal
   )
+
+export interface DashboardPromptQueryParams {
+  accountId: string
+}
+
+export type DashboardPromptProps = Omit<
+  MutateProps<DashboardPromptResponse, ErrorResponse, DashboardPromptQueryParams, DashboardPromptRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Generate a new Dashboard from a prompt.
+ */
+export const DashboardPrompt = (props: DashboardPromptProps) => (
+  <Mutate<DashboardPromptResponse, ErrorResponse, DashboardPromptQueryParams, DashboardPromptRequestBody, void>
+    verb="POST"
+    path={`/dashboards/generate`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseDashboardPromptProps = Omit<
+  UseMutateProps<DashboardPromptResponse, ErrorResponse, DashboardPromptQueryParams, DashboardPromptRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Generate a new Dashboard from a prompt.
+ */
+export const useDashboardPrompt = (props: UseDashboardPromptProps) =>
+  useMutate<DashboardPromptResponse, ErrorResponse, DashboardPromptQueryParams, DashboardPromptRequestBody, void>(
+    'POST',
+    `/dashboards/generate`,
+    { base: getConfig('dashboard/'), ...props }
+  )
+
+/**
+ * Generate a new Dashboard from a prompt.
+ */
+export const dashboardPromptPromise = (
+  props: MutateUsingFetchProps<
+    DashboardPromptResponse,
+    ErrorResponse,
+    DashboardPromptQueryParams,
+    DashboardPromptRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    DashboardPromptResponse,
+    ErrorResponse,
+    DashboardPromptQueryParams,
+    DashboardPromptRequestBody,
+    void
+  >('POST', getConfig('dashboard/'), `/dashboards/generate`, props, signal)
 
 export interface GeneratePublicDashboardSignedUrlQueryParams {
   accountId: string
