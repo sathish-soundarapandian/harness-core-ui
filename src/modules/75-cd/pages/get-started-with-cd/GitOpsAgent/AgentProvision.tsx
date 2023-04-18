@@ -27,11 +27,13 @@ export const danger = 'danger-icon'
 export const AgentProvision = ({
   agent,
   loading: agentCreateLoading,
-  error: agentCreateError
+  error: agentCreateError,
+  setIsAgentConnected
 }: {
   agent?: V1Agent
   loading: boolean
   error?: string
+  setIsAgentConnected: (isConnected: boolean) => void
 }) => {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
@@ -79,6 +81,14 @@ export const AgentProvision = ({
       setUnhealthyIcon(danger)
     }
   }, [agentCreateError])
+
+  let calledOnce = false
+  React.useEffect(() => {
+    if (!calledOnce && isHealthy && data?.health?.lastHeartbeat) {
+      setIsAgentConnected(true)
+      calledOnce = true
+    }
+  }, [isHealthy, data?.health?.lastHeartbeat])
 
   return (
     <div>

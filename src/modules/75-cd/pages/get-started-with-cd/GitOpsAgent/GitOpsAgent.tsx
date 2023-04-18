@@ -71,6 +71,7 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
   const { trackEvent } = useTelemetry()
   // isProvisioningScreen is 2nd screen
   const [isProvisioningScreen, setIsProvisioningScreen] = React.useState(false)
+  const [isAgentConnected, setIsAgentConnected] = React.useState(false)
   const [selectedAgent, setSelectedAgent] = React.useState<V1Agent | null>(null)
   const [provisionedAgent, setProvisionedAgent] = React.useState<V1Agent | undefined>()
   const { accountId } = useParams<ProjectPathProps>()
@@ -169,7 +170,12 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
     return (
       <>
         {isProvisioningScreen ? (
-          <AgentProvision agent={provisionedAgent} loading={agentCreateLoading} error={agentCreateError?.message} />
+          <AgentProvision
+            agent={provisionedAgent}
+            loading={agentCreateLoading}
+            error={agentCreateError?.message}
+            setIsAgentConnected={setIsAgentConnected}
+          />
         ) : (
           <AgentStaticInfo getString={getString} />
         )}
@@ -212,7 +218,10 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
                     saveAgentData((selectedAgent || provisionedAgent) as V1Agent)
                     onNext()
                   }}
-                  disabled={Boolean(agentCreateLoading || agentCreateError)}
+                  disabled={
+                    Boolean(agentCreateLoading || agentCreateError) ||
+                    (agentList?.content?.length ? false : !isAgentConnected)
+                  }
                   loading={false}
                 />
               </>
