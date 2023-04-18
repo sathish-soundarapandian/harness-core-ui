@@ -108,7 +108,7 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
     if (
       !queryParams.stageExecId && // does not have stageExecId in query params
       (_executionId || _childExecutionId) && // has _executionId or _childExecutionId
-      (_stageId === stageId || _childStageId === childStageId) && // auto selected stage is same as current stage
+      (_stageId === stageId || (_childStageId === childStageId && !isEmpty(childStageId))) && // auto selected stage is same as current stage
       !queryParams.collapsedNode //  does not have collapsedNode in query params
     ) {
       executionId = _childExecutionId || _executionId
