@@ -191,9 +191,9 @@ export default function CreatePipelines({
 
     let resp;
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://api.ipify.org?format=json", false);
-    // xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-    // xhr.setRequestHeader('Content-Type', 'text/plain');
+    xhr.open("POST", "http://localhost:12001/api/pipelines/generateWithAI?accountIdentifier=kmpySmUISimoRrJL6NL73w&projectIdentifier=" + values.projectIdentifier + "&orgIdentifier=" + values.orgIdentifier, false);
+    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+    xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onload = (e) => {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
@@ -207,8 +207,8 @@ export default function CreatePipelines({
     xhr.onerror = (e) => {
       console.error(xhr.statusText);
     };
-    // xhr.send(formAiDetails?.aiprompt);
-    xhr.send(null);
+    xhr.send(formAiDetails?.aiprompt);
+    // xhr.send(null);
 
     console.info("Rest call response: " + resp)
     closeLoadingGif();
