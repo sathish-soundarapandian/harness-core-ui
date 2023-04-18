@@ -566,6 +566,7 @@ projectSelector:
 inline: 'Inline'
 upload: Upload
 remote: 'Remote'
+ai: 'AI generated'
 resourcePage:
   title: RESOURCES
   connectors: '{{$.connectorsLabel}}'

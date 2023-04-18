@@ -24,7 +24,7 @@ import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
-import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { EntityAIDetails, Error, PipelineInfoConfig } from 'services/pipeline-ng'
 import { EntityGitDetails, InputSetSummaryResponse, useGetInputsetYaml } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -64,6 +64,8 @@ import { RightBar } from '../RightBar/RightBar'
 import usePipelineErrors from './PipelineErrors/usePipelineErrors'
 import { PipelineCanvasHeader } from './PipelineCanvasHeader'
 import css from './PipelineCanvas.module.scss'
+import { loggerFor } from 'framework/logging/logging'
+import YAML from 'yaml'
 
 interface OtherModalProps {
   onSubmit?: (values: PipelineInfoConfig) => void
@@ -103,7 +105,7 @@ export interface PipelineCanvasProps {
   toPipelineList: PathFn<PipelineType<ProjectPathProps>>
   toPipelineProject: PathFn<PipelineType<ProjectPathProps>>
   getOtherModal?: (
-    onSubmit: (values: PipelineInfoConfig, storeMetadata?: StoreMetadata, gitDetails?: EntityGitDetails) => void,
+    onSubmit: (values: PipelineInfoConfig, storeMetadata?: StoreMetadata, aiDetails?: EntityAIDetails, gitDetails?: EntityGitDetails) => void,
     onClose: () => void
   ) => React.ReactElement<OtherModalProps>
 }
@@ -157,6 +159,7 @@ export function PipelineCanvas({
     originalPipeline,
     yamlHandler,
     isBEPipelineUpdated,
+    aiDetails,
     gitDetails,
     remoteFetchError,
     storeMetadata,
@@ -303,6 +306,7 @@ export function PipelineCanvas({
                 filePath: gitDetails.filePath
               })}
               closeModal={onCloseCreate}
+              aiDetails={ '' }
               gitDetails={{ ...gitDetails, remoteFetchFailed: Boolean(remoteFetchError) } as IGitContextFormProps}
               primaryButtonText={modalMode === 'create' ? getString('start') : getString('continue')}
               isReadonly={isReadonly}
@@ -406,9 +410,12 @@ export function PipelineCanvas({
     (
       values: PipelineInfoConfig,
       currStoreMetadata?: StoreMetadata,
+      updatedAiDetails?: EntityAIDetails,
       updatedGitDetails?: EntityGitDetails,
       shouldUseTemplate = false
     ) => {
+      console.info('PipelineCanvas onSubmit')
+      console.info(values)
       pipeline.name = values.name
       pipeline.description = values.description
       pipeline.identifier = values.identifier
@@ -418,7 +425,56 @@ export function PipelineCanvas({
       delete (pipeline as PipelineWithGitContextFormProps).connectorRef
       delete (pipeline as PipelineWithGitContextFormProps).filePath
       delete (pipeline as PipelineWithGitContextFormProps).storeType
+
+      if (updatedAiDetails) {
+        pipeline.description = values?.aiPrompt
+      }
+      pipeline.description = updatedAiDetails?.aiprompt
+      console.info('PipelineCanvas pipeline')
+      console.info(pipeline)
+    
+        // const y = 'doe: "a deer, a female deer"\n' +
+        //           'ray: "a drop of golden sun"\n' +
+        //           'pi: 3.14159\n' +
+        //           'xmas: true\n' +
+        //           'french-hens: 3\n' +
+        //           'calling-birds:\n' +
+        //           '  - huey\n' +
+        //           '  - dewey\n' +
+        //           '  - louie\n' +
+        //           '  - fred\n' +
+        //           'xmas-fifth-day:\n' +
+        //           '  calling-birds: four\n' +
+        //           '  french-hens: 3\n' +
+        //           '  golden-rings: 5\n' +
+        //           '  partridges:\n' +
+        //           '    count: 1\n' +
+        //           '    location: "a pear tree"\n' +
+        //           'turtle-doves: two';
+
+                  const y = 'pipeline:\n' +
+                  '  name: rolling\n' +
+                  '  identifier: rolling\n' +
+                  '  projectIdentifier: Kubernetes\n' +
+                  '  orgIdentifier: default\n' +
+                  '  tags: {}\n' +
+                  '  stages:\n' +
+                  '    - stage:\n' +
+                  '        name: test\n' +
+                  '        identifier: test\n' +
+                  '        description: ""\n' +
+                  '        type: Deployment';
+        console.info(y);
+        
+        const parsedY = YAML.parse(y)
+        console.info(parsedY);
+
+      pipeline.stages = parsedY.pipeline.stages;
+        
       updatePipeline(pipeline)
+
+
+      // updatePipeline(pipeline)
       if (currStoreMetadata?.storeType) {
         updatePipelineStoreMetadata(currStoreMetadata, gitDetails)
       }

@@ -19,6 +19,7 @@ import HoverCard from '@pipeline/components/HoverCard/HoverCard'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import ConditionalExecutionTooltip from '@pipeline/components/ConditionalExecutionToolTip/ConditionalExecutionTooltip'
 import type { BuildStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import '@common/styles/index.scss';
 import type {
   ExecutionElementConfig,
   ExecutionWrapperConfig,
@@ -202,6 +203,49 @@ const renderPopover = ({
   }
 }
 
+const renderAiPopover = ({
+  onPopoverSelection,
+  isParallelNodeClicked = false,
+  event,
+  labels,
+  isHoverView,
+  data
+}: PopoverData): JSX.Element => {
+  console.info(event)
+
+  let resp;
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://api.ipify.org?format=json", false);
+  // xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+  // xhr.setRequestHeader('Content-Type', 'text/plain');
+  xhr.onload = (e) => {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        console.log(xhr.responseText);
+        resp = xhr.responseText;
+      } else {
+        console.error(xhr.statusText);
+      }
+    }
+  };
+  xhr.onerror = (e) => {
+    console.error(xhr.statusText);
+  };
+  // xhr.send(formAiDetails?.aiprompt);
+  xhr.send(null);
+  
+  return (
+    <HoverCard>
+      {/* <ConditionalExecutionTooltip
+        status={(data as StepElementConfig)?.when?.stageStatus}
+        condition={(data as StepElementConfig)?.when?.condition}
+        mode={Modes.STEP}
+      /> */}
+      <div className='Tooltip--tooltipContentWrapper'>{resp}</div>
+    </HoverCard>
+  )
+}
+
 export interface ExecutionGraphAddStepEvent {
   entity: any //NOTE: this is a graph element
   isParallel: boolean
@@ -306,6 +350,10 @@ function ExecutionGraphRef<T extends StageElementConfig>(
   const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
     DynamicPopoverHandlerBinding<PopoverData> | undefined
   >()
+
+  const [aiDynamicPopoverHandler, setAiDynamicPopoverHandler] = React.useState<
+  DynamicPopoverHandlerBinding<PopoverData> | undefined
+>()
 
   const onPopoverSelection = (
     isStepGroup: boolean,
@@ -470,6 +518,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     dynamicPopoverHandler?.hide()
   }
   const mouseEnterNodeListener = (event: any): void => {
+    console.info("mouse entered")
     const eventTemp = event as any
     eventTemp.stopPropagation?.()
     dynamicPopoverHandler?.hide()
@@ -480,6 +529,16 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       isFindParallelNode: false,
       isRollback: state.isRollback
     }).node as StepElementConfig
+    const sd = get(eventTemp, 'data.data.step')
+    aiDynamicPopoverHandler?.show(
+      eventTemp.target,
+        {
+          event: defaultTo(get(eventTemp, 'data.data'), eventTemp),
+          isHoverView: true,
+          data: defaultTo(sd, node)
+        },
+        { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' }
+    );
     const stepCondition = get(eventTemp, 'data.data.step.when')
     const stepGroupCondition = get(eventTemp, 'data.data.stepGroup.when')
     const whenCondition = defaultTo(stepCondition || stepGroupCondition, node?.when)
@@ -503,9 +562,11 @@ function ExecutionGraphRef<T extends StageElementConfig>(
   }
 
   const mouseLeaveNodeListener = (event: any): void => {
+    console.info("mouse left")
     const eventTemp = event as any
     eventTemp.stopPropagation?.()
     dynamicPopoverHandler?.hide()
+    aiDynamicPopoverHandler?.hide()
   }
 
   const nodeListenersNew: any = {
@@ -880,6 +941,16 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           hoverShowDelay={200}
           render={renderPopover}
           bind={setDynamicPopoverHandler}
+          usePortal
+          closeOnMouseOut
+        />
+
+        <DynamicPopover
+          className={css.addStepPopover}
+          darkMode={true}
+          hoverShowDelay={200}
+          render={renderAiPopover}
+          bind={setAiDynamicPopoverHandler}
           usePortal
           closeOnMouseOut
         />

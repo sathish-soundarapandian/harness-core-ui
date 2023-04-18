@@ -7,11 +7,12 @@
 
 export enum StoreType {
   INLINE = 'INLINE',
-  REMOTE = 'REMOTE'
+  REMOTE = 'REMOTE',
+  AI = 'AI'
 }
 
 export interface StoreMetadata {
-  storeType?: 'INLINE' | 'REMOTE'
+  storeType?: 'INLINE' | 'REMOTE' | 'AI'
   connectorRef?: string
   repoName?: string
   branch?: string

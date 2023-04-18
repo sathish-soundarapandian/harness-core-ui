@@ -401,6 +401,7 @@ export interface StringsMap {
   'common.git.APIAccessDescription': string
   'common.git.APIAuthentication': string
   'common.git.addUserCredentialLabel': string
+  'common.git.aiStoreLabel': string
   'common.git.applicationId': string
   'common.git.azureReposPlaceholderRepoSSH': string
   'common.git.azureReposPlaceholderSSH': string
@@ -3506,6 +3507,12 @@ export interface StringsMap {
   'pipeline.additionalConfiguration': string
   'pipeline.advancedConfiguration': string
   'pipeline.advancedOptions': string
+  'pipeline.aiPromptForm.createNewYaml': string
+  'pipeline.aiPromptForm.enterYamlAiPrompt': string
+  'pipeline.aiPromptForm.useExistingYaml': string
+  'pipeline.aiPromptForm.yamlAiPromptInvalid': string
+  'pipeline.aiPromptForm.yamlAiPromptLabel': string
+  'pipeline.aiPromptForm.yamlAiPromptRequired': string
   'pipeline.allStages': string
   'pipeline.alwaysEditModeYAML': string
   'pipeline.amiFilters': string
@@ -9443,6 +9450,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   advancedTitle: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  ai: string
   /**
    * @deprecated migrate this string to module level file
    */

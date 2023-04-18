@@ -1178,6 +1178,9 @@ export interface EmptyDirYamlSpec {
   medium?: string
   size?: string
 }
+export interface EntityAIDetails {
+  aiPrompt?: string
+}
 
 export interface EntityGitDetails {
   branch?: string

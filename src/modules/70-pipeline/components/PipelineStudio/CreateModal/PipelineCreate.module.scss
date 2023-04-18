@@ -11,7 +11,8 @@
     gap: 20px;
 
     & > :first-child {
-      flex: 1;
+      // flex: 1;
+      min-width: 16em;
       & > div {
         justify-content: flex-start !important;
       }
@@ -39,6 +40,11 @@
     .bp3-input-group,
     .bp3-menu {
       width: 350px !important;
+    }
+
+    textarea {
+      min-width: 700px;
+      min-height: 250px !important;
     }
   }
 }

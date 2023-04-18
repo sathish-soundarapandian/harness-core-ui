@@ -143,6 +143,7 @@ export interface PipelineReducerState {
   templateIcons?: TemplateIcons
   resolvedCustomDeploymentDetailsByRef: { [key: string]: Record<string, string | string[]> }
   storeMetadata?: StoreMetadata
+  aiDetails: EntityAIDetails
   gitDetails: EntityGitDetails
   entityValidityDetails: EntityValidityDetails
   isDBInitialized: boolean

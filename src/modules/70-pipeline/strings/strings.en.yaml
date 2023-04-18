@@ -1755,3 +1755,10 @@ frozenExecPopover:
   viewFreezeWindows: View associated freeze windows
 notGenerated: Not Generated
 notAvailable: Not Available
+aiPromptForm:
+  yamlAiPromptLabel: AI Prompt
+  yamlAiPromptRequired: AI Prompt is required
+  yamlAiPromptInvalid: YAML path should have a valid file/folder name and yaml extension
+  enterYamlAiPrompt: Enter AI Prompt
+  useExistingYaml: Use Existing YAML
+  createNewYaml: Create New YAML

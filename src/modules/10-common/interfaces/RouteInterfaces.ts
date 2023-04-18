@@ -21,6 +21,11 @@ export interface DashboardPathProps extends AccountPathProps {
   folderId: string
 }
 
+export interface AIQueryParams {
+  aiPrompt?: string
+  storeType?: StoreMetadata['storeType']
+}
+
 export interface GitQueryParams {
   branch?: EntityGitDetails['branch']
   repoIdentifier?: EntityGitDetails['repoIdentifier']

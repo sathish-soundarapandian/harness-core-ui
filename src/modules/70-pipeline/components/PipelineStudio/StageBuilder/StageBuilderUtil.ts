@@ -606,14 +606,14 @@ export const getNodeEventListerner = (
     },
     [Event.MouseEnterNode]: (event: any) => {
       const eventTemp = { ...event, ...event.data }
-
+      console.info("Stage mouse enter")
       const current = getStageFromPipeline(eventTemp?.identifier, pipeline)
       if (current.stage?.stage?.when) {
         const { pipelineStatus, condition } = current.stage.stage.when
         const nodeID = defaultTo(eventTemp?.node?.id, eventTemp?.id)
-        if (pipelineStatus === PipelineOrStageStatus.SUCCESS && isEmpty(condition)) {
-          return
-        }
+        // if (pipelineStatus === PipelineOrStageStatus.SUCCESS && isEmpty(condition)) {
+        //   return
+        // }
         dynamicPopoverHandler?.show(
           `[data-nodeid="${nodeID}"]`,
           {
@@ -635,6 +635,7 @@ export const getNodeEventListerner = (
       }
     },
     [Event.MouseLeaveNode]: (_event: any) => {
+      console.info("Stage mouse leave")
       if (dynamicPopoverHandler?.isHoverView?.()) {
         dynamicPopoverHandler?.hide()
       }

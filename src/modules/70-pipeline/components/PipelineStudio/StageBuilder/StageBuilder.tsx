@@ -43,6 +43,7 @@ import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { EmptyStageName, MinimumSplitPaneSize, DefaultSplitPaneSize, MaximumSplitPaneSize } from '../PipelineConstants'
+import '@common/styles/index.scss';
 import {
   getNewStageFromType,
   PopoverData,
@@ -103,6 +104,56 @@ export const initializeStageStateMap = (stages: StageElementWrapperConfig[], map
       })
     }
   })
+}
+
+export const renderAiPopover = (
+  gitDetails: EntityGitDetails,
+  storeMetadata: StoreMetadata | undefined,
+  {
+    data,
+    addStageNew,
+    isParallel,
+    isGroupStage,
+    groupStages,
+    groupSelectedStageId,
+    onClickGroupStage,
+    stagesMap,
+    event,
+    isStageView,
+    onSubmitPrimaryData,
+    renderPipelineStage,
+    isHoverView,
+    contextType,
+    templateTypes
+  }: PopoverData
+): JSX.Element => {
+
+  let resp;
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://api.ipify.org?format=json", false);
+  // xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+  // xhr.setRequestHeader('Content-Type', 'text/plain');
+  xhr.onload = (e) => {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        console.log(xhr.responseText);
+        resp = xhr.responseText;
+      } else {
+        console.error(xhr.statusText);
+      }
+    }
+  };
+  xhr.onerror = (e) => {
+    console.error(xhr.statusText);
+  };
+  // xhr.send(formAiDetails?.aiprompt);
+  xhr.send(null);
+
+  return (
+    <HoverCard>
+      <div className='Tooltip--tooltipContentWrapper'>{resp}</div>
+    </HoverCard>
+  )
 }
 
 export const renderPopover = (
@@ -227,6 +278,7 @@ function StageBuilder(): JSX.Element {
   const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
     DynamicPopoverHandlerBinding<PopoverData> | undefined
   >()
+
   useGlobalEventListener('CLOSE_CREATE_STAGE_POPOVER', () => {
     dynamicPopoverHandler?.hide()
   })
@@ -589,10 +641,17 @@ function StageBuilder(): JSX.Element {
               createNodeTitle={getString('addStage')}
               graphLinkClassname={css.graphLink}
             />
-            <DynamicPopover
+            {/* <DynamicPopover
               darkMode={false}
               className={css.renderPopover}
               render={renderPopover.bind(null, gitDetails, storeMetadata)} // To use latest gitDetails and storeMetadata from pipeline context
+              bind={setDynamicPopoverHandler}
+            /> */}
+
+            <DynamicPopover
+              darkMode={false}
+              className={css.renderPopover}
+              render={renderAiPopover.bind(null, gitDetails, storeMetadata)} // To use latest gitDetails and storeMetadata from pipeline context
               bind={setDynamicPopoverHandler}
             />
           </div>

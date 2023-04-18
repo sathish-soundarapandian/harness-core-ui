@@ -39,7 +39,8 @@ import {
   ResponsePMSPipelineResponseDTO,
   YamlSchemaErrorWrapperDTO,
   ResponsePMSPipelineSummaryResponse,
-  CacheResponseMetadata
+  CacheResponseMetadata,
+  EntityAIDetails
 } from 'services/pipeline-ng'
 import { useGlobalEventListener, useLocalStorage, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -288,6 +289,7 @@ export interface PipelineContextInterface {
   setTemplateServiceData: (data: TemplateServiceDataType) => void
   updatePipeline: (pipeline: PipelineInfoConfig, viewType?: SelectedView) => Promise<void>
   updatePipelineStoreMetadata: (storeMetadata: StoreMetadata, gitDetails: EntityGitDetails) => Promise<void>
+  // updateAIDetails: (aiDetails: EntityAIDetails) => Promise<void>
   updateGitDetails: (gitDetails: EntityGitDetails) => Promise<void>
   updateEntityValidityDetails: (entityValidityDetails: EntityValidityDetails) => Promise<void>
   updatePipelineView: (data: PipelineViewData) => void
@@ -1038,6 +1040,7 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   contextType: PipelineContextType.Pipeline,
   allowableTypes: [],
   updatePipelineStoreMetadata: () => new Promise<void>(() => undefined),
+  // updateAIDetails: () => new Promise<void>(() => undefined),
   updateGitDetails: () => new Promise<void>(() => undefined),
   updateEntityValidityDetails: () => new Promise<void>(() => undefined),
   setView: () => void 0,
@@ -1407,6 +1410,7 @@ export function PipelineProvider({
         renderPipelineStage,
         fetchPipeline,
         updatePipelineStoreMetadata,
+        // updateAIDetails,
         updateGitDetails,
         updateEntityValidityDetails,
         updatePipeline,
