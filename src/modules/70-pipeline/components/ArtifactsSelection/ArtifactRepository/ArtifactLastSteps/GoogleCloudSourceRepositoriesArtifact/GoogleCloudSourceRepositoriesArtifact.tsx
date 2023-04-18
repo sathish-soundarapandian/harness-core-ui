@@ -59,16 +59,16 @@ export enum GitRepoName {
   Repo = 'Repo'
 }
 
-export enum GitFetchType {
+export enum FetchType {
   Branch = 'Branch',
   Commit = 'Commit',
   Tag = 'Tag'
 }
 
-export const gitFetchTypeList = [
-  { label: 'Latest from Branch', value: GitFetchType.Branch },
-  { label: 'Specific Commit Id', value: GitFetchType.Commit },
-  { label: 'Specific Git Tag', value: GitFetchType.Tag }
+export const fetchTypeList = [
+  { label: 'Latest from Branch', value: FetchType.Branch },
+  { label: 'Specific Commit Id', value: FetchType.Commit },
+  { label: 'Specific Git Tag', value: FetchType.Tag }
 ]
 
 export function GoogleCloudSourceRepositories(
@@ -171,7 +171,7 @@ export function GoogleCloudSourceRepositories(
         name: getString('pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepository')
       })
     ),
-    branch: Yup.string().when('gitFetchType', {
+    branch: Yup.string().when('fetchType', {
       is: 'Branch',
       then: Yup.string()
         .trim()
@@ -179,7 +179,7 @@ export function GoogleCloudSourceRepositories(
           getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.deploy.inputSet.branch') })
         )
     }),
-    commitId: Yup.string().when('gitFetchType', {
+    commitId: Yup.string().when('fetchType', {
       is: 'Commit',
       then: Yup.string()
         .trim()
@@ -189,7 +189,7 @@ export function GoogleCloudSourceRepositories(
           })
         )
     }),
-    tag: Yup.string().when('gitFetchType', {
+    tag: Yup.string().when('fetchType', {
       is: 'Tag',
       then: Yup.string()
         .trim()
@@ -253,15 +253,15 @@ export function GoogleCloudSourceRepositories(
         project: formData.project,
         repository: formData.repository,
         sourceDirectory: formData.sourceDirectory,
-        gitFetchType: formData.gitFetchType
+        fetchType: formData.fetchType
       }
     }
 
-    if (formData.gitFetchType === 'Branch') {
+    if (formData.fetchType === 'Branch') {
       set(artifactObj, 'spec.branch', formData.branch)
-    } else if (formData.gitFetchType === 'Commit') {
+    } else if (formData.fetchType === 'Commit') {
       set(artifactObj, 'spec.commitId', formData.commitId)
-    } else if (formData.gitFetchType === 'Tag') {
+    } else if (formData.fetchType === 'Tag') {
       set(artifactObj, 'spec.tag', formData.tag)
     }
 
@@ -447,13 +447,13 @@ export function GoogleCloudSourceRepositories(
               <Layout.Horizontal spacing="huge" className={css.imagePathContainer}>
                 <div className={css.halfWidth}>
                   <FormInput.Select
-                    name="gitFetchType"
-                    label={getString('pipeline.manifestType.gitFetchTypeLabel')}
-                    items={gitFetchTypeList}
+                    name="fetchType"
+                    label={getString('pipeline.artifacts.googleCloudSourceRepositories.fetchType')}
+                    items={fetchTypeList}
                   />
                 </div>
 
-                {formik.values?.gitFetchType === GitFetchType.Branch &&
+                {formik.values?.fetchType === FetchType.Branch &&
                   renderField(
                     formik,
                     'branch',
@@ -461,7 +461,7 @@ export function GoogleCloudSourceRepositories(
                     getString('pipeline.manifestType.branchPlaceholder')
                   )}
 
-                {formik.values?.gitFetchType === GitFetchType.Commit &&
+                {formik.values?.fetchType === FetchType.Commit &&
                   renderField(
                     formik,
                     'commitId',
@@ -469,7 +469,7 @@ export function GoogleCloudSourceRepositories(
                     getString('pipeline.artifacts.googleCloudSourceRepositories.commitIdPlaceholder')
                   )}
 
-                {formik.values?.gitFetchType === GitFetchType.Tag &&
+                {formik.values?.fetchType === FetchType.Tag &&
                   renderField(
                     formik,
                     'tag',

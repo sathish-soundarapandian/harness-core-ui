@@ -1771,3 +1771,4 @@ artifacts:
     commitId: Commit Id
     commitIdPlaceholder: Enter Commit Id
     tagPlaceholder: Enter Tag
+    fetchType: Fetch Type

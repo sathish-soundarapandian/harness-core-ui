@@ -453,7 +453,7 @@ export interface GoogleCloudSourceRepositoriesInitialValuesType {
   project: string
   repository: string
   sourceDirectory: string
-  gitFetchType: 'Branch' | 'Commit' | 'Tag'
+  fetchType: 'Branch' | 'Commit' | 'Tag'
   branch?: string
   commitId?: string
   tag?: string

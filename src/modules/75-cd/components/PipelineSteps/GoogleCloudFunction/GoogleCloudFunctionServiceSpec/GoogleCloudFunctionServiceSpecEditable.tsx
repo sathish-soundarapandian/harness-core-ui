@@ -120,14 +120,14 @@ const GoogleCloudFunctionServiceSpecEditable: React.FC<GoogleCloudFunctionServic
   }, [isPropagating, stage])
 
   const getAllowedManifestTypes = (): ManifestTypes[] => {
-    if (environmentType === GoogleCloudFunctionsEnvType.GEN_ONE) {
+    if (environmentType === GoogleCloudFunctionsEnvType.GenOne) {
       return [ManifestDataType.GoogleCloudFunctionGenOneDefinition]
     }
     return allowedManifestTypes[selectedDeploymentType]
   }
 
   const getAllowedArtifactTypes = (): ArtifactType[] => {
-    if (environmentType === GoogleCloudFunctionsEnvType.GEN_ONE) {
+    if (environmentType === GoogleCloudFunctionsEnvType.GenOne) {
       return [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage, ENABLED_ARTIFACT_TYPES.GoogleCloudSource]
     }
     return allowedArtifactTypes[selectedDeploymentType]

@@ -12,6 +12,6 @@ import { GoogleCloudFunctionsEnvType } from '@pipeline/utils/stageHelpers'
 export const getGoogleCloudFunctionsEnvOptions = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
 ): SelectOption[] => [
-  { label: getString('cd.steps.googleCloudFunctionCommon.envTypes.gen1'), value: GoogleCloudFunctionsEnvType.GEN_ONE },
-  { label: getString('cd.steps.googleCloudFunctionCommon.envTypes.gen2'), value: GoogleCloudFunctionsEnvType.GEN_TWO }
+  { label: getString('cd.steps.googleCloudFunctionCommon.envTypes.gen1'), value: GoogleCloudFunctionsEnvType.GenOne },
+  { label: getString('cd.steps.googleCloudFunctionCommon.envTypes.gen2'), value: GoogleCloudFunctionsEnvType.GenTwo }
 ]

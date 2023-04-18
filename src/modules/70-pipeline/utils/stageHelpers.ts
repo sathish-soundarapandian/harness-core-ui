@@ -834,6 +834,6 @@ export const PriorityByStageStatus: Record<ExecutionStatus, number> = {
 }
 
 export enum GoogleCloudFunctionsEnvType {
-  GEN_ONE = 'GEN_ONE',
-  GEN_TWO = 'GEN_TWO'
+  GenOne = 'GenOne',
+  GenTwo = 'GenTwo'
 }

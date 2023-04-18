@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { debounce, defaultTo, set } from 'lodash-es'
+import { debounce, defaultTo, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { StageElementConfig } from 'services/cd-ng'
@@ -40,6 +40,12 @@ export default function DeployStageSpecifications(props: React.PropsWithChildren
             delete (draft as EditStageFormikType).gitOpsEnabled
             delete draft.spec.service
             delete draft.spec.services
+          }
+          if (
+            draft.spec.deploymentType === ServiceDeploymentType.GoogleCloudFunctions &&
+            !isEmpty((draft as EditStageFormikType).environmentType)
+          ) {
+            delete (draft as EditStageFormikType).environmentType
           }
         }
       })

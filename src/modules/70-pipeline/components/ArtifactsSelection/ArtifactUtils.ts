@@ -605,7 +605,7 @@ export const defaultArtifactInitialValues = (
         identifier: '',
         project: '',
         repository: '',
-        gitFetchType: 'Branch',
+        fetchType: 'Branch',
         branch: undefined,
         commitId: undefined,
         tag: undefined,

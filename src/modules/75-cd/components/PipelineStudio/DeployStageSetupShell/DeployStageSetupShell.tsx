@@ -236,7 +236,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       return ExecutionType.DEFAULT
     } else if (
       selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions &&
-      environmentType === GoogleCloudFunctionsEnvType.GEN_ONE
+      environmentType === GoogleCloudFunctionsEnvType.GenOne
     ) {
       return ExecutionType.ROLLING
     } else if (selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
@@ -365,7 +365,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       selectedStage?.stage?.spec?.deploymentMetadata as GoogleCloudFunctionDeploymentMetaData
     )?.environmentType
     const isGoogleCloudFunctionGen1EnvTypeSelected =
-      isGoogleCloudFunctionsDeploymentTypeSelected && googleCloudFunctionEnvType === GoogleCloudFunctionsEnvType.GEN_ONE
+      isGoogleCloudFunctionsDeploymentTypeSelected && googleCloudFunctionEnvType === GoogleCloudFunctionsEnvType.GenOne
 
     // Show executiomn strategies when openExecutionStrategy is true
     // and deployment type is not of type serverless/GoogleCloudFunctions and

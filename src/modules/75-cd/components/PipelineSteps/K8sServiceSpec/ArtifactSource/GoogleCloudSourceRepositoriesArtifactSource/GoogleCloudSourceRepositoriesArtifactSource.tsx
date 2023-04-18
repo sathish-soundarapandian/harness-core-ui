@@ -289,7 +289,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
             />
           )}
 
-          {!fromTrigger && isFieldRuntime(`${path}.artifacts.${artifactPath}.spec.branch`, template) && (
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.branch`, template) && (
             <TextFieldInputSetView
               name={`${path}.artifacts.${artifactPath}.spec.branch`}
               label={getString('pipelineSteps.deploy.inputSet.branch')}
@@ -304,7 +304,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
             />
           )}
 
-          {!fromTrigger && isFieldRuntime(`${path}.artifacts.${artifactPath}.spec.commitId`, template) && (
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.commitId`, template) && (
             <TextFieldInputSetView
               name={`${path}.artifacts.${artifactPath}.spec.commitId`}
               label={getString('pipeline.artifacts.googleCloudSourceRepositories.commitId')}
@@ -319,7 +319,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
             />
           )}
 
-          {!fromTrigger && isFieldRuntime(`${path}.artifacts.${artifactPath}.spec.tag`, template) && (
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
             <TextFieldInputSetView
               name={`${path}.artifacts.${artifactPath}.spec.tag`}
               label={getString('tagLabel')}

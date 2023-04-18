@@ -3594,6 +3594,7 @@ export interface StringsMap {
   'pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepositoryPlaceholder': string
   'pipeline.artifacts.googleCloudSourceRepositories.commitId': string
   'pipeline.artifacts.googleCloudSourceRepositories.commitIdPlaceholder': string
+  'pipeline.artifacts.googleCloudSourceRepositories.fetchType': string
   'pipeline.artifacts.googleCloudSourceRepositories.sourceDirectory': string
   'pipeline.artifacts.googleCloudSourceRepositories.sourceDirectoryPlaceholder': string
   'pipeline.artifacts.googleCloudSourceRepositories.tagPlaceholder': string

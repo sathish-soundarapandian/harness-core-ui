@@ -90,7 +90,7 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
           if (!isEmpty(googleCloudFunctionsEnvType)) {
             set(draft, 'service.serviceDefinition.spec.environmentType', googleCloudFunctionsEnvType)
           } else {
-            set(draft, 'service.serviceDefinition.spec.environmentType', GoogleCloudFunctionsEnvType.GEN_TWO)
+            set(draft, 'service.serviceDefinition.spec.environmentType', GoogleCloudFunctionsEnvType.GenTwo)
           }
         }
         set(draft, 'service.gitOpsEnabled', gitOpsEnabled)

@@ -107,22 +107,6 @@ function DeployServiceDefinition(): React.ReactElement {
     setCustomDeploymentData(customDeploymentDataFromYaml)
   }, [customDeploymentDataFromYaml])
 
-  // useEffect(() => {
-  //   if (stage?.stage?.spec?.serviceConfig?.serviceDefinition?.type === ServiceDeploymentType.GoogleCloudFunctions) {
-  //     if (
-  //       isEmpty(
-  //         (stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec as GoogleCloudFunctionsServiceSpec)
-  //           ?.environmentType as GoogleCloudFunctionsEnvType
-  //       )
-  //     ) {
-  //       const gen2Option = getGoogleCloudFunctionsEnvOptions(getString).find(
-  //         currEnvOption => currEnvOption.value === GoogleCloudFunctionsEnvType.GEN_TWO
-  //       ) as SelectOption
-  //       handleGCFEnvTypeChange(gen2Option)
-  //     }
-  //   }
-  // }, [stage?.stage?.spec?.serviceConfig?.serviceDefinition?.type])
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
     debounce(
@@ -304,7 +288,7 @@ function DeployServiceDefinition(): React.ReactElement {
         serviceDefinition.type = deploymentType
         if (deploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
           const serviceDefinitionSpec = get(draft, 'stage.spec.serviceConfig.serviceDefinition.spec', {})
-          serviceDefinitionSpec.environmentType = GoogleCloudFunctionsEnvType.GEN_TWO
+          serviceDefinitionSpec.environmentType = GoogleCloudFunctionsEnvType.GenTwo
         } else {
           unset(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.environmentType')
         }
