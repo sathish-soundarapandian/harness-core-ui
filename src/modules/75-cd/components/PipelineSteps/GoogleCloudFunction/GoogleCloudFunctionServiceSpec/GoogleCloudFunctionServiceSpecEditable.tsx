@@ -64,23 +64,37 @@ export interface GoogleCloudFunctionServiceSpecEditableProps {
   factory?: AbstractStepFactory
 }
 
-const suggestedManifest = {
+const suggestedManifestGenOne = {
+  function: {
+    name: '<functionName>',
+    runtime: 'nodejs18',
+    entryPoint: 'helloGET',
+    httpsTrigger: {
+      securityLevel: 'SECURE_OPTIONAL'
+    }
+  }
+}
+
+const suggestedManifestGenTwo = {
   function: {
     name: '<functionName>',
     buildConfig: {
       runtime: 'nodejs18',
       entryPoint: 'helloGET'
-    },
-    environment: 'GEN_2'
-  },
-  function_id: '<functionName>'
+    }
+  }
 }
 
-const suggestedManifestYaml =
-  `# Following are the minimum set of parameters required to create a Google Cloud Function.
+const getSuggestedManifestYaml = (enviromentType: GoogleCloudFunctionsEnvType) => {
+  const suggestedManifestYamlComment = `# Following are the minimum set of parameters required to create a Google Cloud Function.
 # Please make sure your uploaded manifest file includes all of them.
 
-` + yamlStringify(suggestedManifest)
+`
+  if (enviromentType === GoogleCloudFunctionsEnvType.GenOne) {
+    return suggestedManifestYamlComment + yamlStringify(suggestedManifestGenOne)
+  }
+  return suggestedManifestYamlComment + yamlStringify(suggestedManifestGenTwo)
+}
 
 const manifestFileName = 'Google-cloud-function-manifest.yaml'
 
@@ -149,7 +163,7 @@ const GoogleCloudFunctionServiceSpecEditable: React.FC<GoogleCloudFunctionServic
               <AddManifestSteps
                 selectedDeploymentType={selectedDeploymentType}
                 manifestFileName={manifestFileName}
-                suggestedManifestYaml={suggestedManifestYaml}
+                suggestedManifestYaml={getSuggestedManifestYaml(environmentType)}
               />
             )}
             <ManifestSelection
