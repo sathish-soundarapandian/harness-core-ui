@@ -7,30 +7,35 @@
 
 import React from 'react'
 import { Layout } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
-import CDUsageTable from './CDUsageTable'
-import CIUsageTable from './CIUsageTable'
+import type { ModuleLicenseDTO } from 'services/cd-ng'
+import CIUsageGraph from './CIUsageGraph'
+import ServiceLicenseGraphs from './ServiceLicenseGraphs'
 
-interface SubscriptionUsageViewProps {
-  module: ModuleName
+interface SubscriptionGraphViewProps {
+  accountId: string
+  licenseType: 'SERVICES' | 'SERVICE_INSTANCES' | undefined
   licenseData?: ModuleLicenseDTO
+  module: ModuleName
 }
 
-const getModuleUsagesTable = (props: SubscriptionUsageViewProps): React.ReactElement | undefined => {
+const getModuleUsagesGraph = (props: SubscriptionUsageViewProps): React.ReactElement | undefined => {
   switch (props.module) {
     case ModuleName.CI:
-      return <CIUsageTable {...props} />
+      return <CIUsageGraph {...props} />
       break
     case ModuleName.CD:
-      return <CDUsageTable {...props} />
+      return <ServiceLicenseGraphs {...props} />
       break
     default:
       return undefined
   }
 }
 
-const SubscriptionUsageView: React.FC<SubscriptionUsageViewProps> = props => {
-  const usageModuleTable = getModuleUsagesTable(props)
+const SubscriptionGraphView: React.FC<SubscriptionGraphViewProps> = props => {
+  const { getString } = useStrings()
+  const usageModuleTable = getModuleUsagesGraph(props)
   return usageModuleTable ? (
     <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'baseline', justifyContent: 'space-between' }}>
       {usageModuleTable}
@@ -40,4 +45,4 @@ const SubscriptionUsageView: React.FC<SubscriptionUsageViewProps> = props => {
   )
 }
 
-export default SubscriptionUsageView
+export default SubscriptionGraphView

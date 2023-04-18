@@ -100,7 +100,7 @@ const getLast3Months = () => {
   return last3Months
 }
 
-export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props: ServiceLicenseGraphsProps) => {
+ const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props: ServiceLicenseGraphsProps) => {
   const { getString } = useStrings()
   const currentDate = new Date()
   const [fetchType, setFetchType] = useState<string>('MONTHLY')
@@ -361,3 +361,5 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
     </Card>
   )
 }
+
+export default ServiceLicenseGraphs

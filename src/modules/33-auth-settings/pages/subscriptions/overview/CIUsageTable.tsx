@@ -20,7 +20,8 @@ import type { ModuleName } from 'framework/types/ModuleName'
 
 interface CDUsageTableProps {
   module: ModuleName
-  licenseData: ModuleLicenseDTO
+  licenseData?: ModuleLicenseDTO
+  licenseType?: 'SERVICES' | 'SERVICE_INSTANCES' | undefined
 }
 const DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT = ['lastBuild', 'DESC']
 const DEFAULT_PAGE_INDEX = 0
