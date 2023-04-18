@@ -30,7 +30,7 @@ import {
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { StageElementConfig, TemplateStepNode } from 'services/pipeline-ng'
 import { validateStep, validateSteps } from '@pipeline/components/PipelineStudio/StepUtil'
-import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { getTemplateErrorMessage, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useQueryParams } from '@common/hooks'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -118,11 +118,7 @@ function TemplateStepWidget(
 
   const updateFormValues = (newTemplateInputs?: StepElementConfig) => {
     const updateValues = produce(initialValues, draft => {
-      set(
-        draft,
-        'template.templateInputs',
-        !isEmpty(newTemplateInputs) ? replaceDefaultValues(newTemplateInputs) : undefined
-      )
+      set(draft, 'template.templateInputs', !isEmpty(newTemplateInputs) ? newTemplateInputs : undefined)
     })
     setFormValues(updateValues)
     onUpdate?.(updateValues)

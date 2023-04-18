@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, get, isEmpty, isEqual, set, trim, unset, map, omit } from 'lodash-es'
+import { defaultTo, get, isEmpty, isEqual, set, unset, map, omit } from 'lodash-es'
 import produce from 'immer'
 import type { GetDataError } from 'restful-react'
 import React from 'react'
@@ -41,7 +41,6 @@ import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/Pip
 import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { Category } from '@common/constants/TrackingConstants'
 import type { ServiceDefinition } from 'services/cd-ng'
-import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
@@ -368,32 +367,6 @@ export const areTemplatesEqual = (
   template2?: TemplateSummaryResponse
 ): boolean => {
   return areTemplatesSame(template1, template2) && isEqual(template1?.versionLabel, template2?.versionLabel)
-}
-
-/**
- * Replaces all the "<+input>.defaultValue(value)" with "value"
- * Does not replace any other "<+input>"
- */
-export function replaceDefaultValues<T>(template: T): T {
-  const INPUT_EXPRESSION_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
-  return JSON.parse(
-    JSON.stringify(template || {}).replace(
-      new RegExp(`"${INPUT_EXPRESSION_REGEX.source.slice(1).slice(0, -1)}"`, 'g'),
-      value => {
-        const parsed = parseInput(trim(value, '"'))
-
-        if (!parsed || parsed.executionInput) {
-          return value
-        }
-
-        if (parsed.default !== null) {
-          return `"${parsed.default}"`
-        }
-
-        return value
-      }
-    )
-  )
 }
 
 export const getTemplateErrorMessage = (

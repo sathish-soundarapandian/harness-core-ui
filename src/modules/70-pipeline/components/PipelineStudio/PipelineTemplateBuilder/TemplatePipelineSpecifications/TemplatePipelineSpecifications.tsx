@@ -12,7 +12,7 @@ import { Container, Formik, FormikForm, Heading, Layout, PageError } from '@harn
 import { Color } from '@harness/design-system'
 import type { FormikProps, FormikErrors } from 'formik'
 import { produce } from 'immer'
-import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { getTemplateErrorMessage, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getsMergedTemplateInputYamlPromise,
@@ -159,11 +159,7 @@ export function TemplatePipelineSpecifications({
 
   const updateFormValues = (newTemplateInputs: PipelineInfoConfig): void => {
     const updatedPipeline = produce(pipeline, draft => {
-      set(
-        draft,
-        'template.templateInputs',
-        !isEmpty(newTemplateInputs) ? replaceDefaultValues(newTemplateInputs) : undefined
-      )
+      set(draft, 'template.templateInputs', !isEmpty(newTemplateInputs) ? newTemplateInputs : undefined)
     })
 
     setFormValues(updatedPipeline)

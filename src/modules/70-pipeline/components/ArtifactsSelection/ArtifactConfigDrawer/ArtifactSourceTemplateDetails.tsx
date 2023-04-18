@@ -29,7 +29,7 @@ import { NameSchema } from '@common/utils/Validation'
 import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { PageSpinner } from '@common/components'
 import type { Error, StepElementConfig, StageElementConfig, ArtifactConfig } from 'services/cd-ng'
-import { getTemplateErrorMessage, replaceDefaultValues } from '@pipeline/utils/templateUtils'
+import { getTemplateErrorMessage } from '@pipeline/utils/templateUtils'
 // eslint-disable-next-line no-restricted-imports
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import { getsMergedTemplateInputYamlPromise, useGetTemplate, useGetTemplateInputSetYaml } from 'services/template-ng'
@@ -168,7 +168,7 @@ function ArtifactSourceTemplateDetails(
   const updateFormValues = (newTemplateInputs?: ArtifactConfig) => {
     const updateValues = getFormValues(
       produce(formValues, draft => {
-        set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
+        set(draft, 'template.templateInputs', newTemplateInputs)
       })
     )
     setFormValues(updateValues)
