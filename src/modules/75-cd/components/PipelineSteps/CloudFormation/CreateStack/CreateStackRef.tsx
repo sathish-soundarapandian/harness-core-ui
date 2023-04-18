@@ -236,7 +236,6 @@ export const CreateStack = (
         /* istanbul ignore next */
         onChange?.(payload)
       }}
-      validateOnChange={false}
       validateOnBlur={false}
       onSubmit={values => {
         const payload = {
