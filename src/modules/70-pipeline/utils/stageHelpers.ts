@@ -30,6 +30,7 @@ import { getStageFromPipeline as getStageByPipeline } from '@pipeline/components
 import type { CIInfraDetails, DependencyElement } from 'services/ci'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { allowedArtifactTypes } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 
 import type { InputSetDTO } from './types'
 import type { DeploymentStageElementConfig, PipelineStageWrapper, StageElementWrapper } from './pipelineTypes'
@@ -836,4 +837,20 @@ export const PriorityByStageStatus: Record<ExecutionStatus, number> = {
 export enum GoogleCloudFunctionsEnvType {
   GenOne = 'GenOne',
   GenTwo = 'GenTwo'
+}
+
+export const getInitialSelectedArtifactValue = (
+  deploymentType: ServiceDefinition['type'],
+  availableArtifactTypes?: ArtifactType[]
+): ArtifactType | null => {
+  if (availableArtifactTypes) {
+    if (availableArtifactTypes?.length === 1) {
+      return availableArtifactTypes[0]
+    }
+  } else {
+    if (allowedArtifactTypes[deploymentType]?.length === 1) {
+      return allowedArtifactTypes[deploymentType][0]
+    }
+  }
+  return null
 }

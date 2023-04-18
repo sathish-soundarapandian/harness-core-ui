@@ -53,7 +53,7 @@ import type {
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { ServiceDeploymentType, getInitialSelectedArtifactValue } from '@pipeline/utils/stageHelpers'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 // eslint-disable-next-line no-restricted-imports
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
@@ -147,21 +147,10 @@ export default function ServiceV2ArtifactsSelection({
     allowableTypes
   } = usePipelineContext()
 
-  const getInitialSelectedArtifactValue = (): ArtifactType | null => {
-    if (availableArtifactTypes) {
-      if (availableArtifactTypes?.length === 1) {
-        return availableArtifactTypes[0]
-      }
-    } else {
-      if (allowedArtifactTypes[deploymentType]?.length === 1) {
-        return allowedArtifactTypes[deploymentType][0]
-      }
-    }
-    return null
-  }
-
   const [isEditMode, setIsEditMode] = useState(false)
-  const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(getInitialSelectedArtifactValue())
+  const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(
+    getInitialSelectedArtifactValue(deploymentType, availableArtifactTypes)
+  )
   const [connectorView, setConnectorView] = useState(false)
   const [artifactContext, setArtifactContext] = useState(ModalViewFor.PRIMARY)
   const [artifactIndex, setEditIndex] = useState(0)
@@ -511,7 +500,7 @@ export default function ServiceV2ArtifactsSelection({
     setConnectorView(false)
     const artifactObject = get(artifacts, getArtifactsPath(viewType))
     setEditIndex(defaultTo(artifactObject?.length, 0))
-    setSelectedArtifact(getInitialSelectedArtifactValue())
+    setSelectedArtifact(getInitialSelectedArtifactValue(deploymentType, availableArtifactTypes))
     showConnectorModal()
     refetchConnectorList()
   }

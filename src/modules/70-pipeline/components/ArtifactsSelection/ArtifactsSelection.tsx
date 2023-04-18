@@ -37,7 +37,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { ServiceDeploymentType, getInitialSelectedArtifactValue } from '@pipeline/utils/stageHelpers'
 import {
   ArtifactConnectorStepDataToLastStep,
   useArtifactSelectionLastSteps
@@ -94,20 +94,10 @@ export default function ArtifactsSelection({
     allowableTypes
   } = usePipelineContext()
 
-  const getInitialSelectedArtifactValue = (): ArtifactType | null => {
-    if (availableArtifactTypes) {
-      if (availableArtifactTypes?.length === 1) {
-        return availableArtifactTypes[0]
-      }
-    } else {
-      if (allowedArtifactTypes[deploymentType]?.length === 1) {
-        return allowedArtifactTypes[deploymentType][0]
-      }
-    }
-    return null
-  }
   const [isEditMode, setIsEditMode] = useState(false)
-  const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(getInitialSelectedArtifactValue())
+  const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(
+    getInitialSelectedArtifactValue(deploymentType, availableArtifactTypes)
+  )
   const [connectorView, setConnectorView] = useState(false)
   const [context, setModalContext] = useState(ModalViewFor.PRIMARY)
   const [sidecarIndex, setEditIndex] = useState(0)
@@ -417,7 +407,7 @@ export default function ArtifactsSelection({
     if (viewType === ModalViewFor.SIDECAR) {
       setEditIndex(sideCarArtifact?.length || 0)
     }
-    setSelectedArtifact(getInitialSelectedArtifactValue())
+    setSelectedArtifact(getInitialSelectedArtifactValue(deploymentType, availableArtifactTypes))
     showConnectorModal()
     refetchConnectorList()
   }
