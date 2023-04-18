@@ -218,7 +218,10 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
                     saveAgentData((selectedAgent || provisionedAgent) as V1Agent)
                     onNext()
                   }}
-                  disabled={Boolean(agentCreateLoading || agentCreateError) || !isAgentConnected}
+                  disabled={
+                    Boolean(agentCreateLoading || agentCreateError) ||
+                    (agentList?.content?.length ? false : !isAgentConnected)
+                  }
                   loading={false}
                 />
               </>
