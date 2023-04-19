@@ -1,6 +1,6 @@
 .textArea {
   min-height: var(--spacing-small);
-
+  padding-top: 18px !important;
   border: none !important;
   overflow: auto !important;
   outline: none !important;
@@ -17,6 +17,9 @@
   display: grid;
   grid-template-columns: auto 40px;
   background: white;
+
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+  border-radius: 4px;
 }
 
 .inputButton {

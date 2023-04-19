@@ -1,21 +1,20 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, Icon } from '@harness/uicore'
 import { TextArea } from '@blueprintjs/core'
 import css from './PromptInput.module.scss'
 
 interface PromptInputProps {
-  onSubmitPrompt: (prompt: string) => void
+  onSubmitPrompt: () => void
+  prompt: string
+  setPrompt: React.Dispatch<React.SetStateAction<string>>
 }
-const PromptInput: React.FC<PromptInputProps> = ({ onSubmitPrompt }) => {
-  const [prompt, setPrompt] = useState<string>('')
-
+const PromptInput: React.FC<PromptInputProps> = ({ onSubmitPrompt, prompt, setPrompt }) => {
   const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
     setPrompt(event.target.value)
   }
 
   const onSendInput = () => {
-    onSubmitPrompt(prompt)
-    setPrompt('')
+    onSubmitPrompt()
   }
 
   return (

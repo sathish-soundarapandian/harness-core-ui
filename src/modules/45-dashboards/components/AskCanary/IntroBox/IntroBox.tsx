@@ -9,12 +9,11 @@ interface IntroBoxProps {
 const IntroBox: React.FC<IntroBoxProps> = ({ onOpenPrompt }) => {
   return (
     <div className={css.introBox}>
-      <Button className={css.button} icon="cross" minimal />
       <Layout.Vertical spacing={'small'}>
         <Heading level={4} color={Color.BLACK} font={{ variation: FontVariation.H4 }}>
           Your next New Dashboard is a few words away from you!
         </Heading>
-        <Text font={{ variation: FontVariation.BODY1 }}>
+        <Text font={{ variation: FontVariation.BODY }}>
           Just explain in a few words what you want to monitor and leave the rest to us!
         </Text>
         <div>
