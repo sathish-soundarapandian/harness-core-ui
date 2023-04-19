@@ -12,7 +12,7 @@ import { Connectors } from '@connectors/constants'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
-import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
+import { IdentifierSchemaWithOutName, NameSchema } from '@common/utils/Validation'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import {
   buildAzureRepoPayload,
@@ -372,7 +372,7 @@ export const ManifestIdentifierValidation = (
     }
   }
   return {
-    identifier: IdentifierSchemaWithOutName(getString)
+    identifier: NameSchema(getString, { requiredErrorMsg })
   }
 }
 
