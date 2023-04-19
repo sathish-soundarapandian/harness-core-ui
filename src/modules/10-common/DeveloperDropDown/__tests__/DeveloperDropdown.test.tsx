@@ -10,14 +10,13 @@ import { render } from '@testing-library/react'
 import type { SelectOption } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
-import ProjectDropdown from '../ProjectDropdown'
+import DeveloperDropdown from '../DeveloperDropdown'
 
 jest.mock('@harness/uicore', () => {
   return {
     ...jest.requireActual('@harness/uicore'),
     DropDown: (props: any) => {
       const [items, setItems] = useState<SelectOption[]>([])
-
       useEffect(() => {
         props.items().then((itemsResponse: SelectOption[]) => {
           setItems(itemsResponse)
@@ -26,7 +25,7 @@ jest.mock('@harness/uicore', () => {
 
       return (
         <div>
-          projectDropdown
+          developerDropdown
           <button data-testid="onChangeBtn" />
           <div data-testid="dropdownItems">
             {items.map((item: SelectOption) => (
@@ -39,37 +38,24 @@ jest.mock('@harness/uicore', () => {
   }
 })
 
-let projectListPromiseMock = jest.fn().mockImplementation(() => {
+let developerListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
     data: {
-      pageCount: 1,
-      itemCount: 6,
-      pageSize: 50,
-      content: [
-        {
-          project: {
-            orgIdentifier: 'testOrg',
-            identifier: 'test',
-            name: 'test',
-            color: '#e6b800',
-            modules: ['CD'],
-            description: 'test',
-            tags: { tag1: '', tag2: 'tag3' }
-          },
-          createdAt: null,
-          lastModifiedAt: 1606799067248
-        }
-      ],
-      pageIndex: 0,
+      totalPages: 1,
+      totalItems: 2,
+      pageItemCount: 2,
+      pageSize: 2,
+      content: ['harshjain12', 'jamieharness'],
+      pageIndex: 1,
       empty: false,
-      totalItems: 6
+      pageToken: null
     }
   })
 })
 
-jest.mock('services/cd-ng', () => ({
-  getProjectListPromise: jest.fn().mockImplementation(() => {
-    return projectListPromiseMock()
+jest.mock('services/ci', () => ({
+  listActiveDevelopersPromise: jest.fn().mockImplementation(() => {
+    return developerListPromiseMock()
   })
 }))
 
@@ -77,7 +63,7 @@ describe('project dropdown test', () => {
   test('render', () => {
     const { container } = render(
       <TestWrapper>
-        <ProjectDropdown onChange={noop} />
+        <DeveloperDropdown onChange={noop} />
       </TestWrapper>
     )
 
@@ -85,14 +71,14 @@ describe('project dropdown test', () => {
   })
 
   test('test when data is not defined', () => {
-    projectListPromiseMock = jest.fn().mockImplementation(() => {
+    developerListPromiseMock = jest.fn().mockImplementation(() => {
       return Promise.resolve(undefined)
     })
     const { queryByText } = render(
       <TestWrapper>
-        <ProjectDropdown onChange={noop} />
+        <DeveloperDropdown onChange={noop} />
       </TestWrapper>
     )
-    expect(queryByText('projectDropdown')).not.toBeNull()
+    expect(queryByText('developerDropdown')).not.toBeNull()
   })
 })

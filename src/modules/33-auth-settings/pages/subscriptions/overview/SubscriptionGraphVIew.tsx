@@ -24,10 +24,8 @@ const getModuleUsagesGraph = (props: SubscriptionGraphViewProps): React.ReactEle
   switch (props.module) {
     case ModuleName.CI:
       return <CIUsageGraph {...props} />
-      break
     case ModuleName.CD:
       return <ServiceLicenseGraphs {...props} />
-      break
     default:
       return undefined
   }

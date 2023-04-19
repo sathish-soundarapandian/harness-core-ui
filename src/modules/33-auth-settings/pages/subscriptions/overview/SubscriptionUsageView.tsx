@@ -21,10 +21,8 @@ const getModuleUsagesTable = (props: SubscriptionUsageViewProps): React.ReactEle
   switch (props.module) {
     case ModuleName.CI:
       return <CIUsageTable {...props} />
-      break
     case ModuleName.CD:
       return <CDUsageTable {...props} />
-      break
     default:
       return undefined
   }

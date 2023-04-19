@@ -12,13 +12,13 @@ import { listActiveDevelopersPromise } from 'services/ci'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
-interface DeveloperDropdown {
+interface DeveloperDropdownProps {
   onChange: (item: SelectOption) => void
   value?: SelectOption
   className?: string
 }
 
-const DeveloperDropdown: React.FC<DeveloperDropdown> = props => {
+const DeveloperDropdown: React.FC<DeveloperDropdownProps> = props => {
   const { accountId } = useParams<AccountPathProps>()
   const [query, setQuery] = useState<string>()
   const { getString } = useStrings()

@@ -32,8 +32,8 @@ import {
 import { getInfoIcon } from './UsageInfoCard'
 import pageCss from '../SubscriptionsPage.module.scss'
 
-const DEFAULT_PAGE_INDEX = 0
-const DEFAULT_PAGE_SIZE = 10
+export const DEFAULT_PAGE_INDEX = 0
+export const DEFAULT_PAGE_SIZE = 10
 export interface ServiceLicenseTableProps {
   data: PageActiveServiceDTO
   gotoPage: (pageNumber: number) => void

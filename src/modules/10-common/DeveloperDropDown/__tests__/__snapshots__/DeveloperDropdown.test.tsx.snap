@@ -3,7 +3,7 @@
 exports[`project dropdown test render 1`] = `
 <div>
   <div>
-    projectDropdown
+    developerDropdown
     <button
       data-testid="onChangeBtn"
     />

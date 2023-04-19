@@ -17,11 +17,10 @@ import type { SortBy } from './types'
 import { DeveloperNameCell, OrganizationCell, ProjectCell, LastBuildCell } from './CIusageTableCells'
 import { getInfoIcon } from './UsageInfoCard'
 import type { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './ServiceLicenseTable'
 import pageCss from '../SubscriptionsPage.module.scss'
 
-const DEFAULT_PAGE_INDEX = 0
-const DEFAULT_PAGE_SIZE = 10
-export interface ActiveDevelopersTableCI {
+export interface ActiveDevelopersTableCIProps {
   data: PageActiveServiceDTO
   gotoPage: (pageNumber: number) => void
   setSortBy: (sortBy: string[]) => void
@@ -41,7 +40,7 @@ export function ActiveDevelopersTableCI({
   setSortBy,
   updateFilters,
   servicesLoading
-}: ActiveDevelopersTableCI): React.ReactElement {
+}: ActiveDevelopersTableCIProps): React.ReactElement {
   const { getString } = useStrings()
   const {
     content = [],

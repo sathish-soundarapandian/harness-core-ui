@@ -113,7 +113,7 @@ const CIUsageGraph: React.FC<CIUsageGraphProps> = (props: CIUsageGraphProps) => 
   const sortedValues = []
   for (let i = 0; i < dataKeysSorted.length; i++) {
     let sortedValue = dataKeysToTimestamp[i]
-    for (var key in requiredData) {
+    for (let key in requiredData) {
       if (sortedValue === new Date(key).getTime()) {
         sortedValues.push(requiredData[key])
       }
