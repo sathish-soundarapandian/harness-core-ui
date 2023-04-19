@@ -12,6 +12,10 @@ console.log('\nProxy env vars')
 console.table({ baseUrl, targetLocalHost })
 
 module.exports = {
+  '/code-search': {
+    pathRewrite: { '^/code-search': '' },
+    target: 'http://127.0.0.1:4321'
+  },
   '/ng/api': {
     pathRewrite: { '^/ng/api': '' },
     target: targetLocalHost ? 'https://localhost:7090' : `${baseUrl}/ng/api`
