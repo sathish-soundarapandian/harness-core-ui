@@ -13,7 +13,7 @@ const PromptForm: React.FC = () => {
   }
 
   return (
-    <Container>
+    <Container className={css.container}>
       <PromptInput onSubmitPrompt={handleSubmitPrompt} />
     </Container>
   )

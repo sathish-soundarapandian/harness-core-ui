@@ -7,19 +7,19 @@
 
 import React, { useMemo, useState } from 'react'
 import cx from 'classnames'
-import { Dialog, Container, Heading, Icon, Layout } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Dialog, Container, Heading, Icon, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
 import type { DashboardModel } from 'services/custom-dashboards'
 import DashboardCard from '@dashboards/components/DashboardCard/DashboardCard'
 import { DashboardLayoutViews } from '@dashboards/types/DashboardTypes.types'
 import DashboardList from '@dashboards/components/DashboardList/DashboardList'
+import AskCanary from '@dashboards/components/AskCanary/AskCanary'
 import CloneDashboardForm from './CloneDashboardForm'
 import UpdateDashboardForm from './UpdateDashboardForm'
 import { useDashboardsContext } from '../DashboardsContext'
 import css from './HomePage.module.scss'
-import AskCanary from '@dashboards/components/AskCanary/AskCanary'
 
 export interface DashboardsProps {
   dashboards: DashboardModel[]
@@ -89,9 +89,9 @@ const Dashboards: React.FC<DashboardsProps> = ({
       <Layout.Vertical spacing="medium">
         <AskCanary />
 
-        <Heading level={3} color={Color.GREY_800}>
+        <Text font={{ variation: FontVariation.BODY1 }} color={Color.GREY_800} style={{ paddingLeft: '40px' }}>
           Dashboards
-        </Heading>
+        </Text>
         {hasDashboards && view === DashboardLayoutViews.GRID && (
           <Container className={css.masonry}>
             <Layout.Masonry
