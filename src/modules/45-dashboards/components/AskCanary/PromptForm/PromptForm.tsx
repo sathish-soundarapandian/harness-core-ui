@@ -32,8 +32,8 @@ const PromptForm: React.FC = () => {
   const { mutate: sendPrompt, loading } = useDashboardPrompt({ queryParams: { accountId: accountId } })
   const [prompt, setPrompt] = React.useState<string>('')
 
-  const handleExampleClicked = (prompt: string) => {
-    setPrompt(prompt)
+  const handleExampleClicked = (examplePrompt: string): void => {
+    setPrompt(examplePrompt)
     handleSubmitPrompt()
   }
 
