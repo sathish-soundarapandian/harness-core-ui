@@ -34,7 +34,6 @@ const getModuleUsagesGraph = (props: SubscriptionGraphViewProps): React.ReactEle
 }
 
 const SubscriptionGraphView: React.FC<SubscriptionGraphViewProps> = props => {
-  const { getString } = useStrings()
   const usageModuleTable = getModuleUsagesGraph(props)
   return usageModuleTable ? (
     <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'baseline', justifyContent: 'space-between' }}>

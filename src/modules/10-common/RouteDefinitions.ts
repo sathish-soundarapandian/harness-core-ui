@@ -145,14 +145,6 @@ const routes = {
     }
     return url
   }),
-  toCIUsage: withAccountId(({ moduleCard, tab }: SubscriptionQueryParams) => {
-    const url = '/settings/ciusage'
-
-    if (tab) {
-      return url.concat(`?tab=${tab}`)
-    }
-    return url
-  }),
   toAccountSettings: withAccountId(() => '/settings'),
   toAccountSettingsOverview: withAccountId(() => '/settings/overview'),
   toAuthenticationSettings: withAccountId(() => '/settings/authentication'),

@@ -9183,7 +9183,6 @@ export interface StringsMap {
   'cv.toObjectiveValue': string
   'cv.top': string
   'cv.trafficSplit': string
-  'cv.trend': string
   'cv.tuesday': string
   'cv.turnService': string
   'cv.unexpected': string

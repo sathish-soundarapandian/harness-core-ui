@@ -5,23 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import type { Column } from 'react-table'
-import { useParams } from 'react-router-dom'
-import cx from 'classnames'
 import { Text, TableV2, Layout, Card, Heading, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import moment from 'moment'
-import { String, useStrings, StringKeys } from 'framework/strings'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { PageActiveServiceDTO, LicenseUsageDTO, useDownloadActiveServiceCSVReport } from 'services/cd-ng'
+import { useStrings, StringKeys } from 'framework/strings'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'
-import DeveloperDropdown from '@common/DeveloperDropdown/DeveloperDropdown'
-
+import DeveloperDropdown from '@common/DeveloperDropDown/DeveloperDropdown'
 import type { SortBy } from './types'
 import { DeveloperNameCell, OrganizationCell, ProjectCell, LastBuildCell } from './CIusageTableCells'
 import { getInfoIcon } from './UsageInfoCard'
+import type { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
 import pageCss from '../SubscriptionsPage.module.scss'
 
 const DEFAULT_PAGE_INDEX = 0
@@ -112,9 +107,7 @@ export function ActiveDevelopersTableCI({
   const [selectedOrg, setSelectedOrg] = useState<SelectOption | undefined>()
   const [selectedProj, setSelectedProj] = useState<SelectOption | undefined>()
   const [selectedDeveloper, setSelectedDeveloper] = useState<SelectOption | undefined>()
-  const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
 
-  const formattedTime = moment(timeValue).format('MMM DD YYYY hh:mm:ss')
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>

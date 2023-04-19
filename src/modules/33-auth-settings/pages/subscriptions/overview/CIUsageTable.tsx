@@ -13,7 +13,6 @@ import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/ho
 import { usePreferenceStore, PreferenceScope } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
-import type { CDModuleLicenseDTO } from 'services/portal'
 import { ActiveDevelopersTableCI } from './ActiveDevelopersTableCI'
 import type { SelectOption } from '@harness/uicore'
 import type { ModuleName } from 'framework/types/ModuleName'
@@ -41,7 +40,6 @@ const queryParamOptions = {
 }
 
 const CIUsageTable: React.FC<CDUsageTableProps> = props => {
-  const { licenseData } = props
   const { updateQueryParams } = useUpdateQueryParams<Partial<CiLicenseUsageQueryParams>>()
   const { accountId } = useParams<AccountPathProps>()
   const { preference: sortingPreference, setPreference: setSortingPreference } = usePreferenceStore<string | undefined>(

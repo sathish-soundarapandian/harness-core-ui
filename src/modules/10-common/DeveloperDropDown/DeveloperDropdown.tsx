@@ -8,7 +8,7 @@
 import { DropDown, SelectOption } from '@harness/uicore'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { listActiveDevelopersPromise, ResponseSetString } from 'services/ci'
+import { listActiveDevelopersPromise } from 'services/ci'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 

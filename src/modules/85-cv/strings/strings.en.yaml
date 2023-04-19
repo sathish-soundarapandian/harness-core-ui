@@ -31,7 +31,6 @@ clusterType: Cluster Type
 sampleMessage: Sample Message
 sampleEvent: Sample Event
 messageFrequency: Message Frequency
-trend: Trend
 known: Known
 unexpected: Unexpected
 knownEvents: Known events

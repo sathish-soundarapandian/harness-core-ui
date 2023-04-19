@@ -39,21 +39,6 @@ const ActiveDevelopers: React.FC<ActiveDevelopersProps> = ({ subscribedUsers, ac
   }
   return <UsageInfoCard {...props} />
 }
-const CreditInfo: React.FC<ActiveDevelopersProps> = ({ expiryDate, activeUsers }) => {
-  const { getString } = useStrings()
-  const leftHeader = getString('common.subscriptions.usage.allCredits')
-  const tooltip = getString('common.subscriptions.usage.ciTooltip')
-  const hasBar = false
-
-  const props = {
-    usage: activeUsers,
-    leftHeader,
-    tooltip,
-    hasBar,
-    expiryDate
-  }
-  return <UsageInfoCard {...props} />
-}
 
 const CIUsageInfo: React.FC = () => {
   const { limitData, usageData } = useGetUsageAndLimit(ModuleName.CI)
@@ -90,7 +75,6 @@ const CIUsageInfo: React.FC = () => {
         subscribedUsers={limit?.ci?.totalDevelopers || 0}
         activeUsers={usage?.ci?.activeCommitters?.count || 0}
       />
-      <CreditInfo expiryDate={usage?.ci?.expiryDate} activeUsers={usage?.ci?.activeCommitters?.count || 0} />
     </Layout.Horizontal>
   )
 }

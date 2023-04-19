@@ -6,20 +6,18 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { Text, Layout, Card, Heading, PageSpinner, Select, SelectOption, Container } from '@harness/uicore'
+import { Text, Layout, Card, Heading, PageSpinner, SelectOption, Container } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import { StackedColumnChart } from '@common/components/StackedColumnChart/StackedColumnChart'
 import { useMutateAsGet } from '@common/hooks'
-import { ModuleLicenseDTO } from 'services/cd-ng'
-import { useGetLicenseHistoryUsage, CIModuleLicenseDTO } from 'services/ci'
-import { CDLicenseType } from '@common/constants/SubscriptionTypes'
+import type { ModuleLicenseDTO, CIModuleLicenseDTO } from 'services/cd-ng'
+import { useGetLicenseHistoryUsage } from 'services/ci'
 import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import pageCss from '../SubscriptionsPage.module.scss'
 
-interface CIUsageGraph {
+interface CIUsageGraphProps {
   accountId: string
   licenseType: 'SERVICES' | 'SERVICE_INSTANCES' | undefined
   licenseData?: ModuleLicenseDTO
@@ -58,8 +56,6 @@ const getSummaryCardRenderers = (summaryCardsData: SummaryCardData[]): JSX.Eleme
 
 const CIUsageGraph: React.FC<CIUsageGraphProps> = (props: CIUsageGraphProps) => {
   const { getString } = useStrings()
-  const currentDate = new Date()
-
   const [projectIdentifierSelected, setProjectIdentifierSelected] = useState<string>('')
   const [orgIdentifierSelected, setOrgIdentifierSelected] = useState<string>('')
   const [orgSelected, setOrgSelected] = useState<SelectOption | undefined>()
@@ -208,7 +204,6 @@ const CIUsageGraph: React.FC<CIUsageGraphProps> = (props: CIUsageGraphProps) => 
     setOrgIdentifierSelected(orgSelected?.value as string)
     setProjectIdentifierSelected(projSelected?.value as string)
   }
-  const licenseType = props.licenseType
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
