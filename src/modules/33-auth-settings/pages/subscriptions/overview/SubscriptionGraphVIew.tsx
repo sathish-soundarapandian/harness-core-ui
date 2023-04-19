@@ -20,7 +20,7 @@ interface SubscriptionGraphViewProps {
   module: ModuleName
 }
 
-const getModuleUsagesGraph = (props: SubscriptionUsageViewProps): React.ReactElement | undefined => {
+const getModuleUsagesGraph = (props: SubscriptionGraphViewProps): React.ReactElement | undefined => {
   switch (props.module) {
     case ModuleName.CI:
       return <CIUsageGraph {...props} />

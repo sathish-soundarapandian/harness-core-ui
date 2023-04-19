@@ -6,40 +6,52 @@
  */
 
 import React from 'react'
-import { Tabs, Card, Tab } from '@harness/uicore'
+import { Card } from '@harness/uicore'
+import { Tabs } from '@blueprintjs/core'
 import pageCss from '../SubscriptionsPage.module.scss'
 import { useStrings } from 'framework/strings'
-import type { ModuleName } from 'framework/types/ModuleName'
+import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
-import CDUsageTable from './CDUsageTable'
+import SubscriptionUsageView from './SubscriptionUsageView'
+import SubscriptionGraphView from './SubscriptionGraphVIew'
 
 interface SubscriptionTabPageProps {
   module: ModuleName
   licenseData?: ModuleLicenseDTO
+  accountId: string
+  licenseType: 'SERVICES' | 'SERVICE_INSTANCES' | undefined
 }
+
 enum SubscriptionDataTab {
   BREAKDOWN = 'BREAKDOWN',
   TREND = 'TREND'
 }
 
-const SubscriptionTabPage: React.FC<SubscriptionTabPageProps> = props => {
+function SubscriptionTabPage(props: SubscriptionTabPageProps) {
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(SubscriptionDataTab.BREAKDOWN)
+  if (props.module !== ModuleName.CI && props.module !== ModuleName.CD) {
+    return <></>
+  }
   return (
-    <Card className={pageCss.outterCard}>
+    <Card>
       <Tabs
         id="subscription-data"
         className={pageCss.tabs}
         selectedTabId={activeTab}
         onChange={newTab => {
-          //   manuallySelected.current = true
-          //   setActiveTab(newTab as ApprovalStepTab)
+          setActiveTab(newTab as SubscriptionDataTab)
         }}
       >
         <Tabs.Tab
           id={SubscriptionDataTab.BREAKDOWN}
           title={getString('common.subscriptions.tabs.breakdown')}
-          panel={<CDUsageTable {...props} />}
+          panel={<SubscriptionUsageView {...props} />}
+        />
+        <Tabs.Tab
+          id={SubscriptionDataTab.TREND}
+          title={getString('common.subscriptions.tabs.trend')}
+          panel={<SubscriptionGraphView {...props} />}
         />
       </Tabs>
     </Card>
