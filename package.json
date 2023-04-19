@@ -52,6 +52,7 @@
     "custom-coverage": "npx new-files-coverage-check --e !**/*.test.tsx !**/*.test.ts !**/*.snap !**/*.js !**/*.scss !**/*.mock.ts !**/*.spec.ts !**/*.d.ts !**/*.json !**/*.types.ts !**/types.ts !**/*.yml !**/*.yaml !**cypress/** !**/cypress/** !**/__test*/** !**/*.png !**/*.ico !**/*.svg !**/src/services/** !**/src/queries/** !**/src/**/__mocks__/** !**/src/**/RouteDestinations.tsx !**/*.sh !**/*.md !**/index.ts !**/src/modules/75-chaos/**"
   },
   "dependencies": {
+    "reactflow": "^11.7.0`",
     "@blueprintjs/core": "3.26.1",
     "@blueprintjs/datetime": "3.13.0",
     "@blueprintjs/select": "3.12.3",

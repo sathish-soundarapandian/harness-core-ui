@@ -7,7 +7,7 @@
 
 .tabs {
   > :global(.bp3-tabs > .bp3-tab-list) {
-    padding: calc(var(--spacing-large) + 1px) var(--spacing-xlarge) 0;
+    padding: var(--spacing-medium) var(--spacing-xlarge) 0;
     border-bottom: 1px solid var(--grey-200);
   }
 }

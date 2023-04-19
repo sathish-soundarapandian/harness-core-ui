@@ -166,6 +166,28 @@ export interface Distribution {
 }
 
 /**
+ * Edge for a graph
+ */
+export interface Edge {
+  /**
+   * If this node step is enabled
+   */
+  enabled: boolean
+  /**
+   * The ID of the node this edge starts at
+   */
+  from: string
+  /**
+   * The label associated with this edge
+   */
+  label: string
+  /**
+   * The ID of the node this edge ends at
+   */
+  to: string
+}
+
+/**
  * Environment Response
  */
 export interface Environment {
@@ -214,6 +236,30 @@ export interface Error {
    */
   message: string
 }
+
+export interface Evaluation {
+  flag: string
+  identifier?: string
+  kind: string
+  value: string
+}
+
+/**
+ * An explanation of why a flag evaluated how it did for a target
+ */
+export interface EvaluationExplain {
+  /**
+   * A list of edges in the graph
+   */
+  edges: Edge[]
+  /**
+   * A list of nodes in the graph
+   */
+  nodes: Node[]
+  result?: Evaluation
+}
+
+export type Evaluations = Evaluation[]
 
 /**
  * A Feature Flag response
@@ -804,6 +850,24 @@ export interface JiraSearchIssues {
    * The number of matching jira issues
    */
   total?: number
+}
+
+/**
+ * Node for a graph
+ */
+export interface Node {
+  /**
+   * If this node step is enabled
+   */
+  enabled: boolean
+  /**
+   * The ID of the node
+   */
+  id: string
+  /**
+   * The label associated with this node
+   */
+  label: string
 }
 
 /**
@@ -8223,6 +8287,198 @@ export const getTargetAvailableSegmentsPromise = (
     GetTargetAvailableSegmentsQueryParams,
     GetTargetAvailableSegmentsPathParams
   >(getConfig('cf'), `/admin/targets/${identifier}/available_segments`, props, signal)
+
+export interface GetAllEvaluationsQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Environment Identifier
+   */
+  environmentIdentifier: string
+}
+
+export interface GetAllEvaluationsPathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+}
+
+export type GetAllEvaluationsProps = Omit<
+  GetProps<Pagination & Evaluations, unknown, GetAllEvaluationsQueryParams, GetAllEvaluationsPathParams>,
+  'path'
+> &
+  GetAllEvaluationsPathParams
+
+/**
+ * Returns evaluations for all flags for a target
+ *
+ * Returns evaluations for all flags for a target
+ */
+export const GetAllEvaluations = ({ identifier, ...props }: GetAllEvaluationsProps) => (
+  <Get<Pagination & Evaluations, unknown, GetAllEvaluationsQueryParams, GetAllEvaluationsPathParams>
+    path={`/admin/targets/${identifier}/evaluations`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetAllEvaluationsProps = Omit<
+  UseGetProps<Pagination & Evaluations, unknown, GetAllEvaluationsQueryParams, GetAllEvaluationsPathParams>,
+  'path'
+> &
+  GetAllEvaluationsPathParams
+
+/**
+ * Returns evaluations for all flags for a target
+ *
+ * Returns evaluations for all flags for a target
+ */
+export const useGetAllEvaluations = ({ identifier, ...props }: UseGetAllEvaluationsProps) =>
+  useGet<Pagination & Evaluations, unknown, GetAllEvaluationsQueryParams, GetAllEvaluationsPathParams>(
+    (paramsInPath: GetAllEvaluationsPathParams) => `/admin/targets/${paramsInPath.identifier}/evaluations`,
+    { base: getConfig('cf'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * Returns evaluations for all flags for a target
+ *
+ * Returns evaluations for all flags for a target
+ */
+export const getAllEvaluationsPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    Pagination & Evaluations,
+    unknown,
+    GetAllEvaluationsQueryParams,
+    GetAllEvaluationsPathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<Pagination & Evaluations, unknown, GetAllEvaluationsQueryParams, GetAllEvaluationsPathParams>(
+    getConfig('cf'),
+    `/admin/targets/${identifier}/evaluations`,
+    props,
+    signal
+  )
+
+export interface GetEvaluationExplainQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Environment Identifier
+   */
+  environmentIdentifier: string
+}
+
+export interface GetEvaluationExplainPathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+  /**
+   * Identifier of the flag
+   */
+  featureIdentifier: string
+}
+
+export type GetEvaluationExplainProps = Omit<
+  GetProps<Pagination & EvaluationExplain, unknown, GetEvaluationExplainQueryParams, GetEvaluationExplainPathParams>,
+  'path'
+> &
+  GetEvaluationExplainPathParams
+
+/**
+ * Returns an explanation of an evaluation for a target
+ *
+ * Returns an explanation of an evaluation for a target
+ */
+export const GetEvaluationExplain = ({ identifier, featureIdentifier, ...props }: GetEvaluationExplainProps) => (
+  <Get<Pagination & EvaluationExplain, unknown, GetEvaluationExplainQueryParams, GetEvaluationExplainPathParams>
+    path={`/admin/targets/${identifier}/evaluations/${featureIdentifier}/explain`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetEvaluationExplainProps = Omit<
+  UseGetProps<Pagination & EvaluationExplain, unknown, GetEvaluationExplainQueryParams, GetEvaluationExplainPathParams>,
+  'path'
+> &
+  GetEvaluationExplainPathParams
+
+/**
+ * Returns an explanation of an evaluation for a target
+ *
+ * Returns an explanation of an evaluation for a target
+ */
+export const useGetEvaluationExplain = ({ identifier, featureIdentifier, ...props }: UseGetEvaluationExplainProps) =>
+  useGet<Pagination & EvaluationExplain, unknown, GetEvaluationExplainQueryParams, GetEvaluationExplainPathParams>(
+    (paramsInPath: GetEvaluationExplainPathParams) =>
+      `/admin/targets/${paramsInPath.identifier}/evaluations/${paramsInPath.featureIdentifier}/explain`,
+    { base: getConfig('cf'), pathParams: { identifier, featureIdentifier }, ...props }
+  )
+
+/**
+ * Returns an explanation of an evaluation for a target
+ *
+ * Returns an explanation of an evaluation for a target
+ */
+export const getEvaluationExplainPromise = (
+  {
+    identifier,
+    featureIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    Pagination & EvaluationExplain,
+    unknown,
+    GetEvaluationExplainQueryParams,
+    GetEvaluationExplainPathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+    /**
+     * Identifier of the flag
+     */
+    featureIdentifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    Pagination & EvaluationExplain,
+    unknown,
+    GetEvaluationExplainQueryParams,
+    GetEvaluationExplainPathParams
+  >(getConfig('cf'), `/admin/targets/${identifier}/evaluations/${featureIdentifier}/explain`, props, signal)
 
 export interface GetTargetSegmentsQueryParams {
   /**

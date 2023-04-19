@@ -7,17 +7,24 @@
 
 import React, { FC } from 'react'
 import { useParams } from 'react-router-dom'
+import { Tabs } from '@harness/uicore'
 import { Target, useGetTarget } from 'services/cf'
 import { useGetEnvironment } from 'services/cd-ng'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import TargetManagementDetailPageTemplate from '@cf/components/TargetManagementDetailPageTemplate/TargetManagementDetailPageTemplate'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { Page } from '@common/exports'
-import useDeleteTargetDialog from '@cf/pages/target-detail/hooks/useDeleteTargetDialog'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import LeftBar from './components/LeftBar/LeftBar'
 import FlagSettings from './components/FlagSettings/FlagSettings'
+import FlagEvaluations from './components/FlagEvaluations/FlagEvaluations'
+import useDeleteTargetDialog from './hooks/useDeleteTargetDialog'
+
+import css from '@cf/pages/target-group-detail/TargetGroupDetailPage.module.scss'
 
 const TargetDetailPage: FC = () => {
+  const [selectedTab, setSelectedTab] = useQueryParamsState<string>('tab', 'overrides')
+
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const {
     accountId: accountIdentifier,
@@ -79,7 +86,27 @@ const TargetDetailPage: FC = () => {
       metaData={{ environment: envData?.data?.name as string }}
       leftBar={<LeftBar target={target as Target} />}
     >
-      <FlagSettings target={target as Target} />
+      <div className={css.tabs}>
+        <Tabs
+          id="TargetDetailTabs"
+          selectedTabId={selectedTab}
+          onChange={setSelectedTab}
+          tabList={[
+            {
+              id: 'overrides',
+              title: 'Overrides',
+              panel: <FlagSettings target={target as Target} />,
+              panelClassName: css.panel
+            },
+            {
+              id: 'evaluations',
+              title: 'Evaluations',
+              panel: <FlagEvaluations target={target as Target} />,
+              panelClassName: css.panel
+            }
+          ]}
+        />
+      </div>
     </TargetManagementDetailPageTemplate>
   )
 }
