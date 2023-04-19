@@ -81,7 +81,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
         gitOpsEnabled,
         deploymentTemplateIdentifier,
         versionLabel,
-        deploymentMetadataYaml: yamlStringify(deploymentMetadata)
+        deploymentMetadataYaml: deploymentMetadata ? yamlStringify(deploymentMetadata) : undefined
       }
     },
     {
