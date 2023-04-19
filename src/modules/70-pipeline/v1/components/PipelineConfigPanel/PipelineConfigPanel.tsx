@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react'
-import { Container, FontVariation, Icon, Layout, Text } from '@harness/uicore'
+import React, { useCallback, useState } from 'react'
+import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text } from '@harness/uicore'
 import css from './PipelineConfigPanel.module.scss'
-import { MainConfigOptions, PipelineConfigOptionInterface } from './PipelineConfigOptions'
+import { AdditionalConfigOptions, MainConfigOptions, PipelineConfigOptionInterface } from './PipelineConfigOptions'
 
 interface PipelineConfigPanelInterface {
   height?: React.CSSProperties['height']
@@ -9,6 +9,7 @@ interface PipelineConfigPanelInterface {
 
 export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.ReactElement {
   const { height } = props
+  const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false)
 
   const renderPipelineConfigOption = useCallback((configOption: PipelineConfigOptionInterface): React.ReactElement => {
     const { name, iconProps, description } = configOption
@@ -37,8 +38,18 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         <Text font={{ variation: FontVariation.H4 }}>Pipeline Configuration</Text>
       </Container>
       <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xxxlarge' }}>
-        {MainConfigOptions.map((option: PipelineConfigOptionInterface) => renderPipelineConfigOption(option))}
+        {(showMoreOptions ? [...MainConfigOptions, ...AdditionalConfigOptions] : MainConfigOptions).map(
+          (option: PipelineConfigOptionInterface) => renderPipelineConfigOption(option)
+        )}
       </Layout.Vertical>
+      {showMoreOptions ? null : (
+        <Container
+          padding={{ left: 'xlarge', top: 'small', bottom: 'medium', right: 'xlarge' }}
+          flex={{ justifyContent: 'center' }}
+        >
+          <Button text={'SEE MORE OPTIONS'} variation={ButtonVariation.LINK} onClick={() => setShowMoreOptions(true)} />
+        </Container>
+      )}
     </Layout.Vertical>
   )
 }
