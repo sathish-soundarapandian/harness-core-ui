@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import { isEqual, omit } from 'lodash-es'
-import { Icon, Layout, Text } from '@harness/uicore'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { parse } from '@common/utils/YamlHelperMethods'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
@@ -146,7 +146,9 @@ function PipelineYAMLViewV1(): React.ReactElement {
         //   selectedPluginFromYAMLView={selectedEntity}
         //   pluginAddUpdateOpnStatus={entityAddUpdateOpnStatus}
         // />
-        <PipelineConfigPanel height={'calc(100vh - 150px)'} />
+        <Container width="34vw">
+          <PipelineConfigPanel height={'calc(100vh - 150px)'} />
+        </Container>
       ) : null}
     </Layout.Horizontal>
   )
