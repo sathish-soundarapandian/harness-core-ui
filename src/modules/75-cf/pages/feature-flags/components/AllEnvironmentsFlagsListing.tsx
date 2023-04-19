@@ -10,7 +10,7 @@ import type { Cell, Column } from 'react-table'
 import { Container, Layout, TableV2, Text, Utils } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
-import type { AllEnvironmentsFlags, AllEnvironmentsFlag, DeleteFeatureFlagQueryParams, Feature } from 'services/cf'
+import type { DeleteFeatureFlagQueryParams, Feature, FlagState, ProjectFlags } from 'services/cf'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import FlagOptionsMenuButton from '@cf/components/FlagOptionsMenuButton/FlagOptionsMenuButton'
@@ -19,7 +19,7 @@ import { formatDate } from '@cf/utils/CFUtils'
 import FlagEnvironmentsState from './FlagEnvironmentsState'
 export interface AllEnvironmentsFlagsListingProps {
   environments: EnvironmentResponseDTO[]
-  allEnvironmentsFlags: AllEnvironmentsFlags
+  allEnvironmentsFlags: ProjectFlags
   refetchFlags: () => void
   deleteFlag: (data: string, mutateRequestOptions?: MutateRequestOptions<DeleteFeatureFlagQueryParams, void>) => void
   queryParams: DeleteFeatureFlagQueryParams
@@ -37,14 +37,14 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
   const gitSync = useFFGitSyncContext()
   const { getString } = useStrings()
 
-  const allEnvironmentsColumns: Column<AllEnvironmentsFlag>[] = useMemo(
+  const allEnvironmentsColumns: Column<FlagState>[] = useMemo(
     () => [
       {
         font: FontVariation.TABLE_HEADERS,
         id: 'flagName',
         accessor: row => row.name,
         width: '25%',
-        Cell: (cell: Cell<AllEnvironmentsFlag>) => (
+        Cell: (cell: Cell<FlagState>) => (
           <Container
             flex={{ distribution: 'space-between', align: 'center-center' }}
             padding={{ left: 'small', right: 'small' }}
@@ -68,7 +68,7 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
         id: 'createdAt',
         accessor: 'createdAt',
         width: '15%',
-        Cell: (cell: Cell<AllEnvironmentsFlag>) => (
+        Cell: (cell: Cell<FlagState>) => (
           <Layout.Horizontal
             flex={{ distribution: 'space-between', align: 'center-center' }}
             padding={{ left: 'small', right: 'small' }}
@@ -89,7 +89,7 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
         id: 'environments',
         font: FontVariation.TABLE_HEADERS,
         width: '55%',
-        Cell: (cell: Cell<AllEnvironmentsFlag>) => {
+        Cell: (cell: Cell<FlagState>) => {
           const environmentsByType = {
             nonProd: nonProdEnvs.map(env => ({
               identifier: env.identifier,
@@ -126,7 +126,7 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
     [nonProdEnvs, prodEnvs, queryParams, gitSync]
   )
 
-  return <TableV2<AllEnvironmentsFlag> columns={allEnvironmentsColumns} data={allEnvironmentsFlags?.flags || []} />
+  return <TableV2<FlagState> columns={allEnvironmentsColumns} data={allEnvironmentsFlags?.flags || []} />
 }
 
 export default AllEnvironmentsFlagsListing

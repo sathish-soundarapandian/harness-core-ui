@@ -51,7 +51,7 @@ describe('Test useEnvironmentSelectV2', () => {
       clearPreference: jest.fn()
     })
 
-    jest.spyOn(cfServices, 'useGetAllEnvironmentsFlags').mockReturnValue({
+    jest.spyOn(cfServices, 'useGetProjectFlags').mockReturnValue({
       loading: false,
       error: null,
       absolutePath: '',

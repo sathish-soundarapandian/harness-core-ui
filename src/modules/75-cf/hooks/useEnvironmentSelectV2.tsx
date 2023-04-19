@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Select, SelectOption, SelectProps } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useGetAllEnvironmentsFlags } from 'services/cf'
+import { useGetProjectFlags } from 'services/cf'
 import { EnvironmentResponseDTO, useGetEnvironmentListForProject } from 'services/cd-ng'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
@@ -77,7 +77,7 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
     error: fetchAllEnvironmentsFlagsError,
     data: allEnvironmentsFlags,
     refetch: refetchAllEnvironmentsFlags
-  } = useGetAllEnvironmentsFlags({
+  } = useGetProjectFlags({
     identifier: projectIdentifier,
     queryParams,
     lazy: true

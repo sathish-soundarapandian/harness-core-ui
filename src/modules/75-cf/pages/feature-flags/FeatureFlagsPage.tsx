@@ -222,7 +222,7 @@ const FeatureFlagsPage: React.FC = () => {
           />
         </Container>
       )}
-      {!emptyFeatureFlags || !!allEnvironmentsFlags?.flags.length ? (
+      {!emptyFeatureFlags || !!allEnvironmentsFlags?.flags?.length ? (
         <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
           {allEnvironmentsFlags && !!environments?.length ? (
             <AllEnvironmentsFlagsListing
