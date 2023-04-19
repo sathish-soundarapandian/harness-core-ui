@@ -133,7 +133,7 @@ const ConfigureServiceRef = (
   const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const isHelpEnabled = useFeatureFlag(FeatureFlag.CD_ONBOARDING_HELP_ENABLED)
   const {
-    state: { service: serviceData, delegate: delegateData },
+    state: { service: serviceData },
     saveServiceData
   } = useCDOnboardingContext()
 
@@ -191,8 +191,7 @@ const ConfigureServiceRef = (
   const createServiceOnLoad = async (): Promise<void> => {
     const serviceRef = formikRef?.current?.values?.serviceRef
     const isServiceNameUpdated = isEmpty(get(serviceData, 'identifier'))
-
-    if (isServiceNameUpdated && !isEmpty(delegateData?.environmentEntities?.infrastructure)) {
+    if (isServiceNameUpdated) {
       const serviceRefIdentifier = getUniqueEntityIdentifier(serviceRef)
       setServiceIdentifier(serviceRefIdentifier)
       const updatedContextService = produce(serviceData, draft => {
