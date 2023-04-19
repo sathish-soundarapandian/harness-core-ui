@@ -109,10 +109,15 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       setCurrentWizardStepId(WizardStepOrder[indexAt])
     }
   }
+
+  const isGitopsDeploymentType = React.useMemo(
+    () => selectedDeploymentType === ServiceDeploymentType.KubernetesGitops,
+    [selectedDeploymentType]
+  )
+
   React.useEffect(() => {
     trackPage(getString('cd.getStartedWithCD.cdWizardEventName', { eventName: currentWizardStepId as string }), {})
-    const prefix =
-      selectedDeploymentType === ServiceDeploymentType.KubernetesGitops ? `${ResourceCategory.GITOPS}_` : ''
+    const prefix = isGitopsDeploymentType ? `${ResourceCategory.GITOPS}_` : ''
     updateQueryParams({
       sectionId: `${prefix}${currentWizardStepId}`
     })
@@ -475,7 +480,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
 
   const WizardSteps: Map<DeployProvisiongWizardStepId, WizardStep> = new Map([
     firstStep,
-    ...(selectedDeploymentType === ServiceDeploymentType.KubernetesGitops ? WizardStepsgitOpsEnabled : CDWizardSteps)
+    ...(isGitopsDeploymentType ? WizardStepsgitOpsEnabled : CDWizardSteps)
   ])
 
   const {

@@ -347,7 +347,7 @@ const ConfigureServiceRef = (
   }, [formikRef?.current?.values, forwardRef])
 
   useEffect(() => {
-    if (!isEmpty(serviceData?.data?.gitValues?.gitAuthenticationMethod)) {
+    if (!isEmpty(serviceData?.data?.gitValues?.gitAuthenticationMethod) || serviceData?.data?.gitValues) {
       updateManifestStepStatus(['Connector'], StepStatus.Success)
       if (!isEmpty(serviceData?.data?.repoValues)) {
         updateManifestStepStatus(['Repository'], StepStatus.Success)
@@ -512,9 +512,9 @@ const ConfigureServiceRef = (
     }
   }
 
-  const onConnectorSuccess = (connectionStatus: number, conectorResponse: any): void => {
+  const onConnectorSuccess = (connectionStatus: number, conectorResponse: any, isOAuth = false): void => {
     const { validate } = selectGitProviderRef.current || {}
-    if (validate?.()) {
+    if (validate?.() || isOAuth) {
       updateManifestStepStatus(['Connector'], StepStatus.Success)
       updateManifestStepStatus(['Repository'], StepStatus.InProgress)
 
@@ -524,6 +524,7 @@ const ConfigureServiceRef = (
         : connectionStatus
       const updatedContextService = produce(serviceData as ServiceDataType, draft => {
         set(draft, 'data.gitValues', gitValues)
+        set(draft, 'data.isOauth', isOAuth)
         set(draft, 'data.gitConnectionStatus', gitTestConnectionStatus)
         set(draft, 'data.connectorRef', conectorResponse)
       })

@@ -23,10 +23,7 @@ export interface DeployProvisioningWizardProps {
   flowType?: FLOW_TYPES
 }
 
-export const enum Hosting {
-  SaaS = 'SAAS',
-  OnPrem = 'ON_PREM'
-}
+export const OAUTH2_USER_NAME = 'oauth2'
 export interface WizardStep {
   stepRender: React.ReactElement
   onClickNext?: () => void
