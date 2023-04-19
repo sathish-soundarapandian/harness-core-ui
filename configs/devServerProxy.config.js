@@ -112,7 +112,7 @@ module.exports = {
   },
   '/sugary/api': {
     pathRewrite: { '^/sugary': '' },
-    target: 'http://localhost:3001'
+    target: 'http://localhost:3000'
   },
   '/sugary': {
     pathRewrite: { '^/sugary': '' },
