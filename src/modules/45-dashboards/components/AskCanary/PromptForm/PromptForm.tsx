@@ -13,6 +13,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import PromptInput from './PromptInput/PromptInput'
+import css from './PromptForm.module.scss'
 
 const PromptForm: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
