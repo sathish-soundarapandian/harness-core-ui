@@ -8,7 +8,13 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, pickBy, set } from 'lodash-es'
-import { EXECUTION_TIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, PageSpinner } from '@harness/uicore'
+import {
+  EXECUTION_TIME_INPUT_VALUE,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  PageSpinner,
+  useToaster
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -137,7 +143,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
     let options: JiraProjectSelectOption[] = []
     const projectResponseList: JiraProjectBasicNG[] = projectsResponse?.data || []
     options =
-      (projectResponseList || [])?.map((project: JiraProjectBasicNG) => ({
+      projectResponseList.map((project: JiraProjectBasicNG) => ({
         label: defaultTo(project.name, ''),
         value: defaultTo(project.key, ''),
         key: defaultTo(project.key, '')
@@ -170,7 +176,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
       const selectedFieldsValue = initialValues.spec?.fields || inputSetData?.allValues?.spec?.fields
 
       //Mapped fields with BE 'issueTypeData?.fields' data to get details for runtime fields and append it in a single object
-      const fetchRuntimeFields: any = (selectedFieldsValue || [])?.map((fieldValueObj, _index) => {
+      const fetchRuntimeFields: any = selectedFieldsValue.map((fieldValueObj, _index) => {
         const fieldName = fieldValueObj.name
         let matchedField = {} as JiraFieldNG
         pickBy(issueTypeData?.fields, function (value, key) {
@@ -326,6 +332,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
 export default function JiraCreateDeploymentMode(props: JiraCreateDeploymentModeProps): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
+  const { showError } = useToaster()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const commonParams = {
@@ -379,6 +386,21 @@ export default function JiraCreateDeploymentMode(props: JiraCreateDeploymentMode
       issueType: ''
     }
   })
+
+  useEffect(() => {
+    showError(projectMetadataFetchError)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectMetadataFetchError])
+
+  useEffect(() => {
+    showError(projectsFetchError)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectsFetchError])
+
+  useEffect(() => {
+    showError(issueMetadataFetchError)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [issueMetadataFetchError])
 
   return (
     <FormContent

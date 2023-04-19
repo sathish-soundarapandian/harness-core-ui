@@ -25,7 +25,8 @@ import {
   MultiTypeInputType,
   PageSpinner,
   SelectOption,
-  Text
+  Text,
+  useToaster
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -297,7 +298,7 @@ function FormContent({
     let options: JiraProjectSelectOption[] = []
     const projectResponseList: JiraProjectBasicNG[] = projectsResponse?.data || []
     options =
-      projectResponseList.map((project: JiraProjectBasicNG) => ({
+      (projectResponseList || [])?.map((project: JiraProjectBasicNG) => ({
         label: defaultTo(project.name, ''),
         value: defaultTo(project.id, ''),
         key: defaultTo(project.key, '')
@@ -703,6 +704,8 @@ function FormContent({
 function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormikFowardRef<JiraCreateData>) {
   const { onUpdate, isNewStep, readonly, onChange, stepViewType, allowableTypes, unprocessedInitialValues } = props
   const { getString } = useStrings()
+  const { showError } = useToaster()
+
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -756,6 +759,17 @@ function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormi
       issueType: ''
     }
   })
+
+  useEffect(() => {
+    showError('failed to fetch projects')
+  }, [projectsFetchError])
+
+  useEffect(() => {
+    showError('failed to fetch project metadata')
+  }, [projectMetadataFetchError])
+  useEffect(() => {
+    showError('failed to fetch metadata')
+  }, [issueMetadataFetchError])
 
   // formik's dirty prop is computed by comparing initialValues and values,
   // but this step needs a custom dirty prop as the type of submitted/initial values is different from values
