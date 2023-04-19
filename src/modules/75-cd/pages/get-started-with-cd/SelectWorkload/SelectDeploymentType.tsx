@@ -48,6 +48,7 @@ interface SelectDeploymentTypeProps {
   disableNextBtn: () => void
   enableNextBtn: () => void
   onSuccess: (deploymentType: string) => void
+  onSelect?: (value: string) => void
 }
 
 export type SelectDeploymentTypeForwardRef =
@@ -192,7 +193,9 @@ const SelectDeploymentTypeRef = (
                         onChange={
                           /* istanbul ignore next */ (item: DeploymentTypeItem) => {
                             formikProps.setFieldValue('selectedDeploymentType', item.value)
+
                             setSelectedDeploymentType(item)
+                            props.onSelect?.(item.value)
                             trackEvent(CDOnboardingActions.SelectDeploymentType, {
                               deployment_type: item.value
                             })

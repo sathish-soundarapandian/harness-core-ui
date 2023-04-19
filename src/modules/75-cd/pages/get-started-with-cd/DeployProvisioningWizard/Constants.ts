@@ -14,14 +14,16 @@ import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import { deploymentIconMap } from '@cd/utils/deploymentUtils'
 
+export enum FLOW_TYPES {
+  DELEGATE_FIRST = 'DELEGATE_FIRST',
+  SERVICE_FIRST = 'SERVICE_FIRST'
+}
 export interface DeployProvisioningWizardProps {
   lastConfiguredWizardStepId?: DeployProvisiongWizardStepId
+  flowType?: FLOW_TYPES
 }
 
-export const enum Hosting {
-  SaaS = 'SAAS',
-  OnPrem = 'ON_PREM'
-}
+export const OAUTH2_USER_NAME = 'oauth2'
 export interface WizardStep {
   stepRender: React.ReactElement
   onClickNext?: () => void
