@@ -188,5 +188,9 @@ module.exports = {
   '/ssca/api': {
     pathRewrite: { '^/ssca/api': '/api' },
     target: process.env.SSCA_API_URL || 'https://localhost:8186'
+  },
+  '/sei': {
+    pathRewrite: { '^/sei': '' },
+    target: process.env.SEI_UI_URL || 'http://127.0.0.1:3000/'
   }
 }

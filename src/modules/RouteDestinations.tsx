@@ -34,6 +34,7 @@ import IDPRoutes from '@idp/RouteDestinations'
 import GovernanceRoutes from '@governance/RouteDestinations'
 import IACMRoutes from '@iacm/RouteDestinations'
 import ChaosRoutes from '@chaos/RouteDestinations'
+import SEIRoutes from '@sei/RouteDestinations'
 import DASHBOARDRoutes from '@dashboards/RouteDestinations'
 import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
@@ -43,6 +44,9 @@ import CODERouteDestinations from '@code/RouteDestinations'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import ETRoutes from '@et/RouteDestinations'
+import ChildAppMounter from 'microfrontends/ChildAppMounter'
+
+const SEIMicroFrontend = React.lazy(() => import('sei/MicroFrontendApp'))
 
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
@@ -62,14 +66,17 @@ export default function RouteDestinations(): React.ReactElement {
     IACM_ENABLED,
     SSCA_ENABLED,
     IDP_ENABLED,
-    CET_ENABLED
+    CET_ENABLED,
+    SEI_ENABLED
   } = useFeatureFlags()
-  const { licenseInformation } = useLicenseStore()
+  const { licenseInformation } = useLicenseStore()  
 
   const isCVModuleEnabled =
     licenseInformation[ModuleName.CV]?.status === 'ACTIVE' ||
     licenseInformation[ModuleName.CD]?.status === 'ACTIVE' ||
     CVNG_ENABLED
+
+  console.log('SEI_ENABLED', SEI_ENABLED);
 
   return (
     <Switch>
@@ -90,6 +97,7 @@ export default function RouteDestinations(): React.ReactElement {
       {freezeWindowRoutes.props.children}
       {userProfileRoutes.props.children}
       {CHAOS_ENABLED ? ChaosRoutes().props.children : null}
+      {SEI_ENABLED ? SEIRoutes().props.children : null}
       {CING_ENABLED ? CIRoutes.props.children : null}
       {CDRoutes.props.children}
       {isCVModuleEnabled ? CVRoutes.props.children : null}
@@ -110,6 +118,11 @@ export default function RouteDestinations(): React.ReactElement {
       {IACM_ENABLED ? IACMRoutes().props.children : null}
       {SSCA_ENABLED ? SSCARoutes.props.children : null}
       {CET_ENABLED ? ETRoutes({})?.props.children : null}
+
+      {/* <Route path="/account/:accountId/sei">
+        <ChildAppMounter ChildApp={SEIMicroFrontend} />
+      </Route> */}
+
       <Route path="*">
         <NotFoundPage />
       </Route>

@@ -23,7 +23,8 @@ export enum ModuleName {
   IACM = 'IACM',
   SSCA = 'SSCA',
   IDP = 'IDP',
-  CET = 'CET'
+  CET = 'CET',
+  SEI = 'SEI'
 }
 
 export const moduleToModuleNameMapping: Record<Module, ModuleName> = {

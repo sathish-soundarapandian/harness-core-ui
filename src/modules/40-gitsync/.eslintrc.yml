@@ -26,6 +26,7 @@ rules:
             - modules/75-chaos/*
             - modules/75-ci/*
             - modules/75-idp/*
+            - modules/75-sei/*
             - modules/75-ssca/*
             - modules/85-cv/*
             - modules/85-iacm/*
@@ -45,6 +46,7 @@ rules:
             - '@chaos/*'
             - '@ci/*'
             - '@idp/*'
+            - '@sei/*'
             - '@ssca/*'
             - '@cv/*'
             - '@iacm/*'

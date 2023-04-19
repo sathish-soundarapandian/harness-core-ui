@@ -1513,6 +1513,7 @@ export interface ResourceDTO {
     | 'GOVERNANCE_POLICY_SET'
     | 'VARIABLE'
     | 'CHAOS_HUB'
+    | 'SEI_HUB'
     | 'MONITORED_SERVICE'
     | 'CHAOS_INFRASTRUCTURE'
     | 'CHAOS_EXPERIMENT'

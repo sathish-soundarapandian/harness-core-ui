@@ -38,6 +38,7 @@
       "@templates-library/*": ["modules/72-templates-library/*"],
       "@triggers/*": ["modules/72-triggers/*"],
       "@cd/*": ["modules/75-cd/*"],
+      "@sei/*": ["modules/75-sei/*"],
       "@cf/*": ["modules/75-cf/*"],
       "@ci/*": ["modules/75-ci/*"],
       "@cv/*": ["modules/85-cv/*"],

@@ -8067,6 +8067,7 @@ export interface StringsMap {
   'ci.welcome': string
   'idp.adminHome': string
   'idp.layout': string
+  'sei.seiHub': string
   'ssca.allowDenyList': string
   'ssca.enforcementStep.abortOn.sbomComponentPartOfDenyList': string
   'ssca.enforcementStep.abortOn.sbomPartOfDenyList': string

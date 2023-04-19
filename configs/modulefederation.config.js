@@ -35,7 +35,8 @@ module.exports = ({
   enableTIUI,
   enableIACM,
   enableSSCA,
-  enableIDP
+  enableIDP,
+  enableSEI
 }) => {
   const remotes = {}
 
@@ -85,6 +86,10 @@ module.exports = ({
 
   if (enableIACM) {
     remotes.iacm = "remoteIACM@[window.getApiBaseUrl('iacm/remoteEntry.js')]"
+  }
+
+  if (enableSEI) {
+    remotes.sei = "sei@[window.getApiBaseUrl('sei/build/assets/remoteEntry.js')]"
   }
 
   if (process.env.TARGET_LOCALHOST) {

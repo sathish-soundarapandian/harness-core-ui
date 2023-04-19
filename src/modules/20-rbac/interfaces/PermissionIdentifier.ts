@@ -159,6 +159,11 @@ export enum PermissionIdentifier {
   VIEW_CHAOS_GAMEDAY = 'chaos_chaosgameday_view',
   EDIT_CHAOS_GAMEDAY = 'chaos_chaosgameday_edit',
 
+  // SEI Permissions
+  VIEW_SEI_HUB = 'sei_seihub_view',
+  EDIT_SEI_HUB = 'sei_seihub_edit',
+  DELETE_SEI_HUB = 'sei_seihub_delete',
+
   // STO Permissions
   VIEW_STO_ISSUE = 'sto_issue_view',
   VIEW_STO_SCAN = 'sto_scan_view',

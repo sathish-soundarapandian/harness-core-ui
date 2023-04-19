@@ -2144,7 +2144,14 @@ const routes = {
   toETSettings: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
       `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et`
-  )
+  ),
+
+  /****************** SEI Module ************************************************************************************/
+  toSEI: withAccountId(() => `/sei`),
+  toSEIMicroFrontend: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/sei/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
+  ),
 }
 
 export default routes

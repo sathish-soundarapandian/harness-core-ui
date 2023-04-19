@@ -10218,6 +10218,7 @@ export interface ModuleLicenseDTO {
     | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   premiumSupport?: boolean
   selfService?: boolean
   startTime?: number

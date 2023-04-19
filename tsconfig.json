@@ -48,6 +48,7 @@
       "@triggers/*": ["modules/72-triggers/*"],
       "@cd/*": ["modules/75-cd/*"],
       "@chaos/*": ["modules/75-chaos/*"],
+      "@sei/*": ["modules/75-sei/*"],
       "@cf/*": ["modules/75-cf/*"],
       "@ci/*": ["modules/75-ci/*"],
       "@cv/*": ["modules/85-cv/*"],
