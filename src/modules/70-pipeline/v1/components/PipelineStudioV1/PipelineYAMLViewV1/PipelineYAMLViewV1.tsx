@@ -12,13 +12,13 @@ import { FontVariation } from '@harness/design-system'
 import { parse } from '@common/utils/YamlHelperMethods'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import { Status } from '@common/utils/Constants'
+import type { Status } from '@common/utils/Constants'
 import { useStrings } from 'framework/strings'
 import type { EntityValidityDetails, PipelineInfoConfig } from 'services/pipeline-ng'
 import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/useEnableEditModes'
 import { usePipelineSchemaV1 } from '../PipelineSchemaContextV1/PipelineSchemaContextV1'
 import { usePipelineContextV1 } from '../PipelineContextV1/PipelineContextV1'
-import { PluginsPanel } from '../../PluginsPanel/PluginsPanel'
+import { PipelineConfigPanel } from '../../PipelineConfigPanel/PipelineConfigPanel'
 
 import css from './PipelineYAMLViewV1.module.scss'
 
@@ -47,8 +47,8 @@ function PipelineYAMLViewV1(): React.ReactElement {
   updateEntityValidityDetailsRef.current = updateEntityValidityDetails
   const [isEditorExpanded, setIsEditorExpanded] = useState<boolean>(true)
   const { getString } = useStrings()
-  const [selectedEntity, setSelectedEntity] = useState<Record<string, any>>()
-  const [entityAddUpdateOpnStatus, setEntityAddUpdateOpnStatus] = useState<Status>()
+  const [_selectedEntity, setSelectedEntity] = useState<Record<string, any>>()
+  const [_entityAddUpdateOpnStatus, setEntityAddUpdateOpnStatus] = useState<Status>()
 
   // setup polling
   React.useEffect(() => {
@@ -136,16 +136,17 @@ function PipelineYAMLViewV1(): React.ReactElement {
         {...yamlOrJsonProp}
       />
       {yamlHandler && isEditorExpanded ? (
-        <PluginsPanel
-          height={'calc(100vh - 150px)'}
-          onPluginAddUpdate={yamlHandler.addUpdatePluginIntoExistingYAML}
-          onPluginDiscard={() => {
-            setSelectedEntity(undefined)
-            setEntityAddUpdateOpnStatus(Status.TO_DO)
-          }}
-          selectedPluginFromYAMLView={selectedEntity}
-          pluginAddUpdateOpnStatus={entityAddUpdateOpnStatus}
-        />
+        // <PluginsPanel
+        //   height={'calc(100vh - 150px)'}
+        //   onPluginAddUpdate={yamlHandler.addUpdatePluginIntoExistingYAML}
+        //   onPluginDiscard={() => {
+        //     setSelectedEntity(undefined)
+        //     setEntityAddUpdateOpnStatus(Status.TO_DO)
+        //   }}
+        //   selectedPluginFromYAMLView={selectedEntity}
+        //   pluginAddUpdateOpnStatus={entityAddUpdateOpnStatus}
+        // />
+        <PipelineConfigPanel height={'calc(100vh - 150px)'} />
       ) : null}
     </Layout.Horizontal>
   )
