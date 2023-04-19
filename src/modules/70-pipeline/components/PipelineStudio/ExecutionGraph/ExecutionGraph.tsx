@@ -78,6 +78,7 @@ import { EmptyStageName } from '../PipelineConstants'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { getFlattenedSteps } from '../CommonUtils/CommonUtils'
 import css from './ExecutionGraph.module.scss'
+import SessionToken from 'framework/utils/SessionToken'
 
 const diagram = new DiagramFactory('graph')
 
@@ -214,10 +215,13 @@ const renderAiPopover = ({
   console.info(event)
 
   let resp;
+
+  let token = SessionToken.getToken()
   const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://api.ipify.org?format=json", false);
-  // xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-  // xhr.setRequestHeader('Content-Type', 'text/plain');
+  // xhr.open("GET", "https://api.ipify.org?format=json", false);
+  xhr.open("GET", "http://localhost:12001/api/pipelines/generateWithAI/describe/" + data.identifier, false);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+  xhr.setRequestHeader('Content-Type', 'text/plain');
   xhr.onload = (e) => {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
