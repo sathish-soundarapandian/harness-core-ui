@@ -34,12 +34,12 @@ const PromptForm: React.FC = () => {
 
   const handleExampleClicked = (examplePrompt: string): void => {
     setPrompt(examplePrompt)
-    handleSubmitPrompt()
+    handleSubmitPrompt(examplePrompt)
   }
 
-  const handleSubmitPrompt = async (): Promise<void> => {
+  const handleSubmitPrompt = async (submittedPrompt: string): Promise<void> => {
     try {
-      const { dashboard_id } = await sendPrompt({ prompt })
+      const { dashboard_id } = await sendPrompt({ prompt: submittedPrompt })
       showSuccess(getString('dashboards.createModal.success'))
       history.push({
         pathname: routes.toViewCustomDashboard({
@@ -62,7 +62,7 @@ const PromptForm: React.FC = () => {
           Edit a Dashboard
         </Heading>
         <Text font={{ variation: FontVariation.BODY }}>Tell us in a few words what do you want to add</Text>
-        <PromptInput onSubmitPrompt={handleSubmitPrompt} prompt={prompt} setPrompt={setPrompt} />
+        <PromptInput onSubmitPrompt={() => handleSubmitPrompt(prompt)} prompt={prompt} setPrompt={setPrompt} />
         <Text font={{ variation: FontVariation.BODY }}>or try these examples</Text>
         <Layout.Vertical spacing={'medium'}>
           <Layout.Horizontal spacing={'medium'}>

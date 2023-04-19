@@ -9,6 +9,7 @@ interface ExamplePromptProps {
 }
 const ExamplePrompt: React.FC<ExamplePromptProps> = ({ minHeight, prompt, setPrompt }) => {
   const onClickPrompt = (): void => {
+    console.log(prompt)
     setPrompt(prompt)
   }
 
