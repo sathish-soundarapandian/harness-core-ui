@@ -3952,6 +3952,7 @@ export interface StringsMap {
   'pipeline.execution.pipelineActionMessages.pausedMessage': string
   'pipeline.execution.pipelineActionMessages.resumedMessage': string
   'pipeline.execution.retryStepCount': string
+  'pipeline.execution.rollbackStages': string
   'pipeline.execution.stageActionMessages.abortedMessage': string
   'pipeline.execution.stageActionMessages.pausedMessage': string
   'pipeline.execution.stageActionMessages.resumedMessage': string

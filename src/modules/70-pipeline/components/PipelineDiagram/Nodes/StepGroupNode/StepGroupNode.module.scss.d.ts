@@ -25,6 +25,7 @@ declare const styles: {
   readonly parallelNodes: string
   readonly pipelineStageHeader: string
   readonly readonly: string
+  readonly rollbackGroup: string
   readonly stageName: string
   readonly stepGroup: string
   readonly stepGroupBody: string

@@ -34,8 +34,15 @@ import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import css from './ExecutionStageDetailsHeader.module.scss'
 
 export function ExecutionStageDetailsHeader(): React.ReactElement {
-  const { selectedStageId, pipelineStagesMap, refetch, pipelineExecutionDetail, allNodeMap, selectedStageExecutionId } =
-    useExecutionContext()
+  const {
+    selectedStageId,
+    selectedChildStageId,
+    pipelineStagesMap,
+    refetch,
+    pipelineExecutionDetail,
+    allNodeMap,
+    selectedStageExecutionId
+  } = useExecutionContext()
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
 
@@ -44,6 +51,8 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
   const getNodeId =
     selectedStageExecutionId !== selectedStageId && !isEmpty(selectedStageExecutionId)
       ? selectedStageExecutionId
+      : selectedChildStageId && !isEmpty(selectedChildStageId)
+      ? selectedChildStageId
       : selectedStageId
 
   const stage = pipelineStagesMap.get(getNodeId)

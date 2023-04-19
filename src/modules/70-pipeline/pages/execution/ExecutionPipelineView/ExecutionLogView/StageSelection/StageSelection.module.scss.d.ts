@@ -17,6 +17,7 @@ declare const styles: {
   readonly inputWaiting: string
   readonly mainAccordion: string
   readonly mainContainer: string
+  readonly pipelineRollback: string
   readonly spinner: string
   readonly stageName: string
   readonly statusHeader: string

@@ -51,7 +51,7 @@ diagram.registerNode(['Deployment', 'CI'], PipelineStageNode as unknown as React
 diagram.registerNode(DiagramNodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode(DiagramNodeType.EndNode, EndNodeStage)
 diagram.registerNode(DiagramNodeType.StartNode, StartNodeStage)
-diagram.registerNode('Pipeline', DiagramNodes[DiagramNodeType.StepGroupNode])
+diagram.registerNode(['Pipeline', 'PipelineRollback'], DiagramNodes[DiagramNodeType.StepGroupNode])
 diagram.registerNode([DiagramNodeType.MatrixNode, DiagramNodeType.LoopNode, DiagramNodeType.PARALLELISM], MatrixNode)
 diagram.registerNode(['Approval', 'JiraApproval', 'HarnessApproval', 'default-diamond'], DiamondNodeWidget)
 
@@ -80,6 +80,10 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
     () => processLayoutNodeMapV1(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary),
     [pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary]
   )
+  const rollbackNodeData = useMemo(
+    () => processLayoutNodeMapV1(pipelineExecutionDetail?.rollbackGraph?.pipelineExecutionSummary),
+    [pipelineExecutionDetail?.rollbackGraph?.pipelineExecutionSummary]
+  )
 
   const data: any = useMemo(() => {
     //ExecutionPipeline<GraphLayoutNode> | ExecutionPipeline<PipelineGraphState>
@@ -93,8 +97,25 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
   }, [nodeData])
 
   const _childPipelineData: PipelineGraphState[] = useMemo(() => {
-    return processExecutionDataForGraph(childNodeData as PipelineGraphState[], selectedStageId)
-  }, [childNodeData])
+    let processedChildPipelineExecutionData: PipelineGraphState[] = []
+    if (!isEmpty(childNodeData))
+      processedChildPipelineExecutionData = processExecutionDataForGraph(
+        childNodeData as PipelineGraphState[],
+        selectedStageId
+      )
+    else if (!isEmpty(rollbackNodeData)) {
+      const parentRollbackStageId = get(pipelineExecutionDetail?.rollbackGraph?.pipelineExecutionSummary, [
+        'parentStageInfo',
+        'stagenodeid'
+      ])
+      processedChildPipelineExecutionData = processExecutionDataForGraph(
+        rollbackNodeData as PipelineGraphState[],
+        isEmpty(parentRollbackStageId) ? selectedStageId : parentRollbackStageId,
+        true
+      )
+    }
+    return processedChildPipelineExecutionData
+  }, [childNodeData, rollbackNodeData])
 
   React.useEffect(() => {
     if (data?.items && !isEmpty(_childPipelineData)) {
@@ -110,7 +131,10 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
       // TODO -> Remove data mutation
       for (const obj of data.items) {
         let flag = false
-        if (obj.id === selectedStageId) {
+        if (
+          (obj.type === StageType.PIPELINE && obj.id === selectedStageId) ||
+          obj.type === StageType.PIPELINE_ROLLBACK
+        ) {
           obj.childPipelineData = _childPipelineData
           obj.executionMetaData = _executionMetaData
           flag = true
@@ -147,14 +171,20 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
       return selectedChildStageId
     }
 
+    if (!isEmpty(rollbackNodeData) && !isEmpty(selectedChildStageId)) {
+      return [selectedChildStageId, selectedStageId].join('|')
+    }
+
     return selectedStageId
-  }, [selectedStageId, selectedChildStageId, childNodeData, selectedStageExecutionId])
+  }, [selectedStageId, selectedChildStageId, childNodeData, rollbackNodeData, selectedStageExecutionId])
 
   React.useEffect(() => {
     diagram.registerListeners(
       getExecutionStageDiagramListeners({
         allNodeMap: pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap,
-        allChildNodeMap: pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary?.layoutNodeMap,
+        allChildNodeMap:
+          pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary?.layoutNodeMap ||
+          pipelineExecutionDetail?.rollbackGraph?.pipelineExecutionSummary?.layoutNodeMap,
         onMouseLeave: () => {
           dynamicPopoverHandler?.hide()
           setStageSetupIdId('')
@@ -167,7 +197,8 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
   }, [
     pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap,
     dynamicPopoverHandler,
-    pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary?.layoutNodeMap
+    pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary?.layoutNodeMap,
+    pipelineExecutionDetail?.rollbackGraph?.pipelineExecutionSummary?.layoutNodeMap
   ])
 
   React.useEffect(() => {

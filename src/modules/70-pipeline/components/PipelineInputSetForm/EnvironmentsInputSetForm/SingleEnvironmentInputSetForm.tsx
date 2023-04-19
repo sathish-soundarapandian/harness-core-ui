@@ -148,7 +148,12 @@ export default function SingleEnvironmentInputSetForm({
       {deploymentType && showEnvironmentPrefix && !isEnvironmentLoading && (
         <React.Fragment key={`${path}_${environment.environmentRef}`}>
           {isValueFixed(environmentIdentifier) && (
-            <Text font={{ size: 'normal', weight: 'bold' }} padding={{ bottom: 'medium' }} color={Color.GREY_700}>
+            <Text
+              font={{ size: 'normal', weight: 'bold' }}
+              lineClamp={1}
+              margin={{ bottom: 'medium' }}
+              color={Color.GREY_700}
+            >
               {getString('common.environmentPrefix', { name: environmentIdentifier })}
             </Text>
           )}
@@ -300,6 +305,7 @@ export default function SingleEnvironmentInputSetForm({
                         font={{ size: 'normal', weight: 'bold' }}
                         padding={{ bottom: 'medium' }}
                         color={Color.GREY_700}
+                        lineClamp={1}
                       >
                         {getString('common.infrastructurePrefix', {
                           name: infraInputs.identifier

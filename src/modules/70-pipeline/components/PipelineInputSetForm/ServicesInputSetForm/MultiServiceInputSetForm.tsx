@@ -92,6 +92,7 @@ export default function MultiServiceInputSetForm({
                       font={{ size: 'normal', weight: 'bold' }}
                       margin={{ top: 'medium', bottom: 'medium' }}
                       color={Color.GREY_800}
+                      lineClamp={1}
                     >
                       {getString('common.servicePrefix', { name: service.serviceRef })}
                     </Text>

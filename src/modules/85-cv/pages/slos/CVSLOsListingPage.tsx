@@ -85,7 +85,6 @@ import css from './CVSLOsListingPage.module.scss'
 const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService }) => {
   const history = useHistory()
   const { getString } = useStrings()
-  const SRM_COMPOSITE_SLO = useFeatureFlag(FeatureFlag.SRM_COMPOSITE_SLO)
   const SRM_ENABLE_REQUEST_SLO = useFeatureFlag(FeatureFlag.SRM_ENABLE_REQUEST_SLO)
   const monitoredServiceIdentifier = useMemo(() => monitoredService?.identifier, [monitoredService?.identifier])
   useDocumentTitle([getString('cv.srmTitle'), getServiceTitle(getString, monitoredServiceIdentifier)])
@@ -264,7 +263,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           }}
         />
       )}
-      {SRM_COMPOSITE_SLO && !monitoredService && (
+      {!monitoredService && (
         <RbacButton
           icon="plus"
           data-testid="createCompositeSLO"

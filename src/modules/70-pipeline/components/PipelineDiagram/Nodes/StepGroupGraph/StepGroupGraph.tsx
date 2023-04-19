@@ -11,7 +11,7 @@ import { defaultTo } from 'lodash-es'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useDeepCompareEffect } from '@common/hooks'
-import { StageType } from '@pipeline/utils/stageHelpers'
+import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
 import { SVGComponent } from '../../PipelineGraph/PipelineGraph'
 import { PipelineGraphRecursive } from '../../PipelineGraph/PipelineGraphNode'
 import {
@@ -60,10 +60,11 @@ const getCalculatedStyles = (
   let maxChildLength = 0
   let finalHeight = 0
   data.forEach(node => {
-    const childrenNodesId = defaultTo(node?.children, []).map(o => o.id) // list of all parallel nodes of current node
-    const childNodesId = [node.id, ...childrenNodesId] // node + all parallel nodes id list
+    const currentNodeId = node.id.split('|')[0]
+    const childrenNodesId = defaultTo(node?.children, []).map(o => o.id.split('|')[0]) // list of all parallel nodes of current node
+    const childNodesId = [currentNodeId, ...childrenNodesId] // node + all parallel nodes id list
 
-    if (childrenDimensions[node.id]) {
+    if (childrenDimensions[currentNodeId]) {
       // stepGroup child dimension from context
       let nodeHeight = 0
       let nodeWidth = 0
@@ -112,7 +113,10 @@ const getCalculatedStyles = (
     }
   })
 
-  return { height: finalHeight, width: width - (type === StageType.PIPELINE ? 40 : 80) } // 80 is link gap that we dont need for last stepgroup node
+  return {
+    height: finalHeight,
+    width: width - (stageGroupTypes.includes(type as StageType) ? 40 : 80)
+  } // 80 is link gap that we dont need for last stepgroup node
 }
 
 function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
@@ -138,7 +142,7 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
 
   const stagePath = getStagePathFromPipeline(props?.identifier || '', 'pipeline.stages')
   useLayoutEffect(() => {
-    if (props?.type === StageType.PIPELINE) setState(props.data as PipelineGraphState[])
+    if (stageGroupTypes.includes(props?.type as StageType)) setState(props.data as PipelineGraphState[])
     else if (props?.data?.length) {
       setState(
         getPipelineGraphData({

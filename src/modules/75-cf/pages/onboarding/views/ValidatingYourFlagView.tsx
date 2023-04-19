@@ -5,14 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
 import { Classes, Switch } from '@blueprintjs/core'
 import { String, useStrings } from 'framework/strings'
 import type { PlatformEntry } from '@cf/components/LanguageSelection/LanguageSelection'
-import { ApiKey, Feature, useGetAllFeatures } from 'services/cf'
+import { ApiKey, Feature, GetFeatureMetricsQueryParams, useGetFeatureMetrics } from 'services/cf'
 import { useToggleFeatureFlag } from '@cf/hooks/useToggleFeatureFlag'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
 import css from './ValidatingYourFlagView.module.scss'
@@ -48,18 +48,23 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = ({
     environmentIdentifier: environmentIdentifier as string
   })
 
-  const { data: featuresData, refetch } = useGetAllFeatures({
-    queryParams: {
+  const queryParams = useMemo<GetFeatureMetricsQueryParams>(() => {
+    return {
+      projectIdentifier,
+      environmentIdentifier: environmentIdentifier as string,
       accountIdentifier,
       orgIdentifier,
-      projectIdentifier,
-      metrics: true,
-      environmentIdentifier: environmentIdentifier as string,
       pageSize: 1,
-      pageNumber: 0,
-      featureIdentifiers: flagInfo.identifier
-    },
-    lazy: true
+      featureIDs: [flagInfo.identifier],
+      pageNumber: 0
+    }
+  }, [projectIdentifier, environmentIdentifier, accountIdentifier, orgIdentifier, flagInfo.identifier])
+
+  const { data: featureMetrics, refetch: refetchMetrics } = useGetFeatureMetrics({
+    queryParams: {
+      ...queryParams,
+      environmentIdentifier: environmentIdentifier as any
+    }
   })
 
   const [toggledOn, setToggledOn] = useState(false)
@@ -83,7 +88,7 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = ({
       if (tries < MAX_TRIES) {
         const pollingTimer = setTimeout(() => {
           setTries(currentTries => currentTries + 1)
-          refetch()
+          refetchMetrics()
         }, POLLING_INTERVAL_IN_MS)
 
         return () => clearTimeout(pollingTimer)
@@ -93,20 +98,21 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = ({
         setTestDone(true)
       }
     }
-  }, [refetch, fetching, setTestDone, verified, tries, setVerified])
+  }, [refetchMetrics, fetching, setTestDone, verified, tries, setVerified])
 
   useEffect(() => {
     // flag must be validated within the getting started flow
     // anything older than that we don't care about
     if (
-      featuresData?.features?.[0].status?.status === 'active' &&
-      featuresData?.features?.[0].status?.lastAccess > startTime
+      Array.isArray(featureMetrics) &&
+      featureMetrics[0].status?.status === 'active' &&
+      featureMetrics[0].status?.lastAccess > startTime
     ) {
       setFetching(false)
       setVerified(true)
       setTestDone(true)
     }
-  }, [featuresData, startTime, setTestDone, setVerified])
+  }, [featureMetrics, startTime, setTestDone, setVerified])
 
   return (
     <Container className={css.listenToEventContainer}>

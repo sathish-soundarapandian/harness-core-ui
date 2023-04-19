@@ -48,7 +48,8 @@ export enum StageType {
   MATRIX = 'MATRIX',
   LOOP = 'LOOP',
   PARALLELISM = 'PARALLELISM',
-  IACM = 'IACM'
+  IACM = 'IACM',
+  PIPELINE_ROLLBACK = 'PipelineRollback'
 }
 
 export enum ServiceDeploymentType {
@@ -86,6 +87,8 @@ export enum RepositoryFormatTypes {
   NuGet = 'nuget',
   Raw = 'raw'
 }
+
+export const stageGroupTypes = [StageType.PIPELINE, StageType.PIPELINE_ROLLBACK]
 
 const commonRepoFormatTypes = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },

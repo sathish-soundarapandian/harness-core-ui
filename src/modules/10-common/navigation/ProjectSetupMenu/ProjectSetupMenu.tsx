@@ -63,6 +63,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   const isSTO = module === 'sto'
   const isCIorCD = isCI || isCD
   const isCIorCDorSTO = isCI || isCD || isSTO
+  // we don't want to show Policies tab for modules that use this file and don't support it
+  const isNonPolicyEngineModule = module === 'iacm' || module === 'ssca' || module === 'chaos'
   const { licenseInformation } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
   const showDeploymentFreeze = isEnterpriseEdition && isCD
@@ -105,10 +107,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
             to={routes.toTemplates({ ...params, templateType: 'MonitoredService' })}
           />
         )}
-        {isCIorCDorSTO && canUsePolicyEngine && (
-          <SidebarLink label={getString('common.governance')} to={routes.toGovernance(params as GovernancePathProps)} />
-        )}
-        {isCV && canUsePolicyEngine && (
+        {!isNonPolicyEngineModule && canUsePolicyEngine && (
           <SidebarLink label={getString('common.governance')} to={routes.toGovernance(params as GovernancePathProps)} />
         )}
         {showDeploymentFreeze ? (

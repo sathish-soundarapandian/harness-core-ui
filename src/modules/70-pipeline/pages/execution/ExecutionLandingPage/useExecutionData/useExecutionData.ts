@@ -20,6 +20,7 @@ import {
   useGetExecutionDetailV2
 } from 'services/pipeline-ng'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { getActiveStageForPipeline } from './getActiveStageForPipeline'
 import { getActiveStepForStage } from './getActiveStepForStage'
 
@@ -81,7 +82,11 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
   })
 
   React.useEffect(() => {
-    const { executionGraph, pipelineExecutionSummary, childGraph } = get(data, 'data', {} as PipelineExecutionDetail)
+    const { executionGraph, pipelineExecutionSummary, childGraph, rollbackGraph } = get(
+      data,
+      'data',
+      {} as PipelineExecutionDetail
+    )
 
     // pick default values from query params
     let stageId = defaultTo(queryParams.stage, '')
@@ -90,17 +95,37 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
     let childStageId = defaultTo(queryParams.childStage, '')
     const collapsedNode = defaultTo(queryParams.collapsedNode, '')
 
-    const [_stageId, _executionId] = getActiveStageForPipeline(pipelineExecutionSummary)
-    const [_childStageId, _childExecutionId] = getActiveStageForPipeline(childGraph?.pipelineExecutionSummary)
+    let [_stageId, _executionId] = getActiveStageForPipeline(pipelineExecutionSummary)
+    const [_childStageId, _childExecutionId] = getActiveStageForPipeline(
+      childGraph?.pipelineExecutionSummary || rollbackGraph?.pipelineExecutionSummary,
+      !!rollbackGraph?.pipelineExecutionSummary
+    )
 
     // stage selection
     if (!queryParams.stage && !queryParams.collapsedNode) {
       stageId = _stageId
+      const parentRollbackStageId = get(rollbackGraph?.pipelineExecutionSummary, ['parentStageInfo', 'stagenodeid'], '')
+      if (!isEmpty(parentRollbackStageId)) {
+        stageId = parentRollbackStageId
+        _stageId = parentRollbackStageId
+        _executionId = ''
+      }
     }
 
     // set childStageId to auto selected id (`_childStageId`)
     // if there's a childGraph and queryParams.childStage is falsy
     if (childGraph && !queryParams.childStage && !queryParams.collapsedNode) {
+      childStageId = _childStageId
+    }
+
+    // get stage from rollback pipeline if it exists
+    // Because the rollback graph will be available at all times, the fourth condition is added to avoid passing childStageId for setting selectedNodeId while selecting non-rollback stage.
+    if (
+      rollbackGraph &&
+      !queryParams.childStage &&
+      !queryParams.collapsedNode &&
+      pipelineExecutionSummary?.layoutNodeMap?.[stageId]?.nodeType === StageType.PIPELINE_ROLLBACK
+    ) {
       childStageId = _childStageId
     }
 
@@ -115,12 +140,12 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
     } else if (queryParams.stageExecId) {
       // remove executionId
       // if stageId/childStageId is not equal to stageId/childStageId of queryParams.stageExecId
-      if (childGraph) {
-        const childStageIdForExecution = get(childGraph.pipelineExecutionSummary, [
-          'layoutNodeMap',
-          queryParams.stageExecId,
-          'nodeUuid'
-        ])
+      // rollbackGraph condition - Rollback and execution graph will both be present for normal matrix stage, but only rollbackGraph will be present for rollback stage.
+      if (childGraph || (rollbackGraph && !executionGraph)) {
+        const childStageIdForExecution = get(
+          childGraph?.pipelineExecutionSummary || rollbackGraph?.pipelineExecutionSummary,
+          ['layoutNodeMap', queryParams.stageExecId, 'nodeUuid']
+        )
 
         if (childStageIdForExecution !== childStageId) {
           executionId = ''
@@ -144,6 +169,11 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
         ? getActiveStepForStage(
             childGraph.executionGraph,
             get(childGraph.pipelineExecutionSummary, ['layoutNodeMap', executionId || childStageId, 'status'])
+          )
+        : rollbackGraph?.executionGraph
+        ? getActiveStepForStage(
+            rollbackGraph.executionGraph,
+            get(rollbackGraph.pipelineExecutionSummary, ['layoutNodeMap', executionId || childStageId, 'status'])
           )
         : getActiveStepForStage(
             executionGraph,

@@ -509,7 +509,8 @@ exports[`Environments V2 test snapshot test with list view and after sort 1`] = 
                       class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                     >
                       <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
+                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                        style="--text-line-clamp: 1;"
                       >
                         Env 2
                       </p>
@@ -611,7 +612,8 @@ exports[`Environments V2 test snapshot test with list view and after sort 1`] = 
                       class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                     >
                       <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
+                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                        style="--text-line-clamp: 1;"
                       >
                         env
                       </p>

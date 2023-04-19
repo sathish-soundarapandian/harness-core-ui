@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
+import cx from 'classnames'
 import { Accordion, AccordionHandle, Icon } from '@harness/uicore'
 import { Divider, Spinner } from '@blueprintjs/core'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 
 import { useUpdateQueryParams } from '@common/hooks'
 import { processExecutionData } from '@pipeline/utils/executionUtils'
@@ -19,6 +20,7 @@ import { isExecutionNotStarted, isExecutionSkipped, isExecutionWaitingForInput }
 import { StatusHeatMap } from '@pipeline/components/StatusHeatMap/StatusHeatMap'
 import { String as TemplateString } from 'framework/strings'
 import type { ExecutionNode, GraphLayoutNode } from 'services/pipeline-ng'
+import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
 import { StepsTree } from '../StepsTree/StepsTree'
 import { StatusIcon } from '../StepsTree/StatusIcon'
 
@@ -33,6 +35,7 @@ export interface StageSelectionProps {
 export function StageSelection(props: StageSelectionProps): React.ReactElement {
   const {
     childPipelineStagesMap,
+    rollbackPipelineStagesMap,
     allStagesMap,
     allNodeMap,
     pipelineExecutionDetail,
@@ -106,8 +109,9 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
 
   React.useEffect(() => {
     // if (prevSelectedStageIdRef.current === selectedStageId)
-    setChildPipelineEntries([...childPipelineStagesMap.entries()])
-  }, [childPipelineStagesMap])
+    if (!isEmpty(childPipelineStagesMap)) setChildPipelineEntries([...childPipelineStagesMap.entries()])
+    if (!isEmpty(rollbackPipelineStagesMap)) setChildPipelineEntries([...rollbackPipelineStagesMap.entries()])
+  }, [childPipelineStagesMap, rollbackPipelineStagesMap])
 
   const tree = React.useMemo(
     () => processExecutionData(pipelineExecutionDetail?.executionGraph),
@@ -115,8 +119,11 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
   )
 
   const childPipelineTree = React.useMemo(
-    () => processExecutionData(pipelineExecutionDetail?.childGraph?.executionGraph),
-    [pipelineExecutionDetail?.childGraph?.executionGraph]
+    () =>
+      processExecutionData(
+        pipelineExecutionDetail?.childGraph?.executionGraph || pipelineExecutionDetail?.rollbackGraph?.executionGraph
+      ),
+    [pipelineExecutionDetail?.childGraph?.executionGraph, pipelineExecutionDetail?.rollbackGraph?.executionGraph]
   )
 
   function handleStepSelect(stepId: string, retryStep?: string): void {
@@ -199,17 +206,26 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
         onChange={handleAccordionChange}
         panelClassName={css.accordionPanel}
         summaryClassName={css.accordionSummary}
-        detailsClassName={css.accordionDetails}
+        detailsClassName={cx(css.accordionDetails, {
+          [css.pipelineRollback]:
+            !isEmpty(selectedStageId) &&
+            selectedStageId ===
+              get(
+                pipelineExecutionDetail?.rollbackGraph?.pipelineExecutionSummary,
+                ['parentStageInfo', 'stagenodeid'],
+                ''
+              )
+        })}
       >
         {stageEntries.map(([identifier, stage]) => {
           const newIdentifier = stage?.strategyMetadata
             ? [stage.nodeUuid, stage.nodeExecutionId].join('|')
             : defaultTo(stage.nodeUuid, identifier)
-          const isChainedPipelineStage = stage.nodeType === 'Pipeline'
+          const isChainedPipelineOrRollbackStage = stageGroupTypes.includes(stage.nodeType as StageType)
           const shouldShowExecutionInputs =
             !!stage?.executionInputConfigured && isExecutionWaitingForInput(stage.status) && !!selectedStageId
           const shouldShowTree =
-            ((!isChainedPipelineStage &&
+            ((!isChainedPipelineOrRollbackStage &&
               !isEmpty(selectedStageExecutionId) &&
               newIdentifier.includes(selectedStageExecutionId)) ||
               newIdentifier.includes(selectedStageId)) &&
@@ -240,7 +256,7 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
                 </div>
               }
               details={
-                isChainedPipelineStage ? (
+                isChainedPipelineOrRollbackStage ? (
                   shouldShowTree && !isEmpty(childPipelineEntries) ? (
                     <Accordion
                       className={css.mainAccordion}
@@ -257,7 +273,7 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
                       {childPipelineEntries.map(([childIdentifier, childStage]) => {
                         const newChildIdentifier = childStage?.strategyMetadata
                           ? [childStage.nodeUuid, childStage.nodeExecutionId].join('|')
-                          : childIdentifier
+                          : childIdentifier.split('|')[0]
                         const shouldShowChildPipelineStepsTree =
                           newChildIdentifier.includes(selectedStageExecutionId || selectedChildStageId || '') &&
                           (!loading || prevSelectedChildStageIdRef.current === childStage.nodeUuid)

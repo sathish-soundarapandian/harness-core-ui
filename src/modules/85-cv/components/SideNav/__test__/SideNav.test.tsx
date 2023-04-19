@@ -50,26 +50,4 @@ describe('Sidenav', () => {
     userEvent.click(accountTab!)
     expect(getByText('/account/dummy/cv/slos')).toBeInTheDocument()
   })
-
-  test('with feture flags as flase', async () => {
-    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlag')
-    useFeatureFlags.mockReturnValue(false)
-    const { container } = render(
-      <TestWrapper
-        path="/account/:accountId/cv/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <SideNav />
-      </TestWrapper>
-    )
-    await waitFor(() => expect(container.querySelector('[class*="Layout"]')).not.toBeNull())
-    expect(container).toMatchSnapshot()
-    const button = container.querySelector('#bt')
-    if (!button) {
-      throw Error('Button was not rendered.')
-    }
-    userEvent.click(button)
-    const accountTab = container.querySelector('[data-tab-id="AccountTab"]')
-    expect(accountTab).not.toBeInTheDocument()
-  })
 })

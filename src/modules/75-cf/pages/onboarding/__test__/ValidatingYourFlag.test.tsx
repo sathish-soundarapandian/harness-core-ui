@@ -15,7 +15,7 @@ import * as cfService from 'services/cf'
 import { TestYourFlagViewProps, ValidateYourFlagView } from '../views/ValidatingYourFlagView'
 
 jest.mock('services/cf', () => ({
-  useGetAllFeatures: jest.fn().mockReturnValue({ data: [], loading: false, refetch: jest.fn() }),
+  useGetFeatureMetrics: jest.fn().mockReturnValue({ data: [], loading: false, refetch: jest.fn() }),
   usePatchFeature: jest.fn().mockReturnValue({ mutate: jest.fn(), loading: false })
 }))
 

@@ -32,6 +32,7 @@ const contextValue: ExecutionContextParams = {
     ['stage3', { nodeIdentifier: 'stage3', name: 'Stage 3', status: 'Success' }]
   ]),
   childPipelineStagesMap: new Map([]),
+  rollbackPipelineStagesMap: new Map([]),
   allStagesMap: new Map([
     ['stage1', { nodeIdentifier: 'stage1', name: 'Stage 1', status: 'Success' }],
     ['stage2', { nodeIdentifier: 'stage2', name: 'Stage 2', status: 'Success' }],

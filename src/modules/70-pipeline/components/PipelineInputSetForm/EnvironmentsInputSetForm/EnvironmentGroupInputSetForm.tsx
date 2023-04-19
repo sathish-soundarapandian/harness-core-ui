@@ -9,8 +9,9 @@ import React from 'react'
 import { useFormikContext } from 'formik'
 import { get, pick } from 'lodash-es'
 import cx from 'classnames'
+import { Color } from '@harness/design-system'
 
-import { Container } from '@harness/uicore'
+import { Container, Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { DeploymentStageConfig } from 'services/cd-ng'
@@ -70,7 +71,14 @@ export function EnvironmentGroupInputSetForm({
     <div id={`Stage.${stageIdentifier}.EnvironmentGroup`} className={cx(css.accordionSummary)}>
       <div className={css.inputheader}>
         {getString('common.environmentGroup.label')}
-        {environmentGroupLabel}
+        <Text
+          font={{ size: 'normal', weight: 'bold' }}
+          margin={{ bottom: 'medium' }}
+          color={Color.GREY_700}
+          lineClamp={1}
+        >
+          {environmentGroupLabel}
+        </Text>
       </div>
       <div className={css.nestedAccordions}>
         {showEnvironmentGroupSelectionInputField && (

@@ -585,6 +585,7 @@ execution:
   elapsedTime: 'Elapsed time'
   stagesExecuted: Stages executed (most recent first)
   upcomingStagesPrefix: 'Upcoming stages: '
+  rollbackStages: Rollback Stages
   stepTitlePrefix: 'Step: '
   stepGroupTitlePrefix: 'Step Group: '
   stageTitlePrefix: 'Stage: '

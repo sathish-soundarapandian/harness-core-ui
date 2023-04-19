@@ -223,7 +223,8 @@ export interface LayoutNodeMapInterface {
 }
 export function getPipelineStagesMap(
   layoutNodeMap: PipelineExecutionSummary['layoutNodeMap'],
-  startingNodeId?: string
+  startingNodeId?: string,
+  parentStageId?: string
 ): Map<string, GraphLayoutNode> {
   const map = new Map<string, GraphLayoutNode>()
 
@@ -244,7 +245,8 @@ export function getPipelineStagesMap(
         }
       })
     } else {
-      map.set(node.nodeUuid || '', node)
+      const nodeKey = parentStageId ? [node.nodeUuid, parentStageId].join('|') : node.nodeUuid
+      map.set(nodeKey || '', node)
     }
 
     node.edgeLayoutList?.nextIds?.forEach(item => {
@@ -1128,7 +1130,8 @@ export const processLayoutNodeMapInternal = (
 
 export const processExecutionDataForGraph = (
   stages?: PipelineGraphState[],
-  parentStageId?: string
+  parentStageId?: string,
+  isPipelineRollback = false
 ): PipelineGraphState[] => {
   const items: PipelineGraphState[] = []
   stages?.forEach(currentStage => {
@@ -1143,10 +1146,15 @@ export const processExecutionDataForGraph = (
           ? ExecutionPipelineNodeType.MATRIX
           : currentStage?.type,
         parentStageId,
+        ...(isPipelineRollback && {
+          id: [defaultTo(currentStageData?.nodeUuid, ''), parentStageId].join('|')
+        }),
         data: {
           ...currentStage.data,
           conditionalExecutionEnabled: getConditionalExecutionFlag(currentStage?.data?.nodeRunInfo),
-          identifier: currentStageData?.nodeUuid || /* istanbul ignore next */ '',
+          identifier: isPipelineRollback
+            ? [defaultTo(currentStageData?.nodeUuid, ''), parentStageId].join('|')
+            : defaultTo(currentStageData?.nodeUuid, ''),
           name: currentStageData?.name || currentStageData?.nodeIdentifier || /* istanbul ignore next */ '',
           status: currentStageData?.status as any,
           barrierFound: currentStageData?.barrierFound,
@@ -1174,10 +1182,13 @@ export const processExecutionDataForGraph = (
             icon: getIconFromStageModule(node?.module, node.nodeType),
             status: node?.status as never,
             parentStageId,
+            ...(isPipelineRollback && { id: [defaultTo(node?.nodeUuid, ''), parentStageId].join('|') }),
             data: {
               ...node,
               conditionalExecutionEnabled: getConditionalExecutionFlag(node?.nodeRunInfo),
-              identifier: node?.nodeUuid || /* istanbul ignore next */ '',
+              identifier: isPipelineRollback
+                ? [defaultTo(node?.nodeUuid, ''), parentStageId].join('|')
+                : defaultTo(node?.nodeUuid, ''),
               name: node?.name || node?.nodeIdentifier || /* istanbul ignore next */ '',
               status: node?.status as never,
               barrierFound: node?.barrierFound,
@@ -1205,10 +1216,13 @@ export const processExecutionDataForGraph = (
           ? ExecutionPipelineNodeType.MATRIX
           : currentStage?.type,
         parentStageId,
+        ...(isPipelineRollback && { id: [defaultTo(stage?.nodeUuid, ''), parentStageId].join('|') }),
         data: {
           ...stage,
           conditionalExecutionEnabled: getConditionalExecutionFlag(stage?.nodeRunInfo),
-          identifier: stage?.nodeUuid || /* istanbul ignore next */ '',
+          identifier: isPipelineRollback
+            ? [defaultTo(stage?.nodeUuid, ''), parentStageId].join('|')
+            : defaultTo(stage?.nodeUuid, ''),
           name: stage?.name || stage?.nodeIdentifier || /* istanbul ignore next */ '',
           status: stage?.status as any,
           barrierFound: stage?.barrierFound,

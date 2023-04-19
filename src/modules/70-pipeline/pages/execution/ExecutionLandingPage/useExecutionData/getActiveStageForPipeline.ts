@@ -6,6 +6,7 @@
  */
 
 import { defaultTo, get, has, isEmpty } from 'lodash-es'
+
 import {
   isExecutionActive,
   isExecutionCompletedWithBadState,
@@ -51,6 +52,7 @@ export function getActiveStageForPipeline(
 
   if (isExecutionActiveOrCompletedWitBadState(status)) {
     // find the first active node using pre-order DFS
+
     let firstBadStateNode: GraphLayoutNode = {} // first node in a column to execute in a bad state
     let childNodeCount = 0 // total nodes in a column (parallel OR matrix OR combination of both)
     let activeNodeCount = 0 // keeps track of the number of executed nodes in a column (parallel OR matrix OR combination of both)
@@ -70,6 +72,7 @@ export function getActiveStageForPipeline(
         if (childNodeCount > activeNodeCount) {
           activeNodeCount += 1
           const isMatrixOrParallelLeafNode = activeNodeCount === childNodeCount
+
           if (isMatrixOrParallelLeafNode) {
             // If no stage completes execution with a bad state, and the next stage is also a Matrix / Parallel type
             childNodeCount = 0
@@ -79,10 +82,12 @@ export function getActiveStageForPipeline(
           if (isExecutionActive(node.status) && !isExecutionNotStarted(node.status)) return getNode(node)
           else if (isEmpty(firstBadStateNode) && isExecutionCompletedWithBadState(node.status)) firstBadStateNode = node
         }
+
         // Sequential Stage
         else if (!isChildRollbackStage && isExecutionActiveOrCompletedWitBadState(node.status)) {
           return getNode(node)
         }
+
         // Child Rollback Stage
         else if (isChildRollbackStage) {
           if (isExecutionActive(node.status) && !isExecutionNotStarted(node.status)) return getNode(node)
@@ -90,6 +95,7 @@ export function getActiveStageForPipeline(
         }
       }
     }
+
     return getNode(firstBadStateNode)
   }
   /* istanbul ignore else */

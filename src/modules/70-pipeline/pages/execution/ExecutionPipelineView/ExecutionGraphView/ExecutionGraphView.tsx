@@ -116,7 +116,7 @@ export default function ExecutionGraphView(): React.ReactElement {
       ...queryParams,
       ...(parentStageId ? { stage: parentStageId } : { stage }),
       ...(stageExecId ? { stageExecId } : {}),
-      ...(parentStageId && { childStage: stage })
+      ...(parentStageId && { childStage: stage.split('|')[0] })
     }
 
     delete params.step
