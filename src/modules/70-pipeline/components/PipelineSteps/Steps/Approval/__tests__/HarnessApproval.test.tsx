@@ -356,6 +356,7 @@ describe('Harness Approval tests', () => {
         spec: {
           approvalMessage: 'Please review the following information and approve the pipeline progression',
           includePipelineExecutionHistory: true,
+          isAutoRejectEnabled: false,
           approvers: {
             userGroups: [],
             minimumCount: 1,
@@ -377,6 +378,7 @@ describe('Harness Approval tests', () => {
         spec: {
           approvalMessage: 'Please review the following information and approve the pipeline progression',
           includePipelineExecutionHistory: true,
+          isAutoRejectEnabled: false,
           approvers: {
             userGroups: [],
             minimumCount: 1,

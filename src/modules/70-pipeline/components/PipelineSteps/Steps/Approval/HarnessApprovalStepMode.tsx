@@ -181,6 +181,11 @@ function FormContent({
         label={getString('pipeline.approvalStep.includeStageExecutionDetails')}
         disabled={isApprovalStepFieldDisabled(readonly)}
       />
+      <FormInput.CheckBox
+        name="spec.isAutoRejectEnabled"
+        label={'Auto Reject prvious deploy on Approval'}
+        disabled={isApprovalStepFieldDisabled(readonly)}
+      />
 
       <div className={stepCss.stepSubSectionHeading}>Approvers</div>
       <div className={cx(stepCss.formGroup, stepCss.lg)}>
