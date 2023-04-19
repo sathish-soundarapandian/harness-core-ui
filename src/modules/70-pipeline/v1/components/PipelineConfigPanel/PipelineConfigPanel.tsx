@@ -1,7 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text } from '@harness/uicore'
 import css from './PipelineConfigPanel.module.scss'
-import { AdditionalConfigOptions, MainConfigOptions, PipelineConfigOptionInterface } from './PipelineConfigOptions'
+import {
+  AdditionalConfigOptionsMap,
+  ConfigOptionsMapWithAdditionalOptions,
+  MainConfigOptionsMap,
+  PipelineConfigOptionInterface
+} from './PipelineConfigOptions'
 
 interface PipelineConfigPanelInterface {
   height?: React.CSSProperties['height']
@@ -48,6 +53,11 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   }, [])
 
   const renderPipelineConfigOptions = useCallback((): React.ReactElement => {
+    const configOptionsMap = showMoreOptions ? ConfigOptionsMapWithAdditionalOptions : MainConfigOptionsMap
+    const renderElms: React.ReactElement[] = []
+    configOptionsMap.forEach((value: PipelineConfigOptionInterface) => {
+      renderElms.push(renderPipelineConfigOption(value))
+    })
     return (
       <>
         <Container
@@ -56,11 +66,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         >
           <Text font={{ variation: FontVariation.H4 }}>Pipeline Configuration</Text>
         </Container>
-        <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xxxlarge' }}>
-          {(showMoreOptions ? [...MainConfigOptions, ...AdditionalConfigOptions] : MainConfigOptions).map(
-            (option: PipelineConfigOptionInterface) => renderPipelineConfigOption(option)
-          )}
-        </Layout.Vertical>
+        <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xxxlarge' }}>{renderElms}</Layout.Vertical>
         {showMoreOptions ? null : (
           <Container
             padding={{ left: 'xlarge', top: 'small', bottom: 'medium', right: 'xlarge' }}
