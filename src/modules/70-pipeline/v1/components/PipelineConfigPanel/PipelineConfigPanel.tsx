@@ -12,10 +12,10 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false)
 
   const renderPipelineConfigOption = useCallback((configOption: PipelineConfigOptionInterface): React.ReactElement => {
-    const { name, iconProps, description } = configOption
+    const { label, iconProps, description } = configOption
     return (
       <Layout.Horizontal
-        key={name}
+        key={label}
         padding={{ top: 'medium', bottom: 'medium' }}
         flex={{ justifyContent: 'space-between' }}
         className={css.configOption}
@@ -23,7 +23,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         <Layout.Horizontal flex>
           <Icon {...iconProps} />
           <Layout.Vertical spacing="xsmall" padding={{ left: 'large', right: 'large' }}>
-            <Text font={{ variation: FontVariation.BODY1 }}>{name}</Text>
+            <Text font={{ variation: FontVariation.BODY1 }}>{label}</Text>
             <Text>{description}</Text>
           </Layout.Vertical>
         </Layout.Horizontal>
