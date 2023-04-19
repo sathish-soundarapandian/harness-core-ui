@@ -602,7 +602,7 @@ export default function DeployEnvironment({
           />
         )}
         {!(isFixed && isEmpty(selectedEnvironments)) && !isMultiEnvironment && CD_NG_DYNAMIC_PROVISIONING_ENV_V2 ? (
-          <DeployProvisioner initialValues={initialValues} allowableTypes={allowableTypes} />
+          <DeployProvisioner initialValues={initialValues} readonly={readonly} />
         ) : null}
         {shouldRenderChildEntity && !loading && !isMultiEnvironment && (
           <>

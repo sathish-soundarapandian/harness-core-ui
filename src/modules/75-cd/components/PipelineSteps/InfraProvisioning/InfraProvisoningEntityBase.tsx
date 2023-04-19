@@ -5,15 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { Field, FormikContextType, FormikProps } from 'formik'
-import { Container, Formik, FormikForm, FormInput } from '@harness/uicore'
+import { Field, FormikProps } from 'formik'
+import { Container, Formik, FormikForm } from '@harness/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { useStrings } from 'framework/strings'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { AdvancedPanels } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import ExecutionGraph, {
@@ -33,15 +31,18 @@ import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getFlattenedStages } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
-import useChooseProvisioner from './ChooseProvisioner'
 import type { InfraProvisioningData, InfraProvisioningDataUI, InfraProvisioningProps } from './InfraProvisioning'
 import { transformValuesFieldsConfig } from './InfraProvisioningFunctionConfigs'
 import css from './InfraProvisioning.module.scss'
 
-export const InfraProvisioningBase = (
-  { initialValues, onUpdate, onChange }: InfraProvisioningProps,
-  _formikRef: StepFormikFowardRef<InfraProvisioningData>
-): JSX.Element => {
+type InfraProvisioningEntityBaseProps = Pick<InfraProvisioningProps, 'onUpdate'> & {
+  initialValues: Pick<InfraProvisioningProps['initialValues'], 'provisioner' | 'originalProvisioner'>
+}
+
+export default function InfraProvisioningEntityBase({
+  initialValues,
+  onUpdate
+}: InfraProvisioningEntityBaseProps): JSX.Element {
   const {
     state: {
       pipelineView,
@@ -58,28 +59,12 @@ export const InfraProvisioningBase = (
     getStageFromPipeline
   } = usePipelineContext()
   const { getTemplate } = useTemplateSelector()
-  const { getString } = useStrings()
   const { stage: selectedStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
   const [allChildTypes, setAllChildTypes] = React.useState<string[]>([])
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
   const { accountId } = useParams<ProjectPathProps>()
-  const formikRef = useRef<FormikContextType<InfraProvisioningDataUI>>()
 
-  const { showModal } = useChooseProvisioner({
-    onSubmit: (data: any) => {
-      onUpdate?.(data)
-      //  setTypeEnabled(true)
-    },
-    onClose: () => {
-      formikRef.current?.resetForm()
-    }
-  })
-
-  const {
-    data: stepsData,
-    loading: stepsDataLoading,
-    refetch: getStepTypes
-  } = useMutateAsGet(useGetStepsV2, {
+  const { data: stepsData, loading: stepsDataLoading } = useMutateAsGet(useGetStepsV2, {
     queryParams: { accountId },
     body: {
       stepPalleteModuleInfos: getStepPaletteModuleInfosFromStage(
@@ -89,14 +74,8 @@ export const InfraProvisioningBase = (
         getFlattenedStages(pipeline).stages
       )
     },
-    lazy: true
+    lazy: !isEmpty(allChildTypes)
   })
-
-  useEffect(() => {
-    if (isEmpty(allChildTypes) && initialValues.provisionerEnabled) {
-      getStepTypes()
-    }
-  }, [initialValues.provisionerEnabled])
 
   const getStepTypesFromCategories = (stepCategories: StepCategory[]): string[] => {
     const validStepTypes: string[] = []
@@ -118,6 +97,7 @@ export const InfraProvisioningBase = (
     if (stepsData?.data?.stepCategories) {
       setAllChildTypes(getStepTypesFromCategories(stepsData.data.stepCategories))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stepsData?.data?.stepCategories])
 
   const addTemplate = async (event: ExecutionGraphAddStepEvent) => {
@@ -174,142 +154,110 @@ export const InfraProvisioningBase = (
     }
   }
 
-  const isProvisionerDisabled = (provisionerSnippetLoading: boolean): boolean => {
-    return isReadonly || provisionerSnippetLoading || stepsDataLoading
-  }
-
   return (
-    <Formik
-      enableReinitialize
-      initialValues={getInitialValuesInCorrectFormat<InfraProvisioningData, InfraProvisioningDataUI>(
-        initialValues,
-        transformValuesFieldsConfig
-      )}
-      formName="infraProvisionerBase"
-      validate={(_values: InfraProvisioningDataUI) => {
-        const schemaValues = getFormValuesInCorrectFormat<InfraProvisioningDataUI, InfraProvisioningData>(
-          _values,
-          transformValuesFieldsConfig
-        )
-        onChange?.(schemaValues)
-      }}
-      onSubmit={(_values: InfraProvisioningDataUI) => {
-        const schemaValues = getFormValuesInCorrectFormat<InfraProvisioningDataUI, InfraProvisioningData>(
-          _values,
-          transformValuesFieldsConfig
-        )
-        onUpdate?.(schemaValues)
-      }}
-    >
-      {(formik: FormikProps<InfraProvisioningDataUI>) => {
-        formikRef.current = formik
-        return (
-          <FormikForm className={css.provisionerForm}>
-            <FormInput.CheckBox
-              name={`provisionerEnabled`}
-              disabled={isProvisionerDisabled(formik.values.provisionerSnippetLoading as boolean)}
-              label={getString('pipelineSteps.deploy.provisioner.enableProvisionerLabel')}
-              onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                if (!event.currentTarget.checked) {
-                  formik.values.provisioner.stage.spec.execution = { steps: [], rollbackSteps: [] }
-                  formik.setFieldValue('provisioner', formik.values.provisioner)
-                  onUpdate?.({
-                    provisioner: formik.values.provisioner.stage.spec.execution,
-                    provisionerEnabled: event.currentTarget.checked
-                  })
-                } else {
-                  showModal({
-                    provisioner: formik.values.provisioner.stage.spec.execution,
-                    provisionerEnabled: true
-                  })
-                }
-              }}
-            />
-            {formik.values.provisionerSnippetLoading || stepsDataLoading ? (
-              <Container>
-                <Spinner />
-              </Container>
-            ) : formik.values.provisionerEnabled ? (
-              <div className={css.graphContainer}>
-                <Field name="provisioner">
-                  {(_props: any) => {
-                    return (
-                      <ExecutionGraph
-                        rollBackPropsStyle={{ top: '10px' }}
-                        rollBackBannerStyle={{ top: '10px', backgroundColor: 'rgba(0,0,0,0)' }}
-                        canvasButtonsLayout={'horizontal'}
-                        allowAddGroup={true}
-                        isReadonly={isReadonly}
-                        hasRollback={true}
-                        hasDependencies={false}
-                        templateTypes={templateTypes}
-                        templateIcons={templateIcons}
-                        stage={formik.values.provisioner as any}
-                        originalStage={formik.values.originalProvisioner as any}
-                        ref={executionRef}
-                        updateStage={stageData => {
-                          formik.setFieldValue('provisioner', stageData)
-                          onUpdate?.({
-                            provisioner: stageData.stage?.spec?.execution || ({} as any),
-                            provisionerEnabled: formik.values.provisionerEnabled
-                          })
-                        }}
-                        // Check and update the correct stage path here
-                        onAddStep={(event: ExecutionGraphAddStepEvent) => {
-                          if (event.isTemplate) {
-                            addTemplate(event)
-                          } else {
+    <>
+      {stepsDataLoading ? (
+        <Container>
+          <Spinner />
+        </Container>
+      ) : (
+        <Formik
+          enableReinitialize
+          initialValues={getInitialValuesInCorrectFormat<
+            Pick<InfraProvisioningData, 'provisioner' | 'originalProvisioner'>,
+            InfraProvisioningDataUI
+          >(initialValues, transformValuesFieldsConfig)}
+          formName="infraProvisionerEntityBase"
+          onSubmit={(_values: InfraProvisioningDataUI) => {
+            const schemaValues = getFormValuesInCorrectFormat<InfraProvisioningDataUI, InfraProvisioningData>(
+              _values,
+              transformValuesFieldsConfig
+            )
+            onUpdate?.(schemaValues)
+          }}
+        >
+          {(formik: FormikProps<InfraProvisioningDataUI>) => {
+            return (
+              <FormikForm className={css.provisionerForm}>
+                <div className={css.graphContainer}>
+                  <Field name="provisioner">
+                    {(_props: any) => {
+                      return (
+                        <ExecutionGraph
+                          rollBackPropsStyle={{ top: '10px' }}
+                          rollBackBannerStyle={{ top: '10px', backgroundColor: 'rgba(0,0,0,0)' }}
+                          canvasButtonsLayout={'horizontal'}
+                          allowAddGroup={true}
+                          isReadonly={isReadonly}
+                          hasRollback={true}
+                          hasDependencies={false}
+                          templateTypes={templateTypes}
+                          templateIcons={templateIcons}
+                          stage={formik.values.provisioner as any}
+                          originalStage={formik.values.originalProvisioner as any}
+                          ref={executionRef}
+                          updateStage={stageData => {
+                            formik.setFieldValue('provisioner', stageData)
+                            onUpdate?.({
+                              provisioner: stageData.stage?.spec?.execution || ({} as any),
+                              provisionerEnabled: true
+                            })
+                          }}
+                          // Check and update the correct stage path here
+                          onAddStep={(event: ExecutionGraphAddStepEvent) => {
+                            if (event.isTemplate) {
+                              addTemplate(event)
+                            } else {
+                              updatePipelineView({
+                                ...pipelineView,
+                                isDrawerOpened: true,
+                                drawerData: {
+                                  type: DrawerTypes.AddProvisionerStep,
+                                  data: {
+                                    paletteData: {
+                                      entity: event.entity,
+                                      stepsMap: event.stepsMap,
+                                      onUpdate: executionRef.current?.stepGroupUpdated,
+                                      isRollback: event.isRollback,
+                                      isParallelNodeClicked: event.isParallel,
+                                      hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
+                                    }
+                                  }
+                                }
+                              })
+                            }
+                            formik.submitForm()
+                          }}
+                          onEditStep={(event: ExecutionGraphEditStepEvent) => {
                             updatePipelineView({
                               ...pipelineView,
                               isDrawerOpened: true,
                               drawerData: {
-                                type: DrawerTypes.AddProvisionerStep,
+                                type: DrawerTypes.ProvisionerStepConfig,
                                 data: {
-                                  paletteData: {
-                                    entity: event.entity,
+                                  stepConfig: {
+                                    node: event.node as any,
                                     stepsMap: event.stepsMap,
                                     onUpdate: executionRef.current?.stepGroupUpdated,
-                                    isRollback: event.isRollback,
-                                    isParallelNodeClicked: event.isParallel,
+                                    isStepGroup: event.isStepGroup,
+                                    isUnderStepGroup: event.isUnderStepGroup,
+                                    addOrEdit: event.addOrEdit,
                                     hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
                                   }
                                 }
                               }
                             })
-                          }
-                          formik.submitForm()
-                        }}
-                        onEditStep={(event: ExecutionGraphEditStepEvent) => {
-                          updatePipelineView({
-                            ...pipelineView,
-                            isDrawerOpened: true,
-                            drawerData: {
-                              type: DrawerTypes.ProvisionerStepConfig,
-                              data: {
-                                stepConfig: {
-                                  node: event.node as any,
-                                  stepsMap: event.stepsMap,
-                                  onUpdate: executionRef.current?.stepGroupUpdated,
-                                  isStepGroup: event.isStepGroup,
-                                  isUnderStepGroup: event.isUnderStepGroup,
-                                  addOrEdit: event.addOrEdit,
-                                  hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
-                                }
-                              }
-                            }
-                          })
-                        }}
-                      />
-                    )
-                  }}
-                </Field>
-              </div>
-            ) : null}
-          </FormikForm>
-        )
-      }}
-    </Formik>
+                          }}
+                        />
+                      )
+                    }}
+                  </Field>
+                </div>
+              </FormikForm>
+            )
+          }}
+        </Formik>
+      )}
+    </>
   )
 }
-
-export const InfraProvisioningEntityBaseWithRef = React.forwardRef(InfraProvisioningBase)

@@ -1,56 +1,72 @@
-import type { AllowedTypes } from '@harness/uicore'
-import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
-import YAML from 'yaml'
 import React, { useEffect, useState } from 'react'
 import { useFormikContext } from 'formik'
-import { useParams } from 'react-router-dom'
-import { getProvisionerExecutionStrategyYamlPromise } from 'services/cd-ng'
-import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { defaultTo, get, isEmpty, isNil, noop } from 'lodash-es'
+import YAML from 'yaml'
+import { Spinner } from '@blueprintjs/core'
+
+import { Checkbox, Container } from '@harness/uicore'
+
+import { ExecutionElementConfig, getProvisionerExecutionStrategyYamlPromise } from 'services/cd-ng'
+import { useStrings } from 'framework/strings'
+
+import useChooseProvisioner from '../../InfraProvisioning/ChooseProvisioner'
+import InfraProvisioningEntityBase from '../../InfraProvisioning/InfraProvisoningEntityBase'
 import type { InfraProvisioningData, ProvisionersOptions } from '../../InfraProvisioning/InfraProvisioning'
 import type { DeployEnvironmentEntityFormState } from '../types'
-import { InfraProvisioningEntityBaseWithRef } from '../../InfraProvisioning/InfraProvisoningEntityBase'
 
 interface DeployProvisionerProps {
   initialValues: DeployEnvironmentEntityFormState
-  allowableTypes: AllowedTypes
+  readonly: boolean
 }
 
-export const DeployProvisioner = ({ initialValues, allowableTypes }: DeployProvisionerProps): JSX.Element => {
-  const [provisionerEnabled, setProvisionerEnabled] = useState<boolean>(false)
+const isProvisionerEmpty = (provisionerData?: ExecutionElementConfig): boolean => {
+  return isEmpty(provisionerData?.steps) && isEmpty(provisionerData?.rollbackSteps)
+}
+
+export const DeployProvisioner = ({ initialValues, readonly }: DeployProvisionerProps): JSX.Element => {
+  const { getString } = useStrings()
+
+  const [provisionerEnabled, setProvisionerEnabled] = useState<boolean>(
+    !isProvisionerEmpty(get(initialValues, 'provisioner'))
+  )
   const [provisionerSnippetLoading, setProvisionerSnippetLoading] = useState<boolean>(false)
   const [provisionerType, setProvisionerType] = useState<ProvisionersOptions>('TERRAFORM')
-  const { accountId } = useParams<PipelinePathProps>()
 
   const { setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
 
-  const isProvisionerEmpty = (): boolean => {
-    const provisionerData = get(initialValues, 'provisioner')
-    return isEmpty(provisionerData?.steps) && isEmpty(provisionerData?.rollbackSteps)
-  }
+  const { showModal } = useChooseProvisioner({
+    onSubmit: (data: InfraProvisioningData) => {
+      setFieldValue('provisioner', data.provisioner)
+      setProvisionerType(data.selectedProvisioner as ProvisionersOptions)
+      setProvisionerEnabled(true)
+    },
+    onClose: noop
+  })
 
   // load and apply provisioner snippet to the stage
   useEffect(() => {
-    if (initialValues && isProvisionerEmpty() && provisionerEnabled && provisionerType) {
+    if (
+      initialValues &&
+      isProvisionerEmpty(get(initialValues, 'provisioner')) &&
+      provisionerEnabled &&
+      provisionerType
+    ) {
       setProvisionerSnippetLoading(true)
       getProvisionerExecutionStrategyYamlPromise({
         // eslint-disable-next-line
-        // @ts-ignore
-        queryParams: { provisionerType: provisionerType, routingId: accountId }
+        queryParams: { provisionerType: provisionerType }
       }).then(res => {
         const provisionerSnippet = YAML.parse(defaultTo(res?.data, ''))
-        if (initialValues && isProvisionerEmpty() && provisionerSnippet) {
+        if (provisionerSnippet) {
           setFieldValue('provisioner', provisionerSnippet.provisioner)
           setProvisionerSnippetLoading(false)
         }
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provisionerEnabled, provisionerType])
 
-  useEffect(() => {
-    setProvisionerEnabled(!isProvisionerEmpty())
-  }, [])
-
-  const getProvisionerData = (): InfraProvisioningData => {
+  const getProvisionerData = (): Pick<InfraProvisioningData, 'provisioner' | 'originalProvisioner'> => {
     let provisioner = get(initialValues, 'provisioner')
     provisioner = isNil(provisioner)
       ? {
@@ -68,21 +84,43 @@ export const DeployProvisioner = ({ initialValues, allowableTypes }: DeployProvi
 
     return {
       provisioner: { ...provisioner },
-      provisionerEnabled,
-      provisionerSnippetLoading,
       originalProvisioner: { ...provisioner }
     }
   }
 
   return (
-    <InfraProvisioningEntityBaseWithRef
-      initialValues={getProvisionerData()}
-      allowableTypes={allowableTypes}
-      onUpdate={(value: InfraProvisioningData) => {
-        setProvisionerType(value.selectedProvisioner!)
-        setProvisionerEnabled(value.provisionerEnabled)
-        setFieldValue('provisioner', value.provisioner)
-      }}
-    />
+    <>
+      <Checkbox
+        name="provisionerEnabled"
+        disabled={provisionerSnippetLoading || readonly}
+        label={getString('pipelineSteps.deploy.provisioner.enableProvisionerLabel')}
+        onChange={(event: React.FormEvent<HTMLInputElement>) => {
+          if (!event.currentTarget.checked) {
+            setFieldValue('provisioner', undefined)
+            setProvisionerEnabled(false)
+          } else {
+            showModal({
+              provisioner: { steps: [], rollbackSteps: [] }
+            })
+          }
+        }}
+        checked={provisionerEnabled}
+      />
+
+      {provisionerSnippetLoading ? (
+        <Container>
+          <Spinner />
+        </Container>
+      ) : (
+        provisionerEnabled && (
+          <InfraProvisioningEntityBase
+            initialValues={getProvisionerData()}
+            onUpdate={(value: InfraProvisioningData) => {
+              setFieldValue('provisioner', value.provisioner)
+            }}
+          />
+        )
+      )}
+    </>
   )
 }
