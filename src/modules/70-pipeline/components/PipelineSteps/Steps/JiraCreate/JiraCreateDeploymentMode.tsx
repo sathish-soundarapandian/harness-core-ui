@@ -137,7 +137,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
     let options: JiraProjectSelectOption[] = []
     const projectResponseList: JiraProjectBasicNG[] = projectsResponse?.data || []
     options =
-      projectResponseList.map((project: JiraProjectBasicNG) => ({
+      (projectResponseList || [])?.map((project: JiraProjectBasicNG) => ({
         label: defaultTo(project.name, ''),
         value: defaultTo(project.key, ''),
         key: defaultTo(project.key, '')
@@ -170,7 +170,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
       const selectedFieldsValue = initialValues.spec?.fields || inputSetData?.allValues?.spec?.fields
 
       //Mapped fields with BE 'issueTypeData?.fields' data to get details for runtime fields and append it in a single object
-      const fetchRuntimeFields: any = selectedFieldsValue.map((fieldValueObj, _index) => {
+      const fetchRuntimeFields: any = (selectedFieldsValue || [])?.map((fieldValueObj, _index) => {
         const fieldName = fieldValueObj.name
         let matchedField = {} as JiraFieldNG
         pickBy(issueTypeData?.fields, function (value, key) {
