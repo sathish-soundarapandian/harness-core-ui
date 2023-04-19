@@ -1,0 +1,21 @@
+.container {
+  width: 100%;
+  padding: var(--spacing-medium);
+}
+
+.promptDialog {
+  position: relative;
+  padding-bottom: 0;
+  background: var(--form-bg) !important;
+
+  &.create {
+    width: 900px;
+    border-radius: 0 !important;
+  }
+
+  .crossIcon {
+    position: absolute;
+    right: var(--spacing-large);
+    top: var(--spacing-large);
+  }
+}

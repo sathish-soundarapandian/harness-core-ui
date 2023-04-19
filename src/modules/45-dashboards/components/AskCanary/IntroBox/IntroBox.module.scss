@@ -1,0 +1,40 @@
+.introBox {
+  background: #e5feff;
+  /* Light/Medium */
+
+  padding: var(--spacing-medium) var(--spacing-xxxlarge);
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+  border-radius: 8px;
+}
+
+.button {
+  line-height: 12px !important;
+  width: 18px !important;
+  font-size: 8pt !important;
+  font-family: tahoma !important;
+  margin-top: 1px !important;
+  margin-right: 2px !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+}
+
+.createButton {
+  background: linear-gradient(146.61deg, #00cfde 1.78%, #05a660 102.84%) !important;
+  border-radius: 4px;
+
+  margin-top: 12px !important;
+  padding: 4px 16px;
+  height: 32px;
+  width: 250px;
+}
+
+.buttonText {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 24px;
+  /* identical to box height, or 171% */
+
+  color: #ffffff;
+}

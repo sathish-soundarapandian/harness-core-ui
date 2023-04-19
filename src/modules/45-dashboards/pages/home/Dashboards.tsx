@@ -19,6 +19,7 @@ import CloneDashboardForm from './CloneDashboardForm'
 import UpdateDashboardForm from './UpdateDashboardForm'
 import { useDashboardsContext } from '../DashboardsContext'
 import css from './HomePage.module.scss'
+import AskCanary from '@dashboards/components/AskCanary/AskCanary'
 
 export interface DashboardsProps {
   dashboards: DashboardModel[]
@@ -85,43 +86,50 @@ const Dashboards: React.FC<DashboardsProps> = ({
 
   return (
     <>
-      {hasDashboards && view === DashboardLayoutViews.GRID && (
-        <Container className={css.masonry}>
-          <Layout.Masonry
-            gutter={25}
-            items={dashboards}
-            renderItem={(dashboard: DashboardModel) => (
-              <DashboardCard
-                dashboard={dashboard}
-                cloneDashboard={cloneDashboard}
-                deleteDashboard={deleteDashboard}
-                editDashboard={editDashboard}
-              />
-            )}
-            keyOf={dashboard => dashboard.id}
+      <Layout.Vertical spacing="medium">
+        <AskCanary />
+
+        <Heading level={3} color={Color.GREY_800}>
+          Dashboards
+        </Heading>
+        {hasDashboards && view === DashboardLayoutViews.GRID && (
+          <Container className={css.masonry}>
+            <Layout.Masonry
+              gutter={25}
+              items={dashboards}
+              renderItem={(dashboard: DashboardModel) => (
+                <DashboardCard
+                  dashboard={dashboard}
+                  cloneDashboard={cloneDashboard}
+                  deleteDashboard={deleteDashboard}
+                  editDashboard={editDashboard}
+                />
+              )}
+              keyOf={dashboard => dashboard.id}
+            />
+          </Container>
+        )}
+
+        {hasDashboards && view === DashboardLayoutViews.LIST && (
+          <DashboardList
+            dashboards={dashboards || []}
+            cloneDashboard={cloneDashboard}
+            deleteDashboard={deleteDashboard}
+            editDashboard={editDashboard}
           />
-        </Container>
-      )}
+        )}
 
-      {hasDashboards && view === DashboardLayoutViews.LIST && (
-        <DashboardList
-          dashboards={dashboards || []}
-          cloneDashboard={cloneDashboard}
-          deleteDashboard={deleteDashboard}
-          editDashboard={editDashboard}
-        />
-      )}
-
-      {!hasDashboards && !loading && (
-        <Container height="calc(100vh - 226px)" flex={{ align: 'center-center' }}>
-          <Layout.Vertical spacing="medium" width={470} flex={{ alignItems: 'center' }} margin={{ top: '-48px' }}>
-            <Icon name="dashboard" color={Color.GREY_300} size={35} />
-            <Heading level={2} font={{ align: 'center' }} color={Color.GREY_500}>
-              {getString('dashboards.homePage.noDashboardsAvailable')}
-            </Heading>
-          </Layout.Vertical>
-        </Container>
-      )}
+        {!hasDashboards && !loading && (
+          <Container height="calc(100vh - 226px)" flex={{ align: 'center-center' }}>
+            <Layout.Vertical spacing="medium" width={470} flex={{ alignItems: 'center' }} margin={{ top: '-48px' }}>
+              <Icon name="dashboard" color={Color.GREY_300} size={35} />
+              <Heading level={2} font={{ align: 'center' }} color={Color.GREY_500}>
+                {getString('dashboards.homePage.noDashboardsAvailable')}
+              </Heading>
+            </Layout.Vertical>
+          </Container>
+        )}
+      </Layout.Vertical>
     </>
   )
 }

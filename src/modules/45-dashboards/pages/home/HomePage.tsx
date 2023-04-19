@@ -309,17 +309,6 @@ const HomePage: React.FC = () => {
       <FilterTagsSideBar onTagClicked={onCustomTagSelected} />
 
       <Layout.Vertical className={css.homeContent}>
-        <Layout.Horizontal padding={{ top: 'large', right: 'xxxlarge', bottom: 'large', left: 'xxxlarge' }}>
-          <ExpandingSearchInput
-            placeholder={getString('common.searchByNamePlaceholder')}
-            defaultValue={searchTerm}
-            onChange={(text: string) => {
-              setSearchTerm(text)
-              setPage(0)
-            }}
-            className={css.search}
-          />
-        </Layout.Horizontal>
         <Layout.Horizontal
           margin={{ left: 'xxxlarge' }}
           flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}

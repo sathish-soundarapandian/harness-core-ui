@@ -66,9 +66,9 @@
     background: var(--grey-100) !important;
     position: absolute;
     right: 0;
-    top: 146px;
+    top: 73px;
     overflow: scroll;
-    height: calc(100vh - 294px);
+    height: calc(100vh - 226px);
   }
 
   .createButton {
@@ -144,7 +144,7 @@
   .homeContent {
     width: calc(100% - 280px) !important;
     height: calc(100vh - 226px);
-    padding: 0 0 var(--spacing-large) var(--spacing-large) !important;
+    padding: var(--spacing-large) 0 var(--spacing-large) var(--spacing-large) !important;
     overflow: auto;
   }
 }

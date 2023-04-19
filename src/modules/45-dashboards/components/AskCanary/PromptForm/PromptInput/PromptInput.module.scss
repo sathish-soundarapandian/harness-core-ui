@@ -1,0 +1,25 @@
+.textArea {
+  min-height: var(--spacing-small);
+
+  border: none !important;
+  overflow: auto !important;
+  outline: none !important;
+
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+
+  resize: none;
+}
+
+.input {
+  width: 100% !important;
+  display: grid;
+  grid-template-columns: auto 40px;
+  background: white;
+}
+
+.inputButton {
+  height: 100% !important;
+  max-height: none !important;
+}
