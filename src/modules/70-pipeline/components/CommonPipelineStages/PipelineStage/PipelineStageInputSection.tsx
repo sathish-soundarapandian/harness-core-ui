@@ -56,6 +56,7 @@ import type { PipelineStageElementConfig, StageElementWrapper } from '@pipeline/
 import { getInputSetReference } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetUtils'
 import { getsMergedTemplateInputYamlPromise } from 'services/template-ng'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
+import { replaceDefaultValues } from '@pipeline/utils/templateUtils'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { FeatureFlag } from '@common/featureFlags'
@@ -268,7 +269,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   const updateInputTabFormValues = (newFormValues?: PipelineInfoConfig): void => {
     const updatedStage = produce(selectedStage?.stage as PipelineStageElementConfig, draft => {
       if (!hasInputSets || pipelineInputsFromYaml) {
-        set(draft, 'spec.inputs', newFormValues)
+        set(draft, 'spec.inputs', replaceDefaultValues(newFormValues))
         delete draft?.spec?.inputSetReferences
       } else {
         let _inputSetReferences = selectedInputSetReferences
@@ -277,7 +278,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
         delete draft?.spec?.inputs
       }
     })
-    setInputTabFormValues(newFormValues as PipelineInfoConfig)
+    setInputTabFormValues(replaceDefaultValues(newFormValues) as PipelineInfoConfig)
     debounceUpdateStage(updatedStage)
   }
 
