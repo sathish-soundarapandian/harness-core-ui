@@ -100,5 +100,6 @@ export interface PluginAddUpdateMetadata {
   pluginData: Record<string, any>
   pluginName: PluginMetadataResponse['name']
   pluginUses?: PluginMetadataResponse['uses']
+  pluginImage?: PluginMetadataResponse['image']
   shouldInsertYAML: boolean
 }

@@ -408,7 +408,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     if (!selectedPlugin) {
       return <></>
     }
-    const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields, kind, uses } = selectedPlugin
+    const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields, kind, uses, image } = selectedPlugin
     return kind ? (
       <Layout.Vertical
         spacing="medium"
@@ -439,7 +439,8 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                     pluginData: formValues,
                     shouldInsertYAML: true,
                     pluginType: getPluginTypeFromKind(kind),
-                    ...(uses ? { pluginUses: uses } : {})
+                    ...(uses ? { pluginUses: uses } : {}),
+                    ...(image ? { pluginImage: image } : {})
                   },
                   isPluginUpdateAction
                 )
@@ -525,7 +526,14 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
         //     )
         // }
         return isFieldOfSecretType ? (
-          <MultiTypeSecretInput name={name} label={generateFriendlyPluginName(name)} type={'SecretText'} key={index} />
+          <Container className={css.secretSelector}>
+            <MultiTypeSecretInput
+              name={name}
+              label={generateFriendlyPluginName(name)}
+              type={'SecretText'}
+              key={index}
+            />
+          </Container>
         ) : (
           <FormInput.Text
             name={name}

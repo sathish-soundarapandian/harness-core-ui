@@ -909,13 +909,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
 
   const wrapPlugInputInAStep = useCallback((pluginMetadata: PluginAddUpdateMetadata): Record<string, any> => {
-    const { pluginData, pluginType, pluginName, pluginUses } = pluginMetadata
+    const { pluginData, pluginType, pluginName, pluginUses, pluginImage } = pluginMetadata
     return {
       name: pluginName,
       spec:
         pluginType === PluginType.Script
           ? sanitizePluginValues(pluginData)
-          : { with: sanitizePluginValues(pluginData), uses: pluginUses },
+          : { with: sanitizePluginValues(pluginData), uses: pluginUses, image: pluginImage },
       type: pluginType
     }
   }, [])
