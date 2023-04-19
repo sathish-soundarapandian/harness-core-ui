@@ -81,7 +81,7 @@ export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
   [DrawerTypes.PipelineNotifications]: 'calc(100% - 270px - 60px)', // has 60px more offset from right
   [DrawerTypes.FlowControl]: 600,
   [DrawerTypes.AdvancedOptions]: 840,
-  [DrawerTypes.PolicySets]: 1000,
+  [DrawerTypes.PolicySets]: 'calc(100% - 270px - 60px)',
   [DrawerTypes.TemplateInputs]: 876,
   [DrawerTypes.ViewTemplateDetails]: 600
 }
