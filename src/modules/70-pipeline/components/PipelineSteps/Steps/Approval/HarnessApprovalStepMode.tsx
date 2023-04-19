@@ -183,7 +183,7 @@ function FormContent({
       />
       <FormInput.CheckBox
         name="spec.isAutoRejectEnabled"
-        label={'Auto Reject prvious deploy on Approval'}
+        label={getString('pipeline.approvalStep.isAutoRejectEnabled')}
         disabled={isApprovalStepFieldDisabled(readonly)}
       />
 

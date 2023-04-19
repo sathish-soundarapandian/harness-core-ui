@@ -3566,6 +3566,7 @@ export interface StringsMap {
   'pipeline.approvalStep.fetchUserGroupsFailed': string
   'pipeline.approvalStep.fetchingUserGroups': string
   'pipeline.approvalStep.includeStageExecutionDetails': string
+  'pipeline.approvalStep.isAutoRejectEnabled': string
   'pipeline.approvalStep.message': string
   'pipeline.approvalStep.minimumCount': string
   'pipeline.approvalStep.notAuthorizedExecution': string

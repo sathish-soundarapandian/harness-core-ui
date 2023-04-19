@@ -120,6 +120,7 @@ approvalStep:
   approversWithColon: '{{$.pipeline.approvalStep.approvers}}:'
   approverInputs: 'Inputs to be provided by approver'
   includeStageExecutionDetails: 'Include stage execution details in approval'
+  isAutoRejectEnabled: 'Auto-Reject previous deployments paused in this step on approval'
   addUserGroups: Enter User Group
   fetchingUserGroups: Select User Group
   fetchUserGroupsFailed: Failed to fetch User Groups
