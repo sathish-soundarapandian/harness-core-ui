@@ -6,7 +6,8 @@ export interface PipelineConfigOptionInterface {
   description: string
 }
 
-export const enum PipelineEntity {
+export const enum Entity {
+  Pipeline = 'PIPELINE',
   Stage = 'STAGE',
   Trigger = 'TRIGGER',
   Notification = 'NOTIFICATION',
@@ -18,9 +19,9 @@ export const enum PipelineEntity {
   Registry = 'REGISTRY'
 }
 
-export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionInterface>([
+export const MainConfigOptionsMap = new Map<Entity, PipelineConfigOptionInterface>([
   [
-    PipelineEntity.Stage,
+    Entity.Stage,
     {
       label: 'Stages',
       iconProps: { name: 'add-stage', size: 20 },
@@ -28,22 +29,19 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
     }
   ],
   [
-    PipelineEntity.Trigger,
+    Entity.Trigger,
     { label: 'Triggers', iconProps: { name: 'yaml-builder-trigger', size: 20 }, description: 'Add a trigger' }
   ],
   [
-    PipelineEntity.Notification,
+    Entity.Notification,
     { label: 'Notifications', iconProps: { name: 'notifications', size: 20 }, description: 'Add a notification' }
   ],
-  [
-    PipelineEntity.Input,
-    { label: 'Inputs', iconProps: { name: 'template-inputs', size: 20 }, description: 'Add an input' }
-  ]
+  [Entity.Input, { label: 'Inputs', iconProps: { name: 'template-inputs', size: 20 }, description: 'Add an input' }]
 ])
 
-const AdditionalConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionInterface>([
+const AdditionalConfigOptionsMap = new Map<Entity, PipelineConfigOptionInterface>([
   [
-    PipelineEntity.Barrier,
+    Entity.Barrier,
     {
       label: 'Barriers',
       iconProps: { name: 'command-barrier', size: 20 },
@@ -51,7 +49,7 @@ const AdditionalConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionI
     }
   ],
   [
-    PipelineEntity.Clone,
+    Entity.Clone,
     {
       label: 'Clone',
       iconProps: { name: 'code-clone', size: 20 },
@@ -59,7 +57,7 @@ const AdditionalConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionI
     }
   ],
   [
-    PipelineEntity.Delegate,
+    Entity.Delegate,
     {
       label: 'Delegates',
       iconProps: { name: 'main-delegates', size: 20 },
@@ -67,7 +65,7 @@ const AdditionalConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionI
     }
   ],
   [
-    PipelineEntity.EnvVariable,
+    Entity.EnvVariable,
     {
       label: 'Environment Variables',
       iconProps: { name: 'pipeline-variables', size: 20 },
@@ -75,7 +73,7 @@ const AdditionalConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionI
     }
   ],
   [
-    PipelineEntity.Registry,
+    Entity.Registry,
     {
       label: 'Registry',
       iconProps: { name: 'azure-container-registry', size: 20 },
