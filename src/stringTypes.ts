@@ -5877,6 +5877,7 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.manifest.serviceDefinition': string
   'cd.pipelineSteps.serviceTab.manifest.taskDefinition': string
   'cd.pipelineSteps.serviceTab.manifest.taskDefinitionARNPlaceholder': string
+  'cd.pipelineSteps.serviceTab.multiServicesClearConfirmationText': string
   'cd.pipelineSteps.serviceTab.multiServicesConfirmationText': string
   'cd.pipelineSteps.serviceTab.multiServicesParallelDeployLabel': string
   'cd.pipelineSteps.serviceTab.multiServicesText': string
@@ -5889,6 +5890,7 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.selectService': string
   'cd.pipelineSteps.serviceTab.selectServices': string
   'cd.pipelineSteps.serviceTab.serviceIsRequired': string
+  'cd.pipelineSteps.serviceTab.servicesAreRequired': string
   'cd.pipelineSteps.serviceTab.singleServicesConfirmationText': string
   'cd.pipelineSteps.serviceTab.singleServicesTitleText': string
   'cd.pipelineSteps.serviceTab.specifyYourService': string

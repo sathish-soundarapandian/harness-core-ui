@@ -38,7 +38,6 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types'
 import { Status } from '@common/utils/Constants'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SupportedGitProvidersForCIOnboarding } from './SelectGitProvider'
 import { getValidRepoName } from '../../../utils/HostedBuildsUtils'
 
@@ -126,7 +125,6 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   const { getString } = useStrings()
   const importYAMLFormikRef = useRef<FormikContextType<ImportPipelineYAMLInterface>>()
   const saveToGitFormikRef = useRef<FormikContextType<SavePipelineToRemoteInterface>>()
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const generatePipelineConfig: StarterTemplate = {
     name: getString('ci.getStartedWithCI.generatePipelineConfig'),
     description: getString('ci.getStartedWithCI.generatePipelineHelpText'),
@@ -144,9 +142,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   const [showAdvancedOptions, setShowAdvancedOptions] = useState<boolean>(false)
   const [isFetchingDefaultBranch, setIsFetchingDefaultBranch] = useState<boolean>(false)
   const enableSavePipelinetoRemoteOption =
-    CI_YAML_VERSIONING &&
-    configuredGitConnector &&
-    SupportedGitProvidersForCIOnboarding.includes(configuredGitConnector.type)
+    configuredGitConnector && SupportedGitProvidersForCIOnboarding.includes(configuredGitConnector.type)
 
   const markFieldsTouchedToShowValidationErrors = React.useCallback((): void => {
     if (

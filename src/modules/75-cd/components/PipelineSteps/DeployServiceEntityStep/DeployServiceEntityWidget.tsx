@@ -51,7 +51,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
-import { isMultiTypeExpression, isMultiTypeRuntime, isValueExpression } from '@common/utils/utils'
+import { isMultiTypeExpression, isMultiTypeRuntime, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
@@ -158,6 +158,11 @@ export default function DeployServiceEntityWidget({
     isOpen: isSwitchToMultiSvcDialogOpen,
     open: openSwitchToMultiSvcDialog,
     close: closeSwitchToMultiSvcDialog
+  } = useToggleOpen()
+  const {
+    isOpen: isSwitchToMultiSvcClearDialogOpen,
+    open: openSwitchToMultiSvcClearDialog,
+    close: closeSwitchToMultiSvcClearDialog
   } = useToggleOpen()
   const {
     isOpen: isSwitchToSingleSvcDialogOpen,
@@ -375,7 +380,7 @@ export default function DeployServiceEntityWidget({
     }
   }
 
-  function updateValuesInFomikAndPropogate(values: FormState): void {
+  function updateValuesInFormikAndPropagate(values: FormState): void {
     /* istanbul ignore else */
     if (formikRef.current) {
       formikRef.current.setTouched({ service: true, services: true })
@@ -433,13 +438,36 @@ export default function DeployServiceEntityWidget({
       const singleSvcId = formikRef.current.values.service
       const singleSvc = servicesList.find(svc => svc.identifier === singleSvcId)
       const newValues = produce(formikRef.current.values, draft => {
-        draft.services = singleSvc ? [{ label: singleSvc.name, value: singleSvc.identifier }] : []
+        draft.services = singleSvc
+          ? [{ label: singleSvc.name, value: singleSvc.identifier }]
+          : isValueRuntimeInput(singleSvcId)
+          ? (RUNTIME_INPUT_VALUE as any)
+          : []
         delete draft.service
       })
-      updateValuesInFomikAndPropogate(newValues)
+
+      setServiceInputType(getMultiTypeFromValue(singleSvcId))
+      updateValuesInFormikAndPropagate(newValues)
     }
 
     closeSwitchToMultiSvcDialog()
+  }
+
+  function handleSwitchToMultiSvcClearConfirmation(confirmed: boolean): void {
+    /* istanbul ignore else */
+    if (formikRef.current && confirmed) {
+      const newValues = produce(formikRef.current.values, draft => {
+        draft.parallel = true
+        draft.services = []
+        draft.serviceInputs = {}
+        delete draft.service
+      })
+
+      setServiceInputType(MultiTypeInputType.FIXED)
+      updateValuesInFormikAndPropagate(newValues)
+    }
+
+    closeSwitchToMultiSvcClearDialog()
   }
 
   function handleSwitchToSingleSvcConfirmation(confirmed: boolean): void {
@@ -449,7 +477,7 @@ export default function DeployServiceEntityWidget({
         draft.service = ''
         delete draft.services
       })
-      updateValuesInFomikAndPropogate(newValues)
+      updateValuesInFormikAndPropagate(newValues)
     }
 
     closeSwitchToSingleSvcDialog()
@@ -467,7 +495,7 @@ export default function DeployServiceEntityWidget({
           delete draft.service
         }
       })
-      updateValuesInFomikAndPropogate(newValues)
+      updateValuesInFormikAndPropagate(newValues)
     }
   }
 
@@ -476,7 +504,11 @@ export default function DeployServiceEntityWidget({
       if (checked) {
         // open confirmation dialog only if a service is populated
         if (values.service) {
-          openSwitchToMultiSvcDialog()
+          if (isValueExpression(values.service)) {
+            openSwitchToMultiSvcClearDialog()
+          } else {
+            openSwitchToMultiSvcDialog()
+          }
         } else {
           handleSwitchToMultiSvcConfirmation(true)
         }
@@ -712,6 +744,15 @@ export default function DeployServiceEntityWidget({
         confirmButtonText={getString('applyChanges')}
         cancelButtonText={getString('cancel')}
         onClose={handleSwitchToMultiSvcConfirmation}
+        intent={Intent.WARNING}
+      />
+      <ConfirmationDialog
+        isOpen={isSwitchToMultiSvcClearDialogOpen}
+        titleText={getString('cd.pipelineSteps.serviceTab.multiServicesTitleText')}
+        contentText={getString('cd.pipelineSteps.serviceTab.multiServicesClearConfirmationText')}
+        confirmButtonText={getString('applyChanges')}
+        cancelButtonText={getString('cancel')}
+        onClose={handleSwitchToMultiSvcClearConfirmation}
         intent={Intent.WARNING}
       />
       <ConfirmationDialog

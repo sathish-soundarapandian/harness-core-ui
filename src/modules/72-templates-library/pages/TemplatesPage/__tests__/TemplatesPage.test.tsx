@@ -24,6 +24,7 @@ import {
   mockApiErrorResponse,
   mockApiFetchingResponse
 } from '@templates-library/components/TemplateActivityLog/__tests__/TemplateActivityLogTestHelper'
+import { filterListMock } from '@templates-library/components/TemplateFilter/__tests__/mock'
 import { StageTemplate } from '@templates-library/components/Templates/StageTemplate/StageTemplate'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
@@ -85,7 +86,13 @@ const fetchRepositories = jest.fn(() => {
 jest.mock('services/template-ng', () => ({
   useGetRepositoryList: jest.fn().mockImplementation(() => {
     return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
-  })
+  }),
+  useGetFilterList: jest.fn().mockImplementation(() => {
+    return { mutate: jest.fn(), loading: false, data: filterListMock }
+  }),
+  usePostFilter: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useUpdateFilter: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useDeleteFilter: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 
 jest.mock('services/cd-ng', () => ({
@@ -320,8 +327,12 @@ describe('<TemplatesPage /> tests', () => {
       undefined,
       expect.objectContaining({
         body: {
-          filterType: 'Template'
+          filterType: 'Template',
+          repoName: undefined,
+          templateEntityTypes: ['Stage']
         },
+        lazy: false,
+        queryParamStringifyOptions: { arrayFormat: 'comma' },
         queryParams: defaultQueryParams
       })
     )

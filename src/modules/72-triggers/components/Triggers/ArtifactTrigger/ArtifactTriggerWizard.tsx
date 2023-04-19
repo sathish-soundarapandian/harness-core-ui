@@ -108,7 +108,7 @@ import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
 
-const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element => {
+const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAML?: boolean }): JSX.Element => {
   const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier, module } = useParams<
     PipelineType<{
       projectIdentifier: string
@@ -1119,7 +1119,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
           handleModeSwitch: handleArtifactModeSwitch,
           yamlBuilderReadOnlyModeProps,
           yamlObjectKey: 'trigger',
-          showVisualYaml: true,
+          showVisualYaml: !props.isSimplifiedYAML,
           convertFormikValuesToYaml,
           schema: triggerSchema?.data,
           onYamlSubmit: submitTrigger,

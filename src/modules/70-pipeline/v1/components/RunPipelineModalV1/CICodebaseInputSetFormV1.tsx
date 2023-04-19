@@ -43,6 +43,7 @@ export interface CICodebaseInputSetFormV1Props {
   originalPipeline?: PipelineV1InfoConfig
   connectorRef?: string
   repoIdentifier?: string
+  path?: string
 }
 
 export enum ConnectionType {
@@ -70,8 +71,6 @@ export const getBuildTypeInputLabels = (getString: UseStringsReturn['getString']
   PR: getString('pipeline.ciCodebase.pullRequestNumber')
 })
 
-export const codeBaseInputFieldFormName = `repository.reference.value`
-
 function CICodebaseInputSetFormV1Internal({
   readonly,
   formik,
@@ -79,7 +78,8 @@ function CICodebaseInputSetFormV1Internal({
   viewTypeMetadata,
   originalPipeline,
   connectorRef,
-  repoIdentifier
+  repoIdentifier,
+  path
 }: CICodebaseInputSetFormV1Props): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
   const containerWidth = viewTypeMetadata?.isTemplateDetailDrawer ? '100%' : '50%' // drawer view is much smaller 50% would cut out
@@ -92,8 +92,10 @@ function CICodebaseInputSetFormV1Internal({
   )
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const buildPath = `repository.reference.value`
-  const codeBaseTypePath = `repository.reference.type`
+  const formattedPath = isEmpty(path) ? '' : `${path}.`
+  const buildPath = `${formattedPath}repository.reference.value`
+  const codeBaseTypePath = `${formattedPath}repository.reference.type`
+  const codeBaseInputFieldFormName = `${formattedPath}repository.reference.value`
   const [codeBaseType, setCodeBaseType] = useState<CodebaseTypes | undefined>(get(formik?.values, codeBaseTypePath))
 
   const [isFetchingBranches, setIsFetchingBranches] = useState<boolean>(false)
@@ -134,7 +136,7 @@ function CICodebaseInputSetFormV1Internal({
     // OnEdit Case, persists saved ciCodebase build spec
     if (codeBaseType) {
       savedValues.current = Object.assign(savedValues.current, {
-        [codeBaseType]: get(formik?.values, `repository.reference.value`, '')
+        [codeBaseType]: get(formik?.values, `${formattedPath}repository.reference.value`, '')
       })
       const existingValues = { ...formik?.values }
       const updatedValues = set(existingValues, codeBaseTypePath, codeBaseType)

@@ -10,7 +10,7 @@ import React from 'react'
 import TriggerOverviewPanel from '@triggers/components/steps/TriggerOverviewPanel/TriggerOverviewPanel'
 import SchedulePanel from '@triggers/components/steps/SchedulePanel/SchedulePanel'
 import WebhookPipelineInputPanel from '@triggers/components/steps/WebhookPipelineInputPanel/WebhookPipelineInputPanel'
-
+import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
 import { Trigger, TriggerProps } from '../Trigger'
 import { TriggerBaseType } from '../TriggerInterface'
 import ScheduledTriggerWizard from './ScheduledTriggerWizard'
@@ -26,8 +26,8 @@ export abstract class ScheduledTrigger<T> extends Trigger<T> {
     return <SchedulePanel />
   }
 
-  renderStepThree(): JSX.Element {
-    return <WebhookPipelineInputPanel />
+  renderStepThree(isSimplifiedYAML?: boolean): JSX.Element {
+    return isSimplifiedYAML ? <WebhookPipelineInputPanelV1 /> : <WebhookPipelineInputPanel />
   }
 
   renderTrigger(props: TriggerProps<T>): JSX.Element {
@@ -35,7 +35,7 @@ export abstract class ScheduledTrigger<T> extends Trigger<T> {
       <ScheduledTriggerWizard {...props}>
         {this.renderStepOne()}
         {this.renderStepTwo()}
-        {this.renderStepThree()}
+        {this.renderStepThree(props.isSimplifiedYAML)}
       </ScheduledTriggerWizard>
     )
   }

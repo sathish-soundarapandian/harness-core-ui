@@ -51,11 +51,11 @@ describe('Test ConfigurePipeline component', () => {
     expect(container.querySelectorAll('.bp3-card')[0]).toHaveClass('Card--selected')
   })
 
-  test('Advanced Options section should be not be visible for FF CI_YAML_VERSIONING off', async () => {
+  test('Advanced Options section should be not be visible irrespective of FF CI_YAML_VERSIONING on/off', async () => {
     jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
       CI_YAML_VERSIONING: false
     })
-    render(
+    const { getByText } = render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
         <ConfigurePipeline
           repoName="test-repo"
@@ -65,7 +65,7 @@ describe('Test ConfigurePipeline component', () => {
         />
       </TestWrapper>
     )
-    expect(screen.queryByText('common.seeAdvancedOptions')).toBeNull()
+    expect(getByText('common.seeAdvancedOptions')).toBeInTheDocument()
   })
 
   test('Advanced Options section should be be visible for FF CI_YAML_VERSIONING on', async () => {

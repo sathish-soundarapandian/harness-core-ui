@@ -440,6 +440,8 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Select Serverless Lambda as deployment type
     cy.contains('p', 'Serverless Lambda').click()
+    // this is added because service update is debounced
+    cy.wait(1000)
     cy.wait('@serverlessYamlSnippet')
     cy.wait('@stepLibrary')
 

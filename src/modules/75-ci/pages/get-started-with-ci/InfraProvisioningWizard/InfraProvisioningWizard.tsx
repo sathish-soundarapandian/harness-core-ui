@@ -34,7 +34,9 @@ import {
   ResponsePipelineSaveResponse,
   createTriggerPromise,
   CreatePipelineV2QueryParams,
-  PipelineConfig
+  PipelineConfig,
+  createInputSetForPipelinePromise,
+  ResponseInputSetResponse
 } from 'services/pipeline-ng'
 import type { GitQueryParams, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -58,7 +60,10 @@ import {
   ScopedValueObjectDTO
 } from '@common/components/EntityReference/EntityReference.types'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
-import { defaultValues as CodebaseDefaultValues } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
+import {
+  BuildCodebaseType,
+  DefaultBuildValues as CodebaseDefaultValues
+} from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { isSimplifiedYAMLEnabledForCI, YAMLVersion } from '@pipeline/utils/CIUtils'
 import { BuildTabs } from '@ci/components/PipelineStudio/CIPipelineStagesUtils'
 import {
@@ -91,7 +96,8 @@ import {
   getCIStarterPipelineV1,
   addRepositoryInfoToPipeline,
   getGitConnectorRepoBasedOnRepoUrl,
-  getCIStarterPipeline
+  getCIStarterPipeline,
+  getRemoteInputSetPayload
 } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -121,9 +127,11 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const [generatedYAMLAsJSON, setGeneratedYAMLAsJSON] = useState<PipelineConfig>({})
   const { CIE_HOSTED_VMS, CI_YAML_VERSIONING } = useFeatureFlags()
   const enableSavePipelinetoRemoteOption =
-    CI_YAML_VERSIONING &&
-    configuredGitConnector &&
-    SupportedGitProvidersForCIOnboarding.includes(configuredGitConnector.type)
+    configuredGitConnector && SupportedGitProvidersForCIOnboarding.includes(configuredGitConnector.type)
+  const yamlVersion = useMemo(
+    () => (isSimplifiedYAMLEnabledForCI(module, CI_YAML_VERSIONING) ? YAMLVersion.V1 : YAMLVersion.V0),
+    [module, CI_YAML_VERSIONING]
+  )
 
   const setCIGetStartedVisible = (shouldShow: boolean): void => setShowGetStartedTabInMainMenu('ci', shouldShow)
 
@@ -153,7 +161,6 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       setDisableBtn(true)
       setPageLoader({ show: true, message: getString('ci.getStartedWithCI.generatingYAMLFromRepo') })
       try {
-        const yamlVersion = isSimplifiedYAMLEnabledForCI(module, CI_YAML_VERSIONING) ? YAMLVersion.V1 : YAMLVersion.V0
         const connectorRef = getScopedValueFromDTO(configuredGitConnector)
         const connectorScope = getScopeFromDTO(configuredGitConnector)
         const repoNameWithNamespace = getFullRepoName(selectRepositoryRef.current.repository)
@@ -213,7 +220,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     orgIdentifier,
     configurePipelineRef.current?.configuredOption,
     selectRepositoryRef.current?.repository,
-    CI_YAML_VERSIONING
+    yamlVersion
   ])
 
   const constructPipelinePayloadWithCodebase = React.useCallback(
@@ -266,11 +273,13 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     ({
       pipelineId,
       eventType,
-      shouldSavePipelineToGit
+      shouldSavePipelineToGit,
+      remoteInputSetIdentifier
     }: {
       pipelineId: string
       eventType: string
       shouldSavePipelineToGit: boolean
+      remoteInputSetIdentifier: string
     }): NGTriggerConfigV2 | TriggerConfigDTO | undefined => {
       const connectorType: ConnectorInfoDTO['type'] | undefined = configuredGitConnector?.type
       if (!connectorType) {
@@ -322,14 +331,20 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           }
         },
         ...(shouldSavePipelineToGit
-          ? { pipelineBranchName: CodebaseDefaultValues.branch }
+          ? {
+              pipelineBranchName: CodebaseDefaultValues.branch,
+              ...(yamlVersion === YAMLVersion.V0 && remoteInputSetIdentifier
+                ? { inputSetRefs: [remoteInputSetIdentifier] }
+                : {})
+            }
           : { inputYaml: yamlStringify(omitBy(omitBy(pipelineInput, isUndefined), isNull)) })
       }
     },
     [
       configuredGitConnector,
       selectGitProviderRef?.current?.values?.gitProvider,
-      selectRepositoryRef.current?.repository
+      selectRepositoryRef.current?.repository,
+      yamlVersion
     ]
   )
 
@@ -383,6 +398,58 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     []
   )
 
+  const createInputSetForRemotePipelinePromise = useCallback(
+    ({
+      pipelineIdentifier,
+      branch,
+      repo,
+      connectorRef,
+      triggerType
+    }: {
+      pipelineIdentifier: string
+      branch: string
+      repo: string
+      connectorRef: string
+      triggerType: BuildCodebaseType
+    }): Promise<ResponseInputSetResponse> => {
+      const inputSetName =
+        triggerType === BuildCodebaseType.PR
+          ? `${pipelineIdentifier}-pr-trigger-input-set`
+          : `${pipelineIdentifier}-push-trigger-input-set`
+      const yamlPath = `.harness/${inputSetName}.yaml`
+      const commitMsg = `${getString('common.addedEntityLabel', {
+        entity: getString('inputSets.inputSetLabel').toLowerCase()
+      })} ${yamlPath}`
+      return createInputSetForPipelinePromise({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          pipelineIdentifier,
+          projectIdentifier,
+          pipelineBranch: branch,
+          connectorRef,
+          repoName: repo,
+          branch,
+          filePath: yamlPath,
+          storeType: StoreType.REMOTE,
+          commitMsg
+        },
+        body: yamlStringify(
+          getRemoteInputSetPayload({
+            name: inputSetName,
+            identifier: getIdentifierFromName(inputSetName),
+            pipelineIdentifier,
+            orgIdentifier,
+            projectIdentifier,
+            triggerType
+          })
+        ),
+        requestOptions: { headers: { 'content-type': 'application/yaml' } }
+      })
+    },
+    [accountId, orgIdentifier, projectIdentifier]
+  )
+
   const getPipelineAndTriggerSetupPromise = useCallback(
     (isGitSaveRetry?: boolean): Promise<void> | undefined => {
       const {
@@ -390,15 +457,16 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         storeInGit = false,
         yamlPath = '',
         defaultBranch = ''
-      } = CI_YAML_VERSIONING ? (configurePipelineRef.current?.values as SavePipelineToRemoteInterface) || {} : {}
+      } = (configurePipelineRef.current?.values as SavePipelineToRemoteInterface) || {}
       const shouldSavePipelineToGit = (enableSavePipelinetoRemoteOption && storeInGit) || false
       const connectorRef = getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO)
       if (selectRepositoryRef.current?.repository && configuredGitConnector) {
+        const fullRepoName = getFullRepoName(selectRepositoryRef.current.repository)
         const commonGitParams: GitQueryParams = {
           storeType: StoreType.REMOTE,
           connectorRef,
           branch,
-          repoName: getFullRepoName(selectRepositoryRef.current.repository)
+          repoName: fullRepoName
         }
         const { configuredOption } = configurePipelineRef.current || {}
         const v1YAMLAsJSON: Record<string, any> =
@@ -430,16 +498,37 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             yamlPath
           }),
           requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-        }).then((createPipelineResponse: ResponsePipelineSaveResponse) => {
+        }).then(async (createPipelineResponse: ResponsePipelineSaveResponse) => {
           const { status } = createPipelineResponse
           if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
+            const createdPipelineIdentifier = createPipelineResponse?.data?.identifier
+            let prTriggerInputSetIdentifier
             const commonQueryParams = {
               accountIdentifier: accountId,
               orgIdentifier,
               projectIdentifier,
-              targetIdentifier: createPipelineResponse?.data?.identifier
+              targetIdentifier: createdPipelineIdentifier
             }
-            // If pipeline is created successfully, then create a PR trigger
+            if (yamlVersion === YAMLVersion.V0 && createdPipelineIdentifier) {
+              try {
+                const { data: createInputSetResponse, status: createInputSetStatus } =
+                  await createInputSetForRemotePipelinePromise({
+                    branch,
+                    pipelineIdentifier: createdPipelineIdentifier,
+                    repo: fullRepoName,
+                    connectorRef,
+                    triggerType: BuildCodebaseType.PR
+                  })
+                if (createInputSetStatus === Status.SUCCESS && createInputSetResponse?.identifier) {
+                  prTriggerInputSetIdentifier = createInputSetResponse.identifier
+                }
+              } catch (createPRTriggerInputSetErr) {
+                wrapUpAPIOperation(createPRTriggerInputSetErr)
+                return
+              }
+            }
+            // For yaml version V0, if pipeline and input set for PR trigger both are created successfully, then create the PR trigger
+            // For yaml version V1, if pipeline is created successfully, then create a PR trigger
             createTriggerPromise({
               body: yamlStringify({
                 trigger: clearNullUndefined(
@@ -450,7 +539,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                       [Connectors.GITHUB, Connectors.BITBUCKET].includes(configuredGitConnector?.type)
                         ? eventTypes.PULL_REQUEST
                         : eventTypes.MERGE_REQUEST,
-                    shouldSavePipelineToGit
+                    shouldSavePipelineToGit,
+                    remoteInputSetIdentifier: prTriggerInputSetIdentifier || ''
                   }) || {}
                 )
               }) as any,
@@ -458,14 +548,35 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             })
               .then(async (createPRTriggerResponse: ResponseNGTriggerResponse) => {
                 if (createPRTriggerResponse.status === Status.SUCCESS) {
-                  // If PR trigger is created succesfully, then create a Push trigger
+                  let pushTriggerInputSetIdentifier
+                  if (yamlVersion === YAMLVersion.V0 && createdPipelineIdentifier) {
+                    try {
+                      const { data: _createInputSetResponse, status: _createInputSetStatus } =
+                        await createInputSetForRemotePipelinePromise({
+                          branch,
+                          pipelineIdentifier: createdPipelineIdentifier,
+                          repo: fullRepoName,
+                          connectorRef,
+                          triggerType: BuildCodebaseType.branch
+                        })
+                      if (_createInputSetStatus === Status.SUCCESS && _createInputSetResponse?.identifier) {
+                        pushTriggerInputSetIdentifier = _createInputSetResponse.identifier
+                      }
+                    } catch (createPushTriggerInputSetErr) {
+                      wrapUpAPIOperation(createPushTriggerInputSetErr)
+                      return
+                    }
+                  }
+                  // For yaml version V0, if pipeline and input set for Push trigger both are created successfully, then create the Push trigger
+                  // For yaml version V1, if pipeline is created successfully, then create a Push trigger
                   const createPushTriggerResponse: ResponseNGTriggerResponse = await createTriggerPromise({
                     body: yamlStringify({
                       trigger: clearNullUndefined(
                         constructTriggerPayload({
                           pipelineId: createPipelineResponse?.data?.identifier || '',
                           eventType: eventTypes.PUSH,
-                          shouldSavePipelineToGit
+                          shouldSavePipelineToGit,
+                          remoteInputSetIdentifier: pushTriggerInputSetIdentifier || ''
                         }) || {}
                       )
                     }) as any,
@@ -505,7 +616,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       orgIdentifier,
       generatedYAMLAsJSON,
       configurePipelineRef.current,
-      CI_YAML_VERSIONING
+      CI_YAML_VERSIONING,
+      yamlVersion
     ]
   )
 
@@ -572,7 +684,10 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const setupPipelineWithoutCodebaseAndTriggers = React.useCallback((): void => {
     try {
       createPipelineV2Promise({
-        body: constructPipelinePayloadWithoutCodebase(),
+        body:
+          yamlVersion === YAMLVersion.V0
+            ? constructPipelinePayloadWithoutCodebase()
+            : yamlStringify(getCIStarterPipelineV1()),
         queryParams: {
           accountIdentifier: accountId,
           orgIdentifier,
@@ -599,7 +714,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     projectIdentifier,
     setCIGetStartedVisible,
     history,
-    getString
+    getString,
+    yamlVersion
   ])
 
   const reRouteToPipelineStudio = useCallback(

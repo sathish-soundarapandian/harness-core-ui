@@ -77,6 +77,7 @@ import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNe
 import useIsGithubWebhookAuthenticationEnabled from '@triggers/components/Triggers/WebhookTrigger/useIsGithubWebhookAuthenticationEnabled'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import { isNewTrigger } from '@triggers/components/Triggers/utils'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -116,6 +117,7 @@ import {
   SchedulePanel,
   TriggerOverviewPanel
 } from './views'
+import WebhookPipelineInputPanelV1 from './views/V1/WebhookPipelineInputPanelV1'
 import ArtifactConditionsPanel from './views/ArtifactConditionsPanel'
 
 import type {
@@ -201,8 +203,13 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     }
   })
 
-  const { CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled, FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } =
-    useFeatureFlags()
+  const {
+    CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled,
+    FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed,
+    CI_YAML_VERSIONING
+  } = useFeatureFlags()
+
+  const isSimplifiedYAML = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
 
   const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
@@ -1889,7 +1896,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           handleModeSwitch: handleWebhookModeSwitch,
           yamlBuilderReadOnlyModeProps,
           yamlObjectKey: 'trigger',
-          showVisualYaml: true,
+          showVisualYaml: !isSimplifiedYAML,
           convertFormikValuesToYaml,
           schema: triggerSchema?.data,
           onYamlSubmit: submitTrigger,
@@ -1903,7 +1910,11 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       >
         <WebhookTriggerConfigPanel />
         <WebhookConditionsPanel />
-        <WebhookPipelineInputPanel gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
+        {isSimplifiedYAML ? (
+          <WebhookPipelineInputPanelV1 gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
+        ) : (
+          <WebhookPipelineInputPanel gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
+        )}
       </Wizard>
     )
   }
@@ -1942,7 +1953,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           handleModeSwitch: handleArtifactModeSwitch,
           yamlBuilderReadOnlyModeProps,
           yamlObjectKey: 'trigger',
-          showVisualYaml: true,
+          showVisualYaml: !isSimplifiedYAML,
           convertFormikValuesToYaml,
           schema: triggerSchema?.data,
           onYamlSubmit: submitTrigger,
@@ -1955,7 +1966,11 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       >
         <ArtifactTriggerConfigPanel />
         <ArtifactConditionsPanel />
-        <WebhookPipelineInputPanel gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
+        {isSimplifiedYAML ? (
+          <WebhookPipelineInputPanelV1 gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
+        ) : (
+          <WebhookPipelineInputPanel gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
+        )}
       </Wizard>
     )
   }
@@ -1992,7 +2007,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           handleModeSwitch: handleScheduleModeSwitch,
           yamlBuilderReadOnlyModeProps,
           yamlObjectKey: 'trigger',
-          showVisualYaml: true,
+          showVisualYaml: !isSimplifiedYAML,
           convertFormikValuesToYaml,
           schema: triggerSchema?.data,
           onYamlSubmit: submitTrigger,
@@ -2003,7 +2018,11 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       >
         <TriggerOverviewPanel />
         <SchedulePanel isFixedUTCTime={isFixedUTCTimeSchedulePanel} />
-        <WebhookPipelineInputPanel gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
+        {isSimplifiedYAML ? (
+          <WebhookPipelineInputPanelV1 gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
+        ) : (
+          <WebhookPipelineInputPanel gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
+        )}
       </Wizard>
     )
   }

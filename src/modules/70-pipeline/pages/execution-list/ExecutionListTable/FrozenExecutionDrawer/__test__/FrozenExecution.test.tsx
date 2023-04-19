@@ -48,6 +48,14 @@ const renderFrozenExecDrawer = (): RenderResult =>
 
 jest.useFakeTimers()
 
+jest.mock('moment', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({
+    isBetween: jest.fn().mockReturnValue(false),
+    format: jest.fn().mockReturnValue('Dec 20, 2022 11:59 PM')
+  }))
+}))
+
 describe('FrozenExecutionDrawer', () => {
   test('initial render - snaphshot testing', async () => {
     renderFrozenExecDrawer()

@@ -27,6 +27,7 @@ import {
   projectPathProps
 } from '@common/utils/routeUtils'
 import { EnhancedInputSetForm } from '@pipeline/components/InputSetForm/InputSetForm'
+import InputSetFormV1 from '@pipeline/v1/components/InputSetFormV1/InputSetFormV1'
 import ExecutionArtifactsView from '@pipeline/pages/execution/ExecutionArtifactsView/ExecutionArtifactsView'
 import ExecutionInputsView from '@pipeline/pages/execution/ExecutionInputsView/ExecutionInputsView'
 import ExecutionLandingPage from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionLandingPage'
@@ -571,6 +572,24 @@ export function PipelineRouteDestinations({
         pageName={PAGE_NAME.EnhancedInputSetForm}
       >
         <EnhancedInputSetForm />
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        path={routes.toInputSetFormV1({ ...accountPathProps, ...inputSetFormPathProps, ...moduleParams })}
+        pageName={PAGE_NAME.InputSetFormV1}
+      >
+        <InputSetFormV1 />
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={ProjectDetailsSideNavProps}
+        path={routes.toInputSetFormV1({ ...accountPathProps, ...inputSetFormPathProps })}
+        pageName={PAGE_NAME.InputSetFormV1}
+      >
+        <InputSetFormV1 />
       </RouteWithLayout>
       <Route
         exact

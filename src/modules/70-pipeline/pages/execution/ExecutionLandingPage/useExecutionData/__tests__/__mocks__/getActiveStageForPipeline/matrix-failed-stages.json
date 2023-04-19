@@ -1,0 +1,182 @@
+[
+  {
+    "status": "Running",
+    "layoutNodeMap": {
+      "S0": {
+        "nodeUuid": "S0",
+        "nodeType": "MATRIX",
+        "status": "NotStarted",
+        "edgeLayoutList": {
+          "currentNodeChildren": ["S1", "S2", "S3"],
+          "nextIds": []
+        }
+      },
+      "S1": {
+        "nodeUuid": "M1",
+        "nodeExecutionId": "S1",
+        "nodeType": "Deployment",
+        "status": "Errored",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S2": {
+        "nodeUuid": "M1",
+        "nodeExecutionId": "S2",
+        "nodeType": "Deployment",
+        "status": "Running",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S3": {
+        "nodeUuid": "M1",
+        "nodeExecutionId": "S3",
+        "nodeType": "Deployment",
+        "status": "NotStarted",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      }
+    },
+    "startingNodeId": "S0"
+  },
+  {
+    "status": "Running",
+    "layoutNodeMap": {
+      "S0": {
+        "nodeUuid": "S0",
+        "nodeType": "MATRIX",
+        "status": "NotStarted",
+        "edgeLayoutList": {
+          "currentNodeChildren": ["S1", "S2", "S3"],
+          "nextIds": []
+        }
+      },
+      "S1": {
+        "nodeUuid": "M1",
+        "nodeExecutionId": "S1",
+        "nodeType": "Deployment",
+        "status": "Errored",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S2": {
+        "nodeUuid": "M1",
+        "nodeExecutionId": "S2",
+        "nodeType": "Deployment",
+        "status": "Success",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S3": {
+        "nodeUuid": "M1",
+        "nodeExecutionId": "S3",
+        "nodeType": "Deployment",
+        "status": "Running",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      }
+    },
+    "startingNodeId": "S0"
+  },
+  {
+    "status": "Errored",
+    "layoutNodeMap": {
+      "S0": {
+        "nodeUuid": "S0",
+        "nodeType": "MATRIX",
+        "status": "NotStarted",
+        "edgeLayoutList": {
+          "currentNodeChildren": ["S1", "S2", "S3"],
+          "nextIds": []
+        }
+      },
+      "S1": {
+        "nodeUuid": "M1",
+        "nodeExecutionId": "S1",
+        "nodeType": "Deployment",
+        "status": "Errored",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S2": {
+        "nodeUuid": "M1",
+        "nodeExecutionId": "S2",
+        "nodeType": "Deployment",
+        "status": "Success",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S3": {
+        "nodeUuid": "M1",
+        "nodeExecutionId": "S3",
+        "nodeType": "Deployment",
+        "status": "Errored",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      }
+    },
+    "startingNodeId": "S0"
+  },
+  {
+    "status": "Errored",
+    "layoutNodeMap": {
+      "S0": {
+        "nodeUuid": "S0",
+        "nodeType": "MATRIX",
+        "status": "NotStarted",
+        "edgeLayoutList": {
+          "currentNodeChildren": ["S1", "S2", "S3"],
+          "nextIds": []
+        }
+      },
+      "S1": {
+        "nodeUuid": "M1",
+        "nodeExecutionId": "S1",
+        "nodeType": "Deployment",
+        "status": "Success",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S2": {
+        "nodeUuid": "M1",
+        "nodeExecutionId": "S2",
+        "nodeType": "Deployment",
+        "status": "Errored",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S3": {
+        "nodeUuid": "M1",
+        "nodeExecutionId": "S3",
+        "nodeType": "Deployment",
+        "status": "Success",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      }
+    },
+    "startingNodeId": "S0"
+  }
+]

@@ -37,9 +37,12 @@ export const isAllowedAzureArtifactDeploymentTypes = (deploymentType: ServiceDef
   deploymentType === ServiceDeploymentType.CustomDeployment || deploymentType === ServiceDeploymentType.TAS
 
 export const isAllowedBambooArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
-  [ServiceDeploymentType.Ssh, ServiceDeploymentType.CustomDeployment, ServiceDeploymentType.WinRm].includes(
-    deploymentType as ServiceDeploymentType
-  )
+  [
+    ServiceDeploymentType.Ssh,
+    ServiceDeploymentType.CustomDeployment,
+    ServiceDeploymentType.WinRm,
+    ServiceDeploymentType.TAS
+  ].includes(deploymentType as ServiceDeploymentType)
 
 export const isAllowedAMIDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
   deploymentType === ServiceDeploymentType.CustomDeployment || deploymentType === ServiceDeploymentType.TAS
@@ -276,6 +279,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Acr,
     ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
+    ENABLED_ARTIFACT_TYPES.GoogleCloudStorage,
     ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
   ],
   GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage],

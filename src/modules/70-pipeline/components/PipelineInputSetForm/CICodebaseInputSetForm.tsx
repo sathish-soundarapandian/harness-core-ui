@@ -89,22 +89,28 @@ export enum ConnectionType {
   Project = 'Project' // Project level Azure Repo connector is the same as an Account level GitHub/GitLab connector
 }
 
-export const buildTypeInputNames: Record<string, string> = {
-  branch: 'branch',
-  tag: 'tag',
-  PR: 'number'
+export enum BuildType {
+  branch = 'branch',
+  tag = 'tag',
+  PR = 'PR'
 }
 
-export const defaultValues = {
+export enum BuildCodebaseType {
+  branch = 'branch',
+  tag = 'tag',
+  PR = 'number'
+}
+
+export const DefaultBuildValues = {
   branch: '<+trigger.branch>',
   tag: '<+trigger.tag>',
   PR: '<+trigger.prNumber>'
 }
 
 const placeholderValues = {
-  branch: defaultValues['branch'],
-  tag: defaultValues['tag'],
-  PR: defaultValues['PR']
+  branch: DefaultBuildValues['branch'],
+  tag: DefaultBuildValues['tag'],
+  PR: DefaultBuildValues['PR']
 }
 
 export interface ConnectorRefInterface {
@@ -583,14 +589,14 @@ function CICodebaseInputSetFormInternal({
       savedValues.current = Object.assign(savedValues.current, {
         [codeBaseType]: get(
           formik?.values,
-          `${formattedPath}properties.ci.codebase.build.spec.${buildTypeInputNames[codeBaseType]}`,
+          `${formattedPath}properties.ci.codebase.build.spec.${BuildCodebaseType[codeBaseType]}`,
           ''
         )
       })
       const existingValues = { ...formik?.values }
       let updatedValues = set(existingValues, codeBaseTypePath, codeBaseType)
       updatedValues = set(existingValues, buildSpecPath, {
-        [buildTypeInputNames[codeBaseType]]: savedValues.current[codeBaseType]
+        [BuildCodebaseType[codeBaseType]]: savedValues.current[codeBaseType]
       })
       formik?.setValues(updatedValues)
     }
@@ -600,9 +606,9 @@ function CICodebaseInputSetFormInternal({
     formik?.setFieldValue(`${formattedPath}properties.ci.codebase.build`, '')
     formik?.setFieldValue(codeBaseTypePath, newType)
     if (!isInputTouched && triggerIdentifier && isNotScheduledTrigger) {
-      formik?.setFieldValue(buildSpecPath, { [buildTypeInputNames[newType]]: defaultValues[newType] })
+      formik?.setFieldValue(buildSpecPath, { [BuildCodebaseType[newType]]: DefaultBuildValues[newType] })
     } else {
-      formik?.setFieldValue(buildSpecPath, { [buildTypeInputNames[newType]]: savedValues.current[newType] })
+      formik?.setFieldValue(buildSpecPath, { [BuildCodebaseType[newType]]: savedValues.current[newType] })
     }
   }
   const renderCodeBaseTypeInput = (type: CodebaseTypes): JSX.Element => {

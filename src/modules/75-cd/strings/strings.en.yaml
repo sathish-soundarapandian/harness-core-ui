@@ -297,6 +297,7 @@ pipelineSteps:
     newService: '{{$.newService}}'
     plusNewService: '+ {{$.newService}}'
     serviceIsRequired: Service is required
+    servicesAreRequired: Services are required
     useFromStageRequired: Service or Propagate From is required
     aboutYourService: About the Service
     manifest:
@@ -313,13 +314,14 @@ pipelineSteps:
     multiServicesText: Deploy multiple Services
     multiServicesTitleText: Deploy multiple Services?
     multiServicesParallelDeployLabel: Deploy Services in parallel?
-    multiServicesConfirmationText: Are you sure you want to switch to deploying multiple services?. If you choose to proceed, your existing service will be migrated automatically.
-    singleServicesTitleText: Deploy to single service?
-    singleServicesConfirmationText: Are you sure you want to switch to deploying to a single services?. If you choose to proceed, your existing services will be lost.
-    deleteServiceFromListTitleText: Remove service from list?
-    deleteServiceFromListText: Are you sure you want to remove {{name}} service from the list?
-    viewServiceInputs: View service inputs
-    hideServiceInputs: Hide service inputs
+    multiServicesConfirmationText: Are you sure you want to switch to deploying multiple Services?. If you choose to proceed, your existing Service will be migrated automatically.
+    multiServicesClearConfirmationText: Are you sure you want to switch to deploying multiple Services? If you choose to proceed, your existing Service will be lost.
+    singleServicesTitleText: Deploy to single Service?
+    singleServicesConfirmationText: Are you sure you want to switch to deploying to a single Service?. If you choose to proceed, your existing Services will be lost.
+    deleteServiceFromListTitleText: Remove Service from list?
+    deleteServiceFromListText: Are you sure you want to remove {{name}} Service from the list?
+    viewServiceInputs: View Service inputs
+    hideServiceInputs: Hide Service inputs
   infraTab:
     deploymentType: Infrastructure type selection is required
     clusterError: No cluster found with given Connector

@@ -1038,6 +1038,25 @@ const routes = {
       }
     }
   ),
+  toInputSetFormV1: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      inputSetIdentifier,
+      accountId: _accountId,
+      module,
+      ...rest
+    }: PipelineType<InputSetPathProps> & InputSetGitQueryParams) => {
+      const basePath = module || 'home'
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      if (queryString.length > 0) {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/input-sets-v1/${inputSetIdentifier}?${queryString}`
+      } else {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/input-sets-v1/${inputSetIdentifier}`
+      }
+    }
+  ),
   toTriggersPage: withAccountId(
     ({
       orgIdentifier,

@@ -34,6 +34,7 @@ import type {
 import routes from '@common/RouteDefinitions'
 import { killEvent } from '@common/utils/eventUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
@@ -45,7 +46,6 @@ import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelp
 import { mapTriggerTypeToIconAndExecutionText, mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -463,7 +463,7 @@ export const MenuCell: CellType = ({ row, column }) => {
         onCompareExecutions={() => addToCompare(data)}
         onReRunInDebugMode={
           hasCI && CI_REMOTE_DEBUG
-            ? CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+            ? isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
               ? openRunPipelineModalV1
               : openRunPipelineModal
             : undefined

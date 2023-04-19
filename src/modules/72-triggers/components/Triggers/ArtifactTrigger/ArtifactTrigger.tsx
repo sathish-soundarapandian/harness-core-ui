@@ -9,6 +9,7 @@ import React from 'react'
 import ArtifactConditionsPanel from '@triggers/components/steps/ArtifactTriggerConditionsPanel/ArtifactConditionsPanel'
 import ArtifactTriggerInputPanel from '@triggers/components/steps/ArtifactTriggerInputPanel/ArtifactTriggerInputPanel'
 import ArtifactTriggerConfigPanel from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactTriggerConfigPanel'
+import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
 import { Trigger, TriggerProps } from '../Trigger'
 import { TriggerBaseType } from '../TriggerInterface'
 import ArtifactTriggerWizard from './ArtifactTriggerWizard'
@@ -24,8 +25,8 @@ export abstract class ArtifactTrigger<T> extends Trigger<T> {
     return <ArtifactConditionsPanel />
   }
 
-  renderStepThree(): JSX.Element {
-    return <ArtifactTriggerInputPanel />
+  renderStepThree(isSimplifiedYAML?: boolean): JSX.Element {
+    return isSimplifiedYAML ? <WebhookPipelineInputPanelV1 /> : <ArtifactTriggerInputPanel />
   }
 
   renderTrigger(props: TriggerProps<T>): JSX.Element {
@@ -33,7 +34,7 @@ export abstract class ArtifactTrigger<T> extends Trigger<T> {
       <ArtifactTriggerWizard {...props}>
         {this.renderStepOne()}
         {this.renderStepTwo()}
-        {this.renderStepThree()}
+        {this.renderStepThree(props.isSimplifiedYAML)}
       </ArtifactTriggerWizard>
     )
   }

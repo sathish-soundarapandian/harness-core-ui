@@ -99,7 +99,10 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
           }
 
           /* istanbul ignore else */
-          return this.createError({ message, path: 'services' })
+          return this.createError({
+            message: getString('cd.pipelineSteps.serviceTab.servicesAreRequired'),
+            path: 'services'
+          })
         }
 
         return true

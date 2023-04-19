@@ -15,6 +15,11 @@ import { getScopedValueFromDTO } from '@common/components/EntityReference/Entity
 import { Connectors } from '@connectors/constants'
 import { GIT_EXTENSION, YAMLVersion } from '@pipeline/utils/CIUtils'
 import {
+  BuildType,
+  BuildCodebaseType,
+  DefaultBuildValues
+} from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
+import {
   BitbucketPRTriggerActions,
   GitHubPRTriggerActions,
   GitlabPRTriggerActions,
@@ -363,4 +368,49 @@ export const getCloudPipelinePayloadWithCodebase = (): PipelineConfig => {
 
 export const moveVersionFieldToTheTop = (existingPipeline: Record<string, any>) => {
   return { name: get(existingPipeline, 'name'), version: 1, ...omit(existingPipeline, 'version') }
+}
+
+export const getRemoteInputSetPayload = ({
+  name,
+  identifier,
+  projectIdentifier,
+  orgIdentifier,
+  pipelineIdentifier,
+  triggerType
+}: {
+  name: string
+  identifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier: string
+  triggerType: BuildCodebaseType
+}): Record<string, any> => {
+  if (![BuildCodebaseType.PR, BuildCodebaseType.branch].includes(triggerType)) {
+    return {}
+  }
+  return {
+    inputSet: {
+      name,
+      identifier,
+      orgIdentifier,
+      projectIdentifier,
+      pipeline: {
+        identifier: pipelineIdentifier,
+        properties: {
+          ci: {
+            codebase: {
+              build: {
+                type: triggerType === BuildCodebaseType.PR ? BuildType.PR : BuildType.branch,
+                spec: {
+                  ...(triggerType === BuildCodebaseType.PR
+                    ? { number: DefaultBuildValues.PR }
+                    : { branch: DefaultBuildValues.branch })
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

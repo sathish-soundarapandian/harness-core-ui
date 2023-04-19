@@ -46,6 +46,7 @@ export enum PAGE_NAME {
   InputSetList = 'InputSetList',
   DeploymentsList = 'DeploymentsList',
   EnhancedInputSetForm = 'EnhancedInputSetForm',
+  InputSetFormV1 = 'InputSetFormV1',
   TriggersPage = 'TriggersPage',
   TriggersDetailPage = 'TriggersDetailPage',
   TriggersWizardPage = 'TriggersWizardPage',

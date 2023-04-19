@@ -69,7 +69,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
   const {
     data: servicesListResponse,
     error,
-    isLoading: loadingServicesList,
+    isInitialLoading: loadingServicesList,
     refetch: refetchListData
   } = useGetServiceAccessListQuery(
     {

@@ -19,7 +19,7 @@ import {
   HarnessDocTooltip
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { isEmpty, get, pickBy } from 'lodash-es'
 import { parse } from 'yaml'
@@ -38,6 +38,8 @@ import {
 } from 'services/pipeline-ng'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { TagsPopover, PageSpinner } from '@common/components'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -241,6 +243,7 @@ export default function TriggersDetailPage(): JSX.Element {
     >
   >()
   const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const {
     data: triggerResponse,
@@ -392,6 +395,12 @@ export default function TriggersDetailPage(): JSX.Element {
     pipelineInputSet = triggerObj?.inputYaml || ''
   }
 
+  useEffect(() => {
+    if (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)) {
+      setSelectedView(SelectedView.VISUAL)
+    }
+  }, [CI_YAML_VERSIONING, module])
+
   return (
     <>
       <Container
@@ -447,6 +456,7 @@ export default function TriggersDetailPage(): JSX.Element {
             <Layout.Horizontal flex={{ distribution: 'space-between' }}>
               <VisualYamlToggle
                 selectedView={selectedView}
+                disableToggle={isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)}
                 onChange={nextMode => {
                   setSelectedView(nextMode)
                 }}

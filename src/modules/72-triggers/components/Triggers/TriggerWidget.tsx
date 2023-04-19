@@ -7,11 +7,14 @@
 
 import React from 'react'
 
+import { useParams } from 'react-router-dom'
 import TriggerDetailsV1 from '@triggers/pages/trigger-details/TriggerDetails'
 import TriggersWizardPage from '@triggers/pages/triggers/TriggersWizardPage'
 import { TriggerBaseType } from '@triggers/components/Triggers/TriggerInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
+import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import type { AbstractTriggerFactory } from '../../factory/AbstractTriggerFactory'
 import type { TriggerProps } from './Trigger'
 import TriggerDetails from '../TriggerDetails/TriggerDetails'
@@ -28,7 +31,9 @@ export function TriggerWidget<T>({
   isNewTrigger,
   triggerData
 }: TriggerWidgetProps<T>): JSX.Element {
-  const { NG_SVC_ENV_REDESIGN, CD_TRIGGERS_REFACTOR } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, CD_TRIGGERS_REFACTOR, CI_YAML_VERSIONING } = useFeatureFlags()
+  const { module } = useParams<PipelineType<ExecutionPathProps>>()
+  const isSimplifiedYAML = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
 
   // CD_TRIGGERS_REFACTOR check can be removed once triggers refactoring is complete.
   // Until then it gives us the freedom to selectively render only those triggers that have been refactored.
@@ -53,7 +58,8 @@ export function TriggerWidget<T>({
           baseType,
           initialValues: values,
           isNewTrigger,
-          triggerData
+          triggerData,
+          isSimplifiedYAML
         })}
       </TriggerDetails>
     )

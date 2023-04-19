@@ -277,8 +277,11 @@ if (!enableFFUI) {
 }
 
 if (!enableIACM) {
+  // render a mock app when IACM MF is disabled
   config.resolve.alias['iacm/MicroFrontendApp'] = ChildAppError
   config.resolve.alias['iacm/IACMStage'] = ChildAppError
+  config.resolve.alias['iacm/IACMStageInputSet'] = ChildAppError
+  config.resolve.alias['iacm/IACMPipelineResources'] = ChildAppError
 }
 
 if (!enableSSCA) {

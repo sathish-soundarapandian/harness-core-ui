@@ -29,6 +29,7 @@ declare const styles: {
   readonly optionBtns: string
   readonly pageHeaderStyles: string
   readonly reconcileMenu: string
+  readonly saveCancelBtn: string
   readonly treeSidebar: string
   readonly withError: string
 }

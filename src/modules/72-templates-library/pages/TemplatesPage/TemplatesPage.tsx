@@ -33,7 +33,9 @@ import {
   TemplateSummaryResponse,
   useGetRepositoryList,
   useGetTemplateList,
-  useGetTemplateMetadataList
+  useGetTemplateMetadataList,
+  FilterDTO,
+  TemplateFilterProperties
 } from 'services/template-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -50,7 +52,11 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import { getAllowedTemplateTypes, TemplateType } from '@templates-library/utils/templatesUtils'
+import {
+  getAllowedTemplateTypes,
+  TemplateType,
+  prepareTemplateFiltersPayload
+} from '@templates-library/utils/templatesUtils'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -62,15 +68,21 @@ import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import ListHeader from '@common/components/ListHeader/ListHeader'
 import { sortByCreated, sortByLastUpdated, sortByName, SortMethod } from '@common/utils/sortUtils'
+import { TemplateListFilter } from '@templates-library/components/TemplateFilter/TemplateFilter'
+import { getIsSavedFilterApplied } from '@pipeline/pages/execution-list/utils/executionListUtil'
+import { getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
+
 import css from './TemplatesPage.module.scss'
 
 export default function TemplatesPage(): React.ReactElement {
   const { getString } = useStrings()
   const history = useHistory()
   const queryParamOptions = useTemplatesQueryParamOptions()
-  const { templateType, repoName, page, view, size, sort, searchTerm } = useQueryParams(queryParamOptions)
+  const { templateType, repoName, page, view, size, sort, searchTerm, filterIdentifier, filters } =
+    useQueryParams(queryParamOptions)
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<TemplatesQueryParams>()
-
+  const isSavedFilterApplied = getIsSavedFilterApplied(filterIdentifier)
+  const [filterList, setFilterList] = useState<FilterDTO[] | undefined>()
   const [templateToDelete, setTemplateToDelete] = React.useState<TemplateSummaryResponse>({})
   const [templateIdentifierToSettings, setTemplateIdentifierToSettings] = React.useState<string>()
   const [selectedTemplate, setSelectedTemplate] = React.useState<TemplateSummaryResponse | undefined>()
@@ -90,6 +102,7 @@ export default function TemplatesPage(): React.ReactElement {
       featureName: FeatureIdentifier.TEMPLATE_SERVICE
     }
   })
+
   const allowedTemplateTypes = getAllowedTemplateTypes(scope, {
     [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE,
     [TemplateType.CustomDeployment]: !!NG_SVC_ENV_REDESIGN
@@ -105,6 +118,8 @@ export default function TemplatesPage(): React.ReactElement {
   } = useMutateAsGet(supportingTemplatesGitx ? useGetTemplateMetadataList : useGetTemplateList, {
     body: {
       filterType: 'Template',
+      ...(!isSavedFilterApplied && filters && prepareTemplateFiltersPayload(filters as TemplateFilterProperties)),
+      ...(isSavedFilterApplied && getFilterByIdentifier(filterIdentifier!, filterList)?.filterProperties),
       repoName,
       ...(templateType && { templateEntityTypes: [templateType] })
     },
@@ -280,6 +295,7 @@ export default function TemplatesPage(): React.ReactElement {
             />
           )}
         </Layout.Horizontal>
+
         <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
           <ExpandingSearchInput
             alwaysExpanded
@@ -295,6 +311,7 @@ export default function TemplatesPage(): React.ReactElement {
             defaultValue={defaultTo(searchTerm, '')}
             className={css.expandSearch}
           />
+          <TemplateListFilter onFilterListUpdate={setFilterList} />
           <GridListToggle
             initialSelectedView={view}
             onViewToggle={selectedView => updateQueryParams({ view: selectedView })}
