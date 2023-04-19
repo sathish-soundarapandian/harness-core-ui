@@ -16,7 +16,7 @@ import type { InputsResponseBody } from '@harnessio/react-pipeline-service-clien
 import type { EntityGitDetails } from 'services/pipeline-ng'
 import { useGetSettingValue } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
-import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import { SettingType } from '@common/constants/Utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type {
   AccountPathProps,

@@ -71,6 +71,7 @@ export default function MultiServiceInputSetForm({
               stageIdentifier,
               deploymentType: deploymentStage?.deploymentType,
               gitOpsEnabled: deploymentStage?.gitOpsEnabled,
+              deploymentMetadata: deploymentStage?.deploymentMetadata,
               allValues: pick(deploymentStage, ['services']),
               customDeploymentData: deploymentStage?.customDeploymentRef
             }}
