@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import type { Column } from 'react-table'
-import { Text, TableV2, Layout, Card, Heading, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
+import { Text, Layout, Card, Heading, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings, StringKeys } from 'framework/strings'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
@@ -16,8 +16,7 @@ import DeveloperDropdown from '@common/DeveloperDropDown/DeveloperDropdown'
 import type { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
 import type { SortBy } from './types'
 import { DeveloperNameCell, OrganizationCell, ProjectCell, LastBuildCell } from './CIusageTableCells'
-import { getInfoIcon } from './UsageInfoCard'
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, tableV2 } from './ServiceLicenseTable'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, tableV2, NameHeader } from './ServiceLicenseTable'
 import pageCss from '../SubscriptionsPage.module.scss'
 
 export interface ActiveDevelopersTableCIProps {
@@ -50,16 +49,6 @@ export function ActiveDevelopersTableCI({
     size = DEFAULT_PAGE_SIZE
   } = data
   const [currentSort, currentOrder] = sortBy
-  const NameHeader = (headerName: StringKeys, tooltip?: StringKeys) => {
-    return (
-      <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'baseline' }}>
-        <Text font={{ size: 'small' }} color={Color.GREY_700}>
-          {getString(headerName)}
-        </Text>
-        {tooltip && getInfoIcon(getString(tooltip))}
-      </Layout.Horizontal>
-    )
-  }
 
   const columns: Column<LicenseUsageDTO>[] = React.useMemo(() => {
     const getServerSortProps = (id: string) => {
@@ -74,28 +63,28 @@ export function ActiveDevelopersTableCI({
     }
     return [
       {
-        Header: NameHeader('common.purpose.developer'),
+        Header: NameHeader(getString, 'common.purpose.developer'),
         accessor: 'name',
         width: '14%',
         disableSortBy: true,
         Cell: DeveloperNameCell
       },
       {
-        Header: NameHeader('common.organizations'),
+        Header: NameHeader(getString, 'common.organizations'),
         accessor: 'storeType',
         disableSortBy: true,
         width: '13%',
         Cell: OrganizationCell
       },
       {
-        Header: NameHeader('common.projects', 'common.trialInProgressDescription'),
+        Header: NameHeader(getString, 'common.projects', 'common.trialInProgressDescription'),
         accessor: 'storeType1',
         disableSortBy: true,
         width: '15%',
         Cell: ProjectCell
       },
       {
-        Header: NameHeader('common.lastBuildDate'),
+        Header: NameHeader(getString, 'common.lastBuildDate'),
         accessor: 'lastBuildDate',
         width: '12%',
         Cell: LastBuildCell,
