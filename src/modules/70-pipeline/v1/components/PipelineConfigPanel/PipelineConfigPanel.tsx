@@ -142,9 +142,9 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         )}
       </Layout.Vertical>
     ) : (
-      <Layout.Vertical spacing="medium">
+      <Layout.Vertical spacing="xsmall">
         {nodeView}
-        <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }} spacing="xsmall">
+        <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge' }} spacing="medium">
           <Button text="Add" variation={ButtonVariation.PRIMARY} />
           <Button text="Cancel" variation={ButtonVariation.SECONDARY} />
         </Layout.Horizontal>
