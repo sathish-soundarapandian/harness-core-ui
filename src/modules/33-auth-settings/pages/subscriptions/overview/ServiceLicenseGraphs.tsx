@@ -14,8 +14,8 @@ import { StackedColumnChart } from '@common/components/StackedColumnChart/Stacke
 import { useMutateAsGet } from '@common/hooks'
 import { useGetLicenseDateUsage, ModuleLicenseDTO, CDModuleLicenseDTO } from 'services/cd-ng'
 import { CDLicenseType } from '@common/constants/SubscriptionTypes'
-import type { YAxisOptions } from 'highcharts'
 import pageCss from '../SubscriptionsPage.module.scss'
+import type { YAxisOptions } from 'highcharts'
 
 interface ServiceLicenseGraphsProps {
   accountId: string
@@ -100,6 +100,7 @@ const getLast3Months = () => {
   }
   return last3Months
 }
+
 export const getYAxis = (maxValue: number, subscriptions: number): YAxisOptions | YAxisOptions[] | undefined => {
   return {
     min: 0,
@@ -125,7 +126,6 @@ export const getYAxis = (maxValue: number, subscriptions: number): YAxisOptions 
     }
   }
 }
-
 export const getPlotOptions = () => {
   return {
     column: {

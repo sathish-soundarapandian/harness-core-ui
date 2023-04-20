@@ -10,7 +10,7 @@ import { Layout } from '@harness/uicore'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import CIUsageGraph from './CIUsageGraph'
-import ServiceLicenseGraphs from './ServiceLicenseGraphs'
+import { ServiceLicenseGraphs } from './ServiceLicenseGraphs'
 
 interface SubscriptionGraphViewProps {
   accountId: string

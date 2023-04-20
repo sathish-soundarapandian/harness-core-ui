@@ -14,12 +14,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
 import { String, useStrings, StringKeys } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  PageActiveServiceDTO,
-  LicenseUsageDTO,
-  useDownloadActiveServiceCSVReport,
-  ActiveServiceDTO
-} from 'services/cd-ng'
+import { PageActiveServiceDTO, LicenseUsageDTO, useDownloadActiveServiceCSVReport } from 'services/cd-ng'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'
 import ServiceDropdown from '@common/ServiceDropdown/ServiceDropdown'
@@ -53,59 +48,6 @@ export interface ServiceLicenseTableProps {
   licenseType: string
 }
 
-export const NameHeader = (headerName: StringKeys, tooltip?: StringKeys) => {
-  const { getString } = useStrings()
-  return (
-    <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'baseline' }}>
-      <Text font={{ size: 'small' }} color={Color.GREY_700}>
-        {getString(headerName)}
-      </Text>
-      {tooltip && getInfoIcon(getString(tooltip))}
-    </Layout.Horizontal>
-  )
-}
-
-export const noDataCard = (message: StringKeys) => {
-  const { getString } = useStrings()
-  return (
-    <NoDataCard
-      message={getString(message)}
-      className={pageCss.noDataCard}
-      containerClassName={pageCss.noDataCardContainer}
-    />
-  )
-}
-
-export const tableV2 = (
-  columns: Column<LicenseUsageDTO>[],
-  content: ActiveServiceDTO[],
-  totalElements: number,
-  size: number,
-  totalPages: number,
-  number: number,
-  gotoPage: (pageNumber: number) => void
-) => {
-  return (
-    <TableV2
-      className={pageCss.table}
-      columns={columns}
-      data={content}
-      pagination={
-        totalElements > size
-          ? {
-              itemCount: totalElements,
-              pageSize: size,
-              pageCount: totalPages,
-              pageIndex: number,
-              gotoPage
-            }
-          : undefined
-      }
-      sortable
-    />
-  )
-}
-
 export function ServiceLicenseTable({
   data,
   gotoPage,
@@ -124,6 +66,16 @@ export function ServiceLicenseTable({
     size = DEFAULT_PAGE_SIZE
   } = data
   const [currentSort, currentOrder] = sortBy
+  const NameHeader = (headerName: StringKeys, tooltip?: StringKeys) => {
+    return (
+      <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'baseline' }}>
+        <Text font={{ size: 'small' }} color={Color.GREY_700}>
+          {getString(headerName)}
+        </Text>
+        {tooltip && getInfoIcon(getString(tooltip))}
+      </Layout.Horizontal>
+    )
+  }
 
   const columns: Column<LicenseUsageDTO>[] = React.useMemo(() => {
     const getServerSortProps = (id: string) => {
@@ -296,9 +248,31 @@ export function ServiceLicenseTable({
           </Text>
         </Layout.Horizontal>
         {servicesLoading && <PageSpinner />}
-        {content.length > 0
-          ? tableV2(columns, content, totalElements, size, totalPages, number, gotoPage)
-          : noDataCard('common.noActiveServiceData')}
+        {content.length > 0 ? (
+          <TableV2
+            className={pageCss.table}
+            columns={columns}
+            data={content}
+            pagination={
+              totalElements > size
+                ? {
+                    itemCount: totalElements,
+                    pageSize: size,
+                    pageCount: totalPages,
+                    pageIndex: number,
+                    gotoPage
+                  }
+                : undefined
+            }
+            sortable
+          />
+        ) : (
+          <NoDataCard
+            message={getString('common.noActiveServiceData')}
+            className={pageCss.noDataCard}
+            containerClassName={pageCss.noDataCardContainer}
+          />
+        )}
       </Layout.Vertical>
     </Card>
   )
