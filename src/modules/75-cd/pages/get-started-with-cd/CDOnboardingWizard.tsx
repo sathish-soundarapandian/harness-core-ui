@@ -7,14 +7,18 @@
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { useFeatureFlag } from '@harnessio/ff-react-client-sdk'
 import { useQueryParams } from '@common/hooks'
+import { FeatureFlag } from '@common/featureFlags'
 import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
+import WithABFFProvider from '@common/components/WithFFProvider/WithFFProvider'
+import { EXPOSURE_EVENT, PLG_EXPERIMENTS } from '@common/components/WithFFProvider/PLGExperiments'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingProvider } from './CDOnboardingStore'
 import { DeployProvisioningWizard } from './DeployProvisioningWizard/DeployProvisioningWizard'
 
-export default function CDOnboardingWizard(): React.ReactElement {
+function CDOnboardingWizard(): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const { currentUserInfo } = useAppStore()
@@ -28,7 +32,38 @@ export default function CDOnboardingWizard(): React.ReactElement {
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
       serviceIdentifier={serviceId}
     >
-      <DeployProvisioningWizard />
+      <CDWizardWithAB />
     </CDOnboardingProvider>
   )
 }
+
+const CDWizardWithAB: React.FC = () => {
+  const {
+    currentUserInfo: { uuid }
+  } = useAppStore()
+
+  return (
+    <WithABFFProvider
+      fallback={<DeployProvisioningWizard />}
+      featureFlagsToken={window.HARNESS_PLG_FF_SDK_KEY}
+      config={{ experimentKey: PLG_EXPERIMENTS.PLG_SERVICE_DELEGATE_TEST, identifier: uuid }}
+    >
+      <CDWizardHooks />
+    </WithABFFProvider>
+  )
+}
+
+const CDWizardHooks: React.FC = () => {
+  const FLOW_TYPE = useFeatureFlag(FeatureFlag.PLG_SERVICE_DELEGATE_AB)
+  const trackExposure = useFeatureFlag(FeatureFlag.PLG_SERVICE_DELEGATE_EXPOSURE_ENABLED)
+  const { trackEvent } = useTelemetry()
+  useEffect(() => {
+    trackExposure &&
+      trackEvent(EXPOSURE_EVENT, {
+        flag_key: FeatureFlag.PLG_SERVICE_DELEGATE_AB,
+        variant: FLOW_TYPE
+      })
+  }, [])
+  return <DeployProvisioningWizard flowType={FLOW_TYPE} />
+}
+export default CDOnboardingWizard
