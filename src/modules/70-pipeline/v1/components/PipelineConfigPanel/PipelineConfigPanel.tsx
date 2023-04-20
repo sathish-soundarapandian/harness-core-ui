@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { capitalize } from 'lodash-es'
+import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text } from '@harness/uicore'
 import {
   ConfigOptionsMapWithAdditionalOptions,
@@ -26,6 +27,15 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const [pipelineConfigPanelView, setPipelineConfigPanelView] = useState<PipelineConfigPanelView>(
     PipelineConfigPanelView.Options
   )
+  const breadCrumbs: IBreadcrumbProps[] = [
+    {
+      text: capitalize(StudioEntity.Pipeline),
+      onClick: () => {
+        setSelectedConfigOption(undefined)
+        setPipelineConfigPanelView(PipelineConfigPanelView.Options)
+      }
+    }
+  ]
 
   const onSelectConfigOption = useCallback(
     (entity: StudioEntity, selectedConfigOption: PipelineConfigOptionInterface): void => {
@@ -86,14 +96,25 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   }, [showMoreOptions])
 
   const renderPipelineConfigOptionDetails = useCallback((): React.ReactElement => {
-    return <>{selectedConfigOption?.entity}</>
+    return <></>
   }, [selectedConfigOption])
 
   const renderPipelineConfigPanelHeader = useCallback((): React.ReactElement => {
-    return (
-      <Text font={{ variation: FontVariation.H4 }}>
-        {selectedConfigOption ? `Select ${capitalize(selectedConfigOption.entity)} Type` : 'Pipeline Configuration'}
-      </Text>
+    const { entity, entityDetails } = selectedConfigOption || {}
+    const { label, drillDown } = entityDetails || {}
+    const { hasSubTypes } = drillDown || {}
+    const updatedBreadCrumbs = hasSubTypes ? [...breadCrumbs, { text: label }] : [...breadCrumbs, { text: '' }]
+    return selectedConfigOption ? (
+      <Layout.Vertical>
+        <Breadcrumbs items={[...updatedBreadCrumbs]} />
+        {hasSubTypes ? (
+          <Text font={{ variation: FontVariation.H4 }}>{`Select ${capitalize(entity)} Type`}</Text>
+        ) : (
+          <Text font={{ variation: FontVariation.H4 }}>{label}</Text>
+        )}
+      </Layout.Vertical>
+    ) : (
+      <Text font={{ variation: FontVariation.H4 }}>Pipeline Configuration</Text>
     )
   }, [selectedConfigOption])
 
