@@ -83,7 +83,6 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const { isEdit } = sourceData
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
-  const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
   const [productInfo, setProductInfo] = useState<{
     updatedProduct: SelectOption | null
     currentProduct: SelectOption | null
@@ -97,11 +96,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
       disabledConnectorsList.push(HealthSourceTypes.ErrorTracking)
     }
 
-    if (!isSumoLogicEnabled) {
-      disabledConnectorsList.push(HealthSourceTypes.SumoLogic)
-    }
     return disabledConnectorsList
-  }, [isErrorTrackingEnabled, isSumoLogicEnabled])
+  }, [isErrorTrackingEnabled])
 
   const initialValues = useMemo(() => {
     return getInitialValues(sourceData, getString)
