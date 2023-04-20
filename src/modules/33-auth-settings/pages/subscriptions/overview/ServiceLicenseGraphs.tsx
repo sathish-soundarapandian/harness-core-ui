@@ -9,13 +9,13 @@ import React, { useState, useMemo, useEffect } from 'react'
 import { Text, Layout, Card, Heading, PageSpinner, Select, SelectOption, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
+import type { YAxisOptions } from 'highcharts'
 import { useStrings } from 'framework/strings'
 import { StackedColumnChart } from '@common/components/StackedColumnChart/StackedColumnChart'
 import { useMutateAsGet } from '@common/hooks'
 import { useGetLicenseDateUsage, ModuleLicenseDTO, CDModuleLicenseDTO } from 'services/cd-ng'
 import { CDLicenseType } from '@common/constants/SubscriptionTypes'
 import pageCss from '../SubscriptionsPage.module.scss'
-import type { YAxisOptions } from 'highcharts'
 
 interface ServiceLicenseGraphsProps {
   accountId: string
