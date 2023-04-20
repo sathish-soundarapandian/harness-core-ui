@@ -27,15 +27,21 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const [pipelineConfigPanelView, setPipelineConfigPanelView] = useState<PipelineConfigPanelView>(
     PipelineConfigPanelView.Options
   )
-  const [breadCrumbs, setBreadCrumbs] = useState<IBreadcrumbProps[]>([
+  const initialBreadCrumbs = [
     {
       text: capitalize(StudioEntity.Pipeline),
       onClick: () => {
         setSelectedConfigOption(undefined)
         setPipelineConfigPanelView(PipelineConfigPanelView.Options)
+        resetBreadCrumbs()
       }
     }
-  ])
+  ]
+  const [breadCrumbs, setBreadCrumbs] = useState<IBreadcrumbProps[]>(initialBreadCrumbs)
+
+  const resetBreadCrumbs = useCallback((): void => {
+    setBreadCrumbs(initialBreadCrumbs)
+  }, [])
 
   const updateBreadCrumbs = useCallback(
     ({
@@ -59,11 +65,12 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
                   entity: selectedEntity,
                   entityDetails: selectedEntityDetails
                 })
-                setPipelineConfigPanelView(
-                  selectedEntity === StudioEntity.Pipeline
-                    ? PipelineConfigPanelView.Options
-                    : PipelineConfigPanelView.ConfigureOption
-                )
+                if (selectedEntity === StudioEntity.Pipeline) {
+                  resetBreadCrumbs()
+                  setPipelineConfigPanelView(PipelineConfigPanelView.Options)
+                } else {
+                  setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)
+                }
               }
             }
           ]
