@@ -21,7 +21,7 @@ actions:
   pause: Pause
   resume: Resume
 resourceLabel:
-  nodeExecution: Node Execution
+  pipelineExecution: Pipeline Execution
 emptyStateMessageTitle: No records were found to match your search
 emptyStateMessage: Please try to modify your search criteria.
 externalDataText: Export data to external applications via our

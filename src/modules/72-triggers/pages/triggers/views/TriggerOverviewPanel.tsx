@@ -9,7 +9,11 @@ import React from 'react'
 import { HarnessDocTooltip, Layout, Text, PageSpinner } from '@harness/uicore'
 import cx from 'classnames'
 import { NameIdDescriptionTags } from '@common/components'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import { useStrings } from 'framework/strings'
+import StageSelection from '@triggers/components/StageSelection/StageSelection'
+
 import css from './TriggerOverviewPanel.module.scss'
 
 export interface TriggerOverviewPanelPropsInterface {
@@ -25,6 +29,7 @@ const TriggerOverviewPanel: React.FC<TriggerOverviewPanelPropsInterface> = ({
     values: { originalPipeline, pipeline }
   } = formikProps
   const { getString } = useStrings()
+  const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
   // originalPipeline for new, pipeline for onEdit
   const hasLoadedPipeline = originalPipeline || pipeline
   return (
@@ -52,6 +57,8 @@ const TriggerOverviewPanel: React.FC<TriggerOverviewPanelPropsInterface> = ({
           }}
         />
       </Layout.Vertical>
+
+      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION ? <StageSelection formikProps={formikProps} /> : null}
     </Layout.Vertical>
   )
 }

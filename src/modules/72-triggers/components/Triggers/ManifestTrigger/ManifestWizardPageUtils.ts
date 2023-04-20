@@ -615,6 +615,7 @@ export const getArtifactManifestTriggerYaml = ({
     name,
     identifier,
     description,
+    stagesToExecute,
     tags,
     pipeline: pipelineRuntimeInput,
     triggerType: formikValueTriggerType,
@@ -635,7 +636,7 @@ export const getArtifactManifestTriggerYaml = ({
 
   replaceRunTimeVariables({ manifestType, artifactType, selectedArtifact })
   let newPipeline = cloneDeep(pipelineRuntimeInput)
-  const newPipelineObj = newPipeline.template ? newPipeline.template.templateInputs : newPipeline
+  const newPipelineObj = newPipeline?.template ? newPipeline?.template?.templateInputs : newPipeline
   const filteredStage = newPipelineObj.stages?.find((item: any) => item.stage?.identifier === stageId)
   if (manifestType) {
     replaceStageManifests({ filteredStage, selectedArtifact })
@@ -654,6 +655,7 @@ export const getArtifactManifestTriggerYaml = ({
   const triggerYaml: NGTriggerConfigV2 = {
     name,
     identifier,
+    stagesToExecute,
     enabled: enabledStatus,
     description,
     tags,

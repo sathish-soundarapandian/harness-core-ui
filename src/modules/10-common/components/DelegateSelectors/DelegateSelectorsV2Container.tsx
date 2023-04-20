@@ -35,7 +35,8 @@ export const DelegateSelectorsV2Container = (props: DelegateSelectorsV2Container
     onTagInputChange = noop,
     wrapperClassName,
     placeholder,
-    selectedItems
+    selectedItems,
+    readonly
   } = props
 
   const { getString } = useStrings()
@@ -86,6 +87,7 @@ export const DelegateSelectorsV2Container = (props: DelegateSelectorsV2Container
           placeholder={placeholder}
           onTagInputChange={onTagInputChange}
           selectedItems={selectedItems}
+          readonly={readonly}
         />
       )}
     </div>

@@ -371,12 +371,12 @@ AuditTrailFactory.registerResourceHandler('TRIGGER', {
   }
 })
 
-AuditTrailFactory.registerResourceHandler('NODE_EXECUTION', {
+AuditTrailFactory.registerResourceHandler('PIPELINE_EXECUTION', {
   moduleIcon: {
     name: 'cd-main'
   },
   moduleLabel: cdLabel,
-  resourceLabel: 'auditTrail.resourceLabel.nodeExecution',
+  resourceLabel: 'auditTrail.resourceLabel.pipelineExecution',
   resourceUrl: (
     _resource: ResourceDTO,
     resourceScope: ResourceScope,

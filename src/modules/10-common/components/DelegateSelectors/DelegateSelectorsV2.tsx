@@ -42,6 +42,7 @@ export interface DelegateSelectorsV2Props
   wrapperClassName?: string
   onTagInputChange?: (tags: string[]) => void
   data: DelegateSelector[]
+  readonly?: boolean
 }
 
 const mapSelectedData = (delegateSelectors: DelegateSelector[], selectedItems: string[]) => {
@@ -51,7 +52,7 @@ const mapSelectedData = (delegateSelectors: DelegateSelector[], selectedItems: s
 }
 
 export const DelegateSelectorsV2 = (props: DelegateSelectorsV2Props): React.ReactElement | null => {
-  const { onTagInputChange = noop, placeholder, selectedItems, data } = props
+  const { onTagInputChange = noop, placeholder, selectedItems, data, readonly } = props
 
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -203,6 +204,7 @@ export const DelegateSelectorsV2 = (props: DelegateSelectorsV2Props): React.Reac
       }}
       tagRenderer={item => item.name}
       tagInputProps={{
+        disabled: readonly,
         onRemove: (item: string) => {
           removeSelectedTag(item)
           onTagInputChange(transformToTagList())

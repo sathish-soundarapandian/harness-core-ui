@@ -80,7 +80,6 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
@@ -151,7 +150,6 @@ function RunPipelineFormBasic({
   executionIdentifier,
   isDebugMode
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
-  const { FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } = useFeatureFlags()
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState<boolean>(false)
@@ -715,8 +713,7 @@ function RunPipelineFormBasic({
             resolvedPipeline: resolvedMergedPipeline,
             getString,
             viewType: StepViewType.DeploymentForm,
-            selectedStageData: selectedStages,
-            isOptionalVariableAllowed
+            selectedStageData: selectedStages
           }) as any) || formErrors
         resolve(validatedErrors)
       })

@@ -39,7 +39,7 @@ const renderComponent = (props?: Partial<AllEnvironmentsFlagsListingProps>): Ren
 
 describe('AllEnvironmentsFlagsListing', () => {
   beforeAll(() => {
-    jest.spyOn(cfServices, 'useGetAllEnvironmentsFlags').mockReturnValue({
+    jest.spyOn(cfServices, 'useGetProjectFlags').mockReturnValue({
       loading: false,
       data: mockAllEnvsFlags,
       refetch: jest.fn(),

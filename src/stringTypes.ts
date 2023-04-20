@@ -572,6 +572,7 @@ export interface StringsMap {
   'common.modified': string
   'common.module.cd': string
   'common.module.ce': string
+  'common.module.cet': string
   'common.module.cf': string
   'common.module.chaos': string
   'common.module.ci': string
@@ -1592,6 +1593,8 @@ export interface StringsMap {
   'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
+  'defaultSettings.enableNodeExecutionAuditEvents': string
+  'defaultSettings.enforceGitExperience': string
   'defaultSettings.harnessDefault': string
   'defaultSettings.inheritedFrom': string
   'defaultSettings.mandateAuthorizationForCustomWebhookTriggers': string
@@ -3210,7 +3213,7 @@ export interface StringsMap {
   'auditTrail.logStreaming.streamingDestinationCreated': string
   'auditTrail.logStreaming.streamingDestinationSaved': string
   'auditTrail.noYamlDifference': string
-  'auditTrail.resourceLabel.nodeExecution': string
+  'auditTrail.resourceLabel.pipelineExecution': string
   'auditTrail.resourceNameLabel': string
   'auditTrail.streamingDestination': string
   'auditTrail.streamingDestinations': string
@@ -5252,6 +5255,7 @@ export interface StringsMap {
   'triggers.schedulePanel.weeklyTabTitle': string
   'triggers.schedulePanel.yearlyTabTitle': string
   'triggers.scheduledLabel': string
+  'triggers.selectStagesToExecute': string
   'triggers.showAllTriggers': string
   'triggers.toast.existingTriggerError': string
   'triggers.toast.successfulCreate': string
@@ -5946,7 +5950,6 @@ export interface StringsMap {
   'cd.serviceDashboard.headers.infras': string
   'cd.serviceDashboard.headers.infrastructures': string
   'cd.serviceDashboard.headers.instances': string
-  'cd.serviceDashboard.headers.pipelineExecution': string
   'cd.serviceDashboard.helmChartDetails': string
   'cd.serviceDashboard.helmChartName': string
   'cd.serviceDashboard.helmRopoUrl': string

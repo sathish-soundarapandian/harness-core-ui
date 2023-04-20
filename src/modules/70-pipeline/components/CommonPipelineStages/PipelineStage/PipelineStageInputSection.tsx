@@ -58,8 +58,6 @@ import { getsMergedTemplateInputYamlPromise } from 'services/template-ng'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { AcceptableValue } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { PipelineStageTabs } from './utils'
@@ -121,7 +119,6 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   const isChildPipBuildRuntime = useRef<boolean>(true)
   const { getString } = useStrings()
   const { setPipeline: updatePipelineInVariablesContext, selectedInputSetsContext } = usePipelineVariables()
-  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const [existingProvide, setExistingProvide] = useState<ExistingProvide>('existing')
   const [inputTabFormValues, setInputTabFormValues] = React.useState<PipelineInfoConfig | undefined>(
     {} as PipelineInfoConfig
@@ -297,8 +294,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
             resolvedPipeline,
             getString,
             viewType: StepViewType.DeploymentForm,
-            viewTypeMetadata: { isInputSet: true },
-            isOptionalVariableAllowed
+            viewTypeMetadata: { isInputSet: true }
           }) as any) || formErrors
         resolve(validatedErrors)
       })

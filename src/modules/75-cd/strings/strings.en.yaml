@@ -365,7 +365,6 @@ serviceDashboard:
     infras: Infras
     clusters: '{{$.common.clusters}}'
     instances: '{{$.instanceFieldOptions.instances}}'
-    pipelineExecution: Pipeline Execution
   pod: pod
   function: function
   deployedAt: Deployed At

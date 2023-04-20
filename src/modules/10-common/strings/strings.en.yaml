@@ -810,6 +810,7 @@ module:
   sto: STO
   governance: POLICY ENGINE
   code: CODE
+  cet: CET
 templateServiceLabel: Template Service
 customPricing: for Custom Pricing
 specified: Specified

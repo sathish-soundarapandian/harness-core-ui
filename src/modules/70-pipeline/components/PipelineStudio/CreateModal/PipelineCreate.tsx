@@ -66,12 +66,12 @@ export interface PipelineCreateProps {
   gitDetails?: IGitContextFormProps
   primaryButtonText: string
   isReadonly: boolean
+  isGitXEnforced?: boolean
 }
-
-const defaultStoreType = StoreType.INLINE
 
 export default function CreatePipelines({
   afterSave,
+  isGitXEnforced,
   initialValues = {
     identifier: DefaultNewPipelineId,
     name: '',
@@ -79,7 +79,7 @@ export default function CreatePipelines({
     tags: {},
     repo: '',
     branch: '',
-    storeType: defaultStoreType,
+    storeType: isGitXEnforced ? StoreType.REMOTE : StoreType.INLINE,
     stages: [],
     connectorRef: ''
   },
@@ -90,7 +90,8 @@ export default function CreatePipelines({
 }: PipelineCreateProps): JSX.Element {
   const { getString } = useStrings()
   const { pipelineIdentifier } = useParams<{ pipelineIdentifier: string }>()
-  const { storeType: storeTypeParam = StoreType.INLINE } = useQueryParams<GitQueryParams>()
+  const { storeType: storeTypeParam = isGitXEnforced ? StoreType.REMOTE : StoreType.INLINE } =
+    useQueryParams<GitQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams()
   const { isGitSyncEnabled, gitSyncEnabledOnlyForFF, supportingGitSimplification } = useAppStore()
   const oldGitSyncEnabled = isGitSyncEnabled && !gitSyncEnabledOnlyForFF
@@ -137,7 +138,7 @@ export default function CreatePipelines({
     if (!isEdit) {
       // Intitially setting INLINE storeType in queryParam forGitX
       if (supportingGitSimplification && initialValues?.identifier === DefaultNewPipelineId) {
-        updateQueryParams({ storeType: defaultStoreType })
+        updateQueryParams({ storeType: initialValues.storeType as string })
       }
       trackEvent(PipelineActions.LoadCreateNewPipeline, {
         category: Category.PIPELINE
@@ -211,9 +212,11 @@ export default function CreatePipelines({
                 <InlineRemoteSelect
                   className={css.pipelineCardWrapper}
                   selected={storeTypeParam}
-                  getCardDisabledStatus={(current, selected) =>
-                    pipelineIdentifier !== DefaultNewPipelineId && current !== selected
-                  }
+                  getCardDisabledStatus={(current, selected) => {
+                    return pipelineIdentifier !== DefaultNewPipelineId
+                      ? current !== selected
+                      : Boolean(isGitXEnforced && current === StoreType.INLINE)
+                  }}
                   onChange={item => {
                     if (pipelineIdentifier === DefaultNewPipelineId) {
                       formikProps?.setFieldValue('storeType', item.type)

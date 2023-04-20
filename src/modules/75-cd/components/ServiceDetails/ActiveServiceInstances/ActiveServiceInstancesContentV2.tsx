@@ -642,7 +642,7 @@ export const ActiveServiceInstancesContentV2 = (
 
     if (tableType != TableType.PREVIEW) {
       columnsArray.push({
-        Header: getString('cd.serviceDashboard.headers.pipelineExecution'),
+        Header: getString('auditTrail.resourceLabel.pipelineExecution'),
         id: 'pipeline',
         width: columnsProperties.pipelines.width[tableType],
         Cell: RenderPipelineExecution

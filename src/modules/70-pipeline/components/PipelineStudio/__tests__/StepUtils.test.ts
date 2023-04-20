@@ -243,30 +243,17 @@ describe('Test StepUtils', () => {
       template: templatePipelineWithVariables as unknown as PipelineInfoConfig,
       resolvedPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
       viewType: StepViewType.DeploymentForm,
-      isOptionalVariableAllowed: true,
       getString
     })
     expect(has(errors, 'variables')).toBeFalsy()
   })
-  test('Test validatePipeline method without optional variable support', () => {
-    const errors = validatePipeline({
-      pipeline: pipelineWithVariables as unknown as PipelineInfoConfig,
-      originalPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
-      template: templatePipelineWithVariables as unknown as PipelineInfoConfig,
-      resolvedPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
-      viewType: StepViewType.DeploymentForm,
-      isOptionalVariableAllowed: false,
-      getString
-    })
-    expect(has(errors, 'variables')).toBeTruthy()
-  })
+
   test('Test validateStage method with optional variable support', () => {
     const errors = validateStage({
       stage: stageWithVariables as unknown as StageElementConfig,
       template: templateStageWithVariables as unknown as StageElementConfig,
       originalStage: originalStageWithVariables as StageElementConfig,
       viewType: StepViewType.InputSet,
-      isOptionalVariableAllowed: true,
       getString
     })
     expect(has(errors, 'variables')).toBeFalsy()

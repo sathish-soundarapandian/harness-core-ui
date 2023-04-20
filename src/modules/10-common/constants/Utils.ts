@@ -81,5 +81,6 @@ export enum SettingType {
   STAGE_TIMEOUT = 'stage_timeout',
   STEP_TIMEOUT = 'step_timeout',
   CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS = 'concurrent_active_pipeline_executions',
-  ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY = 'allow_user_to_mark_step_as_failed_explicitly'
+  ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY = 'allow_user_to_mark_step_as_failed_explicitly',
+  ENABLE_NODE_EXECUTION_AUDIT_EVENTS = 'enable_node_execution_audit_events'
 }

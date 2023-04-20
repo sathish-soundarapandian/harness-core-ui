@@ -127,8 +127,7 @@ export default function WebhookTriggerWizard(
   props: TriggerProps<any> & { children: JSX.Element[] }
 ): React.ReactElement {
   const { isNewTrigger, baseType, triggerData, type: sourceRepo } = props
-  const { CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled, FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } =
-    useFeatureFlags()
+  const { CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled } = useFeatureFlags()
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [selectedView, setSelectedView] = useTriggerView(isNewTrigger)
@@ -330,7 +329,7 @@ export default function WebhookTriggerWizard(
   })
 
   const getInitialValues = (): FlatInitialValuesInterface => {
-    let newPipeline = { ...(currentPipeline?.pipeline || {}) }
+    let newPipeline: any = { ...(currentPipeline?.pipeline || {}) }
     // only applied for CI, Not cloned codebase
     if (
       newPipeline?.template?.templateInputs &&
@@ -355,6 +354,7 @@ export default function WebhookTriggerWizard(
       resolvedPipeline: resolvedMergedPipeline,
       anyAction: false,
       autoAbortPreviousExecutions: false,
+      stagesToExecute: newPipeline?.stagesToExecute,
       pipelineBranchName: getDefaultPipelineReferenceBranch(baseType) || branch,
       // setDefaultValue only when polling is enabled and for Github Webhook Trigger
       ...(isGitWebhookPollingEnabled &&
@@ -809,6 +809,7 @@ export default function WebhookTriggerWizard(
       name = '',
       identifier,
       description = '',
+      stagesToExecute,
       tags,
       pipeline: pipelineRuntimeInput,
       sourceRepo: formikValueSourceRepo,
@@ -961,6 +962,7 @@ export default function WebhookTriggerWizard(
         name,
         identifier,
         enabled: enabledStatus,
+        stagesToExecute,
         description,
         tags,
         orgIdentifier,
@@ -1132,8 +1134,7 @@ export default function WebhookTriggerWizard(
                 resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
-                viewTypeMetadata: { isTrigger: true },
-                isOptionalVariableAllowed
+                viewTypeMetadata: { isTrigger: true }
               }) as any) || formErrors
             resolve(validatedErrors)
           } catch (e) {

@@ -34,8 +34,9 @@ import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfi
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ArtifactConnectorLabelMap, ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '../ArtifactHelper'
+import { ArtifactConnectorLabelMap, ArtifactToConnectorMap } from '../ArtifactHelper'
 import type { ArtifactType, InitialArtifactDataType } from '../ArtifactInterface'
+import { getConnectorListVersionQueryParam } from '../ArtifactUtils'
 import css from './ArtifactConnector.module.scss'
 
 interface ArtifactConnectorProps {
@@ -96,24 +97,7 @@ export function ArtifactConnector(props: StepProps<ConnectorConfigDTO> & Artifac
     return initialValues
   }, [initialValues, prevStepData?.connectorId])
 
-  const getVersion = (): string => {
-    switch (selectedArtifact) {
-      case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
-        return '3.x'
-      case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
-        return '2.x'
-      default:
-        return ''
-    }
-  }
-
-  const additionalProps =
-    selectedArtifact === ENABLED_ARTIFACT_TYPES.Nexus3Registry ||
-    selectedArtifact === ENABLED_ARTIFACT_TYPES.Nexus2Registry
-      ? {
-          version: getVersion()
-        }
-      : {}
+  const connectorVersionQueryParamProp = getConnectorListVersionQueryParam(selectedArtifact) || {}
 
   return (
     <Layout.Vertical spacing="xxlarge" className={css.firstep}>
@@ -157,7 +141,7 @@ export function ArtifactConnector(props: StepProps<ConnectorConfigDTO> & Artifac
                   enableConfigureOptions={false}
                   selected={formik?.values?.connectorId}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-                  {...additionalProps}
+                  {...connectorVersionQueryParamProp}
                 />
                 {getMultiTypeFromValue(formik.values.connectorId) === MultiTypeInputType.RUNTIME ? (
                   <ConnectorConfigureOptions

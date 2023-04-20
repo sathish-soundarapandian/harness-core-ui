@@ -71,6 +71,13 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.MANDATE_CUSTOM_WEBHOOK
   settingCategory: 'PMS'
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_NODE_EXECUTION_AUDIT_EVENTS, {
+  label: 'defaultSettings.enableNodeExecutionAuditEvents',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'PMS'
+})
+
 DefaultSettingsFactory.registerSettingHandler(SettingType.ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY, {
   label: 'defaultSettings.allowUserToMarkStepAsFailedExplicitly',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
@@ -86,6 +93,13 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_GIT_COMMANDS, {
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS, {
   label: 'defaultSettings.allowDifferentRepoForInputSets',
+  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'GIT_EXPERIENCE'
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENFORCE_GIT_EXPERIENCE, {
+  label: 'defaultSettings.enforceGitExperience',
   settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
   yupValidation: Yup.boolean(),
   settingCategory: 'GIT_EXPERIENCE'

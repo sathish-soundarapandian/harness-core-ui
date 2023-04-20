@@ -34,9 +34,7 @@ import { useMutateAsGet, useQueryParams } from '@common/hooks'
 
 import {
   ConnectorConfigDTO,
-  BuildDetails,
   useGetPlansKey,
-  useGetBuildsForBamboo,
   useGetArtifactPathsForBamboo,
   BambooPlanNames,
   Failure
@@ -62,7 +60,6 @@ function FormComponent(
   const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
   const [errText, setPlanErrText] = useState<GetDataError<Failure | Error> | null>(null)
   const [artifactPaths, setFilePath] = useState<SelectOption[]>([])
-  const [builds, setBambooBuilds] = useState<SelectOption[]>([])
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -96,23 +93,6 @@ function FormComponent(
   } = useMutateAsGet(useGetArtifactPathsForBamboo, {
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue?.toString(),
-
-      planName: planNameValue
-    },
-    lazy: true,
-    body: {}
-  })
-
-  const {
-    refetch: refetchBambooBuild,
-    data: bambooBuildResponse,
-    loading: fetchingBuild,
-    error: buildError
-  } = useMutateAsGet(useGetBuildsForBamboo, {
-    queryParams: {
-      ...commonParams,
-
       connectorRef: connectorRefValue?.toString(),
 
       planName: planNameValue
@@ -155,21 +135,6 @@ function FormComponent(
   }, [plansError])
 
   useEffect(() => {
-    const bambooArtifactRes = get(bambooBuildResponse, 'data', [])
-    if (bambooArtifactRes) {
-      const bambooBuildResponseFormatted: MultiSelectOption[] = (bambooArtifactRes || [])?.map(
-        (jenkinsBuild: BuildDetails) => {
-          return {
-            label: jenkinsBuild.uiDisplayName,
-            value: jenkinsBuild.number
-          } as MultiSelectOption
-        }
-      )
-      setBambooBuilds(bambooBuildResponseFormatted)
-    }
-  }, [bambooBuildResponse])
-
-  useEffect(() => {
     const planKeys = get(plansResponse, 'data.planKeys', [])
     if (planKeys) {
       const planOptions: SelectOption[] = (planKeys || [])?.map((plan: BambooPlanNames) => {
@@ -193,10 +158,6 @@ function FormComponent(
 
   const planPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={loadingPlans} />
-  ))
-
-  const buildItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
-    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingBuild} />
   ))
 
   const onFocus = (e: React.FocusEvent<HTMLInputElement>, callBack: CallableFunction) => {
@@ -259,37 +220,6 @@ function FormComponent(
             multiSelectTypeInputProps={{
               allowableTypes: [MultiTypeInputType.FIXED]
             }}
-          />
-        </div>
-        <div className={css.imagePathContainer}>
-          <FormInput.MultiTypeInput
-            label={getString('pipeline.bambooBuilds')}
-            name="spec.build"
-            useValue
-            placeholder={fetchingBuild ? getString('loading') : getString('pipeline.selectBambooBuildsPlaceholder')}
-            multiTypeInputProps={{
-              /* istanbul ignore next */
-              onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.build', type),
-
-              selectProps: {
-                allowCreatingNewItems: true,
-                items: defaultTo(builds, []),
-                loadingItems: fetchingBuild,
-                itemRenderer: buildItemRenderer,
-                noResults: (
-                  <NoTagResults
-                    tagError={buildError}
-                    isServerlessDeploymentTypeSelected={false}
-                    defaultErrorText={fetchingBuild ? getString('loading') : getString('common.filters.noResultsFound')}
-                  />
-                )
-              },
-              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                onFocus(e, refetchBambooBuild)
-              },
-              allowableTypes: [MultiTypeInputType.FIXED]
-            }}
-            selectItems={builds || []}
           />
         </div>
       </div>

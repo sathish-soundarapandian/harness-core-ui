@@ -12,6 +12,8 @@ import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 
 import { NameIdDescriptionTags } from '@common/components'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import StageSelection from '../../StageSelection/StageSelection'
 
 import css from './TriggerOverviewPanel.module.scss'
 
@@ -28,6 +30,8 @@ const TriggerOverviewPanel: React.FC<TriggerOverviewPanelPropsInterface> = ({
     values: { originalPipeline, pipeline }
   } = formikProps
   const { getString } = useStrings()
+  const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
+
   // originalPipeline for new, pipeline for onEdit
   const hasLoadedPipeline = originalPipeline || pipeline
   return (
@@ -55,6 +59,8 @@ const TriggerOverviewPanel: React.FC<TriggerOverviewPanelPropsInterface> = ({
           }}
         />
       </Layout.Vertical>
+
+      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION ? <StageSelection formikProps={formikProps} /> : null}
     </Layout.Vertical>
   )
 }

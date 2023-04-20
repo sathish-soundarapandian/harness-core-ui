@@ -9,7 +9,7 @@ import type { Schema } from 'yup'
 import type { IconName, SelectOption } from '@harness/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
-import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
+import { IdentifierSchemaWithOutName, NameSchema } from '@common/utils/Validation'
 import { Connectors } from '@connectors/constants'
 import type { ArtifactSource, ConnectorInfoDTO, PrimaryArtifact, ServiceDefinition } from 'services/cd-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
@@ -346,7 +346,7 @@ export const ArtifactIdentifierValidation = (
     }
   }
   return {
-    identifier: IdentifierSchemaWithOutName(getString, { requiredErrorMsg, regexErrorMsg })
+    identifier: NameSchema(getString, { requiredErrorMsg })
   }
 }
 

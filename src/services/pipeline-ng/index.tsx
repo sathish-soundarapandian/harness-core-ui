@@ -3279,6 +3279,7 @@ export interface NGTriggerConfigV2 {
   pipelineIdentifier?: string
   projectIdentifier?: string
   source?: NGTriggerSourceV2
+  stagesToExecute?: string[]
   tags?: {
     [key: string]: string
   }
@@ -3365,6 +3366,7 @@ export interface NGTriggerResponse {
   name?: string
   orgIdentifier?: string
   projectIdentifier?: string
+  stagesToExecute?: string[]
   targetIdentifier?: string
   type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled'
   yaml?: string
@@ -3992,6 +3994,8 @@ export interface PipelineOpaEvaluationContext {
 export type PipelineRollbackFailureActionConfig = FailureStrategyActionConfig & {
   type: 'PipelineRollback'
 }
+
+export type PipelineRollbackStageConfig = StageInfoConfig & {}
 
 export interface PipelineSaveResponse {
   governanceMetadata?: GovernanceMetadata
@@ -16802,6 +16806,9 @@ export interface GetSchemaYamlQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   projectIdentifier?: string
@@ -17109,6 +17116,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   scope?: 'account' | 'org' | 'project' | 'unknown'

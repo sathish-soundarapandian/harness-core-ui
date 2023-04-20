@@ -6,14 +6,14 @@
  */
 
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { ButtonVariation, FormikForm, getErrorInfoFromErrorObject, Layout, useToaster } from '@harness/uicore'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 
 import ScopedTitle from '@common/components/Title/ScopedTitle'
-import { Page } from '@common/exports'
+import { NavigationCheck, Page } from '@common/exports'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useStrings } from 'framework/strings'
@@ -112,8 +112,16 @@ const SettingsList = () => {
     updateValidationScheme({ ...validationScheme, ...val })
   }
 
+  const history = useHistory()
   return (
     <>
+      <NavigationCheck
+        when={true}
+        shouldBlockNavigation={() => !!changedSettings.size}
+        navigate={newPath => {
+          history.push(newPath)
+        }}
+      />
       {hasRBACViewPermission ? (
         <Formik
           formName="defaultSettingsForm"

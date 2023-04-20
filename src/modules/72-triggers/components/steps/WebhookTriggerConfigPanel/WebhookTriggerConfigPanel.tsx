@@ -12,11 +12,15 @@ import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import { useGetGitTriggerEventDetails } from 'services/pipeline-ng'
 import { NameIdDescriptionTags } from '@common/components'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import { useStrings } from 'framework/strings'
 import { getSourceRepoOptions, GitSourceProviders } from '@triggers/components/Triggers/utils'
 import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import StageSelection from '@triggers/components/StageSelection/StageSelection'
+
 import { clearEventsAndActions, getEventAndActions, renderNonCustomEventFields } from '../utils'
+
 import WebhookSecretInputWithDialog from './WebhookSecretInputWithDialog'
 import css from './WebhookTriggerConfigPanel.module.scss'
 
@@ -38,6 +42,8 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
   } = useGetGitTriggerEventDetails({
     lazy: true
   })
+
+  const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
 
   const [eventOptions, setEventOptions] = useState<SelectOption[]>([])
   const [actionsOptions, setActionsOptions] = useState<SelectOption[]>([])
@@ -149,6 +155,8 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
           {sourceRepo === GitSourceProviders.GITHUB.value && <WebhookSecretInputWithDialog formikProps={formikProps} />}
         </section>
       </div>
+
+      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION ? <StageSelection formikProps={formikProps} /> : null}
     </Layout.Vertical>
   )
 }

@@ -47,7 +47,7 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
         label: getString('cd.serviceDashboard.headers.instances')
       },
       {
-        label: getString('cd.serviceDashboard.headers.pipelineExecution')
+        label: getString('auditTrail.resourceLabel.pipelineExecution')
       }
     ]
 
