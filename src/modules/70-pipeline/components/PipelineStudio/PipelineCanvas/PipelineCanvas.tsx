@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Classes, Dialog, IDialogProps, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
 import {
@@ -13,6 +13,7 @@ import {
   ButtonVariation,
   Container,
   Layout,
+  ModalDialog,
   PageSpinner,
   SelectOption,
   useConfirmationDialog,
@@ -168,6 +169,10 @@ export function PipelineCanvas({
     yamlSchemaErrorWrapper
   } = state
 
+  const [missingServices, setMissingServices] = useState({});
+  const [missingEnvs, setMissingEnvs] = useState({});
+  const [missingInfras, setMissingInfras] = useState({});
+
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier, module } = useParams<
     PipelineType<PipelinePathProps> & GitQueryParams
@@ -178,6 +183,10 @@ export function PipelineCanvas({
   // While opeining studio from list view, selected branch can be any branch as in pipeline response
   // We also have to discard Transition url which was without branch
 
+
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+
+  
   React.useEffect(() => {
     if (
       originalPipeline?.identifier !== DefaultNewPipelineId &&
@@ -426,57 +435,44 @@ export function PipelineCanvas({
       delete (pipeline as PipelineWithGitContextFormProps).filePath
       delete (pipeline as PipelineWithGitContextFormProps).storeType
 
-      // if (updatedAiDetails) {
-        // pipeline.description = values?.aiPrompt
-      // }
-      // pipeline.description = updatedAiDetails?.aiprompt
       console.info('PipelineCanvas pipeline')
       console.info(pipeline)
-    
-        // const y = 'doe: "a deer, a female deer"\n' +
-        //           'ray: "a drop of golden sun"\n' +
-        //           'pi: 3.14159\n' +
-        //           'xmas: true\n' +
-        //           'french-hens: 3\n' +
-        //           'calling-birds:\n' +
-        //           '  - huey\n' +
-        //           '  - dewey\n' +
-        //           '  - louie\n' +
-        //           '  - fred\n' +
-        //           'xmas-fifth-day:\n' +
-        //           '  calling-birds: four\n' +
-        //           '  french-hens: 3\n' +
-        //           '  golden-rings: 5\n' +
-        //           '  partridges:\n' +
-        //           '    count: 1\n' +
-        //           '    location: "a pear tree"\n' +
-        //           'turtle-doves: two';
 
-        //           const y = 'pipeline:\n' +
-        //           '  name: rolling\n' +
-        //           '  identifier: rolling\n' +
-        //           '  projectIdentifier: Kubernetes\n' +
-        //           '  orgIdentifier: default\n' +
-        //           '  tags: {}\n' +
-        //           '  stages:\n' +
-        //           '    - stage:\n' +
-        //           '        name: test\n' +
-        //           '        identifier: test\n' +
-        //           '        description: ""\n' +
-        //           '        type: Deployment';
-        // console.info(y);
-        
+      // var data = {
+      //   yaml: 'pipeline:\n  name: asdasdad\n  identifier: asdasdad\n  projectIdentifier: Kubernetes\n  orgIdentifier: default\n  tags: {}\n  stages:\n    - stage:\n        name: Deploy\n        identifier: Deploy\n        description: ""\n        type: Deployment\n        spec:\n          deploymentType: Kubernetes\n          service:\n            serviceRef: nginx\n            serviceInputs:\n              serviceDefinition:\n                type: Kubernetes\n                spec:\n                  artifacts:\n                    primary:\n                      primaryArtifactRef: nginx\n          environment:\n            environmentRef: production\n            deployToAll: false\n            infrastructureDefinitions:\n              - identifier: prod\n          execution:\n            steps:\n              - step:\n                  type: ShellScript\n                  name: Echo Test\n                  identifier: echo_test\n                  spec:\n                    shell: Bash\n                    onDelegate: true\n                    source:\n                      type: Inline\n                      spec:\n                        script: echo test\n                    environmentVariables: []\n                    outputVariables: []\n                  timeout: 10m\n              - step:\n                  name: Rollout Deployment\n                  identifier: rolloutDeployment\n                  type: K8sRollingDeploy\n                  timeout: 10m\n                  spec:\n                    skipDryRun: false\n                    pruningEnabled: false\n            rollbackSteps:\n              - step:\n                  name: Rollback Rollout Deployment\n                  identifier: rollbackRolloutDeployment\n                  type: K8sRollingRollback\n                  timeout: 10m\n                  spec:\n                    pruningEnabled: false\n        tags: {}\n        failureStrategies:\n          - onFailure:\n              errors:\n                - AllErrors\n              action:\n                type: StageRollback\n    - stage:\n        name: Deploy 2\n        identifier: Deploy_2\n        description: ""\n        type: Deployment\n        spec:\n          deploymentType: Kubernetes\n          service:\n            serviceRef: busybox\n            serviceInputs:\n              serviceDefinition:\n                type: Kubernetes\n                spec:\n                  artifacts:\n                    primary:\n                      primaryArtifactRef: busybox\n          environment:\n            environmentRef: staging\n            deployToAll: false\n            infrastructureDefinitions:\n              - identifier: stage\n          execution:\n            steps:\n              - step:\n                  name: Rollout Deployment\n                  identifier: rolloutDeployment\n                  type: K8sRollingDeploy\n                  timeout: 10m\n                  spec:\n                    skipDryRun: false\n                    pruningEnabled: false\n            rollbackSteps:\n              - step:\n                  name: Rollback Rollout Deployment\n                  identifier: rollbackRolloutDeployment\n                  type: K8sRollingRollback\n                  timeout: 10m\n                  spec:\n                    pruningEnabled: false\n        tags: {}\n        failureStrategies:\n          - onFailure:\n              errors:\n                - AllErrors\n              action:\n                type: StageRollback',
+      //   missingServices: ['nginx', 'asd'],
+      //   missingInfra: {
+      //     production: ["prod"],
+      //     staging: ["stage"]
+      //   },
+      //   missingEnvironments: ["production", "staging"]
+      // }
+      // const parsedResponse = data;
 
-      // const y = "pipeline:\n  name: nginx\n  identifier: nginx\n  projectIdentifier: Kubernetes\n  orgIdentifier: default\n  tags: {}\n  stages:\n    - stage:\n        name: Deploy\n        identifier: Deploy\n        description: \"\"\n        type: Deployment\n        spec:\n          deploymentType: Kubernetes\n          service:\n            serviceRef: nginx\n            serviceInputs:\n              serviceDefinition:\n                type: Kubernetes\n                spec:\n                  artifacts:\n                    primary:\n                      primaryArtifactRef: nginx\n          environment:\n            environmentRef: production\n            deployToAll: false\n            infrastructureDefinitions:\n              - identifier: prod\n          execution:\n            steps:\n              - step:\n                  type: ShellScript\n                  name: ShellScript_1\n                  identifier: ShellScript_1\n                  spec:\n                    shell: Bash\n                    onDelegate: true\n                    source:\n                      type: Inline\n                      spec:\n                        script: |-\n                          echo test\n                    environmentVariables: []\n                    outputVariables: []\n                  timeout: 10m\n              - step:\n                  name: Rollout Deployment\n                  identifier: rolloutDeployment\n                  type: K8sRollingDeploy\n                  timeout: 10m\n                  spec:\n                    skipDryRun: false\n                    pruningEnabled: false\n            rollbackSteps:\n              - step:\n                  name: Rollback Rollout Deployment\n                  identifier: rollbackRolloutDeployment\n                  type: K8sRollingRollback\n                  timeout: 10m\n                  spec:\n                    pruningEnabled: false\n        tags: {}\n        failureStrategies:\n          - onFailure:\n              errors:\n                - AllErrors\n              action:\n                type: StageRollback\n    - stage:\n        name: Deploy\n        identifier: Deploy\n        description: \"\"\n        type: Deployment\n        spec:\n          deploymentType: Kubernetes\n          service:\n            serviceRef: busybox\n            serviceInputs:\n              serviceDefinition:\n                type: Kubernetes\n                spec:\n                  artifacts:\n                    primary:\n                      primaryArtifactRef: busybox\n          environment:\n            environmentRef: staging\n            deployToAll: false\n            infrastructureDefinitions:\n              - identifier: staging\n          execution:\n            steps:\n              - step:\n                  name: Rollout Deployment\n                  identifier: rolloutDeployment\n                  type: K8sRollingDeploy\n                  timeout: 10m\n                  spec:\n                    skipDryRun: false\n                    pruningEnabled: false\n            rollbackSteps:\n              - step:\n                  name: Rollback Rollout Deployment\n                  identifier: rollbackRolloutDeployment\n                  type: K8sRollingRollback\n                  timeout: 10m\n                  spec:\n                    pruningEnabled: false\n        tags: {}\n        failureStrategies:\n          - onFailure:\n              errors:\n                - AllErrors\n              action:\n                type: StageRollback";
-      // const parsedY = YAML.parse(y)
+      const parsedResponse = updatedAiDetails?.gptResponse?.data;
 
-      console.info("Unparsed response: " + updatedAiDetails?.gptResponse)
-      const parsedResponse = JSON.parse(updatedAiDetails?.gptResponse)
-      console.info("Parsed response: ")
-      console.info(parsedResponse)
+      console.info("Unparsed yaml: " + parsedResponse.yaml);
+      
+      console.info("Missing services: " + parsedResponse.missingServices);
+      setMissingServices(parsedResponse.missingServices);
+      
+      console.info("Missing envs: " + parsedResponse.missingEnvironments);
+      setMissingEnvs(parsedResponse.missingEnvironments);
+      
+      console.info("Missing infras: " + parsedResponse.missingInfra);
+      let missingInfrasArray = [];
+      Object.keys(parsedResponse.missingInfra).forEach(e => console.info('key= ' + e + ' val= ' + parsedResponse.missingInfra[e][0]));
+      for(var prop in parsedResponse.missingInfra) {
+        console.info("EnvId=" + prop);
+        for (var i in parsedResponse.missingInfra[prop]) {
+          console.info("EnvName=" + parsedResponse.missingInfra[prop][i]);
+          missingInfrasArray.push(prop + ": " + parsedResponse.missingInfra[prop][i]);
+        }
+      }
+      setMissingInfras(missingInfrasArray);
+      console.info(missingInfras) 
 
-      console.info("Unparsed yaml: " + parsedResponse.data);
-      const parsedY = YAML.parse(parsedResponse.data)
+      const parsedY = YAML.parse(parsedResponse.yaml)
       console.info("Parsed yaml: ");
       console.info(parsedY);
 
@@ -484,8 +480,6 @@ export function PipelineCanvas({
         
       updatePipeline(pipeline)
 
-
-      // updatePipeline(pipeline)
       if (currStoreMetadata?.storeType) {
         updatePipelineStoreMetadata(currStoreMetadata, gitDetails)
       }
@@ -517,6 +511,9 @@ export function PipelineCanvas({
       }
       setUseTemplate(shouldUseTemplate)
       hideModal()
+      if (missingServices || missingEnvs || missingInfras) {
+        setIsOpen(true)
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [hideModal, pipeline, updatePipeline]
@@ -850,6 +847,63 @@ export function PipelineCanvas({
             toPipelineStudio={toPipelineStudio}
             openRunPipelineModal={openRunPipelineModal}
           />
+
+            <ModalDialog
+              enforceFocus={true}
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              title="Missing Entities"
+              width={700}
+              height={500}
+              footer={
+                <Layout.Horizontal spacing="small">
+                  <Button variation={ButtonVariation.PRIMARY} onClick={() => setIsOpen(false)} text="I understand" />
+                </Layout.Horizontal>
+              }
+            >
+        <p>
+          Before you proceed with running the pipeline, please make sure that the following entities are created in your project.
+          Following entities are missing : 
+          <br />
+          {missingServices?.length > 0 && (
+            <p>
+              Services
+            <ul>
+              {missingServices.map((service, index) => (
+                <li key={index}>{service}</li>
+              ))}
+            </ul>
+            </p>
+          )}
+
+          {missingEnvs.length > 0 && (
+            <p>
+              Environments
+            <ul>
+              {missingEnvs.map((env, index) => (
+                <li key={index}>{env}</li>
+              ))}
+            </ul>
+            </p>
+          )}
+
+
+          {missingInfras.length > 0 && (
+            <p>
+              Infrastructure Definitions
+            <ul>
+              {missingInfras.map((infrastructureDefinition, index) => (
+                <li key={index}>{infrastructureDefinition}</li>
+              ))}
+            </ul>
+            </p>
+          )}
+
+          
+        </p>
+      </ModalDialog>
+          
+
           {remoteFetchError ? (
             handleFetchFailure(
               'pipeline',

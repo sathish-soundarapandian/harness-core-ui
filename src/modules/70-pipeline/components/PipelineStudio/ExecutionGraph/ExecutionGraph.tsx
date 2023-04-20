@@ -237,6 +237,9 @@ const renderAiPopover = ({
   };
   // xhr.send(formAiDetails?.aiprompt);
   xhr.send(null);
+
+  let jsonResponse = JSON.parse(resp)
+  let description = jsonResponse.data;
   
   return (
     <HoverCard>
@@ -245,7 +248,7 @@ const renderAiPopover = ({
         condition={(data as StepElementConfig)?.when?.condition}
         mode={Modes.STEP}
       /> */}
-      <div className='Tooltip--tooltipContentWrapper'>{resp}</div>
+      <div className='Tooltip--tooltipContentWrapper'>{description}</div>
     </HoverCard>
   )
 }

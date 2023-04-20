@@ -1759,6 +1759,6 @@ aiPromptForm:
   yamlAiPromptLabel: AI Prompt
   yamlAiPromptRequired: AI Prompt is required
   yamlAiPromptInvalid: YAML path should have a valid file/folder name and yaml extension
-  enterYamlAiPrompt: Enter AI Prompt
+  enterYamlAiPrompt: E.g. Setup single service deployment using Kubernetes
   useExistingYaml: Use Existing YAML
   createNewYaml: Create New YAML

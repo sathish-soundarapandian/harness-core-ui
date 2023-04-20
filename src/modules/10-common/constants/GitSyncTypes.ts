@@ -8,7 +8,8 @@
 export enum StoreType {
   INLINE = 'INLINE',
   REMOTE = 'REMOTE',
-  AI = 'AI'
+  AI = 'AI',
+  NA= 'N/A'
 }
 
 export interface StoreMetadata {

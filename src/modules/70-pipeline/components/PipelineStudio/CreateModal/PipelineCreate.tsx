@@ -5,13 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get, omit, pick } from 'lodash-es'
 import produce from 'immer'
 import * as Yup from 'yup'
-import { Container, Formik, FormikForm, Button, ButtonVariation, Text, PageSpinner } from '@harness/uicore'
+import { Container, Formik, FormikForm, Button, ButtonVariation, Text, PageSpinner, UseStringsReturn, IconName, CardSelect, Layout, Icon } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Divider } from '@blueprintjs/core'
 
@@ -30,7 +30,7 @@ import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
+import { CardInterface, InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { errorCheck } from '@common/utils/formikHelpers'
@@ -77,7 +77,7 @@ export interface PipelineCreateProps {
   isReadonly: boolean
 }
 
-const defaultStoreType = StoreType.INLINE
+const defaultStoreType = StoreType.AI
 
 export default function CreatePipelines({
   afterSave,
@@ -143,6 +143,8 @@ export default function CreatePipelines({
       : initialValues.identifier !== DefaultNewPipelineId
   }, [initialValues.identifier, supportingGitSimplification, pipelineIdentifier, isReadonly])
 
+  const [showSpinner, setShowSpinner] = useState(false);
+  
   useEffect(() => {
     if (!isEdit) {
       // Intitially setting INLINE storeType in queryParam forGitX
@@ -156,26 +158,28 @@ export default function CreatePipelines({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit])
 
-  async function getAIResponse() {
+  async function getAIResponse(pipelineId: string, pipelineName: string, accountId: string, projectId: any, orgId: any, token: string, body: any) {
+    try {
     const response = await fetch(
-      'https://api.ipify.org?format=json',
+      'http://localhost:12001/api/pipelines/generateWithAI?identifier=' + pipelineId + '&name=' + pipelineName + '&accountIdentifier=' + accountId + '&projectIdentifier=' + projectId + '&orgIdentifier=' + orgId,
+      // 'https://api.ipify.org?format=json',
       {
-        method: 'GET'
+        method: 'POST',
+        headers: {Authorization: 'Bearer ' + token},
+        body: body
       }
     );
     return await response.json();
+    } catch(error) {
+      console.error(error);
+    }
   } 
 
-
-  const [openLoadingGif, closeLoadingGif] = useModalHook(
-    () => (
-       <PageSpinner />
-  )
-  )
-  
-  const handleSubmit = (values: CreatePipelinesValue): void => {
+  console.log("SPINNER: " + showSpinner);
+  const handleSubmit = async (values: CreatePipelinesValue): Promise<void> => {
     logger.info(JSON.stringify(values))
-    openLoadingGif();
+    setShowSpinner(true)
+
     const formGitDetails =
       supportingGitSimplification && values.storeType === StoreType.REMOTE
         ? { repoName: values.repo, branch: values.branch, filePath: values.filePath }
@@ -187,28 +191,8 @@ export default function CreatePipelines({
     let token = SessionToken.getToken()
     // console.info("Token: " + token)
 
-    let resp;
-    const xhr = new XMLHttpRequest();
-    // xhr.open("GET", "https://api.ipify.org?format=json", false);
-    xhr.open("POST", "http://localhost:12001/api/pipelines/generateWithAI?identifier=" + values.identifier + "&name=" + values.name + "&accountIdentifier=kmpySmUISimoRrJL6NL73w&projectIdentifier=" + values.projectIdentifier + "&orgIdentifier=" + values.orgIdentifier, false);
-    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-    xhr.setRequestHeader('Content-Type', 'text/plain');
-    xhr.onload = (e) => {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          console.log(xhr.responseText);
-          resp = xhr.responseText;
-        } else {
-          console.error(xhr.statusText);
-        }
-      }
-    };
-    xhr.onerror = (e) => {
-      console.error(xhr.statusText);
-    };
-    xhr.send(values.aiPrompt);
-    // xhr.send(null);
-
+    let resp = await getAIResponse(values.identifier, values.name, 'kmpySmUISimoRrJL6NL73w', values.projectIdentifier, values.orgIdentifier, token, values.aiPrompt);
+    // let resp = "";
 
     console.info("Rest call response: " + resp)
 
@@ -218,7 +202,7 @@ export default function CreatePipelines({
     } : undefined
     console.info("FormAiDetails: " + formAiDetails)
 
-    closeLoadingGif();
+    setShowSpinner(false)
     afterSave?.(
       omit(values, 'storeType', 'connectorRef', 'repo', 'branch', 'filePath', 'useTemplate'),
       {
@@ -232,8 +216,14 @@ export default function CreatePipelines({
     )
   }
 
-  return (
+  return (  
     <Container className={css.pipelineCreateForm}>
+      {showSpinner && (
+      <React.Fragment>
+        <PageSpinner />
+        <div/>
+      </React.Fragment>
+    )}
       <Formik<CreatePipelinesValue>
         initialValues={newInitialValues}
         formName="pipelineCreate"
@@ -273,6 +263,7 @@ export default function CreatePipelines({
                 <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
                   {getString('pipeline.createPipeline.choosePipelineSetupHeader')}
                 </Text>
+
                 <InlineRemoteSelect
                   className={css.pipelineCardWrapper}
                   selected={storeTypeParam}
@@ -306,6 +297,7 @@ export default function CreatePipelines({
             {supportingGitSimplification ? (
               <Divider className={cx({ [css.gitSimplificationDivider]: storeTypeParam === StoreType.INLINE })} />
             ) : null}
+
 
             {!isEdit && (
               <Container padding={{ top: 'large' }}>
@@ -356,3 +348,4 @@ export default function CreatePipelines({
     </Container>
   )
 }
+

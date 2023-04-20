@@ -8,14 +8,36 @@
 .pipelineCreateForm {
   .pipelineCardWrapper {
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
 
     & > :first-child {
-      // flex: 1;
-      min-width: 16em;
+      width: 700px;
+      flex: 0 0 auto;
       & > div {
         justify-content: flex-start !important;
       }
+    }
+
+    & > :nth-child(2) {
+      flex: 1 1 auto;
+      width: 338px;
+      & > div {
+        justify-content: flex-start !important;
+      }
+    }
+
+    & > :nth-child(3) {
+      flex: 1 1 auto;
+      width: 338px;
+    }
+
+    .hide-option {
+      display: none;
+    }
+
+    .show-option {
+      display: flex;
     }
   }
 

@@ -10,8 +10,10 @@ declare const styles: {
   readonly choosePipelineSetupHeader: string
   readonly createPipelineButtons: string
   readonly gitSimplificationDivider: string
+  readonly hideOption: string
   readonly pipelineCardWrapper: string
   readonly pipelineCreateForm: string
+  readonly showOption: string
   readonly zeroMargin: string
 }
 export default styles
