@@ -53,4 +53,5 @@ export interface AzureSlotDeploymentProps<T = AzureSlotDeploymentData> {
   path?: string
   stepType?: string
   allValues?: T
+  customStepProps?: Record<string, any>
 }

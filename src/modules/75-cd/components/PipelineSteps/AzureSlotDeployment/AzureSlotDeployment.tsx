@@ -118,6 +118,7 @@ export class AzureSlotDeployment extends PipelineStep<AzureSlotDeploymentStepInf
     if (this.isTemplatizedView(stepViewType)) {
       return (
         <AzureSlotDeploymentInputSet
+          {...(customStepProps as AzureSlotDeploymentVariableStepProps)}
           initialValues={initialValues}
           allowableTypes={allowableTypes}
           allValues={inputSetData?.allValues}

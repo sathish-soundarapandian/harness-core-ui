@@ -7,14 +7,17 @@
 
 import React from 'react'
 import { isEmpty } from 'lodash-es'
+import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { FormikForm, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
+import { useGetAzureWebAppNamesV2, useGetAzureWebAppDeploymentSlotsV2 } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { AzureSlotDeploymentData, AzureSlotDeploymentProps } from './AzureSlotDeploymentInterface.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -23,9 +26,47 @@ const isRuntime = (value: string): boolean => getMultiTypeFromValue(value) === M
 export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData = AzureSlotDeploymentData>(
   props: AzureSlotDeploymentProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, allowableTypes, stepViewType } = props
+  const { inputSetData, readonly, allowableTypes, stepViewType, selectedStage } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
+  const [currentWebAppName, setCurrentWebAppName] = React.useState<string>('s')
+  const [appNames, setAppNames] = React.useState<string[]>([])
+  const [slots, setSlots] = React.useState<string[]>([])
+
+  const {
+    data: appNamesListData,
+    loading,
+    refetch: refetchAppNamesList
+  } = useGetAzureWebAppNamesV2({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      envId: selectedStage?.stage.spec.environment.environmentRef,
+      infraDefinitionId: selectedStage?.stage.spec.environment.infrastructureDefinitions?.[0]?.identifier
+    }
+  })
+
+  const {
+    data: slotsListData,
+    loading: slotsLoading,
+    refetch: refetchSlotsList
+  } = useGetAzureWebAppDeploymentSlotsV2({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier
+    }
+  })
+
+  React.useEffect(() => {
+    console.log('app names', appNamesListData)
+  }, [appNamesListData])
+
+  React.useEffect(() => {
+    console.log('props', props)
+  }, [props])
 
   return (
     <FormikForm>
