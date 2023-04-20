@@ -43,7 +43,7 @@ export class CustomIngestionStep extends PipelineStep<CustomIngestionStepData> {
   }
 
   protected type = StepType.CustomIngest
-  protected stepName = 'Configure CustomIngestion'
+  protected stepName = 'Configure Custom Ingestion'
   protected stepIcon: IconName = 'custom-ingest'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.CustomIngestion'
   protected stepPaletteVisible = false
