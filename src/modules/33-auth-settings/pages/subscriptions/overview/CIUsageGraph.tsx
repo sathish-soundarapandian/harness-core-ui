@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { Text, Layout, Card, Heading, PageSpinner, SelectOption, Container } from '@harness/uicore'
+import { Text, Layout, Card, Heading, PageSpinner, SelectOption } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { StackedColumnChart } from '@common/components/StackedColumnChart/StackedColumnChart'
@@ -15,43 +15,13 @@ import type { ModuleLicenseDTO, CIModuleLicenseDTO } from 'services/cd-ng'
 import { useGetLicenseHistoryUsage } from 'services/ci'
 import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
+import { SummaryCardData, getSummaryCardRenderers } from './ServiceLicenseGraphs'
 import pageCss from '../SubscriptionsPage.module.scss'
 
 interface CIUsageGraphProps {
   accountId: string
   licenseType: 'SERVICES' | 'SERVICE_INSTANCES' | undefined
   licenseData?: ModuleLicenseDTO
-}
-
-interface SummaryCardData {
-  title: string
-  count: number
-  className: string
-}
-
-const summaryCardRenderer = (cardData: SummaryCardData): JSX.Element => {
-  return (
-    <Container className={pageCss.summaryCard} key={cardData.title}>
-      <Text font={{ size: 'medium' }} color={Color.GREY_700} className={pageCss.cardTitle}>
-        {cardData.title}
-      </Text>
-
-      <Layout.Horizontal className={pageCss.frequencyContainer}>
-        <div className={cardData.className}></div>
-        <Text color={Color.BLACK} font={{ size: 'large', weight: 'bold' }} className={pageCss.frequencyCount}>
-          {cardData.count}
-        </Text>
-      </Layout.Horizontal>
-    </Container>
-  )
-}
-
-const getSummaryCardRenderers = (summaryCardsData: SummaryCardData[]): JSX.Element => {
-  return (
-    <Container className={pageCss.summaryCardsContainer}>
-      {summaryCardsData?.map(currData => summaryCardRenderer(currData))}
-    </Container>
-  )
 }
 
 const CIUsageGraph: React.FC<CIUsageGraphProps> = (props: CIUsageGraphProps) => {

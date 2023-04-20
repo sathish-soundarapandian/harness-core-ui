@@ -44,13 +44,13 @@ let filterOptions = [
   }
 ]
 
-interface SummaryCardData {
+export interface SummaryCardData {
   title: string
   count: number
   className: string
 }
 
-const summaryCardRenderer = (cardData: SummaryCardData): JSX.Element => {
+export const summaryCardRenderer = (cardData: SummaryCardData): JSX.Element => {
   return (
     <Container className={pageCss.summaryCard} key={cardData.title}>
       <Text font={{ size: 'medium' }} color={Color.GREY_700} className={pageCss.cardTitle}>
@@ -67,7 +67,7 @@ const summaryCardRenderer = (cardData: SummaryCardData): JSX.Element => {
   )
 }
 
-const getSummaryCardRenderers = (summaryCardsData: SummaryCardData[]): JSX.Element => {
+export const getSummaryCardRenderers = (summaryCardsData: SummaryCardData[]): JSX.Element => {
   return (
     <Container className={pageCss.summaryCardsContainer}>
       {summaryCardsData?.map(currData => summaryCardRenderer(currData))}
@@ -100,7 +100,7 @@ const getLast3Months = () => {
   return last3Months
 }
 
-const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props: ServiceLicenseGraphsProps) => {
+export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props: ServiceLicenseGraphsProps) => {
   const { getString } = useStrings()
   const currentDate = new Date()
   const [fetchType, setFetchType] = useState<string>('MONTHLY')
@@ -361,5 +361,3 @@ const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props: Servic
     </Card>
   )
 }
-
-export default ServiceLicenseGraphs

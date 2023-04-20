@@ -79,6 +79,13 @@ exports[`CIUsageInfo CIUsageInfo 1`] = `
              
             common.subscribed
           </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color"
+          >
+            20
+            % 
+            common.usage
+          </p>
         </div>
       </div>
     </div>
