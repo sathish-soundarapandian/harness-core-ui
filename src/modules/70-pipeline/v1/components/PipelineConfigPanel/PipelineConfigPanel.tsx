@@ -116,7 +116,9 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
     })
     return (
       <>
-        <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }}>{renderElms}</Layout.Vertical>
+        <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'medium', bottom: 'small' }}>
+          {renderElms}
+        </Layout.Vertical>
         {showMoreOptions ? null : (
           <Container
             padding={{ left: 'xlarge', top: 'small', bottom: 'medium', right: 'xlarge' }}
