@@ -124,7 +124,7 @@ function PipelineYAMLViewV1(): React.ReactElement {
         bind={setYamlHandler}
         yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
         height={'calc(100vh - 150px)'}
-        width={isEditorExpanded ? '50vw' : 'calc(100vw - 275px)'}
+        width={isEditorExpanded ? '60vw' : 'calc(100vw - 275px)'}
         onEnableEditMode={enableEditMode}
         shouldShowPluginsPanel={true}
         onEditorResize={(isExpanded: boolean) => setIsEditorExpanded(isExpanded)}
@@ -146,7 +146,7 @@ function PipelineYAMLViewV1(): React.ReactElement {
         //   selectedPluginFromYAMLView={selectedEntity}
         //   pluginAddUpdateOpnStatus={entityAddUpdateOpnStatus}
         // />
-        <Container width="34vw">
+        <Container width="24vw">
           <PipelineConfigPanel height={'calc(100vh - 150px)'} />
         </Container>
       ) : null}

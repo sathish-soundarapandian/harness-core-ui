@@ -1,10 +1,12 @@
+import React from 'react'
 import type { IconProps } from '@harness/icons'
+import { FormInput, Layout } from '@harness/uicore'
 
 export interface PipelineConfigOptionInterface {
   label: string
   iconProps: IconProps
   description: string
-  drillDown: { hasSubTypes: boolean; subTypes?: PipelineConfigOptionInterface[] }
+  drillDown: { hasSubTypes: boolean; subTypes?: PipelineConfigOptionInterface[]; nodeView?: React.ReactElement }
 }
 
 export const enum StudioEntity {
@@ -35,7 +37,20 @@ export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionIn
             label: 'Continuous Integration',
             iconProps: { name: 'ci-main', size: 25 },
             description: 'Add a CI stage',
-            drillDown: { hasSubTypes: false }
+            drillDown: {
+              hasSubTypes: false,
+              nodeView: (
+                <Layout.Vertical padding="large" spacing="xsmall">
+                  <FormInput.Text name={'name'} label={'Name'} placeholder={'stage name'} key={'name'} />
+                  <FormInput.Text
+                    name={'description'}
+                    label={'Description'}
+                    placeholder={'stage description'}
+                    key={'description'}
+                  />
+                </Layout.Vertical>
+              )
+            }
           },
           {
             label: 'Continuous Deployment',

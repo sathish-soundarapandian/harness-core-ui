@@ -38,13 +38,35 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   ])
 
   const updateBreadCrumbs = useCallback(
-    (selectedConfigOption: PipelineConfigOptionInterface): void => {
-      const { label, drillDown } = selectedConfigOption || {}
+    ({
+      entity: selectedEntity,
+      entityDetails: selectedEntityDetails
+    }: {
+      entity: StudioEntity
+      entityDetails: PipelineConfigOptionInterface
+    }): void => {
+      const { label, drillDown } = selectedEntityDetails || {}
       const { hasSubTypes } = drillDown || {}
       const breadCrumbLabel = hasSubTypes ? label : ''
       setBreadCrumbs((existingBreadCrumbs: IBreadcrumbProps[]) => {
         if (!existingBreadCrumbs.map((item: IBreadcrumbProps) => item.text).includes(breadCrumbLabel)) {
-          return [...existingBreadCrumbs, { text: breadCrumbLabel }]
+          return [
+            ...existingBreadCrumbs,
+            {
+              text: breadCrumbLabel,
+              onClick: () => {
+                setSelectedConfigOption({
+                  entity: selectedEntity,
+                  entityDetails: selectedEntityDetails
+                })
+                setPipelineConfigPanelView(
+                  selectedEntity === StudioEntity.Pipeline
+                    ? PipelineConfigPanelView.Options
+                    : PipelineConfigPanelView.ConfigureOption
+                )
+              }
+            }
+          ]
         }
         return existingBreadCrumbs
       })
@@ -56,7 +78,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
     (entity: StudioEntity, selectedConfigOption: PipelineConfigOptionInterface): void => {
       setSelectedConfigOption({ entity, entityDetails: selectedConfigOption })
       setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)
-      updateBreadCrumbs(selectedConfigOption)
+      updateBreadCrumbs({ entity, entityDetails: selectedConfigOption })
     },
     []
   )
@@ -94,7 +116,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
     })
     return (
       <>
-        <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xxxlarge' }}>{renderElms}</Layout.Vertical>
+        <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }}>{renderElms}</Layout.Vertical>
         {showMoreOptions ? null : (
           <Container
             padding={{ left: 'xlarge', top: 'small', bottom: 'medium', right: 'xlarge' }}
@@ -112,15 +134,15 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   }, [showMoreOptions])
 
   const renderPipelineConfigOptionDetails = useCallback((): React.ReactElement => {
-    const { hasSubTypes, subTypes } = selectedConfigOption?.entityDetails?.drillDown || {}
+    const { hasSubTypes, subTypes, nodeView } = selectedConfigOption?.entityDetails?.drillDown || {}
     return hasSubTypes && subTypes && !isEmpty(subTypes) ? (
-      <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xxxlarge' }}>
+      <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }}>
         {subTypes.map((subOption: PipelineConfigOptionInterface) =>
           renderPipelineConfigOption(StudioEntity.Stage, subOption)
         )}
       </Layout.Vertical>
     ) : (
-      <></>
+      <>{nodeView}</>
     )
   }, [selectedConfigOption])
 
@@ -151,7 +173,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
       default:
         return <></>
     }
-  }, [showMoreOptions, pipelineConfigPanelView])
+  }, [showMoreOptions, pipelineConfigPanelView, selectedConfigOption])
 
   return (
     <Layout.Vertical style={{ height }} width="100%">
