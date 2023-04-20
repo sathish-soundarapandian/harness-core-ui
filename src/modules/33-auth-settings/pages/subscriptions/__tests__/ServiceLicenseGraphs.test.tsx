@@ -11,7 +11,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { CDLicenseType } from '@common/constants/SubscriptionTypes'
 import { useMutateAsGet } from '@common/hooks'
 import serviceInstanceApiResponse from './mocks/serviceInstanceApiResponse.json'
-import ServiceLicenseGraphs from '../overview/ServiceLicenseGraphs'
+import { ServiceLicenseGraphs } from '../overview/ServiceLicenseGraphs'
 
 jest.mock('services/cd-ng')
 jest.mock('highcharts-react-official', () => () => <div />)
