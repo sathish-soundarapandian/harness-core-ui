@@ -204,6 +204,8 @@ const getModuleInfo = (
   }
 }
 
+const MODULES_NOT_APPLICABLE_FOR_COMMUNITY = new Set([ModuleName.CV, ModuleName.STO])
+
 const shouldBeVisible = (
   module: NavModuleName,
   featureFlags: Partial<Record<FeatureFlag, boolean>>,
@@ -211,7 +213,7 @@ const shouldBeVisible = (
   isCommunity: boolean
 ): boolean => {
   const featureFlagName = moduleInfoMap[module]?.featureFlagName
-  if (isCommunity && module === ModuleName.CV) {
+  if (isCommunity && MODULES_NOT_APPLICABLE_FOR_COMMUNITY.has(module)) {
     return false
   } else if (module === ModuleName.CV) {
     return Boolean(
