@@ -48,6 +48,18 @@ export interface ServiceLicenseTableProps {
   licenseType: string
 }
 
+export const NameHeader = (headerName: StringKeys, tooltip?: StringKeys) => {
+  const { getString } = useStrings()
+  return (
+    <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'baseline' }}>
+      <Text font={{ size: 'small' }} color={Color.GREY_700}>
+        {getString(headerName)}
+      </Text>
+      {tooltip && getInfoIcon(getString(tooltip))}
+    </Layout.Horizontal>
+  )
+}
+
 export function ServiceLicenseTable({
   data,
   gotoPage,
@@ -66,16 +78,6 @@ export function ServiceLicenseTable({
     size = DEFAULT_PAGE_SIZE
   } = data
   const [currentSort, currentOrder] = sortBy
-  const NameHeader = (headerName: StringKeys, tooltip?: StringKeys) => {
-    return (
-      <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'baseline' }}>
-        <Text font={{ size: 'small' }} color={Color.GREY_700}>
-          {getString(headerName)}
-        </Text>
-        {tooltip && getInfoIcon(getString(tooltip))}
-      </Layout.Horizontal>
-    )
-  }
 
   const columns: Column<LicenseUsageDTO>[] = React.useMemo(() => {
     const getServerSortProps = (id: string) => {

@@ -17,7 +17,7 @@ import type { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
 import type { SortBy } from './types'
 import { DeveloperNameCell, OrganizationCell, ProjectCell, LastBuildCell } from './CIusageTableCells'
 import { getInfoIcon } from './UsageInfoCard'
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './ServiceLicenseTable'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, NameHeader } from './ServiceLicenseTable'
 import pageCss from '../SubscriptionsPage.module.scss'
 
 export interface ActiveDevelopersTableCIProps {
@@ -50,19 +50,8 @@ export function ActiveDevelopersTableCI({
     size = DEFAULT_PAGE_SIZE
   } = data
   const [currentSort, currentOrder] = sortBy
-  const NameHeader = (headerName: StringKeys, tooltip?: StringKeys) => {
-    return (
-      <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'baseline' }}>
-        <Text font={{ size: 'small' }} color={Color.GREY_700}>
-          {getString(headerName)}
-        </Text>
-        {tooltip && getInfoIcon(getString(tooltip))}
-      </Layout.Horizontal>
-    )
-  }
-
   const columns: Column<LicenseUsageDTO>[] = React.useMemo(() => {
-    const getServerSortProps = (id: string) => {
+    const getServerSortPropsCITable = (id: string) => {
       return {
         enableServerSort: true,
         isServerSorted: currentSort === id,
@@ -99,7 +88,7 @@ export function ActiveDevelopersTableCI({
         accessor: 'lastBuildDate',
         width: '12%',
         Cell: LastBuildCell,
-        serverSortProps: getServerSortProps('common.lastBuildDate')
+        serverSortProps: getServerSortPropsCITable('common.lastBuildDate')
       }
     ] as unknown as Column<LicenseUsageDTO>[]
   }, [currentOrder, currentSort])
