@@ -1,6 +1,6 @@
 import React from 'react'
 import type { IconProps } from '@harness/icons'
-import { FormInput, Layout } from '@harness/uicore'
+import { FontVariation, FormInput, Layout, Text } from '@harness/uicore'
 
 export interface PipelineConfigOptionInterface {
   label: string
@@ -40,11 +40,16 @@ export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionIn
             drillDown: {
               hasSubTypes: false,
               nodeView: (
-                <Layout.Vertical padding="large" spacing="xsmall">
-                  <FormInput.Text name={'name'} label={'Name'} placeholder={'stage name'} key={'name'} />
+                <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }} spacing="xsmall">
+                  <FormInput.Text
+                    name={'name'}
+                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Name</Text>}
+                    placeholder={'stage name'}
+                    key={'name'}
+                  />
                   <FormInput.Text
                     name={'description'}
-                    label={'Description'}
+                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Description</Text>}
                     placeholder={'stage description'}
                     key={'description'}
                   />
@@ -57,6 +62,67 @@ export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionIn
             iconProps: { name: 'cd-main', size: 25 },
             description: 'Add a CD stage',
             drillDown: { hasSubTypes: false }
+          }
+        ]
+      }
+    }
+  ],
+  [
+    StudioEntity.Step,
+    {
+      label: 'Steps',
+      iconProps: { name: 'plugin-ci-step', size: 20 },
+      description: 'Add a step',
+      drillDown: {
+        hasSubTypes: true,
+        subTypes: [
+          {
+            label: 'Run Script',
+            iconProps: { name: 'run-ci-step', size: 25 },
+            description: 'Runs a shell script',
+            drillDown: {
+              hasSubTypes: false,
+              nodeView: (
+                <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }} spacing="xsmall">
+                  <FormInput.Text
+                    name={'run'}
+                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Run</Text>}
+                    placeholder={'enter command'}
+                    key={'run'}
+                  />
+                </Layout.Vertical>
+              )
+            }
+          },
+          {
+            label: 'Run a Function',
+            iconProps: { name: 'plugin-step', size: 25 },
+            description: 'Runs a pipeline function from the Harness function marketplace (slack, docker, etc)',
+            drillDown: {
+              hasSubTypes: false,
+              nodeView: (
+                <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }} spacing="xsmall">
+                  <FormInput.Text
+                    name={'uses'}
+                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Uses</Text>}
+                    placeholder={''}
+                    key={'uses'}
+                  />
+                  <FormInput.Text
+                    name={'repo'}
+                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Repo</Text>}
+                    placeholder={'enter repository'}
+                    key={'repo'}
+                  />
+                  <FormInput.Text
+                    name={'connector'}
+                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Connector</Text>}
+                    placeholder={'specify connector'}
+                    key={'connector'}
+                  />
+                </Layout.Vertical>
+              )
+            }
           }
         ]
       }

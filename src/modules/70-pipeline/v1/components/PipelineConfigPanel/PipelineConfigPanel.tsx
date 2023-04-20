@@ -94,11 +94,11 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
           className={css.configOption}
           onClick={() => onSelectConfigOption(entity, configOption)}
         >
-          <Layout.Horizontal flex>
+          <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} width="90%">
             <Icon {...iconProps} />
-            <Layout.Vertical spacing="xsmall" padding={{ left: 'large', right: 'large' }}>
+            <Layout.Vertical spacing="xsmall" padding={{ left: 'large', right: 'large' }} width="100%">
               <Text font={{ variation: FontVariation.BODY1 }}>{label}</Text>
-              <Text>{description}</Text>
+              <Text lineClamp={1}>{description}</Text>
             </Layout.Vertical>
           </Layout.Horizontal>
           <Icon name="chevron-right" />
@@ -142,7 +142,13 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         )}
       </Layout.Vertical>
     ) : (
-      <>{nodeView}</>
+      <Layout.Vertical spacing="medium">
+        {nodeView}
+        <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }} spacing="xsmall">
+          <Button text="Add" variation={ButtonVariation.PRIMARY} />
+          <Button text="Cancel" variation={ButtonVariation.SECONDARY} />
+        </Layout.Horizontal>
+      </Layout.Vertical>
     )
   }, [selectedConfigOption])
 
