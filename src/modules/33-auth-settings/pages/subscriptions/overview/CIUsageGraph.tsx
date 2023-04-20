@@ -15,7 +15,7 @@ import type { ModuleLicenseDTO, CIModuleLicenseDTO } from 'services/cd-ng'
 import { useGetLicenseHistoryUsage } from 'services/ci'
 import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
-import { SummaryCardData, getSummaryCardRenderers } from './ServiceLicenseGraphs'
+import { SummaryCardData, getSummaryCardRenderers, getYAxis, getPlotOptions, getSeries } from './ServiceLicenseGraphs'
 import pageCss from '../SubscriptionsPage.module.scss'
 
 interface CIUsageGraphProps {
@@ -123,52 +123,9 @@ const CIUsageGraph: React.FC<CIUsageGraphProps> = (props: CIUsageGraphProps) => 
         }
       }
     },
-    yAxis: {
-      min: 0,
-      max: maxValue > subscriptions ? maxValue + 1 : subscriptions + 1,
-      plotLines: [
-        {
-          color: 'var(--red-600)',
-          width: 1,
-          value: maxValue,
-          zIndex: 5,
-          dashStyle: 'Dot'
-        },
-        {
-          color: 'var(--primary-7)',
-          width: 1,
-          value: subscriptions,
-          zIndex: 5,
-          dashStyle: 'Solid'
-        }
-      ],
-      title: {
-        text: 'Developers'
-      }
-    },
-    plotOptions: {
-      column: {
-        pointPadding: 0.2,
-        borderWidth: 0
-      }
-    },
-    series: [
-      {
-        type: 'column',
-        name: 'Date',
-        data: values,
-        pointWidth: 15,
-        zones: [
-          {
-            color: 'var(--lime-400)',
-            value: subscriptions + 1
-          },
-          {
-            color: 'var(--green-900)'
-          }
-        ]
-      }
-    ]
+    yAxis: getYAxis(maxValue, subscriptions),
+    plotOptions: getPlotOptions(),
+    series: getSeries(values, subscriptions)
   }
   const updateFilters = () => {
     setOrgIdentifierSelected(orgSelected?.value as string)

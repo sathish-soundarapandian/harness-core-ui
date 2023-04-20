@@ -14,6 +14,7 @@ import { StackedColumnChart } from '@common/components/StackedColumnChart/Stacke
 import { useMutateAsGet } from '@common/hooks'
 import { useGetLicenseDateUsage, ModuleLicenseDTO, CDModuleLicenseDTO } from 'services/cd-ng'
 import { CDLicenseType } from '@common/constants/SubscriptionTypes'
+import type { YAxisOptions } from 'highcharts'
 import pageCss from '../SubscriptionsPage.module.scss'
 
 interface ServiceLicenseGraphsProps {
@@ -98,6 +99,59 @@ const getLast3Months = () => {
     last3Months.push(months[month] + ' ' + year)
   }
   return last3Months
+}
+export const getYAxis = (maxValue: number, subscriptions: number): YAxisOptions | YAxisOptions[] | undefined => {
+  return {
+    min: 0,
+    max: maxValue > subscriptions ? maxValue + 1 : subscriptions + 1,
+    plotLines: [
+      {
+        color: 'var(--red-600)',
+        width: 1,
+        value: maxValue,
+        zIndex: 5,
+        dashStyle: 'Dot'
+      },
+      {
+        color: 'var(--primary-7)',
+        width: 1,
+        value: subscriptions,
+        zIndex: 5,
+        dashStyle: 'Solid'
+      }
+    ],
+    title: {
+      text: 'Developers'
+    }
+  }
+}
+
+export const getPlotOptions = () => {
+  return {
+    column: {
+      pointPadding: 0.2,
+      borderWidth: 0
+    }
+  }
+}
+export const getSeries = (values: number[], subscriptions: number): any => {
+  return [
+    {
+      type: 'column',
+      name: 'Date',
+      data: values,
+      pointWidth: 15,
+      zones: [
+        {
+          color: 'var(--lime-400)',
+          value: subscriptions + 1
+        },
+        {
+          color: 'var(--green-900)'
+        }
+      ]
+    }
+  ]
 }
 
 export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props: ServiceLicenseGraphsProps) => {
@@ -213,52 +267,9 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
         }
       }
     },
-    yAxis: {
-      min: 0,
-      max: maxValue > subscriptions ? maxValue + 1 : subscriptions + 1,
-      plotLines: [
-        {
-          color: 'var(--red-600)',
-          width: 1,
-          value: maxValue,
-          zIndex: 5,
-          dashStyle: 'Dot'
-        },
-        {
-          color: 'var(--primary-7)',
-          width: 1,
-          value: subscriptions,
-          zIndex: 5,
-          dashStyle: 'Solid'
-        }
-      ],
-      title: {
-        text: 'Services Licenses'
-      }
-    },
-    plotOptions: {
-      column: {
-        pointPadding: 0.2,
-        borderWidth: 0
-      }
-    },
-    series: [
-      {
-        type: 'column',
-        name: 'Date',
-        data: values,
-        pointWidth: 15,
-        zones: [
-          {
-            color: 'var(--lime-400)',
-            value: subscriptions
-          },
-          {
-            color: 'var(--green-900)'
-          }
-        ]
-      }
-    ]
+    yAxis: getYAxis(maxValue, subscriptions),
+    plotOptions: getPlotOptions(),
+    series: getSeries(values, subscriptions)
   }
   const licenseType = props.licenseType
   return (
