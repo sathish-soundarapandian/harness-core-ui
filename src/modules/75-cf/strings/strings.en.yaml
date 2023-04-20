@@ -18,6 +18,7 @@ shared:
   pleaseSelectVariation: Please select a variation first.
   getStarted: '{{ $.getStarted }}'
   quickGuide: Quick Guide
+  eventViewer: Event Viewer
 messages:
   flagCreated: Flag created.
   flagUpdated: Flag updated.

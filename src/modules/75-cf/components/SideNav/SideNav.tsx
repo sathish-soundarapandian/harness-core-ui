@@ -81,6 +81,10 @@ export default function CFSideNav(): React.ReactElement {
             to={withActiveEnvironment(routes.toPipelines({ ...params, module: 'cf' }))}
           />
           <SidebarLink
+            label={getString('cf.shared.eventViewer')}
+            to={withActiveEnvironment(routes.toCFEventViewer(params))}
+          />
+          <SidebarLink
             label={getString('cf.shared.getStarted')}
             to={withActiveEnvironment(routes.toCFOnboarding(params))}
           />

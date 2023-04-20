@@ -89,6 +89,7 @@ export enum PAGE_NAME {
   CFTrialHomePage = 'CFTrialHomePage',
   FeatureFlagsLandingPage = 'FeatureFlagsLandingPage',
   FeatureFlagsDetailPage = 'FeatureFlagsDetailPage',
+  FeatureFlagsEventPage = 'FeatureFlagsEventViewer',
   TargetGroupDetailPage = 'TargetGroupDetailPage',
   SegmentDetailPage = 'SegmentDetailPage',
   TargetsPage = 'TargetsPage',

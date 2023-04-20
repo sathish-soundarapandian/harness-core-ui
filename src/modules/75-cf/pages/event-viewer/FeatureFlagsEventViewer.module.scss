@@ -1,0 +1,83 @@
+.metrics {
+  display: flex;
+  flex-direction: row;
+
+  & > div  {
+    margin-right: 20px;
+  }
+}
+
+.statusBar {
+  padding: 16px;
+  display: flex;
+  border: 1px solid #D9DAE5;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+}
+
+.eventsTable {
+  box-shadow: 0 0 0 1px #D9DAE5;
+  border-style: hidden;
+  border-radius: 4px;
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  margin-bottom: 30px;
+
+  tr {
+    border-bottom: 1px solid #D9DAE5;
+    
+    th, td {
+      text-align: left;
+      padding: 16px;
+
+      b { color: var(--primary-7); }
+      a { text-decoration: underline; }
+    }
+  }
+
+  tbody tr:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.emptyState {
+  border: 1px solid #D9DAE5;
+  border-radius: 4px;
+  padding: 32px 16px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  section {
+    /* Targets the Spinner */
+    .emptyMessage > div {
+      margin-top: 16px;
+      & > div {
+        position: static;
+        background: transparent;
+      }
+    }
+  }
+}
+
+.dialog {
+  footer {
+    position: static !important;
+  }
+}
+
+.pill {
+  background: green;
+  border-radius: 8px;
+  padding: 1px 6px;
+  color: white;
+
+  svg {
+    color: white;
+    height: 14px;
+  }
+}

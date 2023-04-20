@@ -7781,6 +7781,7 @@ export interface StringsMap {
   'cf.selectFlagsModal.searchPlaceholder': string
   'cf.shared.archived': string
   'cf.shared.evaluations': string
+  'cf.shared.eventViewer': string
   'cf.shared.flags': string
   'cf.shared.getStarted': string
   'cf.shared.lastEvaluated': string
@@ -10436,6 +10437,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   failed: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  featureFlagsEventViewerTitle: string
   /**
    * @deprecated migrate this string to module level file
    */

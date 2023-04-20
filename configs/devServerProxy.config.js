@@ -53,9 +53,13 @@ module.exports = {
     pathRewrite: { '^/cf/web': '' },
     target: process.env.FF_UI_URL || 'http://localhost:9292'
   },
+  // '/cf': {
+  //   target: targetLocalHost ? 'http://localhost:3000' : baseUrl,
+  //   pathRewrite: targetLocalHost ? { '^/cf': '/api/1.0' } : {}
+  // },
   '/cf': {
-    target: targetLocalHost ? 'http://localhost:3000' : baseUrl,
-    pathRewrite: targetLocalHost ? { '^/cf': '/api/1.0' } : {}
+    target: 'http://localhost:3000',
+    pathRewrite: { '^/cf': '/api/1.0' }
   },
   '/ciui': {
     pathRewrite: { '^/ciui': '' },

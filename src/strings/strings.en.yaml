@@ -26,6 +26,7 @@ regionLabel: 'Region'
 createdBy: 'Created by'
 ciCodebase: CI Codebase
 featureFlagsText: '{{ $.common.purpose.cf.continuous }}'
+featureFlagsEventViewerTitle: '{{ $.common.purpose.cf.continuous }} Event Viewer'
 flag: Flag
 newLabel: New
 featureNA: This feature is not available as of now

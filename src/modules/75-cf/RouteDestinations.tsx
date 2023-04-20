@@ -66,6 +66,7 @@ import { OnboardingPage } from './pages/onboarding/OnboardingPage'
 import { OnboardingDetailPage } from './pages/onboarding/OnboardingDetailPage'
 import CFTrialHomePage from './pages/home/trialPage/CFTrialHomePage'
 import FeatureFlagsLandingPage from './pages/feature-flags/FeatureFlagsLandingPage'
+import FeatureFlagsEventViewer from './pages/event-viewer/FeatureFlagsEventViewer'
 import { FFGitSyncProvider } from './contexts/ff-git-sync-context/FFGitSyncContext'
 import ConfigurePath from './pages/onboarding/ConfigurePath'
 import FFUIApp from './pages/FFUIApp/FFUIApp'
@@ -259,6 +260,16 @@ const CFRoutes: FC = () => {
       <RouteWithLayout
         licenseRedirectData={licenseRedirectData}
         sidebarProps={CFSideNavProps}
+        path={routes.toCFEventViewer({ ...accountPathProps, ...projectPathProps })}
+        exact
+        pageName={PAGE_NAME.FeatureFlagsEventPage}
+      >
+        <FeatureFlagsEventViewer />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={CFSideNavProps}
         path={routes.toCFFeatureFlagsDetail({
           ...accountPathProps,
           ...projectPathProps,
@@ -352,7 +363,7 @@ const CFRoutes: FC = () => {
         pageName={PAGE_NAME.EnvironmentsPage}
       >
         <FFGitSyncProvider>
-          {FFM_5256_FF_MFE_Environment_Listing ? <FFUIApp /> : <EnvironmentsPage />}
+          <EnvironmentsPage />
         </FFGitSyncProvider>
       </RouteWithLayout>
 
@@ -363,7 +374,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.EnvironmentDetails}
       >
-        {FFM_3959_FF_MFE_Environment_Detail ? <FFUIApp /> : <EnvironmentDetails />}
+        <EnvironmentDetails />
       </RouteWithLayout>
 
       <RouteWithLayout
