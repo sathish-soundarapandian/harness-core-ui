@@ -17,7 +17,7 @@ import type { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
 import type { SortBy } from './types'
 import { DeveloperNameCell, OrganizationCell, ProjectCell, LastBuildCell } from './CIusageTableCells'
 import { getInfoIcon } from './UsageInfoCard'
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './ServiceLicenseTable'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, tableV2 } from './ServiceLicenseTable'
 import pageCss from '../SubscriptionsPage.module.scss'
 
 export interface ActiveDevelopersTableCIProps {
@@ -155,23 +155,7 @@ export function ActiveDevelopersTableCI({
         </Layout.Horizontal>
         {servicesLoading && <PageSpinner />}
         {content.length > 0 ? (
-          <TableV2
-            className={pageCss.table}
-            columns={columns}
-            data={content}
-            pagination={
-              totalElements > size
-                ? {
-                    itemCount: totalElements,
-                    pageSize: size,
-                    pageCount: totalPages,
-                    pageIndex: number,
-                    gotoPage
-                  }
-                : undefined
-            }
-            sortable
-          />
+          tableV2(columns, content, totalElements, size, totalPages, number, gotoPage)
         ) : (
           <NoDataCard
             message={getString('common.noActiveDeveloperData')}

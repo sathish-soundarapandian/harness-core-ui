@@ -14,7 +14,12 @@ import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
 import { String, useStrings, StringKeys } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { PageActiveServiceDTO, LicenseUsageDTO, useDownloadActiveServiceCSVReport } from 'services/cd-ng'
+import {
+  PageActiveServiceDTO,
+  LicenseUsageDTO,
+  useDownloadActiveServiceCSVReport,
+  ActiveServiceDTO
+} from 'services/cd-ng'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'
 import ServiceDropdown from '@common/ServiceDropdown/ServiceDropdown'
@@ -46,6 +51,46 @@ export interface ServiceLicenseTableProps {
   ) => void
   servicesLoading: boolean
   licenseType: string
+}
+
+// export const noDataCard = (message: StringKeys) => {
+//   const { getString } = useStrings()
+//   return (
+//     <NoDataCard
+//       message={getString(message)}
+//       className={pageCss.noDataCard}
+//       containerClassName={pageCss.noDataCardContainer}
+//     />
+//   )
+// }
+export const tableV2 = (
+  columns: Column<LicenseUsageDTO>[],
+  content: ActiveServiceDTO[],
+  totalElements: number,
+  size: number,
+  totalPages: number,
+  number: number,
+  gotoPage: (pageNumber: number) => void
+) => {
+  return (
+    <TableV2
+      className={pageCss.table}
+      columns={columns}
+      data={content}
+      pagination={
+        totalElements > size
+          ? {
+              itemCount: totalElements,
+              pageSize: size,
+              pageCount: totalPages,
+              pageIndex: number,
+              gotoPage
+            }
+          : undefined
+      }
+      sortable
+    />
+  )
 }
 
 export function ServiceLicenseTable({
@@ -249,23 +294,7 @@ export function ServiceLicenseTable({
         </Layout.Horizontal>
         {servicesLoading && <PageSpinner />}
         {content.length > 0 ? (
-          <TableV2
-            className={pageCss.table}
-            columns={columns}
-            data={content}
-            pagination={
-              totalElements > size
-                ? {
-                    itemCount: totalElements,
-                    pageSize: size,
-                    pageCount: totalPages,
-                    pageIndex: number,
-                    gotoPage
-                  }
-                : undefined
-            }
-            sortable
-          />
+          tableV2(columns, content, totalElements, size, totalPages, number, gotoPage)
         ) : (
           <NoDataCard
             message={getString('common.noActiveServiceData')}
