@@ -8,13 +8,12 @@
 import React from 'react'
 import { Card } from '@harness/uicore'
 import { Tabs } from '@blueprintjs/core'
-import pageCss from '../SubscriptionsPage.module.scss'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import SubscriptionUsageView from './SubscriptionUsageView'
 import SubscriptionGraphView from './SubscriptionGraphVIew'
-
+import pageCss from '../SubscriptionsPage.module.scss'
 interface SubscriptionTabPageProps {
   module: ModuleName
   licenseData?: ModuleLicenseDTO

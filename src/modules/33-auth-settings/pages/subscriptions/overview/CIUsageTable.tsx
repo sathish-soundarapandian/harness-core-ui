@@ -7,20 +7,20 @@
 
 import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import type { SelectOption } from '@harness/uicore'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import { useCiLicenseUsage, CiLicenseUsageQueryParams } from 'services/ci'
 import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/hooks'
 import { usePreferenceStore, PreferenceScope } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
-import { ActiveDevelopersTableCI } from './ActiveDevelopersTableCI'
-import type { SelectOption } from '@harness/uicore'
 import type { ModuleName } from 'framework/types/ModuleName'
+import { ActiveDevelopersTableCI } from './ActiveDevelopersTableCI'
 
 interface CDUsageTableProps {
   module: ModuleName
   licenseData?: ModuleLicenseDTO
-  licenseType?: 'SERVICES' | 'SERVICE_INSTANCES' | undefined
+  licenseType?: 'SERVICES' | 'SERVICE_INSTANCES'
 }
 const DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT = ['lastBuild', 'DESC']
 const DEFAULT_PAGE_INDEX = 0
@@ -39,7 +39,7 @@ const queryParamOptions = {
   }
 }
 
-const CIUsageTable: React.FC<CDUsageTableProps> = props => {
+const CIUsageTable: React.FC<CDUsageTableProps> = () => {
   const { updateQueryParams } = useUpdateQueryParams<Partial<CiLicenseUsageQueryParams>>()
   const { accountId } = useParams<AccountPathProps>()
   const { preference: sortingPreference, setPreference: setSortingPreference } = usePreferenceStore<string | undefined>(

@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { Layout } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import CIUsageGraph from './CIUsageGraph'

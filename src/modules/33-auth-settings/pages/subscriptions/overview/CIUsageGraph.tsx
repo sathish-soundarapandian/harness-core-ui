@@ -105,15 +105,15 @@ const CIUsageGraph: React.FC<CIUsageGraphProps> = (props: CIUsageGraphProps) => 
     ]
   }, [maxValue])
   const usageDataObject = data?.data?.licenseUsage
-  const dataKeys = Object.keys(usageDataObject || [])
-  const dataKeysToTimestamp = dataKeys.map(id => new Date(id).getTime())
+  const dataKeysLicense = Object.keys(usageDataObject || [])
+  const dataKeysToTimestamp = dataKeysLicense.map(id => new Date(id).getTime())
   // sorting timestamp
-  const dataKeysSorted = dataKeysToTimestamp.sort((m, n) => (m > n ? 1 : -1))
+  const dataKeysSortedLicense = dataKeysToTimestamp.sort((m, n) => (m > n ? 1 : -1))
   const requiredData = usageDataObject || {}
   const sortedValues = []
-  for (let i = 0; i < dataKeysSorted.length; i++) {
-    let sortedValue = dataKeysToTimestamp[i]
-    for (let key in requiredData) {
+  for (let i = 0; i < dataKeysSortedLicense.length; i++) {
+    const sortedValue = dataKeysToTimestamp[i]
+    for (const key in requiredData) {
       if (sortedValue === new Date(key).getTime()) {
         sortedValues.push(requiredData[key])
       }

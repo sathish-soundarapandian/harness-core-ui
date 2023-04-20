@@ -8,9 +8,9 @@
 import React from 'react'
 import { Layout } from '@harness/uicore'
 import { ModuleName } from 'framework/types/ModuleName'
+import type { ModuleLicenseDTO } from 'services/cd-ng'
 import CDUsageTable from './CDUsageTable'
 import CIUsageTable from './CIUsageTable'
-import type { ModuleLicenseDTO } from 'services/cd-ng'
 
 interface SubscriptionUsageViewProps {
   module: ModuleName
