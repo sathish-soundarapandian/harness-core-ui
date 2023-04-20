@@ -20,17 +20,12 @@
       margin-top: var(--spacing-medium);
     }
   }
-  .secret-width {
-    :global(.bp3-button) {
-      width: 264px;
-    }
-  }
 
   .value-row {
     display: grid;
     align-items: center;
     height: 32px;
-    grid-template-columns: 264px 1fr;
+    grid-template-columns: 1fr auto;
     column-gap: var(--spacing-xsmall);
 
     & :global(.bp3-form-group) {
@@ -63,6 +58,7 @@
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: repeat(3, minmax(10px, 1fr));
+    gap: var(--spacing-small);
     align-items: center;
     border-bottom: solid 1px var(--grey-200);
     position: relative;
@@ -121,13 +117,10 @@
   display: grid;
   grid-auto-flow: column;
   grid-template-columns: 1fr 1fr 2fr;
+  gap: var(--spacing-small);
   align-items: center;
   margin: var(--spacing-medium) 0 var(--spacing-large) 0;
   text-transform: uppercase;
-}
-
-.descriptionRow {
-  padding-right: var(--spacing-xxlarge) !important;
 }
 
 .secret-container {
@@ -222,7 +215,7 @@
     grid-template-columns: 1fr 1fr 2fr;
     align-items: center;
     margin-top: var(--spacing-small);
-    column-gap: var(--spacing-xsmall);
+    column-gap: var(--spacing-small);
 
     & > p {
       overflow: hidden;
@@ -251,7 +244,6 @@
 }
 
 .copyTextRow {
-  width: 300px;
   margin: var(--spacing-small) 0;
 
   :global {
@@ -295,7 +287,6 @@
 .variableNameCell {
   background: var(--primary-bg) !important;
   box-sizing: border-box;
-  width: 300px;
   border-radius: var(--spacing-2);
 }
 

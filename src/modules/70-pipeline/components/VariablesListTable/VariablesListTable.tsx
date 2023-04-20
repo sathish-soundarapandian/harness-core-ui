@@ -137,12 +137,12 @@ export function VariablesListTable<T>(props: VariableListTableProps<T>): React.R
                 }}
               />
             )}
+            {/* this span is added to act as the grid column for description */}
             <span />
 
             <Text
               className={css.valueSection}
               font={{ variation: FontVariation.BODY, weight: 'semi-bold' }}
-              padding={{ left: 'medium' }}
               color={Color.BLACK_100}
               lineClamp={1}
             >

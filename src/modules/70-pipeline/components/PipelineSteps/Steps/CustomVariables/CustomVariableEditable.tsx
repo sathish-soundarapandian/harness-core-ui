@@ -15,11 +15,9 @@ import {
   useNestedAccordion,
   ButtonVariation,
   ButtonSize,
-  AllowedTypes,
-  Popover
+  AllowedTypes
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { PopoverInteractionKind } from '@blueprintjs/core'
 import { Formik, FieldArray } from 'formik'
 import { v4 as uuid } from 'uuid'
 import cx from 'classnames'
@@ -266,12 +264,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                           />
                         </Text>
                       )}
-                      <Text
-                        className={css.descriptionRow}
-                        color={Color.GREY_500}
-                        lineClamp={3}
-                        font={{ variation: FontVariation.BODY }}
-                      >
+                      <Text color={Color.GREY_500} lineClamp={3} font={{ variation: FontVariation.BODY }}>
                         {isEmpty(variable?.description) ? '-' : variable?.description}
                       </Text>
                       <div
@@ -300,16 +293,12 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                               type={[]}
                             />
                           ) : variable.type === VariableType.Secret ? (
-                            <Popover interactionKind={PopoverInteractionKind.HOVER} boundary="viewport">
-                              <div className={css.secretWidth}>
-                                <MultiTypeSecretInput
-                                  small
-                                  name={`variables[${index}].value`}
-                                  label=""
-                                  disabled={readonly}
-                                />
-                              </div>
-                            </Popover>
+                            <MultiTypeSecretInput
+                              small
+                              name={`variables[${index}].value`}
+                              label=""
+                              disabled={readonly}
+                            />
                           ) : (
                             <FormInput.MultiTextInput
                               className="variableInput"
@@ -320,7 +309,6 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                                 mini: true,
                                 defaultValueToReset: '',
                                 expressions,
-                                width: 264,
                                 btnClassName:
                                   getMultiTypeFromValue(variable.value as string) === MultiTypeInputType.RUNTIME
                                     ? css.runtimeInputButton

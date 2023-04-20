@@ -2584,7 +2584,7 @@ exports[`S3 Step InputVariable View should render properly 1`] = `
       </span>
       <span />
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
       >
         <span
@@ -2604,7 +2604,7 @@ exports[`S3 Step InputVariable View should render properly 1`] = `
       </span>
       <span />
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
       >
         <span
@@ -2624,7 +2624,7 @@ exports[`S3 Step InputVariable View should render properly 1`] = `
       </span>
       <span />
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
       >
         <span
@@ -2644,7 +2644,7 @@ exports[`S3 Step InputVariable View should render properly 1`] = `
       </span>
       <span />
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
       >
         <span
@@ -2664,7 +2664,7 @@ exports[`S3 Step InputVariable View should render properly 1`] = `
       </span>
       <span />
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
       >
         <span
@@ -2684,7 +2684,7 @@ exports[`S3 Step InputVariable View should render properly 1`] = `
       </span>
       <span />
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
       >
         <span
@@ -2704,7 +2704,7 @@ exports[`S3 Step InputVariable View should render properly 1`] = `
       </span>
       <span />
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
       >
         <span
@@ -2724,7 +2724,7 @@ exports[`S3 Step InputVariable View should render properly 1`] = `
       </span>
       <span />
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
       >
         <span
@@ -2744,7 +2744,7 @@ exports[`S3 Step InputVariable View should render properly 1`] = `
       </span>
       <span />
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
       >
         <span
@@ -2764,7 +2764,7 @@ exports[`S3 Step InputVariable View should render properly 1`] = `
       </span>
       <span />
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
       >
         <span
@@ -2784,7 +2784,7 @@ exports[`S3 Step InputVariable View should render properly 1`] = `
       </span>
       <span />
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black100"
         style="--text-line-clamp: 1;"
       >
         <span
