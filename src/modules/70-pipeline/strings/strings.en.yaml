@@ -1756,9 +1756,9 @@ frozenExecPopover:
 notGenerated: Not Generated
 notAvailable: Not Available
 aiPromptForm:
-  yamlAiPromptLabel: AI Prompt
+  yamlAiPromptLabel: Please describe your pipeline
   yamlAiPromptRequired: AI Prompt is required
   yamlAiPromptInvalid: YAML path should have a valid file/folder name and yaml extension
-  enterYamlAiPrompt: E.g. Setup single service deployment using Kubernetes
+  enterYamlAiPrompt: E.g. Create a kubernetes deployment using 'nginx' image on UAT environment
   useExistingYaml: Use Existing YAML
   createNewYaml: Create New YAML

@@ -451,32 +451,43 @@ export function PipelineCanvas({
 
       const parsedResponse = updatedAiDetails?.gptResponse?.data;
 
+      if (parsedResponse === undefined || parsedResponse.yaml === undefined) {
+        console.error("Response received is not valid. Please check previous logs");
+      }
       console.info("Unparsed yaml: " + parsedResponse.yaml);
       
       console.info("Missing services: " + parsedResponse.missingServices);
-      setMissingServices(parsedResponse.missingServices);
+      if (parsedResponse.missingServices !== undefined) {
+        setMissingServices(parsedResponse.missingServices);
+      }
       
       console.info("Missing envs: " + parsedResponse.missingEnvironments);
-      setMissingEnvs(parsedResponse.missingEnvironments);
-      
-      console.info("Missing infras: " + parsedResponse.missingInfra);
-      let missingInfrasArray = [];
-      Object.keys(parsedResponse.missingInfra).forEach(e => console.info('key= ' + e + ' val= ' + parsedResponse.missingInfra[e][0]));
-      for(var prop in parsedResponse.missingInfra) {
-        console.info("EnvId=" + prop);
-        for (var i in parsedResponse.missingInfra[prop]) {
-          console.info("EnvName=" + parsedResponse.missingInfra[prop][i]);
-          missingInfrasArray.push(prop + ": " + parsedResponse.missingInfra[prop][i]);
-        }
+      if (parsedResponse.missingEnvironments !== undefined) {
+        setMissingEnvs(parsedResponse.missingEnvironments);
       }
-      setMissingInfras(missingInfrasArray);
-      console.info(missingInfras) 
 
-      const parsedY = YAML.parse(parsedResponse.yaml)
-      console.info("Parsed yaml: ");
-      console.info(parsedY);
+      console.info("Missing infras: " + parsedResponse.missingInfra);
+      if (parsedResponse.missingInfra !== undefined) {
+        let missingInfrasArray = [];
+        Object.keys(parsedResponse.missingInfra).forEach(e => console.info('key= ' + e + ' val= ' + parsedResponse.missingInfra[e][0]));
+        for(var prop in parsedResponse.missingInfra) {
+          console.info("EnvId=" + prop);
+          for (var i in parsedResponse.missingInfra[prop]) {
+            console.info("EnvName=" + parsedResponse.missingInfra[prop][i]);
+            missingInfrasArray.push(prop + ": " + parsedResponse.missingInfra[prop][i]);
+          }
+        }
+        setMissingInfras(missingInfrasArray);
+        console.info(missingInfras) 
+      }
 
-      pipeline.stages = parsedY.pipeline.stages;
+      if (parsedResponse !== undefined || parsedResponse.yaml !== undefined) {
+        const parsedY = YAML.parse(parsedResponse.yaml)
+        console.info("Parsed yaml: ");
+        console.info(parsedY);
+
+        pipeline.stages = parsedY.pipeline.stages;
+      }
         
       updatePipeline(pipeline)
 
@@ -864,7 +875,7 @@ export function PipelineCanvas({
         <p>
           Before you proceed with running the pipeline, please make sure that the following entities are created in your project.
           Following entities are missing : 
-          <br />
+          <p></p>
           {missingServices?.length > 0 && (
             <p>
               Services

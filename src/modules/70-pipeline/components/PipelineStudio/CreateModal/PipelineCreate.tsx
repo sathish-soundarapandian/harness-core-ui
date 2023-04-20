@@ -299,7 +299,7 @@ export default function CreatePipelines({
             ) : null}
 
 
-            {!isEdit && (
+            {storeTypeParam !== StoreType.AI && !isEdit && (
               <Container padding={{ top: 'large' }}>
                 <RbacButton
                   text={getString('common.templateStartLabel')}

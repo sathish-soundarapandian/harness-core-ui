@@ -9,7 +9,7 @@
   padding-top: var(--spacing-large);
   textarea {
     min-width: 700px;
-    min-height: 250px;
+    min-height: 170px;
   }
   :global {
     input,
@@ -19,7 +19,7 @@
 
     textarea {
       min-width: 700px;
-      min-height: 250px;
+      min-height: 170px;
     }
   }
 }
