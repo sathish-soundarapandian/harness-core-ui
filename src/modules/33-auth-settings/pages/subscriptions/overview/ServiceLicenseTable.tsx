@@ -14,7 +14,12 @@ import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
 import { String, useStrings, StringKeys } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { PageActiveServiceDTO, LicenseUsageDTO, useDownloadActiveServiceCSVReport } from 'services/cd-ng'
+import {
+  PageActiveServiceDTO,
+  LicenseUsageDTO,
+  useDownloadActiveServiceCSVReport,
+  ActiveServiceDTO
+} from 'services/cd-ng'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'
 import ServiceDropdown from '@common/ServiceDropdown/ServiceDropdown'
@@ -67,6 +72,36 @@ export const noDataCard = (message: StringKeys) => {
       message={getString(message)}
       className={pageCss.noDataCard}
       containerClassName={pageCss.noDataCardContainer}
+    />
+  )
+}
+
+export const tableV2 = (
+  columns: Column<LicenseUsageDTO>[],
+  content: ActiveServiceDTO[],
+  totalElements: number,
+  size: number,
+  totalPages: number,
+  number: number,
+  gotoPage: (pageNumber: number) => void
+) => {
+  return (
+    <TableV2
+      className={pageCss.table}
+      columns={columns}
+      data={content}
+      pagination={
+        totalElements > size
+          ? {
+              itemCount: totalElements,
+              pageSize: size,
+              pageCount: totalPages,
+              pageIndex: number,
+              gotoPage
+            }
+          : undefined
+      }
+      sortable
     />
   )
 }
@@ -261,27 +296,9 @@ export function ServiceLicenseTable({
           </Text>
         </Layout.Horizontal>
         {servicesLoading && <PageSpinner />}
-        {content.length > 0 ? (
-          <TableV2
-            className={pageCss.table}
-            columns={columns}
-            data={content}
-            pagination={
-              totalElements > size
-                ? {
-                    itemCount: totalElements,
-                    pageSize: size,
-                    pageCount: totalPages,
-                    pageIndex: number,
-                    gotoPage
-                  }
-                : undefined
-            }
-            sortable
-          />
-        ) : (
-          noDataCard('common.noActiveServiceData')
-        )}
+        {content.length > 0
+          ? tableV2(columns, content, totalElements, size, totalPages, number, gotoPage)
+          : noDataCard('common.noActiveServiceData')}
       </Layout.Vertical>
     </Card>
   )

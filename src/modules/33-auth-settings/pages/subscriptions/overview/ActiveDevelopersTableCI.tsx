@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import type { Column } from 'react-table'
-import { Text, TableV2, Layout, Card, Heading, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
+import { Text, Layout, Card, Heading, SelectOption, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
@@ -16,7 +16,7 @@ import DeveloperDropdown from '@common/DeveloperDropDown/DeveloperDropdown'
 import type { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
 import type { SortBy } from './types'
 import { DeveloperNameCell, OrganizationCell, ProjectCell, LastBuildCell } from './CIusageTableCells'
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, NameHeader, noDataCard } from './ServiceLicenseTable'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, NameHeader, noDataCard, tableV2 } from './ServiceLicenseTable'
 import pageCss from '../SubscriptionsPage.module.scss'
 
 export interface ActiveDevelopersTableCIProps {
@@ -142,27 +142,9 @@ export function ActiveDevelopersTableCI({
           </Text>
         </Layout.Horizontal>
         {servicesLoading && <PageSpinner />}
-        {content.length > 0 ? (
-          <TableV2
-            className={pageCss.table}
-            columns={columns}
-            data={content}
-            pagination={
-              totalElements > size
-                ? {
-                    itemCount: totalElements,
-                    pageSize: size,
-                    pageCount: totalPages,
-                    pageIndex: number,
-                    gotoPage
-                  }
-                : undefined
-            }
-            sortable
-          />
-        ) : (
-          noDataCard('common.noActiveDeveloperData')
-        )}
+        {content.length > 0
+          ? tableV2(columns, content, totalElements, size, totalPages, number, gotoPage)
+          : noDataCard('common.noActiveDeveloperData')}
       </Layout.Vertical>
     </Card>
   )
