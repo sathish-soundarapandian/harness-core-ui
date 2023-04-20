@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { capitalize } from 'lodash-es'
+import { capitalize, isEmpty } from 'lodash-es'
 import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text } from '@harness/uicore'
 import {
@@ -27,7 +27,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const [pipelineConfigPanelView, setPipelineConfigPanelView] = useState<PipelineConfigPanelView>(
     PipelineConfigPanelView.Options
   )
-  const breadCrumbs: IBreadcrumbProps[] = [
+  const [breadCrumbs, setBreadCrumbs] = useState<IBreadcrumbProps[]>([
     {
       text: capitalize(StudioEntity.Pipeline),
       onClick: () => {
@@ -35,12 +35,28 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         setPipelineConfigPanelView(PipelineConfigPanelView.Options)
       }
     }
-  ]
+  ])
+
+  const updateBreadCrumbs = useCallback(
+    (selectedConfigOption: PipelineConfigOptionInterface): void => {
+      const { label, drillDown } = selectedConfigOption || {}
+      const { hasSubTypes } = drillDown || {}
+      const breadCrumbLabel = hasSubTypes ? label : ''
+      setBreadCrumbs((existingBreadCrumbs: IBreadcrumbProps[]) => {
+        if (!existingBreadCrumbs.map((item: IBreadcrumbProps) => item.text).includes(breadCrumbLabel)) {
+          return [...existingBreadCrumbs, { text: breadCrumbLabel }]
+        }
+        return existingBreadCrumbs
+      })
+    },
+    [breadCrumbs]
+  )
 
   const onSelectConfigOption = useCallback(
     (entity: StudioEntity, selectedConfigOption: PipelineConfigOptionInterface): void => {
       setSelectedConfigOption({ entity, entityDetails: selectedConfigOption })
       setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)
+      updateBreadCrumbs(selectedConfigOption)
     },
     []
   )
@@ -96,17 +112,25 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   }, [showMoreOptions])
 
   const renderPipelineConfigOptionDetails = useCallback((): React.ReactElement => {
-    return <></>
+    const { hasSubTypes, subTypes } = selectedConfigOption?.entityDetails?.drillDown || {}
+    return hasSubTypes && subTypes && !isEmpty(subTypes) ? (
+      <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xxxlarge' }}>
+        {subTypes.map((subOption: PipelineConfigOptionInterface) =>
+          renderPipelineConfigOption(StudioEntity.Stage, subOption)
+        )}
+      </Layout.Vertical>
+    ) : (
+      <></>
+    )
   }, [selectedConfigOption])
 
   const renderPipelineConfigPanelHeader = useCallback((): React.ReactElement => {
     const { entity, entityDetails } = selectedConfigOption || {}
     const { label, drillDown } = entityDetails || {}
     const { hasSubTypes } = drillDown || {}
-    const updatedBreadCrumbs = hasSubTypes ? [...breadCrumbs, { text: label }] : [...breadCrumbs, { text: '' }]
     return selectedConfigOption ? (
       <Layout.Vertical>
-        <Breadcrumbs items={[...updatedBreadCrumbs]} />
+        <Breadcrumbs items={[...breadCrumbs]} />
         {hasSubTypes ? (
           <Text font={{ variation: FontVariation.H4 }}>{`Select ${capitalize(entity)} Type`}</Text>
         ) : (
@@ -116,7 +140,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
     ) : (
       <Text font={{ variation: FontVariation.H4 }}>Pipeline Configuration</Text>
     )
-  }, [selectedConfigOption])
+  }, [selectedConfigOption, breadCrumbs])
 
   const renderPipelineConfigPanel = useCallback((): React.ReactElement => {
     switch (pipelineConfigPanelView) {
