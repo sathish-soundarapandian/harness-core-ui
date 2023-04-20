@@ -19,9 +19,11 @@ import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { clickSubmit } from '@common/utils/JestFormHelper'
+import NotificationMethods, {
+  NotificationMethodsProps
+} from '@pipeline/components/Notifications/Steps/NotificationMethods'
+import { NotificationTypeSelectOptions } from '@rbac/constants/NotificationConstants'
 import NotificationTable, { NotificationTableProps } from '../NotificationTable'
-import { NotificationTypeSelectOptions } from '../NotificationTypeOptions'
-import NotificationMethods, { NotificationMethodsProps } from '../Steps/NotificationMethods'
 
 const notificationMethodProps: NotificationMethodsProps = {
   typeOptions: NotificationTypeSelectOptions,

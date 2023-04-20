@@ -26,7 +26,6 @@ import gitsync from '@gitsync/strings/strings.en.yaml'
 import dashboards from '@dashboards/strings/strings.en.yaml'
 import projectsOrgs from '@projects-orgs/strings/strings.en.yaml'
 import code from '@code/strings/strings.en.yaml'
-import et from '@et/strings/strings.en.yaml'
 import pipeline from '@pipeline/strings/strings.en.yaml'
 import freezeWindows from '@freeze-windows/strings/strings.en.yaml'
 import templatesLibrary from '@templates-library/strings/strings.en.yaml'
@@ -36,6 +35,7 @@ import ce from '@ce/strings/strings.en.yaml'
 import cf from '@cf/strings/strings.en.yaml'
 import chaos from '@chaos/strings/strings.en.yaml'
 import ci from '@ci/strings/strings.en.yaml'
+import et from '@et/strings/strings.en.yaml'
 import idp from '@idp/strings/strings.en.yaml'
 import ssca from '@ssca/strings/strings.en.yaml'
 import cv from '@cv/strings/strings.en.yaml'
@@ -61,7 +61,6 @@ export default function languageLoader() {
     dashboards,
     projectsOrgs,
     code,
-    et,
     pipeline,
     freezeWindows,
     templatesLibrary,
@@ -71,6 +70,7 @@ export default function languageLoader() {
     cf,
     chaos,
     ci,
+    et,
     idp,
     ssca,
     cv,

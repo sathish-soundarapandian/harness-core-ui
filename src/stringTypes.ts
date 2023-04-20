@@ -3473,11 +3473,6 @@ export interface StringsMap {
   'code.missingPermission': string
   'code.pullRequests': string
   'code.webhooks': string
-  'et.homepage.learnMore': string
-  'et.homepage.slogan': string
-  'et.longTitle': string
-  'et.nav.settings': string
-  'et.title': string
   'pipeline.ACR.name': string
   'pipeline.ACR.registry': string
   'pipeline.ACR.registryError': string
@@ -8091,6 +8086,11 @@ export interface StringsMap {
   'ci.titleSettings': string
   'ci.usesLabel': string
   'ci.welcome': string
+  'et.homepage.learnMore': string
+  'et.homepage.slogan': string
+  'et.longTitle': string
+  'et.nav.settings': string
+  'et.title': string
   'idp.adminHome': string
   'idp.layout': string
   'ssca.allowDenyList': string

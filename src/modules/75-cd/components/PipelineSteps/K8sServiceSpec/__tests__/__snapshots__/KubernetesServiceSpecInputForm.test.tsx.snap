@@ -3649,7 +3649,7 @@ exports[`VARIABLES renders the service variables form: variables with default va
                 </p>
               </div>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main descriptionRow StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
                 style="--text-line-clamp: 3;"
               >
                 -

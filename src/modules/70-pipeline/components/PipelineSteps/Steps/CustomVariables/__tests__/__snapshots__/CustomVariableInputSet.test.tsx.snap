@@ -42,7 +42,7 @@ exports[`<CustomVariableInputSet /> tests renders correctly 1`] = `
         </p>
       </div>
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main descriptionRow StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
         style="--text-line-clamp: 3;"
       >
         -
@@ -127,7 +127,7 @@ exports[`<CustomVariableInputSet /> tests renders correctly 1`] = `
         </p>
       </div>
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main descriptionRow StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
         style="--text-line-clamp: 3;"
       >
         -
@@ -251,7 +251,7 @@ exports[`<CustomVariableInputSet /> tests renders correctly 1`] = `
         </p>
       </div>
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main descriptionRow StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
         style="--text-line-clamp: 3;"
       >
         -
@@ -336,7 +336,7 @@ exports[`<CustomVariableInputSet /> tests renders correctly 1`] = `
         </p>
       </div>
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main descriptionRow StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
         style="--text-line-clamp: 3;"
       >
         -

@@ -12,6 +12,9 @@ import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useStrings } from 'framework/strings'
+import type { ETCustomMicroFrontendProps } from '@et/ErrorTracking.types'
+import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'
+import Overview from '@pipeline/components/Notifications/Steps/Overview'
 
 export const ETMonitoredServices = (): JSX.Element => {
   const { getString } = useStrings()
@@ -24,7 +27,16 @@ export const ETMonitoredServices = (): JSX.Element => {
   useDocumentTitle([getString('et.title'), getString('common.monitoredServices')])
 
   if (CET_ENABLED) {
-    return <ChildAppMounter ChildApp={ErrorTracking} componentLocation={componentLocation} />
+    return (
+      <ChildAppMounter<ETCustomMicroFrontendProps>
+        ChildApp={ErrorTracking}
+        componentLocation={componentLocation}
+        customComponents={{
+          NotificationWizardOverviewStep: Overview,
+          NotificationWizardMethodStep: NotificationMethods
+        }}
+      />
+    )
   } else {
     return <></>
   }

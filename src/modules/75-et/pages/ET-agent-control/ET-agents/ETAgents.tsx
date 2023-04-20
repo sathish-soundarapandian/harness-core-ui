@@ -9,6 +9,9 @@ import React from 'react'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { AgentListProps, ErrorTracking } from '@et/ErrorTrackingApp'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
+import type { ETCustomMicroFrontendProps } from '@et/ErrorTracking.types'
+import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'
+import Overview from '@pipeline/components/Notifications/Steps/Overview'
 
 interface Props {
   pathComponentLocation: string
@@ -21,5 +24,11 @@ export const ETAgents = (props: Props): JSX.Element => {
 
   useDocumentTitle(['ET', 'Agents'])
 
-  return <ChildAppMounter<AgentListProps> ChildApp={ErrorTracking} componentLocation={componentLocation} />
+  return (
+    <ChildAppMounter<AgentListProps & ETCustomMicroFrontendProps>
+      ChildApp={ErrorTracking}
+      componentLocation={componentLocation}
+      customComponents={{ NotificationWizardOverviewStep: Overview, NotificationWizardMethodStep: NotificationMethods }}
+    />
+  )
 }

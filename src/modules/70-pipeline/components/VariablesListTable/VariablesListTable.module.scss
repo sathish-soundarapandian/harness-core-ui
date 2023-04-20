@@ -12,6 +12,7 @@
   .variable-list-row {
     display: grid;
     grid-template-columns: repeat(3, minmax(10px, 1fr));
+    gap: var(--spacing-small);
     padding: var(--spacing-small);
     border-bottom: solid 1px;
     border-color: var(--grey-200);
@@ -22,7 +23,6 @@
       font-size: var(--font-size-normal);
       color: var(--grey-500);
       font-weight: 500;
-      width: 300px;
       background-color: var(--primary-bg);
     }
 
@@ -58,21 +58,6 @@
 .currentSelection {
   background-color: var(--orange-400);
   padding: 0px 2px;
-}
-
-.variableListRowItem {
-  display: grid;
-  padding: var(--spacing-small) 0;
-  grid-template-columns: 1fr 1fr;
-
-  .nameSection {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: var(--form-input-font-size);
-    color: var(--grey-500);
-    display: inline;
-  }
 }
 
 .copyOptionTextInput {
@@ -119,12 +104,10 @@
 
 .valueSection {
   font-size: var(--font-size-normal);
-  width: 300px;
 }
 
 .tagsValueSection {
   display: flex;
   column-gap: var(--spacing-xsmall);
   max-width: 410px;
-  padding-left: var(--spacing-medium);
 }

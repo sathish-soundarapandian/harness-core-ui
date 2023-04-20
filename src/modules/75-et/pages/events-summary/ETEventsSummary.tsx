@@ -8,11 +8,20 @@
 import React from 'react'
 import { ErrorTracking } from '@et/ErrorTrackingApp'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
+import type { ETCustomMicroFrontendProps } from '@et/ErrorTracking.types'
+import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'
+import Overview from '@pipeline/components/Notifications/Steps/Overview'
 
 export const ETEventsSummary = (): JSX.Element => {
   const componentLocation = {
     pathname: '/eventsummary'
   }
 
-  return <ChildAppMounter ChildApp={ErrorTracking} componentLocation={componentLocation} />
+  return (
+    <ChildAppMounter<ETCustomMicroFrontendProps>
+      ChildApp={ErrorTracking}
+      componentLocation={componentLocation}
+      customComponents={{ NotificationWizardOverviewStep: Overview, NotificationWizardMethodStep: NotificationMethods }}
+    />
+  )
 }

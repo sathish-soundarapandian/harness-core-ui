@@ -18,14 +18,12 @@ declare const styles: {
   readonly customVariables: string
   readonly customVariablesInputSets: string
   readonly customVariablesStage: string
-  readonly descriptionRow: string
   readonly fixed: string
   readonly headerRow: string
   readonly hoveredRow: string
   readonly icon: string
   readonly runtimeInputButton: string
   readonly secretContainer: string
-  readonly secretWidth: string
   readonly selectedSearchText: string
   readonly selectedSearchTextValueRow: string
   readonly subHeader: string

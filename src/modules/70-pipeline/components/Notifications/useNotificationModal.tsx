@@ -13,11 +13,11 @@ import { Dialog, Classes } from '@blueprintjs/core'
 import cx from 'classnames'
 import type { NotificationRules } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
+import { NotificationTypeSelectOptions } from '@rbac/constants/NotificationConstants'
 import Overview from './Steps/Overview'
 import PipelineEvents from './Steps/PipelineEvents'
 import NotificationMethods from './Steps/NotificationMethods'
 import { Actions } from './NotificationUtils'
-import { NotificationTypeSelectOptions } from './NotificationTypeOptions'
 
 import css from './useNotificationModal.module.scss'
 

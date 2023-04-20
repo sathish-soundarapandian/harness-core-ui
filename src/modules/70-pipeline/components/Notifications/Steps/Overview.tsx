@@ -14,7 +14,7 @@ import { useStrings } from 'framework/strings'
 import type { NotificationRules } from 'services/pipeline-ng'
 import { NameSchema } from '@common/utils/Validation'
 
-interface OverviewProps {
+export interface OverviewProps {
   data?: NotificationRules
   existingNotificationNames?: string[]
   isEdit?: boolean

@@ -25,7 +25,6 @@ rules:
             - modules/45-dashboards/*
             - modules/45-projects-orgs/*
             - modules/60-code/*
-            - modules/60-et/*
             - modules/70-pipeline/*
             - modules/72-freeze-windows/*
             - modules/72-templates-library/*
@@ -35,6 +34,7 @@ rules:
             - modules/75-cf/*
             - modules/75-chaos/*
             - modules/75-ci/*
+            - modules/75-et/*
             - modules/75-idp/*
             - modules/75-ssca/*
             - modules/85-cv/*
@@ -54,7 +54,6 @@ rules:
             - '@dashboards/*'
             - '@projects-orgs/*'
             - '@code/*'
-            - '@et/*'
             - '@pipeline/*'
             - '@freeze-windows/*'
             - '@templates-library/*'
@@ -64,6 +63,7 @@ rules:
             - '@cf/*'
             - '@chaos/*'
             - '@ci/*'
+            - '@et/*'
             - '@idp/*'
             - '@ssca/*'
             - '@cv/*'

@@ -17,7 +17,7 @@ export interface ErrorTrackingLocation {
 }
 
 /* istanbul ignore next */
-interface ChildAppProps {
+export interface ChildAppProps {
   componentLocation?: ErrorTrackingLocation
 }
 
