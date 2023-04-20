@@ -30,6 +30,8 @@ import { StringKeys, useStrings } from 'framework/strings'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { isMultiTypeExpression } from '@common/utils/utils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -80,6 +82,7 @@ export default function DeployEnvironmentEntityWidget({
   const { getString } = useStrings()
   const [radioValue, setRadioValue] = useState<string>(getString(getRadioValueFromInitialValues(initialValues)))
   const { scope } = usePipelineContext()
+  const isDynamicProvisioningEnabled = useFeatureFlag(FeatureFlag.CD_NG_DYNAMIC_PROVISIONING_ENV_V2)
 
   const formikRef = useRef<FormikProps<DeployEnvironmentEntityFormState> | null>(null)
   const environmentsTypeRef = useRef<MultiTypeInputType | null>(null)
@@ -321,7 +324,7 @@ export default function DeployEnvironmentEntityWidget({
     <>
       <Formik<DeployEnvironmentEntityFormState>
         // ! Do not set enableReinitialize to true.
-        // enableReinitialize
+        enableReinitialize={isDynamicProvisioningEnabled}
         formName="deployEnvironmentEntityWidgetForm"
         onSubmit={noop}
         validate={(values: DeployEnvironmentEntityFormState) => {

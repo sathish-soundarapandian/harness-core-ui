@@ -87,38 +87,48 @@ function ServiceConfiguration({
   })
 
   const getUpdatedPipelineYaml = useCallback((): PipelineInfoConfig | undefined => {
-    const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-    const serviceSetYamlVisual = parse(yaml).service
+    try {
+      const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
+      const serviceSetYamlVisual = parse(yaml).service
 
-    if (serviceSetYamlVisual) {
-      return produce({ ...service }, draft => {
-        setNameIDDescription(draft, serviceSetYamlVisual)
-        set(
-          draft,
-          'stages[0].stage.spec.serviceConfig.serviceDefinition',
-          cloneDeep(serviceSetYamlVisual.serviceDefinition)
-        )
-      })
+      if (serviceSetYamlVisual) {
+        return produce({ ...service }, draft => {
+          setNameIDDescription(draft, serviceSetYamlVisual)
+          set(
+            draft,
+            'stages[0].stage.spec.serviceConfig.serviceDefinition',
+            cloneDeep(serviceSetYamlVisual.serviceDefinition)
+          )
+        })
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn(e)
     }
   }, [service, yamlHandler])
 
   const onYamlChange = useCallback(
     (yamlChanged: boolean): void => {
       if (yamlChanged) {
-        const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-        const serviceSetYamlVisual = parse(yaml).service
-        if (
-          !isEmpty(serviceSetYamlVisual.serviceDefinition.spec) ||
-          !isEmpty(serviceSetYamlVisual.serviceDefinition.type)
-        ) {
-          requestAnimationFrame(() => {
-            setHasYamlValidationErrors(!isEmpty(yamlHandler?.getYAMLValidationErrorMap()))
-          })
-        }
+        try {
+          const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
+          const serviceSetYamlVisual = parse(yaml).service
+          if (
+            !isEmpty(serviceSetYamlVisual.serviceDefinition.spec) ||
+            !isEmpty(serviceSetYamlVisual.serviceDefinition.type)
+          ) {
+            requestAnimationFrame(() => {
+              setHasYamlValidationErrors(!isEmpty(yamlHandler?.getYAMLValidationErrorMap()))
+            })
+          }
 
-        const newServiceData = getUpdatedPipelineYaml()
-        const isYamlUpdated = !isEqual(service, newServiceData)
-        newServiceData && isYamlUpdated && updatePipeline(newServiceData)
+          const newServiceData = getUpdatedPipelineYaml()
+          const isYamlUpdated = !isEqual(service, newServiceData)
+          newServiceData && isYamlUpdated && updatePipeline(newServiceData)
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.warn(e)
+        }
       }
     },
     [getUpdatedPipelineYaml, service, setHasYamlValidationErrors, updatePipeline, yamlHandler]
@@ -138,8 +148,12 @@ function ServiceConfiguration({
 
   const isInvalidYaml = useCallback((): boolean => {
     if (yamlHandler) {
-      const parsedYaml = parse(yamlHandler.getLatestYaml())
-      if (!parsedYaml || yamlHandler.getYAMLValidationErrorMap()?.size > 0) {
+      try {
+        const parsedYaml = parse(yamlHandler.getLatestYaml())
+        if (!parsedYaml || yamlHandler.getYAMLValidationErrorMap()?.size > 0) {
+          return true
+        }
+      } catch (_) {
         return true
       }
     }
