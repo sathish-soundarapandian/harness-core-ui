@@ -58,7 +58,7 @@ export function getReferenceFieldProps({
             searchTerm: search,
             type: deploymentType as ServiceDefinition['type'],
             gitOpsEnabled: gitOpsEnabled,
-            deploymentMetadataYaml: yamlStringify(deploymentMetadata),
+            deploymentMetadataYaml: deploymentMetadata ? yamlStringify(deploymentMetadata) : undefined,
             deploymentTemplateIdentifier: ''
           }
         },
