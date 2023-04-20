@@ -42,9 +42,9 @@ export const useSAMLProviderModalV2 = (): UseSAMLProviderReturn => {
       >
         <Container className={css.container}>
           <StepWizard title={getString('authSettings.SAMLProvider')} stepClassName={css.stepDetailsContainer}>
-            <Overview name={getString('overview')} />
+            <Overview name={getString('overview')} samlSettings={samlProvider} />
             <SelectProvider name={getString('authSettings.selectProvider')} />
-            <IdentityProvider name={getString('authSettings.identityProviderLabel')} />
+            <IdentityProvider name={getString('authSettings.identityProviderLabel')} samlProvider={samlProvider} />
             <AdditionalFunctions name={getString('authSettings.additionalFunctions')} />
           </StepWizard>
         </Container>

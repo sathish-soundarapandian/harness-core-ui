@@ -59,7 +59,7 @@ const Configuration: React.FC = () => {
   )
 
   const {
-    data,
+    data: apiResponse,
     loading: fetchingAuthSettings,
     error: errorWhileFetchingAuthSettings,
     refetch: refetchAuthSettings
@@ -69,6 +69,96 @@ const Configuration: React.FC = () => {
     }
   })
 
+  const data = {
+    metaData: {},
+    resource: {
+      ngAuthSettings: [
+        {
+          origin: 'dev-274703.oktapreview.com',
+          identifier: 'UOPlyeTeSYaFk7gb0I54Vw',
+          logoutUrl: null,
+          groupMembershipAttr: null,
+          displayName: 'okta_saml_01',
+          authorizationEnabled: false,
+          entityIdentifier: null,
+          samlProviderType: 'OKTA',
+          clientId: null,
+          clientSecret: null,
+          settingsType: 'SAML'
+        },
+        {
+          connectionSettings: {
+            host: 'ldap.jumpcloud.com',
+            port: 389,
+            sslEnabled: false,
+            referralsEnabled: true,
+            maxReferralHops: 5,
+            bindDN: 'uid=ldap_user1,ou=Users,o=611a119873e7186e37f75599,dc=jumpcloud,dc=com',
+            bindPassword: '*****',
+            passwordType: 'INLINE',
+            bindSecret: null,
+            connectTimeout: 50000,
+            responseTimeout: 50000,
+            useRecursiveGroupMembershipSearch: true,
+            settingType: 'LDAP',
+            accountId: null
+          },
+          identifier: 'm3pw7MbcRQ6JYg1xAWANcw',
+          userSettingsList: [
+            {
+              baseDN: 'ou=Users,o=611a119873e7186e37f75599,dc=jumpcloud,dc=com',
+              searchFilter: '(objectClass=inetOrgPerson)',
+              uidAttr: 'uid',
+              samAccountNameAttr: 'sAMAccountName',
+              emailAttr: 'mail',
+              displayNameAttr: 'cn',
+              groupMembershipAttr: 'memberOf'
+            }
+          ],
+          groupSettingsList: null,
+          displayName: 'test_ldap',
+          cronExpression: '0 0/15 * 1/1 * ? *',
+          nextIterations: [1681888500000, 1681889400000, 1681890300000, 1681891200000, 1681892100000],
+          disabled: false,
+          settingsType: 'LDAP'
+        },
+        {
+          loginSettings: {
+            uuid: 'KM3A-8vETmCI7nV7j5jzDg',
+            accountId: 'mGS7wFvWQ3mVLkTxCyYtVQ',
+            lastUpdatedBy: null,
+            lastUpdatedAt: 1676022397755,
+            userLockoutPolicy: {
+              enableLockoutPolicy: false,
+              numberOfFailedAttemptsBeforeLockout: 5,
+              lockOutPeriod: 24,
+              notifyUser: true,
+              userGroupsToNotify: null
+            },
+            passwordExpirationPolicy: {
+              enabled: false,
+              daysBeforePasswordExpires: 5,
+              daysBeforeUserNotifiedOfPasswordExpiration: 10
+            },
+            passwordStrengthPolicy: {
+              enabled: false,
+              minNumberOfCharacters: 8,
+              minNumberOfUppercaseCharacters: 0,
+              minNumberOfLowercaseCharacters: 0,
+              minNumberOfSpecialCharacters: 0,
+              minNumberOfDigits: 0
+            }
+          },
+          settingsType: 'USER_PASSWORD'
+        }
+      ],
+      whitelistedDomains: [],
+      authenticationMechanism: 'SAML',
+      twoFactorEnabled: false,
+      sessionTimeoutInMinutes: 30
+    },
+    responseMessages: []
+  }
   return (
     <React.Fragment>
       <Page.Body

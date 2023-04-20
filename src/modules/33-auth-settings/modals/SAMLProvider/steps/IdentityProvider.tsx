@@ -19,21 +19,32 @@ import { useStrings } from 'framework/strings'
 import { CopyText } from '@common/components/CopyText/CopyText'
 import { getSamlEndpoint } from '@auth-settings/constants/utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import type { FormValues } from '../utils'
+import type { SAMLSettings } from 'services/cd-ng'
+import { FormValues, getSelectedSAMLProvider } from '../utils'
 import css from '../useSAMLProvider.module.scss'
 
 type IdentityProviderForm = Pick<FormValues, 'logoutUrl'> & { files: any }
 type IdentityProviderFormValues = FormValues & { files: any }
 
-const IdentityProvider: React.FC<StepProps<FormValues & { files: any }>> = props => {
+interface IdentityProviderProps extends StepProps<FormValues> {
+  files?: any
+  samlProvider?: SAMLSettings
+}
+
+const IdentityProvider: React.FC<IdentityProviderProps> = props => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
 
+  const filesValidation = props.samlProvider
+    ? yup.array()
+    : yup.array().required(getString('common.validation.fileIsRequired'))
+
+  const selectedSAMLProviderText = getSelectedSAMLProvider(props.prevStepData?.samlProviderType, getString)
   return (
     <Formik<IdentityProviderForm>
       initialValues={{ ...props.prevStepData } as IdentityProviderFormValues}
       validationSchema={yup.object().shape({
-        files: yup.array().required(getString('common.validation.fileIsRequired'))
+        files: filesValidation
       })}
       onSubmit={values => {
         props.nextStep?.({ ...props.prevStepData, ...values } as IdentityProviderFormValues)
@@ -66,7 +77,12 @@ const IdentityProvider: React.FC<StepProps<FormValues & { files: any }>> = props
               <Container margin={{ bottom: 'xxxlarge' }}>
                 <FormInput.FileInput
                   name="files"
-                  label={`${getString('authSettings.uploadIdentityProvider')}`}
+                  label={`${getString(
+                    props.samlProvider ? 'authSettings.identityProvider' : 'authSettings.uploadIdentityProvider',
+                    {
+                      selectedSAMLProvider: selectedSAMLProviderText
+                    }
+                  )}`}
                   buttonText={getString('upload')}
                   placeholder={getString('authSettings.chooseFile')}
                   multiple

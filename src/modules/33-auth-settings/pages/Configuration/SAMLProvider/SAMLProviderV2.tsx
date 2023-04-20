@@ -59,12 +59,12 @@ const SAMLProviderV2: React.FC<Props> = ({
   const { showSuccess, showError } = useToaster()
   const { accountId } = useParams<AccountPathProps>()
   const [childWindow, setChildWindow] = React.useState<Window | null>(null)
-  authSettings.authenticationMechanism = AuthenticationMechanisms.SAML
   const samlEnabled = authSettings.authenticationMechanism === AuthenticationMechanisms.SAML
-  const samlSettings = authSettings.ngAuthSettings?.filter(
+  let samlSettings = authSettings.ngAuthSettings?.filter(
     settings => settings.settingsType === AuthenticationMechanisms.SAML
   ) as SAMLSettings[]
 
+  samlSettings = [...samlSettings, ...samlSettings]
   const { enabled: featureEnabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.SAML_SUPPORT
@@ -277,6 +277,15 @@ const SAMLProviderV2: React.FC<Props> = ({
               </Container>
             )
           })}
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            margin={{ bottom: 'large' }}
+            onClick={() => {
+              openSAMlProvider()
+            }}
+          >
+            {getString('authSettings.addSAMLProvider')}
+          </Button>
         </Collapse>
       ) : (
         <Utils.WrapOptionalTooltip

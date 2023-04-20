@@ -4,6 +4,7 @@ import React from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { String, useStrings } from 'framework/strings'
+import type { SAMLSettings } from 'services/cd-ng'
 import type { FormValues } from '../utils'
 import css from '../useSAMLProvider.module.scss'
 
@@ -12,12 +13,17 @@ interface OverviewForm {
   friendlyName?: string
 }
 
-const Overview: React.FC<StepProps<FormValues>> = props => {
+interface OverviewProps extends StepProps<FormValues> {
+  samlSettings?: SAMLSettings
+}
+
+const Overview: React.FC<OverviewProps> = props => {
   const { getString } = useStrings()
 
   return (
     <Formik<OverviewForm>
       initialValues={{
+        ...props.samlSettings,
         ...(props.prevStepData as OverviewForm)
       }}
       validationSchema={Yup.object().shape({
