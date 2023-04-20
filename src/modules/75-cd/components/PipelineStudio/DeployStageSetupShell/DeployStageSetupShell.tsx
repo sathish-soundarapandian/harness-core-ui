@@ -222,6 +222,10 @@ export default function DeployStageSetupShell(): JSX.Element {
   }
 
   const selectedDeploymentType = serviceDefinitionType()
+  const googleCloudFunctionEnvType = (
+    selectedStage?.stage?.spec?.deploymentMetadata as GoogleCloudFunctionDeploymentMetaData
+  )?.environmentType
+
   const isServiceDefinitionPresent = isNewService
     ? (get(selectedStage, 'stage.spec.service') || get(selectedStage, 'stage.spec.services')) && serviceDefinitionType()
     : selectedDeploymentType
@@ -269,7 +273,10 @@ export default function DeployStageSetupShell(): JSX.Element {
   }, [selectedDeploymentType, refetchYamlSnippet])
 
   const fetchDefaultStep =
-    isServerlessDeploymentType(selectedDeploymentType || '') || isCustomDeploymentType(selectedDeploymentType || '')
+    isServerlessDeploymentType(selectedDeploymentType) ||
+    isCustomDeploymentType(selectedDeploymentType) ||
+    (isGoogleCloudFuctionsDeploymentType(selectedDeploymentType) &&
+      googleCloudFunctionEnvType === GoogleCloudFunctionsEnvType.GenOne)
 
   React.useEffect(() => {
     if (
@@ -366,9 +373,6 @@ export default function DeployStageSetupShell(): JSX.Element {
 
     // When deployment type is GoogleCloudFunctions
     const isGoogleCloudFunctionsDeploymentTypeSelected = isGoogleCloudFuctionsDeploymentType(selectedDeploymentType)
-    const googleCloudFunctionEnvType = (
-      selectedStage?.stage?.spec?.deploymentMetadata as GoogleCloudFunctionDeploymentMetaData
-    )?.environmentType
     const isGoogleCloudFunctionGen1EnvTypeSelected =
       isGoogleCloudFunctionsDeploymentTypeSelected && googleCloudFunctionEnvType === GoogleCloudFunctionsEnvType.GenOne
 
