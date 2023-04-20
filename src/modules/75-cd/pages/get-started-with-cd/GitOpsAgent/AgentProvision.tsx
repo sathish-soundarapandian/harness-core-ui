@@ -27,16 +27,19 @@ export const danger = 'danger-icon'
 export const AgentProvision = ({
   agent,
   loading: agentCreateLoading,
-  error: agentCreateError
+  error: agentCreateError,
+  setIsAgentConnected
 }: {
   agent?: V1Agent
   loading: boolean
   error?: string
+  setIsAgentConnected: (isConnected: boolean) => void
 }) => {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
 
   const [retryCount, setRetryCount] = React.useState(0)
+  const [calledOnce, setCalledOnce] = React.useState(false)
   const [unhealthyIcon, setUnhealthyIcon] = React.useState<IconName>('steps-spinner') // stepSpinner
   const { data, loading, refetch } = useAgentServiceForServerGet({
     identifier: agent?.identifier || '',
@@ -79,6 +82,13 @@ export const AgentProvision = ({
       setUnhealthyIcon(danger)
     }
   }, [agentCreateError])
+
+  React.useEffect(() => {
+    if (!calledOnce && isHealthy && data?.health?.lastHeartbeat) {
+      setIsAgentConnected(true)
+      setCalledOnce(true)
+    }
+  }, [isHealthy, data?.health?.lastHeartbeat])
 
   return (
     <div>
