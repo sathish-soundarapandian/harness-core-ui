@@ -60,6 +60,17 @@ export const NameHeader = (headerName: StringKeys, tooltip?: StringKeys) => {
   )
 }
 
+export const noDataCard = (message: StringKeys) => {
+  const { getString } = useStrings()
+  return (
+    <NoDataCard
+      message={getString(message)}
+      className={pageCss.noDataCard}
+      containerClassName={pageCss.noDataCardContainer}
+    />
+  )
+}
+
 export function ServiceLicenseTable({
   data,
   gotoPage,
@@ -269,11 +280,7 @@ export function ServiceLicenseTable({
             sortable
           />
         ) : (
-          <NoDataCard
-            message={getString('common.noActiveServiceData')}
-            className={pageCss.noDataCard}
-            containerClassName={pageCss.noDataCardContainer}
-          />
+          noDataCard('common.noActiveServiceData')
         )}
       </Layout.Vertical>
     </Card>

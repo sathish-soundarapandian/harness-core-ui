@@ -9,15 +9,14 @@ import React, { useState } from 'react'
 import type { Column } from 'react-table'
 import { Text, TableV2, Layout, Card, Heading, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { useStrings, StringKeys } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'
 import DeveloperDropdown from '@common/DeveloperDropDown/DeveloperDropdown'
 import type { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
 import type { SortBy } from './types'
 import { DeveloperNameCell, OrganizationCell, ProjectCell, LastBuildCell } from './CIusageTableCells'
-import { getInfoIcon } from './UsageInfoCard'
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, NameHeader } from './ServiceLicenseTable'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, NameHeader, noDataCard } from './ServiceLicenseTable'
 import pageCss from '../SubscriptionsPage.module.scss'
 
 export interface ActiveDevelopersTableCIProps {
@@ -162,11 +161,7 @@ export function ActiveDevelopersTableCI({
             sortable
           />
         ) : (
-          <NoDataCard
-            message={getString('common.noActiveDeveloperData')}
-            className={pageCss.noDataCard}
-            containerClassName={pageCss.noDataCardContainer}
-          />
+          noDataCard('common.noActiveDeveloperData')
         )}
       </Layout.Vertical>
     </Card>
