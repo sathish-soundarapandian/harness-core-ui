@@ -65,7 +65,6 @@ import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStud
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import {
   deleteStageInfo,
-  doesStageContainOtherData,
   GoogleCloudFunctionsEnvType,
   hasStageData,
   ServiceDeploymentType
@@ -351,7 +350,9 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
         deploymentMetadata.environmentType = selectedEnv.value as string
       })
 
-      if (doesStageContainOtherData(stageData?.stage)) {
+      // Checking stage data after assuming that it is serviceV2
+      // because GoogleCloudFunctions swimlane only appears when serviceV2 FF is ON
+      if (hasStageData(stageData?.stage)) {
         setCurrStageData(stageData?.stage)
         openEnvTypeChangeManifestDataDeleteWarningDialog()
       } else {
