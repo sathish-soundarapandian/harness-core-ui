@@ -16,6 +16,7 @@ interface PipelineConfigPanelInterface {
   height?: React.CSSProperties['height']
   selectedEntityTypeFromYAML?: StudioEntity
   selectedEntityFromYAML?: Record<string, any>
+  onAddUpdateEntity?: (values: Record<string, any>) => void
 }
 
 enum PipelineConfigPanelView {
@@ -67,6 +68,8 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   }, [selectedEntityTypeFromYAML, selectedEntityFromYAML])
 
   const resetPipelineConfigPanel = useCallback(() => {
+    setStudioEntity(undefined)
+    setStudioEntitySubType(undefined)
     setPipelineConfigOption(undefined)
     setPipelineConfigPanelView(PipelineConfigPanelView.Options)
     resetBreadCrumbs()
@@ -186,6 +189,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
 
   const renderPipelineConfigOptionDetails = useCallback((): React.ReactElement => {
     const { hasSubTypes, subTypes, nodeView } = pipelineConfigOption?.drillDown || {}
+    const formInitialValues = getFormikInitialValues()
     return studioEntity && hasSubTypes && subTypes && !isEmpty(subTypes) ? (
       <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }}>
         {subTypes.map((subOption: PipelineConfigOptionInterface) =>
@@ -194,7 +198,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
       </Layout.Vertical>
     ) : (
       <Formik<any>
-        initialValues={getFormikInitialValues()}
+        initialValues={formInitialValues}
         formName="config-details-form"
         onSubmit={() => {}}
         enableReinitialize={true}
@@ -202,7 +206,11 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         <Layout.Vertical spacing="xsmall">
           {nodeView}
           <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge' }} spacing="medium">
-            <Button text="Add" variation={ButtonVariation.PRIMARY} type="submit" />
+            <Button
+              text={isEmpty(formInitialValues) ? 'Add' : 'Update'}
+              variation={ButtonVariation.PRIMARY}
+              type="submit"
+            />
             <Button text="Cancel" variation={ButtonVariation.SECONDARY} onClick={() => resetPipelineConfigPanel()} />
           </Layout.Horizontal>
         </Layout.Vertical>
