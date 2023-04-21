@@ -93,8 +93,7 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ALLOW_DIFFERENT_REPO_F
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_MATRIX_FIELD_NAME_SETTING, {
   label: 'defaultSettings.enableMatrixFieldNames',
-  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
-  yupValidation: Yup.boolean(),
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
   settingCategory: 'PMS'
 })
 
