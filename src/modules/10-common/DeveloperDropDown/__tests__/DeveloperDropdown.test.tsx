@@ -40,16 +40,7 @@ jest.mock('@harness/uicore', () => {
 
 let developerListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
-    data: {
-      totalPages: 1,
-      totalItems: 2,
-      pageItemCount: 2,
-      pageSize: 2,
-      content: ['harshjain12', 'jamieharness'],
-      pageIndex: 1,
-      empty: false,
-      pageToken: null
-    }
+    data: ['harshjain12', 'jamieharness']
   })
 })
 
