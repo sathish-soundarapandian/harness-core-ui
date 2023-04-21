@@ -1220,12 +1220,13 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -1308,6 +1309,7 @@ export type AwsCodeCommitSecretKeyAccessKeyDTO = AwsCodeCommitHttpsCredentialsSp
 }
 
 export type AwsConnector = ConnectorConfigDTO & {
+  awsSdkClientBackOffStrategyOverride?: AwsSdkClientBackoffStrategy
   credential: AwsCredential
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
@@ -1329,6 +1331,23 @@ export interface AwsCurAttributes {
   reportName: string
   s3BucketName: string
   s3Prefix?: string
+}
+
+export type AwsEqualJitterBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  baseDelay?: number
+  maxBackoffTime?: number
+  retryCount?: number
+}
+
+export type AwsFixedDelayBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  fixedBackoff?: number
+  retryCount?: number
+}
+
+export type AwsFullJitterBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  baseDelay?: number
+  maxBackoffTime?: number
+  retryCount?: number
 }
 
 export interface AwsInstanceFilter {
@@ -1477,6 +1496,15 @@ export type AwsSamRollbackStepInfo = StepSpecType & {
 }
 
 export type AwsSamServiceSpec = ServiceSpec & {}
+
+export interface AwsSdkClientBackOffStrategySpec {
+  [key: string]: any
+}
+
+export interface AwsSdkClientBackoffStrategy {
+  spec?: AwsSdkClientBackOffStrategySpec
+  type: 'FixedDelayBackoffStrategy' | 'EqualJitterBackoffStrategy' | 'FullJitterBackoffStrategy'
+}
 
 export interface AwsSecretManagerCredential {
   spec?: AwsSecretManagerCredentialSpec
@@ -2106,7 +2134,6 @@ export interface CDPipelineModuleInfo {
 
 export interface CDStageMetaDataDTO {
   environmentRef?: string
-  filteredProvisionerRefs?: string[]
   serviceEnvRefList?: ServiceEnvRef[]
   serviceRef?: string
 }
@@ -2170,6 +2197,10 @@ export type CEModuleLicenseDTO = ModuleLicenseDTO & {
   spendLimit?: number
 }
 
+export type CETModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfAgents?: number
+}
+
 export type CFLicenseSummaryDTO = LicensesWithSummaryDTO & {
   totalClientMAUs?: number
   totalFeatureFlagUnits?: number
@@ -2179,6 +2210,8 @@ export type CFModuleLicenseDTO = ModuleLicenseDTO & {
   numberOfClientMAUs?: number
   numberOfUsers?: number
 }
+
+export type CICreditDTO = CreditDTO & {}
 
 export type CILicenseSummaryDTO = LicensesWithSummaryDTO & {
   cacheSizeAllowance?: number
@@ -2909,6 +2942,33 @@ export type CreatePRStepUpdateConfigScriptInlineSource = CreatePRStepUpdateConfi
 export interface CreatePRStepUpdateConfigScriptWrapper {
   spec: CreatePRStepUpdateConfigScriptBaseSource
   type: string
+}
+
+export interface CreditDTO {
+  accountIdentifier?: string
+  creditStatus?: 'ACTIVE' | 'EXPIRED'
+  creditType?: 'PAID' | 'FREE'
+  expiryTime?: number
+  id?: string
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'SRM'
+    | 'IACM'
+    | 'CET'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'IDP'
+  purchaseTime?: number
+  quantity?: number
 }
 
 export interface CrossAccountAccess {
@@ -4090,6 +4150,9 @@ export interface EntityDetail {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
 }
@@ -5780,11 +5843,13 @@ export interface FeatureRestrictionDetailsDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -5895,11 +5960,13 @@ export interface FeatureRestrictionMetadataDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -6005,11 +6072,13 @@ export interface FeedbackFormDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   score?: number
   suggestion?: string
 }
@@ -6668,6 +6737,9 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   )[]
@@ -6681,11 +6753,13 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
 }
 
@@ -6895,6 +6969,9 @@ export interface GitEntityFilterProperties {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   )[]
@@ -6909,11 +6986,13 @@ export interface GitEntityFilterProperties {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
 }
 
@@ -7199,6 +7278,9 @@ export interface GitFullSyncEntityInfoDTO {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   errorMessage?: string
@@ -7420,6 +7502,9 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   )[]
@@ -7762,6 +7847,9 @@ export interface GitSyncEntityDTO {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   entityUrl?: string
@@ -7977,6 +8065,9 @@ export interface GitSyncEntityListDTO {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   gitSyncEntities?: GitSyncEntityDTO[]
@@ -8209,6 +8300,9 @@ export interface GitSyncErrorDTO {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
@@ -8245,11 +8339,13 @@ export interface GitSyncRepoFilesList {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface GitSyncSettingsDTO {
@@ -8496,10 +8592,14 @@ export type GoogleCloudFunctionsServiceSpec = ServiceSpec & {
 }
 
 export type GoogleCloudSourceArtifactConfig = ArtifactConfig & {
+  branch?: string
+  commitId?: string
   connectorRef: string
+  fetchType: 'Branch' | 'Commit' | 'Tag'
   project: string
   repository: string
   sourceDirectory: string
+  tag?: string
 }
 
 export type GoogleCloudStorageArtifactConfig = ArtifactConfig & {
@@ -8812,6 +8912,11 @@ export type IACMModuleLicenseDTO = ModuleLicenseDTO & {
   numberOfDevelopers?: number
 }
 
+export interface IconDTO {
+  deploymentType?: string
+  icon?: string
+}
+
 export type IdentifierRef = EntityReference & {
   fullyQualifiedScopeIdentifier?: string
   isDefault?: boolean
@@ -8877,6 +8982,7 @@ export interface InfrastructureDef {
     | 'AWS_SAM'
     | 'AwsLambda'
     | 'KubernetesAws'
+    | 'KubernetesRancher'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -8925,6 +9031,7 @@ export interface InfrastructureDefinitionConfig {
     | 'AWS_SAM'
     | 'AwsLambda'
     | 'KubernetesAws'
+    | 'KubernetesRancher'
 }
 
 export interface InfrastructureDetails {
@@ -8951,7 +9058,7 @@ export interface InfrastructureRequestDTO {
   tags?: {
     [key: string]: string
   }
-  type:
+  type?:
     | 'KubernetesDirect'
     | 'KubernetesGcp'
     | 'KubernetesAzure'
@@ -8969,6 +9076,7 @@ export interface InfrastructureRequestDTO {
     | 'AWS_SAM'
     | 'AwsLambda'
     | 'KubernetesAws'
+    | 'KubernetesRancher'
   yaml?: string
 }
 
@@ -9022,6 +9130,7 @@ export interface InfrastructureResponseDTO {
     | 'AWS_SAM'
     | 'AwsLambda'
     | 'KubernetesAws'
+    | 'KubernetesRancher'
   yaml?: string
 }
 
@@ -9763,7 +9872,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -9771,6 +9880,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -10007,11 +10117,13 @@ export interface LicensesWithSummaryDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface LoadBalancer {
@@ -10165,11 +10277,13 @@ export interface ModuleLicenseDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   premiumSupport?: boolean
   selfService?: boolean
   startTime?: number
@@ -10526,11 +10640,13 @@ export interface OAuthSignupDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   name?: string
   referer?: string
   signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
@@ -11279,11 +11395,13 @@ export interface PartialSchemaDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -11497,13 +11615,13 @@ export interface Project {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
-    | 'ET'
+    | 'IDP'
   )[]
   name: string
   orgIdentifier?: string
@@ -11582,11 +11700,11 @@ export interface RecommendationRequest {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   usageMap?: {
@@ -11825,6 +11943,9 @@ export interface ReferencedByDTO {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
 }
@@ -11933,7 +12054,8 @@ export interface ResourceDTO {
     | 'FEATURE_FLAG'
     | 'NG_ACCOUNT_DETAILS'
     | 'BUDGET_GROUP'
-    | 'NODE_EXECUTION'
+    | 'PIPELINE_EXECUTION'
+    | 'IP_ALLOWLIST_CONFIG'
 }
 
 export interface ResourceGroup {
@@ -12959,6 +13081,13 @@ export interface ResponseListConnectorResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseListCreditDTO {
+  correlationId?: string
+  data?: CreditDTO[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListEntityDetailProtoDTO {
   correlationId?: string
   data?: EntityDetailProtoDTO[]
@@ -13173,6 +13302,9 @@ export interface ResponseListEntityType {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   )[]
@@ -13190,9 +13322,15 @@ export interface ResponseListEnvironmentResponse {
 export interface ResponseListExecutionStatus {
   correlationId?: string
   data?: (
+    | 'Running'
+    | 'AsyncWaiting'
     | 'TaskWaiting'
     | 'TimedWaiting'
+    | 'Failed'
+    | 'Errored'
     | 'IgnoreFailed'
+    | 'NotStarted'
+    | 'Expired'
     | 'Aborted'
     | 'Discontinuing'
     | 'Queued'
@@ -13496,6 +13634,7 @@ export interface ResponseMapUsageKeyLong {
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
+
 export interface ResponseMessage {
   code?:
     | 'DEFAULT_ERROR_CODE'
@@ -14957,6 +15096,14 @@ export interface RestResponseString {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseSupportedDelegateVersion {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: SupportedDelegateVersion
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseUserGroup {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -15811,6 +15958,7 @@ export interface ServiceDetailsDTO {
 }
 
 export interface ServiceDetailsDTOV2 {
+  deploymentIconList?: IconDTO[]
   deploymentTypeList?: string[]
   description?: string
   failureRate?: number
@@ -15853,6 +16001,7 @@ export interface ServiceExecutionSummary {
 
 export interface ServiceHeaderInfo {
   createdAt?: number
+  deploymentIconList?: IconDTO[]
   deploymentTypes?: string[]
   description?: string
   identifier?: string
@@ -16428,11 +16577,13 @@ export interface StartTrialDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface StartupCommandConfiguration {
@@ -16696,11 +16847,13 @@ export interface SubscriptionDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   paymentMethodId?: string
 }
 
@@ -16722,11 +16875,13 @@ export interface SubscriptionDetailDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   pendingUpdate?: PendingUpdateDetailDTO
   status?: string
   subscriptionId?: string
@@ -16753,11 +16908,13 @@ export interface SubscriptionRequest {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   paymentFrequency?: string
   premiumSupport?: boolean
 }
@@ -16767,6 +16924,11 @@ export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
   accessKeyRef: string
   delegateSelectors?: string[]
   url: string
+}
+
+export interface SupportedDelegateVersion {
+  latestSupportedMinimalVersion?: string
+  latestSupportedVersion?: string
 }
 
 export interface SvcEnvMigrationProjectWrapperRequestDto {
@@ -16794,6 +16956,7 @@ export interface SvcEnvMigrationRequestDto {
     [key: string]: string
   }
   infraIdentifierFormat: string
+  newBranch?: boolean
   orgIdentifier: string
   pipelineIdentifier: string
   projectIdentifier: string
@@ -16824,10 +16987,10 @@ export interface SyncOptions {
 }
 
 export interface SyncRetryStrategy {
-  baseBackoffDuration: string
-  increaseBackoffByFactor: number
-  limit: number
-  maxBackoffDuration: string
+  baseBackoffDuration?: string
+  increaseBackoffByFactor?: number
+  limit?: number
+  maxBackoffDuration?: string
 }
 
 export type SyncStepInfo = StepSpecType & {
@@ -16882,6 +17045,7 @@ export type TanzuApplicationServiceSpec = ServiceSpec & {}
 
 export type TasAppResizeStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  ignoreInstanceCountManifest?: boolean
   newAppInstances: TasInstanceSelectionWrapper
   oldAppInstances?: TasInstanceSelectionWrapper
 }
@@ -17621,11 +17785,21 @@ export interface User {
   twoFactorAuthenticationEnabled?: boolean
   twoFactorAuthenticationMechanism?: 'TOTP'
   twoFactorJwtToken?: string
+  userAccountLevelDataMap?: {
+    [key: string]: UserAccountLevelData
+  }
   userGroups?: UserGroup[]
   userLocked?: boolean
   userLockoutInfo?: UserLockoutInfo
   utmInfo?: UtmInfo
   uuid: string
+}
+
+export interface UserAccountLevelData {
+  sourceOfProvisioning?: {
+    [key: string]: 'MANUAL' | 'LDAP' | 'SCIM'
+  }
+  userProvisionedTo?: ('CG' | 'NG')[]
 }
 
 export interface UserAggregate {
@@ -17783,6 +17957,13 @@ export interface UserInfo {
   twoFactorAuthenticationEnabled?: boolean
   utmInfo?: UtmInfo
   uuid: string
+}
+
+export interface UserInfoUpdateDTO {
+  email?: string
+  familyName?: string
+  givenName?: string
+  name?: string
 }
 
 export interface UserLockoutInfo {
@@ -18098,11 +18279,13 @@ export interface YamlSchemaMetadata {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -18122,11 +18305,13 @@ export interface YamlSchemaWithDetails {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -18168,8 +18353,6 @@ export type DelegateDownloadRequestRequestBody = DelegateDownloadRequest
 export type DelegateGroupTagsRequestBody = DelegateGroupTags
 
 export type DelegateProfileDetailsNgRequestBody = DelegateProfileDetailsNg
-
-export type DelegateResponseDataRequestBody = DelegateResponseData
 
 export type DockerRequestDTORequestBody = DockerRequestDTO
 
@@ -18256,11 +18439,6 @@ export type UserGroupRequestV2DTORequestBody = UserGroupRequestV2DTO
 export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
-
-export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
-
-export type DeleteManyFreezesBodyRequestBody = string[]
-export type GetEKSClusterNamesViaExpressionResolutionBodyRequestBody = string
 
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
@@ -19100,6 +19278,9 @@ export interface ListActivitiesQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   referredByEntityType?:
@@ -19307,6 +19488,9 @@ export interface ListActivitiesQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
 }
@@ -19618,6 +19802,9 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   referredByEntityType?:
@@ -19825,6 +20012,9 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
 }
@@ -20738,11 +20928,13 @@ export interface GetProjectAggregateDTOListQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -28801,101 +28993,6 @@ export const getEKSClusterNamesPromise = (
     signal
   )
 
-export interface GetEKSClusterNamesViaExpressionResolutionQueryParams {
-  awsConnectorRef?: string
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  envId?: string
-  infraDefinitionId?: string
-  pipelineIdentifier: string
-  fqnPath: string
-  branch?: string
-  repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
-  repoName?: string
-}
-
-export type GetEKSClusterNamesViaExpressionResolutionProps = Omit<
-  MutateProps<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get EKS clusters list with via expression resolution for eks connector
- */
-export const GetEKSClusterNamesViaExpressionResolution = (props: GetEKSClusterNamesViaExpressionResolutionProps) => (
-  <Mutate<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/aws/aws-helper/eks/clusters/v2`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetEKSClusterNamesViaExpressionResolutionProps = Omit<
-  UseMutateProps<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get EKS clusters list with via expression resolution for eks connector
- */
-export const useGetEKSClusterNamesViaExpressionResolution = (
-  props: UseGetEKSClusterNamesViaExpressionResolutionProps
-) =>
-  useMutate<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >('POST', `/aws/aws-helper/eks/clusters/v2`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get EKS clusters list with via expression resolution for eks connector
- */
-export const getEKSClusterNamesViaExpressionResolutionPromise = (
-  props: MutateUsingFetchProps<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/aws/aws-helper/eks/clusters/v2`, props, signal)
-
 export interface ElasticLoadBalancersQueryParams {
   awsConnectorRef?: string
   accountIdentifier: string
@@ -31214,8 +31311,6 @@ export const getConnectorCataloguePromise = (
   )
 
 export interface GetCCMK8SConnectorListQueryParams {
-  pageIndex?: number
-  pageSize?: number
   accountIdentifier?: string
   searchTerm?: string
   orgIdentifier?: string
@@ -31232,6 +31327,10 @@ export interface GetCCMK8SConnectorListQueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   getDistinctFromBranches?: boolean
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetCCMK8SConnectorListProps = Omit<
@@ -31457,8 +31556,6 @@ export const getCEAwsTemplatePromise = (
   )
 
 export interface GetConnectorListV2QueryParams {
-  pageIndex?: number
-  pageSize?: number
   accountIdentifier?: string
   searchTerm?: string
   orgIdentifier?: string
@@ -31475,6 +31572,10 @@ export interface GetConnectorListV2QueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   getDistinctFromBranches?: boolean
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetConnectorListV2Props = Omit<
@@ -32164,6 +32265,61 @@ export const createCreditsPromise = (
     'POST',
     getConfig('ng/api'),
     `/credits/create`,
+    props,
+    signal
+  )
+
+export interface GetCreditsByAccountPathParams {
+  accountIdentifier: string
+}
+
+export type GetCreditsByAccountProps = Omit<
+  GetProps<ResponseListCreditDTO, Failure | Error, void, GetCreditsByAccountPathParams>,
+  'path'
+> &
+  GetCreditsByAccountPathParams
+
+/**
+ * Get Credits purchase history of an Account in expiry time ascending order
+ */
+export const GetCreditsByAccount = ({ accountIdentifier, ...props }: GetCreditsByAccountProps) => (
+  <Get<ResponseListCreditDTO, Failure | Error, void, GetCreditsByAccountPathParams>
+    path={`/credits/${accountIdentifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetCreditsByAccountProps = Omit<
+  UseGetProps<ResponseListCreditDTO, Failure | Error, void, GetCreditsByAccountPathParams>,
+  'path'
+> &
+  GetCreditsByAccountPathParams
+
+/**
+ * Get Credits purchase history of an Account in expiry time ascending order
+ */
+export const useGetCreditsByAccount = ({ accountIdentifier, ...props }: UseGetCreditsByAccountProps) =>
+  useGet<ResponseListCreditDTO, Failure | Error, void, GetCreditsByAccountPathParams>(
+    (paramsInPath: GetCreditsByAccountPathParams) => `/credits/${paramsInPath.accountIdentifier}`,
+    { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * Get Credits purchase history of an Account in expiry time ascending order
+ */
+export const getCreditsByAccountPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: GetUsingFetchProps<ResponseListCreditDTO, Failure | Error, void, GetCreditsByAccountPathParams> & {
+    accountIdentifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListCreditDTO, Failure | Error, void, GetCreditsByAccountPathParams>(
+    getConfig('ng/api'),
+    `/credits/${accountIdentifier}`,
     props,
     signal
   )
@@ -35572,6 +35728,108 @@ export const generateNgHelmValuesYamlPromise = (
     signal
   )
 
+export interface PublishedDelegateVersionQueryParams {
+  accountIdentifier: string
+}
+
+export type PublishedDelegateVersionProps = Omit<
+  GetProps<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets the latest supported delegate version
+ */
+export const PublishedDelegateVersion = (props: PublishedDelegateVersionProps) => (
+  <Get<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>
+    path={`/delegate-setup/latest-supported-version`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UsePublishedDelegateVersionProps = Omit<
+  UseGetProps<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets the latest supported delegate version
+ */
+export const usePublishedDelegateVersion = (props: UsePublishedDelegateVersionProps) =>
+  useGet<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>(
+    `/delegate-setup/latest-supported-version`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets the latest supported delegate version
+ */
+export const publishedDelegateVersionPromise = (
+  props: GetUsingFetchProps<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>(
+    getConfig('ng/api'),
+    `/delegate-setup/latest-supported-version`,
+    props,
+    signal
+  )
+
+export interface OverrideDelegateImageTagQueryParams {
+  accountIdentifier?: string
+  delegateTag?: string
+  validTillNextRelease?: boolean
+  validForDays?: number
+}
+
+export type OverrideDelegateImageTagProps = Omit<
+  MutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Overrides delegate image tag for account
+ */
+export const OverrideDelegateImageTag = (props: OverrideDelegateImageTagProps) => (
+  <Mutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>
+    verb="PUT"
+    path={`/delegate-setup/override-delegate-tag`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseOverrideDelegateImageTagProps = Omit<
+  UseMutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Overrides delegate image tag for account
+ */
+export const useOverrideDelegateImageTag = (props: UseOverrideDelegateImageTagProps) =>
+  useMutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
+    'PUT',
+    `/delegate-setup/override-delegate-tag`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Overrides delegate image tag for account
+ */
+export const overrideDelegateImageTagPromise = (
+  props: MutateUsingFetchProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
+    'PUT',
+    getConfig('ng/api'),
+    `/delegate-setup/override-delegate-tag`,
+    props,
+    signal
+  )
+
 export interface GetDelegateTokensQueryParams {
   name?: string
   accountIdentifier: string
@@ -36668,6 +36926,9 @@ export interface ListReferredByEntitiesQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   searchTerm?: string
@@ -36936,6 +37197,9 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   searchTerm?: string
@@ -40415,6 +40679,9 @@ export interface GetReferencedByQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   searchTerm?: string
@@ -43097,6 +43364,9 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
 }
@@ -43372,9 +43642,11 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'AWSSecurityHub'
       | 'CustomIngest'
       | 'BackstageEnvironmentVariable'
+      | 'Fossa'
+      | 'CodeQL'
+      | 'Gitleaks'
       | 'DeployCloudFunctionGenOne'
       | 'RollbackCloudFunctionGenOne'
-      | 'BackstageEnvironmentVariable'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -46277,7 +46549,7 @@ export type GetInstanceSyncPerpetualTaskResponseProps = Omit<
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >,
   'path' | 'verb'
@@ -46287,13 +46559,7 @@ export type GetInstanceSyncPerpetualTaskResponseProps = Omit<
  * Get instance sync perpetual task response
  */
 export const GetInstanceSyncPerpetualTaskResponse = (props: GetInstanceSyncPerpetualTaskResponseProps) => (
-  <Mutate<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >
+  <Mutate<ResponseBoolean, Failure | Error, GetInstanceSyncPerpetualTaskResponseQueryParams, DelegateResponseData, void>
     verb="POST"
     path={`/instancesync/response`}
     base={getConfig('ng/api')}
@@ -46306,7 +46572,7 @@ export type UseGetInstanceSyncPerpetualTaskResponseProps = Omit<
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >,
   'path' | 'verb'
@@ -46320,7 +46586,7 @@ export const useGetInstanceSyncPerpetualTaskResponse = (props: UseGetInstanceSyn
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >('POST', `/instancesync/response`, { base: getConfig('ng/api'), ...props })
 
@@ -46332,7 +46598,7 @@ export const getInstanceSyncPerpetualTaskResponsePromise = (
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >,
   signal?: RequestInit['signal']
@@ -46341,87 +46607,9 @@ export const getInstanceSyncPerpetualTaskResponsePromise = (
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >('POST', getConfig('ng/api'), `/instancesync/response`, props, signal)
-
-export interface GetInstanceSyncPerpetualTaskResponseV2QueryParams {
-  accountIdentifier: string
-  perpetualTaskId: string
-}
-
-export type GetInstanceSyncPerpetualTaskResponseV2Props = Omit<
-  MutateProps<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get instance sync perpetual task response
- */
-export const GetInstanceSyncPerpetualTaskResponseV2 = (props: GetInstanceSyncPerpetualTaskResponseV2Props) => (
-  <Mutate<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/instancesync/v2/response`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetInstanceSyncPerpetualTaskResponseV2Props = Omit<
-  UseMutateProps<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get instance sync perpetual task response
- */
-export const useGetInstanceSyncPerpetualTaskResponseV2 = (props: UseGetInstanceSyncPerpetualTaskResponseV2Props) =>
-  useMutate<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >('POST', `/instancesync/v2/response`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get instance sync perpetual task response
- */
-export const getInstanceSyncPerpetualTaskResponseV2Promise = (
-  props: MutateUsingFetchProps<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/instancesync/v2/response`, props, signal)
 
 export interface GetInvitesQueryParams {
   accountIdentifier: string
@@ -48192,11 +48380,13 @@ export interface GetEditionActionsQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export type GetEditionActionsProps = Omit<
@@ -48255,11 +48445,13 @@ export interface StartCommunityLicenseQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export type StartCommunityLicenseProps = Omit<
@@ -48384,11 +48576,13 @@ export interface StartFreeLicenseQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   referer?: string
   gaClientId?: string
 }
@@ -48451,11 +48645,13 @@ export interface GetModuleLicensesByAccountAndModuleTypeQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface GetModuleLicensesByAccountAndModuleTypePathParams {
@@ -48681,11 +48877,13 @@ export interface GetLicensesAndSummaryQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface GetLicensesAndSummaryPathParams {
@@ -49727,6 +49925,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   yamlGroup?: string
@@ -50062,6 +50263,9 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
 }
@@ -50622,11 +50826,13 @@ export interface GetProjectListQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -50751,11 +50957,13 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -56089,6 +56297,62 @@ export const upsertServiceV2Promise = (
     void
   >('PUT', getConfig('ng/api'), `/servicesV2/upsert`, props, signal)
 
+export interface ValidateTemplateInputsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  identifier?: string
+}
+
+export type ValidateTemplateInputsProps = Omit<
+  GetProps<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>,
+  'path'
+>
+
+/**
+ * This validates inputs for templates like artifact sources for service yaml
+ */
+export const ValidateTemplateInputs = (props: ValidateTemplateInputsProps) => (
+  <Get<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>
+    path={`/servicesV2/validate-template-inputs`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseValidateTemplateInputsProps = Omit<
+  UseGetProps<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>,
+  'path'
+>
+
+/**
+ * This validates inputs for templates like artifact sources for service yaml
+ */
+export const useValidateTemplateInputs = (props: UseValidateTemplateInputsProps) =>
+  useGet<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>(
+    `/servicesV2/validate-template-inputs`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * This validates inputs for templates like artifact sources for service yaml
+ */
+export const validateTemplateInputsPromise = (
+  props: GetUsingFetchProps<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>(
+    getConfig('ng/api'),
+    `/servicesV2/validate-template-inputs`,
+    props,
+    signal
+  )
+
 export interface DeleteServiceV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -57274,14 +57538,13 @@ export interface ListSubscriptionsQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
-    | 'GOVERNANCE'
 }
 
 export type ListSubscriptionsProps = Omit<
@@ -57862,11 +58125,13 @@ export interface RetrieveProductPricesQueryParams {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export type RetrieveProductPricesProps = Omit<
@@ -61982,6 +62247,84 @@ export const removeUserPromise = (
     signal
   )
 
+export interface UpdateUserNameQueryParams {
+  accountIdentifier?: string
+}
+
+export interface UpdateUserNamePathParams {
+  userId: string
+}
+
+export type UpdateUserNameProps = Omit<
+  MutateProps<
+    ResponseUserInfo,
+    Failure | Error,
+    UpdateUserNameQueryParams,
+    UserInfoUpdateDTO,
+    UpdateUserNamePathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateUserNamePathParams
+
+/**
+ * update user information
+ */
+export const UpdateUserName = ({ userId, ...props }: UpdateUserNameProps) => (
+  <Mutate<ResponseUserInfo, Failure | Error, UpdateUserNameQueryParams, UserInfoUpdateDTO, UpdateUserNamePathParams>
+    verb="PUT"
+    path={`/user/${userId}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateUserNameProps = Omit<
+  UseMutateProps<
+    ResponseUserInfo,
+    Failure | Error,
+    UpdateUserNameQueryParams,
+    UserInfoUpdateDTO,
+    UpdateUserNamePathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateUserNamePathParams
+
+/**
+ * update user information
+ */
+export const useUpdateUserName = ({ userId, ...props }: UseUpdateUserNameProps) =>
+  useMutate<ResponseUserInfo, Failure | Error, UpdateUserNameQueryParams, UserInfoUpdateDTO, UpdateUserNamePathParams>(
+    'PUT',
+    (paramsInPath: UpdateUserNamePathParams) => `/user/${paramsInPath.userId}`,
+    { base: getConfig('ng/api'), pathParams: { userId }, ...props }
+  )
+
+/**
+ * update user information
+ */
+export const updateUserNamePromise = (
+  {
+    userId,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseUserInfo,
+    Failure | Error,
+    UpdateUserNameQueryParams,
+    UserInfoUpdateDTO,
+    UpdateUserNamePathParams
+  > & { userId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseUserInfo,
+    Failure | Error,
+    UpdateUserNameQueryParams,
+    UserInfoUpdateDTO,
+    UpdateUserNamePathParams
+  >('PUT', getConfig('ng/api'), `/user/${userId}`, props, signal)
+
 export interface ListDelegateConfigsNgV2QueryParams {
   offset?: string
   limit?: string
@@ -64305,60 +64648,6 @@ export const getVariablePromise = (
     signal
   )
 
-export interface OverrideDelegateImageTagQueryParams {
-  accountIdentifier?: string
-  delegateTag?: string
-  validTillNextRelease?: boolean
-  validForDays?: number
-}
-
-export type OverrideDelegateImageTagProps = Omit<
-  MutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
-  'path' | 'verb'
->
-
-/**
- * Overrides delegate image tag for account
- */
-export const OverrideDelegateImageTag = (props: OverrideDelegateImageTagProps) => (
-  <Mutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>
-    verb="PUT"
-    path={`/version-override/delegate-tag`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseOverrideDelegateImageTagProps = Omit<
-  UseMutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
-  'path' | 'verb'
->
-
-/**
- * Overrides delegate image tag for account
- */
-export const useOverrideDelegateImageTag = (props: UseOverrideDelegateImageTagProps) =>
-  useMutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
-    'PUT',
-    `/version-override/delegate-tag`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Overrides delegate image tag for account
- */
-export const overrideDelegateImageTagPromise = (
-  props: MutateUsingFetchProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
-    'PUT',
-    getConfig('ng/api'),
-    `/version-override/delegate-tag`,
-    props,
-    signal
-  )
-
 export interface WebhookEndpointQueryParams {
   accountIdentifier: string
 }
@@ -64622,6 +64911,9 @@ export interface GetYamlSchemaQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
   subtype?:
