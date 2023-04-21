@@ -1225,8 +1225,8 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -1309,6 +1309,7 @@ export type AwsCodeCommitSecretKeyAccessKeyDTO = AwsCodeCommitHttpsCredentialsSp
 }
 
 export type AwsConnector = ConnectorConfigDTO & {
+  awsSdkClientBackOffStrategyOverride?: AwsSdkClientBackoffStrategy
   credential: AwsCredential
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
@@ -1330,6 +1331,23 @@ export interface AwsCurAttributes {
   reportName: string
   s3BucketName: string
   s3Prefix?: string
+}
+
+export type AwsEqualJitterBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  baseDelay?: number
+  maxBackoffTime?: number
+  retryCount?: number
+}
+
+export type AwsFixedDelayBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  fixedBackoff?: number
+  retryCount?: number
+}
+
+export type AwsFullJitterBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  baseDelay?: number
+  maxBackoffTime?: number
+  retryCount?: number
 }
 
 export interface AwsInstanceFilter {
@@ -1478,6 +1496,15 @@ export type AwsSamRollbackStepInfo = StepSpecType & {
 }
 
 export type AwsSamServiceSpec = ServiceSpec & {}
+
+export interface AwsSdkClientBackOffStrategySpec {
+  [key: string]: any
+}
+
+export interface AwsSdkClientBackoffStrategy {
+  spec?: AwsSdkClientBackOffStrategySpec
+  type: 'FixedDelayBackoffStrategy' | 'EqualJitterBackoffStrategy' | 'FullJitterBackoffStrategy'
+}
 
 export interface AwsSecretManagerCredential {
   spec?: AwsSecretManagerCredentialSpec
@@ -2107,7 +2134,6 @@ export interface CDPipelineModuleInfo {
 
 export interface CDStageMetaDataDTO {
   environmentRef?: string
-  filteredProvisionerRefs?: string[]
   serviceEnvRefList?: ServiceEnvRef[]
   serviceRef?: string
 }
@@ -2169,6 +2195,10 @@ export type CELicenseSummaryDTO = LicensesWithSummaryDTO & {
 
 export type CEModuleLicenseDTO = ModuleLicenseDTO & {
   spendLimit?: number
+}
+
+export type CETModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfAgents?: number
 }
 
 export type CFLicenseSummaryDTO = LicensesWithSummaryDTO & {
@@ -5819,6 +5849,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -5935,6 +5966,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -6046,6 +6078,7 @@ export interface FeedbackFormDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   score?: number
   suggestion?: string
 }
@@ -6726,6 +6759,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
 }
 
@@ -6958,6 +6992,7 @@ export interface GitEntityFilterProperties {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
 }
 
@@ -8310,6 +8345,7 @@ export interface GitSyncRepoFilesList {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface GitSyncSettingsDTO {
@@ -9836,7 +9872,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -9844,6 +9880,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -10086,6 +10123,7 @@ export interface LicensesWithSummaryDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface LoadBalancer {
@@ -10245,6 +10283,7 @@ export interface ModuleLicenseDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   premiumSupport?: boolean
   selfService?: boolean
   startTime?: number
@@ -10607,6 +10646,7 @@ export interface OAuthSignupDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   name?: string
   referer?: string
   signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
@@ -11361,6 +11401,7 @@ export interface PartialSchemaDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -11579,9 +11620,8 @@ export interface Project {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
-    | 'ET'
+    | 'IDP'
   )[]
   name: string
   orgIdentifier?: string
@@ -11665,7 +11705,6 @@ export interface RecommendationRequest {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   usageMap?: {
@@ -13596,6 +13635,7 @@ export interface ResponseMapUsageKeyLong {
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
+
 export interface ResponseMessage {
   code?:
     | 'DEFAULT_ERROR_CODE'
@@ -15054,6 +15094,14 @@ export interface RestResponseString {
     [key: string]: { [key: string]: any }
   }
   resource?: string
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseSupportedDelegateVersion {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: SupportedDelegateVersion
   responseMessages?: ResponseMessage[]
 }
 
@@ -16536,6 +16584,7 @@ export interface StartTrialDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface StartupCommandConfiguration {
@@ -16805,6 +16854,7 @@ export interface SubscriptionDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   paymentMethodId?: string
 }
 
@@ -16865,6 +16915,7 @@ export interface SubscriptionRequest {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   paymentFrequency?: string
   premiumSupport?: boolean
 }
@@ -16874,6 +16925,11 @@ export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
   accessKeyRef: string
   delegateSelectors?: string[]
   url: string
+}
+
+export interface SupportedDelegateVersion {
+  latestSupportedMinimalVersion?: string
+  latestSupportedVersion?: string
 }
 
 export interface SvcEnvMigrationProjectWrapperRequestDto {
@@ -16901,6 +16957,7 @@ export interface SvcEnvMigrationRequestDto {
     [key: string]: string
   }
   infraIdentifierFormat: string
+  newBranch?: boolean
   orgIdentifier: string
   pipelineIdentifier: string
   projectIdentifier: string
@@ -16931,10 +16988,10 @@ export interface SyncOptions {
 }
 
 export interface SyncRetryStrategy {
-  baseBackoffDuration: string
-  increaseBackoffByFactor: number
-  limit: number
-  maxBackoffDuration: string
+  baseBackoffDuration?: string
+  increaseBackoffByFactor?: number
+  limit?: number
+  maxBackoffDuration?: string
 }
 
 export type SyncStepInfo = StepSpecType & {
@@ -16989,6 +17046,7 @@ export type TanzuApplicationServiceSpec = ServiceSpec & {}
 
 export type TasAppResizeStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  ignoreInstanceCountManifest?: boolean
   newAppInstances: TasInstanceSelectionWrapper
   oldAppInstances?: TasInstanceSelectionWrapper
 }
@@ -18228,6 +18286,7 @@ export interface YamlSchemaMetadata {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -18253,6 +18312,7 @@ export interface YamlSchemaWithDetails {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -18294,8 +18354,6 @@ export type DelegateDownloadRequestRequestBody = DelegateDownloadRequest
 export type DelegateGroupTagsRequestBody = DelegateGroupTags
 
 export type DelegateProfileDetailsNgRequestBody = DelegateProfileDetailsNg
-
-export type DelegateResponseDataRequestBody = DelegateResponseData
 
 export type DockerRequestDTORequestBody = DockerRequestDTO
 
@@ -18382,11 +18440,6 @@ export type UserGroupRequestV2DTORequestBody = UserGroupRequestV2DTO
 export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
-
-export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
-
-export type DeleteManyFreezesBodyRequestBody = string[]
-export type GetEKSClusterNamesViaExpressionResolutionBodyRequestBody = string
 
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
@@ -20882,6 +20935,7 @@ export interface GetProjectAggregateDTOListQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -31258,8 +31312,6 @@ export const getConnectorCataloguePromise = (
   )
 
 export interface GetCCMK8SConnectorListQueryParams {
-  pageIndex?: number
-  pageSize?: number
   accountIdentifier?: string
   searchTerm?: string
   orgIdentifier?: string
@@ -31276,6 +31328,10 @@ export interface GetCCMK8SConnectorListQueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   getDistinctFromBranches?: boolean
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetCCMK8SConnectorListProps = Omit<
@@ -31501,8 +31557,6 @@ export const getCEAwsTemplatePromise = (
   )
 
 export interface GetConnectorListV2QueryParams {
-  pageIndex?: number
-  pageSize?: number
   accountIdentifier?: string
   searchTerm?: string
   orgIdentifier?: string
@@ -31519,6 +31573,10 @@ export interface GetConnectorListV2QueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   getDistinctFromBranches?: boolean
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetConnectorListV2Props = Omit<
@@ -35667,6 +35725,108 @@ export const generateNgHelmValuesYamlPromise = (
     'POST',
     getConfig('ng/api'),
     `/delegate-setup/generate-helm-values`,
+    props,
+    signal
+  )
+
+export interface PublishedDelegateVersionQueryParams {
+  accountIdentifier: string
+}
+
+export type PublishedDelegateVersionProps = Omit<
+  GetProps<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets the latest supported delegate version
+ */
+export const PublishedDelegateVersion = (props: PublishedDelegateVersionProps) => (
+  <Get<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>
+    path={`/delegate-setup/latest-supported-version`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UsePublishedDelegateVersionProps = Omit<
+  UseGetProps<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets the latest supported delegate version
+ */
+export const usePublishedDelegateVersion = (props: UsePublishedDelegateVersionProps) =>
+  useGet<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>(
+    `/delegate-setup/latest-supported-version`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets the latest supported delegate version
+ */
+export const publishedDelegateVersionPromise = (
+  props: GetUsingFetchProps<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseSupportedDelegateVersion, unknown, PublishedDelegateVersionQueryParams, void>(
+    getConfig('ng/api'),
+    `/delegate-setup/latest-supported-version`,
+    props,
+    signal
+  )
+
+export interface OverrideDelegateImageTagQueryParams {
+  accountIdentifier?: string
+  delegateTag?: string
+  validTillNextRelease?: boolean
+  validForDays?: number
+}
+
+export type OverrideDelegateImageTagProps = Omit<
+  MutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Overrides delegate image tag for account
+ */
+export const OverrideDelegateImageTag = (props: OverrideDelegateImageTagProps) => (
+  <Mutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>
+    verb="PUT"
+    path={`/delegate-setup/override-delegate-tag`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseOverrideDelegateImageTagProps = Omit<
+  UseMutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Overrides delegate image tag for account
+ */
+export const useOverrideDelegateImageTag = (props: UseOverrideDelegateImageTagProps) =>
+  useMutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
+    'PUT',
+    `/delegate-setup/override-delegate-tag`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Overrides delegate image tag for account
+ */
+export const overrideDelegateImageTagPromise = (
+  props: MutateUsingFetchProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
+    'PUT',
+    getConfig('ng/api'),
+    `/delegate-setup/override-delegate-tag`,
     props,
     signal
   )
@@ -43488,7 +43648,6 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'Gitleaks'
       | 'DeployCloudFunctionGenOne'
       | 'RollbackCloudFunctionGenOne'
-      | 'BackstageEnvironmentVariable'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -46391,7 +46550,7 @@ export type GetInstanceSyncPerpetualTaskResponseProps = Omit<
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >,
   'path' | 'verb'
@@ -46401,13 +46560,7 @@ export type GetInstanceSyncPerpetualTaskResponseProps = Omit<
  * Get instance sync perpetual task response
  */
 export const GetInstanceSyncPerpetualTaskResponse = (props: GetInstanceSyncPerpetualTaskResponseProps) => (
-  <Mutate<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >
+  <Mutate<ResponseBoolean, Failure | Error, GetInstanceSyncPerpetualTaskResponseQueryParams, DelegateResponseData, void>
     verb="POST"
     path={`/instancesync/response`}
     base={getConfig('ng/api')}
@@ -46420,7 +46573,7 @@ export type UseGetInstanceSyncPerpetualTaskResponseProps = Omit<
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >,
   'path' | 'verb'
@@ -46434,7 +46587,7 @@ export const useGetInstanceSyncPerpetualTaskResponse = (props: UseGetInstanceSyn
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >('POST', `/instancesync/response`, { base: getConfig('ng/api'), ...props })
 
@@ -46446,7 +46599,7 @@ export const getInstanceSyncPerpetualTaskResponsePromise = (
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >,
   signal?: RequestInit['signal']
@@ -46455,87 +46608,9 @@ export const getInstanceSyncPerpetualTaskResponsePromise = (
     ResponseBoolean,
     Failure | Error,
     GetInstanceSyncPerpetualTaskResponseQueryParams,
-    DelegateResponseDataRequestBody,
+    DelegateResponseData,
     void
   >('POST', getConfig('ng/api'), `/instancesync/response`, props, signal)
-
-export interface GetInstanceSyncPerpetualTaskResponseV2QueryParams {
-  accountIdentifier: string
-  perpetualTaskId: string
-}
-
-export type GetInstanceSyncPerpetualTaskResponseV2Props = Omit<
-  MutateProps<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get instance sync perpetual task response
- */
-export const GetInstanceSyncPerpetualTaskResponseV2 = (props: GetInstanceSyncPerpetualTaskResponseV2Props) => (
-  <Mutate<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/instancesync/v2/response`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetInstanceSyncPerpetualTaskResponseV2Props = Omit<
-  UseMutateProps<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get instance sync perpetual task response
- */
-export const useGetInstanceSyncPerpetualTaskResponseV2 = (props: UseGetInstanceSyncPerpetualTaskResponseV2Props) =>
-  useMutate<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >('POST', `/instancesync/v2/response`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get instance sync perpetual task response
- */
-export const getInstanceSyncPerpetualTaskResponseV2Promise = (
-  props: MutateUsingFetchProps<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseBoolean,
-    Failure | Error,
-    GetInstanceSyncPerpetualTaskResponseV2QueryParams,
-    DelegateResponseDataRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/instancesync/v2/response`, props, signal)
 
 export interface GetInvitesQueryParams {
   accountIdentifier: string
@@ -48312,6 +48387,7 @@ export interface GetEditionActionsQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export type GetEditionActionsProps = Omit<
@@ -48376,6 +48452,7 @@ export interface StartCommunityLicenseQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export type StartCommunityLicenseProps = Omit<
@@ -48506,6 +48583,7 @@ export interface StartFreeLicenseQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   referer?: string
   gaClientId?: string
 }
@@ -48574,6 +48652,7 @@ export interface GetModuleLicensesByAccountAndModuleTypeQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface GetModuleLicensesByAccountAndModuleTypePathParams {
@@ -48805,6 +48884,7 @@ export interface GetLicensesAndSummaryQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export interface GetLicensesAndSummaryPathParams {
@@ -50753,6 +50833,7 @@ export interface GetProjectListQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -50883,6 +50964,7 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -56216,6 +56298,62 @@ export const upsertServiceV2Promise = (
     void
   >('PUT', getConfig('ng/api'), `/servicesV2/upsert`, props, signal)
 
+export interface ValidateTemplateInputsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  identifier?: string
+}
+
+export type ValidateTemplateInputsProps = Omit<
+  GetProps<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>,
+  'path'
+>
+
+/**
+ * This validates inputs for templates like artifact sources for service yaml
+ */
+export const ValidateTemplateInputs = (props: ValidateTemplateInputsProps) => (
+  <Get<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>
+    path={`/servicesV2/validate-template-inputs`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseValidateTemplateInputsProps = Omit<
+  UseGetProps<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>,
+  'path'
+>
+
+/**
+ * This validates inputs for templates like artifact sources for service yaml
+ */
+export const useValidateTemplateInputs = (props: UseValidateTemplateInputsProps) =>
+  useGet<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>(
+    `/servicesV2/validate-template-inputs`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * This validates inputs for templates like artifact sources for service yaml
+ */
+export const validateTemplateInputsPromise = (
+  props: GetUsingFetchProps<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>(
+    getConfig('ng/api'),
+    `/servicesV2/validate-template-inputs`,
+    props,
+    signal
+  )
+
 export interface DeleteServiceV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -57994,6 +58132,7 @@ export interface RetrieveProductPricesQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IDP'
 }
 
 export type RetrieveProductPricesProps = Omit<
@@ -64506,60 +64645,6 @@ export const getVariablePromise = (
   getUsingFetch<ResponseVariableResponseDTO, Failure | Error, GetVariableQueryParams, GetVariablePathParams>(
     getConfig('ng/api'),
     `/variables/${identifier}`,
-    props,
-    signal
-  )
-
-export interface OverrideDelegateImageTagQueryParams {
-  accountIdentifier?: string
-  delegateTag?: string
-  validTillNextRelease?: boolean
-  validForDays?: number
-}
-
-export type OverrideDelegateImageTagProps = Omit<
-  MutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
-  'path' | 'verb'
->
-
-/**
- * Overrides delegate image tag for account
- */
-export const OverrideDelegateImageTag = (props: OverrideDelegateImageTagProps) => (
-  <Mutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>
-    verb="PUT"
-    path={`/version-override/delegate-tag`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseOverrideDelegateImageTagProps = Omit<
-  UseMutateProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
-  'path' | 'verb'
->
-
-/**
- * Overrides delegate image tag for account
- */
-export const useOverrideDelegateImageTag = (props: UseOverrideDelegateImageTagProps) =>
-  useMutate<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
-    'PUT',
-    `/version-override/delegate-tag`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Overrides delegate image tag for account
- */
-export const overrideDelegateImageTagPromise = (
-  props: MutateUsingFetchProps<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<RestResponseString, unknown, OverrideDelegateImageTagQueryParams, void, void>(
-    'PUT',
-    getConfig('ng/api'),
-    `/version-override/delegate-tag`,
     props,
     signal
   )
