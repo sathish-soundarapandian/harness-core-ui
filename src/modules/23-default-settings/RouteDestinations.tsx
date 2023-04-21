@@ -91,6 +91,13 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ALLOW_DIFFERENT_REPO_F
   settingCategory: 'GIT_EXPERIENCE'
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_MATRIX_FIELD_NAME_SETTING, {
+  label: 'defaultSettings.enableMatrixFieldNames',
+  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'PMS'
+})
+
 AuditTrailFactory.registerResourceHandler('SETTING', {
   moduleIcon: {
     name: 'nav-settings'

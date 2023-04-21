@@ -13,3 +13,4 @@ stageTimeout: Stage Timeout
 stepTimeout: Step Timeout
 concurrentActivePipelineExecutions: Concurrent Active Pipeline Executions
 allowUserToMarkStepAsFailedExplicitly: Allow users to mark a running Step as failure
+enableMatrixFieldNames: Enable Matrix Labels By Name
