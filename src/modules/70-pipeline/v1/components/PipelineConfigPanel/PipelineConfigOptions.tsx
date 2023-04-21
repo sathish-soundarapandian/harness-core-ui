@@ -29,12 +29,12 @@ export const enum StudioEntity {
 
 export type SubType = Stage | Step
 
-const enum Stage {
+export const enum Stage {
   CI = 'CI',
   CD = 'CD'
 }
 
-const enum Step {
+export const enum Step {
   Run = 'Script',
   Plugin = 'Plugin'
 }

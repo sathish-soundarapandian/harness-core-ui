@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { capitalize, get, isEmpty } from 'lodash-es'
 import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
-import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text, Formik } from '@harness/uicore'
 import {
   ConfigOptionsMapWithAdditionalOptions,
   MainConfigOptionsMap,
   PipelineConfigOptionInterface,
+  Step,
   StudioEntity,
   SubType
 } from './PipelineConfigOptions'
@@ -26,6 +27,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const { height, selectedEntityTypeFromYAML, selectedEntityFromYAML } = props
   const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false)
   const [studioEntity, setStudioEntity] = useState<StudioEntity>()
+  const [studioEntitySubType, setStudioEntitySubType] = useState<SubType>()
   const [pipelineConfigOption, setPipelineConfigOption] = useState<PipelineConfigOptionInterface>()
   const [pipelineConfigPanelView, setPipelineConfigPanelView] = useState<PipelineConfigPanelView>(
     PipelineConfigPanelView.Options
@@ -49,14 +51,15 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         setStudioEntity(selectedEntityTypeFromYAML)
         setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)
         if (configOptionForEntityType.drillDown.hasSubTypes) {
-          const matchingSubType = configOptionForEntityType.drillDown.subTypes?.find(
+          const matchingSubTypeConfigOption = configOptionForEntityType.drillDown.subTypes?.find(
             (
               option: PipelineConfigOptionInterface & {
                 type: SubType
               }
             ) => option.type.toLowerCase() === get(selectedEntityFromYAML, 'type').toLowerCase()
           )
-          setPipelineConfigOption(matchingSubType)
+          setPipelineConfigOption(matchingSubTypeConfigOption)
+          setStudioEntitySubType(matchingSubTypeConfigOption?.type)
         } else {
           setPipelineConfigOption(configOptionForEntityType)
         }
@@ -161,6 +164,22 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
     )
   }, [showMoreOptions])
 
+  const getFormikInitialValues = useCallback((): Record<string, any> => {
+    switch (studioEntity) {
+      case StudioEntity.Stage:
+        return {}
+      case StudioEntity.Step: {
+        switch (studioEntitySubType) {
+          case Step.Run:
+            return get(selectedEntityFromYAML, 'spec')
+          case Step.Plugin:
+            return { uses: get(selectedEntityFromYAML, 'spec.uses'), ...get(selectedEntityFromYAML, 'spec.with') }
+        }
+      }
+    }
+    return {}
+  }, [studioEntity, studioEntitySubType, selectedEntityFromYAML])
+
   const renderPipelineConfigOptionDetails = useCallback((): React.ReactElement => {
     const { hasSubTypes, subTypes, nodeView } = pipelineConfigOption?.drillDown || {}
     return studioEntity && hasSubTypes && subTypes && !isEmpty(subTypes) ? (
@@ -170,15 +189,22 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         )}
       </Layout.Vertical>
     ) : (
-      <Layout.Vertical spacing="xsmall">
-        {nodeView}
-        <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge' }} spacing="medium">
-          <Button text="Add" variation={ButtonVariation.PRIMARY} />
-          <Button text="Cancel" variation={ButtonVariation.SECONDARY} />
-        </Layout.Horizontal>
-      </Layout.Vertical>
+      <Formik<any>
+        initialValues={getFormikInitialValues()}
+        formName="config-details-form"
+        onSubmit={() => {}}
+        enableReinitialize={true}
+      >
+        <Layout.Vertical spacing="xsmall">
+          {nodeView}
+          <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge' }} spacing="medium">
+            <Button text="Add" variation={ButtonVariation.PRIMARY} type="submit" />
+            <Button text="Cancel" variation={ButtonVariation.SECONDARY} />
+          </Layout.Horizontal>
+        </Layout.Vertical>
+      </Formik>
     )
-  }, [pipelineConfigOption, studioEntity])
+  }, [pipelineConfigOption, studioEntity, studioEntitySubType, selectedEntityFromYAML])
 
   const renderPipelineConfigPanelHeader = useCallback((): React.ReactElement => {
     const { label, drillDown } = pipelineConfigOption || {}
