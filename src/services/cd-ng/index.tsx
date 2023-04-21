@@ -12056,7 +12056,6 @@ export interface ResourceDTO {
     | 'BUDGET_GROUP'
     | 'PIPELINE_EXECUTION'
     | 'IP_ALLOWLIST_CONFIG'
-    | 'NODE_EXECUTION'
 }
 
 export interface ResourceGroup {
