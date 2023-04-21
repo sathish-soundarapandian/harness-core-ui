@@ -163,10 +163,10 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
 
   const renderPipelineConfigOptionDetails = useCallback((): React.ReactElement => {
     const { hasSubTypes, subTypes, nodeView } = pipelineConfigOption?.drillDown || {}
-    return hasSubTypes && subTypes && !isEmpty(subTypes) ? (
+    return studioEntity && hasSubTypes && subTypes && !isEmpty(subTypes) ? (
       <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }}>
         {subTypes.map((subOption: PipelineConfigOptionInterface) =>
-          renderPipelineConfigOption(StudioEntity.Stage, subOption)
+          renderPipelineConfigOption(studioEntity, subOption)
         )}
       </Layout.Vertical>
     ) : (
@@ -178,7 +178,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         </Layout.Horizontal>
       </Layout.Vertical>
     )
-  }, [pipelineConfigOption])
+  }, [pipelineConfigOption, studioEntity])
 
   const renderPipelineConfigPanelHeader = useCallback((): React.ReactElement => {
     const { label, drillDown } = pipelineConfigOption || {}
