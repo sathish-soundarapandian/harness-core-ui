@@ -19,7 +19,7 @@ import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/us
 import { usePipelineSchemaV1 } from '../PipelineSchemaContextV1/PipelineSchemaContextV1'
 import { usePipelineContextV1 } from '../PipelineContextV1/PipelineContextV1'
 import { PipelineConfigPanel } from '../../PipelineConfigPanel/PipelineConfigPanel'
-import { StudioEntity } from '../../PipelineConfigPanel/PipelineConfigOptions'
+import { PipelineEntity } from '../../PipelineConfigPanel/PipelineConfigOptions'
 
 import css from './PipelineYAMLViewV1.module.scss'
 
@@ -117,9 +117,9 @@ function PipelineYAMLViewV1(): React.ReactElement {
     [isReadonly]
   )
 
-  const getStudioEntityTypeFromYAML = useCallback((): StudioEntity | undefined => {
+  const getStudioEntityTypeFromYAML = useCallback((): PipelineEntity | undefined => {
     if (_selectedEntity) {
-      return StudioEntity.Step
+      return PipelineEntity.Step
     }
   }, [_selectedEntity])
 

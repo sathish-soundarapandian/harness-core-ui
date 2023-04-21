@@ -8,12 +8,12 @@ export interface PipelineConfigOptionInterface {
   description: string
   drillDown: {
     hasSubTypes: boolean
-    subTypes?: (PipelineConfigOptionInterface & { type: SubType })[]
+    subTypes?: (PipelineConfigOptionInterface & { type: PipelineEntitySubType })[]
     nodeView?: React.ReactElement
   }
 }
 
-export const enum StudioEntity {
+export const enum PipelineEntity {
   Pipeline = 'PIPELINE',
   Stage = 'STAGE',
   Step = 'STEP',
@@ -27,7 +27,7 @@ export const enum StudioEntity {
   Registry = 'REGISTRY'
 }
 
-export type SubType = Stage | Step
+export type PipelineEntitySubType = Stage | Step
 
 export const enum Stage {
   CI = 'CI',
@@ -39,9 +39,9 @@ export const enum Step {
   Plugin = 'Plugin'
 }
 
-export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionInterface>([
+export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionInterface>([
   [
-    StudioEntity.Stage,
+    PipelineEntity.Stage,
     {
       label: 'Stages',
       iconProps: { name: 'add-stage', size: 20 },
@@ -86,7 +86,7 @@ export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionIn
     }
   ],
   [
-    StudioEntity.Step,
+    PipelineEntity.Step,
     {
       label: 'Steps',
       iconProps: { name: 'plugin-ci-step', size: 20 },
@@ -149,7 +149,7 @@ export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionIn
     }
   ],
   [
-    StudioEntity.Trigger,
+    PipelineEntity.Trigger,
     {
       label: 'Triggers',
       iconProps: { name: 'yaml-builder-trigger', size: 20 },
@@ -158,7 +158,7 @@ export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionIn
     }
   ],
   [
-    StudioEntity.Notification,
+    PipelineEntity.Notification,
     {
       label: 'Notifications',
       iconProps: { name: 'notifications', size: 20 },
@@ -167,7 +167,7 @@ export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionIn
     }
   ],
   [
-    StudioEntity.Input,
+    PipelineEntity.Input,
     {
       label: 'Inputs',
       iconProps: { name: 'template-inputs', size: 20 },
@@ -177,9 +177,9 @@ export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionIn
   ]
 ])
 
-const AdditionalConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionInterface>([
+const AdditionalConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionInterface>([
   [
-    StudioEntity.Barrier,
+    PipelineEntity.Barrier,
     {
       label: 'Barriers',
       iconProps: { name: 'command-barrier', size: 20 },
@@ -188,7 +188,7 @@ const AdditionalConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionInt
     }
   ],
   [
-    StudioEntity.Clone,
+    PipelineEntity.Clone,
     {
       label: 'Clone',
       iconProps: { name: 'code-clone', size: 20 },
@@ -197,7 +197,7 @@ const AdditionalConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionInt
     }
   ],
   [
-    StudioEntity.Delegate,
+    PipelineEntity.Delegate,
     {
       label: 'Delegates',
       iconProps: { name: 'main-delegates', size: 20 },
@@ -206,7 +206,7 @@ const AdditionalConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionInt
     }
   ],
   [
-    StudioEntity.EnvVariable,
+    PipelineEntity.EnvVariable,
     {
       label: 'Environment Variables',
       iconProps: { name: 'pipeline-variables', size: 20 },
@@ -215,7 +215,7 @@ const AdditionalConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionInt
     }
   ],
   [
-    StudioEntity.Registry,
+    PipelineEntity.Registry,
     {
       label: 'Registry',
       iconProps: { name: 'azure-container-registry', size: 20 },
