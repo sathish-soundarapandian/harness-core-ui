@@ -669,7 +669,6 @@ function BootstrapDeployInfraDefinition(
                 shouldShowGitops={false}
                 templateLinkConfig={customDeploymentMetaData?.templateMetaData}
                 addOrUpdateTemplate={isEmpty(stageCustomDeploymentData) ? addOrUpdateTemplate : undefined}
-                shouldShowGCFEnvTypeDropdown={false}
               />
               {selectedDeploymentType && <DeployInfraDefinition key={deployInfraRemountCount} />}
             </>

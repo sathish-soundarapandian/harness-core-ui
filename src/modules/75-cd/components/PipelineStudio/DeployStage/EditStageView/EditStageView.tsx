@@ -521,7 +521,6 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                             { [css.templateBarOverride]: !context },
                             { [css.halfWidthBar]: !!context }
                           )}
-                          shouldShowGCFEnvTypeDropdown={false}
                         />
                       </div>
                       {selectedDeploymentType === ServiceDeploymentType['Kubernetes'] && (

@@ -239,7 +239,7 @@ interface SelectServiceDeploymentTypeProps {
   onDeploymentTemplateSelect: (template: TemplateSummaryResponse, fromTemplateSelector: boolean) => void
   addOrUpdateTemplate?: () => void | Promise<void>
   templateBarOverrideClassName?: string
-  shouldShowGCFEnvTypeDropdown: boolean
+  shouldShowGCFEnvTypeDropdown?: boolean
   googleCloudFunctionEnvType?: GoogleCloudFunctionsEnvType
 }
 
@@ -255,7 +255,7 @@ export default function SelectDeploymentType({
   onDeploymentTemplateSelect,
   addOrUpdateTemplate,
   templateBarOverrideClassName = '',
-  shouldShowGCFEnvTypeDropdown,
+  shouldShowGCFEnvTypeDropdown = false,
   handleGCFEnvTypeChange,
   googleCloudFunctionEnvType
 }: SelectServiceDeploymentTypeProps): JSX.Element {
