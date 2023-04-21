@@ -36,9 +36,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
     {
       text: capitalize(StudioEntity.Pipeline),
       onClick: () => {
-        setPipelineConfigOption(undefined)
-        setPipelineConfigPanelView(PipelineConfigPanelView.Options)
-        resetBreadCrumbs()
+        resetPipelineConfigPanel()
       }
     }
   ]
@@ -67,6 +65,12 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
       }
     }
   }, [selectedEntityTypeFromYAML, selectedEntityFromYAML])
+
+  const resetPipelineConfigPanel = useCallback(() => {
+    setPipelineConfigOption(undefined)
+    setPipelineConfigPanelView(PipelineConfigPanelView.Options)
+    resetBreadCrumbs()
+  }, [])
 
   const resetBreadCrumbs = useCallback((): void => {
     setBreadCrumbs(initialBreadCrumbs)
@@ -199,7 +203,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
           {nodeView}
           <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge' }} spacing="medium">
             <Button text="Add" variation={ButtonVariation.PRIMARY} type="submit" />
-            <Button text="Cancel" variation={ButtonVariation.SECONDARY} />
+            <Button text="Cancel" variation={ButtonVariation.SECONDARY} onClick={() => resetPipelineConfigPanel()} />
           </Layout.Horizontal>
         </Layout.Vertical>
       </Formik>
