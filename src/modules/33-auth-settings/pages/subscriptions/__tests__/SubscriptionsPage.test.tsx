@@ -7,7 +7,7 @@
 
 import React from 'react'
 import moment from 'moment'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, waitFor, await } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
@@ -745,7 +745,7 @@ describe('Subscriptions Page', () => {
         }
       })
 
-      const { container, getByText } = render(
+      const { container, getByText, getAllByText } = render(
         <TestWrapper
           defaultAppStoreValues={{ featureFlags }}
           pathParams={{ module: ModuleName.CI }}
@@ -754,8 +754,13 @@ describe('Subscriptions Page', () => {
           <SubscriptionsPage />
         </TestWrapper>
       )
-      expect(container).toMatchSnapshot('ci module yes')
-      // document.querySelector('[data-icon="ci-with-dark-text"]').click()
+      expect(container).toMatchSnapshot('ci module ')
+      expect(getByText('common.lastBuildDate')).toBeTruthy()
+      userEvent.click(getByText('common.lastBuildDate'))
+      const fetchButton = getAllByText('Update')[0]
+      expect(fetchButton).toBeDefined()
+      userEvent.click(fetchButton)
+      expect(getByText('common.lastBuildDate')).toBeTruthy()
     })
 
     test('should render FF details', () => {
