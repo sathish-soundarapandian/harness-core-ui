@@ -167,22 +167,28 @@ describe('PricePreview ci credit card', () => {
   })
 
   test('getOtherRenewDate util method ', () => {
+    jest.useFakeTimers('modern')
+    jest.setSystemTime(new Date('2023-04-10'))
     const prevData = new Date()
     const returnedDate = getOtherRenewDate(TimeType.MONTHLY, prevData)
-    expect(returnedDate.valueOf() === 'May 10, 2023')
+    expect(returnedDate.valueOf() === 'May 10, 2023').toBe(true)
     const returnedDateYearly = getOtherRenewDate(TimeType.YEARLY, prevData)
-    expect(returnedDateYearly.valueOf() === 'May 10, 2024')
+    expect(returnedDateYearly.valueOf() === 'May 10, 2024').toBe(true)
   })
   test('getOtherRenewPrevDate util method ', () => {
+    jest.useFakeTimers('modern')
+    jest.setSystemTime(new Date('2023-04-10'))
     const prevData = new Date()
     const returnedDate = getOtherRenewPrevDate(TimeType.MONTHLY, prevData)
-    expect(returnedDate.valueOf() === 'May 10, 2023')
+    expect(returnedDate.valueOf() === 'Apr 10, 2023').toBe(true)
     const returnedDateYearly = getOtherRenewPrevDate(TimeType.YEARLY, prevData)
-    expect(returnedDateYearly.valueOf() === 'May 10, 2024')
+    expect(returnedDateYearly.valueOf() === 'Apr 10, 2023').toBe(true)
   })
   test('getRenewDate util method ', () => {
+    jest.useFakeTimers('modern')
+    jest.setSystemTime(new Date('2023-04-10'))
     const returnedDate = getRenewDate(TimeType.MONTHLY)
-    expect(returnedDate.valueOf() === 'May 10, 2023')
+    expect(returnedDate.valueOf() === 'May 10, 2023').toBe(true)
   })
   test('getProductPrices util method ', () => {
     const returnedResult = getProductPrices(Editions.TEAM, TimeType.MONTHLY, {
