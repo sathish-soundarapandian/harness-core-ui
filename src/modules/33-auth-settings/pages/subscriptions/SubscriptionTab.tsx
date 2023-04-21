@@ -152,7 +152,7 @@ const SubscriptionTab = ({
     <React.Fragment>
       {hasLicense && getBanner()}
       <Layout.Horizontal className={css.subscriptionTabButtons} spacing="medium">
-        {true && getSubscriptionTabButtons()}
+        {accountData?.productLed && getSubscriptionTabButtons()}
       </Layout.Horizontal>
       {getTabComponent()}
     </React.Fragment>
