@@ -32,6 +32,7 @@ function SubscriptionTabPage(props: SubscriptionTabPageProps) {
   if (props.module !== ModuleName.CI && props.module !== ModuleName.CD) {
     return <></>
   }
+  console.log('SubscriptionTabPage -> props', props)
   return (
     <Card>
       <Tabs
@@ -47,6 +48,7 @@ function SubscriptionTabPage(props: SubscriptionTabPageProps) {
           title={getString('common.subscriptions.tabs.breakdown')}
           panel={<SubscriptionUsageView {...props} />}
         />
+
         <Tabs.Tab
           id={SubscriptionDataTab.TREND}
           title={getString('common.subscriptions.tabs.trend')}

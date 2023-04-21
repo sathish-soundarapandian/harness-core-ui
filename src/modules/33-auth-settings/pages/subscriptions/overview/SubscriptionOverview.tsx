@@ -28,6 +28,7 @@ interface SubscriptionOverviewProps {
 
 const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const { accountName, licenseData, module, trialInformation, refetchGetLicense } = props
+  console.log('props', props)
   const enabled = useFeatureFlag(FeatureFlag.VIEW_USAGE_ENABLED)
   const { accountId } = useParams<AccountPathProps>()
   return (

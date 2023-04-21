@@ -182,11 +182,13 @@ const SubscriptionsPage: React.FC = () => {
     return ACTIVE_MODULE_SELECT_CARDS.map(cardData => {
       function handleCardClick(): void {
         setSelectedModuleCard(cardData)
+
         // reset default tab
         history.push(routes.toSubscriptions({ accountId, moduleCard: cardData.module.toLowerCase() as Module }))
       }
 
       const isSelected = cardData === selectedModuleCard
+      console.log('SubscriptionsPage:React.FC -> selectedModuleCard', selectedModuleCard)
       const moduleClassName = isSelected && css[cardData.module.toLowerCase() as keyof typeof css]
 
       return (
@@ -236,6 +238,7 @@ const SubscriptionsPage: React.FC = () => {
         refetchGetLicense={refetchGetLicense}
       />
     )
+
   return (
     <>
       <Page.Header title={getString('common.subscriptions.title')} />

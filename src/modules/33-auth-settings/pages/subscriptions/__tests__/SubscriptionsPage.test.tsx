@@ -20,15 +20,19 @@ import {
   getAllServicesPromise,
   useDownloadActiveServiceCSVReport
 } from 'services/cd-ng'
+import { listActiveDevelopersPromise } from 'services/ci'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
 import SubscriptionsPage from '../SubscriptionsPage'
 import activeServices from './mocks/activeServices.json'
 import orgMockData from './mocks/orgMockData.json'
 import projMockData from './mocks/projMockData.json'
+import developerMockData from './mocks/devMockData.json'
 import serviceMockData from './mocks/serviceMockData.json'
 jest.mock('services/cd-ng')
+jest.mock('services/ci')
 const getOrganizationListPromiseMock = getOrganizationListPromise as jest.MockedFunction<any>
+const getListActiveDevelopersPromiseMock = listActiveDevelopersPromise as jest.MockedFunction<any>
 const getProjectListPromiseMock = getProjectListPromise as jest.MockedFunction<any>
 const getServiceListPromiseMock = getAllServicesPromise as jest.MockedFunction<any>
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
@@ -38,6 +42,11 @@ const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<a
 const orgListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
     orgMockData
+  })
+})
+const devListPromiseMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    developerMockData
   })
 })
 jest.mock('highcharts-react-official', () => () => <div />)
@@ -59,6 +68,9 @@ useExtendTrialLicenseMock.mockImplementation(() => {
 })
 getOrganizationListPromiseMock.mockImplementation(() => {
   return orgListPromiseMock()
+})
+getListActiveDevelopersPromiseMock.mockImplementation(() => {
+  return devListPromiseMock()
 })
 getProjectListPromiseMock.mockImplementation(() => {
   return projListPromiseMock()
@@ -733,13 +745,17 @@ describe('Subscriptions Page', () => {
         }
       })
 
-      const { getByText } = render(
-        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CE }}>
+      const { container, getByText } = render(
+        <TestWrapper
+          defaultAppStoreValues={{ featureFlags }}
+          pathParams={{ module: ModuleName.CI }}
+          queryParams={{ moduleCard: ModuleName.CI }}
+        >
           <SubscriptionsPage />
         </TestWrapper>
       )
-
-      expect(getByText('common.subscriptions.ci.developers')).toBeInTheDocument()
+      expect(container).toMatchSnapshot('ci module yes')
+      // document.querySelector('[data-icon="ci-with-dark-text"]').click()
     })
 
     test('should render FF details', () => {
