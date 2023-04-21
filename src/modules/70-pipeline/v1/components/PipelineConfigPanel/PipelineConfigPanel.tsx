@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { capitalize, isEmpty } from 'lodash-es'
 import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text } from '@harness/uicore'
@@ -12,6 +12,8 @@ import css from './PipelineConfigPanel.module.scss'
 
 interface PipelineConfigPanelInterface {
   height?: React.CSSProperties['height']
+  selectedEntityTypeFromYAML?: StudioEntity
+  selectedEntityFromYAML?: Record<string, any>
 }
 
 enum PipelineConfigPanelView {
@@ -20,7 +22,7 @@ enum PipelineConfigPanelView {
 }
 
 export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.ReactElement {
-  const { height } = props
+  const { height, selectedEntityTypeFromYAML } = props
   const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false)
   const [studioEntity, setStudioEntity] = useState<StudioEntity>()
   const [pipelineConfigOption, setPipelineConfigOption] = useState<PipelineConfigOptionInterface>()
@@ -38,6 +40,18 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
     }
   ]
   const [breadCrumbs, setBreadCrumbs] = useState<IBreadcrumbProps[]>(initialBreadCrumbs)
+
+  useEffect(() => {
+    if (selectedEntityTypeFromYAML) {
+      const configOptionForEntityType = ConfigOptionsMapWithAdditionalOptions.get(selectedEntityTypeFromYAML)
+      if (configOptionForEntityType) {
+        setStudioEntity(selectedEntityTypeFromYAML)
+        setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)
+        setPipelineConfigOption(configOptionForEntityType)
+        updateBreadCrumbs(selectedEntityTypeFromYAML, configOptionForEntityType)
+      }
+    }
+  }, [selectedEntityTypeFromYAML])
 
   const resetBreadCrumbs = useCallback((): void => {
     setBreadCrumbs(initialBreadCrumbs)

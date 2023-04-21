@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { isEqual, omit } from 'lodash-es'
 import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
@@ -19,6 +19,7 @@ import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/us
 import { usePipelineSchemaV1 } from '../PipelineSchemaContextV1/PipelineSchemaContextV1'
 import { usePipelineContextV1 } from '../PipelineContextV1/PipelineContextV1'
 import { PipelineConfigPanel } from '../../PipelineConfigPanel/PipelineConfigPanel'
+import { StudioEntity } from '../../PipelineConfigPanel/PipelineConfigOptions'
 
 import css from './PipelineYAMLViewV1.module.scss'
 
@@ -116,6 +117,12 @@ function PipelineYAMLViewV1(): React.ReactElement {
     [isReadonly]
   )
 
+  const getStudioEntityTypeFromYAML = useCallback((): StudioEntity | undefined => {
+    if (_selectedEntity) {
+      return StudioEntity.Step
+    }
+  }, [_selectedEntity])
+
   return (
     <Layout.Horizontal>
       <YAMLBuilder
@@ -147,7 +154,11 @@ function PipelineYAMLViewV1(): React.ReactElement {
         //   pluginAddUpdateOpnStatus={entityAddUpdateOpnStatus}
         // />
         <Container width="24vw">
-          <PipelineConfigPanel height={'calc(100vh - 150px)'} />
+          <PipelineConfigPanel
+            height={'calc(100vh - 150px)'}
+            selectedEntityFromYAML={_selectedEntity}
+            selectedEntityTypeFromYAML={getStudioEntityTypeFromYAML()}
+          />
         </Container>
       ) : null}
     </Layout.Horizontal>
