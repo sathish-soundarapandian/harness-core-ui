@@ -685,6 +685,7 @@ interface ValidatePipelineProps {
   viewTypeMetadata?: { [key: string]: boolean }
   selectedStageData?: StageSelectionData
   isOptionalVariableAllowed?: boolean
+  stagesToExecute?: string[]
 }
 
 /**
@@ -892,7 +893,8 @@ export const validatePipeline = ({
   path,
   viewTypeMetadata,
   selectedStageData,
-  isOptionalVariableAllowed
+  isOptionalVariableAllowed,
+  stagesToExecute
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   if (template?.template) {
     const errors = validatePipeline({
@@ -952,19 +954,35 @@ export const validatePipeline = ({
         set(errors, 'variables', errorsResponse.variables)
       }
     }
-    pipeline?.stages?.forEach((stageObj, index) => {
+    const stages = stagesToExecute?.length
+      ? pipeline?.stages?.filter(stage => stage && stage.stage && stagesToExecute.includes(stage.stage.identifier))
+      : pipeline?.stages
+
+    const templateStages = stagesToExecute?.length
+      ? template?.stages?.filter(stage => stage && stage.stage && stagesToExecute.includes(stage.stage.identifier))
+      : template?.stages
+
+    const filteredTemplate = {
+      ...template,
+      stages: {
+        ...templateStages
+      }
+    }
+    stages?.forEach((stageObj, index) => {
       if (stageObj.stage) {
         const originalStage = getStageFromPipeline(stageObj.stage.identifier, originalPipeline)
         if (stageObj.stage.type === StageType.PIPELINE) {
           const chainedPipeline = (stageObj.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
-          const chainedPipelineTemplate = (template?.stages?.[index]?.stage?.spec as PipelineStageConfig)
+          const chainedPipelineTemplate = (filteredTemplate?.stages?.[index]?.stage?.spec as PipelineStageConfig)
             ?.inputs as PipelineInfoConfig
           const _originalPipeline = (originalPipeline?.stages?.[index]?.stage?.spec as PipelineStageConfig)
             ?.inputs as PipelineInfoConfig
 
           const chainedPipelineOutputErrorsResponse = validateOutputPanelInputSet({
             data: { outputs: get(stageObj.stage?.spec as PipelineStageConfig, 'outputs', []) },
-            template: { outputs: get(template?.stages?.[index]?.stage?.spec as PipelineStageConfig, 'outputs', []) },
+            template: {
+              outputs: get(filteredTemplate?.stages?.[index]?.stage?.spec as PipelineStageConfig, 'outputs', [])
+            },
             getString
           })
           if (!isEmpty(chainedPipelineOutputErrorsResponse.outputs)) {
@@ -997,7 +1015,7 @@ export const validatePipeline = ({
         } else {
           const errorsResponse = validateStage({
             stage: stageObj.stage as StageElementConfig,
-            template: template?.stages?.[index]?.stage,
+            template: filteredTemplate?.stages?.[index]?.stage,
             originalStage: originalStage?.stage,
             getString,
             viewType,
@@ -1015,7 +1033,7 @@ export const validatePipeline = ({
             if (stageP.stage.type === StageType.PIPELINE) {
               const chainedPipeline = (stageP.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
               const chainedPipelineTemplate = (
-                template?.stages?.[index]?.parallel?.[indexP]?.stage?.spec as PipelineStageConfig
+                filteredTemplate?.stages?.[index]?.parallel?.[indexP]?.stage?.spec as PipelineStageConfig
               )?.inputs as PipelineInfoConfig
               const _originalPipeline = (
                 originalPipeline?.stages?.[index]?.parallel?.[indexP]?.stage?.spec as PipelineStageConfig
@@ -1025,7 +1043,7 @@ export const validatePipeline = ({
                 data: { outputs: get(stageP.stage?.spec as PipelineStageConfig, 'outputs', []) },
                 template: {
                   outputs: get(
-                    template?.stages?.[index]?.parallel?.[indexP]?.stage?.spec as PipelineStageConfig,
+                    filteredTemplate?.stages?.[index]?.parallel?.[indexP]?.stage?.spec as PipelineStageConfig,
                     'outputs',
                     []
                   )
@@ -1062,7 +1080,7 @@ export const validatePipeline = ({
             } else {
               const errorsResponse = validateStage({
                 stage: stageP.stage as StageElementConfig,
-                template: template?.stages?.[index].parallel?.[indexP]?.stage,
+                template: filteredTemplate?.stages?.[index].parallel?.[indexP]?.stage,
                 originalStage: originalStage?.stage,
                 getString,
                 viewType,

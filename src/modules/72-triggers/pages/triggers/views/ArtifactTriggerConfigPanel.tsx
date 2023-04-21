@@ -9,7 +9,11 @@ import React, { useState, useEffect } from 'react'
 import { Layout, Text, Label, Container, HarnessDocTooltip, PageSpinner } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { NameIdDescriptionTags } from '@common/components'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import { useStrings } from 'framework/strings'
+import StageSelection from '@triggers/components/StageSelection/StageSelection'
+
 import { SelectArtifactModal } from './modals'
 import ArtifactTableInfo from './subviews/ArtifactTableInfo'
 import {
@@ -23,6 +27,7 @@ import {
   getCorrectErrorString
 } from '../utils/TriggersWizardPageUtils'
 import type { artifactTableItem, artifactManifestData } from '../interface/TriggersWizardInterface'
+
 import css from './ArtifactTriggerConfigPanel.module.scss'
 
 export interface ArtifactTriggerConfigPanelPropsInterface {
@@ -215,6 +220,8 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
     formikProps.values
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
+  const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
+
   const [parsedArtifactsManifests, setParsedArtifactsManifests] = useState<{
     appliedArtifact?: artifactManifestData
     data?: artifactManifestData[]
@@ -374,6 +381,7 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
           </Text>
         )}
       </div>
+      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION ? <StageSelection formikProps={formikProps} /> : null}
     </Layout.Vertical>
   )
 }

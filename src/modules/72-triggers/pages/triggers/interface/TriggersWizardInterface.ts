@@ -50,6 +50,7 @@ export interface FlatInitialValuesInterface {
   inputSetRefs?: string[]
   // Triggers authentication
   encryptedWebhookSecretIdentifier?: string
+  stagesToExecute?: string[]
 }
 
 export interface FlatOnEditValuesInterface {
@@ -108,18 +109,21 @@ export interface FlatOnEditValuesInterface {
   pollInterval?: string
   webhookId?: string
   encryptedWebhookSecretIdentifier?: string
+  stagesToExecute?: string[]
 }
 
 export interface FlatValidWebhookFormikValuesInterface {
   name: string
   identifier: string
   description?: string
+  stagesToExecute?: string[]
   tags?: {
     [key: string]: string
   }
   target?: string
   targetIdentifier?: string
   pipeline: PipelineInfoConfig
+  originalPipeline: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
   sourceRepo: string
   triggerType: NGTriggerSourceV2['type']
@@ -162,6 +166,7 @@ export interface FlatValidScheduleFormikValuesInterface {
   expression: string
   pipelineBranchName?: string
   inputSetRefs?: string[]
+  stagesToExecute?: string[]
 }
 
 export interface FlatValidArtifactFormikValuesInterface {
@@ -176,6 +181,7 @@ export interface FlatValidArtifactFormikValuesInterface {
   stageId: string
   pipeline: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
+  stagesToExecute?: string[]
 }
 
 export interface TriggerConfigDTO extends Omit<NGTriggerConfigV2, 'identifier'> {

@@ -440,6 +440,7 @@ export default function ManifestTriggerWizard(
         trigger: {
           name,
           identifier,
+          stagesToExecute,
           description,
           tags,
           inputYaml,
@@ -482,6 +483,7 @@ export default function ManifestTriggerWizard(
         name,
         identifier,
         description,
+        stagesToExecute,
         triggerType: triggerTypeOnNew,
         tags,
         source,
@@ -533,12 +535,14 @@ export default function ManifestTriggerWizard(
     latestPipeline,
     latestYamlTemplate,
     orgPipeline,
-    setSubmitting
+    setSubmitting,
+    stagesToExecute
   }: {
     latestPipeline: { pipeline: PipelineInfoConfig }
     latestYamlTemplate: PipelineInfoConfig
     orgPipeline: PipelineInfoConfig | undefined
     setSubmitting: (bool: boolean) => void
+    stagesToExecute?: string[]
   }): Promise<any> => {
     let errors = formErrors
     function validateErrors(): Promise<
@@ -560,7 +564,8 @@ export default function ManifestTriggerWizard(
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true },
-                isOptionalVariableAllowed
+                isOptionalVariableAllowed,
+                stagesToExecute
               }) as any) || formErrors
             resolve(validatedErrors)
           } catch (e) {
@@ -1056,7 +1061,8 @@ export default function ManifestTriggerWizard(
             latestPipeline: latestPipelineFromYamlView || latestPipeline,
             latestYamlTemplate: yamlTemplate,
             orgPipeline: values.pipeline,
-            setSubmitting
+            setSubmitting,
+            stagesToExecute: formikProps?.values?.stagesToExecute
           })
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)

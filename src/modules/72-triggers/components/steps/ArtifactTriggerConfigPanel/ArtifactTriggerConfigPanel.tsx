@@ -8,8 +8,13 @@
 import React from 'react'
 import { Layout, Text } from '@harness/uicore'
 import { NameIdDescriptionTags } from '@common/components'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import { useStrings } from 'framework/strings'
+import StageSelection from '@triggers/components/StageSelection/StageSelection'
+
 import ArtifactsSelection from './ArtifactsSelection/ArtifactsSelection'
+
 import css from './ArtifactTriggerConfigPanel.module.scss'
 export interface ArtifactTriggerConfigPanelPropsInterface {
   formikProps?: any
@@ -21,6 +26,7 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
   isEdit = false
 }) => {
   const { getString } = useStrings()
+  const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
   const artifactText = getString('pipeline.artifactTriggerConfigPanel.artifact')
 
   return (
@@ -53,6 +59,7 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
       <div className={css.formContent}>
         <ArtifactsSelection formikProps={formikProps} />
       </div>
+      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION ? <StageSelection formikProps={formikProps} /> : null}
     </Layout.Vertical>
   )
 }

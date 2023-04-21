@@ -5234,6 +5234,7 @@ export interface StringsMap {
   'triggers.schedulePanel.weeklyTabTitle': string
   'triggers.schedulePanel.yearlyTabTitle': string
   'triggers.scheduledLabel': string
+  'triggers.selectStagesToExecute': string
   'triggers.showAllTriggers': string
   'triggers.toast.existingTriggerError': string
   'triggers.toast.successfulCreate': string

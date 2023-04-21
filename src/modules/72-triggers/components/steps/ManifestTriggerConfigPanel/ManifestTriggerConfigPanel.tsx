@@ -9,9 +9,15 @@ import React from 'react'
 import type { FormikProps } from 'formik'
 import { Layout, Text } from '@harness/uicore'
 import { NameIdDescriptionTags } from '@common/components'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import { useStrings } from 'framework/strings'
+import StageSelection from '@triggers/components/StageSelection/StageSelection'
+
 import type { ManifestTriggerFormikValues } from './ManifestSelection/ManifestInterface'
+
 import ManifestSelection from './ManifestSelection/ManifestSelection'
+
 import css from '@triggers/pages/triggers/views/ArtifactTriggerConfigPanel.module.scss'
 
 export interface ManifestTriggerConfigPanelProps {
@@ -25,6 +31,7 @@ export default function ManifestTriggerConfigPanel({
 }: ManifestTriggerConfigPanelProps): React.ReactElement {
   const { getString } = useStrings()
   const manifestText = getString('manifestsText')
+  const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
 
   return (
     <Layout.Vertical className={css.artifactTriggerConfigContainer} padding="xxlarge">
@@ -58,6 +65,7 @@ export default function ManifestTriggerConfigPanel({
       <div className={css.formContent}>
         <ManifestSelection formikProps={formikProps!} />
       </div>
+      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION ? <StageSelection formikProps={formikProps} /> : null}
     </Layout.Vertical>
   )
 }

@@ -3,6 +3,7 @@ addNewTrigger: Add New Trigger
 triggersSubLabel: 'All Trigger Types'
 noTriggersFound: 'No Triggers Found'
 newTrigger: + New Trigger
+selectStagesToExecute: Select Stages To Execute
 newTriggerWithoutPlus: New Trigger
 pipelineExecutionInput: Pipeline Execution Input
 lastActivationDetails: Last Activation Details
