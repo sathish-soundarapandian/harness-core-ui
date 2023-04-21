@@ -202,7 +202,6 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               projectIdentifier={projectIdentifier}
               configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
-              width={391}
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{

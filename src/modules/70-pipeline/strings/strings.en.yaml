@@ -631,7 +631,7 @@ execution:
     float: Floating window
     minimize: Minimize window
   dialogMessages:
-    abortExecution: Are you sure you want to abort the execution?
+    abortExecution: 'Warning: Abort command will not clean up any resources created during execution so far. Please mark the stage as failed if you would like to clean up and revert back to the old state.'
     abortTitle: Abort Execution?
     markAsFailedTitle: Mark stage as failed?
     markAsFailedConfirmation: Are you sure you want to mark this stage as failed? Doing so will mark the stage as failed and trigger the respective failure strategy.

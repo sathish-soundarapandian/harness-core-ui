@@ -365,7 +365,6 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               projectIdentifier={projectIdentifier}
               configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
-              width={391}
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
@@ -395,80 +394,76 @@ const Content = (props: ECRRenderContent): JSX.Element => {
           )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template) && (
-            <div className={css.inputFieldLayout}>
-              <SelectInputSetView
-                fieldPath={`artifacts.${artifactPath}.spec.region`}
-                template={template}
-                formik={formik}
-                multiTypeInputProps={{
-                  onChange: () => {
-                    resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.imagePath`)
-                    resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
-                  },
-                  selectProps: {
-                    usePortal: true,
-                    items: regions
-                  },
-                  expressions,
-                  allowableTypes
-                }}
-                useValue
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.region`)}
-                selectItems={regions}
-                label={getString('regionLabel')}
-                name={`${path}.artifacts.${artifactPath}.spec.region`}
-                configureOptionsProps={{
-                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType as StepViewType)
-                }}
-              />
-            </div>
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.region`}
+              template={template}
+              formik={formik}
+              multiTypeInputProps={{
+                onChange: () => {
+                  resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.imagePath`)
+                  resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
+                },
+                selectProps: {
+                  usePortal: true,
+                  items: regions
+                },
+                expressions,
+                allowableTypes
+              }}
+              useValue
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.region`)}
+              selectItems={regions}
+              label={getString('regionLabel')}
+              name={`${path}.artifacts.${artifactPath}.spec.region`}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType as StepViewType)
+              }}
+            />
           )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
-            <div className={css.inputFieldLayout}>
-              <SelectInputSetView
-                fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
-                template={template}
-                selectItems={allImageOptions}
-                label={getString('pipeline.imagePathLabel')}
-                placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
-                name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
-                helperText={getImagePathHelperText()}
-                useValue
-                multiTypeInputProps={{
-                  expressions,
-                  allowableTypes,
-                  onChange: selected => {
-                    if (imagePathValue !== (selected as any)?.value) {
-                      resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
-                    }
-                  },
-                  selectProps: {
-                    noResults: (
-                      <Text lineClamp={1} width={400} padding="small">
-                        {getRBACErrorMessage(imagesListError as RBACError) || getString('pipeline.noImagesFound')}
-                      </Text>
-                    ),
-                    itemRenderer: itemRenderer,
-                    items: allImageOptions,
-                    allowCreatingNewItems: true,
-                    usePortal: true
-                  },
-                  onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                    if (
-                      e?.target?.type !== 'text' ||
-                      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-                    ) {
-                      return
-                    }
-                    if (!imagesListLoading) {
-                      fetchImagesList()
-                    }
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
+              template={template}
+              selectItems={allImageOptions}
+              label={getString('pipeline.imagePathLabel')}
+              placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
+              name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
+              helperText={getImagePathHelperText()}
+              useValue
+              multiTypeInputProps={{
+                expressions,
+                allowableTypes,
+                onChange: selected => {
+                  if (imagePathValue !== (selected as any)?.value) {
+                    resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
                   }
-                }}
-              />
-            </div>
+                },
+                selectProps: {
+                  noResults: (
+                    <Text lineClamp={1} width={400} padding="small">
+                      {getRBACErrorMessage(imagesListError as RBACError) || getString('pipeline.noImagesFound')}
+                    </Text>
+                  ),
+                  itemRenderer: itemRenderer,
+                  items: allImageOptions,
+                  allowCreatingNewItems: true,
+                  usePortal: true
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
+                  if (!imagesListLoading) {
+                    fetchImagesList()
+                  }
+                }
+              }}
+            />
           )}
 
           {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
@@ -498,22 +493,20 @@ const Content = (props: ECRRenderContent): JSX.Element => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
-            <div className={css.inputFieldLayout}>
-              <TextFieldInputSetView
-                fieldPath={`artifacts.${artifactPath}.spec.tagRegex`}
-                template={template}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                label={getString('tagRegex')}
-                name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
-                configureOptionsProps={{
-                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType as StepViewType)
-                }}
-              />
-            </div>
+            <TextFieldInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.tagRegex`}
+              template={template}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              label={getString('tagRegex')}
+              name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType as StepViewType)
+              }}
+            />
           )}
         </Layout.Vertical>
       )}

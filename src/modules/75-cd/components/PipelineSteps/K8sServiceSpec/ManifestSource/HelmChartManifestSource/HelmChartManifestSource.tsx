@@ -195,7 +195,9 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       )
     ),
     serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
-    fqnPath: isNewServiceEnvEntity(path as string) ? getFqnPath(stageIdentifier, manifestPath as string) : undefined
+    fqnPath: isNewServiceEnvEntity(path as string)
+      ? getFqnPath(stageIdentifier, manifest?.identifier as string)
+      : undefined
   }
 
   const {

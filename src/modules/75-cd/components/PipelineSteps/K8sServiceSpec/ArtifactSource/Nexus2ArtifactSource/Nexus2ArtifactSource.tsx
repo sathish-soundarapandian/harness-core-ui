@@ -346,7 +346,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               projectIdentifier={projectIdentifier}
               configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
-              width={391}
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{

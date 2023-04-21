@@ -727,19 +727,17 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repositoryUrl`, template) && (
-            <div className={css.inputFieldLayout}>
-              <TextFieldInputSetView
-                label={getString('repositoryUrlLabel')}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repositoryUrl`)}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                name={`${path}.artifacts.${artifactPath}.spec.repositoryUrl`}
-                fieldPath={`artifacts.${artifactPath}.spec.repositoryUrl`}
-                template={template}
-              />
-            </div>
+            <TextFieldInputSetView
+              label={getString('repositoryUrlLabel')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repositoryUrl`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.repositoryUrl`}
+              fieldPath={`artifacts.${artifactPath}.spec.repositoryUrl`}
+              template={template}
+            />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
             <ServerlessArtifactoryRepository

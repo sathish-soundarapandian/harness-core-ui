@@ -75,58 +75,56 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
   ))
 
   return (
-    <div className={css.inputFieldLayout}>
-      <SelectInputSetView
-        formik={formik}
-        selectItems={
-          fetchingDigest
+    <SelectInputSetView
+      formik={formik}
+      selectItems={
+        fetchingDigest
+          ? [
+              {
+                label: getString('pipeline.artifactsSelection.loadingDigest'),
+                value: getString('pipeline.artifactsSelection.loadingDigest')
+              }
+            ]
+          : digestList
+      }
+      useValue
+      multiTypeInputProps={{
+        onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+          /* istanbul ignore next */
+          if (
+            e?.target?.type !== 'text' ||
+            (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+          ) {
+            return
+          }
+
+          fetchDigest()
+        },
+        selectProps: {
+          items: fetchingDigest
             ? [
                 {
                   label: getString('pipeline.artifactsSelection.loadingDigest'),
                   value: getString('pipeline.artifactsSelection.loadingDigest')
                 }
               ]
-            : digestList
-        }
-        useValue
-        multiTypeInputProps={{
-          onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-            /* istanbul ignore next */
-            if (
-              e?.target?.type !== 'text' ||
-              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-            ) {
-              return
-            }
-
-            fetchDigest()
-          },
-          selectProps: {
-            items: fetchingDigest
-              ? [
-                  {
-                    label: getString('pipeline.artifactsSelection.loadingDigest'),
-                    value: getString('pipeline.artifactsSelection.loadingDigest')
-                  }
-                ]
-              : digestList,
-            usePortal: true,
-            addClearBtn: !readonly,
-            noResults: <Text lineClamp={1}>{getTagError(fetchDigestError)}</Text>,
-            itemRenderer,
-            allowCreatingNewItems: true,
-            popoverClassName: css.selectPopover,
-            loadingItems: fetchingDigest
-          },
-          expressions,
-          allowableTypes
-        }}
-        label={getString('pipeline.digest')}
-        name={`${path}.artifacts.${artifactPath}.spec.digest`}
-        fieldPath={`artifacts.${artifactPath}.spec.digest`}
-        template={template}
-      />
-    </div>
+            : digestList,
+          usePortal: true,
+          addClearBtn: !readonly,
+          noResults: <Text lineClamp={1}>{getTagError(fetchDigestError)}</Text>,
+          itemRenderer,
+          allowCreatingNewItems: true,
+          popoverClassName: css.selectPopover,
+          loadingItems: fetchingDigest
+        },
+        expressions,
+        allowableTypes
+      }}
+      label={getString('pipeline.digest')}
+      name={`${path}.artifacts.${artifactPath}.spec.digest`}
+      fieldPath={`artifacts.${artifactPath}.spec.digest`}
+      template={template}
+    />
   )
 }
 

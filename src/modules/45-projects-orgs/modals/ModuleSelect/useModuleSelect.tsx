@@ -193,8 +193,7 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
       getModulesWithSubscriptionsRoutesMap({ selectedModuleName, projectData, accountId }).has(selectedModuleName) &&
       !isOnPrem()
     ) {
-      // TODO: remove when chaos has support for free plan
-      if (FREE_PLAN_ENABLED && selectedModuleName.toLocaleLowerCase() !== 'chaos') {
+      if (FREE_PLAN_ENABLED) {
         return getString('common.startFreePlan')
       }
       return getString('common.startTrial')
@@ -224,8 +223,7 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
             })
           )
         } else {
-          // TODO: remove when chaos has support for free plan
-          if (FREE_PLAN_ENABLED && selectedModuleName.toLocaleLowerCase() !== 'chaos') {
+          if (FREE_PLAN_ENABLED) {
             startFreeLicense()
           } else {
             startTrialLicense()

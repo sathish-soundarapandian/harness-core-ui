@@ -392,7 +392,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               projectIdentifier={projectIdentifier}
               configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
-              width={391}
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
@@ -410,167 +409,149 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               version={'3.x'}
             />
           )}
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
-              <SelectInputSetView
-                selectItems={getRepository()}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repository`)}
-                label={getString('repository')}
-                name={`${path}.artifacts.${artifactPath}.spec.repository`}
-                placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-                useValue
-                fieldPath={`artifacts.${artifactPath}.spec.repository`}
-                template={template}
-                multiTypeInputProps={{
-                  expressions,
-                  allowableTypes,
-                  selectProps: {
-                    noResults: (
-                      <NoTagResults
-                        tagError={errorFetchingRepository}
-                        isServerlessDeploymentTypeSelected={false}
-                        defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
-                      />
-                    ),
-                    itemRenderer: itemRenderer,
-                    items: getRepository(),
-                    allowCreatingNewItems: true
-                  },
-                  onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                    if (
-                      e?.target?.type !== 'text' ||
-                      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-                    ) {
-                      return
-                    }
-                    refetchRepositoryDetails()
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
+            <SelectInputSetView
+              selectItems={getRepository()}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repository`)}
+              label={getString('repository')}
+              name={`${path}.artifacts.${artifactPath}.spec.repository`}
+              placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
+              useValue
+              fieldPath={`artifacts.${artifactPath}.spec.repository`}
+              template={template}
+              multiTypeInputProps={{
+                expressions,
+                allowableTypes,
+                selectProps: {
+                  noResults: (
+                    <NoTagResults
+                      tagError={errorFetchingRepository}
+                      isServerlessDeploymentTypeSelected={false}
+                      defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
+                    />
+                  ),
+                  itemRenderer: itemRenderer,
+                  items: getRepository(),
+                  allowCreatingNewItems: true
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
                   }
-                }}
-              />
-            )}
-          </div>
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.groupId`, template) && (
-              <TextFieldInputSetView
-                label={getString('pipeline.artifactsSelection.groupId')}
-                name={`${path}.artifacts.${artifactPath}.spec.spec.groupId`}
-                placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                fieldPath={`artifacts.${artifactPath}.spec.spec.groupId`}
-                template={template}
-              />
-            )}
-          </div>
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.artifactId`, template) && (
-              <TextFieldInputSetView
-                label={getString('pipeline.artifactsSelection.artifactId')}
-                name={`${path}.artifacts.${artifactPath}.spec.spec.artifactId`}
-                placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                fieldPath={`artifacts.${artifactPath}.spec.spec.artifactId`}
-                template={template}
-              />
-            )}
-          </div>
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.extension`, template) && (
-              <TextFieldInputSetView
-                label={getString('pipeline.artifactsSelection.extension')}
-                name={`${path}.artifacts.${artifactPath}.spec.spec.extension`}
-                placeholder={getString('pipeline.artifactsSelection.extensionPlaceholder')}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                fieldPath={`artifacts.${artifactPath}.spec.spec.extension`}
-                template={template}
-              />
-            )}
-          </div>
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.classifier`, template) && (
-              <TextFieldInputSetView
-                label={getString('pipeline.artifactsSelection.classifier')}
-                name={`${path}.artifacts.${artifactPath}.spec.spec.classifier`}
-                placeholder={getString('pipeline.artifactsSelection.classifierPlaceholder')}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                fieldPath={`artifacts.${artifactPath}.spec.spec.classifier`}
-                template={template}
-              />
-            )}
-          </div>
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.packageName`, template) && (
-              <TextFieldInputSetView
-                label={getString('pipeline.artifactsSelection.packageName')}
-                name={`${path}.artifacts.${artifactPath}.spec.spec.packageName`}
-                placeholder={getString('pipeline.manifestType.packagePlaceholder')}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                fieldPath={`artifacts.${artifactPath}.spec.spec.packageName`}
-                template={template}
-              />
-            )}
-          </div>
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.group`, template) && (
-              <TextFieldInputSetView
-                name={`${path}.artifacts.${artifactPath}.spec.spec.group`}
-                label={getString('rbac.group')}
-                placeholder={getString('pipeline.artifactsSelection.groupPlaceholder')}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                fieldPath={`artifacts.${artifactPath}.spec.spec.group`}
-                template={template}
-              />
-            )}
-          </div>
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.repositoryPort`, template) && (
-              <TextFieldInputSetView
-                label={getString('pipeline.artifactsSelection.repositoryPort')}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.spec.repositoryPort`)}
-                placeholder={getString('pipeline.artifactsSelection.repositoryPortPlaceholder')}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                name={`${path}.artifacts.${artifactPath}.spec.spec.repositoryPort`}
-                fieldPath={`artifacts.${artifactPath}.spec.spec.repositoryPort`}
-                template={template}
-              />
-            )}
-          </div>
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.repositoryUrl`, template) && (
-              <TextFieldInputSetView
-                placeholder={getString('pipeline.repositoryUrlPlaceholder')}
-                label={getString('repositoryUrlLabel')}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.spec.repositoryUrl`)}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                name={`${path}.artifacts.${artifactPath}.spec.spec.repositoryUrl`}
-                fieldPath={`artifacts.${artifactPath}.spec.spec.repositoryUrl`}
-                template={template}
-              />
-            )}
-          </div>
+                  refetchRepositoryDetails()
+                }
+              }}
+            />
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.groupId`, template) && (
+            <TextFieldInputSetView
+              label={getString('pipeline.artifactsSelection.groupId')}
+              name={`${path}.artifacts.${artifactPath}.spec.spec.groupId`}
+              placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.spec.groupId`}
+              template={template}
+            />
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.artifactId`, template) && (
+            <TextFieldInputSetView
+              label={getString('pipeline.artifactsSelection.artifactId')}
+              name={`${path}.artifacts.${artifactPath}.spec.spec.artifactId`}
+              placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.spec.artifactId`}
+              template={template}
+            />
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.extension`, template) && (
+            <TextFieldInputSetView
+              label={getString('pipeline.artifactsSelection.extension')}
+              name={`${path}.artifacts.${artifactPath}.spec.spec.extension`}
+              placeholder={getString('pipeline.artifactsSelection.extensionPlaceholder')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.spec.extension`}
+              template={template}
+            />
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.classifier`, template) && (
+            <TextFieldInputSetView
+              label={getString('pipeline.artifactsSelection.classifier')}
+              name={`${path}.artifacts.${artifactPath}.spec.spec.classifier`}
+              placeholder={getString('pipeline.artifactsSelection.classifierPlaceholder')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.spec.classifier`}
+              template={template}
+            />
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.packageName`, template) && (
+            <TextFieldInputSetView
+              label={getString('pipeline.artifactsSelection.packageName')}
+              name={`${path}.artifacts.${artifactPath}.spec.spec.packageName`}
+              placeholder={getString('pipeline.manifestType.packagePlaceholder')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.spec.packageName`}
+              template={template}
+            />
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.group`, template) && (
+            <TextFieldInputSetView
+              name={`${path}.artifacts.${artifactPath}.spec.spec.group`}
+              label={getString('rbac.group')}
+              placeholder={getString('pipeline.artifactsSelection.groupPlaceholder')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.spec.group`}
+              template={template}
+            />
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.repositoryPort`, template) && (
+            <TextFieldInputSetView
+              label={getString('pipeline.artifactsSelection.repositoryPort')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.spec.repositoryPort`)}
+              placeholder={getString('pipeline.artifactsSelection.repositoryPortPlaceholder')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.spec.repositoryPort`}
+              fieldPath={`artifacts.${artifactPath}.spec.spec.repositoryPort`}
+              template={template}
+            />
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.repositoryUrl`, template) && (
+            <TextFieldInputSetView
+              placeholder={getString('pipeline.repositoryUrlPlaceholder')}
+              label={getString('repositoryUrlLabel')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.spec.repositoryUrl`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.spec.repositoryUrl`}
+              fieldPath={`artifacts.${artifactPath}.spec.spec.repositoryUrl`}
+              template={template}
+            />
+          )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.artifactPath`, template) && (
             <TextFieldInputSetView
@@ -614,21 +595,19 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               stageIdentifier={stageIdentifier}
             />
           )}
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
-              <TextFieldInputSetView
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                label={getString('tagRegex')}
-                name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
-                fieldPath={`artifacts.${artifactPath}.spec.tagRegex`}
-                template={template}
-              />
-            )}
-          </div>
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
+            <TextFieldInputSetView
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              label={getString('tagRegex')}
+              name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
+              fieldPath={`artifacts.${artifactPath}.spec.tagRegex`}
+              template={template}
+            />
+          )}
         </Layout.Vertical>
       )}
     </>

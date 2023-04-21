@@ -43,7 +43,7 @@ export class CodeqlStep extends PipelineStep<CodeqlStepData> {
   }
 
   protected type = StepType.CodeQL
-  protected stepName = 'Configure Codeql'
+  protected stepName = 'Configure CodeQL'
   protected stepIcon: IconName = 'github'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.CodeQL'
   protected stepPaletteVisible = false

@@ -102,71 +102,67 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
   ))
 
   return (
-    <div className={css.inputFieldLayout}>
-      <SelectInputSetView
-        fieldPath={`artifacts.${artifactPath}.spec.tag`}
-        template={template}
-        formik={formik}
-        disabled={isFieldDisabled()}
-        selectItems={
-          fetchingTags
+    <SelectInputSetView
+      fieldPath={`artifacts.${artifactPath}.spec.tag`}
+      template={template}
+      formik={formik}
+      disabled={isFieldDisabled()}
+      selectItems={
+        fetchingTags
+          ? [
+              {
+                label: loadingPlaceholderText,
+                value: loadingPlaceholderText
+              }
+            ]
+          : tagsList
+      }
+      useValue
+      multiTypeInputProps={{
+        onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+          if (
+            e?.target?.type !== 'text' ||
+            (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+          ) {
+            return
+          }
+
+          if (!isTagsSelectionDisabled(props, isServerlessDeploymentTypeSelected)) {
+            fetchTags()
+          }
+        },
+        selectProps: {
+          items: fetchingTags
             ? [
                 {
                   label: loadingPlaceholderText,
                   value: loadingPlaceholderText
                 }
               ]
-            : tagsList
-        }
-        useValue
-        multiTypeInputProps={{
-          onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-            if (
-              e?.target?.type !== 'text' ||
-              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-            ) {
-              return
-            }
-
-            if (!isTagsSelectionDisabled(props, isServerlessDeploymentTypeSelected)) {
-              fetchTags()
-            }
-          },
-          selectProps: {
-            items: fetchingTags
-              ? [
-                  {
-                    label: loadingPlaceholderText,
-                    value: loadingPlaceholderText
-                  }
-                ]
-              : tagsList,
-            usePortal: true,
-            addClearBtn: !(readonly || isTagsSelectionDisabled(props, isServerlessDeploymentTypeSelected)),
-            noResults: (
-              <Text lineClamp={1}>
-                {getTagError(fetchTagsError) || getString('pipelineSteps.deploy.errors.notags')}
-              </Text>
-            ),
-            itemRenderer,
-            allowCreatingNewItems: true,
-            popoverClassName: css.selectPopover,
-            loadingItems: fetchingTags
-          },
-          expressions,
-          allowableTypes
-        }}
-        label={isServerlessDeploymentTypeSelected ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
-        name={
-          isServerlessDeploymentTypeSelected
-            ? `${path}.artifacts.${artifactPath}.spec.artifactPath`
-            : `${path}.artifacts.${artifactPath}.spec.tag`
-        }
-        configureOptionsProps={{
-          isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType as StepViewType)
-        }}
-      />
-    </div>
+            : tagsList,
+          usePortal: true,
+          addClearBtn: !(readonly || isTagsSelectionDisabled(props, isServerlessDeploymentTypeSelected)),
+          noResults: (
+            <Text lineClamp={1}>{getTagError(fetchTagsError) || getString('pipelineSteps.deploy.errors.notags')}</Text>
+          ),
+          itemRenderer,
+          allowCreatingNewItems: true,
+          popoverClassName: css.selectPopover,
+          loadingItems: fetchingTags
+        },
+        expressions,
+        allowableTypes
+      }}
+      label={isServerlessDeploymentTypeSelected ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
+      name={
+        isServerlessDeploymentTypeSelected
+          ? `${path}.artifacts.${artifactPath}.spec.artifactPath`
+          : `${path}.artifacts.${artifactPath}.spec.tag`
+      }
+      configureOptionsProps={{
+        isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType as StepViewType)
+      }}
+    />
   )
 }
 

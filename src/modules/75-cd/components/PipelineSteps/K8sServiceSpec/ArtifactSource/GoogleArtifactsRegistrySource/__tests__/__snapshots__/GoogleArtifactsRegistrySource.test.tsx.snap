@@ -40,7 +40,6 @@ exports[`GoogleArtifactRegistrySource tests clicking on Region Name field should
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 391px;"
                 >
                   <div
                     class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -166,12 +165,12 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 391px;"
+                    style="width: 400px;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-pipeline.stages[0].stage.spec.seviceConfig.serviceDefinition.spec.artifacts.primary.spec.connectorRef"
-                      style="width: 391px;"
+                      style="width: 400px;"
                       type="button"
                     >
                       <span
@@ -262,7 +261,6 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 391px;"
                 >
                   <div
                     class="bp3-input-group MultiTypeInput--input"
@@ -336,7 +334,6 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 391px;"
                 >
                   <div
                     class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -442,7 +439,6 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 391px;"
                 >
                   <div
                     class="bp3-input-group MultiTypeInput--input"
@@ -516,7 +512,6 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 391px;"
                 >
                   <div
                     class="bp3-input-group MultiTypeInput--input"
@@ -590,7 +585,6 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 391px;"
                 >
                   <div
                     class="bp3-input-group MultiTypeInput--input"
@@ -684,12 +678,12 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 391px;"
+                    style="width: 400px;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-pipeline.stages[0].stage.spec.seviceConfig.serviceDefinition.spec.artifacts.primary.spec.connectorRef"
-                      style="width: 391px;"
+                      style="width: 400px;"
                       type="button"
                     >
                       <span
@@ -780,7 +774,6 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 391px;"
                 >
                   <div
                     class="bp3-input-group MultiTypeInput--input"
@@ -854,7 +847,6 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 391px;"
                 >
                   <div
                     class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -960,7 +952,6 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 391px;"
                 >
                   <div
                     class="bp3-input-group MultiTypeInput--input"
@@ -1034,7 +1025,6 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 391px;"
                 >
                   <div
                     class="bp3-input-group MultiTypeInput--input"
@@ -1108,7 +1098,6 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 391px;"
                 >
                   <div
                     class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"

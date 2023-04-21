@@ -285,7 +285,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               multiTypeInputProps={{
                 onTypeChange: (type: MultiTypeInputType) =>
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.region`, type),
-                width: 391,
                 expressions,
                 selectProps: {
                   allowCreatingNewItems: true,
@@ -331,7 +330,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.versionRegexPlaceholder')}
               disabled={readonly}
               multiTextInputProps={{
-                width: 391,
                 expressions,
                 allowableTypes
               }}
@@ -349,7 +347,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               useValue
               multiTypeInputProps={{
                 expressions,
-                width: 391,
                 allowableTypes,
                 selectProps: {
                   noResults: (
