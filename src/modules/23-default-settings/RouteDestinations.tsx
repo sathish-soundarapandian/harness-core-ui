@@ -98,7 +98,6 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_MATRIX_FIELD_NA
   settingCategory: 'PMS'
 })
 
-
 AuditTrailFactory.registerResourceHandler('SETTING', {
   moduleIcon: {
     name: 'nav-settings'
