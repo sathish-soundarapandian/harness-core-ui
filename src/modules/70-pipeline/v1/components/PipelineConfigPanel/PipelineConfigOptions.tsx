@@ -6,7 +6,11 @@ export interface PipelineConfigOptionInterface {
   label: string
   iconProps: IconProps
   description: string
-  drillDown: { hasSubTypes: boolean; subTypes?: PipelineConfigOptionInterface[]; nodeView?: React.ReactElement }
+  drillDown: {
+    hasSubTypes: boolean
+    subTypes?: (PipelineConfigOptionInterface & { type: SubType })[]
+    nodeView?: React.ReactElement
+  }
 }
 
 export const enum StudioEntity {
@@ -23,6 +27,18 @@ export const enum StudioEntity {
   Registry = 'REGISTRY'
 }
 
+export type SubType = Stage | Step
+
+const enum Stage {
+  CI = 'CI',
+  CD = 'CD'
+}
+
+const enum Step {
+  Run = 'Script',
+  Plugin = 'Plugin'
+}
+
 export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionInterface>([
   [
     StudioEntity.Stage,
@@ -35,6 +51,7 @@ export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionIn
         subTypes: [
           {
             label: 'Continuous Integration',
+            type: Stage.CI,
             iconProps: { name: 'ci-main', size: 25 },
             description: 'Add a CI stage',
             drillDown: {
@@ -59,6 +76,7 @@ export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionIn
           },
           {
             label: 'Continuous Deployment',
+            type: Stage.CD,
             iconProps: { name: 'cd-main', size: 25 },
             description: 'Add a CD stage',
             drillDown: { hasSubTypes: false }
@@ -78,6 +96,7 @@ export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionIn
         subTypes: [
           {
             label: 'Run Script',
+            type: Step.Run,
             iconProps: { name: 'run-ci-step', size: 25 },
             description: 'Runs a shell script',
             drillDown: {
@@ -96,6 +115,7 @@ export const MainConfigOptionsMap = new Map<StudioEntity, PipelineConfigOptionIn
           },
           {
             label: 'Run a Function',
+            type: Step.Plugin,
             iconProps: { name: 'plugin-step', size: 25 },
             description: 'Runs a pipeline function from the Harness function marketplace (slack, docker, etc)',
             drillDown: {

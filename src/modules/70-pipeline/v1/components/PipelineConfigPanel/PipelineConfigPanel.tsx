@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { capitalize, isEmpty } from 'lodash-es'
+import { capitalize, get, isEmpty } from 'lodash-es'
 import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text } from '@harness/uicore'
 import {
   ConfigOptionsMapWithAdditionalOptions,
   MainConfigOptionsMap,
   PipelineConfigOptionInterface,
-  StudioEntity
+  StudioEntity,
+  SubType
 } from './PipelineConfigOptions'
 import css from './PipelineConfigPanel.module.scss'
 
@@ -22,7 +23,7 @@ enum PipelineConfigPanelView {
 }
 
 export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.ReactElement {
-  const { height, selectedEntityTypeFromYAML } = props
+  const { height, selectedEntityTypeFromYAML, selectedEntityFromYAML } = props
   const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false)
   const [studioEntity, setStudioEntity] = useState<StudioEntity>()
   const [pipelineConfigOption, setPipelineConfigOption] = useState<PipelineConfigOptionInterface>()
@@ -47,11 +48,22 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
       if (configOptionForEntityType) {
         setStudioEntity(selectedEntityTypeFromYAML)
         setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)
-        setPipelineConfigOption(configOptionForEntityType)
+        if (configOptionForEntityType.drillDown.hasSubTypes) {
+          const matchingSubType = configOptionForEntityType.drillDown.subTypes?.find(
+            (
+              option: PipelineConfigOptionInterface & {
+                type: SubType
+              }
+            ) => option.type.toLowerCase() === get(selectedEntityFromYAML, 'type').toLowerCase()
+          )
+          setPipelineConfigOption(matchingSubType)
+        } else {
+          setPipelineConfigOption(configOptionForEntityType)
+        }
         updateBreadCrumbs(selectedEntityTypeFromYAML, configOptionForEntityType)
       }
     }
-  }, [selectedEntityTypeFromYAML])
+  }, [selectedEntityTypeFromYAML, selectedEntityFromYAML])
 
   const resetBreadCrumbs = useCallback((): void => {
     setBreadCrumbs(initialBreadCrumbs)
