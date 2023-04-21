@@ -30,6 +30,7 @@ exports[`<GitRemoteDetails /> default rendering GitRemoteDetails 1`] = `
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main repoDetails"
           style="--text-line-clamp: 1;"
+          tabindex="0"
         >
           testRepoName
         </p>
