@@ -12056,8 +12056,6 @@ export interface ResourceDTO {
     | 'BUDGET_GROUP'
     | 'PIPELINE_EXECUTION'
     | 'IP_ALLOWLIST_CONFIG'
-    | 'NODE_EXECUTION'
-
 }
 
 export interface ResourceGroup {
@@ -16981,7 +16979,7 @@ export interface SvcEnvMigrationResponseDto {
 
 export interface SyncOptions {
   applyOutOfSyncOnly: boolean
-  autoCreateNamespace: booleanHEAD
+  autoCreateNamespace: boolean
   prunePropagationPolicy: 'foreground' | 'background' | 'orphan'
   pruneResourcesAtLast: boolean
   replaceResources: boolean
@@ -18442,15 +18440,6 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-
-export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
-
-export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
-
-export type DeleteManyFreezesBodyRequestBody = string[]
-
-export type GetEKSClusterNamesViaExpressionResolutionBodyRequestBody = string
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
@@ -18460,6 +18449,7 @@ export type UpdateFreezeStatusBodyRequestBody = string[]
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
 export type UploadSamlMetaDataRequestBody = void
+
 export interface GetAccountSettingQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -29002,101 +28992,6 @@ export const getEKSClusterNamesPromise = (
     props,
     signal
   )
-
-export interface GetEKSClusterNamesViaExpressionResolutionQueryParams {
-  awsConnectorRef?: string
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  envId?: string
-  infraDefinitionId?: string
-  pipelineIdentifier: string
-  fqnPath: string
-  branch?: string
-  repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
-  repoName?: string
-}
-
-export type GetEKSClusterNamesViaExpressionResolutionProps = Omit<
-  MutateProps<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get EKS clusters list with via expression resolution for eks connector
- */
-export const GetEKSClusterNamesViaExpressionResolution = (props: GetEKSClusterNamesViaExpressionResolutionProps) => (
-  <Mutate<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/aws/aws-helper/eks/clusters/v2`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetEKSClusterNamesViaExpressionResolutionProps = Omit<
-  UseMutateProps<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get EKS clusters list with via expression resolution for eks connector
- */
-export const useGetEKSClusterNamesViaExpressionResolution = (
-  props: UseGetEKSClusterNamesViaExpressionResolutionProps
-) =>
-  useMutate<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >('POST', `/aws/aws-helper/eks/clusters/v2`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get EKS clusters list with via expression resolution for eks connector
- */
-export const getEKSClusterNamesViaExpressionResolutionPromise = (
-  props: MutateUsingFetchProps<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseListString,
-    Failure | Error,
-    GetEKSClusterNamesViaExpressionResolutionQueryParams,
-    CFParametersForAwsBodyRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/aws/aws-helper/eks/clusters/v2`, props, signal)
 
 export interface ElasticLoadBalancersQueryParams {
   awsConnectorRef?: string
