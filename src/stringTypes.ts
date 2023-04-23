@@ -550,7 +550,6 @@ export interface StringsMap {
   'common.jexlExpression': string
   'common.labelTestConnection': string
   'common.last7days': string
-  'common.lastBuildDate': string
   'common.lastConnected': string
   'common.lastConnectedOn': string
   'common.lastDeployed': string
@@ -664,7 +663,6 @@ export interface StringsMap {
   'common.newVersion': string
   'common.nextStep': string
   'common.noAPIKeys': string
-  'common.noActiveDeveloperData': string
   'common.noActiveServiceData': string
   'common.noAvailableTags': string
   'common.noConnectorAvailable': string
@@ -828,7 +826,6 @@ export interface StringsMap {
   'common.purpose.cv.subtitle': string
   'common.purpose.cv.verification': string
   'common.purpose.developer': string
-  'common.purpose.errorTracking.longTitle': string
   'common.purpose.errorTracking.title': string
   'common.purpose.howToProceed': string
   'common.purpose.idp.fullName': string
@@ -1098,7 +1095,6 @@ export interface StringsMap {
   'common.subscriptions.title': string
   'common.subscriptions.trial': string
   'common.subscriptions.usage.activeDevelopers': string
-  'common.subscriptions.usage.allCredits': string
   'common.subscriptions.usage.ccmTooltip': string
   'common.subscriptions.usage.ccmUsers': string
   'common.subscriptions.usage.cdSITooltip': string
