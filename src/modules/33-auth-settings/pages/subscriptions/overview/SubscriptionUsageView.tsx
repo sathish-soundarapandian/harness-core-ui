@@ -29,6 +29,7 @@ const getModuleUsagesTable = (props: SubscriptionUsageViewProps): React.ReactEle
 }
 
 const SubscriptionUsageView: React.FC<SubscriptionUsageViewProps> = props => {
+  console.log('props', props)
   const usageModuleTable = getModuleUsagesTable(props)
   return usageModuleTable ? (
     <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'baseline', justifyContent: 'space-between' }}>

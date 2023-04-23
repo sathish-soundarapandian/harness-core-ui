@@ -14,7 +14,7 @@ import { ServiceLicenseGraphs } from './ServiceLicenseGraphs'
 
 interface SubscriptionGraphViewProps {
   accountId: string
-  licenseType: 'SERVICES' | 'SERVICE_INSTANCES' | undefined
+  licenseType: 'SERVICES' | 'SERVICE_INSTANCES' | 'DEVELOPERS' | undefined
   licenseData?: ModuleLicenseDTO
   module: ModuleName
 }

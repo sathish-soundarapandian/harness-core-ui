@@ -28,7 +28,6 @@ const OrgDropdown: React.FC<OrgDropdownProps> = props => {
       getOrganizationListPromise({ queryParams: { accountIdentifier: accountId, searchTerm: query } })
         .then(result => {
           let selectItems: Array<SelectOption> = []
-
           if (result?.data?.content?.length) {
             selectItems = result?.data?.content?.reduce?.(
               (selected: Array<SelectOption>, item: OrganizationResponse) => {

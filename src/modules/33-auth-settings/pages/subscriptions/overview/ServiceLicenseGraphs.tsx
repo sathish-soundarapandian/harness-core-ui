@@ -19,7 +19,7 @@ import pageCss from '../SubscriptionsPage.module.scss'
 
 interface ServiceLicenseGraphsProps {
   accountId: string
-  licenseType: 'SERVICES' | 'SERVICE_INSTANCES' | undefined
+  licenseType: 'SERVICES' | 'SERVICE_INSTANCES' | 'DEVELOPERS' | undefined
   licenseData?: ModuleLicenseDTO
 }
 

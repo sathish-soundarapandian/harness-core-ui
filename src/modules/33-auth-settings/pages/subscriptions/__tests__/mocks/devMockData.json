@@ -1,9 +1,3 @@
 {
-  "data": {
-    "status": "SUCCESS",
-    "data": ["abc", "def"],
-    "metaData": "",
-    "correlationId": "370210dc-a345-42fa-b3cf-69bd64eb5073"
-  },
-  "loading": false
+  "data": ["abc", "def"]
 }

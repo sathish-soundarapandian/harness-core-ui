@@ -32,7 +32,6 @@ function SubscriptionTabPage(props: SubscriptionTabPageProps) {
   if (props.module !== ModuleName.CI && props.module !== ModuleName.CD) {
     return <></>
   }
-  console.log('SubscriptionTabPage -> props', props)
   return (
     <Card>
       <Tabs
