@@ -381,12 +381,15 @@ export type AzureInheritFromDelegateDetails = AzureCredentialSpec & {
 
 export type AzureKeyVaultConnectorDTO = ConnectorConfigDTO & {
   azureEnvironmentType?: 'AZURE' | 'AZURE_US_GOVERNMENT'
-  clientId: string
+  azureManagedIdentityType?: 'SystemAssignedManagedIdentity' | 'UserAssignedManagedIdentity'
+  clientId?: string
   default?: boolean
   delegateSelectors?: string[]
-  secretKey: string
+  managedClientId?: string
+  secretKey?: string
   subscription: string
-  tenantId: string
+  tenantId?: string
+  useManagedIdentity?: boolean
   vaultName: string
 }
 
@@ -1194,7 +1197,7 @@ export interface CcmK8sMetaInfoResponseDTO {
 }
 
 export interface CcmOverviewDTO {
-  costPerDay?: DataPoint[]
+  costPerDay?: TimeSeriesDataPoints[]
   recommendationsCount?: number
   totalCost?: number
   totalCostTrend?: number
@@ -2227,6 +2230,8 @@ export interface Error {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2641,6 +2646,8 @@ export interface Failure {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4320,6 +4327,8 @@ export interface ResponseMessage {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4334,6 +4343,7 @@ export interface ResponseMessage {
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'DELEGATE_RESTART'
+    | 'USER_MARKED_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -4592,6 +4602,7 @@ export interface RuleEnforcement {
   projectIdentifier?: string
   ruleIds?: string[]
   ruleSetIDs?: string[]
+  runCount?: number
   tags?: string[]
   targetAccounts?: string[]
   targetRegions?: string[]
@@ -7389,15 +7400,15 @@ export const useDeleteRuleEnforcement = (props: UseDeleteRuleEnforcementProps) =
     { base: getConfig('ccm/api'), ...props }
   )
 
-export interface EnqueueGovernanceJobQueryParams {
+export interface EnqueueAdhocGovernanceJobQueryParams {
   accountIdentifier?: string
 }
 
-export type EnqueueGovernanceJobProps = Omit<
+export type EnqueueAdhocGovernanceJobProps = Omit<
   MutateProps<
     ResponseGovernanceEnqueueResponseDTO,
     Failure | Error,
-    EnqueueGovernanceJobQueryParams,
+    EnqueueAdhocGovernanceJobQueryParams,
     GovernanceJobEnqueueDTO,
     void
   >,
@@ -7407,26 +7418,26 @@ export type EnqueueGovernanceJobProps = Omit<
 /**
  * Enqueues job for execution
  */
-export const EnqueueGovernanceJob = (props: EnqueueGovernanceJobProps) => (
+export const EnqueueAdhocGovernanceJob = (props: EnqueueAdhocGovernanceJobProps) => (
   <Mutate<
     ResponseGovernanceEnqueueResponseDTO,
     Failure | Error,
-    EnqueueGovernanceJobQueryParams,
+    EnqueueAdhocGovernanceJobQueryParams,
     GovernanceJobEnqueueDTO,
     void
   >
     verb="POST"
-    path={`/governance/enqueue`}
+    path={`/governance/enqueueAdhoc`}
     base={getConfig('ccm/api')}
     {...props}
   />
 )
 
-export type UseEnqueueGovernanceJobProps = Omit<
+export type UseEnqueueAdhocGovernanceJobProps = Omit<
   UseMutateProps<
     ResponseGovernanceEnqueueResponseDTO,
     Failure | Error,
-    EnqueueGovernanceJobQueryParams,
+    EnqueueAdhocGovernanceJobQueryParams,
     GovernanceJobEnqueueDTO,
     void
   >,
@@ -7436,14 +7447,14 @@ export type UseEnqueueGovernanceJobProps = Omit<
 /**
  * Enqueues job for execution
  */
-export const useEnqueueGovernanceJob = (props: UseEnqueueGovernanceJobProps) =>
+export const useEnqueueAdhocGovernanceJob = (props: UseEnqueueAdhocGovernanceJobProps) =>
   useMutate<
     ResponseGovernanceEnqueueResponseDTO,
     Failure | Error,
-    EnqueueGovernanceJobQueryParams,
+    EnqueueAdhocGovernanceJobQueryParams,
     GovernanceJobEnqueueDTO,
     void
-  >('POST', `/governance/enqueue`, { base: getConfig('ccm/api'), ...props })
+  >('POST', `/governance/enqueueAdhoc`, { base: getConfig('ccm/api'), ...props })
 
 export interface GetSchemaForEntityQueryParams {
   accountIdentifier: string
@@ -7654,6 +7665,11 @@ export interface GetSchemaForEntityQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
+    | 'DeployCloudFunctionGenOne'
+    | 'RollbackCloudFunctionGenOne'
 }
 
 export type GetSchemaForEntityProps = Omit<
@@ -8262,6 +8278,42 @@ export const useDeleteRuleSet = (props: UseDeleteRuleSetProps) =>
     base: getConfig('ccm/api'),
     ...props
   })
+
+export interface ValidateRuleQueryParams {
+  accountIdentifier: string
+}
+
+export type ValidateRuleProps = Omit<
+  MutateProps<void, Failure | Error, ValidateRuleQueryParams, CreateRuleDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Validate a rule
+ */
+export const ValidateRule = (props: ValidateRuleProps) => (
+  <Mutate<void, Failure | Error, ValidateRuleQueryParams, CreateRuleDTORequestBody, void>
+    verb="POST"
+    path={`/governance/ruleValidate`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseValidateRuleProps = Omit<
+  UseMutateProps<void, Failure | Error, ValidateRuleQueryParams, CreateRuleDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Validate a rule
+ */
+export const useValidateRule = (props: UseValidateRuleProps) =>
+  useMutate<void, Failure | Error, ValidateRuleQueryParams, CreateRuleDTORequestBody, void>(
+    'POST',
+    `/governance/ruleValidate`,
+    { base: getConfig('ccm/api'), ...props }
+  )
 
 export interface GetRuleExecutionStatusQueryParams {
   accountIdentifier: string
