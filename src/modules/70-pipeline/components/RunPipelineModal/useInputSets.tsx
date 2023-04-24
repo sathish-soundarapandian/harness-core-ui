@@ -117,6 +117,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
     },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: executionInputSetTemplateYaml || executionView || !selectedStageData.selectedStageItems.length
   })
 
