@@ -2,12 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { capitalize, get, isEmpty } from 'lodash-es'
 import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text, Formik } from '@harness/uicore'
+import { PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
 import {
   ConfigOptionsMapWithAdditionalOptions,
   MainConfigOptionsMap,
   PipelineConfigOptionInterface,
   Step,
-  PipelineEntity,
   PipelineEntitySubType
 } from './PipelineConfigOptions'
 import css from './PipelineConfigPanel.module.scss'

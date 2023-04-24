@@ -1,6 +1,7 @@
 import React from 'react'
 import type { IconProps } from '@harness/icons'
 import { FontVariation, FormInput, Layout, Text } from '@harness/uicore'
+import { PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
 
 export interface PipelineConfigOptionInterface {
   label: string
@@ -11,20 +12,6 @@ export interface PipelineConfigOptionInterface {
     subTypes?: (PipelineConfigOptionInterface & { type: PipelineEntitySubType })[]
     nodeView?: React.ReactElement
   }
-}
-
-export const enum PipelineEntity {
-  Pipeline = 'PIPELINE',
-  Stage = 'STAGE',
-  Step = 'STEP',
-  Trigger = 'TRIGGER',
-  Notification = 'NOTIFICATION',
-  Input = 'INPUT',
-  Barrier = 'BARRIER',
-  Clone = 'CLONE',
-  Delegate = 'DELEGATE',
-  EnvVariable = 'ENVIRONMENT_VARIABLE',
-  Registry = 'REGISTRY'
 }
 
 export type PipelineEntitySubType = Stage | Step

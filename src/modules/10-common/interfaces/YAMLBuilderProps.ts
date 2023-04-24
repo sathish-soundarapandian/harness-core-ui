@@ -108,3 +108,17 @@ export enum EditorAction {
   Add = 'ADD',
   Edit = 'EDIT'
 }
+
+export const enum PipelineEntity {
+  Pipeline = 'PIPELINE',
+  Stage = 'STAGE',
+  Step = 'STEP',
+  Trigger = 'TRIGGER',
+  Notification = 'NOTIFICATION',
+  Input = 'INPUT',
+  Barrier = 'BARRIER',
+  Clone = 'CLONE',
+  Delegate = 'DELEGATE',
+  EnvVariable = 'ENVIRONMENT_VARIABLE',
+  Registry = 'REGISTRY'
+}

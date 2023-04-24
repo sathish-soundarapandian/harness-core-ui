@@ -43,7 +43,8 @@ import {
   YamlBuilderHandlerBinding,
   CompletionItemInterface,
   Theme,
-  EditorAction
+  EditorAction,
+  PipelineEntity
 } from '@common/interfaces/YAMLBuilderProps'
 import { PluginAddUpdateMetadata, PluginType } from '@common/interfaces/YAMLBuilderProps'
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
@@ -168,6 +169,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
   const [_editorAction, setEditorAction] = useState<EditorAction>()
+  const [_pipelineEntity, setPipelineEntity] = useState<PipelineEntity>()
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
   const yamlValidationErrorsRef = useRef<Map<number, string>>()
@@ -202,6 +204,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       } as YamlBuilderHandlerBinding),
     [currentYaml]
   )
+
+  useEffect(() => {
+    setPipelineEntity(PipelineEntity.Step)
+  }, [])
 
   useEffect(() => {
     bind?.(handler)
@@ -801,6 +807,21 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor, currentYaml]
   )
 
+  const getMatchingPositionsForPipelineEntity = useCallback(
+    (selectedPipelineEntity: PipelineEntity): Position[] => {
+      if (!editorRef.current?.editor) {
+        return []
+      }
+      switch (selectedPipelineEntity) {
+        case PipelineEntity.Step:
+          return getValidStepPositions(editorRef.current?.editor)
+        default:
+          return []
+      }
+    },
+    [editorRef.current?.editor]
+  )
+
   const spotLightInsertedYAML = useCallback(
     ({
       noOflinesInserted,
@@ -819,7 +840,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       if (editor) {
         let position: Position
         if (isPluginUpdate && editorRef.current?.editor) {
-          const stepMatchingPositions = getValidStepPositions(editorRef.current.editor)
+          const stepMatchingPositions = getMatchingPositionsForPipelineEntity(PipelineEntity.Step)
           const allMatchesInClosestStageIndex = stepMatchingPositions.slice(startStepIndex)
           position = allMatchesInClosestStageIndex[closestStepIndex]
           const { lineNumber: startingLineNum } = position
