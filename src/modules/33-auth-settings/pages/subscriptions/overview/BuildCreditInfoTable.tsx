@@ -53,7 +53,7 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
 
   const starTimeCell: CellType = ({ row }) => {
     const dataPassed = row.original
-    const formattedStartTime = moment(dataPassed.purchaseTime).format('MMM DD YYYY')
+    const formattedStartTime = moment(dataPassed?.purchaseTime).format('MMM DD YYYY')
     return (
       <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
         {formattedStartTime}
@@ -62,7 +62,7 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
   }
   const expiryTimeCell: CellType = ({ row }) => {
     const dataPassed = row.original
-    const formattedExpiryTime = moment(dataPassed.expiryTime).format('MMM DD YYYY')
+    const formattedExpiryTime = moment(dataPassed?.expiryTime).format('MMM DD YYYY')
     return (
       <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
         {formattedExpiryTime}
@@ -73,7 +73,7 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
     const dataPassed = row.original
     return (
       <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
-        {dataPassed.quantity}
+        {dataPassed?.quantity}
       </Text>
     )
   }
@@ -118,7 +118,7 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
       },
       {
         title: getString('common.nextExpiringDate'),
-        count: moment(data[0].expiryTime).format('MMM DD YYYY'),
+        count: moment(data[0]?.expiryTime).format('MMM DD YYYY'),
         className: pageCss.overUseClass
       }
     ]
@@ -136,7 +136,7 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
         <Layout.Vertical className={pageCss.badgesContainer} flex={{ justifyContent: 'space-between' }}>
           <div>{getSummaryCardRenderers(summaryCardsData, true)}</div>
         </Layout.Vertical>
-        {data.length > 0 ? (
+        {data && data.length > 0 ? (
           <TableV2 className={pageCss.table} columns={columns} data={data} />
         ) : (
           <NoDataCard

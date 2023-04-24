@@ -1,5 +1,113 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Build Credit Info test  Build Credit Info with emmpty credit data: build credit table with empty credit data 1`] = `
+<div>
+  <div
+    class="bp3-card bp3-elevation-0 Card--card outterCard"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-stretch"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        style="width: 100%;"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <h1
+            class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
+          >
+            common.subscriptions.usage.buildCredits
+          </h1>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical StyledProps--main badgesContainer StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      >
+        <div>
+          <div
+            class="StyledProps--font StyledProps--main summaryCardsContainer"
+          >
+            <div
+              class="StyledProps--font StyledProps--main summaryCard"
+            >
+              <p
+                class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              >
+                common.subscriptions.usage.allCredits
+              </p>
+              <div
+                class="Layout--horizontal StyledProps--main frequencyContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
+                >
+                  0
+                </p>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main summaryCard"
+            >
+              <p
+                class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              >
+                common.plans.subscription
+              </p>
+              <div
+                class="Layout--horizontal StyledProps--main frequencyContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
+                >
+                  0
+                </p>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main summaryCard"
+            >
+              <p
+                class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              >
+                common.nextExpiringDate
+              </p>
+              <div
+                class="Layout--horizontal StyledProps--main frequencyContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
+                >
+                  Apr 24 2023
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main NoDataCard--noDataCard noDataCardContainer StyledProps--flex StyledProps--flex-align-center-center"
+      >
+        <div
+          class="Layout--vertical Layout--layout-spacing-medium StyledProps--main noDataCard"
+          style="align-items: center; margin-top: -48px; width: 470px;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main NoDataCard--message StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
+          >
+            common.noCreditInfoData
+          </p>
+          <div
+            class="NoDataCard--buttonContainer"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
 <div>
   <div
