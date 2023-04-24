@@ -73,7 +73,8 @@ export const useRunPipelineModal = (
     queryParams: {
       orgIdentifier,
       projectIdentifier,
-      accountIdentifier: accountId
+      accountIdentifier: accountId,
+      resolveExpressionsType: 'RESOLVE_TRIGGER_EXPRESSIONS'
     },
     requestOptions: {
       headers: {
