@@ -169,7 +169,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
   const [_editorAction, setEditorAction] = useState<EditorAction>()
-  const [_pipelineEntity, setPipelineEntity] = useState<PipelineEntity>()
+  const [pipelineEntity, setPipelineEntity] = useState<PipelineEntity>()
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
   const yamlValidationErrorsRef = useRef<Map<number, string>>()
@@ -828,19 +828,21 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       closestStageIndex,
       isPluginUpdate,
       closestStepIndex,
-      startStepIndex
+      startStepIndex,
+      selectedPipelineEntity
     }: {
       noOflinesInserted: number
       closestStageIndex: number
       isPluginUpdate: boolean
       closestStepIndex: number
       startStepIndex: number
+      selectedPipelineEntity: PipelineEntity
     }): void => {
       const editor = editorRef.current?.editor
       if (editor) {
         let position: Position
         if (isPluginUpdate && editorRef.current?.editor) {
-          const stepMatchingPositions = getMatchingPositionsForPipelineEntity(PipelineEntity.Step)
+          const stepMatchingPositions = getMatchingPositionsForPipelineEntity(selectedPipelineEntity)
           const allMatchesInClosestStageIndex = stepMatchingPositions.slice(startStepIndex)
           position = allMatchesInClosestStageIndex[closestStepIndex]
           const { lineNumber: startingLineNum } = position
@@ -872,7 +874,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
     },
-    [editorRef.current?.editor]
+    [pipelineEntity, editorRef.current?.editor]
   )
 
   const obtainYAMLForEditorActionClick = useCallback(
@@ -992,7 +994,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const { pluginData, shouldInsertYAML } = pluginMetadata
       const cursorPosition = currentCursorPosition.current
       const sanitizedPluginData = omitBy(omitBy(pluginData, isUndefined), isNull)
-      if (!isEmpty(sanitizedPluginData) && shouldInsertYAML && cursorPosition && editorRef.current?.editor) {
+      if (
+        !isEmpty(sanitizedPluginData) &&
+        shouldInsertYAML &&
+        cursorPosition &&
+        editorRef.current?.editor &&
+        pipelineEntity
+      ) {
         let updatedYAML = currentYaml
         try {
           let closestStageIndex = getArrayIndexClosestToCurrentCursor({
@@ -1053,7 +1061,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             closestStageIndex,
             isPluginUpdate,
             closestStepIndex: closestStepIndexInCurrentStage,
-            startStepIndex: stepCountInPrecedingStage
+            startStepIndex: stepCountInPrecedingStage,
+            selectedPipelineEntity: pipelineEntity
           })
         } catch (e) {
           // ignore error
