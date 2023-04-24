@@ -36,6 +36,13 @@ export const serviceEnvironmentTest2Call = `/cv/api/monitored-service/service-en
 export const serviceEnvironmentTest3Call = `/cv/api/monitored-service/service-environment?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&environmentIdentifier=${ENV}&serviceIdentifier=testService3`
 export const overviewCall = `/cv/api/account/${accountId}/orgs/default/projects/${project}/verifications/GZNwefkdR2aBhc7owmJ1-w/overview?routingId=${accountId}`
 
+// Jira calls
+export const jiraProjectsCall = `/ticket-service/api/metadata/projects?*`
+export const jiraPrioritiesCall = `/ticket-service/api/metadata/priorities?*`
+export const jiraIssueTypesCall = `/ticket-service/api/metadata/projects/*`
+export const jiraTicketDetailsCall = `/ticket-service/api/tickets/*`
+export const jiraCreatePostCall = `/cv/api/account/accountId/org/default/project/project1/log-feedback/abc/ticket?*`
+
 export const pipelinesFetchCall = `/pipeline/api/pipelines/NG_Docker_Image?*`
 export const pipelinesSummaryFetchCall = `/pipeline/api/pipelines/summary/NG_Docker_Image?*`
 export const pipelinesYamlFetchCall = `/pipeline/api/yaml-schema?*`
@@ -1359,6 +1366,224 @@ export const logsListCallResponse = {
   responseMessages: []
 }
 
+export const logsListCallResponseWithTicket = {
+  metaData: {},
+  resource: {
+    totalClusters: 1,
+    eventCounts: [
+      {
+        clusterType: 'KNOWN_EVENT',
+        count: 1,
+        displayName: 'Known'
+      },
+      {
+        clusterType: 'UNEXPECTED_FREQUENCY',
+        count: 0,
+        displayName: 'Unexpected Frequency'
+      },
+      {
+        clusterType: 'UNKNOWN_EVENT',
+        count: 0,
+        displayName: 'Unknown'
+      },
+      {
+        clusterType: 'BASELINE',
+        count: 1,
+        displayName: 'Baseline'
+      }
+    ],
+    logAnalysisRadarCharts: {
+      totalPages: 1,
+      totalItems: 1,
+      pageItemCount: 1,
+      pageSize: 10,
+      content: [
+        {
+          message: 'test 1',
+          clusterId: '29659f5a-f6ad-308c-97dc-d54d0ac07c1c',
+          label: 0,
+          risk: 'HEALTHY',
+          clusterType: 'KNOWN_EVENT',
+          count: 8,
+          testHostFrequencyData: [
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 1.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 0.0
+                }
+              ],
+              host: 'host1'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 0.0
+                }
+              ],
+              host: 'host2'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 2.0
+                }
+              ],
+              host: 'host3'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 4.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 4.0
+                }
+              ],
+              host: 'host4'
+            }
+          ],
+          totalTestFrequencyData: [
+            {
+              timeStamp: 1672845420,
+              count: 3.0
+            },
+            {
+              timeStamp: 1672845480,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845540,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845600,
+              count: 6.0
+            },
+            {
+              timeStamp: 1672845660,
+              count: 6.0
+            }
+          ],
+          averageControlFrequencyData: [
+            {
+              timeStamp: 1672845060,
+              count: 1
+            },
+            {
+              timeStamp: 1672845120,
+              count: 2
+            },
+            {
+              timeStamp: 1672845180,
+              count: 1
+            },
+            {
+              timeStamp: 1672845240,
+              count: 3
+            },
+            {
+              timeStamp: 1672845300,
+              count: 10
+            }
+          ],
+          feedbackApplied: {
+            feedbackScore: 'HIGH_RISK',
+            description:
+              'Some applied reason Some applied reason Some applied reason Some applied reason Some applied reasonSome applied reason',
+            createdBy: 'pranesh@harness.io',
+            createdAt: 1677414780069,
+            updatedBy: 'pranesh@harness.io',
+            updatedAt: 1677414840933,
+            feedbackId: 'abc'
+          },
+          feedback: {
+            feedbackScore: 'MEDIUM_RISK',
+            description: 'Some reason',
+            createdBy: 'pranesh@harness.io',
+            createdAt: 1677414780069,
+            updatedBy: 'pranesh@harness.io',
+            updatedAt: 1677414840933,
+            feedbackId: 'abc',
+            ticket: {
+              id: '123',
+              externalId: 'SRM-123',
+              url: 'abc.com'
+            }
+          }
+        }
+      ],
+      pageIndex: 0,
+      empty: false
+    }
+  },
+  responseMessages: []
+}
+
 export const logsRadarChartDataCallResponse = {
   metaData: {},
   resource: [
@@ -2128,4 +2353,87 @@ export const feedbackHistoryResponse = {
       }
     }
   ]
+}
+
+// Jira mocks
+export const jiraProjectsMock = {
+  projects: [
+    {
+      key: 'OIP',
+      name: 'Observability Integrations Platform'
+    },
+    {
+      key: 'IE',
+      name: 'Infrastructure Evolution'
+    }
+  ]
+}
+
+export const jiraPrioritiesMock = {
+  priorities: [
+    {
+      id: '1',
+      name: 'P1'
+    },
+    {
+      id: '2',
+      name: 'P2'
+    }
+  ]
+}
+
+export const jiraIssueTypeMock = {
+  key: 'SRM',
+  name: 'Service Reliability Management',
+  ticketTypes: [
+    {
+      id: '10100',
+      name: 'Story',
+      isSubtask: false
+    },
+    {
+      id: '10321',
+      name: 'RCA-Subtask',
+      isSubtask: true
+    }
+  ]
+}
+
+export const jiraCreatePayload = {
+  identifiers: {
+    Key1: ['value1']
+  },
+  description: 'Some description',
+  priority: '1',
+  issueType: 'Story',
+  projectKey: 'OIP',
+  title: 'Issue to be fixed'
+}
+
+export const jiraTicketGetResponse = {
+  accountId: 'abcdef1234567890ghijkl',
+  assignee: {
+    displayName: 'John Doe',
+    email: 'john.doe@example.com'
+  },
+  created: 1651578240,
+  description: 'This is the very long ticket description...',
+  exists: false,
+  externalId: 'ABC-1234',
+  id: 'abcdef1234567890ghijkl',
+  identifiers: {
+    idName: ['value1', 'value2', 'value3']
+  },
+  issueType: 'Bug',
+  lastModified: 1651578240,
+  module: 'sto',
+  orgId: 'example_org',
+  priority: 'High',
+  projectId: 'example_project',
+  projectKey: 'ABC',
+  projectName: 'Jira Project',
+  status: 'To Do',
+  statusColor: '#42526E',
+  title: 'A new ticket',
+  url: 'https://example.atlassian.net/browse/ABCD-1234'
 }

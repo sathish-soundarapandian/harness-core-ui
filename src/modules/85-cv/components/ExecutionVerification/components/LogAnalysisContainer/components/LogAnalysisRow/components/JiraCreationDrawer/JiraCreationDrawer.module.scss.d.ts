@@ -7,18 +7,17 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly feedbackData: string
-  readonly feedbackDataLabel: string
-  readonly feedbackDataRisk: string
-  readonly feedbackItem: string
-  readonly feedbackSection: string
-  readonly formSection: string
-  readonly modalInputElement: string
-  readonly riskColorIndicator: string
-  readonly riskColorIndicatorSmall: string
-  readonly riskItem: string
+  readonly accordionPanel: string
+  readonly addFieldButton: string
+  readonly configAccordion: string
+  readonly divider: string
+  readonly fieldArrayInput: string
+  readonly jiraDescription: string
+  readonly jiraDetailsDivider: string
+  readonly jiraDetailsMain: string
+  readonly jiraDrawerCloseBtn: string
+  readonly jiraDrawerHeading: string
+  readonly messageContainer: string
   readonly spinnerContainer: string
-  readonly updatePreferenceDrawer: string
-  readonly updatePreferenceDrawerCloseBtn: string
 }
 export default styles

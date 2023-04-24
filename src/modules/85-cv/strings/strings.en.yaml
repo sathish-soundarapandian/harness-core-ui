@@ -1217,6 +1217,17 @@ logs:
   feedbackAppliedMessage: Feedback has been applied to the log that ran in this deployment.
   feedbackUpdatedMessage: Updated event priority feedback will be applied in the next deployment run.
   reasonPlaceholder: Enter the reason for updating the event priority
+  jiraFormLable:
+    priority: Priority
+    ticketSummary: Ticket Summary
+    assignee: Assignee
+  jiraDetails:
+    viewInJira: View in JIRA
+    createTicket: Create ticket
+    viewTicket: View ticket
+  jiraFormValidation:
+    issueType: Issue type is required
+    ticketSummary: Ticket summary is required
   eventPriorityValues:
     notARiskIgnore: Not a risk - Ignore frequency
     notARiskConsider: Not a risk - Consider frequency

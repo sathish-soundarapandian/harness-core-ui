@@ -35,10 +35,21 @@ export function SampleData(props: SampleDataProps): JSX.Element {
 }
 
 export function LogAnalysisDetailsDrawer(props: LogAnalysisDetailsDrawerProps): JSX.Element {
-  const { onHide, rowData, isDataLoading, logsError, retryLogsCall, onUpdatePreferenceDrawerOpen, index } = props
+  const {
+    onHide,
+    rowData,
+    isDataLoading,
+    logsError,
+    retryLogsCall,
+    onUpdatePreferenceDrawerOpen,
+    index,
+    onJiraDrawerOpen
+  } = props
   const [isOpen, setOpen] = useState(true)
 
   const isLogFeedbackEnabled = useFeatureFlag(FeatureFlag.SRM_LOG_FEEDBACK_ENABLE_UI)
+
+  const isJiraCreationEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_JIRA_INTEGRATION)
 
   const {
     messageFrequency,
@@ -73,23 +84,40 @@ export function LogAnalysisDetailsDrawer(props: LogAnalysisDetailsDrawerProps): 
       )
     }
 
+    const jiraDrawerButtonText = !feedback?.ticket?.id
+      ? getString('cv.logs.jiraDetails.createTicket')
+      : getString('cv.logs.jiraDetails.viewTicket')
+
     return (
       <>
         <Container className={css.headingContainer} data-testid="LogAnalysis_detailsDrawer">
           <Heading level={2} font={{ variation: FontVariation.H4 }}>
             {getString('pipeline.verification.logs.eventDetails')}
           </Heading>
-          {isLogFeedbackEnabled && (
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              onClick={() =>
-                onUpdatePreferenceDrawerOpen({ selectedIndex: index ?? 0, isOpenedViaLogsDrawer: true, rowData })
-              }
-              data-testid="updateEventPreferenceButton-Drawer"
-            >
-              {getString('pipeline.verification.logs.updateEventPreference')}
-            </Button>
-          )}
+          <Container>
+            {isJiraCreationEnabled && !isEmpty(feedback) && (
+              <Button
+                variation={ButtonVariation.SECONDARY}
+                icon="service-jira"
+                onClick={() => onJiraDrawerOpen({ selectedIndex: index ?? 0, isOpenedViaLogsDrawer: true, rowData })}
+                data-testid="jiraCreationButton-Drawer"
+                margin={{ right: 'small' }}
+              >
+                {jiraDrawerButtonText}
+              </Button>
+            )}
+            {isLogFeedbackEnabled && (
+              <Button
+                variation={ButtonVariation.SECONDARY}
+                onClick={() =>
+                  onUpdatePreferenceDrawerOpen({ selectedIndex: index ?? 0, isOpenedViaLogsDrawer: true, rowData })
+                }
+                data-testid="updateEventPreferenceButton-Drawer"
+              >
+                {getString('pipeline.verification.logs.updateEventPreference')}
+              </Button>
+            )}
+          </Container>
         </Container>
 
         <Container className={css.formAndMessageContainer}>

@@ -4239,6 +4239,7 @@ export interface StringsMap {
   'pipeline.jiraApprovalStep.validations.project': string
   'pipeline.jiraApprovalStep.validations.requiredField': string
   'pipeline.jiraCreateStep.addFields': string
+  'pipeline.jiraCreateStep.descriptionPlaceholder': string
   'pipeline.jiraCreateStep.fetchingFields': string
   'pipeline.jiraCreateStep.fieldSelectorAdd': string
   'pipeline.jiraCreateStep.fields': string
@@ -5010,6 +5011,7 @@ export interface StringsMap {
   'pipeline.verification.logs.clusterType': string
   'pipeline.verification.logs.copyURL': string
   'pipeline.verification.logs.countPerMin': string
+  'pipeline.verification.logs.createJiraTicket': string
   'pipeline.verification.logs.eventCountPerMin': string
   'pipeline.verification.logs.eventDetails': string
   'pipeline.verification.logs.eventPreference': string
@@ -5017,6 +5019,7 @@ export interface StringsMap {
   'pipeline.verification.logs.eventType': string
   'pipeline.verification.logs.filterByClusterType': string
   'pipeline.verification.logs.firstOccurrence': string
+  'pipeline.verification.logs.jiraTicketTitle': string
   'pipeline.verification.logs.lastKnownOccurrence': string
   'pipeline.verification.logs.logCluster': string
   'pipeline.verification.logs.messageCount': string
@@ -5032,6 +5035,7 @@ export interface StringsMap {
   'pipeline.verification.logs.trend': string
   'pipeline.verification.logs.updateEventPreference': string
   'pipeline.verification.logs.urlCopied': string
+  'pipeline.verification.logs.viewJiraTicket': string
   'pipeline.verification.metricViewPlaceholder': string
   'pipeline.verification.metricsInViolation': string
   'pipeline.verification.nodeCountDisplay': string
@@ -8450,6 +8454,14 @@ export interface StringsMap {
   'cv.logs.feedbackAppliedMessage': string
   'cv.logs.feedbackHistory': string
   'cv.logs.feedbackUpdatedMessage': string
+  'cv.logs.jiraDetails.createTicket': string
+  'cv.logs.jiraDetails.viewInJira': string
+  'cv.logs.jiraDetails.viewTicket': string
+  'cv.logs.jiraFormLable.assignee': string
+  'cv.logs.jiraFormLable.priority': string
+  'cv.logs.jiraFormLable.ticketSummary': string
+  'cv.logs.jiraFormValidation.issueType': string
+  'cv.logs.jiraFormValidation.ticketSummary': string
   'cv.logs.notARisk': string
   'cv.logs.priorityOrRiskSelectionRequired': string
   'cv.logs.radarChartInfo': string

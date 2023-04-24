@@ -41,6 +41,7 @@ export interface LogAnalysisDataRowProps {
   ) => void
   onDrawOpen: (index: number) => void
   onUpdateEventPreferenceDrawer: (options: UpdateEventPreferenceOpenFn) => void
+  onJiraModalOpen: (options: UpdateEventPreferenceOpenFn) => void
   index: number
   isSelected: boolean
   isErrorTracking?: boolean
@@ -61,4 +62,11 @@ export interface UpdateEventPreferenceOpenFn {
   selectedIndex: number
   isOpenedViaLogsDrawer?: boolean
   rowData?: LogAnalysisRowData
+}
+
+export interface InitialDrawerValuesType {
+  showDrawer: boolean
+  selectedRowData: LogAnalysisRowData | null
+  isFetchUpdatedData?: boolean
+  isOpenedViaLogsDrawer?: boolean
 }

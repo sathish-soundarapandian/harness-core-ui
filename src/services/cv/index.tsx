@@ -9521,6 +9521,90 @@ export const getFeedbackHistoryPromise = (
     signal
   )
 
+export interface CreateTicketForFeedbackPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  logFeedbackId: string
+}
+
+export type CreateTicketForFeedbackProps = Omit<
+  MutateProps<TicketResponseDto, unknown, void, TicketRequestDto, CreateTicketForFeedbackPathParams>,
+  'path' | 'verb'
+> &
+  CreateTicketForFeedbackPathParams
+
+/**
+ * creates ticket for log feedback
+ */
+export const CreateTicketForFeedback = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  logFeedbackId,
+  ...props
+}: CreateTicketForFeedbackProps) => (
+  <Mutate<TicketResponseDto, unknown, void, TicketRequestDto, CreateTicketForFeedbackPathParams>
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback/${logFeedbackId}/ticket`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseCreateTicketForFeedbackProps = Omit<
+  UseMutateProps<TicketResponseDto, unknown, void, TicketRequestDto, CreateTicketForFeedbackPathParams>,
+  'path' | 'verb'
+> &
+  CreateTicketForFeedbackPathParams
+
+/**
+ * creates ticket for log feedback
+ */
+export const useCreateTicketForFeedback = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  logFeedbackId,
+  ...props
+}: UseCreateTicketForFeedbackProps) =>
+  useMutate<TicketResponseDto, unknown, void, TicketRequestDto, CreateTicketForFeedbackPathParams>(
+    'POST',
+    (paramsInPath: CreateTicketForFeedbackPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/log-feedback/${paramsInPath.logFeedbackId}/ticket`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, logFeedbackId },
+      ...props
+    }
+  )
+
+/**
+ * creates ticket for log feedback
+ */
+export const createTicketForFeedbackPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    logFeedbackId,
+    ...props
+  }: MutateUsingFetchProps<TicketResponseDto, unknown, void, TicketRequestDto, CreateTicketForFeedbackPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+    logFeedbackId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<TicketResponseDto, unknown, void, TicketRequestDto, CreateTicketForFeedbackPathParams>(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback/${logFeedbackId}/ticket`,
+    props,
+    signal
+  )
+
 export interface GetMetricsAnalysisForVerifyStepExecutionIdQueryParams {
   anomalousMetricsOnly?: boolean
   healthSource?: string[]

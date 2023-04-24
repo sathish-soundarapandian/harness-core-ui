@@ -21,18 +21,25 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { LogAnalysisDetailsDrawer } from './components/LogAnalysisDetailsDrawer/LogAnalysisDetailsDrawer'
-import type { LogAnalysisRowProps, CompareLogEventsInfo, UpdateEventPreferenceOpenFn } from './LogAnalysisRow.types'
+import type {
+  LogAnalysisRowProps,
+  CompareLogEventsInfo,
+  UpdateEventPreferenceOpenFn,
+  InitialDrawerValuesType
+} from './LogAnalysisRow.types'
 import { getCorrectLogsData, isNoLogSelected } from './LogAnalysisRow.utils'
 import LogAnalysisDataRow from './components/LogAnalysisDataRow/LogAnalysisDataRow'
 import LogAnalysisPagination from './components/LogAnalysisPagination'
 import UpdateEventPreferenceDrawer from './components/UpdateEventPreferenceDrawer/UpdateEventPreferenceDrawer'
 import type { LogAnalysisRowData } from '../../LogAnalysis.types'
+import { JiraCreationDrawer } from './components/JiraCreationDrawer/JiraCreationDrawer'
+import { initialValuesForDrawerState } from './LogAnalysisRow.constants'
 import css from './LogAnalysisRow.module.scss'
 
 function ColumnHeaderRow(): JSX.Element {
   const { getString } = useStrings()
   return (
-    <Container className={cx(css.mainRow, css.columnHeader)}>
+    <Container className={cx(css.heading, css.columnHeader)}>
       <span />
       <Text padding={{ left: 'small' }}>{getString('pipeline.verification.logs.eventType')}</Text>
       <Text>{getString('cv.sampleMessage')}</Text>
@@ -67,19 +74,14 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     selectedIndex: null
   })
 
-  const [updateEventPreferenceDrawer, setUpdateEventPreferenceDrawer] = useState<{
-    showDrawer: boolean
-    selectedRowData: LogAnalysisRowData | null
-    isOpenedViaLogsDrawer?: boolean
-    isFetchUpdatedData?: boolean
-  }>({
-    showDrawer: false,
-    selectedRowData: null,
-    isOpenedViaLogsDrawer: false,
-    isFetchUpdatedData: false
-  })
+  const [updateEventPreferenceDrawer, setUpdateEventPreferenceDrawer] =
+    useState<InitialDrawerValuesType>(initialValuesForDrawerState)
+
+  const [jiraDrawer, setJiraDrawer] = useState<InitialDrawerValuesType>(initialValuesForDrawerState)
 
   const isLogFeedbackEnabled = useFeatureFlag(FeatureFlag.SRM_LOG_FEEDBACK_ENABLE_UI)
+
+  const isJiraCreationEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_JIRA_INTEGRATION)
 
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
 
@@ -199,14 +201,17 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     const { isFetchUpdatedData: wasEventsUpdated, isOpenedViaLogsDrawer: wasEventDrawerOpenedViaRiskDrawer } =
       updateEventPreferenceDrawer
 
+    const { isFetchUpdatedData: wasJiraTicketCreated, isOpenedViaLogsDrawer: wasJiraDrawerOpenedViaRiskDrawer } =
+      jiraDrawer
+
     if (wasEventDrawerOpenedViaRiskDrawer && wasEventsUpdated) {
       refetchLogAnalysis?.()
-      setUpdateEventPreferenceDrawer({
-        showDrawer: false,
-        selectedRowData: null,
-        isOpenedViaLogsDrawer: false,
-        isFetchUpdatedData: false
-      })
+      setUpdateEventPreferenceDrawer(initialValuesForDrawerState)
+    }
+
+    if (wasJiraDrawerOpenedViaRiskDrawer && wasJiraTicketCreated) {
+      refetchLogAnalysis?.()
+      setJiraDrawer(initialValuesForDrawerState)
     }
   }
 
@@ -258,6 +263,18 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     []
   )
 
+  const onJiraModalOpen = useCallback(
+    ({ selectedIndex, isOpenedViaLogsDrawer, rowData }: UpdateEventPreferenceOpenFn) => {
+      setJiraDrawer(currentData => ({
+        ...currentData,
+        showDrawer: true,
+        selectedRowData: rowData ?? data[selectedIndex],
+        isOpenedViaLogsDrawer
+      }))
+    },
+    [data]
+  )
+
   const onUpdatePreferenceDrawerHide = useCallback(
     (isFetchUpdatedData?: boolean, clusterId?: string) => {
       const { isOpenedViaLogsDrawer, isFetchUpdatedData: isFetchUpdatedDataState } = updateEventPreferenceDrawer
@@ -282,6 +299,23 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     [accountId, updateEventPreferenceDrawer, refetchLogAnalysis, fetchLogData]
   )
 
+  const onJiraDrawerHide = useCallback(
+    (isFetchUpdatedData?: boolean) => {
+      const { isFetchUpdatedData: isFetchUpdatedDataState, isOpenedViaLogsDrawer } = jiraDrawer
+      setJiraDrawer({
+        showDrawer: false,
+        selectedRowData: null,
+        isOpenedViaLogsDrawer,
+        isFetchUpdatedData: Boolean(isFetchUpdatedDataState) || isFetchUpdatedData
+      })
+
+      if (isFetchUpdatedData && !isOpenedViaLogsDrawer) {
+        refetchLogAnalysis?.()
+      }
+    },
+    [jiraDrawer, refetchLogAnalysis]
+  )
+
   return (
     <Container className={cx(css.main, props.className)}>
       <ColumnHeaderRow />
@@ -294,6 +328,7 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
           retryLogsCall={retryLogsCall}
           index={riskEditModalData.selectedIndex}
           onUpdatePreferenceDrawerOpen={onUpdatePreferenceDrawerOpen}
+          onJiraDrawerOpen={onJiraModalOpen}
         />
       ) : null}
       {updateEventPreferenceDrawer.showDrawer && isLogFeedbackEnabled ? (
@@ -301,6 +336,13 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
           onHide={onUpdatePreferenceDrawerHide}
           rowData={updateEventPreferenceDrawer.selectedRowData || ({} as LogAnalysisRowData)}
           activityId={activityId as string}
+        />
+      ) : null}
+
+      {jiraDrawer.showDrawer && isJiraCreationEnabled ? (
+        <JiraCreationDrawer
+          onHide={onJiraDrawerHide}
+          rowData={jiraDrawer.selectedRowData || ({} as LogAnalysisRowData)}
         />
       ) : null}
       <Container className={css.dataContainer}>
@@ -314,6 +356,7 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
               index={index}
               onDrawOpen={onDrawerOpen}
               onUpdateEventPreferenceDrawer={onUpdatePreferenceDrawerOpen}
+              onJiraModalOpen={onJiraModalOpen}
               isSelected={selectedIndices.has(index)}
               isErrorTracking={isErrorTracking}
             />

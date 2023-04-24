@@ -5,7 +5,7 @@ import type { UseStringsReturn } from 'framework/strings'
 const getChartCategories = (series?: Highcharts.SeriesOptionsType[]): string[] => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  return Array.from({ length: series[0]?.data.length as number }).map((_, i) => String(i + 1))
+  return Array.from({ length: series[0]?.data?.length as number }).map((_, i) => String(i + 1))
 }
 
 export function getChartsConfigForDrawer(

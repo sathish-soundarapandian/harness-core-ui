@@ -21,6 +21,7 @@ export interface LogAnalysisDetailsDrawerProps {
   retryLogsCall?: () => void
   index: number | null
   onUpdatePreferenceDrawerOpen: (options: UpdateEventPreferenceOpenFn) => void
+  onJiraDrawerOpen: (options: UpdateEventPreferenceOpenFn) => void
 }
 
 export interface RiskAndMessageFormProps {

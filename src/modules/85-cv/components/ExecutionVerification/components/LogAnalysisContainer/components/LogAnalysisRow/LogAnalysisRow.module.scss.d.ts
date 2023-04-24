@@ -7,17 +7,20 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly actionRow: string
   readonly actions: string
   readonly columnHeader: string
   readonly compareDataColumn: string
   readonly dataContainer: string
-  readonly dataRow: string
   readonly eventTypeTag: string
+  readonly heading: string
   readonly healthScoreCard: string
+  readonly jiraTicketLink: string
   readonly lineChartContainer: string
   readonly logRowColumnHeader: string
   readonly logRowText: string
   readonly logText: string
+  readonly logsMetadataHolder: string
   readonly main: string
   readonly mainRow: string
   readonly noFeedback: string
