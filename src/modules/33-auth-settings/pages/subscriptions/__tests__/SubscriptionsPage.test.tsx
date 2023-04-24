@@ -18,7 +18,8 @@ import {
   getOrganizationListPromise,
   getProjectListPromise,
   getAllServicesPromise,
-  useDownloadActiveServiceCSVReport
+  useDownloadActiveServiceCSVReport,
+  useGetCreditsByAccount
 } from 'services/cd-ng'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -29,6 +30,7 @@ import projMockData from './mocks/projMockData.json'
 import serviceMockData from './mocks/serviceMockData.json'
 jest.mock('services/cd-ng')
 const getOrganizationListPromiseMock = getOrganizationListPromise as jest.MockedFunction<any>
+const useGetCreditsByAccountMock = useGetCreditsByAccount as jest.MockedFunction<any>
 const getProjectListPromiseMock = getProjectListPromise as jest.MockedFunction<any>
 const getServiceListPromiseMock = getAllServicesPromise as jest.MockedFunction<any>
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
@@ -65,6 +67,16 @@ getProjectListPromiseMock.mockImplementation(() => {
 })
 getServiceListPromiseMock.mockImplementation(() => {
   return serviceListPromiseMock()
+})
+useGetCreditsByAccountMock.mockImplementation(() => {
+  return {
+    creditsData: {
+      data: [
+        { qunatity: 1000, expiryTime: 1682341973607, purchaseTime: 1682341973200 },
+        { qunatity: 2000, expiryTime: 1682341973607, purchaseTime: 1682341972000 }
+      ]
+    }
+  }
 })
 const useSaveFeedbackMock = useSaveFeedback as jest.MockedFunction<any>
 useSaveFeedbackMock.mockImplementation(() => {
@@ -735,6 +747,43 @@ describe('Subscriptions Page', () => {
 
       const { getByText } = render(
         <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CE }}>
+          <SubscriptionsPage />
+        </TestWrapper>
+      )
+
+      expect(getByText('common.subscriptions.ci.developers')).toBeInTheDocument()
+    })
+    test.only('should render BuildCreditTable', () => {
+      useGetModuleLicenseInfoMock.mockImplementation(() => {
+        return {
+          data: {
+            data: [
+              {
+                edition: Editions.ENTERPRISE,
+                numberOfCommitters: 200,
+                moduleType: 'CI'
+              }
+            ],
+            status: 'SUCCESS'
+          },
+          refetch: jest.fn()
+        }
+      })
+
+      useGetAccountMock.mockImplementation(() => {
+        return {
+          data: {
+            data: {
+              accountId: '123'
+            },
+            status: 'SUCCESS'
+          },
+          refetch: jest.fn()
+        }
+      })
+
+      const { getByText } = render(
+        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CI }}>
           <SubscriptionsPage />
         </TestWrapper>
       )

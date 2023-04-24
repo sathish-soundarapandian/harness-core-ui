@@ -130,7 +130,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         ></ServiceLicenseGraphs>
       ) : null}
       {module === 'CI' ? (
-        <BuildCreditInfoTable data={creditsData?.data || {}} licenseData={(licenseData as ModuleLicenseDTO) || ''} />
+        <BuildCreditInfoTable data={creditsData?.data || []} licenseData={(licenseData as ModuleLicenseDTO) || ''} />
       ) : null}
     </Layout.Vertical>
   )

@@ -130,30 +130,30 @@ const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
             </Text>
             {getInfoIcon(tooltip)}
           </Layout.Horizontal>
-          {usage ? (
-            <Text font={{ size: 'small' }} color={Color.GREY_500}>
-              {rightHeader}
-            </Text>
-          ) : (
+          {credits ? (
             <div className={css.expiryTime}>
               <Text font={{ size: 'small' }} color={Color.ORANGE_700}>
                 {rightHeader}
                 {getInfoIcon(tooltipExpiry)}
               </Text>
             </div>
+          ) : (
+            <Text font={{ size: 'small' }} color={Color.GREY_500}>
+              {rightHeader}
+            </Text>
           )}
         </Layout.Horizontal>
-        {usage ? (
-          <Text font={{ size: 'large', weight: 'bold' }} color={Color.BLACK}>
-            {prefix}
-            {getLabel(usage)}
-          </Text>
-        ) : (
+        {credits ? (
           <div className={css.creditTotal}>
             <Text font={{ size: 'large', weight: 'bold' }} color={Color.BLACK} className={css.creditTotal}>
               {credits}
             </Text>
           </div>
+        ) : (
+          <Text font={{ size: 'large', weight: 'bold' }} color={Color.BLACK}>
+            {prefix}
+            {getLabel(usage)}
+          </Text>
         )}
         {hasBar && <PercentageBar width={width} />}
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>

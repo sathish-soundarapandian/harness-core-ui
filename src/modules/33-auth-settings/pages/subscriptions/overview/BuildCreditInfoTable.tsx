@@ -9,13 +9,13 @@ import React, { useMemo } from 'react'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, Column } from 'react-table'
 import { Text, TableV2, Layout, Card, Heading, NoDataCard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { useStrings, StringKeys } from 'framework/strings'
 import moment from 'moment'
-import type { LicenseUsageDTO, CreditDTO, ModuleLicenseDTO, CIModuleLicenseDTO } from 'services/cd-ng'
+import { useStrings, StringKeys } from 'framework/strings'
+import type { LicenseUsageDTO, CreditDTO, CIModuleLicenseDTO } from 'services/cd-ng'
 import { getInfoIcon } from './UsageInfoCard'
-import pageCss from '../SubscriptionsPage.module.scss'
 import { getSummaryCardRenderers } from './ServiceLicenseGraphs'
 import { creditSum } from './CIUsageInfo'
+import pageCss from '../SubscriptionsPage.module.scss'
 
 interface SummaryCardData {
   title: string
@@ -52,8 +52,8 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
   }
 
   const starTimeCell: CellType = ({ row }) => {
-    const data = row.original
-    const formattedStartTime = moment(data.purchaseTime).format('MMM DD YYYY')
+    const dataPassed = row.original
+    const formattedStartTime = moment(dataPassed.purchaseTime).format('MMM DD YYYY')
     return (
       <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
         {formattedStartTime}
@@ -61,8 +61,8 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
     )
   }
   const expiryTimeCell: CellType = ({ row }) => {
-    const data = row.original
-    const formattedExpiryTime = moment(data.expiryTime).format('MMM DD YYYY')
+    const dataPassed = row.original
+    const formattedExpiryTime = moment(dataPassed.expiryTime).format('MMM DD YYYY')
     return (
       <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
         {formattedExpiryTime}
@@ -70,10 +70,10 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
     )
   }
   const entitlementCell: CellType = ({ row }) => {
-    const data = row.original
+    const dataPassed = row.original
     return (
       <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
-        {data.quantity}
+        {dataPassed.quantity}
       </Text>
     )
   }

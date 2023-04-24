@@ -29,7 +29,7 @@ exports[`FFUsageInfo FFUsageInfo 1`] = `
                 class="bp3-popover-target"
               >
                 <span
-                  class="bp3-icon StyledProps--main"
+                  class="bp3-icon StyledProps--main infoIcon"
                   data-icon="info"
                   tabindex="0"
                 >
@@ -113,7 +113,7 @@ exports[`FFUsageInfo FFUsageInfo 1`] = `
                 class="bp3-popover-target"
               >
                 <span
-                  class="bp3-icon StyledProps--main"
+                  class="bp3-icon StyledProps--main infoIcon"
                   data-icon="info"
                   tabindex="0"
                 >
@@ -197,7 +197,7 @@ exports[`FFUsageInfo FFUsageInfo 1`] = `
                 class="bp3-popover-target"
               >
                 <span
-                  class="bp3-icon StyledProps--main"
+                  class="bp3-icon StyledProps--main infoIcon"
                   data-icon="info"
                   tabindex="0"
                 >
