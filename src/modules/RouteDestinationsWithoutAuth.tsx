@@ -15,6 +15,7 @@ import SignupPage from '@common/pages/signup/SignupPage'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import RedirectPage from '@common/pages/redirect/Redirect'
 import { returnUrlParams } from '@common/utils/routeUtils'
+import CorsTestPage from '@common/pages/CorsTestPage'
 
 const RedirectToHome: React.FC = () => {
   const history = useHistory()
@@ -32,6 +33,9 @@ const RouteDestinationsWithoutAuth: React.FC = () => {
     <Switch>
       <Route exact path="/">
         <RedirectToHome />
+      </Route>
+      <Route path="/cors-test">
+        <CorsTestPage />
       </Route>
       {__DEV__ ? (
         <Route path={routes.toLogin()}>
