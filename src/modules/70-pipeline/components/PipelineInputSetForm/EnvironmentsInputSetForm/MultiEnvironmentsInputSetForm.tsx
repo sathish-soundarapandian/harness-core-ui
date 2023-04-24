@@ -389,7 +389,9 @@ export function MultiEnvironmentsInputSetForm({
                                       }}
                                       allowableTypes={allowableTypes}
                                       allValues={{
-                                        environmentRef: environment.environmentRef,
+                                        ...environmentInDeploymentStage?.infrastructureDefinitions?.[infraIndex]?.inputs
+                                          ?.spec,
+                                        environmentRef: environmentInDeploymentStage.environmentRef,
                                         infrastructureRef: infraInputs.identifier
                                       }}
                                       type={

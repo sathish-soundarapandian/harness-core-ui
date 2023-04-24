@@ -192,3 +192,13 @@
     color: var(--grey-400);
   }
 }
+
+.halfWidth {
+  width: 45%;
+}
+
+.runtimeInput {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+}

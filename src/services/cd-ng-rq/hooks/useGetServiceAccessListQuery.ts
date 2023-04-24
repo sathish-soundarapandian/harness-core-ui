@@ -49,6 +49,7 @@ export interface GetServiceAccessListQueryQueryParams {
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
+  deploymentMetadataYaml?: string
 }
 
 export type GetServiceAccessListOkResponse = ResponseListServiceResponse

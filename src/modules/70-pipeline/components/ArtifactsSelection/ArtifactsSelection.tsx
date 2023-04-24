@@ -73,7 +73,8 @@ import {
   isAllowedAzureArtifactDeploymentTypes,
   isAllowedAMIDeploymentTypes,
   showArtifactStoreStepDirectly,
-  isAllowedBambooArtifactDeploymentTypes
+  isAllowedBambooArtifactDeploymentTypes,
+  getInitialSelectedArtifactValue
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -82,7 +83,8 @@ import css from './ArtifactsSelection.module.scss'
 export default function ArtifactsSelection({
   isPropagating = false,
   deploymentType,
-  readonly
+  readonly,
+  availableArtifactTypes
 }: ArtifactsSelectionProps): React.ReactElement | null {
   const {
     state: {
@@ -95,7 +97,7 @@ export default function ArtifactsSelection({
 
   const [isEditMode, setIsEditMode] = useState(false)
   const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(
-    allowedArtifactTypes[deploymentType]?.length === 1 ? allowedArtifactTypes[deploymentType][0] : null
+    getInitialSelectedArtifactValue(deploymentType, availableArtifactTypes)
   )
   const [connectorView, setConnectorView] = useState(false)
   const [context, setModalContext] = useState(ModalViewFor.PRIMARY)
@@ -406,6 +408,7 @@ export default function ArtifactsSelection({
     if (viewType === ModalViewFor.SIDECAR) {
       setEditIndex(sideCarArtifact?.length || 0)
     }
+    setSelectedArtifact(getInitialSelectedArtifactValue(deploymentType, availableArtifactTypes))
     showConnectorModal()
     refetchConnectorList()
   }
@@ -596,7 +599,7 @@ export default function ArtifactsSelection({
         <ArtifactWizard
           artifactInitialValue={getArtifactInitialValues()}
           iconsProps={getIconProps()}
-          types={allowedArtifactTypes[deploymentType]}
+          types={availableArtifactTypes ?? allowedArtifactTypes[deploymentType]}
           expressions={expressions}
           allowableTypes={allowableTypes}
           lastSteps={artifactSelectionLastSteps}

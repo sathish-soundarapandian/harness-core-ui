@@ -192,6 +192,7 @@ export default function SingleServiceInputSetForm({
                 stageIdentifier,
                 deploymentType: deploymentStage?.deploymentType,
                 gitOpsEnabled: deploymentStage?.gitOpsEnabled,
+                deploymentMetadata: deploymentStage?.deploymentMetadata,
                 allValues: pick(deploymentStage, ['service']),
                 customDeploymentData: deploymentStage?.customDeploymentRef,
                 childPipelineMetadata

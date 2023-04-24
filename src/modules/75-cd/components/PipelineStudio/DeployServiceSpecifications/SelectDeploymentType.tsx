@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, ReactNode } from 'react'
+import React, { FC, ReactNode, SyntheticEvent } from 'react'
 import { Formik, FormikProps } from 'formik'
 import { get, noop } from 'lodash-es'
 import * as Yup from 'yup'
@@ -15,8 +15,10 @@ import {
   Checkbox,
   Container,
   FormError,
+  FormInput,
   HarnessDocTooltip,
   Layout,
+  SelectOption,
   Text,
   Thumbnail,
   Utils
@@ -29,7 +31,7 @@ import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useGetCommunity } from '@common/utils/utils'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { GoogleCloudFunctionsEnvType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
@@ -51,6 +53,7 @@ import {
 } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { getGoogleCloudFunctionsEnvOptions } from '@cd/components/PipelineSteps/GoogleCloudFunction/utils/utils'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 import deployServiceCss from './DeployServiceSpecifications.module.scss'
 
@@ -230,11 +233,14 @@ interface SelectServiceDeploymentTypeProps {
   selectedDeploymentType?: ServiceDeploymentType
   viewContext?: string
   handleGitOpsCheckChanged?: (ev: React.FormEvent<HTMLInputElement>) => void
+  handleGCFEnvTypeChange?: (selectedEnv: SelectOption, event?: SyntheticEvent<HTMLElement, Event> | undefined) => void
   gitOpsEnabled?: boolean
   templateLinkConfig?: TemplateLinkConfig
   onDeploymentTemplateSelect: (template: TemplateSummaryResponse, fromTemplateSelector: boolean) => void
   addOrUpdateTemplate?: () => void | Promise<void>
   templateBarOverrideClassName?: string
+  shouldShowGCFEnvTypeDropdown?: boolean
+  googleCloudFunctionEnvType?: GoogleCloudFunctionsEnvType
 }
 
 export default function SelectDeploymentType({
@@ -248,7 +254,10 @@ export default function SelectDeploymentType({
   templateLinkConfig,
   onDeploymentTemplateSelect,
   addOrUpdateTemplate,
-  templateBarOverrideClassName = ''
+  templateBarOverrideClassName = '',
+  shouldShowGCFEnvTypeDropdown = false,
+  handleGCFEnvTypeChange,
+  googleCloudFunctionEnvType
 }: SelectServiceDeploymentTypeProps): JSX.Element {
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
@@ -364,6 +373,27 @@ export default function SelectDeploymentType({
     return null
   }
 
+  const renderGCFEnvTypeDropdown = (): JSX.Element | null => {
+    if (shouldShowGCFEnvTypeDropdown && selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
+      const googleCloudFunctionEnvTypeOptions = getGoogleCloudFunctionsEnvOptions(getString)
+      const preSelectedOption = googleCloudFunctionEnvTypeOptions.find(
+        currOption => currOption.value === googleCloudFunctionEnvType
+      )
+      return (
+        <FormInput.Select
+          className={deployServiceCss.googleCloudFunctionsEnvType}
+          name="environmentType"
+          label={getString('cd.steps.googleCloudFunctionCommon.envVersionLabel')}
+          items={googleCloudFunctionEnvTypeOptions}
+          onChange={handleGCFEnvTypeChange}
+          value={preSelectedOption}
+          disabled={isReadonly}
+        />
+      )
+    }
+    return null
+  }
+
   const renderRecentDeploymentTemplates = (): ReactNode => {
     if (isReadonly && selectedDeploymentType !== ServiceDeploymentType.CustomDeployment) {
       return null
@@ -398,12 +428,13 @@ export default function SelectDeploymentType({
   }
 
   return (
-    <Formik<{ deploymentType: string; gitOpsEnabled: boolean }>
+    <Formik<{ deploymentType: string; gitOpsEnabled: boolean; environmentType?: GoogleCloudFunctionsEnvType }>
       onSubmit={noop}
       enableReinitialize={true}
       initialValues={{
         deploymentType: selectedDeploymentType as string,
-        gitOpsEnabled: shouldShowGitops ? !!gitOpsEnabled : false
+        gitOpsEnabled: shouldShowGitops ? !!gitOpsEnabled : false,
+        environmentType: shouldShowGCFEnvTypeDropdown ? googleCloudFunctionEnvType : undefined
       }}
       validationSchema={Yup.object().shape({
         deploymentType: getServiceDeploymentTypeSchema(getString)
@@ -418,6 +449,7 @@ export default function SelectDeploymentType({
               {renderDeploymentTypeLabel()}
               {renderDeploymentTypes()}
               {renderGitops()}
+              {renderGCFEnvTypeDropdown()}
               {renderRecentDeploymentTemplates()}
             </Card>
           )

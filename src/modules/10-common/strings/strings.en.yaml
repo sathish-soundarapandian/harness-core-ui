@@ -1358,16 +1358,6 @@ collapse: Collapse
 expand: Expand
 selectProject: Select Project
 googleCloudPlatform: Google Cloud Platform
-artifacts:
-  googleCloudStorage:
-    title: Google Cloud Storage
-    bucketPlaceholder: Enter Bucket
-  googleCloudSourceRepositories:
-    title: Google Cloud Source
-    cloudSourceRepository: Cloud Source Repository
-    cloudSourceRepositoryPlaceholder: Select Cloud Source Repository
-    sourceDirectory: Source Directory
-    sourceDirectoryPlaceholder: Enter Source Directory
 updated: Updated
 python: Python
 successfullyAdded: Successfully added

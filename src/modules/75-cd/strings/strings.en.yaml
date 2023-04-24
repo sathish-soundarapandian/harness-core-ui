@@ -168,7 +168,10 @@ steps:
     fieldMaskPlaceholder: Enter Field Mask
     trafficPercent: Traffic Percent
     trafficPercentPlaceholder: Enter Traffic Percent
-
+    envVersionLabel: Google Cloud Function Environment Version
+    envTypes:
+      gen1: '1st gen'
+      gen2: '2nd gen'
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'

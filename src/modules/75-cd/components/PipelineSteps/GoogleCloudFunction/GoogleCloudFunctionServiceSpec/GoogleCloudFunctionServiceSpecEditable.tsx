@@ -18,12 +18,21 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
-import { getSelectedDeploymentType, getVariablesHeaderTooltipId } from '@pipeline/utils/stageHelpers'
+import {
+  getSelectedDeploymentType,
+  getVariablesHeaderTooltipId,
+  GoogleCloudFunctionsEnvType
+} from '@pipeline/utils/stageHelpers'
 import {
   allowedManifestTypes,
-  getManifestsHeaderTooltipId
+  getManifestsHeaderTooltipId,
+  ManifestDataType
 } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import {
+  allowedArtifactTypes,
+  ENABLED_ARTIFACT_TYPES,
+  getArtifactsHeaderTooltipId
+} from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import {
   DeployTabs,
   isNewServiceEnvEntity
@@ -34,6 +43,8 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
+import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { AddManifestSteps } from '@cd/components/CommonComponents/AddManifestSteps/AddManifestSteps'
 import { isMultiArtifactSourceEnabled, setupMode } from '../../PipelineStepsUtil'
@@ -53,23 +64,37 @@ export interface GoogleCloudFunctionServiceSpecEditableProps {
   factory?: AbstractStepFactory
 }
 
-const suggestedManifest = {
+const suggestedManifestGenOne = {
+  function: {
+    name: '<functionName>',
+    runtime: 'nodejs18',
+    entryPoint: 'helloGET',
+    httpsTrigger: {
+      securityLevel: 'SECURE_OPTIONAL'
+    }
+  }
+}
+
+const suggestedManifestGenTwo = {
   function: {
     name: '<functionName>',
     buildConfig: {
       runtime: 'nodejs18',
       entryPoint: 'helloGET'
-    },
-    environment: 'GEN_2'
-  },
-  function_id: '<functionName>'
+    }
+  }
 }
 
-const suggestedManifestYaml =
-  `# Following are the minimum set of parameters required to create a Google Cloud Function.
+const getSuggestedManifestYaml = (enviromentType: GoogleCloudFunctionsEnvType) => {
+  const suggestedManifestYamlComment = `# Following are the minimum set of parameters required to create a Google Cloud Function.
 # Please make sure your uploaded manifest file includes all of them.
 
-` + yamlStringify(suggestedManifest)
+`
+  if (enviromentType === GoogleCloudFunctionsEnvType.GenOne) {
+    return suggestedManifestYamlComment + yamlStringify(suggestedManifestGenOne)
+  }
+  return suggestedManifestYamlComment + yamlStringify(suggestedManifestGenTwo)
+}
 
 const manifestFileName = 'Google-cloud-function-manifest.yaml'
 
@@ -99,12 +124,28 @@ const GoogleCloudFunctionServiceSpecEditable: React.FC<GoogleCloudFunctionServic
     stage?.stage as DeploymentStageElementConfig,
     isServiceEntityPage
   )
+  const environmentType = get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.environmentType')
+
   const manifestList: ManifestConfigWrapper[] = useMemo(() => {
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.manifests', [])
     }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', [])
   }, [isPropagating, stage])
+
+  const getAllowedManifestTypes = (): ManifestTypes[] => {
+    if (environmentType === GoogleCloudFunctionsEnvType.GenOne) {
+      return [ManifestDataType.GoogleCloudFunctionGenOneDefinition]
+    }
+    return allowedManifestTypes[selectedDeploymentType]
+  }
+
+  const getAllowedArtifactTypes = (): ArtifactType[] => {
+    if (environmentType === GoogleCloudFunctionsEnvType.GenOne) {
+      return [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage, ENABLED_ARTIFACT_TYPES.GoogleCloudSource]
+    }
+    return allowedArtifactTypes[selectedDeploymentType]
+  }
 
   return (
     <div className={css.serviceDefinition}>
@@ -122,7 +163,7 @@ const GoogleCloudFunctionServiceSpecEditable: React.FC<GoogleCloudFunctionServic
               <AddManifestSteps
                 selectedDeploymentType={selectedDeploymentType}
                 manifestFileName={manifestFileName}
-                suggestedManifestYaml={suggestedManifestYaml}
+                suggestedManifestYaml={getSuggestedManifestYaml(environmentType)}
               />
             )}
             <ManifestSelection
@@ -131,7 +172,7 @@ const GoogleCloudFunctionServiceSpecEditable: React.FC<GoogleCloudFunctionServic
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={!!readonly}
               allowOnlyOneManifest={true}
-              availableManifestTypes={allowedManifestTypes[selectedDeploymentType]}
+              availableManifestTypes={getAllowedManifestTypes()}
               addManifestBtnText={getString('common.addName', {
                 name: getString('cd.pipelineSteps.serviceTab.manifest.functionDefinition')
               })}
@@ -154,6 +195,7 @@ const GoogleCloudFunctionServiceSpecEditable: React.FC<GoogleCloudFunctionServic
                 deploymentType={selectedDeploymentType}
                 isReadonlyServiceMode={isReadonlyServiceMode as boolean}
                 readonly={!!readonly}
+                availableArtifactTypes={getAllowedArtifactTypes()}
               />
             ) : (
               <ArtifactsSelection
@@ -161,6 +203,7 @@ const GoogleCloudFunctionServiceSpecEditable: React.FC<GoogleCloudFunctionServic
                 deploymentType={selectedDeploymentType}
                 isReadonlyServiceMode={isReadonlyServiceMode as boolean}
                 readonly={!!readonly}
+                availableArtifactTypes={getAllowedArtifactTypes()}
               />
             )}
           </Card>

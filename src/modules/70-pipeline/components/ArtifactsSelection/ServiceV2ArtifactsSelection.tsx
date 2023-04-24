@@ -81,6 +81,7 @@ import {
   ArtifactIconByType,
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES,
+  getInitialSelectedArtifactValue,
   isAllowedAMIDeploymentTypes,
   isAllowedAzureArtifactDeploymentTypes,
   isAllowedBambooArtifactDeploymentTypes,
@@ -133,7 +134,8 @@ const getUpdatedTemplate = (
 
 export default function ServiceV2ArtifactsSelection({
   deploymentType,
-  readonly
+  readonly,
+  availableArtifactTypes
 }: ArtifactsSelectionProps): React.ReactElement | null {
   const {
     state: {
@@ -148,7 +150,7 @@ export default function ServiceV2ArtifactsSelection({
 
   const [isEditMode, setIsEditMode] = useState(false)
   const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(
-    allowedArtifactTypes[deploymentType]?.length === 1 ? allowedArtifactTypes[deploymentType][0] : null
+    getInitialSelectedArtifactValue(deploymentType, availableArtifactTypes)
   )
   const [connectorView, setConnectorView] = useState(false)
   const [artifactContext, setArtifactContext] = useState(ModalViewFor.PRIMARY)
@@ -499,6 +501,7 @@ export default function ServiceV2ArtifactsSelection({
     setConnectorView(false)
     const artifactObject = get(artifacts, getArtifactsPath(viewType))
     setEditIndex(defaultTo(artifactObject?.length, 0))
+    setSelectedArtifact(getInitialSelectedArtifactValue(deploymentType, availableArtifactTypes))
     showConnectorModal()
     refetchConnectorList()
   }
@@ -722,7 +725,7 @@ export default function ServiceV2ArtifactsSelection({
       <ArtifactWizard
         artifactInitialValue={getArtifactInitialValues}
         iconsProps={getIconProps}
-        types={allowedArtifactTypes[deploymentType]}
+        types={availableArtifactTypes ?? allowedArtifactTypes[deploymentType]}
         expressions={expressions}
         allowableTypes={allowableTypes}
         lastSteps={artifactSelectionLastSteps}

@@ -317,13 +317,15 @@ export default function SingleEnvironmentInputSetForm({
                           factory={factory}
                           template={infraInputs?.spec}
                           initialValues={{
-                            ...deploymentStageInputSet?.infrastructureDefinitions?.[infraIndex]?.inputs?.spec,
+                            ...deploymentStageInputSet?.environment?.infrastructureDefinitions?.[infraIndex]?.inputs
+                              ?.spec,
                             environmentRef: environment.environmentRef,
                             infrastructureRef: infraInputs.identifier
                           }}
                           allowableTypes={allowableTypes}
                           allValues={{
-                            environmentRef: environment.environmentRef,
+                            ...deploymentStage?.environment?.infrastructureDefinitions?.[infraIndex]?.inputs?.spec,
+                            environmentRef: deploymentStage?.environment?.environmentRef,
                             infrastructureRef: infraInputs.identifier
                           }}
                           type={

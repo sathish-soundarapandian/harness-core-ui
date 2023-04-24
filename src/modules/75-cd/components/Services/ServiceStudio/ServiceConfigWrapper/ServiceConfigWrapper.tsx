@@ -22,8 +22,8 @@ import {
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { sanitize } from '@common/utils/JSONUtils'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import type { NGServiceConfig } from 'services/cd-ng'
+import { GoogleCloudFunctionsEnvType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { GoogleCloudFunctionDeploymentMetaData, NGServiceConfig } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
@@ -46,7 +46,8 @@ interface ServiceConfigurationWrapperProps {
 function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
-  const { serviceResponse, isServiceCreateModalView, selectedDeploymentType, gitOpsEnabled } = useServiceContext()
+  const { serviceResponse, isServiceCreateModalView, selectedDeploymentType, gitOpsEnabled, deploymentMetadata } =
+    useServiceContext()
 
   const {
     state: {
@@ -82,6 +83,15 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
             'service.serviceDefinition.spec.customDeploymentRef',
             pipelineStage?.stage?.spec?.customDeploymentRef
           )
+        }
+        if (selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
+          const googleCloudFunctionsEnvType = (deploymentMetadata as GoogleCloudFunctionDeploymentMetaData)
+            ?.environmentType
+          if (!isEmpty(googleCloudFunctionsEnvType)) {
+            set(draft, 'service.serviceDefinition.spec.environmentType', googleCloudFunctionsEnvType)
+          } else {
+            set(draft, 'service.serviceDefinition.spec.environmentType', GoogleCloudFunctionsEnvType.GenTwo)
+          }
         }
         set(draft, 'service.gitOpsEnabled', gitOpsEnabled)
       })

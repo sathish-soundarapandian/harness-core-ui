@@ -71,13 +71,6 @@ export interface StringsMap {
   'common.approve': string
   'common.artifactPaths': string
   'common.artifactTag': string
-  'common.artifacts.googleCloudSourceRepositories.cloudSourceRepository': string
-  'common.artifacts.googleCloudSourceRepositories.cloudSourceRepositoryPlaceholder': string
-  'common.artifacts.googleCloudSourceRepositories.sourceDirectory': string
-  'common.artifacts.googleCloudSourceRepositories.sourceDirectoryPlaceholder': string
-  'common.artifacts.googleCloudSourceRepositories.title': string
-  'common.artifacts.googleCloudStorage.bucketPlaceholder': string
-  'common.artifacts.googleCloudStorage.title': string
   'common.askUs': string
   'common.assignedAt': string
   'common.assignedThrough': string
@@ -3602,6 +3595,17 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.selectAManifest': string
   'pipeline.artifactTriggerConfigPanel.selectAnArtifact': string
   'pipeline.artifactTriggerConfigPanel.tagArtifactPathBuild': string
+  'pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepository': string
+  'pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepositoryPlaceholder': string
+  'pipeline.artifacts.googleCloudSourceRepositories.commitId': string
+  'pipeline.artifacts.googleCloudSourceRepositories.commitIdPlaceholder': string
+  'pipeline.artifacts.googleCloudSourceRepositories.fetchType': string
+  'pipeline.artifacts.googleCloudSourceRepositories.sourceDirectory': string
+  'pipeline.artifacts.googleCloudSourceRepositories.sourceDirectoryPlaceholder': string
+  'pipeline.artifacts.googleCloudSourceRepositories.tagPlaceholder': string
+  'pipeline.artifacts.googleCloudSourceRepositories.title': string
+  'pipeline.artifacts.googleCloudStorage.bucketPlaceholder': string
+  'pipeline.artifacts.googleCloudStorage.title': string
   'pipeline.artifactsSelection.AmazonMachineImageTitle': string
   'pipeline.artifactsSelection.addArtifactSource': string
   'pipeline.artifactsSelection.addPrimaryArtifact': string
@@ -3899,6 +3903,7 @@ export interface StringsMap {
   'pipeline.enterBuildRegex': string
   'pipeline.envGroupLabel': string
   'pipeline.envLabel': string
+  'pipeline.envTypeChangeServiceDataDeleteWarningText': string
   'pipeline.errorFramework.fixErrors': string
   'pipeline.errorFramework.fixStage': string
   'pipeline.errorFramework.fixStep': string
@@ -4388,6 +4393,7 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.EcsServiceDefinition': string
   'pipeline.manifestTypeLabels.EcsTaskDefinition': string
   'pipeline.manifestTypeLabels.GoogleCloudFunctionDefinition': string
+  'pipeline.manifestTypeLabels.GoogleCloudFunctionDefinitionGenOne': string
   'pipeline.manifestTypeLabels.HelmRepoOverride': string
   'pipeline.manifestTypeLabels.K8sManifest': string
   'pipeline.manifestTypeLabels.KustomizeLabel': string
@@ -6085,6 +6091,9 @@ export interface StringsMap {
   'cd.steps.elastigroup.infraDetailHeader': string
   'cd.steps.emailStep.ccOptionalLabel': string
   'cd.steps.emailStep.timeout1DayMinimum': string
+  'cd.steps.googleCloudFunctionCommon.envTypes.gen1': string
+  'cd.steps.googleCloudFunctionCommon.envTypes.gen2': string
+  'cd.steps.googleCloudFunctionCommon.envVersionLabel': string
   'cd.steps.googleCloudFunctionCommon.fieldMask': string
   'cd.steps.googleCloudFunctionCommon.fieldMaskPlaceholder': string
   'cd.steps.googleCloudFunctionCommon.trafficPercent': string

@@ -8,7 +8,7 @@
 import produce from 'immer'
 import { isEmpty, set, get, defaultTo } from 'lodash-es'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
+import { GoogleCloudFunctionsEnvType, ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import type {
   StepPalleteModuleInfo,
   StageElementConfig,
@@ -72,13 +72,15 @@ export function getStepPaletteModuleInfosFromStage(
   initialCategory?: string,
   stages?: StageElementWrapperConfig[]
 ): StepPalleteModuleInfo[] {
+  // When stage is propagated from other previous stage
+  const propagateFromStageId = get(stage, 'spec.serviceConfig.useFromStage.stage', undefined)
+
+  // deploymentType
   let deploymentType = get(
     stage,
     'spec.serviceConfig.serviceDefinition.type',
     get(stage, `spec.deploymentType`, undefined)
   )
-  // When stage is propagated from other previous stage
-  const propagateFromStageId = get(stage, 'spec.serviceConfig.useFromStage.stage', undefined)
   if (!deploymentType && stages?.length && propagateFromStageId) {
     const propagateFromStage = stages.find(
       currStage => (currStage as DeploymentStageElementConfigWrapper).stage.identifier === propagateFromStageId
@@ -87,6 +89,23 @@ export function getStepPaletteModuleInfosFromStage(
       propagateFromStage?.stage,
       'spec.serviceConfig.serviceDefinition.type',
       get(propagateFromStage?.stage, `spec.deploymentType`, undefined)
+    )
+  }
+
+  // GoogleCloudFunctions - environmentType
+  let environmentType = get(
+    stage,
+    'spec.serviceConfig.serviceDefinition.spec.environmentType',
+    get(stage, `spec.deploymentMetadata.environmentType`, undefined)
+  )
+  if (!environmentType && stages?.length && propagateFromStageId) {
+    const propagateFromStage = stages.find(
+      currStage => (currStage as DeploymentStageElementConfigWrapper).stage.identifier === propagateFromStageId
+    ) as DeploymentStageElementConfigWrapper
+    environmentType = get(
+      propagateFromStage?.stage,
+      'spec.serviceConfig.serviceDefinition.spec.environmentType',
+      get(propagateFromStage?.stage, `spec.deploymentMetadata.environmentType`, undefined)
     )
   }
 
@@ -117,6 +136,14 @@ export function getStepPaletteModuleInfosFromStage(
     case ServiceDeploymentType.Asg:
       category = 'AutoScalingGroup'
       break
+    case ServiceDeploymentType.GoogleCloudFunctions: {
+      if (environmentType === GoogleCloudFunctionsEnvType.GenOne) {
+        category = 'GoogleCloudFunctionsGenOne'
+      } else {
+        category = deploymentType
+      }
+      break
+    }
     default:
       category = deploymentType
   }

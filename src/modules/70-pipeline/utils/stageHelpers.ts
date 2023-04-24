@@ -628,7 +628,7 @@ export const isExecutionFieldPresent = (stage: DeploymentStageElementConfig): bo
 }
 
 export const isServiceDefinitionSpecDataPresent = (stage: DeploymentStageElementConfig): boolean => {
-  return !isEmpty(omit(stage.spec?.serviceConfig?.serviceDefinition?.spec, 'variables'))
+  return !isEmpty(omit(stage.spec?.serviceConfig?.serviceDefinition?.spec, 'variables', 'environmentType'))
 }
 
 export const doesStageContainOtherData = (stage?: DeploymentStageElementConfig): boolean => {
@@ -669,7 +669,7 @@ export const deleteServiceData = (stage?: DeploymentStageElementConfig): void =>
     set(
       stage,
       'spec.serviceConfig.serviceDefinition.spec',
-      pick(get(stage, 'spec.serviceConfig.serviceDefinition.spec'), ['variables'])
+      pick(get(stage, 'spec.serviceConfig.serviceDefinition.spec'), ['variables', 'environmentType'])
     )
   }
 }
@@ -834,4 +834,9 @@ export const PriorityByStageStatus: Record<ExecutionStatus, number> = {
   WaitStepRunning: 2,
   QueuedLicenseLimitReached: 0,
   QueuedExecutionConcurrencyReached: 0
+}
+
+export enum GoogleCloudFunctionsEnvType {
+  GenOne = 'GenOne',
+  GenTwo = 'GenTwo'
 }

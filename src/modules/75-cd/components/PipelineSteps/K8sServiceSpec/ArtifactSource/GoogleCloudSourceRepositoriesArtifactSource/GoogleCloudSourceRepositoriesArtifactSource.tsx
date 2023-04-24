@@ -35,6 +35,7 @@ import {
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity
 } from '../artifactSourceUtils'
+import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
@@ -273,8 +274,10 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
           {!fromTrigger && isValueRuntimeInput(get(template, `artifacts.${artifactPath}.spec.repository`)) && (
             <TextFieldInputSetView
               name={`${path}.artifacts.${artifactPath}.spec.repository`}
-              label={getString('common.artifacts.googleCloudSourceRepositories.cloudSourceRepository')}
-              placeholder={getString('common.artifacts.googleCloudSourceRepositories.cloudSourceRepositoryPlaceholder')}
+              label={getString('pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepository')}
+              placeholder={getString(
+                'pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepositoryPlaceholder'
+              )}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repository`)}
               multiTextInputProps={{
                 expressions,
@@ -285,11 +288,56 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
             />
           )}
 
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.branch`, template) && (
+            <TextFieldInputSetView
+              name={`${path}.artifacts.${artifactPath}.spec.branch`}
+              label={getString('pipelineSteps.deploy.inputSet.branch')}
+              placeholder={getString('pipeline.manifestType.branchPlaceholder')}
+              disabled={isFieldDisabled(`${path}.artifacts.${artifactPath}.spec.branch`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.branch`}
+              template={template}
+            />
+          )}
+
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.commitId`, template) && (
+            <TextFieldInputSetView
+              name={`${path}.artifacts.${artifactPath}.spec.commitId`}
+              label={getString('pipeline.artifacts.googleCloudSourceRepositories.commitId')}
+              placeholder={getString('pipeline.artifacts.googleCloudSourceRepositories.commitIdPlaceholder')}
+              disabled={isFieldDisabled(`${path}.artifacts.${artifactPath}.spec.commitId`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.commitId`}
+              template={template}
+            />
+          )}
+
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
+            <TextFieldInputSetView
+              name={`${path}.artifacts.${artifactPath}.spec.tag`}
+              label={getString('tagLabel')}
+              placeholder={getString('pipeline.artifacts.googleCloudSourceRepositories.tagPlaceholder')}
+              disabled={isFieldDisabled(`${path}.artifacts.${artifactPath}.spec.tag`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.tag`}
+              template={template}
+            />
+          )}
+
           {!fromTrigger && isValueRuntimeInput(get(template, `artifacts.${artifactPath}.spec.sourceDirectory`)) && (
             <TextFieldInputSetView
               name={`${path}.artifacts.${artifactPath}.spec.sourceDirectory`}
-              label={getString('common.artifacts.googleCloudSourceRepositories.sourceDirectory')}
-              placeholder={getString('common.artifacts.googleCloudSourceRepositories.sourceDirectoryPlaceholder')}
+              label={getString('pipeline.artifacts.googleCloudSourceRepositories.sourceDirectory')}
+              placeholder={getString('pipeline.artifacts.googleCloudSourceRepositories.sourceDirectoryPlaceholder')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.sourceDirectory`)}
               multiTextInputProps={{
                 expressions,

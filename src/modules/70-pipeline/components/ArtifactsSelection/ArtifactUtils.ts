@@ -605,6 +605,10 @@ export const defaultArtifactInitialValues = (
         identifier: '',
         project: '',
         repository: '',
+        fetchType: 'Branch',
+        branch: undefined,
+        commitId: undefined,
+        tag: undefined,
         sourceDirectory: ''
       }
     case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:

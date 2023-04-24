@@ -32,7 +32,7 @@ import {
 } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import { parse } from '@common/utils/YamlHelperMethods'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { executionStrategyTypes } from '@pipeline/utils/DeploymentTypeUtils'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -133,6 +133,7 @@ function ExecutionStrategyRef(
     switch (serviceDefinitionType()) {
       case ServiceDeploymentType.ServerlessAwsLambda:
       case ServiceDeploymentType.AwsLambda:
+      case ServiceDeploymentType.GoogleCloudFunctions:
         setSelectedStrategy(ExecutionType.BASIC)
         break
       case ServiceDeploymentType.AzureWebApp:
@@ -219,6 +220,9 @@ function ExecutionStrategyRef(
       accountIdentifier: accountId,
       serviceDefinitionType: serviceDefinitionType(),
       strategyType: selectedStrategy !== 'BlankCanvas' ? selectedStrategy : 'Rolling',
+      deploymentMetadataYaml: (selectedStage?.stage?.spec as DeploymentStageConfig)?.deploymentMetadata
+        ? yamlStringify((selectedStage?.stage?.spec as DeploymentStageConfig)?.deploymentMetadata)
+        : undefined,
       ...(isVerifyEnabled && !isDefaultStrategySelected(selectedStrategy) && { includeVerify: true })
     },
     lazy: true,

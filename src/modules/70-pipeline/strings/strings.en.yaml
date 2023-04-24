@@ -476,6 +476,7 @@ manifestTypeLabels:
   VarsYAML: TAS Vars
   Autoscaler: TAS AutoScaler
   GoogleCloudFunctionDefinition: Google Cloud Function Definition
+  GoogleCloudFunctionDefinitionGenOne: Google Cloud Function Definition Gen One
   HelmRepoOverride: Helm Repo Override
   AwsLambdaFunctionDefinition: AWS Lambda Function Definition
   AwsLambdaFunctionAliasDefinition: AWS Lambda Function Alias Definition
@@ -1471,6 +1472,7 @@ stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
 stageDataDeleteWarningText: Changing deployment type will delete existing stage data like artifacts, manifests, infrastructure details, steps etc. Do you still want to proceed?
 serviceDataDeleteWarningText: Changing deployment type will delete existing service data like artifacts, manifests etc. Do you still want to proceed?
+envTypeChangeServiceDataDeleteWarningText: Changing environment type will delete existing service data like artifacts, manifests etc. Do you still want to proceed?
 errorFramework:
   pipelineErrorsTitle: 'Pipeline cannot be saved because {{fields}} further configuration.'
   fixErrors: Fix Errors
@@ -1764,6 +1766,20 @@ frozenExecPopover:
   viewFreezeWindows: View associated freeze windows
 notGenerated: Not Generated
 notAvailable: Not Available
+artifacts:
+  googleCloudStorage:
+    title: Google Cloud Storage
+    bucketPlaceholder: Enter Bucket
+  googleCloudSourceRepositories:
+    title: Google Cloud Source
+    cloudSourceRepository: Cloud Source Repository
+    cloudSourceRepositoryPlaceholder: Select Cloud Source Repository
+    sourceDirectory: Source Directory
+    sourceDirectoryPlaceholder: Enter Source Directory
+    commitId: Commit Id
+    commitIdPlaceholder: Enter Commit Id
+    tagPlaceholder: Enter Tag
+    fetchType: Fetch Type
 templateAlreadyExists:
   title: Template Already Exists
   content: The template with given identifier already exists, if you want to create a new version of this template then use save as new version option from the given template or if you want to create a new Template then use a different identifier.

@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { TemplateSummaryResponse } from 'services/template-ng'
+
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import type { TemplateSummaryResponse } from 'services/template-ng'
 
 export interface EditStageViewProps {
   data?: StageElementWrapper<DeploymentStageElementConfig>
@@ -27,4 +28,5 @@ export interface EditStageFormikType {
   serviceType: string
   deploymentType?: string
   gitOpsEnabled?: boolean
+  environmentType?: string
 }
