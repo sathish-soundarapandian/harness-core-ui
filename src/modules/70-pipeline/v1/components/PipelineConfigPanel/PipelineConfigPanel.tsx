@@ -28,7 +28,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const { entityType, entityAsObj } = entitySelectedFromYAML || {}
   const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false)
   const [pipelineEntity, setPipelineEntity] = useState<PipelineEntity>()
-  const [pipelineEntitySubType, setPipelineEntitySubType] = useState<PipelineEntitySubType>()
+  const [pipelineEntitySubType, setPipelineEntitySubType] = useState<PipelineEntitySubType | PipelineEntity>()
   const [pipelineConfigOption, setPipelineConfigOption] = useState<PipelineConfigOptionInterface>()
   const [pipelineConfigPanelView, setPipelineConfigPanelView] = useState<PipelineConfigPanelView>(
     PipelineConfigPanelView.Options
@@ -53,7 +53,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
           const matchingSubTypeConfigOption = configOptionForEntityType.drillDown.subTypes?.find(
             (
               option: PipelineConfigOptionInterface & {
-                type: PipelineEntitySubType
+                type: PipelineEntitySubType | PipelineEntity
               }
             ) => option.type.toLowerCase() === get(entityAsObj, 'type')?.toLowerCase()
           )

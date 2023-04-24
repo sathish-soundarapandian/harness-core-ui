@@ -9,7 +9,7 @@ export interface PipelineConfigOptionInterface {
   description: string
   drillDown: {
     hasSubTypes: boolean
-    subTypes?: (PipelineConfigOptionInterface & { type: PipelineEntitySubType })[]
+    subTypes?: (PipelineConfigOptionInterface & { type: PipelineEntitySubType | PipelineEntity })[]
     nodeView?: React.ReactElement
   }
 }
@@ -159,7 +159,61 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
       label: 'Inputs',
       iconProps: { name: 'template-inputs', size: 20 },
       description: 'Add an input',
-      drillDown: { hasSubTypes: false }
+      drillDown: {
+        hasSubTypes: true,
+        subTypes: [
+          {
+            label: 'username',
+            description: '',
+            drillDown: {
+              hasSubTypes: false,
+              nodeView: (
+                <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }} spacing="xsmall">
+                  <FormInput.Text
+                    name={'name'}
+                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Name</Text>}
+                    placeholder={''}
+                    key={'name'}
+                  />
+                  <FormInput.Text
+                    name={'description'}
+                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Description</Text>}
+                    placeholder={''}
+                    key={'description'}
+                  />
+                </Layout.Vertical>
+              )
+            },
+            iconProps: { name: 'plugin-inputs' },
+            type: PipelineEntity.Input
+          },
+          {
+            label: 'password',
+            description: '',
+            drillDown: {
+              hasSubTypes: false,
+              nodeView: (
+                <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }} spacing="xsmall">
+                  <FormInput.Text
+                    name={'name'}
+                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Name</Text>}
+                    placeholder={''}
+                    key={'name'}
+                  />
+                  <FormInput.Text
+                    name={'description'}
+                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Description</Text>}
+                    placeholder={''}
+                    key={'description'}
+                  />
+                </Layout.Vertical>
+              )
+            },
+            iconProps: { name: 'plugin-inputs' },
+            type: PipelineEntity.Input
+          }
+        ]
+      }
     }
   ]
 ])
