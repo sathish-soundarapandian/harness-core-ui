@@ -7,6 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly creditTotal: string
+  readonly expiryTime: string
+  readonly infoIcon: string
   readonly innerCard: string
 }
 export default styles

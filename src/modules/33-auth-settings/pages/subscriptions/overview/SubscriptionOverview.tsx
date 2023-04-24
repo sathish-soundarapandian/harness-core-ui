@@ -11,7 +11,7 @@ import { Layout, SelectOption } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
-import { useLisCDActiveServices, LisCDActiveServicesQueryParams } from 'services/cd-ng'
+import { useLisCDActiveServices, LisCDActiveServicesQueryParams, useGetCreditsByAccount } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/hooks'
@@ -25,6 +25,7 @@ import SubscriptionUsageCard from './SubscriptionUsageCard'
 import { ServiceLicenseTable } from './ServiceLicenseTable'
 import { ServiceLicenseGraphs } from './ServiceLicenseGraphs'
 import type { TrialInformation } from '../SubscriptionsPage'
+import { BuildCreditInfoTable } from './BuildCreditInfoTable'
 interface SubscriptionOverviewProps {
   accountName?: string
   licenseData?: ModuleLicenseDTO
@@ -81,6 +82,16 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
+
+  // const { data: creditsData } = useGetCreditsByAccount({
+  //   accountIdentifier: accountId
+  // })
+  const creditsData = {
+    data: [
+      { quantity: 10000, expiryTime: 1682326693848, purchaseTime: 1682326693848 },
+      { quantity: 10000, expiryTime: 1682326693848, purchaseTime: 1682326693848 }
+    ]
+  }
   const updateFilters = (
     orgId: SelectOption | undefined,
     projId: SelectOption | undefined,
@@ -100,7 +111,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         refetchGetLicense={refetchGetLicense}
       />
       {enabled && licenseData && module !== ModuleName.CHAOS && (
-        <SubscriptionUsageCard module={module} licenseData={licenseData} />
+        <SubscriptionUsageCard module={module} licenseData={licenseData} creditsData={creditsData?.data} />
       )}
       {module === 'CD' && shouldVisible ? (
         <ServiceLicenseTable
@@ -122,6 +133,9 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
           licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType}
           licenseData={licenseData}
         ></ServiceLicenseGraphs>
+      ) : null}
+      {module === 'CI' ? (
+        <BuildCreditInfoTable data={creditsData?.data || {}} licenseData={(licenseData as ModuleLicenseDTO) || ''} />
       ) : null}
     </Layout.Vertical>
   )
