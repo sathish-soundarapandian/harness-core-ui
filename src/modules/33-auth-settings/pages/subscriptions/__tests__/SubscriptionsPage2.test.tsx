@@ -17,7 +17,8 @@ import {
   getOrganizationListPromise,
   getProjectListPromise,
   getAllServicesPromise,
-  useDownloadActiveServiceCSVReport
+  useDownloadActiveServiceCSVReport,
+  useGetCreditsByAccount
 } from 'services/cd-ng'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import SubscriptionsPage from '../SubscriptionsPage'
@@ -26,6 +27,7 @@ import projMockData from './mocks/projMockData.json'
 import serviceMockData from './mocks/serviceMockData.json'
 jest.mock('services/cd-ng')
 const getOrganizationListPromiseMock = getOrganizationListPromise as jest.MockedFunction<any>
+const useGetCreditsByAccountMock = useGetCreditsByAccount as jest.MockedFunction<any>
 const getProjectListPromiseMock = getProjectListPromise as jest.MockedFunction<any>
 const getServiceListPromiseMock = getAllServicesPromise as jest.MockedFunction<any>
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
@@ -63,6 +65,9 @@ getProjectListPromiseMock.mockImplementation(() => {
 })
 getServiceListPromiseMock.mockImplementation(() => {
   return serviceListPromiseMock()
+})
+useGetCreditsByAccountMock.mockImplementation(() => {
+  return []
 })
 const useSaveFeedbackMock = useSaveFeedback as jest.MockedFunction<any>
 useSaveFeedbackMock.mockImplementation(() => {

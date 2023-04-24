@@ -899,7 +899,7 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                         class="bp3-popover-target"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
+                          class="bp3-icon StyledProps--main infoIcon"
                           data-icon="info"
                           tabindex="0"
                         >
@@ -965,7 +965,7 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                         class="bp3-popover-target"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
+                          class="bp3-icon StyledProps--main infoIcon"
                           data-icon="info"
                           tabindex="0"
                         >
@@ -2274,7 +2274,7 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                         class="bp3-popover-target"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
+                          class="bp3-icon StyledProps--main infoIcon"
                           data-icon="info"
                           tabindex="0"
                         >
@@ -2340,7 +2340,7 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                         class="bp3-popover-target"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
+                          class="bp3-icon StyledProps--main infoIcon"
                           data-icon="info"
                           tabindex="0"
                         >
@@ -3649,7 +3649,7 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                         class="bp3-popover-target"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
+                          class="bp3-icon StyledProps--main infoIcon"
                           data-icon="info"
                           tabindex="0"
                         >
@@ -3715,7 +3715,7 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                         class="bp3-popover-target"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
+                          class="bp3-icon StyledProps--main infoIcon"
                           data-icon="info"
                           tabindex="0"
                         >
@@ -4924,7 +4924,7 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
                         class="bp3-popover-target"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
+                          class="bp3-icon StyledProps--main infoIcon"
                           data-icon="info"
                           tabindex="0"
                         >
@@ -4990,7 +4990,7 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
                         class="bp3-popover-target"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
+                          class="bp3-icon StyledProps--main infoIcon"
                           data-icon="info"
                           tabindex="0"
                         >
@@ -6250,7 +6250,7 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                         class="bp3-popover-target"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
+                          class="bp3-icon StyledProps--main infoIcon"
                           data-icon="info"
                           tabindex="0"
                         >
@@ -6316,7 +6316,7 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                         class="bp3-popover-target"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
+                          class="bp3-icon StyledProps--main infoIcon"
                           data-icon="info"
                           tabindex="0"
                         >
