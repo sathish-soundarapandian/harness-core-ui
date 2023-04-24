@@ -102,3 +102,9 @@ export interface PluginAddUpdateMetadata {
   pluginUses?: PluginMetadataResponse['uses']
   shouldInsertYAML: boolean
 }
+
+export enum EditorAction {
+  Manage = 'MANAGE',
+  Add = 'ADD',
+  Edit = 'EDIT'
+}

@@ -38,11 +38,12 @@ import { Icon, Layout, Tag, Container, useConfirmationDialog } from '@harness/ui
 import { useStrings } from 'framework/strings'
 import type { Module } from 'framework/types/ModuleName'
 import { useToaster } from '@common/exports'
-import type {
+import {
   YamlBuilderProps,
   YamlBuilderHandlerBinding,
   CompletionItemInterface,
-  Theme
+  Theme,
+  EditorAction
 } from '@common/interfaces/YAMLBuilderProps'
 import { PluginAddUpdateMetadata, PluginType } from '@common/interfaces/YAMLBuilderProps'
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
@@ -166,7 +167,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     !defaultTo(existingYaml, existingJSON)
   )
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
-
+  const [_editorAction, setEditorAction] = useState<EditorAction>()
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
   const yamlValidationErrorsRef = useRef<Map<number, string>>()
@@ -704,6 +705,41 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }, [])
 
+  const generateCallbackForEditorActionClick = useCallback(
+    ({
+      fromLine,
+      toLineNum,
+      cursorPosition,
+      action
+    }: {
+      fromLine: number
+      toLineNum: number
+      cursorPosition: Position
+      action: EditorAction
+    }): string => {
+      return (
+        editorRef.current?.editor?.addCommand(
+          0,
+          () => {
+            setEditorAction(action)
+            setPluginOpnStatus?.(Status.TO_DO)
+            try {
+              const numberOfLinesInSelection = obtainYAMLForEditorActionClick(cursorPosition, currentYaml)
+              if (numberOfLinesInSelection) {
+                currentCursorPosition.current = cursorPosition
+                highlightInsertedYAML(fromLine, toLineNum + numberOfLinesInSelection - 1)
+              }
+            } catch (e) {
+              //ignore error
+            }
+          },
+          ''
+        ) || ''
+      )
+    },
+    [editorRef.current?.editor, currentYaml]
+  )
+
   const addCodeLensRegistration = useCallback(
     ({
       fromLine,
@@ -714,37 +750,39 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       toLineNum: number
       cursorPosition: Position
     }): IDisposable => {
-      const commandId = editorRef.current?.editor?.addCommand(
-        0,
-        () => {
-          setPluginOpnStatus?.(Status.TO_DO)
-          try {
-            const numberOfLinesInSelection = getSelectionRangeOnSettingsBtnClick(cursorPosition, currentYaml)
-            if (numberOfLinesInSelection) {
-              currentCursorPosition.current = cursorPosition
-              highlightInsertedYAML(fromLine, toLineNum + numberOfLinesInSelection - 1)
-            }
-          } catch (e) {
-            //ignore error
-          }
-        },
-        ''
-      )
+      const commonArgs = { fromLine, toLineNum, cursorPosition }
+      const codeLensRange = {
+        startLineNumber: fromLine,
+        startColumn: 1,
+        endLineNumber: toLineNum,
+        endColumn: 1
+      }
       const registrationId: IDisposable = monaco.languages.registerCodeLensProvider('yaml', {
         provideCodeLenses: function (_model: unknown, _token: unknown) {
           return {
             lenses: [
               {
-                range: {
-                  startLineNumber: fromLine,
-                  startColumn: 1,
-                  endLineNumber: toLineNum,
-                  endColumn: 1
-                },
-                id: 'plugin-settings',
+                range: codeLensRange,
+                id: 'manage-entity',
                 command: {
-                  id: commandId,
-                  title: 'Settings'
+                  id: generateCallbackForEditorActionClick({ ...commonArgs, action: EditorAction.Manage }),
+                  title: getString('common.manage')
+                }
+              },
+              {
+                range: codeLensRange,
+                id: 'edit-entity',
+                command: {
+                  id: generateCallbackForEditorActionClick({ ...commonArgs, action: EditorAction.Edit }),
+                  title: getString('edit')
+                }
+              },
+              {
+                range: codeLensRange,
+                id: 'add-entity',
+                command: {
+                  id: generateCallbackForEditorActionClick({ ...commonArgs, action: EditorAction.Add }),
+                  title: getString('add')
                 }
               }
             ],
@@ -816,7 +854,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor]
   )
 
-  const getSelectionRangeOnSettingsBtnClick = useCallback(
+  const obtainYAMLForEditorActionClick = useCallback(
     (cursorPosition: Position, latestYAML: string): number => {
       if (cursorPosition && editorRef.current?.editor) {
         try {
