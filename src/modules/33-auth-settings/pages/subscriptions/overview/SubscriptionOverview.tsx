@@ -83,15 +83,10 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
-  // const { data: creditsData } = useGetCreditsByAccount({
-  //   accountIdentifier: accountId
-  // })
-  const creditsData = {
-    data: [
-      { quantity: 10000, expiryTime: 1682326693848, purchaseTime: 1682326693848 },
-      { quantity: 10000, expiryTime: 1682326693848, purchaseTime: 1682326693848 }
-    ]
-  }
+  const { data: creditsData } = useGetCreditsByAccount({
+    accountIdentifier: accountId
+  })
+
   const updateFilters = (
     orgId: SelectOption | undefined,
     projId: SelectOption | undefined,
