@@ -1441,3 +1441,6 @@ welcomePage:
 successCount: 'Success {{count}}'
 failedCount: 'Failed {{count}}'
 configurations: Configurations
+googleCloudSourceFetchType:
+  specificCommitId: Specific Commit Id
+  specificTag: Specific Tag

@@ -343,13 +343,16 @@ function DeployServiceDefinition(): React.ReactElement {
         handleGitOpsCheckChanged={handleGitOpsCheckChanged}
         templateLinkConfig={customDeploymentData}
         addOrUpdateTemplate={isServiceEntityModalView ? undefined : addOrUpdateTemplate}
-        shouldShowGCFEnvTypeDropdown={true}
-        googleCloudFunctionEnvType={defaultTo(
-          (stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec as GoogleCloudFunctionsServiceSpec)
-            ?.environmentType as GoogleCloudFunctionsEnvType,
-          (deploymentMetadata as GoogleCloudFunctionDeploymentMetaData)?.environmentType as GoogleCloudFunctionsEnvType
-        )}
-        handleGCFEnvTypeChange={handleGCFEnvTypeChange}
+        googleCloudFunctionsSpecificProps={{
+          shouldShowGCFEnvTypeDropdown: true,
+          googleCloudFunctionEnvType: defaultTo(
+            (stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec as GoogleCloudFunctionsServiceSpec)
+              ?.environmentType as GoogleCloudFunctionsEnvType,
+            (deploymentMetadata as GoogleCloudFunctionDeploymentMetaData)
+              ?.environmentType as GoogleCloudFunctionsEnvType
+          ),
+          handleGCFEnvTypeChange: handleGCFEnvTypeChange
+        }}
       />
       {!!selectedDeploymentType && (
         <Layout.Horizontal>

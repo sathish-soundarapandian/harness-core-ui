@@ -28,6 +28,7 @@ import {
 import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
+import type { StringsMap } from 'framework/strings/StringsContext'
 import { ConnectorConfigDTO, useGetProjects } from 'services/cd-ng'
 import { useMutateAsGet } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -65,10 +66,12 @@ export enum FetchType {
   Tag = 'Tag'
 }
 
-export const fetchTypeList = [
-  { label: 'Latest from Branch', value: FetchType.Branch },
-  { label: 'Specific Commit Id', value: FetchType.Commit },
-  { label: 'Specific Git Tag', value: FetchType.Tag }
+export const getFetchTypeList = (
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
+) => [
+  { label: getString('gitFetchTypes.fromBranch'), value: FetchType.Branch },
+  { label: getString('common.googleCloudSourceFetchType.specificCommitId'), value: FetchType.Commit },
+  { label: getString('common.googleCloudSourceFetchType.specificTag'), value: FetchType.Tag }
 ]
 
 export function GoogleCloudSourceRepositories(
@@ -449,7 +452,7 @@ export function GoogleCloudSourceRepositories(
                   <FormInput.Select
                     name="fetchType"
                     label={getString('pipeline.artifacts.googleCloudSourceRepositories.fetchType')}
-                    items={fetchTypeList}
+                    items={getFetchTypeList(getString)}
                   />
                 </div>
 

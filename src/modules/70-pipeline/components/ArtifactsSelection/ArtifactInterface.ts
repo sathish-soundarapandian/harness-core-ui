@@ -22,7 +22,8 @@ import type {
   ArtifactoryBuildDetailsDTO,
   ServiceDefinition,
   ArtifactSource,
-  ConnectorConfigDTO
+  ConnectorConfigDTO,
+  GoogleCloudSourceArtifactConfig
 } from 'services/cd-ng'
 import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import type { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
@@ -453,7 +454,7 @@ export interface GoogleCloudSourceRepositoriesInitialValuesType {
   project: string
   repository: string
   sourceDirectory: string
-  fetchType: 'Branch' | 'Commit' | 'Tag'
+  fetchType: GoogleCloudSourceArtifactConfig['fetchType']
   branch?: string
   commitId?: string
   tag?: string

@@ -493,6 +493,8 @@ export interface StringsMap {
   'common.gnupgKeys': string
   'common.goBack': string
   'common.googleCloudPlatform': string
+  'common.googleCloudSourceFetchType.specificCommitId': string
+  'common.googleCloudSourceFetchType.specificTag': string
   'common.governance': string
   'common.gpgkey': string
   'common.harnessClusterHostingAccount': string
