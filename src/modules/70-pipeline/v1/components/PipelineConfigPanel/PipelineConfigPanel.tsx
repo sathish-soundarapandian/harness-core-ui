@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { capitalize, get, isEmpty } from 'lodash-es'
 import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text, Formik } from '@harness/uicore'
-import { PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
+import { EntitySelectionFromYAML, PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
 import {
   ConfigOptionsMapWithAdditionalOptions,
   MainConfigOptionsMap,
@@ -14,7 +14,7 @@ import css from './PipelineConfigPanel.module.scss'
 
 interface PipelineConfigPanelInterface {
   height?: React.CSSProperties['height']
-  entitySelectedFromYAML?: { entityType: PipelineEntity; entityAsObj: Record<string, any> }
+  entitySelectedFromYAML?: EntitySelectionFromYAML
   onAddUpdateEntity?: (values: Record<string, any>) => void
 }
 

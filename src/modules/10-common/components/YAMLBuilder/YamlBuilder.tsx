@@ -169,7 +169,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     !defaultTo(existingYaml, existingJSON)
   )
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
-  const [_editorAction, setEditorAction] = useState<EditorAction>()
+  const [editorAction, setEditorAction] = useState<EditorAction>()
   const [pipelineEntityType, setPipelineEntityType] = useState<PipelineEntity>()
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
@@ -876,7 +876,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const obtainYAMLForEditorActionClick = useCallback(
     (cursorPosition: Position, latestYAML: string): number => {
-      if (cursorPosition && editorRef.current?.editor) {
+      if (cursorPosition && editorRef.current?.editor && editorAction) {
         try {
           const currentYAMLAsJSON = parse(latestYAML)
           const closestStageIndex = getArrayIndexClosestToCurrentCursor({
@@ -906,7 +906,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const pluginAsStep = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
           setPlugin?.(pluginAsStep)
           setPipelineEntityType(PipelineEntity.Step) //TODO deduce pipelineEntityType here
-          setSelectedEntityFromYAML?.({ entityType: PipelineEntity.Step, entityAsObj: pluginAsStep })
+          setSelectedEntityFromYAML?.({ entityType: PipelineEntity.Step, entityAsObj: pluginAsStep, editorAction })
           const stepValueTokens = yamlStringify(pluginAsStep).split('\n').length
           return stepValueTokens
         } catch (e) {
@@ -915,7 +915,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       }
       return 0
     },
-    [editorRef.current?.editor]
+    [editorRef.current?.editor, editorAction]
   )
 
   useEffect(() => {

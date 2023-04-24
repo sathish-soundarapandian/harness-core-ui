@@ -11,9 +11,8 @@ import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { parse } from '@common/utils/YamlHelperMethods'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
-import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import type { EntitySelectionFromYAML, YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { Status } from '@common/utils/Constants'
-import type { PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
 import { useStrings } from 'framework/strings'
 import type { EntityValidityDetails, PipelineInfoConfig } from 'services/pipeline-ng'
 import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/useEnableEditModes'
@@ -50,8 +49,7 @@ function PipelineYAMLViewV1(): React.ReactElement {
   const { getString } = useStrings()
   const [_selectedEntity, setSelectedEntity] = useState<Record<string, any>>()
   const [_entityAddUpdateOpnStatus, setEntityAddUpdateOpnStatus] = useState<Status>()
-  const [entitySelectedFromYAML, setSelectedEntityFromYAML] =
-    useState<{ entityType: PipelineEntity; entityAsObj: Record<string, any> }>()
+  const [entitySelectedFromYAML, setSelectedEntityFromYAML] = useState<EntitySelectionFromYAML>()
 
   // setup polling
   React.useEffect(() => {
