@@ -485,6 +485,7 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
   const queryParams = useQueryParams<GitQueryParams>()
   const triggerType = get(data, 'executionTriggerInfo.triggerType', 'MANUAL')
+  const { sourceEventId, sourceEventLink } = get(data, 'executionTriggerInfo.triggeredBy.extraInfo', {})
   const { iconName, getText } = mapTriggerTypeToIconAndExecutionText(triggerType, getString) ?? {}
   const { hasparentpipeline = false, identifier: pipelineIdentifier } = get(
     data,
@@ -529,14 +530,29 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
           </Link>
         </>
       ) : (
-        <>
-          {iconName && <Icon name={iconName} size={12} />}
-          {typeof getText === 'function' && (
-            <Text font={{ size: 'small' }} color={Color.GREY_800} lineClamp={1}>
-              {getText(data?.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)}
-            </Text>
-          )}
-        </>
+        iconName &&
+        typeof getText === 'function' && (
+          <Text font={{ size: 'small' }} icon={iconName} iconProps={{ size: 12 }} color={Color.GREY_800}>
+            {getText(data?.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)}
+            {sourceEventId && sourceEventLink && (
+              <span>
+                &#40;
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={sourceEventLink}
+                  style={{ color: Color.PRIMARY_7 }}
+                  onClick={e => {
+                    e.stopPropagation()
+                  }}
+                >
+                  {sourceEventId.slice(0, 7)}
+                </a>
+                &#41;
+              </span>
+            )}
+          </Text>
+        )
       )}
     </Layout.Horizontal>
   )

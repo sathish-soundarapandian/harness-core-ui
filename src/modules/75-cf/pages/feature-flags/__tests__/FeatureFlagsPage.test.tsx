@@ -15,6 +15,7 @@ import mockImport from 'framework/utils/mockImport'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
 import FeatureFlagsPage from '../FeatureFlagsPage'
 import mockFeatureFlags from './mockFeatureFlags'
+import mockGetAllEnvironmentsFlags from './mockGetAllEnvironmentsFlags'
 
 const renderComponent = (): RenderResult =>
   render(
@@ -122,6 +123,37 @@ describe('FeatureFlagsPage', () => {
       expect(screen.getByText('common.allEnvironments')).toBeInTheDocument()
       expect(screen.getByText('QB')).toBeInTheDocument()
     })
+  })
+
+  test('It should show All Environments Flags view on click of "All Environments" in the EnvironmentSelect dropdown', async () => {
+    const refetchAllEnvironmentsFlags = jest.fn()
+
+    mockImport('services/cf', {
+      useGetProjectFlags: () => ({
+        loading: false,
+        data: mockGetAllEnvironmentsFlags,
+        refetch: refetchAllEnvironmentsFlags,
+        error: null
+      })
+    })
+
+    renderComponent()
+
+    const environmentSelect = screen.getByRole('textbox', { name: 'cf.shared.selectEnvironment' })
+
+    expect(environmentSelect).toHaveValue('foobar')
+
+    userEvent.click(environmentSelect)
+
+    expect(refetchAllEnvironmentsFlags).not.toHaveBeenCalled()
+    expect(screen.getByText('common.allEnvironments')).toBeInTheDocument()
+    expect(screen.getByText('QB')).toBeInTheDocument()
+
+    userEvent.click(screen.getByText('common.allEnvironments'))
+
+    expect(refetchAllEnvironmentsFlags).toHaveBeenCalledTimes(1)
+    expect(screen.getAllByText('cf.environments.nonProd')).toHaveLength(17)
+    expect(screen.getAllByText('cf.environments.prod')).toHaveLength(17)
   })
 
   test('It should go to edit page by clicking a row', async () => {

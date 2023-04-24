@@ -21,6 +21,7 @@ import type {
   RecurringDowntimeSpec
 } from 'services/cv'
 import { DowntimeStatus } from '../../SLODowntimePage.types'
+import { defaultDateTime } from '../../SLODowntimePage.constants'
 
 export const getIsSetPreviousPage = (pageIndex: number, pageItemCount: number): boolean => {
   return Boolean(pageIndex) && pageItemCount === 1
@@ -28,7 +29,7 @@ export const getIsSetPreviousPage = (pageIndex: number, pageItemCount: number): 
 
 export const getDowntimeWindowInfo = (downtime: DowntimeListView, getString: UseStringsReturn['getString']) => {
   const { type = DowntimeWindowToggleViews.ONE_TIME } = downtime?.spec || {}
-  const { startTime = 1, timezone = 'Asia/Calcutta' } = downtime?.spec?.spec || {}
+  const { startDateTime = defaultDateTime, timezone = 'Asia/Calcutta' } = downtime?.spec?.spec || {}
 
   let timeFrame = null
   let downtimeType = null
@@ -36,7 +37,7 @@ export const getDowntimeWindowInfo = (downtime: DowntimeListView, getString: Use
   if (type === DowntimeWindowToggleViews.ONE_TIME) {
     const onetimeDowntimeSpec = downtime?.spec?.spec as OnetimeDowntimeSpec
     const { type: oneTimeDowntimeType = EndTimeMode.DURATION } = onetimeDowntimeSpec || {}
-    const _startTime = getFormattedTime({ time: startTime, timezone, format: 'lll' })
+    const _startTime = getFormattedTime({ dateTime: startDateTime, format: 'lll' })
     let _endTime = null
 
     if (oneTimeDowntimeType === EndTimeMode.DURATION) {
@@ -46,10 +47,9 @@ export const getDowntimeWindowInfo = (downtime: DowntimeListView, getString: Use
         .add(durationValue, durationType.toLowerCase() as any)
         .format('lll')
     } else {
-      const { endTime = 1 } = (onetimeDowntimeSpec?.spec as OnetimeEndTimeBasedSpec) || {}
+      const { endDateTime = defaultDateTime } = (onetimeDowntimeSpec?.spec as OnetimeEndTimeBasedSpec) || {}
       _endTime = getFormattedTime({
-        time: endTime,
-        timezone,
+        dateTime: endDateTime,
         format: 'lll'
       })
     }
@@ -57,24 +57,26 @@ export const getDowntimeWindowInfo = (downtime: DowntimeListView, getString: Use
     timeFrame = `${_startTime} - ${_endTime} (${timezone})`
     downtimeType = getString('common.occurrence.oneTime').toUpperCase()
   } else {
-    const { downtimeDuration, downtimeRecurrence, recurrenceEndTime } = downtime?.spec?.spec as RecurringDowntimeSpec
+    const {
+      downtimeDuration,
+      downtimeRecurrence,
+      recurrenceEndDateTime = defaultDateTime
+    } = downtime?.spec?.spec as RecurringDowntimeSpec
 
     timeFrame = `${getString('cv.sloDowntime.timeFrame', {
       recurrenceType: getRecurrenceType(downtimeRecurrence, getString),
       time: getFormattedTime({
-        time: startTime,
-        timezone,
+        dateTime: startDateTime,
         format: 'LT'
       }),
       duration: getDuration(getString, downtimeDuration)
     })} (${timezone})`
     downtimeType = getString('cv.sloDowntime.recurringDowntime', {
       startTime: getFormattedTime({
-        time: startTime,
-        timezone,
+        dateTime: startDateTime,
         format: 'll'
       }),
-      endTime: getFormattedTime({ time: recurrenceEndTime, timezone, format: 'll' })
+      endTime: getFormattedTime({ dateTime: recurrenceEndDateTime, format: 'll' })
     })
   }
 

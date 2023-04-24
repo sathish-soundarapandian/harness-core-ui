@@ -878,6 +878,7 @@ export interface ClusteredLog {
 }
 
 export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
+  evaluationType?: 'Window' | 'Request'
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
 }
 
@@ -1077,6 +1078,8 @@ export type CustomSecretManager = ConnectorConfigDTO & {
   template: TemplateLinkConfigForCustomSecretManager
   workingDirectory?: string
 }
+
+export type DataCollectionFailureInstanceDetails = SecondaryEventDetails & { [key: string]: any }
 
 export interface DataCollectionInfo {
   collectHostData?: boolean
@@ -1345,11 +1348,14 @@ export interface DowntimeDuration {
 export interface DowntimeHistoryView {
   affectedEntities?: AffectedEntity[]
   category?: 'ScheduledMaintenance' | 'Deployment' | 'Other'
+  downtimeDetails?: DowntimeSpecDTO
   duration?: DowntimeDuration
+  endDateTime?: string
   endTime?: number
   identifier?: string
   name?: string
   spec?: DowntimeSpecDTO
+  startDateTime?: string
   startTime?: number
 }
 
@@ -1381,7 +1387,8 @@ export interface DowntimeResponse {
 }
 
 export interface DowntimeSpec {
-  startTime: number
+  startDateTime?: string
+  startTime?: number
   timezone: string
 }
 
@@ -1391,6 +1398,7 @@ export interface DowntimeSpecDTO {
 }
 
 export interface DowntimeStatusDetails {
+  endDateTime?: string
   endTime?: number
   startTime?: number
   status?: 'Active' | 'Scheduled'
@@ -1871,6 +1879,7 @@ export interface Error {
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2308,6 +2317,7 @@ export interface Failure {
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3274,6 +3284,7 @@ export interface LogFeedback {
   feedbackScore?: 'NO_RISK_IGNORE_FREQUENCY' | 'NO_RISK_CONSIDER_FREQUENCY' | 'MEDIUM_RISK' | 'HIGH_RISK' | 'DEFAULT'
   sampleMessage?: string
   serviceIdentifier?: string
+  ticket?: TicketResponseDto
   updatedAt?: number
   updatedBy?: string
   verificationJobInstanceId?: string
@@ -3798,7 +3809,8 @@ export type OnetimeDurationBasedSpec = OnetimeSpec & {
 }
 
 export type OnetimeEndTimeBasedSpec = OnetimeSpec & {
-  endTime: number
+  endDateTime?: string
+  endTime?: number
 }
 
 export interface OnetimeSpec {
@@ -4336,7 +4348,8 @@ export type RatioSLIMetricSpec = SLIMetricSpec & {
 export type RecurringDowntimeSpec = DowntimeSpec & {
   downtimeDuration: DowntimeDuration
   downtimeRecurrence: DowntimeRecurrence
-  recurrenceEndTime: number
+  recurrenceEndDateTime?: string
+  recurrenceEndTime?: number
 }
 
 export interface ReferenceDTO {
@@ -4905,6 +4918,7 @@ export interface ResponseMessage {
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5823,6 +5837,7 @@ export interface SLOConsumptionBreakdown {
   contributedErrorBudgetBurned: number
   environmentIdentifier: string
   errorBudgetBurned: number
+  failedState?: boolean
   monitoredServiceIdentifier: string
   orgName?: string
   projectName?: string
@@ -5914,6 +5929,7 @@ export interface SLOHealthListView {
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
   evaluationType: 'Window' | 'Request'
+  failedState: boolean
   healthSourceIdentifier?: string
   healthSourceName?: string
   monitoredServiceIdentifier?: string
@@ -6340,6 +6356,25 @@ export interface Throwable {
   suppressed?: Throwable[]
 }
 
+export interface TicketRequestDto {
+  description?: string
+  exists?: boolean
+  externalId?: string
+  identifiers?: {
+    [key: string]: string[]
+  }
+  issueType?: string
+  priority?: string
+  projectKey?: string
+  title?: string
+}
+
+export interface TicketResponseDto {
+  externalId?: string
+  id?: string
+  url?: string
+}
+
 export interface TimeGraphResponse {
   dataPoints?: DataPoints[]
   endTime?: number
@@ -6732,7 +6767,12 @@ export interface UnavailabilityInstancesResponse {
   orgIdentifier?: string
   projectIdentifier?: string
   startTime?: number
-  status?: 'MonitoredServiceDisabled' | 'MaintenanceWindow' | 'DataCollectionFailed'
+  status?:
+    | 'MonitoredServiceDisabled'
+    | 'MaintenanceWindow'
+    | 'DataCollectionFailed'
+    | 'DataRecollectionPassed'
+    | 'DataRestored'
 }
 
 export interface UsageDataDTO {

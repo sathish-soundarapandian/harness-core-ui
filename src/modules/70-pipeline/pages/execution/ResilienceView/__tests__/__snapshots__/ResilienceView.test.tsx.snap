@@ -1,5 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<MemoizedResilienceViewCTA /> tests Should render MemoizedResilienceViewCTA when chaos license is not present 1`] = `
+<div>
+  <div
+    data-testid="error-tracking-child-mounter"
+  >
+    mounted
+  </div>
+</div>
+`;
+
+exports[`<MemoizedResilienceViewCTA /> tests Should render MemoizedResilienceViewCTA when chaos step is not present 1`] = `
+<div>
+  <div
+    data-testid="error-tracking-child-mounter"
+  >
+    mounted
+  </div>
+</div>
+`;
+
 exports[`<MemoizedResilienceViewContent /> tests Should re-render MemoizedResilienceViewContent when notifyIDs change 1`] = `
 <div>
   <div
@@ -22,30 +42,20 @@ exports[`<MemoizedResilienceViewContent /> tests Should re-render MemoizedResili
 
 exports[`<ResilienceView /> tests Should not crash when chaos notifyIDs are not yet created/empty 1`] = `
 <div>
-  <div>
-    <h1>
-      Not Found
-    </h1>
-    <div
-      data-testid="location"
-    >
-      /account/undefined/chaos/orgs/undefined/projects/undefined/experiments/expID/runs/expRunID?fault=faultName
-    </div>
+  <div
+    data-testid="error-tracking-child-mounter"
+  >
+    mounted
   </div>
 </div>
 `;
 
 exports[`<ResilienceView /> tests Should render ResilienceView when pipeline has chaos step 1`] = `
 <div>
-  <div>
-    <h1>
-      Not Found
-    </h1>
-    <div
-      data-testid="location"
-    >
-      /account/undefined/chaos/orgs/undefined/projects/undefined/experiments/expID/runs/expRunID?fault=faultName
-    </div>
+  <div
+    data-testid="error-tracking-child-mounter"
+  >
+    mounted
   </div>
 </div>
 `;

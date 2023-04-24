@@ -5,13 +5,32 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getServiceLevelObjectivesRiskCountParams } from '../CVSLOListingPage.utils'
+import type { StringKeys } from 'framework/strings'
+import {
+  getDefaultAllOption,
+  getServiceLevelObjectivesRiskCountParams,
+  isSLOFilterApplied
+} from '../CVSLOListingPage.utils'
+import type { SLOFilterState } from '../CVSLOsListingPage.types'
 import {
   riskCountQueryParamsExpectedResult,
   riskCountQueryParamsParametersMock,
   riskCountQueryParamsParametersWithoutDefaultMock,
   riskCountQueryParamsWithAllMonitoredServiceResult
 } from './CVSLOsListingPage.mock'
+
+function getString(key: StringKeys): StringKeys {
+  return key
+}
+
+const filterState = {
+  monitoredService: getDefaultAllOption(getString),
+  userJourney: getDefaultAllOption(getString),
+  targetTypes: getDefaultAllOption(getString),
+  sliTypes: getDefaultAllOption(getString),
+  evaluationType: getDefaultAllOption(getString),
+  search: ''
+} as SLOFilterState
 
 describe('CVSLOListingPage utils', () => {
   test('getServiceLevelObjectivesRiskCountParams should take monitored service default identifier if it exists', () => {
@@ -45,5 +64,23 @@ describe('CVSLOListingPage utils', () => {
     const result = getServiceLevelObjectivesRiskCountParams(riskCountQueryParamsParametersWithoutDefaultMock)
 
     expect(result).toEqual(riskCountQueryParamsWithAllMonitoredServiceResult)
+  })
+
+  test('isSLOFilterApplied should return correct value when no filter or at least one filter is applied', () => {
+    // when no filter applied
+    let result = isSLOFilterApplied(getString, filterState)
+    expect(result).toBe(false)
+
+    // when MS selected
+    result = isSLOFilterApplied(getString, { ...filterState, monitoredService: { label: 'msdemo', value: 'msdemo' } })
+    expect(result).toBe(true)
+
+    // when trying to search
+    result = isSLOFilterApplied(getString, { ...filterState, search: 'SLO1' })
+    expect(result).toBe(true)
+
+    // when user journey selected
+    result = isSLOFilterApplied(getString, { ...filterState, userJourney: { label: 'uj1', value: 'uj1' } })
+    expect(result).toBe(true)
   })
 })

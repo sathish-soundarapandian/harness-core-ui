@@ -188,6 +188,9 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = ({
           </Layout.Horizontal>
         )}
       </Container>
+      <Layout.Horizontal width="450px">
+        <Text font={{ weight: 'semi-bold' }}>{getString('cf.onboarding.sdkWarning')}</Text>
+      </Layout.Horizontal>
       {!verified && !fetching && toggledOn && (
         <Text
           width="450px"

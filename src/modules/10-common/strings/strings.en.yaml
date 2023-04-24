@@ -333,7 +333,6 @@ purpose:
     tests: '{{$.tests}}'
   errorTracking:
     title: Error Tracking
-    longTitle: Continuous Error Tracking
   code:
     name: Code
   chaos:
@@ -347,6 +346,9 @@ purpose:
     name: Developer Portal
     fullName: Internal Developer Portal
     shortName: IDP
+  cet:
+    continuous: Continuous Error Tracking
+    moduleSelectionSubHeading: Identify and fix errors faster with complete visibility into code level data using Harness Continuous Error Tracking.
 trialInProgress: Trial in progress
 trialInProgressDescription: A Project contains your pipelines, resources, and team members. Get started by creating your first Project.
 letsGetYouStarted: Let’s get you started
@@ -531,6 +533,8 @@ subscriptions:
     developers: '{{ developers }} Developers'
   sto:
     developers: '{{ developers }} Developers'
+  cet:
+    agents: '{{ agents }} Agents'
   chaos:
     experiments: '{{ experiments }} Experiments per month'
     infrastructures: '{{ infrastructures }} Chaos Infrastructures'
@@ -567,6 +571,8 @@ subscriptions:
     cloudSpend: Total Cloud Spend
     ccmUsers: Active CCM Users
     ccmTooltip: Cloud Spend refers to the total spend (dollars) managed and optimized by Harness Cloud Cost Management.
+    cetAgents: Active Agents
+    cetAgentToolTip: An Agent refers to a constantly active error tracking component that is integrated with Harness platform for continuous monitoring and analysis.
 current: Current
 banners:
   email:

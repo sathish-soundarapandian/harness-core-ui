@@ -15,3 +15,4 @@ stepTimeout: Step Timeout
 concurrentActivePipelineExecutions: Concurrent Active Pipeline Executions
 enableNodeExecutionAuditEvents: Enable Node Execution Audit Events
 allowUserToMarkStepAsFailedExplicitly: Allow users to mark a running Step as failure
+enableMatrixFieldNames: Enable Matrix Labels By Name

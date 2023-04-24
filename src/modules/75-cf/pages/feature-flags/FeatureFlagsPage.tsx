@@ -97,8 +97,8 @@ const FeatureFlagsPage: React.FC = () => {
     error: envsError,
     refetch: refetchEnvironments,
     environments,
-    allEnvironmentsFlags,
-    refetchAllEnvironmentsFlags
+    projectFlags,
+    refetchProjectFlags
   } = useEnvironmentSelectV2({
     selectedEnvironmentIdentifier: environmentIdentifier,
     allowAllOption: true,
@@ -132,12 +132,13 @@ const FeatureFlagsPage: React.FC = () => {
   )
 
   useEffect(() => {
-    if (allEnvironmentsFlags) {
-      refetchAllEnvironmentsFlags()
+    if (projectFlags) {
+      refetchProjectFlags()
     } else {
       refetchFlags()
     }
-  }, [allEnvironmentsFlags, queryParams, refetchAllEnvironmentsFlags, refetchFlags])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryParams])
 
   const emptyFeatureFlags = !features?.features?.length
   // use emptyFeatureFlags below as temp fallback to ensure FilterCards still display in case featureCounts is unavailable or flag STALE_FLAGS_FFM_1510 is toggled off on backend only
@@ -210,7 +211,7 @@ const FeatureFlagsPage: React.FC = () => {
         refetchFlags()
       }}
     >
-      {showFilterCards && !allEnvironmentsFlags && (
+      {showFilterCards && !projectFlags && (
         <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
           <FlagTableFilters
             features={features}
@@ -222,13 +223,13 @@ const FeatureFlagsPage: React.FC = () => {
           />
         </Container>
       )}
-      {!emptyFeatureFlags || !!allEnvironmentsFlags?.flags?.length ? (
+      {!emptyFeatureFlags || !!projectFlags?.flags?.length ? (
         <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
-          {allEnvironmentsFlags && !!environments?.length ? (
+          {projectFlags && !!environments?.length ? (
             <AllEnvironmentsFlagsListing
               environments={environments}
-              allEnvironmentsFlags={allEnvironmentsFlags}
-              refetchFlags={refetchAllEnvironmentsFlags}
+              projectFlags={projectFlags}
+              refetchFlags={refetchProjectFlags}
               deleteFlag={deleteFlag.mutate}
               queryParams={queryParams}
             />

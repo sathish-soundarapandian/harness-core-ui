@@ -13,7 +13,7 @@
 
 .exportButton {
   background-color: var(--primary-7);
-  color: white;
+  color: var(--white);
   font-size: var(--font-size-small);
   padding: 4px 20px !important;
   min-height: 24px !important;
@@ -91,6 +91,11 @@
       box-shadow: unset !important;
       background-color: var(--primary-1) !important;
       border-color: var(--primary-5) !important;
+    }
+    &.cet {
+      box-shadow: unset !important;
+      background-color: var(--red-50) !important;
+      border-color: var(--red-400) !important;
     }
   }
 

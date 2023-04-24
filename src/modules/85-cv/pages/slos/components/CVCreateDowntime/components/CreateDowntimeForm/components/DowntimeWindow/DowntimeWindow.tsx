@@ -17,7 +17,7 @@ import {
   DowntimeFormFields,
   EndTimeMode
 } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'
-import { timezoneToOffsetObjectWithDaylightSaving } from '@cv/utils/dateUtils'
+import { ALL_TIME_ZONES } from '@common/utils/dateUtils'
 import { DowntimeWindowToggleViews } from '../../CreateDowntimeForm.types'
 import { getDurationOptions, getRecurrenceTypeOptions } from '../../CreateDowntimeForm.utils'
 import css from '../../CreateDowntimeForm.module.scss'
@@ -34,10 +34,7 @@ const DowntimeWindow = (): JSX.Element => {
       : DowntimeWindowToggleViews.RECURRING
   )
 
-  const timeZoneList: SelectOption[] = Object.entries(timezoneToOffsetObjectWithDaylightSaving).map(timezone => ({
-    value: timezone[0],
-    label: `${timezone[0]} (GMT${Number(timezone[1]) >= 0 ? '+' : ''}${timezone[1]})`
-  }))
+  const timeZoneList: SelectOption[] = ALL_TIME_ZONES.map(timezone => ({ value: timezone, label: timezone }))
 
   const toggleProps: PillToggleProps<DowntimeWindowToggleViews> = {
     options: [

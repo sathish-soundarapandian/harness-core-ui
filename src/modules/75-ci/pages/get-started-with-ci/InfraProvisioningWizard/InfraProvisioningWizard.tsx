@@ -416,7 +416,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         triggerType === BuildCodebaseType.PR
           ? `${pipelineIdentifier}-pr-trigger-input-set`
           : `${pipelineIdentifier}-push-trigger-input-set`
-      const yamlPath = `.harness/${inputSetName}.yaml`
+      const yamlPath = `.harness/${inputSetName}-${new Date().getTime()}.yaml`
       const commitMsg = `${getString('common.addedEntityLabel', {
         entity: getString('inputSets.inputSetLabel').toLowerCase()
       })} ${yamlPath}`
@@ -509,7 +509,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               projectIdentifier,
               targetIdentifier: createdPipelineIdentifier
             }
-            if (yamlVersion === YAMLVersion.V0 && createdPipelineIdentifier) {
+            if (shouldSavePipelineToGit && yamlVersion === YAMLVersion.V0 && createdPipelineIdentifier) {
               try {
                 const { data: createInputSetResponse, status: createInputSetStatus } =
                   await createInputSetForRemotePipelinePromise({
@@ -549,7 +549,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               .then(async (createPRTriggerResponse: ResponseNGTriggerResponse) => {
                 if (createPRTriggerResponse.status === Status.SUCCESS) {
                   let pushTriggerInputSetIdentifier
-                  if (yamlVersion === YAMLVersion.V0 && createdPipelineIdentifier) {
+                  if (shouldSavePipelineToGit && yamlVersion === YAMLVersion.V0 && createdPipelineIdentifier) {
                     try {
                       const { data: _createInputSetResponse, status: _createInputSetStatus } =
                         await createInputSetForRemotePipelinePromise({

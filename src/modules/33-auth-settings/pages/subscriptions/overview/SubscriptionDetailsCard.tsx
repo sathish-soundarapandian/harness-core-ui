@@ -19,7 +19,7 @@ import { useContactSalesMktoModal } from '@common/modals/ContactSales/useContact
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useExtendTrialLicense, StartTrialDTO, FeedbackFormDTO, useSaveFeedback } from 'services/cd-ng'
 import { useToaster } from '@common/components'
-import type { ModuleName } from 'framework/types/ModuleName'
+import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import {
   useExtendTrialOrFeedbackModal,
@@ -94,7 +94,10 @@ const SubscriptionDetailsCard: React.FC<SubscriptionDetailsCardProps> = props =>
     module,
     expiryDateStr: moment(expiryDate).format('MMMM D YYYY'),
     formType: isExpired ? FORM_TYPE.EXTEND_TRIAL : FORM_TYPE.FEEDBACK,
-    moduleDescription: getString(`${module.toLowerCase()}.continuous` as keyof StringsMap),
+    moduleDescription:
+      module === ModuleName.CET
+        ? getString(`et.continuous` as keyof StringsMap)
+        : getString(`${module.toLowerCase()}.continuous` as keyof StringsMap),
     loading: sendingFeedback
   })
 

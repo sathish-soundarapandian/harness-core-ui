@@ -69,7 +69,7 @@ const GitRemoteDetails = ({
             tooltip={filePath && getTooltipContent(filePath, fileUrl)}
             tooltipProps={{
               isDark: true,
-              interactionKind: PopoverInteractionKind.CLICK,
+              interactionKind: PopoverInteractionKind.HOVER,
               position: Position.BOTTOM_LEFT
             }}
             lineClamp={1}

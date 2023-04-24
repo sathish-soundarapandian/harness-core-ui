@@ -18,6 +18,12 @@ describe('EnvironmentsV2 Configuration Page', () => {
             name: 'NG_SVC_ENV_REDESIGN',
             enabled: true,
             lastUpdatedAt: 0
+          },
+          {
+            uuid: null,
+            name: 'NG_EXPRESSIONS_NEW_INPUT_ELEMENT',
+            enabled: true,
+            lastUpdatedAt: 0
           }
         ]
       })
@@ -74,11 +80,11 @@ describe('EnvironmentsV2 Configuration Page', () => {
     cy.get('@valueList').eq(2).should('contain.text', 'Expression').as('expressionValue')
     cy.get('@expressionValue').click()
     cy.get('span[data-icon="expression-input"]').should('be.visible') // Expression Icon
-    cy.get('input[name="variables[0].value"]') // Input val
+    cy.get('div[name="variables[0].value"]') // Input val
       .should('not.be.disabled')
       .clear()
       .type('<+17>')
-      .should('have.value', '<+17>')
+    cy.contains('span', '<+17>').should('be.visible')
 
     // Adding var2
     cy.get('@addVariable').click()

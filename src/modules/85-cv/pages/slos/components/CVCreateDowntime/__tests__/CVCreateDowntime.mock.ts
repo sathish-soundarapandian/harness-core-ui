@@ -109,10 +109,10 @@ export const oneTimeEndTimeBasedDowntimeResponse = {
         type: 'Onetime',
         spec: {
           timezone: 'Asia/Calcutta',
-          startTime: 1900747256,
+          startDateTime: '2030-04-15 06:00 PM',
           type: 'EndTime',
           spec: {
-            endTime: 1900748256
+            endDateTime: '2030-04-15 06:30 PM'
           }
         }
       }
@@ -149,7 +149,7 @@ export const oneTimeDurationBasedDowntimeResponse = {
         type: 'Onetime',
         spec: {
           timezone: 'Asia/Calcutta',
-          startTime: 1900747256,
+          startDateTime: '2030-04-15 12:00 PM',
           type: 'Duration',
           spec: {
             downtimeDuration: {
@@ -182,8 +182,8 @@ export const recurrenceBasedDowntimeResponse = {
         type: 'Recurring',
         spec: {
           timezone: 'Asia/Bangkok',
-          startTime: 1900747256,
-          recurrenceEndTime: 1960748256,
+          startDateTime: '2030-04-15 02:00 PM',
+          recurrenceEndDateTime: '2031-04-15 02:00 PM',
           downtimeDuration: {
             durationType: 'Minutes',
             durationValue: 30

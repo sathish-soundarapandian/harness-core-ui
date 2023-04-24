@@ -254,15 +254,15 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                   >
                     <p
                       class="StyledProps--font StyledProps--main firstLine"
-                      title="February 13, 2023"
+                      title="April 15, 2029"
                     >
-                      February 13, 2023
+                      April 15, 2029
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main secondLine"
-                      title="5:45 PM (Asia/Baghdad)"
+                      title="12:00 PM (Asia/Baghdad)"
                     >
-                      5:45 PM (Asia/Baghdad)
+                      12:00 PM (Asia/Baghdad)
                     </p>
                   </div>
                 </div>
@@ -276,15 +276,15 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                   >
                     <p
                       class="StyledProps--font StyledProps--main firstLine"
-                      title="February 13, 2023"
+                      title="April 15, 2029"
                     >
-                      February 13, 2023
+                      April 15, 2029
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main secondLine"
-                      title="5:50 PM (Asia/Baghdad)"
+                      title="12:30 PM (Asia/Baghdad)"
                     >
-                      5:50 PM (Asia/Baghdad)
+                      12:30 PM (Asia/Baghdad)
                     </p>
                   </div>
                 </div>
@@ -380,15 +380,15 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                   >
                     <p
                       class="StyledProps--font StyledProps--main firstLine"
-                      title="February 13, 2023"
+                      title="April 14, 2030"
                     >
-                      February 13, 2023
+                      April 14, 2030
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main secondLine"
-                      title="9:30 PM (Asia/Bangkok)"
+                      title="12:00 PM (Asia/Bangkok)"
                     >
-                      9:30 PM (Asia/Bangkok)
+                      12:00 PM (Asia/Bangkok)
                     </p>
                   </div>
                 </div>
@@ -402,15 +402,15 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                   >
                     <p
                       class="StyledProps--font StyledProps--main firstLine"
-                      title="February 13, 2023"
+                      title="April 14, 2030"
                     >
-                      February 13, 2023
+                      April 14, 2030
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main secondLine"
-                      title="9:35 PM (Asia/Bangkok)"
+                      title="12:30 PM (Asia/Bangkok)"
                     >
-                      9:35 PM (Asia/Bangkok)
+                      12:30 PM (Asia/Bangkok)
                     </p>
                   </div>
                 </div>
@@ -527,9 +527,9 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main secondLine"
-                      title="5:30 AM (Asia/Calcutta)"
+                      title="12:00 AM (Asia/Calcutta)"
                     >
-                      5:30 AM (Asia/Calcutta)
+                      12:00 AM (Asia/Calcutta)
                     </p>
                   </div>
                 </div>
@@ -549,9 +549,9 @@ exports[`DowntimeHistory page should render downtime history view and change fil
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main secondLine"
-                      title="5:30 AM (Asia/Calcutta)"
+                      title="12:00 AM (Asia/Calcutta)"
                     >
-                      5:30 AM (Asia/Calcutta)
+                      12:00 AM (Asia/Calcutta)
                     </p>
                   </div>
                 </div>
@@ -1149,9 +1149,9 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
                             <p
                               class="StyledProps--font Text--lineclamp StyledProps--main firstLine"
                               style="--text-line-clamp: 1;"
-                              title=""
+                              title="admin@harness.io"
                             >
-                              
+                              admin@harness.io
                             </p>
                             <p
                               class="StyledProps--font StyledProps--main secondLine"
@@ -1336,9 +1336,9 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
                           >
                             <p
                               class="StyledProps--font StyledProps--main firstLine"
-                              title="Feb 14, 2023 2:16 AM - Feb 14, 2023 2:46 AM (Asia/Calcutta)"
+                              title="Apr 15, 2031 12:00 PM - Apr 15, 2031 12:30 PM (Asia/Calcutta)"
                             >
-                              Feb 14, 2023 2:16 AM - Feb 14, 2023 2:46 AM (Asia/Calcutta)
+                              Apr 15, 2031 12:00 PM - Apr 15, 2031 12:30 PM (Asia/Calcutta)
                             </p>
                             <p
                               class="StyledProps--font StyledProps--main secondLine"
@@ -1820,9 +1820,9 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
                           >
                             <p
                               class="StyledProps--font StyledProps--main firstLine"
-                              title="Jan 1, 1970 5:30 AM - Jan 1, 1970 6:00 AM (Asia/Calcutta)"
+                              title="Jan 1, 1970 12:00 AM - Jan 1, 1970 12:30 AM (Asia/Calcutta)"
                             >
-                              Jan 1, 1970 5:30 AM - Jan 1, 1970 6:00 AM (Asia/Calcutta)
+                              Jan 1, 1970 12:00 AM - Jan 1, 1970 12:30 AM (Asia/Calcutta)
                             </p>
                             <p
                               class="StyledProps--font StyledProps--main secondLine"

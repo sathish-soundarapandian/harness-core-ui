@@ -110,7 +110,6 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
         ]
       }
     case StageType.DEPLOY:
-    default:
       return {
         [Modes.STEP]: [
           Strategy.ManualIntervention,
@@ -137,6 +136,35 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.ManualIntervention,
           Strategy.StageRollback,
           Strategy.PipelineRollback,
+          Strategy.Ignore,
+          Strategy.Retry,
+          Strategy.MarkAsSuccess,
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues,
+          Strategy.MarkAsFailure
+        ]
+      }
+    default:
+      return {
+        [Modes.STEP]: [
+          Strategy.ManualIntervention,
+          Strategy.Ignore,
+          Strategy.Retry,
+          Strategy.MarkAsSuccess,
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues,
+          Strategy.MarkAsFailure
+        ],
+        [Modes.STEP_GROUP]: [
+          Strategy.ManualIntervention,
+          Strategy.Ignore,
+          Strategy.Retry,
+          Strategy.MarkAsSuccess,
+          Strategy.Abort,
+          Strategy.MarkAsFailure
+        ],
+        [Modes.STAGE]: [
+          Strategy.ManualIntervention,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,

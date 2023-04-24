@@ -33,6 +33,7 @@ import {
   ServiceNowFieldNGWithValue,
   ServiceNowStaticFields
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
+import { EXPANDABLE_INPUT_SUPPORTED_FIELDS } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
 
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/helper'
 import type { ServiceNowTicketTypeSelectOption } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/types'
@@ -371,6 +372,17 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
                     className={css.deploymentViewMedium}
                     multiTypeInputProps={{ allowableTypes: allowableTypes, expressions }}
                     useValue
+                  />
+                )
+              } else if (EXPANDABLE_INPUT_SUPPORTED_FIELDS.has(customFields[fieldIndex]?.key)) {
+                return (
+                  <FormMultiTypeTextAreaField
+                    label={customFields[fieldIndex].name}
+                    disabled={isApprovalStepFieldDisabled(readonly)}
+                    name={`${prefix}spec.fields[${index}].value`}
+                    placeholder={customFields[fieldIndex].name}
+                    multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                    className={css.deploymentViewMedium}
                   />
                 )
               } else if (

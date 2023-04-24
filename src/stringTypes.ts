@@ -784,6 +784,8 @@ export interface StringsMap {
   'common.purpose.ce.optimizationCard.description': string
   'common.purpose.ce.subtitle': string
   'common.purpose.ce.visibilityCard.description': string
+  'common.purpose.cet.continuous': string
+  'common.purpose.cet.moduleSelectionSubHeading': string
   'common.purpose.cf.continuous': string
   'common.purpose.cf.description': string
   'common.purpose.cf.descriptionOnly': string
@@ -816,7 +818,6 @@ export interface StringsMap {
   'common.purpose.cv.serviceReliability': string
   'common.purpose.cv.subtitle': string
   'common.purpose.cv.verification': string
-  'common.purpose.errorTracking.longTitle': string
   'common.purpose.errorTracking.title': string
   'common.purpose.howToProceed': string
   'common.purpose.idp.fullName': string
@@ -1063,6 +1064,7 @@ export interface StringsMap {
   'common.subscriptions.ccm.cloudSpend': string
   'common.subscriptions.cd.serviceInstances': string
   'common.subscriptions.cd.services': string
+  'common.subscriptions.cet.agents': string
   'common.subscriptions.chaos.experiments': string
   'common.subscriptions.chaos.infrastructures': string
   'common.subscriptions.ci.developers': string
@@ -1088,6 +1090,8 @@ export interface StringsMap {
   'common.subscriptions.usage.cdSITooltip': string
   'common.subscriptions.usage.cdServiceTooltip': string
   'common.subscriptions.usage.cdUsers': string
+  'common.subscriptions.usage.cetAgentToolTip': string
+  'common.subscriptions.usage.cetAgents': string
   'common.subscriptions.usage.ciTooltip': string
   'common.subscriptions.usage.ciUsers': string
   'common.subscriptions.usage.cloudSpend': string
@@ -1593,6 +1597,7 @@ export interface StringsMap {
   'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
+  'defaultSettings.enableMatrixFieldNames': string
   'defaultSettings.enableNodeExecutionAuditEvents': string
   'defaultSettings.enforceGitExperience': string
   'defaultSettings.harnessDefault': string
@@ -3365,6 +3370,7 @@ export interface StringsMap {
   'projectsOrgs.goto': string
   'projectsOrgs.gotoBuilds': string
   'projectsOrgs.gotoCD': string
+  'projectsOrgs.gotoCET': string
   'projectsOrgs.gotoCF': string
   'projectsOrgs.gotoCHAOS': string
   'projectsOrgs.gotoCI': string
@@ -3423,6 +3429,7 @@ export interface StringsMap {
   'projectsOrgs.projectsInOrg': string
   'projectsOrgs.purposeList.cd': string
   'projectsOrgs.purposeList.ce': string
+  'projectsOrgs.purposeList.cet': string
   'projectsOrgs.purposeList.cf': string
   'projectsOrgs.purposeList.change': string
   'projectsOrgs.purposeList.chaos': string
@@ -7679,6 +7686,7 @@ export interface StringsMap {
   'cf.onboarding.readme.xamarinAndroid': string
   'cf.onboarding.readme.xamarinIOS': string
   'cf.onboarding.sdkKeyDescription': string
+  'cf.onboarding.sdkWarning': string
   'cf.onboarding.secret': string
   'cf.onboarding.selectEnvAndSdk': string
   'cf.onboarding.selectLanguage': string
@@ -8086,9 +8094,9 @@ export interface StringsMap {
   'ci.titleSettings': string
   'ci.usesLabel': string
   'ci.welcome': string
+  'et.continuous': string
   'et.homepage.learnMore': string
   'et.homepage.slogan': string
-  'et.longTitle': string
   'et.nav.settings': string
   'et.title': string
   'idp.adminHome': string

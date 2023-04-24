@@ -21,7 +21,6 @@ import type {
   OnetimeSpec,
   RecurringDowntimeSpec
 } from 'services/cv'
-import { timezoneToOffsetObjectWithDaylightSaving } from '@cv/utils/dateUtils'
 import {
   DowntimeCategory,
   DowntimeForm,
@@ -39,27 +38,17 @@ const getTimeRoundedOffToNext30Minutes = (): number => {
 
 export const getFormattedTime = ({
   field,
-  time,
-  timezone,
+  dateTime,
   format = DATE_PARSE_FORMAT
 }: {
   field?: DowntimeFormFields
-  time?: number
-  timezone?: string
+  dateTime?: string
   format?: string
 }): string => {
-  if (time && timezone) {
-    const offsetFromLocal = new Date().getTimezoneOffset()
-    const offsetFromSelectedTimezone =
-      Number(
-        timezoneToOffsetObjectWithDaylightSaving[timezone as keyof typeof timezoneToOffsetObjectWithDaylightSaving]
-      ) * 60
-
-    return moment(time * 1000)
-      .add(offsetFromSelectedTimezone + offsetFromLocal, 'minutes')
-      .format(format)
+  if (dateTime) {
+    return moment(dateTime).format(format)
   }
-  time = getTimeRoundedOffToNext30Minutes()
+  const time = getTimeRoundedOffToNext30Minutes()
   if (field === DowntimeFormFields.END_TIME) {
     return moment(time).add(30, 'm').format(format)
   } else if (field === DowntimeFormFields.RECURRENCE_END_TIME) {
@@ -86,21 +75,18 @@ export const getDowntimeInitialFormData = (sloDowntime?: DowntimeDTO): DowntimeF
       sloDowntime?.spec?.spec?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
     [DowntimeFormFields.START_TIME]: getFormattedTime({
       field: DowntimeFormFields.START_TIME,
-      time: sloDowntime?.spec?.spec?.startTime,
-      timezone: sloDowntime?.spec?.spec?.timezone
+      dateTime: sloDowntime?.spec?.spec?.startDateTime
     }),
     [DowntimeFormFields.END_TIME_MODE]: onetimeDowntimeSpec?.type || EndTimeMode.DURATION,
     [DowntimeFormFields.END_TIME]: getFormattedTime({
       field: DowntimeFormFields.END_TIME,
-      time: onetimeEndTimeBasedSpec?.endTime,
-      timezone: sloDowntime?.spec?.spec?.timezone
+      dateTime: onetimeEndTimeBasedSpec?.endDateTime
     }),
     [DowntimeFormFields.RECURRENCE_VALUE]: recurringDowntimeSpec?.downtimeRecurrence?.recurrenceValue || 2,
     [DowntimeFormFields.RECURRENCE_TYPE]: recurringDowntimeSpec?.downtimeRecurrence?.recurrenceType || 'Week',
     [DowntimeFormFields.RECURRENCE_END_TIME]: getFormattedTime({
       field: DowntimeFormFields.RECURRENCE_END_TIME,
-      time: recurringDowntimeSpec?.recurrenceEndTime,
-      timezone: sloDowntime?.spec?.spec?.timezone
+      dateTime: recurringDowntimeSpec?.recurrenceEndDateTime
     }),
     [DowntimeFormFields.ENTITIES_RULE_TYPE]: sloDowntime?.entitiesRule.type || EntitiesRuleType.IDENTIFIERS,
     [DowntimeFormFields.MS_LIST]: []
@@ -204,7 +190,7 @@ export const getDowntimeCategoryLabel = (
 }
 
 const getOneTimeBasedDowntimeSpec = (values: DowntimeForm): OnetimeSpec => {
-  const { endTimeMode, timezone } = values
+  const { endTimeMode } = values
   if (endTimeMode === EndTimeMode.DURATION) {
     const { durationValue, durationType } = values
     return {
@@ -216,7 +202,7 @@ const getOneTimeBasedDowntimeSpec = (values: DowntimeForm): OnetimeSpec => {
   } else {
     const { endTime } = values
     return {
-      endTime: getEpochTime(endTime as string, timezone)
+      endDateTime: endTime
     }
   }
 }
@@ -235,16 +221,6 @@ const getEntitiesRule = (msList: MonitoredServiceDetail[], entitiesRuleType: Ent
       entityIdentifiers: getEntityDetails(msList)
     } as EntityIdentifiersRule
   }
-}
-
-const getEpochTime = (time: string, timezone: string): number => {
-  const offsetFromLocal = new Date(time).getTimezoneOffset()
-  const offsetFromSelectedTimezone =
-    Number(
-      timezoneToOffsetObjectWithDaylightSaving[timezone as keyof typeof timezoneToOffsetObjectWithDaylightSaving]
-    ) * 60
-
-  return moment(time).unix() - (offsetFromSelectedTimezone + offsetFromLocal) * 60
 }
 
 export const createSLODowntimeRequestPayload = (
@@ -281,7 +257,7 @@ export const createSLODowntimeRequestPayload = (
         type,
         spec: {
           timezone,
-          startTime: getEpochTime(startTime as string, timezone),
+          startDateTime: startTime,
           type: endTimeMode,
           spec: getOneTimeBasedDowntimeSpec(values)
         } as OnetimeDowntimeSpec
@@ -304,7 +280,7 @@ export const createSLODowntimeRequestPayload = (
         type,
         spec: {
           timezone,
-          startTime: getEpochTime(startTime as string, timezone),
+          startDateTime: startTime,
           downtimeDuration: {
             durationValue,
             durationType
@@ -313,7 +289,7 @@ export const createSLODowntimeRequestPayload = (
             recurrenceValue,
             recurrenceType
           },
-          recurrenceEndTime: getEpochTime(recurrenceEndTime as string, timezone)
+          recurrenceEndDateTime: recurrenceEndTime
         } as RecurringDowntimeSpec
       }
     }

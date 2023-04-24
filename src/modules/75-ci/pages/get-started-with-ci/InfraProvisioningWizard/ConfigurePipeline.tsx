@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
@@ -371,6 +371,12 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
     enableNextBtn()
   }, [configuredGitConnector?.type, saveToGitFormikRef.current])
 
+  const defaultYAMLPath = useMemo((): string => {
+    return `${HARNESS_FOLDER_PREFIX}/pipelines/${getIdentifierFromValue(
+      getValidRepoName(repoName)
+    )}-${new Date().getTime()}.yaml`
+  }, [repoName])
+
   return (
     <Layout.Horizontal spacing="huge">
       <Layout.Vertical width="40%" spacing="medium">
@@ -419,9 +425,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
               })}
               initialValues={{
                 pipelineName: `Build ${getValidRepoName(repoName)}`,
-                yamlPath: `${HARNESS_FOLDER_PREFIX}/pipelines/${getIdentifierFromValue(
-                  getValidRepoName(repoName)
-                )}.yaml`,
+                yamlPath: defaultYAMLPath,
                 storeInGit: true,
                 createBranchIfNotExists: true
               }}
@@ -450,6 +454,14 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                           name="storeInGit"
                           label={getString('ci.getStartedWithCI.storeInGit')}
                           defaultChecked={true}
+                          onChange={event => {
+                            const isChecked = event.currentTarget.checked
+                            saveToGitFormikRef.current?.setValues(
+                              produce(saveToGitFormikRef.current.values, (draft: SavePipelineToRemoteInterface) => {
+                                return set(set(draft, 'storeInGit', isChecked), 'createBranchIfNotExists', isChecked)
+                              })
+                            )
+                          }}
                         />
                       </Layout.Vertical>
                       <Container padding={{ top: 'medium', bottom: 'medium' }}>

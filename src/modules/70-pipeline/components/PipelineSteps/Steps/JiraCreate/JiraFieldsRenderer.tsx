@@ -147,9 +147,16 @@ function GetMappedFieldComponent({
             allowableTypes={allowableTypes}
             onChange={items => {
               const valueArr = [] as string[]
-              ;(items as any)?.forEach((opt: any) => {
-                if (opt?.value) valueArr.push(opt?.value)
-              })
+              if (Array.isArray(items)) {
+                items.forEach((opt: any) => {
+                  if (opt?.value) valueArr.push(opt?.value)
+                })
+              }
+
+              if (typeof items === 'string') {
+                valueArr.push(items)
+              }
+
               props.formik.setFieldValue(formikFieldPath, valueArr.toString())
             }}
             value={processMultiSelectTypeInputRuntimeValues(get(props.formik?.values, formikFieldPath))}

@@ -86,7 +86,8 @@ const featureFlags = {
   CING_ENABLED: true,
   CENG_ENABLED: true,
   CFNG_ENABLED: true,
-  CHAOS_ENABLED: true
+  CHAOS_ENABLED: true,
+  CET_ENABLED: true
 }
 
 describe('Subscriptions Page', () => {
@@ -819,6 +820,45 @@ describe('Subscriptions Page', () => {
 
       expect(getByText('common.subscriptions.chaos.experiments')).toBeInTheDocument()
       expect(getByText('common.subscriptions.chaos.infrastructures')).toBeInTheDocument()
+    })
+
+    test('should render CET details', () => {
+      useGetModuleLicenseInfoMock.mockImplementation(() => {
+        return {
+          data: {
+            data: [
+              {
+                edition: Editions.ENTERPRISE,
+                status: 'ACTIVE',
+                numberOfAgents: 100,
+                moduleType: 'CET'
+              }
+            ],
+            status: 'SUCCESS'
+          },
+          refetch: jest.fn()
+        }
+      })
+
+      useGetAccountMock.mockImplementation(() => {
+        return {
+          data: {
+            data: {
+              accountId: '123'
+            },
+            status: 'SUCCESS'
+          },
+          refetch: jest.fn()
+        }
+      })
+
+      const { getByText } = render(
+        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CET }}>
+          <SubscriptionsPage />
+        </TestWrapper>
+      )
+
+      expect(getByText('common.subscriptions.cet.agents')).toBeInTheDocument()
     })
   })
 })

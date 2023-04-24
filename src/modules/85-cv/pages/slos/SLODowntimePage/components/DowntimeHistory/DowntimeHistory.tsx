@@ -20,6 +20,7 @@ import DowntimeFilters from '../DowntimeFilters/DowntimeFilters'
 import { FiltersContext } from '../../FiltersContext'
 import { getDuration } from '../DowntimeList/DowntimeList.utils'
 import { RenderServices } from '../DowntimeList/DowntimeList'
+import { defaultDateTime } from '../../SLODowntimePage.constants'
 import css from '../DowntimeList/DowntimeList.module.scss'
 
 interface DowntimeHistoryProps {
@@ -53,7 +54,7 @@ const DowntimeHistory = ({
 
   const RenderDowntimeType: Renderer<CellProps<DowntimeHistoryView>> = ({ row }) => {
     const downtimeHistory = row?.original
-    const { type = DowntimeWindowToggleViews.ONE_TIME } = downtimeHistory?.spec || {}
+    const { type = DowntimeWindowToggleViews.ONE_TIME } = downtimeHistory?.downtimeDetails || {}
 
     return (
       <Text title={type} className={css.firstLine}>
@@ -68,13 +69,13 @@ const DowntimeHistory = ({
     _time,
     downtimeHistory
   }: {
-    _time: number
+    _time?: string
     downtimeHistory: DowntimeHistoryView
   }): JSX.Element => {
-    const { timezone = 'Asia/Calcutta' } = downtimeHistory?.spec?.spec || {}
+    const { timezone = 'Asia/Calcutta' } = downtimeHistory?.downtimeDetails?.spec || {}
 
-    const date = getFormattedTime({ time: _time, timezone, format: 'LL' })
-    const timeLabel = `${getFormattedTime({ time: _time, timezone, format: 'LT' })} (${timezone})`
+    const date = getFormattedTime({ dateTime: _time, format: 'LL' })
+    const timeLabel = `${getFormattedTime({ dateTime: _time, format: 'LT' })} (${timezone})`
 
     return (
       <Layout.Vertical spacing={'xsmall'}>
@@ -90,16 +91,16 @@ const DowntimeHistory = ({
 
   const RenderStartTime: Renderer<CellProps<DowntimeHistoryView>> = ({ row }) => {
     const downtimeHistory = row?.original
-    const { startTime = 1 } = downtimeHistory
+    const { startDateTime = defaultDateTime } = downtimeHistory
 
-    return <RenderTime _time={startTime} downtimeHistory={downtimeHistory} />
+    return <RenderTime _time={startDateTime} downtimeHistory={downtimeHistory} />
   }
 
   const RenderEndTime: Renderer<CellProps<DowntimeHistoryView>> = ({ row }) => {
     const downtimeHistory = row?.original
-    const { endTime = 1 } = downtimeHistory
+    const { endDateTime = defaultDateTime } = downtimeHistory
 
-    return <RenderTime _time={endTime} downtimeHistory={downtimeHistory} />
+    return <RenderTime _time={endDateTime} downtimeHistory={downtimeHistory} />
   }
 
   const RenderDowntimeDuration: Renderer<CellProps<DowntimeHistoryView>> = ({ row }) => {

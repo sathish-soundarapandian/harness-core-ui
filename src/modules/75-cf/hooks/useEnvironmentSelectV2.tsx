@@ -73,10 +73,10 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
     name: searchTerm
   }
   const {
-    loading: loadingAllEnvironmentsFlags,
-    error: fetchAllEnvironmentsFlagsError,
-    data: allEnvironmentsFlags,
-    refetch: refetchAllEnvironmentsFlags
+    loading: loadingProjectFlags,
+    error: getProjectFlagsError,
+    data: projectFlags,
+    refetch: refetchProjectFlags
   } = useGetProjectFlags({
     identifier: projectIdentifier,
     queryParams,
@@ -156,7 +156,7 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
           onChange={opt => {
             setSelectedEnvironment(opt)
             if (opt.value === getString('common.allEnvironments')) {
-              refetchAllEnvironmentsFlags()
+              refetchProjectFlags()
               return
             }
             if (selectedEnvironment?.value !== opt.value) {
@@ -181,12 +181,11 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
         />
       )
     },
-    loading: loading || loadingAllEnvironmentsFlags,
-    error: error || fetchAllEnvironmentsFlagsError,
+    loading: loading || loadingProjectFlags,
+    error: error || getProjectFlagsError,
     refetch,
     environments: environmentList?.data?.content,
-    allEnvironmentsFlags:
-      selectedEnvironment?.value === getString('common.allEnvironments') ? allEnvironmentsFlags : null,
-    refetchAllEnvironmentsFlags
+    projectFlags: selectedEnvironment?.value === getString('common.allEnvironments') ? projectFlags : null,
+    refetchProjectFlags
   }
 }

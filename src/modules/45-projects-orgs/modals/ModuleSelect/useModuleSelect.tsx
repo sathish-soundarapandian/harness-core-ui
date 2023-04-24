@@ -244,7 +244,7 @@ export const useModuleSelectModal = ({
   const [selectedModuleName, setSelectedModuleName] = React.useState<ModuleName>()
   const [projectData, setProjectData] = React.useState<Project>()
 
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED, CET_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
   const modalProps: IDialogProps = {
     isOpen: true,
@@ -292,6 +292,11 @@ export const useModuleSelectModal = ({
   if (CHAOS_ENABLED) {
     infoCards.push({
       name: ModuleName.CHAOS
+    })
+  }
+  if (CET_ENABLED) {
+    infoCards.push({
+      name: ModuleName.CET
     })
   }
 

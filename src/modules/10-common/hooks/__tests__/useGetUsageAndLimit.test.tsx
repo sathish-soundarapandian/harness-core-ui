@@ -13,6 +13,7 @@ import {
   useGetCDLicenseUsageForServiceInstances,
   useGetCDLicenseUsageForServices
 } from 'services/cd-ng'
+import { useGetLicenseUsage as useGetCETUsage } from 'services/cet/cetComponents'
 import { useGetLicenseUsage } from 'services/cf'
 import { useGetUsage } from 'services/ci'
 import { useGetCCMLicenseUsage } from 'services/ce'
@@ -111,6 +112,22 @@ useGetSTOUsageMock.mockImplementation(() => {
         activeScans: {
           count: 24,
           displayName: 'Last 30 Days'
+        }
+      },
+      status: 'SUCCESS'
+    }
+  }
+})
+
+jest.mock('services/cet/cetComponents')
+const useGetCETUsageMock = useGetCETUsage as jest.MockedFunction<any>
+useGetCETUsageMock.mockImplementation(() => {
+  return {
+    data: {
+      data: {
+        activeAgents: {
+          count: 42,
+          displayName: 'Current'
         }
       },
       status: 'SUCCESS'

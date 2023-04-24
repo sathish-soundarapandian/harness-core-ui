@@ -23,7 +23,7 @@ const renderComponent = (props?: Partial<AllEnvironmentsFlagsListingProps>): Ren
     >
       <AllEnvironmentsFlagsListing
         environments={mockEnvs.data.content as any}
-        allEnvironmentsFlags={mockAllEnvsFlags}
+        projectFlags={mockAllEnvsFlags}
         refetchFlags={jest.fn()}
         deleteFlag={jest.fn()}
         queryParams={{

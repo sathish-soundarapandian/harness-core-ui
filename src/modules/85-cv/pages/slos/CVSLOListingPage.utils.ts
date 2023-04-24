@@ -383,7 +383,7 @@ export function setFilterValue<T>(callback: Dispatch<SetStateAction<T>>, value: 
 
 const defaultAllOption: SelectOption = { label: 'All', value: 'All' }
 
-const getDefaultAllOption = (
+export const getDefaultAllOption = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
 ): SelectOption => ({ label: getString('all'), value: getString('all') })
 
@@ -695,11 +695,13 @@ export const getServiceTitle = (
 export const isSLOFilterApplied = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   filterState: SLOFilterState
-) =>
-  getMonitoredServiceSLODashboardParams(getString, filterState.monitoredService) ||
-  getFilterValueForSLODashboardParams(getString, filterState.userJourney) ||
-  getFilterValueForSLODashboardParams(getString, filterState.targetTypes) ||
-  getFilterValueForSLODashboardParams(getString, filterState.sliTypes)
+): boolean =>
+  !!getMonitoredServiceSLODashboardParams(getString, filterState.monitoredService) ||
+  !!getFilterValueForSLODashboardParams(getString, filterState.userJourney)?.length ||
+  !!getFilterValueForSLODashboardParams(getString, filterState.targetTypes)?.length ||
+  !!getFilterValueForSLODashboardParams(getString, filterState.sliTypes)?.length ||
+  !!getFilterValueForSLODashboardParams(getString, filterState.evaluationType || defaultAllOption)?.length ||
+  !isEmpty(filterState.search)
 
 export function getSLOsNoDataMessageTitle({
   monitoredServiceIdentifier,

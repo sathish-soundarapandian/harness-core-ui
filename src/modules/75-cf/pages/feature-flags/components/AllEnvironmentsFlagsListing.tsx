@@ -19,7 +19,7 @@ import { formatDate } from '@cf/utils/CFUtils'
 import FlagEnvironmentsState from './FlagEnvironmentsState'
 export interface AllEnvironmentsFlagsListingProps {
   environments: EnvironmentResponseDTO[]
-  allEnvironmentsFlags: ProjectFlags
+  projectFlags: ProjectFlags
   refetchFlags: () => void
   deleteFlag: (data: string, mutateRequestOptions?: MutateRequestOptions<DeleteFeatureFlagQueryParams, void>) => void
   queryParams: DeleteFeatureFlagQueryParams
@@ -27,7 +27,7 @@ export interface AllEnvironmentsFlagsListingProps {
 
 export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> = ({
   environments,
-  allEnvironmentsFlags,
+  projectFlags,
   refetchFlags,
   deleteFlag,
   queryParams
@@ -126,7 +126,7 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
     [nonProdEnvs, prodEnvs, queryParams, gitSync]
   )
 
-  return <TableV2<FlagState> columns={allEnvironmentsColumns} data={allEnvironmentsFlags?.flags || []} />
+  return <TableV2<FlagState> columns={allEnvironmentsColumns} data={projectFlags?.flags || []} />
 }
 
 export default AllEnvironmentsFlagsListing

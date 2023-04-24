@@ -129,7 +129,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
   const updatedPath = path?.replace('pipeline.', '')
   const tableRef = React.useRef()
   const { openNestedPath } = useNestedAccordion()
-  const { NG_EXECUTION_INPUT } = useFeatureFlags()
+  const { NG_EXECUTION_INPUT, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   React.useLayoutEffect(() => {
     if (tableRef.current) {
@@ -306,6 +306,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                               label=""
                               disabled={readonly}
                               multiTextInputProps={{
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                 mini: true,
                                 defaultValueToReset: '',
                                 expressions,

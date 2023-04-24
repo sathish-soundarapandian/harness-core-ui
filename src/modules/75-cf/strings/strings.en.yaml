@@ -577,6 +577,7 @@ onboarding:
   validatingYourFlag: Validating your Flag
   validatingFlagInfo: 'Enable your Flag to verify that the event we received has the same value. Learn more about <a target="_blank" href="https://docs.harness.io/article/7ikyqtmjce-communication-sdks-harness-feature-flags">Events and Evaluation</a>'
   eventWeReceived: Event we received
+  sdkWarning: The SDK must run for at least 60 seconds to allow for metrics to be processed and sent. Also, please double-check that metrics were not inadvertently disabled in the SDK configuration.
   createdAndValidated: Congrats! You have created and validated your first Flag! <br><br>Now you can define which Targets and Target Groups this Flag should be enabled for, and then see how that affects your application.
   errorReceivingEvent: We couldn't receive a Flag status from your application, check the <a target="_blank" href="https://docs.harness.io/category/eyzngtupao-sdk-overview"> SDK reference guide</a> to ensure you've set up the SDK correctly, then toggle the Flag to try again.
   furtherAssistance: '<br>If you are still having issues,'

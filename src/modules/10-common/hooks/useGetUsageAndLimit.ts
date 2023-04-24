@@ -8,6 +8,7 @@
 import { useState } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
+import { useGetLicenseUsage as useGetCETUsage } from 'services/cet/cetComponents'
 import {
   useGetLicensesAndSummary,
   GetLicensesAndSummaryQueryParams,
@@ -30,6 +31,8 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useGetSRMLicenseUsage } from 'services/cv'
+
+import type { CETLicenseUsageDTO } from 'services/cet/cetSchemas'
 import type { UsageResult } from 'services/sto/stoSchemas'
 
 export interface UsageAndLimitReturn {
@@ -71,6 +74,9 @@ interface UsageProps {
   }
   cv?: {
     activeServices?: UsageProp
+  }
+  cet?: {
+    activeAgents?: UsageProp
   }
 }
 
@@ -315,6 +321,24 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     lazy: module !== ModuleName.CV
   })
 
+  const {
+    data: cetUsageData,
+    isLoading: loadingCETUsage,
+    error: cetUsageError,
+    refetch: refetchCETUsage
+  } = useGetCETUsage<CETLicenseUsageDTO>(
+    {
+      queryParams: {
+        accountId,
+        timestamp
+      }
+    },
+    {
+      retry: false,
+      enabled: module === ModuleName.CET
+    }
+  )
+
   function setUsageByModule(): void {
     switch (module) {
       case ModuleName.CI:
@@ -397,6 +421,19 @@ export function useGetUsage(module: ModuleName): UsageReturn {
           refetchUsage: refetchCVUsage
         })
         break
+
+      case ModuleName.CET:
+        setUsageData({
+          usage: {
+            cet: {
+              activeAgents: cetUsageData?.numberOfAgents
+            }
+          },
+          loadingUsage: loadingCETUsage,
+          usageErrorMsg: cetUsageError?.payload.message,
+          refetchUsage: refetchCETUsage
+        })
+        break
     }
   }
 
@@ -425,7 +462,11 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     loadingCDUsage,
     cvUsageData,
     loadingCVUsage,
-    cvUsageError
+    cvUsageError,
+    cetUsageData,
+    cetUsageError,
+    loadingCETUsage,
+    refetchCETUsage
   ])
 
   return usageData

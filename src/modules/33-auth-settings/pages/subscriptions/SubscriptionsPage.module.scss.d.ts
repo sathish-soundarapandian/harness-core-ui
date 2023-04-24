@@ -16,6 +16,7 @@ declare const styles: {
   readonly cardTitle: string
   readonly cd: string
   readonly ce: string
+  readonly cet: string
   readonly cf: string
   readonly ci: string
   readonly cv: string

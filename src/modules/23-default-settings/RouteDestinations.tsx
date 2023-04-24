@@ -105,6 +105,12 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ENFORCE_GIT_EXPERIENCE
   settingCategory: 'GIT_EXPERIENCE'
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_MATRIX_FIELD_NAME_SETTING, {
+  label: 'defaultSettings.enableMatrixFieldNames',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'PMS'
+})
+
 AuditTrailFactory.registerResourceHandler('SETTING', {
   moduleIcon: {
     name: 'nav-settings'

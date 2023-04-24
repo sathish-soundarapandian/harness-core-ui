@@ -44,7 +44,6 @@ import css from './DelegateCommandLineCreation.module.scss'
 
 interface DelegateCommandLineCreationProps {
   onDone: HideModal
-  oldDelegateCreation?: () => void
 }
 interface CommonStatesforAllClicksProps {
   commandTypeLocal: CommandType | undefined
@@ -58,7 +57,7 @@ const installDelegateLink =
 const intsallDelegateLinkTutorial =
   'https://developer.harness.io/docs/platform/Delegates/install-delegates/install-a-delegate'
 
-const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = ({ onDone, oldDelegateCreation }) => {
+const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = ({ onDone }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [delegateType, setDelegateType] = useState<DelegateCommandLineTypes>(DelegateCommandLineTypes.KUBERNETES)
@@ -396,21 +395,6 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
               <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
                 {getString('delegates.newDelegate')}
               </Text>
-              {oldDelegateCreation && (
-                <Button
-                  variation={ButtonVariation.LINK}
-                  onClick={() => {
-                    if (oldDelegateCreation) {
-                      trackEvent(DelegateActions.SwitchedToOldDelegateCreationModal, {
-                        category: Category.DELEGATE
-                      })
-                      oldDelegateCreation()
-                      onDone()
-                    }
-                  }}
-                  text={getString('delegates.commandLineCreation.oldWayToCreateDelegate')}
-                />
-              )}
             </Layout.Horizontal>
             <Text font={{ variation: FontVariation.SMALL }} margin={{ bottom: 'xxlarge' }}>
               {getString('delegates.commandLineCreation.installDelegateSubText')}{' '}
