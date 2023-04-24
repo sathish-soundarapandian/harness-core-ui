@@ -392,7 +392,8 @@ function SaveAsInputSet({
           permission={{
             permission: PermissionIdentifier.EDIT_PIPELINE,
             resource: {
-              resourceType: ResourceType.PIPELINE
+              resourceType: ResourceType.PIPELINE,
+              resourceIdentifier: pipeline?.identifier
             }
           }}
         />
