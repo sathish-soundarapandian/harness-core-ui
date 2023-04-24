@@ -334,6 +334,10 @@ describe('CD Pipeline List Page', () => {
           searchTerm: 'asd',
           size: 20,
           sort: ['lastUpdatedAt', 'DESC']
+        },
+        pathParams: undefined,
+        headers: {
+          'content-type': 'application/json'
         }
       }
     )
@@ -401,6 +405,10 @@ describe('CI Pipeline List Page', () => {
           searchTerm: undefined,
           size: 20,
           sort: ['executionSummaryInfo.lastExecutionTs', 'ASC']
+        },
+        pathParams: undefined,
+        headers: {
+          'content-type': 'application/json'
         }
       }
     )
