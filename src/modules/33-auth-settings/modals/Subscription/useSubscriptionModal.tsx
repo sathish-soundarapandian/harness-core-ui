@@ -168,6 +168,7 @@ const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose, c
           subscriptionDetails={subscriptionProps}
           setSubscriptionDetails={setSubscriptionProps}
           module={module}
+          invoiceData={invoiceData}
           canChangePaymentFrequency={view < SubscribeViews.PAYMENT_METHOD}
         />
       </Layout.Horizontal>
@@ -225,6 +226,7 @@ const LeftView = ({
           className={css.leftView}
           countries={countries}
           states={states}
+          module={module}
         />
       )
     case SubscribeViews.CALCULATE:

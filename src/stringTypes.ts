@@ -703,6 +703,7 @@ export interface StringsMap {
   'common.pagerDuty': string
   'common.paste': string
   'common.path': string
+  'common.payNow': string
   'common.payload': string
   'common.pendingInvitation': string
   'common.per': string
@@ -2056,11 +2057,13 @@ export interface StringsMap {
   'authSettings.confirmDisablePasswordStrength': string
   'authSettings.confirmDisableUserPasswordLogin': string
   'authSettings.confirmDisableWhitelistedDomains': string
+  'authSettings.costCalculator.alreadySubscribed': string
   'authSettings.costCalculator.comparePlans': string
   'authSettings.costCalculator.currentSubscribed': string
   'authSettings.costCalculator.developer.developer': string
   'authSettings.costCalculator.developer.developerDefinition': string
   'authSettings.costCalculator.developer.title': string
+  'authSettings.costCalculator.developer.titleCI': string
   'authSettings.costCalculator.mau.kMauFree': string
   'authSettings.costCalculator.mau.mMauFree': string
   'authSettings.costCalculator.mau.mau': string
@@ -2072,6 +2075,8 @@ export interface StringsMap {
   'authSettings.costCalculator.next': string
   'authSettings.costCalculator.premSupport.includedByDefault': string
   'authSettings.costCalculator.premSupport.onCallSupport': string
+  'authSettings.costCalculator.premSupport.premierSupport': string
+  'authSettings.costCalculator.premSupport.premierSupportDefinition': string
   'authSettings.costCalculator.premSupport.title': string
   'authSettings.costCalculator.premiumSupport': string
   'authSettings.costCalculator.switchTooltip': string
@@ -2226,6 +2231,7 @@ export interface StringsMap {
   'authSettings.pricePreview.calculatedNextStep': string
   'authSettings.pricePreview.discount': string
   'authSettings.pricePreview.title': string
+  'authSettings.proRata': string
   'authSettings.publicOAuthLoginDisabled': string
   'authSettings.publicOAuthLoginEnabled': string
   'authSettings.recomendation': string

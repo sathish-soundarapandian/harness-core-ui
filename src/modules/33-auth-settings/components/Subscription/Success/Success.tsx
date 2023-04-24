@@ -58,7 +58,10 @@ export const Success: React.FC<SuccessProps> = ({ module, subscriptionProps, inv
     >
       <img src={Hero} />
       <Layout.Horizontal spacing={'small'}>
-        <Text font={{ variation: FontVariation.H3, weight: 'bold' }} color={Color.ORANGE_500}>
+        <Text
+          font={{ variation: FontVariation.H3, weight: 'bold' }}
+          color={module.toLowerCase() === 'cf' ? Color.ORANGE_500 : Color.PRIMARY_5}
+        >
           {getString('authSettings.success.woohoo')}
         </Text>
         <Text font={{ variation: FontVariation.H3, weight: 'bold' }}>{getString('authSettings.success.title')}</Text>

@@ -814,6 +814,7 @@ function RunPipelineFormBasic({
                     executionStageList={executionStageList}
                     runModalHeaderTitle={formTitleText}
                     refetchPipeline={refetchPipeline}
+                    refetchTemplate={getTemplateFromPipeline}
                   />
                   <RequiredStagesInfo
                     selectedStageData={selectedStageData}

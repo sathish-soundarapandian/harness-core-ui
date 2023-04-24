@@ -592,7 +592,12 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       pathParams: { inputSetIdentifier: inputSetIdentifier },
       requestOptions: { headers: { 'Load-From-Cache': 'false' } }
     })
-    refetchTemplate({ requestOptions: { headers: { 'Load-From-Cache': 'false' } } })
+    refetchTemplate({
+      body: {
+        stageIdentifiers: []
+      },
+      requestOptions: { headers: { 'Load-From-Cache': 'false' } }
+    })
     refetchPipeline({ requestOptions: { headers: { 'Load-From-Cache': 'false' } } })
   }
 

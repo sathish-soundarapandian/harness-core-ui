@@ -31,6 +31,7 @@ import {
   ALL_STAGE_VALUE,
   getAllStageData,
   getAllStageItem,
+  getStageIdentifierFromStageData,
   SelectedStageData,
   StageSelectionData
 } from '@pipeline/utils/runPipelineUtils'
@@ -60,6 +61,7 @@ export interface RunModalHeaderProps {
   executionStageList: SelectOption[]
   runModalHeaderTitle: string
   refetchPipeline: any
+  refetchTemplate: any
 }
 
 export default function RunModalHeader(props: RunModalHeaderProps): React.ReactElement | null {
@@ -79,7 +81,8 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
     stageExecutionData,
     executionStageList,
     runModalHeaderTitle,
-    refetchPipeline
+    refetchPipeline,
+    refetchTemplate
   } = props
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -101,6 +104,12 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
 
   const handleReloadFromCache = () => {
     refetchPipeline({
+      requestOptions: { headers: { 'Load-From-Cache': 'false' } }
+    })
+    refetchTemplate({
+      body: {
+        stageIdentifiers: getStageIdentifierFromStageData(selectedStageData)
+      },
       requestOptions: { headers: { 'Load-From-Cache': 'false' } }
     })
   }

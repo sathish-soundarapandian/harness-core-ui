@@ -196,7 +196,7 @@ exports[`useSubscriptionModal render 1`] = `
                 class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
               >
                 <div
-                  class="PillToggle--optionBtns plan"
+                  class="PillToggle--optionBtns"
                 >
                   <div
                     class="PillToggle--item PillToggle--selected"
@@ -314,7 +314,7 @@ exports[`useSubscriptionModal render 1`] = `
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
                       >
-                        250
+                        100
                       </p>
                     </div>
                   </div>
@@ -669,6 +669,24 @@ exports[`useSubscriptionModal render 1`] = `
                 </p>
               </div>
             </div>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target Text--targetClass"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                    tabindex="0"
+                  >
+                    authSettings.costCalculator.premSupport.premierSupport
+                  </p>
+                </span>
+              </span>
+            </div>
           </div>
           <button
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withRightIcon Button--variation Button--variation-primary"
@@ -820,39 +838,686 @@ exports[`useSubscriptionModal render 1`] = `
                 0
               </div>
             </div>
-          </div>
-          <div
-            class="Layout--vertical StyledProps--main"
-          >
             <div
-              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+              class="Layout--horizontal StyledProps--main line StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small"
             >
               <p
-                class="StyledProps--font StyledProps--main StyledProps--font-variation-h2"
+                class="StyledProps--font StyledProps--main"
               >
                 total
               </p>
               <p
-                class="StyledProps--font StyledProps--main StyledProps--font-variation-h2"
+                class="StyledProps--font StyledProps--main"
               >
                 $0.00
-                common.perMonth
               </p>
+            </div>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+            >
+              authSettings.salesTax
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer />
+</div>
+`;
+
+exports[`useSubscriptionModal render CI credit card 1`] = `
+<div
+  class="bp3-dialog Dialog--dialog dialog bp3-dialog"
+>
+  <span
+    class="bp3-icon StyledProps--main Dialog--close"
+    data-icon="Stroke"
+  >
+    <svg
+      fill="none"
+      height="15"
+      width="15"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1 .8l6 6 6-6-12 12 6-6 6 6"
+        stroke="#8F90A6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+  <div
+    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h4 StyledProps--padding-bottom-large"
+        style="display: flex; align-items: center;"
+      >
+        <span
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+          data-icon="ci-solid"
+        >
+          <svg
+            fill="none"
+            height="24"
+            viewBox="0 0 32 32"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <lineargradient
+              gradientUnits="userSpaceOnUse"
+              id="ci-solid_svg__a"
+              x1="-5.398"
+              x2="11.398"
+              y1="11.398"
+              y2="37.398"
+            >
+              <stop
+                offset="0"
+                stop-color="#73dfe7"
+              />
+              <stop
+                offset="1"
+                stop-color="#0095f7"
+              />
+            </lineargradient>
+            <path
+              clip-rule="evenodd"
+              d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.155-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+              fill="url(#ci-solid_svg__a)"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        common.purpose.ci.continuous common.plans.subscription
+      </p>
+      <div
+        class="Layout--horizontal StyledProps--main view StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
+      >
+        <div
+          class="Layout--vertical StyledProps--main leftView"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex"
+            >
+              <div
+                class="Layout--vertical StyledProps--main StyledProps--flex"
+              >
+                <div
+                  class="MultiStepProgressIndicator--dotNameFailed"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+                    style="--text-line-clamp: 1;"
+                  />
+                </div>
+                <div
+                  class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+                />
+              </div>
+              <div
+                class="MultiStepProgressIndicator--statusBar"
+              >
+                <div
+                  class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+                />
+              </div>
             </div>
             <div
-              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+              class="Layout--horizontal StyledProps--main StyledProps--flex"
+            >
+              <div
+                class="Layout--vertical StyledProps--main StyledProps--flex"
+              >
+                <div
+                  class="MultiStepProgressIndicator--dotNameFailed"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+                    style="--text-line-clamp: 1;"
+                  />
+                </div>
+                <div
+                  class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+                />
+              </div>
+              <div
+                class="MultiStepProgressIndicator--statusBar"
+              >
+                <div
+                  class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+                />
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex"
+            >
+              <div
+                class="Layout--vertical StyledProps--main StyledProps--flex"
+              >
+                <div
+                  class="MultiStepProgressIndicator--dotNameFailed"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+                    style="--text-line-clamp: 1;"
+                  />
+                </div>
+                <div
+                  class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+                />
+              </div>
+              <div
+                class="MultiStepProgressIndicator--statusBar"
+              >
+                <div
+                  class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+                />
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex"
+            >
+              <div
+                class="Layout--vertical StyledProps--main StyledProps--flex"
+              >
+                <div
+                  class="MultiStepProgressIndicator--dotNameFailed"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+                    style="--text-line-clamp: 1;"
+                  />
+                </div>
+                <div
+                  class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--vertical StyledProps--main body StyledProps--padding-top-large StyledProps--padding-bottom-large"
+          >
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
             >
               <p
-                class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
               >
-                authSettings.autoRenewal
+                authSettings.choosePlan
+              </p>
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
+              >
+                <div
+                  class="PillToggle--optionBtns"
+                >
+                  <div
+                    class="PillToggle--item PillToggle--selected"
+                    data-name="toggle-option-one"
+                    role="button"
+                    tabindex="0"
+                  >
+                    Team
+                  </div>
+                  <div
+                    class="PillToggle--item"
+                    data-name="toggle-option-two"
+                    role="button"
+                    tabindex="0"
+                  >
+                    Enterprise
+                  </div>
+                </div>
+                <a
+                  href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+                  target="_blank"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                  >
+                    authSettings.costCalculator.comparePlans
+                  </p>
+                </a>
+              </div>
+            </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--margin-bottom-large"
+            >
+              <div
+                class="bp3-card bp3-elevation-0 Card--card"
+              >
+                <div
+                  class="Layout--vertical StyledProps--main"
+                >
+                  <div
+                    class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+                    >
+                      authSettings.costCalculator.developer.titleCI
+                    </p>
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                    >
+                      <span
+                        class="bp3-popover-wrapper"
+                      >
+                        <span
+                          class="bp3-popover-target Text--targetClass"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                            tabindex="0"
+                          >
+                            authSettings.costCalculator.developer.developer
+                          </p>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+                  >
+                    <div
+                      class="bp3-slider slider"
+                    >
+                      <div
+                        class="bp3-slider-track"
+                      >
+                        <div
+                          class="bp3-slider-progress bp3-intent-primary"
+                          style="left: 0.00%; right: 100.00%; top: 0px;"
+                        />
+                        <div
+                          class="bp3-slider-progress"
+                          style="left: 0.00%; right: 100.00%; top: 0px;"
+                        />
+                        <div
+                          class="bp3-slider-progress"
+                          style="left: 0.00%; right: 0.00%; top: 0px;"
+                        />
+                      </div>
+                      <div
+                        class="bp3-slider-axis"
+                      >
+                        <div
+                          class="bp3-slider-label"
+                          style="left: 0.00%;"
+                        >
+                          0
+                        </div>
+                        <div
+                          class="bp3-slider-label"
+                          style="left: 16.67%;"
+                        >
+                          50
+                        </div>
+                        <div
+                          class="bp3-slider-label"
+                          style="left: 33.33%;"
+                        >
+                          100
+                        </div>
+                        <div
+                          class="bp3-slider-label"
+                          style="left: 50.00%;"
+                        >
+                          150
+                        </div>
+                        <div
+                          class="bp3-slider-label"
+                          style="left: 66.67%;"
+                        >
+                          200
+                        </div>
+                        <div
+                          class="bp3-slider-label"
+                          style="left: 83.33%;"
+                        >
+                          250
+                        </div>
+                        <div
+                          class="bp3-slider-label"
+                          style="left: 100.00%;"
+                        >
+                          300
+                        </div>
+                      </div>
+                      <span
+                        class="bp3-slider-handle"
+                        style="left: calc(0.00% - 0px);"
+                        tabindex="0"
+                      >
+                        <span
+                          class="bp3-slider-label"
+                        >
+                          0
+                        </span>
+                      </span>
+                    </div>
+                    <div
+                      class="TextInput--main"
+                    >
+                      <div
+                        class="bp3-input-group textInput"
+                      >
+                        <input
+                          class="bp3-input"
+                          data-testid="slider-input"
+                          type="text"
+                          value="0"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <br />
+                  <div
+                    class="Layout--horizontal StyledProps--main subscriptionInfo StyledProps--flex StyledProps--flex-justifyContent-space-between"
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                    >
+                      <div
+                        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          authSettings.costCalculator.currentSubscribed
+                        </p>
+                        <div
+                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                          >
+                            0
+                          </p>
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                          >
+                            Free common.subscriptions.overview.plan
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                    >
+                      <div
+                        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          authSettings.costCalculator.using
+                        </p>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+                        >
+                          0
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="Layout--horizontal StyledProps--main subscriptionInfo"
+                    >
+                      <div
+                        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          authSettings.recomendation
+                        </p>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
+                        >
+                          0
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main premSupport StyledProps--padding-small StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <label
+                    class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox checkbox StyledProps--main"
+                  >
+                    <input
+                      disabled=""
+                      size="12"
+                      tabindex="0"
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                  </label>
+                </span>
+              </span>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between StyledProps--padding-top-xsmall"
+                style="width: 90%;"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-bold"
+                    style="display: flex; align-items: center;"
+                  >
+                    <span
+                      class="bp3-icon bp3-icon-crown StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-orange700"
+                      icon="crown"
+                    >
+                      <svg
+                        data-icon="crown"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        width="16"
+                      >
+                        <desc>
+                          crown
+                        </desc>
+                        <path
+                          d="M2 6l3 2 3-4 3 4 3-2-1 6H3L2 6zm6-5a1 1 0 110 2 1 1 0 010-2zM1 3a1 1 0 110 2 1 1 0 010-2zm14 0a1 1 0 110 2 1 1 0 010-2zM3 13h10v2H3v-2z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                    authSettings.costCalculator.premSupport.title
+                  </p>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  >
+                    authSettings.costCalculator.premSupport.onCallSupport
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                >
+                  authSettings.costCalculator.premSupport.includedByDefault
+                </p>
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target Text--targetClass"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                    tabindex="0"
+                  >
+                    authSettings.costCalculator.premSupport.premierSupport
+                  </p>
+                </span>
+              </span>
+            </div>
+          </div>
+          <button
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withRightIcon Button--variation Button--variation-primary"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              authSettings.costCalculator.next
+            </span>
+            <span
+              class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+              icon="chevron-right"
+            >
+              <svg
+                data-icon="chevron-right"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  chevron-right
+                </desc>
+                <path
+                  d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+        <div
+          class="Layout--vertical StyledProps--main pricePreview ci"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h4 StyledProps--padding-bottom-large"
+          >
+            authSettings.pricePreview.title
+          </p>
+          <div
+            class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-bottom-large"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              common.billed
+            </p>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+            >
+              <p
+                class="StyledProps--font StyledProps--main selected"
+              >
+                common.monthly
+              </p>
+              <label
+                class="Toggle--toggle paymentFrequency StyledProps--main"
+                data-testid="toggle"
+              >
+                <input
+                  class="Toggle--input"
+                  type="checkbox"
+                  value=""
+                />
+                <span
+                  class="Toggle--toggleIcon"
+                />
+                
+              </label>
+              <div
+                class="Layout--horizontal StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  common.yearly
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  authSettings.pricePreview.discount
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-bottom-large"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              common.subscriptions.overview.details
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-bold"
+            >
+              Team common.subscriptions.overview.plan
+            </p>
+            <div
+              class="Layout--vertical StyledProps--main line StyledProps--padding-top-small StyledProps--padding-bottom-small"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-bottom-small"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
+                >
+                  common.subscriptions.usage.developers
+                </p>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  0 x $0.00 common.perDeveloper
+                </p>
+                0
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main line StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                total
               </p>
               <p
-                class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                class="StyledProps--font StyledProps--main"
               >
-                authSettings.salesTax
+                $0.00
               </p>
             </div>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+            >
+              authSettings.salesTax
+            </p>
           </div>
         </div>
       </div>

@@ -19,11 +19,12 @@ interface SubscriptionDetailsProps {
   subscriptionDetails: SubscriptionProps
   premiumSupportAmount: number
   products: Product[]
+  totalAmount?: number
 }
 
 const TaxLine: React.FC<{ taxAmount?: number }> = ({ taxAmount }) => {
   const { getString } = useStrings()
-  const taxAmountDescr = taxAmount ? taxAmount : getString('authSettings.pricePreview.calculatedNextStep')
+  const taxAmountDescr = !isNil(taxAmount) ? taxAmount : getString('authSettings.pricePreview.calculatedNextStep')
   return (
     <Layout.Horizontal
       flex={{ justifyContent: 'space-between' }}
@@ -48,7 +49,21 @@ const PremiumSupportLine: React.FC<{ premiumSupportAmount: number }> = ({ premiu
       padding={{ top: 'small', bottom: 'small' }}
     >
       <Text>{getString('authSettings.costCalculator.premiumSupport')}</Text>
-      <Text>{premiumSupportAmountDescr}</Text>
+      <Text>{`${premiumSupportAmountDescr}`}</Text>
+    </Layout.Horizontal>
+  )
+}
+const TotalAmount: React.FC<{ totalAmount: number }> = ({ totalAmount }) => {
+  const { getString } = useStrings()
+
+  return (
+    <Layout.Horizontal
+      flex={{ justifyContent: 'space-between' }}
+      className={css.line}
+      padding={{ top: 'small', bottom: 'small' }}
+    >
+      <Text>{getString('total')}</Text>
+      <Text>{getAmountInCurrency(CurrencyType.USD, totalAmount)}</Text>
     </Layout.Horizontal>
   )
 }
@@ -56,7 +71,8 @@ const PremiumSupportLine: React.FC<{ premiumSupportAmount: number }> = ({ premiu
 const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
   subscriptionDetails,
   products,
-  premiumSupportAmount
+  premiumSupportAmount,
+  totalAmount
 }) => {
   const { getString } = useStrings()
   const { premiumSupport } = subscriptionDetails
@@ -73,7 +89,12 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
         return <PricePreviewLine {...product} key={product.description} unit={unit} minValue={minValue} />
       })}
       {premiumSupport && <PremiumSupportLine premiumSupportAmount={premiumSupportAmount} />}
+      {<TotalAmount totalAmount={totalAmount || 0} />}
       {!isNil(subscriptionDetails.taxAmount) && <TaxLine taxAmount={subscriptionDetails.taxAmount} />}
+
+      {isNil(subscriptionDetails.taxAmount) && (
+        <Text font={{ size: 'xsmall' }}>{getString('authSettings.salesTax')}</Text>
+      )}
     </Layout.Vertical>
   )
 }
