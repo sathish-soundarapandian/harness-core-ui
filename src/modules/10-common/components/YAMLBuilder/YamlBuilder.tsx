@@ -157,7 +157,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     onEditorResize,
     customCss,
     setPlugin,
-    setPluginOpnStatus
+    setPluginOpnStatus,
+    setSelectedEntityFromYAML
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
@@ -169,7 +170,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
   const [_editorAction, setEditorAction] = useState<EditorAction>()
-  const [pipelineEntity, setPipelineEntity] = useState<PipelineEntity>()
+  const [pipelineEntityType, setPipelineEntityType] = useState<PipelineEntity>()
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
   const yamlValidationErrorsRef = useRef<Map<number, string>>()
@@ -204,10 +205,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       } as YamlBuilderHandlerBinding),
     [currentYaml]
   )
-
-  useEffect(() => {
-    setPipelineEntity(PipelineEntity.Step)
-  }, [])
 
   useEffect(() => {
     bind?.(handler)
@@ -874,7 +871,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
     },
-    [pipelineEntity, editorRef.current?.editor]
+    [pipelineEntityType, editorRef.current?.editor]
   )
 
   const obtainYAMLForEditorActionClick = useCallback(
@@ -908,6 +905,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const stepYAMLPath = getStepYAMLPathForStepInsideAStage(closestStageIndex, closestStepIndex)
           const pluginAsStep = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
           setPlugin?.(pluginAsStep)
+          setPipelineEntityType(PipelineEntity.Step) //TODO deduce pipelineEntityType here
+          setSelectedEntityFromYAML?.({ entityType: PipelineEntity.Step, entityAsObj: pluginAsStep })
           const stepValueTokens = yamlStringify(pluginAsStep).split('\n').length
           return stepValueTokens
         } catch (e) {
@@ -999,7 +998,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         shouldInsertYAML &&
         cursorPosition &&
         editorRef.current?.editor &&
-        pipelineEntity
+        pipelineEntityType
       ) {
         let updatedYAML = currentYaml
         try {
@@ -1062,7 +1061,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             isPluginUpdate,
             closestStepIndex: closestStepIndexInCurrentStage,
             startStepIndex: stepCountInPrecedingStage,
-            selectedPipelineEntity: pipelineEntity
+            selectedPipelineEntity: pipelineEntityType
           })
         } catch (e) {
           // ignore error

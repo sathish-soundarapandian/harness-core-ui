@@ -14,8 +14,7 @@ import css from './PipelineConfigPanel.module.scss'
 
 interface PipelineConfigPanelInterface {
   height?: React.CSSProperties['height']
-  selectedEntityTypeFromYAML?: PipelineEntity
-  selectedEntityFromYAML?: Record<string, any>
+  entitySelectedFromYAML?: { entityType: PipelineEntity; entityAsObj: Record<string, any> }
   onAddUpdateEntity?: (values: Record<string, any>) => void
 }
 
@@ -25,7 +24,8 @@ enum PipelineConfigPanelView {
 }
 
 export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.ReactElement {
-  const { height, selectedEntityTypeFromYAML, selectedEntityFromYAML } = props
+  const { height, entitySelectedFromYAML } = props
+  const { entityType, entityAsObj } = entitySelectedFromYAML || {}
   const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false)
   const [pipelineEntity, setPipelineEntity] = useState<PipelineEntity>()
   const [pipelineEntitySubType, setPipelineEntitySubType] = useState<PipelineEntitySubType>()
@@ -44,10 +44,10 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const [breadCrumbs, setBreadCrumbs] = useState<IBreadcrumbProps[]>(initialBreadCrumbs)
 
   useEffect(() => {
-    if (selectedEntityTypeFromYAML) {
-      const configOptionForEntityType = ConfigOptionsMapWithAdditionalOptions.get(selectedEntityTypeFromYAML)
+    if (entityType) {
+      const configOptionForEntityType = ConfigOptionsMapWithAdditionalOptions.get(entityType)
       if (configOptionForEntityType) {
-        setPipelineEntity(selectedEntityTypeFromYAML)
+        setPipelineEntity(entityType)
         setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)
         if (configOptionForEntityType.drillDown.hasSubTypes) {
           const matchingSubTypeConfigOption = configOptionForEntityType.drillDown.subTypes?.find(
@@ -55,17 +55,17 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
               option: PipelineConfigOptionInterface & {
                 type: PipelineEntitySubType
               }
-            ) => option.type.toLowerCase() === get(selectedEntityFromYAML, 'type').toLowerCase()
+            ) => option.type.toLowerCase() === get(entityAsObj, 'type')?.toLowerCase()
           )
           setPipelineConfigOption(matchingSubTypeConfigOption)
           setPipelineEntitySubType(matchingSubTypeConfigOption?.type)
         } else {
           setPipelineConfigOption(configOptionForEntityType)
         }
-        updateBreadCrumbs(selectedEntityTypeFromYAML, configOptionForEntityType)
+        updateBreadCrumbs(entityType, configOptionForEntityType)
       }
     }
-  }, [selectedEntityTypeFromYAML, selectedEntityFromYAML])
+  }, [entityType, entityAsObj])
 
   const resetPipelineConfigPanel = useCallback(() => {
     setPipelineEntity(undefined)
@@ -178,14 +178,14 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
       case PipelineEntity.Step: {
         switch (pipelineEntitySubType) {
           case Step.Run:
-            return get(selectedEntityFromYAML, 'spec')
+            return get(entityAsObj, 'spec')
           case Step.Plugin:
-            return { uses: get(selectedEntityFromYAML, 'spec.uses'), ...get(selectedEntityFromYAML, 'spec.with') }
+            return { uses: get(entityAsObj, 'spec.uses'), ...get(entityAsObj, 'spec.with') }
         }
       }
     }
     return {}
-  }, [pipelineEntity, pipelineEntitySubType, selectedEntityFromYAML])
+  }, [pipelineEntity, pipelineEntitySubType, entityAsObj])
 
   const renderPipelineConfigOptionDetails = useCallback((): React.ReactElement => {
     const { hasSubTypes, subTypes, nodeView } = pipelineConfigOption?.drillDown || {}
@@ -216,7 +216,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         </Layout.Vertical>
       </Formik>
     )
-  }, [pipelineConfigOption, pipelineEntity, pipelineEntitySubType, selectedEntityFromYAML])
+  }, [pipelineConfigOption, pipelineEntity, pipelineEntitySubType, entityAsObj])
 
   const renderPipelineConfigPanelHeader = useCallback((): React.ReactElement => {
     const { label, drillDown } = pipelineConfigOption || {}

@@ -60,6 +60,13 @@ export interface YamlBuilderProps {
   customCss?: React.HTMLAttributes<HTMLDivElement>['className']
   setPlugin?: (plugin: Record<string, any>) => void
   setPluginOpnStatus?: (status: Status) => void
+  setSelectedEntityFromYAML?: ({
+    entityType,
+    entityAsObj
+  }: {
+    entityType: PipelineEntity
+    entityAsObj: Record<string, any>
+  }) => void
 }
 
 export interface CompletionItemInterface {

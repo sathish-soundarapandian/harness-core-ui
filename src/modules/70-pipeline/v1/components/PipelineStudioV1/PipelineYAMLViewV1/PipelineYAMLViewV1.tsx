@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { isEqual, omit } from 'lodash-es'
 import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
@@ -13,7 +13,7 @@ import { parse } from '@common/utils/YamlHelperMethods'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { Status } from '@common/utils/Constants'
-import { PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
+import type { PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
 import { useStrings } from 'framework/strings'
 import type { EntityValidityDetails, PipelineInfoConfig } from 'services/pipeline-ng'
 import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/useEnableEditModes'
@@ -50,6 +50,8 @@ function PipelineYAMLViewV1(): React.ReactElement {
   const { getString } = useStrings()
   const [_selectedEntity, setSelectedEntity] = useState<Record<string, any>>()
   const [_entityAddUpdateOpnStatus, setEntityAddUpdateOpnStatus] = useState<Status>()
+  const [entitySelectedFromYAML, setSelectedEntityFromYAML] =
+    useState<{ entityType: PipelineEntity; entityAsObj: Record<string, any> }>()
 
   // setup polling
   React.useEffect(() => {
@@ -117,12 +119,6 @@ function PipelineYAMLViewV1(): React.ReactElement {
     [isReadonly]
   )
 
-  const getStudioEntityTypeFromYAML = useCallback((): PipelineEntity | undefined => {
-    if (_selectedEntity) {
-      return PipelineEntity.Step
-    }
-  }, [_selectedEntity])
-
   return (
     <Layout.Horizontal>
       <YAMLBuilder
@@ -139,6 +135,7 @@ function PipelineYAMLViewV1(): React.ReactElement {
         schema={pipelineSchema?.data}
         setPlugin={setSelectedEntity}
         setPluginOpnStatus={setEntityAddUpdateOpnStatus}
+        setSelectedEntityFromYAML={setSelectedEntityFromYAML}
         {...yamlEditorCustomHeaderProp}
         {...yamlOrJsonProp}
       />
@@ -154,11 +151,7 @@ function PipelineYAMLViewV1(): React.ReactElement {
         //   pluginAddUpdateOpnStatus={entityAddUpdateOpnStatus}
         // />
         <Container width="24vw">
-          <PipelineConfigPanel
-            height={'calc(100vh - 150px)'}
-            selectedEntityFromYAML={_selectedEntity}
-            selectedEntityTypeFromYAML={getStudioEntityTypeFromYAML()}
-          />
+          <PipelineConfigPanel height={'calc(100vh - 150px)'} entitySelectedFromYAML={entitySelectedFromYAML} />
         </Container>
       ) : null}
     </Layout.Horizontal>
