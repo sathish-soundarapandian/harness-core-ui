@@ -223,9 +223,9 @@ function RetryPipeline({
     planExecutionId: planExecutionIdentifier,
     queryParams: {
       orgIdentifier,
-      resolveExpressions: true,
       projectIdentifier,
-      accountIdentifier: accountId
+      accountIdentifier: accountId,
+      resolveExpressionsType: 'RESOLVE_TRIGGER_EXPRESSIONS'
     },
     requestOptions: {
       headers: {

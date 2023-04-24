@@ -404,6 +404,7 @@ export interface AccessControlCheckError {
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -618,11 +619,11 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   )[]
@@ -985,6 +986,7 @@ export interface ContainerInfraYamlSpec {
   automountServiceAccountToken?: boolean
   connectorRef: string
   containerSecurityContext?: SecurityContext
+  harnessImageConnectorRef?: string
   initTimeout?: string
   labels?: {
     [key: string]: string
@@ -1566,6 +1568,7 @@ export interface Error {
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1937,6 +1940,7 @@ export interface ErrorMetadata {
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   errorMessage?: string
 }
 
@@ -2044,7 +2048,6 @@ export interface ExecutionMetaDataResponse {
   executionYaml?: string
   inputYaml?: string
   planExecutionId: string
-  resolvedYaml?: string
   triggerPayload?: TriggerPayload
 }
 
@@ -2534,6 +2537,7 @@ export interface Failure {
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4340,6 +4344,7 @@ export interface ResourceDTO {
     | 'NG_ACCOUNT_DETAILS'
     | 'BUDGET_GROUP'
     | 'PIPELINE_EXECUTION'
+    | 'IP_ALLOWLIST_CONFIG'
 }
 
 export interface ResourceScope {
@@ -5038,6 +5043,7 @@ export interface ResponseMessage {
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -10036,6 +10042,7 @@ export interface PostExecutionRollbackQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   identifier: string
+  stageNodeExecutionIds: string
 }
 
 export interface PostExecutionRollbackPathParams {
@@ -12487,6 +12494,7 @@ export interface GetInputsetYamlQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   resolveExpressions?: boolean
+  resolveExpressionsType?: 'RESOLVE_ALL_EXPRESSIONS' | 'RESOLVE_TRIGGER_EXPRESSIONS' | 'UNKNOWN'
 }
 
 export interface GetInputsetYamlPathParams {
@@ -12549,6 +12557,7 @@ export interface GetInputsetYamlV2QueryParams {
   orgIdentifier: string
   projectIdentifier: string
   resolveExpressions?: boolean
+  resolveExpressionsType?: 'RESOLVE_ALL_EXPRESSIONS' | 'RESOLVE_TRIGGER_EXPRESSIONS' | 'UNKNOWN'
 }
 
 export interface GetInputsetYamlV2PathParams {
@@ -15083,6 +15092,188 @@ export const nGTriggerConfigV2Promise = (
     props,
     signal
   )
+
+export interface TriggerHistoryEventCorrelationQueryParams {
+  accountIdentifier: string
+  page?: number
+  size?: number
+  sort?: string[]
+}
+
+export interface TriggerHistoryEventCorrelationPathParams {
+  eventCorrelationId: string
+}
+
+export type TriggerHistoryEventCorrelationProps = Omit<
+  GetProps<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerHistoryEventCorrelationQueryParams,
+    TriggerHistoryEventCorrelationPathParams
+  >,
+  'path'
+> &
+  TriggerHistoryEventCorrelationPathParams
+
+/**
+ * Get Trigger history event correlation
+ */
+export const TriggerHistoryEventCorrelation = ({
+  eventCorrelationId,
+  ...props
+}: TriggerHistoryEventCorrelationProps) => (
+  <Get<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerHistoryEventCorrelationQueryParams,
+    TriggerHistoryEventCorrelationPathParams
+  >
+    path={`/triggers/eventHistory/eventCorrelation/${eventCorrelationId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseTriggerHistoryEventCorrelationProps = Omit<
+  UseGetProps<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerHistoryEventCorrelationQueryParams,
+    TriggerHistoryEventCorrelationPathParams
+  >,
+  'path'
+> &
+  TriggerHistoryEventCorrelationPathParams
+
+/**
+ * Get Trigger history event correlation
+ */
+export const useTriggerHistoryEventCorrelation = ({
+  eventCorrelationId,
+  ...props
+}: UseTriggerHistoryEventCorrelationProps) =>
+  useGet<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerHistoryEventCorrelationQueryParams,
+    TriggerHistoryEventCorrelationPathParams
+  >(
+    (paramsInPath: TriggerHistoryEventCorrelationPathParams) =>
+      `/triggers/eventHistory/eventCorrelation/${paramsInPath.eventCorrelationId}`,
+    { base: getConfig('pipeline/api'), pathParams: { eventCorrelationId }, ...props }
+  )
+
+/**
+ * Get Trigger history event correlation
+ */
+export const triggerHistoryEventCorrelationPromise = (
+  {
+    eventCorrelationId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerHistoryEventCorrelationQueryParams,
+    TriggerHistoryEventCorrelationPathParams
+  > & { eventCorrelationId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerHistoryEventCorrelationQueryParams,
+    TriggerHistoryEventCorrelationPathParams
+  >(getConfig('pipeline/api'), `/triggers/eventHistory/eventCorrelation/${eventCorrelationId}`, props, signal)
+
+export interface TriggerEventHistoryNewQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  targetIdentifier: string
+  searchTerm?: string
+  page?: number
+  size?: number
+  sort?: string[]
+}
+
+export interface TriggerEventHistoryNewPathParams {
+  triggerIdentifier: string
+}
+
+export type TriggerEventHistoryNewProps = Omit<
+  GetProps<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerEventHistoryNewQueryParams,
+    TriggerEventHistoryNewPathParams
+  >,
+  'path'
+> &
+  TriggerEventHistoryNewPathParams
+
+/**
+ * Get Trigger event history
+ */
+export const TriggerEventHistoryNew = ({ triggerIdentifier, ...props }: TriggerEventHistoryNewProps) => (
+  <Get<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerEventHistoryNewQueryParams,
+    TriggerEventHistoryNewPathParams
+  >
+    path={`/triggers/eventHistory/${triggerIdentifier}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseTriggerEventHistoryNewProps = Omit<
+  UseGetProps<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerEventHistoryNewQueryParams,
+    TriggerEventHistoryNewPathParams
+  >,
+  'path'
+> &
+  TriggerEventHistoryNewPathParams
+
+/**
+ * Get Trigger event history
+ */
+export const useTriggerEventHistoryNew = ({ triggerIdentifier, ...props }: UseTriggerEventHistoryNewProps) =>
+  useGet<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerEventHistoryNewQueryParams,
+    TriggerEventHistoryNewPathParams
+  >((paramsInPath: TriggerEventHistoryNewPathParams) => `/triggers/eventHistory/${paramsInPath.triggerIdentifier}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { triggerIdentifier },
+    ...props
+  })
+
+/**
+ * Get Trigger event history
+ */
+export const triggerEventHistoryNewPromise = (
+  {
+    triggerIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerEventHistoryNewQueryParams,
+    TriggerEventHistoryNewPathParams
+  > & { triggerIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerEventHistoryNewQueryParams,
+    TriggerEventHistoryNewPathParams
+  >(getConfig('pipeline/api'), `/triggers/eventHistory/${triggerIdentifier}`, props, signal)
 
 export type GenerateWebhookTokenProps = Omit<GetProps<RestResponseString, Failure | Error, void, void>, 'path'>
 
