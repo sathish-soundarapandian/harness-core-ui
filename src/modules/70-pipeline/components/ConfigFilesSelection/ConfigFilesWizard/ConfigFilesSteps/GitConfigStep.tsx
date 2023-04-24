@@ -61,7 +61,7 @@ export function GitConfigStep({
   const gitConnectionType: string = modifiedPrevStepData?.store === ConfigFilesMap.Git ? 'connectionType' : 'type'
   const connectionType =
     /* istanbul ignore next */
-    modifiedPrevStepData.connectorRef?.connector.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    modifiedPrevStepData.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
     modifiedPrevStepData.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
@@ -74,10 +74,10 @@ export function GitConfigStep({
   }, [prevStepData])
 
   const getInitialValues = React.useCallback((): any => {
-    if (modifiedPrevStepData.identifier) {
+    if (modifiedPrevStepData?.identifier) {
       return {
         ...modifiedPrevStepData,
-        identifier: modifiedPrevStepData.identifier,
+        identifier: modifiedPrevStepData?.identifier,
         skipResourceVersioning: modifiedPrevStepData.skipResourceVersioning,
         enableDeclarativeRollback: modifiedPrevStepData.enableDeclarativeRollback,
         repoName: getRepositoryName(modifiedPrevStepData, {
@@ -86,7 +86,7 @@ export function GitConfigStep({
             store: {
               type: modifiedPrevStepData?.store,
               spec: {
-                connectorRef: modifiedPrevStepData.connectorRef?.connector.identifier,
+                connectorRef: modifiedPrevStepData.connectorRef?.connector?.identifier,
                 repoName: modifiedPrevStepData.repoName
               }
             }
