@@ -283,6 +283,7 @@ export interface StringsMap {
   'common.editYaml': string
   'common.enableGitSyncPipeline': string
   'common.endTime': string
+  'common.entitlement': string
   'common.entityPlaceholderText': string
   'common.entityReferenceSubTitle': string
   'common.entityReferenceTitle': string
@@ -324,6 +325,7 @@ export interface StringsMap {
   'common.expand': string
   'common.expiration': string
   'common.expiryDate': string
+  'common.expiryDateCredit': string
   'common.exploreAllPlans': string
   'common.explorePlans': string
   'common.exploreSaaSPlans': string
@@ -661,11 +663,13 @@ export interface StringsMap {
   'common.newLines': string
   'common.newName': string
   'common.newVersion': string
+  'common.nextExpiringDate': string
   'common.nextStep': string
   'common.noAPIKeys': string
   'common.noActiveServiceData': string
   'common.noAvailableTags': string
   'common.noConnectorAvailable': string
+  'common.noCreditInfoData': string
   'common.noDelegateForTask': string
   'common.noDelegateLogs': string
   'common.noDeployments': string
@@ -1055,6 +1059,7 @@ export interface StringsMap {
   'common.stage': string
   'common.stageName': string
   'common.start14dayTrial': string
+  'common.startDateCredit': string
   'common.startFree': string
   'common.startFreePlan': string
   'common.startTrial': string
@@ -1092,6 +1097,8 @@ export interface StringsMap {
   'common.subscriptions.title': string
   'common.subscriptions.trial': string
   'common.subscriptions.usage.activeDevelopers': string
+  'common.subscriptions.usage.allCredits': string
+  'common.subscriptions.usage.buildCredits': string
   'common.subscriptions.usage.ccmTooltip': string
   'common.subscriptions.usage.ccmUsers': string
   'common.subscriptions.usage.cdSITooltip': string
@@ -1102,6 +1109,9 @@ export interface StringsMap {
   'common.subscriptions.usage.ciTooltip': string
   'common.subscriptions.usage.ciUsers': string
   'common.subscriptions.usage.cloudSpend': string
+  'common.subscriptions.usage.creditTooltip': string
+  'common.subscriptions.usage.creditTooltipExpiry': string
+  'common.subscriptions.usage.creditsRightHeader': string
   'common.subscriptions.usage.developer': string
   'common.subscriptions.usage.developers': string
   'common.subscriptions.usage.ffActiveUserTootip': string
