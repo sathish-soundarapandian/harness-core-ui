@@ -94,6 +94,9 @@ export interface SubscriptionProps {
       numberOfDevelopers: number
       numberOfMau: number
     }
+    ci?: {
+      numberOfDevelopers: number
+    }
   }
   sampleDetails?: SampleData
   isValid: boolean

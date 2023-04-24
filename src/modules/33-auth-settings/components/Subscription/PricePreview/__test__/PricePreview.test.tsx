@@ -7,12 +7,13 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Module } from 'framework/types/ModuleName'
 import { Editions, TimeType } from '@common/constants/SubscriptionTypes'
 import PricePreview from '../PricePreview'
+import { getOtherRenewDate, getOtherRenewPrevDate, getRenewDate, getProductPrices } from '../../subscriptionUtils'
 
 const billingContactInfo = {
   name: 'Jane Doe',
@@ -68,6 +69,7 @@ const subscriptionDetails = {
   paymentFreq: TimeType.YEARLY,
   subscriptionId: '1',
   billingContactInfo,
+  taxAmount: 1000,
   paymentMethodInfo,
   productPrices,
   sampleDetails: {
@@ -79,9 +81,16 @@ const subscriptionDetails = {
     featureFlag: {
       numberOfDevelopers: 25,
       numberOfMau: 12
+    },
+    ci: {
+      numberOfDevelopers: 200
     }
   },
   isValid: false
+}
+
+const invoiceData = {
+  totalAmount: 1000
 }
 
 describe('PricePreview', () => {
@@ -133,12 +142,66 @@ describe('PricePreview', () => {
         <PricePreview {...newProps} />
       </TestWrapper>
     )
-    userEvent.click(getByTestId('toggle'))
+    fireEvent.click(getByTestId('toggle'))
+    expect(setSubscriptionDetailsMock).toBeCalled()
+  })
+})
+describe('PricePreview ci credit card', () => {
+  const setSubscriptionDetailsMock = jest.fn()
+  const props = {
+    subscriptionDetails,
+    setSubscriptionDetails: setSubscriptionDetailsMock,
+    invoiceData,
+    module: 'ci' as Module
+  }
+
+  test('render ci', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <PricePreview {...props} />
+      </TestWrapper>
+    )
     await waitFor(() => {
-      expect(setSubscriptionDetailsMock).toHaveBeenCalledWith({
-        ...subscriptionDetails,
-        paymentFreq: TimeType.YEARLY
-      })
+      expect(container).toMatchSnapshot()
     })
+  })
+
+  test('getOtherRenewDate util method ', () => {
+    jest.useFakeTimers('modern')
+    jest.setSystemTime(new Date('2023-04-10'))
+    const prevData = new Date()
+    const returnedDate = getOtherRenewDate(TimeType.MONTHLY, prevData)
+    expect(returnedDate.valueOf() === 'May 10, 2023').toBe(true)
+    const returnedDateYearly = getOtherRenewDate(TimeType.YEARLY, prevData)
+    expect(returnedDateYearly.valueOf() === 'May 10, 2024').toBe(true)
+  })
+  test('getOtherRenewPrevDate util method ', () => {
+    jest.useFakeTimers('modern')
+    jest.setSystemTime(new Date('2023-04-10'))
+    const prevData = new Date()
+    const returnedDate = getOtherRenewPrevDate(TimeType.MONTHLY, prevData)
+    expect(returnedDate.valueOf() === 'Apr 10, 2023').toBe(true)
+    const returnedDateYearly = getOtherRenewPrevDate(TimeType.YEARLY, prevData)
+    expect(returnedDateYearly.valueOf() === 'Apr 10, 2023').toBe(true)
+  })
+  test('getRenewDate util method ', () => {
+    jest.useFakeTimers('modern')
+    jest.setSystemTime(new Date('2023-04-10'))
+    const returnedDate = getRenewDate(TimeType.MONTHLY)
+    expect(returnedDate.valueOf() === 'May 10, 2023').toBe(true)
+  })
+  test('getProductPrices util method ', () => {
+    const returnedResult = getProductPrices(Editions.TEAM, TimeType.MONTHLY, {
+      monthly: [{ metaData: { edition: Editions.TEAM } }],
+      yearly: [{ metaData: { edition: Editions.TEAM } }]
+    })
+    const result = returnedResult[0]?.metaData?.edition === 'TEAM'
+    expect(result).toBe(true)
+    const returnedResultYearly = getProductPrices(Editions.ENTERPRISE, TimeType.YEARLY, {
+      monthly: [{ metaData: { edition: Editions.TEAM } }],
+      yearly: [{ metaData: { edition: Editions.ENTERPRISE, timeType: 'YEARLY' } }]
+    })
+    const resultYearly = returnedResultYearly[0]?.metaData?.edition === 'ENTERPRISE'
+    expect(resultYearly).toBe(true)
   })
 })

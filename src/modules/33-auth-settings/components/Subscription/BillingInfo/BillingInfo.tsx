@@ -17,6 +17,7 @@ import { getErrorMessage } from '@auth-settings/utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { StateByCountryMap } from '@common/hooks/useRegionList'
+import type { Module } from 'framework/types/ModuleName'
 import BillingContact, { InitialBillingInfo } from './BillingContact'
 import { Header } from '../Header'
 import { PLAN_TYPES } from '../subscriptionUtils'
@@ -30,6 +31,7 @@ interface BillingInfoProp {
   className?: string
   countries: { label: string; value: string }[]
   states: StateByCountryMap
+  module: Module
 }
 
 export const BillingInfo: React.FC<BillingInfoProp> = ({
@@ -39,7 +41,8 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
   setView,
   className,
   countries,
-  states
+  states,
+  module
 }) => {
   const { accountId } = useParams<AccountPathProps>()
   const handleBack = (): void => setView(SubscribeViews.CALCULATE)
@@ -52,11 +55,25 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
 
   const [err, setErr] = useState<string>()
 
-  const { mutate: createFFNewSubscription, loading: creatingNewSubscription } = useCreateSubscription({
+  const { mutate: createNewSubscription, loading: creatingNewSubscription } = useCreateSubscription({
     queryParams: { accountIdentifier: accountId }
   })
 
-  async function createNewSubscription(data?: InitialBillingInfo, update?: boolean): Promise<string | undefined> {
+  const handleSubmitData = (values: InitialBillingInfo) => {
+    switch (module) {
+      case 'cf':
+        createNewSubscriptionFF(values).then((subscriptionId?: string) => {
+          updateSubscriptionProps(values, subscriptionId)
+        })
+        break
+      case 'ci':
+        createNewSubscriptionCI(values).then((subscriptionId?: string) => {
+          updateSubscriptionProps(values, subscriptionId)
+        })
+        break
+    }
+  }
+  async function createNewSubscriptionFF(data?: InitialBillingInfo, update?: boolean): Promise<string | undefined> {
     try {
       let res
 
@@ -70,7 +87,7 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
         const isPremiumSupport = subscriptionProps.premiumSupport || false
         // TODO: add a function to return create subscription function based of module
 
-        res = await createFFNewSubscription({
+        res = await createNewSubscription({
           accountIdentifier: accountId,
           moduleType: 'CF',
           items: isPremiumSupport
@@ -88,6 +105,52 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
           paymentFrequency: subscriptionProps.paymentFreq,
           premiumSupport: subscriptionProps.premiumSupport,
           ...subscriptionProps.quantities?.featureFlag,
+          customer: {
+            address: {
+              postalCode: data?.zipCode,
+              line1: data?.billingAddress,
+              city: data?.city,
+              country: data?.country,
+              state: data?.state
+            },
+            billingEmail: subscriptionProps.billingContactInfo.email,
+            companyName: subscriptionProps.billingContactInfo.companyName
+          }
+        })
+      } else {
+        // res = await updateSubscription({ customerId: '', data: {} })
+      }
+      setErr('')
+      return res?.data?.subscriptionId
+    } catch (error) {
+      const errorMessage = getErrorMessage(error)
+      setErr(errorMessage)
+      throw new Error(errorMessage)
+    }
+  }
+  async function createNewSubscriptionCI(data?: InitialBillingInfo, update?: boolean): Promise<string | undefined> {
+    try {
+      let res
+      if (!update) {
+        setSubscriptionProps({ ...subscriptionProps, subscriptionId: '' })
+        setInvoiceData(undefined)
+        const numberOfDevelopers = defaultTo(subscriptionProps.quantities?.ci?.numberOfDevelopers, 25)
+        const isPremiumSupport = subscriptionProps.premiumSupport || false
+        // TODO: add a function to return create subscription function based of module
+
+        res = await createNewSubscription({
+          accountIdentifier: accountId,
+          moduleType: 'CI',
+          items: isPremiumSupport
+            ? [
+                { type: PLAN_TYPES.DEVELOPERS, quantity: numberOfDevelopers, quantityIncludedInPrice: false },
+                { type: PLAN_TYPES.DEVELOPERS_SUPPORT, quantity: numberOfDevelopers, quantityIncludedInPrice: false }
+              ]
+            : [{ type: PLAN_TYPES.DEVELOPERS, quantity: numberOfDevelopers, quantityIncludedInPrice: false }],
+          edition: subscriptionProps.edition,
+          paymentFrequency: subscriptionProps.paymentFreq,
+          premiumSupport: subscriptionProps.premiumSupport,
+          ...subscriptionProps.quantities?.ci,
           customer: {
             address: {
               postalCode: data?.zipCode,
@@ -144,16 +207,14 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
         companyName: Yup.string().required(getString('authSettings.billingInfo.formikErrors.company'))
       })}
       onSubmit={(values: InitialBillingInfo): void => {
-        createNewSubscription(values).then((subscriptionId?: string) => {
-          updateSubscriptionProps(values, subscriptionId)
-        })
+        handleSubmitData(values)
       }}
       formName="subscriptionUserInfo"
     >
       {formik => (
         <FormikForm>
           {err && !subscriptionProps.subscriptionId ? (
-            <Container width={300}>
+            <Container width={300} margin={{ left: 'large' }}>
               <PageError message={err} onClick={formik.submitForm} />
             </Container>
           ) : (

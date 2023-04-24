@@ -776,6 +776,7 @@ searchPlaceholder: Search by name or Id
 monthly: Monthly
 per: per
 perMonth: /month
+payNow: 'Pay Now'
 perMonthWithoutSlash: per Month
 perYearWithoutSlash: per year
 perYear: /year
