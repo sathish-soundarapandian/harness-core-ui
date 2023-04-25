@@ -132,3 +132,9 @@
     font-size: 13px;
   }
 }
+
+.warningMessage {
+  color: var(--red-700) !important;
+  margin-top: var(--spacing-medium) !important;
+  font-weight: 500 !important;
+}

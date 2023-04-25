@@ -8,6 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { FormikForm, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { connect, FormikContextType } from 'formik'
@@ -25,15 +26,18 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import TgPlanConfigSection from './TgPlanConfigSection'
 import TgPlanVarFiles from './TgPlanVarFiles'
 import type { TerragruntPlanProps } from '../../Common/Terragrunt/TerragruntInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from '../../Common/Terraform/TerraformStep.module.scss'
 
 function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextType<any> }): React.ReactElement {
   const { getString } = useStrings()
   const { inputSetData, readonly, initialValues, allowableTypes, stepViewType } = props
   const { expressions } = useVariablesExpression()
+  const { CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const template = inputSetData?.template
@@ -99,6 +103,19 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
             disabled={readonly}
             setRefValue
             gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+            isRecordDisabled={selectedRecord =>
+              (selectedRecord as any)?.spec?.readOnly &&
+              CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN
+            }
+            renderRecordDisabledWarning={
+              <Text
+                icon="warning-icon"
+                iconProps={{ size: 18, color: Color.RED_800, padding: { right: 'xsmall' } }}
+                className={css.warningMessage}
+              >
+                {getString('common.readOnlyConnectorWarning')}
+              </Text>
+            }
           />
         </div>
       )}
