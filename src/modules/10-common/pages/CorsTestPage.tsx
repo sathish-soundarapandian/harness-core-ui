@@ -1,16 +1,16 @@
-import { Container } from '@harness/uicore'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
-export default function CorsTestPage() {
+export default function CorsTestPage(): JSX.Element {
   const ref = useRef(null)
-  const methodRef = useRef(null)
-  const handleSubmit = ev => {
+  const bodyRef = useRef(null)
+  const [method, setMethod] = useState('GET')
+  const handleSubmit = (ev): void => {
     ev.preventDefault()
     ev.stopPropagation()
-    console.log(methodRef.current?.value)
-    fetch(ref.current.value, {
-      method: methodRef.current.value,
-      body: JSON.stringify({})
+
+    fetch(ref.current?.value, {
+      method,
+      body: method === 'POST' ? JSON.stringify(bodyRef.current.value) : void 0
     })
       .then(res => res.text())
       .then(res => {
@@ -19,15 +19,29 @@ export default function CorsTestPage() {
   }
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit}>
-        <select ref={methodRef}>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <select
+          value={method}
+          onChange={ev => {
+            setMethod(ev.target.value)
+          }}
+        >
           <option>GET</option>
           <option>POST</option>
         </select>
-        <input type="text" name="url" placeholder="https://pr.harness.io/<namespace>/api/<endpoint>" ref={ref} />
+        <input
+          type="text"
+          name="url"
+          style={{ width: '500px' }}
+          placeholder="https://pr.harness.io/<namespace>/api/<endpoint>"
+          ref={ref}
+        />
+      </div>
+      <div>{method === 'POST' ? <textarea name="body" ref={bodyRef} placeholder={'{}'} /> : null}</div>
+      <div>
         <button type="submit">Submit</button>
-      </form>
-    </Container>
+      </div>
+    </form>
   )
 }
