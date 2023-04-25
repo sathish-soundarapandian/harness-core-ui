@@ -129,3 +129,9 @@ export const enum PipelineEntity {
   EnvVariable = 'ENVIRONMENT_VARIABLE',
   Registry = 'REGISTRY'
 }
+
+export const PipelineEntitiesWithCodeLensIntegrationEnabled = [
+  PipelineEntity.Stage,
+  PipelineEntity.Step,
+  PipelineEntity.Input
+]

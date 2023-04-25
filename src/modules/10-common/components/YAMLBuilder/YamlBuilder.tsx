@@ -177,7 +177,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   yamlValidationErrorsRef.current = yamlValidationErrors
   const editorVersionRef = useRef<number>()
   const currentCursorPosition = useRef<Position>()
-  const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
+  const codeLensRegistrations = useRef<Map<PipelineEntity, Map<number, IDisposable>>>(
+    new Map<PipelineEntity, Map<number, IDisposable>>()
+  )
   const [isEditorExpanded, setIsEditorExpanded] = useState<boolean>(true)
   const { module } = useParams<{
     module: Module
@@ -940,19 +942,20 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   useEffect(() => {
     const editor = editorRef.current?.editor
     if (shouldShowPluginsPanel && editor) {
-      const stepMatchingPositions = getValidStepPositions(editor)
+      const stepMatchingPositions = getMatchingPositionsForPipelineEntity(PipelineEntity.Step)
       if (stepMatchingPositions.length) {
         stepMatchingPositions.map((matchingPosition: Position) => {
           const { lineNumber } = matchingPosition
-          if (codeLensRegistrations.current.has(lineNumber)) {
-            const existingRegistrationId = codeLensRegistrations.current.get(lineNumber)
+          const registrationsForSelectedPipelineEntity = codeLensRegistrations.current.get(PipelineEntity.Step)
+          if (registrationsForSelectedPipelineEntity && registrationsForSelectedPipelineEntity.has(lineNumber)) {
+            const existingRegistrationId = registrationsForSelectedPipelineEntity.get(lineNumber)
             if (existingRegistrationId) {
               try {
                 existingRegistrationId.dispose()
               } catch (ex) {
                 //ignore excetion
               }
-              codeLensRegistrations.current.delete(lineNumber)
+              registrationsForSelectedPipelineEntity.delete(lineNumber)
             }
           }
           const registrationId = addCodeLensRegistration({
@@ -960,7 +963,15 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             toLineNum: lineNumber,
             cursorPosition: matchingPosition
           })
-          codeLensRegistrations.current.set(lineNumber, registrationId)
+          if (registrationsForSelectedPipelineEntity) {
+            registrationsForSelectedPipelineEntity.set(lineNumber, registrationId)
+            codeLensRegistrations.current.set(PipelineEntity.Step, registrationsForSelectedPipelineEntity)
+          } else {
+            codeLensRegistrations.current.set(
+              PipelineEntity.Step,
+              new Map<number, IDisposable>([[lineNumber, registrationId]])
+            )
+          }
         })
       }
     }
