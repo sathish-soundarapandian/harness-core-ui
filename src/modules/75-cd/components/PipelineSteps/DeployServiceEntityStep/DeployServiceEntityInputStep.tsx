@@ -240,10 +240,18 @@ export function DeployServiceEntityInputStep({
       updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${fullPathPrefix}values`)
       formik.setFieldValue(`${localPathPrefix}values`, RUNTIME_INPUT_VALUE)
     } else {
-      const newValues = values.map(val => ({
-        serviceRef: val.value as string,
-        serviceInputs: RUNTIME_INPUT_VALUE
-      }))
+      const newValues = values.map(val => {
+        let serviceInputs: any = RUNTIME_INPUT_VALUE
+        const existingServiceInputs = servicesValue.find((ser: any) => ser.serviceRef === (val.value as string))
+        if (existingServiceInputs) {
+          serviceInputs = existingServiceInputs.serviceInputs
+        }
+
+        return {
+          serviceRef: val.value as string,
+          serviceInputs: serviceInputs
+        }
+      })
 
       formik.setFieldValue(`${localPathPrefix}values`, newValues)
     }
