@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Layout, useConfirmationDialog } from '@harness/uicore'
+import { Layout, SelectOption, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { debounce, defaultTo, get, isEqual, set, unset } from 'lodash-es'
 import produce from 'immer'
@@ -33,7 +33,7 @@ import {
   GoogleCloudFunctionsEnvType,
   ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
-import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import type { ServicePipelineConfig } from '@cd/components/Services/utils/ServiceUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
@@ -205,12 +205,27 @@ function DeployServiceDefinition(): React.ReactElement {
     }
   }
 
-  const handleGCFEnvTypeChange = (stageData?: StageElementWrapper<DeploymentStageElementConfig>): void => {
-    if (doesStageContainOtherData(stageData?.stage)) {
-      setCurrStageData(stageData?.stage)
-      openEnvTypeChangeManifestDataDeleteWarningDialog()
-    } else {
-      updateStage(stageData?.stage as StageElementConfig)
+  const handleGCFEnvTypeChange = (selectedEnv: SelectOption): void => {
+    if (
+      selectedEnv.value !==
+      ((stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec as GoogleCloudFunctionsServiceSpec)
+        ?.environmentType as GoogleCloudFunctionsEnvType)
+    ) {
+      const stageData = produce(stage, draft => {
+        const serviceDefinitionSpec = get(
+          draft,
+          'stage.spec.serviceConfig.serviceDefinition.spec',
+          {}
+        ) as GoogleCloudFunctionsServiceSpec
+        serviceDefinitionSpec.environmentType = selectedEnv.value as string
+      })
+
+      if (doesStageContainOtherData(stageData?.stage)) {
+        setCurrStageData(stageData?.stage)
+        openEnvTypeChangeManifestDataDeleteWarningDialog()
+      } else {
+        updateStage(stageData?.stage as StageElementConfig)
+      }
     }
   }
 
