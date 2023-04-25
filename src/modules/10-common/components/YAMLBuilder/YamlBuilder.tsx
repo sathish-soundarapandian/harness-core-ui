@@ -44,7 +44,8 @@ import {
   CompletionItemInterface,
   Theme,
   EditorAction,
-  PipelineEntity
+  PipelineEntity,
+  PipelineEntitiesWithCodeLensIntegrationEnabled
 } from '@common/interfaces/YAMLBuilderProps'
 import { PluginAddUpdateMetadata, PluginType } from '@common/interfaces/YAMLBuilderProps'
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
@@ -942,38 +943,40 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   useEffect(() => {
     const editor = editorRef.current?.editor
     if (shouldShowPluginsPanel && editor) {
-      const stepMatchingPositions = getMatchingPositionsForPipelineEntity(PipelineEntity.Step)
-      if (stepMatchingPositions.length) {
-        stepMatchingPositions.map((matchingPosition: Position) => {
-          const { lineNumber } = matchingPosition
-          const registrationsForSelectedPipelineEntity = codeLensRegistrations.current.get(PipelineEntity.Step)
-          if (registrationsForSelectedPipelineEntity && registrationsForSelectedPipelineEntity.has(lineNumber)) {
-            const existingRegistrationId = registrationsForSelectedPipelineEntity.get(lineNumber)
-            if (existingRegistrationId) {
-              try {
-                existingRegistrationId.dispose()
-              } catch (ex) {
-                //ignore excetion
+      PipelineEntitiesWithCodeLensIntegrationEnabled.map((entity: PipelineEntity) => {
+        const stepMatchingPositions = getMatchingPositionsForPipelineEntity(entity)
+        if (stepMatchingPositions.length) {
+          stepMatchingPositions.map((matchingPosition: Position) => {
+            const { lineNumber } = matchingPosition
+            const registrationsForSelectedPipelineEntity = codeLensRegistrations.current.get(PipelineEntity.Step)
+            if (registrationsForSelectedPipelineEntity && registrationsForSelectedPipelineEntity.has(lineNumber)) {
+              const existingRegistrationId = registrationsForSelectedPipelineEntity.get(lineNumber)
+              if (existingRegistrationId) {
+                try {
+                  existingRegistrationId.dispose()
+                } catch (ex) {
+                  //ignore excetion
+                }
+                registrationsForSelectedPipelineEntity.delete(lineNumber)
               }
-              registrationsForSelectedPipelineEntity.delete(lineNumber)
             }
-          }
-          const registrationId = addCodeLensRegistration({
-            fromLine: lineNumber,
-            toLineNum: lineNumber,
-            cursorPosition: matchingPosition
+            const registrationId = addCodeLensRegistration({
+              fromLine: lineNumber,
+              toLineNum: lineNumber,
+              cursorPosition: matchingPosition
+            })
+            if (registrationsForSelectedPipelineEntity) {
+              registrationsForSelectedPipelineEntity.set(lineNumber, registrationId)
+              codeLensRegistrations.current.set(PipelineEntity.Step, registrationsForSelectedPipelineEntity)
+            } else {
+              codeLensRegistrations.current.set(
+                PipelineEntity.Step,
+                new Map<number, IDisposable>([[lineNumber, registrationId]])
+              )
+            }
           })
-          if (registrationsForSelectedPipelineEntity) {
-            registrationsForSelectedPipelineEntity.set(lineNumber, registrationId)
-            codeLensRegistrations.current.set(PipelineEntity.Step, registrationsForSelectedPipelineEntity)
-          } else {
-            codeLensRegistrations.current.set(
-              PipelineEntity.Step,
-              new Map<number, IDisposable>([[lineNumber, registrationId]])
-            )
-          }
-        })
-      }
+        }
+      })
     }
   }, [currentYaml, editorRef.current?.editor, shouldShowPluginsPanel, codeLensRegistrations.current])
 
