@@ -84,15 +84,11 @@ const FlagSettingsPanel: FC<FlagSettingsPanelProps> = ({ targetGroup }) => {
   })
 
   const handleSave = async (data: PatchOperation): Promise<void> => {
-    try {
-      const response = await patchTargetGroup(data)
-      if (isGovernanceError(response)) {
-        handleGovernanceError(response)
-      }
-      refetch()
-    } catch (e: unknown) {
-      handleResponseError(e)
+    const response = await patchTargetGroup(data)
+    if (isGovernanceError(response)) {
+      handleGovernanceError(response)
     }
+    refetch()
   }
 
   const onChange = useCallback(
@@ -105,7 +101,7 @@ const FlagSettingsPanel: FC<FlagSettingsPanelProps> = ({ targetGroup }) => {
       )
 
       try {
-        saveWithGit({
+        await saveWithGit({
           commitMessage: GIT_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS,
           patchInstructions: { instructions },
           onSave: handleSave
@@ -123,7 +119,7 @@ const FlagSettingsPanel: FC<FlagSettingsPanelProps> = ({ targetGroup }) => {
       const instructions = [getAddFlagsInstruction(values.flags)]
 
       try {
-        saveWithGit({
+        await saveWithGit({
           commitMessage: GIT_COMMIT_MESSAGES.ADDED_FLAG_TARGETS,
           patchInstructions: { instructions },
           onSave: handleSave

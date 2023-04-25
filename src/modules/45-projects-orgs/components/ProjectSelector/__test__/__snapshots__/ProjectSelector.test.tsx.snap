@@ -170,13 +170,12 @@ exports[`ProjectSelector render list view 1`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+      class="Layout--horizontal StyledProps--main ListHeader--listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
       >
-        total
-        : 
+        Total: 
       </p>
       <div
         class="bp3-popover-wrapper DropDown--main"
@@ -2420,13 +2419,12 @@ exports[`ProjectSelector render with projects 2`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+      class="Layout--horizontal StyledProps--main ListHeader--listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
       >
-        total
-        : 
+        Total: 
       </p>
       <div
         class="bp3-popover-wrapper DropDown--main"

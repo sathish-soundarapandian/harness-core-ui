@@ -580,7 +580,7 @@ export class K8sApplyStep extends PipelineStep<K8sApplyData> {
 
   protected type = StepType.K8sApply
   protected stepName = 'K8s Apply'
-  protected stepIcon: IconName = 'code'
+  protected stepIcon: IconName = 'apply'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sApply'
   protected referenceId = 'K8sApplyStep'
 

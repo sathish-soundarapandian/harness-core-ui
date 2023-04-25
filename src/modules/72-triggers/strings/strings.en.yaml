@@ -21,8 +21,8 @@ cronLabel: 'Cron'
 scheduledLabel: 'Scheduled'
 triggerConfigurationLabel: 'Trigger Configuration'
 pipelineInputLabel: 'Pipeline Input'
-branchNameCantBeExpression: Branch Name cannot be an expresion for non-Webhook triggers
-inputSetIsRequired: Input Set(s) is required.
+branchNameCantBeExpression: Branch Name cannot be an expression for non-Webhook triggers
+inputSetIsRequired: With Git Experience enabled it is required to Select Input Set(s) which is stored as part of the pipeline definition in the same repository.
 updateTrigger: 'Update Trigger'
 createTrigger: 'Create Trigger'
 deleteTrigger: 'Delete Trigger'

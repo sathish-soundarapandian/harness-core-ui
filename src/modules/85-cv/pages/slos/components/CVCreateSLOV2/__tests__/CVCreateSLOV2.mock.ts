@@ -47,6 +47,7 @@ export const SLODetailsData = {
       },
       type: 'Composite',
       spec: {
+        evaluationType: 'Window',
         serviceLevelObjectivesDetails: [
           {
             serviceLevelObjectiveRef: 'hHJYxnUFTCypZdmYr0Q0tQ',

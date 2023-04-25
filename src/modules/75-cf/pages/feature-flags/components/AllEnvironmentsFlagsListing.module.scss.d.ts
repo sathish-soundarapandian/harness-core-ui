@@ -9,6 +9,7 @@
 declare const styles: {
   readonly disabled: string
   readonly enabled: string
+  readonly environmentCard: string
   readonly environmentTypeContainer: string
   readonly environmentsContainer: string
   readonly flagEnvironmentStatus: string

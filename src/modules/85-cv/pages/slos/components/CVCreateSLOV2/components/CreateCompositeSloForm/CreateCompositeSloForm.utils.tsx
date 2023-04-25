@@ -9,13 +9,14 @@ import React from 'react'
 import { Text } from '@harness/uicore'
 import type { Renderer, CellProps, Column } from 'react-table'
 import type { FormikProps } from 'formik'
-import { defaultTo, isEmpty, isEqual } from 'lodash-es'
-import type { SLOConsumptionBreakdown, SLOTargetFilterDTO } from 'services/cv'
+import { defaultTo, isEmpty, isEqual, isUndefined } from 'lodash-es'
+import type { SLOConsumptionBreakdown, SLOTargetFilterDTO, ServiceLevelIndicatorDTO } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
-import { PeriodLengthTypes, PeriodTypes, SLOObjective, SLOV2Form } from '../../CVCreateSLOV2.types'
+import { PeriodLengthTypes, PeriodTypes, SLOObjective, SLOV2Form, SLOV2FormFields } from '../../CVCreateSLOV2.types'
 import { createSloTargetFilterDTO } from './components/AddSlos/AddSLOs.utils'
-import { MinNumberOfSLO, MaxNumberOfSLO, SLOWeight } from './CreateCompositeSloForm.constant'
+import { MinNumberOfSLO, MaxNumberOfSLO, SLOWeight, WarningModalType } from './CreateCompositeSloForm.constant'
 import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
+import type { UseCreateCompositeSloWarningModalProps } from './useCreateCompositeSloWarningModal'
 import css from './CreateCompositeSloForm.module.scss'
 
 const addSLOError = (formikProps: FormikProps<SLOV2Form>, getString?: UseStringsReturn['getString']) => {
@@ -58,14 +59,22 @@ export const validateDefineSLOSection = (formikProps: FormikProps<SLOV2Form>): b
   return true
 }
 
-export const validateSetSLOTimeWindow = (formikProps: FormikProps<SLOV2Form>): boolean => {
+export const validateSetSLOTimeWindow = (formikProps: FormikProps<SLOV2Form>, enableRequestSLO?: boolean): boolean => {
   formikProps.setFieldTouched(CompositeSLOFormFields.PERIOD_LENGTH, true)
   formikProps.setFieldTouched(CompositeSLOFormFields.PERIOD_TYPE, true)
   formikProps.setFieldTouched(CompositeSLOFormFields.PERIOD_LENGTH_TYPE, true)
   formikProps.setFieldTouched(CompositeSLOFormFields.DAY_OF_MONTH, true)
   formikProps.setFieldTouched(CompositeSLOFormFields.DAY_OF_WEEK, true)
 
-  const { periodType, periodLength, periodLengthType, dayOfMonth, dayOfWeek } = formikProps.values
+  if (enableRequestSLO) {
+    formikProps.setFieldTouched(SLOV2FormFields.EVALUATION_TYPE, true)
+  }
+  const { periodType, periodLength, periodLengthType, dayOfMonth, dayOfWeek, evaluationType } = formikProps.values
+
+  if (enableRequestSLO && isUndefined(evaluationType)) {
+    return false
+  }
+
   if (periodType === PeriodTypes.ROLLING) {
     return Boolean(periodLength)
   }
@@ -105,13 +114,14 @@ export const validateErrorBudgetPolicy = (): boolean => {
 
 export const isFormDataValid = (
   formikProps: FormikProps<SLOV2Form>,
-  selectedTabId: CreateCompositeSLOSteps
+  selectedTabId: CreateCompositeSLOSteps,
+  enableRequestSLO?: boolean
 ): boolean => {
   switch (selectedTabId) {
     case CreateCompositeSLOSteps.Define_SLO_Identification:
       return validateDefineSLOSection(formikProps)
     case CreateCompositeSLOSteps.Set_SLO_Time_Window:
-      return validateSetSLOTimeWindow(formikProps)
+      return validateSetSLOTimeWindow(formikProps, enableRequestSLO)
     case CreateCompositeSLOSteps.Add_SLOs:
       return validateAddSLO(formikProps)
     case CreateCompositeSLOSteps.Set_SLO_Target:
@@ -177,6 +187,14 @@ export const shouldOpenPeriodUpdateModal = (
   )
 }
 
+export const shouldOpenEvaluationUpdateModal = (
+  formikValues: SLOV2Form,
+  evaluationTypesRef: React.MutableRefObject<ServiceLevelIndicatorDTO['type']>
+): boolean =>
+  Boolean(formikValues.evaluationType) &&
+  Boolean(evaluationTypesRef?.current) &&
+  evaluationTypesRef.current !== formikValues.evaluationType
+
 export const RenderOrg: Renderer<CellProps<SLOObjective | SLOConsumptionBreakdown>> = ({ row }) => {
   const slo = row.original
   return (
@@ -225,3 +243,88 @@ export const getColumsForProjectAndAccountLevel = ({
             column.Header as string
           )
       )
+
+export const getOkAndCancelActions = ({
+  type,
+  onChange,
+  onClose,
+  prevStepData,
+  handleRedirect
+}: {
+  type: WarningModalType
+  onClose: () => void
+  onChange: UseCreateCompositeSloWarningModalProps['onChange']
+  prevStepData: UseCreateCompositeSloWarningModalProps['prevStepData']
+  handleRedirect: UseCreateCompositeSloWarningModalProps['handleRedirect']
+}): {
+  onClickOk?: () => void
+  onClickCancel?: () => void
+} => {
+  switch (type) {
+    case WarningModalType.SAVE_CHANGES:
+      return {
+        onClickOk: () => handleRedirect(),
+        onClickCancel: () => onClose()
+      }
+    case WarningModalType.PERIOD_TYPE:
+    case WarningModalType.EVALUATION_TYPE:
+      return {
+        onClickOk: () => {
+          onChange(prevState => {
+            return {
+              ...prevState,
+              serviceLevelObjectivesDetails: []
+            }
+          })
+          onClose()
+        },
+        onClickCancel: () => {
+          onChange({ ...prevStepData.current } as SLOV2Form)
+          onClose()
+        }
+      }
+    default:
+      return {}
+  }
+}
+
+export const getWarningModalProps = ({
+  type,
+  getString,
+  okAndCancelActions
+}: {
+  type: WarningModalType
+  okAndCancelActions: {
+    onClickOk?: () => void
+    onClickCancel?: () => void
+  }
+  getString: UseStringsReturn['getString']
+}): {
+  modalTitle?: string
+  modalMessage?: string
+  onClickOk?: () => void
+  onClickCancel?: () => void
+} => {
+  switch (type) {
+    case WarningModalType.SAVE_CHANGES:
+      return {
+        modalTitle: getString('unsavedChanges'),
+        modalMessage: getString('common.unsavedChangesLong'),
+        ...okAndCancelActions
+      }
+    case WarningModalType.PERIOD_TYPE:
+      return {
+        modalTitle: getString('cv.CompositeSLO.PeriodChangeWarning.title'),
+        modalMessage: getString('cv.CompositeSLO.PeriodChangeWarning.message'),
+        ...okAndCancelActions
+      }
+    case WarningModalType.EVALUATION_TYPE:
+      return {
+        modalTitle: getString('cv.CompositeSLO.EvaluationTypeChangeWarning.title'),
+        modalMessage: getString('cv.CompositeSLO.EvaluationTypeChangeWarning.message'),
+        ...okAndCancelActions
+      }
+    default:
+      return {}
+  }
+}

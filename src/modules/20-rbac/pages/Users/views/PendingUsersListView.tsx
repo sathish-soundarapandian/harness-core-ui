@@ -16,7 +16,13 @@ import {
   useConfirmationDialog,
   useToaster,
   Page,
-  TableV2
+  TableV2,
+  ListHeader,
+  sortByCreated,
+  sortByLastModified,
+  sortByName,
+  SortMethod,
+  sortByEmail
 } from '@harness/uicore'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Classes, Position, Menu, Tag, Intent } from '@blueprintjs/core'
@@ -37,8 +43,6 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useRbacQueryParamOptions } from '@rbac/utils/utils'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
-import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByEmail, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'

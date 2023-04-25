@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { EXECUTION_TIME_INPUT_VALUE, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings, StringKeys } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -32,6 +32,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { ServiceNowTicketTypeSelectOption, SnowApprovalDeploymentModeProps } from './types'
 import { getDateTimeOptions } from './ServiceNowApprovalChangeWindow'
+import { getGenuineValue } from './helper'
 import css from './ServiceNowApproval.module.scss'
 
 const fetchingTicketTypesPlaceholder: StringKeys = 'pipeline.serviceNowApprovalStep.fetchingTicketTypesPlaceholder'
@@ -45,7 +46,6 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
   const runTimeTicketType = get(formik?.values, `${prefix}spec.ticketType`)
   const fixedTicketType = inputSetData?.allValues?.spec?.ticketType
   const { getString } = useStrings()
-  const [snowConnector, setSnowConnector] = useState(get(inputSetData?.allValues, 'spec.connectorRef', ''))
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -58,6 +58,10 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
   }
   const { expressions } = useVariablesExpression()
   const { CDS_SERVICENOW_TICKET_TYPE_V2 } = useFeatureFlags()
+  const connectorRefFixedValue =
+    template?.spec?.connectorRef === EXECUTION_TIME_INPUT_VALUE
+      ? get(formik?.values, `${prefix}spec.connectorRef`)
+      : getGenuineValue(initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string))
 
   const getServiceNowTicketTypesQuery = useGetServiceNowTicketTypes({
     lazy: true,
@@ -91,31 +95,34 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
   })
 
   useEffect(() => {
-    if (!isEmpty(snowConnector) && getMultiTypeFromValue(snowConnector) === MultiTypeInputType.FIXED) {
+    if (
+      !isEmpty(connectorRefFixedValue) &&
+      getMultiTypeFromValue(connectorRefFixedValue) === MultiTypeInputType.FIXED
+    ) {
       if (CDS_SERVICENOW_TICKET_TYPE_V2) {
         getServiceNowTicketTypesV2Query.refetch({
           queryParams: {
             ...commonParams,
-            connectorRef: snowConnector.toString()
+            connectorRef: connectorRefFixedValue.toString()
           }
         })
       } else {
         getServiceNowTicketTypesQuery.refetch({
           queryParams: {
             ...commonParams,
-            connectorRef: snowConnector.toString()
+            connectorRef: connectorRefFixedValue.toString()
           }
         })
       }
     }
-  }, [snowConnector])
+  }, [connectorRefFixedValue])
 
   useEffect(() => {
     if (runTimeTicketType || (fixedTicketType && getMultiTypeFromValue(fixedTicketType) === MultiTypeInputType.FIXED)) {
       getServiceNowIssueCreateMetadataQuery.refetch({
         queryParams: {
           ...commonParams,
-          connectorRef: snowConnector,
+          connectorRef: connectorRefFixedValue.toString(),
           ticketType: runTimeTicketType?.toString() || fixedTicketType?.toString()
         }
       })
@@ -182,11 +189,6 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-          }}
-          onChange={(value, _valueType, type) => {
-            if (type === MultiTypeInputType.FIXED && !isEmpty(value)) {
-              setSnowConnector(value)
-            }
           }}
           type={'ServiceNow'}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}

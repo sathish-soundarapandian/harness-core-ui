@@ -13,7 +13,12 @@ import {
   ExpandingSearchInputHandle,
   GridListToggle,
   HarnessDocTooltip,
-  Layout
+  Layout,
+  sortByCreated,
+  sortByLastUpdated,
+  sortByName,
+  SortMethod,
+  ListHeader
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
@@ -66,8 +71,6 @@ import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarni
 import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import RepoFilter from '@common/components/RepoFilter/RepoFilter'
-import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByLastUpdated, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { TemplateListFilter } from '@templates-library/components/TemplateFilter/TemplateFilter'
 import { getIsSavedFilterApplied } from '@pipeline/pages/execution-list/utils/executionListUtil'
 import { getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'

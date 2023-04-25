@@ -25,7 +25,6 @@
     display: flex;
     align-items: center;
     padding: var(--spacing-medium) 0 !important;
-    border-top: 1px solid var(--grey-200) !important;
 
     &Text {
       color: var(--primary-main) !important;
@@ -36,13 +35,10 @@
 
   .mainRow {
     display: grid;
-    grid-template-columns: 24px 100px 1fr 50px;
+    grid-template-columns: 1fr 50px;
     padding: 0 var(--spacing-3);
-
-    &.dataRow {
-      height: 50px;
-      cursor: pointer;
-    }
+    height: 50px;
+    cursor: pointer;
 
     .logRowText {
       display: flex;
@@ -108,8 +104,17 @@
       display: flex;
     }
   }
+
+  .actionRow,
+  .heading {
+    display: grid;
+    grid-template-columns: 24px 100px 1fr;
+  }
+
   .columnHeader {
     align-items: center;
+    padding: 0 var(--spacing-3);
+    margin-top: var(--spacing-small);
     p {
       text-transform: uppercase !important;
       color: var(--grey-600) !important;
@@ -138,4 +143,19 @@
   padding: 4px 6px !important;
   text-transform: uppercase;
   font-weight: 800 !important;
+}
+
+.jiraTicketLink {
+  background-color: transparent !important;
+  margin: var(--spacing-small) 0 !important;
+
+  span {
+    font-weight: 400 !important;
+  }
+}
+
+.logsMetadataHolder {
+  gap: var(--spacing-medium) !important;
+  border-top: 1px solid var(--grey-200) !important;
+  align-items: center;
 }

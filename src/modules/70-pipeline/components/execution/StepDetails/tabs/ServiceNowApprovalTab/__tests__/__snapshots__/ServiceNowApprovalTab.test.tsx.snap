@@ -64,6 +64,37 @@ exports[`<ServiceNowApprovalTab/> tests isWaiting test 1`] = `
             </div>
           </td>
         </tr>
+        <tr
+          class="delegateRow"
+        >
+          <th>
+            delegate.delegates:
+          </th>
+          <td>
+            <div
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+            >
+              <div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-bold"
+                >
+                  <span>
+                    common.delegateForTask
+                  </span>
+                </p>
+                 
+                (
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-primary7"
+                  style="cursor: pointer;"
+                >
+                  common.logs.delegateSelectionLogs
+                </p>
+                )
+              </div>
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>

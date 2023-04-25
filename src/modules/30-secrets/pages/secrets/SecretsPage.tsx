@@ -17,7 +17,12 @@ import {
   Layout,
   PageError,
   PageSpinner,
-  Popover
+  Popover,
+  sortByCreated,
+  sortByLastModified,
+  sortByName,
+  SortMethod,
+  ListHeader
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
@@ -46,8 +51,6 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
-import ListHeader from '@common/components/ListHeader/ListHeader'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { usePermission } from '@rbac/hooks/usePermission'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'

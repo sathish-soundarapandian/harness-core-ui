@@ -57,10 +57,8 @@ import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list
 import { registerFeatureFlagPipelineStage } from './pages/pipeline-studio/views/FeatureFlagStage'
 import { registerFlagConfigurationPipelineStep } from './components/PipelineSteps'
 import { TargetsPage } from './pages/target-management/targets/TargetsPage'
-import { TargetDetailPage as LegacyTargetDetailPage } from './pages/target-details/TargetDetailPage'
 import TargetDetailPage from './pages/target-detail/TargetDetailPage'
 import { SegmentsPage } from './pages/target-management/segments/SegmentsPage'
-import { SegmentDetailPage } from './pages/segment-details/SegmentDetailPage'
 import TargetGroupDetailPage from './pages/target-group-detail/TargetGroupDetailPage'
 import { OnboardingPage } from './pages/onboarding/OnboardingPage'
 import { OnboardingDetailPage } from './pages/onboarding/OnboardingDetailPage'
@@ -193,8 +191,6 @@ registerFlagConfigurationPipelineStep()
 
 const CFRoutes: FC = () => {
   const {
-    FFM_1512,
-    FFM_1827,
     NG_SETTINGS,
     FFM_3959_FF_MFE_Environment_Detail,
     FFM_5939_MFE_TARGET_GROUPS_LISTING,
@@ -281,20 +277,10 @@ const CFRoutes: FC = () => {
           ...segmentPathProps
         })}
         exact
-        pageName={
-          FFM_1512 || FFM_6666_FF_MFE_Target_Group_Detail
-            ? PAGE_NAME.TargetGroupDetailPage
-            : PAGE_NAME.SegmentDetailPage
-        }
+        pageName={PAGE_NAME.TargetGroupDetailPage}
       >
         <FFGitSyncProvider>
-          {FFM_6666_FF_MFE_Target_Group_Detail ? (
-            <FFUIApp />
-          ) : FFM_1512 ? (
-            <TargetGroupDetailPage />
-          ) : (
-            <SegmentDetailPage />
-          )}
+          {FFM_6666_FF_MFE_Target_Group_Detail ? <FFUIApp /> : <TargetGroupDetailPage />}
         </FFGitSyncProvider>
       </RouteWithLayout>
 
@@ -307,13 +293,9 @@ const CFRoutes: FC = () => {
           ...targetPathProps
         })}
         exact
-        pageName={
-          FFM_1827 || FFM_6665_FF_MFE_Target_Detail ? PAGE_NAME.TargetDetailPage : PAGE_NAME.LegacyTargetDetailPage
-        }
+        pageName={PAGE_NAME.TargetDetailPage}
       >
-        <FFGitSyncProvider>
-          {FFM_6665_FF_MFE_Target_Detail ? <FFUIApp /> : FFM_1827 ? <TargetDetailPage /> : <LegacyTargetDetailPage />}
-        </FFGitSyncProvider>
+        <FFGitSyncProvider>{FFM_6665_FF_MFE_Target_Detail ? <FFUIApp /> : <TargetDetailPage />}</FFGitSyncProvider>
       </RouteWithLayout>
 
       <RouteWithLayout

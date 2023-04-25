@@ -11,6 +11,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import {
   Days,
   ErrorBudgetInterface,
+  EvaluationType,
   PeriodLengthTypes,
   PeriodTypes,
   SLOV2Form
@@ -119,3 +120,14 @@ export const getCustomOptionsForSLOTargetChart = (
     }
   }
 }
+
+export const getEvaluationOptions = (getString: UseStringsReturn['getString']) => [
+  {
+    label: getString('cv.slos.slis.evaluationType.window'),
+    value: EvaluationType.WINDOW
+  },
+  {
+    label: getString('common.request'),
+    value: EvaluationType.REQUEST
+  }
+]

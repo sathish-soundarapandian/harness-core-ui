@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect, useMemo, useState } from 'react'
 import { Container, Icon, Layout, Text, useConfirmationDialog, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -257,15 +264,11 @@ export default function WidgetsWithSameStartTime(props: WidgetsWithSameStartTime
                           padding={{ bottom: 'small' }}
                         >
                           <Text className={css.downTimeTextElements}>
-                            {moment(new Date(startTime)).format(DATE_FORMAT)}
+                            {moment(new Date(startTime)).format(DATE_FORMAT)} -{' '}
+                            {moment(new Date(endTime)).format(DATE_FORMAT)}
                           </Text>
-                          <Text className={css.downTimeTextElements}>{' - '}</Text>
-                          <Text className={css.downTimeTextElements}>{`${moment(new Date(endTime)).format(
-                            DATE_FORMAT
-                          )}`}</Text>
                         </Layout.Horizontal>
                         <hr className={css.division} />
-                        <></>
                       </>
                     )
                   })

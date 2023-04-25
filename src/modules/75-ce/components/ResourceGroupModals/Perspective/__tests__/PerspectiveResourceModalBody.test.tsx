@@ -7,9 +7,9 @@
 
 import React from 'react'
 import { render, screen } from '@testing-library/react'
+import { SortMethod } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as ceService from 'services/ce'
-import { SortMethod } from '@common/utils/sortUtils'
 import PerspectiveResourceModalBody from '../PerspectiveResourceModalBody'
 import FoldersData from './foldersMockData.json'
 

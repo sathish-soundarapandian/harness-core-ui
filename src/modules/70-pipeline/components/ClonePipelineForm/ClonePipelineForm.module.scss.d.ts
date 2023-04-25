@@ -14,6 +14,7 @@ declare const styles: {
   readonly form: string
   readonly inlineRemoteSelect: string
   readonly inputWithSpinner: string
+  readonly policyEvalContainer: string
   readonly zeroMargin: string
 }
 export default styles

@@ -228,6 +228,7 @@ jiraApprovalStep:
 jiraCreateStep:
   fields: Jira Fields
   summaryPlaceholder: Enter a Title or Summary
+  descriptionPlaceholder: Add description to the ticket
   addFields: Add Jira Fields
   selectFieldsHeading: Select fields you would like to add.
   fieldSelectorAdd: '+ Fields'
@@ -1111,6 +1112,9 @@ verification:
     eventCountPerMin: Event count per minute
     eventDetails: Event Details
     updateEventPreference: Update event preference
+    createJiraTicket: Create Jira ticket
+    viewJiraTicket: View Jira ticket
+    jiraTicketTitle: Jira ticket
     eventPreference: Event Preference
     lastKnownOccurrence: Last Known Occurrence
     firstOccurrence: First Occurrence

@@ -1167,6 +1167,24 @@ exports[`Saved Connector Details render for Github Repo schema 1`] = `
             </span>
           </div>
         </div>
+        <div
+          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+          >
+            connectors.connectivityMode.title
+          </p>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+          >
+            <span
+              class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+            >
+              common.harnessDelegate
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

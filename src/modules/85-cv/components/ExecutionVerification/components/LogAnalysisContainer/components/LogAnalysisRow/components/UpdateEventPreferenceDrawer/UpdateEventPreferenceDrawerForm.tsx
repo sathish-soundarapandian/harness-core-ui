@@ -114,7 +114,7 @@ export default function UpdateEventPreferenceDrawerForm({
                 )
               }}
               data-testid="eventPriorityDropdown"
-              className={css.riskSelectElement}
+              className={css.modalInputElement}
               label={getString('cv.logs.riskPriorityLabel')}
               items={getRiskItems(getString)}
             />

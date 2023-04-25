@@ -19,8 +19,6 @@ describe('RouteDestinations', () => {
   const useFeatureFlagsMock = jest.spyOn(hooks, 'useFeatureFlags')
 
   const defaultFlagValues: Partial<Record<FeatureFlag, boolean>> = {
-    FFM_1512: false,
-    FFM_1827: false,
     NG_SETTINGS: false,
     FFM_3959_FF_MFE_Environment_Detail: false,
     FFM_5256_FF_MFE_Environment_Listing: false,
@@ -72,26 +70,14 @@ describe('RouteDestinations', () => {
     expect(routesHavePageName(routes, 'SegmentsPage')).toBeFalsy()
   })
 
-  test('it should render the NGUI version of the Segment Detail page when FFM_6666_FF_MFE_Target_Groups_Detail is false', async () => {
-    const routes = renderRoutes({ FFM_6666_FF_MFE_Target_Group_Detail: false, FFM_1512: false })
-
-    expect(routesHavePageName(routes, 'SegmentDetailPage')).toBeTruthy()
-  })
-
-  test('it should not render the NGUI version of the Segment Detail page when FFM_6666_FF_MFE_Target_Groups_Detail is true', async () => {
-    const routes = renderRoutes({ FFM_6666_FF_MFE_Target_Group_Detail: true, FFM_1512: false })
-
-    expect(routesHavePageName(routes, 'SegmentDetailPage')).toBeFalsy()
-  })
-
   test('it should render the NGUI version of the Target Group Detail page when FFM_6666_FF_MFE_Target_Groups_Detail is false', async () => {
-    const routes = renderRoutes({ FFM_6666_FF_MFE_Target_Group_Detail: false, FFM_1512: true })
+    const routes = renderRoutes({ FFM_6666_FF_MFE_Target_Group_Detail: false })
 
     expect(routesHavePageName(routes, 'TargetGroupDetailPage')).toBeTruthy()
   })
 
   test('it should not render the NGUI version of the Target Group Detail page when FFM_6666_FF_MFE_Target_Groups_Detail is true', async () => {
-    const routes = renderRoutes({ FFM_6666_FF_MFE_Target_Group_Detail: true, FFM_1512: true })
+    const routes = renderRoutes({ FFM_6666_FF_MFE_Target_Group_Detail: true })
 
     expect(routesHavePageName(routes, 'TargetGroupDetailPage')).toBeFalsy()
   })
@@ -121,13 +107,13 @@ describe('RouteDestinations', () => {
   })
 
   test('it should render the NGUI version of the Target Detail page when FFM_6665_FF_MFE_Target_Detail is false', async () => {
-    const routes = renderRoutes({ FFM_6665_FF_MFE_Target_Detail: false, FFM_1827: true })
+    const routes = renderRoutes({ FFM_6665_FF_MFE_Target_Detail: false })
 
     expect(routesHavePageName(routes, 'TargetDetailPage')).toBeTruthy()
   })
 
   test('it should not render the NGUI version of the Target Detail page when FFM_6665_FF_MFE_Target_Detail is true', async () => {
-    const routes = renderRoutes({ FFM_6665_FF_MFE_Target_Detail: true, FFM_1827: false })
+    const routes = renderRoutes({ FFM_6665_FF_MFE_Target_Detail: true })
 
     expect(routesHavePageName(routes, 'TargetDetailPage')).toBeFalsy()
   })

@@ -15,19 +15,26 @@ import { useMutateAsGet } from '@common/hooks'
 import {
   NotificationRuleResponse,
   SLOTargetFilterDTO,
+  ServiceLevelIndicatorDTO,
   useGetNotificationRuleData,
   useGetOnboardingGraph,
   useGetSLOHealthListViewV2
 } from 'services/cv'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Stepper } from '@common/components/Stepper/Stepper'
 import SLOName from '@cv/pages/slos/common/SLOName/SLOName'
 import SLOTargetNotifications from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
 import { CreatePreview } from '@cv/pages/slos/common/CreatePreview/CreatePreview'
-import { getErrorMessageByTabId, isFormDataValid, shouldOpenPeriodUpdateModal } from './CreateCompositeSloForm.utils'
+import {
+  getErrorMessageByTabId,
+  isFormDataValid,
+  shouldOpenEvaluationUpdateModal,
+  shouldOpenPeriodUpdateModal
+} from './CreateCompositeSloForm.utils'
 import { AddSLOs } from './components/AddSlos/AddSLOs'
 import { CreateCompositeSLOSteps, CreateCompositeSloFormInterface } from './CreateCompositeSloForm.types'
-import type { SLOV2Form } from '../../CVCreateSLOV2.types'
+import { EvaluationType, SLOV2Form } from '../../CVCreateSLOV2.types'
 import SLOTarget from './components/SLOTarget/SLOTarget'
 import useCreateCompositeSloWarningModal from './useCreateCompositeSloWarningModal'
 import PeriodLength from './components/PeriodLength/PeriodLength'
@@ -50,24 +57,29 @@ export const CreateCompositeSloForm = ({
   const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const queryParams = isAccountLevel ? { accountId } : { accountId, orgIdentifier, projectIdentifier }
   const { getString } = useStrings()
+  const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
   const formikProps = useFormikContext<SLOV2Form>()
   const [notificationPage, setNotificationPage] = useState(0)
   const [notificationsInTable, setNotificationsInTable] = useState<NotificationRuleResponse[]>([])
   const isStepValid = useCallback(
-    (stepId: string) => isFormDataValid(formikProps, stepId as CreateCompositeSLOSteps),
+    (stepId: string) => isFormDataValid(formikProps, stepId as CreateCompositeSLOSteps, enableRequestSLO),
     [formikProps.values, formikProps.errors]
   )
 
   const [validateAllSteps, setValidateAllSteps] = useState<boolean | undefined>(runValidationOnMount)
   const compositeSloPayloadRef = useRef<SLOV2Form | null>()
   const periodTypesRef = useRef<SLOTargetFilterDTO>()
+  const evaluationTypesRef = useRef<ServiceLevelIndicatorDTO['type']>()
   const prevStepDataRef = useRef<SLOV2Form | null>()
+  const formikEvaluationType = formikProps.values.evaluationType
 
-  const [openSaveCancelModal, openPeriodUpdateModal] = useCreateCompositeSloWarningModal({
-    handleRedirect,
-    onChange: formikProps.setValues,
-    prevStepData: prevStepDataRef
-  })
+  const [openSaveCancelModal, openPeriodUpdateModal, openEvaluationTypeUpdateModal] = useCreateCompositeSloWarningModal(
+    {
+      handleRedirect,
+      onChange: formikProps.setValues,
+      prevStepData: prevStepDataRef
+    }
+  )
 
   const {
     data: dashboardWidgetsResponse,
@@ -100,6 +112,12 @@ export const CreateCompositeSloForm = ({
     }
   }, [openPeriodUpdateModal, formikFilterData])
 
+  useEffect(() => {
+    if (shouldOpenEvaluationUpdateModal(formikProps.values, evaluationTypesRef)) {
+      openEvaluationTypeUpdateModal()
+    }
+  }, [openEvaluationTypeUpdateModal, evaluationTypesRef.current, formikProps.values.evaluationType])
+
   const sloIdentifiers = useMemo(
     () => formikProps.values.serviceLevelObjectivesDetails?.map(item => item.sloIdentifier)?.join(''),
     [formikProps.values.serviceLevelObjectivesDetails]
@@ -126,6 +144,7 @@ export const CreateCompositeSloForm = ({
 
   const onStepChange = (): void => {
     prevStepDataRef.current = formikProps.values
+    evaluationTypesRef.current = formikProps.values.evaluationType
     periodTypesRef.current = createSloTargetFilterDTO(formikProps.values)
   }
 
@@ -202,7 +221,13 @@ export const CreateCompositeSloForm = ({
                   id: CreateCompositeSLOSteps.Set_SLO_Time_Window,
                   title: getString('cv.CompositeSLO.SetTimeWindow'),
                   helpPanelReferenceId: 'setCompositeSLOTimeWindow',
-                  panel: <PeriodLength periodType={periodType} periodLengthType={periodLengthType} />,
+                  panel: (
+                    <PeriodLength
+                      periodType={periodType}
+                      periodLengthType={periodLengthType}
+                      hasEvaluationType={enableRequestSLO}
+                    />
+                  ),
                   errorMessage: getErrorMessageByTabId(
                     formikProps,
                     CreateCompositeSLOSteps.Set_SLO_Time_Window,
@@ -260,6 +285,7 @@ export const CreateCompositeSloForm = ({
                         getNotifications={getNotifications}
                         notificationsInTable={notificationsInTable}
                         setNotificationsInTable={setNotificationsInTable}
+                        isCompositeRequestBasedSLO={formikEvaluationType === EvaluationType.REQUEST}
                       />
                     </CompositeSLOContext.Provider>
                   ),

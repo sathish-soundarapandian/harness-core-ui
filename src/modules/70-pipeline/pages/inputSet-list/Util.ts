@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { SortMethod } from '@harness/uicore'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { SortMethod } from '@common/utils/sortUtils'
 
 export type InputSetListQueryParams = {
   searchTerm?: string

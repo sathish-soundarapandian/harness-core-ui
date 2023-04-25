@@ -35,7 +35,8 @@ import css from './ConfigureSLOAlertConditions.module.scss'
 export default function ConfigureSLOAlertConditions({
   prevStepData,
   nextStep,
-  previousStep
+  previousStep,
+  isCompositeRequestBasedSLO
 }: ConfigureSLOAlertConditionsProps): JSX.Element {
   const { projectIdentifier } = useParams<ProjectPathProps>()
   const [conditions, setConditions] = useState<NotificationRule[]>(getInitialNotificationRules(prevStepData))
@@ -99,6 +100,7 @@ export default function ConfigureSLOAlertConditions({
                   notificationRule={notificationRule}
                   handleChangeField={handleChangeField}
                   handleDeleteNotificationRule={handleDeleteNotificationRule}
+                  isCompositeRequestBasedSLO={isCompositeRequestBasedSLO}
                 />
               )
             })

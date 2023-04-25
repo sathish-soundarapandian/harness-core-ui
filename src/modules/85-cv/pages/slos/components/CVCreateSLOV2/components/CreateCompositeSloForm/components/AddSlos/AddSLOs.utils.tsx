@@ -91,7 +91,8 @@ export const createRequestBodyForSLOHealthListViewV2 = ({ values }: { values: SL
     sloTargetFilterDTO: {
       ...createSloTargetFilterDTO(values),
       type: values.periodType
-    }
+    },
+    evaluationType: values.evaluationType
   }
 }
 

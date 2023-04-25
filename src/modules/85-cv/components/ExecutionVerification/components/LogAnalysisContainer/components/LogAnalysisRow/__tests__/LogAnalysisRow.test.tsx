@@ -10,11 +10,18 @@ import { render, waitFor, screen, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import * as cvService from 'services/cv'
+import * as ticketService from 'services/ticket-service/ticketServiceComponents'
 import { LogAnalysisRow } from '../LogAnalysisRow'
 import {
+  expectedCreateTicketPayload,
+  jiraIssueTypeMock,
+  jiraPrioritiesMock,
+  jiraProjectsMock,
+  jiraTicketDetailsMock,
   logFeedbackHistoryPathParams,
   mockedLogAnalysisData,
   mockedLogAnalysisDataWithFeedback,
+  mockedLogAnalysisDataWithFeedbackAndTicket,
   mockLogsCall,
   mockServicePageLogsCall,
   saveFeedbackExpectedPayload,
@@ -440,6 +447,311 @@ describe('Unit tests for LogAnalysisRow', () => {
         // Call to fetch the updated the logs in the list page
         expect(refetchLogAnalysisMock).toHaveBeenCalled()
       })
+    })
+  })
+
+  describe('Log Jira creation', () => {
+    test('should not render create jira button if the feature flag is disabled', () => {
+      const { container } = render(<WrapperComponent {...initialProps} />)
+
+      const contextMenuOptionButton = container.querySelector('[data-icon="Options"]:first-child') as HTMLElement
+
+      act(() => {
+        userEvent.click(contextMenuOptionButton)
+      })
+
+      const viewDetailsButton = screen.getByText('cv.logs.viewEventDetails')
+
+      const viewJiraButton = screen.queryByText('pipeline.verification.logs.viewJiraTicket')
+      const createJiraButton = screen.queryByText('pipeline.verification.logs.createJiraTicket')
+
+      expect(viewDetailsButton).toBeInTheDocument()
+      expect(viewJiraButton).not.toBeInTheDocument()
+      expect(createJiraButton).not.toBeInTheDocument()
+
+      act(() => {
+        userEvent.click(viewDetailsButton)
+      })
+
+      expect(screen.getByTestId('LogAnalysis_detailsDrawer')).toBeInTheDocument()
+
+      expect(screen.queryByTestId(/jiraCreationButton-Drawer/)).not.toBeInTheDocument()
+    })
+
+    test('should render create jira button as disabled if the feature flag is enabled and log has no feedback given', async () => {
+      const propsWithFeatureFlag = {
+        ...initialProps,
+        featureFlagValues: { SRM_ENABLE_JIRA_INTEGRATION: true }
+      }
+      const { container } = render(<WrapperComponent {...propsWithFeatureFlag} />)
+
+      const contextMenuOptionButton = container.querySelector('[data-icon="Options"]:first-child') as HTMLElement
+
+      act(() => {
+        userEvent.click(contextMenuOptionButton)
+      })
+
+      const viewDetailsButton = screen.getByText('cv.logs.viewEventDetails')
+
+      const viewJiraButton = screen.queryByText('pipeline.verification.logs.viewJiraTicket')
+      const createJiraButton = screen.queryByText('pipeline.verification.logs.createJiraTicket')
+
+      expect(viewDetailsButton).toBeInTheDocument()
+      expect(viewJiraButton).not.toBeInTheDocument()
+      expect(createJiraButton).toBeInTheDocument()
+
+      act(() => {
+        userEvent.click(viewDetailsButton)
+      })
+
+      expect(screen.getByTestId('LogAnalysis_detailsDrawer')).toBeInTheDocument()
+
+      expect(screen.queryByTestId(/jiraCreationButton-Drawer/)).not.toBeInTheDocument()
+    })
+
+    test('should check all the jira create functionalities are working as expected - user flow', async () => {
+      const getIssueTypesRefetch = jest.fn()
+      const createJiraMutate = jest.fn()
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      jest.spyOn(ticketService, 'useMetadataListProjects').mockReturnValue({
+        error: null,
+        isLoading: false,
+        data: jiraProjectsMock
+      })
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      jest.spyOn(ticketService, 'useMetadataListPriorities').mockReturnValue({
+        error: null,
+        isLoading: false,
+        data: jiraPrioritiesMock
+      })
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      jest.spyOn(ticketService, 'useMetadataGetProject').mockReturnValue({
+        error: null,
+        isLoading: false,
+        data: jiraIssueTypeMock,
+        refetch: getIssueTypesRefetch
+      })
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      jest.spyOn(cvService, 'useCreateTicketForFeedback').mockReturnValue({
+        cancel: jest.fn(),
+        error: null,
+        loading: false,
+        mutate: createJiraMutate
+      })
+
+      const refetchLogAnalysisMock = jest.fn()
+
+      const initialPropsWithFeedback = {
+        data: mockedLogAnalysisDataWithFeedback.resource.content as LogAnalysisRowData[],
+        goToPage: jest.fn()
+      }
+
+      const propsWithFeatureFlag = {
+        ...initialPropsWithFeedback,
+        activityId: 'updateActivityIdTest',
+        featureFlagValues: { SRM_ENABLE_JIRA_INTEGRATION: true },
+        refetchLogAnalysis: refetchLogAnalysisMock
+      }
+      const { container } = render(<WrapperComponent {...propsWithFeatureFlag} />)
+
+      const contextMenuOptionButton = container.querySelector('[data-icon="Options"]:first-child') as HTMLElement
+
+      act(() => {
+        userEvent.click(contextMenuOptionButton)
+      })
+
+      const viewDetailsButton = screen.getByText('cv.logs.viewEventDetails')
+
+      const viewJiraButton = screen.queryByText('pipeline.verification.logs.viewJiraTicket')
+      const createJiraButton = screen.getByText('pipeline.verification.logs.createJiraTicket')
+
+      expect(viewDetailsButton).toBeInTheDocument()
+      expect(viewJiraButton).not.toBeInTheDocument()
+      expect(createJiraButton).toBeInTheDocument()
+
+      act(() => {
+        userEvent.click(createJiraButton)
+      })
+
+      expect(screen.getByTestId('jiraDrawer-Container')).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: 'pipeline.verification.logs.createJiraTicket' })).toBeInTheDocument()
+
+      const projectsDropdown = document.querySelector('input[name="projectKey"]')
+
+      act(() => {
+        userEvent.click(projectsDropdown!)
+      })
+
+      expect(screen.getByText('Observability Integrations Platform')).toBeInTheDocument()
+      expect(screen.getByText('Infrastructure Evolution')).toBeInTheDocument()
+
+      expect(getIssueTypesRefetch).not.toHaveBeenCalled()
+      act(() => {
+        userEvent.click(screen.getByText('Observability Integrations Platform'))
+      })
+
+      await waitFor(() => {
+        expect(getIssueTypesRefetch).toHaveBeenCalled()
+      })
+
+      await waitFor(() => {
+        expect(projectsDropdown).toHaveValue('Observability Integrations Platform')
+      })
+
+      const issueTypeDropdown = document.querySelector('input[name="issueType"]')
+
+      act(() => {
+        userEvent.click(issueTypeDropdown!)
+      })
+
+      expect(screen.getByText('Story')).toBeInTheDocument()
+      expect(screen.getByText('RCA-Subtask')).toBeInTheDocument()
+
+      act(() => {
+        userEvent.click(screen.getByText('Story'))
+      })
+
+      await waitFor(() => {
+        expect(issueTypeDropdown).toHaveValue('Story')
+      })
+
+      const prioritiesDropdown = document.querySelector('input[name="priority"]')
+
+      act(() => {
+        userEvent.click(prioritiesDropdown!)
+      })
+
+      expect(screen.getByText('P1')).toBeInTheDocument()
+      expect(screen.getByText('P2')).toBeInTheDocument()
+
+      act(() => {
+        userEvent.click(screen.getByText('P1'))
+      })
+
+      await waitFor(() => {
+        expect(prioritiesDropdown).toHaveValue('P1')
+      })
+
+      const ticketTitle = screen.getByPlaceholderText(/pipeline.jiraCreateStep.summaryPlaceholder/)
+
+      act(() => {
+        userEvent.type(ticketTitle, 'New ticket to fix')
+      })
+
+      const ticketdescription = screen.getByPlaceholderText(/pipeline.jiraCreateStep.descriptionPlaceholder/)
+
+      act(() => {
+        userEvent.type(ticketdescription, 'New description')
+      })
+
+      await waitFor(() => {
+        expect(ticketTitle).toHaveValue('New ticket to fix')
+        expect(ticketdescription).toHaveValue('New description')
+      })
+
+      const addFieldButton = screen.getByText('pipeline.jiraCreateStep.addFields')
+
+      act(() => {
+        userEvent.click(addFieldButton)
+      })
+
+      const keyInput = screen.getByPlaceholderText(/pipeline.keyPlaceholder/)
+
+      act(() => {
+        userEvent.type(keyInput, 'key1')
+      })
+
+      const valueInput = screen.getByPlaceholderText(/Type and press enter to create a tag/)
+
+      fireEvent.change(valueInput, { target: { value: 'issueKey1Value' } })
+
+      await waitFor(() => {
+        expect(keyInput).toHaveValue('key1')
+        expect(valueInput).toHaveValue('issueKey1Value')
+      })
+
+      const deleteFieldButton = document.querySelector('span[data-icon="main-trash"]')
+
+      act(() => {
+        userEvent.click(deleteFieldButton!)
+      })
+
+      await waitFor(() => {
+        expect(keyInput).not.toBeInTheDocument()
+      })
+
+      const submitButton = screen.getByTestId('jiraDrawerSubmit_button')
+
+      act(() => {
+        userEvent.click(submitButton)
+      })
+
+      await waitFor(() => expect(createJiraMutate).toHaveBeenCalledWith(expectedCreateTicketPayload))
+    })
+
+    test('should check all the jira view functionalities are working as expected - user flow', async () => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      jest.spyOn(ticketService, 'useTicketsFindTicketById').mockReturnValue({
+        error: null,
+        isLoading: false,
+        data: jiraTicketDetailsMock
+      })
+
+      const refetchLogAnalysisMock = jest.fn()
+
+      const initialPropsWithFeedback = {
+        data: mockedLogAnalysisDataWithFeedbackAndTicket.resource.content as LogAnalysisRowData[],
+        goToPage: jest.fn()
+      }
+
+      const propsWithFeatureFlag = {
+        ...initialPropsWithFeedback,
+        activityId: 'updateActivityIdTest',
+        featureFlagValues: { SRM_ENABLE_JIRA_INTEGRATION: true },
+        refetchLogAnalysis: refetchLogAnalysisMock
+      }
+      const { container } = render(<WrapperComponent {...propsWithFeatureFlag} />)
+
+      const contextMenuOptionButton = container.querySelector('[data-icon="Options"]:first-child') as HTMLElement
+
+      act(() => {
+        userEvent.click(contextMenuOptionButton)
+      })
+
+      const viewDetailsButton = screen.getByText('cv.logs.viewEventDetails')
+
+      const viewJiraButton = screen.getByText('pipeline.verification.logs.viewJiraTicket')
+      const createJiraButton = screen.queryByText('pipeline.verification.logs.createJiraTicket')
+
+      expect(viewDetailsButton).toBeInTheDocument()
+      expect(viewJiraButton).toBeInTheDocument()
+      expect(createJiraButton).not.toBeInTheDocument()
+
+      act(() => {
+        userEvent.click(viewJiraButton)
+      })
+
+      expect(screen.getByTestId('jiraDrawer-Container')).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: 'pipeline.verification.logs.viewJiraTicket' })).toBeInTheDocument()
+
+      expect(screen.getByTestId(/jiraDetails_project/)).toHaveTextContent('Jira Project')
+      expect(screen.getByTestId(/jiraDetails_issueType/)).toHaveTextContent('Bug')
+      expect(screen.getByTestId(/jiraDetails_title/)).toHaveTextContent('A new ticket')
+      expect(screen.getByTestId(/jiraDetails_description/)).toHaveTextContent(
+        'This is the very long ticket description...'
+      )
+      expect(screen.getByTestId(/jiraDetails_priority/)).toHaveTextContent('High')
+      expect(screen.getByTestId(/jiraDetails_status/)).toHaveTextContent('To Do')
+      expect(screen.getByTestId(/jiraDetails_assignee/)).toHaveTextContent('John Doe')
     })
   })
 })

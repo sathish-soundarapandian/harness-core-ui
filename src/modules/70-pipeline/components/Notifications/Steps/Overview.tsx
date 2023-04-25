@@ -14,7 +14,7 @@ import { useStrings } from 'framework/strings'
 import type { NotificationRules } from 'services/pipeline-ng'
 import { NameSchema } from '@common/utils/Validation'
 
-export interface OverviewProps {
+export interface OverviewProps extends StepProps<NotificationRules> {
   data?: NotificationRules
   existingNotificationNames?: string[]
   isEdit?: boolean
@@ -26,7 +26,7 @@ function Overview({
   nextStep,
   prevStepData,
   isEdit
-}: StepProps<NotificationRules> & OverviewProps): React.ReactElement {
+}: OverviewProps): React.ReactElement {
   const { getString } = useStrings()
   return (
     <Layout.Vertical spacing="xxlarge" padding="small">

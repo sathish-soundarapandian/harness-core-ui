@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event'
 import * as cfServices from 'services/cf'
 import { CurrentLocation, TestWrapper } from '@common/utils/testUtils'
 import mockAllEnvsFlags from './mockGetAllEnvsFlags'
-import mockEnvs from './mockEnvs'
+import mockEnvironments from './mockEnvironments'
 import { AllEnvironmentsFlagsListing, AllEnvironmentsFlagsListingProps } from '../AllEnvironmentsFlagsListing'
 
 const renderComponent = (props?: Partial<AllEnvironmentsFlagsListingProps>): RenderResult =>
@@ -22,7 +22,7 @@ const renderComponent = (props?: Partial<AllEnvironmentsFlagsListingProps>): Ren
       defaultFeatureFlagValues={{ FFM_6683_ALL_ENVIRONMENTS_FLAGS: true }}
     >
       <AllEnvironmentsFlagsListing
-        environments={mockEnvs.data.content as any}
+        environments={mockEnvironments.data.content as any}
         projectFlags={mockAllEnvsFlags}
         refetchFlags={jest.fn()}
         deleteFlag={jest.fn()}

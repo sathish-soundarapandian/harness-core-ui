@@ -79,17 +79,13 @@ const FlagSettings: FC<FlagSettingsProps> = ({ target }) => {
 
   const handleSave = useCallback(
     async (data: PatchOperation): Promise<void> => {
-      try {
-        const response = await patchTarget(data)
-        if (isGovernanceError(response)) {
-          handleGovernanceError(response)
-        }
-        refetchFlags()
-      } catch (e: unknown) {
-        handleResponseError(e)
+      const response = await patchTarget(data)
+      if (isGovernanceError(response)) {
+        handleGovernanceError(response)
       }
+      refetchFlags()
     },
-    [handleGovernanceError, handleResponseError, isGovernanceError, patchTarget, refetchFlags]
+    [handleGovernanceError, isGovernanceError, patchTarget, refetchFlags]
   )
 
   const onChange = useCallback(
@@ -99,7 +95,7 @@ const FlagSettings: FC<FlagSettingsProps> = ({ target }) => {
       /* istanbul ignore else */
       if (instructions.length) {
         try {
-          saveWithGit({
+          await saveWithGit({
             commitMessage: GIT_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS,
             patchInstructions: { instructions },
             onSave: handleSave
@@ -120,7 +116,7 @@ const FlagSettings: FC<FlagSettingsProps> = ({ target }) => {
       /* istanbul ignore else */
       if (instructions.length) {
         try {
-          saveWithGit({
+          await saveWithGit({
             commitMessage: GIT_COMMIT_MESSAGES.ADDED_FLAG_TARGETS,
             patchInstructions: { instructions },
             onSave: handleSave

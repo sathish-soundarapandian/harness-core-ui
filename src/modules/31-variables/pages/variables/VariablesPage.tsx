@@ -6,7 +6,17 @@
  */
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ButtonVariation, Layout, ExpandingSearchInput, Button } from '@harness/uicore'
+import {
+  ButtonVariation,
+  Layout,
+  ExpandingSearchInput,
+  Button,
+  ListHeader,
+  sortByCreated,
+  sortByLastModified,
+  sortByName,
+  SortMethod
+} from '@harness/uicore'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 
 import RbacButton from '@rbac/components/Button/Button'
@@ -28,9 +38,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useGetVariablesList } from 'services/cd-ng'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-import ListHeader from '@common/components/ListHeader/ListHeader'
 import VariableListView from './views/VariableListView'
 import css from './VariablesPage.module.scss'
 

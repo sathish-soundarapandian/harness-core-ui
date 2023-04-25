@@ -18,7 +18,7 @@ import ConfigureSlackNotifications from '@rbac/modals/ConfigureNotificationsModa
 import ConfigurePagerDutyNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigurePagerDutyNotifications/ConfigurePagerDutyNotifications'
 import ConfigureMSTeamsNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureMSTeamsNotifications/ConfigureMSTeamsNotifications'
 
-export type NotificationMethodsProps = StepProps<NotificationRules> & {
+export interface NotificationMethodsProps extends StepProps<NotificationRules> {
   typeOptions?: SelectOption[]
   expressions?: string[]
 }

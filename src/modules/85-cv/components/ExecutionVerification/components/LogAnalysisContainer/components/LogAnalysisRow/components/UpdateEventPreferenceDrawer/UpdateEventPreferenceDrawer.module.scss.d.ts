@@ -13,10 +13,10 @@ declare const styles: {
   readonly feedbackItem: string
   readonly feedbackSection: string
   readonly formSection: string
+  readonly modalInputElement: string
   readonly riskColorIndicator: string
   readonly riskColorIndicatorSmall: string
   readonly riskItem: string
-  readonly riskSelectElement: string
   readonly spinnerContainer: string
   readonly updatePreferenceDrawer: string
   readonly updatePreferenceDrawerCloseBtn: string

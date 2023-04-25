@@ -115,6 +115,9 @@ export const CreatePreview = ({ id, data }: CreatePreviewProps): JSX.Element => 
               value={`${data.SLOTargetPercentage.toString()}%` || ''}
             />
           )}
+          {data.evaluationType && (
+            <LabelAndValue label={getString('cv.slos.evaluationType')} value={data.evaluationType} />
+          )}
         </Layout.Vertical>
       )
     case CreateCompositeSLOSteps.Set_SLO_Target:

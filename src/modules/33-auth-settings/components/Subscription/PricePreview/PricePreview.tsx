@@ -12,15 +12,20 @@ import { Text, Layout, Toggle } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { TimeType, SubscriptionProps, CurrencyType } from '@common/constants/SubscriptionTypes'
-import type { Module } from 'framework/types/ModuleName'
+import { Module, ModuleName } from 'framework/types/ModuleName'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { getAmountInCurrency, getDollarAmount } from '@auth-settings/utils'
+import type { InvoiceDetailDTO } from 'services/cd-ng'
 import SubcriptionDetails from './SubscriptionDetails'
 import {
   getRenewDate,
   getSubscriptionBreakdownsByModuleAndFrequency,
   isSelectedPlan,
   PLAN_TYPES,
-  strToNumber
+  strToNumber,
+  getTodayDate,
+  getOtherRenewDate,
+  getOtherRenewPrevDate
 } from '../subscriptionUtils'
 import css from './PricePreview.module.scss'
 
@@ -29,6 +34,7 @@ interface PricePreviewProps {
   setSubscriptionDetails: (value: SubscriptionProps) => void
   module: Module
   canChangePaymentFrequency?: boolean
+  invoiceData?: InvoiceDetailDTO
 }
 
 const PaymentFrequencyToggle: React.FC<{
@@ -62,27 +68,79 @@ const PaymentFrequencyToggle: React.FC<{
   )
 }
 
-const Footer: React.FC<{ totalAmount: number; payingFrequency: TimeType; taxAmount?: number }> = ({
-  totalAmount,
-  payingFrequency,
-  taxAmount
-}) => {
+const Footer: React.FC<{
+  invoiceData?: InvoiceDetailDTO
+  payingFrequency: TimeType
+  totalAmount: number
+  module: Module
+}> = ({ invoiceData, payingFrequency, totalAmount, module }) => {
   const { getString } = useStrings()
+
+  const { licenseInformation } = useLicenseStore()
   const frequency = payingFrequency === TimeType.MONTHLY ? getString('common.perMonth') : getString('common.perYear')
   const renewDate = getRenewDate(payingFrequency)
+  const todayDate = getTodayDate()
+  let otherSubStartDate
+  if (licenseInformation['CF']?.edition !== 'FREE' && licenseInformation['CF']?.startTime) {
+    otherSubStartDate = new Date(licenseInformation['CF']?.startTime)
+  }
+  if (licenseInformation['CI']?.edition !== 'FREE' && licenseInformation['CI']?.startTime) {
+    otherSubStartDate = new Date(licenseInformation['CI']?.startTime)
+  }
+
+  let otherRenewDate = ''
+  if (otherSubStartDate !== undefined) {
+    otherRenewDate = getOtherRenewDate(payingFrequency, otherSubStartDate)
+    if (licenseInformation['CF']?.edition !== 'FREE' && licenseInformation['CF']?.startTime) {
+      otherSubStartDate = new Date(licenseInformation['CF']?.startTime)
+    }
+    if (licenseInformation['CI']?.edition !== 'FREE' && licenseInformation['CI']?.startTime) {
+      otherSubStartDate = new Date(licenseInformation['CI']?.startTime)
+    }
+    otherSubStartDate = getOtherRenewPrevDate(payingFrequency, otherSubStartDate)
+  }
+
+  const width = '320px'
+
   return (
     <Layout.Vertical>
-      <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-        <Text font={{ variation: FontVariation.H2 }}>{getString('total')}</Text>
+      <Layout.Horizontal
+        flex={{ justifyContent: 'space-between' }}
+        className={module === ModuleName.CI.toLowerCase() ? css.footerStyleCi : css.footerStyleFf}
+      >
+        <Text font={{ variation: FontVariation.H2 }}>{getString('common.payNow')}</Text>
         <Text font={{ variation: FontVariation.H2 }}>
-          {getAmountInCurrency(CurrencyType.USD, totalAmount)}
+          {getAmountInCurrency(
+            CurrencyType.USD,
+            invoiceData?.amountDue !== undefined ? invoiceData?.amountDue / 100 : totalAmount
+          )}
           {frequency}
         </Text>
       </Layout.Horizontal>
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-        <Text font={{ size: 'xsmall' }}>{getString('authSettings.autoRenewal', { date: renewDate })}</Text>
-        {isNil(taxAmount) && <Text font={{ size: 'xsmall' }}>{getString('authSettings.salesTax')}</Text>}
+        <Text font={{ size: 'xsmall' }}>
+          {getString('authSettings.autoRenewal', { date: otherRenewDate !== '' ? otherRenewDate : renewDate })}
+        </Text>
       </Layout.Horizontal>
+      {otherRenewDate !== '' && renewDate !== otherRenewDate ? (
+        <>
+          <Layout.Horizontal flex={{ justifyContent: 'space-between' }} style={{ marginTop: '10px' }}>
+            <Text font={{ size: 'xsmall' }}>{`${otherSubStartDate}`}</Text>
+            <Text font={{ size: 'xsmall' }} style={{ marginRight: '128px' }}>{`${todayDate}`}</Text>
+            <Text font={{ size: 'xsmall' }}>{`${otherRenewDate}`}</Text>
+          </Layout.Horizontal>
+          <Layout.Horizontal className={css.parentTime}>
+            <Layout.Horizontal
+              className={css.parentTimeChild1}
+              style={{ borderRight: `${width} solid var(--primary-7)` }}
+            ></Layout.Horizontal>
+          </Layout.Horizontal>
+          <Layout.Horizontal>
+            <Text font={{ size: 'xsmall' }}>{getString('authSettings.proRata', { date: todayDate })}</Text>
+            <Text font={{ size: 'xsmall' }}>{`-${otherRenewDate}`}</Text>
+          </Layout.Horizontal>
+        </>
+      ) : null}
     </Layout.Vertical>
   )
 }
@@ -91,6 +149,8 @@ function getColorByModule(module: Module): string | undefined {
   switch (module) {
     case 'cf':
       return css.cf
+    case 'ci':
+      return css.ci
   }
   return undefined
 }
@@ -99,7 +159,8 @@ const PricePreview: React.FC<PricePreviewProps> = ({
   module,
   subscriptionDetails,
   setSubscriptionDetails,
-  canChangePaymentFrequency
+  canChangePaymentFrequency,
+  invoiceData
 }) => {
   const { getString } = useStrings()
   const { paymentFreq, productPrices, premiumSupport, quantities, taxAmount } = subscriptionDetails
@@ -200,8 +261,11 @@ const PricePreview: React.FC<PricePreviewProps> = ({
         subscriptionDetails={subscriptionDetails}
         products={products}
         premiumSupportAmount={premiumSupportUnitPrice}
+        totalAmount={totalAmount}
       />
-      <Footer payingFrequency={paymentFreq} totalAmount={totalAmount} taxAmount={subscriptionDetails.taxAmount} />
+      {!isNil(taxAmount) && invoiceData?.totalAmount !== undefined ? (
+        <Footer payingFrequency={paymentFreq} invoiceData={invoiceData} totalAmount={totalAmount} module={module} />
+      ) : null}
     </Layout.Vertical>
   )
 }

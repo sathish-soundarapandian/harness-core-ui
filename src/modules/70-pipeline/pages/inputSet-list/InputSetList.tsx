@@ -7,7 +7,18 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { defaultTo, isEmpty, pick } from 'lodash-es'
-import { Popover, Layout, TextInput, Text, ButtonVariation, useToaster } from '@harness/uicore'
+import {
+  Popover,
+  Layout,
+  TextInput,
+  Text,
+  ButtonVariation,
+  useToaster,
+  ListHeader,
+  sortByCreated,
+  sortByName,
+  SortMethod
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { Menu, MenuItem, Position } from '@blueprintjs/core'
@@ -40,8 +51,6 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
-import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { InputSetListView } from './InputSetListView'

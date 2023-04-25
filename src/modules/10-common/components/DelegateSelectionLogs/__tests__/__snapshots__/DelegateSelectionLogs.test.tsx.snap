@@ -100,150 +100,146 @@ exports[`<ExecutionStepDetails /> tests renders normal step 1`] = `
       </span>
     </div>
     <div
-      class="bp3-card bp3-elevation-0 Card--card card"
+      class="TableV2--table"
     >
       <div
-        class="TableV2--table"
+        class="TableV2--header"
+        role="row"
       >
         <div
-          class="TableV2--header"
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            ASSESSMENT
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 80%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            DETAILS
+          </p>
+        </div>
+      </div>
+      <div
+        class="TableV2--body"
+      >
+        <div
+          class="TableV2--row TableV2--card"
           role="row"
         >
           <div
-            class="TableV2--cell"
-            colspan="1"
-            role="columnheader"
-            style="width: 20%;"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-            >
-              ASSESSMENT
-            </p>
-          </div>
-          <div
-            class="TableV2--cell"
-            colspan="1"
-            role="columnheader"
-            style="width: 80%;"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-            >
-              DETAILS
-            </p>
-          </div>
-        </div>
-        <div
-          class="TableV2--body"
-        >
-          <div
-            class="TableV2--row TableV2--card"
-            role="row"
+            class="TableV2--cells"
           >
             <div
-              class="TableV2--cells"
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+                style="display: flex; align-items: center;"
+              >
+                Selected
+                <span
+                  class="bp3-icon bp3-icon-tick StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-green500"
+                  icon="tick"
+                >
+                  <svg
+                    data-icon="tick"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                  >
+                    <desc>
+                      tick
+                    </desc>
+                    <path
+                      d="M14 3c-.28 0-.53.11-.71.29L6 10.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l8-8A1.003 1.003 0 0014 3z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 80%;"
             >
               <div
-                class="TableV2--cell"
-                role="cell"
-                style="width: 20%;"
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-medium"
+                data-testid="Delegate assigned for task execution"
+                style="padding-left: 0px;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main"
-                  style="display: flex; align-items: center;"
+                  class="StyledProps--font StyledProps--main messageContainer StyledProps--color StyledProps--color-grey800"
                 >
-                  Selected
-                  <span
-                    class="bp3-icon bp3-icon-tick StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-green500"
-                    icon="tick"
-                  >
-                    <svg
-                      data-icon="tick"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      width="16"
-                    >
-                      <desc>
-                        tick
-                      </desc>
-                      <path
-                        d="M14 3c-.28 0-.53.11-.71.29L6 10.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l8-8A1.003 1.003 0 0014 3z"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
+                  Delegate assigned for task execution
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey400 StyledProps--font-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  <span>
+                    loggedAt
                   </span>
                 </p>
               </div>
-              <div
-                class="TableV2--cell"
-                role="cell"
-                style="width: 80%;"
-              >
-                <div
-                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-medium"
-                  data-testid="Delegate assigned for task execution"
-                  style="padding-left: 0px;"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main messageContainer StyledProps--color StyledProps--color-grey800"
-                  >
-                    Delegate assigned for task execution
-                  </p>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey400 StyledProps--font-small"
-                    style="--text-line-clamp: 1;"
-                  >
-                    <span>
-                      loggedAt
-                    </span>
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
           <div
-            class="TableV2--row TableV2--card"
-            role="row"
+            class="TableV2--cells"
           >
             <div
-              class="TableV2--cells"
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                Accepted
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 80%;"
             >
               <div
-                class="TableV2--cell"
-                role="cell"
-                style="width: 20%;"
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-medium"
+                data-testid="Successfully matched required delegate capabilities"
+                style="padding-left: 0px;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main"
+                  class="StyledProps--font StyledProps--main messageContainer StyledProps--color StyledProps--color-grey800"
                 >
-                  Accepted
+                  Successfully matched required delegate capabilities
                 </p>
-              </div>
-              <div
-                class="TableV2--cell"
-                role="cell"
-                style="width: 80%;"
-              >
-                <div
-                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-medium"
-                  data-testid="Successfully matched required delegate capabilities"
-                  style="padding-left: 0px;"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey400 StyledProps--font-small"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font StyledProps--main messageContainer StyledProps--color StyledProps--color-grey800"
-                  >
-                    Successfully matched required delegate capabilities
-                  </p>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey400 StyledProps--font-small"
-                    style="--text-line-clamp: 1;"
-                  >
-                    <span>
-                      loggedAt
-                    </span>
-                  </p>
-                </div>
+                  <span>
+                    loggedAt
+                  </span>
+                </p>
               </div>
             </div>
           </div>

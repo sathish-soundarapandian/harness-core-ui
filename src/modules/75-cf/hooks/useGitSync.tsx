@@ -60,7 +60,7 @@ export interface UseGitSync {
   isGitSyncActionsEnabled: boolean
   gitSyncLoading: boolean
   apiError: string
-  saveWithGit: (reqData: SaveWithGitArgs) => void
+  saveWithGit: (reqData: SaveWithGitArgs) => Promise<void>
   handleAutoCommit: (newAutoCommitValue: boolean) => Promise<void>
   handleGitPause: (newGitPauseValue: boolean) => Promise<void>
   getGitSyncFormMeta: (commitMessage: string) => GitSyncFormMeta
@@ -290,12 +290,12 @@ export const useGitSync = (): UseGitSync => {
 
     if (isGitSyncEnabled) {
       if (isAutoCommitEnabled) {
-        onSaveAutoCommit()
+        await onSaveAutoCommit()
       } else {
         showGitSyncModal()
       }
     } else {
-      onSave(patchInstructions)
+      await onSave(patchInstructions)
     }
   }
 

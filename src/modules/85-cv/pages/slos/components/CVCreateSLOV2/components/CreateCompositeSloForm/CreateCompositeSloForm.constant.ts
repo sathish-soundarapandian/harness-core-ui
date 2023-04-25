@@ -24,3 +24,9 @@ export const serviceLevelObjectiveKeys = [
   'serviceLevelObjectiveRef',
   'weightagePercentage'
 ]
+
+export enum WarningModalType {
+  PERIOD_TYPE = 'PeriodType',
+  SAVE_CHANGES = 'SaveChanges',
+  EVALUATION_TYPE = 'EvaluationType'
+}

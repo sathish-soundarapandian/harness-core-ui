@@ -23,4 +23,5 @@ export interface NotificationRuleRowProps {
   ) => void
   handleDeleteNotificationRule: (id: string) => void
   index: number
+  isCompositeRequestBasedSLO?: boolean
 }

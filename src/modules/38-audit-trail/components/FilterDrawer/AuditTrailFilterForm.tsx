@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { FormInput, MultiSelectOption } from '@harness/uicore'
+import { FormInput, MultiSelectOption, SortMethod } from '@harness/uicore'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
@@ -20,7 +20,6 @@ import UserTagRenderer from '@common/components/UserTagRenderer/UserTagRenderer'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import { SortMethod } from '@common/utils/sortUtils'
 import type { AuditTrailFormType } from './FilterDrawer'
 
 interface AuditTrailFormProps {

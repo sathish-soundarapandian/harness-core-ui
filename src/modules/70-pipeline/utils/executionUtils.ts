@@ -1152,6 +1152,9 @@ export const processExecutionDataForGraph = (
         data: {
           ...currentStage.data,
           conditionalExecutionEnabled: getConditionalExecutionFlag(currentStage?.data?.nodeRunInfo),
+          ...(isPipelineRollback && {
+            id: [defaultTo(currentStageData?.nodeUuid, ''), parentStageId].join('|')
+          }),
           identifier: isPipelineRollback
             ? [defaultTo(currentStageData?.nodeUuid, ''), parentStageId].join('|')
             : defaultTo(currentStageData?.nodeUuid, ''),
@@ -1186,6 +1189,7 @@ export const processExecutionDataForGraph = (
             data: {
               ...node,
               conditionalExecutionEnabled: getConditionalExecutionFlag(node?.nodeRunInfo),
+              ...(isPipelineRollback && { id: [defaultTo(node?.nodeUuid, ''), parentStageId].join('|') }),
               identifier: isPipelineRollback
                 ? [defaultTo(node?.nodeUuid, ''), parentStageId].join('|')
                 : defaultTo(node?.nodeUuid, ''),
@@ -1220,6 +1224,7 @@ export const processExecutionDataForGraph = (
         data: {
           ...stage,
           conditionalExecutionEnabled: getConditionalExecutionFlag(stage?.nodeRunInfo),
+          ...(isPipelineRollback && { id: [defaultTo(stage?.nodeUuid, ''), parentStageId].join('|') }),
           identifier: isPipelineRollback
             ? [defaultTo(stage?.nodeUuid, ''), parentStageId].join('|')
             : defaultTo(stage?.nodeUuid, ''),

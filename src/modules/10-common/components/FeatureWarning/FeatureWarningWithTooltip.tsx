@@ -75,7 +75,7 @@ export const FeatureWarningTooltip = ({ featureName, warningMessage }: FeatureWa
     }
     return (
       <Text font={{ size: 'small' }} color={Color.WHITE}>
-        {upgradeDescription} {featureDescription}
+        {featureDescription} {upgradeDescription}
       </Text>
     )
   }

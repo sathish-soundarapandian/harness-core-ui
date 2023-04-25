@@ -8,7 +8,13 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isNull, isUndefined } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType, PageSpinner } from '@harness/uicore'
+import {
+  EXECUTION_TIME_INPUT_VALUE,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  PageSpinner
+} from '@harness/uicore'
 import { StringKeys, useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -84,9 +90,10 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
   const ticketTypeKeyFixedValue = getGenuineValue(
     initialValues.spec?.ticketType || (inputSetData?.allValues?.spec?.ticketType as string)
   )
-  const connectorRefFixedValue = getGenuineValue(
-    initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string)
-  )
+  const connectorRefFixedValue =
+    template?.spec?.connectorRef === EXECUTION_TIME_INPUT_VALUE
+      ? formContentProps?.formik?.values?.spec?.connectorRef
+      : getGenuineValue(initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string))
   const descriptionFieldIndex = template?.spec?.fields?.findIndex(
     field => field.name === ServiceNowStaticFields.description
   )

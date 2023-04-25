@@ -7,8 +7,8 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import { SortMethod } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import { SortMethod } from '@common/utils/sortUtils'
 import EnvironmentResourceModal from '../EnvironmentResourceModal'
 import mockData from './environmentMockData.json'
 

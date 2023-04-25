@@ -103,8 +103,10 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = ({
   useEffect(() => {
     // flag must be validated within the getting started flow
     // anything older than that we don't care about
+
     if (
       Array.isArray(featureMetrics) &&
+      featureMetrics.length &&
       featureMetrics[0].status?.status === 'active' &&
       featureMetrics[0].status?.lastAccess > startTime
     ) {

@@ -49,12 +49,8 @@ import CECOEditGatewayPage from './pages/co-edit-gateway/CECOEditGatewayPage'
 import CECOLoadBalancersPage from './pages/co-access-points/CECOAccessPointsPage'
 import CETrialHomePage from './pages/home/CETrialHomePage'
 
-import PerspectiveDetailsPage from './pages/perspective-details/PerspectiveDetailsPage'
-import CreatePerspectivePage from './pages/perspective-builder/CreatePerspectivePage'
-import PerspectiveListPage from './pages/perspective-list/PerspectiveListPage'
 import OverviewPage from './pages/overview/OverviewPage'
 import formatCost from './utils/formatCost'
-import BusinessMapping from './pages/business-mapping/BusinessMapping'
 import OverviewAddCluster from './components/OverviewPage/OverviewAddCluster'
 import CORuleDetailsPage from './pages/co-rule-details/CORuleDetailsPage'
 import CommitmentOrchestration from './pages/CommitmentOrchestration/CommitmentOrchestration'
@@ -451,38 +447,6 @@ const CENonMFERoutes = (
     <RouteWithLayout
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CESideNavProps}
-      path={routes.toCECreatePerspective({
-        ...accountPathProps,
-        perspectiveId: ':perspectiveId'
-      })}
-      exact
-      pageName={PAGE_NAME.CECreatePerspectivePage}
-    >
-      <CreatePerspectivePage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCEPerspectives({
-        ...accountPathProps
-      })}
-      exact
-      pageName={PAGE_NAME.CEPerspectiveListPage}
-    >
-      <PerspectiveListPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toBusinessMapping({ ...accountPathProps })}
-      exact
-      pageName={PAGE_NAME.CEBusinessMapping}
-    >
-      <BusinessMapping />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
       path={routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps })}
       exact
       pageName={PAGE_NAME.CECOCreateGatewayPage}
@@ -506,18 +470,6 @@ const CENonMFERoutes = (
       pageName={PAGE_NAME.CECORuleDetailsPage}
     >
       <CORuleDetailsPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      sidebarProps={CESideNavProps}
-      path={routes.toPerspectiveDetails({
-        ...accountPathProps,
-        perspectiveId: ':perspectiveId',
-        perspectiveName: ':perspectiveName'
-      })}
-      exact
-      pageName={PAGE_NAME.CEPerspectiveDetailsPage}
-    >
-      <PerspectiveDetailsPage />
     </RouteWithLayout>
     <RouteWithLayout
       licenseRedirectData={licenseRedirectData}

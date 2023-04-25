@@ -701,6 +701,7 @@ export interface StringsMap {
   'common.pagerDuty': string
   'common.paste': string
   'common.path': string
+  'common.payNow': string
   'common.payload': string
   'common.pendingInvitation': string
   'common.per': string
@@ -2048,11 +2049,13 @@ export interface StringsMap {
   'authSettings.confirmDisablePasswordStrength': string
   'authSettings.confirmDisableUserPasswordLogin': string
   'authSettings.confirmDisableWhitelistedDomains': string
+  'authSettings.costCalculator.alreadySubscribed': string
   'authSettings.costCalculator.comparePlans': string
   'authSettings.costCalculator.currentSubscribed': string
   'authSettings.costCalculator.developer.developer': string
   'authSettings.costCalculator.developer.developerDefinition': string
   'authSettings.costCalculator.developer.title': string
+  'authSettings.costCalculator.developer.titleCI': string
   'authSettings.costCalculator.mau.kMauFree': string
   'authSettings.costCalculator.mau.mMauFree': string
   'authSettings.costCalculator.mau.mau': string
@@ -2064,6 +2067,8 @@ export interface StringsMap {
   'authSettings.costCalculator.next': string
   'authSettings.costCalculator.premSupport.includedByDefault': string
   'authSettings.costCalculator.premSupport.onCallSupport': string
+  'authSettings.costCalculator.premSupport.premierSupport': string
+  'authSettings.costCalculator.premSupport.premierSupportDefinition': string
   'authSettings.costCalculator.premSupport.title': string
   'authSettings.costCalculator.premiumSupport': string
   'authSettings.costCalculator.switchTooltip': string
@@ -2218,6 +2223,7 @@ export interface StringsMap {
   'authSettings.pricePreview.calculatedNextStep': string
   'authSettings.pricePreview.discount': string
   'authSettings.pricePreview.title': string
+  'authSettings.proRata': string
   'authSettings.publicOAuthLoginDisabled': string
   'authSettings.publicOAuthLoginEnabled': string
   'authSettings.recomendation': string
@@ -4241,6 +4247,7 @@ export interface StringsMap {
   'pipeline.jiraApprovalStep.validations.project': string
   'pipeline.jiraApprovalStep.validations.requiredField': string
   'pipeline.jiraCreateStep.addFields': string
+  'pipeline.jiraCreateStep.descriptionPlaceholder': string
   'pipeline.jiraCreateStep.fetchingFields': string
   'pipeline.jiraCreateStep.fieldSelectorAdd': string
   'pipeline.jiraCreateStep.fields': string
@@ -5012,6 +5019,7 @@ export interface StringsMap {
   'pipeline.verification.logs.clusterType': string
   'pipeline.verification.logs.copyURL': string
   'pipeline.verification.logs.countPerMin': string
+  'pipeline.verification.logs.createJiraTicket': string
   'pipeline.verification.logs.eventCountPerMin': string
   'pipeline.verification.logs.eventDetails': string
   'pipeline.verification.logs.eventPreference': string
@@ -5019,6 +5027,7 @@ export interface StringsMap {
   'pipeline.verification.logs.eventType': string
   'pipeline.verification.logs.filterByClusterType': string
   'pipeline.verification.logs.firstOccurrence': string
+  'pipeline.verification.logs.jiraTicketTitle': string
   'pipeline.verification.logs.lastKnownOccurrence': string
   'pipeline.verification.logs.logCluster': string
   'pipeline.verification.logs.messageCount': string
@@ -5034,6 +5043,7 @@ export interface StringsMap {
   'pipeline.verification.logs.trend': string
   'pipeline.verification.logs.updateEventPreference': string
   'pipeline.verification.logs.urlCopied': string
+  'pipeline.verification.logs.viewJiraTicket': string
   'pipeline.verification.metricViewPlaceholder': string
   'pipeline.verification.metricsInViolation': string
   'pipeline.verification.nodeCountDisplay': string
@@ -8129,6 +8139,8 @@ export interface StringsMap {
   'cv.CompositeSLO.CreateTitle': string
   'cv.CompositeSLO.DefineSLO': string
   'cv.CompositeSLO.ErrorBudgetPolicy': string
+  'cv.CompositeSLO.EvaluationTypeChangeWarning.message': string
+  'cv.CompositeSLO.EvaluationTypeChangeWarning.title': string
   'cv.CompositeSLO.MatchingSLO': string
   'cv.CompositeSLO.NoData': string
   'cv.CompositeSLO.NoDataSuggestion': string
@@ -8312,6 +8324,7 @@ export interface StringsMap {
   'cv.ends': string
   'cv.errorBudget': string
   'cv.errorBudgetBurnDown': string
+  'cv.errorBudgetIncrease': string
   'cv.errorBudgetIsSuccessfullyReset': string
   'cv.errorBudgetRecalculationInProgress': string
   'cv.errorBudgetRemaining': string
@@ -8452,6 +8465,14 @@ export interface StringsMap {
   'cv.logs.feedbackAppliedMessage': string
   'cv.logs.feedbackHistory': string
   'cv.logs.feedbackUpdatedMessage': string
+  'cv.logs.jiraDetails.createTicket': string
+  'cv.logs.jiraDetails.viewInJira': string
+  'cv.logs.jiraDetails.viewTicket': string
+  'cv.logs.jiraFormLable.assignee': string
+  'cv.logs.jiraFormLable.priority': string
+  'cv.logs.jiraFormLable.ticketSummary': string
+  'cv.logs.jiraFormValidation.issueType': string
+  'cv.logs.jiraFormValidation.ticketSummary': string
   'cv.logs.notARisk': string
   'cv.logs.priorityOrRiskSelectionRequired': string
   'cv.logs.radarChartInfo': string

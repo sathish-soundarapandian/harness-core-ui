@@ -13,7 +13,7 @@ import { defaultTo, lowerCase } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import moment from 'moment'
 import { getModuleIcon } from '@common/utils/utils'
-import type { Module, ModuleName } from 'framework/types/ModuleName'
+import { Module, ModuleName } from 'framework/types/ModuleName'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import type { InvoiceDetailDTO, ItemDTO, SubscriptionDetailDTO } from 'services/cd-ng'
@@ -106,14 +106,23 @@ function SubscriptionTable({ data = [], frequency }: SubscriptionTableProps): JS
         </Layout.Vertical>
       </div>
       <TableHeader />
-      {data.map(row => (
-        <TableRow
-          key={row.moduletype}
-          data={row}
-          module={row?.moduletype as ModuleName}
-          name={lowerCase(row.moduletype || '')}
-        />
-      ))}
+      {data.map(row => {
+        const items: ItemDTO[] = []
+        row?.latestInvoiceDetail?.items?.forEach(item => {
+          if (!item.description?.includes('Sales Tax') && item.amount !== 0) {
+            items.push(item)
+          }
+        })
+
+        return (
+          <TableRow
+            key={items[0]?.price?.metaData?.module?.toLowerCase()}
+            data={row}
+            module={items[0]?.price?.metaData?.module?.toLowerCase() as ModuleName}
+            name={items[0]?.price?.metaData?.module?.toLowerCase() || ''}
+          />
+        )
+      })}
     </Card>
   )
 }
@@ -131,13 +140,13 @@ const TableHeader = (): JSX.Element => {
   )
 }
 interface TableRowProps {
-  module: ModuleName
+  module?: ModuleName
   subscribed?: string
   using?: string
   name: string
   data: SubscriptionDetailDTO
 }
-const TableRow = ({ name, using = '-', module, data }: TableRowProps): JSX.Element => {
+const TableRow = ({ name, using = '-', module = ModuleName.CF, data }: TableRowProps): JSX.Element => {
   const { getString } = useStrings()
   const history = useHistory()
 
@@ -166,19 +175,22 @@ const TableRow = ({ name, using = '-', module, data }: TableRowProps): JSX.Eleme
       moduleName: name as Module
     })
   }
-
+  const ffString = `${priceDetails.developers?.quantity} ${getString(
+    'common.subscriptions.usage.developers'
+  )} / ${getQuantityFromValue(
+    priceDetails.maus?.price?.metaData?.max as string,
+    priceDetails.maus?.price?.metaData?.sampleMultiplier as string,
+    priceDetails.maus?.price?.metaData?.sampleUnit as string
+  )} ${getString('authSettings.costCalculator.maus')}`
+  const ciString = `${priceDetails.developers?.quantity} ${getString('common.subscriptions.usage.developers')}`
   return (
     <div className={css.tableRow}>
       <Text font={{ variation: FontVariation.BODY }} iconProps={{ size: 22 }} icon={getModuleIcon(module)}>
-        {getString(getTitleByModule(name as Module).title as keyof StringsMap)}
+        {getString(getTitleByModule(name as Module)?.title as keyof StringsMap)}
       </Text>
-      <Text font={{ variation: FontVariation.BODY }}>{`${priceDetails.developers?.quantity} ${getString(
-        'common.subscriptions.usage.developers'
-      )} / ${getQuantityFromValue(
-        priceDetails.maus?.price?.metaData?.max as string,
-        priceDetails.maus?.price?.metaData?.sampleMultiplier as string,
-        priceDetails.maus?.price?.metaData?.sampleUnit as string
-      )} ${getString('authSettings.costCalculator.maus')}`}</Text>
+      <Text font={{ variation: FontVariation.BODY }}>
+        {module === ModuleName.CF.toLowerCase() ? ffString : ciString}
+      </Text>
       <Text font={{ variation: FontVariation.BODY }}> {`${using}`}</Text>
       <Text font={{ variation: FontVariation.BODY }}>
         <RbacButton
@@ -259,18 +271,19 @@ const PriceBreakdownTooltipFF = ({
             }`}</Text>
           </Layout.Horizontal>
         </Layout.Vertical>
-        <Layout.Vertical flex className={css.breakdownRow} data-testid="maus">
-          <Layout.Horizontal className={cx(css.fullWidth, css.alignSpace)}>
-            <Text color={Color.BLACK} width={200}>{`${getQuantityFromValue(
-              priceDetails.maus?.price?.metaData?.max as string,
-              priceDetails.maus?.price?.metaData?.sampleMultiplier as string,
-              priceDetails.maus?.price?.metaData?.sampleUnit as string
-            )} ${getString('authSettings.costCalculator.maus')}`}</Text>
-            <Text color={Color.BLACK} className={css.right}>
-              ${toDollars(priceDetails.maus?.amount)}
-            </Text>
-          </Layout.Horizontal>
-          {/* <Layout.Horizontal flex className={css.fullWidth}>
+        {moduleName.toLowerCase() === 'cf' ? (
+          <Layout.Vertical flex className={css.breakdownRow} data-testid="maus">
+            <Layout.Horizontal className={cx(css.fullWidth, css.alignSpace)}>
+              <Text color={Color.BLACK} width={200}>{`${getQuantityFromValue(
+                priceDetails.maus?.price?.metaData?.max as string,
+                priceDetails.maus?.price?.metaData?.sampleMultiplier as string,
+                priceDetails.maus?.price?.metaData?.sampleUnit as string
+              )} ${getString('authSettings.costCalculator.maus')}`}</Text>
+              <Text color={Color.BLACK} className={css.right}>
+                ${toDollars(priceDetails.maus?.amount)}
+              </Text>
+            </Layout.Horizontal>
+            {/* <Layout.Horizontal flex className={css.fullWidth}>
             <Text color={Color.BLACK} font={{ size: 'small' }} width={200}>
               {`${getQuantityFromValue(
                 priceDetails.maus?.price?.metaData?.max as string,
@@ -283,7 +296,8 @@ const PriceBreakdownTooltipFF = ({
               )}  ${isMonthly ? getString('common.perMonth') : getString('common.perYearWithoutSlash')}`}
             </Text>
           </Layout.Horizontal> */}
-        </Layout.Vertical>
+          </Layout.Vertical>
+        ) : null}
         {toDollars(priceDetails.premiumSupport) > 0 && (
           <Layout.Horizontal flex className={css.breakdownRow} data-testid="support">
             <Text color={Color.BLACK} width={200}>

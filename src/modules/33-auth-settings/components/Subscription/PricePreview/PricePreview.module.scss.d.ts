@@ -8,9 +8,15 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly cf: string
+  readonly ci: string
+  readonly footerStyleCi: string
+  readonly footerStyleFf: string
   readonly line: string
+  readonly parentTime: string
+  readonly parentTimeChild1: string
   readonly paymentFrequency: string
   readonly pricePreview: string
   readonly selected: string
+  readonly totalAmountStyle: string
 }
 export default styles

@@ -165,7 +165,7 @@ const usePatchFeatureFlag = ({
     }
 
     // submit request
-    patch.feature.onPatchAvailable(async patchInstructions => {
+    patch.feature.onPatchAvailable(patchInstructions =>
       saveWithGit({
         featureFlagName,
         featureFlagIdentifier,
@@ -173,8 +173,9 @@ const usePatchFeatureFlag = ({
         patchInstructions,
         onSave: handleSave
       })
-    })
+    )
   }
+
   return {
     saveChanges,
     loading

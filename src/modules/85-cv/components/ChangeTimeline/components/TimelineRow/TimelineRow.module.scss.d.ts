@@ -16,5 +16,9 @@ declare const styles: {
   readonly singleEvent: string
   readonly timeline: string
   readonly timelineRow: string
+  readonly widgetContainer: string
+  readonly widgetIcon: string
+  readonly widgetTextElements: string
+  readonly widgetsPopover: string
 }
 export default styles

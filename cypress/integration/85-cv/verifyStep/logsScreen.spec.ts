@@ -15,8 +15,19 @@ import {
   feedbackHistoryResponse,
   gitSyncCall,
   healthSourceAPI,
+  jiraCreatePayload,
+  jiraCreatePostCall,
+  jiraIssueTypeMock,
+  jiraIssueTypesCall,
+  jiraPrioritiesCall,
+  jiraPrioritiesMock,
+  jiraProjectsCall,
+  jiraProjectsMock,
+  jiraTicketDetailsCall,
+  jiraTicketGetResponse,
   logsListCall,
   logsListCallResponse,
+  logsListCallResponseWithTicket,
   logsListCLusterFilterCall,
   logsListMinSliderFilterCall,
   logsListNodeFilterCall,
@@ -44,6 +55,12 @@ describe('Verify step', () => {
           {
             uuid: null,
             name: 'SRM_LOG_FEEDBACK_ENABLE_UI',
+            enabled: true,
+            lastUpdatedAt: 0
+          },
+          {
+            uuid: null,
+            name: 'SRM_ENABLE_JIRA_INTEGRATION',
             enabled: true,
             lastUpdatedAt: 0
           }
@@ -237,5 +254,218 @@ describe('Verify step', () => {
 
     cy.findByTestId('Known').should('exist')
     cy.findByTestId('Known').should('be.checked')
+  })
+
+  it('should verify create jira functionalty', () => {
+    cy.intercept('GET', logsListCall, logsListCallResponse).as('logsListCall')
+    cy.intercept('GET', logsRadarChartDataCall, logsRadarChartDataCallResponse).as('logsRadarChartDataCall')
+    cy.intercept('GET', logsListNodeFilterCall, logsListCallResponse).as('logsListNodeFilterCall')
+    cy.intercept('GET', logsRadarChartDataNodeFilterCall, logsRadarChartDataCallResponse).as(
+      'logsRadarChartDataNodeFilterCall'
+    )
+
+    cy.intercept('GET', logsListCLusterFilterCall, logsListCallResponse).as('logsListCLusterFilterCall')
+    cy.intercept('GET', logsRadarChartDataCLusterFilterCall, logsRadarChartDataCallResponse).as(
+      'logsRadarChartDataCLusterFilterCall'
+    )
+    cy.intercept('GET', logsListMinSliderFilterCall, logsListCallResponse).as('logsListMinSliderFilterCall')
+    cy.intercept('GET', feedbackHistory, feedbackHistoryResponse).as('feedbackHistory')
+
+    cy.intercept('GET', jiraProjectsCall, jiraProjectsMock).as('jiraProjectsCall')
+    cy.intercept('GET', jiraPrioritiesCall, jiraPrioritiesMock).as('jiraPrioritiesCall')
+    cy.intercept('GET', jiraIssueTypesCall, jiraIssueTypeMock).as('jiraIssueTypesCall')
+    cy.intercept('POST', jiraCreatePostCall).as('jiraCreatePostCall')
+
+    cy.findByText('NG Docker Image').click()
+
+    cy.wait('@sourceCodeManagerCall')
+    cy.wait('@gitSyncCall')
+    cy.wait('@pipelinesYamlFetchCall')
+
+    cy.wait('@pipelineSummary')
+    cy.wait('@pipelineDetails')
+
+    cy.url().should('include', '/pipelines/NG_Docker_Image/pipeline-studio')
+
+    cy.findByRole('link', { name: /Execution History/i }).click()
+
+    cy.wait('@pipelineExecutionSumary')
+    cy.wait('@pipelineSummary')
+
+    cy.findByText(/(Execution Id: 5)/i)
+      .scrollIntoView()
+      .click()
+
+    cy.wait('@pipelineExecution')
+    cy.wait('@pipelineExecutionForNode')
+
+    cy.url().should('include', '/pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline')
+
+    cy.url().should('include', '/pipelines/NG_Docker_Image/executions/')
+
+    cy.findByTestId(/Logs/i).click()
+
+    cy.wait('@overviewCall')
+    cy.wait('@logsListCall')
+    cy.wait('@logsRadarChartDataCall')
+
+    cy.url().should(
+      'include',
+      '/pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline?storeType=INLINE&view=log&type=Logs&filterAnomalous=true'
+    )
+
+    cy.findAllByTestId(/logs-data-row/i).should('have.length', 3)
+
+    cy.findAllByTestId(/logs-data-row/i)
+      .first()
+      .click()
+
+    cy.findByTestId(/LogAnalysis_detailsDrawer/i).should('exist')
+
+    cy.findByTestId(/jiraCreationButton-Drawer/i)
+      .should('exist')
+      .click()
+
+    cy.wait('@jiraProjectsCall')
+    cy.wait('@jiraPrioritiesCall')
+
+    cy.findByTestId(/addJiraField/)
+      .should('exist')
+      .click()
+
+    cy.findByTestId(/jiraDrawerSubmit_button/)
+      .should('exist')
+      .click({ force: true })
+
+    cy.findByText(/Project is required/).should('exist')
+    cy.findByText(/Issue type is required/).should('exist')
+    cy.findByText(/Ticket summary is required/).should('exist')
+    cy.findByText(/Description is required/).should('exist')
+    cy.findByText(/Key is required/).should('exist')
+    cy.findByText(/Value is required/).should('exist')
+
+    cy.get('input[name="projectKey"]').click()
+    cy.contains('p', 'Observability Integrations Platform').click({ force: true })
+
+    cy.wait('@jiraIssueTypesCall')
+
+    cy.get('input[name="issueType"]').click()
+    cy.contains('p', 'Story').click({ force: true })
+
+    cy.get('input[name="priority"]').click()
+    cy.contains('p', 'P1').click({ force: true })
+
+    cy.fillField('title', 'Issue to be fixed')
+    cy.fillField('description', 'Some description')
+
+    cy.findByPlaceholderText(/Enter Key/)
+      .should('exist')
+      .type('Key1')
+
+    cy.findByPlaceholderText(/Type and press enter to create a tag/)
+      .should('exist')
+      .type('value1')
+      .blur()
+
+    cy.findByTestId(/addJiraField/)
+      .should('exist')
+      .click()
+
+    cy.get('span[data-icon="main-trash"]').last().click()
+
+    cy.findByTestId(/jiraDrawerSubmit_button/)
+      .should('exist')
+      .click({ force: true })
+
+    cy.wait('@jiraCreatePostCall').then(interception => {
+      expect(interception.request.body).to.deep.equal(jiraCreatePayload)
+    })
+
+    cy.findByTestId(/DrawerClose_button/)
+      .should('exist')
+      .click()
+
+    cy.wait('@logsListCall')
+  })
+
+  it('should verify view jira functionalty', () => {
+    cy.intercept('GET', logsListCall, logsListCallResponseWithTicket).as('logsListCall')
+    cy.intercept('GET', logsRadarChartDataCall, logsRadarChartDataCallResponse).as('logsRadarChartDataCall')
+    cy.intercept('GET', logsListNodeFilterCall, logsListCallResponse).as('logsListNodeFilterCall')
+    cy.intercept('GET', logsRadarChartDataNodeFilterCall, logsRadarChartDataCallResponse).as(
+      'logsRadarChartDataNodeFilterCall'
+    )
+
+    cy.intercept('GET', logsListCLusterFilterCall, logsListCallResponse).as('logsListCLusterFilterCall')
+    cy.intercept('GET', logsRadarChartDataCLusterFilterCall, logsRadarChartDataCallResponse).as(
+      'logsRadarChartDataCLusterFilterCall'
+    )
+    cy.intercept('GET', logsListMinSliderFilterCall, logsListCallResponse).as('logsListMinSliderFilterCall')
+    cy.intercept('GET', feedbackHistory, feedbackHistoryResponse).as('feedbackHistory')
+
+    cy.intercept('GET', jiraProjectsCall, jiraProjectsMock).as('jiraProjectsCall')
+    cy.intercept('GET', jiraPrioritiesCall, jiraPrioritiesMock).as('jiraPrioritiesCall')
+    cy.intercept('GET', jiraIssueTypesCall, jiraIssueTypeMock).as('jiraIssueTypesCall')
+    cy.intercept('GET', jiraTicketDetailsCall, jiraTicketGetResponse).as('jiraTicketDetailsCall')
+    cy.intercept('POST', jiraCreatePostCall).as('jiraCreatePostCall')
+
+    cy.findByText('NG Docker Image').click()
+
+    cy.wait('@sourceCodeManagerCall')
+    cy.wait('@gitSyncCall')
+    cy.wait('@pipelinesYamlFetchCall')
+
+    cy.wait('@pipelineSummary')
+    cy.wait('@pipelineDetails')
+
+    cy.url().should('include', '/pipelines/NG_Docker_Image/pipeline-studio')
+
+    cy.findByRole('link', { name: /Execution History/i }).click()
+
+    cy.wait('@pipelineExecutionSumary')
+    cy.wait('@pipelineSummary')
+
+    cy.findByText(/(Execution Id: 5)/i)
+      .scrollIntoView()
+      .click()
+
+    cy.wait('@pipelineExecution')
+    cy.wait('@pipelineExecutionForNode')
+
+    cy.url().should('include', '/pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline')
+
+    cy.url().should('include', '/pipelines/NG_Docker_Image/executions/')
+
+    cy.findByTestId(/Logs/i).click()
+
+    cy.wait('@overviewCall')
+    cy.wait('@logsListCall')
+    cy.wait('@logsRadarChartDataCall')
+
+    cy.url().should(
+      'include',
+      '/pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline?storeType=INLINE&view=log&type=Logs&filterAnomalous=true'
+    )
+
+    cy.findByTestId(/createdJiraTicketIdDisplay/).should('exist')
+
+    cy.findAllByTestId(/logs-data-row/i)
+      .first()
+      .click()
+
+    cy.findByTestId(/LogAnalysis_detailsDrawer/i).should('exist')
+
+    cy.findByTestId(/jiraCreationButton-Drawer/i).should('have.text', 'View ticket')
+
+    cy.findByTestId(/jiraCreationButton-Drawer/i)
+      .should('exist')
+      .click()
+
+    cy.wait('@jiraTicketDetailsCall')
+
+    cy.findByText(/Jira Project/).should('be.visible')
+    cy.findByText(/A new ticket/).should('be.visible')
+    cy.findByText(/This is the very long ticket description.../).should('be.visible')
+    cy.findByText(/John Doe/).should('be.visible')
   })
 })

@@ -7,9 +7,9 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import { SortMethod } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
-import { SortMethod } from '@common/utils/sortUtils'
 import ConnectorResourceModalBody from '../ConnectorResourceModalBody'
 
 const props = {

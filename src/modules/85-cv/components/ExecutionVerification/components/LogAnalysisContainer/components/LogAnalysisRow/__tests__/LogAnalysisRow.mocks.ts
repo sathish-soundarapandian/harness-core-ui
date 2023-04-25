@@ -6,7 +6,7 @@
  */
 
 import { RiskValues } from '@cv/utils/CommonUtils'
-import type { LogAnalysisMessageFrequency } from '../../../LogAnalysis.types'
+import type { LogAnalysisMessageFrequency, LogAnalysisRowData } from '../../../LogAnalysis.types'
 
 const messageFrequency: LogAnalysisMessageFrequency[] = [
   {
@@ -179,6 +179,55 @@ export const mockedLogAnalysisDataWithFeedback = {
   responseMessages: []
 }
 
+export const mockedLogAnalysisDataWithFeedbackAndTicket = {
+  metaData: {},
+  resource: {
+    totalPages: 1,
+    totalItems: 1,
+    pageItemCount: 0,
+    pageSize: 10,
+    content: [
+      {
+        message: 'Done with entity',
+        clusterType: 'KNOWN',
+        riskStatus: RiskValues.HEALTHY,
+        riskScore: 0.0,
+        count: 410,
+        messageFrequency,
+        label: 1,
+        clusterId: 'abc',
+        feedbackApplied: {
+          feedbackScore: 'HIGH_RISK',
+          description:
+            'Some applied reason Some applied reason Some applied reason Some applied reason Some applied reasonSome applied reason',
+          createdBy: 'pranesh@harness.io',
+          createdAt: 1677414780069,
+          updatedBy: 'pranesh@harness.io',
+          updatedAt: 1677414840933,
+          feedbackId: 'abc'
+        },
+        feedback: {
+          feedbackScore: 'MEDIUM_RISK',
+          description: 'Some reason',
+          createdBy: 'pranesh@harness.io',
+          createdAt: 1677414780069,
+          updatedBy: 'pranesh@harness.io',
+          updatedAt: 1677414840933,
+          feedbackId: 'abc',
+          ticket: {
+            id: '123',
+            externalId: 'SRM-123',
+            url: 'abc.com'
+          }
+        }
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  responseMessages: []
+}
+
 export const mockLogsCall = {
   metaData: {},
   resource: {
@@ -308,5 +357,106 @@ export const logFeedbackHistoryPathParams = {
     logFeedbackId: 'abc',
     orgIdentifier: '1234_ORG',
     projectIdentifier: '1234_project'
+  }
+}
+
+export const jiraProjectsMock = {
+  projects: [
+    {
+      key: 'OIP',
+      name: 'Observability Integrations Platform'
+    },
+    {
+      key: 'IE',
+      name: 'Infrastructure Evolution'
+    }
+  ]
+}
+
+export const jiraPrioritiesMock = {
+  priorities: [
+    {
+      id: '1',
+      name: 'P1'
+    },
+    {
+      id: '2',
+      name: 'P2'
+    }
+  ]
+}
+
+export const jiraIssueTypeMock = {
+  key: 'SRM',
+  name: 'Service Reliability Management',
+  ticketTypes: [
+    {
+      id: '10100',
+      name: 'Story',
+      isSubtask: false
+    },
+    {
+      id: '10321',
+      name: 'RCA-Subtask',
+      isSubtask: true
+    }
+  ]
+}
+
+export const expectedCreateTicketPayload = {
+  description: 'New description',
+  issueType: 'Story',
+  priority: '1',
+  projectKey: 'OIP',
+  title: 'New ticket to fix'
+}
+
+export const jiraTicketDetailsMock = {
+  accountId: 'abcdef1234567890ghijkl',
+  assignee: {
+    displayName: 'John Doe',
+    email: 'john.doe@example.com'
+  },
+  created: 1651578240,
+  description: 'This is the very long ticket description...',
+  exists: false,
+  externalId: 'ABC-1234',
+  id: 'abcdef1234567890ghijkl',
+  identifiers: {
+    idName: ['value1', 'value2', 'value3']
+  },
+  issueType: 'Bug',
+  lastModified: 1651578240,
+  module: 'sto',
+  orgId: 'example_org',
+  priority: 'High',
+  projectId: 'example_project',
+  projectKey: 'ABC',
+  projectName: 'Jira Project',
+  status: 'To Do',
+  statusColor: '#42526E',
+  title: 'A new ticket',
+  url: 'https://example.atlassian.net/browse/ABCD-1234'
+}
+
+export const rowDataMockForJira: LogAnalysisRowData = {
+  clusterType: 'KNOWN',
+  count: 10,
+  message: 'Some message',
+  messageFrequency: [],
+  riskStatus: 'HEALTHY',
+  feedback: {
+    feedbackScore: 'MEDIUM_RISK',
+    description: 'Some reason',
+    createdBy: 'pranesh@harness.io',
+    createdAt: 1677414780069,
+    updatedBy: 'pranesh@harness.io',
+    updatedAt: 1677414840933,
+    feedbackId: 'abc',
+    ticket: {
+      id: '123',
+      externalId: 'SRM-123',
+      url: 'abc.com'
+    }
   }
 }

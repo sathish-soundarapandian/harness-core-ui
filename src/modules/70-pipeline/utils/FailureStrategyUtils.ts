@@ -53,10 +53,10 @@ export const strategyIconMap: Record<StrategyType, IconName> = {
   Ignore: 'delete',
   Abort: 'ban-circle',
   MarkAsSuccess: 'tick',
-  StageRollback: 'repeat',
+  StageRollback: 'rollback-stage',
   Retry: 'refresh',
   ManualIntervention: 'hand-up',
-  PipelineRollback: 'repeat',
+  PipelineRollback: 'rollback-pipeline',
   ProceedWithDefaultValues: 'main-resume',
   StepGroupRollback: 'repeat',
   MarkAsFailure: 'mark-as-failure'

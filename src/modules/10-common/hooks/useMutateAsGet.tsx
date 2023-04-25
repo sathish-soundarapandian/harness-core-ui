@@ -69,7 +69,8 @@ async function _fetchData<TData, TError, TQueryParams, TRequestBody, TPathParams
   try {
     const data = await mutate(props.body, {
       queryParams: props.queryParams,
-      pathParams: props.pathParams
+      pathParams: props.pathParams,
+      ...props.requestOptions
     })
     if (data) {
       unstable_batchedUpdates(() => {

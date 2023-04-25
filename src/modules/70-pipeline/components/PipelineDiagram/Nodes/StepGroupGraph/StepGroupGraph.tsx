@@ -60,8 +60,8 @@ const getCalculatedStyles = (
   let maxChildLength = 0
   let finalHeight = 0
   data.forEach(node => {
-    const currentNodeId = node.id.split('|')[0]
-    const childrenNodesId = defaultTo(node?.children, []).map(o => o.id.split('|')[0]) // list of all parallel nodes of current node
+    const currentNodeId = node.id
+    const childrenNodesId = defaultTo(node?.children, []).map(o => o.id) // list of all parallel nodes of current node
     const childNodesId = [currentNodeId, ...childrenNodesId] // node + all parallel nodes id list
 
     if (childrenDimensions[currentNodeId]) {

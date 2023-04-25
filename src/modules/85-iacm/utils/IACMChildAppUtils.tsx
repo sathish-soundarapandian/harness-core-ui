@@ -26,13 +26,10 @@ import routes from '@common/RouteDefinitions'
 import { getStyles } from '@iacm/utils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
-import RbacButton from '@rbac/components/Button/Button'
-import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { usePermission } from '@rbac/hooks/usePermission'
-import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { useGetConnector, useGetListOfBranchesByRefConnectorV2, useGetListOfReposByRefConnector } from 'services/cd-ng'
+import { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 
 const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   ApprovalStageOverview,
@@ -41,11 +38,8 @@ const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   SaveTemplateButton,
   MultiTypeConnectorField,
   MultiTypeFieldSelector,
-  ExecutionGraph,
-  RbacOptionsMenuButton,
-  RbacButton,
-  RbacMenuItem,
-  ConnectorReferenceField
+  ConnectorReferenceField,
+  MultiTypeSecretInput
 }
 
 const customFunctions: IACMCustomMicroFrontendProps['customFunctions'] = {

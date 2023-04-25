@@ -145,6 +145,7 @@ export const getCompositeSLOFormValue = (serviceLevelObjective: ServiceLevelObje
   const { spec } = serviceLevelObjective
   return {
     ...getSLOCommonFormValues(serviceLevelObjective),
+    [SLOV2FormFields.EVALUATION_TYPE]: spec?.evaluationType,
     // Add SLOs
     [SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS]: spec?.serviceLevelObjectivesDetails
   }
@@ -376,7 +377,7 @@ export const createSLOV2RequestPayload = (
   serviceLevelIndicatorsIdentifierFromResponse?: string
 ): ServiceLevelObjectiveV2DTO => {
   const sloType = values.type
-  if (sloType === 'Simple') {
+  if (sloType === SLOType.SIMPLE) {
     const serviceLevelIndicatorsIdentifier = getServiceLevelIndicatorsIdentifier(
       values,
       serviceLevelIndicatorsIdentifierFromResponse
@@ -427,6 +428,7 @@ export const createSLOV2RequestPayload = (
         spec: { ...getSLOTarget(values) }
       },
       spec: {
+        evaluationType: values?.evaluationType,
         serviceLevelObjectivesDetails: filterServiceLevelObjectivesDetailsFromSLOObjective(
           values.serviceLevelObjectivesDetails
         )
@@ -580,6 +582,19 @@ export const getSimpleSLOCustomValidation = (values: SLOV2Form, getString: UseSt
       evaluationType,
       getString
     })?.errorMessage
+  }
+}
+
+export const getCompositeSLOCustomValidation = (
+  values: SLOV2Form,
+  getString: UseStringsReturn['getString'],
+  enableRequestSLO?: boolean
+) => {
+  const { evaluationType } = values
+  if (enableRequestSLO && isUndefined(evaluationType)) {
+    return {
+      [SLOV2FormFields.EVALUATION_TYPE]: getString('cv.required')
+    }
   }
 }
 

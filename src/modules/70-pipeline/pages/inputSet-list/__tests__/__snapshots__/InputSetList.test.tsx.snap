@@ -93,13 +93,12 @@ exports[`Input Set List tests render Input Set List view 1`] = `
     data-testid="page-body"
   >
     <div
-      class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+      class="Layout--horizontal StyledProps--main ListHeader--listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
       >
-        total
-        : 
+        Total: 
         2
       </p>
       <div

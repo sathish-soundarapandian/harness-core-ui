@@ -15,7 +15,12 @@ import {
   Views,
   ButtonVariation,
   Page,
-  ButtonSize
+  ButtonSize,
+  ListHeader,
+  sortByCreated,
+  sortByLastModified,
+  sortByName,
+  SortMethod
 } from '@harness/uicore'
 
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
@@ -33,8 +38,6 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { projectsPageQueryParamOptions, ProjectsPageQueryParams } from '@projects-orgs/utils/utils'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
-import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
 import ProjectsListView from './views/ProjectListView/ProjectListView'

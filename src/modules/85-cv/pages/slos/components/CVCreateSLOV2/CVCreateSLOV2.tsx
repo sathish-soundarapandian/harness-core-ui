@@ -38,6 +38,7 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import sloReviewChange from '@cv/assets/sloReviewChange.svg'
 import {
   createSLOV2RequestPayload,
+  getCompositeSLOCustomValidation,
   getIsUserUpdatedSLOData,
   getServiceLevelIndicatorsIdentifierFromResponse,
   getSimpleSLOCustomValidation,
@@ -219,7 +220,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
 
   const sloType = isComposite ? SLOType.COMPOSITE : SLOType.SIMPLE
   const validationSchema = isComposite ? getSLOV2FormValidationSchema : getSimpleSLOV2FormValidationSchema
-  const customValidations = isComposite ? undefined : getSimpleSLOCustomValidation
+  const customValidations = isComposite ? getCompositeSLOCustomValidation : getSimpleSLOCustomValidation
   const initialFormData = getSLOV2InitialFormData(
     sloType,
     SLODataResponse?.resource?.serviceLevelObjectiveV2,
@@ -252,7 +253,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
           handleSLOV2Submit(values)
         }}
         validationSchema={validationSchema(getString)}
-        validate={values => customValidations?.(values, getString)}
+        validate={values => customValidations?.(values, getString, enableRequestSLO)}
         enableReinitialize
       >
         {() =>

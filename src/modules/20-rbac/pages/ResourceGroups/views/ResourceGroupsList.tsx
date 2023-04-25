@@ -6,7 +6,18 @@
  */
 
 import React from 'react'
-import { Layout, ExpandingSearchInput, ButtonVariation, PageHeader, PageBody } from '@harness/uicore'
+import {
+  Layout,
+  ExpandingSearchInput,
+  ButtonVariation,
+  PageHeader,
+  PageBody,
+  ListHeader,
+  sortByCreated,
+  sortByLastModified,
+  sortByName,
+  SortMethod
+} from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { useResourceGroupModal } from '@rbac/modals/ResourceGroupModal/useResourceGroupModal'
@@ -23,8 +34,6 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { RbacQueryParams, useRbacQueryParamOptions } from '@rbac/utils/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
-import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 

@@ -34,8 +34,7 @@ describe('Unit tests for Downtime', () => {
       identifiers: ['zCyEg2AJQ4Kq2awF4iujIQ'],
       leftOffset: 1043.7857589440778
     },
-    index: 0,
-    fetchSecondaryEvents: jest.fn()
+    index: 0
   }
 
   test('should be able to verify that Downtime component loads with appropriate data', async () => {

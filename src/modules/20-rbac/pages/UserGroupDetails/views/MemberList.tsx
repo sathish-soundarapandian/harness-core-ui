@@ -17,7 +17,11 @@ import {
   Container,
   NoDataCard,
   TableV2,
-  useConfirmationDialog
+  useConfirmationDialog,
+  ListHeader,
+  sortByEmail,
+  sortByName,
+  SortMethod
 } from '@harness/uicore'
 import { FontVariation, Intent } from '@harness/design-system'
 import { Classes, Menu, Position, PopoverInteractionKind, MenuItem } from '@blueprintjs/core'
@@ -31,8 +35,6 @@ import { AuthenticationMechanisms, getUserGroupQueryParams } from '@rbac/utils/u
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { sortByEmail, sortByName, SortMethod } from '@common/utils/sortUtils'
-import ListHeader from '@common/components/ListHeader/ListHeader'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import css from '../UserGroupDetails.module.scss'
