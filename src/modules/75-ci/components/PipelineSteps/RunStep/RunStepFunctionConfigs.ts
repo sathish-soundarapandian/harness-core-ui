@@ -165,14 +165,12 @@ export function getInputSetViewValidateFieldsConfig(
     {
       name: 'spec.connectorRef',
       type: ValidationFieldTypes.Text,
-      label: 'pipelineSteps.connectorLabel',
-      isRequired
+      label: 'pipelineSteps.connectorLabel'
     },
     {
       name: 'spec.image',
       type: ValidationFieldTypes.Text,
-      label: 'imageLabel',
-      isRequired
+      label: 'imageLabel'
     },
     {
       name: 'spec.shell',
