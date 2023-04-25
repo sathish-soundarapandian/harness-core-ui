@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, ReactNode, SyntheticEvent } from 'react'
+import React, { FC, ReactNode } from 'react'
 import { Formik, FormikProps } from 'formik'
 import { get, noop } from 'lodash-es'
+import produce from 'immer'
 import * as Yup from 'yup'
 import {
   Button,
@@ -27,6 +28,8 @@ import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
+
+import type { GoogleCloudFunctionsServiceSpec } from 'services/cd-ng'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useGetCommunity } from '@common/utils/utils'
 import { errorCheck } from '@common/utils/formikHelpers'
@@ -52,10 +55,13 @@ import {
   TemplateListType
 } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { getGoogleCloudFunctionsEnvOptions } from '@cd/components/PipelineSteps/GoogleCloudFunction/utils/utils'
-import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
-import deployServiceCss from './DeployServiceSpecifications.module.scss'
+import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
+import deployServiceCss from '../DeployServiceSpecifications.module.scss'
+import css from './SelectDeploymentType.module.scss'
 
 const DEPLOYMENT_TYPE_KEY = 'deploymentType'
 
@@ -229,7 +235,7 @@ const CardList = ({ items, isReadonly, selectedValue, onChange }: CardListProps)
 interface GoogleCloudFunctionsSpecificPropsType {
   shouldShowGCFEnvTypeDropdown?: boolean
   googleCloudFunctionEnvType?: GoogleCloudFunctionsEnvType
-  handleGCFEnvTypeChange?: (selectedEnv: SelectOption, event?: SyntheticEvent<HTMLElement, Event> | undefined) => void
+  handleGCFEnvTypeChange?: (stageData?: StageElementWrapper<DeploymentStageElementConfig>) => void
 }
 
 interface SelectServiceDeploymentTypeProps {
@@ -263,6 +269,14 @@ export default function SelectDeploymentType({
 }: SelectServiceDeploymentTypeProps): JSX.Element {
   const { shouldShowGCFEnvTypeDropdown, googleCloudFunctionEnvType, handleGCFEnvTypeChange } =
     googleCloudFunctionsSpecificProps
+
+  const {
+    state: {
+      selectionState: { selectedStageId }
+    },
+    getStageFromPipeline
+  } = usePipelineContext()
+  const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
@@ -378,6 +392,25 @@ export default function SelectDeploymentType({
     return null
   }
 
+  const handleGoogleCloudFunctionEnvrionemtTypeChange = (selectedEnv: SelectOption) => {
+    if (
+      selectedEnv.value !==
+      ((stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec as GoogleCloudFunctionsServiceSpec)
+        ?.environmentType as GoogleCloudFunctionsEnvType)
+    ) {
+      const stageData = produce(stage, draft => {
+        const serviceDefinitionSpec = get(
+          draft,
+          'stage.spec.serviceConfig.serviceDefinition.spec',
+          {}
+        ) as GoogleCloudFunctionsServiceSpec
+        serviceDefinitionSpec.environmentType = selectedEnv.value as string
+      })
+
+      handleGCFEnvTypeChange?.(stageData)
+    }
+  }
+
   const renderGCFEnvTypeDropdown = (): JSX.Element | null => {
     if (shouldShowGCFEnvTypeDropdown && selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
       const googleCloudFunctionEnvTypeOptions = getGoogleCloudFunctionsEnvOptions(getString)
@@ -386,11 +419,11 @@ export default function SelectDeploymentType({
       )
       return (
         <FormInput.Select
-          className={deployServiceCss.googleCloudFunctionsEnvType}
+          className={css.googleCloudFunctionsEnvType}
           name="environmentType"
           label={getString('cd.steps.googleCloudFunctionCommon.envVersionLabel')}
           items={googleCloudFunctionEnvTypeOptions}
-          onChange={handleGCFEnvTypeChange}
+          onChange={handleGoogleCloudFunctionEnvrionemtTypeChange}
           value={preSelectedOption}
           disabled={isReadonly}
         />
