@@ -142,7 +142,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
       getTemplatesResolvedPipeline: true,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const pipeline: PipelineInfoConfig | undefined = useMemo(
@@ -168,7 +169,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
       repoIdentifier,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const { data: inputSetData, loading: loadingInputSetsData } = useMutateAsGet(
@@ -190,7 +192,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
         getDefaultFromOtherRepo: true,
         parentEntityConnectorRef: connectorRef,
         parentEntityRepoName: repoName
-      }
+      },
+      requestOptions: { headers: { 'Load-From-Cache': 'true' } }
     }
   )
 
@@ -371,7 +374,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
           },
           queryParams: {
             accountIdentifier: accountId
-          }
+          },
+          requestOptions: { headers: { 'Load-From-Cache': 'true' } }
         }).then(response => {
           if (response && response.status === 'SUCCESS') {
             setLoadingMergedTemplateInputs(false)

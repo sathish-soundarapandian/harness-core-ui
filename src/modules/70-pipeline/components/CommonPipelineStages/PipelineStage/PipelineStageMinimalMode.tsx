@@ -41,9 +41,9 @@ import {
   PagePMSPipelineSummaryResponse,
   PipelineFilterProperties,
   PMSPipelineSummaryResponse,
-  useGetPipeline,
   useGetPipelineList,
-  Error
+  Error,
+  useGetPipelineSummary
 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import type { PipelineListPageQueryParams } from '@pipeline/pages/pipeline-list/types'
@@ -114,7 +114,7 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
     debounce: 400
   })
 
-  const { loading: loadingChildPipeline, error: childPipelineLoadingError } = useGetPipeline({
+  const { loading: loadingChildPipeline, error: childPipelineLoadingError } = useGetPipelineSummary({
     pipelineIdentifier: selectedRow.identifier as string,
     queryParams: {
       accountIdentifier: accountId,
@@ -122,11 +122,12 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
       projectIdentifier: selectedProject.value as string,
       repoIdentifier,
       branch,
-      getTemplatesResolvedPipeline: true,
       parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoName
+      parentEntityRepoName: repoName,
+      getMetadataOnly: false
     },
-    lazy: isEmpty(selectedRow) && !selectedRow.identifier
+    lazy: isEmpty(selectedRow) && !selectedRow.identifier,
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const {
