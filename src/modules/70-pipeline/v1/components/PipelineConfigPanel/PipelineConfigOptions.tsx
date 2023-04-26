@@ -1,7 +1,11 @@
 import React from 'react'
 import type { IconProps } from '@harness/icons'
 import { FontVariation, FormInput, Layout, Text } from '@harness/uicore'
-import { PipelineAtomicEntity, PipelineEntityGroupings } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
+import {
+  PipelineAtomicEntity,
+  PipelineEntity,
+  PipelineEntityGroupings
+} from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 
 export interface PipelineConfigOptionInterface {
   label: string
@@ -26,10 +30,7 @@ export const enum Step {
   Plugin = 'Plugin'
 }
 
-export const MainConfigOptionsMap = new Map<
-  PipelineAtomicEntity | PipelineEntityGroupings,
-  PipelineConfigOptionInterface
->([
+export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionInterface>([
   [
     PipelineAtomicEntity.Stage,
     {
@@ -221,10 +222,7 @@ export const MainConfigOptionsMap = new Map<
   ]
 ])
 
-const AdditionalConfigOptionsMap = new Map<
-  PipelineAtomicEntity | PipelineEntityGroupings,
-  PipelineConfigOptionInterface
->([
+const AdditionalConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionInterface>([
   [
     PipelineAtomicEntity.Barrier,
     {

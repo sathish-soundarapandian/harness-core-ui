@@ -12,7 +12,7 @@ import type { Status } from '@common/utils/Constants'
 import type {
   PipelineAtomicEntity,
   EditorAction,
-  PipelineEntityGroupings
+  PipelineEntity
 } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 
 export interface YamlBuilderHandlerBinding {
@@ -70,7 +70,7 @@ export interface YamlBuilderProps {
 
 export interface EntitySelectionFromYAML {
   editorAction: EditorAction
-  entityType: PipelineAtomicEntity | PipelineEntityGroupings
+  entityType: PipelineEntity
   entityAsObj: Record<string, any>
 }
 

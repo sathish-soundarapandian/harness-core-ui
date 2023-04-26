@@ -3,7 +3,7 @@ import { capitalize, get, isEmpty } from 'lodash-es'
 import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text, Formik } from '@harness/uicore'
 import type { EntitySelectionFromYAML } from '@common/interfaces/YAMLBuilderProps'
-import { PipelineAtomicEntity, PipelineEntityGroupings } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
+import { PipelineAtomicEntity, PipelineEntity } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import {
   ConfigOptionsMapWithAdditionalOptions,
   MainConfigOptionsMap,
@@ -28,7 +28,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const { height, entitySelectedFromYAML } = props
   const { entityType, entityAsObj } = entitySelectedFromYAML || {}
   const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false)
-  const [pipelineEntity, setPipelineEntity] = useState<PipelineAtomicEntity | PipelineEntityGroupings>()
+  const [pipelineEntity, setPipelineEntity] = useState<PipelineEntity>()
   const [pipelineEntitySubType, setPipelineEntitySubType] = useState<PipelineEntitySubType | PipelineAtomicEntity>()
   const [pipelineConfigOption, setPipelineConfigOption] = useState<PipelineConfigOptionInterface>()
   const [pipelineConfigPanelView, setPipelineConfigPanelView] = useState<PipelineConfigPanelView>(
@@ -81,10 +81,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   }, [])
 
   const updateBreadCrumbs = useCallback(
-    (
-      selectedEntity: PipelineAtomicEntity | PipelineEntityGroupings,
-      selectedConfigOption: PipelineConfigOptionInterface
-    ): void => {
+    (selectedEntity: PipelineEntity, selectedConfigOption: PipelineConfigOptionInterface): void => {
       const { label, drillDown } = selectedConfigOption || {}
       const { hasSubTypes } = drillDown || {}
       const breadCrumbLabel = hasSubTypes ? label : ''
@@ -114,10 +111,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   )
 
   const onSelectConfigOption = useCallback(
-    (
-      selectedEntity: PipelineAtomicEntity | PipelineEntityGroupings,
-      selectedConfigOption: PipelineConfigOptionInterface
-    ): void => {
+    (selectedEntity: PipelineEntity, selectedConfigOption: PipelineConfigOptionInterface): void => {
       setPipelineEntity(selectedEntity)
       setPipelineConfigOption(selectedConfigOption)
       setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)
@@ -127,10 +121,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   )
 
   const renderPipelineConfigOption = useCallback(
-    (
-      entity: PipelineAtomicEntity | PipelineEntityGroupings,
-      configOption: PipelineConfigOptionInterface
-    ): React.ReactElement => {
+    (entity: PipelineEntity, configOption: PipelineConfigOptionInterface): React.ReactElement => {
       const { label, iconProps, description } = configOption
       return (
         <Layout.Horizontal
@@ -157,11 +148,9 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const renderPipelineConfigOptions = useCallback((): React.ReactElement => {
     const configOptionsMap = showMoreOptions ? ConfigOptionsMapWithAdditionalOptions : MainConfigOptionsMap
     const renderElms: React.ReactElement[] = []
-    configOptionsMap.forEach(
-      (value: PipelineConfigOptionInterface, key: PipelineAtomicEntity | PipelineEntityGroupings) => {
-        renderElms.push(renderPipelineConfigOption(key, value))
-      }
-    )
+    configOptionsMap.forEach((value: PipelineConfigOptionInterface, key: PipelineEntity) => {
+      renderElms.push(renderPipelineConfigOption(key, value))
+    })
     return (
       <>
         <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'medium', bottom: 'small' }}>

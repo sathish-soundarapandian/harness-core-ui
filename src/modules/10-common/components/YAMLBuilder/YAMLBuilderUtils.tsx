@@ -17,7 +17,8 @@ import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import {
   PipelineEntityToRegexMapping,
   PipelineAtomicEntity,
-  PipelineEntityGroupings
+  PipelineEntityGroupings,
+  PipelineEntity
 } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
 
@@ -171,7 +172,7 @@ const getDefaultStageForModule = (module: Module): Record<string, any> => {
 
 export const getMatchingPositionsForPipelineEntity = (
   editor: editor.IStandaloneCodeEditor,
-  selectedPipelineEntity: PipelineAtomicEntity | PipelineEntityGroupings
+  selectedPipelineEntity: PipelineEntity
 ): Position[] => {
   switch (selectedPipelineEntity) {
     case PipelineAtomicEntity.Step:
