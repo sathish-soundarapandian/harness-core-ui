@@ -12,7 +12,7 @@ import { get } from 'lodash-es'
 
 import TagSelector from '../TagSelector/TagSelector'
 
-interface SelectedTagsType {
+export interface SelectedTagsType {
   key: string
   value: string
 }
@@ -43,7 +43,7 @@ const MultiTypeArrayTagSelector = ({
   isLoadingTags
 }: MultiTypeTagSelectorProps) => {
   const formik = useFormikContext()
-  const [selectedTags, setSelectedTags] = useState([] as SelectedTagsType[])
+  const [selectedTags, setSelectedTags] = useState<SelectedTagsType[]>([])
   const [lastInitialTags, setLastInitialTags] = useState(initialTags)
 
   useEffect(() => {

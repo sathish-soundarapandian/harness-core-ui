@@ -16,6 +16,7 @@ import type {
   ServiceDefinition,
   SidecarArtifact
 } from 'services/cd-ng'
+import type { SelectedTagsType } from '@common/components/MultiTypeTagSelector/MultiTypeArrayTagSelector'
 import { ENABLED_ARTIFACT_TYPES, ModalViewFor } from './ArtifactHelper'
 import {
   ArtifactTagHelperText,
@@ -690,7 +691,10 @@ export const amiFilters = [
   }
 ]
 
-export const getInSelectOptionForm = (data?: { [key: string]: string } | string) => {
+export const getInSelectOptionForm = (data?: { [key: string]: string } | string | SelectedTagsType[]) => {
+  if (Array.isArray(data)) {
+    return data
+  }
   if (isObject(data)) {
     return Object.entries(data)
       .filter(([_, value]) => Boolean(value))
