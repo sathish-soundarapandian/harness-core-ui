@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { DEFAULT_TIME_RANGE } from '@common/utils/momentUtils'
 import CFModuleOverview from '../CFModuleOverview'
