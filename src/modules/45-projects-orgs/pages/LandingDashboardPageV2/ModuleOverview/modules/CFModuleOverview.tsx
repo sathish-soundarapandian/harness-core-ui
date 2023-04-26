@@ -70,7 +70,7 @@ const CountRow: React.FC<{ count: number; isEnabled?: boolean }> = ({ count, isE
   const { getString } = useStrings()
   return (
     <Container>
-      <Text font={{ variation: FontVariation.H4 }} padding={{ left: 'medium' }}>
+      <Text font={{ variation: FontVariation.H4 }} padding={{ left: 'medium' }} data-testid="countRowText">
         {numberFormatter(count)}
       </Text>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
@@ -158,7 +158,7 @@ const CFModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmp
       ) : (
         <Layout.Vertical flex={{ justifyContent: 'center' }}>
           <Text inline style={{ fontSize: '8px' }}>
-            <Text inline font={{ variation: FontVariation.H4 }}>
+            <Text inline font={{ variation: FontVariation.H4 }} data-testid="collapsedEnabledCount">
               {numberFormatter(enabled)}
             </Text>
             <Text inline font={{ variation: FontVariation.TINY }} color={Color.GREY_400}>
