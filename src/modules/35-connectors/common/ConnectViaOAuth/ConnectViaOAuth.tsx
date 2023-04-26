@@ -34,6 +34,7 @@ export interface ConnectViaOAuthProps {
   label?: string | JSX.Element
   orgIdentifier?: string
   projectIdentifier?: string
+  isPrivateSecret?: boolean
 }
 
 export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
@@ -49,6 +50,7 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     setForceFailOAuthTimeoutId,
     orgIdentifier,
     projectIdentifier,
+    isPrivateSecret,
     label
   } = props
   const { getString } = useStrings()
@@ -76,8 +78,14 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     try {
       const { headers } = getRequestOptions()
       let oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProviderType.toLowerCase()}&accountId=${accountId}`
-      if (orgIdentifier) oauthRedirectEndpoint += `&orgId=${orgIdentifier}`
-      if (orgIdentifier && projectIdentifier) oauthRedirectEndpoint += `&projectId=${projectIdentifier}`
+
+      if (isPrivateSecret) {
+        oauthRedirectEndpoint += `&isPrivateSecret=true`
+      } else {
+        if (orgIdentifier) oauthRedirectEndpoint += `&orgId=${orgIdentifier}`
+        if (orgIdentifier && projectIdentifier) oauthRedirectEndpoint += `&projectId=${projectIdentifier}`
+      }
+
       const response = await fetch(oauthRedirectEndpoint, {
         headers
       })

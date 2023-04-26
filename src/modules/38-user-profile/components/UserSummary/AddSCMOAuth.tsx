@@ -88,6 +88,7 @@ const AddSCMOAuth: React.FC = () => {
         {gitProviderType && (
           <ConnectViaOAuth
             label={'Connect'}
+            isPrivateSecret={true}
             gitProviderType={gitProviderType}
             accountId={accountId}
             status={oAuthStatus}
