@@ -78,7 +78,7 @@ export const getMatrixHeight = (
   parallelism: number,
   showAllNodes: boolean
 ): number => {
-  if (parallelism === 0) {
+  if (parallelism === 0 || maxChildLength === parallelism) {
     // parallel case
     return maxChildLength * nodeHeight
   } else if (!showAllNodes && maxChildLength < parallelism) {
