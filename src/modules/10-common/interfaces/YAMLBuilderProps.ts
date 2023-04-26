@@ -142,3 +142,9 @@ export const PipelineEntityToEditorActionsMappingForCodelens = new Map<PipelineE
   [PipelineEntity.Step, [EditorAction.Add, EditorAction.Edit]],
   [PipelineEntity.Input, [EditorAction.Manage, EditorAction.Edit]]
 ])
+
+export const PipelineEntityToRegexMapping = new Map<PipelineEntity, string>([
+  [PipelineEntity.Stage, 'steps:'],
+  [PipelineEntity.Step, '-\\sname:'],
+  [PipelineEntity.Input, 'inputs:']
+])

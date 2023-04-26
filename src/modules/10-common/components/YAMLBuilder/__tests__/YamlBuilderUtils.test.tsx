@@ -9,6 +9,7 @@ import { parse } from 'yaml'
 import type { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { Diagnostic } from 'vscode-languageserver-types'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { PipelineEntity, PipelineEntityToRegexMapping } from '@common/interfaces/YAMLBuilderProps'
 import {
   getYAMLFromEditor,
   getMetaDataForKeyboardEventProcessing,
@@ -17,7 +18,6 @@ import {
   getArrayIndexClosestToCurrentCursor,
   extractStepsFromStage,
   StepMatchRegex,
-  StageMatchRegex,
   getValidStepPositions
 } from '../YAMLBuilderUtils'
 
@@ -76,7 +76,7 @@ const setupMockEditorWithDifferentMatchResults = (
                     { range: { endLineNumber: 20, endColumn: 16 } },
                     { range: { endLineNumber: 28, endColumn: 16 } }
                   ] as editor.FindMatch[])
-              : textToFind === StageMatchRegex
+              : textToFind === PipelineEntityToRegexMapping.get(PipelineEntity.Stage) || ''
               ? stageMatches ||
                 ([
                   { range: { endLineNumber: 7, endColumn: 13 } },
@@ -232,16 +232,23 @@ describe('YAMLBuilder Utils test', () => {
     expect(
       getArrayIndexClosestToCurrentCursor({ ...args, sourcePosition: { lineNumber: 22, column: 5 } as Position })
     ).toBe(1)
-
+    const stageMatchRegex = PipelineEntityToRegexMapping.get(PipelineEntity.Stage)
     // test for "step" lookup
-    expect(getArrayIndexClosestToCurrentCursor({ ...args, searchToken: StageMatchRegex })).toBe(0)
-    expect(
-      getArrayIndexClosestToCurrentCursor({
-        ...args,
-        searchToken: StageMatchRegex,
-        sourcePosition: { lineNumber: 22, column: 5 } as Position
-      })
-    ).toBe(1)
+    if (stageMatchRegex) {
+      expect(
+        getArrayIndexClosestToCurrentCursor({
+          ...args,
+          searchToken: stageMatchRegex
+        })
+      ).toBe(0)
+      expect(
+        getArrayIndexClosestToCurrentCursor({
+          ...args,
+          searchToken: stageMatchRegex,
+          sourcePosition: { lineNumber: 22, column: 5 } as Position
+        })
+      ).toBe(1)
+    }
   })
 
   test('Test extractStepsFromStage method', () => {

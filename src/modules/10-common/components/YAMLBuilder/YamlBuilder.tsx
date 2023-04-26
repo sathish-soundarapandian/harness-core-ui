@@ -46,7 +46,8 @@ import {
   EditorAction,
   PipelineEntity,
   PipelineEntitiesWithCodeLensIntegrationEnabled,
-  PipelineEntityToEditorActionsMappingForCodelens
+  PipelineEntityToEditorActionsMappingForCodelens,
+  PipelineEntityToRegexMapping
 } from '@common/interfaces/YAMLBuilderProps'
 import { PluginAddUpdateMetadata, PluginType } from '@common/interfaces/YAMLBuilderProps'
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
@@ -62,7 +63,6 @@ import {
   getStageYAMLPathForStageIndex,
   getStepYAMLPathForStepInsideAStage,
   getDefaultStageForModule,
-  StageMatchRegex,
   getArrayIndexClosestToCurrentCursor,
   extractStepsFromStage,
   getClosestStepIndexInCurrentStage,
@@ -909,7 +909,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const closestStageIndex = getArrayIndexClosestToCurrentCursor({
             editor: editorRef.current.editor,
             sourcePosition: cursorPosition,
-            searchToken: StageMatchRegex
+            searchToken: PipelineEntityToRegexMapping.get(PipelineEntity.Stage) || ''
           })
           const stageStepsForTheClosestIndex = extractStepsFromStage(
             currentYAMLAsJSON,
@@ -1042,13 +1042,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean): void => {
       const { shouldInsertYAML } = pluginMetadata
       const cursorPosition = currentCursorPosition.current
-      if (shouldInsertYAML && cursorPosition && editorRef.current?.editor && pipelineEntityType) {
+      const stageMatchRegex = PipelineEntityToRegexMapping.get(PipelineEntity.Stage)
+      if (shouldInsertYAML && cursorPosition && editorRef.current?.editor && pipelineEntityType && stageMatchRegex) {
         let updatedYAML = currentYaml
         try {
           let closestStageIndex = getArrayIndexClosestToCurrentCursor({
             editor: editorRef.current.editor,
             sourcePosition: cursorPosition,
-            searchToken: StageMatchRegex
+            searchToken: stageMatchRegex
           })
           if (closestStageIndex < 0) {
             updatedYAML = yamlStringify({ ...parse(currentYaml), stages: [getDefaultStageForModule(module)] })
@@ -1074,7 +1075,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             const currentStageIndex = getArrayIndexClosestToCurrentCursor({
               editor: editorRef.current.editor,
               sourcePosition: cursorPosition,
-              searchToken: StageMatchRegex
+              searchToken: stageMatchRegex
             })
             const stepsInCurrentStage = extractStepsFromStage(
               currentPipelineJSON,

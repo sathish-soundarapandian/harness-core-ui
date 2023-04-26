@@ -13,7 +13,7 @@ import { get, isEmpty } from 'lodash-es'
 import type { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import { findLeafToParentPath, getSchemaWithLanguageSettings, validateYAMLWithSchema } from '../../utils/YamlUtils'
 import type { Module } from 'framework/types/ModuleName'
-import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
+import { PipelineEntityToRegexMapping, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
 import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
 
@@ -173,14 +173,15 @@ export const getMatchingPositionsForPipelineEntity = (
     case PipelineEntity.Step:
       return getValidStepPositions(editor)
     case PipelineEntity.Input:
-      return findPositionsForMatchingKeys(editor, InputsMatchRegex)
+      return findPositionsForMatchingKeys(editor, PipelineEntityToRegexMapping.get(PipelineEntity.Input) || '')
     default:
       return []
   }
 }
 
 const getValidStepPositions = (editor: editor.IStandaloneCodeEditor): Position[] => {
-  const allStageMatches = findPositionsForMatchingKeys(editor, StageMatchRegex) || []
+  const allStageMatches =
+    findPositionsForMatchingKeys(editor, PipelineEntityToRegexMapping.get(PipelineEntity.Stage) || '') || []
   const allStepMatches = findPositionsForMatchingKeys(editor, StepMatchRegex) || []
   const currentYAML = editor.getValue()
   if (currentYAML && allStageMatches.length && allStepMatches.length) {
@@ -230,12 +231,13 @@ const getArrayIndexClosestToCurrentCursor = ({
 }): number => {
   if (editor) {
     const { lineNumber: currentCursorLineNum } = sourcePosition || {}
-    if (currentCursorLineNum) {
+    const stageMatchRegex = PipelineEntityToRegexMapping.get(PipelineEntity.Stage)
+    if (currentCursorLineNum && stageMatchRegex) {
       const allMatchesFound =
         searchToken === StepMatchRegex
           ? getValidStepPositions(editor)
-          : searchToken === StageMatchRegex
-          ? findPositionsForMatchingKeys(editor, StageMatchRegex)
+          : searchToken === stageMatchRegex
+          ? findPositionsForMatchingKeys(editor, stageMatchRegex)
           : []
       const relevantMatches = (
         startIdxForLookup && noOfResultsToBeIncludedInLookup
@@ -330,8 +332,6 @@ const getClosestStepIndexInCurrentStage = ({
 }
 
 export const StepMatchRegex = '-\\sname:'
-export const StageMatchRegex = 'steps:'
-export const InputsMatchRegex = 'inputs:'
 
 export {
   getYAMLFromEditor,
