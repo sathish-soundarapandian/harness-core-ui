@@ -715,7 +715,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const getOnClickHandlerForEntityType = useCallback((selectedPipelineEntity: PipelineEntity): Function => {
     switch (selectedPipelineEntity) {
       case PipelineEntity.Step:
-        return obtainYAMLForEditorActionClick
+        return obtainStepYAMLForEditorActionClick
       default:
         return noop
     }
@@ -916,7 +916,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor]
   )
 
-  const obtainYAMLForEditorActionClick = useCallback(
+  const obtainStepYAMLForEditorActionClick = useCallback(
     ({ cursorPosition, latestYAML }: { cursorPosition: Position; latestYAML: string }): Record<string, any> => {
       if (cursorPosition && editorRef.current?.editor) {
         try {
