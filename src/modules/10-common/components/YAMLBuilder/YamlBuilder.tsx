@@ -63,9 +63,9 @@ import {
   getDefaultStageForModule,
   StageMatchRegex,
   getArrayIndexClosestToCurrentCursor,
-  getValidStepPositions,
   extractStepsFromStage,
-  getClosestStepIndexInCurrentStage
+  getClosestStepIndexInCurrentStage,
+  getMatchingPositionsForPipelineEntity
 } from './YAMLBuilderUtils'
 import {
   DEFAULT_EDITOR_HEIGHT,
@@ -814,21 +814,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor, currentYaml]
   )
 
-  const getMatchingPositionsForPipelineEntity = useCallback(
-    (selectedPipelineEntity: PipelineEntity): Position[] => {
-      if (!editorRef.current?.editor) {
-        return []
-      }
-      switch (selectedPipelineEntity) {
-        case PipelineEntity.Step:
-          return getValidStepPositions(editorRef.current?.editor)
-        default:
-          return []
-      }
-    },
-    [editorRef.current?.editor]
-  )
-
   const spotLightInsertedYAML = useCallback(
     ({
       noOflinesInserted,
@@ -849,7 +834,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       if (editor) {
         let position: Position
         if (isPluginUpdate && editorRef.current?.editor) {
-          const stepMatchingPositions = getMatchingPositionsForPipelineEntity(selectedPipelineEntity)
+          const stepMatchingPositions = getMatchingPositionsForPipelineEntity(editor, selectedPipelineEntity)
           const allMatchesInClosestStageIndex = stepMatchingPositions.slice(startStepIndex)
           position = allMatchesInClosestStageIndex[closestStepIndex]
           const { lineNumber: startingLineNum } = position
@@ -944,7 +929,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     const editor = editorRef.current?.editor
     if (shouldShowPluginsPanel && editor) {
       PipelineEntitiesWithCodeLensIntegrationEnabled.map((entity: PipelineEntity) => {
-        const stepMatchingPositions = getMatchingPositionsForPipelineEntity(entity)
+        const stepMatchingPositions = getMatchingPositionsForPipelineEntity(editor, entity)
         if (stepMatchingPositions.length) {
           stepMatchingPositions.map((matchingPosition: Position) => {
             const { lineNumber } = matchingPosition
@@ -1030,7 +1015,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean): void => {
       const { shouldInsertYAML } = pluginMetadata
       const cursorPosition = currentCursorPosition.current
-      if (shouldInsertYAML && cursorPosition && editorRef.current?.editor) {
+      if (shouldInsertYAML && cursorPosition && editorRef.current?.editor && pipelineEntityType) {
         let updatedYAML = currentYaml
         try {
           let closestStageIndex = getArrayIndexClosestToCurrentCursor({

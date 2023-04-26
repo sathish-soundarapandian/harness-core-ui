@@ -14,6 +14,7 @@ import type { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import { findLeafToParentPath, getSchemaWithLanguageSettings, validateYAMLWithSchema } from '../../utils/YamlUtils'
 import type { Module } from 'framework/types/ModuleName'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
+import { PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
 import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
 
 /**
@@ -161,6 +162,20 @@ const getDefaultStageForModule = (module: Module): Record<string, any> => {
     spec: {
       steps: []
     }
+  }
+}
+
+export const getMatchingPositionsForPipelineEntity = (
+  editor: editor.IStandaloneCodeEditor,
+  selectedPipelineEntity: PipelineEntity
+): Position[] => {
+  switch (selectedPipelineEntity) {
+    case PipelineEntity.Step:
+      return getValidStepPositions(editor)
+    case PipelineEntity.Input:
+      return findPositionsForMatchingKeys(editor, InputsMatchRegex)
+    default:
+      return []
   }
 }
 
@@ -316,6 +331,7 @@ const getClosestStepIndexInCurrentStage = ({
 
 export const StepMatchRegex = '-\\sname:'
 export const StageMatchRegex = 'steps:'
+export const InputsMatchRegex = 'inputs:'
 
 export {
   getYAMLFromEditor,
