@@ -14,7 +14,11 @@ import type { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import { findLeafToParentPath, getSchemaWithLanguageSettings, validateYAMLWithSchema } from '../../utils/YamlUtils'
 import type { Module } from 'framework/types/ModuleName'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
-import { PipelineEntityToRegexMapping, PipelineEntity } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
+import {
+  PipelineEntityToRegexMapping,
+  PipelineEntity,
+  PipelineEntityGroupings
+} from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
 
 /**
@@ -167,13 +171,16 @@ const getDefaultStageForModule = (module: Module): Record<string, any> => {
 
 export const getMatchingPositionsForPipelineEntity = (
   editor: editor.IStandaloneCodeEditor,
-  selectedPipelineEntity: PipelineEntity
+  selectedPipelineEntity: PipelineEntity | PipelineEntityGroupings
 ): Position[] => {
   switch (selectedPipelineEntity) {
     case PipelineEntity.Step:
       return getValidStepPositions(editor)
-    case PipelineEntity.Input:
-      return findPositionsForMatchingKeys(editor, PipelineEntityToRegexMapping.get(PipelineEntity.Input) || '')
+    case PipelineEntityGroupings.Inputs:
+      return findPositionsForMatchingKeys(
+        editor,
+        PipelineEntityToRegexMapping.get(PipelineEntityGroupings.Inputs) || ''
+      )
     default:
       return []
   }

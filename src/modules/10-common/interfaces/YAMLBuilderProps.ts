@@ -9,7 +9,11 @@ import type { CompletionItemKind } from 'vscode-languageserver-types'
 import type { GetYamlSchemaQueryParams } from 'services/cd-ng'
 import type { PluginMetadataResponse } from 'services/ci'
 import type { Status } from '@common/utils/Constants'
-import type { PipelineEntity, EditorAction } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
+import type {
+  PipelineEntity,
+  EditorAction,
+  PipelineEntityGroupings
+} from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 
 export interface YamlBuilderHandlerBinding {
   getLatestYaml: () => string
@@ -66,7 +70,7 @@ export interface YamlBuilderProps {
 
 export interface EntitySelectionFromYAML {
   editorAction: EditorAction
-  entityType: PipelineEntity
+  entityType: PipelineEntity | PipelineEntityGroupings
   entityAsObj: Record<string, any>
 }
 
