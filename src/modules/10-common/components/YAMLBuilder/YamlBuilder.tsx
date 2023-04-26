@@ -28,7 +28,8 @@ import {
   truncate,
   omitBy,
   isUndefined,
-  isNull
+  isNull,
+  noop
 } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Intent, Popover, PopoverInteractionKind, Position as PopoverPosition } from '@blueprintjs/core'
@@ -711,6 +712,15 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }, [])
 
+  const getOnClickHandlerForEntityType = useCallback((selectedPipelineEntity: PipelineEntity): Function => {
+    switch (selectedPipelineEntity) {
+      case PipelineEntity.Step:
+        return obtainYAMLForEditorActionClick
+      default:
+        return noop
+    }
+  }, [])
+
   const generateCallbackForEditorActionClick = useCallback(
     ({
       fromLine,
@@ -732,16 +742,24 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             setEditorAction(editorActionToPerform)
             setPluginOpnStatus?.(Status.TO_DO)
             try {
-              const numberOfLinesInSelection = obtainYAMLForEditorActionClick({
-                cursorPosition,
-                latestYAML: currentYaml,
-                editorActionPerformed: editorActionToPerform,
-                selectedPipelineEntity
-              })
+              const selectedPipelineEntityYAMLAsJSON: Record<string, any> =
+                getOnClickHandlerForEntityType(selectedPipelineEntity)({
+                  cursorPosition,
+                  latestYAML: currentYaml,
+                  editorActionPerformed: editorActionToPerform,
+                  selectedPipelineEntity
+                }) || {}
+              const numberOfLinesInSelection = yamlStringify(selectedPipelineEntityYAMLAsJSON).split('\n').length
               if (numberOfLinesInSelection) {
                 currentCursorPosition.current = cursorPosition
                 highlightInsertedYAML(fromLine, toLineNum + numberOfLinesInSelection - 1)
               }
+              setPlugin?.(selectedPipelineEntityYAMLAsJSON)
+              setSelectedEntityFromYAML?.({
+                entityType: selectedPipelineEntity,
+                entityAsObj: selectedPipelineEntityYAMLAsJSON,
+                editorAction: editorActionToPerform
+              })
             } catch (e) {
               //ignore error
             }
@@ -899,18 +917,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
 
   const obtainYAMLForEditorActionClick = useCallback(
-    ({
-      cursorPosition,
-      latestYAML,
-      editorActionPerformed,
-      selectedPipelineEntity
-    }: {
-      cursorPosition: Position
-      latestYAML: string
-      editorActionPerformed: EditorAction
-      selectedPipelineEntity: PipelineEntity
-    }): number => {
-      if (cursorPosition && editorRef.current?.editor && editorActionPerformed) {
+    ({ cursorPosition, latestYAML }: { cursorPosition: Position; latestYAML: string }): Record<string, any> => {
+      if (cursorPosition && editorRef.current?.editor) {
         try {
           const currentYAMLAsJSON = parse(latestYAML)
           const closestStageIndex = getArrayIndexClosestToCurrentCursor({
@@ -937,20 +945,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             currentStageStepsCount: stageStepsForTheClosestIndex.length
           })
           const stepYAMLPath = getStepYAMLPathForStepInsideAStage(closestStageIndex, closestStepIndex)
-          const pluginAsStep = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
-          setPlugin?.(pluginAsStep)
-          setSelectedEntityFromYAML?.({
-            entityType: selectedPipelineEntity,
-            entityAsObj: pluginAsStep,
-            editorAction: editorActionPerformed
-          })
-          const stepValueTokens = yamlStringify(pluginAsStep).split('\n').length
-          return stepValueTokens
+          return get(currentYAMLAsJSON, stepYAMLPath)
         } catch (e) {
           // ignore error
         }
       }
-      return 0
+      return {}
     },
     [editorRef.current?.editor]
   )
