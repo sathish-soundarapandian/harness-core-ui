@@ -8,19 +8,26 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
-import { isEmpty, cloneDeep } from 'lodash-es'
+import { isEmpty, isEqual, cloneDeep } from 'lodash-es'
 
 import { PageSpinner } from '@harness/uicore'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
-import { ModuleLicenseDTO, useGetAccountLicenses, useGetLastModifiedTimeForAllModuleTypes } from 'services/cd-ng'
+import {
+  getLastModifiedTimeForAllModuleTypesPromise,
+  ModuleLicenseDTO,
+  useGetAccountLicenses,
+  useGetLastModifiedTimeForAllModuleTypes
+} from 'services/cd-ng'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import GenericErrorPage, { GENERIC_ERROR_CODES } from '@common/pages/GenericError/GenericErrorPage'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { useFeaturesContext } from 'framework/featureStore/FeaturesContext'
 import { VersionMap, LICENSE_STATE_VALUES, defaultLicensesByModule } from './licenseStoreUtil'
 
 // Only keep GA modules for now
@@ -108,6 +115,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
 
   const {
     data: accountLicensesData,
+    refetch: getAccountLicenses,
     error,
     loading: getAccountLicensesLoading
   } = useGetAccountLicenses({
@@ -138,6 +146,71 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       .catch(_err => {
         // do nothing
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // 1000 milliseconds * 60 seconds * 1 minute
+  const POLL_VERSION_INTERVAL = 1000 * 60 * 5
+
+  const { requestFeatures } = useFeaturesContext()
+
+  /*
+   * this is to poll versionMap every minute
+   * if versionMap changes, refresh license
+   * and refresh feature context
+   * if versionMap call fails, stop calling
+   */
+  useEffect(() => {
+    let getVersionTimeOut = setTimeout(() => {
+      pollVersionMap(state.versionMap)
+    }, POLL_VERSION_INTERVAL)
+
+    async function pollVersionMap(versionMap: VersionMap): Promise<void> {
+      try {
+        // We are using promise since mutate was rerendering the whole applications every 60 seconds
+        // even if no data change in store
+        const response = await getLastModifiedTimeForAllModuleTypesPromise({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          queryParams: { accountIdentifier: accountId, routingId: accountId } as any,
+          body: undefined,
+          requestOptions: {
+            headers: {
+              'content-type': 'application/json'
+            }
+          }
+        })
+        const latestVersionMap = response.data
+        if (latestVersionMap && !isEqual(latestVersionMap, versionMap)) {
+          // refresh licenses
+          getAccountLicenses()
+
+          // refresh feature context
+          requestFeatures(
+            { featureName: FeatureIdentifier.BUILDS },
+            {
+              skipCache: true
+            }
+          )
+
+          // refresh versionMap
+          setState(prevState => ({
+            ...prevState,
+            versionMap: response.data || {}
+          }))
+        }
+
+        // set next poll
+        getVersionTimeOut = setTimeout(() => {
+          pollVersionMap(latestVersionMap || versionMap)
+        }, POLL_VERSION_INTERVAL)
+      } catch (_err) {
+        clearTimeout(getVersionTimeOut)
+      }
+    }
+
+    return () => {
+      clearTimeout(getVersionTimeOut)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
