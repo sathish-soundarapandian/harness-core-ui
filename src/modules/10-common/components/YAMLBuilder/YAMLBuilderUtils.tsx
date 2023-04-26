@@ -182,7 +182,8 @@ export const getMatchingPositionsForPipelineEntity = (
 const getValidStepPositions = (editor: editor.IStandaloneCodeEditor): Position[] => {
   const allStageMatches =
     findPositionsForMatchingKeys(editor, PipelineEntityToRegexMapping.get(PipelineEntity.Stage) || '') || []
-  const allStepMatches = findPositionsForMatchingKeys(editor, StepMatchRegex) || []
+  const allStepMatches =
+    findPositionsForMatchingKeys(editor, PipelineEntityToRegexMapping.get(PipelineEntity.Step) || '') || []
   const currentYAML = editor.getValue()
   if (currentYAML && allStageMatches.length && allStepMatches.length) {
     let currentYAMLAsJSON = {}
@@ -234,7 +235,7 @@ const getArrayIndexClosestToCurrentCursor = ({
     const stageMatchRegex = PipelineEntityToRegexMapping.get(PipelineEntity.Stage)
     if (currentCursorLineNum && stageMatchRegex) {
       const allMatchesFound =
-        searchToken === StepMatchRegex
+        searchToken === PipelineEntityToRegexMapping.get(PipelineEntity.Step)
           ? getValidStepPositions(editor)
           : searchToken === stageMatchRegex
           ? findPositionsForMatchingKeys(editor, stageMatchRegex)
@@ -309,12 +310,13 @@ const getClosestStepIndexInCurrentStage = ({
   currentStageStepsCount: number
 }): number => {
   let closestStepIndex = -1
-  if (editor) {
+  const stepRegexMatch = PipelineEntityToRegexMapping.get(PipelineEntity.Step) || ''
+  if (editor && stepRegexMatch) {
     if (precedingStageStepsCount > 0) {
       closestStepIndex = getArrayIndexClosestToCurrentCursor({
         editor,
         sourcePosition: cursorPosition,
-        searchToken: StepMatchRegex,
+        searchToken: stepRegexMatch,
         startIdxForLookup: precedingStageStepsCount,
         noOfResultsToBeIncludedInLookup: precedingStageStepsCount + currentStageStepsCount
       })
@@ -322,7 +324,7 @@ const getClosestStepIndexInCurrentStage = ({
       closestStepIndex = getArrayIndexClosestToCurrentCursor({
         editor,
         sourcePosition: cursorPosition,
-        searchToken: StepMatchRegex,
+        searchToken: stepRegexMatch,
         startIdxForLookup: 0,
         noOfResultsToBeIncludedInLookup: currentStageStepsCount
       })
@@ -330,8 +332,6 @@ const getClosestStepIndexInCurrentStage = ({
   }
   return closestStepIndex === -1 ? 0 : closestStepIndex
 }
-
-export const StepMatchRegex = '-\\sname:'
 
 export {
   getYAMLFromEditor,

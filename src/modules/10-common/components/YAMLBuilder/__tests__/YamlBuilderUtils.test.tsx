@@ -17,7 +17,6 @@ import {
   findPositionsForMatchingKeys,
   getArrayIndexClosestToCurrentCursor,
   extractStepsFromStage,
-  StepMatchRegex,
   getValidStepPositions
 } from '../YAMLBuilderUtils'
 
@@ -67,7 +66,7 @@ const setupMockEditorWithDifferentMatchResults = (
         {
           getLineContent: (_lineNum: number) => `delegateName${_lineNum}: dn`,
           findMatches: (textToFind: string) => {
-            return textToFind === StepMatchRegex
+            return textToFind === PipelineEntityToRegexMapping.get(PipelineEntity.Step) || ''
               ? stepMatches ||
                   ([
                     { range: { endLineNumber: 4, endColumn: 10 } },
@@ -208,7 +207,7 @@ describe('YAMLBuilder Utils test', () => {
         lineNumber: 17,
         column: 19
       }) as editor.IStandaloneCodeEditor,
-      searchToken: StepMatchRegex,
+      searchToken: PipelineEntityToRegexMapping.get(PipelineEntity.Step) || '',
       sourcePosition: { lineNumber: 0, column: 0 } as Position
     }
     // test for "step" lookup
