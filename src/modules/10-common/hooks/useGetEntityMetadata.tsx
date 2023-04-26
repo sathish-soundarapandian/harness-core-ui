@@ -145,7 +145,12 @@ const getTemplateUrl = async (scope: EntityScope, identifier: string): Promise<s
 
 export const useGetEntityMetadata = (prop: UseGetEntityUrlProp): { getEntityURL: () => Promise<string> } => {
   const entityInfo = prop.entityInfo
-  const { accountIdentifier = '', orgIdentifier = '', projectIdentifier = '' } = entityInfo?.entityRef || {}
+  const {
+    accountIdentifier = '',
+    orgIdentifier = '',
+    projectIdentifier = '',
+    pipelineIdentifier = ''
+  } = entityInfo?.entityRef || {}
   const entityType = entityInfo?.type
   const identifier = entityInfo?.entityRef?.identifier || ''
 
@@ -220,6 +225,15 @@ export const useGetEntityMetadata = (prop: UseGetEntityUrlProp): { getEntityURL:
           projectIdentifier,
           environmentIdentifier: identifier
         })}?sectionId=INFRASTRUCTURE`
+        break
+      case 'Triggers':
+        entityUrl = `${routes.toTriggersDetailPage({
+          accountId: accountIdentifier,
+          orgIdentifier,
+          projectIdentifier,
+          pipelineIdentifier,
+          triggerIdentifier: identifier
+        })}`
         break
       default:
         entityUrl = routes.toLandingDashboard({ accountId: accountIdentifier })
