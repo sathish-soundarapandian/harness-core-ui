@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CIUsageInfo CIUsageInfo 1`] = `
+exports[`CDUsageInfo CDUsageInfo 1`] = `
 <div>
   <div
     class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
@@ -20,7 +20,7 @@ exports[`CIUsageInfo CIUsageInfo 1`] = `
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
             >
-              common.subscriptions.usage.activeDevelopers
+              common.subscriptions.usage.serviceLicenses
             </p>
             <span
               class="bp3-popover-wrapper"
@@ -52,13 +52,13 @@ exports[`CIUsageInfo CIUsageInfo 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
           >
-            Last 30 Days
+            common.subscriptions.usage.last30days
           </p>
         </div>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-size-large StyledProps--font-weight-bold StyledProps--color StyledProps--color-black"
         >
-          20
+          0
         </p>
         <div
           class="StyledProps--font StyledProps--main bar StyledProps--background-grey100 StyledProps--border StyledProps--margin-bottom-small"
@@ -66,7 +66,7 @@ exports[`CIUsageInfo CIUsageInfo 1`] = `
         >
           <div
             class="StyledProps--font StyledProps--main StyledProps--background-primary6 StyledProps--border"
-            style="width: 20%; height: 100%;"
+            style="width: 0%; height: 100%;"
           />
         </div>
         <div
@@ -82,7 +82,7 @@ exports[`CIUsageInfo CIUsageInfo 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color"
           >
-            20
+            0
             % 
             common.usage
           </p>
@@ -92,3 +92,5 @@ exports[`CIUsageInfo CIUsageInfo 1`] = `
   </div>
 </div>
 `;
+
+exports[`Subscriptions graph view undefined module flow   it renders the subscriptions page with no data service table 1`] = `<div />`;

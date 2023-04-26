@@ -543,6 +543,7 @@ export interface StringsMap {
   'common.jexlExpression': string
   'common.labelTestConnection': string
   'common.last7days': string
+  'common.lastBuildDate': string
   'common.lastConnected': string
   'common.lastConnectedOn': string
   'common.lastDeployed': string
@@ -656,6 +657,7 @@ export interface StringsMap {
   'common.newVersion': string
   'common.nextStep': string
   'common.noAPIKeys': string
+  'common.noActiveDeveloperData': string
   'common.noActiveServiceData': string
   'common.noAvailableTags': string
   'common.noConnectorAvailable': string
@@ -819,6 +821,7 @@ export interface StringsMap {
   'common.purpose.cv.serviceReliability': string
   'common.purpose.cv.subtitle': string
   'common.purpose.cv.verification': string
+  'common.purpose.developer': string
   'common.purpose.errorTracking.title': string
   'common.purpose.howToProceed': string
   'common.purpose.idp.fullName': string
@@ -1082,8 +1085,10 @@ export interface StringsMap {
   'common.subscriptions.overview.trialExpiry': string
   'common.subscriptions.paid': string
   'common.subscriptions.sto.developers': string
+  'common.subscriptions.tabs.breakdown': string
   'common.subscriptions.tabs.overview': string
   'common.subscriptions.tabs.plans': string
+  'common.subscriptions.tabs.trend': string
   'common.subscriptions.title': string
   'common.subscriptions.trial': string
   'common.subscriptions.usage.activeDevelopers': string
@@ -9204,7 +9209,6 @@ export interface StringsMap {
   'cv.toObjectiveValue': string
   'cv.top': string
   'cv.trafficSplit': string
-  'cv.trend': string
   'cv.tuesday': string
   'cv.turnService': string
   'cv.unexpected': string

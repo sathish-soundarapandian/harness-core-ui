@@ -19,13 +19,18 @@ import {
   getAllServicesPromise,
   useDownloadActiveServiceCSVReport
 } from 'services/cd-ng'
+import { listActiveDevelopersPromise } from 'services/ci'
 import { Editions } from '@common/constants/SubscriptionTypes'
+import { ModuleName } from 'framework/types/ModuleName'
 import SubscriptionsPage from '../SubscriptionsPage'
 import orgMockData from './mocks/orgMockData.json'
 import projMockData from './mocks/projMockData.json'
 import serviceMockData from './mocks/serviceMockData.json'
+
 jest.mock('services/cd-ng')
+jest.mock('services/ci')
 const getOrganizationListPromiseMock = getOrganizationListPromise as jest.MockedFunction<any>
+const getListActiveDevelopersPromiseMock = listActiveDevelopersPromise as jest.MockedFunction<any>
 const getProjectListPromiseMock = getProjectListPromise as jest.MockedFunction<any>
 const getServiceListPromiseMock = getAllServicesPromise as jest.MockedFunction<any>
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
@@ -42,6 +47,11 @@ const orgListPromiseMock = jest.fn().mockImplementation(() => {
 const projListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
     projMockData
+  })
+})
+const devListPromiseMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    data: ['abc', 'def']
   })
 })
 const serviceListPromiseMock = jest.fn().mockImplementation(() => {
@@ -63,6 +73,9 @@ getProjectListPromiseMock.mockImplementation(() => {
 })
 getServiceListPromiseMock.mockImplementation(() => {
   return serviceListPromiseMock()
+})
+getListActiveDevelopersPromiseMock.mockImplementation(() => {
+  return devListPromiseMock()
 })
 const useSaveFeedbackMock = useSaveFeedback as jest.MockedFunction<any>
 useSaveFeedbackMock.mockImplementation(() => {
@@ -138,5 +151,46 @@ describe('Subscriptions Page', () => {
     expect(getByText('common.subscriptions.expiryCountdown')).toBeTruthy()
     expect(getByText('common.subscriptions.trial')).toBeTruthy()
     expect(container).toMatchSnapshot()
+  })
+  test('should render CI details  with no data service table', () => {
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              numberOfCommitters: 200,
+              moduleType: 'CI'
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    useGetAccountMock.mockImplementation(() => {
+      return {
+        data: {
+          data: {
+            accountId: '123'
+          },
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        pathParams={{ module: ModuleName.CI }}
+        queryParams={{ moduleCard: ModuleName.CI }}
+      >
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot('ci module ')
+    // document.querySelector('[data-icon="ci-with-dark-text"]').click()
   })
 })
