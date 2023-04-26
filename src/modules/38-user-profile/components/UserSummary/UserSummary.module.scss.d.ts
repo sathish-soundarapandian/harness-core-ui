@@ -10,6 +10,7 @@ declare const styles: {
   readonly card: string
   readonly cardContainer: string
   readonly name: string
+  readonly oauthDropDown: string
   readonly tagClassName: string
 }
 export default styles

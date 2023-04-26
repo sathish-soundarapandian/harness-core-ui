@@ -31,8 +31,9 @@ export interface ConnectViaOAuthProps {
   oAuthSecretIntercepted?: React.MutableRefObject<boolean>
   forceFailOAuthTimeoutId?: NodeJS.Timeout
   setForceFailOAuthTimeoutId: React.Dispatch<React.SetStateAction<NodeJS.Timeout | undefined>>
-  orgIdentifier: string | undefined
-  projectIdentifier: string | undefined
+  label?: string | JSX.Element
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
@@ -47,7 +48,8 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     forceFailOAuthTimeoutId,
     setForceFailOAuthTimeoutId,
     orgIdentifier,
-    projectIdentifier
+    projectIdentifier,
+    label
   } = props
   const { getString } = useStrings()
 
@@ -167,12 +169,12 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
         {renderView()}
         <Button
           intent="primary"
-          text={getString(
-            isExistingConnectionHealthy ? 'connectors.relinkToGitProvider' : 'connectors.linkToGitProvider',
-            {
+          text={
+            label ||
+            getString(isExistingConnectionHealthy ? 'connectors.relinkToGitProvider' : 'connectors.linkToGitProvider', {
               gitProvider: getRelinkLabel()
-            }
-          )}
+            })
+          }
           onClick={handleOAuthLinking}
           variation={ButtonVariation.PRIMARY}
           className={css.linkToGitBtn}

@@ -32,9 +32,10 @@ module.exports = {
       base: `{getConfig("ng/api")}`
     },
     customGenerator: arg => customGenerator(arg, "getConfig('ng/api')"),
-    ...(process.env.cdng_schema_path
-      ? { file: process.env.cdng_schema_path }
-      : { url: 'http://localhost:7457/swagger.json' })
+    // ...(process.env.cdng_schema_path
+    file: 'src/services/cd-ng/swagger.json'
+    // ? { file: process.env.cdng_schema_path }
+    // : { url: 'http://localhost:7457/swagger.json' })
   },
   'cd-ng-open-api': {
     output: 'src/services/cd-ng-open-api/index.tsx',

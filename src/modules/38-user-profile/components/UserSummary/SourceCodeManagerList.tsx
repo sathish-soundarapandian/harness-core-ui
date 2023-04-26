@@ -10,12 +10,20 @@ import { useParams } from 'react-router-dom'
 import { Text, Layout, Button, Icon, ButtonVariation, useConfirmationDialog } from '@harness/uicore'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useSourceCodeModal } from '@user-profile/modals/SourceCodeManager/useSourceCodeManager'
 import { useStrings } from 'framework/strings'
-import { SourceCodeManagerDTO, useDeleteSourceCodeManagers, useGetSourceCodeManagers } from 'services/cd-ng'
+import {
+  SourceCodeManagerDTO,
+  useDeleteSourceCodeManagers,
+  useGetSourceCodeManagers,
+  useGetUserSourceCodeManagers
+} from 'services/cd-ng'
 import { Table, useToaster } from '@common/components'
 import { getIconBySCM, SourceCodeTypes } from '@user-profile/utils/utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import AddSCMOAuth from './AddSCMOAuth'
 
 const RenderColumnName: Renderer<CellProps<SourceCodeManagerDTO>> = ({ row }) => {
   const data = row.original
@@ -107,8 +115,18 @@ const RenderColumnDelete: Renderer<CellProps<SourceCodeManagerDTO>> = ({ row, co
 
 const SourceCodeManagerList: React.FC = () => {
   const { getString } = useStrings()
+  const { currentUserInfo } = useAppStore()
   const { accountId } = useParams<AccountPathProps>()
+  const { PIE_GITX_OAUTH } = useFeatureFlags()
   const { data, loading, refetch } = useGetSourceCodeManagers({ queryParams: { accountIdentifier: accountId } })
+  const {
+    data: OauthSCMs,
+    loading: loadingOauthSCMs
+    // refetch: refetchOauthSCMs
+  } = useGetUserSourceCodeManagers({
+    queryParams: { accountIdentifier: accountId, userIdentifier: currentUserInfo.uuid },
+    lazy: !PIE_GITX_OAUTH
+  })
 
   const { openSourceCodeModal } = useSourceCodeModal({ onSuccess: refetch })
 
@@ -145,7 +163,7 @@ const SourceCodeManagerList: React.FC = () => {
     if (data?.data?.length) {
       return <Table<SourceCodeManagerDTO> data={data.data} columns={columns} hideHeaders={true} />
     }
-    if (!loading) {
+    if (!(loading || loadingOauthSCMs)) {
       return (
         <Layout.Horizontal padding={{ top: 'large' }}>
           <Button
@@ -162,6 +180,8 @@ const SourceCodeManagerList: React.FC = () => {
 
   return (
     <Layout.Vertical spacing="large">
+      {PIE_GITX_OAUTH && <AddSCMOAuth></AddSCMOAuth>}
+
       <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
         {getString('userProfile.mysourceCodeManagers')}
       </Text>

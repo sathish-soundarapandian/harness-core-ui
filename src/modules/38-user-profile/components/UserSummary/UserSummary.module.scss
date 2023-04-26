@@ -27,3 +27,13 @@
   font-weight: bold;
   letter-spacing: 0.4px;
 }
+
+.oauthDropDown {
+  width: 320px;
+
+  :global {
+    .bp3-popover {
+      width: 320px;
+    }
+  }
+}
