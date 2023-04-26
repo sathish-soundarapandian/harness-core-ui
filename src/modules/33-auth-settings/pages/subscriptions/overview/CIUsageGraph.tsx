@@ -123,7 +123,7 @@ const CIUsageGraph: React.FC<CIUsageGraphProps> = (props: CIUsageGraphProps) => 
         }
       }
     },
-    yAxis: getYAxis(maxValue, subscriptions),
+    yAxis: getYAxis(maxValue, subscriptions, getString('common.subscriptions.usage.developers')),
     plotOptions: getPlotOptions(),
     series: getSeries(values, subscriptions)
   }

@@ -101,7 +101,11 @@ const getLast3Months = () => {
   return last3Months
 }
 
-export const getYAxis = (maxValue: number, subscriptions: number): YAxisOptions | YAxisOptions[] | undefined => {
+export const getYAxis = (
+  maxValue: number,
+  subscriptions: number,
+  title: string
+): YAxisOptions | YAxisOptions[] | undefined => {
   return {
     min: 0,
     max: maxValue > subscriptions ? maxValue + 1 : subscriptions + 1,
@@ -122,7 +126,7 @@ export const getYAxis = (maxValue: number, subscriptions: number): YAxisOptions 
       }
     ],
     title: {
-      text: 'Developers'
+      text: title
     }
   }
 }
@@ -267,7 +271,7 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
         }
       }
     },
-    yAxis: getYAxis(maxValue, subscriptions),
+    yAxis: getYAxis(maxValue, subscriptions, getString('common.subscriptions.usage.services')),
     plotOptions: getPlotOptions(),
     series: getSeries(values, subscriptions)
   }
