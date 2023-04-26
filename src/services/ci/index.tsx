@@ -51,6 +51,16 @@ export type ActionStepInfoV1 = StepSpecType & {
   with?: ParameterFieldMapStringString
 }
 
+export interface ActiveDevelopersDTO {
+  accountIdentifier?: string
+  identifier: string
+  lastBuild?: number
+  module?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  timestamp?: number
+}
+
 export type AquaTrivyStepInfo = StepSpecType & {
   advanced?: STOYamlAdvancedSettings
   baseImageConnectorRefs?: ParameterFieldListString
@@ -295,6 +305,7 @@ export interface BuildSpec {
 
 export type BurpStepInfo = StepSpecType & {
   advanced?: STOYamlAdvancedSettings
+  auth?: STOYamlAuth
   baseImageConnectorRefs?: ParameterFieldListString
   config: 'default'
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
@@ -347,6 +358,12 @@ export interface CIBuildPRHook {
   triggerCommits?: CIBuildCommit[]
 }
 
+export interface CIDevelopersFilterParams {
+  developer?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
 export interface CIExecutionArgs {
   executionSource?: ExecutionSource
   runSequence?: string
@@ -379,6 +396,13 @@ export interface CIInfraDetails {
   infraHostType?: string
   infraOSType?: string
   infraType?: string
+}
+
+export interface CILicenseHistoryDTO {
+  licenseType?: 'DEVELOPERS'
+  licenseUsage?: {
+    [key: string]: number
+  }
 }
 
 export interface CIPipelineModuleInfo {
@@ -542,12 +566,27 @@ export type CloudRuntimeV1 = RuntimeV1 & {
 
 export interface CodeBase {
   build: Build
-  connectorRef: string
+  connectorRef?: string
   depth?: number
   prCloneStrategy?: 'MergeCommit' | 'SourceBranch'
   repoName?: string
   resources?: ContainerResource
   sslVerify?: boolean
+}
+
+export type CodeqlStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export interface CommitDetails {
@@ -623,7 +662,7 @@ export type CustomExecutionSource = ExecutionSource & {
 export type CustomIngestStepInfo = StepSpecType & {
   advanced?: STOYamlAdvancedSettings
   baseImageConnectorRefs?: ParameterFieldListString
-  config: 'default'
+  config: 'default' | 'sarif'
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
   ingestion?: STOYamlIngestion
   mode: 'ingestion' | 'orchestration' | 'extraction'
@@ -637,6 +676,8 @@ export type CustomIngestStepInfo = StepSpecType & {
 
 export interface DashboardBuildExecutionInfo {
   buildExecutionInfoList?: BuildExecutionInfo[]
+  buildRate?: number
+  buildRateChangeRate?: number
 }
 
 export interface DashboardBuildRepositoryInfo {
@@ -1163,6 +1204,7 @@ export interface Error {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1533,6 +1575,7 @@ export interface ErrorMetadata {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   errorMessage?: string
 }
 
@@ -1929,6 +1972,7 @@ export interface Failure {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1973,6 +2017,22 @@ export type FortifyOnDemandStepInfo = StepSpecType & {
   settings?: ParameterFieldMapStringJsonNode
   target: STOYamlTarget
   tool?: STOYamlFODToolData
+}
+
+export type FossaStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  auth: STOYamlAuth
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export type GCRStepInfo = StepSpecType & {
@@ -2021,6 +2081,21 @@ export interface GitInfo {
   repoName?: string
   sourceBranch?: string
   targetBranch?: string
+}
+
+export type GitLeaksStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export type GrypeStepInfo = StepSpecType & {
@@ -2150,6 +2225,7 @@ export interface Input {
   name?: string
   required?: boolean
   secret?: boolean
+  type?: string
 }
 
 export interface InputSetError {
@@ -2466,6 +2542,7 @@ export interface OnFailureConfig {
     | 'InputTimeoutError'
     | 'ApprovalRejection'
     | 'DelegateRestart'
+    | 'UserMarkedFailure'
   )[]
 }
 
@@ -2497,6 +2574,11 @@ export type OpenvasStepInfo = StepSpecType & {
 export interface Operation {
   field: string
   value?: string
+}
+
+export interface Output {
+  description?: string
+  name?: string
 }
 
 export interface OutputNGVariable {
@@ -2569,6 +2651,20 @@ export interface Page {
   totalPages?: number
 }
 
+export interface PageActiveDevelopersDTO {
+  content?: ActiveDevelopersDTO[]
+  empty?: boolean
+  first?: boolean
+  last?: boolean
+  number?: number
+  numberOfElements?: number
+  pageable?: Pageable
+  size?: number
+  sort?: Sort
+  totalElements?: number
+  totalPages?: number
+}
+
 export interface PagePluginMetadataResponse {
   content?: PluginMetadataResponse[]
   empty?: boolean
@@ -2578,6 +2674,15 @@ export interface PagePluginMetadataResponse {
   pageToken?: string
   totalItems?: number
   totalPages?: number
+}
+
+export interface Pageable {
+  offset?: number
+  pageNumber?: number
+  pageSize?: number
+  paged?: boolean
+  sort?: Sort
+  unpaged?: boolean
 }
 
 export type ParallelStepElementConfig = ExecutionWrapperConfig[]
@@ -2767,6 +2872,7 @@ export interface PluginMetadataResponse {
   kind?: string
   logo?: string
   name?: string
+  outputs?: Output[]
   repo?: string
   uses?: string
 }
@@ -2946,6 +3052,13 @@ export interface ResponseBoolean {
 export interface ResponseCIExecutionImages {
   correlationId?: string
   data?: CIExecutionImages
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseCILicenseHistoryDTO {
+  correlationId?: string
+  data?: CILicenseHistoryDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -3396,6 +3509,7 @@ export interface ResponseMessage {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -3410,14 +3524,29 @@ export interface ResponseMessage {
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'DELEGATE_RESTART'
+    | 'USER_MARKED_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
 }
 
+export interface ResponsePageActiveDevelopersDTO {
+  correlationId?: string
+  data?: PageActiveDevelopersDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponsePagePluginMetadataResponse {
   correlationId?: string
   data?: PagePluginMetadataResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseSetString {
+  correlationId?: string
+  data?: string[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -3819,6 +3948,12 @@ export type SonarqubeStepInfo = StepSpecType & {
   settings?: ParameterFieldMapStringJsonNode
   target: STOYamlTarget
   tool?: STOYamlSonarqubeToolData
+}
+
+export interface Sort {
+  empty?: boolean
+  sorted?: boolean
+  unsorted?: boolean
 }
 
 export interface Splitting {
@@ -4318,6 +4453,8 @@ export type ZapStepInfo = StepSpecType & {
   target: STOYamlTarget
   tool?: STOYamlZapToolData
 }
+
+export type CIDevelopersFilterParamsRequestBody = CIDevelopersFilterParams
 
 export type OperationArrayRequestBody = Operation[]
 
@@ -5142,6 +5279,263 @@ export const updateExecutionQueueLimitsPromise = (
     void
   >('POST', getConfig('ci'), `/execution-limit`, props, signal)
 
+export interface CiLicenseUsageQueryParams {
+  accountIdentifier?: string
+  page?: number
+  size?: number
+  sort?: string[]
+  timestamp?: number
+}
+
+export type CiLicenseUsageProps = Omit<
+  MutateProps<
+    ResponsePageActiveDevelopersDTO,
+    Failure | Error,
+    CiLicenseUsageQueryParams,
+    CIDevelopersFilterParamsRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get CI Licence Usage
+ */
+export const CiLicenseUsage = (props: CiLicenseUsageProps) => (
+  <Mutate<
+    ResponsePageActiveDevelopersDTO,
+    Failure | Error,
+    CiLicenseUsageQueryParams,
+    CIDevelopersFilterParamsRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/license-usage`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseCiLicenseUsageProps = Omit<
+  UseMutateProps<
+    ResponsePageActiveDevelopersDTO,
+    Failure | Error,
+    CiLicenseUsageQueryParams,
+    CIDevelopersFilterParamsRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get CI Licence Usage
+ */
+export const useCiLicenseUsage = (props: UseCiLicenseUsageProps) =>
+  useMutate<
+    ResponsePageActiveDevelopersDTO,
+    Failure | Error,
+    CiLicenseUsageQueryParams,
+    CIDevelopersFilterParamsRequestBody,
+    void
+  >('POST', `/license-usage`, { base: getConfig('ci'), ...props })
+
+/**
+ * Get CI Licence Usage
+ */
+export const ciLicenseUsagePromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageActiveDevelopersDTO,
+    Failure | Error,
+    CiLicenseUsageQueryParams,
+    CIDevelopersFilterParamsRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageActiveDevelopersDTO,
+    Failure | Error,
+    CiLicenseUsageQueryParams,
+    CIDevelopersFilterParamsRequestBody,
+    void
+  >('POST', getConfig('ci'), `/license-usage`, props, signal)
+
+export interface DownloadActiveDevelopersCSVReportQueryParams {
+  accountIdentifier?: string
+  timestamp?: number
+}
+
+export type DownloadActiveDevelopersCSVReportProps = Omit<
+  GetProps<void, Failure | Error, DownloadActiveDevelopersCSVReportQueryParams, void>,
+  'path'
+>
+
+/**
+ * Download CSV Active Developers report
+ */
+export const DownloadActiveDevelopersCSVReport = (props: DownloadActiveDevelopersCSVReportProps) => (
+  <Get<void, Failure | Error, DownloadActiveDevelopersCSVReportQueryParams, void>
+    path={`/license-usage/csv/download`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseDownloadActiveDevelopersCSVReportProps = Omit<
+  UseGetProps<void, Failure | Error, DownloadActiveDevelopersCSVReportQueryParams, void>,
+  'path'
+>
+
+/**
+ * Download CSV Active Developers report
+ */
+export const useDownloadActiveDevelopersCSVReport = (props: UseDownloadActiveDevelopersCSVReportProps) =>
+  useGet<void, Failure | Error, DownloadActiveDevelopersCSVReportQueryParams, void>(`/license-usage/csv/download`, {
+    base: getConfig('ci'),
+    ...props
+  })
+
+/**
+ * Download CSV Active Developers report
+ */
+export const downloadActiveDevelopersCSVReportPromise = (
+  props: GetUsingFetchProps<void, Failure | Error, DownloadActiveDevelopersCSVReportQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<void, Failure | Error, DownloadActiveDevelopersCSVReportQueryParams, void>(
+    getConfig('ci'),
+    `/license-usage/csv/download`,
+    props,
+    signal
+  )
+
+export interface ListActiveDevelopersQueryParams {
+  accountIdentifier?: string
+  timestamp?: number
+}
+
+export type ListActiveDevelopersProps = Omit<
+  GetProps<ResponseSetString, Failure | Error, ListActiveDevelopersQueryParams, void>,
+  'path'
+>
+
+/**
+ * List Active Developers
+ */
+export const ListActiveDevelopers = (props: ListActiveDevelopersProps) => (
+  <Get<ResponseSetString, Failure | Error, ListActiveDevelopersQueryParams, void>
+    path={`/license-usage/developers`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseListActiveDevelopersProps = Omit<
+  UseGetProps<ResponseSetString, Failure | Error, ListActiveDevelopersQueryParams, void>,
+  'path'
+>
+
+/**
+ * List Active Developers
+ */
+export const useListActiveDevelopers = (props: UseListActiveDevelopersProps) =>
+  useGet<ResponseSetString, Failure | Error, ListActiveDevelopersQueryParams, void>(`/license-usage/developers`, {
+    base: getConfig('ci'),
+    ...props
+  })
+
+/**
+ * List Active Developers
+ */
+export const listActiveDevelopersPromise = (
+  props: GetUsingFetchProps<ResponseSetString, Failure | Error, ListActiveDevelopersQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseSetString, Failure | Error, ListActiveDevelopersQueryParams, void>(
+    getConfig('ci'),
+    `/license-usage/developers`,
+    props,
+    signal
+  )
+
+export interface GetLicenseHistoryUsageQueryParams {
+  accountIdentifier: string
+  licenseType: 'DEVELOPERS'
+}
+
+export type GetLicenseHistoryUsageProps = Omit<
+  MutateProps<
+    ResponseCILicenseHistoryDTO,
+    Failure | Error,
+    GetLicenseHistoryUsageQueryParams,
+    CIDevelopersFilterParamsRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get license date usage in CI Module
+ */
+export const GetLicenseHistoryUsage = (props: GetLicenseHistoryUsageProps) => (
+  <Mutate<
+    ResponseCILicenseHistoryDTO,
+    Failure | Error,
+    GetLicenseHistoryUsageQueryParams,
+    CIDevelopersFilterParamsRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/license-usage/history`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseGetLicenseHistoryUsageProps = Omit<
+  UseMutateProps<
+    ResponseCILicenseHistoryDTO,
+    Failure | Error,
+    GetLicenseHistoryUsageQueryParams,
+    CIDevelopersFilterParamsRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get license date usage in CI Module
+ */
+export const useGetLicenseHistoryUsage = (props: UseGetLicenseHistoryUsageProps) =>
+  useMutate<
+    ResponseCILicenseHistoryDTO,
+    Failure | Error,
+    GetLicenseHistoryUsageQueryParams,
+    CIDevelopersFilterParamsRequestBody,
+    void
+  >('POST', `/license-usage/history`, { base: getConfig('ci'), ...props })
+
+/**
+ * Get license date usage in CI Module
+ */
+export const getLicenseHistoryUsagePromise = (
+  props: MutateUsingFetchProps<
+    ResponseCILicenseHistoryDTO,
+    Failure | Error,
+    GetLicenseHistoryUsageQueryParams,
+    CIDevelopersFilterParamsRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseCILicenseHistoryDTO,
+    Failure | Error,
+    GetLicenseHistoryUsageQueryParams,
+    CIDevelopersFilterParamsRequestBody,
+    void
+  >('POST', getConfig('ci'), `/license-usage/history`, props, signal)
+
 export interface GetPartialYamlSchemaQueryParams {
   accountIdentifier: string
   projectIdentifier?: string
@@ -5403,6 +5797,11 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'GitLeaks'
+    | 'DeployCloudFunctionGenOne'
+    | 'RollbackCloudFunctionGenOne'
   yamlGroup?: string
 }
 

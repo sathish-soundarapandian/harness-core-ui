@@ -8,7 +8,7 @@
 import React, { useCallback } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, merge } from 'lodash-es'
+import { defaultTo, get, merge, set } from 'lodash-es'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import type { IItemRendererProps } from '@blueprintjs/select'
@@ -53,6 +53,23 @@ import {
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
+
+export enum GitRepoName {
+  Account = 'Account',
+  Repo = 'Repo'
+}
+
+export enum FetchType {
+  Branch = 'Branch',
+  Commit = 'Commit',
+  Tag = 'Tag'
+}
+
+export const fetchTypeList = [
+  { label: 'Latest from Branch', value: FetchType.Branch },
+  { label: 'Specific Commit Id', value: FetchType.Commit },
+  { label: 'Specific Git Tag', value: FetchType.Tag }
+]
 
 export function GoogleCloudSourceRepositories(
   props: StepProps<ConnectorConfigDTO> & GoogleCloudSourceRepositoriesArtifactProps
@@ -151,12 +168,40 @@ export function GoogleCloudSourceRepositories(
     project: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString('projectLabel') })),
     repository: Yup.mixed().required(
       getString('common.validation.fieldIsRequired', {
-        name: getString('common.artifacts.googleCloudSourceRepositories.cloudSourceRepository')
+        name: getString('pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepository')
       })
     ),
+    branch: Yup.string().when('fetchType', {
+      is: 'Branch',
+      then: Yup.string()
+        .trim()
+        .required(
+          getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.deploy.inputSet.branch') })
+        )
+    }),
+    commitId: Yup.string().when('fetchType', {
+      is: 'Commit',
+      then: Yup.string()
+        .trim()
+        .required(
+          getString('common.validation.fieldIsRequired', {
+            name: getString('pipeline.artifacts.googleCloudSourceRepositories.commitId')
+          })
+        )
+    }),
+    tag: Yup.string().when('fetchType', {
+      is: 'Tag',
+      then: Yup.string()
+        .trim()
+        .required(
+          getString('common.validation.fieldIsRequired', {
+            name: getString('tagLabel')
+          })
+        )
+    }),
     sourceDirectory: Yup.string().required(
       getString('common.validation.fieldIsRequired', {
-        name: getString('common.artifacts.googleCloudSourceRepositories.sourceDirectory')
+        name: getString('pipeline.artifacts.googleCloudSourceRepositories.sourceDirectory')
       })
     )
   }
@@ -207,9 +252,19 @@ export function GoogleCloudSourceRepositories(
         connectorRef: formData.connectorId,
         project: formData.project,
         repository: formData.repository,
-        sourceDirectory: formData.sourceDirectory
+        sourceDirectory: formData.sourceDirectory,
+        fetchType: formData.fetchType
       }
     }
+
+    if (formData.fetchType === 'Branch') {
+      set(artifactObj, 'spec.branch', formData.branch)
+    } else if (formData.fetchType === 'Commit') {
+      set(artifactObj, 'spec.commitId', formData.commitId)
+    } else if (formData.fetchType === 'Tag') {
+      set(artifactObj, 'spec.tag', formData.tag)
+    }
+
     if (isIdentifierAllowed) {
       merge(artifactObj, { identifier: formData?.identifier })
     }
@@ -249,6 +304,39 @@ export function GoogleCloudSourceRepositories(
     ),
     [loadingProjects]
   )
+
+  const renderField = (
+    formikFormRef: FormikProps<GoogleCloudSourceRepositoriesInitialValuesType>,
+    fieldName: string,
+    fieldLabel: string,
+    fieldPlaceholder: string
+  ): JSX.Element => {
+    return (
+      <div
+        className={cx(css.halfWidth, {
+          [css.runtimeInput]: getMultiTypeFromValue(get(formikFormRef.values, fieldName)) === MultiTypeInputType.RUNTIME
+        })}
+      >
+        <FormInput.MultiTextInput
+          multiTextInputProps={{ expressions, allowableTypes }}
+          label={fieldLabel}
+          placeholder={fieldPlaceholder}
+          name={fieldName}
+        />
+        {getMultiTypeFromValue(get(formikFormRef.values, fieldName)) === MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            value={get(formikFormRef.values, fieldName)}
+            type="String"
+            variableName={fieldName}
+            showRequiredField={false}
+            showDefaultField={false}
+            onChange={value => formikFormRef.setFieldValue(fieldName, value)}
+            isReadonly={isReadonly}
+          />
+        )}
+      </div>
+    )
+  }
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
@@ -330,9 +418,9 @@ export function GoogleCloudSourceRepositories(
               <div className={css.imagePathContainer}>
                 <FormInput.MultiTextInput
                   name="repository"
-                  label={getString('common.artifacts.googleCloudSourceRepositories.cloudSourceRepository')}
+                  label={getString('pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepository')}
                   placeholder={getString(
-                    'common.artifacts.googleCloudSourceRepositories.cloudSourceRepositoryPlaceholder'
+                    'pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepositoryPlaceholder'
                   )}
                   disabled={isReadonly}
                   multiTextInputProps={{
@@ -356,11 +444,45 @@ export function GoogleCloudSourceRepositories(
                 )}
               </div>
 
+              <Layout.Horizontal spacing="huge" className={css.imagePathContainer}>
+                <div className={css.halfWidth}>
+                  <FormInput.Select
+                    name="fetchType"
+                    label={getString('pipeline.artifacts.googleCloudSourceRepositories.fetchType')}
+                    items={fetchTypeList}
+                  />
+                </div>
+
+                {formik.values?.fetchType === FetchType.Branch &&
+                  renderField(
+                    formik,
+                    'branch',
+                    getString('pipelineSteps.deploy.inputSet.branch'),
+                    getString('pipeline.manifestType.branchPlaceholder')
+                  )}
+
+                {formik.values?.fetchType === FetchType.Commit &&
+                  renderField(
+                    formik,
+                    'commitId',
+                    getString('pipeline.artifacts.googleCloudSourceRepositories.commitId'),
+                    getString('pipeline.artifacts.googleCloudSourceRepositories.commitIdPlaceholder')
+                  )}
+
+                {formik.values?.fetchType === FetchType.Tag &&
+                  renderField(
+                    formik,
+                    'tag',
+                    getString('tagLabel'),
+                    getString('pipeline.artifacts.googleCloudSourceRepositories.tagPlaceholder')
+                  )}
+              </Layout.Horizontal>
+
               <div className={css.imagePathContainer}>
                 <FormInput.MultiTextInput
                   name="sourceDirectory"
-                  label={getString('common.artifacts.googleCloudSourceRepositories.sourceDirectory')}
-                  placeholder={getString('common.artifacts.googleCloudSourceRepositories.sourceDirectoryPlaceholder')}
+                  label={getString('pipeline.artifacts.googleCloudSourceRepositories.sourceDirectory')}
+                  placeholder={getString('pipeline.artifacts.googleCloudSourceRepositories.sourceDirectoryPlaceholder')}
                   disabled={isReadonly}
                   multiTextInputProps={{
                     expressions,

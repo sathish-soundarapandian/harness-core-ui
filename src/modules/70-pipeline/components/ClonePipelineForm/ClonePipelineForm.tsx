@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { defaultTo, set, get, pick } from 'lodash-es'
 import produce from 'immer'
 import { useHistory, useParams } from 'react-router-dom'
@@ -20,7 +20,8 @@ import {
   SelectOption,
   useToaster,
   Text,
-  Icon
+  Icon,
+  ModalDialog
 } from '@harness/uicore'
 import { Divider } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
@@ -44,6 +45,8 @@ import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/Inline
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 
+import type { Evaluation } from 'services/pm'
+import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import { getValidationSchema, FormState, getInitialValues, processFormData } from './ClonePipelineFormUtils'
 
 import css from './ClonePipelineForm.module.scss'
@@ -84,6 +87,7 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   const { supportingGitSimplification, selectedProject } = useAppStore()
   const [projectsQuery, setProjectsQuery] = React.useState('')
   const [selectedOrg, setSelectedOrg] = React.useState(orgIdentifier)
+  const [governanceMetadata, setGovernanceMetadata] = useState<Evaluation | undefined>()
 
   const { mutate: clonePipeline } = useClonePipeline({})
   const { data: orgData, loading: orgDataLoading } = useGetOrganizationList({
@@ -155,11 +159,16 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
     }
   }
 
-  async function handleSubmit(formData: FormState): Promise<FormState> {
+  async function handleSubmit(formData: FormState): Promise<void> {
     try {
       const [data, queryParams] = processFormData(formData, accountId)
+      const cloneResponse = await clonePipeline(data, { queryParams })
+      const governanceMetadataFromResponse = cloneResponse?.data?.governanceMetadata as Evaluation | undefined
 
-      await clonePipeline(data, { queryParams })
+      if (governanceMetadataFromResponse?.status === 'error') {
+        setGovernanceMetadata(governanceMetadataFromResponse)
+        return
+      }
 
       showSuccess(
         getString('pipeline.cloneSuccess', {
@@ -183,95 +192,116 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
     } catch (e: unknown) {
       showError(getRBACErrorMessage(e as RBACError))
     }
-
-    return formData
   }
+
   const initialvalues: FormState = React.useMemo(
     () => getInitialValues({ originalPipeline, orgIdentifier, projectIdentifier, supportingGitSimplification }),
     [originalPipeline, orgIdentifier, projectIdentifier, supportingGitSimplification]
   )
 
   return (
-    <div data-testid="clone-pipeline-form">
-      <Formik<FormState>
-        formName="clone-pipeline"
-        initialValues={initialvalues}
-        onSubmit={handleSubmit}
-        validationSchema={getValidationSchema(getString)}
-      >
-        {formikProps => {
-          formikRef.current = formikProps
-          const { storeType } = formikProps.values
+    <>
+      <div data-testid="clone-pipeline-form">
+        <Formik<FormState>
+          formName="clone-pipeline"
+          initialValues={initialvalues}
+          onSubmit={handleSubmit}
+          validationSchema={getValidationSchema(getString)}
+        >
+          {formikProps => {
+            formikRef.current = formikProps
+            const { storeType } = formikProps.values
 
-          return (
-            <FormikForm className={css.form}>
-              <div className={css.container}>
-                <NameIdDescriptionTags inputGroupProps={{ className: css.zeroMargin }} formikProps={formikProps} />
-              </div>
-              {supportingGitSimplification ? (
-                <>
-                  <Divider />
-                  <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
-                    {getString('pipeline.createPipeline.choosePipelineSetupHeader')}
-                  </Text>
-                  <InlineRemoteSelect
-                    className={css.inlineRemoteSelect}
-                    selected={formikProps.values.storeType}
-                    onChange={item => formikProps.setFieldValue('storeType', item.type)}
-                    getCardDisabledStatus={() => false}
-                  />
-                </>
-              ) : null}
-              {storeType === StoreType.INLINE ? (
+            return (
+              <FormikForm className={css.form}>
                 <div className={css.container}>
-                  <div className={css.inputWithSpinner}>
-                    <FormInput.Select
-                      selectProps={{ usePortal: true }}
-                      label={getString('orgLabel')}
-                      name="destinationConfig.orgIdentifier"
-                      items={organizations}
-                      onChange={handleOrgChange}
-                    />
-                    {orgDataLoading ? <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} /> : null}
-                  </div>
-                  <div className={css.inputWithSpinner}>
-                    <FormInput.Select
-                      key={get(formikProps.values, 'destinationConfig.orgIdentifier')}
-                      selectProps={{ usePortal: true }}
-                      label={getString('projectLabel')}
-                      name="destinationConfig.projectIdentifier"
-                      items={projects}
-                      onQueryChange={setProjectsQuery}
-                    />
-                    {projectDataLoading ? <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} /> : null}
-                  </div>
+                  <NameIdDescriptionTags inputGroupProps={{ className: css.zeroMargin }} formikProps={formikProps} />
                 </div>
-              ) : null}
-              {storeType === StoreType.REMOTE ? (
-                <React.Fragment>
-                  <GitSyncForm formikProps={formikProps as any} isEdit={false} initialValues={{}} />
+                {supportingGitSimplification ? (
+                  <>
+                    <Divider />
+                    <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
+                      {getString('pipeline.createPipeline.choosePipelineSetupHeader')}
+                    </Text>
+                    <InlineRemoteSelect
+                      className={css.inlineRemoteSelect}
+                      selected={formikProps.values.storeType}
+                      onChange={item => formikProps.setFieldValue('storeType', item.type)}
+                      getCardDisabledStatus={() => false}
+                    />
+                  </>
+                ) : null}
+                {storeType === StoreType.INLINE ? (
                   <div className={css.container}>
-                    <FormInput.TextArea label={getString('common.git.commitMessage')} name="commitMsg" />
+                    <div className={css.inputWithSpinner}>
+                      <FormInput.Select
+                        selectProps={{ usePortal: true }}
+                        label={getString('orgLabel')}
+                        name="destinationConfig.orgIdentifier"
+                        items={organizations}
+                        onChange={handleOrgChange}
+                      />
+                      {orgDataLoading ? <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} /> : null}
+                    </div>
+                    <div className={css.inputWithSpinner}>
+                      <FormInput.Select
+                        key={get(formikProps.values, 'destinationConfig.orgIdentifier')}
+                        selectProps={{ usePortal: true }}
+                        label={getString('projectLabel')}
+                        name="destinationConfig.projectIdentifier"
+                        items={projects}
+                        onQueryChange={setProjectsQuery}
+                      />
+                      {projectDataLoading ? <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} /> : null}
+                    </div>
                   </div>
-                </React.Fragment>
-              ) : null}
-              <Layout.Horizontal className={css.createPipelineButtons} spacing="medium">
-                <RbacButton
-                  permission={{
-                    resource: { resourceType: ResourceType.PIPELINE },
-                    permission: PermissionIdentifier.EDIT_PIPELINE
-                  }}
-                  intent="primary"
-                  text={getString('projectCard.clone')}
-                  type="submit"
-                  data-testid="clone"
-                />
-                <Button intent="none" text={getString('cancel')} type="reset" onClick={onClose} />
-              </Layout.Horizontal>
-            </FormikForm>
-          )
+                ) : null}
+                {storeType === StoreType.REMOTE ? (
+                  <React.Fragment>
+                    <GitSyncForm formikProps={formikProps as any} isEdit={false} initialValues={{}} />
+                    <div className={css.container}>
+                      <FormInput.TextArea label={getString('common.git.commitMessage')} name="commitMsg" />
+                    </div>
+                  </React.Fragment>
+                ) : null}
+                <Layout.Horizontal className={css.createPipelineButtons} spacing="medium">
+                  <RbacButton
+                    permission={{
+                      resource: { resourceType: ResourceType.PIPELINE },
+                      permission: PermissionIdentifier.EDIT_PIPELINE
+                    }}
+                    intent="primary"
+                    text={getString('projectCard.clone')}
+                    type="submit"
+                    data-testid="clone"
+                  />
+                  <Button intent="none" text={getString('cancel')} type="reset" onClick={onClose} />
+                </Layout.Horizontal>
+              </FormikForm>
+            )
+          }}
+        </Formik>
+      </div>
+
+      <ModalDialog
+        isOpen={Boolean(governanceMetadata)}
+        onClose={() => {
+          setGovernanceMetadata(undefined)
+          onClose()
         }}
-      </Formik>
-    </div>
+        title={getString('common.policiesSets.evaluations')}
+        enforceFocus={false}
+        width={900}
+      >
+        <PolicyManagementEvaluationView
+          metadata={governanceMetadata}
+          accountId={accountId}
+          module={module}
+          headingErrorMessage={getString('pipeline.policyEvaluations.failureHeadingEvaluationDetail')}
+          headingWarningMessage={getString('pipeline.policyEvaluations.warningHeadingEvaluationDetail')}
+          className={css.policyEvalContainer}
+        />
+      </ModalDialog>
+    </>
   )
 }

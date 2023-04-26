@@ -200,13 +200,12 @@ exports[`UserGroupDetails Test render data 1`] = `
         class="StyledProps--font StyledProps--main memberList"
       >
         <div
-          class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+          class="Layout--horizontal StyledProps--main ListHeader--listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
           >
-            total
-            : 
+            Total: 
             2
           </p>
           <div
@@ -913,13 +912,12 @@ exports[`UserGroupDetails Test render data for community editiion 1`] = `
         class="StyledProps--font StyledProps--main memberList"
       >
         <div
-          class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+          class="Layout--horizontal StyledProps--main ListHeader--listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
           >
-            total
-            : 
+            Total: 
             2
           </p>
           <div

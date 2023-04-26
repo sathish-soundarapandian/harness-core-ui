@@ -63,6 +63,7 @@ const contextValue = (mock: any = mockCD): ExecutionContextParams => ({
     mock.data.pipelineExecutionSummary.startingNodeId
   ),
   childPipelineStagesMap: new Map([]),
+  rollbackPipelineStagesMap: new Map([]),
   allStagesMap: getPipelineStagesMap(
     mock.data.pipelineExecutionSummary.layoutNodeMap as any,
     mock.data.pipelineExecutionSummary.startingNodeId

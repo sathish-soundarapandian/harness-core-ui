@@ -6,14 +6,24 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, Container, DropDown, ExpandingSearchInput, Layout } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  Container,
+  DropDown,
+  ExpandingSearchInput,
+  Layout,
+  sortByCreated,
+  sortByLastModified,
+  sortByName,
+  SortMethod
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Page } from '@common/exports'
-import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
 import css from './AddResourceModal.module.scss'
 
 interface RoleModalData {

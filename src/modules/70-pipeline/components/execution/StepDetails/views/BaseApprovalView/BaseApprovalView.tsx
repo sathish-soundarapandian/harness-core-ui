@@ -52,10 +52,17 @@ interface ApprovalTabComponentProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
   isWaiting: boolean
   executionMetadata: ExecutionGraph['executionMetadata']
+  progressData?: {
+    [key: string]: string
+  }
 }
 
 export interface BaseApprovalViewProps extends StepDetailProps {
-  step: ExecutionNode
+  step: Omit<ExecutionNode, 'progressData'> & {
+    progressData?: {
+      [key: string]: any
+    }
+  }
   mock?: {
     data?: ResponseApprovalInstanceResponse
     loading?: boolean
@@ -183,6 +190,7 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
             endTs={step.endTs}
             stepParameters={step.stepParameters}
             executionMetadata={executionMetadata}
+            progressData={step.progressData}
           />
         }
       />

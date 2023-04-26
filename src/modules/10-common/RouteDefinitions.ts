@@ -1038,6 +1038,25 @@ const routes = {
       }
     }
   ),
+  toInputSetFormV1: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      inputSetIdentifier,
+      accountId: _accountId,
+      module,
+      ...rest
+    }: PipelineType<InputSetPathProps> & InputSetGitQueryParams) => {
+      const basePath = module || 'home'
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      if (queryString.length > 0) {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/input-sets-v1/${inputSetIdentifier}?${queryString}`
+      } else {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/input-sets-v1/${inputSetIdentifier}`
+      }
+    }
+  ),
   toTriggersPage: withAccountId(
     ({
       orgIdentifier,
@@ -2038,6 +2057,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/gamedays`
   ),
+  toChaosDashboards: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-dashboards`
+  ),
 
   // chaos enviroments
   toChaosEnvironments: withAccountId(
@@ -2115,6 +2138,7 @@ const routes = {
   // Error Tracking
   toET: withAccountId(() => '/et'),
   toETHome: withAccountId(() => '/et/home'),
+  toETHomeTrial: withAccountId(() => '/et/home/trial'),
   toETEventsSummary: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
       `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/et/eventsummary`
@@ -2144,6 +2168,41 @@ const routes = {
   toETSettings: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
       `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et`
+  ),
+
+  toETDefaultSettings: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/default-settings`
+  ),
+
+  toETConnectors: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/connectors`
+  ),
+
+  toETSecrets: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/secrets`
+  ),
+
+  toETAccessControl: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/access-control`
+  ),
+
+  toETDelegates: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/delegates`
+  ),
+
+  toETPolicies: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/governance/dashboard`
+  ),
+
+  toETCodeErrorsCriticalEvents: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/criticalevents`
   )
 }
 

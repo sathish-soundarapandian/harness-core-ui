@@ -19,7 +19,6 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
@@ -33,7 +32,6 @@ import {
   isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource,
-  isExecutionTimeFieldDisabled,
   getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
@@ -226,7 +224,6 @@ const Content = (props: GCRRenderContent): JSX.Element => {
               projectIdentifier={projectIdentifier}
               configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
-              width={391}
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
@@ -244,24 +241,22 @@ const Content = (props: GCRRenderContent): JSX.Element => {
             />
           )}
 
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.registryHostname`, template) && (
-              <SelectInputSetView
-                label={getString('connectors.GCR.registryHostname')}
-                name={`${path}.artifacts.${artifactPath}.spec.registryHostname`}
-                useValue
-                fieldPath={`artifacts.${artifactPath}.spec.registryHostname`}
-                template={template}
-                selectItems={gcrUrlList}
-                multiTypeInputProps={{
-                  onChange: () => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`),
-                  expressions,
-                  allowableTypes,
-                  selectProps: { allowCreatingNewItems: true, addClearBtn: true, items: gcrUrlList }
-                }}
-              />
-            )}
-          </div>
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.registryHostname`, template) && (
+            <SelectInputSetView
+              label={getString('connectors.GCR.registryHostname')}
+              name={`${path}.artifacts.${artifactPath}.spec.registryHostname`}
+              useValue
+              fieldPath={`artifacts.${artifactPath}.spec.registryHostname`}
+              template={template}
+              selectItems={gcrUrlList}
+              multiTypeInputProps={{
+                onChange: () => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`),
+                expressions,
+                allowableTypes,
+                selectProps: { allowCreatingNewItems: true, addClearBtn: true, items: gcrUrlList }
+              }}
+            />
+          )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
             <TextFieldInputSetView
@@ -303,38 +298,20 @@ const Content = (props: GCRRenderContent): JSX.Element => {
               stageIdentifier={stageIdentifier}
             />
           )}
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
-              <TextFieldInputSetView
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                label={getString('tagRegex')}
-                name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
-                fieldPath={`artifacts.${artifactPath}.spec.tagRegex`}
-                template={template}
-              />
-            )}
-            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.tagRegex`)) ===
-              MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                className={css.configureOptions}
-                style={{ alignSelf: 'center' }}
-                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.tagRegex`)}
-                type="String"
-                variableName="tagRegex"
-                showRequiredField={false}
-                isReadonly={readonly}
-                showDefaultField={true}
-                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                onChange={value => {
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.tagRegex`, value)
-                }}
-              />
-            )}
-          </div>
+
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
+            <TextFieldInputSetView
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              label={getString('tagRegex')}
+              name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
+              fieldPath={`artifacts.${artifactPath}.spec.tagRegex`}
+              template={template}
+            />
+          )}
         </Layout.Vertical>
       )}
     </>

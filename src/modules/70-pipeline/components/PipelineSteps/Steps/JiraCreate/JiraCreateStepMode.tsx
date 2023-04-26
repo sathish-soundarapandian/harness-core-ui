@@ -54,6 +54,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isFieldFixed } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { getGenuineValue, setIssueTypeOptions } from '../JiraApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -266,9 +267,9 @@ function FormContent({
         toBeUpdatedNonKVFields.push({
           name: field.name,
           value:
-            field?.schema?.type === 'option'
+            field?.schema?.type === 'option' && isFieldFixed(field.value as string)
               ? field?.schema?.array
-                ? (field.value as MultiSelectOption[])?.map(i => i?.value).toString()
+                ? (field.value as MultiSelectOption[])?.map(i => i?.value)?.toString()
                 : (field.value as SelectOption)?.value?.toString()
               : field?.value?.toString()
         })
@@ -506,7 +507,7 @@ function FormContent({
             />
           )}
         </div>
-        {!fetchingProjects && !projectsFetchError && isEmpty(projectsResponse?.data) ? (
+        {connectorRefFixedValue && !fetchingProjects && !projectsFetchError && isEmpty(projectsResponse?.data) ? (
           showWarningMessage()
         ) : projectsFetchError ? (
           <FormError
@@ -569,7 +570,8 @@ function FormContent({
           )}
         </div>
 
-        {!fetchingProjectMetadata &&
+        {projectKeyFixedValue &&
+          !fetchingProjectMetadata &&
           !projectMetadataFetchError &&
           isEmpty(projectMetaResponse?.data) &&
           showWarningMessage()}

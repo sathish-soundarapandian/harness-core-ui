@@ -29,10 +29,13 @@ import type { NotificationRules, PipelineEvent } from 'services/pipeline-ng'
 import { getIconByNotificationMethod } from '@rbac/utils/NotificationUtils'
 import type { NotificationType } from '@rbac/interfaces/Notifications'
 import NoNotifications from '@pipeline/icons/NoNotifications.svg'
+import {
+  getAllNotificationTypeSelectOption,
+  NotificationTypeSelectOptions
+} from '@rbac/constants/NotificationConstants'
 import { useNotificationModal } from './useNotificationModal'
 import { PipelineEventType } from './Steps/PipelineEvents'
 import { Actions } from './NotificationUtils'
-import { getAllNotificationTypeSelectOption, NotificationTypeSelectOptions } from './NotificationTypeOptions'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import css from './NotificationTable.module.scss'
 

@@ -157,6 +157,15 @@ export function getErrorMessage(errorObj?: any): string | undefined {
   return get(errorObj, 'message')
 }
 
+export type ParseError = { payload: { message: string; status?: number } }
+
+export function getErrorMessageForReactQuery(errorObj?: ParseError): string | undefined {
+  if (get(errorObj, 'payload.message')) {
+    return get(errorObj, 'payload.message') || JSON.stringify(get(errorObj, 'payload'), null, '\t')
+  }
+  return get(errorObj, 'message')
+}
+
 interface GetEnvironmentOptionsProps {
   environmentList: ResponseListEnvironmentResponse | null
   loading: boolean

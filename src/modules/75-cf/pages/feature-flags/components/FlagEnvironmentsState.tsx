@@ -6,7 +6,7 @@
  */
 
 import React, { FC } from 'react'
-import { Layout, Text } from '@harness/uicore'
+import { Card, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
@@ -16,9 +16,10 @@ export interface FlagEnvironmentsStateProps {
   environmentsByType: {
     [key: string]: { identifier?: string; name?: string; enabled?: boolean }[]
   }
+  onClickEnvironment: (envId: string) => void
 }
 
-const FlagEnvironmentsState: FC<FlagEnvironmentsStateProps> = ({ environmentsByType }) => {
+const FlagEnvironmentsState: FC<FlagEnvironmentsStateProps> = ({ environmentsByType, onClickEnvironment }) => {
   const { getString } = useStrings()
   const envTypes = Object.keys(environmentsByType)
 
@@ -31,7 +32,6 @@ const FlagEnvironmentsState: FC<FlagEnvironmentsStateProps> = ({ environmentsByT
             key={envType}
             flex={{ distribution: 'space-between', align: 'center-center' }}
             padding="small"
-            margin={{ right: 'medium' }}
             spacing="medium"
             className={cx(css.environmentTypeContainer, envType === 'prod' ? css.prod : css.nonProd)}
             data-testid="environmentTypeContainer"
@@ -42,28 +42,38 @@ const FlagEnvironmentsState: FC<FlagEnvironmentsStateProps> = ({ environmentsByT
               </Text>
             </div>
             {environmentsByType[envType].map(env => (
-              <Layout.Vertical
+              <Card
                 key={env.identifier}
-                padding="medium"
-                margin="small"
-                background={Color.WHITE}
-                height="100%"
-                flex={{ alignItems: 'start', justifyContent: 'space-around' }}
-                className={css.flagEnvironmentStatus}
-                data-testid="flagEnvironmentStatus"
+                interactive
+                elevation={0}
+                className={css.environmentCard}
+                onClick={() => {
+                  if (env.identifier) {
+                    onClickEnvironment(env.identifier)
+                  }
+                }}
               >
-                <Text color={Color.GREY_800} font={{ variation: FontVariation.BODY2 }}>
-                  {env.name}
-                </Text>
-                <Text
-                  font={{ variation: FontVariation.TINY }}
-                  tag="div"
-                  padding="xsmall"
-                  className={env.enabled ? css.enabled : css.disabled}
+                <Layout.Vertical
+                  key={env.identifier}
+                  background={Color.WHITE}
+                  height="100%"
+                  flex={{ alignItems: 'start', justifyContent: 'space-between' }}
+                  className={css.flagEnvironmentStatus}
+                  data-testid="flagEnvironmentStatus"
                 >
-                  {(env.enabled ? getString('enabledLabel') : getString('common.disabled')).toUpperCase()}
-                </Text>
-              </Layout.Vertical>
+                  <Text color={Color.GREY_800} font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
+                    {env.name}
+                  </Text>
+                  <Text
+                    font={{ variation: FontVariation.TINY }}
+                    tag="div"
+                    padding="xsmall"
+                    className={env.enabled ? css.enabled : css.disabled}
+                  >
+                    {(env.enabled ? getString('enabledLabel') : getString('common.disabled')).toUpperCase()}
+                  </Text>
+                </Layout.Vertical>
+              </Card>
             ))}
           </Layout.Horizontal>
         ))}

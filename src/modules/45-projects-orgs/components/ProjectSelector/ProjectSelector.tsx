@@ -22,7 +22,12 @@ import {
   GridListToggle,
   Views,
   TableV2,
-  SelectOption
+  SelectOption,
+  ListHeader,
+  sortByCreated,
+  sortByLastModified,
+  sortByName,
+  SortMethod
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Column } from 'react-table'
@@ -39,8 +44,6 @@ import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
 import { PageSpinner } from '@common/components'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
-import { sortByCreated, sortByLastModified, sortByName, SortMethod } from '@common/utils/sortUtils'
-import ListHeader from '@common/components/ListHeader/ListHeader'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
 import pointerImage from './pointer.svg'

@@ -286,7 +286,7 @@ export function GoogleCloudStorage({
                 <FormInput.MultiTypeInput
                   name="bucket"
                   label={getString('pipelineSteps.bucketLabel')}
-                  placeholder={getString('common.artifacts.googleCloudStorage.bucketPlaceholder')}
+                  placeholder={getString('pipeline.artifacts.googleCloudStorage.bucketPlaceholder')}
                   selectItems={bucketOptions}
                   useValue
                   helperText={getBucketHelperText(formik)}

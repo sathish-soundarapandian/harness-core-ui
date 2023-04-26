@@ -23,7 +23,7 @@
   }
 }
 
-.riskSelectElement {
+.modalInputElement {
   width: 350px !important;
 }
 
@@ -75,4 +75,8 @@
   height: 400px;
   display: grid;
   place-items: center;
+
+  + :global(.OverlaySpinner--overlay) {
+    display: none !important;
+  }
 }

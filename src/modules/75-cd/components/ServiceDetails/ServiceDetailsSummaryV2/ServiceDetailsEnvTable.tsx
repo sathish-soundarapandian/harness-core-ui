@@ -10,7 +10,8 @@ import { defaultTo, isEmpty, isEqual, isUndefined } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { CellProps, Column, Renderer } from 'react-table'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
+import { Position } from '@blueprintjs/core'
 import { Container, getErrorInfoFromErrorObject, Icon, PageError, Text } from '@harness/uicore'
 import { StringKeys, useStrings } from 'framework/strings'
 import { DialogEmptyState } from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetailSummary/EnvironmentDetailsUtils'
@@ -28,7 +29,10 @@ import type { ServiceDetailInstanceViewProps } from './ServiceDetailsInstanceVie
 import css from './ServiceDetailsSummaryV2.module.scss'
 
 interface ServiceDetailsEnvTableProps {
-  envFilter?: string
+  envFilter?: {
+    envId?: string
+    isEnvGroup: boolean
+  }
   resetSearch: () => void
   setRowClickFilter: React.Dispatch<React.SetStateAction<ServiceDetailInstanceViewProps>>
   searchTerm: string
@@ -37,6 +41,7 @@ export interface TableRowData {
   artifact?: string
   envId?: string
   envName?: string
+  envGroups?: string[]
   environmentType?: string
   infrastructureId?: string
   infrastructureName?: string
@@ -57,13 +62,18 @@ export const convertToEnvType = (envType: string): StringKeys => {
   return 'cd.preProduction'
 }
 
-const getEnvTableData = (envTableData: InstanceGroupedByEnvironment[], envFilter?: string): TableRowData[] => {
+const getEnvTableData = (
+  envTableData: InstanceGroupedByEnvironment[],
+  isEnvGroup: boolean,
+  envFilter?: string
+): TableRowData[] => {
   const tableData: TableRowData[] = []
   envTableData.forEach(env => {
     /* istanbul ignore else */
-    if ((envFilter && env.envId === envFilter) || !envFilter) {
+    if ((!isEnvGroup && envFilter && env.envId === envFilter) || isEnvGroup || !envFilter) {
       const envName = defaultTo(env.envName, '-')
       const envId = env.envId
+      const envGroups = defaultTo(env.envGroups, [])
       const lastDeployedAt = defaultTo(env.lastDeployedAt, 0)
       let showEnv = true
       let showEnvType = true
@@ -85,6 +95,7 @@ const getEnvTableData = (envTableData: InstanceGroupedByEnvironment[], envFilter
                 clusterId: clusterId,
                 envId,
                 envName,
+                envGroups,
                 lastDeployedAt,
                 environmentType: envType,
                 infrastructureId: infraId,
@@ -125,6 +136,63 @@ export const RenderEnv: Renderer<CellProps<TableRowData>> = ({
   )
 }
 
+export const RenderEnvGroups: Renderer<CellProps<TableRowData>> = ({
+  row: {
+    original: { showEnv, envGroups }
+  }
+}) => {
+  const { getString } = useStrings()
+  if (!showEnv) {
+    return <></>
+  }
+
+  if (!envGroups || envGroups.length === 0) {
+    return <Text>-</Text>
+  }
+
+  const [firstEnvGroup, ...otherEnvGroups] = envGroups
+
+  const tooltipContent = (
+    <Container className={css.envGroupTooltip}>
+      <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_300}>
+        {getString('cd.serviceDashboard.envGroupsHeader')}
+      </Text>
+      <div className={css.envGroupSeparator} />
+      <div id="envGrpText">
+        {otherEnvGroups.map((item, index) => (
+          <Text
+            key={`${item}_${index}`}
+            font={{ variation: FontVariation.SMALL_SEMI }}
+            padding={{ top: 'xsmall' }}
+            color={Color.GREY_200}
+            lineClamp={1}
+          >
+            {item}
+          </Text>
+        ))}
+      </div>
+    </Container>
+  )
+  return (
+    <Container className={css.envGroupContainer}>
+      <Text lineClamp={1} tooltipProps={{ isDark: true }} margin={{ right: 'tiny' }} className={css.envGroupStyle}>
+        {firstEnvGroup}
+      </Text>
+      {otherEnvGroups.length > 0 && (
+        <Text
+          lineClamp={1}
+          tooltipProps={{ isDark: true, position: Position.RIGHT }}
+          className={css.envGroupStyle}
+          alwaysShowTooltip={true}
+          tooltip={tooltipContent}
+        >
+          {`+ ${numberFormatter(otherEnvGroups.length)}`}
+        </Text>
+      )}
+    </Container>
+  )
+}
+
 export const RenderEnvType: Renderer<CellProps<TableRowData>> = ({
   row: {
     original: { showEnvType, environmentType }
@@ -156,7 +224,7 @@ export const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
 }) => {
   return instanceCount ? (
     <Container>
-      <Text font={{ size: 'small' }} color={Color.GREY_600} className={css.overflow}>
+      <Text font={{ size: 'small' }} color={Color.GREY_600} className={css.overflow} lineClamp={1}>
         {numberFormatter(instanceCount)}
       </Text>
     </Container>
@@ -197,7 +265,9 @@ export const RenderArtifact: Renderer<CellProps<TableRowData>> = ({
 }
 
 export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProps): React.ReactElement {
-  const { envFilter, resetSearch, setRowClickFilter, searchTerm } = props
+  const { envFilter: envFilterObj, resetSearch, setRowClickFilter, searchTerm } = props
+  const envFilter = envFilterObj?.envId
+  const isEnvGroup = !!envFilterObj?.isEnvGroup
   const { getString } = useStrings()
   const [selectedRow, setSelectedRow] = React.useState<string>()
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
@@ -207,7 +277,8 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
     orgIdentifier,
     projectIdentifier,
     serviceId,
-    environmentIdentifier: envFilter ? envFilter : undefined
+    environmentIdentifier: !isEnvGroup ? envFilter : undefined,
+    envGroupIdentifier: isEnvGroup ? envFilter : undefined
   }
 
   const { data, loading, error, refetch } = useGetActiveInstanceGroupedByEnvironment({ queryParams })
@@ -224,6 +295,7 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
     return envTableDetailData?.filter(
       envDetail =>
         envDetail.envName?.toLocaleLowerCase().includes(searchValue) ||
+        envDetail.envGroups?.some(group => group.toLowerCase().includes(searchValue.toLowerCase())) ||
         envDetail.instanceGroupedByEnvironmentTypeList.some(
           envType =>
             (envType.environmentType &&
@@ -241,7 +313,7 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
   }, [searchTerm, envTableDetailData])
 
   const tableData: TableRowData[] = useMemo(() => {
-    return getEnvTableData(defaultTo(filteredTableData, [] as InstanceGroupedByEnvironment[]), envFilter)
+    return getEnvTableData(defaultTo(filteredTableData, [] as InstanceGroupedByEnvironment[]), isEnvGroup, envFilter)
   }, [envFilter, filteredTableData])
 
   const searchApplied = !isEmpty(searchTerm.trim())
@@ -257,8 +329,14 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       {
         Header: getString('environment'),
         id: 'environment',
-        width: '20%',
+        width: '15%',
         Cell: RenderEnv
+      },
+      {
+        Header: getString('pipeline.verification.tableHeaders.group'),
+        id: 'environmentGroups',
+        width: '20%',
+        Cell: RenderEnvGroups
       },
       {
         Header: getString('typeLabel'),
@@ -275,13 +353,26 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       {
         Header: getString('cd.serviceDashboard.artifact'),
         id: 'artifact',
-        width: '35%',
+        width: '25%',
         Cell: RenderArtifact
       },
       {
-        Header: getString('cd.serviceDashboard.headers.instances'),
+        Header: (
+          <Text
+            font={{ variation: FontVariation.TABLE_HEADERS }}
+            tooltipProps={{ isDark: true }}
+            alwaysShowTooltip={true}
+            tooltip={
+              <Text color={Color.GREY_100} padding="small">
+                {getString('cd.serviceDashboard.headers.instances')}
+              </Text>
+            }
+          >
+            {'INST'}
+          </Text>
+        ),
         id: 'instances',
-        width: '10%',
+        width: '5%',
         Cell: RenderInstanceCount
       }
     ]

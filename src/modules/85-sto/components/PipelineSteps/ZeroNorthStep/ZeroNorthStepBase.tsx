@@ -23,7 +23,7 @@ import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidate
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
 import { CIStepOptionalConfig } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { useGetPropagatedStageById } from '@ci/components/PipelineSteps/CIStep/StepUtils'
-import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './ZeroNorthStepFunctionConfigs'
 import type { ZeroNorthStepProps, ZeroNorthStepData, ZeroNorthStepDataUI } from './ZeroNorthStep'
 
@@ -102,7 +102,21 @@ export const ZeroNorthStepBase = (
               readonly={readonly}
               enableFields={{
                 'spec.settings': {}
-                // 'spec.reportPaths': {}
+              }}
+              allowableTypes={allowableTypes}
+            />
+            <CIStepOptionalConfig
+              stepViewType={stepViewType}
+              readonly={readonly}
+              enableFields={{
+                'spec.privileged': {
+                  shouldHide: [
+                    CIBuildInfrastructureType.Cloud,
+                    CIBuildInfrastructureType.VM,
+                    CIBuildInfrastructureType.KubernetesHosted,
+                    CIBuildInfrastructureType.Docker
+                  ].includes(buildInfrastructureType)
+                }
               }}
               allowableTypes={allowableTypes}
             />

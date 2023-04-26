@@ -16,7 +16,7 @@ describe('ServiceListView', () => {
   test('render Service list', () => {
     const { container } = render(
       <TestWrapper>
-        <ServicesListView data={serviceListResponse} onServiceSelect={jest.fn()} loading={false} />
+        <ServicesListView data={serviceListResponse} onServiceSelect={jest.fn()} loading={false} isForceDeleteEnabled />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -26,7 +26,7 @@ describe('ServiceListView', () => {
 
     const { container } = render(
       <TestWrapper>
-        <ServiceMenu data={services} />
+        <ServiceMenu data={services} isForceDeleteEnabled />
       </TestWrapper>
     )
 

@@ -7,7 +7,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import cx from 'classnames'
 import { Button, ButtonVariation, Container } from '@harness/uicore'
-import { useParams } from 'react-router-dom'
 import { getMonitoredServiceIdentifiers } from '@cv/utils/CommonUtils'
 import ChangeTimeline from '@cv/components/ChangeTimeline/ChangeTimeline'
 import type { ChangesInfoCardData } from '@cv/components/ChangeTimeline/ChangeTimeline.types'
@@ -16,8 +15,6 @@ import AnomaliesCard from '@cv/pages/monitored-service/components/ServiceHealth/
 import { calculateStartAndEndTimes } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.utils'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import type { AnnotationMessage } from '@cv/components/ChangeTimeline/components/TimelineRow/components/Annotation/Annotation.types'
-import { useGetSecondaryEvents } from 'services/cv'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import annotationsIcon from '@cv/assets/annotationsDark.svg'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -44,7 +41,10 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
   showTimelineSlider,
   setShowTimelineSlider,
   setCustomTimeFilter,
-  defaultOffSetPercentage
+  defaultOffSetPercentage,
+  sloWidgetsData,
+  sloWidgetsDataLoading,
+  fetchSecondaryEvents
 }) => {
   const {
     sloPerformanceTrend,
@@ -56,7 +56,6 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
     environmentIdentifier,
     sloIdentifier
   } = filteredServiceLevelObjective ?? serviceLevelObjective
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const SLOEndTime = sloPerformanceTrend[sloPerformanceTrend.length - 1]?.timestamp
   const errorBudgetEndTime = errorBudgetBurndown[errorBudgetBurndown.length - 1]?.timestamp
@@ -66,21 +65,6 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
   const { startTime = currentPeriodStartTime, endTime = _endTime } = chartTimeRange ?? {}
   const isAnnotationsEnabled = useFeatureFlag(FeatureFlag.SRM_SLO_ANNOTATIONS)
   const isSLOView = type === SLOCardToggleViews.SLO
-
-  const {
-    data: sloWidgetsData,
-    loading,
-    refetch: fetchSecondaryEvents
-  } = useGetSecondaryEvents({
-    queryParams: {
-      startTime: currentPeriodStartTime,
-      endTime: _endTime,
-      accountId,
-      orgIdentifier,
-      projectIdentifier
-    },
-    identifier: sloIdentifier
-  })
 
   const { showDrawer, hideDrawer } = useDrawer({
     createDrawerContent: props => (
@@ -194,8 +178,8 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
           />
         )}
         <ChangeTimeline
-          sloWidgetsData={sloWidgetsData?.data}
-          sloWidgetsDataLoading={loading}
+          sloWidgetsData={sloWidgetsData}
+          sloWidgetsDataLoading={sloWidgetsDataLoading}
           fetchSecondaryEvents={fetchSecondaryEvents}
           selectedTimeRange={{ startTime, endTime }}
           startTime={sliderTimeRange?.startTime}

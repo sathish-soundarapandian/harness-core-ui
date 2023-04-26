@@ -15,7 +15,7 @@ describe('ServicesGridView', () => {
   test('render', () => {
     const { container } = render(
       <TestWrapper>
-        <ServicesGridView data={serviceListResponse} onServiceSelect={jest.fn()} loading={false} />
+        <ServicesGridView data={serviceListResponse} onServiceSelect={jest.fn()} loading={false} isForceDeleteEnabled />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

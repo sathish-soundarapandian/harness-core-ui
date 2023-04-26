@@ -7,6 +7,7 @@
 
 import React from 'react'
 import * as Yup from 'yup'
+import { Color } from '@harness/design-system'
 import { RouteWithLayout } from '@common/router'
 import SettingsList from '@default-settings/pages/SettingsList'
 import routes from '@common/RouteDefinitions'
@@ -47,7 +48,8 @@ DefaultSettingsFactory.registerCategory('CONNECTORS', {
 })
 
 DefaultSettingsFactory.registerCategory('GIT_EXPERIENCE', {
-  icon: 'cog',
+  icon: 'git-experience-setting',
+  iconProps: { color: Color.GREY_900, size: 16 },
   label: 'authSettings.cdCommunityPlan.communityPlanStrings.item5',
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
 })
@@ -71,6 +73,13 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.MANDATE_CUSTOM_WEBHOOK
   settingCategory: 'PMS'
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_NODE_EXECUTION_AUDIT_EVENTS, {
+  label: 'defaultSettings.enableNodeExecutionAuditEvents',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'PMS'
+})
+
 DefaultSettingsFactory.registerSettingHandler(SettingType.ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY, {
   label: 'defaultSettings.allowUserToMarkStepAsFailedExplicitly',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
@@ -89,6 +98,19 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ALLOW_DIFFERENT_REPO_F
   settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
   yupValidation: Yup.boolean(),
   settingCategory: 'GIT_EXPERIENCE'
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENFORCE_GIT_EXPERIENCE, {
+  label: 'defaultSettings.enforceGitExperience',
+  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'GIT_EXPERIENCE'
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_MATRIX_FIELD_NAME_SETTING, {
+  label: 'defaultSettings.enableMatrixFieldNames',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'PMS'
 })
 
 AuditTrailFactory.registerResourceHandler('SETTING', {

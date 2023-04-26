@@ -2,6 +2,7 @@ import {
   cdFailureStrategiesYaml,
   gitSyncEnabledCall,
   pageHeaderClassName,
+  featureFlagsCall,
   pipelinesRoute,
   pipelineVariablesCall
 } from '../../support/70-pipeline/constants'
@@ -12,6 +13,20 @@ describe('Pipeline Variables', () => {
     cy.intercept('GET', cdFailureStrategiesYaml, { fixture: 'pipeline/api/pipelines/failureStrategiesYaml' }).as(
       'cdFailureStrategiesYaml'
     )
+    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+      cy.intercept('GET', featureFlagsCall, {
+        ...featureFlagsData,
+        resource: [
+          ...featureFlagsData.resource,
+          {
+            uuid: null,
+            name: 'NG_EXPRESSIONS_NEW_INPUT_ELEMENT',
+            enabled: true,
+            lastUpdatedAt: 0
+          }
+        ]
+      }).as('enableFeatureFlag')
+    })
 
     cy.initializeRoute()
 
@@ -81,7 +96,7 @@ describe('Pipeline Variables', () => {
 
     cy.get('.bp3-menu>li>a').eq(2).click({ force: true })
     cy.wait(1000)
-    cy.get('input[name="variables[0].value"]').should('not.be.disabled').should('have.value', '')
+    cy.get('div[name="variables[0].value"]').should('not.be.disabled').should('have.value', '')
 
     cy.get('div[data-testid="pipeline.variables-panel"]')
       .get('.MultiTypeInput--EXPRESSION')

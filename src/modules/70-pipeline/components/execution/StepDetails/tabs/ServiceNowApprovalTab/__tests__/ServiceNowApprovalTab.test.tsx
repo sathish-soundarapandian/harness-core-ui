@@ -28,6 +28,10 @@ describe('<ServiceNowApprovalTab/> tests', () => {
           isWaiting={true}
           approvalData={approvalData as any}
           executionMetadata={executionMetadata}
+          progressData={{
+            latestDelegateTaskId: '3lZV9tjHSg6Pot2TXRz6Wg-DEL',
+            taskName: 'ServiceNow Task: Get Ticket'
+          }}
         />
       </TestWrapper>
     )

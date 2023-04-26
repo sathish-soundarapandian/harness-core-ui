@@ -211,7 +211,8 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
                   class="serviceNameWrapper"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    style="--text-line-clamp: 1;"
                   >
                     Service 3
                   </p>
@@ -386,7 +387,8 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
                   class="serviceNameWrapper"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    style="--text-line-clamp: 1;"
                   >
                     Service 1
                   </p>
@@ -561,7 +563,8 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
                   class="serviceNameWrapper"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    style="--text-line-clamp: 1;"
                   >
                     Service 2
                   </p>
@@ -860,7 +863,8 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                   class="serviceNameWrapper"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    style="--text-line-clamp: 1;"
                   >
                     Service 3
                   </p>
@@ -1035,7 +1039,8 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                   class="serviceNameWrapper"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    style="--text-line-clamp: 1;"
                   >
                     Service 1
                   </p>
@@ -1210,7 +1215,8 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                   class="serviceNameWrapper"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    style="--text-line-clamp: 1;"
                   >
                     Service 2
                   </p>
@@ -2096,7 +2102,8 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
                   class="serviceNameWrapper"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    style="--text-line-clamp: 1;"
                   >
                     Service 3
                   </p>
@@ -2271,7 +2278,8 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
                   class="serviceNameWrapper"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    style="--text-line-clamp: 1;"
                   >
                     Service 1
                   </p>
@@ -2446,7 +2454,8 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
                   class="serviceNameWrapper"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                    style="--text-line-clamp: 1;"
                   >
                     Service 2
                   </p>

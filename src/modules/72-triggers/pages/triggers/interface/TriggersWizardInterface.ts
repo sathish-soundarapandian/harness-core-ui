@@ -18,6 +18,7 @@ import type {
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
+import type { CronFormat } from '../views/subviews/CustomTab'
 
 export interface ConnectorRefInterface {
   identifier?: string
@@ -50,6 +51,7 @@ export interface FlatInitialValuesInterface {
   inputSetRefs?: string[]
   // Triggers authentication
   encryptedWebhookSecretIdentifier?: string
+  stagesToExecute?: string[]
 }
 
 export interface FlatOnEditValuesInterface {
@@ -92,6 +94,7 @@ export interface FlatOnEditValuesInterface {
   selectedScheduleTab?: string
   minutes?: string
   expression?: string
+  cronFormat?: CronFormat
   // ARTIFACT/MANIFEST-SPECIFIC
   selectedArtifact?: any
   stageId?: string
@@ -108,18 +111,21 @@ export interface FlatOnEditValuesInterface {
   pollInterval?: string
   webhookId?: string
   encryptedWebhookSecretIdentifier?: string
+  stagesToExecute?: string[]
 }
 
 export interface FlatValidWebhookFormikValuesInterface {
   name: string
   identifier: string
   description?: string
+  stagesToExecute?: string[]
   tags?: {
     [key: string]: string
   }
   target?: string
   targetIdentifier?: string
   pipeline: PipelineInfoConfig
+  originalPipeline: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
   sourceRepo: string
   triggerType: NGTriggerSourceV2['type']
@@ -162,6 +168,8 @@ export interface FlatValidScheduleFormikValuesInterface {
   expression: string
   pipelineBranchName?: string
   inputSetRefs?: string[]
+  stagesToExecute?: string[]
+  cronFormat?: CronFormat
 }
 
 export interface FlatValidArtifactFormikValuesInterface {
@@ -176,6 +184,7 @@ export interface FlatValidArtifactFormikValuesInterface {
   stageId: string
   pipeline: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
+  stagesToExecute?: string[]
 }
 
 export interface TriggerConfigDTO extends Omit<NGTriggerConfigV2, 'identifier'> {

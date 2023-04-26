@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Select, SelectOption, SelectProps } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useGetAllEnvironmentsFlags } from 'services/cf'
+import { useGetProjectFlags } from 'services/cf'
 import { EnvironmentResponseDTO, useGetEnvironmentListForProject } from 'services/cd-ng'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
@@ -73,11 +73,11 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
     name: searchTerm
   }
   const {
-    loading: loadingAllEnvironmentsFlags,
-    error: fetchAllEnvironmentsFlagsError,
-    data: allEnvironmentsFlags,
-    refetch: refetchAllEnvironmentsFlags
-  } = useGetAllEnvironmentsFlags({
+    loading: loadingProjectFlags,
+    error: getProjectFlagsError,
+    data: projectFlags,
+    refetch: refetchProjectFlags
+  } = useGetProjectFlags({
     identifier: projectIdentifier,
     queryParams,
     lazy: true
@@ -156,7 +156,7 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
           onChange={opt => {
             setSelectedEnvironment(opt)
             if (opt.value === getString('common.allEnvironments')) {
-              refetchAllEnvironmentsFlags()
+              refetchProjectFlags()
               return
             }
             if (selectedEnvironment?.value !== opt.value) {
@@ -181,12 +181,11 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
         />
       )
     },
-    loading: loading || loadingAllEnvironmentsFlags,
-    error: error || fetchAllEnvironmentsFlagsError,
+    loading: loading || loadingProjectFlags,
+    error: error || getProjectFlagsError,
     refetch,
     environments: environmentList?.data?.content,
-    allEnvironmentsFlags:
-      selectedEnvironment?.value === getString('common.allEnvironments') ? allEnvironmentsFlags : null,
-    refetchAllEnvironmentsFlags
+    projectFlags: selectedEnvironment?.value === getString('common.allEnvironments') ? projectFlags : null,
+    refetchProjectFlags
   }
 }

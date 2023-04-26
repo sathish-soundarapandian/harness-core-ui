@@ -7,9 +7,9 @@
 
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
+import { SortMethod } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
-import { SortMethod } from '@common/utils/sortUtils'
 import TemplateResourceModal from '../TemplateResourceModal'
 import mockData from './templateResourceMockData.json'
 

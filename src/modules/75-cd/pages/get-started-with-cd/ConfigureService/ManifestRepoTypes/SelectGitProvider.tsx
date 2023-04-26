@@ -65,7 +65,8 @@ import {
   GitProviderPermissions,
   ACCOUNT_SCOPE_PREFIX,
   DEFAULT_HARNESS_KMS,
-  AccessTokenPermissionsDocLinks
+  AccessTokenPermissionsDocLinks,
+  OAUTH2_USER_NAME
 } from '../../DeployProvisioningWizard/Constants'
 import { getOAuthConnectorPayload, ONBOARDING_PREFIX } from '../../CDOnboardingUtils'
 import css from '../../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
@@ -91,7 +92,11 @@ interface SelectGitProviderProps {
   connectionStatus?: TestStatus
   selectedGitProvider?: GitProvider
 
-  onSuccess: (status: number, connectorResponse: SelectGitProviderRefInstance['connectorRef']) => void
+  onSuccess: (
+    status: number,
+    connectorResponse: SelectGitProviderRefInstance['connectorRef'],
+    isOauth?: boolean
+  ) => void
 }
 
 export interface SelectGitProviderInterface {
@@ -278,8 +283,8 @@ const SelectGitProviderRef = (
         onSuccess(testConnectionStatus, connectorResponse)
       }
     } else if (authMethod === GitAuthenticationMethod.OAuth) {
-      if (oAuthStatus === Status.SUCCESS) {
-        onSuccess(testConnectionStatus, connectorResponse)
+      if (oAuthStatus === Status.IN_PROGRESS) {
+        onSuccess(testConnectionStatus, connectorResponse, true)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -385,7 +390,7 @@ const SelectGitProviderRef = (
         case Connectors.GITHUB:
           updatedConnectorPayload = set(commonConnectorPayload, 'spec.authentication.spec.type', 'UsernameToken')
           updatedConnectorPayload = set(updatedConnectorPayload, 'spec.authentication.spec.spec', {
-            username: formikRef.current?.values?.username || 'oauth2',
+            username: formikRef.current?.values?.username || OAUTH2_USER_NAME,
             tokenRef: `${ACCOUNT_SCOPE_PREFIX}${secretId}`
           })
           updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.type', 'Token')
@@ -692,7 +697,7 @@ const SelectGitProviderRef = (
       case Connectors.GITHUB:
         initialValues = {
           accessToken: defaultTo(gitValues?.accessToken, ''),
-          username: defaultTo(gitValues?.username, '')
+          username: defaultTo(gitValues?.username, OAUTH2_USER_NAME)
         }
         break
       case Connectors.GITLAB:

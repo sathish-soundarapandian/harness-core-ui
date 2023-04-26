@@ -119,7 +119,7 @@ Array [
         "startTrialRedirect": [Function],
       }
     }
-    pageName="SegmentDetailPage"
+    pageName="TargetGroupDetailPage"
     path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/target-management/target-groups/:segmentIdentifier"
     sidebarProps={
       Object {
@@ -130,7 +130,7 @@ Array [
     }
   >
     <FFGitSyncProvider>
-      <SegmentDetailPage />
+      <TargetGroupDetailPage />
     </FFGitSyncProvider>
   </RouteWithLayout>,
   <RouteWithLayout
@@ -143,7 +143,7 @@ Array [
         "startTrialRedirect": [Function],
       }
     }
-    pageName="LegacyTargetDetailPage"
+    pageName="TargetDetailPage"
     path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/target-management/targets/:targetIdentifier"
     sidebarProps={
       Object {

@@ -56,7 +56,6 @@ export const LoadSourceByType = ({
   expressions?: string[]
 }): JSX.Element | null => {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
-  const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
   const selectedProduct = data?.product?.value || data?.existingMetricDetails?.type
   const productInfo = getSelectedProductInfo(selectedProduct)
   const healthSourceConfig = healthSourcesConfig[productInfo]
@@ -160,9 +159,6 @@ export const LoadSourceByType = ({
     case HealthSourceTypes.SumoLogic:
     case HealthSourceTypes.SumologicLogs:
     case HealthSourceTypes.SumologicMetrics:
-      if (!isSumoLogicEnabled) {
-        return null
-      }
       return (
         <CommonHealthSourceContainer
           data={data}

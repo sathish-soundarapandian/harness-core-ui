@@ -45,6 +45,7 @@ interface ServiceRow {
 interface ServiceItemProps {
   data: any
   onRefresh?: () => Promise<void>
+  isForceDeleteEnabled: boolean
 }
 
 export enum DeploymentStatus {
@@ -53,7 +54,7 @@ export enum DeploymentStatus {
 }
 
 const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
-  const { data: service, onRefresh } = props
+  const { data: service, onRefresh, isForceDeleteEnabled } = props
   const [menuOpen, setMenuOpen] = useState(false)
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
@@ -115,13 +116,15 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
         onRefresh?.()
       }
     } catch (err: any) {
-      if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
-        setCustomErrorMessage(undefined)
-        openReferenceErrorDialog()
-      } else if (err?.data?.code === 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION') {
-        setCustomErrorMessage(getErrorInfoFromErrorObject(err))
-        setHideReferencedByButton(true)
-        openReferenceErrorDialog()
+      if (isForceDeleteEnabled) {
+        if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+          setCustomErrorMessage(undefined)
+          openReferenceErrorDialog()
+        } else if (err?.data?.code === 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION') {
+          setCustomErrorMessage(getErrorInfoFromErrorObject(err))
+          setHideReferencedByButton(true)
+          openReferenceErrorDialog()
+        }
       } else {
         showError(getRBACErrorMessage(err))
       }

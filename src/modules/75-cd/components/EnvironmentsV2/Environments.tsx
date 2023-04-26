@@ -167,6 +167,7 @@ export function Environments(): React.ReactElement {
         handleCustomSortChange={handleCustomSortChange}
         filterType={'Environment'}
         FilterComponent={EnvironmentsFilters}
+        isForceDeleteAllowed
       />
     </PageStoreContext.Provider>
   )

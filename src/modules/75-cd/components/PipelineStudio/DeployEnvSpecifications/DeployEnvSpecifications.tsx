@@ -133,10 +133,10 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
 
   const filteredAllowableTypes = useMemo(
     () =>
-      scope === Scope.PROJECT || (CDS_OrgAccountLevelServiceEnvEnvGroup && !stage?.stage?.spec?.gitOpsEnabled)
+      scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
         ? allowableTypes
         : getAllowableTypesWithoutFixedValue(allowableTypes),
-    [scope, CDS_OrgAccountLevelServiceEnvEnvGroup, allowableTypes, stage?.stage?.spec?.gitOpsEnabled]
+    [scope, CDS_OrgAccountLevelServiceEnvEnvGroup, allowableTypes]
   )
 
   return (

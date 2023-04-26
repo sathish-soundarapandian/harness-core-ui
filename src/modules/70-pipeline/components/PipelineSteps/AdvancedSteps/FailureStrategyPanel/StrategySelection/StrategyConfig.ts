@@ -80,8 +80,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
       return {
         [Modes.STEP]: [
           Strategy.ManualIntervention,
-          Strategy.StageRollback,
-          Strategy.PipelineRollback,
+          // Strategy.StageRollback,
+          // Strategy.PipelineRollback,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
@@ -91,8 +91,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
         ],
         [Modes.STEP_GROUP]: [
           Strategy.ManualIntervention,
-          Strategy.StageRollback,
-          Strategy.PipelineRollback,
+          // Strategy.StageRollback,
+          // Strategy.PipelineRollback,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
@@ -101,6 +101,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
         ],
         [Modes.STAGE]: [
           Strategy.Ignore,
+          // Strategy.StageRollback,
+          // Strategy.PipelineRollback,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
           Strategy.ProceedWithDefaultValues,
@@ -108,7 +110,6 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
         ]
       }
     case StageType.DEPLOY:
-    default:
       return {
         [Modes.STEP]: [
           Strategy.ManualIntervention,
@@ -135,6 +136,35 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.ManualIntervention,
           Strategy.StageRollback,
           Strategy.PipelineRollback,
+          Strategy.Ignore,
+          Strategy.Retry,
+          Strategy.MarkAsSuccess,
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues,
+          Strategy.MarkAsFailure
+        ]
+      }
+    default:
+      return {
+        [Modes.STEP]: [
+          Strategy.ManualIntervention,
+          Strategy.Ignore,
+          Strategy.Retry,
+          Strategy.MarkAsSuccess,
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues,
+          Strategy.MarkAsFailure
+        ],
+        [Modes.STEP_GROUP]: [
+          Strategy.ManualIntervention,
+          Strategy.Ignore,
+          Strategy.Retry,
+          Strategy.MarkAsSuccess,
+          Strategy.Abort,
+          Strategy.MarkAsFailure
+        ],
+        [Modes.STAGE]: [
+          Strategy.ManualIntervention,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
@@ -234,5 +264,6 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
   [StageType.MATRIX]: [],
   [StageType.LOOP]: [],
   [StageType.PARALLELISM]: [],
-  [StageType.IACM]: []
+  [StageType.IACM]: [],
+  [StageType.PIPELINE_ROLLBACK]: []
 }

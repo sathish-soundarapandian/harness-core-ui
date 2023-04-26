@@ -30,10 +30,13 @@ export interface ServiceNowApprovalTabProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
   isWaiting: boolean
   executionMetadata: ExecutionGraph['executionMetadata']
+  progressData?: {
+    [key: string]: string
+  }
 }
 
 export function ServiceNowApprovalTab(props: ServiceNowApprovalTabProps): React.ReactElement {
-  const { isWaiting, startTs, endTs, stepParameters, executionMetadata } = props
+  const { isWaiting, startTs, endTs, stepParameters, executionMetadata, progressData } = props
   const { getString } = useStrings()
   const approvalData = props.approvalData as ApprovalData
   const wasApproved = !isWaiting && approvalData?.status === ApprovalStatus.APPROVED
@@ -104,7 +107,11 @@ export function ServiceNowApprovalTab(props: ServiceNowApprovalTabProps): React.
         </div>
       )}
       <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
-        <StepDetails step={{ startTs, endTs, stepParameters }} executionMetadata={executionMetadata} />
+        <StepDetails
+          step={{ startTs, endTs, stepParameters }}
+          executionMetadata={executionMetadata}
+          progressData={progressData}
+        />
       </Container>
       <div className={cx(css.serviceNowApproval, css.applyTopPadding)}>
         {approvalData?.details?.approvalCriteria ? (

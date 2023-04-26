@@ -8,7 +8,7 @@
 .variablesWithDescription {
   :global(.variable-list-row) {
     grid-column-gap: 10px !important;
-    grid-template-columns: repeat(4, minmax(10px, 1fr)) !important;
+    grid-template-columns: repeat(2, minmax(10px, 1fr)) minmax(10px, 2fr) !important;
     :global(.connectorVariableField) {
       :global(.bp3-form-content) > div {
         width: 100% !important;
@@ -40,7 +40,7 @@
   border-bottom: solid 1px var(--grey-200);
   position: relative;
   grid-column-gap: 10px !important;
-  grid-template-columns: repeat(4, minmax(10px, 1fr)) !important;
+  grid-template-columns: repeat(2, minmax(10px, 1fr)) minmax(10px, 2fr) !important;
   padding: var(--spacing-small) 0;
   padding-left: calc(var(--spacing-xlarge) + 4px) !important;
 }

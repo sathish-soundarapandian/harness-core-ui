@@ -141,12 +141,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                 {variable.type}
               </Text>
             </Layout.Vertical>
-            <Text
-              className={css.descriptionRow}
-              color={Color.GREY_500}
-              lineClamp={3}
-              font={{ variation: FontVariation.BODY }}
-            >
+            <Text color={Color.GREY_500} lineClamp={3} font={{ variation: FontVariation.BODY }}>
               {isEmpty(description) ? '-' : description}
             </Text>
             <div className={css.valueRow}>

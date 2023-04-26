@@ -605,6 +605,10 @@ export const defaultArtifactInitialValues = (
         identifier: '',
         project: '',
         repository: '',
+        fetchType: 'Branch',
+        branch: undefined,
+        commitId: undefined,
+        tag: undefined,
         sourceDirectory: ''
       }
     case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
@@ -731,4 +735,17 @@ export const canFetchAMITags = (repository: string, groupId?: string, artifactId
 export const isArtifactInMultiService = (services?: string[], path?: string): boolean => {
   // The first condition is for TemplateUsage and the second condition is for all other templatized views
   return !isEmpty(services) || !!path?.includes('services.values')
+}
+
+export const getConnectorListVersionQueryParam = (
+  selectedArtifact: ArtifactType | null
+): { version: string } | null => {
+  switch (selectedArtifact) {
+    case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
+      return { version: '3.x' }
+    case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
+      return { version: '2.x' }
+    default:
+      return null
+  }
 }

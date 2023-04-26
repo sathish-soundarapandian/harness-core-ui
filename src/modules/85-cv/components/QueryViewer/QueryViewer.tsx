@@ -8,6 +8,7 @@
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
 import { Button, Container, FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { MapGCPLogsToServiceFieldNames } from '@cv/pages/health-source/connectors/GCOLogsMonitoringSource/components/MapQueriesToHarnessService/constants'
@@ -35,7 +36,8 @@ export function QueryContent(props: QueryContentProps): JSX.Element {
     expressions,
     isConnectorRuntimeOrExpression,
     fetchButtonText,
-    isFetchButtonDisabled = false
+    isFetchButtonDisabled = false,
+    showLabel
   } = props
   const { getString } = useStrings()
   const [key, setKey] = useState<string | null>(null)
@@ -77,6 +79,11 @@ export function QueryContent(props: QueryContentProps): JSX.Element {
         </>
       ) : (
         <>
+          {showLabel && (
+            <Container margin={{ bottom: 'small' }} data-testid="queryLabel">
+              <Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('cv.query')}</Text>
+            </Container>
+          )}
           <Layout.Horizontal className={css.queryIcons} spacing="small">
             {onEditQuery && (
               <Button icon="Edit" iconProps={{ size: 12 }} className={css.action} onClick={() => onEditQuery()} />

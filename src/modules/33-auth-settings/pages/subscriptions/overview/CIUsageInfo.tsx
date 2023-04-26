@@ -26,6 +26,7 @@ const ActiveDevelopers: React.FC<ActiveDevelopersProps> = ({ subscribedUsers, ac
   const hasBar = true
   const leftFooter = getString('common.subscribed')
   const defaultRightHeader = rightHeader || getString('common.subscriptions.usage.last30days')
+  const rightFooter = getString('common.usage')
   const props = {
     subscribed: subscribedUsers,
     usage: activeUsers,
@@ -33,7 +34,8 @@ const ActiveDevelopers: React.FC<ActiveDevelopersProps> = ({ subscribedUsers, ac
     tooltip,
     rightHeader: defaultRightHeader,
     hasBar,
-    leftFooter
+    leftFooter,
+    rightFooter
   }
   return <UsageInfoCard {...props} />
 }

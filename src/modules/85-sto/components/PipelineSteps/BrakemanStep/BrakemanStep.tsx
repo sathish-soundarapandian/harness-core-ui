@@ -43,7 +43,7 @@ export class BrakemanStep extends PipelineStep<BrakemanStepData> {
   }
 
   protected type = StepType.Brakeman
-  protected stepName = 'Configure Brakeman Dependency Check'
+  protected stepName = 'Configure Brakeman'
   protected stepIcon: IconName = 'brakeman'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.Brakeman'
   protected stepPaletteVisible = false

@@ -63,14 +63,13 @@ AuditTrailFactory.registerResourceHandler('GOVERNANCE_POLICY', {
     resource: ResourceDTO,
     resourceScope: ResourceScope,
     _module?: Module,
-    auditEventData?: AuditEventData
+    _auditEventData?: AuditEventData
   ) => {
     const { orgIdentifier, accountIdentifier, projectIdentifier } = resourceScope
     return routes.toGovernanceEditPolicy({
       orgIdentifier,
       accountId: accountIdentifier,
       projectIdentifier,
-      module: (auditEventData as any)?.eventModule,
       policyIdentifier: resource.identifier
     })
   }
@@ -86,14 +85,13 @@ AuditTrailFactory.registerResourceHandler('GOVERNANCE_POLICY_SET', {
     resource: ResourceDTO,
     resourceScope: ResourceScope,
     _module?: Module,
-    auditEventData?: AuditEventData
+    _auditEventData?: AuditEventData
   ) => {
     const { orgIdentifier, accountIdentifier, projectIdentifier } = resourceScope
     return routes.toGovernancePolicySetDetail({
       orgIdentifier,
       accountId: accountIdentifier,
       projectIdentifier,
-      module: (auditEventData as any)?.eventModule,
       policySetIdentifier: resource.identifier
     })
   }

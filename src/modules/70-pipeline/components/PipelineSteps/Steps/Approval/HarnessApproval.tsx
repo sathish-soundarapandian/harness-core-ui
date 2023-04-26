@@ -61,6 +61,7 @@ export class HarnessApproval extends PipelineStep<HarnessApprovalData> {
     spec: {
       approvalMessage: 'Please review the following information and approve the pipeline progression',
       includePipelineExecutionHistory: true,
+      isAutoRejectEnabled: false,
       approvers: {
         userGroups: [],
         minimumCount: 1,

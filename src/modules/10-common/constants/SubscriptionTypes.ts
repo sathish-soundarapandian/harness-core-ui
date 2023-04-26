@@ -39,6 +39,11 @@ export enum SubscriptionTabNames {
   BILLING = 'BILLING'
 }
 
+export enum CIUsageTabNames {
+  BREAKDOWN = 'BREAKDOWN',
+  TREND = 'TREND'
+}
+
 export enum CDLicenseType {
   SERVICES = 'SERVICES',
   SERVICE_INSTANCES = 'SERVICE_INSTANCES'
@@ -93,6 +98,9 @@ export interface SubscriptionProps {
     featureFlag?: {
       numberOfDevelopers: number
       numberOfMau: number
+    }
+    ci?: {
+      numberOfDevelopers: number
     }
   }
   sampleDetails?: SampleData

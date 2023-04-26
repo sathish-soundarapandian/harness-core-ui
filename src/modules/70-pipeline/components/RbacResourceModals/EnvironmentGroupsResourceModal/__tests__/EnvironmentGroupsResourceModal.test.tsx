@@ -8,10 +8,10 @@
 import React from 'react'
 import { act, render, screen, waitFor } from '@testing-library/react'
 
+import { SortMethod } from '@harness/uicore'
 import * as cdNgServices from 'services/cd-ng'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import { SortMethod } from '@common/utils/sortUtils'
 
 import EnvironmentGroupsResourceModal from '../EnvironmentGroupsResourceModal'
 import mockData from './environmentGroupsMockData.json'

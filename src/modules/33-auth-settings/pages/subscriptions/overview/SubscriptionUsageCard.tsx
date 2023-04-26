@@ -17,6 +17,7 @@ import CIUsageInfo from './CIUsageInfo'
 import FFUsageInfo from './FFUsageInfo'
 import CDUsageInfo from './CDUsageInfo'
 import STOUsageInfo from './STOUsageInfo'
+import CETUsageInfo from './CETUsageInfo'
 import css from '../SubscriptionsPage.module.scss'
 
 interface SubscriptionUsageProps {
@@ -36,6 +37,8 @@ const getModuleUsages = (props: SubscriptionUsageProps): React.ReactElement | un
       return <CDUsageInfo {...props} />
     case ModuleName.STO:
       return <STOUsageInfo />
+    case ModuleName.CET:
+      return <CETUsageInfo {...props} />
     default:
       return undefined
   }

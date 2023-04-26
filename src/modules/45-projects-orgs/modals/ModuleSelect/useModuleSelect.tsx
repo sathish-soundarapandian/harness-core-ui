@@ -193,8 +193,7 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
       getModulesWithSubscriptionsRoutesMap({ selectedModuleName, projectData, accountId }).has(selectedModuleName) &&
       !isOnPrem()
     ) {
-      // TODO: remove when chaos has support for free plan
-      if (FREE_PLAN_ENABLED && selectedModuleName.toLocaleLowerCase() !== 'chaos') {
+      if (FREE_PLAN_ENABLED) {
         return getString('common.startFreePlan')
       }
       return getString('common.startTrial')
@@ -224,8 +223,7 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
             })
           )
         } else {
-          // TODO: remove when chaos has support for free plan
-          if (FREE_PLAN_ENABLED && selectedModuleName.toLocaleLowerCase() !== 'chaos') {
+          if (FREE_PLAN_ENABLED) {
             startFreeLicense()
           } else {
             startTrialLicense()
@@ -246,7 +244,7 @@ export const useModuleSelectModal = ({
   const [selectedModuleName, setSelectedModuleName] = React.useState<ModuleName>()
   const [projectData, setProjectData] = React.useState<Project>()
 
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED, CET_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
   const modalProps: IDialogProps = {
     isOpen: true,
@@ -294,6 +292,11 @@ export const useModuleSelectModal = ({
   if (CHAOS_ENABLED) {
     infoCards.push({
       name: ModuleName.CHAOS
+    })
+  }
+  if (CET_ENABLED) {
+    infoCards.push({
+      name: ModuleName.CET
     })
   }
 

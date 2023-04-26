@@ -71,5 +71,6 @@ describe('Testcase for utils', () => {
     expect(getModuleFullLengthTitle(ModuleName.CE)).toEqual('common.purpose.ce.continuous')
     expect(getModuleFullLengthTitle(ModuleName.CF)).toEqual('common.purpose.cf.continuous')
     expect(getModuleFullLengthTitle(ModuleName.CHAOS)).toEqual('common.purpose.chaos.continuous')
+    expect(getModuleFullLengthTitle(ModuleName.CET)).toEqual('common.purpose.cet.continuous')
   })
 })

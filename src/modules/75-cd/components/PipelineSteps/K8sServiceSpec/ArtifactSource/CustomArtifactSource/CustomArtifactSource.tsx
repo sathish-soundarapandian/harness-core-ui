@@ -7,7 +7,6 @@
 
 import React, { useMemo } from 'react'
 import { defaultTo, get, isArray, memoize } from 'lodash-es'
-import cx from 'classnames'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { useParams } from 'react-router-dom'
@@ -43,6 +42,7 @@ import {
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import genericServiceCss from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 interface CustomArtifactRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
 }
@@ -202,144 +202,125 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
   return (
     <>
       {isRuntime && (
-        <Layout.Vertical key={artifactPath} className={css.inputWidth}>
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.timeout`, template) && (
-              <TimeoutFieldInputSetView
-                name={`${path}.artifacts.${artifactPath}.spec.timeout`}
-                label={getString('pipelineSteps.timeoutLabel')}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.timeout`)}
-                multiTypeDurationProps={{
-                  width: 391,
-                  expressions,
-                  enableConfigureOptions: false,
-                  allowableTypes
-                }}
-                fieldPath={`artifacts.${artifactPath}.spec.timeout`}
-                template={template}
-              />
-            )}
-          </div>
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            {isFieldRuntime(
-              `artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`,
-              template
-            ) && (
-              <MultiTypeFieldScriptSelector
+        <Layout.Vertical key={artifactPath} className={genericServiceCss.inputWidth}>
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.timeout`, template) && (
+            <TimeoutFieldInputSetView
+              name={`${path}.artifacts.${artifactPath}.spec.timeout`}
+              label={getString('pipelineSteps.timeoutLabel')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.timeout`)}
+              multiTypeDurationProps={{
+                expressions,
+                enableConfigureOptions: false,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.timeout`}
+              template={template}
+            />
+          )}
+          {isFieldRuntime(
+            `artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`,
+            template
+          ) && (
+            <MultiTypeFieldScriptSelector
+              name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`}
+              label={getString('common.script')}
+              defaultValueToReset=""
+              disabled={isFieldDisabled(
+                `artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`
+              )}
+              allowedTypes={allowableTypes}
+              disableTypeSelection={readonly}
+              skipRenderValueInExpressionLabel
+              expressionRender={() => {
+                return (
+                  <ShellScriptMonacoField
+                    name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`}
+                    scriptType={scriptType}
+                    disabled={readonly}
+                    expressions={expressions}
+                  />
+                )
+              }}
+            >
+              <ShellScriptMonacoField
                 name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`}
-                label={getString('common.script')}
-                defaultValueToReset=""
-                disabled={isFieldDisabled(
-                  `artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`
-                )}
-                allowedTypes={allowableTypes}
-                disableTypeSelection={readonly}
-                skipRenderValueInExpressionLabel
-                expressionRender={() => {
-                  return (
-                    <ShellScriptMonacoField
-                      name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`}
-                      scriptType={scriptType}
-                      disabled={readonly}
-                      expressions={expressions}
-                    />
-                  )
-                }}
-              >
-                <ShellScriptMonacoField
-                  name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`}
-                  scriptType={scriptType}
-                  disabled={readonly}
-                  expressions={expressions}
-                />
-              </MultiTypeFieldScriptSelector>
-            )}
-          </div>
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            {isFieldRuntime(
-              `artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`,
-              template
-            ) && (
-              <TextFieldInputSetView
-                name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`}
-                label={getString('pipeline.artifactsSelection.artifactsArrayPath')}
-                placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
-                disabled={isFieldDisabled(
-                  `artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`
-                )}
-                multiTextInputProps={{
-                  width: 391,
-                  expressions,
-                  allowableTypes
-                }}
-                fieldPath={`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`}
-                template={template}
+                scriptType={scriptType}
+                disabled={readonly}
+                expressions={expressions}
               />
-            )}
-          </div>
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`, template) && (
-              <TextFieldInputSetView
-                name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`}
-                label={getString('pipeline.artifactsSelection.versionPath')}
-                placeholder={getString('pipeline.artifactsSelection.versionPathPlaceholder')}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`)}
-                multiTextInputProps={{
-                  width: 391,
-                  expressions,
-                  allowableTypes
-                }}
-                fieldPath={`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`}
-                template={template}
-              />
-            )}
-          </div>
+            </MultiTypeFieldScriptSelector>
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`, template) && (
+            <TextFieldInputSetView
+              name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`}
+              label={getString('pipeline.artifactsSelection.artifactsArrayPath')}
+              placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`}
+              template={template}
+            />
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`, template) && (
+            <TextFieldInputSetView
+              name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`}
+              label={getString('pipeline.artifactsSelection.versionPath')}
+              placeholder={getString('pipeline.artifactsSelection.versionPathPlaceholder')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`}
+              template={template}
+            />
+          )}
 
-          <div className={cx(cx(stepCss.formGroup, stepCss.md))}>
-            {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
-              <SelectInputSetView
-                selectItems={getBuildDetails()}
-                label={getString('version')}
-                name={`${path}.artifacts.${artifactPath}.spec.version`}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.version`)}
-                placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
-                useValue
-                fieldPath={`artifacts.${artifactPath}.spec.version`}
-                template={template}
-                multiTypeInputProps={{
-                  width: 391,
-                  expressions,
-                  allowableTypes,
-                  selectProps: {
-                    noResults: (
-                      <NoTagResults
-                        tagError={error}
-                        isServerlessDeploymentTypeSelected={false}
-                        defaultErrorText={getString('pipeline.artifactsSelection.validation.noBuild')}
-                      />
-                    ),
-                    itemRenderer: itemRenderer,
-                    items: getBuildDetails(),
-                    allowCreatingNewItems: true
-                  },
-                  onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                    if (
-                      e?.target?.type !== 'text' ||
-                      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-                    ) {
-                      return
-                    }
-                    refetchBuildDetails()
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
+            <SelectInputSetView
+              selectItems={getBuildDetails()}
+              label={getString('version')}
+              name={`${path}.artifacts.${artifactPath}.spec.version`}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.version`)}
+              placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
+              useValue
+              fieldPath={`artifacts.${artifactPath}.spec.version`}
+              template={template}
+              multiTypeInputProps={{
+                expressions,
+                allowableTypes,
+                selectProps: {
+                  noResults: (
+                    <NoTagResults
+                      tagError={error}
+                      isServerlessDeploymentTypeSelected={false}
+                      defaultErrorText={getString('pipeline.artifactsSelection.validation.noBuild')}
+                    />
+                  ),
+                  itemRenderer: itemRenderer,
+                  items: getBuildDetails(),
+                  allowCreatingNewItems: true
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
                   }
-                }}
-              />
-            )}
-          </div>
+                  refetchBuildDetails()
+                }
+              }}
+            />
+          )}
+
           {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
             <TextFieldInputSetView
               label={getString('version')}
               multiTextInputProps={{
-                width: 391,
                 expressions,
                 value: TriggerDefaultFieldList.build,
                 allowableTypes
@@ -466,13 +447,11 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
           ) : null}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.delegateSelectors`, template) && (
-            <div className={cx(css.customArtifactContainer)}>
-              <DelegateSelectorPanel
-                isReadonly={readonly}
-                allowableTypes={allowableTypes}
-                name={`${path}.artifacts.${artifactPath}.spec.delegateSelectors`}
-              />
-            </div>
+            <DelegateSelectorPanel
+              isReadonly={readonly}
+              allowableTypes={allowableTypes}
+              name={`${path}.artifacts.${artifactPath}.spec.delegateSelectors`}
+            />
           )}
         </Layout.Vertical>
       )}

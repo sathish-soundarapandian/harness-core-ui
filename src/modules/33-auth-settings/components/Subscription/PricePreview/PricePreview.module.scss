@@ -8,10 +8,34 @@
 .selected {
   color: var(--primary-6) !important;
 }
+.footerStyleCi {
+  margin-top: 90px !important;
+}
+.footerStyleFf {
+  margin-top: 30px !important;
+}
+
+.totalAmountStyle {
+  margin-left: 120px !important;
+}
+
+.parentTimeChild1 {
+  height: 10px;
+  background-color: var(--primary-1) !important;
+  width: 100% !important;
+  border: 1px solid var(--primary-2);
+  border-radius: 10px 10px 10px 10px;
+}
+
+.parentTime {
+  display: flex;
+  width: auto;
+}
 
 .pricePreview {
   width: 40% !important;
-  height: 60% !important;
+  height: 65vh;
+  background: linear-gradient(180deg, white 75%, var(--primary-1) 25%) !important;
   padding: var(--spacing-large) !important;
   border: 6px solid;
   border-radius: 12px;
@@ -19,6 +43,10 @@
 
 .cf {
   border-color: var(--orange-500);
+}
+
+.ci {
+  border-color: var(--ci-border);
 }
 
 .line {

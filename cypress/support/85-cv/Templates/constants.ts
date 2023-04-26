@@ -195,7 +195,6 @@ export const yamlTemplate = `template:
   type: MonitoredService
   projectIdentifier: project1
   orgIdentifier: default
-  tags: {}
   spec:
     serviceRef: <+input>
     environmentRef: <+input>
@@ -214,28 +213,28 @@ export const yamlTemplate = `template:
             metricDefinitions:
               - identifier: appdMetric
                 metricName: appdMetric
-                baseFolder: ""
-                metricPath: ""
                 completeMetricPath: <+input>
                 groupName: Group 1
+                completeServiceInstanceMetricPath: <+input>
                 sli:
                   enabled: true
                 analysis:
                   riskProfile:
-                    category: Errors
-                    metricType: ERROR
+                    riskCategory: Errors
                     thresholdTypes:
                       - ACT_WHEN_HIGHER
                   liveMonitoring:
                     enabled: false
                   deploymentVerification:
                     enabled: true
-                    serviceInstanceMetricPath: <+input>
             feature: Application Monitoring
             connectorRef: <+input>
             metricPacks:
               - identifier: Errors
+                metricThresholds: []
               - identifier: Performance
+                metricThresholds: []
+  tags: {}
 `
 export const templateListValue = {
   status: 'SUCCESS',

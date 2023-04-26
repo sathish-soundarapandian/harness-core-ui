@@ -29,7 +29,7 @@
     "RBAC": ["src/modules/20-rbac/**"],
     "SHARED": ["src/modules/10-common/**", "src/navigation/**"],
     "DASHBOARDS": ["src/modules/45-dashboards/**"],
-    "User Profile": ["src/modules/35-user-profile/**"],
+    "User Profile": ["src/modules/38-user-profile/**"],
     "Auth": ["src/modules/33-auth-settings/**"],
     "GOVERNANCE": ["src/modules/73-governance/**"]
   },

@@ -38,7 +38,6 @@ import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/Tem
 import { getTemplateErrorMessage, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './TemplateStageSpecifications.module.scss'
 
 declare global {
@@ -62,7 +61,6 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   const { stage } = getStageFromPipeline(selectedStageId)
   const queryParams = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
-  const { FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } = useFeatureFlags()
   const templateRef = getIdentifierFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
   const templateVersionLabel = getIdentifierFromValue(defaultTo(stage?.stage?.template?.versionLabel, ''))
   const templateScope = getScopeFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
@@ -206,8 +204,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
         template: templateInputs,
         originalStage: stage?.stage?.template?.templateInputs as StageElementConfig,
         getString,
-        viewType: StepViewType.DeploymentForm,
-        isOptionalVariableAllowed
+        viewType: StepViewType.DeploymentForm
       })
       return set({}, TEMPLATE_INPUT_PATH, errorsResponse)
     } else {

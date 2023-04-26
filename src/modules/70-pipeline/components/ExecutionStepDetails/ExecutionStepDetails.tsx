@@ -182,7 +182,8 @@ export default function ExecutionStepDetails(): React.ReactElement {
           key={selectedStep.uuid}
           step={selectedStep}
           executionMetadata={defaultTo(
-            pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata,
+            pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata ||
+              pipelineExecutionDetail?.rollbackGraph?.executionGraph?.executionMetadata,
             defaultTo(pipelineExecutionDetail?.executionGraph?.executionMetadata, {})
           )}
           stageType={stageType}

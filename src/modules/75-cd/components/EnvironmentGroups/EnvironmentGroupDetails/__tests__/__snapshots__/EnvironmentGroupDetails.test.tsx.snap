@@ -123,8 +123,8 @@ exports[`Environment Group Details Page loads configuration and update of name a
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
           >
             <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--margin-bottom-xsmall"
-              level="2"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-bottom-xsmall"
+              style="--text-line-clamp: 1; width: 900px;"
             >
               Env Group 7
             </h2>

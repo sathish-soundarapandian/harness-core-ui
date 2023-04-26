@@ -19,6 +19,7 @@ import TimeRangeFilter from './TimeRangeFilter'
 import ErrorBudgetGauge from './ErrorBudgetGauge'
 import SLOTargetChartWithChangeTimeline from './SLOTargetChartWithChangeTimeline'
 import { getDefaultOffSet } from './SLOCardContent.utils'
+import { SLOType } from '../components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import { EvaluationType } from '../components/CVCreateSLOV2/CVCreateSLOV2.types'
 import css from '../CVSLOsListingPage.module.scss'
 
@@ -35,7 +36,10 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
   const { notificationTime } = useQueryParams<{ notificationTime?: number }>()
   const location = useLocation()
   const history = useHistory()
+  const { sloType } = useQueryParams<{ sloType?: string }>()
+  const isCompositeSLO = sloType === SLOType.COMPOSITE
   const isRequestBased = serviceLevelObjective?.evaluationType === EvaluationType.REQUEST
+  const dontShowErrorBudgetRequestOrMinutes = isCompositeSLO && isRequestBased
 
   const resetSlider = useCallback(() => {
     setShowTimelineSlider(false)
@@ -194,21 +198,25 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
           <Layout.Horizontal spacing="medium">
             {renderRecalculation(serviceLevelObjective)}
             <Container height={200} className={css.errorBudgetGaugeContainer}>
-              <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetRemaining'}>
-                {getString(isRequestBased ? 'cv.errorBudgetRemainingWithRequest' : 'cv.errorBudgetRemainingWithMins')}
-              </Heading>
+              {!dontShowErrorBudgetRequestOrMinutes && (
+                <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetRemaining'}>
+                  {getString(isRequestBased ? 'cv.errorBudgetRemainingWithRequest' : 'cv.errorBudgetRemainingWithMins')}
+                </Heading>
+              )}
               <ErrorBudgetGauge customChartOptions={gaugeConfig} />
-              <Text
-                font={{ variation: FontVariation.SMALL }}
-                className={css.errorBudgetRemaining}
-                width={175}
-                margin="small"
-                data-testid="errorBudgetRemaining"
-              >
-                {`${serviceLevelObjective.errorBudgetRemaining} ${getString(
-                  isRequestBased ? 'cv.requestsRemaining' : 'cv.minutesRemaining'
-                )}`}
-              </Text>
+              {!dontShowErrorBudgetRequestOrMinutes && (
+                <Text
+                  font={{ variation: FontVariation.SMALL }}
+                  className={css.errorBudgetRemaining}
+                  width={175}
+                  margin="small"
+                  data-testid="errorBudgetRemaining"
+                >
+                  {`${serviceLevelObjective.errorBudgetRemaining} ${getString(
+                    isRequestBased ? 'cv.requestsRemaining' : 'cv.minutesRemaining'
+                  )}`}
+                </Text>
+              )}
             </Container>
             <Container className={css.flexGrowOne} style={{ overflow: 'auto' }}>
               <Container flex={{ alignItems: 'flex-start' }} margin={{ bottom: 'small' }}>

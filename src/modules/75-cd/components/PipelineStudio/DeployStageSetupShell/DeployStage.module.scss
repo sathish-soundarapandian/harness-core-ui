@@ -17,7 +17,9 @@
 
 .deployStage {
   min-width: 464px;
+  max-height: 635px;
   margin-top: 2px;
+  overflow-y: scroll;
   .content-section {
     background-color: var(--form-bg);
     height: 100%;

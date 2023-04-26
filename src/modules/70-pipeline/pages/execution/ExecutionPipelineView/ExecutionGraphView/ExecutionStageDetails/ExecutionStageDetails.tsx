@@ -106,11 +106,14 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
   const data: any = {
     //ExecutionPipeline<ExecutionNode> = {
     items: processExecutionDataV1(
-      pipelineExecutionDetail?.executionGraph || pipelineExecutionDetail?.childGraph?.executionGraph
+      pipelineExecutionDetail?.childGraph?.executionGraph ||
+        pipelineExecutionDetail?.rollbackGraph?.executionGraph ||
+        pipelineExecutionDetail?.executionGraph
     ),
     identifier: `${executionIdentifier}-${
-      pipelineExecutionDetail?.executionGraph?.rootNodeId ||
-      pipelineExecutionDetail?.childGraph?.executionGraph?.rootNodeId
+      pipelineExecutionDetail?.childGraph?.executionGraph?.rootNodeId ||
+      pipelineExecutionDetail?.rollbackGraph?.executionGraph?.rootNodeId ||
+      pipelineExecutionDetail?.executionGraph?.rootNodeId
     }`,
     status: stage?.status as any,
     allNodes: Object.keys(allNodeMap)

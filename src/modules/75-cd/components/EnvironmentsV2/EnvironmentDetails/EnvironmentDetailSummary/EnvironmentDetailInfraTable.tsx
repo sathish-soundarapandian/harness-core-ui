@@ -355,7 +355,7 @@ export const EnvironmentDetailInfraTable = (
         Cell: RenderInstances
       },
       {
-        Header: getString('cd.serviceDashboard.headers.pipelineExecution'),
+        Header: getString('auditTrail.resourceLabel.pipelineExecution'),
         id: 'pipelineExecution',
         width: columnsProperties.pipelineExecution.width,
         Cell: RenderPipelineExecution

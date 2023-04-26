@@ -189,15 +189,20 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
 
   const graphNodeMap = data?.data?.executionGraph?.nodeMap || {}
   const childGraphNodeMap = data?.data?.childGraph?.executionGraph?.nodeMap || {}
+  const rollbackGraphNodeMap = data?.data?.rollbackGraph?.executionGraph?.nodeMap || {}
 
   let isDataLoadedForSelectedStage = Object.keys(graphNodeMap).some(
     key => graphNodeMap?.[key]?.setupId === selectedStageId
   )
 
-  const isDataLoadedForChildSelectedStage = Object.keys(childGraphNodeMap).some(
+  const isDataLoadedForSelectedChildStage = Object.keys(childGraphNodeMap).some(
     key => childGraphNodeMap?.[key]?.setupId === selectedChildStageId
   )
-  isDataLoadedForSelectedStage ||= isDataLoadedForChildSelectedStage
+
+  const isDataLoadedForSelectedRollbackStage = Object.keys(rollbackGraphNodeMap).some(
+    key => rollbackGraphNodeMap?.[key]?.setupId === selectedChildStageId
+  )
+  isDataLoadedForSelectedStage ||= isDataLoadedForSelectedChildStage || isDataLoadedForSelectedRollbackStage
 
   const allStagesMap = React.useMemo(() => {
     return getPipelineStagesMap(
@@ -216,14 +221,34 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     data?.data?.childGraph?.pipelineExecutionSummary?.startingNodeId
   ])
 
+  const rollbackPipelineStagesMap = React.useMemo(() => {
+    const parentRollbackStageId = get(data?.data?.rollbackGraph?.pipelineExecutionSummary, [
+      'parentStageInfo',
+      'stagenodeid'
+    ])
+    return getPipelineStagesMap(
+      data?.data?.rollbackGraph?.pipelineExecutionSummary?.layoutNodeMap,
+      data?.data?.rollbackGraph?.pipelineExecutionSummary?.startingNodeId,
+      isEmpty(parentRollbackStageId) ? selectedStageId : parentRollbackStageId
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    data?.data?.rollbackGraph?.pipelineExecutionSummary?.layoutNodeMap,
+    data?.data?.rollbackGraph?.pipelineExecutionSummary?.startingNodeId
+  ])
+
   let pipelineStagesMap = allStagesMap
   if (childPipelineStagesMap.size)
     pipelineStagesMap = new Map<string, GraphLayoutNode>([...pipelineStagesMap, ...childPipelineStagesMap])
+  if (rollbackPipelineStagesMap.size)
+    pipelineStagesMap = new Map<string, GraphLayoutNode>([...pipelineStagesMap, ...rollbackPipelineStagesMap])
 
   // combine steps and dependencies(ci stage)
   useDeepCompareEffect(() => {
     let nodeMap = { ...data?.data?.executionGraph?.nodeMap }
     if (data?.data?.childGraph?.executionGraph) nodeMap = { ...data?.data?.childGraph?.executionGraph?.nodeMap }
+    else if (data?.data?.rollbackGraph?.executionGraph)
+      nodeMap = { ...data?.data?.rollbackGraph?.executionGraph?.nodeMap }
 
     nodeMap = processForCIData({ nodeMap, data })
 
@@ -236,7 +261,9 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     data?.data?.executionGraph?.nodeMap,
     data?.data?.executionGraph?.nodeAdjacencyListMap,
     data?.data?.childGraph?.executionGraph?.nodeMap,
-    data?.data?.childGraph?.executionGraph?.nodeAdjacencyListMap
+    data?.data?.childGraph?.executionGraph?.nodeAdjacencyListMap,
+    data?.data?.rollbackGraph?.executionGraph?.nodeMap,
+    data?.data?.rollbackGraph?.executionGraph?.nodeAdjacencyListMap
   ])
 
   // Do polling after initial default loading and has some data, stop if execution is in complete status
@@ -279,6 +306,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         allNodeMap,
         pipelineStagesMap,
         childPipelineStagesMap,
+        rollbackPipelineStagesMap,
         allStagesMap,
         isPipelineInvalid,
         selectedStageId,

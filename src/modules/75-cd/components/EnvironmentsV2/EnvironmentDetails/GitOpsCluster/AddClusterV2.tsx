@@ -27,6 +27,7 @@ import {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
+import environmentEmptyStateSvg from '@pipeline/icons/emptyServiceDetail.svg'
 import { getErrorMessage } from '@triggers/components/Triggers/ManifestTrigger/ManifestWizardPageUtils'
 import css from './AddCluster.module.scss'
 
@@ -197,6 +198,13 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
               </div>
             )
           }}
+          noDataCard={{
+            image: environmentEmptyStateSvg,
+            message: getString('cd.noCluster.title'),
+            containerClassName: css.noDataCardContainerConnector,
+            className: css.noDataCardContainerContent
+          }}
+          noRecordsText={getString('cd.noCluster.title')}
           disableCollapse
           isMultiSelect
           showAllTab={false}

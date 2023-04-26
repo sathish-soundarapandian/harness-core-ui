@@ -21,7 +21,7 @@ exports[`CreateDowntimePreview should render CreateDowntimePreview with correct 
         <p
           class="StyledProps--font StyledProps--main value"
         >
-          Starting on 2030-03-26 02:50 PM (Asia/Calcutta) for 30 Minutes
+          Starting on 2030-04-15 12:00 PM (Asia/Calcutta) for 30 Minutes
         </p>
       </div>
     </div>
@@ -50,7 +50,7 @@ exports[`CreateDowntimePreview should render CreateDowntimePreview with correct 
         <p
           class="StyledProps--font StyledProps--main value"
         >
-          Starting on 2030-03-26 02:50 PM (Asia/Calcutta) till 2030-03-26 03:07 PM
+          Starting on 2030-04-15 06:00 PM (Asia/Calcutta) till 2030-04-15 06:30 PM
         </p>
       </div>
     </div>
@@ -79,12 +79,12 @@ exports[`CreateDowntimePreview should render CreateDowntimePreview with correct 
         <p
           class="StyledProps--font StyledProps--main value"
         >
-          Starting on 2030-03-26 04:20 PM (Asia/Bangkok) for 30 Minutes
+          Starting on 2030-04-15 02:00 PM (Asia/Bangkok) for 30 Minutes
         </p>
         <p
           class="StyledProps--font StyledProps--main value"
         >
-          Repeats after 2 Week until 2032-02-19 03:17 AM
+          Repeats after 2 Week until 2031-04-15 02:00 PM
         </p>
       </div>
     </div>

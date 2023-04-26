@@ -11,6 +11,7 @@ import { Dialog } from '@blueprintjs/core'
 import type { ResponseInputSetResponse } from 'services/pipeline-ng'
 import type { InputSetDTO } from '@pipeline/utils/types'
 import { EnhancedInputSetForm } from '@pipeline/components/InputSetForm/InputSetForm'
+import InputSetFormV1 from '@pipeline/v1/components/InputSetFormV1/InputSetFormV1'
 import css from './InputSetForm.module.scss'
 
 export interface NewInputSetModalProps {
@@ -18,13 +19,15 @@ export interface NewInputSetModalProps {
   isModalOpen: boolean
   closeModal: () => void
   onCreateSuccess: (response: ResponseInputSetResponse) => void
+  isSimplifiedYAML?: boolean
 }
 
 export default React.memo(function NewInputSetModal({
   inputSetInitialValue,
   isModalOpen,
   closeModal,
-  onCreateSuccess
+  onCreateSuccess,
+  isSimplifiedYAML
 }: NewInputSetModalProps): React.ReactElement {
   return (
     <Dialog
@@ -37,16 +40,28 @@ export default React.memo(function NewInputSetModal({
         closeModal()
       }}
     >
-      <EnhancedInputSetForm
-        inputSetInitialValue={inputSetInitialValue}
-        isNewInModal
-        className={css.formInModal}
-        onCancel={closeModal}
-        onCreateSuccess={response => {
-          closeModal()
-          onCreateSuccess(response)
-        }}
-      />
+      {isSimplifiedYAML ? (
+        <InputSetFormV1
+          isNewInModal
+          className={css.formInModal}
+          onCancel={closeModal}
+          onCreateSuccess={response => {
+            closeModal()
+            onCreateSuccess(response)
+          }}
+        />
+      ) : (
+        <EnhancedInputSetForm
+          inputSetInitialValue={inputSetInitialValue}
+          isNewInModal
+          className={css.formInModal}
+          onCancel={closeModal}
+          onCreateSuccess={response => {
+            closeModal()
+            onCreateSuccess(response)
+          }}
+        />
+      )}
     </Dialog>
   )
 })

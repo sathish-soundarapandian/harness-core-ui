@@ -6,7 +6,7 @@
  */
 
 import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep, omit } from 'lodash-es'
-import { string, array, object, ObjectSchema } from 'yup'
+import { string, array, object, ObjectSchema, ValidationError, TestContext } from 'yup'
 import { parse } from 'yaml'
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
@@ -47,6 +47,7 @@ import type {
   TriggerConfigDTO,
   FlatOnEditValuesInterface
 } from '../interface/TriggersWizardInterface'
+import { CronFormat } from '../views/subviews/CustomTab'
 export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
 export const AwsCodeCommit = 'AwsCodeCommit'
@@ -258,7 +259,7 @@ const checkValidArtifactTrigger = ({ formikValues }: { formikValues: { [key: str
 }
 
 const checkValidCronExpression = ({ formikValues }: { formikValues: { [key: string]: any } }): boolean =>
-  isCronValid(formikValues?.expression || '')
+  isCronValid(formikValues?.expression || '', formikValues?.cronFormat === CronFormat.QUARTZ)
 
 const getPanels = ({
   triggerType,
@@ -346,6 +347,19 @@ export const getWizardMap = ({
   panels: getPanels({ triggerType, getString })
 })
 
+function getCronExpressionValidationError(
+  this: TestContext,
+  isValidCron: boolean,
+  getString: UseStringsReturn['getString']
+): boolean | ValidationError {
+  if (isValidCron) {
+    return true
+  } else {
+    return this.createError({
+      message: getString('triggers.validation.cronExpression')
+    })
+  }
+}
 // requiredFields and checkValidPanel in getPanels() above to render warning icons related to this schema
 export const getValidationSchema = (
   triggerType: NGTriggerSourceV2['type'],
@@ -611,13 +625,21 @@ export const getValidationSchema = (
   } else {
     // Scheduled
     return TriggerNameIdentifierSchema.shape({
-      expression: string().test(
-        getString('triggers.validation.cronExpression'),
-        getString('triggers.validation.cronExpression'),
-        function (expression) {
-          return isCronValid(expression || '')
-        }
-      )
+      expression: string().when('cronFormat', {
+        is: val => val === CronFormat.QUARTZ,
+        then: string().test({
+          test(val: string): boolean | ValidationError {
+            const isValidCron = isCronValid(val || '', true)
+            return getCronExpressionValidationError.call(this, isValidCron, getString)
+          }
+        }),
+        otherwise: string().test({
+          test(val: string): boolean | ValidationError {
+            const isValidCron = isCronValid(val || '', false)
+            return getCronExpressionValidationError.call(this, isValidCron, getString)
+          }
+        })
+      })
     })
   }
 }
@@ -2229,8 +2251,10 @@ export const getArtifactManifestTriggerYaml = ({
     name,
     identifier,
     description,
+    stagesToExecute,
     tags,
     pipeline: pipelineRuntimeInput,
+    originalPipeline,
     triggerType: formikValueTriggerType,
     event,
     selectedArtifact,
@@ -2246,7 +2270,7 @@ export const getArtifactManifestTriggerYaml = ({
   )
   replaceRunTimeVariables({ manifestType, artifactType, selectedArtifact })
   let newPipeline = cloneDeep(pipelineRuntimeInput)
-  const newPipelineObj = newPipeline.template ? newPipeline.template.templateInputs : newPipeline
+  const newPipelineObj = newPipeline?.template ? newPipeline?.template?.templateInputs : newPipeline
   const filteredStage = newPipelineObj.stages?.find((item: any) => item.stage?.identifier === stageId)
   if (manifestType) {
     replaceStageManifests({ filteredStage, selectedArtifact })
@@ -2326,10 +2350,13 @@ export const getArtifactManifestTriggerYaml = ({
     )
   }
 
+  const execStages = originalPipeline?.allowStageExecutions ? stagesToExecute : []
+
   const triggerYaml: NGTriggerConfigV2 = {
     name,
     identifier,
     enabled: enabledStatus,
+    stagesToExecute: execStages,
     description,
     tags,
     orgIdentifier,

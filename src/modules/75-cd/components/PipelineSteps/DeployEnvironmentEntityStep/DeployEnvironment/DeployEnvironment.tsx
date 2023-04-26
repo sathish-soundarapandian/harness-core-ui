@@ -478,7 +478,7 @@ export default function DeployEnvironment({
         margin={{ bottom: isMultiEnvironment ? 'medium' : 'none' }}
       >
         {isMultiEnvironment ? (
-          CDS_OrgAccountLevelServiceEnvEnvGroup && !isUnderEnvGroup && !gitOpsEnabled ? (
+          CDS_OrgAccountLevelServiceEnvEnvGroup && !isUnderEnvGroup ? (
             /*** This condition is added as entities one step down the entity tree
               will be following the parent scope so no need of the new component here ***/
             <MultiTypeEnvironmentField
@@ -517,7 +517,7 @@ export default function DeployEnvironment({
               }}
             />
           )
-        ) : CDS_OrgAccountLevelServiceEnvEnvGroup && !gitOpsEnabled ? (
+        ) : CDS_OrgAccountLevelServiceEnvEnvGroup ? (
           <MultiTypeEnvironmentField
             {...commonProps}
             placeholder={placeHolderForEnvironment}
@@ -580,7 +580,11 @@ export default function DeployEnvironment({
       <Layout.Vertical className={css.mainContent} spacing="medium">
         {isMultiEnvironment && !isUnderEnvGroup ? (
           <FormInput.CheckBox
-            label={getString('cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel')}
+            label={
+              gitOpsEnabled
+                ? getString('cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployClusterLabel')
+                : getString('cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel')
+            }
             name="parallel"
           />
         ) : null}

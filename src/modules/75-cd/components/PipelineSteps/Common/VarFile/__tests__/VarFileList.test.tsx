@@ -55,22 +55,13 @@ describe('Test VarFileList', () => {
     const { findByTestId } = renderComponent(defaultProps)
     const addButton = await screen.findByText('plusAdd')
     fireEvent.click(addButton)
-    const addInlineButton = await screen.findByText('cd.addRemote')
-    fireEvent.click(addInlineButton)
+    const addVarFile = await screen.findByText('cd.addRemote')
+    fireEvent.click(addVarFile)
     const gitConnector = await findByTestId('varStore-Git')
     expect(gitConnector).toBeInTheDocument()
     const dialog = findDialogContainer() as HTMLElement
     const closeButton = dialog.querySelector('span[icon="cross"]') as Element
     fireEvent.click(closeButton)
-  })
-
-  test('remove terraform var file', () => {
-    const { getByTestId, container } = renderComponent(defaultProps)
-    const removeLabel = getByTestId('remove-varFile-0')
-    act(() => {
-      userEvent.click(removeLabel)
-    })
-    expect(container.querySelector('span[data-icon="remote"]')).toBeInTheDocument()
   })
 
   test('edit terraform remote var file', async () => {
@@ -131,5 +122,27 @@ describe('Test VarFileList', () => {
     //close
     fireEvent.click(document.querySelector('[data-icon="cross"]') as HTMLElement)
     waitFor(() => expect(dailog).toBeFalsy())
+  })
+
+  test('remove terraform remote var file and add inline var file with same identifier', async () => {
+    const { getByTestId, container } = renderComponent(defaultProps)
+    const removeLabel = getByTestId('remove-varFile-0')
+
+    act(() => {
+      userEvent.click(removeLabel)
+    })
+
+    expect(container.querySelector('span[data-icon="Inline"]')).toBeInTheDocument()
+    const addButton = await screen.findByText('plusAdd')
+    fireEvent.click(addButton)
+    const addInlineButton = await screen.findByText('cd.addInline')
+    fireEvent.click(addInlineButton)
+    const dialog = findDialogContainer() as HTMLElement
+    await waitFor(() => getByTextBody(dialog, 'Add Inline Terraform Var File'))
+    const identifierInput = dialog.querySelector('input[name="varFile.identifier"]') as HTMLInputElement
+    fireEvent.change(identifierInput, { target: { value: 'plan var id' } })
+    expect(identifierInput).toBeDefined()
+    const submitBtn = dialog.querySelector('button[data-testid="submit-inlinevar"]') as Element
+    fireEvent.click(submitBtn)
   })
 })

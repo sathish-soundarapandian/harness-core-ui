@@ -40,7 +40,7 @@ import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } fro
 import { useQueryParams } from '@common/hooks'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
-import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import { ModuleName } from 'framework/types/ModuleName'
 import css from './ExecutionHeader.module.scss'
 
 export interface ExecutionHeaderProps {
@@ -259,7 +259,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             modules={pipelineExecutionSummary.modules}
             onReRunInDebugMode={
               hasCI && CI_REMOTE_DEBUG
-                ? CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+                ? isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
                   ? openRunPipelineModalV1
                   : openRunPipelineModal
                 : undefined

@@ -7,3 +7,5 @@ allowpaths:
   - /v2/resourcegroup/{identifier}
   - /v2/resourcetype
   - /v2/resourcegroup/filter
+  - /zendesk
+  - /zendesk/token

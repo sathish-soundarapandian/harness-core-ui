@@ -17,7 +17,7 @@ import { useStrings } from 'framework/strings'
 import ServiceEntityEditModal from '@cd/components/Services/ServiceEntityEditModal/ServiceEntityEditModal'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import type { ServiceYaml } from 'services/cd-ng'
+import type { DeploymentMetaData, ServiceYaml } from 'services/cd-ng'
 
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type { ServiceData } from '../DeployServiceEntityUtils'
@@ -41,6 +41,7 @@ export interface ServiceEntitiesListProps {
   servicesData: ServiceData[]
   selectedDeploymentType?: ServiceDeploymentType
   gitOpsEnabled?: boolean
+  deploymentMetadata?: DeploymentMetaData
   onRemoveServiceFormList(id: string): void
   readonly?: boolean
   stageIdentifier?: string
@@ -55,6 +56,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
     loading,
     servicesData,
     gitOpsEnabled,
+    deploymentMetadata,
     onRemoveServiceFormList,
     selectedDeploymentType,
     readonly,
@@ -140,6 +142,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
           onServiceCreate={handleServiceEntityUpdate}
           isServiceCreateModalView={false}
           gitOpsEnabled={gitOpsEnabled}
+          deploymentMetadata={deploymentMetadata}
         />
       </ModalDialog>
       <ConfirmationDialog

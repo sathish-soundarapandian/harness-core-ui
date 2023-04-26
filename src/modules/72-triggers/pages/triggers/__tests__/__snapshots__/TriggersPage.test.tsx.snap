@@ -87,13 +87,12 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
       data-testid="page-body"
     >
       <div
-        class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+        class="Layout--horizontal StyledProps--main ListHeader--listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
         >
-          total
-          : 
+          Total: 
           6
         </p>
         <div
@@ -3389,13 +3388,12 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
       data-testid="page-body"
     >
       <div
-        class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+        class="Layout--horizontal StyledProps--main ListHeader--listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
         >
-          total
-          : 
+          Total: 
           6
         </p>
         <div

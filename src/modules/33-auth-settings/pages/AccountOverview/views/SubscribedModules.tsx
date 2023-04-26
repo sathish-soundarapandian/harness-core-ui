@@ -12,6 +12,7 @@ import { Color } from '@harness/design-system'
 import moment from 'moment'
 import { useParams, Link } from 'react-router-dom'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
@@ -32,10 +33,12 @@ const MODULE_ICONS: {
   CD: 'cd-with-dark-text',
   CE: 'ccm-with-dark-text',
   CV: 'srm-with-dark-text',
+  SRM: 'srm-with-dark-text',
   CF: 'ff-with-dark-text',
   CI: 'ci-with-dark-text',
   STO: 'sto-with-dark-text',
-  CHAOS: 'chaos-with-dark-text'
+  CHAOS: 'chaos-with-dark-text',
+  CET: 'cet-with-dark-text'
 }
 
 const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
@@ -118,10 +121,13 @@ const SubscribedModules: React.FC = () => {
         return CVNG_ENABLED
       }
       case ModuleName.STO: {
-        return licenseStatus === 'ACTIVE'
+        return licenseStatus === LICENSE_STATE_VALUES.ACTIVE
       }
       case ModuleName.CHAOS: {
         return CHAOS_ENABLED
+      }
+      case ModuleName.CET: {
+        return licenseStatus === LICENSE_STATE_VALUES.ACTIVE
       }
       default:
         return undefined

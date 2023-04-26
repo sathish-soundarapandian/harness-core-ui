@@ -7,12 +7,14 @@
 
 import React from 'react'
 import { defaultTo } from 'lodash-es'
-import { Color } from '@harness/design-system'
-import { Icon, Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
-import type { ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
+import { Icon, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+
 import { Failure, getServiceAccessListPromise, ServiceDefinition, ServiceResponseDTO } from 'services/cd-ng'
+import type { ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import serviceEmptyStateSvg from '@pipeline/icons/emptyInstanceDetail.svg'
 import css from './FormMultiTypeServiceField.module.scss'
 
@@ -28,6 +30,7 @@ export function getReferenceFieldProps({
   accountIdentifier,
   deploymentType,
   gitOpsEnabled,
+  deploymentMetadata,
   setPagedServiceData,
   selectedServices,
   getString
@@ -55,6 +58,7 @@ export function getReferenceFieldProps({
             searchTerm: search,
             type: deploymentType as ServiceDefinition['type'],
             gitOpsEnabled: gitOpsEnabled,
+            deploymentMetadataYaml: deploymentMetadata ? yamlStringify(deploymentMetadata) : undefined,
             deploymentTemplateIdentifier: ''
           }
         },

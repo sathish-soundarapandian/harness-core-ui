@@ -652,6 +652,14 @@ export interface FlagEnvironmentState {
  * Flag object with its state in each environment
  */
 export interface FlagState {
+  /**
+   * The date the flag was created in milliseconds
+   */
+  createdAt: number
+  /**
+   * The flags description
+   */
+  description: string
   environments: {
     [key: string]: FlagEnvironmentState
   }
@@ -1277,10 +1285,10 @@ export interface UsageDataDTO {
 }
 
 /**
- * Returns counts of Active (Where flag state is on in 1+ environments) and Total Flags
+ * Returns counts of Enabled (Where flag state is on in 1+ environments) and Total Flags
  */
 export interface UserFlagOverview {
-  active: number
+  enabled: number
   total: number
 }
 
@@ -4884,9 +4892,9 @@ export type GetUserFlagOverviewProps = Omit<
 >
 
 /**
- * Returns a count of active and total flags for projects a User can access
+ * Returns a count of enabled and total flags for projects a User can access
  *
- * Returns an active (where flag state is on in 1+ environment) and total count of flags in all projects a user can access
+ * Returns an enabled (where flag state is on in 1+ environment) and total count of flags in all projects a user can access
  */
 export const GetUserFlagOverview = (props: GetUserFlagOverviewProps) => (
   <Get<
@@ -4912,9 +4920,9 @@ export type UseGetUserFlagOverviewProps = Omit<
 >
 
 /**
- * Returns a count of active and total flags for projects a User can access
+ * Returns a count of enabled and total flags for projects a User can access
  *
- * Returns an active (where flag state is on in 1+ environment) and total count of flags in all projects a user can access
+ * Returns an enabled (where flag state is on in 1+ environment) and total count of flags in all projects a user can access
  */
 export const useGetUserFlagOverview = (props: UseGetUserFlagOverviewProps) =>
   useGet<
@@ -4925,9 +4933,9 @@ export const useGetUserFlagOverview = (props: UseGetUserFlagOverviewProps) =>
   >(`/admin/overview`, { base: getConfig('cf'), ...props })
 
 /**
- * Returns a count of active and total flags for projects a User can access
+ * Returns a count of enabled and total flags for projects a User can access
  *
- * Returns an active (where flag state is on in 1+ environment) and total count of flags in all projects a user can access
+ * Returns an enabled (where flag state is on in 1+ environment) and total count of flags in all projects a user can access
  */
 export const getUserFlagOverviewPromise = (
   props: GetUsingFetchProps<
@@ -6919,156 +6927,6 @@ export const getSegmentFlagsPromise = (
     GetSegmentFlagsQueryParams,
     GetSegmentFlagsPathParams
   >(getConfig('cf'), `/admin/segments/${identifier}/flags`, props, signal)
-
-export interface AllEnvironmentsFlag {
-  /**
-   * The date the flag was created in milliseconds
-   */
-  createdAt: number
-  /**
-   * A description for this Environment
-   */
-  description?: string
-  /**
-   * Unique identifier for the object in the API.
-   */
-  identifier: string
-  /**
-   * The user friendly identifier for the API Key
-   */
-  name: string
-  /**
-   * The state of the flag across all environments
-   */
-  environments: {
-    [key: string]: {
-      enabled: boolean
-    }
-  }
-}
-
-export type AllEnvironmentsFlags = {
-  flags?: AllEnvironmentsFlag[]
-}
-
-/**
- * OK
- */
-export type AllEnvironmentsFlagsResponseResponse = Pagination & {
-  flags: AllEnvironmentsFlag[]
-  /**
-   * All environments names
-   */
-  environments: {
-    [key: string]: {
-      name: string
-    }
-  }
-}
-
-export type GetAllEnvironmentsFlagsProps = Omit<
-  GetProps<
-    AllEnvironmentsFlagsResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetAllEnvironmentsFlagsQueryParams,
-    GetAllEnvironmentsFlagsPathParams
-  >,
-  'path'
-> &
-  GetAllEnvironmentsFlagsPathParams
-export interface GetAllEnvironmentsFlagsPathParams {
-  /**
-   * Project identifier for the object in the API.
-   */
-  identifier: string
-}
-export interface GetAllEnvironmentsFlagsQueryParams {
-  /**
-   * Account Identifier
-   */
-  accountIdentifier: string
-  /**
-   * Organization Identifier
-   */
-  orgIdentifier: string
-  /**
-   * Flag Name - used for search
-   */
-  name?: string
-}
-
-/**
- * Returns flag states across all Environments for the given Project identifier
- */
-export const GetAllEnvironmentsFlags = ({ identifier, ...props }: GetAllEnvironmentsFlagsProps) => (
-  <Get<
-    AllEnvironmentsFlagsResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetAllEnvironmentsFlagsQueryParams,
-    GetAllEnvironmentsFlagsPathParams
-  >
-    path={`/admin/projects/${identifier}/flags`}
-    base={getConfig('cf')}
-    {...props}
-  />
-)
-
-export type UseGetAllEnvironmentsFlagsProps = Omit<
-  UseGetProps<
-    AllEnvironmentsFlagsResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetAllEnvironmentsFlagsQueryParams,
-    GetAllEnvironmentsFlagsPathParams
-  >,
-  'path'
-> &
-  GetProjectPathParams
-
-/**
- * Returns All Feature Flags
- *
- * Returns All Feature Flags across all Environments for the given identifier
- */
-export const useGetAllEnvironmentsFlags = ({ identifier, ...props }: UseGetAllEnvironmentsFlagsProps) =>
-  useGet<
-    AllEnvironmentsFlagsResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetAllEnvironmentsFlagsQueryParams,
-    GetAllEnvironmentsFlagsPathParams
-  >((paramsInPath: GetAllEnvironmentsFlagsPathParams) => `/admin/projects/${paramsInPath.identifier}/flags`, {
-    base: getConfig('cf'),
-    pathParams: { identifier },
-    ...props
-  })
-
-/**
- * Returns All Feature Flags
- *
- * Returns All Feature Flags across all Environments for the given identifier
- */
-export const getAllEnvironmentsFlagsPromise = (
-  {
-    identifier,
-    ...props
-  }: GetUsingFetchProps<
-    AllEnvironmentsFlagsResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetAllEnvironmentsFlagsQueryParams,
-    GetAllEnvironmentsFlagsPathParams
-  > & {
-    /**
-     * Unique identifier for the object in the API.
-     */
-    identifier: string
-  },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    AllEnvironmentsFlagsResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetAllEnvironmentsFlagsQueryParams,
-    GetAllEnvironmentsFlagsPathParams
-  >(getConfig('cf'), `/admin/projects/${identifier}/flags`, props, signal)
 
 export interface GetAllTargetsQueryParams {
   /**

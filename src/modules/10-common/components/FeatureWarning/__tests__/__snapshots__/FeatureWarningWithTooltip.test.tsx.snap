@@ -35,11 +35,11 @@ exports[`FeatureWarning FeatureWarningTooltip 1`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-white"
       >
-        common.feature.levelUp.planMessage
-         
         <span>
           projectsOrgs.multipleProjects
         </span>
+         
+        common.feature.levelUp.planMessage
       </p>
       <button
         class="bp3-button Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--variation Button--variation-primary Button--size Button--small"

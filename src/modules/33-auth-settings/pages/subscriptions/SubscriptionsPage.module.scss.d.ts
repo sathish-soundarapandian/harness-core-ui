@@ -16,6 +16,7 @@ declare const styles: {
   readonly cardTitle: string
   readonly cd: string
   readonly ce: string
+  readonly cet: string
   readonly cf: string
   readonly ci: string
   readonly cv: string
@@ -44,5 +45,6 @@ declare const styles: {
   readonly summaryCard: string
   readonly summaryCardsContainer: string
   readonly table: string
+  readonly tabs: string
 }
 export default styles

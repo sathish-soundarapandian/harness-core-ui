@@ -12,6 +12,8 @@ import parallel from './__mocks__/getActiveStageForPipeline/parallel-stages.json
 import matrix from './__mocks__/getActiveStageForPipeline/matrix-stages.json'
 import loop from './__mocks__/getActiveStageForPipeline/loop-stages.json'
 import parallelism from './__mocks__/getActiveStageForPipeline/parallelism-stages.json'
+import parallelFailedStages from './__mocks__/getActiveStageForPipeline/parallel-failed-stages.json'
+import matrixFailedStages from './__mocks__/getActiveStageForPipeline/matrix-failed-stages.json'
 
 describe('getActiveStageForPipeline', () => {
   test('handles falsy/empty values', () => {
@@ -52,5 +54,19 @@ describe('getActiveStageForPipeline', () => {
     expect(getActiveStageForPipeline(loop[1] as any)).toEqual(['M1', 'S2'])
     expect(getActiveStageForPipeline(loop[2] as any)).toEqual(['M1', 'S3'])
     expect(getActiveStageForPipeline(loop[3] as any)).toEqual(['M1', 'S1'])
+  })
+
+  test('parallel failed stages check', () => {
+    expect(getActiveStageForPipeline(parallelFailedStages[0] as any)).toEqual(['S2', ''])
+    expect(getActiveStageForPipeline(parallelFailedStages[1] as any)).toEqual(['S3', ''])
+    expect(getActiveStageForPipeline(parallelFailedStages[2] as any)).toEqual(['S2', ''])
+    expect(getActiveStageForPipeline(parallelFailedStages[3] as any)).toEqual(['S1', ''])
+  })
+
+  test('matrix failed stages check', () => {
+    expect(getActiveStageForPipeline(matrixFailedStages[0] as any)).toEqual(['M1', 'S2'])
+    expect(getActiveStageForPipeline(matrixFailedStages[1] as any)).toEqual(['M1', 'S3'])
+    expect(getActiveStageForPipeline(matrixFailedStages[2] as any)).toEqual(['M1', 'S1'])
+    expect(getActiveStageForPipeline(matrixFailedStages[3] as any)).toEqual(['M1', 'S2'])
   })
 })

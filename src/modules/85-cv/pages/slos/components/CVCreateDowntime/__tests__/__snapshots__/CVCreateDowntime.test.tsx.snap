@@ -938,7 +938,7 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
                         <p
                           class="StyledProps--font StyledProps--main value"
                         >
-                          Starting on 2030-03-26 02:50 PM (Asia/Calcutta) till 2030-03-26 03:07 PM
+                          Starting on 2030-04-15 06:00 PM (Asia/Calcutta) till 2030-04-15 06:30 PM
                         </p>
                       </div>
                     </div>

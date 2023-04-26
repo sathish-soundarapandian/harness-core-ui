@@ -40,7 +40,6 @@ exports[`JenkinsArtifactSource tests after selecting jobName, artifactPath shoul
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 400px;"
                 >
                   <div
                     class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -117,7 +116,6 @@ exports[`JenkinsArtifactSource tests after selecting jobName, artifactPath shoul
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                  style="width: 400px;"
                 >
                   <div
                     class="TextInput--main MultiTypeInput--input"
@@ -265,7 +263,6 @@ exports[`JenkinsArtifactSource tests renders fine for all Runtime values 1`] = `
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 400px;"
                 >
                   <div
                     class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -342,7 +339,6 @@ exports[`JenkinsArtifactSource tests renders fine for all Runtime values 1`] = `
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                  style="width: 400px;"
                 >
                   <div
                     class="TextInput--main MultiTypeInput--input"

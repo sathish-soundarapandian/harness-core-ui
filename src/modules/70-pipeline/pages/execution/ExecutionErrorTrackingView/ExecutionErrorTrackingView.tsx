@@ -8,12 +8,13 @@
 import React from 'react'
 import { Container } from '@harness/uicore'
 import { useParams, useHistory } from 'react-router-dom'
-import type { EventListProps } from '@et/ErrorTrackingApp'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
-import { ErrorTracking } from '@et/ErrorTrackingApp'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+
+// eslint-disable-next-line import/no-unresolved
+const ErrorTrackingApp = React.lazy(() => import('errortracking/App'))
 
 export default function ExecutionErrorTrackingView(): React.ReactElement | null {
   const context = useExecutionContext()
@@ -37,8 +38,9 @@ export default function ExecutionErrorTrackingView(): React.ReactElement | null 
 
   return (
     <Container width="100%" height="100%">
-      <ChildAppMounter<EventListProps>
-        ChildApp={ErrorTracking}
+      <ChildAppMounter
+        // props type is @et/ErrorTrackingApp/EventListProps (can't be imported here)
+        ChildApp={ErrorTrackingApp}
         orgId={params.orgIdentifier}
         accountId={params.accountId}
         projectId={params.projectIdentifier}

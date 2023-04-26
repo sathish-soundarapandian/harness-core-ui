@@ -12,7 +12,7 @@ interface BannerEOLProps {
   email?: string
 }
 
-const DEFAULT_LINK = 'https://developer.harness.io/docs/continuous-delivery/onboard-cd/upgrading/upgrade-cd-v2/'
+const DEFAULT_LINK = 'https://developer.harness.io/docs/continuous-delivery/get-started/upgrading/upgrade-cd-v2'
 const DEFAULT_EMAIL = 'support@harness.io'
 
 export function BannerEOL({

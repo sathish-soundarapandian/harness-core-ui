@@ -108,7 +108,7 @@ export const DeploymentsV2 = (
 
     if (tableType != TableType.PREVIEW) {
       columnsView.push({
-        Header: getString('cd.serviceDashboard.headers.pipelineExecution'),
+        Header: getString('auditTrail.resourceLabel.pipelineExecution'),
         id: 'pipeline',
         width: columnsProp.pipelines.width[tableType],
         Cell: RenderPipelineExecution

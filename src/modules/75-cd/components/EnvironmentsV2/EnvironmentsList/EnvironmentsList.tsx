@@ -11,7 +11,12 @@ import type { Column } from 'react-table'
 import { defaultTo, get } from 'lodash-es'
 
 import { TableV2, useToaster } from '@harness/uicore'
-import { EnvironmentResponse, EnvironmentResponseDTO, useDeleteEnvironmentV2 } from 'services/cd-ng'
+import {
+  EnvironmentResponse,
+  EnvironmentResponseDTO,
+  PageEnvironmentResponse,
+  useDeleteEnvironmentV2
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -29,7 +34,15 @@ import {
 } from './EnvironmentsListColumns'
 import { EnvironmentDetailsTab } from '../utils'
 
-export default function EnvironmentsList({ response, refetch }: any): JSX.Element {
+export default function EnvironmentsList({
+  response,
+  refetch,
+  isForceDeleteEnabled
+}: {
+  response: PageEnvironmentResponse
+  refetch: () => void
+  isForceDeleteEnabled: boolean
+}): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -70,7 +83,7 @@ export default function EnvironmentsList({ response, refetch }: any): JSX.Elemen
       showSuccess(getString('cd.environment.deleted'))
       refetch()
     } catch (e: any) {
-      if (e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+      if (isForceDeleteEnabled && e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         setEnvironmentToDelete(environment)
         openReferenceErrorDialog()
       } else {
@@ -133,12 +146,13 @@ export default function EnvironmentsList({ response, refetch }: any): JSX.Elemen
         }
       }
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [getString]
   )
   return (
     <TableV2<EnvironmentResponse>
       columns={envColumns}
-      data={response.content}
+      data={response.content as EnvironmentResponse[]}
       onRowClick={(row: EnvironmentResponse) => {
         history.push(
           routes.toEnvironmentDetails({

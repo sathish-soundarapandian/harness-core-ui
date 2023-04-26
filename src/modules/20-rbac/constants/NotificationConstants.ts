@@ -8,17 +8,26 @@
 import type { SelectOption } from '@harness/uicore'
 import { NotificationType } from '../interfaces/Notifications'
 
+export const getAllNotificationTypeSelectOption = (getString: any): SelectOption => ({
+  label: getString('allNotificationFormat'),
+  value: ''
+})
+
 export const NotificationTypeSelectOptions: SelectOption[] = [
   {
     label: NotificationType.Slack,
     value: NotificationType.Slack
+  },
+  {
+    label: NotificationType.Email,
+    value: NotificationType.Email
+  },
+  {
+    label: NotificationType.PagerDuty,
+    value: NotificationType.PagerDuty
+  },
+  {
+    label: 'Microsoft Teams',
+    value: NotificationType.MsTeams
   }
-  // {
-  //   label: NotificationType.Email,
-  //   value: NotificationType.Email
-  // },
-  // {
-  //   label: NotificationType.PagerDuty,
-  //   value: NotificationType.PagerDuty
-  // }
 ]

@@ -46,6 +46,9 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
+import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'
+import Overview from '@pipeline/components/Notifications/Steps/Overview'
+import type { ETCustomMicroFrontendProps } from '@et/ErrorTracking.types'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -421,7 +424,13 @@ export default (
       sidebarProps={CVSideNavProps}
       path={routes.toErrorTracking({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
-      <ChildAppMounter ChildApp={ErrorTracking} />
+      <ChildAppMounter<ETCustomMicroFrontendProps>
+        ChildApp={ErrorTracking}
+        customComponents={{
+          NotificationWizardOverviewStep: Overview,
+          NotificationWizardMethodStep: NotificationMethods
+        }}
+      />
     </RouteWithLayout>
 
     <RouteWithLayout

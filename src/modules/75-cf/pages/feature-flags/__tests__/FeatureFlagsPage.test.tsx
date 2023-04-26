@@ -6,7 +6,17 @@
  */
 
 import React from 'react'
-import { render, fireEvent, getByText, waitFor, RenderResult, screen, act } from '@testing-library/react'
+import {
+  render,
+  fireEvent,
+  getByText,
+  waitFor,
+  RenderResult,
+  screen,
+  act,
+  getAllByRole,
+  getAllByTestId
+} from '@testing-library/react'
 import { cloneDeep } from 'lodash-es'
 import userEvent from '@testing-library/user-event'
 import * as cfServices from 'services/cf'
@@ -15,6 +25,7 @@ import mockImport from 'framework/utils/mockImport'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
 import FeatureFlagsPage from '../FeatureFlagsPage'
 import mockFeatureFlags from './mockFeatureFlags'
+import mockGetAllEnvironmentsFlags from './mockGetAllEnvironmentsFlags'
 
 const renderComponent = (): RenderResult =>
   render(
@@ -124,6 +135,37 @@ describe('FeatureFlagsPage', () => {
     })
   })
 
+  test('It should show All Environments Flags view on click of "All Environments" in the EnvironmentSelect dropdown', async () => {
+    const refetchAllEnvironmentsFlags = jest.fn()
+
+    mockImport('services/cf', {
+      useGetProjectFlags: () => ({
+        loading: false,
+        data: mockGetAllEnvironmentsFlags,
+        refetch: refetchAllEnvironmentsFlags,
+        error: null
+      })
+    })
+
+    renderComponent()
+
+    const environmentSelect = screen.getByRole('textbox', { name: 'cf.shared.selectEnvironment' })
+
+    expect(environmentSelect).toHaveValue('foobar')
+
+    userEvent.click(environmentSelect)
+
+    expect(refetchAllEnvironmentsFlags).not.toHaveBeenCalled()
+    expect(screen.getByText('common.allEnvironments')).toBeInTheDocument()
+    expect(screen.getByText('QB')).toBeInTheDocument()
+
+    userEvent.click(screen.getByText('common.allEnvironments'))
+
+    expect(refetchAllEnvironmentsFlags).toHaveBeenCalledTimes(1)
+    expect(screen.getAllByText('cf.environments.nonProd')).toHaveLength(17)
+    expect(screen.getAllByText('cf.environments.prod')).toHaveLength(17)
+  })
+
   test('It should go to edit page by clicking a row', async () => {
     renderComponent()
 
@@ -186,6 +228,52 @@ describe('FeatureFlagsPage', () => {
     renderComponent()
 
     expect(getByText(document.body, message)).toBeDefined()
+  })
+
+  test('It should go to Feature Flag details page on click of an environment in All Environments view', async () => {
+    const refetchProjectFlags = jest.fn()
+
+    mockImport('services/cf', {
+      useGetProjectFlags: () => ({
+        loading: false,
+        data: mockGetAllEnvironmentsFlags,
+        refetch: refetchProjectFlags,
+        error: null
+      })
+    })
+
+    renderComponent()
+
+    const environmentSelect = screen.getByRole('textbox', { name: 'cf.shared.selectEnvironment' })
+
+    expect(environmentSelect).toHaveValue('foobar')
+
+    userEvent.click(environmentSelect)
+
+    expect(refetchProjectFlags).not.toHaveBeenCalled()
+    expect(screen.getByText('common.allEnvironments')).toBeInTheDocument()
+
+    userEvent.click(screen.getByText('common.allEnvironments'))
+
+    expect(refetchProjectFlags).toHaveBeenCalledTimes(1)
+    expect(screen.getAllByText('cf.environments.nonProd')).toHaveLength(17)
+    expect(screen.getAllByText('cf.environments.prod')).toHaveLength(17)
+
+    const rows = screen.getAllByRole('row')
+
+    // Feature Flag 1st row
+    const flag1Columns = getAllByRole(rows[1], 'cell')
+    const envTypeContainers = getAllByTestId(flag1Columns[2], 'environmentTypeContainer')
+    const nonProdEnvironments = getAllByTestId(envTypeContainers[0], 'flagEnvironmentStatus')
+
+    // PreProduction environments
+    expect(envTypeContainers[0]).toHaveTextContent('cf.environments.nonProd')
+    expect(nonProdEnvironments[0]).toHaveTextContent('foobarENABLEDLABEL')
+    expect(nonProdEnvironments[1]).toHaveTextContent('QBENABLEDLABEL')
+
+    userEvent.click(nonProdEnvironments[1])
+
+    expect(screen.getByTestId('location')).toHaveTextContent('dummy/feature-flags/hello_world?activeEnvironment=QB')
   })
 
   describe('FilterCards', () => {

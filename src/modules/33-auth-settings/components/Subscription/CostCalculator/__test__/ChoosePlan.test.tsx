@@ -13,12 +13,30 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import ChoosePlan from '../ChoosePlan'
 
+jest.mock('services/cd-ng', () => {
+  return {
+    useGetAccountLicenses: jest.fn().mockImplementation(() => {
+      return {
+        data: {
+          correlationId: '40d39b08-857d-4bd2-9418-af1aafc42d20',
+          data: {
+            accountId: 'HlORRJY8SH2IlwpAGWwkmg',
+            moduleLicenses: {}
+          },
+          metaData: null,
+          status: 'SUCCESS'
+        }
+      }
+    })
+  }
+})
 describe('ChoosePlan', () => {
   const setPlanMock = jest.fn()
   const props = {
     plan: Editions.ENTERPRISE,
     setPlan: setPlanMock,
-    module: 'cf' as Module
+    module: 'cf' as Module,
+    allLicenses: {}
   }
 
   test('render', async () => {

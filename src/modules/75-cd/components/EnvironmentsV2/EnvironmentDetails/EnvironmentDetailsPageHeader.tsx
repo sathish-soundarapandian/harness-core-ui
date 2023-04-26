@@ -11,7 +11,7 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { Position } from '@blueprintjs/core'
 import moment from 'moment'
 
-import { Container, Heading, Layout, TagsPopover, Text } from '@harness/uicore'
+import { Container, Layout, TagsPopover, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
@@ -48,9 +48,9 @@ export function PageHeaderTitle({
       </Layout.Horizontal>
       <Container>
         <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing={'small'}>
-          <Heading level={2} margin={{ bottom: 'xsmall' }}>
+          <Text tag="h2" tooltip={name} lineClamp={1} width={900} margin={{ bottom: 'xsmall' }}>
             {name}
-          </Heading>
+          </Text>
           {!isEmpty(tags) && (
             <TagsPopover
               className={css.tagsPopover}

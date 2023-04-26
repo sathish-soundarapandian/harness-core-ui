@@ -25,7 +25,15 @@ describe('<JiraApprovalTab/> tests', () => {
   test('isWaiting test', () => {
     const { container } = render(
       <TestWrapper>
-        <JiraApprovalTab isWaiting={true} approvalData={approvalData as any} executionMetadata={executionMetadata} />
+        <JiraApprovalTab
+          isWaiting={true}
+          approvalData={approvalData as any}
+          executionMetadata={executionMetadata}
+          progressData={{
+            latestDelegateTaskId: 'ZfSxY6WRRbmxcX1K8EmlUg-DEL',
+            taskName: 'Jira Task: Get Issue'
+          }}
+        />
       </TestWrapper>
     )
 

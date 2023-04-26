@@ -8,7 +8,13 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isNull, isUndefined } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType, PageSpinner } from '@harness/uicore'
+import {
+  EXECUTION_TIME_INPUT_VALUE,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  PageSpinner
+} from '@harness/uicore'
 import { StringKeys, useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -19,6 +25,7 @@ import type {
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { EXPANDABLE_INPUT_SUPPORTED_FIELDS } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
 import type {
   ServiceNowCreateDeploymentModeFormContentInterface,
   ServiceNowCreateDeploymentModeProps
@@ -83,9 +90,10 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
   const ticketTypeKeyFixedValue = getGenuineValue(
     initialValues.spec?.ticketType || (inputSetData?.allValues?.spec?.ticketType as string)
   )
-  const connectorRefFixedValue = getGenuineValue(
-    initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string)
-  )
+  const connectorRefFixedValue =
+    template?.spec?.connectorRef === EXECUTION_TIME_INPUT_VALUE
+      ? formContentProps?.formik?.values?.spec?.connectorRef
+      : getGenuineValue(initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string))
   const descriptionFieldIndex = template?.spec?.fields?.findIndex(
     field => field.name === ServiceNowStaticFields.description
   )
@@ -349,6 +357,17 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
                     className={css.deploymentViewMedium}
                     multiTypeInputProps={{ allowableTypes: allowableTypes, expressions }}
                     useValue
+                  />
+                )
+              } else if (EXPANDABLE_INPUT_SUPPORTED_FIELDS.has(customFields[fieldIndex]?.key)) {
+                return (
+                  <FormMultiTypeTextAreaField
+                    label={customFields[fieldIndex].name}
+                    disabled={isApprovalStepFieldDisabled(readonly)}
+                    name={`${prefix}spec.fields[${index}].value`}
+                    placeholder={customFields[fieldIndex].name}
+                    multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                    className={css.deploymentViewMedium}
                   />
                 )
               } else if (

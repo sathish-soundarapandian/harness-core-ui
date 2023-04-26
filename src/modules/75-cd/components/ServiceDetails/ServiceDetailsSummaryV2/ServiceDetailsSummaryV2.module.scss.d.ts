@@ -18,13 +18,20 @@ declare const styles: {
   readonly detailSummaryView: string
   readonly dialogBase: string
   readonly dialogWrap: string
+  readonly driftPopover: string
+  readonly driftTable: string
   readonly envCardGrid: string
   readonly envCardTitle: string
   readonly envCardViewEmptyState: string
   readonly envCards: string
   readonly envColumnStyle: string
+  readonly envGroupContainer: string
+  readonly envGroupSeparator: string
+  readonly envGroupStyle: string
+  readonly envGroupTooltip: string
   readonly environmentType: string
   readonly fullViewTableStyle: string
+  readonly headerTile: string
   readonly hoverUnderline: string
   readonly instanceCountStyle: string
   readonly instanceDetail: string
@@ -53,6 +60,9 @@ declare const styles: {
   readonly selected: string
   readonly separatorStyle: string
   readonly slideStyle: string
+  readonly statusIcon: string
+  readonly statusIconPopover: string
   readonly titleStyle: string
+  readonly titleText: string
 }
 export default styles

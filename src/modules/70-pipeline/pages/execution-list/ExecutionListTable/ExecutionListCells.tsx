@@ -34,6 +34,7 @@ import type {
 import routes from '@common/RouteDefinitions'
 import { killEvent } from '@common/utils/eventUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
@@ -45,7 +46,6 @@ import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelp
 import { mapTriggerTypeToIconAndExecutionText, mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -463,7 +463,7 @@ export const MenuCell: CellType = ({ row, column }) => {
         onCompareExecutions={() => addToCompare(data)}
         onReRunInDebugMode={
           hasCI && CI_REMOTE_DEBUG
-            ? CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+            ? isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
               ? openRunPipelineModalV1
               : openRunPipelineModal
             : undefined
@@ -485,6 +485,7 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
   const queryParams = useQueryParams<GitQueryParams>()
   const triggerType = get(data, 'executionTriggerInfo.triggerType', 'MANUAL')
+  const { sourceEventId, sourceEventLink } = get(data, 'executionTriggerInfo.triggeredBy.extraInfo', {})
   const { iconName, getText } = mapTriggerTypeToIconAndExecutionText(triggerType, getString) ?? {}
   const { hasparentpipeline = false, identifier: pipelineIdentifier } = get(
     data,
@@ -529,14 +530,29 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
           </Link>
         </>
       ) : (
-        <>
-          {iconName && <Icon name={iconName} size={12} />}
-          {typeof getText === 'function' && (
-            <Text font={{ size: 'small' }} color={Color.GREY_800} lineClamp={1}>
-              {getText(data?.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)}
-            </Text>
-          )}
-        </>
+        iconName &&
+        typeof getText === 'function' && (
+          <Text font={{ size: 'small' }} icon={iconName} iconProps={{ size: 12 }} color={Color.GREY_800}>
+            {getText(data?.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)}
+            {sourceEventId && sourceEventLink && (
+              <span>
+                &#40;
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={sourceEventLink}
+                  style={{ color: Color.PRIMARY_7 }}
+                  onClick={e => {
+                    e.stopPropagation()
+                  }}
+                >
+                  {sourceEventId.slice(0, 7)}
+                </a>
+                &#41;
+              </span>
+            )}
+          </Text>
+        )
       )}
     </Layout.Horizontal>
   )

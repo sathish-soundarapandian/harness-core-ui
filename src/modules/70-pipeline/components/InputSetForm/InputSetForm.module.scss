@@ -14,11 +14,16 @@
 
 .gitRemoteDetails {
   display: inline-flex;
+  min-width: 250px;
   align-items: center;
   padding-left: 12px !important;
   border: 1px solid var(--grey-200);
   border-radius: var(--spacing-2);
   margin-left: var(--spacing-medium) !important;
+}
+
+.noCacheDetails {
+  min-width: 210px !important;
 }
 
 .reconcileMenu {
@@ -82,6 +87,9 @@
       background: var(--grey-50);
       width: 100%;
       padding: 12px !important;
+    }
+    .save-cancel-btn {
+      margin: 0px 10px !important;
     }
   }
 

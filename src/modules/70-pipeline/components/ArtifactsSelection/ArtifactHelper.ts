@@ -9,7 +9,7 @@ import type { Schema } from 'yup'
 import type { IconName, SelectOption } from '@harness/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
-import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
+import { IdentifierSchemaWithOutName, NameSchema } from '@common/utils/Validation'
 import { Connectors } from '@connectors/constants'
 import type { ArtifactSource, ConnectorInfoDTO, PrimaryArtifact, ServiceDefinition } from 'services/cd-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
@@ -121,8 +121,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
   AzureArtifacts: 'connectors.title.azureArtifacts',
   AmazonMachineImage: 'pipeline.artifactsSelection.AmazonMachineImageTitle',
-  GoogleCloudStorage: 'common.artifacts.googleCloudStorage.title',
-  GoogleCloudSource: 'common.artifacts.googleCloudSourceRepositories.title',
+  GoogleCloudStorage: 'pipeline.artifacts.googleCloudStorage.title',
+  GoogleCloudSource: 'pipeline.artifacts.googleCloudSourceRepositories.title',
   Bamboo: 'connectors.bamboo.bamboo'
 }
 
@@ -346,7 +346,7 @@ export const ArtifactIdentifierValidation = (
     }
   }
   return {
-    identifier: IdentifierSchemaWithOutName(getString, { requiredErrorMsg, regexErrorMsg })
+    identifier: NameSchema(getString, { requiredErrorMsg })
   }
 }
 
@@ -355,5 +355,24 @@ export const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefin
 }
 
 export const showArtifactStoreStepDirectly = (selectedArtifact: ArtifactType | null): boolean => {
-  return !!(selectedArtifact && [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage].includes(selectedArtifact))
+  return !!(
+    selectedArtifact &&
+    [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage, ENABLED_ARTIFACT_TYPES.GoogleCloudSource].includes(selectedArtifact)
+  )
+}
+
+export const getInitialSelectedArtifactValue = (
+  deploymentType: ServiceDefinition['type'],
+  availableArtifactTypes?: ArtifactType[]
+): ArtifactType | null => {
+  if (availableArtifactTypes) {
+    if (availableArtifactTypes?.length === 1) {
+      return availableArtifactTypes[0]
+    }
+  } else {
+    if (allowedArtifactTypes[deploymentType]?.length === 1) {
+      return allowedArtifactTypes[deploymentType][0]
+    }
+  }
+  return null
 }

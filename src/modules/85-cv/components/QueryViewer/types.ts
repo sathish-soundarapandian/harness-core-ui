@@ -28,6 +28,7 @@ export interface QueryContentProps {
   isConnectorRuntimeOrExpression?: boolean
   fetchButtonText?: string
   isFetchButtonDisabled?: boolean
+  showLabel?: boolean
 }
 
 export interface QueryViewerProps {

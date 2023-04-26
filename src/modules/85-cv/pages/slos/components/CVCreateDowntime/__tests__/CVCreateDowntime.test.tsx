@@ -211,7 +211,7 @@ describe('CVCreateDowntime', () => {
       userEvent.click(getByText('next'))
     })
 
-    expect(getByText('Asia/Calcutta (GMT+5.5)')).toBeInTheDocument()
+    expect(getByText('Asia/Calcutta')).toBeInTheDocument()
     expect(getByText('cv.dateAndTimeLabel')).toBeInTheDocument()
     expect(getByText('pipeline.startTime')).toBeInTheDocument()
     expect(getByText('common.endTime')).toBeInTheDocument()
@@ -286,7 +286,7 @@ describe('CVCreateDowntime', () => {
       userEvent.click(getByTestId(/nextButton/i))
     })
 
-    expect(getByText('Asia/Bangkok (GMT+7)')).toBeInTheDocument()
+    expect(getByText('Asia/Bangkok')).toBeInTheDocument()
     expect(getByText('cv.dateAndTimeLabel')).toBeInTheDocument()
     expect(getByText('pipeline.startTime')).toBeInTheDocument()
     expect(getByText('pipeline.duration')).toBeInTheDocument()

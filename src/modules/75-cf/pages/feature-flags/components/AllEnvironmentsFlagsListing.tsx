@@ -10,16 +10,19 @@ import type { Cell, Column } from 'react-table'
 import { Container, Layout, TableV2, Text, Utils } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
-import type { AllEnvironmentsFlags, AllEnvironmentsFlag, DeleteFeatureFlagQueryParams, Feature } from 'services/cf'
+import { useHistory } from 'react-router-dom'
+import type { DeleteFeatureFlagQueryParams, Feature, FlagState, ProjectFlags } from 'services/cf'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import FlagOptionsMenuButton from '@cf/components/FlagOptionsMenuButton/FlagOptionsMenuButton'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { formatDate } from '@cf/utils/CFUtils'
+import routes from '@common/RouteDefinitions'
+import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import FlagEnvironmentsState from './FlagEnvironmentsState'
 export interface AllEnvironmentsFlagsListingProps {
   environments: EnvironmentResponseDTO[]
-  allEnvironmentsFlags: AllEnvironmentsFlags
+  projectFlags: ProjectFlags
   refetchFlags: () => void
   deleteFlag: (data: string, mutateRequestOptions?: MutateRequestOptions<DeleteFeatureFlagQueryParams, void>) => void
   queryParams: DeleteFeatureFlagQueryParams
@@ -27,7 +30,7 @@ export interface AllEnvironmentsFlagsListingProps {
 
 export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> = ({
   environments,
-  allEnvironmentsFlags,
+  projectFlags,
   refetchFlags,
   deleteFlag,
   queryParams
@@ -36,24 +39,40 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
   const nonProdEnvs = useMemo(() => environments.filter(e => e.type === 'PreProduction'), [environments])
   const gitSync = useFFGitSyncContext()
   const { getString } = useStrings()
+  const history = useHistory()
+  const { withActiveEnvironment } = useActiveEnvironment()
 
-  const allEnvironmentsColumns: Column<AllEnvironmentsFlag>[] = useMemo(
+  const goToFlagWithEnvironment = (flagId: string, envId: string): void => {
+    history.push(
+      withActiveEnvironment(
+        routes.toCFFeatureFlagsDetail({
+          orgIdentifier: queryParams.orgIdentifier,
+          projectIdentifier: queryParams.projectIdentifier,
+          featureFlagIdentifier: flagId,
+          accountId: queryParams.accountIdentifier
+        }),
+        envId
+      )
+    )
+  }
+
+  const allEnvironmentsColumns: Column<FlagState>[] = useMemo(
     () => [
       {
         font: FontVariation.TABLE_HEADERS,
         id: 'flagName',
         accessor: row => row.name,
         width: '25%',
-        Cell: (cell: Cell<AllEnvironmentsFlag>) => (
+        Cell: (cell: Cell<FlagState>) => (
           <Container
             flex={{ distribution: 'space-between', align: 'center-center' }}
             padding={{ left: 'small', right: 'small' }}
           >
             <Layout.Vertical spacing="xsmall" width="fit-content">
-              <Text color={Color.BLACK} font={{ variation: FontVariation.BODY2 }}>
+              <Text color={Color.BLACK} font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
                 {cell.row.original.name}
               </Text>
-              <Text color={Color.GREY_400} font={{ variation: FontVariation.TINY }}>
+              <Text color={Color.GREY_400} font={{ variation: FontVariation.TINY }} lineClamp={1}>
                 {cell.row.original.identifier}
               </Text>
               <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
@@ -68,7 +87,7 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
         id: 'createdAt',
         accessor: 'createdAt',
         width: '15%',
-        Cell: (cell: Cell<AllEnvironmentsFlag>) => (
+        Cell: (cell: Cell<FlagState>) => (
           <Layout.Horizontal
             flex={{ distribution: 'space-between', align: 'center-center' }}
             padding={{ left: 'small', right: 'small' }}
@@ -89,20 +108,28 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
         id: 'environments',
         font: FontVariation.TABLE_HEADERS,
         width: '55%',
-        Cell: (cell: Cell<AllEnvironmentsFlag>) => {
+        Cell: (cell: Cell<FlagState>) => {
           const environmentsByType = {
             nonProd: nonProdEnvs.map(env => ({
               identifier: env.identifier,
               name: env.name,
-              enabled: cell.row.original.environments[`${env.identifier}`].enabled
+              enabled: cell.row.original.environments[`${env.identifier}`]?.enabled
             })),
             prod: prodEnvs.map(env => ({
               identifier: env.identifier,
               name: env.name,
-              enabled: cell.row.original.environments[`${env.identifier}`].enabled
+              enabled: cell.row.original.environments[`${env.identifier}`]?.enabled
             }))
           }
-          return <FlagEnvironmentsState environmentsByType={environmentsByType} />
+          return (
+            <FlagEnvironmentsState
+              environmentsByType={environmentsByType}
+              onClickEnvironment={envId => {
+                const flagId = cell.row.original.identifier
+                goToFlagWithEnvironment(flagId, envId)
+              }}
+            />
+          )
         }
       },
       {
@@ -126,7 +153,7 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
     [nonProdEnvs, prodEnvs, queryParams, gitSync]
   )
 
-  return <TableV2<AllEnvironmentsFlag> columns={allEnvironmentsColumns} data={allEnvironmentsFlags?.flags || []} />
+  return <TableV2<FlagState> columns={allEnvironmentsColumns} data={projectFlags?.flags || []} />
 }
 
 export default AllEnvironmentsFlagsListing

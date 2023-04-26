@@ -95,6 +95,8 @@ export interface MultiTypeConnectorFieldProps extends Omit<ConnectorReferenceFie
     templateValue: string | SelectOption | undefined
   }
   version?: string
+  isRecordDisabled?: (item: any) => boolean
+  renderRecordDisabledWarning?: JSX.Element
 }
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
   status: ConnectorResponse['status']
@@ -129,6 +131,8 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     isDrawerMode = false,
     templateProps,
     version,
+    isRecordDisabled,
+    renderRecordDisabledWarning,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -423,7 +427,9 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     version,
     getString,
     openConnectorModal,
-    setPagedConnectorData
+    setPagedConnectorData,
+    isRecordDisabled,
+    renderRecordDisabledWarning
   })
   const component = (
     <FormGroup {...rest} labelFor={name} helperText={helperText} intent={intent} style={{ marginBottom: 0 }}>
@@ -535,7 +541,9 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
                 disabled,
                 gitScope,
                 category,
-                tooltipProps: { dataTooltipId }
+                tooltipProps: { dataTooltipId },
+                isRecordDisabled,
+                renderRecordDisabledWarning
               }}
             />
           )}

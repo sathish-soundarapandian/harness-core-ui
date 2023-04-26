@@ -20,6 +20,7 @@ export const shouldAllowOnlyOneFilePath = (selectedManifest: ManifestTypes): boo
     ManifestDataType.AsgLaunchTemplate,
     ManifestDataType.AsgConfiguration,
     ManifestDataType.GoogleCloudFunctionDefinition,
+    ManifestDataType.GoogleCloudFunctionGenOneDefinition,
     ManifestDataType.AwsLambdaFunctionDefinition,
     ManifestDataType.AwsLambdaFunctionAliasDefinition
   ].includes(selectedManifest)

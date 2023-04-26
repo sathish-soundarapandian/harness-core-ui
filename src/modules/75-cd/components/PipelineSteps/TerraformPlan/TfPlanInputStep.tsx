@@ -10,7 +10,7 @@ import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text, FormInput 
 import { get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikContextType } from 'formik'
-
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import List from '@common/components/List/List'
@@ -27,11 +27,13 @@ import type { TerraformBackendConfigSpec } from 'services/cd-ng'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { TFMonaco } from '../Common/Terraform/Editview/TFMonacoEditor'
 import type { TerraformPlanProps } from '../Common/Terraform/TerraformInterfaces'
 import ConfigInputs from './InputSteps/TfConfigSection'
 import TfVarFiles from './InputSteps/TfPlanVarFiles'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from '../Common/Terraform/TerraformStep.module.scss'
 
 export default function TfPlanInputStep(
   props: TerraformPlanProps & { formik?: FormikContextType<any> }
@@ -39,6 +41,7 @@ export default function TfPlanInputStep(
   const { getString } = useStrings()
   const { inputSetData, readonly, initialValues, allowableTypes, stepViewType, formik } = props
   const { expressions } = useVariablesExpression()
+  const { CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -103,6 +106,18 @@ export default function TfPlanInputStep(
           disabled={readonly}
           setRefValue
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          isRecordDisabled={selectedRecord =>
+            (selectedRecord as any)?.spec?.readOnly && CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN
+          }
+          renderRecordDisabledWarning={
+            <Text
+              icon="warning-icon"
+              iconProps={{ size: 18, color: Color.RED_800, padding: { right: 'xsmall' } }}
+              className={css.warningMessage}
+            >
+              {getString('common.readOnlyConnectorWarning')}
+            </Text>
+          }
         />
       )}
       <ConfigInputs {...props} isConfig />

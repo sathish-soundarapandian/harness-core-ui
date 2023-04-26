@@ -90,7 +90,7 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
         flexGrow: 32
       },
       {
-        label: getString('cd.serviceDashboard.headers.pipelineExecution'),
+        label: getString('auditTrail.resourceLabel.pipelineExecution'),
         flexGrow: 24
       }
     ]

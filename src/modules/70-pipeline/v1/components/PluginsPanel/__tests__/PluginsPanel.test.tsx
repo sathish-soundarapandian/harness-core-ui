@@ -13,7 +13,7 @@ import routes from '@common/RouteDefinitions'
 import { projectPathProps, pipelinePathProps, modulePathProps } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PluginsPanel } from '../PluginsPanel'
-import { pluginsWithRequiredField, pluginsWithoutRequiredField } from './mocks'
+import { pluginsWithRequiredField, pluginsWithoutRequiredField, pluginsWithNoFields } from './mocks'
 
 const mockFetch = jest.fn(() => Promise.resolve(pluginsWithRequiredField))
 
@@ -120,7 +120,7 @@ describe('Test PluginsPanel component', () => {
     act(() => {
       fireEvent.click(addBtn)
     })
-    expect(addBtn).toBeDisabled()
+    expect(addBtn).not.toBeDisabled()
     const docsLink = container.querySelector('a')
     expect(docsLink).toBeInTheDocument()
     expect(docsLink).toHaveAttribute('href', 'https://github.com/robertstettner/drone-cloudformation')
@@ -293,5 +293,24 @@ describe('Test PluginsPanel component', () => {
     )
 
     expect(getByText('common.successfullyAdded')).toBeInTheDocument()
+  })
+
+  test('Test for plugins with no fields', () => {
+    ;(useListPlugins as jest.Mock).mockImplementation(() => ({
+      loading: false,
+      data: pluginsWithNoFields,
+      refetch: mockFetch
+    }))
+    const { container, getByText } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <PluginsPanel
+          onPluginAddUpdate={jest.fn()}
+          onPluginDiscard={jest.fn()}
+          selectedPluginFromYAMLView={{ name: 'Super-Linter' }}
+        />
+      </TestWrapper>
+    )
+    expect(getByText('common.noPluginInputsRequired')).toBeInTheDocument()
+    expect(container.querySelector('button[type="submit"]')!).not.toBeInTheDocument()
   })
 })

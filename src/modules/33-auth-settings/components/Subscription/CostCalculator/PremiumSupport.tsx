@@ -37,9 +37,15 @@ interface PremiumSupportProps {
   premiumSupport: boolean
   onChange: (value: boolean) => void
   disabled: boolean
+  isAlreadyPrime: boolean
 }
 
-export const PremiumSupport: React.FC<PremiumSupportProps> = ({ premiumSupport, onChange, disabled }) => {
+export const PremiumSupport: React.FC<PremiumSupportProps> = ({
+  premiumSupport,
+  onChange,
+  disabled,
+  isAlreadyPrime
+}) => {
   const { getString } = useStrings()
   const checkbox = disabled ? (
     <Popover
@@ -48,7 +54,9 @@ export const PremiumSupport: React.FC<PremiumSupportProps> = ({ premiumSupport, 
       position={Position.BOTTOM}
       content={
         <Text padding={'medium'} color={Color.GREY_100} font={{ size: 'small' }}>
-          {getString('authSettings.costCalculator.switchTooltip')}
+          {isAlreadyPrime
+            ? getString('authSettings.costCalculator.alreadySubscribed')
+            : getString('authSettings.costCalculator.switchTooltip')}
         </Text>
       }
     >
@@ -64,13 +72,24 @@ export const PremiumSupport: React.FC<PremiumSupportProps> = ({ premiumSupport, 
     <Checkbox size={12} checked={premiumSupport} onChange={() => onChange(!premiumSupport)} className={css.checkbox} />
   )
   return (
-    <Layout.Horizontal
-      className={css.premSupport}
-      padding={'small'}
-      flex={{ alignItems: 'baseline', justifyContent: 'start' }}
-    >
-      {checkbox}
-      <PremLabel />
-    </Layout.Horizontal>
+    <>
+      <Layout.Horizontal
+        className={css.premSupport}
+        padding={'small'}
+        flex={{ alignItems: 'baseline', justifyContent: 'start' }}
+      >
+        {checkbox}
+        <PremLabel />
+      </Layout.Horizontal>
+      <Layout.Horizontal spacing={'small'}>
+        <Text
+          color={Color.PRIMARY_7}
+          tooltip={getString('authSettings.costCalculator.premSupport.premierSupportDefinition')}
+          font={{ size: 'xsmall' }}
+        >
+          {getString('authSettings.costCalculator.premSupport.premierSupport')}
+        </Text>
+      </Layout.Horizontal>
+    </>
   )
 }

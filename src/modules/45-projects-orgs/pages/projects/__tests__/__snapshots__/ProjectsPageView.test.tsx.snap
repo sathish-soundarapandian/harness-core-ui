@@ -256,13 +256,12 @@ exports[`Project Page List Create Project and Close 1`] = `
       data-testid="page-body"
     >
       <div
-        class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+        class="Layout--horizontal StyledProps--main ListHeader--listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
         >
-          total
-          : 
+          Total: 
           6
         </p>
         <div
@@ -3903,13 +3902,12 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
       data-testid="page-body"
     >
       <div
-        class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+        class="Layout--horizontal StyledProps--main ListHeader--listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
         >
-          total
-          : 
+          Total: 
           6
         </p>
         <div
@@ -7550,13 +7548,12 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
       data-testid="page-body"
     >
       <div
-        class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+        class="Layout--horizontal StyledProps--main ListHeader--listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
         >
-          total
-          : 
+          Total: 
           6
         </p>
         <div
@@ -11197,13 +11194,12 @@ exports[`Project Page List Whole Modal Test 1`] = `
       data-testid="page-body"
     >
       <div
-        class="Layout--horizontal StyledProps--main listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+        class="Layout--horizontal StyledProps--main ListHeader--listHeader listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
         >
-          total
-          : 
+          Total: 
           6
         </p>
         <div

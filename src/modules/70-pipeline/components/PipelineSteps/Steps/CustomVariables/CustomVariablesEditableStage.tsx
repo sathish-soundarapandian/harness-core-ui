@@ -38,6 +38,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SecretConfigureOptions } from '@secrets/components/SecretConfigureOptions/SecretConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { CustomVariableEditableProps, CustomVariablesData } from './CustomVariableEditable'
 import { VariableType, labelStringMap } from './CustomVariableUtils'
 import AddEditCustomVariable, { VariableState } from './AddEditCustomVariable'
@@ -82,6 +83,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [selectedVariable, setSelectedVariable] = React.useState<VariableState | null>(null)
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -211,6 +213,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                               label=""
                               disabled={readonly}
                               multiTextInputProps={{
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                 defaultValueToReset: '',
                                 expressions,
                                 textProps: {

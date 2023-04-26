@@ -36,12 +36,6 @@ exports[`<KubernetesServiceSpecInputSetMode /> tests snapshot test for kubernete
           <div
             class="inputFieldLayout"
           />
-          <div
-            class="inputFieldLayout"
-          />
-          <div
-            class="inputFieldLayout"
-          />
         </div>
       </div>
     </div>

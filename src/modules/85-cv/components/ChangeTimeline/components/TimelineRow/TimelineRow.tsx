@@ -21,6 +21,7 @@ import Annotation from './components/Annotation/Annotation'
 import DefaultWidget from './components/DefaultWidget/DefaultWidget'
 import WidgetsWithSameStartTime from './components/WidgetsWithSameStartTime/WidgetsWithSameStartTime'
 import { SLO_WIDGETS } from './TimelineRow.constants'
+import ErrorBudgetReset from './components/ErrorBudgetReset/ErrorBudgetReset'
 import css from './TimelineRow.module.scss'
 
 export function TimelineRow(props: TimelineRowProps): JSX.Element {
@@ -71,7 +72,7 @@ export function TimelineRow(props: TimelineRowProps): JSX.Element {
                 const { type } = widget
                 switch (type) {
                   case SLO_WIDGETS.DOWNTIME:
-                    return <DownTime index={index} widget={widget} fetchSecondaryEvents={fetchSecondaryEvents} />
+                    return <DownTime index={index} widget={widget} />
                   case SLO_WIDGETS.ANNOTATION:
                     return (
                       <Annotation
@@ -81,6 +82,8 @@ export function TimelineRow(props: TimelineRowProps): JSX.Element {
                         fetchSecondaryEvents={fetchSecondaryEvents}
                       />
                     )
+                  case SLO_WIDGETS.ERROR_BUDGET_RESET:
+                    return <ErrorBudgetReset index={index} widget={widget} />
                   default:
                     return <DefaultWidget index={index} widget={widget} />
                 }

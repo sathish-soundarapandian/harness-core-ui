@@ -22,12 +22,6 @@ exports[`K8sManifestSource tests Should match snapshot 1`] = `
         data-name="manifest"
       >
         <div
-          class="inputFieldLayout"
-        />
-        <div
-          class="inputFieldLayout"
-        />
-        <div
           class="verticalSpacingInput"
         >
           <div

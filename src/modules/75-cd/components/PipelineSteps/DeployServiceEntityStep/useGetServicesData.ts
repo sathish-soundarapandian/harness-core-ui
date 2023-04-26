@@ -12,16 +12,22 @@ import { useToaster, shouldShowError } from '@harness/uicore'
 import produce from 'immer'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
-import type { JsonNode, ServiceDefinition, ServiceInputsMergedResponseDto, ServiceYaml } from 'services/cd-ng'
+import type {
+  DeploymentMetaData,
+  JsonNode,
+  ServiceDefinition,
+  ServiceInputsMergedResponseDto,
+  ServiceYaml
+} from 'services/cd-ng'
 import { useGetServiceAccessListQuery, useGetServicesYamlAndRuntimeInputsQuery } from 'services/cd-ng-rq'
-import { yamlParse } from '@common/utils/YamlHelperMethods'
+import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-
 import type { ServiceData } from './DeployServiceEntityUtils'
 
 export interface UseGetServicesDataProps {
   deploymentType: ServiceDefinition['type']
   gitOpsEnabled?: boolean
+  deploymentMetadata?: DeploymentMetaData
   serviceIdentifiers: string[]
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -44,8 +50,15 @@ export interface UseGetServicesDataReturn {
 const STALE_TIME = 60 * 1000 * 15
 
 export function useGetServicesData(props: UseGetServicesDataProps): UseGetServicesDataReturn {
-  const { deploymentType, gitOpsEnabled, serviceIdentifiers, deploymentTemplateIdentifier, versionLabel, lazyService } =
-    props
+  const {
+    deploymentType,
+    gitOpsEnabled,
+    serviceIdentifiers,
+    deploymentTemplateIdentifier,
+    versionLabel,
+    lazyService,
+    deploymentMetadata
+  } = props
   const [servicesList, setServicesList] = useState<ServiceYaml[]>([])
   const [servicesData, setServicesData] = useState<ServiceData[]>([])
   const [nonExistingServiceIdentifiers, setNonExistingServiceIdentifiers] = useState<string[]>([])
@@ -67,7 +80,8 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
         type: deploymentType as ServiceDefinition['type'],
         gitOpsEnabled,
         deploymentTemplateIdentifier,
-        versionLabel
+        versionLabel,
+        deploymentMetadataYaml: deploymentMetadata ? yamlStringify(deploymentMetadata) : undefined
       }
     },
     {

@@ -199,8 +199,10 @@ export function MultiEnvironmentsInputSetForm({
                     {showEnvironmentPrefix && (
                       <Text
                         font={{ size: 'normal', weight: 'bold' }}
-                        padding={{ bottom: 'medium' }}
+                        margin={{ bottom: 'medium' }}
                         color={Color.GREY_700}
+                        lineClamp={1}
+                        tooltip={environment.environmentRef}
                       >
                         {getString('common.environmentPrefix', { name: environment.environmentRef })}
                       </Text>
@@ -309,6 +311,7 @@ export function MultiEnvironmentsInputSetForm({
                           readonly={readonly}
                           customStepProps={{
                             environmentIdentifier: environment.environmentRef,
+                            scopePrefix,
                             isMultipleCluster: true,
                             deployToAllClusters: environmentInDeploymentStage?.deployToAll,
                             showEnvironmentsSelectionInputField
@@ -368,6 +371,7 @@ export function MultiEnvironmentsInputSetForm({
                                     font={{ size: 'normal', weight: 'bold' }}
                                     padding={{ bottom: 'medium' }}
                                     color={Color.GREY_700}
+                                    lineClamp={1}
                                   >
                                     {getString('common.infrastructurePrefix', {
                                       name: infraInputs.identifier
@@ -386,7 +390,9 @@ export function MultiEnvironmentsInputSetForm({
                                       }}
                                       allowableTypes={allowableTypes}
                                       allValues={{
-                                        environmentRef: environment.environmentRef,
+                                        ...environmentInDeploymentStage?.infrastructureDefinitions?.[infraIndex]?.inputs
+                                          ?.spec,
+                                        environmentRef: environmentInDeploymentStage.environmentRef,
                                         infrastructureRef: infraInputs.identifier
                                       }}
                                       type={

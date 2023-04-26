@@ -465,7 +465,7 @@ exports[`Subscription Plans should expand feature comparison when click on arrow
         </div>
       </div>
       <a
-        href="https://next.harness.io/pricing?module=ci"
+        href="https://www.harness.io/pricing?module=ci#"
         rel="noreferrer"
         target="_blank"
       >
@@ -1014,7 +1014,7 @@ exports[`Subscription Plans should render the plans for CCM 1`] = `
         </div>
       </div>
       <a
-        href="https://next.harness.io/pricing?module=cc"
+        href="https://www.harness.io/pricing?module=cc#"
         rel="noreferrer"
         target="_blank"
       >
@@ -1549,7 +1549,7 @@ exports[`Subscription Plans should render the plans for CD 1`] = `
         </div>
       </div>
       <a
-        href="https://next.harness.io/pricing?module=cd"
+        href="https://www.harness.io/pricing?module=cd#"
         rel="noreferrer"
         target="_blank"
       >
@@ -2008,7 +2008,7 @@ exports[`Subscription Plans should render the plans for CI 1`] = `
         </div>
       </div>
       <a
-        href="https://next.harness.io/pricing?module=ci"
+        href="https://www.harness.io/pricing?module=ci#"
         rel="noreferrer"
         target="_blank"
       >
@@ -2584,7 +2584,7 @@ exports[`Subscription Plans should render the plans for FF 1`] = `
         </div>
       </div>
       <a
-        href="https://next.harness.io/pricing?module=ff"
+        href="https://www.harness.io/pricing?module=ff#"
         rel="noreferrer"
         target="_blank"
       >

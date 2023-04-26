@@ -39,6 +39,7 @@ export type ManifestTypes =
   | 'AsgScalingPolicy'
   | 'AsgScheduledUpdateGroupAction'
   | 'GoogleCloudFunctionDefinition'
+  | 'GoogleCloudFunctionGenOneDefinition'
   | 'HelmRepoOverride'
   | 'AwsLambdaFunctionDefinition'
   | 'AwsLambdaFunctionAliasDefinition'

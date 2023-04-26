@@ -25,6 +25,9 @@ export interface CustomApprovalTabProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
   isWaiting: boolean
   executionMetadata: ExecutionGraph['executionMetadata']
+  progressData?: {
+    [key: string]: string
+  }
 }
 
 const statusToStringIdMap = {
@@ -49,7 +52,7 @@ function CustomApprovalMessage({ status }: { status: keyof typeof ApprovalStatus
 }
 
 export function CustomApprovalTab(props: CustomApprovalTabProps): React.ReactElement {
-  const { approvalData, isWaiting, startTs, endTs, stepParameters, executionMetadata } = props
+  const { approvalData, isWaiting, startTs, endTs, stepParameters, executionMetadata, progressData } = props
   const wasFailed = !isWaiting && approvalData?.status === ApprovalStatus.FAILED
 
   return (
@@ -87,7 +90,11 @@ export function CustomApprovalTab(props: CustomApprovalTabProps): React.ReactEle
       )}
 
       <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
-        <StepDetails step={{ startTs, endTs, stepParameters }} executionMetadata={executionMetadata} />
+        <StepDetails
+          step={{ startTs, endTs, stepParameters }}
+          executionMetadata={executionMetadata}
+          progressData={progressData}
+        />
       </Container>
 
       <div className={cx(css.customApproval, css.applyTopPadding)}>

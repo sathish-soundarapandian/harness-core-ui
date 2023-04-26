@@ -11,20 +11,23 @@ import { connect } from 'formik'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import type { InputsResponseBody } from '@harnessio/react-pipeline-service-client'
+import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import css from './PipelineInputParamsV1.module.scss'
 
 export interface PipelineInputParametersV1Props {
   pipelineInputsMetadata?: InputsResponseBody | null
   formik?: any
+  path?: string
 }
 
 export function PipelineInputParametersV1Internal(props: PipelineInputParametersV1Props): React.ReactElement {
-  const { formik, pipelineInputsMetadata } = props
+  const { formik, pipelineInputsMetadata, path } = props
   const { getString } = useStrings()
+  const formattedPath = isEmpty(path) ? '' : `${path}`
 
   const handleChange = (key: string, newValue: string) => {
-    formik?.setFieldValue(`inputs.${key}`, newValue)
+    formik?.setFieldValue(`${formattedPath}.inputs.${key}`, newValue)
   }
 
   return (
@@ -45,23 +48,30 @@ export function PipelineInputParametersV1Internal(props: PipelineInputParameters
         <div className={css.accordionSummary}>
           <div className={css.nestedAccordions}>
             <Layout.Vertical spacing="small">
-              {Object.entries(formik?.values?.inputs).map((input, index) => {
-                return (
-                  <div className={cx(css.group, css.withoutAligning)} key={index}>
-                    <div>
-                      <TextInput name={`inputs.${input[0]}`} disabled={true} value={`${input[0]}`} />
-                    </div>
-                    <div className={cx(css.group, css.withoutAligning, css.withoutSpacing)}>
-                      <TextInput
-                        name={`inputs.${input[1]}`}
-                        value={`${input[1]}`}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(input[0], e.target.value)}
-                        required={pipelineInputsMetadata?.inputs && pipelineInputsMetadata?.inputs[input[0]].required}
-                      />
-                    </div>
-                  </div>
-                )
-              })}
+              {(!isEmpty(formik?.values[formattedPath]?.inputs) || !isEmpty(formik?.values?.inputs)) &&
+                Object.entries(formattedPath ? formik?.values[formattedPath]?.inputs : formik?.values?.inputs).map(
+                  (input, index) => {
+                    return (
+                      <div className={cx(css.group, css.withoutAligning)} key={index}>
+                        <div>
+                          <TextInput name={`inputs.${input[0]}`} disabled={true} value={`${input[0]}`} />
+                        </div>
+                        <div className={cx(css.group, css.withoutAligning, css.withoutSpacing)}>
+                          <TextInput
+                            name={`inputs.${input[1]}`}
+                            value={`${input[1]}`}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                              handleChange(input[0], e.target.value)
+                            }
+                            required={
+                              pipelineInputsMetadata?.inputs && pipelineInputsMetadata?.inputs[input[0]].required
+                            }
+                          />
+                        </div>
+                      </div>
+                    )
+                  }
+                )}
             </Layout.Vertical>
           </div>
         </div>

@@ -7,12 +7,24 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { defaultTo, isEmpty, pick } from 'lodash-es'
-import { Popover, Layout, TextInput, Text, ButtonVariation, useToaster } from '@harness/uicore'
+import {
+  Popover,
+  Layout,
+  TextInput,
+  Text,
+  ButtonVariation,
+  useToaster,
+  ListHeader,
+  sortByCreated,
+  sortByName,
+  SortMethod
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { Menu, MenuItem, Position } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
+import { getPipelineInputs, InputsResponseBody } from '@harnessio/react-pipeline-service-client'
 import { Page } from '@common/exports'
 import {
   InputSetSummaryResponse,
@@ -24,6 +36,8 @@ import type { Error } from 'services/template-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { OverlayInputSetForm } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
 import routes from '@common/RouteDefinitions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
@@ -37,8 +51,6 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
-import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { InputSetListView } from './InputSetListView'
@@ -112,6 +124,30 @@ function InputSetList(): React.ReactElement {
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
+  let pipelineInputs: InputsResponseBody, inputsError: { data: Error }
+
+  useEffect(() => {
+    if (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)) {
+      setIsLoading(true)
+      getPipelineInputs({
+        org: orgIdentifier,
+        project: projectIdentifier,
+        pipeline: pipelineIdentifier,
+        queryParams: {
+          repo_name: repoIdentifier,
+          branch_name: branch,
+          connector_ref: connectorRef
+        }
+      })
+        .then(response => {
+          pipelineInputs = response
+        })
+        .catch(err => (inputsError = err))
+        .finally(() => setIsLoading(false))
+    }
+  }, [CI_YAML_VERSIONING])
+
   const {
     data: pipelineMetadata,
     isFetching: loadingPipelineSummary,
@@ -135,7 +171,7 @@ function InputSetList(): React.ReactElement {
     if (pipelineMetadata?.data && !pipelineMetadata?.data?.entityValidityDetails?.valid) {
       return true
     }
-    if ((templateError?.data as Error)?.status === 'ERROR') {
+    if ((templateError?.data as Error)?.status === 'ERROR' || (inputsError?.data as Error)?.status === 'ERROR') {
       return true
     }
     return false
@@ -148,7 +184,11 @@ function InputSetList(): React.ReactElement {
   // These flags will be used to disable the Add Input set buttons in the page.
   const [pipelineHasRuntimeInputs, setPipelineHasRuntimeInputs] = useState(true)
   useEffect(() => {
-    if (!template?.data?.inputSetTemplateYaml) {
+    if (
+      !template?.data?.inputSetTemplateYaml &&
+      isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) &&
+      !isEmpty(pipelineInputs?.inputs)
+    ) {
       setPipelineHasRuntimeInputs(false)
     } else {
       setPipelineHasRuntimeInputs(true)
@@ -174,6 +214,32 @@ function InputSetList(): React.ReactElement {
     (inputSetTemp?: InputSetSummaryResponse) => {
       history.push(
         routes.toInputSetForm({
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          pipelineIdentifier,
+          inputSetIdentifier: typeof inputSetTemp?.identifier !== 'string' ? '-1' : inputSetTemp.identifier,
+          module,
+          inputSetRepoIdentifier: inputSetTemp?.gitDetails?.repoIdentifier,
+          inputSetRepoName: inputSetTemp?.gitDetails?.repoName,
+          inputSetBranch: inputSetTemp?.gitDetails?.branch,
+          inputSetConnectorRef: inputSetTemp?.connectorRef, //InputSet connector
+          connectorRef, //Pipeline connector
+          repoIdentifier,
+          repoName,
+          branch,
+          storeType
+        })
+      )
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier, module, history, repoIdentifier, branch]
+  )
+
+  const goToInputSetFormV1 = React.useCallback(
+    (inputSetTemp?: InputSetSummaryResponse) => {
+      history.push(
+        routes.toInputSetFormV1({
           accountId,
           orgIdentifier,
           projectIdentifier,
@@ -285,7 +351,7 @@ function InputSetList(): React.ReactElement {
           <MenuItem
             text={getString('inputSets.inputSetLabel')}
             onClick={() => {
-              goToInputSetForm()
+              isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) ? goToInputSetFormV1() : goToInputSetForm()
             }}
           />
           {(inputSet?.data?.content as InputSetSummaryResponse[])?.length > 0 && (
@@ -389,7 +455,9 @@ function InputSetList(): React.ReactElement {
                   inputSetConnectorRef: inputSetTemp?.connectorRef
                 })
                 if (inputSetTemp?.inputSetType === 'INPUT_SET') {
-                  goToInputSetForm(inputSetTemp)
+                  isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
+                    ? goToInputSetFormV1(inputSetTemp)
+                    : goToInputSetForm(inputSetTemp)
                 } else {
                   showOverlayInputSetForm()
                 }

@@ -9,15 +9,46 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
-import ResilienceView, { MemoizedResilienceViewContent, ResilienceViewContentProps } from '../ResilienceView'
+import ResilienceView, {
+  MemoizedResilienceViewContent,
+  MemoizedResilienceViewCTA,
+  ResilienceViewContentProps,
+  ResilienceViewCTAProps
+} from '../ResilienceView'
 import { mockEmptyPipelineContext, mockPipelineContextWithChaosStep } from './mocks/mockData'
 
 // eslint-disable-next-line react/display-name
-jest.mock('microfrontends/ChildAppMounter', () => (props: ResilienceViewContentProps) => {
-  props.onStageSelectionChange('stageID2')
-  props.onViewInChaosModuleClick('expID', 'expRunID', 'faultName')
+jest.mock('microfrontends/ChildAppMounter', () => (props: ResilienceViewContentProps | ResilienceViewCTAProps) => {
+  const resCTAProps = props as ResilienceViewCTAProps
+  if (resCTAProps.isSubscriptionAvailable) {
+    resCTAProps.addResilienceStep && resCTAProps.addResilienceStep()
+  } else {
+    resCTAProps.startFreePlan && resCTAProps.startFreePlan()
+  }
+
+  const resProps = props as ResilienceViewContentProps
+  resProps.onStageSelectionChange && resProps.onStageSelectionChange('stageID2')
+  resProps.onViewInChaosModuleClick && resProps.onViewInChaosModuleClick('expID', 'expRunID', 'faultName')
+
   return <div data-testid="error-tracking-child-mounter">mounted</div>
 })
+
+jest.mock('services/cd-ng', () => ({
+  useStartFreeLicense: jest.fn().mockImplementation(() => {
+    return {
+      cancel: jest.fn(),
+      loading: false,
+      mutate: jest.fn().mockImplementationOnce(() => {
+        return Promise.resolve({
+          status: 'SUCCESS',
+          data: {
+            licenseType: 'FREE'
+          }
+        })
+      })
+    }
+  })
+}))
 
 describe('<ResilienceView /> tests', () => {
   test('Should not crash when chaos notifyIDs are not yet created/empty', () => {
@@ -94,5 +125,45 @@ describe('<MemoizedResilienceViewContent /> tests', () => {
     )
 
     expect(container).toMatchSnapshot()
+  })
+})
+
+describe('<MemoizedResilienceViewCTA /> tests', () => {
+  test('Should render MemoizedResilienceViewCTA when chaos license is not present', () => {
+    const mockStartFreePlan = jest.fn()
+    const mockAddResilienceStep = jest.fn()
+    const mockIsSubscriptionAvailable = false
+
+    const { container } = render(
+      <TestWrapper>
+        <MemoizedResilienceViewCTA
+          isSubscriptionAvailable={mockIsSubscriptionAvailable}
+          startFreePlan={mockStartFreePlan}
+          addResilienceStep={mockAddResilienceStep}
+        />
+      </TestWrapper>
+    )
+
+    expect(container).toMatchSnapshot()
+    expect(mockStartFreePlan).toHaveBeenCalledTimes(1)
+  })
+
+  test('Should render MemoizedResilienceViewCTA when chaos step is not present', () => {
+    const mockStartFreePlan = jest.fn()
+    const mockAddResilienceStep = jest.fn()
+    const mockIsSubscriptionAvailable = true
+
+    const { container } = render(
+      <TestWrapper>
+        <MemoizedResilienceViewCTA
+          isSubscriptionAvailable={mockIsSubscriptionAvailable}
+          startFreePlan={mockStartFreePlan}
+          addResilienceStep={mockAddResilienceStep}
+        />
+      </TestWrapper>
+    )
+
+    expect(container).toMatchSnapshot()
+    expect(mockAddResilienceStep).toHaveBeenCalledTimes(1)
   })
 })

@@ -152,7 +152,10 @@ export const getSelectedFieldsToBeAddedInForm = (
     if (!alreadyPresent && !alreadyPresentKVField) {
       toReturn.push({ ...field, value: !isEmpty(field.allowedValues) ? [] : '' })
     } else {
-      toReturn.push({ ...field, value: alreadyPresent !== undefined ? alreadyPresent?.value : '' })
+      toReturn.push({
+        ...field,
+        value: alreadyPresent !== undefined ? alreadyPresent?.value : field.schema.array ? [] : ''
+      })
     }
   })
   return toReturn

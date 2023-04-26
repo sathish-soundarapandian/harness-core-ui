@@ -8,6 +8,7 @@
 import type { SecondaryEventsResponse } from 'services/cv'
 import downTimeIcon from '@cv/assets/downTime.svg'
 import annotationsIcon from '@cv/assets/annotations.svg'
+import errorBudgetResetIcon from '@cv/assets/errorBudgetReset.svg'
 import { SLO_WIDGETS } from '../TimelineRow/TimelineRow.constants'
 import type { TimelineData } from '../TimelineRow/TimelineRow.types'
 
@@ -57,6 +58,14 @@ export function generateSLOWidgetsInfo(sloWidgetsData?: SecondaryEventsResponse[
             }
           }
           break
+        case SLO_WIDGETS.ERROR_BUDGET_RESET:
+          updatedSLOWidgetsInfo = {
+            ...updatedSLOWidgetsInfo,
+            icon: {
+              ...updatedSLOWidgetsInfo?.icon,
+              url: errorBudgetResetIcon
+            }
+          }
       }
 
       return updatedSLOWidgetsInfo

@@ -67,3 +67,40 @@
   margin: var(--spacing-6) 0;
   opacity: 0.3;
 }
+
+.event {
+  position: absolute;
+  top: 0;
+
+  .singleEvent {
+    transform: rotate(45deg);
+  }
+}
+
+.widgetContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.widgetTextElements {
+  font-size: var(--font-size-xsmall) !important;
+  color: var(--white) !important;
+}
+
+.widgetsPopover {
+  background-color: var(--primary-9-dark);
+  position: relative;
+  bottom: 10px;
+  :global {
+    .bp3-popover-arrow-fill {
+      fill: var(--primary-9-dark);
+    }
+    .bp3-popover-content {
+      background-color: var(--primary-9-dark);
+    }
+  }
+}
+
+.widgetIcon {
+  cursor: pointer;
+}

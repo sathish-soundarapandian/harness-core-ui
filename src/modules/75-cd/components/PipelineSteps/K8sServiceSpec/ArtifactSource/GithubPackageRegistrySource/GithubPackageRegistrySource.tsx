@@ -326,7 +326,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               accountIdentifier={accountId}
               projectIdentifier={projectIdentifier}
               orgIdentifier={orgIdentifier}
-              width={391}
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
@@ -354,7 +353,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.orgNamePlaceholder')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.org`)}
               multiTextInputProps={{
-                width: 391,
                 expressions,
                 allowableTypes
               }}
@@ -371,7 +369,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.manifestType.packagePlaceholder')}
               useValue
               multiTypeInputProps={{
-                width: 391,
                 expressions,
                 allowableTypes,
                 selectProps: {
@@ -410,7 +407,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               useValue
               multiTypeInputProps={{
                 expressions,
-                width: 391,
                 allowableTypes,
                 selectProps: {
                   noResults: (
@@ -440,7 +436,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             <FormInput.MultiTextInput
               label={getString('version')}
               multiTextInputProps={{
-                width: 391,
                 expressions,
                 value: TriggerDefaultFieldList.build,
                 allowableTypes
@@ -458,7 +453,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.versionRegexPlaceholder')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.versionRegex`)}
               multiTextInputProps={{
-                width: 391,
                 expressions,
                 allowableTypes
               }}

@@ -106,10 +106,13 @@ export default function useMigrateTemplateResource(
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
+  const canMoveToRemote = (item: TemplateMetadataSummaryResponse): boolean =>
+    item.storeType === StoreType.INLINE || (!isGitSyncEnabled && !item.storeType)
+
   React.useEffect(() => {
     const newVersionOptions: SelectOption[] = []
     templates.forEach((item: TemplateMetadataSummaryResponse) => {
-      if (item.storeType === StoreType.INLINE) {
+      if (canMoveToRemote(item)) {
         newVersionOptions.push({
           label: getVersionLabelText(item, getString),
           value: defaultTo(item.versionLabel, DefaultStableVersionValue)
@@ -124,11 +127,7 @@ export default function useMigrateTemplateResource(
     if (templateData?.data?.content) {
       if (
         !isEmpty(templateData?.data?.content) &&
-        isEmpty(
-          templateData?.data?.content.find(
-            (item: TemplateMetadataSummaryResponse) => item.storeType === StoreType.INLINE
-          )
-        )
+        isEmpty(templateData?.data?.content.find((item: TemplateMetadataSummaryResponse) => canMoveToRemote(item)))
       ) {
         return showWarning(getString('templatesLibrary.moveTemplateToRemoteWarning'))
       }

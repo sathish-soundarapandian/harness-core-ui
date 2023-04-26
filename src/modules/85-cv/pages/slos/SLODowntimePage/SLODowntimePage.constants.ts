@@ -8,3 +8,5 @@
 import type { SelectOption } from '@harness/uicore'
 
 export const defaultOption = { label: 'All', value: 'all' } as SelectOption
+
+export const defaultDateTime = '1970-01-01 12:00 AM'

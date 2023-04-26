@@ -67,7 +67,7 @@ interface ModuleInfo {
   backgroundColor?: string
 }
 
-const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
+export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CD]: {
     icon: 'cd-main',
     label: 'common.cdAndGitops',
@@ -152,10 +152,10 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   },
   [ModuleName.CET]: {
     icon: 'cet',
-    label: 'common.purpose.errorTracking.longTitle',
-    getHomePageUrl: (accountId: string) => routes.toETHome({ accountId }),
+    label: 'common.purpose.cet.continuous',
+    getHomePageUrl: (accountId: string) => routes.toET({ accountId }),
     featureFlagName: FeatureFlag.CET_ENABLED,
-    color: '--default-module-border'
+    color: '--cet-border'
   }
 }
 
@@ -168,7 +168,7 @@ export interface GroupConfig {
 export const moduleGroupConfig: GroupConfig[] = [
   {
     label: 'common.moduleList.buildAndTest',
-    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO, ModuleName.IACM]
+    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO, ModuleName.IACM, ModuleName.CET]
   },
   {
     label: 'common.moduleList.deployChanges',
@@ -176,7 +176,7 @@ export const moduleGroupConfig: GroupConfig[] = [
   },
   {
     label: 'common.moduleList.manageImpact',
-    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCA, ModuleName.CET]
+    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCA]
   },
   {
     label: 'common.moduleList.optimizeProcesses',
@@ -204,6 +204,8 @@ const getModuleInfo = (
   }
 }
 
+const MODULES_NOT_APPLICABLE_FOR_COMMUNITY = new Set([ModuleName.CV, ModuleName.STO])
+
 const shouldBeVisible = (
   module: NavModuleName,
   featureFlags: Partial<Record<FeatureFlag, boolean>>,
@@ -211,7 +213,7 @@ const shouldBeVisible = (
   isCommunity: boolean
 ): boolean => {
   const featureFlagName = moduleInfoMap[module]?.featureFlagName
-  if (isCommunity && module === ModuleName.CV) {
+  if (isCommunity && MODULES_NOT_APPLICABLE_FOR_COMMUNITY.has(module)) {
     return false
   } else if (module === ModuleName.CV) {
     return Boolean(

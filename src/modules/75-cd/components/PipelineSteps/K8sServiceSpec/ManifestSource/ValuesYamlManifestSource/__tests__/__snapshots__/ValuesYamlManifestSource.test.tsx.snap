@@ -22,10 +22,7 @@ exports[`ValuesYamlManifestSource tests Should match snapshot 1`] = `
         data-name="manifest"
       >
         <div
-          class="inputFieldLayout"
-        />
-        <div
-          class="fieldAndOptions inputFieldLayout"
+          class="fieldAndOptions fieldAndOptionsWidth verticalSpacingInput"
         >
           <div
             class="bp3-form-group"
@@ -90,9 +87,6 @@ exports[`ValuesYamlManifestSource tests Should match snapshot 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="inputFieldLayout"
-        />
         <div
           class="inputFieldLayout"
         />
@@ -129,12 +123,6 @@ exports[`ValuesYamlManifestSource tests Should match snapshot 1`] = `
         <div
           class="inputFieldLayout"
         />
-        <div
-          class="inputFieldLayout"
-        />
-        <div
-          class="inputFieldLayout"
-        />
       </div>
     </div>
   </div>
@@ -156,10 +144,7 @@ exports[`ValuesYamlManifestSource tests Should match snapshot with fromTrigger 1
         data-name="manifest"
       >
         <div
-          class="inputFieldLayout"
-        />
-        <div
-          class="fieldAndOptions inputFieldLayout"
+          class="fieldAndOptions fieldAndOptionsWidth verticalSpacingInput"
         >
           <div
             class="bp3-form-group"
@@ -236,9 +221,6 @@ exports[`ValuesYamlManifestSource tests Should match snapshot with fromTrigger 1
         <div
           class="inputFieldLayout"
         />
-        <div
-          class="inputFieldLayout"
-        />
       </div>
     </div>
     <div>
@@ -249,12 +231,6 @@ exports[`ValuesYamlManifestSource tests Should match snapshot with fromTrigger 1
         class="Layout--vertical StyledProps--main inputWidth layoutVerticalSpacing"
         data-name="manifest"
       >
-        <div
-          class="inputFieldLayout"
-        />
-        <div
-          class="inputFieldLayout"
-        />
         <div
           class="inputFieldLayout"
         />

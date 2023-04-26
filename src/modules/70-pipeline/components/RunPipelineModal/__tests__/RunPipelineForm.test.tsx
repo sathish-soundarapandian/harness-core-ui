@@ -22,7 +22,6 @@ import { TestWrapper } from '@common/utils/testUtils'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
 import { useShouldDisableDeployment } from 'services/cd-ng'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { RunPipelineForm } from '../RunPipelineForm'
 import {
   getMockFor_Generic_useMutate,
@@ -201,36 +200,7 @@ describe('STUDIO MODE', () => {
     await waitFor(() => expect(queryByText('pipeline.inputSets.aboutInputSets')).toBeTruthy())
   })
 
-  test('should not allow submit if form is incomplete', async () => {
-    const { container, findByText, queryByText } = render(
-      <TestWrapper>
-        <RunPipelineForm {...commonProps} source="executions" />
-      </TestWrapper>
-    )
-
-    const provideValues = await findByText('pipeline.pipelineInputPanel.provide')
-    // Navigate to 'Provide Values'
-    fireEvent.click(provideValues)
-    await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
-
-    // Submit the incomplete form
-    const runButton = container.querySelector('button[type="submit"]')
-    act(() => {
-      fireEvent.click(runButton!)
-    })
-
-    // Verify the ErrorStrip is present and submit is disabled
-    await waitFor(() => expect(queryByText('common.errorCount')).toBeTruthy())
-    await waitFor(() => expect(queryByText('common.seeDetails')).toBeTruthy())
-    await waitFor(() => expect(queryByText('fieldRequired')).toBeTruthy())
-    const buttonShouldBeDisabled = container.querySelector('.bp3-disabled')
-    expect(buttonShouldBeDisabled).toBeTruthy()
-  })
-
   test('should allow submit if form is incomplete as variable values are optional', async () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      FF_ALLOW_OPTIONAL_VARIABLE: true
-    })
     const { findByText, queryByText, getByRole } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
@@ -255,33 +225,6 @@ describe('STUDIO MODE', () => {
     await waitFor(() => expect(queryByText('common.seeDetails')).toBeFalsy())
     await waitFor(() => expect(queryByText('fieldRequired')).toBeFalsy())
     expect(runPipelineButton).toBeEnabled()
-  })
-
-  test('should not allow submit if form is incomplete and enter key pressed', async () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      FF_ALLOW_OPTIONAL_VARIABLE: false
-    })
-    const { container, findByText, queryByText, getByTestId } = render(
-      <TestWrapper>
-        <RunPipelineForm {...commonProps} source="executions" />
-      </TestWrapper>
-    )
-    const provideValues = await findByText('pipeline.pipelineInputPanel.provide')
-    // Navigate to 'Provide Values'
-    fireEvent.click(provideValues)
-    await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
-
-    // Submit the incomplete form by pressing enter
-    act(() => {
-      fireEvent.keyDown(getByTestId('runPipelineVisualView'), { key: 'Enter', code: 'Enter', charCode: 13 })
-    })
-
-    // Verify the ErrorStrip is present and submit is disabled
-    await waitFor(() => expect(queryByText('common.errorCount')).toBeTruthy())
-    await waitFor(() => expect(queryByText('common.seeDetails')).toBeTruthy())
-    await waitFor(() => expect(queryByText('fieldRequired')).toBeTruthy())
-    const buttonShouldBeDisabled = container.querySelector('.bp3-disabled')
-    expect(buttonShouldBeDisabled).toBeTruthy()
   })
 
   test('should submit and call the run pipeine method if form is valid', async () => {
@@ -476,10 +419,8 @@ describe('STUDIO MODE', () => {
 
   test('Valid input set enables Run button if it was disabled due to errors', async () => {
     // What to do -
-    // 1. Go to provide values and submit empty form
-    // 2. Expect errors in form and Run button to be disabled
-    // 3. Apply input set so that all fields are filled
-    // 4. Expect errors to go away and Run button to be enabled
+    // 1. Apply input set so that all fields are filled
+    // 2. Run button to be enabled
 
     const { container, getByText, findByText, queryByText } = render(
       <TestWrapper>
@@ -493,18 +434,6 @@ describe('STUDIO MODE', () => {
       fireEvent.click(provide)
     })
     await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
-
-    // Submit the incomplete form
-    const runButton = container.querySelector('button[type="submit"]')
-    act(() => {
-      fireEvent.click(runButton!)
-    })
-
-    // Verify the ErrorStrip is present and submit is disabled
-    await waitFor(() => expect(queryByText('common.errorCount')).toBeTruthy())
-    await waitFor(() => expect(queryByText('common.seeDetails')).toBeTruthy())
-    const buttonShouldBeDisabled = container.querySelector('.bp3-disabled')
-    expect(buttonShouldBeDisabled).toBeTruthy()
 
     // Navigate to 'Existing'
     const existing = await findByText('pipeline.pipelineInputPanel.existing')

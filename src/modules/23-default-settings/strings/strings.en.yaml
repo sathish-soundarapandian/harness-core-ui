@@ -8,8 +8,11 @@ mandateAuthorizationForCustomWebhookTriggers: Mandate Authorization for Custom W
 enableForceDelete: Enable Force Delete of Harness Resources
 enableGitCommands: Use Git client for commits
 allowDifferentRepoForInputSets: Allow different repo for Pipeline and InputSets
+enforceGitExperience: Enforce git experience
 pipelineTimeout: Pipeline Timeout
 stageTimeout: Stage Timeout
 stepTimeout: Step Timeout
 concurrentActivePipelineExecutions: Concurrent Active Pipeline Executions
+enableNodeExecutionAuditEvents: Enable Node Execution Audit Events
 allowUserToMarkStepAsFailedExplicitly: Allow users to mark a running Step as failure
+enableMatrixFieldNames: Enable Matrix Labels By Name

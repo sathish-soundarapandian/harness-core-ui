@@ -119,7 +119,8 @@ export default function ExecutionLogView(): React.ReactElement {
             step={executionInputStep}
             className={css.executionInput}
             executionMetadata={defaultTo(
-              pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata,
+              pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata ||
+                pipelineExecutionDetail?.rollbackGraph?.executionGraph?.executionMetadata,
               defaultTo(pipelineExecutionDetail?.executionGraph?.executionMetadata, {})
             )}
             onSuccess={closeExecutionTimeInputsModal}

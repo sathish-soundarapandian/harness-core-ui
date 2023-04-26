@@ -532,6 +532,16 @@ exports[`Test GCOMetricsHealthSource Should show please Enter Query when ther is
                             class="StyledProps--font StyledProps--main queryContainer"
                           >
                             <div
+                              class="StyledProps--font StyledProps--main StyledProps--margin-bottom-small"
+                              data-testid="queryLabel"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                              >
+                                cv.query
+                              </p>
+                            </div>
+                            <div
                               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main queryIcons"
                             >
                               <button

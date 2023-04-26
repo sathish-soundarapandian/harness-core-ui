@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { FormInput, Icon, Layout, Text, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
+import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import SLOTargetChartWrapper from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart'
 import {
@@ -15,7 +16,8 @@ import {
   PeriodLengthTypes,
   SLOV2FormFields,
   ErrorBudgetInterface,
-  SLOTargetAndBudgetPolicyProps
+  SLOTargetAndBudgetPolicyProps,
+  SLOV2Form
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { flexStart } from './SLOTargetAndBudgetPolicy.constants'
 import { convertSLOFormDataToServiceLevelIndicatorDTO } from '../../components/CVCreateSLOV2/CVCreateSLOV2.utils'
@@ -26,7 +28,8 @@ import {
   getWindowEndOptionsForMonth,
   getWindowEndOptionsForWeek,
   getErrorBudget,
-  getCustomOptionsForSLOTargetChart
+  getCustomOptionsForSLOTargetChart,
+  getEvaluationOptions
 } from './SLOTargetAndBudgetPolicy.utils'
 import { useConfigureSLIContext } from '../SLI/SLIContext'
 import SLOTargetCss from './SLOTargetAndBudgetPolicy.module.scss'
@@ -35,17 +38,31 @@ interface SLOPeriodInterface {
   periodType?: string
   periodLengthType?: string
   verticalOrientation?: boolean
+  hasEvaluationType?: boolean
 }
 
 export const SloPeriodLength = ({
   periodType,
   periodLengthType,
-  verticalOrientation
+  verticalOrientation,
+  hasEvaluationType
 }: SLOPeriodInterface): JSX.Element => {
   const { getString } = useStrings()
+  const {
+    values: { evaluationType }
+  } = useFormikContext<SLOV2Form>()
   const ComponentLayout = verticalOrientation ? Layout.Vertical : Layout.Horizontal
+  const evaluationOptions = useMemo(() => getEvaluationOptions(getString), [])
   return (
     <ComponentLayout spacing="medium">
+      {hasEvaluationType && (
+        <FormInput.RadioGroup
+          key={evaluationType}
+          name={SLOV2FormFields.EVALUATION_TYPE}
+          label={getString('cv.slos.evaluationType')}
+          items={evaluationOptions}
+        />
+      )}
       <FormInput.Select
         name={SLOV2FormFields.PERIOD_TYPE}
         label={getString('cv.slos.sloTargetAndBudget.periodType')}

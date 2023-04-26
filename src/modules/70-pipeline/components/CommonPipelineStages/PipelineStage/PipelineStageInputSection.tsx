@@ -18,7 +18,7 @@ import {
   MultiTypeInputType
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { isEmpty, defaultTo, get, set, debounce, noop, memoize, remove, isUndefined, isNil } from 'lodash-es'
+import { isEmpty, defaultTo, get, set, debounce, noop, memoize, isUndefined, isNil } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import produce from 'immer'
@@ -44,10 +44,7 @@ import SelectExistingInputsOrProvideNew from '@pipeline/components/RunPipelineMo
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
-import {
-  PipelineVariablesContextProvider,
-  usePipelineVariables
-} from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import type { InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
 import { useQueryParams } from '@common/hooks'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
@@ -58,8 +55,6 @@ import { getsMergedTemplateInputYamlPromise } from 'services/template-ng'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { AcceptableValue } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { PipelineStageTabs } from './utils'
@@ -120,8 +115,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   const formikRef = useRef<FormikProps<PipelineInfoConfig>>()
   const isChildPipBuildRuntime = useRef<boolean>(true)
   const { getString } = useStrings()
-  const { setPipeline: updatePipelineInVariablesContext, selectedInputSetsContext } = usePipelineVariables()
-  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
+  const { selectedInputSetsContext } = usePipelineVariables()
+
   const [existingProvide, setExistingProvide] = useState<ExistingProvide>('existing')
   const [inputTabFormValues, setInputTabFormValues] = React.useState<PipelineInfoConfig | undefined>(
     {} as PipelineInfoConfig
@@ -145,7 +140,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
       getTemplatesResolvedPipeline: true,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const pipeline: PipelineInfoConfig | undefined = useMemo(
@@ -171,7 +167,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
       repoIdentifier,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const { data: inputSetData, loading: loadingInputSetsData } = useMutateAsGet(
@@ -193,7 +190,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
         getDefaultFromOtherRepo: true,
         parentEntityConnectorRef: connectorRef,
         parentEntityRepoName: repoName
-      }
+      },
+      requestOptions: { headers: { 'Load-From-Cache': 'true' } }
     }
   )
 
@@ -205,8 +203,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   }, [inputSetData?.data, inputSetData?.data?.errorResponse])
 
   const onReconcile = (identifier: string): void => {
-    remove(invalidInputSetReferences, id => id === identifier)
-    setInvalidInputSetReferences(invalidInputSetReferences)
+    setInvalidInputSetReferences(invalidInputSetReferences.filter(id => id !== identifier))
   }
 
   const inputSetTemplate = useMemo((): Pipeline => {
@@ -252,14 +249,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
 
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputSetSelected])
-
-  useDeepCompareEffect(() => {
-    if (resolvedPipeline) {
-      updatePipelineInVariablesContext(resolvedPipeline)
-    }
-  }, [resolvedPipeline])
 
   const selectedInputSetReferences: string[] | undefined = React.useMemo(() => {
     return selectedInputSets?.map(getInputSetReference)
@@ -297,8 +287,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
             resolvedPipeline,
             getString,
             viewType: StepViewType.DeploymentForm,
-            viewTypeMetadata: { isInputSet: true },
-            isOptionalVariableAllowed
+            viewTypeMetadata: { isInputSet: true }
           }) as any) || formErrors
         resolve(validatedErrors)
       })
@@ -375,7 +364,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
           },
           queryParams: {
             accountIdentifier: accountId
-          }
+          },
+          requestOptions: { headers: { 'Load-From-Cache': 'true' } }
         }).then(response => {
           if (response && response.status === 'SUCCESS') {
             setLoadingMergedTemplateInputs(false)
@@ -532,8 +522,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
 }
 
 export function PipelineStageInputSection({
-  children,
-  storeMetadata
+  children
 }: React.PropsWithChildren<{
   storeMetadata?: StoreMetadata
 }>): React.ReactElement {
@@ -543,9 +532,7 @@ export function PipelineStageInputSection({
     <div className={cx(css.stageSection, css.editStageGrid)}>
       <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={css.contentSection} ref={scrollRef}>
-        <PipelineVariablesContextProvider storeMetadata={storeMetadata}>
-          <PipelineInputSetFormBasic />
-        </PipelineVariablesContextProvider>
+        <PipelineInputSetFormBasic />
         <Container margin={{ top: 'xxlarge' }} className={css.navigationButtons}>
           {children}
         </Container>

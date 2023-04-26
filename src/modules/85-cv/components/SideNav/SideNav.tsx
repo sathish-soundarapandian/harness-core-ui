@@ -30,7 +30,7 @@ export default function CVSideNav(): React.ReactElement {
   const history = useHistory()
   const { updateAppStore } = useAppStore()
   const SRM_ET_EXPERIMENTAL = useFeatureFlag(FeatureFlag.SRM_ET_EXPERIMENTAL)
-  const SRM_COMPOSITE_SLO = useFeatureFlag(FeatureFlag.SRM_COMPOSITE_SLO)
+
   enum CVSideNavTabIds {
     AccountTab = 'AccountTab',
     ProjectTab = 'ProjectTab'
@@ -99,7 +99,7 @@ export default function CVSideNav(): React.ReactElement {
     </Layout.Vertical>
   )
 
-  return SRM_COMPOSITE_SLO ? (
+  return (
     <Container className={css.cvtab}>
       <Tabs
         id={'cvSideNav'}
@@ -127,7 +127,5 @@ export default function CVSideNav(): React.ReactElement {
         ]}
       />
     </Container>
-  ) : (
-    ProjectPanel
   )
 }

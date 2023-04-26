@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ETTrialPage snapshot test should render properly 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main body"
+    style="background: transparent url(test-file-stub) no-repeat;"
+  >
+    <h1
+      class="StyledProps--font StyledProps--font-h1 StyledProps--main heading StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--color StyledProps--color-black100"
+    >
+      et.continuous
+    </h1>
+    <div
+      class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--padding-bottom-xxlarge"
+        style="width: 500px;"
+      >
+        et.homepage.slogan
+      </p>
+      <a
+        href="https://developer.harness.io/docs/service-reliability-management/continuous-error-tracking/getting-started/cet-overview"
+        rel="noreferrer"
+        target="_blank"
+      >
+        et.homepage.learnMore
+      </a>
+      <button
+        aria-label="common.trialCommingSoon"
+        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color"
+        disabled=""
+        style="cursor: default; width: 300px; height: 45px;"
+        tabindex="-1"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          common.trialCommingSoon
+        </span>
+      </button>
+      <a
+        aria-label="common.banners.trial.contactSales"
+        class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+        href="https://www.harness.io/company/contact-sales?utm_source=Website&utm_medium=internal&utm_content=Contact-Sales-STO-Pricing"
+        role="button"
+        style="width: 300px; height: 45px;"
+        tabindex="0"
+        target="_blank"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          common.banners.trial.contactSales
+        </span>
+      </a>
+    </div>
+  </div>
+</div>
+`;

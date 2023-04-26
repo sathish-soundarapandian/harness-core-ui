@@ -16,6 +16,7 @@ export interface TriggerProps<T> {
   type?: TriggerSubType
   triggerData?: NGTriggerResponse
   initialValues: T
+  isSimplifiedYAML?: boolean
 }
 
 export abstract class Trigger<T> {

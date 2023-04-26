@@ -12,7 +12,7 @@ import { Connectors } from '@connectors/constants'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
-import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
+import { IdentifierSchemaWithOutName, NameSchema } from '@common/utils/Validation'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import {
   buildAzureRepoPayload,
@@ -76,6 +76,7 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   AsgScalingPolicy: 'AsgScalingPolicy',
   AsgScheduledUpdateGroupAction: 'AsgScheduledUpdateGroupAction',
   GoogleCloudFunctionDefinition: 'GoogleCloudFunctionDefinition',
+  GoogleCloudFunctionGenOneDefinition: 'GoogleCloudFunctionGenOneDefinition',
   HelmRepoOverride: 'HelmRepoOverride',
   AwsLambdaFunctionDefinition: 'AwsLambdaFunctionDefinition',
   AwsLambdaFunctionAliasDefinition: 'AwsLambdaFunctionAliasDefinition'
@@ -216,6 +217,7 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   AsgScalingPolicy: gitStoreTypesWithHarnessStoreType,
   AsgScheduledUpdateGroupAction: gitStoreTypesWithHarnessStoreType,
   GoogleCloudFunctionDefinition: gitStoreTypesWithHarnessStoreType,
+  GoogleCloudFunctionGenOneDefinition: gitStoreTypesWithHarnessStoreType,
   HelmRepoOverride: [ManifestStoreMap.Http, ManifestStoreMap.OciHelmChart, ManifestStoreMap.S3, ManifestStoreMap.Gcs],
   AwsLambdaFunctionDefinition: [...gitStoreTypes, ManifestStoreMap.Harness],
   AwsLambdaFunctionAliasDefinition: [...gitStoreTypes, ManifestStoreMap.Harness]
@@ -242,6 +244,7 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   AsgScalingPolicy: 'aws-asg',
   AsgScheduledUpdateGroupAction: 'aws-asg',
   GoogleCloudFunctionDefinition: 'service-google-functions',
+  GoogleCloudFunctionGenOneDefinition: 'service-google-functions',
   HelmRepoOverride: 'service-helm',
   AwsLambdaFunctionDefinition: 'service-aws-native-lambda',
   AwsLambdaFunctionAliasDefinition: 'service-aws-native-lambda'
@@ -268,6 +271,7 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   AsgScalingPolicy: 'pipeline.manifestTypeLabels.AsgScalingPolicy',
   AsgScheduledUpdateGroupAction: 'pipeline.manifestTypeLabels.AsgScheduledUpdateGroupAction',
   GoogleCloudFunctionDefinition: 'pipeline.manifestTypeLabels.GoogleCloudFunctionDefinition',
+  GoogleCloudFunctionGenOneDefinition: 'pipeline.manifestTypeLabels.GoogleCloudFunctionDefinitionGenOne',
   HelmRepoOverride: 'pipeline.manifestTypeLabels.HelmRepoOverride',
   AwsLambdaFunctionDefinition: 'pipeline.manifestTypeLabels.AwsLambdaFunctionDefinition',
   AwsLambdaFunctionAliasDefinition: 'pipeline.manifestTypeLabels.AwsLambdaFunctionAliasDefinition'
@@ -306,7 +310,7 @@ export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
   Http: 'pipeline.manifestType.httpHelmRepoConnectorLabel',
   OciHelmChart: 'pipeline.manifestType.ociHelmConnectorLabel',
   S3: 'connectors.S3',
-  Gcs: 'common.artifacts.googleCloudStorage.title',
+  Gcs: 'pipeline.artifacts.googleCloudStorage.title',
   InheritFromManifest: 'pipeline.manifestType.InheritFromManifest',
   Inline: 'inline',
   Harness: 'harness',
@@ -372,7 +376,7 @@ export const ManifestIdentifierValidation = (
     }
   }
   return {
-    identifier: IdentifierSchemaWithOutName(getString)
+    identifier: NameSchema(getString, { requiredErrorMsg })
   }
 }
 
@@ -430,6 +434,7 @@ export function getManifestLocation(manifestType: ManifestTypes, manifestStore: 
       ManifestDataType.TasAutoScaler,
       ManifestDataType.TasVars,
       ManifestDataType.GoogleCloudFunctionDefinition,
+      ManifestDataType.GoogleCloudFunctionGenOneDefinition,
       ManifestDataType.AwsLambdaFunctionDefinition,
       ManifestDataType.AwsLambdaFunctionAliasDefinition
     ].includes(manifestType):

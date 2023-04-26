@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, fireEvent, waitFor, getByText, screen } from '@testing-library/react'
 import mockImport from 'framework/utils/mockImport'
+import type { PageEnvironmentResponse } from 'services/cd-ng'
 import mockEnvironments from '@cd/components/PipelineSteps/DeployEnvStep/__tests__/mock.json'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -36,7 +37,11 @@ describe('EnvironmentsGrid', () => {
   test('renders Environment Grid', () => {
     const { container } = render(
       <TestWrapper>
-        <EnvironmentsGrid response={mockEnvironments.data} refetch={jest.fn()} />
+        <EnvironmentsGrid
+          response={mockEnvironments.data as PageEnvironmentResponse}
+          refetch={jest.fn()}
+          isForceDeleteEnabled
+        />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -50,7 +55,11 @@ describe('EnvironmentCardGrid', () => {
         path={routes.toEnvironment({ ...projectPathProps, ...modulePathProps })}
         pathParams={{ accountId: 'dummy', module: 'cd', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentsGrid response={mockEnvironments.data} refetch={jest.fn()} />
+        <EnvironmentsGrid
+          response={mockEnvironments.data as PageEnvironmentResponse}
+          refetch={jest.fn()}
+          isForceDeleteEnabled
+        />
       </TestWrapper>
     )
 
@@ -69,7 +78,11 @@ describe('EnvironmentCardGrid', () => {
         path={routes.toEnvironment({ ...projectPathProps, ...modulePathProps })}
         pathParams={{ accountId: 'dummy', module: 'cd', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentsGrid response={mockEnvironments.data} refetch={jest.fn()} />
+        <EnvironmentsGrid
+          response={mockEnvironments.data as PageEnvironmentResponse}
+          refetch={jest.fn()}
+          isForceDeleteEnabled
+        />
       </TestWrapper>
     )
 
@@ -96,7 +109,11 @@ describe('EnvironmentCardGrid', () => {
         path={routes.toEnvironment({ ...projectPathProps, ...modulePathProps })}
         pathParams={{ accountId: 'dummy', module: 'cd', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentsGrid response={mockEnvironments.data} refetch={jest.fn()} />
+        <EnvironmentsGrid
+          response={mockEnvironments.data as PageEnvironmentResponse}
+          refetch={jest.fn()}
+          isForceDeleteEnabled
+        />
       </TestWrapper>
     )
 

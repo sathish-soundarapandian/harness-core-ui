@@ -31,7 +31,6 @@ clusterType: Cluster Type
 sampleMessage: Sample Message
 sampleEvent: Sample Event
 messageFrequency: Message Frequency
-trend: Trend
 known: Known
 unexpected: Unexpected
 knownEvents: Known events
@@ -1003,6 +1002,9 @@ CompositeSLO:
   PeriodChangeWarning:
     title: Review Period Type Change
     message: Updating period type will reset selected SLOs, Do you want to continue ?
+  EvaluationTypeChangeWarning:
+    title: Review Evaluation Type Change
+    message: Updating Evaluation type will reset selected SLOs, Do you want to continue ?
   MatchingSLO: SLOs matching the time window.
   NoSloFound: There are no SLOs available for selected filter
   compositeSloCreated: Composite SLO created successfully
@@ -1070,6 +1072,7 @@ sloGraphUserHint: To view anomalies, metrics and logs for a specific time window
 sloRecalculationInProgress: SLO recalculation in progress
 errorBudgetRecalculationInProgress: Error Budget recalculation in progress
 sloAnalysisTakingLong: The SLO analysis is taking too long. Please check the execution logs and third party API call logs.
+errorBudgetIncrease: Error budget increased by {{ minutes }} minutes
 errorBudgetRemaining: Error Budget Remaining
 errorBudgetRemainingWithMins: Error Budget Remaining (mins)
 errorBudgetRemainingWithRequest: Error Budget Remaining (requests)
@@ -1217,6 +1220,17 @@ logs:
   feedbackAppliedMessage: Feedback has been applied to the log that ran in this deployment.
   feedbackUpdatedMessage: Updated event priority feedback will be applied in the next deployment run.
   reasonPlaceholder: Enter the reason for updating the event priority
+  jiraFormLable:
+    priority: Priority
+    ticketSummary: Ticket Summary
+    assignee: Assignee
+  jiraDetails:
+    viewInJira: View in JIRA
+    createTicket: Create ticket
+    viewTicket: View ticket
+  jiraFormValidation:
+    issueType: Issue type is required
+    ticketSummary: Ticket summary is required
   eventPriorityValues:
     notARiskIgnore: Not a risk - Ignore frequency
     notARiskConsider: Not a risk - Consider frequency

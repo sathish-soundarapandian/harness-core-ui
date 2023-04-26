@@ -102,3 +102,11 @@
   border-radius: 3px;
   padding: var(--spacing-4) !important;
 }
+
+.secretSelector {
+  :global {
+    .bp3-form-group {
+      flex-grow: 0;
+    }
+  }
+}

@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, ExpandingSearchInput } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  ExpandingSearchInput,
+  ListHeader,
+  sortByCreated,
+  sortByName,
+  SortMethod
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useParams, useHistory } from 'react-router-dom'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
@@ -25,8 +33,6 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getErrorMessage } from '@triggers/components/Triggers/utils'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
-import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'

@@ -120,6 +120,7 @@ approvalStep:
   approversWithColon: '{{$.pipeline.approvalStep.approvers}}:'
   approverInputs: 'Inputs to be provided by approver'
   includeStageExecutionDetails: 'Include stage execution details in approval'
+  isAutoRejectEnabled: 'Auto-Reject previous deployments paused in this step on approval'
   addUserGroups: Enter User Group
   fetchingUserGroups: Select User Group
   fetchUserGroupsFailed: Failed to fetch User Groups
@@ -228,6 +229,7 @@ jiraApprovalStep:
 jiraCreateStep:
   fields: Jira Fields
   summaryPlaceholder: Enter a Title or Summary
+  descriptionPlaceholder: Add description to the ticket
   addFields: Add Jira Fields
   selectFieldsHeading: Select fields you would like to add.
   fieldSelectorAdd: '+ Fields'
@@ -476,6 +478,7 @@ manifestTypeLabels:
   VarsYAML: TAS Vars
   Autoscaler: TAS AutoScaler
   GoogleCloudFunctionDefinition: Google Cloud Function Definition
+  GoogleCloudFunctionDefinitionGenOne: Google Cloud Function Definition Gen One
   HelmRepoOverride: Helm Repo Override
   AwsLambdaFunctionDefinition: AWS Lambda Function Definition
   AwsLambdaFunctionAliasDefinition: AWS Lambda Function Alias Definition
@@ -584,6 +587,7 @@ execution:
   elapsedTime: 'Elapsed time'
   stagesExecuted: Stages executed (most recent first)
   upcomingStagesPrefix: 'Upcoming stages: '
+  rollbackStages: Rollback Stages
   stepTitlePrefix: 'Step: '
   stepGroupTitlePrefix: 'Step Group: '
   stageTitlePrefix: 'Stage: '
@@ -629,7 +633,7 @@ execution:
     float: Floating window
     minimize: Minimize window
   dialogMessages:
-    abortExecution: Are you sure you want to abort the execution?
+    abortExecution: 'Warning: Abort command will not clean up any resources created during execution so far. Please mark the stage as failed if you would like to clean up and revert back to the old state.'
     abortTitle: Abort Execution?
     markAsFailedTitle: Mark stage as failed?
     markAsFailedConfirmation: Are you sure you want to mark this stage as failed? Doing so will mark the stage as failed and trigger the respective failure strategy.
@@ -1039,6 +1043,8 @@ artifactsSelection:
   errors:
     noRepositories: No repositories found with given connector
     nodigest: No Digests found with given tag
+    noGroupIds: No GroupIds Found
+    noArtifactIds: No ArtifactIds Found
 overrideSets:
   createOverrideSet: Create Override Set
   overrideSetPlaceholder: Enter Override Set Name
@@ -1109,6 +1115,9 @@ verification:
     eventCountPerMin: Event count per minute
     eventDetails: Event Details
     updateEventPreference: Update event preference
+    createJiraTicket: Create Jira ticket
+    viewJiraTicket: View Jira ticket
+    jiraTicketTitle: Jira ticket
     eventPreference: Event Preference
     lastKnownOccurrence: Last Known Occurrence
     firstOccurrence: First Occurrence
@@ -1470,6 +1479,7 @@ stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
 stageDataDeleteWarningText: Changing deployment type will delete existing stage data like artifacts, manifests, infrastructure details, steps etc. Do you still want to proceed?
 serviceDataDeleteWarningText: Changing deployment type will delete existing service data like artifacts, manifests etc. Do you still want to proceed?
+envTypeChangeServiceDataDeleteWarningText: Changing environment type will delete existing service data like artifacts, manifests etc. Do you still want to proceed?
 errorFramework:
   pipelineErrorsTitle: 'Pipeline cannot be saved because {{fields}} further configuration.'
   fixErrors: Fix Errors
@@ -1763,6 +1773,20 @@ frozenExecPopover:
   viewFreezeWindows: View associated freeze windows
 notGenerated: Not Generated
 notAvailable: Not Available
+artifacts:
+  googleCloudStorage:
+    title: Google Cloud Storage
+    bucketPlaceholder: Enter Bucket
+  googleCloudSourceRepositories:
+    title: Google Cloud Source
+    cloudSourceRepository: Cloud Source Repository
+    cloudSourceRepositoryPlaceholder: Select Cloud Source Repository
+    sourceDirectory: Source Directory
+    sourceDirectoryPlaceholder: Enter Source Directory
+    commitId: Commit Id
+    commitIdPlaceholder: Enter Commit Id
+    tagPlaceholder: Enter Tag
+    fetchType: Fetch Type
 templateAlreadyExists:
   title: Template Already Exists
   content: The template with given identifier already exists, if you want to create a new version of this template then use save as new version option from the given template or if you want to create a new Template then use a different identifier.

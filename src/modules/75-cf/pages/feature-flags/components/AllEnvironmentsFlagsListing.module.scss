@@ -21,11 +21,19 @@
   &.nonProd {
     background-color: var(--teal-50);
   }
+  :last-child {
+    margin-right: var(--spacing-small) !important;
+  }
+}
+
+.environmentCard {
+  padding: var(--spacing-small) !important;
+  box-shadow: var(--elevation-0) !important;
+  height: 100%;
 }
 
 .flagEnvironmentStatus {
-  border-radius: var(--spacing-small);
-  width: 60px;
+  width: 100px !important;
   > .enabled {
     background-color: var(--green-50);
     border-radius: var(--spacing-xsmall);

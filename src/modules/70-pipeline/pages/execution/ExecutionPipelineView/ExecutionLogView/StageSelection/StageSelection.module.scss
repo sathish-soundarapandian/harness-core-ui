@@ -71,6 +71,10 @@
     }
   }
 
+  & .pipelineRollback {
+    border-left: 7px solid var(--orange-700);
+  }
+
   .icon {
     margin-right: var(--spacing-3);
   }

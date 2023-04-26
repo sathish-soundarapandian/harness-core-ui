@@ -58,6 +58,7 @@ import {
 import type { ArtifactSourceConfigFormData } from '@cd/components/TemplateStudio/ArtifactSourceTemplateCanvas/types'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { getConnectorListVersionQueryParam } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import css from './ArtifactSourceConfigForm.module.scss'
 
 const ALLOWABLE_TYPES = [
@@ -72,8 +73,7 @@ interface ArtifactSourceConnectorProps {
   allowableTypes: AllowedTypes
   formik: FormikContextType<any>
   connectorType: ConnectorInfoDTO['type']
-  selectedConnectorLabel: string
-  selectedConnectorTooltip: ConnectorInfoDTO['type']
+  selectedArtifactType: ArtifactType
 }
 
 type Params = {
@@ -111,15 +111,10 @@ const getEnabledArtifactTypesList = ({
 }
 
 function ArtifactSourceConnector(props: ArtifactSourceConnectorProps) {
-  const {
-    expressions,
-    isReadonly,
-    allowableTypes,
-    formik,
-    connectorType,
-    selectedConnectorLabel,
-    selectedConnectorTooltip
-  } = props
+  const { expressions, isReadonly, allowableTypes, formik, connectorType, selectedArtifactType } = props
+
+  const selectedConnectorLabel = ArtifactConnectorLabelMap[selectedArtifactType]
+  const selectedConnectorTooltip = ArtifactToConnectorMap[selectedArtifactType]
 
   const { accountId } = useParams<ProjectPathProps>()
   const {
@@ -139,6 +134,8 @@ function ArtifactSourceConnector(props: ArtifactSourceConnectorProps) {
     },
     permissions: [PermissionIdentifier.UPDATE_CONNECTOR]
   })
+
+  const connectorVersionQueryParamProp = getConnectorListVersionQueryParam(selectedArtifactType) || {}
 
   if (!connectorType) {
     return null
@@ -172,6 +169,7 @@ function ArtifactSourceConnector(props: ArtifactSourceConnectorProps) {
           enableConfigureOptions={false}
           selected={formik?.values?.connectorId}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          {...connectorVersionQueryParamProp}
         />
         {getMultiTypeFromValue(formik.values.connectorId) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -334,8 +332,7 @@ export function ArtifactSourceSpecifications(props: {
                   expressions={expressions}
                   isReadonly={isReadonly}
                   connectorType={artifactConnectorType}
-                  selectedConnectorLabel={ArtifactConnectorLabelMap[selectedArtifactType]}
-                  selectedConnectorTooltip={ArtifactToConnectorMap[selectedArtifactType]}
+                  selectedArtifactType={selectedArtifactType}
                   allowableTypes={ALLOWABLE_TYPES}
                   formik={formik}
                 />

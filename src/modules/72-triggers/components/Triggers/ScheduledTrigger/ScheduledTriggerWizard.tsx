@@ -69,6 +69,7 @@ import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/util
 import TabWizard from '@triggers/components/TabWizard/TabWizard'
 
 import {
+  CronFormat,
   getBreakdownValues,
   getDefaultExpressionBreakdownValues,
   resetScheduleObject,
@@ -76,8 +77,6 @@ import {
 } from '@triggers/components/steps/SchedulePanel/components/utils'
 import { scheduledTypes } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import useTriggerView from '@common/components/Wizard/useTriggerView'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import { flattenKeys, getModifiedTemplateValues } from '../WebhookTrigger/utils'
@@ -113,7 +112,6 @@ export default function ScheduledTriggerWizard(
 
   const history = useHistory()
   const { getString } = useStrings()
-  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const { showSuccess, showError, clear } = useToaster()
 
   const {
@@ -326,6 +324,7 @@ export default function ScheduledTriggerWizard(
       pipeline: newPipeline,
       originalPipeline,
       resolvedPipeline: resolvedMergedPipeline,
+      cronFormat: CronFormat.UNIX,
       pipelineBranchName: isNewGitSyncRemotePipeline ? branch : '',
       ...getDefaultExpressionBreakdownValues(scheduleTabsId.MINUTES)
     }
@@ -480,7 +479,7 @@ export default function ScheduledTriggerWizard(
           inputSetRefs,
           source: {
             spec: {
-              spec: { expression }
+              spec: { expression, type }
             }
           }
         }
@@ -520,6 +519,7 @@ export default function ScheduledTriggerWizard(
         expression,
         pipelineBranchName,
         inputSetRefs,
+        cronFormat: type,
         ...newExpressionBreakdown,
         selectedScheduleTab: scheduleTabsId.CUSTOM // only show CUSTOM on edit
       }
@@ -552,10 +552,12 @@ export default function ScheduledTriggerWizard(
       name,
       identifier,
       description,
+      stagesToExecute,
       tags,
       pipeline: pipelineRuntimeInput,
       triggerType: formikValueTriggerType,
       expression,
+      cronFormat: type,
       pipelineBranchName = ''
     } = val
 
@@ -572,6 +574,7 @@ export default function ScheduledTriggerWizard(
       name,
       identifier,
       enabled: enabledStatus,
+      stagesToExecute,
       description,
       tags,
       orgIdentifier,
@@ -582,7 +585,8 @@ export default function ScheduledTriggerWizard(
         spec: {
           type: scheduledTypes.CRON,
           spec: {
-            expression
+            expression,
+            type
           }
         }
       },
@@ -707,8 +711,7 @@ export default function ScheduledTriggerWizard(
                 resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
-                viewTypeMetadata: { isTrigger: true },
-                isOptionalVariableAllowed
+                viewTypeMetadata: { isTrigger: true }
               }) as any) || formErrors
             resolve(validatedErrors)
           } catch (e) {

@@ -35,6 +35,7 @@ export interface PipelineInputSetFormV1Props {
   connectorRef?: string
   repoIdentifier?: string
   formik: any
+  path?: string
 }
 
 export function PipelineInputSetFormV1Internal(props: PipelineInputSetFormV1Props): React.ReactElement {
@@ -49,7 +50,8 @@ export function PipelineInputSetFormV1Internal(props: PipelineInputSetFormV1Prop
     connectorRef,
     repoIdentifier,
     inputSets,
-    formik
+    formik,
+    path = ''
   } = props
 
   return (
@@ -65,9 +67,12 @@ export function PipelineInputSetFormV1Internal(props: PipelineInputSetFormV1Prop
           originalPipeline={props.originalPipeline}
           connectorRef={connectorRef}
           repoIdentifier={repoIdentifier}
+          path={path}
         />
       ) : null}
-      {hasRuntimeInputs ? <PipelineInputParametersV1 pipelineInputsMetadata={inputSets} formik={formik} /> : null}
+      {hasRuntimeInputs ? (
+        <PipelineInputParametersV1 pipelineInputsMetadata={inputSets} formik={formik} path={path} />
+      ) : null}
     </Layout.Vertical>
   )
 }

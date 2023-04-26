@@ -113,8 +113,11 @@ const SliderBar: React.FC<SliderBarProps> = ({
         <TextInput
           data-testid="slider-input"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            const val = Math.abs(Number(e.target.value))
+            let val = Math.abs(Number(e.target.value))
             const maxValue = Math.abs(Number(max))
+            if (val === 0) {
+              val = 1
+            }
             return setValue(val > maxValue ? maxValue : val)
           }}
           value={defaultTo(inputValue, value).toString()}

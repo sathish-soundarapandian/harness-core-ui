@@ -10,6 +10,7 @@ import cx from 'classnames'
 import { isEmpty, isNull, isUndefined } from 'lodash-es'
 import { Button, FormInput, Layout, AllowedTypes } from '@harness/uicore'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { FormMultiTypeTextAreaField } from '@common/components'
 import type { ServiceNowFieldNG } from 'services/cd-ng'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { setServiceNowFieldAllowedValuesOptions } from './helper'
@@ -29,6 +30,8 @@ interface MappedComponentInterface {
   expressions: string[]
   index: number
 }
+// TODO: Going forward this should be governed by metadata returned by BE API once it's available
+export const EXPANDABLE_INPUT_SUPPORTED_FIELDS = new Set(['work_notes', 'work_notes_list'])
 
 function GetMappedFieldComponent({ selectedField, props, expressions, index }: MappedComponentInterface) {
   const showTextField = useCallback(() => {
@@ -51,6 +54,8 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
     return selectedField.allowedValues && selectedField.schema?.type === 'option'
   }, [selectedField])
 
+  const showExpandableTextField = () => EXPANDABLE_INPUT_SUPPORTED_FIELDS.has(selectedField.key)
+
   if (showMultiTypeField()) {
     return (
       <FormInput.MultiTypeInput
@@ -61,6 +66,17 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
         disabled={isApprovalStepFieldDisabled(props.readonly)}
         className={cx(css.multiSelect, css.md)}
         multiTypeInputProps={{ allowableTypes: props.allowableTypes, expressions }}
+      />
+    )
+  } else if (showExpandableTextField()) {
+    return (
+      <FormMultiTypeTextAreaField
+        label={selectedField.name}
+        name={`spec.selectedFields[${index}].value`}
+        placeholder={selectedField.name}
+        multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes: props.allowableTypes }}
+        disabled={isApprovalStepFieldDisabled(props.readonly)}
+        className={css.md}
       />
     )
   } else if (showTextField()) {

@@ -47,7 +47,7 @@ const Plans: React.FC<PlansProps> = ({ plans, featureCaption, featureGroup, modu
     <Layout.Vertical className={css.plans} spacing="large">
       <PlansPanel plans={plans} module={module} />
       <FeatureComparison featureCaption={featureCaption} featureGroup={featureGroup} module={module.toLowerCase()} />
-      <a target="_blank" href={`https://next.harness.io/pricing?module=${moduleParam}`} rel="noreferrer">
+      <a target="_blank" href={`https://www.harness.io/pricing?module=${moduleParam}#`} rel="noreferrer">
         <Text
           color={Color.PRIMARY_6}
           rightIcon="main-share"

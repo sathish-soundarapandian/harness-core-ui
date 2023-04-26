@@ -17,7 +17,6 @@ declare const styles: {
   readonly tagsValueSection: string
   readonly valueSection: string
   readonly variableListRow: string
-  readonly variableListRowItem: string
   readonly variablesListTable: string
 }
 export default styles

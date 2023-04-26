@@ -6,7 +6,17 @@
  */
 
 import React from 'react'
-import { ButtonSize, ButtonVariation, ExpandingSearchInput, Layout } from '@harness/uicore'
+import {
+  ButtonSize,
+  ButtonVariation,
+  ExpandingSearchInput,
+  Layout,
+  ListHeader,
+  sortByCreated,
+  sortByEmail,
+  sortByName,
+  SortMethod
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
@@ -23,8 +33,6 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import { RbacQueryParams, useRbacQueryParamOptions } from '@rbac/utils/utils'
-import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByEmail, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 

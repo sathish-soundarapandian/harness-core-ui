@@ -11,6 +11,7 @@ declare const styles: {
   readonly checkboxEditDetails: string
   readonly collapseFeatures: string
   readonly collapseFeaturesPrerequisites: string
+  readonly deleteFlagModalText: string
   readonly editDetailsModalContainer: string
   readonly editFlagModal: string
   readonly flagVariationValue: string

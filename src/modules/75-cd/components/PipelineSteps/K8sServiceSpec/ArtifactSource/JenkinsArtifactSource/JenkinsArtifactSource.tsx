@@ -476,7 +476,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               projectIdentifier={projectIdentifier}
               configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
-              width={391}
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
@@ -636,7 +635,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               multiTypeInputProps={{
                 onTypeChange: (type: MultiTypeInputType) =>
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.artifactPath`, type),
-                width: 400,
                 expressions,
                 allowableTypes,
                 onChange: (newFilePath: any) => {
@@ -682,7 +680,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 },
                 onTypeChange: (type: MultiTypeInputType) =>
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.build`, type),
-                width: 400,
                 expressions,
                 allowableTypes,
                 selectProps: {

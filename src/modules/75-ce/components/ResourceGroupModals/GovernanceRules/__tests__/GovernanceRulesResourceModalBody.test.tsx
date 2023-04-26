@@ -8,8 +8,8 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 
+import { SortMethod } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import { SortMethod } from '@common/utils/sortUtils'
 import { useGetPolicies } from 'services/ce'
 
 import GovernanceRulesResourceModalBody from '../GovernanceRulesResourceModalBody'

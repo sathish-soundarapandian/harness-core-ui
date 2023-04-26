@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Suspense, lazy, useMemo } from 'react'
+import React, { Suspense, lazy, useMemo, useState } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { Container } from '@harness/uicore'
 import { omit } from 'lodash-es'
@@ -14,8 +14,11 @@ import { useStrings } from 'framework/strings'
 import SessionToken from 'framework/utils/SessionToken'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
-import commonRoutes from '@common/RouteDefinitions'
 import { PermissionsRequest, usePermission } from '@rbac/hooks/usePermission'
+import { useCreateToken } from 'services/cd-ng'
+import type { ResponseString } from 'services/cd-ng'
+import { useDeepCompareEffect } from '@common/hooks'
+import commonRoutes from '@common/RouteDefinitions'
 import routes from './RouteDefinitions'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RemoteViewProps = Record<string, any>
@@ -82,7 +85,8 @@ const CODERemoteComponentMounter: React.FC<{
           routes={omit(routes, ['toCODE', 'toCODEHome'])}
           hooks={{
             useGetToken,
-            usePermissionTranslate
+            usePermissionTranslate,
+            useGenerateToken
           }}
           currentUserProfileURL={commonRoutes.toUserProfile({ accountId: params.accountId })}
         >
@@ -91,6 +95,38 @@ const CODERemoteComponentMounter: React.FC<{
       </AppErrorBoundary>
     </Suspense>
   )
+}
+
+function useGenerateToken(hash?: string, parentId?: string, deps?: any[]): ResponseString | undefined {
+  const { params } = useRouteMatch<ProjectPathProps>()
+  const { mutate: createToken } = useCreateToken({
+    queryParams: { accountIdentifier: params.accountId }
+  })
+  const [token, setToken] = useState<ResponseString>()
+  useDeepCompareEffect(() => {
+    if (deps) {
+      const apiKeyName = `codeApiKey_${hash}`
+      const tokenName = `codeToken_${hash}`
+      const apiKeyType = 'USER'
+
+      createToken({
+        accountIdentifier: params.accountId,
+        apiKeyIdentifier: apiKeyName,
+        apiKeyType: apiKeyType,
+        identifier: tokenName,
+        name: tokenName,
+        parentIdentifier: parentId || ''
+      })
+        .then(res => {
+          setToken(res)
+          return res
+        })
+        .catch(err => {
+          setToken(err)
+        })
+    }
+  }, [deps])
+  return token
 }
 
 // return tooltip from here and can be more specific or generic

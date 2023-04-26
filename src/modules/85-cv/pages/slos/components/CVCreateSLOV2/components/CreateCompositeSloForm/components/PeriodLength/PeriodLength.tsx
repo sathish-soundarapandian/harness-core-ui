@@ -14,9 +14,10 @@ import { SloPeriodLength } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/
 interface PeriodInterface {
   periodType?: string
   periodLengthType?: string
+  hasEvaluationType?: boolean
 }
 
-export default function PeriodLength({ periodType, periodLengthType }: PeriodInterface) {
+export default function PeriodLength({ periodType, periodLengthType, hasEvaluationType }: PeriodInterface) {
   const formikProps = useFormikContext<SLOV2Form>()
   useEffect(() => {
     if (periodType === PeriodTypes.ROLLING) {
@@ -36,7 +37,12 @@ export default function PeriodLength({ periodType, periodLengthType }: PeriodInt
 
   return (
     <Container width={200}>
-      <SloPeriodLength periodType={periodType} periodLengthType={periodLengthType} verticalOrientation />
+      <SloPeriodLength
+        periodType={periodType}
+        periodLengthType={periodLengthType}
+        verticalOrientation
+        hasEvaluationType={hasEvaluationType}
+      />
     </Container>
   )
 }

@@ -154,13 +154,12 @@ exports[`Variables Page render page at account level 1`] = `
     data-testid="page-body"
   >
     <div
-      class="Layout--horizontal StyledProps--main listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
+      class="Layout--horizontal StyledProps--main ListHeader--listHeader StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--margin-bottom-small"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
       >
-        total
-        : 
+        Total: 
         3
       </p>
       <div

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { IconName, Views } from '@harness/uicore'
+import { IconName, Views, SortMethod } from '@harness/uicore'
 import { get } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
@@ -18,7 +18,6 @@ import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPagina
 import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
-import { SortMethod } from '@common/utils/sortUtils'
 
 export enum Sort {
   DESC = 'DESC',

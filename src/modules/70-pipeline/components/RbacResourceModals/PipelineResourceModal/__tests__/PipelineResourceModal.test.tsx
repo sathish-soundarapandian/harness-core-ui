@@ -7,10 +7,10 @@
 
 import React from 'react'
 import { render, screen } from '@testing-library/react'
+import { SortMethod } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { pipelines } from '@pipeline/components/PipelineModalListView/__tests__/pipelinelistMocks'
-import { SortMethod } from '@common/utils/sortUtils'
 import PipelineResourceModal from '../PipelineResourceModal'
 
 const props = {

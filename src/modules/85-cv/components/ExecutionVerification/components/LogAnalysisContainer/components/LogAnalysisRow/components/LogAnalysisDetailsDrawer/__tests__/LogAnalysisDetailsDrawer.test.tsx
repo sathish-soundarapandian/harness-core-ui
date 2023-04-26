@@ -26,7 +26,8 @@ describe('Unit tests for LogAnalysisRiskAndJiraModal', () => {
     onHide: jest.fn(),
     ...drawerPropsMockData,
     index: null,
-    onUpdatePreferenceDrawerOpen: () => void 0
+    onUpdatePreferenceDrawerOpen: jest.fn(),
+    onJiraDrawerOpen: () => jest.fn()
   }
   test('Verify if all the fields are rendered correctly inside LogAnalysisRiskAndJiraModal', async () => {
     const { getByText } = render(<WrapperComponent {...initialProps} />)

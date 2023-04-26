@@ -14,6 +14,7 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getVaribaleTypeOptions, VariableType } from './CustomVariableUtils'
 
 const MAX_LENGTH = 128
@@ -50,6 +51,7 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
   const existingNames: string[] = Array.isArray(existingVariables) ? existingVariables.map(v => v?.name || '') : []
   const isEdit = selectedVariable && typeof selectedVariable.index === 'number' && selectedVariable.index > -1
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   // remove current variable name in case of edit
   if (isEdit) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -127,6 +129,7 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
                 name="value"
                 label={getString('valueLabel')}
                 multiTextInputProps={{
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   defaultValueToReset: '',
                   expressions,
                   textProps: {

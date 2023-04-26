@@ -1,0 +1,68 @@
+.jiraDrawer {
+  &CloseBtn:global(.bp3-button.bp3-minimal) {
+    right: 700px !important;
+    z-index: 30 !important;
+  }
+
+  &Heading {
+    align-items: center;
+  }
+}
+
+.addFieldButton {
+  align-self: flex-start;
+  padding-left: 0px !important;
+}
+.fieldArrayInput {
+  width: 50% !important;
+}
+
+.jiraDetails {
+  &Main {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+
+    p {
+      font-size: var(--font-size-normal) !important;
+      margin-bottom: var(--spacing-medium) !important;
+    }
+  }
+
+  &Divider {
+    grid-column: 1 / -1;
+    border: 1px solid var(--grey-100);
+    margin: var(--spacing-xxlarge) 0 !important;
+  }
+}
+
+.jiraDescription textarea {
+  max-height: 500px !important;
+  min-height: 100px !important;
+  resize: vertical;
+}
+
+.spinnerContainer {
+  height: 400px;
+  display: grid;
+  place-items: center;
+}
+
+.messageContainer {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.divider {
+  margin: var(--spacing-huge) 0;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.accordionPanel {
+  padding: 0 !important;
+}
+
+.configAccordion {
+  margin-bottom: var(--spacing-large) !important;
+}

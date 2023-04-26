@@ -168,7 +168,10 @@ steps:
     fieldMaskPlaceholder: Enter Field Mask
     trafficPercent: Traffic Percent
     trafficPercentPlaceholder: Enter Traffic Percent
-
+    envVersionLabel: Google Cloud Function Environment Version
+    envTypes:
+      gen1: '1st gen'
+      gen2: '2nd gen'
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -266,6 +269,7 @@ pipelineSteps:
     viewInfrastructureInputs: View infrastructure inputs
     hideInfrastructureInputs: Hide infrastructure inputs
     multiEnvironmentsParallelDeployLabel: Deploy to Environments or Infrastructures in parallel?
+    multiEnvironmentsParallelDeployClusterLabel: Deploy to Environments or Clusters in parallel?
     environmentGroupDialogTitleText: Deploy to environment group?
     environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group? If you choose to proceed, your existing environments will be lost.
     multiEnvironmentsDialogTitleText: Deploy to multiple environments or infrastructures?
@@ -362,7 +366,6 @@ serviceDashboard:
     infras: Infras
     clusters: '{{$.common.clusters}}'
     instances: '{{$.instanceFieldOptions.instances}}'
-    pipelineExecution: Pipeline Execution
   pod: pod
   function: function
   deployedAt: Deployed At
@@ -397,9 +400,19 @@ serviceDashboard:
   runTime: runTime
   updatedTime: updatedTime
   memorySize: memorySize
+  envGroupTitle: Env Group
+  latestVersion: Latest version
+  driftDetection: Drift Detection!
+  deployedByHotfix: Deployed by Hotfixed pipeline
+  triggeredByRollback: Triggered by Rollback
+  envAndGroup: Environments & Groups
+  bothTypeLabel: 'Prod, Pre-Prod'
+  envGroupsHeader: 'ENV GROUPS'
 noEnvironment:
   title: You have no Environments
   message: Create an environment and let’s start configuring the deployment
+noCluster:
+  title: You have no Clusters
 gitOps: '{{ $.common.gitOps }}'
 addService: Add Service
 noService: You have no Services

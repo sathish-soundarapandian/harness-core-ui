@@ -1903,7 +1903,8 @@ export const getArtifactManifestTriggerYaml = ({
     selectedArtifact,
     stageId,
     pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
-    source
+    source,
+    stagesToExecute
   } = val
 
   const inputSetRefs = get(
@@ -1917,7 +1918,7 @@ export const getArtifactManifestTriggerYaml = ({
 
   replaceRunTimeVariables({ manifestType, artifactType, selectedArtifact })
   let newPipeline = cloneDeep(pipelineRuntimeInput)
-  const newPipelineObj = newPipeline.template ? newPipeline.template.templateInputs : newPipeline
+  const newPipelineObj = newPipeline?.template ? newPipeline?.template?.templateInputs : newPipeline
   const filteredStage = newPipelineObj.stages?.find((item: any) => item.stage?.identifier === stageId)
   if (manifestType) {
     replaceStageManifests({ filteredStage, selectedArtifact })
@@ -1987,7 +1988,7 @@ export const getArtifactManifestTriggerYaml = ({
       )
     )
   }
-
+  const execStages = val?.originalPipeline?.allowStageExecutions ? stagesToExecute : []
   const triggerYaml: NGTriggerConfigV2 = {
     name,
     identifier,
@@ -1997,6 +1998,7 @@ export const getArtifactManifestTriggerYaml = ({
     orgIdentifier,
     projectIdentifier,
     pipelineIdentifier,
+    stagesToExecute: execStages,
     source: {
       type: triggerType as NGTriggerSourceV2['type'],
       spec: {

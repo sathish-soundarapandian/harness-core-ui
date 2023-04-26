@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -41,6 +41,7 @@ export interface LicenseStoreContextProps {
   readonly CHAOS_LICENSE_STATE: LICENSE_STATE_VALUES
   readonly STO_LICENSE_STATE: LICENSE_STATE_VALUES
   readonly CV_LICENSE_STATE: LICENSE_STATE_VALUES
+  readonly CET_LICENSE_STATE: LICENSE_STATE_VALUES
 
   updateLicenseStore(data: Partial<Pick<LicenseStoreContextProps, 'licenseInformation'>>): void
 }
@@ -63,7 +64,8 @@ export const LICENSE_STATE_NAMES: { [T in licenseStateNames]: T } = {
   CD_LICENSE_STATE: 'CD_LICENSE_STATE',
   CHAOS_LICENSE_STATE: 'CHAOS_LICENSE_STATE',
   STO_LICENSE_STATE: 'STO_LICENSE_STATE',
-  CV_LICENSE_STATE: 'CV_LICENSE_STATE'
+  CV_LICENSE_STATE: 'CV_LICENSE_STATE',
+  CET_LICENSE_STATE: 'CET_LICENSE_STATE'
 }
 
 export const LicenseStoreContext = React.createContext<LicenseStoreContextProps>({
@@ -76,6 +78,7 @@ export const LicenseStoreContext = React.createContext<LicenseStoreContextProps>
   CHAOS_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
   STO_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
   CV_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
+  CET_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
   updateLicenseStore: () => void 0
 })
 
@@ -110,7 +113,8 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     CD_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
     CHAOS_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
     STO_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
-    CV_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED
+    CV_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
+    CET_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED
   })
 
   const {
@@ -260,6 +264,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     const ChaosModuleLicenseData = licenses['CHAOS']
     const STOModuleLicenseData = licenses['STO']
     const CVModuleLicenseData = licenses['CV']
+    const CETModuleLicenseData = licenses['CET']
 
     const updatedCILicenseState: LICENSE_STATE_VALUES = getLicenseState(CIModuleLicenseData?.expiryTime)
     const updatedFFLicenseState: LICENSE_STATE_VALUES = getLicenseState(FFModuleLicenseData?.expiryTime)
@@ -268,6 +273,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     const updatedChaosLicenseState: LICENSE_STATE_VALUES = getLicenseState(ChaosModuleLicenseData?.expiryTime)
     const updatedSTOLicenseState: LICENSE_STATE_VALUES = getLicenseState(STOModuleLicenseData?.expiryTime)
     const updatedCVLicenseState: LICENSE_STATE_VALUES = getLicenseState(CVModuleLicenseData?.expiryTime)
+    const updatedCETLicenseState: LICENSE_STATE_VALUES = getLicenseState(CETModuleLicenseData?.expiryTime)
 
     setState(prevState => ({
       ...prevState,
@@ -278,7 +284,8 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       CD_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCDLicenseState,
       CHAOS_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedChaosLicenseState,
       STO_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedSTOLicenseState,
-      CV_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCVLicenseState
+      CV_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCVLicenseState,
+      CET_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCETLicenseState
     }))
 
     if (!getAccountLicensesLoading && !isEmpty(currentUserInfo)) {
@@ -300,6 +307,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
           | 'CHAOS_LICENSE_STATE'
           | 'STO_LICENSE_STATE'
           | 'CV_LICENSE_STATE'
+          | 'CET_LICENSE_STATE'
         >
       >
     ): void => {
@@ -310,6 +318,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       const ChaosModuleLicenseData = updateData.licenseInformation?.['CHAOS']
       const STOModuleLicenseData = updateData.licenseInformation?.['STO']
       const CVModuleLicenseData = updateData.licenseInformation?.['CV']
+      const CETModuleLicenseData = updateData.licenseInformation?.['CET']
 
       setState(prevState => ({
         ...prevState,
@@ -334,7 +343,10 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
           : prevState.STO_LICENSE_STATE,
         CV_LICENSE_STATE: CVModuleLicenseData?.expiryTime
           ? getLicenseState(CVModuleLicenseData.expiryTime)
-          : prevState.CV_LICENSE_STATE
+          : prevState.CV_LICENSE_STATE,
+        CET_LICENSE_STATE: CETModuleLicenseData?.expiryTime
+          ? getLicenseState(CETModuleLicenseData.expiryTime)
+          : prevState.CET_LICENSE_STATE
       }))
     },
     [getLicenseState]
@@ -364,6 +376,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
         CHAOS_LICENSE_STATE: state.CHAOS_LICENSE_STATE,
         STO_LICENSE_STATE: state.STO_LICENSE_STATE,
         CV_LICENSE_STATE: state.CV_LICENSE_STATE,
+        CET_LICENSE_STATE: state.CET_LICENSE_STATE,
         licenseInformation: state.licenseInformation,
         versionMap: state.versionMap,
         updateLicenseStore
@@ -395,6 +408,7 @@ export function handleUpdateLicenseStore(
           | 'CHAOS_LICENSE_STATE'
           | 'STO_LICENSE_STATE'
           | 'CV_LICENSE_STATE'
+          | 'CET_LICENSE_STATE'
         >
       >
     | undefined
@@ -431,6 +445,11 @@ export function handleUpdateLicenseStore(
     }
   } else if (module.toUpperCase() === ModuleName.CV) {
     newLicenseInformation[ModuleName.CV] = data
+    licenseStoreData = {
+      licenseInformation: newLicenseInformation
+    }
+  } else if (module.toUpperCase() === ModuleName.CET) {
+    newLicenseInformation[ModuleName.CET] = data
     licenseStoreData = {
       licenseInformation: newLicenseInformation
     }

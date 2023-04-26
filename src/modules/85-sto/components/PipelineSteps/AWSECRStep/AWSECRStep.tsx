@@ -43,7 +43,7 @@ export class AWSECRStep extends PipelineStep<AWSECRStepData> {
   }
 
   protected type = StepType.AWSECR
-  protected stepName = 'Configure AWSECR'
+  protected stepName = 'Configure AWS ECR Scan'
   protected stepIcon: IconName = 'ecr-step'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.AWSECR'
   protected stepPaletteVisible = false

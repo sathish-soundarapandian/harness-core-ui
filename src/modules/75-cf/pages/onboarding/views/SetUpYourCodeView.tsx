@@ -6,8 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { Layout, RadioButtonGroup, Heading } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Layout, RadioButtonGroup, Heading, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { Divider } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { ApiKey } from 'services/cf'
@@ -35,7 +35,6 @@ export const SetUpYourCodeView: React.FC<SetUpYourCodeViewProps> = ({ language, 
       <Heading level={4} font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xsmall' }}>
         {getString('cf.onboarding.setUpYourCode')}
       </Heading>
-
       {language.name === 'Xamarin' && (
         <RadioButtonGroup
           asPills
@@ -70,6 +69,9 @@ export const SetUpYourCodeView: React.FC<SetUpYourCodeViewProps> = ({ language, 
           flagIdentifier
         }}
       />
+      <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
+        {getString('cf.onboarding.sdkWarning')}
+      </Text>
     </>
   )
 }

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, queryByAttribute, waitFor, findByText as findByTextGlobal } from '@testing-library/react'
+import { render, queryByAttribute, waitFor, findByText as findByTextGlobal, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useToaster } from '@harness/uicore'
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
@@ -14,7 +14,7 @@ import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useClonePipeline } from 'services/pipeline-ng'
 import { useGetProjectAggregateDTOList, useGetOrganizationList } from 'services/cd-ng'
-
+import mockImport from 'framework/utils/mockImport'
 import { ClonePipelineForm, ClonePipelineFormProps } from './ClonePipelineForm'
 
 jest.mock('@harness/uicore', () => ({
@@ -65,6 +65,25 @@ jest.mock('services/cd-ng', () => ({
 jest.mock('services/pipeline-ng', () => ({
   useClonePipeline: jest.fn().mockReturnValue({ mutate: jest.fn() })
 }))
+
+mockImport('@governance/PolicyManagementEvaluationView', {
+  PolicyManagementEvaluationView: () => <p>Evaluation View</p>
+})
+
+const clonePipelineResponseWithPolicyErrors = {
+  status: 'SUCCESS',
+  data: {
+    identifier: null,
+    governanceMetadata: {
+      id: 'id',
+      deny: true,
+      details: [],
+      status: 'error'
+    }
+  },
+  metaData: null,
+  correlationId: 'correlationId'
+}
 
 describe('<ClonePipelineForm /> tests', () => {
   beforeEach(() => {
@@ -186,6 +205,51 @@ describe('<ClonePipelineForm /> tests', () => {
           /account/TEST_ACCOUNT1/cd/orgs/TEST_ORG1/projects/TEST_PROJECT1/pipelines/My_Pipeline_Clone/pipeline-studio/?storeType=INLINE
         </div>
       `)
+    })
+
+    test('renders policy evaluation view if clone API returns policy errors', async () => {
+      const clonePipeline = jest.fn().mockReturnValue(clonePipelineResponseWithPolicyErrors)
+      ;(useClonePipeline as jest.Mock).mockImplementation().mockReturnValue({
+        mutate: clonePipeline
+      })
+      render(
+        <TestWrapper path={TEST_PATH} pathParams={PATH_PARAMS as any}>
+          <ClonePipelineForm originalPipeline={originalPipeline} onClose={jest.fn()} isOpen />
+          <CurrentLocation />
+        </TestWrapper>
+      )
+      const clone = await screen.findByTestId('clone')
+
+      userEvent.click(clone)
+
+      await waitFor(() =>
+        expect(clonePipeline).toHaveBeenLastCalledWith(
+          {
+            cloneConfig: {
+              connectors: false,
+              inputSets: false,
+              templates: false,
+              triggers: false
+            },
+            destinationConfig: {
+              orgIdentifier: 'TEST_ORG1',
+              pipelineIdentifier: 'My_Pipeline_Clone',
+              pipelineName: 'My Pipeline - Clone',
+              projectIdentifier: 'TEST_PROJECT1',
+              description: 'My Pipeline Description',
+              tags: { MyTag1: '', MyTag2: '' }
+            },
+            sourceConfig: {
+              orgIdentifier: 'TEST_ORG1',
+              pipelineIdentifier: 'My_Pipeline',
+              projectIdentifier: 'TEST_PROJECT1'
+            }
+          },
+          { queryParams: { accountIdentifier: 'TEST_ACCOUNT1', storeType: 'INLINE' } }
+        )
+      )
+
+      expect(await screen.findByText('Evaluation View')).toBeInTheDocument()
     })
 
     test('handles errors', async () => {

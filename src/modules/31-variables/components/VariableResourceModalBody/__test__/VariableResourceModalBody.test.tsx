@@ -7,13 +7,13 @@
 
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
+import { SortMethod } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   VariableSuccessResponseWithData,
   VariableSuccessResponseWithNoData
 } from '@variables/pages/variables/__tests__/mock/variableResponse'
 import * as cdngServices from 'services/cd-ng'
-import { SortMethod } from '@common/utils/sortUtils'
 import VariableResourceModalBody from '../VariableResourceModalBody'
 
 const props = {

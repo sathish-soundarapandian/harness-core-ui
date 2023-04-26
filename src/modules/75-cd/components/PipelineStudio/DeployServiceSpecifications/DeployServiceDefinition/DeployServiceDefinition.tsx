@@ -6,11 +6,17 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Layout, useConfirmationDialog } from '@harness/uicore'
+import { Layout, SelectOption, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
-import { debounce, defaultTo, get, isEqual, set } from 'lodash-es'
+import { debounce, defaultTo, get, isEqual, set, unset } from 'lodash-es'
 import produce from 'immer'
-import type { ServiceDefinition, StageElementConfig, TemplateLinkConfig } from 'services/cd-ng'
+import type {
+  GoogleCloudFunctionDeploymentMetaData,
+  GoogleCloudFunctionsServiceSpec,
+  ServiceDefinition,
+  StageElementConfig,
+  TemplateLinkConfig
+} from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -24,6 +30,7 @@ import {
   deleteServiceData,
   doesStageContainOtherData,
   getStepTypeByDeploymentType,
+  GoogleCloudFunctionsEnvType,
   ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
@@ -54,6 +61,7 @@ function DeployServiceDefinition(): React.ReactElement {
     isServiceCreateModalView,
     selectedDeploymentType: defaultDeploymentType,
     gitOpsEnabled: defaultGitOpsValue,
+    deploymentMetadata,
     isDeploymentTypeDisabled
   } = useServiceContext()
 
@@ -88,16 +96,16 @@ function DeployServiceDefinition(): React.ReactElement {
   const [customDeploymentData, setCustomDeploymentData] = useState<TemplateLinkConfig | undefined>(
     customDeploymentDataFromYaml
   )
+
   const shouldDeleteServiceData = useRef(false)
-
-  useDeepCompareEffect(() => {
-    setCustomDeploymentData(customDeploymentDataFromYaml)
-  }, [customDeploymentDataFromYaml])
-
   const selectedDeploymentTemplateRef = useRef<TemplateSummaryResponse | undefined>()
   const fromTemplateSelectorRef = useRef(false)
 
   const disabledState = isDeploymentTypeDisabled || isReadonly
+
+  useDeepCompareEffect(() => {
+    setCustomDeploymentData(customDeploymentDataFromYaml)
+  }, [customDeploymentDataFromYaml])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
@@ -140,6 +148,7 @@ function DeployServiceDefinition(): React.ReactElement {
     )
     setGitOpsEnabled(false)
   }
+
   const { openDialog: openServiceDataDeleteWarningDialog } = useConfirmationDialog({
     ...serviceDataDialogProps,
     onCloseDialog: async isConfirmed => {
@@ -172,6 +181,20 @@ function DeployServiceDefinition(): React.ReactElement {
     }
   })
 
+  const { openDialog: openEnvTypeChangeManifestDataDeleteWarningDialog } = useConfirmationDialog({
+    cancelButtonText: getString('cancel'),
+    contentText: getString('pipeline.envTypeChangeServiceDataDeleteWarningText'),
+    titleText: getString('pipeline.serviceDataDeleteWarningTitle'),
+    confirmButtonText: getString('confirm'),
+    intent: Intent.WARNING,
+    onCloseDialog: async isConfirmed => {
+      if (isConfirmed) {
+        deleteServiceData(currStageData)
+        await debounceUpdateStage(currStageData)
+      }
+    }
+  })
+
   const handleGitOpsCheckChanged = (ev: React.FormEvent<HTMLInputElement>): void => {
     const checked = ev.currentTarget.checked
     if (doesStageContainOtherData(stage?.stage)) {
@@ -179,6 +202,30 @@ function DeployServiceDefinition(): React.ReactElement {
     } else {
       setGitOpsEnabled(checked)
       debounceUpdatePipeline({ ...pipeline, gitOpsEnabled: checked } as ServicePipelineConfig)
+    }
+  }
+
+  const handleGCFEnvTypeChange = (selectedEnv: SelectOption): void => {
+    if (
+      selectedEnv.value !==
+      ((stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec as GoogleCloudFunctionsServiceSpec)
+        ?.environmentType as GoogleCloudFunctionsEnvType)
+    ) {
+      const stageData = produce(stage, draft => {
+        const serviceDefinitionSpec = get(
+          draft,
+          'stage.spec.serviceConfig.serviceDefinition.spec',
+          {}
+        ) as GoogleCloudFunctionsServiceSpec
+        serviceDefinitionSpec.environmentType = selectedEnv.value as string
+      })
+
+      if (doesStageContainOtherData(stageData?.stage)) {
+        setCurrStageData(stageData?.stage)
+        openEnvTypeChangeManifestDataDeleteWarningDialog()
+      } else {
+        updateStage(stageData?.stage as StageElementConfig)
+      }
     }
   }
 
@@ -239,6 +286,12 @@ function DeployServiceDefinition(): React.ReactElement {
       const stageData = produce(stage, draft => {
         const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
         serviceDefinition.type = deploymentType
+        if (deploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
+          const serviceDefinitionSpec = get(draft, 'stage.spec.serviceConfig.serviceDefinition.spec', {})
+          serviceDefinitionSpec.environmentType = GoogleCloudFunctionsEnvType.GenTwo
+        } else {
+          unset(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.environmentType')
+        }
       })
       if (doesStageContainOtherData(stageData?.stage)) {
         setCurrStageData(stageData?.stage)
@@ -249,7 +302,6 @@ function DeployServiceDefinition(): React.ReactElement {
         if (gitOpsEnabled) {
           await updateDeploymentTypeWithGitops(deploymentType)
         }
-
         if (deploymentType === ServiceDeploymentType.CustomDeployment) {
           shouldDeleteServiceData.current = false
           onCustomDeploymentSelection()
@@ -291,6 +343,13 @@ function DeployServiceDefinition(): React.ReactElement {
         handleGitOpsCheckChanged={handleGitOpsCheckChanged}
         templateLinkConfig={customDeploymentData}
         addOrUpdateTemplate={isServiceEntityModalView ? undefined : addOrUpdateTemplate}
+        shouldShowGCFEnvTypeDropdown={true}
+        googleCloudFunctionEnvType={defaultTo(
+          (stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec as GoogleCloudFunctionsServiceSpec)
+            ?.environmentType as GoogleCloudFunctionsEnvType,
+          (deploymentMetadata as GoogleCloudFunctionDeploymentMetaData)?.environmentType as GoogleCloudFunctionsEnvType
+        )}
+        handleGCFEnvTypeChange={handleGCFEnvTypeChange}
       />
       {!!selectedDeploymentType && (
         <Layout.Horizontal>

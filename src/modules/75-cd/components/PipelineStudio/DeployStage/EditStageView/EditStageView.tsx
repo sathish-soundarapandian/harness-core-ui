@@ -16,6 +16,7 @@ import {
   FormikForm,
   FormInput,
   HarnessDocTooltip,
+  SelectOption,
   Text,
   useConfirmationDialog
 } from '@harness/uicore'
@@ -23,7 +24,7 @@ import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/Thumb
 import { Color, Intent } from '@harness/design-system'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { get, isEmpty, omit, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, omit, set, unset } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import produce from 'immer'
 import { useStrings } from 'framework/strings'
@@ -48,7 +49,12 @@ import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpec
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import type { StringNGVariable, TemplateLinkConfig } from 'services/cd-ng'
+import type {
+  GoogleCloudFunctionDeploymentMetaData,
+  StageElementConfig,
+  StringNGVariable,
+  TemplateLinkConfig
+} from 'services/cd-ng'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import {
   createTemplate,
@@ -57,11 +63,17 @@ import {
 } from '@pipeline/utils/templateUtils'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
-import { deleteStageInfo, hasStageData, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  deleteStageInfo,
+  GoogleCloudFunctionsEnvType,
+  hasStageData,
+  ServiceDeploymentType
+} from '@pipeline/utils/stageHelpers'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { errorCheck } from '@common/utils/formikHelpers'
 import type { TemplateSummaryResponse } from 'services/template-ng'
+import { getGoogleCloudFunctionsEnvOptions } from '@cd/components/PipelineSteps/GoogleCloudFunction/utils/utils'
 import SelectDeploymentType from '../../DeployServiceSpecifications/SelectDeploymentType'
 import type { EditStageFormikType, EditStageViewProps } from '../EditStageViewInterface'
 import css from './EditStageView.module.scss'
@@ -129,19 +141,30 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   const getLinkedDeploymentTemplateConfig = () => {
     return get(data, 'stage.spec.customDeploymentRef')
   }
+
+  const [currStageData, setCurrStageData] = useState<DeploymentStageElementConfig | undefined>()
   const [selectedDeploymentType, setSelectedDeploymentType] = useState<ServiceDeploymentType | undefined>(
     getDeploymentType()
   )
-
+  const [googleCloudFunctionEnvType, setGoogleCloudFunctionEnvType] = useState<GoogleCloudFunctionsEnvType | undefined>(
+    data?.stage?.spec?.deploymentMetadata?.environmentType
+  )
   const [linkedDeploymentTemplateConfig, setLinkedDeploymentTemplateConfig] = useState<TemplateLinkConfig | undefined>(
     getLinkedDeploymentTemplateConfig()
   )
+
   const selectedDeploymentTemplateRef = useRef<TemplateSummaryResponse | undefined>()
   const fromTemplateSelectorRef = useRef(false)
+  const { getTemplate } = useTemplateSelector()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-
-  const { getTemplate } = useTemplateSelector()
+  const googleCloudFunctionEnvTypeOptions = getGoogleCloudFunctionsEnvOptions(getString)
+  const selectedGCFEnvTypeOption = googleCloudFunctionEnvTypeOptions.find(
+    currEnvOption => currEnvOption.value === googleCloudFunctionEnvType
+  )
+  const gcfGen2EnvTypeOption = googleCloudFunctionEnvTypeOptions.find(
+    currEnvOption => currEnvOption.value === GoogleCloudFunctionsEnvType.GenTwo
+  )
 
   const onUseDeploymentTemplate = (deploymentTemplate: TemplateSummaryResponse): void => {
     setSelectedDeploymentType(ServiceDeploymentType.CustomDeployment)
@@ -234,6 +257,11 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
         if (values.gitOpsEnabled) {
           set(data, 'stage.spec.gitOpsEnabled', values.gitOpsEnabled)
         }
+        if (values.deploymentType === ServiceDeploymentType.GoogleCloudFunctions && values.environmentType) {
+          set(data, 'stage.spec.deploymentMetadata.environmentType', values.environmentType)
+        } else {
+          unset(data, 'stage.spec.deploymentMetadata')
+        }
         onSubmit?.(data, values.identifier)
       }
     }
@@ -252,6 +280,9 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
           getDeploymentTemplate()
         } else {
           setSelectedDeploymentType(newDeploymentType)
+          if (newDeploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
+            setGoogleCloudFunctionEnvType(GoogleCloudFunctionsEnvType.GenTwo)
+          }
           updateDeploymentType && updateDeploymentType(newDeploymentType, true)
         }
       } else {
@@ -265,6 +296,12 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
 
     formikRef.current?.setFieldValue('deploymentType', deploymentType)
 
+    if (deploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
+      formikRef.current?.setFieldValue('environmentType', gcfGen2EnvTypeOption?.value)
+    } else {
+      formikRef.current?.setFieldValue('environmentType', undefined)
+    }
+
     if (hasStageData(data?.stage)) {
       openStageDataDeleteWarningDialog()
     } else {
@@ -273,7 +310,55 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
       } else {
         setLinkedDeploymentTemplateConfig(undefined)
         setSelectedDeploymentType(deploymentType)
+        if (deploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
+          setGoogleCloudFunctionEnvType(GoogleCloudFunctionsEnvType.GenTwo)
+        }
         updateDeploymentType && updateDeploymentType(deploymentType)
+      }
+    }
+  }
+
+  const { openDialog: openEnvTypeChangeManifestDataDeleteWarningDialog } = useConfirmationDialog({
+    cancelButtonText: getString('cancel'),
+    contentText: getString('pipeline.envTypeChangeServiceDataDeleteWarningText'),
+    titleText: getString('pipeline.serviceDataDeleteWarningTitle'),
+    confirmButtonText: getString('confirm'),
+    intent: Intent.WARNING,
+    onCloseDialog: async isConfirmed => {
+      if (isConfirmed) {
+        const newEnvType = (currStageData?.spec?.deploymentMetadata as GoogleCloudFunctionDeploymentMetaData)
+          .environmentType as GoogleCloudFunctionsEnvType
+        deleteStageInfo(currStageData)
+        formikRef.current?.setFieldValue(
+          'environmentType',
+          (currStageData?.spec?.deploymentMetadata as GoogleCloudFunctionDeploymentMetaData).environmentType
+        )
+        setGoogleCloudFunctionEnvType(newEnvType)
+        await updateStage(currStageData as StageElementConfig)
+      }
+    }
+  })
+
+  const handleGCFEnvTypeChange = (selectedEnv: SelectOption): void => {
+    if (selectedEnv.value !== (selectedGCFEnvTypeOption?.value as GoogleCloudFunctionsEnvType)) {
+      const stageData = produce(stage, draft => {
+        const deploymentMetadata = get(
+          draft,
+          'stage.spec.deploymentMetadata',
+          {}
+        ) as GoogleCloudFunctionDeploymentMetaData
+        deploymentMetadata.environmentType = selectedEnv.value as string
+      })
+
+      // Checking stage data after assuming that it is serviceV2
+      // because GoogleCloudFunctions swimlane only appears when serviceV2 FF is ON
+      if (hasStageData(stageData?.stage)) {
+        setCurrStageData(stageData?.stage)
+        openEnvTypeChangeManifestDataDeleteWarningDialog()
+      } else {
+        formikRef.current?.setFieldValue('environmentType', selectedEnv.value)
+        setGoogleCloudFunctionEnvType(selectedEnv.value as GoogleCloudFunctionsEnvType)
+        updateStage(stageData?.stage as StageElementConfig)
       }
     }
   }
@@ -331,7 +416,11 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
               tags: data?.stage?.tags || {},
               serviceType: newStageData[0].value,
               deploymentType: selectedDeploymentType,
-              gitOpsEnabled: data?.stage?.spec?.gitOpsEnabled
+              gitOpsEnabled: data?.stage?.spec?.gitOpsEnabled,
+              environmentType:
+                selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions
+                  ? (defaultTo(selectedGCFEnvTypeOption?.value, gcfGen2EnvTypeOption?.value) as string)
+                  : undefined
             }}
             formName="cdEditStage"
             onSubmit={handleSubmit}
@@ -439,6 +528,17 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                           name="gitOpsEnabled"
                           label={getString('common.gitOps')}
                           className={css.gitOpsCheck}
+                        />
+                      )}
+                      {selectedDeploymentType === ServiceDeploymentType['GoogleCloudFunctions'] && (
+                        <FormInput.Select
+                          className={css.googleCloudFunctionsEnvType}
+                          name="environmentType"
+                          label={getString('cd.steps.googleCloudFunctionCommon.envVersionLabel')}
+                          items={googleCloudFunctionEnvTypeOptions}
+                          disabled={isReadonly}
+                          value={selectedGCFEnvTypeOption}
+                          onChange={handleGCFEnvTypeChange}
                         />
                       )}
                     </>

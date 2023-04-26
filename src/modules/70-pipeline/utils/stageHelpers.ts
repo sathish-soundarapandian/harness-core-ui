@@ -48,7 +48,8 @@ export enum StageType {
   MATRIX = 'MATRIX',
   LOOP = 'LOOP',
   PARALLELISM = 'PARALLELISM',
-  IACM = 'IACM'
+  IACM = 'IACM',
+  PIPELINE_ROLLBACK = 'PipelineRollback'
 }
 
 export enum ServiceDeploymentType {
@@ -86,6 +87,8 @@ export enum RepositoryFormatTypes {
   NuGet = 'nuget',
   Raw = 'raw'
 }
+
+export const stageGroupTypes = [StageType.PIPELINE, StageType.PIPELINE_ROLLBACK]
 
 const commonRepoFormatTypes = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },
@@ -413,6 +416,15 @@ export const isAzureWebAppOrSshWinrmGenericDeploymentType = (
   return false
 }
 
+export const isSshWinRmGenericDeploymentType = (deploymentType: string, repo: string | undefined): boolean => {
+  if (isSSHWinRMDeploymentType(deploymentType)) {
+    // default repository format should be Generic if none is previously selected
+    return repo ? repo === RepositoryFormatTypes.Generic : true
+  }
+
+  return false
+}
+
 export const isTASDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.TAS
 }
@@ -625,7 +637,7 @@ export const isExecutionFieldPresent = (stage: DeploymentStageElementConfig): bo
 }
 
 export const isServiceDefinitionSpecDataPresent = (stage: DeploymentStageElementConfig): boolean => {
-  return !isEmpty(omit(stage.spec?.serviceConfig?.serviceDefinition?.spec, 'variables'))
+  return !isEmpty(omit(stage.spec?.serviceConfig?.serviceDefinition?.spec, 'variables', 'environmentType'))
 }
 
 export const doesStageContainOtherData = (stage?: DeploymentStageElementConfig): boolean => {
@@ -666,7 +678,7 @@ export const deleteServiceData = (stage?: DeploymentStageElementConfig): void =>
     set(
       stage,
       'spec.serviceConfig.serviceDefinition.spec',
-      pick(get(stage, 'spec.serviceConfig.serviceDefinition.spec'), ['variables'])
+      pick(get(stage, 'spec.serviceConfig.serviceDefinition.spec'), ['variables', 'environmentType'])
     )
   }
 }
@@ -831,4 +843,9 @@ export const PriorityByStageStatus: Record<ExecutionStatus, number> = {
   WaitStepRunning: 2,
   QueuedLicenseLimitReached: 0,
   QueuedExecutionConcurrencyReached: 0
+}
+
+export enum GoogleCloudFunctionsEnvType {
+  GenOne = 'GenOne',
+  GenTwo = 'GenTwo'
 }

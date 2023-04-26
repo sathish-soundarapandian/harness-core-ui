@@ -54,28 +54,28 @@ enum ModuleType {
 enum Status {
   ACTIVE = 'ACTIVE'
 }
+export const licenseData = {
+  id: '622596d705bb66724f02cf12',
+  accountIdentifier: 'zEaak-FLS425IEO7OLzMUg',
+  moduleType: ModuleType.CD,
+  edition: Edition.ENTERPRISE,
+  licenseType: LicenseType.PAID,
+  status: Status.ACTIVE,
+  startTime: 1633977619398,
+  expiryTime: 1766494425000,
+  premiumSupport: false,
+  selfService: false,
+  createdAt: 1646630615316,
+  lastModifiedAt: 1646630615316,
+  cdLicenseType: 'SERVICES',
+  workloads: 100
+}
 
 describe('CDUsageInfo', () => {
   test('CDUsageInfo', () => {
-    const data = {
-      id: '622596d705bb66724f02cf12',
-      accountIdentifier: 'zEaak-FLS425IEO7OLzMUg',
-      moduleType: ModuleType.CD,
-      edition: Edition.ENTERPRISE,
-      licenseType: LicenseType.PAID,
-      status: Status.ACTIVE,
-      startTime: 1633977619398,
-      expiryTime: 1766494425000,
-      premiumSupport: false,
-      selfService: false,
-      createdAt: 1646630615316,
-      lastModifiedAt: 1646630615316,
-      cdLicenseType: 'SERVICES',
-      workloads: 100
-    }
     const { container } = render(
       <TestWrapper>
-        <CDUsageInfo licenseData={data} module={ModuleName.CD} />
+        <CDUsageInfo licenseData={licenseData} module={ModuleName.CD} />
       </TestWrapper>
     )
 

@@ -130,7 +130,7 @@ export default function MetricsDashboardList<T>(props: MetricsDashboardListProps
   return (
     <SetupSourceLayout
       content={
-        <Container className={css.main}>
+        <Container margin={{ top: 'medium' }} className={css.main}>
           {isNoData(loading, error, dashboardItems) ? (
             <NoDataCard
               icon="warning-sign"

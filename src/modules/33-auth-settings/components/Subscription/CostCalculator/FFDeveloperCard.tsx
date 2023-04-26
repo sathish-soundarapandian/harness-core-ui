@@ -22,15 +22,26 @@ export const generateRangeArray = (min: number, max: number, stepSize: number): 
   return rangeArray
 }
 
-const Header: React.FC<{ unitPrice: number }> = () => {
+export const Header: React.FC<{ unitPrice: number; module: string }> = props => {
   const { getString } = useStrings()
-  // const unitPriceDescr = `${getString('authSettings.unitPrice')}: ${getAmountInCurrency(
-  //   CurrencyType.USD,
-  //   unitPrice
-  // )} ${getString('common.perDeveloper')} ${getString('common.perMonth')}`
+  const { module } = props
+  const titleHeader = () => {
+    switch (module) {
+      case 'cf':
+        return (
+          <Text font={{ variation: FontVariation.H5 }}>{getString('authSettings.costCalculator.developer.title')}</Text>
+        )
+      case 'ci':
+        return (
+          <Text font={{ variation: FontVariation.H5 }}>
+            {getString('authSettings.costCalculator.developer.titleCI')}
+          </Text>
+        )
+    }
+  }
   return (
     <Layout.Vertical padding={{ bottom: 'medium' }}>
-      <Text font={{ variation: FontVariation.H5 }}>{getString('authSettings.costCalculator.developer.title')}</Text>
+      {titleHeader()}
       <Layout.Horizontal spacing={'small'}>
         <Text
           color={Color.PRIMARY_7}
@@ -39,7 +50,6 @@ const Header: React.FC<{ unitPrice: number }> = () => {
         >
           {getString('authSettings.costCalculator.developer.developer')}
         </Text>
-        {/* <Text font={{ size: 'xsmall' }}>{unitPriceDescr}</Text> */}
       </Layout.Horizontal>
     </Layout.Vertical>
   )
@@ -161,7 +171,7 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
   return (
     <Card>
       <Layout.Vertical>
-        <Header unitPrice={unitPrice} />
+        <Header unitPrice={unitPrice} module="cf" />
         <DeveloperSubscriptionInfo
           recommended={recommended}
           currentSubscribed={currentSubscribed}

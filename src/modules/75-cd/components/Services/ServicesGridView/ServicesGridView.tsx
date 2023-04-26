@@ -21,10 +21,11 @@ interface ServicesGridViewProps {
   loading?: boolean
   onRefresh?: () => Promise<void>
   onServiceSelect: (data: any) => Promise<void>
+  isForceDeleteEnabled: boolean
 }
 
 const ServicesGridView: React.FC<ServicesGridViewProps> = props => {
-  const { loading, data, onServiceSelect } = props
+  const { loading, data, onServiceSelect, isForceDeleteEnabled } = props
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const paginationProps = useDefaultPaginationProps({
     itemCount: data?.data?.totalItems || 0,
@@ -52,6 +53,7 @@ const ServicesGridView: React.FC<ServicesGridViewProps> = props => {
                   onServiceSelect={(selectedService: any) => onServiceSelect(selectedService)}
                   data={service}
                   onRefresh={props.onRefresh}
+                  isForceDeleteEnabled={isForceDeleteEnabled}
                 />
               )}
               keyOf={service => service?.service?.identifier}

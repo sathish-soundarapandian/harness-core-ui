@@ -1,5 +1,180 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`PricePreview ci credit card render ci 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main pricePreview ci"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-h4 StyledProps--padding-bottom-large"
+    >
+      authSettings.pricePreview.title
+    </p>
+    <div
+      class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-bottom-large"
+    >
+      <p
+        class="StyledProps--font StyledProps--main"
+      >
+        common.billed
+      </p>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-start"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          common.monthly
+        </p>
+        <label
+          class="Toggle--toggle paymentFrequency StyledProps--main"
+          data-testid="toggle"
+        >
+          <input
+            checked=""
+            class="Toggle--input"
+            disabled=""
+            type="checkbox"
+            value=""
+          />
+          <span
+            class="Toggle--toggleIcon"
+          />
+          
+        </label>
+        <div
+          class="Layout--horizontal StyledProps--main"
+        >
+          <p
+            class="StyledProps--font StyledProps--main selected"
+          >
+            common.yearly
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main selected"
+          >
+            authSettings.pricePreview.discount
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-bottom-large"
+    >
+      <p
+        class="StyledProps--font StyledProps--main"
+      >
+        common.subscriptions.overview.details
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-bold"
+      >
+        Team common.subscriptions.overview.plan
+      </p>
+      <div
+        class="Layout--vertical StyledProps--main line StyledProps--padding-top-small StyledProps--padding-bottom-small"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-bottom-small"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
+          >
+            common.subscriptions.usage.developers
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
+          >
+            $0.00
+            common.perMonth
+          </p>
+        </div>
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
+        >
+          <p
+            class="StyledProps--font StyledProps--main"
+          >
+            200 x $0.00 common.perDeveloper
+          </p>
+          0
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main line StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          authSettings.costCalculator.premiumSupport
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          authSettings.pricePreview.calculatedNextStep
+        </p>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main line StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          total
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          $1,000.00
+        </p>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main line StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          authSettings.costCalculator.tax
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          $1000
+        </p>
+      </div>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main footerStyleCi StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-h2"
+        >
+          common.payNow
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-h2"
+        >
+          $1,000.00
+          common.perYear
+        </p>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+        >
+          authSettings.autoRenewal
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`PricePreview render 1`] = `
 <div>
   <div
@@ -150,37 +325,32 @@ exports[`PricePreview render 1`] = `
           authSettings.pricePreview.calculatedNextStep
         </p>
       </div>
-    </div>
-    <div
-      class="Layout--vertical StyledProps--main"
-    >
       <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        class="Layout--horizontal StyledProps--main line StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small"
       >
         <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h2"
+          class="StyledProps--font StyledProps--main"
         >
           total
         </p>
         <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h2"
+          class="StyledProps--font StyledProps--main"
         >
-          $0.00
-          common.perYear
+          $1,000.00
         </p>
       </div>
       <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        class="Layout--horizontal StyledProps--main line StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small"
       >
         <p
-          class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+          class="StyledProps--font StyledProps--main"
         >
-          authSettings.autoRenewal
+          authSettings.costCalculator.tax
         </p>
         <p
-          class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+          class="StyledProps--font StyledProps--main"
         >
-          authSettings.salesTax
+          $1000
         </p>
       </div>
     </div>

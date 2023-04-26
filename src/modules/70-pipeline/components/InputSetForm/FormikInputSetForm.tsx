@@ -154,7 +154,6 @@ function useValidateValues({
   validateValues: (values: InputSetDTO & GitContextProps & StoreMetadata) => Promise<FormikErrors<InputSetDTO>>
 } {
   const { getString } = useStrings()
-  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const NameIdSchema = Yup.object({
     name: NameSchema(getString),
     identifier: IdentifierSchema(getString)
@@ -179,8 +178,7 @@ function useValidateValues({
           getString,
           viewType: StepViewType.InputSet,
           viewTypeMetadata: { isInputSet: true },
-          resolvedPipeline,
-          isOptionalVariableAllowed
+          resolvedPipeline
         }) as any
 
         /* istanbul ignore else */ if (isEmpty(errors.pipeline)) {

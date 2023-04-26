@@ -1034,16 +1034,28 @@ const getSchemaByType = (
   }
 }
 
-const getCommonCredentialsDetailsSchema = (connector: ConnectorInfoDTO) => {
+const getCommonCredentialsDetailsSchema = (
+  connector: ConnectorInfoDTO,
+  getString: UseStringsReturn['getString']
+): Array<ActivityDetailsRowInterface> => {
   const delegateSelectors = connector.spec?.delegateSelectors
-  return delegateSelectors && delegateSelectors.length
-    ? [
-        {
-          label: 'connectors.delegate.delegateSelectors',
-          value: connector.spec?.delegateSelectors.join(', ')
-        }
-      ]
-    : []
+  const executeOnDelegate = connector.spec?.executeOnDelegate
+  const schema = []
+  if (executeOnDelegate !== null && executeOnDelegate !== undefined) {
+    schema.push({
+      label: 'connectors.connectivityMode.title',
+      value: connector.spec?.executeOnDelegate
+        ? getString('common.harnessDelegate')
+        : getString('common.harnessPlatform')
+    })
+  }
+  if (delegateSelectors && delegateSelectors.length) {
+    schema.push({
+      label: 'connectors.delegate.delegateSelectors',
+      value: connector.spec?.delegateSelectors.join(', ')
+    })
+  }
+  return schema
 }
 
 const getSchema = (props: SavedConnectorDetailsProps): Array<ActivityDetailsRowInterface> => {
@@ -1239,7 +1251,7 @@ const SavedConnectorDetails: React.FC<SavedConnectorDetailsProps> = props => {
   const connectorDetailsSchema = getSchema(props)
   const credenatialsDetailsSchema = getSchemaByType(props.connector, props.connector?.type, getString)
   const backoffStrategyDetailsSchema = getBackoffStrategySchema(props.connector, getString)
-  const commonCredentialsDetailsSchema = getCommonCredentialsDetailsSchema(props.connector)
+  const commonCredentialsDetailsSchema = getCommonCredentialsDetailsSchema(props.connector, getString)
 
   const getRenderDetailsData = (sectionName: string) => {
     if (sectionName === SectionType.overview) {

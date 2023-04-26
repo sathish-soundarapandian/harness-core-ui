@@ -14,7 +14,8 @@ jest.mock('services/cd-ng', () => {
   return {
     useEnvironmentStore: jest.fn(),
     useGetEnvironmentList: jest.fn(() => ({ refetch: jest.fn() })),
-    useDeleteEnvironmentV2: jest.fn(() => ({ mutate: jest.fn() }))
+    useDeleteEnvironmentV2: jest.fn(() => ({ mutate: jest.fn() })),
+    useGetSettingValue: jest.fn().mockResolvedValue({})
   }
 })
 

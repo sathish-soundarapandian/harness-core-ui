@@ -42,6 +42,7 @@ const execContextValues: ExecutionContextParams = {
   allNodeMap: {},
   pipelineStagesMap: new Map(),
   childPipelineStagesMap: new Map(),
+  rollbackPipelineStagesMap: new Map(),
   allStagesMap: new Map(),
   selectedStageId: '',
   selectedStepId: '',

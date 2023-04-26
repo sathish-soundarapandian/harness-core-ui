@@ -29,10 +29,13 @@ export interface JiraApprovalTabProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
   isWaiting: boolean
   executionMetadata: ExecutionGraph['executionMetadata']
+  progressData?: {
+    [key: string]: string
+  }
 }
 
 export function JiraApprovalTab(props: JiraApprovalTabProps): React.ReactElement {
-  const { isWaiting, startTs, endTs, stepParameters, executionMetadata } = props
+  const { isWaiting, startTs, endTs, stepParameters, executionMetadata, progressData } = props
   const approvalData = props.approvalData as ApprovalData
   const wasApproved = !isWaiting && approvalData?.status === ApprovalStatus.APPROVED
   const wasRejected =
@@ -103,7 +106,11 @@ export function JiraApprovalTab(props: JiraApprovalTabProps): React.ReactElement
       )}
 
       <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
-        <StepDetails step={{ startTs, endTs, stepParameters }} executionMetadata={executionMetadata} />
+        <StepDetails
+          step={{ startTs, endTs, stepParameters }}
+          executionMetadata={executionMetadata}
+          progressData={progressData}
+        />
       </Container>
 
       <div className={cx(css.jiraApproval, css.applyTopPadding)}>

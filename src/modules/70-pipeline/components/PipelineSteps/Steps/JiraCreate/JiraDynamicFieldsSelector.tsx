@@ -264,10 +264,11 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
         ) : (
           <Text intent={Intent.DANGER}>{getRBACErrorMessage(issueUpdateMetadataFetchError)}</Text>
         )
-      ) : isEmpty(issueUpdateMetaResponse?.data) && !issueUpdateMetadataFetchError ? (
+      ) : jiraType === 'updateMode' && isEmpty(issueUpdateMetaResponse?.data) && !issueUpdateMetadataFetchError ? (
         <Text intent="warning">{getString('pipeline.jiraUpdateStep.projectIssueKeyDisclaimer')}</Text>
-      ) : (isEmpty(projectMetaResponse?.data) && !projectMetadataFetchError) ||
-        (isEmpty(issueMetaResponse?.data) && !issueMetadataFetchError) ? (
+      ) : jiraType === 'createMode' &&
+        ((isEmpty(projectMetaResponse?.data) && !projectMetadataFetchError) ||
+          (isEmpty(issueMetaResponse?.data) && !issueMetadataFetchError)) ? (
         <Text intent="warning">{getString('pipeline.jiraCreateStep.projectIssueTypeDisclaimer')}</Text>
       ) : (
         <JiraFieldSelector

@@ -36,7 +36,8 @@ import {
   getServiceLevelIndicatorsIdentifierFromResponse,
   getSimpleSLOCustomValidation,
   getSLOTarget,
-  getSLOV2InitialFormData
+  getSLOV2InitialFormData,
+  getCompositeSLOCustomValidation
 } from '../CVCreateSLOV2.utils'
 import { SLOType } from '../CVCreateSLOV2.constants'
 import { SLOV2FormMock } from '../components/CreateSimpleSloForm/__tests__/CreateSimpleSloForm.utils.mock'
@@ -263,7 +264,11 @@ describe('CVCreateSloV2', () => {
       .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
 
     const { container, getByText } = render(
-      <TestWrapper path={testPath} pathParams={testPathParams}>
+      <TestWrapper
+        path={testPath}
+        pathParams={testPathParams}
+        defaultFeatureFlagValues={{ SRM_ENABLE_REQUEST_SLO: true }}
+      >
         <CVCreateSLOV2 isComposite />
       </TestWrapper>
     )
@@ -272,6 +277,7 @@ describe('CVCreateSloV2', () => {
     act(() => {
       userEvent.click(screen.getByText('next'))
     })
+    expect(container.querySelector('input[value="Window"]')).toBeChecked()
     await waitFor(() => expect(getByText(SLODetailsData.resource.serviceLevelObjectiveV2.name)).toBeInTheDocument())
     await waitFor(() =>
       expect(getByText(SLODetailsData.resource.serviceLevelObjectiveV2.userJourneyRefs.join(' '))).toBeInTheDocument()
@@ -729,6 +735,22 @@ describe('CVCreateSloV2', () => {
   test('should validate getSLOTarget with empty periodType', () => {
     expect(getSLOTarget({} as any)).toEqual({})
     expect(getSLOTarget({ periodType: 'Calender' } as any)).toEqual({})
+  })
+
+  test('should validate getCompositeSLOCustomValidation', () => {
+    expect(getCompositeSLOCustomValidation(serviceLevelObjectiveV2 as any, str => str, true)).toEqual({
+      evaluationType: 'cv.required'
+    })
+    expect(
+      getCompositeSLOCustomValidation(
+        {
+          ...serviceLevelObjectiveV2,
+          evaluationType: 'Window'
+        } as any,
+        str => str,
+        true
+      )
+    ).toEqual(undefined)
   })
 })
 

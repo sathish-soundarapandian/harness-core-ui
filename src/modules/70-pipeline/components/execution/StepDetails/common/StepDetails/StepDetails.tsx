@@ -9,7 +9,7 @@ import React from 'react'
 import { Text, Layout, Icon, useToggleOpen, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Link } from 'react-router-dom'
-import { defaultTo, isArray, isEmpty, isNil } from 'lodash-es'
+import { defaultTo, isArray, isEmpty, isNil, isUndefined } from 'lodash-es'
 import { Duration } from '@common/exports'
 import { useDelegateSelectionLogsModal } from '@common/components/DelegateSelectionLogs/DelegateSelectionLogs'
 import type { DelegateInfo, ExecutableResponse, ExecutionGraph, ExecutionNode } from 'services/pipeline-ng'
@@ -38,10 +38,13 @@ export interface StepDetailsProps {
   step: ExecutionNode
   executionMetadata: ExecutionGraph['executionMetadata']
   labels?: StepLabels[]
+  progressData?: {
+    [key: string]: string
+  }
 }
 
 export function StepDetails(props: StepDetailsProps): React.ReactElement {
-  const { step, executionMetadata, labels = [] } = props
+  const { step, executionMetadata, labels = [], progressData } = props
   const { getString } = useStrings()
   const { orgIdentifier, projectIdentifier, accountId } = defaultTo(executionMetadata, {})
   //TODO - types will modified when the backend swagger docs are updated
@@ -64,7 +67,11 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
   }, [step.executableResponses])
 
   const showDelegateRow = (delegateList: DelegateInfo[] | undefined, tasks: ExecutableResponse[]): boolean => {
-    return (delegateList && delegateList?.length > 0) || tasks?.length > 0
+    return (
+      (delegateList && delegateList?.length > 0) ||
+      tasks?.length > 0 ||
+      !isUndefined(progressData?.latestDelegateTaskId)
+    )
   }
 
   const delegateListContainsTask = (delegateList: DelegateInfo[] | undefined, taskId: string): boolean => {
@@ -222,6 +229,32 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                       </div>
                     )
                   )}
+                {progressData?.latestDelegateTaskId && (
+                  <div key={progressData.latestDelegateTaskId}>
+                    <Text font={{ size: 'small', weight: 'bold' }}>
+                      <String
+                        stringID="common.delegateForTask"
+                        vars={{ taskName: progressData?.taskName }}
+                        useRichText
+                      />
+                    </Text>{' '}
+                    (
+                    <Text
+                      font={{ size: 'small' }}
+                      onClick={() =>
+                        openDelegateSelectionLogsModal({
+                          taskId: progressData.latestDelegateTaskId,
+                          taskName: progressData?.taskName
+                        })
+                      }
+                      style={{ cursor: 'pointer' }}
+                      color={Color.PRIMARY_7}
+                    >
+                      {getString('common.logs.delegateSelectionLogs')}
+                    </Text>
+                    )
+                  </div>
+                )}
                 {DELEGATE_TASK_LOGS_ENABLED && !isOnPrem() ? (
                   <>
                     <Button

@@ -1501,7 +1501,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
                     <div
                       class="tableType"
                     >
-                      AppDynamics
+                      pipeline.verification.analysisTab.metrics
                     </div>
                     <div
                       class="StyledProps--font StyledProps--main StyledProps--flex"

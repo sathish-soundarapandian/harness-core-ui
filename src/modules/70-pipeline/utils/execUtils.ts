@@ -938,7 +938,7 @@ export const getExecutionStageDiagramListeners = ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [Event.MouseEnterNode]: (event: any) => {
       const nodeID = defaultTo(event?.data?.nodeExecutionId, event?.data?.id)
-      const stageData = allNodeMap[nodeID] ?? allChildNodeMap[nodeID]
+      const stageData = allNodeMap[nodeID] ?? allChildNodeMap[nodeID.split('|')[0]]
       const target = document.querySelector(`[data-nodeid="${event?.data?.id}"]`)
       if (stageData) {
         onMouseEnter({

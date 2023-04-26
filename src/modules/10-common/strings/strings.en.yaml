@@ -265,6 +265,7 @@ purpose:
   continuous: CONTINUOUS
   change: CHANGE
   service: SERVICE
+  developer: DEVELOPER
   moduleSuccess: Module Added Successfully
   startATrial: Start A Trial
   setup: 15 min setup
@@ -333,7 +334,6 @@ purpose:
     tests: '{{$.tests}}'
   errorTracking:
     title: Error Tracking
-    longTitle: Continuous Error Tracking
   code:
     name: Code
   chaos:
@@ -347,6 +347,10 @@ purpose:
     name: Developer Portal
     fullName: Internal Developer Portal
     shortName: IDP
+  cet:
+    continuous: Continuous Error Tracking
+    moduleSelectionSubHeading: Identify and fix errors faster with complete visibility into code level data using Harness Continuous Error Tracking.
+trialCommingSoon: Trial - Coming soon
 trialInProgress: Trial in progress
 trialInProgressDescription: A Project contains your pipelines, resources, and team members. Get started by creating your first Project.
 letsGetYouStarted: Let’s get you started
@@ -513,6 +517,8 @@ subscriptions:
   tabs:
     overview: Subscription Overview
     plans: Plans
+    breakdown: Breakdown
+    trend: Trend
   overview:
     details: Subscription Details
     plan: Plan
@@ -531,6 +537,8 @@ subscriptions:
     developers: '{{ developers }} Developers'
   sto:
     developers: '{{ developers }} Developers'
+  cet:
+    agents: '{{ agents }} Agents'
   chaos:
     experiments: '{{ experiments }} Experiments per month'
     infrastructures: '{{ infrastructures }} Chaos Infrastructures'
@@ -567,6 +575,8 @@ subscriptions:
     cloudSpend: Total Cloud Spend
     ccmUsers: Active CCM Users
     ccmTooltip: Cloud Spend refers to the total spend (dollars) managed and optimized by Harness Cloud Cost Management.
+    cetAgents: Active Agents
+    cetAgentToolTip: An Agent refers to a constantly active error tracking component that is integrated with Harness platform for continuous monitoring and analysis.
 current: Current
 banners:
   email:
@@ -770,6 +780,7 @@ searchPlaceholder: Search by name or Id
 monthly: Monthly
 per: per
 perMonth: /month
+payNow: 'Pay Now'
 perMonthWithoutSlash: per Month
 perYearWithoutSlash: per year
 perYear: /year
@@ -810,6 +821,7 @@ module:
   sto: STO
   governance: POLICY ENGINE
   code: CODE
+  cet: CET
 templateServiceLabel: Template Service
 customPricing: for Custom Pricing
 specified: Specified
@@ -840,7 +852,7 @@ feature:
     limitMessage:
       description: You've used {{limits}}
       thisMonth: This Month
-    planMessage: is supported in {{plan}} plan(s).
+    planMessage: is/are supported in {{plan}} plan(s).
 repositoryName: Repository Name
 mostActiveServices: Most active services
 monitoredServices: Monitored Services
@@ -1351,16 +1363,6 @@ collapse: Collapse
 expand: Expand
 selectProject: Select Project
 googleCloudPlatform: Google Cloud Platform
-artifacts:
-  googleCloudStorage:
-    title: Google Cloud Storage
-    bucketPlaceholder: Enter Bucket
-  googleCloudSourceRepositories:
-    title: Google Cloud Source
-    cloudSourceRepository: Cloud Source Repository
-    cloudSourceRepositoryPlaceholder: Select Cloud Source Repository
-    sourceDirectory: Source Directory
-    sourceDirectoryPlaceholder: Enter Source Directory
 updated: Updated
 python: Python
 successfullyAdded: Successfully added
@@ -1444,3 +1446,6 @@ welcomePage:
 successCount: 'Success {{count}}'
 failedCount: 'Failed {{count}}'
 configurations: Configurations
+lastBuildDate: LAST BUILD DATE
+noActiveDeveloperData: No active Developer Record found
+readOnlyConnectorWarning: Read-only Vault connector is not allowed for Terraform/Terragrunt Plan steps.

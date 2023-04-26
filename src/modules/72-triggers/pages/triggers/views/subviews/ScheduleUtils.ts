@@ -376,4 +376,11 @@ export const getBreakdownValues = (cronExpression: string): ExpressionBreakdownI
   }
 }
 
-export const isCronValid = (expression: string): boolean => isValidCron(expression, { alias: true })
+export const isCronValid = (expression: string, isQuartz?: boolean): boolean => {
+  const expLength = expression?.trim().split(' ').length
+
+  if (isQuartz) {
+    return expLength === 6 || expLength === 7
+  }
+  return isValidCron(expression, { alias: true })
+}

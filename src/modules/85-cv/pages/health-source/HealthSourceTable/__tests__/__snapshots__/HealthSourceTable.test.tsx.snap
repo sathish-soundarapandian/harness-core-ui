@@ -407,7 +407,7 @@ exports[`HealthSource table Verify HealthSource Table in Verify step 1`] = `
               <div
                 class="tableType"
               >
-                AppDynamics
+                pipeline.verification.analysisTab.metrics
               </div>
               <div
                 class="StyledProps--font StyledProps--main StyledProps--flex"
@@ -517,7 +517,7 @@ exports[`HealthSource table Verify HealthSource Table in Verify step 1`] = `
               <div
                 class="tableType"
               >
-                AppDynamics
+                pipeline.verification.analysisTab.metrics
               </div>
               <div
                 class="StyledProps--font StyledProps--main StyledProps--flex"

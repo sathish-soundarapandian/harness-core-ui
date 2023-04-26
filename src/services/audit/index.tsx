@@ -318,6 +318,7 @@ export interface AccessControlCheckError {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -370,6 +371,9 @@ export interface AccessControlCheckError {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -444,7 +448,9 @@ export interface AuditEventDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   requestMetadata?: RequestMetadata
   resource: ResourceDTO
   resourceScope: ResourceScopeDTO
@@ -523,7 +529,9 @@ export interface AuditFilterProperties {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
+    | 'IDP'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -882,6 +890,7 @@ export interface Error {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -934,6 +943,9 @@ export interface Error {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1252,6 +1264,7 @@ export interface Failure {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -1304,6 +1317,9 @@ export interface Failure {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1354,12 +1370,17 @@ export type MSTeamSettingDTO = NotificationSettingDTO & {}
 
 export type NodeExecutionEventData = AuditEventData & {
   accountIdentifier?: string
+  endTs?: number
   nodeExecutionId?: string
   orgIdentifier?: string
   pipelineIdentifier?: string
   planExecutionId?: string
   projectIdentifier?: string
   stageIdentifier?: string
+  stageType?: string
+  startTs?: number
+  status?: string
+  triggeredBy?: TriggeredByInfoAuditDetails
 }
 
 export interface NotificationDTO {
@@ -1493,7 +1514,6 @@ export interface ResourceDTO {
     | 'RESOURCE_GROUP'
     | 'USER'
     | 'ROLE'
-    | 'ROLE_ASSIGNMENT'
     | 'PIPELINE'
     | 'TRIGGER'
     | 'TEMPLATE'
@@ -1539,7 +1559,7 @@ export interface ResourceDTO {
     | 'FEATURE_FLAG'
     | 'NG_ACCOUNT_DETAILS'
     | 'BUDGET_GROUP'
-    | 'NODE_EXECUTION'
+    | 'PIPELINE_EXECUTION'
 }
 
 export interface ResourceFilter {
@@ -2003,6 +2023,7 @@ export interface ResponseMessage {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -2055,6 +2076,9 @@ export interface ResponseMessage {
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2238,6 +2262,14 @@ export interface Throwable {
   suppressed?: Throwable[]
 }
 
+export interface TriggeredByInfoAuditDetails {
+  extraInfo?: {
+    [key: string]: string
+  }
+  identifier?: string
+  type?: string
+}
+
 export type UserInvitationAuditEventData = AuditEventData & {
   roleBindings?: RoleBinding[]
 }
@@ -2268,7 +2300,7 @@ export type ResourceGroupRequestRequestBody = ResourceGroupRequest
 
 export type ResourceGroupV2RequestRequestBody = ResourceGroupV2Request
 
-export type PutTemplateRequestBody = void
+export type InsertOrUpdateTemplateRequestBody = void
 
 export interface GetAuditFilterListQueryParams {
   pageIndex?: number
@@ -3674,7 +3706,13 @@ export interface InsertOrUpdateTemplateQueryParams {
 }
 
 export type InsertOrUpdateTemplateProps = Omit<
-  MutateProps<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>,
+  MutateProps<
+    ResponseTemplateDTO,
+    Failure | Error,
+    InsertOrUpdateTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -3682,7 +3720,13 @@ export type InsertOrUpdateTemplateProps = Omit<
  * Update a template if exists else create
  */
 export const InsertOrUpdateTemplate = (props: InsertOrUpdateTemplateProps) => (
-  <Mutate<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>
+  <Mutate<
+    ResponseTemplateDTO,
+    Failure | Error,
+    InsertOrUpdateTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    void
+  >
     verb="PUT"
     path={`/templates/insertOrUpdate`}
     base={getConfig('audit/api')}
@@ -3691,7 +3735,13 @@ export const InsertOrUpdateTemplate = (props: InsertOrUpdateTemplateProps) => (
 )
 
 export type UseInsertOrUpdateTemplateProps = Omit<
-  UseMutateProps<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>,
+  UseMutateProps<
+    ResponseTemplateDTO,
+    Failure | Error,
+    InsertOrUpdateTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -3699,11 +3749,13 @@ export type UseInsertOrUpdateTemplateProps = Omit<
  * Update a template if exists else create
  */
 export const useInsertOrUpdateTemplate = (props: UseInsertOrUpdateTemplateProps) =>
-  useMutate<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>(
-    'PUT',
-    `/templates/insertOrUpdate`,
-    { base: getConfig('audit/api'), ...props }
-  )
+  useMutate<
+    ResponseTemplateDTO,
+    Failure | Error,
+    InsertOrUpdateTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    void
+  >('PUT', `/templates/insertOrUpdate`, { base: getConfig('audit/api'), ...props })
 
 /**
  * Update a template if exists else create
@@ -3713,7 +3765,7 @@ export const insertOrUpdateTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     InsertOrUpdateTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -3722,7 +3774,7 @@ export const insertOrUpdateTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     InsertOrUpdateTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     void
   >('PUT', getConfig('audit/api'), `/templates/insertOrUpdate`, props, signal)
 
@@ -3848,7 +3900,7 @@ export type PutTemplateProps = Omit<
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >,
   'path' | 'verb'
@@ -3859,7 +3911,13 @@ export type PutTemplateProps = Omit<
  * Update a template
  */
 export const PutTemplate = ({ identifier, ...props }: PutTemplateProps) => (
-  <Mutate<ResponseTemplateDTO, Failure | Error, PutTemplateQueryParams, PutTemplateRequestBody, PutTemplatePathParams>
+  <Mutate<
+    ResponseTemplateDTO,
+    Failure | Error,
+    PutTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    PutTemplatePathParams
+  >
     verb="PUT"
     path={`/templates/${identifier}`}
     base={getConfig('audit/api')}
@@ -3872,7 +3930,7 @@ export type UsePutTemplateProps = Omit<
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >,
   'path' | 'verb'
@@ -3887,7 +3945,7 @@ export const usePutTemplate = ({ identifier, ...props }: UsePutTemplateProps) =>
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >('PUT', (paramsInPath: PutTemplatePathParams) => `/templates/${paramsInPath.identifier}`, {
     base: getConfig('audit/api'),
@@ -3906,7 +3964,7 @@ export const putTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -3915,7 +3973,7 @@ export const putTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >('PUT', getConfig('audit/api'), `/templates/${identifier}`, props, signal)
 

@@ -13,7 +13,11 @@ import {
   Layout,
   Pagination,
   PageHeader,
-  PageBody
+  PageBody,
+  ListHeader,
+  sortByCreated,
+  sortByName,
+  SortMethod
 } from '@harness/uicore'
 
 import { useHistory, useParams } from 'react-router-dom'
@@ -34,8 +38,6 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
-import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByName, SortMethod } from '@common/utils/sortUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'

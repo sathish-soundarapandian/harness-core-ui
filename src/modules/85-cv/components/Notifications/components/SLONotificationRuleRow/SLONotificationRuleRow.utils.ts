@@ -7,7 +7,16 @@
 
 import type { SelectOption } from '@harness/uicore'
 import { defaultOption } from '../../NotificationsContainer.constants'
+import { SLOCondition, sloConditionOptions } from './SLONotificationRuleRow.constants'
 
 export const getValueFromEvent = (e: React.FormEvent<HTMLElement>): string | SelectOption => {
   return (e?.target as any)?.value || defaultOption
+}
+
+export const getSLOConditionOptions = (isCompositeRequestBasedSLO?: boolean) => {
+  if (isCompositeRequestBasedSLO) {
+    return sloConditionOptions.filter(item => item.value !== SLOCondition.ERROR_BUDGET_REMAINING_MINUTES)
+  } else {
+    return sloConditionOptions
+  }
 }

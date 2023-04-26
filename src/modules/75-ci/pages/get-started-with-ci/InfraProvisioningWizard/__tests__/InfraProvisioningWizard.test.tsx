@@ -16,6 +16,13 @@ import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
 import { InfraProvisiongWizardStepId } from '../Constants'
 import { repos } from '../mocks/repositories'
 
+const createInputSetForPipelinePromiseMock = jest.fn(() =>
+  Promise.resolve({
+    status: 'SUCCESS',
+    data: { identifier: 'created_input_set' }
+  })
+)
+
 jest.mock('services/pipeline-ng', () => ({
   createPipelineV2Promise: jest.fn().mockImplementation(() =>
     Promise.resolve({
@@ -29,7 +36,10 @@ jest.mock('services/pipeline-ng', () => ({
     Promise.resolve({
       status: 'SUCCESS'
     })
-  )
+  ),
+  createInputSetForPipelinePromise: jest.fn().mockImplementation(() => {
+    return createInputSetForPipelinePromiseMock()
+  })
 }))
 
 const generatedYAMLResponseMock = jest.fn().mockImplementation(() => {
@@ -150,9 +160,26 @@ describe('Render and test InfraProvisioningWizard', () => {
       fireEvent.click(getByText('ci.getStartedWithCI.starterPipelineConfig'))
     })
 
+    expect(routesToPipelineStudio).not.toHaveBeenCalled()
+
+    await waitFor(() =>
+      fillAtForm([
+        {
+          container,
+          fieldId: 'branch',
+          type: InputTypes.TEXTFIELD,
+          value: 'main'
+        }
+      ])
+    )
+
     await act(async () => {
       fireEvent.click(getByText('ci.getStartedWithCI.createPipeline'))
     })
+
+    expect(createInputSetForPipelinePromiseMock).toBeCalled()
+
+    expect(createInputSetForPipelinePromiseMock).toBeCalledTimes(2)
 
     expect(routesToPipelineStudio).toHaveBeenCalled()
   })

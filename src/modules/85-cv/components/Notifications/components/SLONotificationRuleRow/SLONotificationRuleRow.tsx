@@ -5,13 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import React, { useCallback, useMemo } from 'react'
 import { Button, Container, FormInput, Layout, Text, TextInput } from '@harness/uicore'
-import React, { useCallback } from 'react'
 import HorizontalLineWithText from '@cv/components/HorizontalLineWithText/HorizontalLineWithText'
 import { useStrings } from 'framework/strings'
 import type { NotificationRuleRowProps } from './SLONotificationRuleRow.types'
-import { getValueFromEvent } from './SLONotificationRuleRow.utils'
-import { SLOCondition, sloConditionOptions } from './SLONotificationRuleRow.constants'
+import { getValueFromEvent, getSLOConditionOptions } from './SLONotificationRuleRow.utils'
+import { SLOCondition } from './SLONotificationRuleRow.constants'
 import { defaultOption } from '../../NotificationsContainer.constants'
 import css from './SLONotificationRuleRow.module.scss'
 
@@ -20,7 +20,8 @@ export default function SLONotificationRuleRow({
   showDeleteNotificationsIcon,
   handleDeleteNotificationRule,
   handleChangeField,
-  index
+  index,
+  isCompositeRequestBasedSLO
 }: NotificationRuleRowProps): JSX.Element {
   const { getString } = useStrings()
   const { threshold, lookBackDuration, id, condition } = notificationRule || {}
@@ -90,6 +91,11 @@ export default function SLONotificationRuleRow({
         return <></>
     }
   }
+
+  const sloConditionOptions = useMemo(
+    () => getSLOConditionOptions(isCompositeRequestBasedSLO),
+    [isCompositeRequestBasedSLO]
+  )
 
   return (
     <>

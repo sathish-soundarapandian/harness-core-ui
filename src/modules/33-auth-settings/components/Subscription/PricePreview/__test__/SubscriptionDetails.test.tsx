@@ -15,6 +15,7 @@ describe('SubscriptionDetails', () => {
   const props = {
     taxAmount: 100,
     subscriptionDetails: {
+      taxAmount: 100,
       edition: Editions.TEAM,
       premiumSupport: true,
       paymentFreq: TimeType.MONTHLY,

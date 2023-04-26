@@ -70,15 +70,15 @@ export const downtimeResponse = {
         },
         enabled: false,
         lastModified: {
-          lastModifiedBy: '',
+          lastModifiedBy: 'admin@harness.io',
           lastModifiedAt: 1676290050470
         },
         spec: {
           type: 'Recurring',
           spec: {
             timezone: 'Asia/Calcutta',
-            startTime: 1673929800,
-            recurrenceEndTime: 1737091800,
+            startDateTime: '2030-04-15 12:00 PM',
+            recurrenceEndDateTime: '2031-04-15 12:00 PM',
             downtimeDuration: {
               durationType: 'Minutes',
               durationValue: 30
@@ -119,7 +119,8 @@ export const downtimeResponse = {
         downtimeStatusDetails: {
           status: 'Active',
           startTime: 1676385421,
-          endTime: 1676386020
+          endTime: 1676386020,
+          endDateTime: '2030-04-15 12:30 PM'
         },
         enabled: true,
         lastModified: {
@@ -130,7 +131,7 @@ export const downtimeResponse = {
           type: 'Onetime',
           spec: {
             timezone: 'Asia/Calcutta',
-            startTime: 1676321160,
+            startDateTime: '2031-04-15 12:00 PM',
             spec: {
               downtimeDuration: {
                 durationType: 'Minutes',
@@ -176,8 +177,8 @@ export const downtimeResponse = {
           type: 'Recurring',
           spec: {
             timezone: 'Asia/Calcutta',
-            startTime: 1676694600,
-            recurrenceEndTime: 1737091800,
+            startDateTime: '2030-04-15 12:00 PM',
+            recurrenceEndDateTime: '2031-04-15 12:00 PM',
             downtimeDuration: {
               durationType: 'Minutes',
               durationValue: 30
@@ -201,8 +202,8 @@ export const downtimeHistoryResponse = {
   status: 'SUCCESS',
   data: {
     totalPages: 1,
-    totalItems: 2,
-    pageItemCount: 2,
+    totalItems: 3,
+    pageItemCount: 3,
     pageSize: 10,
     content: [
       {
@@ -220,13 +221,13 @@ export const downtimeHistoryResponse = {
           durationType: 'Minutes',
           durationValue: 5
         },
-        startTime: 1676299500,
-        endTime: 1676299800,
-        spec: {
+        startDateTime: '2029-04-15 12:00 PM',
+        endDateTime: '2029-04-15 12:30 PM',
+        downtimeDetails: {
           type: 'Onetime',
           spec: {
             timezone: 'Asia/Baghdad',
-            startTime: 1676299500,
+            startDateTime: '2030-04-15 12:00 PM',
             spec: {
               downtimeDuration: {
                 durationType: 'Minutes',
@@ -257,13 +258,13 @@ export const downtimeHistoryResponse = {
           durationType: 'Minutes',
           durationValue: 5
         },
-        startTime: 1676298600,
-        endTime: 1676298900,
-        spec: {
+        startDateTime: '2030-04-14 12:00 PM',
+        endDateTime: '2030-04-14 12:30 PM',
+        downtimeDetails: {
           type: 'Onetime',
           spec: {
             timezone: 'Asia/Bangkok',
-            startTime: 1676298600,
+            startDateTime: '2030-03-15 12:00 PM',
             spec: {
               downtimeDuration: {
                 durationType: 'Minutes',

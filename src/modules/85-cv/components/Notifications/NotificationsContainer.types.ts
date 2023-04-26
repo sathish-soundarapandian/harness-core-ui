@@ -30,7 +30,7 @@ export interface NotificationsContainerProps {
 }
 
 export type ConfigureMonitoredServiceAlertConditionsProps = StepProps<SRMNotification>
-export type ConfigureSLOAlertConditionsProps = StepProps<SRMNotification>
+export type ConfigureSLOAlertConditionsProps = StepProps<SRMNotification> & { isCompositeRequestBasedSLO?: boolean }
 
 export type NotificationConditions = StepProps<SRMNotification> & {
   conditions?: NotificationConditionRow[]

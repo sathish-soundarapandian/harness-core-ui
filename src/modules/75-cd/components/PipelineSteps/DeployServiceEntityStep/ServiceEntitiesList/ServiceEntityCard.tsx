@@ -120,7 +120,7 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
         <div className={css.serviceNameIconWrapper}>
           <span className={css.serviceIcon}>{type ? <Icon name={deploymentIconMap[type]} size={24} /> : null}</span>
           <span className={css.serviceNameWrapper}>
-            <Text color={Color.PRIMARY_7} font="normal">
+            <Text color={Color.PRIMARY_7} font="normal" lineClamp={1}>
               {service.name}
             </Text>
             <Text color={Color.GREY_500} font="small">

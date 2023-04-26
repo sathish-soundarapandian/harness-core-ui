@@ -47,14 +47,15 @@ export interface ArtifactListViewProps {
   isMultiArtifactSource?: boolean
   deploymentType: ServiceDefinition['type']
 }
+
+export type ArtifactType = Required<PrimaryArtifact>['type']
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean
   deploymentType: ServiceDefinition['type']
   isReadonlyServiceMode: boolean
   readonly: boolean
+  availableArtifactTypes?: ArtifactType[]
 }
-
-export type ArtifactType = Required<PrimaryArtifact>['type']
 
 export interface OrganizationCreationType {
   type: ArtifactType
@@ -452,6 +453,10 @@ export interface GoogleCloudSourceRepositoriesInitialValuesType {
   project: string
   repository: string
   sourceDirectory: string
+  fetchType: 'Branch' | 'Commit' | 'Tag'
+  branch?: string
+  commitId?: string
+  tag?: string
 }
 
 export interface GoogleCloudSourceRepositoriesArtifactProps {

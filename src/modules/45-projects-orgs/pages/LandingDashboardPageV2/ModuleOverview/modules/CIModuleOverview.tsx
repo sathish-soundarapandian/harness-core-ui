@@ -100,6 +100,7 @@ const CIModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
         isExpanded={isExpanded}
         data={deploymentStatsData || []}
         count={totalCount || 0}
+        countChangeInfo={{ countChange: data?.data?.buildRate, countChangeRate: data?.data?.buildRateChangeRate }}
         timeRangeLabel={
           timeRange.type
             ? getString('common.buildsIn', {

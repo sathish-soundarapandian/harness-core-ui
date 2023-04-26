@@ -20,7 +20,10 @@ interface ServiceDetailsDialogProps {
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
   isEnvView: boolean
-  envFilter?: string
+  envFilter?: {
+    envId?: string
+    isEnvGroup: boolean
+  }
   artifactFilter?: string
   artifactFilterApplied?: boolean
 }
@@ -50,14 +53,23 @@ export default function ServiceDetailsDialog(props: ServiceDetailsDialogProps): 
     searchRef.current.clear()
   }
 
+  const resetDialogState = useCallback(() => {
+    setRowClickFilter({
+      artifact: '',
+      envId: '',
+      environmentType: 'PreProduction',
+      envName: ''
+    })
+    setSearchTerm('')
+  }, [])
+
   return (
     <Dialog
       className={cx('padded-dialog', css.dialogBase)}
       isOpen={isOpen}
       onClose={() => {
         setIsOpen(false)
-        setRowClickFilter({ artifact: '', envId: '', environmentType: 'PreProduction', envName: '' })
-        setSearchTerm('')
+        resetDialogState()
       }}
       enforceFocus={false}
     >

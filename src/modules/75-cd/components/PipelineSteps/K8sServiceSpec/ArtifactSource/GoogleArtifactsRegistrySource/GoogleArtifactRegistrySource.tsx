@@ -252,7 +252,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               accountIdentifier={accountId}
               projectIdentifier={projectIdentifier}
               orgIdentifier={orgIdentifier}
-              width={391}
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
@@ -276,7 +275,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.projectIDPlaceholder')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.project`)}
               multiTextInputProps={{
-                width: 391,
                 expressions,
                 allowableTypes
               }}
@@ -294,7 +292,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               multiTypeInputProps={{
                 onTypeChange: (type: MultiTypeInputType) =>
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.region`, type),
-                width: 391,
                 expressions,
                 selectProps: {
                   allowCreatingNewItems: true,
@@ -315,7 +312,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repositoryName`)}
               multiTextInputProps={{
-                width: 391,
                 expressions,
                 allowableTypes
               }}
@@ -330,7 +326,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.manifestType.packagePlaceholder')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.package`)}
               multiTextInputProps={{
-                width: 391,
                 expressions,
                 allowableTypes
               }}
@@ -347,7 +342,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               useValue
               multiTypeInputProps={{
-                width: 391,
                 expressions,
                 allowableTypes,
                 selectProps: {
@@ -381,7 +375,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               template={template}
               label={getString('version')}
               multiTextInputProps={{
-                width: 391,
                 expressions,
                 value: TriggerDefaultFieldList.build,
                 allowableTypes
@@ -399,7 +392,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.versionRegexPlaceholder')}
               disabled={readonly}
               multiTextInputProps={{
-                width: 391,
                 expressions,
                 allowableTypes
               }}

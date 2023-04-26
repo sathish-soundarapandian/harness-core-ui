@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { Column, CellProps, Renderer } from 'react-table'
-import { Layout, Text, Card, TableV2 } from '@harness/uicore'
+import { Layout, Text, TableV2 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import { String, useStrings } from 'framework/strings'
@@ -73,9 +73,5 @@ export default function DelegateSelectionLogsTable({
     [getString]
   )
 
-  return (
-    <Card className={css.card}>
-      <TableV2<DelegateSelectionLogParams> columns={columns} data={selectionLogs || []} />
-    </Card>
-  )
+  return <TableV2<DelegateSelectionLogParams> columns={columns} data={selectionLogs || []} />
 }

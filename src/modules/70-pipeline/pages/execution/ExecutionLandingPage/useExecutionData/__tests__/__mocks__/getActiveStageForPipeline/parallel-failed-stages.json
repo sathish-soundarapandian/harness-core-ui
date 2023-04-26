@@ -1,0 +1,170 @@
+[
+  {
+    "status": "Running",
+    "layoutNodeMap": {
+      "S0": {
+        "nodeUuid": "S0",
+        "nodeType": "parallel",
+        "status": "NotStarted",
+        "edgeLayoutList": {
+          "currentNodeChildren": ["S1", "S2", "S3"],
+          "nextIds": []
+        }
+      },
+      "S1": {
+        "nodeUuid": "S1",
+        "nodeType": "Deployment",
+        "status": "Errored",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S2": {
+        "nodeUuid": "S2",
+        "nodeType": "Deployment",
+        "status": "Running",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S3": {
+        "nodeUuid": "S3",
+        "nodeType": "Deployment",
+        "status": "Running",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      }
+    },
+    "startingNodeId": "S0"
+  },
+  {
+    "status": "Running",
+    "layoutNodeMap": {
+      "S0": {
+        "nodeUuid": "S0",
+        "nodeType": "parallel",
+        "status": "NotStarted",
+        "edgeLayoutList": {
+          "currentNodeChildren": ["S1", "S2", "S3"],
+          "nextIds": []
+        }
+      },
+      "S1": {
+        "nodeUuid": "S1",
+        "nodeType": "Deployment",
+        "status": "Success",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S2": {
+        "nodeUuid": "S2",
+        "nodeType": "Deployment",
+        "status": "Errored",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S3": {
+        "nodeUuid": "S3",
+        "nodeType": "Deployment",
+        "status": "Running",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      }
+    },
+    "startingNodeId": "S0"
+  },
+  {
+    "status": "Errored",
+    "layoutNodeMap": {
+      "S0": {
+        "nodeUuid": "S0",
+        "nodeType": "parallel",
+        "status": "NotStarted",
+        "edgeLayoutList": {
+          "currentNodeChildren": ["S1", "S2", "S3"],
+          "nextIds": []
+        }
+      },
+      "S1": {
+        "nodeUuid": "S1",
+        "nodeType": "Deployment",
+        "status": "Success",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S2": {
+        "nodeUuid": "S2",
+        "nodeType": "Deployment",
+        "status": "Errored",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S3": {
+        "nodeUuid": "S3",
+        "nodeType": "Deployment",
+        "status": "Errored",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      }
+    },
+    "startingNodeId": "S0"
+  },
+  {
+    "status": "Errored",
+    "layoutNodeMap": {
+      "S0": {
+        "nodeUuid": "S0",
+        "nodeType": "parallel",
+        "status": "NotStarted",
+        "edgeLayoutList": {
+          "currentNodeChildren": ["S1", "S2", "S3"],
+          "nextIds": []
+        }
+      },
+      "S1": {
+        "nodeUuid": "S1",
+        "nodeType": "Deployment",
+        "status": "Errored",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S2": {
+        "nodeUuid": "S2",
+        "nodeType": "Deployment",
+        "status": "Success",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      },
+      "S3": {
+        "nodeUuid": "S3",
+        "nodeType": "Deployment",
+        "status": "Success",
+        "edgeLayoutList": {
+          "currentNodeChildren": [],
+          "nextIds": []
+        }
+      }
+    },
+    "startingNodeId": "S0"
+  }
+]

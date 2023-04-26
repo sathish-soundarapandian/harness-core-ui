@@ -22,6 +22,7 @@ declare const styles: {
   readonly pluginFields: string
   readonly pluginIcon: string
   readonly search: string
+  readonly secretSelector: string
   readonly tabs: string
 }
 export default styles

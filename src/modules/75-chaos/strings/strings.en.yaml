@@ -19,6 +19,7 @@ navLabels:
   chaosHubs: ChaosHubs
   gamedays: GameDays
   probes: Resilience Probes
+  dashboards: Chaos Dashboards
 environments:
   pageTitle: '[{{projectName}}] Environments'
   create:

@@ -53,7 +53,9 @@ export function InfrastructureName({
   return (
     <Layout.Vertical>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small" margin={{ bottom: 'small' }}>
-        <Text color={Color.BLACK}>{name}</Text>
+        <Text color={Color.BLACK} lineClamp={1}>
+          {name}
+        </Text>
         {!isEmpty(tags) && (
           <TagsPopover
             className={css.tagsPopover}

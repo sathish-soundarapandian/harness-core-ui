@@ -15,7 +15,8 @@ import {
   SelectOption,
   Button,
   ButtonVariation,
-  useToaster
+  useToaster,
+  SortMethod
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
@@ -28,7 +29,6 @@ import { errorCheck } from '@common/utils/formikHelpers'
 import { getScopeBasedDefaultResourceGroup, isAccountBasicRole, isAssignmentFieldDisabled } from '@rbac/utils/utils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import NewUserRoleDropdown from '@rbac/components/NewUserRoleDropdown/NewUserRoleDropdown'
-import { SortMethod } from '@common/utils/sortUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { Assignment, RoleOption, UserRoleAssignmentValues } from './UserRoleAssigment'
 import type { RoleAssignmentValues } from './RoleAssignment'

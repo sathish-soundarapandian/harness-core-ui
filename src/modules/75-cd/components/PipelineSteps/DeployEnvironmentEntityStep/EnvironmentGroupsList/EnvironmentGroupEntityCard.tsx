@@ -78,13 +78,15 @@ export function EnvironmentGroupCard({
   return (
     <Card className={css.card}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Layout.Vertical>
+        <Layout.Vertical width={'90%'}>
           <Layout.Horizontal
             flex={{ justifyContent: 'flex-start', alignItems: 'flex-end' }}
             spacing="small"
             margin={{ bottom: 'xsmall' }}
           >
-            <Text color={Color.PRIMARY_7}>{name}</Text>
+            <Text color={Color.PRIMARY_7} lineClamp={1}>
+              {name}
+            </Text>
             {!isEmpty(tags) && (
               <TagsPopover iconProps={{ size: 14, color: Color.GREY_600 }} tags={defaultTo(tags, {})} />
             )}

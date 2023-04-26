@@ -21,7 +21,8 @@ import type {
   STOModuleLicenseDTO,
   ModuleLicenseDTO,
   ChaosModuleLicenseDTO,
-  CVModuleLicenseDTO
+  CVModuleLicenseDTO,
+  CETModuleLicenseDTO
 } from 'services/cd-ng'
 import css from './SubscriptionDetailsCard.module.scss'
 
@@ -166,6 +167,7 @@ function getLicenseCountByModule({
   licenseData?: ModuleLicenseDTO
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
 }): React.ReactElement | undefined {
+  const UNLIMITED = -1
   switch (licenseData?.moduleType) {
     case ModuleName.CF: {
       const cfModuleLicenseDTO = licenseData as CFModuleLicenseDTO
@@ -185,7 +187,7 @@ function getLicenseCountByModule({
     case ModuleName.CI: {
       const ciModuleLicenseDTO = licenseData as CIModuleLicenseDTO
       const committers =
-        ciModuleLicenseDTO?.numberOfCommitters === -1
+        ciModuleLicenseDTO?.numberOfCommitters === UNLIMITED
           ? getString('common.unlimited')
           : ciModuleLicenseDTO?.numberOfCommitters?.toLocaleString()
       return (
@@ -231,7 +233,7 @@ function getLicenseCountByModule({
     case ModuleName.CE: {
       const ceModuleLicenseDTO = licenseData as CEModuleLicenseDTO
       const spendLimit =
-        ceModuleLicenseDTO?.spendLimit === -1
+        ceModuleLicenseDTO?.spendLimit === UNLIMITED
           ? getString('common.unlimited')
           : `$${ceModuleLicenseDTO?.spendLimit?.toLocaleString()}`
       return (
@@ -245,7 +247,7 @@ function getLicenseCountByModule({
     case ModuleName.STO: {
       const stoModuleLicenseDTO = licenseData as STOModuleLicenseDTO
       const developers =
-        stoModuleLicenseDTO?.numberOfDevelopers === -1
+        stoModuleLicenseDTO?.numberOfDevelopers === UNLIMITED
           ? getString('common.unlimited')
           : stoModuleLicenseDTO?.numberOfDevelopers?.toLocaleString()
       return (
@@ -267,6 +269,20 @@ function getLicenseCountByModule({
           </Text>
           <Text color={Color.BLACK} font={{ weight: 'semi-bold' }}>
             {getString('common.subscriptions.chaos.infrastructures', { infrastructures: totalChaosInfrastructures })}
+          </Text>
+        </Layout.Vertical>
+      )
+    }
+    case ModuleName.CET: {
+      const cetModuleLicenseDTO = licenseData as CETModuleLicenseDTO
+      const agents =
+        cetModuleLicenseDTO?.numberOfAgents === UNLIMITED
+          ? getString('common.unlimited')
+          : cetModuleLicenseDTO?.numberOfAgents?.toLocaleString()
+      return (
+        <Layout.Vertical spacing="medium">
+          <Text color={Color.BLACK} font={{ weight: 'semi-bold' }} margin={{ bottom: 5 }}>
+            {getString('common.subscriptions.cet.agents', { agents: agents })}
           </Text>
         </Layout.Vertical>
       )

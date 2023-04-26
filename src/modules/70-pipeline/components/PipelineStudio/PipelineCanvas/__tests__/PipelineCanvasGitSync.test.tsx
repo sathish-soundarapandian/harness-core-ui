@@ -67,7 +67,8 @@ jest.mock('services/cd-ng', () => ({
   getListOfBranchesWithStatusPromise: jest.fn().mockImplementation(() => Promise.resolve(branchStatusMock)),
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitSyncListResponse, refetch: getListGitSync }
-  })
+  }),
+  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { data: { value: 'true' } } }))
 }))
 
 jest.mock('services/cd-ng-rq', () => ({

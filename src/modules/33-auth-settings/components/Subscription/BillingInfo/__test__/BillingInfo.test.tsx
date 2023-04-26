@@ -95,6 +95,7 @@ describe('BillingInfo', () => {
             className=""
             states={{}}
             countries={[]}
+            module={'cf'}
           />
         </Elements>
       </TestWrapper>
@@ -117,6 +118,7 @@ describe('BillingInfo', () => {
             className=""
             states={{}}
             countries={[]}
+            module={'cf'}
           />
         </Elements>
       </TestWrapper>

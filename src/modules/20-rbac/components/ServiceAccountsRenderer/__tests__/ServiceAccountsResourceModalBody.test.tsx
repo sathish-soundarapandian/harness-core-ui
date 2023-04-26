@@ -7,8 +7,8 @@
 
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
+import { SortMethod } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import { SortMethod } from '@common/utils/sortUtils'
 import * as cdng from 'services/cd-ng'
 import ServiceAccountsResourceModalBody from '../ServiceAccountsResourceModalBody'
 import data from './mock.json'

@@ -47,6 +47,7 @@ export interface DeployClusterEntityInputStepProps extends Required<DeployCluste
     path?: string
     readonly?: boolean
   }
+  scopePrefix?: string
 }
 
 export default function DeployClusterEntityInputStep({
@@ -56,7 +57,8 @@ export default function DeployClusterEntityInputStep({
   environmentIdentifier,
   isMultipleCluster,
   deployToAllClusters,
-  showEnvironmentsSelectionInputField
+  showEnvironmentsSelectionInputField,
+  scopePrefix
 }: DeployClusterEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
@@ -83,7 +85,9 @@ export default function DeployClusterEntityInputStep({
 
   const [clusterIdentifiers, setClusterIdentifiers] = useState<string[]>(getClusterIdentifiers())
 
-  const { clustersList, loadingClustersList } = useGetClustersData({ environmentIdentifier })
+  const { clustersList, loadingClustersList } = useGetClustersData({
+    environmentIdentifier: defaultTo(scopePrefix, '') + environmentIdentifier
+  })
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */

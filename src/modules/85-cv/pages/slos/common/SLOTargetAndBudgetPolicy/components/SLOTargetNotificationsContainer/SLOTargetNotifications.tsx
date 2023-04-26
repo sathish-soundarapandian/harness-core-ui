@@ -30,6 +30,7 @@ interface SLOTargetNotificationsProps {
   getNotifications: () => Promise<void>
   notificationsInTable: NotificationRuleResponse[]
   setNotificationsInTable: React.Dispatch<React.SetStateAction<NotificationRuleResponse[]>>
+  isCompositeRequestBasedSLO?: boolean
 }
 
 export default function SLOTargetNotifications(props: SLOTargetNotificationsProps): JSX.Element {
@@ -42,7 +43,8 @@ export default function SLOTargetNotifications(props: SLOTargetNotificationsProp
     page,
     getNotifications,
     notificationsInTable,
-    setNotificationsInTable
+    setNotificationsInTable,
+    isCompositeRequestBasedSLO
   } = props
 
   const { getString } = useStrings()
@@ -101,7 +103,10 @@ export default function SLOTargetNotifications(props: SLOTargetNotificationsProp
       error={error}
       getNotifications={getNotifications}
     >
-      <ConfigureSLOAlertConditions name={getString('conditions')} />
+      <ConfigureSLOAlertConditions
+        name={getString('conditions')}
+        isCompositeRequestBasedSLO={isCompositeRequestBasedSLO}
+      />
     </NotificationsContainer>
   )
 }

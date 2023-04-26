@@ -244,7 +244,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
   return (
     <>
       {isRuntime && (
-        <Layout.Vertical key={artifactPath}>
+        <Layout.Vertical key={artifactPath} className={css.inputWidth}>
           {isFieldRuntime(`artifacts.${artifactPath}.spec.connectorRef`, template) && (
             <FormMultiTypeConnectorField
               name={`${path}.artifacts.${artifactPath}.spec.connectorRef`}
@@ -284,7 +284,6 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
               fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
               template={template}
-              className={css.inputFieldLayout}
             />
           )}
 
@@ -317,38 +316,34 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
             </>
           )}
 
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
+            <TextFieldInputSetView
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              label={getString('tagRegex')}
+              name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
+              fieldPath={`artifacts.${artifactPath}.spec.tagRegex`}
+              template={template}
+            />
+          )}
+
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
-              <div className={css.inputFieldLayout}>
-                <DigestField
-                  {...props}
-                  fetchingDigest={fetchingDigest}
-                  // buildDetailsList={dockerdata?.data?.buildDetailsList}
-                  fetchDigestError={digestError}
-                  fetchDigest={fetchDigest}
-                  expressions={expressions}
-                  stageIdentifier={stageIdentifier}
-                  digestData={digestData}
-                />
-              </div>
-            )}
-
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
-              <TextFieldInputSetView
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                label={getString('tagRegex')}
-                name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
-                fieldPath={`artifacts.${artifactPath}.spec.tagRegex`}
-                template={template}
+              <DigestField
+                {...props}
+                fetchingDigest={fetchingDigest}
+                // buildDetailsList={dockerdata?.data?.buildDetailsList}
+                fetchDigestError={digestError}
+                fetchDigest={fetchDigest}
+                expressions={expressions}
+                stageIdentifier={stageIdentifier}
+                digestData={digestData}
               />
             )}
-          </div>
         </Layout.Vertical>
       )}
     </>
