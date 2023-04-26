@@ -9,7 +9,7 @@ import { parse } from 'yaml'
 import type { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { Diagnostic } from 'vscode-languageserver-types'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { PipelineEntity, PipelineEntityToRegexMapping } from '@common/interfaces/YAMLBuilderProps'
+import { PipelineEntity, PipelineEntityToRegexMapping } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import {
   getYAMLFromEditor,
   getMetaDataForKeyboardEventProcessing,

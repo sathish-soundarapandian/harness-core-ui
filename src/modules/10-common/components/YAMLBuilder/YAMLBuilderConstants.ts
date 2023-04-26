@@ -81,3 +81,41 @@ export const allowedKeysInReadOnlyModeMap = [
   KEY_CODE_FOR_CHAR_A,
   KEY_CODE_FOR_CHAR_F
 ]
+
+export enum EditorAction {
+  Manage = 'MANAGE',
+  Add = 'ADD',
+  Edit = 'EDIT'
+}
+
+export const enum PipelineEntity {
+  Pipeline = 'PIPELINE',
+  Stage = 'STAGE',
+  Step = 'STEP',
+  Trigger = 'TRIGGER',
+  Notification = 'NOTIFICATION',
+  Input = 'INPUT',
+  Barrier = 'BARRIER',
+  Clone = 'CLONE',
+  Delegate = 'DELEGATE',
+  EnvVariable = 'ENVIRONMENT_VARIABLE',
+  Registry = 'REGISTRY'
+}
+
+export const PipelineEntitiesWithCodeLensIntegrationEnabled = [
+  PipelineEntity.Stage,
+  PipelineEntity.Step,
+  PipelineEntity.Input
+]
+
+export const PipelineEntityToEditorActionsMappingForCodelens = new Map<PipelineEntity, EditorAction[]>([
+  [PipelineEntity.Stage, [EditorAction.Add, EditorAction.Edit]],
+  [PipelineEntity.Step, [EditorAction.Add, EditorAction.Edit]],
+  [PipelineEntity.Input, [EditorAction.Manage, EditorAction.Edit]]
+])
+
+export const PipelineEntityToRegexMapping = new Map<PipelineEntity, string>([
+  [PipelineEntity.Stage, 'steps:'],
+  [PipelineEntity.Step, '-\\sname:'],
+  [PipelineEntity.Input, 'inputs:']
+])

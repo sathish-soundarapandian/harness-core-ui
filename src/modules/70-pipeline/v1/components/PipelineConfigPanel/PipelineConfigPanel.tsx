@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { capitalize, get, isEmpty } from 'lodash-es'
 import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text, Formik } from '@harness/uicore'
-import { EntitySelectionFromYAML, PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
+import type { EntitySelectionFromYAML } from '@common/interfaces/YAMLBuilderProps'
+import { PipelineEntity } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import {
   ConfigOptionsMapWithAdditionalOptions,
   MainConfigOptionsMap,

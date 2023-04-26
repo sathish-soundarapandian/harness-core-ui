@@ -1,7 +1,7 @@
 import React from 'react'
 import type { IconProps } from '@harness/icons'
 import { FontVariation, FormInput, Layout, Text } from '@harness/uicore'
-import { PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
+import { PipelineEntity } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 
 export interface PipelineConfigOptionInterface {
   label: string

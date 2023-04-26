@@ -39,17 +39,19 @@ import { Icon, Layout, Tag, Container, useConfirmationDialog } from '@harness/ui
 import { useStrings } from 'framework/strings'
 import type { Module } from 'framework/types/ModuleName'
 import { useToaster } from '@common/exports'
-import {
+import type {
   YamlBuilderProps,
   YamlBuilderHandlerBinding,
   CompletionItemInterface,
-  Theme,
+  Theme
+} from '@common/interfaces/YAMLBuilderProps'
+import {
   EditorAction,
   PipelineEntity,
   PipelineEntitiesWithCodeLensIntegrationEnabled,
   PipelineEntityToEditorActionsMappingForCodelens,
   PipelineEntityToRegexMapping
-} from '@common/interfaces/YAMLBuilderProps'
+} from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import { PluginAddUpdateMetadata, PluginType } from '@common/interfaces/YAMLBuilderProps'
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
@@ -716,6 +718,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     switch (selectedPipelineEntity) {
       case PipelineEntity.Step:
         return obtainStepYAMLForEditorActionClick
+      case PipelineEntity.Input:
+        return obtainInputYAMLForEditorActionClick
       default:
         return noop
     }
@@ -914,6 +918,20 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       }
     },
     [editorRef.current?.editor]
+  )
+
+  const obtainInputYAMLForEditorActionClick = useCallback(
+    ({ latestYAML }: { latestYAML: string }): Record<string, any> => {
+      if (editorRef.current?.editor) {
+        try {
+          return { inputs: get(parse(latestYAML), 'inputs') }
+        } catch (e) {
+          // ignore error
+        }
+      }
+      return {}
+    },
+    []
   )
 
   const obtainStepYAMLForEditorActionClick = useCallback(

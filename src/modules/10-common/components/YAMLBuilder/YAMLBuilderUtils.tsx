@@ -13,8 +13,8 @@ import { get, isEmpty } from 'lodash-es'
 import type { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import { findLeafToParentPath, getSchemaWithLanguageSettings, validateYAMLWithSchema } from '../../utils/YamlUtils'
 import type { Module } from 'framework/types/ModuleName'
-import { PipelineEntityToRegexMapping, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
-import { PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
+import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
+import { PipelineEntityToRegexMapping, PipelineEntity } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
 
 /**
