@@ -3,7 +3,7 @@ import { capitalize, get, isEmpty } from 'lodash-es'
 import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text, Formik } from '@harness/uicore'
 import type { EntitySelectionFromYAML } from '@common/interfaces/YAMLBuilderProps'
-import { PipelineEntity } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
+import { PipelineAtomicEntity, PipelineEntityGroupings } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import {
   ConfigOptionsMapWithAdditionalOptions,
   MainConfigOptionsMap,
@@ -28,15 +28,15 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const { height, entitySelectedFromYAML } = props
   const { entityType, entityAsObj } = entitySelectedFromYAML || {}
   const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false)
-  const [pipelineEntity, setPipelineEntity] = useState<PipelineEntity>()
-  const [pipelineEntitySubType, setPipelineEntitySubType] = useState<PipelineEntitySubType | PipelineEntity>()
+  const [pipelineEntity, setPipelineEntity] = useState<PipelineAtomicEntity | PipelineEntityGroupings>()
+  const [pipelineEntitySubType, setPipelineEntitySubType] = useState<PipelineEntitySubType | PipelineAtomicEntity>()
   const [pipelineConfigOption, setPipelineConfigOption] = useState<PipelineConfigOptionInterface>()
   const [pipelineConfigPanelView, setPipelineConfigPanelView] = useState<PipelineConfigPanelView>(
     PipelineConfigPanelView.Options
   )
   const initialBreadCrumbs = [
     {
-      text: capitalize(PipelineEntity.Pipeline),
+      text: capitalize(PipelineAtomicEntity.Pipeline),
       onClick: () => {
         resetPipelineConfigPanel()
       }
@@ -54,7 +54,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
           const matchingSubTypeConfigOption = configOptionForEntityType.drillDown.subTypes?.find(
             (
               option: PipelineConfigOptionInterface & {
-                type: PipelineEntitySubType | PipelineEntity
+                type: PipelineEntitySubType | PipelineAtomicEntity
               }
             ) => option.type.toLowerCase() === get(entityAsObj, 'type')?.toLowerCase()
           )
@@ -81,7 +81,10 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   }, [])
 
   const updateBreadCrumbs = useCallback(
-    (selectedEntity: PipelineEntity, selectedConfigOption: PipelineConfigOptionInterface): void => {
+    (
+      selectedEntity: PipelineAtomicEntity | PipelineEntityGroupings,
+      selectedConfigOption: PipelineConfigOptionInterface
+    ): void => {
       const { label, drillDown } = selectedConfigOption || {}
       const { hasSubTypes } = drillDown || {}
       const breadCrumbLabel = hasSubTypes ? label : ''
@@ -94,7 +97,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
               onClick: () => {
                 setPipelineEntity(selectedEntity)
                 setPipelineConfigOption(selectedConfigOption)
-                if (selectedEntity === PipelineEntity.Pipeline) {
+                if (selectedEntity === PipelineAtomicEntity.Pipeline) {
                   resetBreadCrumbs()
                   setPipelineConfigPanelView(PipelineConfigPanelView.Options)
                 } else {
@@ -111,7 +114,10 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   )
 
   const onSelectConfigOption = useCallback(
-    (selectedEntity: PipelineEntity, selectedConfigOption: PipelineConfigOptionInterface): void => {
+    (
+      selectedEntity: PipelineAtomicEntity | PipelineEntityGroupings,
+      selectedConfigOption: PipelineConfigOptionInterface
+    ): void => {
       setPipelineEntity(selectedEntity)
       setPipelineConfigOption(selectedConfigOption)
       setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)
@@ -121,7 +127,10 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   )
 
   const renderPipelineConfigOption = useCallback(
-    (entity: PipelineEntity, configOption: PipelineConfigOptionInterface): React.ReactElement => {
+    (
+      entity: PipelineAtomicEntity | PipelineEntityGroupings,
+      configOption: PipelineConfigOptionInterface
+    ): React.ReactElement => {
       const { label, iconProps, description } = configOption
       return (
         <Layout.Horizontal
@@ -148,9 +157,11 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const renderPipelineConfigOptions = useCallback((): React.ReactElement => {
     const configOptionsMap = showMoreOptions ? ConfigOptionsMapWithAdditionalOptions : MainConfigOptionsMap
     const renderElms: React.ReactElement[] = []
-    configOptionsMap.forEach((value: PipelineConfigOptionInterface, key: PipelineEntity) => {
-      renderElms.push(renderPipelineConfigOption(key, value))
-    })
+    configOptionsMap.forEach(
+      (value: PipelineConfigOptionInterface, key: PipelineAtomicEntity | PipelineEntityGroupings) => {
+        renderElms.push(renderPipelineConfigOption(key, value))
+      }
+    )
     return (
       <>
         <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'medium', bottom: 'small' }}>
@@ -174,9 +185,9 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
 
   const getFormikInitialValues = useCallback((): Record<string, any> => {
     switch (pipelineEntity) {
-      case PipelineEntity.Stage:
+      case PipelineAtomicEntity.Stage:
         return {}
-      case PipelineEntity.Step: {
+      case PipelineAtomicEntity.Step: {
         switch (pipelineEntitySubType) {
           case Step.Run:
             return get(entityAsObj, 'spec')

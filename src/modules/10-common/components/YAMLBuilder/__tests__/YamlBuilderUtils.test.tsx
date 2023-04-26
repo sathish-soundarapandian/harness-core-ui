@@ -9,7 +9,7 @@ import { parse } from 'yaml'
 import type { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { Diagnostic } from 'vscode-languageserver-types'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { PipelineEntity, PipelineEntityToRegexMapping } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
+import { PipelineAtomicEntity, PipelineEntityToRegexMapping } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import {
   getYAMLFromEditor,
   getMetaDataForKeyboardEventProcessing,
@@ -66,7 +66,7 @@ const setupMockEditorWithDifferentMatchResults = (
         {
           getLineContent: (_lineNum: number) => `delegateName${_lineNum}: dn`,
           findMatches: (textToFind: string) => {
-            return textToFind === PipelineEntityToRegexMapping.get(PipelineEntity.Step) || ''
+            return textToFind === PipelineEntityToRegexMapping.get(PipelineAtomicEntity.Step) || ''
               ? stepMatches ||
                   ([
                     { range: { endLineNumber: 4, endColumn: 10 } },
@@ -75,7 +75,7 @@ const setupMockEditorWithDifferentMatchResults = (
                     { range: { endLineNumber: 20, endColumn: 16 } },
                     { range: { endLineNumber: 28, endColumn: 16 } }
                   ] as editor.FindMatch[])
-              : textToFind === PipelineEntityToRegexMapping.get(PipelineEntity.Stage) || ''
+              : textToFind === PipelineEntityToRegexMapping.get(PipelineAtomicEntity.Stage) || ''
               ? stageMatches ||
                 ([
                   { range: { endLineNumber: 7, endColumn: 13 } },
@@ -207,7 +207,7 @@ describe('YAMLBuilder Utils test', () => {
         lineNumber: 17,
         column: 19
       }) as editor.IStandaloneCodeEditor,
-      searchToken: PipelineEntityToRegexMapping.get(PipelineEntity.Step) || '',
+      searchToken: PipelineEntityToRegexMapping.get(PipelineAtomicEntity.Step) || '',
       sourcePosition: { lineNumber: 0, column: 0 } as Position
     }
     // test for "step" lookup
@@ -231,7 +231,7 @@ describe('YAMLBuilder Utils test', () => {
     expect(
       getArrayIndexClosestToCurrentCursor({ ...args, sourcePosition: { lineNumber: 22, column: 5 } as Position })
     ).toBe(1)
-    const stageMatchRegex = PipelineEntityToRegexMapping.get(PipelineEntity.Stage)
+    const stageMatchRegex = PipelineEntityToRegexMapping.get(PipelineAtomicEntity.Stage)
     // test for "step" lookup
     if (stageMatchRegex) {
       expect(

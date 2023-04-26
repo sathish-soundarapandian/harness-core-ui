@@ -10,7 +10,7 @@ import type { GetYamlSchemaQueryParams } from 'services/cd-ng'
 import type { PluginMetadataResponse } from 'services/ci'
 import type { Status } from '@common/utils/Constants'
 import type {
-  PipelineEntity,
+  PipelineAtomicEntity,
   EditorAction,
   PipelineEntityGroupings
 } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
@@ -70,7 +70,7 @@ export interface YamlBuilderProps {
 
 export interface EntitySelectionFromYAML {
   editorAction: EditorAction
-  entityType: PipelineEntity | PipelineEntityGroupings
+  entityType: PipelineAtomicEntity | PipelineEntityGroupings
   entityAsObj: Record<string, any>
 }
 
@@ -114,5 +114,5 @@ export interface PluginAddUpdateMetadata {
   pluginUses?: PluginMetadataResponse['uses']
   pluginImage?: PluginMetadataResponse['image']
   shouldInsertYAML: boolean
-  pipelineEntity: PipelineEntity
+  pipelineEntity: PipelineAtomicEntity
 }

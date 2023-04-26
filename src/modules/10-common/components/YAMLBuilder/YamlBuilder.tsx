@@ -47,7 +47,7 @@ import type {
 } from '@common/interfaces/YAMLBuilderProps'
 import {
   EditorAction,
-  PipelineEntity,
+  PipelineAtomicEntity,
   PipelineEntitiesWithCodeLensIntegrationEnabled,
   PipelineEntityToEditorActionsMappingForCodelens,
   PipelineEntityToRegexMapping,
@@ -182,8 +182,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   yamlValidationErrorsRef.current = yamlValidationErrors
   const editorVersionRef = useRef<number>()
   const currentCursorPosition = useRef<Position>()
-  const codeLensRegistrations = useRef<Map<PipelineEntity, Map<number, IDisposable>>>(
-    new Map<PipelineEntity, Map<number, IDisposable>>()
+  const codeLensRegistrations = useRef<Map<PipelineAtomicEntity, Map<number, IDisposable>>>(
+    new Map<PipelineAtomicEntity, Map<number, IDisposable>>()
   )
   const [isEditorExpanded, setIsEditorExpanded] = useState<boolean>(true)
   const { module } = useParams<{
@@ -716,9 +716,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [])
 
   const getOnClickHandlerForEntityType = useCallback(
-    (selectedPipelineEntity: PipelineEntity | PipelineEntityGroupings): Function => {
+    (selectedPipelineEntity: PipelineAtomicEntity | PipelineEntityGroupings): Function => {
       switch (selectedPipelineEntity) {
-        case PipelineEntity.Step:
+        case PipelineAtomicEntity.Step:
           return obtainStepYAMLForEditorActionClick
         case PipelineEntityGroupings.Inputs:
           return obtainInputYAMLForEditorActionClick
@@ -741,7 +741,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       toLineNum: number
       cursorPosition: Position
       editorActionToPerform: EditorAction
-      selectedPipelineEntity: PipelineEntity | PipelineEntityGroupings
+      selectedPipelineEntity: PipelineAtomicEntity | PipelineEntityGroupings
     }): string => {
       return (
         editorRef.current?.editor?.addCommand(
@@ -789,7 +789,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       fromLine: number
       toLineNum: number
       cursorPosition: Position
-      selectedPipelineEntity: PipelineEntity | PipelineEntityGroupings
+      selectedPipelineEntity: PipelineAtomicEntity | PipelineEntityGroupings
     }): IDisposable | undefined => {
       const commonArgs = { fromLine, toLineNum, cursorPosition }
       const codeLensRange = {
@@ -883,7 +883,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       isPluginUpdate: boolean
       closestStepIndex: number
       startStepIndex: number
-      selectedPipelineEntity: PipelineEntity
+      selectedPipelineEntity: PipelineAtomicEntity
     }): void => {
       const editor = editorRef.current?.editor
       if (editor) {
@@ -946,7 +946,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const closestStageIndex = getArrayIndexClosestToCurrentCursor({
             editor: editorRef.current.editor,
             sourcePosition: cursorPosition,
-            searchToken: PipelineEntityToRegexMapping.get(PipelineEntity.Stage) || ''
+            searchToken: PipelineEntityToRegexMapping.get(PipelineAtomicEntity.Stage) || ''
           })
           const stageStepsForTheClosestIndex = extractStepsFromStage(
             currentYAMLAsJSON,
@@ -980,12 +980,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   useEffect(() => {
     const editor = editorRef.current?.editor
     if (shouldShowPluginsPanel && editor) {
-      PipelineEntitiesWithCodeLensIntegrationEnabled.map((entity: PipelineEntity | PipelineEntityGroupings) => {
+      PipelineEntitiesWithCodeLensIntegrationEnabled.map((entity: PipelineAtomicEntity | PipelineEntityGroupings) => {
         const stepMatchingPositions = getMatchingPositionsForPipelineEntity(editor, entity)
         if (stepMatchingPositions.length) {
           stepMatchingPositions.map((matchingPosition: Position) => {
             const { lineNumber } = matchingPosition
-            const registrationsForSelectedPipelineEntity = codeLensRegistrations.current.get(PipelineEntity.Step)
+            const registrationsForSelectedPipelineEntity = codeLensRegistrations.current.get(PipelineAtomicEntity.Step)
             if (registrationsForSelectedPipelineEntity && registrationsForSelectedPipelineEntity.has(lineNumber)) {
               const existingRegistrationId = registrationsForSelectedPipelineEntity.get(lineNumber)
               if (existingRegistrationId) {
@@ -1006,10 +1006,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             if (registrationId) {
               if (registrationsForSelectedPipelineEntity) {
                 registrationsForSelectedPipelineEntity.set(lineNumber, registrationId)
-                codeLensRegistrations.current.set(PipelineEntity.Step, registrationsForSelectedPipelineEntity)
+                codeLensRegistrations.current.set(PipelineAtomicEntity.Step, registrationsForSelectedPipelineEntity)
               } else {
                 codeLensRegistrations.current.set(
-                  PipelineEntity.Step,
+                  PipelineAtomicEntity.Step,
                   new Map<number, IDisposable>([[lineNumber, registrationId]])
                 )
               }
@@ -1070,7 +1070,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean): void => {
       const { shouldInsertYAML } = pluginMetadata
       const cursorPosition = currentCursorPosition.current
-      const stageMatchRegex = PipelineEntityToRegexMapping.get(PipelineEntity.Stage)
+      const stageMatchRegex = PipelineEntityToRegexMapping.get(PipelineAtomicEntity.Stage)
       if (shouldInsertYAML && cursorPosition && editorRef.current?.editor && stageMatchRegex) {
         let updatedYAML = currentYaml
         try {

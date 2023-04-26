@@ -88,7 +88,7 @@ export enum EditorAction {
   Edit = 'EDIT'
 }
 
-export const enum PipelineEntity {
+export const enum PipelineAtomicEntity {
   Pipeline = 'PIPELINE',
   Stage = 'STAGE',
   Step = 'STEP',
@@ -108,23 +108,23 @@ export const enum PipelineEntityGroupings {
   Inputs = 'INPUTS'
 }
 
-export const PipelineEntitiesWithCodeLensIntegrationEnabled: (PipelineEntity | PipelineEntityGroupings)[] = [
-  PipelineEntity.Stage,
-  PipelineEntity.Step,
+export const PipelineEntitiesWithCodeLensIntegrationEnabled: (PipelineAtomicEntity | PipelineEntityGroupings)[] = [
+  PipelineAtomicEntity.Stage,
+  PipelineAtomicEntity.Step,
   PipelineEntityGroupings.Inputs
 ]
 
 export const PipelineEntityToEditorActionsMappingForCodelens = new Map<
-  PipelineEntity | PipelineEntityGroupings,
+  PipelineAtomicEntity | PipelineEntityGroupings,
   EditorAction[]
 >([
-  [PipelineEntity.Stage, [EditorAction.Edit]],
-  [PipelineEntity.Step, [EditorAction.Edit]],
+  [PipelineAtomicEntity.Stage, [EditorAction.Edit]],
+  [PipelineAtomicEntity.Step, [EditorAction.Edit]],
   [PipelineEntityGroupings.Inputs, [EditorAction.Manage, EditorAction.Add]]
 ])
 
-export const PipelineEntityToRegexMapping = new Map<PipelineEntity | PipelineEntityGroupings, string>([
-  [PipelineEntity.Stage, 'steps:'],
-  [PipelineEntity.Step, '-\\sname:'],
+export const PipelineEntityToRegexMapping = new Map<PipelineAtomicEntity | PipelineEntityGroupings, string>([
+  [PipelineAtomicEntity.Stage, 'steps:'],
+  [PipelineAtomicEntity.Step, '-\\sname:'],
   [PipelineEntityGroupings.Inputs, 'inputs:']
 ])

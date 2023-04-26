@@ -1,7 +1,7 @@
 import React from 'react'
 import type { IconProps } from '@harness/icons'
 import { FontVariation, FormInput, Layout, Text } from '@harness/uicore'
-import { PipelineEntity } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
+import { PipelineAtomicEntity, PipelineEntityGroupings } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 
 export interface PipelineConfigOptionInterface {
   label: string
@@ -9,7 +9,7 @@ export interface PipelineConfigOptionInterface {
   description: string
   drillDown: {
     hasSubTypes: boolean
-    subTypes?: (PipelineConfigOptionInterface & { type: PipelineEntitySubType | PipelineEntity })[]
+    subTypes?: (PipelineConfigOptionInterface & { type: PipelineEntitySubType | PipelineAtomicEntity })[]
     nodeView?: React.ReactElement
   }
 }
@@ -26,9 +26,12 @@ export const enum Step {
   Plugin = 'Plugin'
 }
 
-export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionInterface>([
+export const MainConfigOptionsMap = new Map<
+  PipelineAtomicEntity | PipelineEntityGroupings,
+  PipelineConfigOptionInterface
+>([
   [
-    PipelineEntity.Stage,
+    PipelineAtomicEntity.Stage,
     {
       label: 'Stages',
       iconProps: { name: 'add-stage', size: 20 },
@@ -73,7 +76,7 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
     }
   ],
   [
-    PipelineEntity.Step,
+    PipelineAtomicEntity.Step,
     {
       label: 'Steps',
       iconProps: { name: 'plugin-ci-step', size: 20 },
@@ -136,7 +139,7 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
     }
   ],
   [
-    PipelineEntity.Trigger,
+    PipelineAtomicEntity.Trigger,
     {
       label: 'Triggers',
       iconProps: { name: 'yaml-builder-trigger', size: 20 },
@@ -145,7 +148,7 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
     }
   ],
   [
-    PipelineEntity.Notification,
+    PipelineAtomicEntity.Notification,
     {
       label: 'Notifications',
       iconProps: { name: 'notifications', size: 20 },
@@ -154,7 +157,7 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
     }
   ],
   [
-    PipelineEntity.Input,
+    PipelineEntityGroupings.Inputs,
     {
       label: 'Inputs',
       iconProps: { name: 'template-inputs', size: 20 },
@@ -185,7 +188,7 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
               )
             },
             iconProps: { name: 'plugin-inputs' },
-            type: PipelineEntity.Input
+            type: PipelineAtomicEntity.Input
           },
           {
             label: 'password',
@@ -210,7 +213,7 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
               )
             },
             iconProps: { name: 'plugin-inputs' },
-            type: PipelineEntity.Input
+            type: PipelineAtomicEntity.Input
           }
         ]
       }
@@ -218,9 +221,12 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
   ]
 ])
 
-const AdditionalConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionInterface>([
+const AdditionalConfigOptionsMap = new Map<
+  PipelineAtomicEntity | PipelineEntityGroupings,
+  PipelineConfigOptionInterface
+>([
   [
-    PipelineEntity.Barrier,
+    PipelineAtomicEntity.Barrier,
     {
       label: 'Barriers',
       iconProps: { name: 'command-barrier', size: 20 },
@@ -229,7 +235,7 @@ const AdditionalConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionI
     }
   ],
   [
-    PipelineEntity.Clone,
+    PipelineAtomicEntity.Clone,
     {
       label: 'Clone',
       iconProps: { name: 'code-clone', size: 20 },
@@ -238,7 +244,7 @@ const AdditionalConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionI
     }
   ],
   [
-    PipelineEntity.Delegate,
+    PipelineAtomicEntity.Delegate,
     {
       label: 'Delegates',
       iconProps: { name: 'main-delegates', size: 20 },
@@ -247,7 +253,7 @@ const AdditionalConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionI
     }
   ],
   [
-    PipelineEntity.EnvVariable,
+    PipelineAtomicEntity.EnvVariable,
     {
       label: 'Environment Variables',
       iconProps: { name: 'pipeline-variables', size: 20 },
@@ -256,7 +262,7 @@ const AdditionalConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionI
     }
   ],
   [
-    PipelineEntity.Registry,
+    PipelineAtomicEntity.Registry,
     {
       label: 'Registry',
       iconProps: { name: 'azure-container-registry', size: 20 },

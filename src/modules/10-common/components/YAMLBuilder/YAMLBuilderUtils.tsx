@@ -16,7 +16,7 @@ import type { Module } from 'framework/types/ModuleName'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import {
   PipelineEntityToRegexMapping,
-  PipelineEntity,
+  PipelineAtomicEntity,
   PipelineEntityGroupings
 } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
@@ -171,10 +171,10 @@ const getDefaultStageForModule = (module: Module): Record<string, any> => {
 
 export const getMatchingPositionsForPipelineEntity = (
   editor: editor.IStandaloneCodeEditor,
-  selectedPipelineEntity: PipelineEntity | PipelineEntityGroupings
+  selectedPipelineEntity: PipelineAtomicEntity | PipelineEntityGroupings
 ): Position[] => {
   switch (selectedPipelineEntity) {
-    case PipelineEntity.Step:
+    case PipelineAtomicEntity.Step:
       return getValidStepPositions(editor)
     case PipelineEntityGroupings.Inputs:
       return findPositionsForMatchingKeys(
@@ -188,9 +188,9 @@ export const getMatchingPositionsForPipelineEntity = (
 
 const getValidStepPositions = (editor: editor.IStandaloneCodeEditor): Position[] => {
   const allStageMatches =
-    findPositionsForMatchingKeys(editor, PipelineEntityToRegexMapping.get(PipelineEntity.Stage) || '') || []
+    findPositionsForMatchingKeys(editor, PipelineEntityToRegexMapping.get(PipelineAtomicEntity.Stage) || '') || []
   const allStepMatches =
-    findPositionsForMatchingKeys(editor, PipelineEntityToRegexMapping.get(PipelineEntity.Step) || '') || []
+    findPositionsForMatchingKeys(editor, PipelineEntityToRegexMapping.get(PipelineAtomicEntity.Step) || '') || []
   const currentYAML = editor.getValue()
   if (currentYAML && allStageMatches.length && allStepMatches.length) {
     let currentYAMLAsJSON = {}
@@ -239,10 +239,10 @@ const getArrayIndexClosestToCurrentCursor = ({
 }): number => {
   if (editor) {
     const { lineNumber: currentCursorLineNum } = sourcePosition || {}
-    const stageMatchRegex = PipelineEntityToRegexMapping.get(PipelineEntity.Stage)
+    const stageMatchRegex = PipelineEntityToRegexMapping.get(PipelineAtomicEntity.Stage)
     if (currentCursorLineNum && stageMatchRegex) {
       const allMatchesFound =
-        searchToken === PipelineEntityToRegexMapping.get(PipelineEntity.Step)
+        searchToken === PipelineEntityToRegexMapping.get(PipelineAtomicEntity.Step)
           ? getValidStepPositions(editor)
           : searchToken === stageMatchRegex
           ? findPositionsForMatchingKeys(editor, stageMatchRegex)
@@ -317,7 +317,7 @@ const getClosestStepIndexInCurrentStage = ({
   currentStageStepsCount: number
 }): number => {
   let closestStepIndex = -1
-  const stepRegexMatch = PipelineEntityToRegexMapping.get(PipelineEntity.Step) || ''
+  const stepRegexMatch = PipelineEntityToRegexMapping.get(PipelineAtomicEntity.Step) || ''
   if (editor && stepRegexMatch) {
     if (precedingStageStepsCount > 0) {
       closestStepIndex = getArrayIndexClosestToCurrentCursor({
