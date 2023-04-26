@@ -219,9 +219,8 @@ describe('Pipeline Canvas - new pipeline', () => {
     )
 
     // Click on VISUAL again
-    act(() => {
-      fireEvent.click(getByText('VISUAL'))
-    })
+    fireEvent.click(getByText('VISUAL'))
+
     await waitFor(() => expect(showError).toBeCalledWith('pipeline.duplicateStepIdentifiers', 5000))
   })
 

@@ -38,6 +38,7 @@ export const getHarnessApprovalEditModePropsAsExpressions = (): HarnessApprovalS
     spec: {
       approvalMessage: '<+somemessage>',
       includePipelineExecutionHistory: '',
+      isAutoRejectEnabled: false,
       approverInputs: '',
       approvers: {
         userGroups: '<+abc>',
@@ -64,6 +65,7 @@ export const getHarnessApprovalEditModePropsMinimumCountNegative = (): HarnessAp
     spec: {
       approvalMessage: '<+somemessage>',
       includePipelineExecutionHistory: '',
+      isAutoRejectEnabled: false,
       approverInputs: '',
       approvers: {
         userGroups: '<+abc>',
@@ -90,6 +92,7 @@ export const getHarnessApprovalEditModePropsWithValues = (): HarnessApprovalStep
     spec: {
       approvalMessage: 'Approving pipeline <+pname>',
       includePipelineExecutionHistory: true,
+      isAutoRejectEnabled: false,
       approverInputs: [
         {
           name: 'somekey',

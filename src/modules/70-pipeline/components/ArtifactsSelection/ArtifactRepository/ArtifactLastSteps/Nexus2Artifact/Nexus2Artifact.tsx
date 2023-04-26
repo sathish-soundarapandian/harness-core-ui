@@ -17,13 +17,15 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  FormikForm
+  FormikForm,
+  SelectOption
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { merge, defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
+
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
@@ -31,7 +33,9 @@ import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import {
   ConnectorConfigDTO,
   DockerBuildDetailsDTO,
+  useArtifactIds,
   useGetBuildDetailsForNexusArtifact,
+  useGetGroupIds,
   useGetRepositories
 } from 'services/cd-ng'
 import {
@@ -51,11 +55,16 @@ import { nexus2RepositoryFormatTypes, RepositoryFormatTypes } from '@pipeline/ut
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { isValueFixed } from '@common/utils/utils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
 import ArtifactImagePathTagView, { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import type { queryInterface } from '../Nexus3Artifact/Nexus3Artifact'
+import { getRequestOptions } from '../helper'
+
 import css from '../../ArtifactConnector.module.scss'
 
 export function Nexus2Artifact({
@@ -74,12 +83,15 @@ export function Nexus2Artifact({
   editArtifactModePrevStepData
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
+  const { CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN } = useFeatureFlags()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const [lastQueryData, setLastQueryData] = useState<queryInterface>({ repositoryFormat: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
+  const [groupIds, setGroupIds] = useState<SelectOption[]>([])
+  const [artifactIds, setArtifactIds] = useState<SelectOption[]>([])
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
@@ -156,12 +168,84 @@ export function Nexus2Artifact({
     }
   })
 
+  const apiOptions = getRequestOptions({
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    connectorRef: getConnectorRefQueryData(),
+    repository: lastQueryData.repository
+  })
+
+  const {
+    data: groupIdData,
+    loading: fetchingGroupIds,
+    error: groupIdError,
+    refetch: refetchGroupIds
+  } = useMutateAsGet(useGetGroupIds, apiOptions)
+
+  const {
+    data: artifactIdData,
+    loading: fetchingArtifactIds,
+    error: artifactIdError,
+    refetch: refetchArtifactIds
+  } = useMutateAsGet(useArtifactIds, apiOptions)
+
   const selectRepositoryItems = useMemo(() => {
     return repositoryDetails?.data?.map(repository => ({
       value: defaultTo(repository.repositoryId, ''),
       label: defaultTo(repository.repositoryId, '')
     }))
   }, [repositoryDetails?.data])
+
+  useEffect(() => {
+    const groupOptions: SelectOption[] = (groupIdData?.data || [])?.map(group => {
+      return {
+        label: group,
+        value: group
+      } as SelectOption
+    }) || [
+      {
+        label: getString('common.loadingFieldOptions', {
+          fieldName: getString('pipeline.artifactsSelection.groupId')
+        }),
+        value: getString('common.loadingFieldOptions', {
+          fieldName: getString('pipeline.artifactsSelection.groupId')
+        })
+      }
+    ]
+    setGroupIds(groupOptions)
+  }, [groupIdData?.data])
+
+  useEffect(() => {
+    if (groupIdError) {
+      setGroupIds([])
+    }
+  }, [groupIdError])
+
+  useEffect(() => {
+    if (artifactIdError) {
+      setArtifactIds([])
+    }
+  }, [artifactIdError])
+
+  useEffect(() => {
+    const artifactOptions: SelectOption[] = (artifactIdData?.data || [])?.map(artifact => {
+      return {
+        label: artifact,
+        value: artifact
+      } as SelectOption
+    }) || [
+      {
+        label: getString('common.loadingFieldOptions', {
+          fieldName: getString('pipeline.artifactsSelection.artifactId')
+        }),
+        value: getString('common.loadingFieldOptions', {
+          fieldName: getString('pipeline.artifactsSelection.artifactId')
+        })
+      }
+    ]
+    setArtifactIds(artifactOptions)
+  }, [artifactIdData?.data])
 
   const getRepository = (): { label: string; value: string }[] => {
     if (fetchingRepository) {
@@ -272,8 +356,8 @@ export function Nexus2Artifact({
       ? !checkIfQueryParamsisNotEmpty([
           formikValue.repositoryFormat,
           formikValue.repository,
-          formikValue.spec.artifactId,
-          formikValue.spec.groupId
+          formikValue.spec?.artifactId,
+          formikValue.spec?.groupId
         ])
       : !checkIfQueryParamsisNotEmpty([
           formikValue.repositoryFormat,
@@ -336,7 +420,7 @@ export function Nexus2Artifact({
       })
     }
   }
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
+  const itemRenderer = memoize((item: { label: string }, { handleClick }, disabled) => (
     <div key={item.label.toString()}>
       <Menu.Item
         text={
@@ -344,7 +428,7 @@ export function Nexus2Artifact({
             <Text>{item.label}</Text>
           </Layout.Horizontal>
         }
-        disabled={fetchingRepository}
+        disabled={disabled}
         onClick={handleClick}
       />
     </div>
@@ -370,265 +454,441 @@ export function Nexus2Artifact({
           })
         }}
       >
-        {formik => (
-          <FormikForm>
-            <div className={cx(css.artifactForm, formClassName)}>
-              {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
-              {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-              <div className={css.imagePathContainer}>
-                <FormInput.Select
-                  name="repositoryFormat"
-                  label={getString('common.repositoryFormat')}
-                  items={nexus2RepositoryFormatTypes}
-                  onChange={value => {
-                    if (value.value === RepositoryFormatTypes.Maven) {
-                      const optionalValues: { extension?: string; classifier?: string } = {}
-                      if (formik.values?.spec?.classifier) {
-                        optionalValues.classifier = formik.values?.spec?.classifier
-                      }
-                      if (formik.values?.spec?.extension) {
-                        optionalValues.extension = formik.values?.spec?.extension
-                      }
-                      setLastQueryData({
-                        repository: '',
-                        repositoryFormat: RepositoryFormatTypes.Maven,
-                        artifactId: '',
-                        groupId: '',
-                        ...optionalValues
-                      })
-                    } else {
-                      setLastQueryData({
-                        repository: '',
-                        repositoryFormat: value.value as string,
-                        packageName: ''
-                      })
-                    }
-                  }}
-                />
-              </div>
-              <div className={css.imagePathContainer}>
-                <FormInput.MultiTypeInput
-                  selectItems={getRepository()}
-                  disabled={isReadonly}
-                  label={getString('repository')}
-                  name="repository"
-                  placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-                  useValue
-                  multiTypeInputProps={{
-                    expressions,
-                    allowableTypes,
-                    selectProps: {
-                      noResults: (
-                        <NoTagResults
-                          tagError={errorFetchingRepository}
-                          isServerlessDeploymentTypeSelected={false}
-                          defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
-                        />
-                      ),
-                      itemRenderer: itemRenderer,
-                      items: getRepository(),
-                      allowCreatingNewItems: true
-                    },
-                    onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                      if (
-                        e?.target?.type !== 'text' ||
-                        (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
-                        getMultiTypeFromValue(formik.values?.repositoryFormat) === MultiTypeInputType.RUNTIME
-                      ) {
-                        return
-                      }
-                      refetchRepositoryDetails({
-                        queryParams: {
-                          ...commonParams,
-                          connectorRef: getConnectorRefQueryData(),
-                          repositoryFormat: formik.values?.repositoryFormat
-                        }
-                      })
-                    }
-                  }}
-                />
-                {getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME && (
-                  <div className={css.configureOptions}>
-                    <SelectConfigureOptions
-                      options={getRepository()}
-                      loading={fetchingRepository}
-                      style={{ alignSelf: 'center' }}
-                      value={formik.values?.repository as string}
-                      type={getString('string')}
-                      variableName="repository"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => {
-                        formik.setFieldValue('repository', value)
-                      }}
-                      isReadonly={isReadonly}
-                    />
-                  </div>
-                )}
-              </div>
-              {formik.values?.repositoryFormat === RepositoryFormatTypes.Maven ? (
-                <>
-                  <div className={css.imagePathContainer}>
-                    <FormInput.MultiTextInput
-                      label={getString('pipeline.artifactsSelection.groupId')}
-                      name="spec.groupId"
-                      placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
-                    />
-                    {getMultiTypeFromValue(formik.values?.spec?.groupId) === MultiTypeInputType.RUNTIME && (
-                      <div className={css.configureOptions}>
-                        <ConfigureOptions
-                          value={formik.values?.spec?.groupId || ''}
-                          type="String"
-                          variableName="spec.groupId"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          onChange={value => {
-                            formik.setFieldValue('spec.groupId', value)
-                          }}
-                          isReadonly={isReadonly}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <div className={css.imagePathContainer}>
-                    <FormInput.MultiTextInput
-                      label={getString('pipeline.artifactsSelection.artifactId')}
-                      name="spec.artifactId"
-                      placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
-                    />
-                    {getMultiTypeFromValue(formik.values?.spec?.artifactId) === MultiTypeInputType.RUNTIME && (
-                      <div className={css.configureOptions}>
-                        <ConfigureOptions
-                          value={formik.values?.spec?.artifactId || ''}
-                          type="String"
-                          variableName="spec.artifactId"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          onChange={value => {
-                            formik.setFieldValue('spec.artifactId', value)
-                          }}
-                          isReadonly={isReadonly}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <div className={css.imagePathContainer}>
-                    <FormInput.MultiTextInput
-                      label={getString('pipeline.artifactsSelection.extension')}
-                      name="spec.extension"
-                      placeholder={getString('pipeline.artifactsSelection.extensionPlaceholder')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
-                    />
-                    {getMultiTypeFromValue(formik.values?.spec?.extension) === MultiTypeInputType.RUNTIME && (
-                      <div className={css.configureOptions}>
-                        <ConfigureOptions
-                          value={formik.values?.spec?.extension || ''}
-                          type="String"
-                          variableName="spec.extension"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          onChange={value => {
-                            formik.setFieldValue('spec.extension', value)
-                          }}
-                          isReadonly={isReadonly}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <div className={css.imagePathContainer}>
-                    <FormInput.MultiTextInput
-                      label={getString('pipeline.artifactsSelection.classifier')}
-                      name="spec.classifier"
-                      placeholder={getString('pipeline.artifactsSelection.classifierPlaceholder')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
-                    />
-                    {getMultiTypeFromValue(formik.values?.spec?.classifier) === MultiTypeInputType.RUNTIME && (
-                      <div className={css.configureOptions}>
-                        <ConfigureOptions
-                          value={formik.values?.spec?.classifier || ''}
-                          type="String"
-                          variableName="spec.classifier"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          onChange={value => {
-                            formik.setFieldValue('spec.classifier', value)
-                          }}
-                          isReadonly={isReadonly}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </>
-              ) : (
+        {formik => {
+          return (
+            <FormikForm>
+              <div className={cx(css.artifactForm, formClassName)}>
+                {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
+                {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 <div className={css.imagePathContainer}>
-                  <FormInput.MultiTextInput
-                    label={getString('pipeline.artifactsSelection.packageName')}
-                    name="spec.packageName"
-                    placeholder={getString('pipeline.manifestType.packagePlaceholder')}
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                  <FormInput.Select
+                    name="repositoryFormat"
+                    label={getString('common.repositoryFormat')}
+                    items={nexus2RepositoryFormatTypes}
+                    onChange={value => {
+                      if (value.value === RepositoryFormatTypes.Maven) {
+                        const optionalValues: { extension?: string; classifier?: string } = {}
+                        if (formik.values?.spec?.classifier) {
+                          optionalValues.classifier = formik.values?.spec?.classifier
+                        }
+                        if (formik.values?.spec?.extension) {
+                          optionalValues.extension = formik.values?.spec?.extension
+                        }
+                        setLastQueryData({
+                          repository: '',
+                          repositoryFormat: RepositoryFormatTypes.Maven,
+                          artifactId: '',
+                          groupId: '',
+                          ...optionalValues
+                        })
+                      } else {
+                        setLastQueryData({
+                          repository: '',
+                          repositoryFormat: value.value as string,
+                          packageName: ''
+                        })
+                      }
+                    }}
                   />
-                  {getMultiTypeFromValue(formik.values?.spec?.packageName) === MultiTypeInputType.RUNTIME && (
+                </div>
+                <div className={css.imagePathContainer}>
+                  <FormInput.MultiTypeInput
+                    selectItems={getRepository()}
+                    disabled={isReadonly}
+                    label={getString('repository')}
+                    name="repository"
+                    placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
+                    useValue
+                    multiTypeInputProps={{
+                      expressions,
+                      allowableTypes,
+                      selectProps: {
+                        noResults: (
+                          <NoTagResults
+                            tagError={errorFetchingRepository}
+                            isServerlessDeploymentTypeSelected={false}
+                            defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
+                          />
+                        ),
+                        itemRenderer: (item, props) => itemRenderer(item, props, fetchingRepository),
+                        items: getRepository(),
+                        allowCreatingNewItems: true
+                      },
+                      onChange: (val: any) => {
+                        if (isValueFixed(val)) {
+                          formik.setValues({
+                            ...formik.values,
+                            repository: val.value,
+                            spec: {
+                              ...formik.values.spec,
+                              groupId: '',
+                              artifactId: ''
+                            }
+                          })
+
+                          setGroupIds([])
+                          setArtifactIds([])
+                        }
+                      },
+                      onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                        if (
+                          e?.target?.type !== 'text' ||
+                          (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                          getMultiTypeFromValue(formik.values?.repositoryFormat) === MultiTypeInputType.RUNTIME
+                        ) {
+                          return
+                        }
+                        refetchRepositoryDetails({
+                          queryParams: {
+                            ...commonParams,
+                            connectorRef: getConnectorRefQueryData(),
+                            repositoryFormat: formik.values?.repositoryFormat
+                          }
+                        })
+                      }
+                    }}
+                  />
+                  {getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME && (
                     <div className={css.configureOptions}>
-                      <ConfigureOptions
-                        value={formik.values?.spec?.packageName || ''}
-                        type="String"
-                        variableName="spec.packageName"
+                      <SelectConfigureOptions
+                        options={getRepository()}
+                        loading={fetchingRepository}
+                        style={{ alignSelf: 'center' }}
+                        value={formik.values?.repository as string}
+                        type={getString('string')}
+                        variableName="repository"
                         showRequiredField={false}
                         showDefaultField={false}
                         onChange={value => {
-                          formik.setFieldValue('spec.packageName', value)
+                          formik.setFieldValue('repository', value)
                         }}
                         isReadonly={isReadonly}
                       />
                     </div>
                   )}
                 </div>
+                {formik.values?.repositoryFormat === RepositoryFormatTypes.Maven ? (
+                  <>
+                    <div className={css.imagePathContainer}>
+                      {CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN ? (
+                        <>
+                          <FormInput.MultiTypeInput
+                            selectItems={groupIds}
+                            useValue
+                            label={getString('pipeline.artifactsSelection.groupId')}
+                            name="spec.groupId"
+                            placeholder={
+                              fetchingGroupIds
+                                ? getString('common.loadingFieldOptions', {
+                                    fieldName: getString('pipeline.artifactsSelection.groupId')
+                                  })
+                                : getString('pipeline.artifactsSelection.groupIdPlaceholder')
+                            }
+                            multiTypeInputProps={{
+                              expressions,
+                              allowableTypes,
+                              selectProps: {
+                                allowCreatingNewItems: true,
+                                itemRenderer: (item, props) => itemRenderer(item, props, fetchingGroupIds),
+                                items: groupIds,
+                                loadingItems: fetchingGroupIds,
+
+                                noResults: !fetchingGroupIds ? (
+                                  <NoTagResults
+                                    tagError={groupIdError}
+                                    isServerlessDeploymentTypeSelected={false}
+                                    defaultErrorText={
+                                      fetchingGroupIds
+                                        ? getString('loading')
+                                        : getString('common.filters.noResultsFound')
+                                    }
+                                  />
+                                ) : null
+                              },
+                              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                                if (
+                                  e?.target?.type !== 'text' ||
+                                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                                  getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME ||
+                                  getMultiTypeFromValue(formik.values?.spec?.groupId) === MultiTypeInputType.RUNTIME
+                                ) {
+                                  return
+                                }
+
+                                refetchGroupIds({
+                                  queryParams: {
+                                    ...commonParams,
+                                    connectorRef: getConnectorRefQueryData(),
+                                    repository: formik.values?.repository,
+                                    repositoryFormat: formik.values?.repositoryFormat
+                                  }
+                                })
+                              }
+                            }}
+                          />
+                          {getMultiTypeFromValue(formik.values?.spec?.groupId) === MultiTypeInputType.RUNTIME && (
+                            <div className={css.configureOptions}>
+                              <SelectConfigureOptions
+                                options={groupIds}
+                                loading={fetchingGroupIds}
+                                style={{ alignSelf: 'center' }}
+                                value={formik.values?.spec?.groupId as string}
+                                type={getString('string')}
+                                variableName="spec.groupId"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={value => {
+                                  formik.setFieldValue('spec.groupId', value)
+                                }}
+                                isReadonly={isReadonly}
+                              />
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <FormInput.MultiTextInput
+                            label={getString('pipeline.artifactsSelection.groupId')}
+                            name="spec.groupId"
+                            placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
+                            multiTextInputProps={{ expressions, allowableTypes }}
+                          />
+                          {getMultiTypeFromValue(formik.values?.spec?.groupId) === MultiTypeInputType.RUNTIME && (
+                            <div className={css.configureOptions}>
+                              <ConfigureOptions
+                                value={formik.values?.spec?.groupId || ''}
+                                type="String"
+                                variableName="spec.groupId"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={value => {
+                                  formik.setFieldValue('spec.groupId', value)
+                                }}
+                                isReadonly={isReadonly}
+                              />
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <div className={css.imagePathContainer}>
+                      {CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN ? (
+                        <>
+                          <FormInput.MultiTypeInput
+                            selectItems={artifactIds}
+                            useValue
+                            label={getString('pipeline.artifactsSelection.artifactId')}
+                            name="spec.artifactId"
+                            placeholder={
+                              fetchingArtifactIds
+                                ? getString('common.loadingFieldOptions', {
+                                    fieldName: getString('pipeline.artifactsSelection.artifactId')
+                                  })
+                                : getString('pipeline.artifactsSelection.artifactIdPlaceholder')
+                            }
+                            multiTypeInputProps={{
+                              expressions,
+                              allowableTypes,
+                              selectProps: {
+                                noResults: !fetchingArtifactIds ? (
+                                  <NoTagResults
+                                    tagError={artifactIdError}
+                                    defaultErrorText={
+                                      fetchingArtifactIds
+                                        ? getString('loading')
+                                        : getString('common.filters.noResultsFound')
+                                    }
+                                  />
+                                ) : null,
+                                itemRenderer: (item, props) => itemRenderer(item, props, fetchingArtifactIds),
+                                items: artifactIds,
+                                loadingItems: fetchingArtifactIds,
+                                allowCreatingNewItems: true
+                              },
+                              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                                if (
+                                  e?.target?.type !== 'text' ||
+                                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                                  getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME ||
+                                  getMultiTypeFromValue(formik.values?.spec?.artifactId) === MultiTypeInputType.RUNTIME
+                                ) {
+                                  return
+                                }
+
+                                refetchArtifactIds({
+                                  queryParams: {
+                                    ...commonParams,
+                                    connectorRef: getConnectorRefQueryData(),
+                                    repository: formik.values?.repository,
+                                    repositoryFormat: formik.values?.repositoryFormat,
+                                    groupId: formik.values?.spec?.groupId,
+                                    nexusSourceType: 'Nexus2Registry'
+                                  }
+                                })
+                              }
+                            }}
+                          />
+                          {getMultiTypeFromValue(formik.values?.spec?.artifactId) === MultiTypeInputType.RUNTIME && (
+                            <div className={css.configureOptions}>
+                              <SelectConfigureOptions
+                                options={artifactIds}
+                                loading={fetchingArtifactIds}
+                                style={{ alignSelf: 'center' }}
+                                value={formik.values?.spec?.artifactId as string}
+                                type={getString('string')}
+                                variableName="spec.artifactId"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={value => {
+                                  formik.setFieldValue('spec.artifactId', value)
+                                }}
+                                isReadonly={isReadonly}
+                              />
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <FormInput.MultiTextInput
+                            label={getString('pipeline.artifactsSelection.artifactId')}
+                            name="spec.artifactId"
+                            placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
+                            multiTextInputProps={{ expressions, allowableTypes }}
+                          />
+                          {getMultiTypeFromValue(formik.values?.spec?.artifactId) === MultiTypeInputType.RUNTIME && (
+                            <div className={css.configureOptions}>
+                              <ConfigureOptions
+                                value={formik.values?.spec?.artifactId || ''}
+                                type="String"
+                                variableName="spec.artifactId"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={value => {
+                                  formik.setFieldValue('spec.artifactId', value)
+                                }}
+                                isReadonly={isReadonly}
+                              />
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <div className={css.imagePathContainer}>
+                      <FormInput.MultiTextInput
+                        label={getString('pipeline.artifactsSelection.extension')}
+                        name="spec.extension"
+                        placeholder={getString('pipeline.artifactsSelection.extensionPlaceholder')}
+                        multiTextInputProps={{ expressions, allowableTypes }}
+                      />
+                      {getMultiTypeFromValue(formik.values?.spec?.extension) === MultiTypeInputType.RUNTIME && (
+                        <div className={css.configureOptions}>
+                          <ConfigureOptions
+                            value={formik.values?.spec?.extension || ''}
+                            type="String"
+                            variableName="spec.extension"
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            onChange={value => {
+                              formik.setFieldValue('spec.extension', value)
+                            }}
+                            isReadonly={isReadonly}
+                          />
+                        </div>
+                      )}
+                    </div>
+                    <div className={css.imagePathContainer}>
+                      <FormInput.MultiTextInput
+                        label={getString('pipeline.artifactsSelection.classifier')}
+                        name="spec.classifier"
+                        placeholder={getString('pipeline.artifactsSelection.classifierPlaceholder')}
+                        multiTextInputProps={{ expressions, allowableTypes }}
+                      />
+                      {getMultiTypeFromValue(formik.values?.spec?.classifier) === MultiTypeInputType.RUNTIME && (
+                        <div className={css.configureOptions}>
+                          <ConfigureOptions
+                            value={formik.values?.spec?.classifier || ''}
+                            type="String"
+                            variableName="spec.classifier"
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            onChange={value => {
+                              formik.setFieldValue('spec.classifier', value)
+                            }}
+                            isReadonly={isReadonly}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <div className={css.imagePathContainer}>
+                    <FormInput.MultiTextInput
+                      label={getString('pipeline.artifactsSelection.packageName')}
+                      name="spec.packageName"
+                      placeholder={getString('pipeline.manifestType.packagePlaceholder')}
+                      multiTextInputProps={{ expressions, allowableTypes }}
+                    />
+                    {getMultiTypeFromValue(formik.values?.spec?.packageName) === MultiTypeInputType.RUNTIME && (
+                      <div className={css.configureOptions}>
+                        <ConfigureOptions
+                          value={formik.values?.spec?.packageName || ''}
+                          type="String"
+                          variableName="spec.packageName"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          onChange={value => {
+                            formik.setFieldValue('spec.packageName', value)
+                          }}
+                          isReadonly={isReadonly}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+                <ArtifactImagePathTagView
+                  selectedArtifact={selectedArtifact as ArtifactType}
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  isReadonly={isReadonly}
+                  connectorIdValue={getConnectorIdValue(modifiedPrevStepData)}
+                  fetchTags={() => fetchTags(formik.values)}
+                  buildDetailsLoading={nexusBuildDetailsLoading}
+                  tagError={nexusTagError}
+                  tagList={tagList}
+                  setTagList={setTagList}
+                  tagDisabled={isTagDisabled(formik?.values)}
+                  isArtifactPath={false}
+                  isImagePath={false}
+                  canFetchTags={() =>
+                    canFetchAMITags(
+                      formik?.values?.repository,
+                      formik?.values?.spec?.groupId,
+                      formik?.values?.spec?.artifactId
+                    )
+                  }
+                  tooltipId="nexus2-tag"
+                />
+              </div>
+              {!hideHeaderAndNavBtns && (
+                <Layout.Horizontal spacing="medium">
+                  <Button
+                    variation={ButtonVariation.SECONDARY}
+                    text={getString('back')}
+                    icon="chevron-left"
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
+                  />
+                  <Button
+                    variation={ButtonVariation.PRIMARY}
+                    type="submit"
+                    text={getString('submit')}
+                    rightIcon="chevron-right"
+                  />
+                </Layout.Horizontal>
               )}
-              <ArtifactImagePathTagView
-                selectedArtifact={selectedArtifact as ArtifactType}
-                formik={formik}
-                expressions={expressions}
-                allowableTypes={allowableTypes}
-                isReadonly={isReadonly}
-                connectorIdValue={getConnectorIdValue(modifiedPrevStepData)}
-                fetchTags={() => fetchTags(formik.values)}
-                buildDetailsLoading={nexusBuildDetailsLoading}
-                tagError={nexusTagError}
-                tagList={tagList}
-                setTagList={setTagList}
-                tagDisabled={isTagDisabled(formik?.values)}
-                isArtifactPath={false}
-                isImagePath={false}
-                canFetchTags={() =>
-                  canFetchAMITags(
-                    formik?.values?.repository,
-                    formik?.values?.spec?.groupId,
-                    formik?.values?.spec?.artifactId
-                  )
-                }
-                tooltipId="nexus2-tag"
-              />
-            </div>
-            {!hideHeaderAndNavBtns && (
-              <Layout.Horizontal spacing="medium">
-                <Button
-                  variation={ButtonVariation.SECONDARY}
-                  text={getString('back')}
-                  icon="chevron-left"
-                  onClick={() => previousStep?.(modifiedPrevStepData)}
-                />
-                <Button
-                  variation={ButtonVariation.PRIMARY}
-                  type="submit"
-                  text={getString('submit')}
-                  rightIcon="chevron-right"
-                />
-              </Layout.Horizontal>
-            )}
-          </FormikForm>
-        )}
+            </FormikForm>
+          )
+        }}
       </Formik>
     </Layout.Vertical>
   )

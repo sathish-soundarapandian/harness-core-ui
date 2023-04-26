@@ -51,7 +51,7 @@ describe('ServiceMenu', () => {
   test('Should render options edit/delete', () => {
     const { container } = render(
       <TestWrapper>
-        <ServiceMenu data={services} />
+        <ServiceMenu data={services} isForceDeleteEnabled />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -63,7 +63,7 @@ describe('ServiceMenu', () => {
         path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <ServiceMenu data={services} />
+        <ServiceMenu data={services} isForceDeleteEnabled />
       </TestWrapper>
     )
     fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
@@ -90,7 +90,7 @@ describe('ServiceMenu', () => {
         path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <ServiceMenu data={services} />
+        <ServiceMenu data={services} isForceDeleteEnabled />
       </TestWrapper>
     )
 

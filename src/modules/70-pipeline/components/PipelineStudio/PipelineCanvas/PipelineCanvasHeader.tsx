@@ -63,7 +63,7 @@ import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
 import { EntityCachedCopy, EntityCachedCopyHandle } from './EntityCachedCopy/EntityCachedCopy'
-import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
+import { getDuplicateIdentifiers } from './PipelineCanvasUtils'
 import { ValidationBadge } from '../AsyncValidation/ValidationBadge'
 import css from './PipelineCanvas.module.scss'
 
@@ -207,7 +207,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   function handleViewChange(newView: SelectedView): boolean {
     if (newView === view) return false
     if (newView === SelectedView.VISUAL) {
-      const duplicateStepIdentifiersList = pipeline?.stages ? getDuplicateStepIdentifierList(pipeline?.stages) : []
+      const duplicateStepIdentifiersList = pipeline?.stages ? getDuplicateIdentifiers(pipeline.stages) : []
       if (duplicateStepIdentifiersList.length) {
         clear()
         showError(

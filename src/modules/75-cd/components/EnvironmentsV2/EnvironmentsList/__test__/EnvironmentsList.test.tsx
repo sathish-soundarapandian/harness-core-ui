@@ -9,6 +9,7 @@ import React from 'react'
 import { render, fireEvent, waitFor, getByText, screen } from '@testing-library/react'
 import mockEnvironments from '@cd/components/PipelineSteps/DeployEnvStep/__tests__/mock.json'
 import mockImport from 'framework/utils/mockImport'
+import type { PageEnvironmentResponse } from 'services/cd-ng'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { modulePathProps, projectPathProps } from '@common/utils/routeUtils'
@@ -48,7 +49,11 @@ describe('EnvironmentsList', () => {
         path={routes.toEnvironment({ ...projectPathProps, ...modulePathProps })}
         pathParams={{ accountId: 'dummy', module: 'cd', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentsList response={mockEnvironments.data} refetch={jest.fn()} />
+        <EnvironmentsList
+          response={mockEnvironments.data as PageEnvironmentResponse}
+          refetch={jest.fn()}
+          isForceDeleteEnabled
+        />
       </TestWrapper>
     )
 
@@ -62,7 +67,11 @@ describe('EnvironmentsList', () => {
         path={routes.toEnvironment({ ...projectPathProps, ...modulePathProps })}
         pathParams={{ accountId: 'dummy', module: 'cd', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentsList response={mockEnvironments.data} refetch={jest.fn()} />
+        <EnvironmentsList
+          response={mockEnvironments.data as PageEnvironmentResponse}
+          refetch={jest.fn()}
+          isForceDeleteEnabled
+        />
       </TestWrapper>
     )
 
@@ -81,7 +90,11 @@ describe('EnvironmentsList', () => {
         path={routes.toEnvironment({ ...projectPathProps, ...modulePathProps })}
         pathParams={{ accountId: 'dummy', module: 'cd', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentsList response={mockEnvironments.data} refetch={jest.fn()} />
+        <EnvironmentsList
+          response={mockEnvironments.data as PageEnvironmentResponse}
+          refetch={jest.fn()}
+          isForceDeleteEnabled
+        />
       </TestWrapper>
     )
 
@@ -100,7 +113,11 @@ describe('EnvironmentsList', () => {
         path={routes.toEnvironment({ ...projectPathProps, ...modulePathProps })}
         pathParams={{ accountId: 'dummy', module: 'cd', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentsList response={mockEnvironments.data} refetch={jest.fn()} />
+        <EnvironmentsList
+          response={mockEnvironments.data as PageEnvironmentResponse}
+          refetch={jest.fn()}
+          isForceDeleteEnabled
+        />
       </TestWrapper>
     )
 
@@ -127,7 +144,11 @@ describe('EnvironmentsList', () => {
         path={routes.toEnvironment({ ...projectPathProps, ...modulePathProps })}
         pathParams={{ accountId: 'dummy', module: 'cd', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentsList response={mockEnvironments.data} refetch={jest.fn()} />
+        <EnvironmentsList
+          response={mockEnvironments.data as PageEnvironmentResponse}
+          refetch={jest.fn()}
+          isForceDeleteEnabled
+        />
       </TestWrapper>
     )
     fireEvent.click(screen.getAllByRole('button', { name: /more/i })[0])
@@ -158,7 +179,11 @@ describe('EnvironmentsList', () => {
         path={routes.toEnvironment({ ...projectPathProps, ...modulePathProps })}
         pathParams={{ accountId: 'dummy', module: 'cd', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentsList response={mockEnvironments.data} refetch={jest.fn()} />
+        <EnvironmentsList
+          response={mockEnvironments.data as PageEnvironmentResponse}
+          refetch={jest.fn()}
+          isForceDeleteEnabled
+        />
       </TestWrapper>
     )
     fireEvent.click(screen.getAllByRole('button', { name: /more/i })[0])

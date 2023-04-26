@@ -2167,6 +2167,41 @@ const routes = {
   toETSettings: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
       `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et`
+  ),
+
+  toETDefaultSettings: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/default-settings`
+  ),
+
+  toETConnectors: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/connectors`
+  ),
+
+  toETSecrets: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/secrets`
+  ),
+
+  toETAccessControl: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/access-control`
+  ),
+
+  toETDelegates: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/delegates`
+  ),
+
+  toETPolicies: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/governance/dashboard`
+  ),
+
+  toETCodeErrorsCriticalEvents: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/criticalevents`
   )
 }
 

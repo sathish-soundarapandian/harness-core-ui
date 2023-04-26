@@ -67,7 +67,7 @@ interface ModuleInfo {
   backgroundColor?: string
 }
 
-const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
+export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CD]: {
     icon: 'cd-main',
     label: 'common.cdAndGitops',
@@ -153,9 +153,9 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CET]: {
     icon: 'cet',
     label: 'common.purpose.cet.continuous',
-    getHomePageUrl: (accountId: string) => routes.toETHome({ accountId }),
+    getHomePageUrl: (accountId: string) => routes.toET({ accountId }),
     featureFlagName: FeatureFlag.CET_ENABLED,
-    color: '--default-module-border'
+    color: '--cet-border'
   }
 }
 
@@ -168,7 +168,7 @@ export interface GroupConfig {
 export const moduleGroupConfig: GroupConfig[] = [
   {
     label: 'common.moduleList.buildAndTest',
-    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO, ModuleName.IACM]
+    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO, ModuleName.IACM, ModuleName.CET]
   },
   {
     label: 'common.moduleList.deployChanges',
@@ -176,7 +176,7 @@ export const moduleGroupConfig: GroupConfig[] = [
   },
   {
     label: 'common.moduleList.manageImpact',
-    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCA, ModuleName.CET]
+    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCA]
   },
   {
     label: 'common.moduleList.optimizeProcesses',

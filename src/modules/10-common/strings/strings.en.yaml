@@ -265,6 +265,7 @@ purpose:
   continuous: CONTINUOUS
   change: CHANGE
   service: SERVICE
+  developer: DEVELOPER
   moduleSuccess: Module Added Successfully
   startATrial: Start A Trial
   setup: 15 min setup
@@ -515,6 +516,8 @@ subscriptions:
   tabs:
     overview: Subscription Overview
     plans: Plans
+    breakdown: Breakdown
+    trend: Trend
   overview:
     details: Subscription Details
     plan: Plan
@@ -1443,3 +1446,6 @@ successCount: 'Success {{count}}'
 failedCount: 'Failed {{count}}'
 configurations: Configurations
 enabledFlags: ENABLED FLAGS
+lastBuildDate: LAST BUILD DATE
+noActiveDeveloperData: No active Developer Record found
+readOnlyConnectorWarning: Read-only Vault connector is not allowed for Terraform/Terragrunt Plan steps.

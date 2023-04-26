@@ -1017,5 +1017,5 @@ gcpSecretManager:
   validation:
     credFileRequired: Credentials File is required
 terraformCloud:
-  url: Terraform Cloud Url
-  urlValidation: Terraform Cloud Url is required
+  url: Terraform Cloud URL
+  urlValidation: Terraform Cloud URL is required

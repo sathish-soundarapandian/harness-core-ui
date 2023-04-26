@@ -148,9 +148,9 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   })
   const prices = data?.data?.prices
   React.useEffect(() => {
-    if (usageAndLimitInfo.usageData.usage?.ff || usageAndLimitInfo.usageData.usage?.ci) {
-      fetchRecommendations()
-    }
+    fetchRecommendations()
+  }, [])
+  React.useEffect(() => {
     if (Object.keys(allLicenses).length > 0) {
       const premSupport = allLicenses['CF']?.[0]?.premiumSupport || allLicenses['CI']?.[0]?.premiumSupport || false
       setSubscriptionProps({

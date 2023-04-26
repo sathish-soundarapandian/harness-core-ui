@@ -167,6 +167,7 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
                     </Container>
                     <Container className={css.validationContainer}>
                       <QueryContent
+                        showLabel
                         key={formikProps.values.identifier}
                         textAreaProps={{ readOnly: !selectedMetricInfo?.queryEditable }}
                         handleFetchRecords={async () => {

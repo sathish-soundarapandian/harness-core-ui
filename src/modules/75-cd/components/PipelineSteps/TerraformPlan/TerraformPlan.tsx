@@ -126,8 +126,12 @@ function TerraformPlanWidget(
 ): React.ReactElement {
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep, readonly = false, stepViewType } = props
   const { getString } = useStrings()
-  const { CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG, CD_TERRAFORM_CLOUD_CLI_NG, CDS_TERRAFORM_CLI_OPTIONS_NG } =
-    useFeatureFlags()
+  const {
+    CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG,
+    CD_TERRAFORM_CLOUD_CLI_NG,
+    CDS_TERRAFORM_CLI_OPTIONS_NG,
+    CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN
+  } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
@@ -603,6 +607,19 @@ function TerraformPlanWidget(
                     multiTypeProps={{ expressions, allowableTypes }}
                     gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                     disabled={readonly}
+                    isRecordDisabled={selectedRecord =>
+                      (selectedRecord as any)?.spec?.readOnly &&
+                      CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN
+                    }
+                    renderRecordDisabledWarning={
+                      <Text
+                        icon="warning-icon"
+                        iconProps={{ size: 18, color: Color.RED_800, padding: { right: 'xsmall' } }}
+                        className={css.warningMessage}
+                      >
+                        {getString('common.readOnlyConnectorWarning')}
+                      </Text>
+                    }
                   />
                 </div>
               )}

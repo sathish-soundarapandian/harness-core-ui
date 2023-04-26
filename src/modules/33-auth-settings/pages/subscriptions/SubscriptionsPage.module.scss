@@ -148,7 +148,16 @@
 }
 
 .outterCard {
-  min-width: 1000px;
+  min-width: 100%;
+}
+.tabs {
+  :global(.bp3-tab-list) {
+    border-bottom: 1px solid var(--grey-300);
+    padding: 0 var(--spacing-5);
+  }
+  :global(.bp3-tab-panel) {
+    margin-top: var(--spacing-none);
+  }
 }
 
 .activeServiceLink {

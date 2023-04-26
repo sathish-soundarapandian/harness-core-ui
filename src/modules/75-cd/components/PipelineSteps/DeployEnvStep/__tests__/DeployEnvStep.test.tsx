@@ -38,15 +38,14 @@ jest.mock('services/cd-ng', () => ({
           projectIdentifier: 'asdasd',
           identifier: obj.identifier,
           name: obj.name,
-          description: null,
           color: '#0063F7',
           type: obj.type,
           deleted: false,
           tags: {},
           version: 1
         },
-        createdAt: null,
-        lastModifiedAt: null
+        createdAt: 1624020290070,
+        lastModifiedAt: 1624020290070
       })
       return {
         status: 'SUCCESS'

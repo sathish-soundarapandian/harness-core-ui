@@ -24,14 +24,13 @@ import {
   Pagination,
   SelectOption,
   Text,
-  DropDown
+  DropDown,
+  useToaster
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
-import { GetFilterListQueryParams, useGetFilterList } from 'services/cd-ng'
-
-import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
+import { GetFilterListQueryParams, useGetFilterList, useGetSettingValue } from 'services/cd-ng'
 
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -39,6 +38,12 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { SettingType } from '@common/constants/Utils'
+
+import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import { FilterContextProvider } from '@cd/context/FiltersContext'
 
@@ -69,13 +74,14 @@ export interface PageTemplateProps {
   createButtonProps: CreateButtonProps
   useGetListHook: any
   emptyContent: ReactNode
-  ListComponent: React.VoidFunctionComponent<{ response: any; refetch: () => void }>
-  GridComponent: React.VoidFunctionComponent<{ response: any; refetch: () => void }>
+  ListComponent: React.VoidFunctionComponent<{ response: any; refetch: () => void; isForceDeleteEnabled: boolean }>
+  GridComponent: React.VoidFunctionComponent<{ response: any; refetch: () => void; isForceDeleteEnabled: boolean }>
   sortOptions: SelectOption[]
   defaultSortOption: string[]
   handleCustomSortChange: (value: string) => string[]
   filterType: GetFilterListQueryParams['type']
   FilterComponent: React.VoidFunctionComponent
+  isForceDeleteAllowed?: boolean
 }
 
 export default function PageTemplate({
@@ -92,13 +98,16 @@ export default function PageTemplate({
   defaultSortOption,
   handleCustomSortChange,
   filterType,
-  FilterComponent
+  FilterComponent,
+  isForceDeleteAllowed
 }: PropsWithChildren<PageTemplateProps>): JSX.Element {
   useDocumentTitle(title)
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
 
   const { view, setView } = usePageStore()
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
+  const { showError } = useToaster()
 
   const [sort, setSort] = useState<string[]>(defaultSortOption)
   const [sortOption, setSortOption] = useState<SelectOption>(sortOptions[0])
@@ -111,6 +120,31 @@ export default function PageTemplate({
   const searchRef = useRef<ExpandingSearchInputHandle>()
 
   const hasFilterIdentifier = getHasFilterIdentifier(filterIdentifier)
+
+  const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
+  const {
+    data: forceDeleteSettings,
+    loading: forceDeleteSettingsLoading,
+    error: forceDeleteSettingsError
+  } = useGetSettingValue({
+    identifier: SettingType.ENABLE_FORCE_DELETE,
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: !(isForceDeleteAllowed && isSettingsEnabled)
+  })
+
+  React.useEffect(() => {
+    if (forceDeleteSettingsError) {
+      showError(getRBACErrorMessage(forceDeleteSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceDeleteSettingsError])
+
+  const isForceDeleteEnabled = useMemo(
+    () => forceDeleteSettings?.data?.value == 'true',
+    [forceDeleteSettings?.data?.value]
+  )
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetListHook, {
     queryParams: {
@@ -147,7 +181,7 @@ export default function PageTemplate({
   const state = useMemo<STATUS>(() => {
     if (error) {
       return STATUS.error
-    } else if (loading) {
+    } else if (loading || forceDeleteSettingsLoading) {
       return STATUS.loading
     }
 
@@ -276,10 +310,10 @@ export default function PageTemplate({
               {hasData ? (
                 view === Views.LIST ? (
                   <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
-                    <ListComponent response={response} refetch={refetch} />
+                    <ListComponent response={response} refetch={refetch} isForceDeleteEnabled={isForceDeleteEnabled} />
                   </Container>
                 ) : (
-                  <GridComponent response={response} refetch={refetch} />
+                  <GridComponent response={response} refetch={refetch} isForceDeleteEnabled={isForceDeleteEnabled} />
                 )
               ) : null}
             </>

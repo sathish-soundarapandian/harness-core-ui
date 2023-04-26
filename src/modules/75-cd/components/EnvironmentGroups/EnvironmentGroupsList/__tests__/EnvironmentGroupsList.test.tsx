@@ -27,6 +27,7 @@ describe('Environment Groups List View', () => {
         <EnvironmentGroupsList
           environmentGroups={EnvironmentGroupsMockData as unknown as cdNgServices.EnvironmentGroupResponse[]}
           refetch={jest.fn()}
+          isForceDeleteEnabled
         />
       </TestWrapper>
     )
@@ -53,6 +54,7 @@ describe('Environment Groups List View', () => {
         <EnvironmentGroupsList
           environmentGroups={EnvironmentGroupsMockData as unknown as cdNgServices.EnvironmentGroupResponse[]}
           refetch={jest.fn()}
+          isForceDeleteEnabled
         />
       </TestWrapper>
     )
@@ -97,6 +99,7 @@ describe('Environment Groups List View', () => {
         <EnvironmentGroupsList
           environmentGroups={EnvironmentGroupsMockData as unknown as cdNgServices.EnvironmentGroupResponse[]}
           refetch={jest.fn()}
+          isForceDeleteEnabled
         />
       </TestWrapper>
     )
@@ -154,6 +157,7 @@ describe('Environment Groups List View', () => {
         <EnvironmentGroupsList
           environmentGroups={EnvironmentGroupsMockData as unknown as cdNgServices.EnvironmentGroupResponse[]}
           refetch={jest.fn()}
+          isForceDeleteEnabled
         />
       </TestWrapper>
     )

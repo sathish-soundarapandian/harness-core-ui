@@ -139,6 +139,8 @@ export interface EntityReferenceProps<T extends ScopedObjectDTO> {
   onMultiSelect?: (selected: ScopeAndIdentifier[]) => void
   showAllTab?: boolean
   selectedRecord?: ScopeAndIdentifier
+  isRecordDisabled?: (item: any) => boolean
+  renderRecordDisabledWarning?: JSX.Element
 }
 
 export const tabIdToScopeMap: Record<TAB_ID, Scope | undefined> = {
@@ -198,7 +200,9 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
     isMultiSelect,
     selectedRecords: selectedRecordsFromProps,
     showAllTab = false,
-    selectedRecord: selectedRecordFromProps
+    selectedRecord: selectedRecordFromProps,
+    isRecordDisabled,
+    renderRecordDisabledWarning
   } = props
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [selectedTab, setSelectedTab] = useState<TAB_ID>(
@@ -215,7 +219,6 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>()
   const [selectedRecord, setSelectedRecord] = useState<T>()
-
   // used for multiselect
   const [selectedRecords, setSelectedRecords] = useState<ScopeAndIdentifier[]>(selectedRecordsFromProps ?? [])
 
@@ -395,6 +398,19 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
     ) : null
   }
 
+  const multiSelectRecordsData = selectedRecords?.map(selectedVal => {
+    return data.find(record => record?.identifier === selectedVal?.identifier)
+  })
+
+  const isMultiSelectRecordDisabled = multiSelectRecordsData?.some(val => {
+    return isRecordDisabled?.(val?.record)
+  })
+
+  const disableApplyButton = (): boolean | undefined => {
+    if (isMultiSelect) return !selectedRecords.length || isMultiSelectRecordDisabled
+    return !selectedRecord || isRecordDisabled?.(selectedRecord)
+  }
+
   const { trackEvent } = useTelemetry()
   useEffect(() => {
     trackEvent(StageActions.LoadCreateOrSelectConnectorView, {
@@ -421,6 +437,9 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
         </Tabs>
       </div>
 
+      {((isMultiSelect && isMultiSelectRecordDisabled) || isRecordDisabled?.(selectedRecord)) &&
+        renderRecordDisabledWarning}
+
       <Layout.Horizontal spacing="medium" padding={{ top: 'medium' }}>
         <Button
           variation={ButtonVariation.PRIMARY}
@@ -437,7 +456,7 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
               })
             }
           }}
-          disabled={isMultiSelect ? !selectedRecords.length : !selectedRecord}
+          disabled={disableApplyButton()}
           className={cx(Classes.POPOVER_DISMISS)}
         />
         {props.onCancel && (

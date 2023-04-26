@@ -113,12 +113,12 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
             nonProd: nonProdEnvs.map(env => ({
               identifier: env.identifier,
               name: env.name,
-              enabled: cell.row.original.environments[`${env.identifier}`].enabled
+              enabled: cell.row.original.environments[`${env.identifier}`]?.enabled
             })),
             prod: prodEnvs.map(env => ({
               identifier: env.identifier,
               name: env.name,
-              enabled: cell.row.original.environments[`${env.identifier}`].enabled
+              enabled: cell.row.original.environments[`${env.identifier}`]?.enabled
             }))
           }
           return (

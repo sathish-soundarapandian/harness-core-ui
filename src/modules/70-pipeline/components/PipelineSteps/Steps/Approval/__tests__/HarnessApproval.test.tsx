@@ -200,6 +200,7 @@ describe('Harness Approval tests', () => {
       spec: {
         approvalMessage: '<+somemessage>',
         includePipelineExecutionHistory: '',
+        isAutoRejectEnabled: false,
         approverInputs: '',
         approvers: {
           userGroups: '<+abc>',
@@ -283,7 +284,8 @@ describe('Harness Approval tests', () => {
           minimumCount: 1,
           userGroups: ['ug1', 'org.ug2', 'org.ug3', 'ug4', 'account.ug5', 'account.ug6']
         },
-        includePipelineExecutionHistory: true
+        includePipelineExecutionHistory: true,
+        isAutoRejectEnabled: false
       },
       timeout: '10m',
       type: 'HarnessApproval'
@@ -324,6 +326,7 @@ describe('Harness Approval tests', () => {
       spec: {
         approvalMessage: 'Approving pipeline <+pname>',
         includePipelineExecutionHistory: true,
+        isAutoRejectEnabled: false,
         approverInputs: [{ name: 'somekey', defaultValue: 'somevalue' }],
         approvers: {
           userGroups: ['ug1', 'org.ug2', 'org.ug3', 'ug4', 'account.ug5', 'account.ug6'],
@@ -356,6 +359,7 @@ describe('Harness Approval tests', () => {
         spec: {
           approvalMessage: 'Please review the following information and approve the pipeline progression',
           includePipelineExecutionHistory: true,
+          isAutoRejectEnabled: false,
           approvers: {
             userGroups: [],
             minimumCount: 1,
@@ -377,6 +381,7 @@ describe('Harness Approval tests', () => {
         spec: {
           approvalMessage: 'Please review the following information and approve the pipeline progression',
           includePipelineExecutionHistory: true,
+          isAutoRejectEnabled: false,
           approvers: {
             userGroups: [],
             minimumCount: 1,

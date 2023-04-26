@@ -24,22 +24,26 @@ import {
   Text,
   DropDown,
   Pagination,
-  ExpandingSearchInputHandle
+  ExpandingSearchInputHandle,
+  useToaster
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
-import { useGetEnvironmentGroupList, useGetFilterList } from 'services/cd-ng'
-
-import RbacButton from '@rbac/components/Button/Button'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import { useGetEnvironmentGroupList, useGetFilterList, useGetSettingValue } from 'services/cd-ng'
 
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { SettingType } from '@common/constants/Utils'
+
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 
 import { FilterContextProvider } from '@cd/context/FiltersContext'
 
@@ -62,7 +66,28 @@ import css from './EnvironmentGroups.module.scss'
 export default function EnvironmentGroupsPage(): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
+  const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+
+  const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
+  const {
+    data: forceDeleteSettings,
+    loading: forceDeleteSettingsLoading,
+    error: forceDeleteSettingsError
+  } = useGetSettingValue({
+    identifier: SettingType.ENABLE_FORCE_DELETE,
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: !isSettingsEnabled
+  })
+
+  React.useEffect(() => {
+    if (forceDeleteSettingsError) {
+      showError(getRBACErrorMessage(forceDeleteSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceDeleteSettingsError])
 
   /* #region Sort changes */
   const sortOptions: SelectOption[] = [
@@ -238,7 +263,7 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
       <Page.Body
         error={getRBACErrorMessage(error as RBACError)}
         retryOnError={/*istanbul ignore next*/ () => refetch()}
-        loading={loading}
+        loading={loading || forceDeleteSettingsLoading}
       >
         {hasContent && (
           <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
@@ -257,7 +282,11 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
                 onChange={handleSortChange}
               />
             </Layout.Horizontal>
-            <EnvironmentGroupsList environmentGroups={response?.content} refetch={refetch} />
+            <EnvironmentGroupsList
+              environmentGroups={response?.content}
+              refetch={refetch}
+              isForceDeleteEnabled={forceDeleteSettings?.data?.value === 'true'}
+            />
             <Pagination {...paginationProps} />
           </Container>
         )}

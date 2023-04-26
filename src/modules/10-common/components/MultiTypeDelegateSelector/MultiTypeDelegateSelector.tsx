@@ -60,9 +60,9 @@ export function MultiTypeDelegateSelector(props: ConnectedMultiTypeDelegateSelec
 
   const { intent = hasError ? Intent.DANGER : Intent.NONE, disabled, ...rest } = restProps
 
-  const handleDelegateSelectorFixedValueChange = React.useCallback((tags: string[]) => {
+  const handleDelegateSelectorFixedValueChange = (tags: string[]): void => {
     formik.setFieldValue(name, compact(tags))
-  }, [])
+  }
 
   const tooltipContext = React.useContext(FormikTooltipContext)
   const dataTooltipId =

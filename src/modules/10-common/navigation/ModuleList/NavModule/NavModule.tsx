@@ -39,7 +39,7 @@ const navModuleToClassMap: Record<NavModuleName, string> = {
   [ModuleName.SSCA]: css.ssca,
   [ModuleName.CODE]: css.default,
   [ModuleName.IDP]: css.default,
-  [ModuleName.CET]: css.default
+  [ModuleName.CET]: css.cet
 }
 
 const NavModule: React.FC<NavModuleProps> = ({ module, active, onClick, checkboxProps }) => {

@@ -45,7 +45,8 @@ import { SortOption } from '@common/components/SortOption/SortOption'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 import { getFixed, INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { numberFormatter } from '@common/utils/utils'
-import { ChangeRate, IconDTO, ServiceDetailsDTOV2, useDeleteServiceV2 } from 'services/cd-ng'
+import { SettingType } from '@common/constants/Utils'
+import { ChangeRate, IconDTO, ServiceDetailsDTOV2, useDeleteServiceV2, useGetSettingValue } from 'services/cd-ng'
 import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/DeploymentTypeIcons'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -401,13 +402,15 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
         ;(column as any).reload?.()
       }
     } catch (err: any) {
-      if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
-        setCustomErrorMessage(undefined)
-        openReferenceErrorDialog()
-      } else if (err?.data?.code === 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION') {
-        setCustomErrorMessage(getErrorInfoFromErrorObject(err))
-        setHideReferencedByButton(true)
-        openReferenceErrorDialog()
+      if ((column as any).isForceDeleteEnabled) {
+        if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+          setCustomErrorMessage(undefined)
+          openReferenceErrorDialog()
+        } else if (err?.data?.code === 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION') {
+          setCustomErrorMessage(getErrorInfoFromErrorObject(err))
+          setHideReferencedByButton(true)
+          openReferenceErrorDialog()
+        }
       } else {
         showError(getRBACErrorMessage(err as RBACError))
       }
@@ -556,8 +559,26 @@ function ServiceListHeaderCustomPrimary(headerProps: { total?: number }): JSX.El
 export const ServicesList: React.FC<ServicesListProps> = props => {
   const { loading, data, error, refetch, setSavedSortOption, setSort, sort } = props
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
+  const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const history = useHistory()
+
+  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_FORCE_DELETE,
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: !isSettingsEnabled
+  })
+
+  React.useEffect(() => {
+    if (forceDeleteSettingsError) {
+      showError(getRBACErrorMessage(forceDeleteSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceDeleteSettingsError])
 
   const columns: TableProps<ServiceListItem>['columns'] = useMemo(
     () => {
@@ -610,12 +631,13 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
           id: 'action',
           Cell: RenderColumnMenu,
           reload: refetch,
-          disableSortBy: true
+          disableSortBy: true,
+          isForceDeleteEnabled: forceDeleteSettings?.data?.value === 'true'
         }
       ]
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [forceDeleteSettings?.data?.value]
   )
 
   const goToServiceDetails = useCallback(

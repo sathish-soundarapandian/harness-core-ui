@@ -12,7 +12,7 @@ import { defaultTo } from 'lodash-es'
 import { Container, Layout, useToaster } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import { EnvironmentResponse, useDeleteEnvironmentV2 } from 'services/cd-ng'
+import { EnvironmentResponse, PageEnvironmentResponse, useDeleteEnvironmentV2 } from 'services/cd-ng'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -24,7 +24,15 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { EnvironmentCard } from './EnvironmentCard'
 import { EnvironmentDetailsTab } from '../utils'
 
-export default function EnvironmentsGrid({ response, refetch }: any) {
+export default function EnvironmentsGrid({
+  response,
+  refetch,
+  isForceDeleteEnabled
+}: {
+  response: PageEnvironmentResponse
+  refetch: () => void
+  isForceDeleteEnabled: boolean
+}): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -53,7 +61,7 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
     )
   }
 
-  const handleEnvDelete = async (id: string, forceDelete?: boolean) => {
+  const handleEnvDelete = async (id: string, forceDelete?: boolean): Promise<void> => {
     try {
       await deleteItem(id, {
         headers: { 'content-type': 'application/json' },
@@ -62,7 +70,7 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
       showSuccess(getString('cd.environment.deleted'))
       refetch()
     } catch (e: any) {
-      if (e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+      if (isForceDeleteEnabled && e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         setCurEnvId(id)
         openReferenceErrorDialog()
       } else {

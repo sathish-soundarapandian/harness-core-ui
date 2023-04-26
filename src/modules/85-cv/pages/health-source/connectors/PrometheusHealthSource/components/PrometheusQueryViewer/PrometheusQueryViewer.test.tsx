@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -31,5 +31,12 @@ describe('Unit tests for PrometheusQueryViewer', () => {
     const fetchRecordsButton = await waitFor(() => queryByText('cv.monitoringSources.gcoLogs.fetchRecords'))
 
     expect(fetchRecordsButton).toBeNull()
+  })
+
+  test('should check the title is rendered within the query viewer', async () => {
+    const onChange = jest.fn()
+    render(<WrapperComponent values={{} as any} onChange={onChange} />)
+
+    await waitFor(() => expect(screen.getByTestId('queryLabel')).toBeInTheDocument())
   })
 })

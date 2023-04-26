@@ -28,7 +28,10 @@ import css from './ServiceDetailsSummaryV2.module.scss'
 
 interface ServiceDetailsArtifactTableProps {
   artifactFilter?: string
-  envFilter?: string
+  envFilter?: {
+    envId?: string
+    isEnvGroup: boolean
+  }
   resetSearch: () => void
   setRowClickFilter: React.Dispatch<React.SetStateAction<ServiceDetailInstanceViewProps>>
   searchTerm: string
@@ -45,6 +48,7 @@ export const convertToEnvType = (envType: string): StringKeys => {
 
 const getArtifactTableData = (
   artifactTableData: InstanceGroupedOnArtifact[],
+  isEnvGroup: boolean,
   envFilter?: string,
   artifactFilter?: string
 ): TableRowData[] => {
@@ -65,7 +69,7 @@ const getArtifactTableData = (
           if (
             env.envId &&
             env.instanceGroupedOnEnvironmentTypeList &&
-            ((envFilter && env.envId === envFilter) || !envFilter)
+            ((!isEnvGroup && envFilter && env.envId === envFilter) || isEnvGroup || !envFilter)
           ) {
             env.instanceGroupedOnEnvironmentTypeList.forEach(envDetail => {
               const envType = envDetail.environmentType
@@ -138,7 +142,16 @@ export const RenderArtifact: Renderer<CellProps<TableRowData>> = ({
 }
 
 export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifactTableProps): React.ReactElement {
-  const { artifactFilter, envFilter, resetSearch, setRowClickFilter, searchTerm, artifactFilterApplied = false } = props
+  const {
+    artifactFilter,
+    envFilter: envFilterObj,
+    resetSearch,
+    setRowClickFilter,
+    searchTerm,
+    artifactFilterApplied = false
+  } = props
+  const envFilter = envFilterObj?.envId
+  const isEnvGroup = !!envFilterObj?.isEnvGroup
   const { getString } = useStrings()
   const [selectedRow, setSelectedRow] = React.useState<string>()
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
@@ -149,7 +162,8 @@ export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifac
     projectIdentifier,
     serviceId,
     artifact: artifactFilter,
-    environmentIdentifier: envFilter ? envFilter : undefined,
+    environmentIdentifier: !isEnvGroup ? envFilter : undefined,
+    envGroupIdentifier: isEnvGroup ? envFilter : undefined,
     filterOnArtifact: artifactFilterApplied
   }
 
@@ -187,6 +201,7 @@ export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifac
   const tableData: TableRowData[] = useMemo(() => {
     return getArtifactTableData(
       defaultTo(filteredTableData, [] as InstanceGroupedOnArtifact[]),
+      isEnvGroup,
       envFilter,
       artifactFilter
     )

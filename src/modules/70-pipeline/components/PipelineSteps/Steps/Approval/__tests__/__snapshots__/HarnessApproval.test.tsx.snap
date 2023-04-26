@@ -1317,6 +1317,33 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
           </div>
         </div>
         <div
+          class="bp3-form-group bp3-disabled"
+          data-id="spec.isAutoRejectEnabled-4"
+        >
+          <div
+            class="bp3-form-content"
+          >
+            <label
+              class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+            >
+              <input
+                disabled=""
+                name="spec.isAutoRejectEnabled"
+                type="checkbox"
+              />
+              <span
+                class="bp3-control-indicator"
+              />
+              <span
+                class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                data-tooltip-id="harnessApproval_spec.isAutoRejectEnabled"
+              >
+                pipeline.approvalStep.isAutoRejectEnabled
+              </span>
+            </label>
+          </div>
+        </div>
+        <div
           class="stepSubSectionHeading"
         >
           Approvers
@@ -1326,7 +1353,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
         >
           <div
             class="bp3-form-group"
-            data-id="spec.approvers.userGroups-4"
+            data-id="spec.approvers.userGroups-5"
             style="flex-grow: 1; margin-bottom: 0px;"
           >
             <label
@@ -1388,7 +1415,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
             >
               <div
                 class="bp3-form-group"
-                data-id="undefined-5"
+                data-id="undefined-6"
               >
                 <div
                   class="bp3-form-content"
@@ -1420,7 +1447,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
         >
           <div
             class="bp3-form-group bp3-disabled"
-            data-id="spec.approvers.minimumCount-6"
+            data-id="spec.approvers.minimumCount-7"
           >
             <label
               class="bp3-label"
@@ -1483,7 +1510,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
         </div>
         <div
           class="bp3-form-group bp3-disabled"
-          data-id="spec.approvers.disallowPipelineExecutor-7"
+          data-id="spec.approvers.disallowPipelineExecutor-8"
         >
           <div
             class="bp3-form-content"
@@ -1876,6 +1903,32 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
           </div>
         </div>
         <div
+          class="bp3-form-group"
+          data-id="spec.isAutoRejectEnabled-4"
+        >
+          <div
+            class="bp3-form-content"
+          >
+            <label
+              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+            >
+              <input
+                name="spec.isAutoRejectEnabled"
+                type="checkbox"
+              />
+              <span
+                class="bp3-control-indicator"
+              />
+              <span
+                class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                data-tooltip-id="harnessApproval_spec.isAutoRejectEnabled"
+              >
+                pipeline.approvalStep.isAutoRejectEnabled
+              </span>
+            </label>
+          </div>
+        </div>
+        <div
           class="stepSubSectionHeading"
         >
           Approvers
@@ -1885,7 +1938,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
         >
           <div
             class="bp3-form-group"
-            data-id="userGroupExpression-4"
+            data-id="userGroupExpression-5"
             style="flex-grow: 1; margin-bottom: 0px;"
           >
             <label
@@ -2017,7 +2070,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
         >
           <div
             class="bp3-form-group"
-            data-id="spec.approvers.minimumCount-5"
+            data-id="spec.approvers.minimumCount-6"
           >
             <label
               class="bp3-label"
@@ -2109,7 +2162,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
         </div>
         <div
           class="bp3-form-group"
-          data-id="spec.approvers.disallowPipelineExecutor-6"
+          data-id="spec.approvers.disallowPipelineExecutor-7"
         >
           <div
             class="bp3-form-content"
@@ -2507,6 +2560,32 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
           </div>
         </div>
         <div
+          class="bp3-form-group"
+          data-id="spec.isAutoRejectEnabled-4"
+        >
+          <div
+            class="bp3-form-content"
+          >
+            <label
+              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+            >
+              <input
+                name="spec.isAutoRejectEnabled"
+                type="checkbox"
+              />
+              <span
+                class="bp3-control-indicator"
+              />
+              <span
+                class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                data-tooltip-id="harnessApproval_spec.isAutoRejectEnabled"
+              >
+                pipeline.approvalStep.isAutoRejectEnabled
+              </span>
+            </label>
+          </div>
+        </div>
+        <div
           class="stepSubSectionHeading"
         >
           Approvers
@@ -2516,7 +2595,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
         >
           <div
             class="bp3-form-group"
-            data-id="userGroupExpression-4"
+            data-id="userGroupExpression-5"
             style="flex-grow: 1; margin-bottom: 0px;"
           >
             <label
@@ -2648,7 +2727,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
         >
           <div
             class="bp3-form-group"
-            data-id="spec.approvers.minimumCount-5"
+            data-id="spec.approvers.minimumCount-6"
           >
             <label
               class="bp3-label"
@@ -2717,7 +2796,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
         </div>
         <div
           class="bp3-form-group"
-          data-id="spec.approvers.disallowPipelineExecutor-6"
+          data-id="spec.approvers.disallowPipelineExecutor-7"
         >
           <div
             class="bp3-form-content"
@@ -3110,6 +3189,32 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
           </div>
         </div>
         <div
+          class="bp3-form-group"
+          data-id="spec.isAutoRejectEnabled-4"
+        >
+          <div
+            class="bp3-form-content"
+          >
+            <label
+              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+            >
+              <input
+                name="spec.isAutoRejectEnabled"
+                type="checkbox"
+              />
+              <span
+                class="bp3-control-indicator"
+              />
+              <span
+                class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                data-tooltip-id="harnessApproval_spec.isAutoRejectEnabled"
+              >
+                pipeline.approvalStep.isAutoRejectEnabled
+              </span>
+            </label>
+          </div>
+        </div>
+        <div
           class="stepSubSectionHeading"
         >
           Approvers
@@ -3119,7 +3224,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
         >
           <div
             class="bp3-form-group"
-            data-id="spec.approvers.userGroups-4"
+            data-id="spec.approvers.userGroups-5"
             style="flex-grow: 1; margin-bottom: 0px;"
           >
             <label
@@ -3179,7 +3284,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
             >
               <div
                 class="bp3-form-group"
-                data-id="undefined-5"
+                data-id="undefined-6"
               >
                 <div
                   class="bp3-form-content"
@@ -3286,7 +3391,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
         >
           <div
             class="bp3-form-group"
-            data-id="spec.approvers.minimumCount-6"
+            data-id="spec.approvers.minimumCount-7"
           >
             <label
               class="bp3-label"
@@ -3355,7 +3460,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
         </div>
         <div
           class="bp3-form-group"
-          data-id="spec.approvers.disallowPipelineExecutor-7"
+          data-id="spec.approvers.disallowPipelineExecutor-8"
         >
           <div
             class="bp3-form-content"

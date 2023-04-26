@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
 import {
   Dialog,
@@ -28,15 +28,16 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 
 import { Page } from '@common/exports'
 import RbacButton from '@rbac/components/Button/Button'
-import { ServiceResponseDTO, useGetServiceList, ServiceResponse } from 'services/cd-ng'
+import { ServiceResponseDTO, useGetServiceList, ServiceResponse, useGetSettingValue } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useGetCommunity, useGetFreeOrCommunityCD } from '@common/utils/utils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { SettingType } from '@common/constants/Utils'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
-import { FeatureFlag } from '@common/featureFlags'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { SortOption } from '@common/components/SortOption/SortOption'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import serviceEmptyStateSvg from '@cd/icons/ServiceDetailsEmptyState.svg'
 import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
@@ -53,11 +54,17 @@ interface ServicesListPageProps {
 export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): React.ReactElement => {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const isCommunity = useGetCommunity()
-  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-  const isCdsV1EOLEnabled = useFeatureFlag(FeatureFlag.CDS_V1_EOL_BANNER)
+  // const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  // const isCdsV1EOLEnabled = useFeatureFlag(FeatureFlag.CDS_V1_EOL_BANNER)
+  const {
+    NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled,
+    CDS_V1_EOL_BANNER: isCdsV1EOLEnabled,
+    NG_SETTINGS: isSettingsEnabled
+  } = useFeatureFlags()
 
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { fetchDeploymentList } = useServiceStore()
   const history = useHistory()
   const isFreeOrCommunityCD = useGetFreeOrCommunityCD()
@@ -90,6 +97,21 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
       showModal()
     }
   }, [isEdit])
+
+  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_FORCE_DELETE,
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: !isSettingsEnabled
+  })
+
+  useEffect(() => {
+    if (forceDeleteSettingsError) {
+      showError(getRBACErrorMessage(forceDeleteSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceDeleteSettingsError])
 
   const goToServiceDetails = useCallback(
     (selectedService: ServiceResponseDTO): void => {
@@ -207,6 +229,11 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
     fetchDeploymentList.current = refetch
   }, [fetchDeploymentList, refetch])
 
+  const isForceDeleteEnabled = useMemo(
+    () => forceDeleteSettings?.data?.value === 'true',
+    [forceDeleteSettings?.data?.value]
+  )
+
   return (
     <Page.Body className={css.pageBody}>
       <>
@@ -255,6 +282,7 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
                 loading={loading}
                 onRefresh={() => refetch()}
                 onServiceSelect={async service => goToServiceDetails(service)}
+                isForceDeleteEnabled={isForceDeleteEnabled}
               />
             ) : (
               <ServicesListView
@@ -262,6 +290,7 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
                 loading={loading}
                 onRefresh={() => refetch()}
                 onServiceSelect={async service => goToServiceDetails(service)}
+                isForceDeleteEnabled={isForceDeleteEnabled}
               />
             )
           ) : (

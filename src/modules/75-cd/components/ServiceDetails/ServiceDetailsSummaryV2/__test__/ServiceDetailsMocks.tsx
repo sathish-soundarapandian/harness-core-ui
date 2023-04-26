@@ -7,56 +7,104 @@
 
 import type {
   ResponseArtifactInstanceDetails,
-  ResponseEnvironmentInstanceDetails,
+  ResponseEnvironmentGroupInstanceDetails,
   ResponseInstanceDetailGroupedByPipelineExecutionList,
   ResponseInstanceGroupedByEnvironmentList,
   ResponseInstanceGroupedOnArtifactList,
   ResponseOpenTaskDetails
 } from 'services/cd-ng'
 
-export const envInstanceDetailsMock: ResponseEnvironmentInstanceDetails = {
+export const envInstanceDetailsMock: ResponseEnvironmentGroupInstanceDetails = {
   status: 'SUCCESS',
   data: {
-    environmentInstanceDetails: [
+    environmentGroupInstanceDetails: [
       {
-        envId: 'awspr',
-        envName: 'aws-pr',
-        environmentType: 'PreProduction',
+        id: 'awspr',
+        name: 'aws-pr',
+        environmentTypes: ['PreProduction'],
         count: 2,
-        artifactDeploymentDetail: {
-          artifact: '/test-artifact',
-          lastDeployedAt: 1666785805123
-        }
+        isDrift: false,
+        isEnvGroup: false,
+        isRevert: false,
+        isRollback: true,
+        artifactDeploymentDetails: [
+          {
+            artifact: '/test-artifact',
+            lastDeployedAt: 1666785805123,
+            envId: 'sampleEnv',
+            envName: 'sampleEnv',
+            lastPipelineExecutionId: 'testexec',
+            pipelineId: 'testpipeline'
+          }
+        ]
       },
       {
-        envId: 'azureEnvPR',
-        envName: 'azureEnv-PR',
-        environmentType: 'Production',
+        id: 'azureEnvPR',
+        name: 'azureEnv-PR',
+        environmentTypes: ['Production'],
         count: 4,
-        artifactDeploymentDetail: {
-          artifact: '/test-artifact',
-          lastDeployedAt: 1666150641027
-        }
+        isDrift: false,
+        isEnvGroup: false,
+        isRevert: true,
+        isRollback: false,
+        artifactDeploymentDetails: [
+          {
+            artifact: '/test-artifact',
+            lastDeployedAt: 1666150641027,
+            envId: 'sampleEnv1',
+            envName: 'sampleEnv1',
+            lastPipelineExecutionId: 'testexec',
+            pipelineId: 'testpipeline'
+          }
+        ]
       },
       {
-        envId: 'DemoenvTest',
-        envName: 'demo-env-Test-pdc',
-        environmentType: 'PreProduction',
+        id: 'DemoenvTest',
+        name: 'demo-env-Test-pdc',
+        environmentTypes: ['PreProduction', 'Production'],
         count: 2,
-        artifactDeploymentDetail: {
-          artifact: '/test-artifact',
-          lastDeployedAt: 1666870992508
-        }
+        isDrift: true,
+        isEnvGroup: true,
+        isRevert: false,
+        isRollback: false,
+        artifactDeploymentDetails: [
+          {
+            artifact: 'test-artifact:1.0',
+            lastDeployedAt: 1666870999508,
+            envId: 'sampleEnv31',
+            envName: 'sampleEnv31',
+            lastPipelineExecutionId: 'testexec',
+            pipelineId: 'testpipeline'
+          },
+          {
+            artifact: '/test-artifact',
+            lastDeployedAt: 1666870992508,
+            envId: 'sampleEnv2',
+            envName: 'sampleEnv2',
+            lastPipelineExecutionId: 'testexec',
+            pipelineId: 'testpipeline'
+          }
+        ]
       },
       {
-        envId: 'winrmnew',
-        envName: 'winrm-new',
-        environmentType: 'PreProduction',
+        id: 'winrmnew',
+        name: 'winrm-new',
+        environmentTypes: ['PreProduction', 'Production'],
         count: 2,
-        artifactDeploymentDetail: {
-          artifact: '/test-artifact',
-          lastDeployedAt: 1663761753831
-        }
+        isDrift: false,
+        isEnvGroup: true,
+        isRevert: false,
+        isRollback: false,
+        artifactDeploymentDetails: [
+          {
+            artifact: '/test-artifact',
+            lastDeployedAt: 1663761753831,
+            envId: 'sampleEnv3',
+            envName: 'sampleEnv3',
+            lastPipelineExecutionId: 'testexec',
+            pipelineId: 'testpipeline'
+          }
+        ]
       }
     ]
   },
@@ -250,17 +298,55 @@ export const artifactInstanceDetailsMock: ResponseArtifactInstanceDetails = {
     artifactInstanceDetails: [
       {
         artifact: 'testArtifactDisplayName',
-        environmentInstanceDetails: {
-          environmentInstanceDetails: [
+        environmentGroupInstanceDetails: {
+          environmentGroupInstanceDetails: [
             {
-              envId: 'sampleEnv',
-              envName: 'sampleEnv',
-              environmentType: 'PreProduction',
+              id: 'sampleEnv',
+              name: 'sampleEnv',
+              environmentTypes: ['PreProduction'],
               count: undefined,
-              artifactDeploymentDetail: {
-                artifact: 'testArtifactDisplayName',
-                lastDeployedAt: 1675925501095
-              }
+              isDrift: false,
+              isEnvGroup: false,
+              isRevert: false,
+              isRollback: false,
+              artifactDeploymentDetails: [
+                {
+                  artifact: 'testArtifactDisplayName',
+                  lastPipelineExecutionId: 'exectestplan',
+                  lastDeployedAt: 1676812202024,
+                  envId: 'testenv',
+                  pipelineId: 'waitpipetest',
+                  envName: 'testenv'
+                }
+              ]
+            },
+            {
+              id: 'demodriftgroup',
+              name: 'demodriftgroup',
+              environmentTypes: ['PreProduction', 'Production'],
+              count: 2,
+              isDrift: true,
+              isEnvGroup: true,
+              isRevert: false,
+              isRollback: false,
+              artifactDeploymentDetails: [
+                {
+                  artifact: 'demodrift:1.0',
+                  envName: 'testenv31',
+                  lastDeployedAt: 1676812202024,
+                  envId: 'testenv31',
+                  lastPipelineExecutionId: 'exectestplan',
+                  pipelineId: 'waitpipetest'
+                },
+                {
+                  envId: 'testenv2',
+                  artifact: '/demodrift',
+                  lastDeployedAt: 1666870992508,
+                  envName: 'testenv2',
+                  pipelineId: 'waitpipetest',
+                  lastPipelineExecutionId: 'exectestplan'
+                }
+              ]
             }
           ]
         }

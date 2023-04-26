@@ -10,12 +10,12 @@ import { Button, ButtonSize, ButtonVariation, Container, Layout, Text } from '@h
 import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
 import { useStrings } from 'framework/strings'
-import type { UnavailabilityInstancesResponse } from 'services/cv'
+import type { SecondaryEventsResponse } from 'services/cv'
 import css from '../DetailsPanel.module.scss'
 
 interface DowntimeBannerProps {
   showBanner: React.Dispatch<React.SetStateAction<boolean>>
-  bannerData: UnavailabilityInstancesResponse[]
+  bannerData: SecondaryEventsResponse[]
 }
 
 const DowntimeBanner = ({ showBanner, bannerData }: DowntimeBannerProps): JSX.Element => {

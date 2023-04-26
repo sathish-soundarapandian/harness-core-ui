@@ -21,9 +21,10 @@ interface ServicesListViewProps {
   loading?: boolean
   onRefresh?: () => Promise<void>
   onServiceSelect: (data: any) => Promise<void>
+  isForceDeleteEnabled: boolean
 }
 const ServicesListView = (props: ServicesListViewProps): React.ReactElement => {
-  const { data, onServiceSelect, loading } = props
+  const { data, onServiceSelect, loading, isForceDeleteEnabled } = props
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const paginationProps = useDefaultPaginationProps({
     itemCount: data?.data?.totalItems || 0,
@@ -61,7 +62,11 @@ const ServicesListView = (props: ServicesListViewProps): React.ReactElement => {
               width: '3%',
               // eslint-disable-next-line react/display-name
               Cell: ({ row }: { row: { original: unknown } }) => (
-                <ServiceMenu data={row.original} onRefresh={props.onRefresh} />
+                <ServiceMenu
+                  data={row.original}
+                  onRefresh={props.onRefresh}
+                  isForceDeleteEnabled={isForceDeleteEnabled}
+                />
               )
             }
           ]}

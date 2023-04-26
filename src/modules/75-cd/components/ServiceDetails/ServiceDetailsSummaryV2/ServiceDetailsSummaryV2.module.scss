@@ -7,18 +7,67 @@
 
 .envCards {
   min-width: 240px;
-  height: 173px;
+  height: 200px;
   margin: var(--spacing-6) !important;
-  padding: var(--spacing-5) !important;
+  padding: 32px var(--spacing-5) var(--spacing-5) var(--spacing-5) !important;
+  border: none !important;
+  display: flex !important;
+  flex-direction: column;
 
   .envCardTitle {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
 
-    > p {
-      width: 240px;
+    .statusIcon {
+      background: var(--grey-100);
+      border: 0.5px solid var(--grey-300);
+      border-radius: 4px;
+      padding: 4px;
+      display: flex;
+      align-items: center;
     }
+  }
+}
+
+.headerTile {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%);
+  width: 150px;
+  height: 20px;
+  background: var(--blue-100);
+  text-align: center;
+  line-height: 15px;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: var(--primary-9);
+  clip-path: polygon(0 0, 100% 0, calc(100% - var(--spacing-xlarge)) 100%, var(--spacing-xlarge) 100%);
+  letter-spacing: 2px;
+  font-size: 10px;
+  border-top: 1px solid var(--blue-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--blue-50);
+    color: var(--primary-9);
+    z-index: -1;
+    clip-path: polygon(
+      2px 0,
+      calc(100% - 2px) 0,
+      calc(100% - var(--spacing-xlarge) - 1px) calc(100% - 1px),
+      calc(var(--spacing-xlarge) + 1px) calc(100% - 1px)
+    );
   }
 }
 
@@ -31,6 +80,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.titleText {
+  padding: var(--spacing-large) var(--spacing-large) 0 !important;
 }
 
 .environmentType {
@@ -49,6 +102,9 @@
   border-radius: var(--spacing-10);
   margin-top: 10px !important;
   margin-bottom: 10px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 15px !important;
 
   &.production {
     background-color: var(--purple-50) !important;
@@ -61,7 +117,7 @@
   flex-direction: row;
   align-items: center;
   margin-top: 10px !important;
-  margin-bottom: var(--spacing-5) !important;
+  margin-bottom: var(--spacing-6) !important;
   p {
     padding-left: 6px !important;
     &:hover {
@@ -144,14 +200,14 @@
 }
 
 .dialogBase {
-  min-width: 1350px;
+  min-width: 1450px;
   min-height: 900px;
   padding: 0 !important;
 }
 
 .dialogWrap {
   display: grid;
-  grid-template-columns: 1fr 1fr 5px;
+  grid-template-columns: 1fr 0.85fr 5px;
 }
 
 .detailSummaryView {
@@ -210,7 +266,7 @@
     padding-bottom: var(--spacing-3);
 
     p {
-      font-size: var(--font-size-small) !important;
+      font-size: 11px !important;
       color: var(--grey-600) !important;
     }
   }
@@ -339,8 +395,8 @@
 }
 
 .artifactCards {
-  min-width: 307px;
-  height: 173px;
+  min-width: 430px;
+  height: 200px;
   margin: var(--spacing-6) !important;
   padding: var(--spacing-5) !important;
 }
@@ -353,13 +409,13 @@
 
 .artifactViewEnvDetail {
   display: grid !important;
-  grid-template-columns: 1fr 90px;
+  grid-template-columns: 1fr max-content;
   column-gap: var(--spacing-3);
   align-items: center;
   height: var(--spacing-8);
 
-  :nth-child(3) {
-    justify-self: end;
+  p[id='groupLabel'] {
+    border-color: var(--primary-2) !important;
   }
 }
 
@@ -413,4 +469,93 @@
 .overflowScrollPipelineIdList {
   overflow: auto;
   max-height: 680px;
+}
+
+.driftPopover {
+  :global {
+    .bp3-popover-arrow-fill {
+      fill: var(--primary-9-dark) !important;
+    }
+    .bp3-popover-content {
+      background-color: var(--primary-9-dark) !important;
+    }
+  }
+  border-radius: 8px;
+}
+
+.driftTable {
+  width: 450px;
+  padding: 12px !important;
+  background-color: var(--primary-9-dark) !important;
+  border-radius: 8px;
+
+  div[class*='TableV2--header'] {
+    p {
+      color: var(--grey-300) !important;
+    }
+    padding-bottom: var(--spacing-3);
+  }
+
+  div[class*='TableV2--body'] {
+    max-height: 400px;
+    overflow: auto;
+    div[class*='TableV2--row'] {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    div[class*='TableV2--cells'] {
+      height: 0;
+    }
+  }
+}
+
+.statusIconPopover {
+  :global {
+    .bp3-popover-arrow-fill {
+      fill: var(--primary-9-dark) !important;
+    }
+    .bp3-popover-content {
+      background-color: var(--primary-9-dark) !important;
+      border-radius: 4px !important;
+    }
+  }
+  background-color: var(--primary-9-dark) !important;
+  border-radius: 4px !important;
+
+  p {
+    padding: 12px !important;
+    border-radius: 4px;
+  }
+}
+
+.envGroupStyle {
+  font-size: var(--font-size-small) !important;
+  color: var(--grey-800) !important;
+  padding-left: var(--spacing-1) !important;
+  max-width: 140px;
+}
+
+.envGroupContainer {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(0, 40px);
+  align-items: center;
+  justify-content: flex-start;
+  grid-auto-flow: column;
+  grid-column-gap: 4px;
+}
+
+.envGroupSeparator {
+  margin-top: 4px;
+  margin-bottom: 6px;
+  border-top: 1px solid var(--grey-200);
+}
+
+.envGroupTooltip {
+  padding: var(--spacing-5) !important;
+  width: 240px;
+
+  div[id='envGrpText'] {
+    max-height: 400px;
+    overflow: auto;
+  }
 }

@@ -20,15 +20,17 @@ import {
   getAllServicesPromise,
   useDownloadActiveServiceCSVReport
 } from 'services/cd-ng'
+import { listActiveDevelopersPromise } from 'services/ci'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
 import SubscriptionsPage from '../SubscriptionsPage'
 import activeServices from './mocks/activeServices.json'
-import orgMockData from './mocks/orgMockData.json'
 import projMockData from './mocks/projMockData.json'
 import serviceMockData from './mocks/serviceMockData.json'
 jest.mock('services/cd-ng')
+jest.mock('services/ci')
 const getOrganizationListPromiseMock = getOrganizationListPromise as jest.MockedFunction<any>
+const getListActiveDevelopersPromiseMock = listActiveDevelopersPromise as jest.MockedFunction<any>
 const getProjectListPromiseMock = getProjectListPromise as jest.MockedFunction<any>
 const getServiceListPromiseMock = getAllServicesPromise as jest.MockedFunction<any>
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
@@ -37,7 +39,39 @@ const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
 const orgListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
-    orgMockData
+    data: {
+      pageCount: 1,
+      itemCount: 3,
+      pageSize: 50,
+      content: [
+        {
+          organization: {
+            accountIdentifier: 'testAcc',
+            identifier: 'testOrg',
+            name: 'Org Name',
+            description: 'Description',
+            tags: { tag1: '', tag2: 'tag3' }
+          }
+        },
+        {
+          organization: {
+            accountIdentifier: 'testAcc',
+            identifier: 'default',
+            name: 'default',
+            description: 'default',
+            tags: { tag1: '', tag2: 'tag3' }
+          },
+          harnessManaged: true
+        }
+      ],
+      pageIndex: 0,
+      empty: false
+    }
+  })
+})
+const devListPromiseMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    data: ['abc', 'def']
   })
 })
 jest.mock('highcharts-react-official', () => () => <div />)
@@ -59,6 +93,9 @@ useExtendTrialLicenseMock.mockImplementation(() => {
 })
 getOrganizationListPromiseMock.mockImplementation(() => {
   return orgListPromiseMock()
+})
+getListActiveDevelopersPromiseMock.mockImplementation(() => {
+  return devListPromiseMock()
 })
 getProjectListPromiseMock.mockImplementation(() => {
   return projListPromiseMock()
@@ -704,7 +741,7 @@ describe('Subscriptions Page', () => {
       expect(getByText('common.subscriptions.ccm.cloudSpend')).toBeInTheDocument()
     })
 
-    test('should render CI details', () => {
+    test('should render CI details', async () => {
       useGetModuleLicenseInfoMock.mockImplementation(() => {
         return {
           data: {
@@ -733,13 +770,58 @@ describe('Subscriptions Page', () => {
         }
       })
 
-      const { getByText } = render(
-        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CE }}>
+      const { container, getByText, getAllByText } = render(
+        <TestWrapper
+          defaultAppStoreValues={{ featureFlags }}
+          pathParams={{ module: ModuleName.CI }}
+          queryParams={{ moduleCard: ModuleName.CI }}
+        >
           <SubscriptionsPage />
         </TestWrapper>
       )
+      expect(container).toMatchSnapshot('ci module ')
+      expect(getByText('common.lastBuildDate')).toBeTruthy()
+      userEvent.click(getByText('common.lastBuildDate'))
+      expect(getByText('common.lastBuildDate')).toBeTruthy()
 
-      expect(getByText('common.subscriptions.ci.developers')).toBeInTheDocument()
+      // checking update filters for undefined
+      const fetchButton0 = getAllByText('Update')[0]
+      expect(fetchButton0).toBeDefined()
+      userEvent.click(fetchButton0)
+
+      // changing values in dropdowns
+      expect(getByText('common.subscriptions.usage.developers')).toBeTruthy()
+      act(() => {
+        fireEvent.click(getByText('common.subscriptions.usage.developers'))
+      })
+      await waitFor(() => {
+        getByText('abc')
+      })
+      act(() => {
+        fireEvent.click(getByText('abc'))
+      })
+      const orgDropdown = getAllByText('orgsText')[0]
+      act(() => {
+        fireEvent.click(orgDropdown)
+      })
+      // calling the orgchange by selecting value from dropdown
+      await waitFor(() => {
+        getByText('Org Name')
+      })
+      act(() => {
+        fireEvent.click(getByText('Org Name'))
+      })
+
+      const fetchButton = getAllByText('Update')[0]
+      expect(fetchButton).toBeDefined()
+      userEvent.click(fetchButton)
+      // checking the trend tab for ci graphs
+      await waitFor(() => {
+        getByText('common.subscriptions.tabs.trend')
+      })
+      act(() => {
+        fireEvent.click(getByText('common.subscriptions.tabs.trend'))
+      })
     })
 
     test('should render FF details', () => {

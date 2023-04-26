@@ -575,7 +575,9 @@ function CICodebaseInputSetFormInternal({
       if (isCpuLimitRuntimeInput && !get(newInitialValues, codeBaseInputFieldFormName.cpuLimit)) {
         set(newInitialValues, codeBaseInputFieldFormName.cpuLimit, codeBaseInputDefaultValue.cpuLimit)
       }
-      formik?.setValues(newInitialValues)
+      const codeBasePath = `${formattedPath}properties.ci.codebase`
+
+      formik?.setFieldValue(get(newInitialValues, codeBasePath), codeBasePath)
     }
   }, [pipelineHasCodebaseSection, formik?.values?.pipeline?.identifier, formik?.values?.identifier])
 

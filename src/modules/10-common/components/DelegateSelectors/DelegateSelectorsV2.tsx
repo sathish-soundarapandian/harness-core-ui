@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import { defaultTo, isArray, noop, some } from 'lodash-es'
+import React, { useMemo } from 'react'
+import { compact } from 'lodash-es'
 import { SimpleTagInput, Text, Icon, Layout, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
@@ -16,7 +16,7 @@ import { useStrings } from 'framework/strings'
 import type { DelegateSelector } from 'services/portal'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { addTagIfNeeded, listContainsTag, removeTagIfNeeded } from './DelegateSelectors.utils'
+import { listContainsTag, transformToTagList } from './DelegateSelectors.utils'
 import css from './DelegateSelectors.module.scss'
 
 const isValidExpression = (
@@ -45,63 +45,52 @@ export interface DelegateSelectorsV2Props
   readonly?: boolean
 }
 
-const mapSelectedData = (delegateSelectors: DelegateSelector[], selectedItems: string[]) => {
-  return delegateSelectors.filter((item: DelegateSelector) => {
-    return selectedItems?.includes(defaultTo(item?.name, ''))
-  })
-}
-
 export const DelegateSelectorsV2 = (props: DelegateSelectorsV2Props): React.ReactElement | null => {
-  const { onTagInputChange = noop, placeholder, selectedItems, data, readonly } = props
-
+  const { onTagInputChange, placeholder, data: delegateSelectors, readonly } = props
+  const selectedItems = props.selectedItems as string[] | undefined
   const { getString } = useStrings()
   const { showError } = useToaster()
 
-  const [delegateSelectors, setDelegateSelectors] = useState<DelegateSelector[]>([])
-  const [selectedDelegateSelectors, setSelectedDelegateSelectors] = useState<DelegateSelector[]>([])
-  const [createdTags, setCreatedTags] = useState<DelegateSelector[]>([])
+  const selectedDelegateSelectors = useMemo(() => {
+    if (!Array.isArray(selectedItems)) return []
 
-  // Updating internal state when delegate selectors list is empty
-  if (data.length !== delegateSelectors.length) {
-    setDelegateSelectors(data)
-    const selectedList = mapSelectedData(data, selectedItems as string[])
-    // Note: Need to check why tags created from UI are not coming in the delegate selectors API response hence updating here
-    const newItems = isArray(selectedItems)
-      ? selectedItems?.filter(value => !some(data, ({ name }) => name === value))
-      : []
-    const updateNewTags =
-      newItems.length > 0 ? (newItems.map(name => ({ connected: false, name })) as DelegateSelector[]) : []
-    setCreatedTags(updateNewTags)
-    setSelectedDelegateSelectors([...selectedList, ...updateNewTags])
+    return compact(selectedItems).map(item => {
+      const itemInDelegateSelectors = delegateSelectors.find(dS => dS.name === item)
+      return itemInDelegateSelectors ?? { connected: false, name: item }
+    })
+  }, [selectedItems, delegateSelectors])
+
+  const createdDelegateSelectors = useMemo(() => {
+    return selectedDelegateSelectors.filter(sDS => !delegateSelectors.some(dS => dS.name === sDS.name))
+  }, [delegateSelectors, selectedDelegateSelectors])
+
+  const allItems = useMemo(
+    () => [...delegateSelectors, ...createdDelegateSelectors],
+    [createdDelegateSelectors, delegateSelectors]
+  )
+
+  const onRemove = (tagValue: string): void => {
+    onTagInputChange?.(transformToTagList(selectedDelegateSelectors.filter(sDS => sDS.name !== tagValue)))
   }
 
-  const removeSelectedTag = (tagValue: string) => {
-    const tag = [...delegateSelectors, ...createdTags].find(
-      (item: DelegateSelector) => item.name === tagValue
-    ) as DelegateSelector
-    const { updatedCreatedTags } = removeTagIfNeeded(createdTags, tag)
-    setCreatedTags(updatedCreatedTags)
-    selectDeselectDelegateSelectors(tag)
-  }
-
-  const selectDeselectDelegateSelectors = (delegateSelector: DelegateSelector) => {
-    const selectedTagList = selectedDelegateSelectors
-    const index = selectedTagList.findIndex((item: DelegateSelector) => item.name === delegateSelector.name)
-    if (index === -1) {
-      selectedTagList.push(delegateSelector)
-    } else {
-      const { updatedCreatedTags } = removeTagIfNeeded(createdTags, delegateSelector)
-      setCreatedTags(updatedCreatedTags)
-      selectedTagList.splice(index, 1)
+  const onItemSelect = (item: DelegateSelector): void => {
+    const isNewlyCreatedTag = !listContainsTag(allItems, item)
+    if (isNewlyCreatedTag && !validateNewTag(item?.name || '')) {
+      return
     }
-    setSelectedDelegateSelectors(selectedTagList)
+
+    const existingSelector = selectedDelegateSelectors.find(sDS => sDS.name === item.name)
+    const updatedSelectors = existingSelector
+      ? selectedDelegateSelectors.filter(sDS => sDS !== existingSelector)
+      : [...selectedDelegateSelectors, item]
+    onTagInputChange?.(transformToTagList(updatedSelectors))
   }
 
-  const transformToTagList = () => {
-    return selectedDelegateSelectors.map((item: any) => item.name)
-  }
-
-  const renderCreateTagOption = (query: string, active: boolean, handleClick: any) => {
+  const renderCreateTagOption = (
+    query: string,
+    active: boolean,
+    handleClick: React.MouseEventHandler<HTMLElement>
+  ): JSX.Element => {
     return (
       <Menu.Item
         icon="add"
@@ -114,7 +103,7 @@ export const DelegateSelectorsV2 = (props: DelegateSelectorsV2Props): React.Reac
     )
   }
 
-  const validateNewTag = (tag: string) => {
+  const validateNewTag = (tag: string): boolean => {
     const pattern = new RegExp('^[a-z0-9-${}]+$', 'i')
     const validTag = new RegExp('^[a-z0-9-${}._<>+]+$', 'i').test(tag)
     const tagChars = tag.split('')
@@ -138,11 +127,14 @@ export const DelegateSelectorsV2 = (props: DelegateSelectorsV2Props): React.Reac
     return validTag && validExpression
   }
 
-  const renderDelegateSelector = (item: DelegateSelector, handleClick: any) => {
+  const renderDelegateSelector = (
+    item: DelegateSelector,
+    handleClick: React.MouseEventHandler<HTMLElement>
+  ): JSX.Element => {
     return (
       <Menu.Item
         key={item.name as string}
-        onClick={() => handleClick(item)}
+        onClick={handleClick}
         title={item.name}
         text={
           <Layout.Horizontal flex={{ distribution: 'space-between' }}>
@@ -163,7 +155,7 @@ export const DelegateSelectorsV2 = (props: DelegateSelectorsV2Props): React.Reac
     )
   }
 
-  const renderIcon = (color: string) => {
+  const renderIcon = (color: string): JSX.Element => {
     return <Icon color={color} name="full-circle" size={10} width={30} />
   }
 
@@ -177,7 +169,7 @@ export const DelegateSelectorsV2 = (props: DelegateSelectorsV2Props): React.Reac
         className: css.delegatePopover
       }}
       resetOnQuery={false}
-      items={[...delegateSelectors, ...createdTags]}
+      items={allItems}
       selectedItems={selectedDelegateSelectors}
       placeholder={placeholder || getString('delegate.Delegate_Selector_placeholder')}
       itemRenderer={(item: DelegateSelector, { handleClick }) => renderDelegateSelector(item, handleClick)}
@@ -192,29 +184,17 @@ export const DelegateSelectorsV2 = (props: DelegateSelectorsV2Props): React.Reac
         }
       }}
       resetOnSelect
-      onItemSelect={(item: DelegateSelector) => {
-        const isNewlyCreatedTag = !listContainsTag(delegateSelectors, item)
-        if (isNewlyCreatedTag && !validateNewTag(item?.name || '')) {
-          return
-        }
-        const { updatedCreatedTags } = addTagIfNeeded(delegateSelectors, createdTags, item)
-        setCreatedTags(updatedCreatedTags)
-        selectDeselectDelegateSelectors(item)
-        onTagInputChange(transformToTagList())
-      }}
+      onItemSelect={onItemSelect}
       tagRenderer={item => item.name}
       tagInputProps={{
         disabled: readonly,
-        onRemove: (item: string) => {
-          removeSelectedTag(item)
-          onTagInputChange(transformToTagList())
-        },
+        onRemove,
         className: css.delegateInput,
         tagProps: (value: any) => {
           const _value = value as string
-          const isItemNewlyCreated = createdTags.findIndex(item => item.name === value) !== -1
-          const isExpression: any = isItemNewlyCreated && _value.startsWith('${') && _value.endsWith('}')
-          return isExpression
+          const isItemNewlyCreated = createdDelegateSelectors.findIndex(item => item.name === value) !== -1
+          const isExpression = isItemNewlyCreated && _value.startsWith('${') && _value.endsWith('}')
+          return isExpression || readonly
             ? { intent: 'none', minimal: true }
             : isItemNewlyCreated
             ? { intent: 'danger', minimal: true }

@@ -6,7 +6,6 @@
  */
 
 import type { IconName } from '@harness/uicore'
-import { defaultTo } from 'lodash-es'
 import type { AddDrawerMapInterface } from '@common/components/AddDrawer/AddDrawer'
 import type { ExecutionWrapperConfig, StageElementWrapperConfig, StepCategory } from 'services/pipeline-ng'
 import type { DependencyElement, IntegrationStageConfigImpl } from 'services/ci'
@@ -111,70 +110,60 @@ export const getCategoryItems = (_stageType: string, _selectedStage: StageElemen
   //   }
 }
 
-export const getDuplicateIdentifiers = (idMap: string[]): string[] => {
-  return idMap.filter((element, position, arr) => arr.indexOf(element) !== position)
-}
-
-interface StageStepsIdMap {
-  [key: string]: { steps: string[]; rollbackSteps: string[] }
-}
-
-const getStageStepsIdentifiers = (
-  stageStepsData: ExecutionWrapperConfig[] | DependencyElement[] | undefined
+const getStepIdPaths = (
+  stepsData: (ExecutionWrapperConfig | DependencyElement)[] | undefined,
+  prefix: string
 ): string[] => {
-  const idMap = [] as string[]
-  stageStepsData?.forEach((stepsData: ExecutionWrapperConfig | DependencyElement | undefined) => {
-    if ((stepsData as ExecutionWrapperConfig)?.step) {
-      idMap.push((stepsData as ExecutionWrapperConfig)?.step?.identifier as string)
-    } else if ((stepsData as ExecutionWrapperConfig)?.parallel) {
-      idMap.push(...getStageStepsIdentifiers((stepsData as ExecutionWrapperConfig)?.parallel))
-    } else if ((stepsData as ExecutionWrapperConfig)?.stepGroup) {
-      idMap.push((stepsData as ExecutionWrapperConfig)?.stepGroup?.identifier as string)
-      idMap.push(...getStageStepsIdentifiers((stepsData as ExecutionWrapperConfig)?.stepGroup?.steps))
-    } else {
-      idMap.push((stepsData as DependencyElement)?.identifier as string)
-    }
-  })
-  return idMap
-}
+  if (!Array.isArray(stepsData)) return []
 
-export const getStageIdDetailsMapping = (stagesData: StageElementWrapperConfig[]): StageStepsIdMap => {
-  let stageStepsMapping = {} as StageStepsIdMap
-  stagesData?.forEach(stageData => {
-    if ((stageData as StageElementWrapperConfig)?.parallel) {
-      stageStepsMapping = {
-        ...stageStepsMapping,
-        ...getStageIdDetailsMapping(defaultTo((stageData as StageElementWrapperConfig).parallel, []))
+  return stepsData
+    .reduce<string[]>((paths, stepData) => {
+      if ((stepData as ExecutionWrapperConfig)?.step?.identifier) {
+        const stepId = (stepData as ExecutionWrapperConfig)?.step?.identifier as string
+        paths.push(stepId)
+      } else if ((stepData as ExecutionWrapperConfig)?.parallel) {
+        paths.push(...getStepIdPaths((stepData as ExecutionWrapperConfig)?.parallel, ''))
+      } else if ((stepData as ExecutionWrapperConfig)?.stepGroup) {
+        const stepGroupIdentifier = (stepData as ExecutionWrapperConfig)?.stepGroup?.identifier as string
+        paths.push(stepGroupIdentifier)
+        paths.push(
+          ...getStepIdPaths((stepData as ExecutionWrapperConfig)?.stepGroup?.steps, `${stepGroupIdentifier}.steps`)
+        )
+      } else {
+        paths.push((stepData as DependencyElement)?.identifier as string)
       }
-    } else if ((stageData as StageElementWrapperConfig)?.stage) {
-      const stageId = (stageData as StageElementWrapperConfig)?.stage?.identifier as string
-      const localStageSteps = { steps: [] as string[], rollbackSteps: [] as string[] }
-      // Execution CI serviceDependencies
-      localStageSteps.steps.push(
-        ...getStageStepsIdentifiers((stageData?.stage?.spec as IntegrationStageConfigImpl)?.serviceDependencies)
-      )
-      // Execution steps
-      localStageSteps.steps.push(
-        ...getStageStepsIdentifiers((stageData as StageElementWrapperConfig)?.stage?.spec?.execution?.steps)
-      )
-      // Execution rollback steps
-      localStageSteps.rollbackSteps.push(
-        ...getStageStepsIdentifiers((stageData as StageElementWrapperConfig)?.stage?.spec?.execution?.rollbackSteps)
-      )
-      // Saving stepsId against stage identifier
-      stageStepsMapping[stageId] = localStageSteps
-    }
-  })
-  return stageStepsMapping
+      return paths
+    }, [])
+    .map(path => (prefix ? `${prefix}.${path}` : path))
 }
 
-export const getDuplicateStepIdentifierList = (stagesData: StageElementWrapperConfig[]): string[] => {
-  const duplicateStepIdentifiersList = [] as string[]
-  const stepsIdMap = getStageIdDetailsMapping(stagesData)
-  Object.values(stepsIdMap).forEach(stepIdMap => {
-    const duplicateSteps = getDuplicateIdentifiers(stepIdMap.steps)
-    const duplicateRollbackSteps = getDuplicateIdentifiers(stepIdMap.rollbackSteps)
-    duplicateStepIdentifiersList.push(...duplicateSteps, ...duplicateRollbackSteps)
-  })
-  return duplicateStepIdentifiersList
+const getStagesToStepIdPaths = (stagesData: StageElementWrapperConfig[], prefix: string): string[] => {
+  if (!Array.isArray(stagesData)) return []
+
+  return stagesData
+    .reduce<string[]>((paths, stageData) => {
+      if (Array.isArray(stageData.parallel)) {
+        paths.push(...getStagesToStepIdPaths(stageData.parallel, ''))
+      } else if (stageData.stage) {
+        const stageId = stageData.stage?.identifier
+        paths.push(stageId)
+        paths.push(
+          ...getStepIdPaths(
+            (stageData.stage?.spec as IntegrationStageConfigImpl)?.serviceDependencies,
+            `${stageId}.spec.serviceDependencies`
+          ),
+          ...getStepIdPaths(stageData.stage?.spec?.execution?.steps, `${stageId}.spec.execution.steps`),
+          ...getStepIdPaths(stageData.stage.spec?.execution?.rollbackSteps, `${stageId}.spec.execution.rollbackSteps`)
+        )
+      }
+      return paths
+    }, [])
+    .map(path => (prefix ? `${prefix}.${path}` : path))
+}
+
+/** A step/step group/stage identifier is a duplicate if a unique path cannot be formed to the step/step group/stage identifier starting from pipeline.stages */
+export const getDuplicateIdentifiers = (stagesData: StageElementWrapperConfig[]): string[] => {
+  const allPaths = getStagesToStepIdPaths(stagesData, 'pipeline.stages')
+  const uniqueDuplicates = [...new Set(allPaths.filter((e, i, a) => a.indexOf(e) !== i))]
+  return uniqueDuplicates
 }

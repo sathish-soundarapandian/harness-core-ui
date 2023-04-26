@@ -204,3 +204,32 @@ export const pluginsWithRequiredField = {
     ]
   }
 }
+
+export const pluginsWithNoFields = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 1,
+    totalItems: 1,
+    pageItemCount: 1,
+    pageSize: 200,
+    content: [
+      {
+        name: 'Super-Linter',
+        description:
+          'It is a simple combination of various linters, written in bash, to help validate your source code.',
+        kind: 'action',
+        logo: '',
+        repo: 'github.com/github/super-linter',
+        image: null,
+        uses: 'github/super-linter@v4.10.1',
+        inputs: [],
+        outputs: []
+      }
+    ],
+    pageIndex: 0,
+    empty: false,
+    pageToken: null
+  },
+  metaData: null,
+  correlationId: '1c1a486b-d398-4e56-99f5-51dc3cd4dab4'
+}

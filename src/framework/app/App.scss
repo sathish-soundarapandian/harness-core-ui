@@ -78,8 +78,11 @@ body {
   --ssca-border: #4791ff;
   --ssca-background: #ebefff;
 
+  // Continuous Error Tracking
+  --cet-border: #e35a54;
+
   // Default Colors
-  --default-module-border: white;
+  --default-module-border: var(--white);
 }
 /* stylelint-enable  color-no-hex */
 

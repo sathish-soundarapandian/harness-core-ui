@@ -29,7 +29,8 @@ jest.mock('services/cd-ng', () => {
           status: 'SUCCESS'
         }
       })
-    }))
+    })),
+    useGetSettingValue: jest.fn().mockResolvedValue({})
   }
 })
 const mutate = jest.fn(() => {

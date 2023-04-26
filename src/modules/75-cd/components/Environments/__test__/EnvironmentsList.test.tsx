@@ -40,7 +40,7 @@ describe('EnvironmentList', () => {
         path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/environment"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentList />
+        <EnvironmentList isForceDeleteEnabled />
       </TestWrapper>
     )
 
@@ -58,7 +58,7 @@ describe('EnvironmentList', () => {
         path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/environment"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentList />
+        <EnvironmentList isForceDeleteEnabled />
       </TestWrapper>
     )
     expect(getByText(document.body, message)).toBeDefined()
@@ -79,7 +79,7 @@ describe('EnvironmentList', () => {
         path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/environment"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentList />
+        <EnvironmentList isForceDeleteEnabled />
       </TestWrapper>
     )
 
@@ -92,7 +92,7 @@ describe('EnvironmentList', () => {
         path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/environment"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentList />
+        <EnvironmentList isForceDeleteEnabled />
       </TestWrapper>
     )
     fireEvent.click(container.querySelector('[data-testid="add-environment"]') as HTMLElement)
@@ -116,7 +116,7 @@ describe('EnvironmentList', () => {
         path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/environment"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentList />
+        <EnvironmentList isForceDeleteEnabled />
       </TestWrapper>
     )
 
@@ -141,7 +141,7 @@ describe('EnvironmentList', () => {
         path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/environment"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentList />
+        <EnvironmentList isForceDeleteEnabled />
       </TestWrapper>
     )
 
@@ -174,7 +174,7 @@ describe('EnvironmentList', () => {
         path={routes.toEnvironment({ ...projectPathProps, ...modulePathProps })}
         pathParams={{ accountId: 'dummy', module: 'cd', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <EnvironmentList />
+        <EnvironmentList isForceDeleteEnabled />
       </TestWrapper>
     )
 

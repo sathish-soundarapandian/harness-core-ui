@@ -25,5 +25,6 @@ declare const styles: {
   readonly optionalConfigDetails: string
   readonly radioBtns: string
   readonly stepTitle: string
+  readonly warningMessage: string
 }
 export default styles

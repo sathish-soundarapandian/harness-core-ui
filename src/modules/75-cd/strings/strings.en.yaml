@@ -399,6 +399,14 @@ serviceDashboard:
   runTime: runTime
   updatedTime: updatedTime
   memorySize: memorySize
+  envGroupTitle: Env Group
+  latestVersion: Latest version
+  driftDetection: Drift Detection!
+  deployedByHotfix: Deployed by Hotfixed pipeline
+  triggeredByRollback: Triggered by Rollback
+  envAndGroup: Environments & Groups
+  bothTypeLabel: 'Prod, Pre-Prod'
+  envGroupsHeader: 'ENV GROUPS'
 noEnvironment:
   title: You have no Environments
   message: Create an environment and let’s start configuring the deployment

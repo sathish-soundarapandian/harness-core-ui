@@ -120,6 +120,7 @@ approvalStep:
   approversWithColon: '{{$.pipeline.approvalStep.approvers}}:'
   approverInputs: 'Inputs to be provided by approver'
   includeStageExecutionDetails: 'Include stage execution details in approval'
+  isAutoRejectEnabled: 'Auto-Reject previous deployments paused in this step on approval'
   addUserGroups: Enter User Group
   fetchingUserGroups: Select User Group
   fetchUserGroupsFailed: Failed to fetch User Groups
@@ -1042,6 +1043,8 @@ artifactsSelection:
   errors:
     noRepositories: No repositories found with given connector
     nodigest: No Digests found with given tag
+    noGroupIds: No GroupIds Found
+    noArtifactIds: No ArtifactIds Found
 overrideSets:
   createOverrideSet: Create Override Set
   overrideSetPlaceholder: Enter Override Set Name

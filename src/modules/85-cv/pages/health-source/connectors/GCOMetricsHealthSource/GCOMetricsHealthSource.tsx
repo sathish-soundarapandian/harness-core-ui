@@ -360,6 +360,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                         <Container className={css.validationContainer}>
                           <Container width={'500px'}>
                             <QueryContent
+                              showLabel
                               handleFetchRecords={() => {
                                 if (!shouldShowChart) {
                                   setShouldShowChart(true)

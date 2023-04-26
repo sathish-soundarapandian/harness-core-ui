@@ -12,7 +12,6 @@ import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
-import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ProjectSelector, ProjectSelectorProps } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
@@ -24,8 +23,6 @@ export default function ETSideNav(): React.ReactElement {
   const params = useParams<PipelinePathProps>()
   const { accountId, projectIdentifier, orgIdentifier } = params
 
-  // CET-1024: empty navigation sidebar for now
-  /* istanbul ignore next */
   const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
     updateAppStore({ selectedProject: data })
 
@@ -34,7 +31,7 @@ export default function ETSideNav(): React.ReactElement {
 
   return (
     <Layout.Vertical spacing="small">
-      <ProjectSelector moduleFilter={ModuleName.CET} onSelect={projectSelectHandler} />
+      <ProjectSelector onSelect={projectSelectHandler} />
       {projectIdentifier && orgIdentifier && (
         <React.Fragment>
           <SidebarLink
@@ -53,48 +50,8 @@ export default function ETSideNav(): React.ReactElement {
               accountId
             })}
           />
-          {/*
-          <SidebarLink
-            label="Getting Started"
-            to={routes.toETHome({
-              accountId
-            })}
-          />
-          */}
           <NavExpandable title={getString('common.projectSetup')} route={'undefined'}>
             <Layout.Vertical spacing="small">
-              {/*
-              <SidebarLink
-                label={'Connectors'}
-                to={routes.toETHome({
-                  accountId
-                })}
-              />
-              <SidebarLink
-                label={'Secrets'}
-                to={routes.toETHome({
-                  accountId
-                })}
-              />
-              <SidebarLink
-                label={'Variables'}
-                to={routes.toETHome({
-                  accountId
-                })}
-              />
-              <SidebarLink
-                label={'Access Control'}
-                to={routes.toETHome({
-                  accountId
-                })}
-              />
-              <SidebarLink
-                label={'Delegates'}
-                to={routes.toETHome({
-                  accountId
-                })}
-              />
-              */}
               <SidebarLink
                 label={'Tokens'}
                 to={routes.toETAgentsTokens({
@@ -111,14 +68,54 @@ export default function ETSideNav(): React.ReactElement {
                   accountId
                 })}
               />
-              {/*
               <SidebarLink
-                label={'Settings'}
-                to={routes.toETHome({
+                label={getString('connectorsLabel')}
+                to={routes.toETConnectors({
+                  projectIdentifier,
+                  orgIdentifier,
                   accountId
                 })}
               />
-              */}
+              <SidebarLink
+                label={getString('common.secrets')}
+                to={routes.toETSecrets({
+                  projectIdentifier,
+                  orgIdentifier,
+                  accountId
+                })}
+              />
+              <SidebarLink
+                label={getString('accessControl')}
+                to={routes.toETAccessControl({
+                  projectIdentifier,
+                  orgIdentifier,
+                  accountId
+                })}
+              />
+              <SidebarLink
+                label={getString('delegate.delegates')}
+                to={routes.toETDelegates({
+                  projectIdentifier,
+                  orgIdentifier,
+                  accountId
+                })}
+              />
+              <SidebarLink
+                label={'Policies'}
+                to={routes.toETPolicies({
+                  projectIdentifier,
+                  orgIdentifier,
+                  accountId
+                })}
+              />
+              <SidebarLink
+                label={getString('common.defaultSettings')}
+                to={routes.toETDefaultSettings({
+                  projectIdentifier,
+                  orgIdentifier,
+                  accountId
+                })}
+              />
             </Layout.Vertical>
           </NavExpandable>
         </React.Fragment>

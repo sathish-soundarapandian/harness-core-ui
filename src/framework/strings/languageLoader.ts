@@ -20,8 +20,8 @@ import filestore from '@filestore/strings/strings.en.yaml'
 import variables from '@variables/strings/strings.en.yaml'
 import authSettings from '@auth-settings/strings/strings.en.yaml'
 import connectors from '@connectors/strings/strings.en.yaml'
-import userProfile from '@user-profile/strings/strings.en.yaml'
 import auditTrail from '@audit-trail/strings/strings.en.yaml'
+import userProfile from '@user-profile/strings/strings.en.yaml'
 import gitsync from '@gitsync/strings/strings.en.yaml'
 import dashboards from '@dashboards/strings/strings.en.yaml'
 import projectsOrgs from '@projects-orgs/strings/strings.en.yaml'
@@ -55,8 +55,8 @@ export default function languageLoader() {
     variables,
     authSettings,
     connectors,
-    userProfile,
     auditTrail,
+    userProfile,
     gitsync,
     dashboards,
     projectsOrgs,
