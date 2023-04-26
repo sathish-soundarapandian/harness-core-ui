@@ -7,7 +7,7 @@
 
 import React, { SetStateAction, Dispatch } from 'react'
 import cx from 'classnames'
-import { FormInput, SelectOption, Text, Container, MultiTypeInputType } from '@harness/uicore'
+import { FormInput, SelectOption, Text, Container, MultiTypeInputType, HarnessDocTooltip } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty, isUndefined, sortBy } from 'lodash-es'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
@@ -103,8 +103,10 @@ export const renderNonCustomEventFields = ({
                   font={{ variation: FontVariation.FORM_INPUT_TEXT, weight: 'semi-bold' }}
                   color={Color.GREY_600}
                   style={{ marginBottom: 'var(--spacing-xsmall)' }}
+                  data-tooltip-id="webhookTriggerActions"
                 >
                   {getString('triggers.triggerConfigurationPanel.actions')}
+                  <HarnessDocTooltip tooltipId="webhookTriggerActions" useStandAlone={true} />
                 </Text>
                 <FormInput.MultiSelect
                   className={css.multiSelect}

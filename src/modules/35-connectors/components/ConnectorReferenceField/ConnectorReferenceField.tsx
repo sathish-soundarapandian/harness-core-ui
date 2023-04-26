@@ -129,6 +129,8 @@ export interface ConnectorReferenceFieldProps extends Omit<IFormGroupProps, 'lab
   isMultiSelect?: boolean
   selectedConnectors?: ConnectorSelectedValue[] | string[]
   onMultiSelectChange?: (arg: ScopeAndIdentifier[]) => void
+  isRecordDisabled?: (val?: any) => boolean
+  renderRecordDisabledWarning?: JSX.Element
 }
 
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
@@ -248,6 +250,8 @@ interface GetReferenceFieldMethodProps extends ConnectorReferenceFieldProps {
   type: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
   setPagedConnectorData: (data: ResponsePageConnectorResponse) => void
   version?: string
+  isRecordDisabled?: (item: any) => boolean
+  renderRecordDisabledWarning?: JSX.Element
 }
 
 interface RecordRenderProps {
@@ -447,7 +451,9 @@ export function getReferenceFieldProps({
   connectorFilterProperties,
   isMultiSelect,
   version,
-  selectedConnectors
+  selectedConnectors,
+  isRecordDisabled,
+  renderRecordDisabledWarning
 }: GetReferenceFieldMethodProps): Omit<
   ReferenceSelectProps<ConnectorReferenceDTO>,
   'onChange' | 'onMultiSelectChange' | 'onCancel' | 'pagination'
@@ -585,7 +591,9 @@ export function getReferenceFieldProps({
       return <CollapseRecordRender {...recordRenderProps} />
     },
     isMultiSelect,
-    selectedReferences: selectedConnectors
+    selectedReferences: selectedConnectors,
+    isRecordDisabled,
+    renderRecordDisabledWarning
   }
 }
 export const getConnectorStatusCall = async (
@@ -636,6 +644,8 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     isMultiSelect,
     selectedConnectors,
     onMultiSelectChange,
+    isRecordDisabled,
+    renderRecordDisabledWarning,
     ...rest
   } = props
 
@@ -856,7 +866,9 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     setPagedConnectorData,
     connectorFilterProperties,
     isMultiSelect,
-    selectedConnectors
+    selectedConnectors,
+    isRecordDisabled,
+    renderRecordDisabledWarning
   })
   return (
     <FormGroup

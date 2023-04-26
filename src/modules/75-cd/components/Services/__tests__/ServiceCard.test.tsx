@@ -15,7 +15,7 @@ describe('ServiceCard', () => {
   test('render', () => {
     const { container } = render(
       <TestWrapper>
-        <ServiceCard {...serviceCard} />
+        <ServiceCard {...serviceCard} isForceDeleteEnabled />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

@@ -910,12 +910,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const wrapPlugInputInAStep = useCallback((pluginMetadata: PluginAddUpdateMetadata): Record<string, any> => {
     const { pluginData, pluginType, pluginName, pluginUses, pluginImage } = pluginMetadata
+    const sanitizedPluginData = omitBy(omitBy(sanitizePluginValues(pluginData), isUndefined), isNull)
     return {
       name: pluginName,
       spec:
         pluginType === PluginType.Script
-          ? sanitizePluginValues(pluginData)
-          : { with: sanitizePluginValues(pluginData), uses: pluginUses, image: pluginImage },
+          ? sanitizedPluginData
+          : {
+              ...(!isEmpty(sanitizedPluginData) ? { with: sanitizedPluginData } : {}),
+              ...(pluginUses ? { uses: pluginUses } : {}),
+              ...(pluginImage ? { image: pluginImage } : {})
+            },
       type: pluginType
     }
   }, [])
@@ -930,10 +935,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const addUpdatePluginIntoExistingYAML = useCallback(
     (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean): void => {
-      const { pluginData, shouldInsertYAML } = pluginMetadata
+      const { shouldInsertYAML } = pluginMetadata
       const cursorPosition = currentCursorPosition.current
-      const sanitizedPluginData = omitBy(omitBy(pluginData, isUndefined), isNull)
-      if (!isEmpty(sanitizedPluginData) && shouldInsertYAML && cursorPosition && editorRef.current?.editor) {
+      if (shouldInsertYAML && cursorPosition && editorRef.current?.editor) {
         let updatedYAML = currentYaml
         try {
           let closestStageIndex = getArrayIndexClosestToCurrentCursor({

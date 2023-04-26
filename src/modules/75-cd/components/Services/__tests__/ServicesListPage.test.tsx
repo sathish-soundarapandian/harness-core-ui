@@ -24,7 +24,8 @@ jest.mock('services/cd-ng', () => {
     useGetYamlSchema: jest.fn(() => ({ data: null })),
     useCreateServiceV2: jest.fn(() => ({ mutate: jest.fn() })),
     useUpsertServiceV2: jest.fn(() => ({ mutate: jest.fn() })),
-    useDeleteServiceV2: jest.fn(() => ({ mutate: jest.fn() }))
+    useDeleteServiceV2: jest.fn(() => ({ mutate: jest.fn() })),
+    useGetSettingValue: jest.fn().mockResolvedValue({})
   }
 })
 

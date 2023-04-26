@@ -45,5 +45,6 @@ declare const styles: {
   readonly summaryCard: string
   readonly summaryCardsContainer: string
   readonly table: string
+  readonly tabs: string
 }
 export default styles

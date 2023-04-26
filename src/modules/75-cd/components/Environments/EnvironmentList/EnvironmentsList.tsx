@@ -34,7 +34,7 @@ import EnvironmentTabs from '../EnvironmentTabs'
 import EmptyContent from './EmptyContent.svg'
 import css from './EnvironmentsList.module.scss'
 
-export const EnvironmentList: React.FC = () => {
+export const EnvironmentList: React.FC<{ isForceDeleteEnabled: boolean }> = ({ isForceDeleteEnabled }) => {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ParamsType>()
@@ -157,7 +157,7 @@ export const EnvironmentList: React.FC = () => {
       showSuccess(getString('cd.environment.deleted', { identifier: environment.identifier }))
       refetch()
     } catch (e: any) {
-      if (e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+      if (isForceDeleteEnabled && e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         setEnvironmentToDelete(environment)
         openReferenceErrorDialog()
       } else {
@@ -201,6 +201,7 @@ export const EnvironmentList: React.FC = () => {
         }
       }
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [getString, handleEnvDelete]
   )
 

@@ -545,6 +545,7 @@ export interface StringsMap {
   'common.jexlExpression': string
   'common.labelTestConnection': string
   'common.last7days': string
+  'common.lastBuildDate': string
   'common.lastConnected': string
   'common.lastConnectedOn': string
   'common.lastDeployed': string
@@ -658,6 +659,7 @@ export interface StringsMap {
   'common.newVersion': string
   'common.nextStep': string
   'common.noAPIKeys': string
+  'common.noActiveDeveloperData': string
   'common.noActiveServiceData': string
   'common.noAvailableTags': string
   'common.noConnectorAvailable': string
@@ -821,6 +823,7 @@ export interface StringsMap {
   'common.purpose.cv.serviceReliability': string
   'common.purpose.cv.subtitle': string
   'common.purpose.cv.verification': string
+  'common.purpose.developer': string
   'common.purpose.errorTracking.title': string
   'common.purpose.howToProceed': string
   'common.purpose.idp.fullName': string
@@ -839,6 +842,7 @@ export interface StringsMap {
   'common.pwsh': string
   'common.python': string
   'common.readOnly': string
+  'common.readOnlyConnectorWarning': string
   'common.readonlyPermissions': string
   'common.readonlyPermissionsForFile': string
   'common.recents': string
@@ -1083,8 +1087,10 @@ export interface StringsMap {
   'common.subscriptions.overview.trialExpiry': string
   'common.subscriptions.paid': string
   'common.subscriptions.sto.developers': string
+  'common.subscriptions.tabs.breakdown': string
   'common.subscriptions.tabs.overview': string
   'common.subscriptions.tabs.plans': string
+  'common.subscriptions.tabs.trend': string
   'common.subscriptions.title': string
   'common.subscriptions.trial': string
   'common.subscriptions.usage.activeDevelopers': string
@@ -3131,51 +3137,6 @@ export interface StringsMap {
   'connectors.validation.serviceNowUrl': string
   'connectors.validationPath': string
   'connectors.verifyConnection': string
-  'userProfile.addSCM': string
-  'userProfile.awsCredentials': string
-  'userProfile.basicInformation': string
-  'userProfile.changeDefaultAccountMessage': string
-  'userProfile.changePassword': string
-  'userProfile.confirmDelete': string
-  'userProfile.confirmDeleteTitle': string
-  'userProfile.confirmPassword': string
-  'userProfile.currentPassword': string
-  'userProfile.editProfile': string
-  'userProfile.myGroups': string
-  'userProfile.myProjects': string
-  'userProfile.myTools': string
-  'userProfile.mysourceCodeManagers': string
-  'userProfile.newPassword': string
-  'userProfile.newPasswordShouldMeetTheRequirements': string
-  'userProfile.newPasswordShouldNotBeCurrentPassword': string
-  'userProfile.passwordChangedSuccessfully': string
-  'userProfile.passwordMatch': string
-  'userProfile.passwordMustBeBetweenMinAndMax': string
-  'userProfile.passwordReqs': string
-  'userProfile.plusSCM': string
-  'userProfile.qrCode': string
-  'userProfile.requiredField': string
-  'userProfile.scmCreateFail': string
-  'userProfile.scmCreateSuccess': string
-  'userProfile.scmDeleteFailure': string
-  'userProfile.scmDeleteSuccess': string
-  'userProfile.scmUpdateFail': string
-  'userProfile.scmUpdateSuccess': string
-  'userProfile.scmValidation.accessKey': string
-  'userProfile.scmValidation.secretKey': string
-  'userProfile.selectSCM': string
-  'userProfile.selectedSCM': string
-  'userProfile.twoFactor.description': string
-  'userProfile.twoFactor.disableSuccess': string
-  'userProfile.twoFactor.disableText': string
-  'userProfile.twoFactor.disableTitle': string
-  'userProfile.twoFactor.enableSuccess': string
-  'userProfile.twoFactor.enableTitle': string
-  'userProfile.twoFactor.resetTitle': string
-  'userProfile.twofactorAuth': string
-  'userProfile.userEditFail': string
-  'userProfile.userEditSuccess': string
-  'userProfile.yourCurrentPasswordIncorrect': string
   'auditTrail.Platform': string
   'auditTrail.actions.added_collaborator': string
   'auditTrail.actions.added_membership': string
@@ -3232,6 +3193,51 @@ export interface StringsMap {
   'auditTrail.streamingDestinations': string
   'auditTrail.supplementaryDetails': string
   'auditTrail.yamlDifference': string
+  'userProfile.addSCM': string
+  'userProfile.awsCredentials': string
+  'userProfile.basicInformation': string
+  'userProfile.changeDefaultAccountMessage': string
+  'userProfile.changePassword': string
+  'userProfile.confirmDelete': string
+  'userProfile.confirmDeleteTitle': string
+  'userProfile.confirmPassword': string
+  'userProfile.currentPassword': string
+  'userProfile.editProfile': string
+  'userProfile.myGroups': string
+  'userProfile.myProjects': string
+  'userProfile.myTools': string
+  'userProfile.mysourceCodeManagers': string
+  'userProfile.newPassword': string
+  'userProfile.newPasswordShouldMeetTheRequirements': string
+  'userProfile.newPasswordShouldNotBeCurrentPassword': string
+  'userProfile.passwordChangedSuccessfully': string
+  'userProfile.passwordMatch': string
+  'userProfile.passwordMustBeBetweenMinAndMax': string
+  'userProfile.passwordReqs': string
+  'userProfile.plusSCM': string
+  'userProfile.qrCode': string
+  'userProfile.requiredField': string
+  'userProfile.scmCreateFail': string
+  'userProfile.scmCreateSuccess': string
+  'userProfile.scmDeleteFailure': string
+  'userProfile.scmDeleteSuccess': string
+  'userProfile.scmUpdateFail': string
+  'userProfile.scmUpdateSuccess': string
+  'userProfile.scmValidation.accessKey': string
+  'userProfile.scmValidation.secretKey': string
+  'userProfile.selectSCM': string
+  'userProfile.selectedSCM': string
+  'userProfile.twoFactor.description': string
+  'userProfile.twoFactor.disableSuccess': string
+  'userProfile.twoFactor.disableText': string
+  'userProfile.twoFactor.disableTitle': string
+  'userProfile.twoFactor.enableSuccess': string
+  'userProfile.twoFactor.enableTitle': string
+  'userProfile.twoFactor.resetTitle': string
+  'userProfile.twofactorAuth': string
+  'userProfile.userEditFail': string
+  'userProfile.userEditSuccess': string
+  'userProfile.yourCurrentPasswordIncorrect': string
   'gitsync.PRTitle': string
   'gitsync.addFolder': string
   'gitsync.addNewHarnessFolderLabel': string
@@ -3562,6 +3568,7 @@ export interface StringsMap {
   'pipeline.approvalStep.fetchUserGroupsFailed': string
   'pipeline.approvalStep.fetchingUserGroups': string
   'pipeline.approvalStep.includeStageExecutionDetails': string
+  'pipeline.approvalStep.isAutoRejectEnabled': string
   'pipeline.approvalStep.message': string
   'pipeline.approvalStep.minimumCount': string
   'pipeline.approvalStep.notAuthorizedExecution': string
@@ -3637,6 +3644,8 @@ export interface StringsMap {
   'pipeline.artifactsSelection.customArtifactScriptFill': string
   'pipeline.artifactsSelection.delegateselectionPlaceholder': string
   'pipeline.artifactsSelection.digestPlaceholder': string
+  'pipeline.artifactsSelection.errors.noArtifactIds': string
+  'pipeline.artifactsSelection.errors.noGroupIds': string
   'pipeline.artifactsSelection.errors.noRepositories': string
   'pipeline.artifactsSelection.errors.nodigest': string
   'pipeline.artifactsSelection.existingDocker.enterTagRegex': string
@@ -5945,14 +5954,20 @@ export interface StringsMap {
   'cd.serviceDashboard.asgName': string
   'cd.serviceDashboard.awsRegion': string
   'cd.serviceDashboard.bgEnv': string
+  'cd.serviceDashboard.bothTypeLabel': string
   'cd.serviceDashboard.buildName': string
   'cd.serviceDashboard.containerList': string
   'cd.serviceDashboard.deployedAt': string
   'cd.serviceDashboard.deployedBy': string
+  'cd.serviceDashboard.deployedByHotfix': string
   'cd.serviceDashboard.deploymentDetails': string
   'cd.serviceDashboard.deploymentSlot': string
+  'cd.serviceDashboard.driftDetection': string
   'cd.serviceDashboard.ec2InstanceId': string
   'cd.serviceDashboard.elastigroupId': string
+  'cd.serviceDashboard.envAndGroup': string
+  'cd.serviceDashboard.envGroupTitle': string
+  'cd.serviceDashboard.envGroupsHeader': string
   'cd.serviceDashboard.envName': string
   'cd.serviceDashboard.executionId': string
   'cd.serviceDashboard.frequency': string
@@ -5977,6 +5992,7 @@ export interface StringsMap {
   'cd.serviceDashboard.instancesDetails': string
   'cd.serviceDashboard.lastDeployment': string
   'cd.serviceDashboard.lastPipelineExecution': string
+  'cd.serviceDashboard.latestVersion': string
   'cd.serviceDashboard.manageServiceLabel': string
   'cd.serviceDashboard.memorySize': string
   'cd.serviceDashboard.moreDetails': string
@@ -6005,6 +6021,7 @@ export interface StringsMap {
   'cd.serviceDashboard.totalDeployments': string
   'cd.serviceDashboard.totalPipelines': string
   'cd.serviceDashboard.totalServices': string
+  'cd.serviceDashboard.triggeredByRollback': string
   'cd.serviceDashboard.unitDay': string
   'cd.serviceDashboard.updatedTime': string
   'cd.serviceDashboard.webApp': string
@@ -7513,6 +7530,7 @@ export interface StringsMap {
   'cf.featureFlags.defaultWillBeServed': string
   'cf.featureFlags.deleteFlag': string
   'cf.featureFlags.deleteFlagMessage': string
+  'cf.featureFlags.deleteFlagWarning': string
   'cf.featureFlags.false': string
   'cf.featureFlags.flagOff': string
   'cf.featureFlags.flagOn': string
@@ -7913,6 +7931,7 @@ export interface StringsMap {
   'chaos.homepage.slogan': string
   'chaos.navLabels.chaosExperiments': string
   'chaos.navLabels.chaosHubs': string
+  'chaos.navLabels.dashboards': string
   'chaos.navLabels.gamedays': string
   'chaos.navLabels.probes': string
   'chaos.noEnvironment.message': string
@@ -9208,7 +9227,6 @@ export interface StringsMap {
   'cv.toObjectiveValue': string
   'cv.top': string
   'cv.trafficSplit': string
-  'cv.trend': string
   'cv.tuesday': string
   'cv.turnService': string
   'cv.unexpected': string

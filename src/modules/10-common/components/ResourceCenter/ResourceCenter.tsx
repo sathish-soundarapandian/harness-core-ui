@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { noop } from 'lodash-es'
-import { Button, ButtonVariation, Icon, Layout, Text, IconName } from '@harness/uicore'
+import { Button, ButtonVariation, Icon, Layout, Text, IconName, useToggleOpen } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 import _refiner from 'refiner-js'
@@ -23,7 +23,6 @@ import {
   getReleaseNodeLink,
   openWhatsNew,
   openEarlyAccess,
-  openFileATicket,
   openZendeskSupport,
   HARNESS_SEARCH_LINK,
   HARNESS_UNIVERISITY_LINK,
@@ -32,10 +31,12 @@ import {
   HARNESS_DOCS_LINK,
   HARNESS_API_DOCS_LINK,
   SITE_STATUS_LINK,
-  HARNESS_TUTORIALS
+  HARNESS_TUTORIALS,
+  openFileATicket
 } from './utils'
 import { CommunitySubmitTicket } from './MenuItems'
 import { useReleaseNotesModal } from './ReleaseNotesModal/useReleaseNotesModal'
+import { SubmitTicketModal } from './SubmitTicketModal/SubmitTicketModal'
 import css from './ResourceCenter.module.scss'
 
 const refinerProjectId = window.refinerProjectToken
@@ -51,9 +52,10 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const [show, setShow] = useState<boolean>(false)
   const { showModal } = useReleaseNotesModal()
+  const { isOpen, open: openSubmitTicketModal, close: closeSubmitTicketModal } = useToggleOpen(false)
 
   const isCommunity = useGetCommunity()
-  const { SPG_MODULE_VERSION_INFO } = useFeatureFlags()
+  const { SPG_MODULE_VERSION_INFO, CDS_SUPPORT_TICKET_DEFLECTION } = useFeatureFlags()
   useEffect(() => {
     _refiner('dismissForm', refinerSurveryId)
     _refiner('setProject', refinerProjectId)
@@ -87,7 +89,13 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
         icon: 'pipeline-deploy',
         iconClassname: css.iconFilled,
         className: css.bottom,
-        onClick: (e: React.MouseEvent<Element, MouseEvent>) => openFileATicket(e, currentUserInfo, setShow),
+        onClick: (e: React.MouseEvent<Element, MouseEvent>) => {
+          if (!CDS_SUPPORT_TICKET_DEFLECTION) {
+            openSubmitTicketModal()
+          } else {
+            openFileATicket(e, currentUserInfo, setShow)
+          }
+        },
         testId: 'submit-ticket'
       },
       {
@@ -295,6 +303,7 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
           )}
         </Layout.Vertical>
       </Layout.Vertical>
+      <SubmitTicketModal isOpen={isOpen} close={closeSubmitTicketModal} />
     </Drawer>
   )
 }

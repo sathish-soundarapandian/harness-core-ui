@@ -26,6 +26,7 @@ declare const styles: {
   readonly inputSetcard: string
   readonly inputsetGrid: string
   readonly nameiddescription: string
+  readonly noCacheDetails: string
   readonly optionBtns: string
   readonly pageHeaderStyles: string
   readonly reconcileMenu: string

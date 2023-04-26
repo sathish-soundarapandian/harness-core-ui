@@ -75,7 +75,7 @@ describe('Test cases for CVSLODetailsPage', () => {
       .spyOn(cvServices, 'useGetSLODetails')
       .mockReturnValue({ data: responseSLODashboardDetail, loading: false, refetch: jest.fn } as any)
     jest
-      .spyOn(cvServices, 'useGetUnavailabilityInstances')
+      .spyOn(cvServices, 'useGetSecondaryEvents')
       .mockReturnValue({ data: {}, loading: false, refetch: jest.fn } as any)
 
     const { container } = renderComponent()
@@ -144,7 +144,7 @@ describe('Test cases for CVSLODetailsPage', () => {
       .spyOn(cvServices, 'useGetSLODetails')
       .mockReturnValue({ data: responseSLODashboardDetail2, loading: false, refetch: jest.fn } as any)
     jest
-      .spyOn(cvServices, 'useGetUnavailabilityInstances')
+      .spyOn(cvServices, 'useGetSecondaryEvents')
       .mockReturnValue({ data: {}, loading: false, refetch: jest.fn } as any)
 
     renderComponent()

@@ -16,7 +16,10 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
 import type { HealthSource } from 'services/cv'
-import { getIconBySourceType } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
+import {
+  getIconBySourceType,
+  getTypeByFeature
+} from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
 import noHealthsourcesImage from '@cv/assets/noHealthsources.svg'
 import type { HealthSourcesProps } from './HealthSources.types'
 import css from './HealthSources.module.scss'
@@ -43,7 +46,7 @@ export default function HealthSources(props: HealthSourcesProps): React.ReactEle
   const HealthSourceActions = (tableProps: CellProps<HealthSource>): JSX.Element => {
     return (
       <Container className={css.header}>
-        <div className={css.tableType}>{tableProps.value}</div>
+        <div className={css.tableType}>{getTypeByFeature(tableProps.value, getString)}</div>
         <Container flex>
           <Icon
             name="edit"

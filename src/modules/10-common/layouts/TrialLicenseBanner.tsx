@@ -42,7 +42,7 @@ import css from './layouts.module.scss'
 
 export const BANNER_KEY = 'license_banner_dismissed'
 
-const moduleDescriptionMap: Record<string, keyof StringsMap> = {
+export const moduleDescriptionMap: Record<string, keyof StringsMap> = {
   cd: 'cd.continuous',
   ce: 'ce.continuous',
   cf: 'cf.continuous',

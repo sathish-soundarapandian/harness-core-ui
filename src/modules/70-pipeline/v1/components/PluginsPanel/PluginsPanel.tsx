@@ -107,7 +107,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
         setSelectedPlugin(scriptPlugin)
         setPluginCategory(PluginCategory.RunStep)
       } else if (selectedPluginName) {
-        setQuery(selectedPluginName)
+        fetchPlugins({ queryParams: { ...defaultQueryParams, searchTerm: selectedPluginName } })
       }
     }
   }, [selectedPluginFromYAMLView])
@@ -119,23 +119,20 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   }, [data, loading, error])
 
   useEffect(() => {
-    if (selectedPluginName) {
-      const matchingPlugin = plugins.find((item: PluginMetadataResponse) => item.name === selectedPluginName)
-      if (matchingPlugin) {
-        setSelectedPlugin(matchingPlugin)
-        const matchingCategory = getPluginCategoryForPluginKind(get(matchingPlugin, 'kind') as PluginKind)
-        if (matchingCategory) {
-          setPluginCategory(matchingCategory)
-        }
+    const matchingPlugin = plugins.find((item: PluginMetadataResponse) => item.name === selectedPluginName)
+    if (matchingPlugin) {
+      setSelectedPlugin(matchingPlugin)
+      const matchingCategory = getPluginCategoryForPluginKind(get(matchingPlugin, 'kind') as PluginKind)
+      if (matchingCategory) {
+        setPluginCategory(matchingCategory)
       }
+    } else {
+      setSelectedPlugin(undefined)
     }
   }, [plugins])
 
   useEffect(() => {
-    if (
-      pluginPanelView === PluginPanelView.List ||
-      (!isEmpty(selectedPluginFromYAMLView) && pluginPanelView === PluginPanelView.Configuration)
-    ) {
+    if (pluginPanelView === PluginPanelView.List) {
       fetchPlugins({ queryParams: { ...defaultQueryParams, searchTerm: query || '' } })
     }
   }, [query, pluginPanelView])
@@ -404,92 +401,112 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   //#region Plugin Configuration
 
-  const renderPluginsPanelConfigurationView = useCallback((): JSX.Element => {
-    if (!selectedPlugin) {
+  const renderPluginsPanelBtns = useCallback(
+    ({ shouldRenderUpdateBtn }: { shouldRenderUpdateBtn: boolean }): JSX.Element => {
+      if (!isPluginUpdateAction) {
+        return <Button type="submit" variation={ButtonVariation.PRIMARY} text={getString('add')} />
+      } else if (shouldRenderUpdateBtn) {
+        return <Button type="submit" variation={ButtonVariation.PRIMARY} text={getString('update')} />
+      }
       return <></>
-    }
-    const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields, kind, uses, image } = selectedPlugin
-    return kind ? (
-      <Layout.Vertical
-        spacing="medium"
-        margin={{ left: 'xxlarge', top: 'large', right: 'xxlarge', bottom: 'xxlarge' }}
-        height="95%"
-        flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }}
-      >
-        <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
-          <Icon name="arrow-left" onClick={handleBackArrowClick} className={css.backBtn} />
-          <Text font={{ variation: FontVariation.H5 }}>{pluginName}</Text>
-        </Layout.Horizontal>
-        <Container className={css.form}>
-          <Formik
-            initialValues={
-              isPluginUpdateAction
-                ? get(selectedPluginFromYAMLView, kind === PluginKind.HarnessBuiltIn ? 'spec' : 'spec.with')
-                : {}
-            }
-            validationSchema={formFields ? generateValidationSchema(formFields) : {}}
-            enableReinitialize={true}
-            formName="pluginsForm"
-            onSubmit={formValues => {
-              try {
-                onPluginAddUpdate?.(
-                  {
-                    pluginName:
-                      kind === PluginKind.HarnessBuiltIn && selectedPluginName ? selectedPluginName : pluginName,
-                    pluginData: formValues,
-                    shouldInsertYAML: true,
-                    pluginType: getPluginTypeFromKind(kind),
-                    ...(uses ? { pluginUses: uses } : {}),
-                    ...(image ? { pluginImage: image } : {})
-                  },
-                  isPluginUpdateAction
-                )
-              } catch (e) {
-                //ignore error
-              }
-            }}
-          >
-            {formikProps => {
-              return (
-                <FormikForm>
-                  <Layout.Vertical
-                    height="100%"
-                    flex={{ justifyContent: 'space-between', alignItems: 'baseline' }}
-                    spacing="small"
-                  >
-                    <Container className={css.pluginFields}>{renderPluginCongigurationForm()}</Container>
-                    <Layout.Horizontal flex spacing="xlarge">
-                      <Button
-                        type="submit"
-                        variation={ButtonVariation.PRIMARY}
-                        disabled={formFields?.length === 0 || !formikProps.dirty}
-                      >
-                        {isPluginUpdateAction ? getString('update') : getString('add')}
-                      </Button>
-                      {pluginDocumentationLink ? (
-                        <a href={pluginDocumentationLink} target="_blank" rel="noopener noreferrer">
-                          <Text className={css.docsLink}>{getString('common.seeDocumentation')}</Text>
-                        </a>
-                      ) : null}
-                    </Layout.Horizontal>
-                    {[Status.SUCCESS, Status.ERROR].includes(pluginAddUpdateOpnStatus) ? (
-                      <Container padding={{ top: 'small', bottom: 'xsmall' }}>
-                        {renderPluginAddUpdateOpnStatus()}
-                      </Container>
-                    ) : (
-                      <></>
-                    )}
-                  </Layout.Vertical>
-                </FormikForm>
-              )
-            }}
-          </Formik>
+    },
+    [isPluginUpdateAction]
+  )
+
+  const renderPluginsPanelConfigurationView = useCallback((): JSX.Element => {
+    if (loading) {
+      return (
+        <Container flex={{ justifyContent: 'space-evenly' }} padding="large">
+          <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
         </Container>
-      </Layout.Vertical>
-    ) : (
-      <></>
-    )
-  }, [selectedPlugin, pluginAddUpdateOpnStatus])
+      )
+    } else {
+      if (!selectedPlugin) {
+        return (
+          <Container flex={{ justifyContent: 'space-evenly' }} padding="large">
+            <Text>{getString('noSearchResultsFoundPeriod')}</Text>
+          </Container>
+        )
+      }
+      const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields, kind, uses, image } = selectedPlugin
+      return kind ? (
+        <Layout.Vertical
+          spacing="medium"
+          margin={{ left: 'xxlarge', top: 'large', right: 'xxlarge', bottom: 'xxlarge' }}
+          height="95%"
+          flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }}
+        >
+          <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
+            <Icon name="arrow-left" onClick={handleBackArrowClick} className={css.backBtn} />
+            <Text font={{ variation: FontVariation.H5 }}>{pluginName}</Text>
+          </Layout.Horizontal>
+          <Container className={css.form}>
+            <Formik
+              initialValues={
+                isPluginUpdateAction
+                  ? get(selectedPluginFromYAMLView, kind === PluginKind.HarnessBuiltIn ? 'spec' : 'spec.with')
+                  : {}
+              }
+              validationSchema={formFields ? generateValidationSchema(formFields) : {}}
+              enableReinitialize={true}
+              formName="pluginsForm"
+              onSubmit={formValues => {
+                try {
+                  onPluginAddUpdate?.(
+                    {
+                      pluginName:
+                        kind === PluginKind.HarnessBuiltIn && selectedPluginName ? selectedPluginName : pluginName,
+                      pluginData: formValues,
+                      shouldInsertYAML: true,
+                      pluginType: getPluginTypeFromKind(kind),
+                      pluginUses: uses,
+                      pluginImage: image
+                    },
+                    isPluginUpdateAction
+                  )
+                } catch (e) {
+                  //ignore error
+                }
+              }}
+            >
+              {_formikProps => {
+                return (
+                  <FormikForm>
+                    <Layout.Vertical
+                      height="100%"
+                      flex={{ justifyContent: 'space-between', alignItems: 'baseline' }}
+                      spacing="small"
+                    >
+                      <Container className={css.pluginFields}>{renderPluginCongigurationForm()}</Container>
+                      <Layout.Horizontal flex spacing="xlarge">
+                        {renderPluginsPanelBtns({
+                          shouldRenderUpdateBtn: isPluginUpdateAction && !isEmpty(formFields)
+                        })}
+                        {pluginDocumentationLink ? (
+                          <a href={pluginDocumentationLink} target="_blank" rel="noopener noreferrer">
+                            <Text className={css.docsLink}>{getString('common.seeDocumentation')}</Text>
+                          </a>
+                        ) : null}
+                      </Layout.Horizontal>
+                      {[Status.SUCCESS, Status.ERROR].includes(pluginAddUpdateOpnStatus) ? (
+                        <Container padding={{ top: 'small', bottom: 'xsmall' }}>
+                          {renderPluginAddUpdateOpnStatus()}
+                        </Container>
+                      ) : (
+                        <></>
+                      )}
+                    </Layout.Vertical>
+                  </FormikForm>
+                )
+              }}
+            </Formik>
+          </Container>
+        </Layout.Vertical>
+      ) : (
+        <></>
+      )
+    }
+  }, [selectedPlugin, pluginAddUpdateOpnStatus, loading])
 
   const renderPluginCongigurationFormField = useCallback(
     ({ field, index }: { field: Input; index: number }): JSX.Element => {

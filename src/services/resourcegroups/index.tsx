@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -318,6 +318,7 @@ export interface AccessControlCheckError {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -367,6 +368,13 @@ export interface AccessControlCheckError {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -412,6 +420,12 @@ export interface AuditEventDTO {
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
     | 'ERROR_BUDGET_RESET'
+    | 'START'
+    | 'END'
+    | 'PAUSE'
+    | 'RESUME'
+    | 'ABORT'
+    | 'TIMEOUT'
   auditEventData?: AuditEventData
   auditId?: string
   authenticationInfo: AuthenticationInfoDTO
@@ -430,12 +444,14 @@ export interface AuditEventDTO {
     | 'STO'
     | 'CHAOS'
     | 'SRM'
+    | 'IACM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
-    | 'IACM'
+    | 'IDP'
   requestMetadata?: RequestMetadata
   resource: ResourceDTO
   resourceScope: ResourceScopeDTO
@@ -476,6 +492,12 @@ export interface AuditFilterProperties {
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
     | 'ERROR_BUDGET_RESET'
+    | 'START'
+    | 'END'
+    | 'PAUSE'
+    | 'RESUME'
+    | 'ABORT'
+    | 'TIMEOUT'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -503,12 +525,14 @@ export interface AuditFilterProperties {
     | 'STO'
     | 'CHAOS'
     | 'SRM'
+    | 'IACM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'CET'
     | 'GOVERNANCE'
-    | 'IACM'
+    | 'IDP'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -533,6 +557,12 @@ export interface AuthenticationInfoDTO {
 
 export type ChaosAuditEventData = AuditEventData & {
   eventModule?: string
+}
+
+export interface CoveoResponseDTO {
+  code?: number
+  message?: string
+  token?: string
 }
 
 export interface DelegateMetaInfo {
@@ -867,6 +897,7 @@ export interface Error {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -916,6 +947,13 @@ export interface Error {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1234,6 +1272,7 @@ export interface Failure {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -1283,6 +1322,13 @@ export interface Failure {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1331,6 +1377,21 @@ export type InvitationSource = Source & {}
 
 export type MSTeamSettingDTO = NotificationSettingDTO & {}
 
+export type NodeExecutionEventData = AuditEventData & {
+  accountIdentifier?: string
+  endTs?: number
+  nodeExecutionId?: string
+  orgIdentifier?: string
+  pipelineIdentifier?: string
+  planExecutionId?: string
+  projectIdentifier?: string
+  stageIdentifier?: string
+  stageType?: string
+  startTs?: number
+  status?: string
+  triggeredBy?: TriggeredByInfoAuditDetails
+}
+
 export interface NotificationDTO {
   accountIdentifier?: string
   channelType?: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS'
@@ -1368,6 +1429,7 @@ export interface Page {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1378,6 +1440,7 @@ export interface PageAuditEventDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1388,6 +1451,7 @@ export interface PageFilterDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1398,6 +1462,7 @@ export interface PageNotificationDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1408,6 +1473,7 @@ export interface PageResourceGroupResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1418,6 +1484,7 @@ export interface PageResourceGroupV2Response {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1456,7 +1523,6 @@ export interface ResourceDTO {
     | 'RESOURCE_GROUP'
     | 'USER'
     | 'ROLE'
-    | 'ROLE_ASSIGNMENT'
     | 'PIPELINE'
     | 'TRIGGER'
     | 'TEMPLATE'
@@ -1465,6 +1531,7 @@ export interface ResourceDTO {
     | 'DELEGATE_GROUPS'
     | 'SERVICE'
     | 'ENVIRONMENT'
+    | 'ENVIRONMENT_GROUP'
     | 'DELEGATE'
     | 'SERVICE_ACCOUNT'
     | 'CONNECTOR'
@@ -1499,6 +1566,9 @@ export interface ResourceDTO {
     | 'CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT'
     | 'TARGET_GROUP'
     | 'FEATURE_FLAG'
+    | 'NG_ACCOUNT_DETAILS'
+    | 'BUDGET_GROUP'
+    | 'PIPELINE_EXECUTION'
 }
 
 export interface ResourceFilter {
@@ -1638,6 +1708,13 @@ export interface ResponseAuditSettingsDTO {
 export interface ResponseBoolean {
   correlationId?: string
   data?: boolean
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseCoveoResponseDTO {
+  correlationId?: string
+  data?: CoveoResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -1962,6 +2039,7 @@ export interface ResponseMessage {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -2011,6 +2089,13 @@ export interface ResponseMessage {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2025,6 +2110,7 @@ export interface ResponseMessage {
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'DELEGATE_RESTART'
+    | 'USER_MARKED_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -2121,6 +2207,13 @@ export interface ResponseYamlDiffRecordDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseZendeskResponseDTO {
+  correlationId?: string
+  data?: ZendeskResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface RoleBinding {
   resourceGroupIdentifier?: string
   roleIdentifier?: string
@@ -2194,6 +2287,14 @@ export interface Throwable {
   suppressed?: Throwable[]
 }
 
+export interface TriggeredByInfoAuditDetails {
+  extraInfo?: {
+    [key: string]: string
+  }
+  identifier?: string
+  type?: string
+}
+
 export type UserInvitationAuditEventData = AuditEventData & {
   roleBindings?: RoleBinding[]
 }
@@ -2216,6 +2317,11 @@ export interface YamlDiffRecordDTO {
   oldYaml?: string
 }
 
+export interface ZendeskResponseDTO {
+  code?: number
+  message?: string
+}
+
 export type FilterDTORequestBody = FilterDTO
 
 export type ResourceGroupFilterDTORequestBody = ResourceGroupFilterDTO
@@ -2234,6 +2340,7 @@ export interface GetResourceGroupListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetResourceGroupListProps = Omit<
@@ -2386,6 +2493,7 @@ export interface GetFilterResourceGroupListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetFilterResourceGroupListProps = Omit<
@@ -2761,6 +2869,7 @@ export interface GetResourceGroupListV2QueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetResourceGroupListV2Props = Omit<
@@ -2913,6 +3022,7 @@ export interface GetFilterResourceGroupListV2QueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetFilterResourceGroupListV2Props = Omit<
@@ -3235,3 +3345,127 @@ export const updateResourceGroupV2Promise = (
     ResourceGroupV2RequestRequestBody,
     UpdateResourceGroupV2PathParams
   >('PUT', getConfig('resourcegroup/api'), `/v2/resourcegroup/${identifier}`, props, signal)
+
+export interface CreateZendeskTicketQueryParams {
+  emailId: string
+  ticketType: 'QUESTION' | 'PROBLEM' | 'FEATURE_REQUEST' | 'OTHER'
+  priority: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT'
+  subject: string
+}
+
+export type CreateZendeskTicketProps = Omit<
+  MutateProps<
+    ResponseZendeskResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateZendeskTicketQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * create zendesk ticket for given user
+ */
+export const CreateZendeskTicket = (props: CreateZendeskTicketProps) => (
+  <Mutate<
+    ResponseZendeskResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateZendeskTicketQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/zendesk`}
+    base={getConfig('resourcegroup/api')}
+    {...props}
+  />
+)
+
+export type UseCreateZendeskTicketProps = Omit<
+  UseMutateProps<
+    ResponseZendeskResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateZendeskTicketQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * create zendesk ticket for given user
+ */
+export const useCreateZendeskTicket = (props: UseCreateZendeskTicketProps) =>
+  useMutate<
+    ResponseZendeskResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateZendeskTicketQueryParams,
+    void,
+    void
+  >('POST', `/zendesk`, { base: getConfig('resourcegroup/api'), ...props })
+
+/**
+ * create zendesk ticket for given user
+ */
+export const createZendeskTicketPromise = (
+  props: MutateUsingFetchProps<
+    ResponseZendeskResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateZendeskTicketQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseZendeskResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateZendeskTicketQueryParams,
+    void,
+    void
+  >('POST', getConfig('resourcegroup/api'), `/zendesk`, props, signal)
+
+export type GetCoveoTokenProps = Omit<
+  GetProps<ResponseCoveoResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+  'path'
+>
+
+/**
+ * get short live token for Coveo
+ */
+export const GetCoveoToken = (props: GetCoveoTokenProps) => (
+  <Get<ResponseCoveoResponseDTO, Failure | AccessControlCheckError | Error, void, void>
+    path={`/zendesk/token`}
+    base={getConfig('resourcegroup/api')}
+    {...props}
+  />
+)
+
+export type UseGetCoveoTokenProps = Omit<
+  UseGetProps<ResponseCoveoResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+  'path'
+>
+
+/**
+ * get short live token for Coveo
+ */
+export const useGetCoveoToken = (props: UseGetCoveoTokenProps) =>
+  useGet<ResponseCoveoResponseDTO, Failure | AccessControlCheckError | Error, void, void>(`/zendesk/token`, {
+    base: getConfig('resourcegroup/api'),
+    ...props
+  })
+
+/**
+ * get short live token for Coveo
+ */
+export const getCoveoTokenPromise = (
+  props: GetUsingFetchProps<ResponseCoveoResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseCoveoResponseDTO, Failure | AccessControlCheckError | Error, void, void>(
+    getConfig('resourcegroup/api'),
+    `/zendesk/token`,
+    props,
+    signal
+  )

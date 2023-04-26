@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Subscriptions graph view undefined module flow   it renders the subscriptions page with no data service table 1`] = `<div />`;

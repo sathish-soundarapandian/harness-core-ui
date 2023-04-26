@@ -15,6 +15,14 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import PolicyManagementMFE from '@governance/GovernanceApp'
+import ConnectorsPage from '@connectors/pages/connectors/ConnectorsPage'
+import SecretsPage from '@secrets/pages/secrets/SecretsPage'
+import DelegatesPage from '@delegates/pages/delegates/DelegatesPage'
+import DelegateListing from '@delegates/pages/delegates/DelegateListing'
+import AccessControlPage from '@rbac/pages/AccessControl/AccessControlPage'
+import UsersPage from '@rbac/pages/Users/UsersPage'
+import SettingsList from '@default-settings/pages/SettingsList'
 import { ETMonitoredServices } from './pages/ETMonitoredServices'
 import SideNav from './components/SideNav/SideNav'
 import ETHomePage from './pages/ETHomePage'
@@ -125,7 +133,60 @@ const ETRoutes: FC = () => {
       <RouteWithLayout
         exact
         sidebarProps={ETSideNavProps}
-        path={[routes.toCVCodeErrorsCriticalEvents({ ...accountPathProps, ...projectPathProps, ...etModuleParams })]}
+        path={[routes.toETConnectors({ ...accountPathProps, ...projectPathProps, ...orgPathProps })]}
+      >
+        <ConnectorsPage />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        exact
+        sidebarProps={ETSideNavProps}
+        path={[routes.toETSecrets({ ...accountPathProps, ...projectPathProps, ...orgPathProps })]}
+      >
+        <SecretsPage />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        exact
+        sidebarProps={ETSideNavProps}
+        path={[routes.toETAccessControl({ ...accountPathProps, ...projectPathProps, ...orgPathProps })]}
+      >
+        <AccessControlPage>
+          <UsersPage />
+        </AccessControlPage>
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        exact
+        sidebarProps={ETSideNavProps}
+        path={[routes.toETDelegates({ ...accountPathProps, ...projectPathProps, ...orgPathProps })]}
+      >
+        <DelegatesPage>
+          <DelegateListing />
+        </DelegatesPage>
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        exact
+        sidebarProps={ETSideNavProps}
+        path={[routes.toETDefaultSettings({ ...accountPathProps, ...projectPathProps, ...orgPathProps })]}
+      >
+        <SettingsList />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        exact
+        sidebarProps={ETSideNavProps}
+        path={[routes.toETPolicies({ ...accountPathProps, ...projectPathProps, ...orgPathProps })]}
+        pageName={PAGE_NAME.OPAPolicyDashboard}
+      >
+        <PolicyManagementMFE />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        exact
+        sidebarProps={ETSideNavProps}
+        path={[routes.toETCodeErrorsCriticalEvents({ ...accountPathProps, ...projectPathProps, ...etModuleParams })]}
       >
         <ETSettings>
           <ETAgents pathComponentLocation={'/criticalevents'} />

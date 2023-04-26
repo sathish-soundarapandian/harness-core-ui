@@ -18,19 +18,24 @@ import {
   ButtonVariation,
   PillToggle,
   getErrorInfoFromErrorObject,
-  PageError
+  PageError,
+  IconName,
+  DropDown,
+  SelectOption
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
+import { Popover, Position } from '@blueprintjs/core'
 import { capitalize, defaultTo, isEmpty, isUndefined } from 'lodash-es'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
+import { useMutateAsGet } from '@common/hooks'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 import {
   ArtifactDeploymentDetail,
   ArtifactInstanceDetail,
-  EnvironmentInstanceDetail,
+  EnvironmentGroupInstanceDetail,
   GetArtifactInstanceDetailsQueryParams,
   GetEnvironmentInstanceDetailsQueryParams,
   useGetArtifactInstanceDetails,
@@ -38,11 +43,18 @@ import {
 } from 'services/cd-ng'
 import { EnvCardViewEmptyState } from './ServiceDetailEmptyStates'
 import ServiceDetailsDialog from './ServiceDetailsDialog'
+import ServiceDetailDriftTable from './ServiceDetailDriftTable'
 
 import css from './ServiceDetailsSummaryV2.module.scss'
 
+enum CardSortOption {
+  ALL = 'All',
+  PROD = 'PRODUCTION',
+  PRE_PROD = 'PREPRODUCTION'
+}
+
 interface ServiceDetailsEnvViewProps {
-  setEnvId: React.Dispatch<React.SetStateAction<string | undefined>>
+  setEnvId: React.Dispatch<React.SetStateAction<string | string[] | undefined>>
   setArtifactName: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
@@ -51,12 +63,16 @@ enum CardView {
   ARTIFACT = 'ARTIFACT'
 }
 
-interface EnvCardProps {
-  envId: string
-  envName?: string
-  environmentType?: 'PreProduction' | 'Production'
-  artifactDeploymentDetail: ArtifactDeploymentDetail
+export interface EnvCardProps {
+  id: string
+  name?: string
+  environmentTypes?: ('PreProduction' | 'Production')[]
+  artifactDeploymentDetails?: ArtifactDeploymentDetail[]
   count?: number
+  isEnvGroup?: boolean
+  isDrift?: boolean
+  isRollback?: boolean
+  isRevert?: boolean
 }
 
 function createGroups(
@@ -68,12 +84,43 @@ function createGroups(
 }
 
 interface EnvCardComponentProps {
-  setSelectedEnv: React.Dispatch<React.SetStateAction<string | undefined>>
-  setEnvId: React.Dispatch<React.SetStateAction<string | undefined>>
+  setSelectedEnv: React.Dispatch<
+    React.SetStateAction<
+      | {
+          envId?: string
+          isEnvGroup: boolean
+        }
+      | undefined
+    >
+  >
+  setEnvId: React.Dispatch<React.SetStateAction<string | string[] | undefined>>
   setIsDetailsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  setEnvFilter: React.Dispatch<React.SetStateAction<string>>
+  setEnvFilter: React.Dispatch<
+    React.SetStateAction<{
+      envId?: string
+      isEnvGroup: boolean
+    }>
+  >
   env?: EnvCardProps
-  selectedEnv?: string
+  selectedEnv?: {
+    envId?: string
+    isEnvGroup: boolean
+  }
+}
+
+const getLatestTimeAndArtifact = (data: ArtifactDeploymentDetail[] | undefined): ArtifactDeploymentDetail => {
+  return defaultTo(
+    data?.reduce(
+      (latest, deployment) =>
+        deployment.lastDeployedAt !== undefined &&
+        latest.lastDeployedAt &&
+        deployment.lastDeployedAt > latest.lastDeployedAt
+          ? deployment
+          : latest,
+      { lastDeployedAt: Number.MIN_SAFE_INTEGER, artifact: undefined }
+    ),
+    { lastDeployedAt: Number.MIN_SAFE_INTEGER, artifact: undefined }
+  )
 }
 
 function EnvCard({
@@ -85,8 +132,24 @@ function EnvCard({
   selectedEnv
 }: EnvCardComponentProps): JSX.Element | null {
   const { getString } = useStrings()
-  const envName = env?.envName
-  const envId = env?.envId
+  const envName = env?.name
+  const envId = env?.id
+  const { lastDeployedAt: latestTime, artifact: artifactName } = getLatestTimeAndArtifact(
+    env?.artifactDeploymentDetails
+  )
+
+  const statusIcon = env?.isRollback
+    ? { icon: 'reset', size: 12, tooltipText: getString('cd.serviceDashboard.triggeredByRollback') }
+    : env?.isRevert
+    ? { icon: 'hotfix', size: 14, tooltipText: getString('cd.serviceDashboard.deployedByHotfix') }
+    : { icon: '', size: 0 }
+  const isDrift = env?.isDrift
+  const isEnvGroup = env?.isEnvGroup
+
+  const envGroupEnvIds = env?.isEnvGroup
+    ? (defaultTo(env.artifactDeploymentDetails?.map(envValue => envValue.envId)?.filter(Boolean), []) as string[])
+    : []
+
   if (isUndefined(envId)) {
     return null
   }
@@ -94,46 +157,62 @@ function EnvCard({
     <Card
       className={cx(css.envCards, css.cursor)}
       onClick={() => {
-        if (selectedEnv === envId) {
+        if (selectedEnv?.envId === envId) {
           setSelectedEnv(undefined)
           setEnvId(undefined)
         } else {
-          setSelectedEnv(envId)
-          setEnvId(envId)
+          setSelectedEnv({ envId: envId, isEnvGroup: !!isEnvGroup })
+          setEnvId(isEnvGroup ? envGroupEnvIds : envId)
         }
       }}
-      selected={selectedEnv === envId}
+      selected={selectedEnv?.envId === envId}
     >
+      {isEnvGroup && <String tagName="div" className={css.headerTile} stringID="cd.serviceDashboard.envGroupTitle" />}
       <div className={css.envCardTitle}>
         <Text
-          icon="infrastructure"
-          font={{ variation: FontVariation.CARD_TITLE }}
+          font={{ variation: FontVariation.FORM_SUB_SECTION }}
           color={Color.GREY_600}
           lineClamp={1}
           tooltipProps={{ isDark: true }}
         >
           {!isEmpty(envName) ? envName : '--'}
         </Text>
+        {!isEmpty(statusIcon.icon) && (
+          <Popover
+            popoverClassName={css.statusIconPopover}
+            interactionKind="hover"
+            position={Position.TOP}
+            content={
+              <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_100}>
+                {statusIcon.tooltipText}
+              </Text>
+            }
+          >
+            <Container className={css.statusIcon}>
+              <Icon name={statusIcon.icon as IconName} size={statusIcon.size} />
+            </Container>
+          </Popover>
+        )}
       </div>
-      {
-        <Text
-          className={cx(css.environmentType, {
-            [css.production]: env?.environmentType === EnvironmentType.PRODUCTION
-          })}
-          font={{ size: 'small' }}
-        >
-          {env?.environmentType
-            ? getString(
-                env?.environmentType === EnvironmentType.PRODUCTION
-                  ? 'cd.serviceDashboard.prod'
-                  : 'cd.preProductionType'
-              )
-            : '-'}
-        </Text>
-      }
-      {env?.artifactDeploymentDetail.lastDeployedAt && (
+      <div>
+        {env?.environmentTypes?.map((item, index) => (
+          <Text
+            key={index}
+            className={cx(css.environmentType, {
+              [css.production]: item === EnvironmentType.PRODUCTION
+            })}
+            font={{ size: 'small' }}
+            margin={{ right: 'small' }}
+          >
+            {item
+              ? getString(item === EnvironmentType.PRODUCTION ? 'cd.serviceDashboard.prod' : 'cd.preProductionType')
+              : '-'}
+          </Text>
+        ))}
+      </div>
+      {!!(latestTime && latestTime !== Number.MIN_SAFE_INTEGER) && (
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
-          {getString('pipeline.lastDeployed')} <ReactTimeago date={env.artifactDeploymentDetail.lastDeployedAt} />
+          {getString('pipeline.lastDeployed')} <ReactTimeago date={latestTime} />
         </Text>
       )}
       {env?.count && (
@@ -142,7 +221,7 @@ function EnvCard({
           <Text
             onClick={e => {
               e.stopPropagation()
-              setEnvFilter(env.envId)
+              setEnvFilter({ envId: env.id, isEnvGroup: !!env.isEnvGroup })
               setIsDetailsDialogOpen(true)
             }}
             color={Color.PRIMARY_7}
@@ -153,14 +232,29 @@ function EnvCard({
         </div>
       )}
       <Container flex={{ justifyContent: 'flex-end' }}>
-        <Text
-          font={{ variation: FontVariation.CARD_TITLE, weight: 'semi-bold' }}
-          color={Color.GREY_800}
-          lineClamp={1}
-          tooltipProps={{ isDark: true }}
+        <Popover
+          interactionKind="hover"
+          content={
+            <ServiceDetailDriftTable data={defaultTo(env?.artifactDeploymentDetails, [])} isArtifactView={false} />
+          }
+          disabled={!isDrift}
+          popoverClassName={css.driftPopover}
+          position={Position.BOTTOM}
+          modifiers={{ preventOverflow: { escapeWithReference: true } }}
         >
-          {env?.artifactDeploymentDetail.artifact ? env?.artifactDeploymentDetail.artifact : '-'}
-        </Text>
+          <Container flex={{ alignItems: 'center' }}>
+            {isDrift && <Icon name="execution-warning" color={Color.RED_700} />}
+            <Text
+              font={{ variation: FontVariation.CARD_TITLE, weight: 'semi-bold' }}
+              color={isDrift ? Color.RED_700 : Color.GREY_800}
+              lineClamp={1}
+              margin={{ left: 'small' }}
+              tooltipProps={{ isDark: true, disabled: isDrift }}
+            >
+              {artifactName || '-'}
+            </Text>
+          </Container>
+        </Popover>
       </Container>
     </Card>
   )
@@ -170,7 +264,12 @@ interface ArtifactCardProps {
   setArtifactName: React.Dispatch<React.SetStateAction<string | undefined>>
   setSelectedArtifact: React.Dispatch<React.SetStateAction<string | undefined>>
   setIsDetailsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  setEnvFilter: React.Dispatch<React.SetStateAction<string>>
+  setEnvFilter: React.Dispatch<
+    React.SetStateAction<{
+      envId?: string
+      isEnvGroup: boolean
+    }>
+  >
   setArtifactFilter: React.Dispatch<React.SetStateAction<string | undefined>>
   artifact?: ArtifactInstanceDetail | null
   selectedArtifact?: string
@@ -189,7 +288,7 @@ function ArtifactCard({
 }: ArtifactCardProps): JSX.Element | null {
   const artifactName = artifact?.artifact
   const { getString } = useStrings()
-  const envList = artifact?.environmentInstanceDetails.environmentInstanceDetails || []
+  const envList = artifact?.environmentGroupInstanceDetails.environmentGroupInstanceDetails || []
 
   if (isUndefined(artifactName) && !envList.length) {
     return null
@@ -218,7 +317,7 @@ function ArtifactCard({
         onClick={e => {
           e.stopPropagation()
           setArtifactFilter(artifactName)
-          setEnvFilter('')
+          setEnvFilter({ envId: undefined, isEnvGroup: false })
           setArtifactFilterApplied?.(true)
           setIsDetailsDialogOpen(true)
         }}
@@ -226,51 +325,90 @@ function ArtifactCard({
         {!isEmpty(artifactName) ? artifactName : '--'}
       </Text>
       <div className={css.artifactViewEnvList}>
-        {envList.map(envInfo => (
-          <Layout.Horizontal key={envInfo.envId} className={css.artifactViewEnvDetail}>
-            <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-              <Text
-                font={{ variation: FontVariation.BODY2 }}
-                color={Color.GREY_600}
-                lineClamp={1}
-                padding={{ right: 'small' }}
-                tooltipProps={{ isDark: true }}
-                className={css.hoverUnderline}
-                onClick={e => {
-                  e.stopPropagation()
-                  setEnvFilter(envInfo.envId)
-                  setArtifactFilter(artifactName)
-                  setArtifactFilterApplied?.(true)
-                  setIsDetailsDialogOpen(true)
-                }}
-              >
-                {!isEmpty(envInfo.envName) ? envInfo.envName : '--'}
-              </Text>
-              {
-                <Text
-                  className={cx(css.environmentType, {
-                    [css.production]: envInfo?.environmentType === EnvironmentType.PRODUCTION
-                  })}
-                  font={{ size: 'xsmall' }}
-                  height={16}
+        {envList.map((envInfo, idx) => {
+          const { lastDeployedAt: latestTime } = getLatestTimeAndArtifact(envInfo?.artifactDeploymentDetails)
+          const isDrift = envInfo?.isDrift
+          const isEnvGroup = envInfo?.isEnvGroup
+          return (
+            <Layout.Horizontal key={`${envInfo.id}_${idx}`} className={css.artifactViewEnvDetail}>
+              <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+                <Popover
+                  interactionKind="hover"
+                  content={
+                    <ServiceDetailDriftTable
+                      data={defaultTo(envInfo.artifactDeploymentDetails, [])}
+                      isArtifactView={true}
+                      artifactName={artifactName}
+                    />
+                  }
+                  disabled={!isDrift}
+                  popoverClassName={css.driftPopover}
+                  position={Position.TOP}
+                  modifiers={{ preventOverflow: { escapeWithReference: true } }}
                 >
-                  {envInfo?.environmentType
-                    ? getString(
-                        envInfo?.environmentType === EnvironmentType.PRODUCTION
-                          ? 'cd.serviceDashboard.prod'
-                          : 'cd.preProductionType'
-                      )
-                    : '-'}
+                  <Container flex>
+                    <Text
+                      font={{ variation: FontVariation.BODY2 }}
+                      color={isDrift ? Color.RED_700 : Color.GREY_600}
+                      lineClamp={1}
+                      padding={{ right: 'small' }}
+                      tooltipProps={{ isDark: true, disabled: isDrift }}
+                      className={css.hoverUnderline}
+                      onClick={e => {
+                        e.stopPropagation()
+                        setEnvFilter({ envId: envInfo.id, isEnvGroup: !!envInfo.isEnvGroup })
+                        setArtifactFilter(artifactName)
+                        setArtifactFilterApplied?.(true)
+                        setIsDetailsDialogOpen(true)
+                      }}
+                    >
+                      {!isEmpty(envInfo.name) ? envInfo.name : '--'}
+                    </Text>
+                    {isDrift && <Icon name="execution-warning" color={Color.RED_700} padding={{ right: 'small' }} />}
+                  </Container>
+                </Popover>
+                <Container flex>
+                  {envInfo?.environmentTypes?.map((item, index) => (
+                    <Text
+                      key={index}
+                      className={cx(css.environmentType, {
+                        [css.production]: item === EnvironmentType.PRODUCTION
+                      })}
+                      font={{ size: 'small' }}
+                      height={16}
+                      margin={{ right: 'small' }}
+                    >
+                      {item
+                        ? getString(
+                            item === EnvironmentType.PRODUCTION ? 'cd.serviceDashboard.prod' : 'cd.preProductionType'
+                          )
+                        : '-'}
+                    </Text>
+                  ))}
+                </Container>
+                {isEnvGroup && (
+                  <Text
+                    font={{ variation: FontVariation.TINY_SEMI }}
+                    color={Color.PRIMARY_9}
+                    width={45}
+                    height={18}
+                    border={{ radius: 2, color: '#CDF4FE' }}
+                    id="groupLabel"
+                    background={Color.PRIMARY_1}
+                    flex={{ alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    {getString('pipeline.verification.tableHeaders.group')}
+                  </Text>
+                )}
+              </Layout.Horizontal>
+              {!!(latestTime && latestTime !== Number.MIN_SAFE_INTEGER) && (
+                <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
+                  <ReactTimeago date={latestTime} />
                 </Text>
-              }
+              )}
             </Layout.Horizontal>
-            {envInfo?.artifactDeploymentDetail.lastDeployedAt && (
-              <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
-                <ReactTimeago date={envInfo.artifactDeploymentDetail.lastDeployedAt} />
-              </Text>
-            )}
-          </Layout.Horizontal>
-        ))}
+          )
+        })}
       </div>
     </Card>
   )
@@ -279,17 +417,23 @@ function ArtifactCard({
 export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.ReactElement {
   const { setEnvId, setArtifactName } = props
   const { getString } = useStrings()
-  const [selectedEnv, setSelectedEnv] = useState<string>()
+  const [selectedEnv, setSelectedEnv] = useState<{ envId?: string; isEnvGroup: boolean }>()
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const [activeSlide, setActiveSlide] = useState<number>(1)
   const [cardView, setCardView] = useState(CardView.ENV)
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState<boolean>(false)
-  const [envFilter, setEnvFilter] = useState<string>('')
+  const [envFilter, setEnvFilter] = useState<{ envId?: string; isEnvGroup: boolean }>({
+    envId: undefined,
+    isEnvGroup: false
+  })
 
   //artifact state
   const [selectedArtifact, setSelectedArtifact] = useState<string>()
   const [artifactFilter, setArtifactFilter] = useState<string | undefined>('')
   const [artifactFilterApplied, setArtifactFilterApplied] = useState(false)
+
+  //filter
+  const [sortOptions, setSortOptions] = useState<CardSortOption>(CardSortOption.ALL)
 
   const queryParams: GetEnvironmentInstanceDetailsQueryParams | GetArtifactInstanceDetailsQueryParams = {
     accountIdentifier: accountId,
@@ -304,8 +448,15 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
     loading: envLoading,
     error: envError,
     refetch: envRefetch
-  } = useGetEnvironmentInstanceDetails({ queryParams })
-  const resData = defaultTo(envData?.data?.environmentInstanceDetails, [] as EnvironmentInstanceDetail[])
+  } = useMutateAsGet(useGetEnvironmentInstanceDetails, {
+    queryParams,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    }
+  })
+  const resData = defaultTo(envData?.data?.environmentGroupInstanceDetails, [] as EnvironmentGroupInstanceDetail[])
 
   //Artifact Card
   const {
@@ -318,18 +469,22 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
 
   const envList: EnvCardProps[] = resData.map(item => {
     return {
-      envId: item.envId,
-      envName: item.envName,
-      environmentType: item.environmentType,
+      id: item.id,
+      name: item.name,
+      environmentTypes: item.environmentTypes,
       count: item.count,
-      artifactDeploymentDetail: item.artifactDeploymentDetail
+      artifactDeploymentDetails: item.artifactDeploymentDetails,
+      isDrift: item.isDrift,
+      isEnvGroup: item.isEnvGroup,
+      isRevert: item.isRevert,
+      isRollback: item.isRollback
     }
   })
 
   const artifactList: ArtifactInstanceDetail[] = artifactCardData.map(item => {
     return {
       artifact: item.artifact,
-      environmentInstanceDetails: item.environmentInstanceDetails
+      environmentGroupInstanceDetails: item.environmentGroupInstanceDetails
     }
   })
 
@@ -391,12 +546,60 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
           )
         })
 
+  const dropdownOptions = React.useMemo(() => {
+    return [
+      {
+        label: getString('cd.serviceDashboard.bothTypeLabel'),
+        value: CardSortOption.ALL
+      },
+      {
+        label: getString('cd.serviceDashboard.prod'),
+        value: CardSortOption.PROD
+      },
+      {
+        label: getString('cd.preProductionType'),
+        value: CardSortOption.PRE_PROD
+      }
+    ]
+  }, [])
+
+  const onDropdownChange = React.useCallback((item: SelectOption) => {
+    const sortFilter = []
+    if (item.value === CardSortOption.ALL) {
+      setSortOptions(CardSortOption.ALL)
+      sortFilter.push('Production')
+      sortFilter.push('PreProduction')
+    } else if (item.value === CardSortOption.PROD) {
+      setSortOptions(CardSortOption.PROD)
+      sortFilter.push('Production')
+    } else if (item.value === CardSortOption.PRE_PROD) {
+      setSortOptions(CardSortOption.PRE_PROD)
+      sortFilter.push('PreProduction')
+    }
+
+    envRefetch({
+      queryParams,
+      body: {
+        filterType: 'Environment',
+        environmentTypes: sortFilter
+      }
+    })
+  }, [])
+
   return (
     <Container>
+      <Text color={Color.GREY_800} font={{ variation: FontVariation.H6 }} className={css.titleText}>
+        {cardView === CardView.ENV ? getString('cd.serviceDashboard.envAndGroup') : getString('artifacts')}
+      </Text>
       <div className={css.titleStyle}>
-        <Text color={Color.GREY_800} font={{ weight: 'bold' }}>
-          {cardView === CardView.ENV ? getString('environments') : getString('artifacts')}
-        </Text>
+        <DropDown
+          items={dropdownOptions}
+          onChange={onDropdownChange}
+          value={sortOptions}
+          filterable={false}
+          usePortal
+          disabled={cardView === CardView.ARTIFACT}
+        />
         <div>
           <Button
             variation={ButtonVariation.LINK}
@@ -405,7 +608,7 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
             iconProps={{ size: 13 }}
             text={getString('cd.environmentDetailPage.viewInTable')}
             onClick={() => {
-              setEnvFilter('')
+              setEnvFilter({ envId: undefined, isEnvGroup: false })
               setArtifactFilter(undefined)
               setIsDetailsDialogOpen(true)
               setArtifactFilterApplied(false)

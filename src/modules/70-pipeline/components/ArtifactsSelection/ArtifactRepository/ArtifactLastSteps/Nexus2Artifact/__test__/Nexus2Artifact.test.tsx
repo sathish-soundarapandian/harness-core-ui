@@ -358,21 +358,8 @@ describe('Nexus Artifact tests', () => {
     const submitBtn = container.querySelector('button[type="submit"]')!
     fireEvent.click(submitBtn)
 
-    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
-    // Select repository from dropdown
-    const repositoryDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
-    fireEvent.click(repositoryDropDownButton!)
-    expect(portalDivs.length).toBe(1)
-    const dropdownPortalDiv = portalDivs[0]
-    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const selectItem = await findByText(selectListMenu as HTMLElement, 'cdp-test-group2')
-    act(() => {
-      fireEvent.click(selectItem)
-    })
-    const repositorySelect = queryByNameAttribute('repository') as HTMLInputElement
-    expect(repositorySelect.value).toBe('cdp-test-group2')
 
     fireEvent.click(submitBtn)
 

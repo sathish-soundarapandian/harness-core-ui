@@ -13,8 +13,8 @@ rules:
             - '!microfrontends/ChildAppMounter'
         - group:
             - modules/35-connectors/*
-            - modules/35-user-profile/*
             - modules/38-audit-trail/*
+            - modules/38-user-profile/*
             - modules/40-gitsync/*
             - modules/45-dashboards/*
             - modules/45-projects-orgs/*
@@ -36,8 +36,8 @@ rules:
             - modules/85-sto/*
             - modules/90-gitops/*
             - '@connectors/*'
-            - '@user-profile/*'
             - '@audit-trail/*'
+            - '@user-profile/*'
             - '@gitsync/*'
             - '@dashboards/*'
             - '@projects-orgs/*'

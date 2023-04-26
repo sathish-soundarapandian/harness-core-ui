@@ -30,3 +30,14 @@ export const getEvaluationTitleAndValue = (
         )
   }
 }
+
+export const getDownTimeStartTimeAndEndTime = (
+  chartTimeRange?: { startTime: number; endTime: number },
+  sloDashboardWidget?: SLODashboardWidget
+): { downtimeStartTime: number; downtimeEndTime: number } => {
+  const { currentPeriodStartTime = 0, currentPeriodEndTime = 0, sloPerformanceTrend } = sloDashboardWidget ?? {}
+  const downtimeStartTime = chartTimeRange?.startTime || sloPerformanceTrend?.at(0)?.timestamp || currentPeriodStartTime
+  const downtimeEndTime =
+    chartTimeRange?.endTime || sloPerformanceTrend?.[sloPerformanceTrend?.length - 1]?.timestamp || currentPeriodEndTime
+  return { downtimeStartTime, downtimeEndTime }
+}

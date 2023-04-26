@@ -148,7 +148,8 @@ export function getPromisesForChildPipeline(
         getTemplatesResolvedPipeline: true,
         parentEntityConnectorRef: connectorRef,
         parentEntityRepoName: repoIdentifier
-      }
+      },
+      requestOptions: { headers: { 'Load-From-Cache': 'true' } }
     })
   })
   return promises

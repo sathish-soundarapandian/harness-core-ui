@@ -24,6 +24,29 @@ jest.mock('framework/PreferenceStore/PreferenceStoreContext')
     clearPreference: jest.fn
   }
 })
+const zendeskCreate = {
+  loading: false,
+  error: null,
+  data: {
+    status: 'SUCCESS',
+    data: {
+      code: 201,
+      message: 'ticket created'
+    }
+  }
+}
+
+jest.mock('services/resourcegroups', () => ({
+  useGetCoveoToken: jest.fn(() =>
+    Promise.resolve({
+      data: {
+        code: 201,
+        token: 'dummyToken'
+      }
+    })
+  ),
+  useCreateZendeskTicket: jest.fn(() => Promise.resolve(zendeskCreate))
+}))
 
 jest.mock('services/cd-ng', () => ({
   useGetAccountNGMock: jest.fn().mockImplementation(() => {

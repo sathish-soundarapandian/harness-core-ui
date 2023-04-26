@@ -24,7 +24,7 @@ import { Classes, MenuItem, Popover, PopoverInteractionKind, Menu, Dialog } from
 import { FieldArray, FieldArrayRenderProps } from 'formik'
 import type { FormikProps } from 'formik'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
-import { get } from 'lodash-es'
+import { get, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { RemoteVar, TerraformStoreTypes } from '../Terraform/TerraformInterfaces'
 import InlineVarFile from './InlineVarFile'
@@ -157,6 +157,14 @@ export default function VarFileList<T, U>(props: VarFileProps<T>): React.ReactEl
   }
   const tooltipContext = React.useContext(FormikTooltipContext)
   const dataTooltipId = tooltipContext?.formName ? `${tooltipContext.formName}_${name}` : ''
+  const [removeVarFile, setRemoveVarFile] = useState(false)
+  const listofVarFiles = get(formik.values, varFilePath)
+
+  const deleteVarFile = (index: number): void => {
+    listofVarFiles.splice(index, 1)
+    set(formik, `values.${varFilePath}`, listofVarFiles)
+    setRemoveVarFile(!removeVarFile)
+  }
 
   return (
     <Layout.Vertical>
@@ -211,7 +219,7 @@ export default function VarFileList<T, U>(props: VarFileProps<T>): React.ReactEl
                                       minimal
                                       icon="main-trash"
                                       data-testid={`remove-varFile-${index}`}
-                                      onClick={() => arrayHelpers.remove(index)}
+                                      onClick={() => deleteVarFile(index)}
                                     />
                                   </Layout.Horizontal>
                                 </Layout.Horizontal>

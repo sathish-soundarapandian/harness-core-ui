@@ -9,10 +9,10 @@ import type { SelectOption } from '@harness/uicore'
 import type {
   MonitoredServiceDTO,
   RiskCount,
+  SecondaryEventsResponse,
   SLODashboardWidget,
   SLOErrorBudgetResetDTO,
-  TimeRangeFilter,
-  UnavailabilityInstancesResponse
+  TimeRangeFilter
 } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
 import type { SLOActionTypes } from './CVSLOsListingPage.constants'
@@ -42,7 +42,9 @@ export interface SLOCardContentProps {
   setChartTimeRange?: (timeRange?: SLOCardContentProps['chartTimeRange']) => void
   sliderTimeRange?: { startTime: number; endTime: number }
   setSliderTimeRange?: (timeRange?: SLOCardContentProps['sliderTimeRange']) => void
-  downtimeInstanceUnavailability?: UnavailabilityInstancesResponse[]
+  sloWidgetsData?: SecondaryEventsResponse[]
+  sloWidgetsDataLoading?: boolean
+  fetchSecondaryEvents?: () => Promise<void>
 }
 
 export interface SLOTargetChartWithChangeTimelineProps extends SLOCardContentProps {

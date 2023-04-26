@@ -12,7 +12,8 @@ import {
   monitoredServiceListCall,
   monitoredServiceListResponse,
   environmentResponse,
-  servicesResponse
+  servicesResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
 import {
   metricPackCall,
@@ -20,6 +21,7 @@ import {
   metricStructureCall,
   metricStructureResponse
 } from '../../../support/85-cv/monitoredService/health-sources/AppDynamics/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   RuntimeValue,
   HealthSourceDetails,
@@ -59,10 +61,11 @@ describe('Create empty monitored service', () => {
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.visitSRMTemplate()
   })
 
-  it.skip('Add new AppDynamics monitored service with custom metric and all Runtime values and use it to create Monitored Service', () => {
+  it('Add new AppDynamics monitored service with custom metric and all Runtime values and use it to create Monitored Service', () => {
     // Template Creation
     cy.addNewSRMTemplate()
     cy.populateTemplateDetails(HealthSourceDetails.template.name, HealthSourceDetails.template.version)
@@ -97,7 +100,7 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="sli"]').click({ force: true })
     cy.get('input[name="continuousVerification"]').click({ force: true })
     cy.get('input[name="serviceInstanceMetricPath"]').should('have.value', RuntimeValue)
-    cy.get('input[value="Errors/ERROR"]').click({ force: true })
+    cy.get('input[value="Errors"]').click({ force: true })
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
 
     cy.contains('span', 'Submit').click({ force: true })
@@ -114,7 +117,7 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="completeMetricPath"]').should('have.value', RuntimeValue)
     cy.contains('div', 'Assign').click({ force: true })
     cy.get('input[name="serviceInstanceMetricPath"]').should('have.value', RuntimeValue)
-    cy.get('input[value="Errors/ERROR"]').should('be.checked')
+    cy.get('input[value="Errors"]').should('be.checked')
     cy.get('input[name="higherBaselineDeviation"]').should('be.checked')
     cy.contains('span', 'Submit').click({ force: true })
 
@@ -132,9 +135,7 @@ describe('Create empty monitored service', () => {
     cy.wait(2000)
     cy.contains('div', 'Unsaved changes').should('be.visible')
     cy.contains('p', 'Templates').click()
-    cy.get('.bp3-dialog')
-      .findByRole('button', { name: /Confirm/i })
-      .click()
+    cy.get('.bp3-dialog button[type="submit"]').click()
     cy.findByText('AppD Template').should('be.visible')
 
     // MS Creation Using Template

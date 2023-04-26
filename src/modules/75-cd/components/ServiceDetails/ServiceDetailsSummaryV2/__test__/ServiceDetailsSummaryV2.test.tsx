@@ -6,12 +6,13 @@
  */
 
 import React from 'react'
-import { findByText, getAllByText, render, waitFor, getByText, screen } from '@testing-library/react'
+import { findByText, getAllByText, render, waitFor, getByText, screen, fireEvent, within } from '@testing-library/react'
 import * as routerMock from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
-import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import * as cdng from 'services/cd-ng'
+import * as commonHooks from '@common/hooks'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import pipelineList from '@pipeline/pages/execution-list/__tests__/mocks/pipeline-list.json'
@@ -20,7 +21,6 @@ import {
   filterAPI,
   summaryAPI
 } from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetailSummary/__test__/EnvDetailSummary.mock'
-import { useGetListOfExecutions } from 'services/pipeline-ng'
 import { useGetActiveServiceInstanceDetailsGroupedByPipelineExecution } from 'services/cd-ng'
 import ServiceDetailsSummaryV2 from '../ServiceDetailsSummaryV2'
 import {
@@ -40,6 +40,13 @@ jest.mock('react-timeago', () => () => 'dummy date')
 jest.mock('react-router-dom', () => ({
   ...(jest.requireActual('react-router-dom') as any),
   useParams: jest.fn().mockReturnValue({ serviceId: 'serviceTest' })
+}))
+
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(() => {
+    return { data: envInstanceDetailsMock, refetch: jest.fn(), loading: false, error: false }
+  })
 }))
 
 jest.mock('services/cd-ng', () => ({
@@ -220,11 +227,10 @@ describe('Service Detail Summary - ', () => {
       </TestWrapper>
     )
 
-    // card click and check for execution list call
+    // card click
     const envName = getByText(container, 'demo-env-Test-pdc')
     expect(envName).toBeInTheDocument()
     userEvent.click(envName)
-    expect(useGetListOfExecutions).toHaveBeenCalled()
 
     //open table with env filter
     const viewTableEnvFilter = getByText(container, '4 Pipeline.execution.instances')
@@ -249,13 +255,12 @@ describe('Service Detail Summary - ', () => {
     //toggle to artifact view
     toggleToArtifact(container)
 
-    // artifact card click and check for execution list call
+    // artifact card click
     const artifactName = getByText(container, 'testArtifactDisplayName')
     expect(artifactName).toBeInTheDocument()
     expect(artifactName.parentElement).not.toHaveClass('Card--selected')
     userEvent.click(artifactName.parentElement!)
     expect(artifactName.parentElement).toHaveClass('Card--selected')
-    expect(useGetListOfExecutions).toHaveBeenCalled()
   })
 
   test('Test ServiceDetailsArtifactTable', async () => {
@@ -291,6 +296,59 @@ describe('Service Detail Summary - ', () => {
 
     //banner visible
     expect(screen.getByText('cd.openTask.seeOpenTask')).toBeInTheDocument()
+  })
+
+  test('Test ServiceDetail Env Cards and drift test', async () => {
+    window.open = jest.fn()
+    const { container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={getModuleParams()}>
+        <ServiceDetailsSummaryV2 />
+      </TestWrapper>
+    )
+
+    const envName = getByText(container, 'demo-env-Test-pdc')
+    expect(envName).toBeInTheDocument()
+
+    const driftedArtifact = getByText(container, 'test-artifact:1.0')
+    expect(driftedArtifact).toBeInTheDocument()
+    fireEvent.mouseOver(driftedArtifact)
+    await waitFor(() => expect(screen.getByText('cd.serviceDashboard.driftDetection')).toBeInTheDocument())
+    const popover = findPopoverContainer()
+
+    expect(popover).not.toBeNull()
+    userEvent.click(within(popover!).getByText('sampleEnv31'))
+    expect(window.open).toBeCalledWith(expect.stringContaining('/account/undefined/environments/sampleEnv31/details'))
+  })
+
+  test('Test ServiceDetail Env Cards and drift test', async () => {
+    window.open = jest.fn()
+    const { container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={getModuleParams()}>
+        <ServiceDetailsSummaryV2 />
+      </TestWrapper>
+    )
+
+    //toggle to artifact view
+    toggleToArtifact(container)
+
+    // artifact card click
+    const artifactName = getByText(container, 'testArtifactDisplayName')
+    expect(artifactName).toBeInTheDocument()
+
+    const driftedEnvGroup = getByText(container, 'demodriftgroup')
+    expect(driftedEnvGroup).toBeInTheDocument()
+    fireEvent.mouseOver(driftedEnvGroup)
+    await waitFor(() => expect(screen.getByText('cd.serviceDashboard.driftDetection')).toBeInTheDocument())
+    const popover = findPopoverContainer()
+
+    expect(popover).not.toBeNull()
+    expect(within(popover!).getByText('demodrift:1.0')).toBeInTheDocument()
+    userEvent.click(within(popover!).getAllByText('dummy date')[0])
+    expect(window.open).toBeCalledWith(
+      expect.stringContaining(
+        '/account/undefined/home/orgs/undefined/projects/undefined/pipelines/waitpipetest/deployments/exectestplan/pipeline'
+      )
+    )
   })
 })
 
@@ -399,13 +457,8 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
   })
 
   test('Test ServiceDetailsEnvView - error states', () => {
-    jest.spyOn(cdng, 'useGetEnvironmentInstanceDetails').mockImplementation(() => {
-      return {
-        data: null,
-        loading: false,
-        error: true,
-        refetch: jest.fn()
-      } as any
+    jest.spyOn(commonHooks, 'useMutateAsGet').mockImplementation(() => {
+      return { loading: false, error: 'Some error occurred', data: undefined, refetch: jest.fn() } as any
     })
     const { container } = render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams()}>
@@ -419,13 +472,8 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
   })
 
   test('Test ServiceDetailsEnvView - loading states', () => {
-    jest.spyOn(cdng, 'useGetEnvironmentInstanceDetails').mockImplementation(() => {
-      return {
-        data: null,
-        loading: true,
-        error: false,
-        refetch: jest.fn()
-      } as any
+    jest.spyOn(commonHooks, 'useMutateAsGet').mockImplementation(() => {
+      return { loading: true, error: false, data: undefined, refetch: jest.fn() } as any
     })
     const { container } = render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams()}>
@@ -437,13 +485,8 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
   })
 
   test('Test ServiceDetailsEnvView - empty states', () => {
-    jest.spyOn(cdng, 'useGetEnvironmentInstanceDetails').mockImplementation(() => {
-      return {
-        data: null,
-        loading: false,
-        error: false,
-        refetch: jest.fn()
-      } as any
+    jest.spyOn(commonHooks, 'useMutateAsGet').mockImplementation(() => {
+      return { loading: false, error: false, data: undefined, refetch: jest.fn() } as any
     })
     jest.spyOn(routerMock, 'useParams').mockReturnValue({ serviceId: undefined })
     const { container } = render(

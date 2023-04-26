@@ -11,14 +11,7 @@ import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
 import { IDrawerProps, Position, Drawer } from '@blueprintjs/core'
 import cx from 'classnames'
-import {
-  Container,
-  Text,
-  Utils,
-  useConfirmationDialog,
-  MultiTypeInputType,
-  getMultiTypeFromValue
-} from '@harness/uicore'
+import { Container, Utils, useConfirmationDialog, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { GetMetricNamesQueryParams, ResponseListPrometheusSampleData, useGetSampleData } from 'services/cv'
@@ -214,6 +207,7 @@ export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.El
         />
       ) : (
         <QueryContent
+          showLabel
           handleFetchRecords={async () => {
             cancel()
             await refetch({
@@ -280,10 +274,5 @@ export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.El
     )
   }
 
-  return (
-    <Container className={cx(css.main, className)}>
-      {!isTemplate && <Text className={css.labelText}>{getString('cv.query')}</Text>}
-      {content}
-    </Container>
-  )
+  return <Container className={cx(css.main, className)}>{content}</Container>
 }

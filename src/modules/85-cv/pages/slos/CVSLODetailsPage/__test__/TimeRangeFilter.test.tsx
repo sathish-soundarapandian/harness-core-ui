@@ -65,7 +65,6 @@ jest.mock('services/cv', () => {
       .mockImplementation(() => ({ data: null, loading: false, error: null, refetch: jest.fn() })),
     useChangeEventTimelineForAccount: jest.fn().mockImplementation(() => mockAPI),
     useChangeEventListForAccount: jest.fn().mockImplementation(() => mockAPI),
-    useGetUnavailabilityInstances: jest.fn().mockImplementation(() => mockAPI),
     useGetSecondaryEvents: jest.fn().mockImplementation(() => {
       return {
         data: mockedSecondaryEventsResponse,

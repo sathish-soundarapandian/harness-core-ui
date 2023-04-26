@@ -10,6 +10,7 @@ declare const styles: {
   readonly active: string
   readonly ccm: string
   readonly cd: string
+  readonly cet: string
   readonly chaos: string
   readonly checkbox: string
   readonly ci: string

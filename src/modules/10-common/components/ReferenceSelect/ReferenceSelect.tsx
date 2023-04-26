@@ -76,6 +76,8 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   isOnlyFixedtype?: boolean
   selectedReferences?: string[] | Item[]
   onMultiSelectChange?: (records: ScopeAndIdentifier[]) => void
+  isRecordDisabled?: (item: any) => boolean
+  renderRecordDisabledWarning?: JSX.Element
 }
 
 export const ReferenceSelectDialogTitle = (props: ReferenceSelectDialogTitleProps): JSX.Element => {
@@ -137,6 +139,8 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
     selectedReferences,
     onMultiSelectChange,
     placeholderClass,
+    isRecordDisabled,
+    renderRecordDisabledWarning,
     ...referenceProps
   } = props
   const [isOpen, setOpen] = useState(false)
@@ -251,6 +255,8 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
             isMultiSelect={isMultiSelect}
             selectedRecords={selectedRecords}
             selectedRecord={selectedRecord}
+            isRecordDisabled={isRecordDisabled}
+            renderRecordDisabledWarning={renderRecordDisabledWarning}
           />
         </div>
       </Dialog>

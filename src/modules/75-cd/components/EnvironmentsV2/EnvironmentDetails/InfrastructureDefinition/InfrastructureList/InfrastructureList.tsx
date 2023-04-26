@@ -10,12 +10,15 @@ import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { defaultTo } from 'lodash-es'
 import { ButtonVariation, Container, Heading, Layout, TableV2, useToaster } from '@harness/uicore'
-import { InfrastructureResponse, useDeleteInfrastructure } from 'services/cd-ng'
+import { InfrastructureResponse, useDeleteInfrastructure, useGetSettingValue } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import type { EnvironmentPathProps, ProjectPathProps, EnvironmentQueryParams } from '@common/interfaces/RouteInterfaces'
 import { InfraDefinitionTabs } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
 import { useUpdateQueryParams } from '@common/hooks'
+import { SettingType } from '@common/constants/Utils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
@@ -46,8 +49,24 @@ export default function InfrastructureList({
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+  const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams>()
   const [infraDetailsToBeDeleted, setInfraDetailsToBeDeleted] = React.useState<InfraDetails>()
+
+  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_FORCE_DELETE,
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: !isSettingsEnabled
+  })
+
+  React.useEffect(() => {
+    if (forceDeleteSettingsError) {
+      showError(getRBACErrorMessage(forceDeleteSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceDeleteSettingsError])
 
   const redirectToReferencedBy = (): void => {
     closeReferenceErrorDialog()
@@ -93,7 +112,7 @@ export default function InfrastructureList({
         setInfraDetailsToBeDeleted(undefined)
       }
     } catch (error) {
-      if (error?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+      if (forceDeleteSettings?.data?.value === 'true' && error?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         openReferenceErrorDialog()
       } else {
         showError(getRBACErrorMessage(error))

@@ -15,8 +15,8 @@ rules:
             - modules/31-variables/*
             - modules/33-auth-settings/*
             - modules/35-connectors/*
-            - modules/35-user-profile/*
             - modules/38-audit-trail/*
+            - modules/38-user-profile/*
             - modules/40-gitsync/*
             - modules/45-dashboards/*
             - modules/45-projects-orgs/*
@@ -40,8 +40,8 @@ rules:
             - '@variables/*'
             - '@auth-settings/*'
             - '@connectors/*'
-            - '@user-profile/*'
             - '@audit-trail/*'
+            - '@user-profile/*'
             - '@gitsync/*'
             - '@dashboards/*'
             - '@projects-orgs/*'

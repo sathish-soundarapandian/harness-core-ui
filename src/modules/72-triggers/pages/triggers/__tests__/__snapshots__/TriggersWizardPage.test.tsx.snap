@@ -4200,6 +4200,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                           <div>
                             <p
                               class="StyledProps--font StyledProps--main StyledProps--font-variation-form-input-text StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
+                              data-tooltip-id="webhookTriggerActions"
                             >
                               triggers.triggerConfigurationPanel.actions
                             </p>
@@ -5414,6 +5415,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                           <div>
                             <p
                               class="StyledProps--font StyledProps--main StyledProps--font-variation-form-input-text StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
+                              data-tooltip-id="webhookTriggerActions"
                             >
                               triggers.triggerConfigurationPanel.actions
                             </p>

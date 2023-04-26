@@ -11,31 +11,11 @@ export const listContainsTag = (tags: DelegateSelector[], findTag: DelegateSelec
   return tags.some((tagItem: DelegateSelector) => tagItem.name === findTag.name)
 }
 
-export const addTagToList = (tags: DelegateSelector[], tag: DelegateSelector) => {
-  return [...tags, tag]
-}
-
-export const removeTagFromList = (tags: DelegateSelector[], tag: DelegateSelector) => {
-  return tags.filter(tagItem => tagItem !== tag)
-}
-
-export const addTagIfNeeded = (
-  tags: DelegateSelector[],
-  createdTags: DelegateSelector[],
-  tag: DelegateSelector
-): { updatedCreatedTags: DelegateSelector[] } => {
-  const isNewlyCreatedTag = !listContainsTag(tags, tag)
-  return {
-    updatedCreatedTags: isNewlyCreatedTag ? addTagToList(createdTags, tag) : createdTags
-  }
-}
-
-export const removeTagIfNeeded = (
-  createdTags: DelegateSelector[],
-  tag: DelegateSelector
-): { updatedCreatedTags: DelegateSelector[] } => {
-  const wasNewlyCreatedTag = listContainsTag(createdTags, tag)
-  return {
-    updatedCreatedTags: wasNewlyCreatedTag ? removeTagFromList(createdTags, tag) : createdTags
-  }
+export const transformToTagList = (selectors: DelegateSelector[]): string[] => {
+  return selectors.reduce<string[]>((tags, selector) => {
+    if (selector.name) {
+      tags.push(selector.name)
+    }
+    return tags
+  }, [])
 }

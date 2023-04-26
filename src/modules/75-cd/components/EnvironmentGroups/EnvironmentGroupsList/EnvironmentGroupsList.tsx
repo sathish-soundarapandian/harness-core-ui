@@ -34,9 +34,14 @@ import css from '../EnvironmentGroups.module.scss'
 export interface EnvironmentGroupsListProps {
   environmentGroups?: EnvironmentGroupResponse[]
   refetch: () => void
+  isForceDeleteEnabled: boolean
 }
 
-export default function EnvironmentGroupsList({ environmentGroups, refetch }: EnvironmentGroupsListProps) {
+export default function EnvironmentGroupsList({
+  environmentGroups,
+  refetch,
+  isForceDeleteEnabled
+}: EnvironmentGroupsListProps): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const history = useHistory()
   const { getString } = useStrings()
@@ -44,7 +49,7 @@ export default function EnvironmentGroupsList({ environmentGroups, refetch }: En
   const [expandedSets, setExpandedSets] = useState<Set<string>>(new Set())
   const [curGroupId, setCurGroupId] = useState('')
 
-  const onEdit = (environmentGroupIdentifier: string) => {
+  const onEdit = (environmentGroupIdentifier: string): void => {
     history.push(
       routes.toEnvironmentGroupDetails({
         orgIdentifier,
@@ -59,7 +64,7 @@ export default function EnvironmentGroupsList({ environmentGroups, refetch }: En
 
   const { mutate: deleteEnvironmentGroup } = useDeleteEnvironmentGroup({})
 
-  const onDelete = async (identifier: string, forceDelete?: boolean) => {
+  const onDelete = async (identifier: string, forceDelete?: boolean): Promise<void> => {
     try {
       await deleteEnvironmentGroup(identifier, {
         headers: { 'content-type': 'application/json' },
@@ -68,7 +73,7 @@ export default function EnvironmentGroupsList({ environmentGroups, refetch }: En
       showSuccess(getString('common.environmentGroup.deleted', { identifier }))
       refetch()
     } catch (e: any) {
-      if (e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+      if (isForceDeleteEnabled && e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         setCurGroupId(identifier)
         openReferenceErrorDialog()
       } else {
@@ -197,7 +202,7 @@ export default function EnvironmentGroupsList({ environmentGroups, refetch }: En
   )
 }
 
-function EnvironmentGroupsListHeaders() {
+function EnvironmentGroupsListHeaders(): React.ReactElement {
   const { getString } = useStrings()
 
   return (

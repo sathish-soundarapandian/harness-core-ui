@@ -24,7 +24,30 @@ import {
   SITE_STATUS_LINK
 } from '../utils'
 
+const zendeskCreate = {
+  loading: false,
+  error: null,
+  data: {
+    status: 'SUCCESS',
+    data: {
+      code: 201,
+      message: 'ticket created'
+    }
+  }
+}
+
 jest.mock('services/cd-ng')
+jest.mock('services/resourcegroups', () => ({
+  useGetCoveoToken: jest.fn(() =>
+    Promise.resolve({
+      data: {
+        code: 201,
+        token: 'dummyToken'
+      }
+    })
+  ),
+  useCreateZendeskTicket: jest.fn(() => Promise.resolve(zendeskCreate))
+}))
 const useGetAccountNGMock = useGetAccountNG as jest.MockedFunction<any>
 jest.mock('refiner-js', () => {
   return jest.fn().mockImplementation((param, callback) => {

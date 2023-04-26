@@ -22,9 +22,14 @@ import { defaultTo, get, isEmpty, pick } from 'lodash-es'
 import { Formik } from 'formik'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import { useGetSettingValue } from 'services/cd-ng'
+
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PageSpinner, useToaster } from '@common/components'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { SettingType } from '@common/constants/Utils'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { useMutateAsGet } from '@common/hooks'
 import {
@@ -74,6 +79,22 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { mutate: deleteTemplates, loading: deleteLoading } = useDeleteTemplateVersionsOfIdentifier({})
   const [templateVersionsToDelete, setTemplateVersionsToDelete] = React.useState<string[]>([])
+
+  const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
+  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_FORCE_DELETE,
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: !isSettingsEnabled
+  })
+
+  React.useEffect(() => {
+    if (forceDeleteSettingsError) {
+      showError(getRBACErrorMessage(forceDeleteSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceDeleteSettingsError])
 
   const {
     data: templateData,
@@ -137,7 +158,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
       }
     } catch (err) {
       /* istanbul ignore next */
-      if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+      if (forceDeleteSettings?.data?.value === 'true' && err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         openReferenceErrorDialog()
         return
       }

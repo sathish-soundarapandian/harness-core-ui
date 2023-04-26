@@ -214,7 +214,7 @@ exports[`Create CE AWS Connector Create Cross Account Role Step should render fo
             </div>
             <a
               class="noAccountLink"
-              href="https://newdocs.helpdocs.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#review_aws_access_permissions"
+              href="https://developer.harness.io/docs/cloud-cost-management/getting-started-ccm/set-up-cloud-cost-management/set-up-cost-visibility-for-aws/#aws-access-permissions"
               rel="noreferrer"
               target="_blank"
             >

@@ -18,10 +18,11 @@ interface ServiceCardProps {
   onEdit?: () => Promise<void>
   onRefresh?: () => Promise<void>
   onServiceSelect?: (data: any) => Promise<void>
+  isForceDeleteEnabled: boolean
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = props => {
-  const { data, onRefresh, onServiceSelect } = props
+  const { data, onRefresh, onServiceSelect, isForceDeleteEnabled } = props
 
   return (
     <Card className={css.card} onClick={() => onServiceSelect && onServiceSelect(data?.service)}>
@@ -39,7 +40,7 @@ const ServiceCard: React.FC<ServiceCardProps> = props => {
           >
             {data?.service?.name}
           </Text>
-          <ServiceMenu data={data?.service} onRefresh={onRefresh} />
+          <ServiceMenu data={data?.service} onRefresh={onRefresh} isForceDeleteEnabled={isForceDeleteEnabled} />
         </div>
 
         <Layout.Horizontal margin={{ top: 'xsmall', bottom: 'xsmall' }} className={css.idTags}>

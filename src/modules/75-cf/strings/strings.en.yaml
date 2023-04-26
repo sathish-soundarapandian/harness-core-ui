@@ -149,6 +149,7 @@ featureFlags:
   servePercentageRollout: serve <strong>percentage rollout</strong>
   deleteFlag: Delete Flag
   deleteFlagMessage: Are you sure you want to delete flag <strong>{{name}}</strong>? This action cannot be undone.
+  deleteFlagWarning: 'Warning: deleting a flag removes it from all environments, not just the currently selected environment'
   flagOff: Flag is Disabled
   flagOn: Flag is Enabled
   flagWillTurnOn: Enable flag for this environment upon save

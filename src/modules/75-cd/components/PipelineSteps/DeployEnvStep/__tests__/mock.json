@@ -13,7 +13,6 @@
           "projectIdentifier": "asdasd",
           "identifier": "gjhjghjhg",
           "name": "gjhjghjhg",
-          "description": null,
           "color": "#0063F7",
           "type": "PreProduction",
           "deleted": false,
@@ -30,7 +29,6 @@
           "projectIdentifier": "asdasd",
           "identifier": "fdf",
           "name": "asdd",
-          "description": null,
           "color": "#0063F7",
           "type": "Production",
           "deleted": false,
@@ -47,7 +45,6 @@
           "projectIdentifier": "asdasd",
           "identifier": "ddsffdgg",
           "name": "ddsffdgg",
-          "description": null,
           "color": "#0063F7",
           "type": "Production",
           "deleted": false,
@@ -64,7 +61,6 @@
           "projectIdentifier": "asdasd",
           "identifier": "asdfdf",
           "name": "asdfdf",
-          "description": null,
           "color": "#0063F7",
           "type": "PreProduction",
           "deleted": false,
@@ -81,15 +77,12 @@
           "projectIdentifier": "asdasd",
           "identifier": "qa",
           "name": "qa",
-          "description": null,
           "color": "#0063F7",
           "type": "Production",
           "deleted": false,
           "tags": { "asd": "" },
           "version": 18
-        },
-        "createdAt": null,
-        "lastModifiedAt": null
+        }
       },
       {
         "environment": {
@@ -98,15 +91,13 @@
           "projectIdentifier": "asdasd",
           "identifier": "asd",
           "name": "asd",
-          "description": null,
           "color": "#0063F7",
           "type": "Production",
           "deleted": false,
           "tags": {},
           "version": 5
         },
-        "createdAt": null,
-        "lastModifiedAt": null
+        "createdAt": 1624019624502
       },
       {
         "environment": {
@@ -115,15 +106,13 @@
           "projectIdentifier": "asdasd",
           "identifier": "sdf",
           "name": "sdf",
-          "description": null,
           "color": "#0063F7",
           "type": "PreProduction",
           "deleted": false,
           "tags": {},
           "version": 1
         },
-        "createdAt": null,
-        "lastModifiedAt": null
+        "lastModifiedAt": 1624019624502
       }
     ],
     "pageIndex": 0,

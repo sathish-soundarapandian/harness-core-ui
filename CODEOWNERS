@@ -16,10 +16,10 @@ yarn.lock @harness/ui-council
 .storybook/ @harness/ui-council
 scripts/ @harness/ui-council
 certificates/ @harness/ui-council
-configs/modulefederation.config.js @abhinavrastogi-harness @vkbansal-harness @knagurski @tan-nhu
-configs/ @harness/ui-council @abhinavrastogi-harness @vkbansal-harness
+configs/modulefederation.config.js @abhinavrastogi-harness @knagurski @tan-nhu
+configs/ @harness/ui-council @abhinavrastogi-harness
 src/index.html @harness/ui-council
-src/microfrontends/ @abhinavrastogi-harness @vkbansal-harness @knagurski @tan-nhu
+src/microfrontends/ @abhinavrastogi-harness @knagurski @tan-nhu
 src/framework/ @harness/ui-council
 src/framework/featureStore @harness/ui-plg
 src/framework/LicenseStore @harness/ui-plg
@@ -48,7 +48,7 @@ src/modules/33-auth-settings/pages/subscriptions @harness/ui-plg
 src/modules/33-auth-settings/pages/AccountOverview @harness/ui-plg
 src/modules/30-secrets @harness/ui-platform
 src/modules/35-connectors @harness/ui-platform
-src/modules/35-user-profile @harness/ui-platform
+src/modules/38-user-profile @harness/ui-platform
 src/modules/40-gitsync @harness/ui-pipeline
 src/modules/45-projects-orgs @harness/ui-platform
 src/modules/45-projects-orgs/pages/HomePageTemplate @harness/ui-plg
@@ -58,23 +58,23 @@ src/modules/70-pipeline/components/HomePageByModule @harness/ui-plg
 src/modules/70-pipeline/components/TrialModalTemplate @harness/ui-plg
 src/modules/70-pipeline/interfaces/STOApp.ts @harness/ui-sto
 src/modules/70-pipeline/pages/execution/ExecutionSecurityView @harness/ui-sto
-src/modules/70-pipeline/components/PipelineInputSetForm/EnvironmentsInputSetForm @vkbansal-harness @AshwinBhatkal-Harness
-src/modules/70-pipeline/components/PipelineInputSetForm/ServicesInputSetForm @vkbansal-harness @AshwinBhatkal-Harness
+src/modules/70-pipeline/components/PipelineInputSetForm/EnvironmentsInputSetForm @harness/ui-cd-core
+src/modules/70-pipeline/components/PipelineInputSetForm/ServicesInputSetForm @harness/ui-cd-core
 src/modules/72-templates-library @harness/ui-templates
 src/modules/72-freeze-windows @harness/ui-pipeline
 src/modules/75-cd @harness/ui-pipeline
 src/modules/75-cd/modals/CDTrial @harness/ui-plg
 src/modules/75-cd/pages/home @harness/ui-plg
-src/modules/75-cd/components/PipelineSteps/DeployServiceEntityStep @vkbansal-harness @AshwinBhatkal-Harness
-src/modules/75-cd/components/PipelineStudio/DeployServiceSpecifications @vkbansal-harness @AshwinBhatkal-Harness
-src/modules/75-cd/components/Services/ServiceStudio @vkbansal-harness @AshwinBhatkal-Harness
-src/modules/75-cd/components/PipelineSteps/K8sServiceSpec/KubernetesArtifacts @vkbansal-harness @AshwinBhatkal-Harness
-src/modules/75-cd/components/PipelineSteps/K8sServiceSpec/PrimaryArtifact @vkbansal-harness @AshwinBhatkal-Harness
-src/modules/75-cd/components/EnvironmentsV2 @vkbansal-harness @AshwinBhatkal-Harness
-src/modules/75-cd/components/PipelineSteps/DeployClusterEntityStep @vkbansal-harness @AshwinBhatkal-Harness
-src/modules/75-cd/components/PipelineSteps/DeployEnvironmentEntityStep @vkbansal-harness @AshwinBhatkal-Harness
-src/modules/75-cd/components/PipelineSteps/DeployInfrastructureEntityStep @vkbansal-harness @AshwinBhatkal-Harness
-src/modules/75-cd/components/PipelineSteps/DeployEnvironmentGroupStep @vkbansal-harness @AshwinBhatkal-Harness
+src/modules/75-cd/components/PipelineSteps/DeployServiceEntityStep @harness/ui-cd-core
+src/modules/75-cd/components/PipelineStudio/DeployServiceSpecifications @harness/ui-cd-core
+src/modules/75-cd/components/Services/ServiceStudio @harness/ui-cd-core
+src/modules/75-cd/components/PipelineSteps/K8sServiceSpec/KubernetesArtifacts @harness/ui-cd-core
+src/modules/75-cd/components/PipelineSteps/K8sServiceSpec/PrimaryArtifact @harness/ui-cd-core
+src/modules/75-cd/components/EnvironmentsV2 @harness/ui-cd-core
+src/modules/75-cd/components/PipelineSteps/DeployClusterEntityStep @harness/ui-cd-core
+src/modules/75-cd/components/PipelineSteps/DeployEnvironmentEntityStep @harness/ui-cd-core
+src/modules/75-cd/components/PipelineSteps/DeployInfrastructureEntityStep @harness/ui-cd-core
+src/modules/75-cd/components/PipelineSteps/DeployEnvironmentGroupStep @harness/ui-cd-core
 src/modules/85-cv @harness/ui-cv
 src/modules/85-cv/pages/home @harness/ui-plg
 src/modules/85-sto @harness/ui-sto

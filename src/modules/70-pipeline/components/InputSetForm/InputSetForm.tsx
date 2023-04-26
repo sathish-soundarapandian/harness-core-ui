@@ -419,10 +419,10 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
         requestOptions: { headers: { 'Load-From-Cache': loadFromCache } }
       })
       refetchTemplate()
-      refetchPipeline()
+      refetchPipeline({ requestOptions: { headers: { 'Load-From-Cache': loadFromCache } } })
     } else {
       refetchTemplate()
-      refetchPipeline()
+      refetchPipeline({ requestOptions: { headers: { 'Load-From-Cache': loadFromCache } } })
 
       setIsEdit(false)
     }
@@ -696,7 +696,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                 />
               )}
               {isEdit && inputSet?.storeType === StoreType.REMOTE && (
-                <Container className={css.gitRemoteDetails}>
+                <Container className={cx(css.gitRemoteDetails, inputSet?.cacheResponse ? '' : css.noCacheDetails)}>
                   <GitRemoteDetails
                     connectorRef={inputSet?.connectorRef}
                     repoName={inputSet?.gitDetails?.repoName}
