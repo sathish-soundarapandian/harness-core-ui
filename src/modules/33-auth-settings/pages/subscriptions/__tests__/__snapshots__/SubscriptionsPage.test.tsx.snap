@@ -1034,7 +1034,7 @@ exports[`Subscriptions Page Subscription Details Card should render CI details: 
                   class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-stretch"
                 >
                   <div
-                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center"
                     style="width: 100%;"
                   >
                     <div
