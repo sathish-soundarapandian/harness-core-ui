@@ -134,7 +134,7 @@ const CIUsageGraph: React.FC<CIUsageGraphProps> = (props: CIUsageGraphProps) => 
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
-        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
+        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'center' }} width={'100%'}>
           <Layout.Vertical>
             <Heading color={Color.BLACK} font={{ size: 'medium' }}>
               {getString('common.subscriptions.usage.activeDevelopers')}
