@@ -30,7 +30,7 @@ import {
 import { Input, PluginMetadataResponse, useListPlugins } from 'services/ci'
 import { useStrings } from 'framework/strings'
 import { Status } from '@common/utils/Constants'
-import { PluginType, PluginAddUpdateMetadata } from '@common/interfaces/YAMLBuilderProps'
+import { PluginType, PluginAddUpdateMetadata, PipelineEntity } from '@common/interfaces/YAMLBuilderProps'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 
 import css from './PluginsPanel.module.scss'
@@ -460,7 +460,8 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                       shouldInsertYAML: true,
                       pluginType: getPluginTypeFromKind(kind),
                       pluginUses: uses,
-                      pluginImage: image
+                      pluginImage: image,
+                      pipelineEntity: PipelineEntity.Step
                     },
                     isPluginUpdateAction
                   )

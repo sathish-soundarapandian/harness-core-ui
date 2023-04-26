@@ -109,6 +109,7 @@ export interface PluginAddUpdateMetadata {
   pluginUses?: PluginMetadataResponse['uses']
   pluginImage?: PluginMetadataResponse['image']
   shouldInsertYAML: boolean
+  pipelineEntity: PipelineEntity
 }
 
 export enum EditorAction {

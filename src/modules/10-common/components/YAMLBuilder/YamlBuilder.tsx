@@ -172,7 +172,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
   const [_editorAction, setEditorAction] = useState<EditorAction>()
-  const [pipelineEntityType, setPipelineEntityType] = useState<PipelineEntity>()
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
   const yamlValidationErrorsRef = useRef<Map<number, string>>()
@@ -717,12 +716,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       fromLine,
       toLineNum,
       cursorPosition,
-      editorActionToPerform
+      editorActionToPerform,
+      selectedPipelineEntity
     }: {
       fromLine: number
       toLineNum: number
       cursorPosition: Position
       editorActionToPerform: EditorAction
+      selectedPipelineEntity: PipelineEntity
     }): string => {
       return (
         editorRef.current?.editor?.addCommand(
@@ -734,7 +735,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               const numberOfLinesInSelection = obtainYAMLForEditorActionClick({
                 cursorPosition,
                 latestYAML: currentYaml,
-                editorActionPerformed: editorActionToPerform
+                editorActionPerformed: editorActionToPerform,
+                selectedPipelineEntity
               })
               if (numberOfLinesInSelection) {
                 currentCursorPosition.current = cursorPosition
@@ -756,12 +758,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       fromLine,
       toLineNum,
       cursorPosition,
-      selectedEntity
+      selectedPipelineEntity
     }: {
       fromLine: number
       toLineNum: number
       cursorPosition: Position
-      selectedEntity: PipelineEntity
+      selectedPipelineEntity: PipelineEntity
     }): IDisposable | undefined => {
       const commonArgs = { fromLine, toLineNum, cursorPosition }
       const codeLensRange = {
@@ -770,7 +772,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         endLineNumber: toLineNum,
         endColumn: 1
       }
-      const editorActionsForSelectedEntity = PipelineEntityToEditorActionsMappingForCodelens.get(selectedEntity)
+      const editorActionsForSelectedEntity = PipelineEntityToEditorActionsMappingForCodelens.get(selectedPipelineEntity)
       if (editorActionsForSelectedEntity) {
         const registrationId: IDisposable = monaco.languages.registerCodeLensProvider('yaml', {
           provideCodeLenses: function (_model: unknown, _token: unknown) {
@@ -780,11 +782,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                   ? [
                       {
                         range: codeLensRange,
-                        id: `manage-${selectedEntity}-entity-${fromLine}`,
+                        id: `manage-${selectedPipelineEntity}-entity-${fromLine}`,
                         command: {
                           id: generateCallbackForEditorActionClick({
                             ...commonArgs,
-                            editorActionToPerform: EditorAction.Manage
+                            editorActionToPerform: EditorAction.Manage,
+                            selectedPipelineEntity: selectedPipelineEntity
                           }),
                           title: getString('common.manage')
                         }
@@ -795,11 +798,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                   ? [
                       {
                         range: codeLensRange,
-                        id: `edit-${selectedEntity}-entity-${fromLine}`,
+                        id: `edit-${selectedPipelineEntity}-entity-${fromLine}`,
                         command: {
                           id: generateCallbackForEditorActionClick({
                             ...commonArgs,
-                            editorActionToPerform: EditorAction.Edit
+                            editorActionToPerform: EditorAction.Edit,
+                            selectedPipelineEntity: selectedPipelineEntity
                           }),
                           title: getString('edit')
                         }
@@ -810,11 +814,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                   ? [
                       {
                         range: codeLensRange,
-                        id: `add-${selectedEntity}-entity-${fromLine}`,
+                        id: `add-${selectedPipelineEntity}-entity-${fromLine}`,
                         command: {
                           id: generateCallbackForEditorActionClick({
                             ...commonArgs,
-                            editorActionToPerform: EditorAction.Add
+                            editorActionToPerform: EditorAction.Add,
+                            selectedPipelineEntity: selectedPipelineEntity
                           }),
                           title: getString('add')
                         }
@@ -890,18 +895,20 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
     },
-    [pipelineEntityType, editorRef.current?.editor]
+    [editorRef.current?.editor]
   )
 
   const obtainYAMLForEditorActionClick = useCallback(
     ({
       cursorPosition,
       latestYAML,
-      editorActionPerformed
+      editorActionPerformed,
+      selectedPipelineEntity
     }: {
       cursorPosition: Position
       latestYAML: string
       editorActionPerformed: EditorAction
+      selectedPipelineEntity: PipelineEntity
     }): number => {
       if (cursorPosition && editorRef.current?.editor && editorActionPerformed) {
         try {
@@ -932,9 +939,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const stepYAMLPath = getStepYAMLPathForStepInsideAStage(closestStageIndex, closestStepIndex)
           const pluginAsStep = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
           setPlugin?.(pluginAsStep)
-          setPipelineEntityType(PipelineEntity.Step) //TODO deduce pipelineEntityType here
           setSelectedEntityFromYAML?.({
-            entityType: PipelineEntity.Step,
+            entityType: selectedPipelineEntity,
             entityAsObj: pluginAsStep,
             editorAction: editorActionPerformed
           })
@@ -973,7 +979,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               fromLine: lineNumber,
               toLineNum: lineNumber,
               cursorPosition: matchingPosition,
-              selectedEntity: entity
+              selectedPipelineEntity: entity
             })
             if (registrationId) {
               if (registrationsForSelectedPipelineEntity) {
@@ -1043,7 +1049,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const { shouldInsertYAML } = pluginMetadata
       const cursorPosition = currentCursorPosition.current
       const stageMatchRegex = PipelineEntityToRegexMapping.get(PipelineEntity.Stage)
-      if (shouldInsertYAML && cursorPosition && editorRef.current?.editor && pipelineEntityType && stageMatchRegex) {
+      if (shouldInsertYAML && cursorPosition && editorRef.current?.editor && stageMatchRegex) {
         let updatedYAML = currentYaml
         try {
           let closestStageIndex = getArrayIndexClosestToCurrentCursor({
@@ -1105,7 +1111,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             isPluginUpdate,
             closestStepIndex: closestStepIndexInCurrentStage,
             startStepIndex: stepCountInPrecedingStage,
-            selectedPipelineEntity: pipelineEntityType
+            selectedPipelineEntity: pluginMetadata.pipelineEntity
           })
         } catch (e) {
           // ignore error
