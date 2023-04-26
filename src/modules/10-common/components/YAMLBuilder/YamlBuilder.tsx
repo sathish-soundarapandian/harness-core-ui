@@ -45,7 +45,8 @@ import {
   Theme,
   EditorAction,
   PipelineEntity,
-  PipelineEntitiesWithCodeLensIntegrationEnabled
+  PipelineEntitiesWithCodeLensIntegrationEnabled,
+  PipelineEntityToEditorActionsMappingForCodelens
 } from '@common/interfaces/YAMLBuilderProps'
 import { PluginAddUpdateMetadata, PluginType } from '@common/interfaces/YAMLBuilderProps'
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
@@ -754,12 +755,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     ({
       fromLine,
       toLineNum,
-      cursorPosition
+      cursorPosition,
+      selectedEntity
     }: {
       fromLine: number
       toLineNum: number
       cursorPosition: Position
-    }): IDisposable => {
+      selectedEntity: PipelineEntity
+    }): IDisposable | undefined => {
       const commonArgs = { fromLine, toLineNum, cursorPosition }
       const codeLensRange = {
         startLineNumber: fromLine,
@@ -767,49 +770,70 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         endLineNumber: toLineNum,
         endColumn: 1
       }
-      const registrationId: IDisposable = monaco.languages.registerCodeLensProvider('yaml', {
-        provideCodeLenses: function (_model: unknown, _token: unknown) {
-          return {
-            lenses: [
-              {
-                range: codeLensRange,
-                id: 'manage-entity',
-                command: {
-                  id: generateCallbackForEditorActionClick({
-                    ...commonArgs,
-                    editorActionToPerform: EditorAction.Manage
-                  }),
-                  title: getString('common.manage')
+      const editorActionsForSelectedEntity = PipelineEntityToEditorActionsMappingForCodelens.get(selectedEntity)
+      if (editorActionsForSelectedEntity) {
+        const registrationId: IDisposable = monaco.languages.registerCodeLensProvider('yaml', {
+          provideCodeLenses: function (_model: unknown, _token: unknown) {
+            return {
+              lenses: [
+                ...(editorActionsForSelectedEntity.includes(EditorAction.Manage)
+                  ? [
+                      {
+                        range: codeLensRange,
+                        id: `manage-${selectedEntity}-entity-${fromLine}`,
+                        command: {
+                          id: generateCallbackForEditorActionClick({
+                            ...commonArgs,
+                            editorActionToPerform: EditorAction.Manage
+                          }),
+                          title: getString('common.manage')
+                        }
+                      }
+                    ]
+                  : []),
+                ...(editorActionsForSelectedEntity.includes(EditorAction.Edit)
+                  ? [
+                      {
+                        range: codeLensRange,
+                        id: `edit-${selectedEntity}-entity-${fromLine}`,
+                        command: {
+                          id: generateCallbackForEditorActionClick({
+                            ...commonArgs,
+                            editorActionToPerform: EditorAction.Edit
+                          }),
+                          title: getString('edit')
+                        }
+                      }
+                    ]
+                  : []),
+                ...(editorActionsForSelectedEntity.includes(EditorAction.Add)
+                  ? [
+                      {
+                        range: codeLensRange,
+                        id: `add-${selectedEntity}-entity-${fromLine}`,
+                        command: {
+                          id: generateCallbackForEditorActionClick({
+                            ...commonArgs,
+                            editorActionToPerform: EditorAction.Add
+                          }),
+                          title: getString('add')
+                        }
+                      }
+                    ]
+                  : [])
+              ],
+              dispose: () => {
+                try {
+                  registrationId.dispose()
+                } catch (e) {
+                  // ignore error
                 }
-              },
-              {
-                range: codeLensRange,
-                id: 'edit-entity',
-                command: {
-                  id: generateCallbackForEditorActionClick({ ...commonArgs, editorActionToPerform: EditorAction.Edit }),
-                  title: getString('edit')
-                }
-              },
-              {
-                range: codeLensRange,
-                id: 'add-entity',
-                command: {
-                  id: generateCallbackForEditorActionClick({ ...commonArgs, editorActionToPerform: EditorAction.Add }),
-                  title: getString('add')
-                }
-              }
-            ],
-            dispose: () => {
-              try {
-                registrationId.dispose()
-              } catch (e) {
-                // ignore error
               }
             }
           }
-        }
-      })
-      return registrationId
+        })
+        return registrationId
+      }
     },
     [editorRef.current?.editor, currentYaml]
   )
@@ -948,16 +972,19 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             const registrationId = addCodeLensRegistration({
               fromLine: lineNumber,
               toLineNum: lineNumber,
-              cursorPosition: matchingPosition
+              cursorPosition: matchingPosition,
+              selectedEntity: entity
             })
-            if (registrationsForSelectedPipelineEntity) {
-              registrationsForSelectedPipelineEntity.set(lineNumber, registrationId)
-              codeLensRegistrations.current.set(PipelineEntity.Step, registrationsForSelectedPipelineEntity)
-            } else {
-              codeLensRegistrations.current.set(
-                PipelineEntity.Step,
-                new Map<number, IDisposable>([[lineNumber, registrationId]])
-              )
+            if (registrationId) {
+              if (registrationsForSelectedPipelineEntity) {
+                registrationsForSelectedPipelineEntity.set(lineNumber, registrationId)
+                codeLensRegistrations.current.set(PipelineEntity.Step, registrationsForSelectedPipelineEntity)
+              } else {
+                codeLensRegistrations.current.set(
+                  PipelineEntity.Step,
+                  new Map<number, IDisposable>([[lineNumber, registrationId]])
+                )
+              }
             }
           })
         }

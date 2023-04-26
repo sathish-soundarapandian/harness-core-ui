@@ -136,3 +136,9 @@ export const PipelineEntitiesWithCodeLensIntegrationEnabled = [
   PipelineEntity.Step,
   PipelineEntity.Input
 ]
+
+export const PipelineEntityToEditorActionsMappingForCodelens = new Map<PipelineEntity, EditorAction[]>([
+  [PipelineEntity.Stage, [EditorAction.Add, EditorAction.Edit]],
+  [PipelineEntity.Step, [EditorAction.Add, EditorAction.Edit]],
+  [PipelineEntity.Input, [EditorAction.Manage, EditorAction.Edit]]
+])
