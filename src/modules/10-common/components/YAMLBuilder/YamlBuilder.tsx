@@ -758,7 +758,19 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               const numberOfLinesInSelection = yamlStringify(selectedPipelineEntityYAMLAsJSON).split('\n').length
               if (numberOfLinesInSelection) {
                 currentCursorPosition.current = cursorPosition
-                highlightInsertedYAML(fromLine, toLineNum + numberOfLinesInSelection - 1)
+                /* yamlStringify converts an object to json by adding a "---" at the top and a trailing newline character, hence we need to subtract to 2 to get actual lines in the yaml*/
+                /*
+                ---
+                name: Dockerize
+                type: plugin
+                spec:
+                  uses: docker
+                  with:
+                    repo: harness/hello-world
+                    connector: account.dockerhub
+
+                */
+                highlightInsertedYAML(fromLine, toLineNum + numberOfLinesInSelection - 2)
               }
               setPlugin?.(selectedPipelineEntityYAMLAsJSON)
               setSelectedEntityFromYAML?.({
@@ -1027,7 +1039,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const pluginInputDecoration: editor.IModelDeltaDecoration = {
         range: new monaco.Range(fromLine, 1, toLineNum, 1),
         options: {
-          isWholeLine: false,
+          isWholeLine: true,
           className: css.pluginDecorator
         }
       }
