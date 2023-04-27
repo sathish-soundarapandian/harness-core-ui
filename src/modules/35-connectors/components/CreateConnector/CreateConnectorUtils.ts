@@ -100,7 +100,6 @@ export const handleOAuthEventProcessing = ({
   onSuccessCallback: (response: OAuthEventProcessingResponse) => void
 }): OAuthEventProcessingResponse | undefined => {
   if (oAuthStatus === Status.IN_PROGRESS) {
-    console.log('____Oauth event', event)
     // if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
     //   return
     // }

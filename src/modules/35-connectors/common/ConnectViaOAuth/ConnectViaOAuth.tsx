@@ -35,6 +35,7 @@ export interface ConnectViaOAuthProps {
   orgIdentifier?: string
   projectIdentifier?: string
   isPrivateSecret?: boolean
+  hideOauthLinkButton?: boolean
 }
 
 export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
@@ -51,7 +52,8 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     orgIdentifier,
     projectIdentifier,
     isPrivateSecret,
-    label
+    label,
+    hideOauthLinkButton
   } = props
   const { getString } = useStrings()
 
@@ -175,18 +177,23 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     <>
       <Layout.Vertical spacing="xlarge">
         {renderView()}
-        <Button
-          intent="primary"
-          text={
-            label ||
-            getString(isExistingConnectionHealthy ? 'connectors.relinkToGitProvider' : 'connectors.linkToGitProvider', {
-              gitProvider: getRelinkLabel()
-            })
-          }
-          onClick={handleOAuthLinking}
-          variation={ButtonVariation.PRIMARY}
-          className={css.linkToGitBtn}
-        />
+        {!hideOauthLinkButton && (
+          <Button
+            intent="primary"
+            text={
+              label ||
+              getString(
+                isExistingConnectionHealthy ? 'connectors.relinkToGitProvider' : 'connectors.linkToGitProvider',
+                {
+                  gitProvider: getRelinkLabel()
+                }
+              )
+            }
+            onClick={handleOAuthLinking}
+            variation={ButtonVariation.PRIMARY}
+            className={css.linkToGitBtn}
+          />
+        )}
       </Layout.Vertical>
     </>
   )

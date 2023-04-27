@@ -7,36 +7,45 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Text, Layout, DropDown } from '@harness/uicore'
+import { Text, Layout, DropDown, getErrorInfoFromErrorObject, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { ConnectorInfoDTO, useSaveUserSourceCodeManager } from 'services/cd-ng'
+import { useStrings } from 'framework/strings'
+import { ConnectorInfoDTO, useSaveUserSourceCodeManager, UserSourceCodeManagerRequestDTO } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ConnectViaOAuth } from '@connectors/common/ConnectViaOAuth/ConnectViaOAuth'
-import { Connectors } from '@connectors/constants'
 import { Status } from '@common/utils/Constants'
 import {
   OAuthEventProcessingResponse,
   handleOAuthEventProcessing
 } from '@connectors/components/CreateConnector/CreateConnectorUtils'
+import { SourceCodeTypes } from '@user-profile/utils/utils'
 import css from './UserSummary.module.scss'
-
-const supportedSCMs = [
-  { label: 'Github', value: Connectors.GITHUB },
-  { label: 'Gitlab', value: Connectors.GITLAB },
-  { label: 'BitBucket', value: Connectors.BITBUCKET },
-  { label: 'Azure repository', value: Connectors.AZURE_REPO }
-]
 
 const AddSCMOAuth: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const { currentUserInfo } = useAppStore()
+  const { getString } = useStrings()
+  const { showSuccess, showError } = useToaster()
   const [oAuthStatus, setOAuthStatus] = useState<Status>(Status.TO_DO)
-  const [isAccessRevoked, setIsAccessRevoked] = useState<boolean>(false)
   const oAuthSecretIntercepted = useRef<boolean>(false)
   const [forceFailOAuthTimeoutId, setForceFailOAuthTimeoutId] = useState<NodeJS.Timeout>()
   const [oAuthResponse, setOAuthResponse] = useState<OAuthEventProcessingResponse>()
-  const [gitProviderType, setGitProviderType] = useState<ConnectorInfoDTO['type']>()
+  const [gitProviderType, setGitProviderType] = useState<UserSourceCodeManagerRequestDTO['type']>()
+
+  const supportedSCMs = [
+    {
+      label: 'Github',
+      value: SourceCodeTypes.GITHUB
+    },
+    {
+      label: 'Bitbucket',
+      value: SourceCodeTypes.BITBUCKET
+    },
+    { label: 'Gitlab', value: SourceCodeTypes.GITLAB },
+    { label: 'Azure repository', value: SourceCodeTypes.AZURE_REPO },
+    { label: 'AWS code commit', value: SourceCodeTypes.AWS_CODE_COMMIT }
+  ]
 
   const { data, loading, mutate: createUserSCM } = useSaveUserSourceCodeManager({})
 
@@ -47,12 +56,26 @@ const AddSCMOAuth: React.FC = () => {
         oAuthStatus,
         setOAuthStatus,
         oAuthSecretIntercepted,
-        onSuccessCallback: ({ accessTokenRef }: OAuthEventProcessingResponse) => {
-          setOAuthResponse({ accessTokenRef })
+        onSuccessCallback: ({ accessTokenRef, refreshTokenRef }: OAuthEventProcessingResponse) => {
+          setOAuthResponse({ accessTokenRef, refreshTokenRef })
           if (forceFailOAuthTimeoutId) {
             clearTimeout(forceFailOAuthTimeoutId)
-            // createUserSCM({ accountIdentifier: accountId, type: 'GITHUB', userIdentifier: currentUserInfo?.uuid, spec: {} })
           }
+          createUserSCM({
+            accountIdentifier: accountId,
+            type: gitProviderType,
+            userIdentifier: currentUserInfo?.uuid,
+            authentication: {
+              apiAccessDTO: {
+                spec: { tokenRef: accessTokenRef },
+                type: 'OAuth'
+              }
+            }
+          }).catch(error => {
+            setOAuthStatus(Status.TO_DO)
+            setOAuthResponse(undefined)
+            showError(getErrorInfoFromErrorObject(error))
+          })
         }
       })
     },
@@ -77,27 +100,31 @@ const AddSCMOAuth: React.FC = () => {
           className={css.oauthDropDown}
           value={gitProviderType}
           onChange={item => {
-            console.log(item)
-            setGitProviderType(item?.value as ConnectorInfoDTO['type'])
+            setOAuthStatus(Status.TO_DO)
+            setOAuthResponse(undefined)
+            setGitProviderType(item?.value as UserSourceCodeManagerRequestDTO['type'])
           }}
           items={supportedSCMs}
           placeholder={'Select a Git Provider'}
           usePortal={true}
           addClearBtn={true}
+          disabled={loading}
         />
         {gitProviderType && (
           <ConnectViaOAuth
             label={'Connect'}
             isPrivateSecret={true}
-            gitProviderType={gitProviderType}
+            key={gitProviderType}
+            gitProviderType={gitProviderType as ConnectorInfoDTO['type']}
             accountId={accountId}
             status={oAuthStatus}
             setOAuthStatus={setOAuthStatus}
-            isOAuthAccessRevoked={isAccessRevoked}
+            isOAuthAccessRevoked={false}
             isExistingConnectionHealthy={false}
             oAuthSecretIntercepted={oAuthSecretIntercepted}
             forceFailOAuthTimeoutId={forceFailOAuthTimeoutId}
             setForceFailOAuthTimeoutId={setForceFailOAuthTimeoutId}
+            hideOauthLinkButton={oAuthStatus === Status.SUCCESS || oAuthStatus === Status.IN_PROGRESS}
           />
         )}
       </Layout.Horizontal>
