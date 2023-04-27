@@ -3,7 +3,13 @@ import { capitalize, get, isEmpty } from 'lodash-es'
 import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text, Formik } from '@harness/uicore'
 import type { EntitySelectionFromYAML } from '@common/interfaces/YAMLBuilderProps'
-import { EditorAction, PipelineAtomicEntity, PipelineEntity } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
+import {
+  EditorAction,
+  PipelineAtomicEntity,
+  PipelineEntity,
+  PipelineEntityGroupings,
+  PipelineEntityGroupingsToAtomicEntityMapping
+} from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import {
   ConfigOptionsMapWithAdditionalOptions,
   MainConfigOptionsMap,
@@ -193,14 +199,27 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
     return {}
   }, [pipelineEntity, pipelineEntitySubType, entityAsObj])
 
+  const renderAddNewSubTypeView = useCallback((entityType: PipelineEntity): React.ReactElement => {
+    const label = capitalize(
+      PipelineEntityGroupingsToAtomicEntityMapping.get(entityType as PipelineEntityGroupings) || ''
+    )
+    return (
+      <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge' }} spacing="medium">
+        <Button text={`Create an ${label}`} variation={ButtonVariation.PRIMARY} type="submit" rightIcon="plus" />
+        <Button text="Cancel" variation={ButtonVariation.SECONDARY} onClick={() => resetPipelineConfigPanel()} />
+      </Layout.Horizontal>
+    )
+  }, [])
+
   const renderPipelineConfigOptionDetails = useCallback((): React.ReactElement => {
-    const { hasSubTypes, subTypes, nodeView } = pipelineConfigOption?.drillDown || {}
+    const { hasSubTypes, subTypes, nodeView, canAddNewSubTypes } = pipelineConfigOption?.drillDown || {}
     const formInitialValues = getFormikInitialValues()
     return pipelineEntity && hasSubTypes && subTypes && !isEmpty(subTypes) ? (
-      <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }}>
+      <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }} spacing="medium">
         {subTypes.map((subOption: PipelineConfigOptionInterface) =>
           renderPipelineConfigOption(pipelineEntity, subOption)
         )}
+        {canAddNewSubTypes ? renderAddNewSubTypeView(pipelineEntity) : null}
       </Layout.Vertical>
     ) : nodeView ? (
       <Formik<any>

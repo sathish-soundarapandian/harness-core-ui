@@ -14,7 +14,8 @@ export interface PipelineConfigOptionInterface {
   drillDown: {
     hasSubTypes: boolean
     subTypes?: (PipelineConfigOptionInterface & { type: PipelineEntitySubType | PipelineAtomicEntity })[]
-    nodeView?: React.ReactElement
+    nodeView?: React.ReactElement // if a node doesn't have subTypes, then it should necessarily have a nodeView
+    canAddNewSubTypes?: boolean
   }
 }
 
@@ -216,7 +217,8 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
             iconProps: { name: 'plugin-inputs' },
             type: PipelineAtomicEntity.Input
           }
-        ]
+        ],
+        canAddNewSubTypes: true
       }
     }
   ]

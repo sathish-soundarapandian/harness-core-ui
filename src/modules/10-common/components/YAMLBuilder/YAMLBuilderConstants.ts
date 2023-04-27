@@ -121,6 +121,12 @@ export const PipelineEntitiesWithCodeLensIntegrationEnabled: PipelineEntity[] = 
   PipelineEntityGroupings.Steps
 ]
 
+export const PipelineEntityGroupingsToAtomicEntityMapping = new Map<PipelineEntityGroupings, PipelineAtomicEntity>([
+  [PipelineEntityGroupings.Inputs, PipelineAtomicEntity.Input],
+  [PipelineEntityGroupings.Stages, PipelineAtomicEntity.Stage],
+  [PipelineEntityGroupings.Steps, PipelineAtomicEntity.Step]
+])
+
 export const PipelineEntityToEditorActionsMappingForCodelens = new Map<PipelineEntity, EditorAction[]>([
   /* Atomic entities */
   [PipelineAtomicEntity.Stage, [EditorAction.Edit]],
