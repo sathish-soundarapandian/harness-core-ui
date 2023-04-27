@@ -90,7 +90,7 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
         iconClassname: css.iconFilled,
         className: css.bottom,
         onClick: (e: React.MouseEvent<Element, MouseEvent>) => {
-          if (!CDS_SUPPORT_TICKET_DEFLECTION) {
+          if (CDS_SUPPORT_TICKET_DEFLECTION) {
             openSubmitTicketModal()
           } else {
             openFileATicket(e, currentUserInfo, setShow)

@@ -14,6 +14,11 @@ import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineCon
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
+jest.mock('@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil', () => ({
+  ...(jest.requireActual('@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil') as any),
+  removeNodeFromPipeline: jest.fn().mockImplementation(() => true)
+}))
+
 const stageTemplate: TemplateSummaryResponse = {
   accountId: 'px7xd_BFRCi-pfWPYXVjvw',
   childType: 'Deployment',
@@ -131,6 +136,6 @@ describe('useStageTemplateAction Test', () => {
     await act(async () => {
       fireEvent.click(removeTemplateBtn)
     })
-    expect(pipelineContextMock.updateStage).toBeCalledWith({ identifier: 's1', name: 's1', type: 'CI' })
+    expect(pipelineContextMock.updatePipeline).toHaveBeenCalled()
   })
 })

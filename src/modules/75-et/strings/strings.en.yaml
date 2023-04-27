@@ -3,5 +3,5 @@ continuous: '{{$.common.purpose.cet.continuous}}'
 nav:
   settings: 'Error Tacking Settings'
 homepage:
-  slogan: 'This is the homepage of Continuous Error Tracking module'
-  learnMore: Learn more about Error Tracking
+  slogan: Enables you to identify, triage, and resolve errors in your service. This helps to implement rapid code changes by ensuring that the code is always in a deployable state.
+  learnMore: Learn more about Continuous Error Tracking

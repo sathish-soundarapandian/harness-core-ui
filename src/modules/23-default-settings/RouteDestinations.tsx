@@ -7,6 +7,7 @@
 
 import React from 'react'
 import * as Yup from 'yup'
+import { Color } from '@harness/design-system'
 import { RouteWithLayout } from '@common/router'
 import SettingsList from '@default-settings/pages/SettingsList'
 import routes from '@common/RouteDefinitions'
@@ -47,7 +48,8 @@ DefaultSettingsFactory.registerCategory('CONNECTORS', {
 })
 
 DefaultSettingsFactory.registerCategory('GIT_EXPERIENCE', {
-  icon: 'cog',
+  icon: 'git-experience-setting',
+  iconProps: { color: Color.GREY_900, size: 16 },
   label: 'authSettings.cdCommunityPlan.communityPlanStrings.item5',
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
 })

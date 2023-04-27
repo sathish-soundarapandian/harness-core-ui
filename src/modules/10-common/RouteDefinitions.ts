@@ -2138,6 +2138,7 @@ const routes = {
   // Error Tracking
   toET: withAccountId(() => '/et'),
   toETHome: withAccountId(() => '/et/home'),
+  toETHomeTrial: withAccountId(() => '/et/home/trial'),
   toETEventsSummary: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
       `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/et/eventsummary`

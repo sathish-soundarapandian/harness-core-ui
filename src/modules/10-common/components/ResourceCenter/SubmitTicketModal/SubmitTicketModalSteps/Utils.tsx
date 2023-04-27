@@ -105,3 +105,40 @@ export const priorityItems = [
   { label: 'Normal', value: PriorityType.NORMAL },
   { label: 'Low', value: PriorityType.LOW }
 ]
+
+//source :- https://developer.mozilla.org/en-US/docs/Web/API/Window/navigator
+export function getBrowserName(userAgent: string): string {
+  // The order matters here, and this may report false positives for unlisted browsers.
+
+  if (userAgent.includes('Firefox')) {
+    return 'Mozilla Firefox'
+  } else if (userAgent.includes('SamsungBrowser')) {
+    return 'Samsung Internet'
+  } else if (userAgent.includes('Opera') || userAgent.includes('OPR')) {
+    return 'Opera'
+  } else if (userAgent.includes('Edge')) {
+    return 'Microsoft Edge (Legacy)'
+  } else if (userAgent.includes('Edg')) {
+    return 'Microsoft Edge (Chromium)'
+  } else if (userAgent.includes('Chrome')) {
+    return 'Google Chrome or Chromium'
+  } else if (userAgent.includes('Safari')) {
+    return 'Apple Safari'
+  } else {
+    return 'unknown'
+  }
+}
+export function getOsVersion(): string {
+  const os = navigator.userAgent
+  let finalOs = ''
+  if (os.search('Windows') !== -1) {
+    finalOs = 'Windows'
+  } else if (os.search('Mac') !== -1) {
+    finalOs = 'MacOS'
+  } else if (os.search('X11') !== -1 && !(os.search('Linux') !== -1)) {
+    finalOs = 'UNIX'
+  } else if (os.search('Linux') !== -1 && os.search('X11') !== -1) {
+    finalOs = 'Linux'
+  }
+  return finalOs
+}

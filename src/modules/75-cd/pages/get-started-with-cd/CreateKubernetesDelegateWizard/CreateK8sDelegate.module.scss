@@ -355,6 +355,11 @@
   border-bottom: 1px solid var(--grey-200);
 }
 
+.marginBottomClass {
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--grey-200);
+}
+
 .createPipelineBtn {
   margin-left: 20px !important;
 }
@@ -393,3 +398,53 @@
 //  border: 1px solid red;
 //  padding: 20px;
 //}
+.betterHelp {
+  .videoSection {
+    justify-content: space-between;
+  }
+  .textLinks {
+    margin-bottom: var(--spacing-xlarge);
+  }
+  .delegateInfo {
+    gap: var(--spacing-small);
+  }
+  .delegateDiagram {
+    padding: var(--spacing-medium);
+    cursor: pointer;
+    width: 375px;
+    height: 250px;
+  }
+  .expandIcon {
+    position: relative;
+    width: 40px;
+    right: 0;
+    left: 90%;
+    top: -50px;
+    cursor: pointer;
+  }
+  .videoframe {
+    cursor: pointer;
+    iframe {
+      width: 375px;
+      height: 150px;
+    }
+  }
+}
+
+.diagramdialog {
+  padding: 0 var(--spacing-xlarge);
+  border-radius: 11px;
+  position: relative;
+  padding-bottom: var(--spacing-xlarge);
+  width: 1000px;
+  &.videoDialog {
+    width: auto;
+  }
+  .closeDialog {
+    padding: var(--spacing-small);
+    display: flex;
+    cursor: pointer;
+    justify-content: flex-end;
+    font-weight: bold !important;
+  }
+}

@@ -917,9 +917,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         pluginType === PluginType.Script
           ? sanitizedPluginData
           : {
-              ...(!isEmpty(sanitizedPluginData) ? { with: sanitizedPluginData } : {}),
-              ...(pluginUses ? { uses: pluginUses } : {}),
-              ...(pluginImage ? { image: pluginImage } : {})
+              ...(!isEmpty(sanitizedPluginData) && { with: sanitizedPluginData }),
+              ...(pluginUses && { uses: pluginUses }),
+              ...(pluginImage && { image: pluginImage })
             },
       type: pluginType
     }

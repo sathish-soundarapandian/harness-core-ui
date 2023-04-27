@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { defaultTo, isEmpty, isNil, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
 import { v4 as uuid } from 'uuid'
@@ -26,6 +26,8 @@ import { useStrings } from 'framework/strings'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
 
 import ClusterEntitiesList from '../ClusterEntitiesList/ClusterEntitiesList'
 import type { DeployEnvironmentEntityFormState } from '../types'
@@ -73,6 +75,13 @@ export default function DeployCluster({
   // State
   const [selectedClusters, setSelectedClusters] = useState(getAllFixedClusters(initialValues, environmentIdentifier))
 
+  let envToFetchClusters = environmentIdentifier
+
+  if (get(values, 'category') === 'group') {
+    const scope = getScopeFromValue(get(values, 'environmentGroup') as string)
+    envToFetchClusters = scope !== Scope.PROJECT ? `${scope}.${environmentIdentifier}` : environmentIdentifier
+  }
+
   // Constants
   const isFixed =
     getMultiTypeFromValue(isMultiCluster ? values.clusters?.[environmentIdentifier] : values.cluster) ===
@@ -80,7 +89,7 @@ export default function DeployCluster({
 
   // API
   const { clustersList, loadingClustersList } = useGetClustersData({
-    environmentIdentifier,
+    environmentIdentifier: envToFetchClusters,
     lazyCluster
   })
 
@@ -88,7 +97,7 @@ export default function DeployCluster({
     /* istanbul ignore else */
     if (!isNil(clustersList)) {
       return clustersList.map(cluster => ({
-        label: cluster.name,
+        label: cluster.name || cluster.clusterRef,
         value: cluster.clusterRef
       }))
     }
@@ -193,10 +202,10 @@ export default function DeployCluster({
             }}
             onChange={items => {
               if (items?.at(0)?.value === 'All') {
-                setFieldValue(`clusters.${environmentIdentifier}`, undefined)
+                setFieldValue(`clusters.['${environmentIdentifier}']`, undefined)
                 setSelectedClusters([])
               } else {
-                setFieldValue(`clusters.${environmentIdentifier}`, items)
+                setFieldValue(`clusters.['${environmentIdentifier}']`, items)
                 setSelectedClusters(getSelectedClustersFromOptions(items))
               }
             }}

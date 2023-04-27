@@ -416,6 +416,15 @@ export const isAzureWebAppOrSshWinrmGenericDeploymentType = (
   return false
 }
 
+export const isSshWinRmGenericDeploymentType = (deploymentType: string, repo: string | undefined): boolean => {
+  if (isSSHWinRMDeploymentType(deploymentType)) {
+    // default repository format should be Generic if none is previously selected
+    return repo ? repo === RepositoryFormatTypes.Generic : true
+  }
+
+  return false
+}
+
 export const isTASDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.TAS
 }

@@ -18,6 +18,7 @@ import type {
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
+import type { CronFormat } from '../views/subviews/CustomTab'
 
 export interface ConnectorRefInterface {
   identifier?: string
@@ -93,6 +94,7 @@ export interface FlatOnEditValuesInterface {
   selectedScheduleTab?: string
   minutes?: string
   expression?: string
+  cronFormat?: CronFormat
   // ARTIFACT/MANIFEST-SPECIFIC
   selectedArtifact?: any
   stageId?: string
@@ -167,6 +169,7 @@ export interface FlatValidScheduleFormikValuesInterface {
   pipelineBranchName?: string
   inputSetRefs?: string[]
   stagesToExecute?: string[]
+  cronFormat?: CronFormat
 }
 
 export interface FlatValidArtifactFormikValuesInterface {

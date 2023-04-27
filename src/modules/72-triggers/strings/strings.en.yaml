@@ -145,3 +145,5 @@ schedulePanel:
   SUN: '{{$.common.schedulePanel.SUN}}'
   expressionBreakdown: '{{$.common.schedulePanel.expressionBreakdown}}'
   cronExpression: '{{$.common.schedulePanel.cronExpression}}'
+  unixExpression: 'UNIX Expression'
+  quartzExpression: 'Quartz Expression'

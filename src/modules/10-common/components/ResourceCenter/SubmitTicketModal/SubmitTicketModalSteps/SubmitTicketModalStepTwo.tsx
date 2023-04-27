@@ -27,7 +27,16 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { DEFAULT_MODULES_ORDER, moduleInfoMap } from '@common/hooks/useNavModuleInfo'
 import { useStrings } from 'framework/strings'
-import { getComponentsFromModule, IssueType, issueTypes, priorityItems, PriorityType, SubmitTicket } from './Utils'
+import {
+  getBrowserName,
+  getComponentsFromModule,
+  getOsVersion,
+  IssueType,
+  issueTypes,
+  priorityItems,
+  PriorityType,
+  SubmitTicket
+} from './Utils'
 import css from './SubmitTicketModalSteps.module.scss'
 
 interface SubmitTicketModalStepTwoProps {
@@ -55,7 +64,8 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
     const formData = new FormData()
     formData.set('message', data.ticketDetails)
     formData.set('url', window.location.href)
-    formData.set('website', window.location.hostname)
+    formData.set('userBrowser', getBrowserName(navigator.userAgent))
+    formData.set('userOS', getOsVersion())
     formData.set('userAgent', navigator.userAgent)
     formData.set('userName', email as string)
     formData.set('accountId', accountId)

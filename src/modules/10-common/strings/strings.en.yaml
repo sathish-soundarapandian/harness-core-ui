@@ -350,6 +350,7 @@ purpose:
   cet:
     continuous: Continuous Error Tracking
     moduleSelectionSubHeading: Identify and fix errors faster with complete visibility into code level data using Harness Continuous Error Tracking.
+trialCommingSoon: Trial - Coming soon
 trialInProgress: Trial in progress
 trialInProgressDescription: A Project contains your pipelines, resources, and team members. Get started by creating your first Project.
 letsGetYouStarted: Let’s get you started

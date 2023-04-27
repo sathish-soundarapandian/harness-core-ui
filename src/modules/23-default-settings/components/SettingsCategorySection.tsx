@@ -157,7 +157,7 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
   if (!settingCategoryHandler) {
     return null
   }
-  const { label, icon } = settingCategoryHandler
+  const { label, icon, iconProps } = settingCategoryHandler
 
   return (
     <Card className={css.summaryCard}>
@@ -199,7 +199,11 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
           }
           id={settingCategory}
           summary={
-            <Text font={{ variation: FontVariation.H5 }} icon={icon} iconProps={{ margin: { right: 'small' } }}>
+            <Text
+              font={{ variation: FontVariation.H5 }}
+              icon={icon}
+              iconProps={{ margin: { right: 'small' }, ...iconProps }}
+            >
               {getString(label)}
             </Text>
           }

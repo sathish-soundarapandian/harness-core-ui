@@ -120,6 +120,7 @@ import {
 import WebhookPipelineInputPanelV1 from './views/V1/WebhookPipelineInputPanelV1'
 import ArtifactConditionsPanel from './views/ArtifactConditionsPanel'
 
+import { CronFormat } from './views/subviews/CustomTab'
 import type {
   ConnectorRefInterface,
   FlatInitialValuesInterface,
@@ -973,7 +974,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           inputSetRefs,
           source: {
             spec: {
-              spec: { expression }
+              spec: { expression, type }
             }
           }
         }
@@ -1014,6 +1015,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         expression,
         pipelineBranchName,
         inputSetRefs,
+        cronFormat: type,
         ...newExpressionBreakdown,
         selectedScheduleTab: scheduleTabsId.CUSTOM // only show CUSTOM on edit
       }
@@ -1150,6 +1152,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       pipeline: pipelineRuntimeInput,
       triggerType: formikValueTriggerType,
       expression,
+      cronFormat,
       pipelineBranchName = getDefaultPipelineReferenceBranch()
     } = val
     const inputSetRefs = get(
@@ -1179,6 +1182,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         spec: {
           type: scheduledTypes.CRON,
           spec: {
+            type: cronFormat,
             expression
           }
         }
@@ -1448,6 +1452,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         resolvedPipeline: resolvedMergedPipeline,
         stagesToExecute: newPipeline?.stagesToExecute,
         pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType) || branch,
+        cronFormat: CronFormat.UNIX,
         ...getDefaultExpressionBreakdownValues(scheduleTabsId.MINUTES)
       }
     } else if (isArtifactOrManifestTrigger(triggerType)) {

@@ -50,6 +50,7 @@ import {
   isAzureWebAppGenericDeploymentType,
   isCustomDTGenericDeploymentType,
   isServerlessDeploymentType,
+  isSshWinRmGenericDeploymentType,
   isTasGenericDeploymentType,
   RepositoryFormatTypes,
   ServiceDeploymentType
@@ -262,10 +263,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       : (get(selectedStageSpec, 'serviceConfig.serviceDefinition.type') as ServiceDeploymentType)
   }, [path, props.formik?.values, props.stageIdentifier])
 
-  const isServerlessOrSshOrWinRmSelected =
-    isServerlessDeploymentType(selectedDeploymentType) ||
-    selectedDeploymentType === 'WinRm' ||
-    selectedDeploymentType === 'Ssh'
+  const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
 
   const [isAzureWebAppGenericSelected, setIsAzureWebAppGenericSelected] = useState(
     repoFormat ? isAzureWebAppGenericDeploymentType(selectedDeploymentType, repoFormat) : false
@@ -279,13 +277,38 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     repoFormat ? isCustomDTGenericDeploymentType(selectedDeploymentType, repoFormat) : false
   )
 
+  const [isSshOrWinRmGenericSelected, setIsSshOrWinRmGenericSelected] = useState(
+    repoFormat ? isSshWinRmGenericDeploymentType(selectedDeploymentType, repoFormat) : false
+  )
+
   const [isGenericArtifactory, setIsGenericArtifactory] = useState(
-    isServerlessOrSshOrWinRmSelected ||
+    isServerlessDeploymentTypeSelected ||
+      isSshOrWinRmGenericSelected ||
       isAzureWebAppGenericSelected ||
       isCustomDeploymentGenericSelected ||
       isTasGenericSelected ||
       repoFormat === RepositoryFormatTypes.Generic
   )
+
+  useEffect(() => {
+    let serviceRepoFormat
+    /* istanbul ignore else */
+    if (service) {
+      const parsedService = service?.data?.yaml && parse(service?.data?.yaml)
+      // to be refactored for some fields once generic dependency is resolved via V2
+      const artifactsInfo = get(parsedService, `service.serviceDefinition.spec.artifacts`) as ArtifactListConfig
+      artifactsInfo?.primary?.sources?.forEach(artifactInfo => {
+        if (artifactInfo?.identifier === (artifact as ArtifactSource)?.identifier) {
+          serviceRepoFormat = artifactInfo?.spec?.repositoryFormat
+          setRepoFormat(serviceRepoFormat)
+        }
+      })
+    }
+
+    setIsSshOrWinRmGenericSelected(
+      serviceRepoFormat ? isSshWinRmGenericDeploymentType(selectedDeploymentType, serviceRepoFormat) : false
+    )
+  }, [service, artifact, selectedDeploymentType])
 
   useEffect(() => {
     let serviceRepoFormat
@@ -347,14 +370,16 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
 
   useEffect(() => {
     setIsGenericArtifactory(
-      isServerlessOrSshOrWinRmSelected ||
+      isServerlessDeploymentTypeSelected ||
+        isSshOrWinRmGenericSelected ||
         isAzureWebAppGenericSelected ||
         isCustomDeploymentGenericSelected ||
         isTasGenericSelected ||
         repoFormat === RepositoryFormatTypes.Generic
     )
   }, [
-    isServerlessOrSshOrWinRmSelected,
+    isServerlessDeploymentTypeSelected,
+    isSshOrWinRmGenericSelected,
     isAzureWebAppGenericSelected,
     isCustomDeploymentGenericSelected,
     isTasGenericSelected,

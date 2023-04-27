@@ -311,6 +311,7 @@ export function MultiEnvironmentsInputSetForm({
                           readonly={readonly}
                           customStepProps={{
                             environmentIdentifier: environment.environmentRef,
+                            scopePrefix,
                             isMultipleCluster: true,
                             deployToAllClusters: environmentInDeploymentStage?.deployToAll,
                             showEnvironmentsSelectionInputField

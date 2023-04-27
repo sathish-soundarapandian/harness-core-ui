@@ -43,8 +43,8 @@ import {
   newEnvironmentState
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import InfoContainer from '../InfoContainer/InfoContainer'
 import { CreateK8sDelegateV2 } from '../CreateKubernetesDelegateWizard/CreateK8sDelegateV2'
+import ConnectWithDelegate from './ConnectWithDelegate'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 import moduleCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
@@ -389,9 +389,10 @@ const DelegateSelectorWizardRef = (
               {getString('cd.getStartedWithCD.connectHarnessEnv')}
               <HarnessDocTooltip tooltipId="cdOnboardingEnvironment" useStandAlone={true} />
             </Text>
-            <InfoContainer label="cd.getStartedWithCD.delegateDescription" />
 
-            <div className={css.marginTopClass} />
+            <div className={css.marginBottomClass} />
+            <ConnectWithDelegate trackEvent={trackEvent} />
+            {/* <InfoContainer label="cd.getStartedWithCD.delegateDescription" /> */}
           </Container>
           <Layout.Vertical>
             <div className={css.marginTop} />

@@ -69,6 +69,7 @@ import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/util
 import TabWizard from '@triggers/components/TabWizard/TabWizard'
 
 import {
+  CronFormat,
   getBreakdownValues,
   getDefaultExpressionBreakdownValues,
   resetScheduleObject,
@@ -323,6 +324,7 @@ export default function ScheduledTriggerWizard(
       pipeline: newPipeline,
       originalPipeline,
       resolvedPipeline: resolvedMergedPipeline,
+      cronFormat: CronFormat.UNIX,
       pipelineBranchName: isNewGitSyncRemotePipeline ? branch : '',
       ...getDefaultExpressionBreakdownValues(scheduleTabsId.MINUTES)
     }
@@ -477,7 +479,7 @@ export default function ScheduledTriggerWizard(
           inputSetRefs,
           source: {
             spec: {
-              spec: { expression }
+              spec: { expression, type }
             }
           }
         }
@@ -517,6 +519,7 @@ export default function ScheduledTriggerWizard(
         expression,
         pipelineBranchName,
         inputSetRefs,
+        cronFormat: type,
         ...newExpressionBreakdown,
         selectedScheduleTab: scheduleTabsId.CUSTOM // only show CUSTOM on edit
       }
@@ -554,6 +557,7 @@ export default function ScheduledTriggerWizard(
       pipeline: pipelineRuntimeInput,
       triggerType: formikValueTriggerType,
       expression,
+      cronFormat: type,
       pipelineBranchName = ''
     } = val
 
@@ -581,7 +585,8 @@ export default function ScheduledTriggerWizard(
         spec: {
           type: scheduledTypes.CRON,
           spec: {
-            expression
+            expression,
+            type
           }
         }
       },
