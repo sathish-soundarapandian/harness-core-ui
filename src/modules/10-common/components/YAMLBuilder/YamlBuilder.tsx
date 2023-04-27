@@ -721,7 +721,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       case PipelineAtomicEntity.Step:
         return obtainStepYAMLForEditorActionClick
       case PipelineEntityGroupings.Inputs:
-        return obtainInputYAMLForEditorActionClick
+        return obtainYAMLForEditorActionClickOnInputs
+      case PipelineEntityGroupings.Stages:
+        return obtainYAMLForEditorActionClickOnStages
       default:
         return noop
     }
@@ -934,11 +936,25 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor]
   )
 
-  const obtainInputYAMLForEditorActionClick = useCallback(
+  const obtainYAMLForEditorActionClickOnInputs = useCallback(
     ({ latestYAML }: { latestYAML: string }): Record<string, any> => {
       if (editorRef.current?.editor) {
         try {
           return { inputs: get(parse(latestYAML), 'inputs') }
+        } catch (e) {
+          // ignore error
+        }
+      }
+      return {}
+    },
+    []
+  )
+
+  const obtainYAMLForEditorActionClickOnStages = useCallback(
+    ({ latestYAML }: { latestYAML: string }): Record<string, any> => {
+      if (editorRef.current?.editor) {
+        try {
+          return { stages: get(parse(latestYAML), 'stages') }
         } catch (e) {
           // ignore error
         }

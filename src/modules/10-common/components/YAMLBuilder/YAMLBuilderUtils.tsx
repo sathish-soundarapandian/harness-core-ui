@@ -182,6 +182,11 @@ export const getMatchingPositionsForPipelineEntity = (
         editor,
         PipelineEntityToRegexMapping.get(PipelineEntityGroupings.Inputs) || ''
       )
+    case PipelineEntityGroupings.Stages:
+      return findPositionsForMatchingKeys(
+        editor,
+        PipelineEntityToRegexMapping.get(PipelineEntityGroupings.Stages) || ''
+      )
     default:
       return []
   }

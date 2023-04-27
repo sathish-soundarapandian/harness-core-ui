@@ -51,7 +51,11 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
       if (configOptionForEntityType) {
         setPipelineEntity(entityType)
         setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)
-        if (editorAction !== EditorAction.Manage && configOptionForEntityType.drillDown.hasSubTypes) {
+        if (
+          editorAction &&
+          ![EditorAction.Manage, EditorAction.Add].includes(editorAction) &&
+          configOptionForEntityType.drillDown.hasSubTypes
+        ) {
           const matchingSubTypeConfigOption = configOptionForEntityType.drillDown.subTypes?.find(
             (
               option: PipelineConfigOptionInterface & {

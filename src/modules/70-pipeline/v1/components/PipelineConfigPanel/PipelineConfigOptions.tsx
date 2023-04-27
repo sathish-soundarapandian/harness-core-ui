@@ -32,7 +32,7 @@ export const enum Step {
 
 export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionInterface>([
   [
-    PipelineAtomicEntity.Stage,
+    PipelineEntityGroupings.Stages,
     {
       label: 'Stages',
       iconProps: { name: 'add-stage', size: 20 },
