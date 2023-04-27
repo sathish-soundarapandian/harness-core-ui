@@ -77,7 +77,7 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
     }
   ],
   [
-    PipelineAtomicEntity.Step,
+    PipelineEntityGroupings.Steps,
     {
       label: 'Steps',
       iconProps: { name: 'plugin-ci-step', size: 20 },

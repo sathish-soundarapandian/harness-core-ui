@@ -718,12 +718,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const getOnClickHandlerForEntityType = useCallback((selectedPipelineEntity: PipelineEntity): Function => {
     switch (selectedPipelineEntity) {
+      /* Atomic entities */
       case PipelineAtomicEntity.Step:
         return obtainStepYAMLForEditorActionClick
+
+      /* Entity groupings */
       case PipelineEntityGroupings.Inputs:
         return obtainYAMLForEditorActionClickOnInputs
       case PipelineEntityGroupings.Stages:
         return obtainYAMLForEditorActionClickOnStages
+      case PipelineEntityGroupings.Steps:
+        return obtainYAMLForEditorActionClickOnSteps
       default:
         return noop
     }
@@ -994,6 +999,30 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           })
           const stepYAMLPath = getStepYAMLPathForStepInsideAStage(closestStageIndex, closestStepIndex)
           return get(currentYAMLAsJSON, stepYAMLPath)
+        } catch (e) {
+          // ignore error
+        }
+      }
+      return {}
+    },
+    [editorRef.current?.editor]
+  )
+
+  const obtainYAMLForEditorActionClickOnSteps = useCallback(
+    ({ cursorPosition, latestYAML }: { cursorPosition: Position; latestYAML: string }): Record<string, any> => {
+      if (cursorPosition && editorRef.current?.editor) {
+        try {
+          const currentYAMLAsJSON = parse(latestYAML)
+          const closestStageIndex = getArrayIndexClosestToCurrentCursor({
+            editor: editorRef.current.editor,
+            sourcePosition: cursorPosition,
+            searchToken: PipelineEntityToRegexMapping.get(PipelineAtomicEntity.Stage) || ''
+          })
+          const stageStepsForTheClosestIndex = extractStepsFromStage(
+            currentYAMLAsJSON,
+            getStageYAMLPathForStageIndex(closestStageIndex)
+          ) as unknown[]
+          return { steps: stageStepsForTheClosestIndex }
         } catch (e) {
           // ignore error
         }

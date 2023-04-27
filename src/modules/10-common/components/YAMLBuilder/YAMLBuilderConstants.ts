@@ -111,22 +111,34 @@ export const enum PipelineEntityGroupings {
 }
 
 export const PipelineEntitiesWithCodeLensIntegrationEnabled: PipelineEntity[] = [
+  /* Atomic entities */
   PipelineAtomicEntity.Stage,
   PipelineAtomicEntity.Step,
+
+  /* Entity groupings */
   PipelineEntityGroupings.Inputs,
-  PipelineEntityGroupings.Stages
+  PipelineEntityGroupings.Stages,
+  PipelineEntityGroupings.Steps
 ]
 
 export const PipelineEntityToEditorActionsMappingForCodelens = new Map<PipelineEntity, EditorAction[]>([
+  /* Atomic entities */
   [PipelineAtomicEntity.Stage, [EditorAction.Edit]],
   [PipelineAtomicEntity.Step, [EditorAction.Edit]],
+
+  /* Entity groupings */
   [PipelineEntityGroupings.Inputs, [EditorAction.Manage, EditorAction.Add]],
-  [PipelineEntityGroupings.Stages, [EditorAction.Add]]
+  [PipelineEntityGroupings.Stages, [EditorAction.Add]],
+  [PipelineEntityGroupings.Steps, [EditorAction.Add]]
 ])
 
 export const PipelineEntityToRegexMapping = new Map<PipelineEntity, string>([
+  /* Atomic entities */
   [PipelineAtomicEntity.Stage, 'steps:'],
   [PipelineAtomicEntity.Step, '-\\sname:'],
+
+  /* Entity groupings */
   [PipelineEntityGroupings.Inputs, 'inputs:'],
-  [PipelineEntityGroupings.Stages, 'stages:']
+  [PipelineEntityGroupings.Stages, 'stages:'],
+  [PipelineEntityGroupings.Steps, 'steps:']
 ])

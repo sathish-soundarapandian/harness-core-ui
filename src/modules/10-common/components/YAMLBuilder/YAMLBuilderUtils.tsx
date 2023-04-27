@@ -175,8 +175,11 @@ export const getMatchingPositionsForPipelineEntity = (
   selectedPipelineEntity: PipelineEntity
 ): Position[] => {
   switch (selectedPipelineEntity) {
+    /* Atomic entities */
     case PipelineAtomicEntity.Step:
       return getValidStepPositions(editor)
+
+    /* Entity groupings */
     case PipelineEntityGroupings.Inputs:
       return findPositionsForMatchingKeys(
         editor,
@@ -187,6 +190,8 @@ export const getMatchingPositionsForPipelineEntity = (
         editor,
         PipelineEntityToRegexMapping.get(PipelineEntityGroupings.Stages) || ''
       )
+    case PipelineEntityGroupings.Steps:
+      return findPositionsForMatchingKeys(editor, PipelineEntityToRegexMapping.get(PipelineEntityGroupings.Steps) || '')
     default:
       return []
   }
