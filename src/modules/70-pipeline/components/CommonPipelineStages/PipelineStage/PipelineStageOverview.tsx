@@ -12,7 +12,7 @@ import { Formik, FormikProps } from 'formik'
 import { debounce, noop, get } from 'lodash-es'
 import { Accordion, Card, Container, Text, FormikForm, HarnessDocTooltip, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import produce from 'immer'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
@@ -32,7 +32,9 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import routes from '@common/RouteDefinitions'
+import { useGetEntityMetadata } from '@common/hooks/useGetEntityMetadata'
+import { EntityType } from '@common/pages/entityUsage/EntityConstants'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { PipelineStageTabs } from './utils'
 import css from './PipelineStageOverview.module.scss'
 
@@ -53,7 +55,7 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
     updateStage,
     getStageFromPipeline
   } = usePipelineContext()
-  const { accountId, module } = useParams<AccountPathProps & ModulePathParams>()
+  const { accountId } = useParams<AccountPathProps & ModulePathParams>()
   const { stage } = getStageFromPipeline<PipelineStageElementConfig>(selectedStageId || '')
   const { variablesPipeline, metadataMap } = usePipelineVariables()
   const allNGVariables = (stage?.stage?.variables || []) as AllNGVariables[]
@@ -65,6 +67,18 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
   const pipelineIdentifier = get(stage?.stage as PipelineStageElementConfig, 'spec.pipeline', '')
   const projectIdentifier = get(stage?.stage as PipelineStageElementConfig, 'spec.project', '')
   const orgIdentifier = get(stage?.stage as PipelineStageElementConfig, 'spec.org', '')
+
+  const entityData = useGetEntityMetadata({
+    entityInfo: {
+      entityRef: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        identifier: pipelineIdentifier
+      },
+      type: EntityType.Pipelines
+    }
+  })
 
   const updateStageDebounced = useMemo(() => debounce(updateStage, 300), [updateStage])
 
@@ -141,23 +155,22 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
           {getString('common.pipeline')}
         </Text>
         <Card className={css.sectionCard}>
-          <Link
-            to={routes.toPipelineStudio({
-              orgIdentifier,
-              projectIdentifier,
-              pipelineIdentifier,
-              accountId,
-              module
-            })}
-            target="_blank"
+          <a
             className={css.childPipelineDetails}
+            rel="noreferrer"
+            onClick={async e => {
+              e.preventDefault()
+              e.stopPropagation()
+              const targetUrl = await entityData.getEntityURL()
+              window.open(`${windowLocationUrlPartBeforeHash()}#${targetUrl}`, '_blank')
+            }}
           >
             <Icon name="chained-pipeline" color={Color.PRIMARY_7} size={20} margin={{ right: 'xsmall' }} />
             <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
               {`${getString('common.pipeline')}: ${pipelineIdentifier}`}
             </Text>
             <Icon name="launch" color={Color.PRIMARY_7} size={16} margin={{ left: 'small' }} />
-          </Link>
+          </a>
         </Card>
         <Accordion activeId={allNGVariables.length > 0 ? 'advanced' : ''} className={css.accordion}>
           <Accordion.Panel

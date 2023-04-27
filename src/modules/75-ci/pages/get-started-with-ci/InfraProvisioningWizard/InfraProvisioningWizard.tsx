@@ -83,8 +83,7 @@ import {
   ImportPipelineYAMLInterface,
   PipelineConfigurationOption,
   SavePipelineToRemoteInterface,
-  StarterConfigIdToOptionMap,
-  StarterConfigurations
+  StarterConfigIdToOptionMap
 } from './ConfigurePipeline'
 import {
   getPRTriggerActions,
@@ -97,7 +96,8 @@ import {
   addRepositoryInfoToPipeline,
   getGitConnectorRepoBasedOnRepoUrl,
   getCIStarterPipeline,
-  getRemoteInputSetPayload
+  getRemoteInputSetPayload,
+  getPipelinePayloadWithCodebase
 } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -125,7 +125,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const [buttonLabel, setButtonLabel] = useState<string>('')
   const { trackEvent } = useTelemetry()
   const [generatedYAMLAsJSON, setGeneratedYAMLAsJSON] = useState<PipelineConfig>({})
-  const { CIE_HOSTED_VMS, CI_YAML_VERSIONING } = useFeatureFlags()
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const enableSavePipelinetoRemoteOption =
     configuredGitConnector && SupportedGitProvidersForCIOnboarding.includes(configuredGitConnector.type)
   const yamlVersion = useMemo(
@@ -223,21 +223,22 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     yamlVersion
   ])
 
-  const constructPipelinePayloadWithCodebase = React.useCallback(
+  const constructV0PipelinePayloadWithCodebase = React.useCallback(
     (repository: UserRepoResponse): string => {
       const { name: repoName, namespace } = repository
       if (!repoName || !namespace || !configuredGitConnector?.identifier) {
         return ''
       }
       try {
-        const { id, pipelineYaml = '', name = '' } = configurePipelineRef.current?.configuredOption || {}
+        const { id } = configurePipelineRef.current?.configuredOption || {}
         return yamlStringify(
           getPayloadForPipelineCreation({
-            pipelineYaml,
-            pipelineName: name,
+            pipelineYaml: yamlStringify(
+              id && StarterConfigIdToOptionMap[id] === PipelineConfigurationOption.GenerateYAML
+                ? generatedYAMLAsJSON
+                : getPipelinePayloadWithCodebase()
+            ),
             configuredGitConnector,
-            isUsingAStarterPipeline: id ? StarterConfigurations.includes(StarterConfigIdToOptionMap[id]) : false,
-            isUsingHostedVMsInfra: CIE_HOSTED_VMS,
             orgIdentifier,
             projectIdentifier,
             repository,
@@ -249,7 +250,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       }
       return ''
     },
-    [projectIdentifier, orgIdentifier, configuredGitConnector?.identifier, configurePipelineRef]
+    [projectIdentifier, orgIdentifier, configuredGitConnector?.identifier, configurePipelineRef, generatedYAMLAsJSON]
   )
 
   const constructPipelinePayloadWithoutCodebase = React.useCallback((): string => {
@@ -489,7 +490,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                       )
                     })
               )
-            : constructPipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
+            : constructV0PipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
           queryParams: getCreatePipelineQueryParams({
             shouldSavePipelineToGit,
             defaultBranch,

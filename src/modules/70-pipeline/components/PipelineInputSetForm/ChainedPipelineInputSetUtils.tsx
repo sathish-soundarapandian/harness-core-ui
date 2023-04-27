@@ -10,13 +10,15 @@ import { Text, Icon, AllowedTypes } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Classes, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 import type { PipelineStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import routes from '@common/RouteDefinitions'
+import { useGetEntityMetadata } from '@common/hooks/useGetEntityMetadata'
+import { EntityType } from '@common/pages/entityUsage/EntityConstants'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import type { StepViewType } from '../AbstractSteps/Step'
 import css from './PipelineInputSetForm.module.scss'
 
@@ -58,7 +60,18 @@ export function ChainedPipelineInfoPopover(
     {} as ChildPipelineMetadataType
   )
   const { getString } = useStrings()
-  const { accountId, module } = useParams<AccountPathProps & ModulePathParams>()
+  const { accountId } = useParams<AccountPathProps & ModulePathParams>()
+  const entityData = useGetEntityMetadata({
+    entityInfo: {
+      entityRef: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        identifier: pipelineIdentifier
+      },
+      type: EntityType.Pipelines
+    }
+  })
 
   return (
     <Popover
@@ -77,22 +90,21 @@ export function ChainedPipelineInfoPopover(
               {`${parentPipelineName} |`}
             </Text>
           )}
-          <Link
-            to={routes.toPipelineStudio({
-              orgIdentifier,
-              projectIdentifier,
-              pipelineIdentifier,
-              accountId,
-              module
-            })}
-            target="_blank"
+          <a
             className={css.childPipelineLink}
+            rel="noreferrer"
+            onClick={async e => {
+              e.preventDefault()
+              e.stopPropagation()
+              const targetUrl = await entityData.getEntityURL()
+              window.open(`${windowLocationUrlPartBeforeHash()}#${targetUrl}`, '_blank')
+            }}
           >
             <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_5} lineClamp={1}>
               {`${getString('common.pipeline')}: ${pipelineIdentifier}`}
             </Text>
             <Icon name="launch" color={Color.PRIMARY_4} size={14} margin={{ left: 'small' }} />
-          </Link>
+          </a>
         </div>
       }
     >

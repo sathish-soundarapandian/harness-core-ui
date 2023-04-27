@@ -137,12 +137,16 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
     lastObject?: LastRemoteObjectId,
     storeMetadata?: StoreMetadata,
     saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE,
-    saveAsNewVersionOfExistingTemplate?: boolean
+    saveAsNewVersionOfExistingTemplate?: boolean,
+    isGitSyncOrRemoteTemplate?: boolean
   ): Promise<UseSaveSuccessResponse> => {
     if (isEdit) {
       return updateExistingLabel(latestTemplate, comments, updatedGitDetails, lastObject, storeMetadata, saveAsType)
     } else {
-      const isNewTemplateIdentifierCreation = saveAsType !== SaveTemplateAsType.NEW_LABEL_VERSION
+      const isNewTemplateIdentifierCreation =
+        saveAsType !== SaveTemplateAsType.NEW_LABEL_VERSION &&
+        !saveAsNewVersionOfExistingTemplate &&
+        !isGitSyncOrRemoteTemplate
       const response = await createTemplatePromise({
         body: stringifyTemplate(omit(cloneDeep(latestTemplate), 'repo', 'branch')),
         queryParams: {
@@ -150,7 +154,7 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
           projectIdentifier: latestTemplate.projectIdentifier,
           orgIdentifier: latestTemplate.orgIdentifier,
           comments,
-          ...(isNewTemplateIdentifierCreation && !saveAsNewVersionOfExistingTemplate ? { isNewTemplate: true } : {}),
+          ...(isNewTemplateIdentifierCreation ? { isNewTemplate: true } : {}),
           ...(updatedGitDetails ?? {}),
           ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {}),
           ...(updatedGitDetails && updatedGitDetails.isNewBranch
@@ -192,7 +196,10 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
       isEdit,
       omit(updatedGitDetails, 'name', 'identifier'),
       templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId, lastCommitId } : {},
-      storeMetadata
+      storeMetadata,
+      undefined,
+      undefined,
+      true
     )
     return response
   }
@@ -243,8 +250,11 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
       saveAsNewVersionOfExistingTemplate
     } = extraInfo
 
+    const isGitSyncOrRemoteTemplate =
+      (isGitSyncEnabled && !isEmpty(updatedGitDetails)) || storeMetadata?.storeType === StoreType.REMOTE
+
     // if Git sync enabled then display modal
-    if ((isGitSyncEnabled && !isEmpty(updatedGitDetails)) || storeMetadata?.storeType === StoreType.REMOTE) {
+    if (isGitSyncOrRemoteTemplate) {
       openSaveToGitDialog({
         isEditing: defaultTo(isEdit, false),
         disableCreatingNewBranch,
@@ -268,7 +278,8 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
       undefined,
       undefined,
       saveAsType,
-      saveAsNewVersionOfExistingTemplate
+      saveAsNewVersionOfExistingTemplate,
+      isGitSyncOrRemoteTemplate
     )
   }
 
