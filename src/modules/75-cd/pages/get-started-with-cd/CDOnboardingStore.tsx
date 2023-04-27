@@ -70,10 +70,13 @@ export interface CDOnboardingProviderProps {
   serviceIdentifier: string
 }
 
-export function useWizardStepQueryParams() {
+export function useWizardStepQueryParams(): {
+  sectionId: string | null | undefined
+  setWizardStepQueryParamState: (state: WizardStepQueryParams) => void
+} {
   const { sectionId } = useQueryParams<WizardStepQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams<WizardStepQueryParams>()
-  const setWizardStepQueryParamState = (state: WizardStepQueryParams) => {
+  const setWizardStepQueryParamState = (state: WizardStepQueryParams): void => {
     updateQueryParams({ sectionId: state.sectionId }, { skipNulls: true })
   }
 

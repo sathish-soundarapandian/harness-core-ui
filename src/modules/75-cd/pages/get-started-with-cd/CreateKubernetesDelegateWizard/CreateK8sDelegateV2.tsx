@@ -227,9 +227,9 @@ export const CreateK8sDelegateV2 = ({
 
   return (
     <>
-      <Layout.Vertical className={css.marginBottomClass}>
+      <Layout.Vertical>
         <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
-          {getString('delegates.delSetup')}
+          {getString('cd.instructionsDelegate')}
         </Text>
         <ul className={css.progress}>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>

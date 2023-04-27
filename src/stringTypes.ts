@@ -5590,6 +5590,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.clusterspec': string
   'cd.getStartedWithCD.codeRepos': string
   'cd.getStartedWithCD.configureRepo': string
+  'cd.getStartedWithCD.connectDelegateHeader': string
   'cd.getStartedWithCD.connectHarnessEnv': string
   'cd.getStartedWithCD.connectOwnArtifact': string
   'cd.getStartedWithCD.connectTo': string
@@ -5602,10 +5603,14 @@ export interface StringsMap {
   'cd.getStartedWithCD.delegateInfo1': string
   'cd.getStartedWithCD.delegateInfo2': string
   'cd.getStartedWithCD.delegateInstalled': string
+  'cd.getStartedWithCD.delegateIntroduction': string
   'cd.getStartedWithCD.delegateNotConnected': string
   'cd.getStartedWithCD.delegateRequiredWarning': string
   'cd.getStartedWithCD.delegateRunAs': string
+  'cd.getStartedWithCD.delegateSecInfo': string
+  'cd.getStartedWithCD.delegateSecInfoMore': string
   'cd.getStartedWithCD.delegateSuccess': string
+  'cd.getStartedWithCD.delegateWorksInfo': string
   'cd.getStartedWithCD.deployToGitops': string
   'cd.getStartedWithCD.deploymentType': string
   'cd.getStartedWithCD.destinationDetails': string
@@ -5643,13 +5648,18 @@ export interface StringsMap {
   'cd.getStartedWithCD.healthStatus.unknown': string
   'cd.getStartedWithCD.healthStatusLabel': string
   'cd.getStartedWithCD.helm': string
+  'cd.getStartedWithCD.helmRequired': string
   'cd.getStartedWithCD.helpAndTroubleshoot': string
+  'cd.getStartedWithCD.helpInstallSteps': string
   'cd.getStartedWithCD.hideDelegateDetails': string
   'cd.getStartedWithCD.hostedAgentExplain': string
   'cd.getStartedWithCD.hostedAgentExplainContent': string
   'cd.getStartedWithCD.hostedAgentInfoTitle': string
   'cd.getStartedWithCD.hostedAgentInstall': string
   'cd.getStartedWithCD.hostedGitopsAgent': string
+  'cd.getStartedWithCD.howDelegateWorks': string
+  'cd.getStartedWithCD.howToPrepareCluster': string
+  'cd.getStartedWithCD.howtoProvisionK8sCluster': string
   'cd.getStartedWithCD.inHarnessFileStore': string
   'cd.getStartedWithCD.inManifest': string
   'cd.getStartedWithCD.inManifestContent': string
@@ -5670,6 +5680,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.nameYourCluster': string
   'cd.getStartedWithCD.onBoardingSubTitle': string
   'cd.getStartedWithCD.onboardingTitle': string
+  'cd.getStartedWithCD.prepareCluserInfo': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.provideMyOwn': string
   'cd.getStartedWithCD.provisionedSuccessfully': string
@@ -5724,6 +5735,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.useSample': string
   'cd.getStartedWithCD.usernameAndPassword': string
   'cd.getStartedWithCD.viewDelegateDetails': string
+  'cd.getStartedWithCD.whatDelegateSec': string
   'cd.getStartedWithCD.workloadDeploy': string
   'cd.gitFetchTypeRequired': string
   'cd.gitOps': string

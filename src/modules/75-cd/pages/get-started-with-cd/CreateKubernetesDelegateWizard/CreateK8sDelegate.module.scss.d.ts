@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly active: string
+  readonly betterHelp: string
   readonly blackDot: string
   readonly bodyClass: string
   readonly borderBottom: string
@@ -16,6 +17,7 @@ declare const styles: {
   readonly buildImg: string
   readonly checkIcon: string
   readonly checkItemsWrapper: string
+  readonly closeDialog: string
   readonly collapseDiv: string
   readonly containerPadding: string
   readonly copyCommandContainer: string
@@ -24,10 +26,14 @@ declare const styles: {
   readonly danger: string
   readonly dangerColor: string
   readonly dangerDialog: string
+  readonly delegateDiagram: string
+  readonly delegateInfo: string
   readonly descriptionVerificationWrapper: string
+  readonly diagramdialog: string
   readonly docker: string
   readonly downloadButton: string
   readonly error: string
+  readonly expandIcon: string
   readonly footer: string
   readonly formLabel: string
   readonly hover: string
@@ -62,11 +68,15 @@ declare const styles: {
   readonly successDialog: string
   readonly successPadding: string
   readonly tabsContainer: string
+  readonly textLinks: string
   readonly textPadding: string
   readonly titleYamlVerification: string
   readonly troubleShoot: string
   readonly troubleShootTitle: string
   readonly verificationField: string
   readonly verificationFieldWrapper: string
+  readonly videoDialog: string
+  readonly videoSection: string
+  readonly videoframe: string
 }
 export default styles
