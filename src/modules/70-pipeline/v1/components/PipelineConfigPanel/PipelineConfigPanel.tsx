@@ -3,7 +3,7 @@ import { capitalize, get, isEmpty } from 'lodash-es'
 import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text, Formik } from '@harness/uicore'
 import type { EntitySelectionFromYAML } from '@common/interfaces/YAMLBuilderProps'
-import { PipelineAtomicEntity, PipelineEntity } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
+import { EditorAction, PipelineAtomicEntity, PipelineEntity } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import {
   ConfigOptionsMapWithAdditionalOptions,
   MainConfigOptionsMap,
@@ -26,7 +26,7 @@ enum PipelineConfigPanelView {
 
 export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.ReactElement {
   const { height, entitySelectedFromYAML } = props
-  const { entityType, entityAsObj } = entitySelectedFromYAML || {}
+  const { entityType, entityAsObj, editorAction } = entitySelectedFromYAML || {}
   const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false)
   const [pipelineEntity, setPipelineEntity] = useState<PipelineEntity>()
   const [pipelineEntitySubType, setPipelineEntitySubType] = useState<PipelineEntitySubType | PipelineAtomicEntity>()
@@ -45,12 +45,13 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const [breadCrumbs, setBreadCrumbs] = useState<IBreadcrumbProps[]>(initialBreadCrumbs)
 
   useEffect(() => {
+    resetPipelineConfigPanel()
     if (entityType) {
       const configOptionForEntityType = ConfigOptionsMapWithAdditionalOptions.get(entityType)
       if (configOptionForEntityType) {
         setPipelineEntity(entityType)
         setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)
-        if (configOptionForEntityType.drillDown.hasSubTypes) {
+        if (editorAction !== EditorAction.Manage && configOptionForEntityType.drillDown.hasSubTypes) {
           const matchingSubTypeConfigOption = configOptionForEntityType.drillDown.subTypes?.find(
             (
               option: PipelineConfigOptionInterface & {
@@ -197,7 +198,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
           renderPipelineConfigOption(pipelineEntity, subOption)
         )}
       </Layout.Vertical>
-    ) : (
+    ) : nodeView ? (
       <Formik<any>
         initialValues={formInitialValues}
         formName="config-details-form"
@@ -216,6 +217,13 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
           </Layout.Horizontal>
         </Layout.Vertical>
       </Formik>
+    ) : (
+      <Text
+        padding={{ left: 'xlarge', top: 'xlarge', bottom: 'medium', right: 'xlarge' }}
+        flex={{ justifyContent: 'center' }}
+      >
+        No layout found for this selection
+      </Text>
     )
   }, [pipelineConfigOption, pipelineEntity, pipelineEntitySubType, entityAsObj])
 
