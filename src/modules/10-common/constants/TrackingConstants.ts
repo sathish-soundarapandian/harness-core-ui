@@ -372,7 +372,15 @@ export enum CDOnboardingActions {
   CreateAndSyncAppClicked = 'Clicked on Create and Sync Application',
   AppCreatedSuccessfully = 'Application Created Successfully',
   AppSyncedSuccessfully = 'Application Synced Successfully',
-  AppCreateOrSyncFailure = 'Application Creation/Sync Failed'
+  AppCreateOrSyncFailure = 'Application Creation/Sync Failed',
+  CD_HELP_ENGAGEMENT = 'Help Content Engaged With',
+  CD_HELP_LINK_CLICKED = 'Link clicked',
+  CD_HELP_DELEGATE_PANEL_EXPANDED = 'Delegate panel expanded',
+  CD_HELP_DELEGATE_PANEL_COLLAPSED = 'Delegate panel collapsed',
+  CD_HELP_CLUSTER_PANEL_EXPANDED = 'Cluster panel expanded',
+  CD_HELP_CLUSTER_PANEL_COLLAPSED = 'Cluster panel collapsed',
+  CD_HELP_IMAGE_ENLARGED = 'Image enlarged',
+  CD_HELP_VIDEO_PLAYED = 'Video played'
 }
 
 export enum CFOverviewActions {

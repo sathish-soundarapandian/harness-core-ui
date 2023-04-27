@@ -167,6 +167,7 @@ const SelectGitProviderRef = (
               if (oAuthConnector && status === Status.SUCCESS) {
                 oAuthSecretIntercepted.current = true
                 setOAuthStatus(Status.SUCCESS)
+                setConnectorResponse(oAuthConnector)
                 setConnector(oAuthConnector)
                 clearTimeout(timerId)
               }

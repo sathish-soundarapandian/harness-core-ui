@@ -1,5 +1,12 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
-import { Text, Icon } from '@harness/uicore'
+import { Text, Icon, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { getScope } from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
@@ -39,6 +46,7 @@ export function LocationValue(props: ILocationValueItem): React.ReactElement {
               className={isHarnessFileStore ? css.locationLink : ''}
               key={`${locationValue}${i}`}
               onClick={() => handleClick(locationValue)}
+              lineClamp={1}
             >
               {isHarnessFileStore && <Icon name="edit" margin={{ right: 'xsmall' }} />}
               {locationValue}
@@ -47,13 +55,13 @@ export function LocationValue(props: ILocationValueItem): React.ReactElement {
         }
 
         return (
-          <div key={`${locationValue}${i}`} onClick={() => handleClick(locationValue)}>
+          <Container key={`${locationValue}${i}`} onClick={() => handleClick(locationValue)}>
             {isHarnessFileStore && <Icon name="edit" margin={{ right: 'xsmall' }} />}
-            <span color={Color.BLACK} className={isHarnessFileStore ? css.locationLink : ''}>
+            <Text color={Color.BLACK} className={isHarnessFileStore ? css.locationLink : ''} lineClamp={1}>
               {locationValue}
               {!isTooltip && locations.length !== i + 1 ? ` ,` : null}
-            </span>
-          </div>
+            </Text>
+          </Container>
         )
       })}
     </>

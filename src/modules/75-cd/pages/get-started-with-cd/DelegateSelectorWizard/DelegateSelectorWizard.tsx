@@ -43,8 +43,8 @@ import {
   newEnvironmentState
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import InfoContainer from '../InfoContainer/InfoContainer'
 import { CreateK8sDelegateV2 } from '../CreateKubernetesDelegateWizard/CreateK8sDelegateV2'
+import ConnectWithDelegate from './ConnectWithDelegate'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 import moduleCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
@@ -382,22 +382,21 @@ const DelegateSelectorWizardRef = (
           <Container>
             <Text
               font={{ variation: FontVariation.H3, weight: 'semi-bold' }}
-              margin={{ bottom: 'small' }}
+              margin={{ bottom: 'large' }}
               color={Color.GREY_600}
               data-tooltip-id="cdOnboardingEnvironment"
             >
               {getString('cd.getStartedWithCD.connectHarnessEnv')}
               <HarnessDocTooltip tooltipId="cdOnboardingEnvironment" useStandAlone={true} />
             </Text>
-            <InfoContainer label="cd.getStartedWithCD.delegateDescription" />
 
-            <div className={css.marginTopClass} />
+            <div className={css.marginBottomClass} />
+            <ConnectWithDelegate trackEvent={trackEvent} />
           </Container>
           <Layout.Vertical>
-            <div className={css.marginTop} />
+            <div className={css.marginBottomClass} />
             {conditionalContent()}
           </Layout.Vertical>
-
           {delegateName?.current && !isEmpty(delegateData?.delegateType) && (
             <>
               <Container className={css.borderBottomClass} />

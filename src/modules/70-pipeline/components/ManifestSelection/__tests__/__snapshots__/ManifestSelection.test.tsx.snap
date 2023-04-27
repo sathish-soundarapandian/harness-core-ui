@@ -145,13 +145,15 @@ exports[`ManifestSelection tests delete manifest list works correctly 1`] = `
                       style="--text-line-clamp: 1; width: 200px;"
                       tabindex="0"
                     >
-                      <div>
-                        <span
-                          class=""
-                          color="black"
+                      <div
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
                         >
                           path
-                        </span>
+                        </p>
                       </div>
                     </p>
                   </span>
@@ -477,13 +479,15 @@ exports[`ManifestSelection tests edit manifest list works correctly 1`] = `
                       style="--text-line-clamp: 1; width: 200px;"
                       tabindex="0"
                     >
-                      <div>
-                        <span
-                          class=""
-                          color="black"
+                      <div
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
                         >
                           test
-                        </span>
+                        </p>
                       </div>
                     </p>
                   </span>
@@ -910,22 +914,26 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        <div>
-                          <span
-                            class=""
-                            color="black"
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                            style="--text-line-clamp: 1;"
                           >
                             1
                              ,
-                          </span>
+                          </p>
                         </div>
-                        <div>
-                          <span
-                            class=""
-                            color="black"
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                            style="--text-line-clamp: 1;"
                           >
                             2
-                          </span>
+                          </p>
                         </div>
                       </p>
                     </span>
@@ -1103,22 +1111,26 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        <div>
-                          <span
-                            class=""
-                            color="black"
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                            style="--text-line-clamp: 1;"
                           >
                             a1
                              ,
-                          </span>
+                          </p>
                         </div>
-                        <div>
-                          <span
-                            class=""
-                            color="black"
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                            style="--text-line-clamp: 1;"
                           >
                             b
-                          </span>
+                          </p>
                         </div>
                       </p>
                     </span>
@@ -1296,13 +1308,15 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        <div>
-                          <span
-                            class=""
-                            color="black"
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                            style="--text-line-clamp: 1;"
                           >
                             &lt;+input&gt;
-                          </span>
+                          </p>
                         </div>
                       </p>
                     </span>
@@ -1480,13 +1494,15 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        <div>
-                          <span
-                            class=""
-                            color="black"
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                            style="--text-line-clamp: 1;"
                           >
                             p1
-                          </span>
+                          </p>
                         </div>
                       </p>
                     </span>
@@ -1749,22 +1765,26 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        <div>
-                          <span
-                            class=""
-                            color="black"
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                            style="--text-line-clamp: 1;"
                           >
                             1
                              ,
-                          </span>
+                          </p>
                         </div>
-                        <div>
-                          <span
-                            class=""
-                            color="black"
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                            style="--text-line-clamp: 1;"
                           >
                             2
-                          </span>
+                          </p>
                         </div>
                       </p>
                     </span>
@@ -1942,22 +1962,26 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        <div>
-                          <span
-                            class=""
-                            color="black"
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                            style="--text-line-clamp: 1;"
                           >
                             a1
                              ,
-                          </span>
+                          </p>
                         </div>
-                        <div>
-                          <span
-                            class=""
-                            color="black"
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                            style="--text-line-clamp: 1;"
                           >
                             b
-                          </span>
+                          </p>
                         </div>
                       </p>
                     </span>
@@ -2135,13 +2159,15 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        <div>
-                          <span
-                            class=""
-                            color="black"
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                            style="--text-line-clamp: 1;"
                           >
                             &lt;+input&gt;
-                          </span>
+                          </p>
                         </div>
                       </p>
                     </span>
@@ -2319,13 +2345,15 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        <div>
-                          <span
-                            class=""
-                            color="black"
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                            style="--text-line-clamp: 1;"
                           >
                             p1
-                          </span>
+                          </p>
                         </div>
                       </p>
                     </span>

@@ -563,7 +563,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         <hr className={css.divider} />
         {/* content */}
         <Layout.Vertical
-          padding={{ left: 'huge', right: 'huge', top: 'huge' }}
+          padding={{ left: 'huge', right: 'huge', top: 'large' }}
           flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
           height="90vh"
           width="100%"

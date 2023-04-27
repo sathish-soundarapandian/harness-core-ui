@@ -734,6 +734,18 @@ getStartedWithCD:
   connectHarnessEnv: Connect Harness to your environment
   installDelegateToTargetEnv: Install a Harness Delegate in your target environment.
   delegateDescription: Run the Harness Delegate in your Kubernetes cluster directly in order to deploy your app. You can install the Harness Delegate with a Helm chart by copying and running the commands below in your Kubernetes cluster.
+  delegateIntroduction: When you run a deployment pipeline in Harness, the Delegate service retrieves the manifest and performs the deployment in your Kubernetes cluster. You can install the Delegate using the delegate helm chart by running the commands below in your Kubernetes cluster.
+  howDelegateWorks: How does the Delegate work?
+  connectDelegateHeader: Connecting with a Delegate
+  delegateWorksInfo: The Delegate is similar to a traditional DevOps agent. The Delegate only initiates outbound, secure connections when you need it to perform deployment tasks. When you trigger a deployment, the Delegate fetches your manifest and artifacts and deploys your app to your target environment.
+  whatDelegateSec: What about security?
+  delegateSecInfo: The Delegate connects to Harness Manager (via SaaS) over a Secure WebSockets channel (WebSockets over TLS). The channel is used to send notifications of Delegate task events and to exchange connection heartbeats. The channel is not used to send task data itself.
+  delegateSecInfoMore: "For any security concerns please review the open <a target='_blank' href='{{sourceCode}}'>source code</a>. Inspect the <a target='_blank' href='{{delegateImage}}'>Delegate image</a>.\nLearn more  <a target='_blank' href='{{faq}}'>FAQ</a>."
+  howToPrepareCluster: How to prepare a Kubernetes cluster?
+  prepareCluserInfo: If you don't have a cluster already it can be provisioned locally or in the cloud.
+  howtoProvisionK8sCluster: How to provision a Kubernetes cluster
+  helmRequired: Helm has to be installed in your cluster.
+  helpInstallSteps: Helm install instructions
   helpAndTroubleshoot: Help & Troubleshoot
   hostedAgentExplain: What is it?
   hostedAgentExplainContent: Harness hosts and manages your GitOps agent, making set up easy with zero maintenance

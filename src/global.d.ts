@@ -87,6 +87,8 @@ declare interface Window {
   }
   noAuthHeader: boolean
   MonacoEnvironment: any
+  YT?: any
+  onYouTubeIframeAPIReady?: () => void
 }
 
 declare interface WindowEventMap {
