@@ -163,61 +163,51 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
     {
       label: 'Inputs',
       iconProps: { name: 'template-inputs', size: 20 },
-      description: 'Add an input',
+      description: 'Create an input',
       drillDown: {
-        hasSubTypes: true,
-        subTypes: [
-          {
-            label: 'username',
-            description: '',
-            drillDown: {
-              hasSubTypes: false,
-              nodeView: (
-                <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }} spacing="xsmall">
-                  <FormInput.Text
-                    name={'name'}
-                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Name</Text>}
-                    placeholder={''}
-                    key={'name'}
-                  />
-                  <FormInput.Text
-                    name={'description'}
-                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Description</Text>}
-                    placeholder={''}
-                    key={'description'}
-                  />
-                </Layout.Vertical>
-              )
-            },
-            iconProps: { name: 'plugin-inputs' },
-            type: PipelineAtomicEntity.Input
-          },
-          {
-            label: 'password',
-            description: '',
-            drillDown: {
-              hasSubTypes: false,
-              nodeView: (
-                <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }} spacing="xsmall">
-                  <FormInput.Text
-                    name={'name'}
-                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Name</Text>}
-                    placeholder={''}
-                    key={'name'}
-                  />
-                  <FormInput.Text
-                    name={'description'}
-                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Description</Text>}
-                    placeholder={''}
-                    key={'description'}
-                  />
-                </Layout.Vertical>
-              )
-            },
-            iconProps: { name: 'plugin-inputs' },
-            type: PipelineAtomicEntity.Input
-          }
-        ],
+        hasSubTypes: false,
+        nodeView: (
+          <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }} spacing="xsmall">
+            <FormInput.Text
+              name={'name'}
+              label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Name</Text>}
+              placeholder={'input variable name'}
+              key={'name'}
+            />
+            <FormInput.Select
+              name={'type'}
+              label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Type</Text>}
+              placeholder={'Select input variable type'}
+              items={[
+                { label: 'String', value: 'string' },
+                { label: 'Number', value: 'number' },
+                { label: 'Boolean', value: 'boolean' }
+              ]}
+              key={'type'}
+            />
+            <FormInput.Text
+              name={'description'}
+              label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Description</Text>}
+              placeholder={'input variable description'}
+              key={'description'}
+            />
+            <FormInput.Text
+              name={'defaultValue'}
+              label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Default Value</Text>}
+              placeholder={'input variable default value'}
+              key={'defaultValue'}
+            />
+            <FormInput.RadioGroup
+              name={'required'}
+              label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Required</Text>}
+              items={[
+                { label: 'Yes', value: 'yes' },
+                { label: 'No', value: 'no' }
+              ]}
+              key={'required'}
+            />
+          </Layout.Vertical>
+        ),
         canAddNewSubTypes: true
       }
     }
