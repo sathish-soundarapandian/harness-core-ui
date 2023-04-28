@@ -1450,6 +1450,7 @@ configurations: Configurations
 googleCloudSourceFetchType:
   specificCommitId: Specific Commit Id
   specificTag: Specific Tag
+enabledFlags: ENABLED FLAGS
 lastBuildDate: LAST BUILD DATE
 noActiveDeveloperData: No active Developer Record found
 readOnlyConnectorWarning: Read-only Vault connector is not allowed for Terraform/Terragrunt Plan steps.
