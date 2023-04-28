@@ -93,9 +93,8 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
 
   const updateBreadCrumbs = useCallback(
     (selectedEntity: PipelineEntity, selectedConfigOption: PipelineConfigOptionInterface): void => {
-      const { label, drillDown } = selectedConfigOption || {}
-      const { hasSubTypes } = drillDown || {}
-      const breadCrumbLabel = hasSubTypes ? label : ''
+      const { label } = selectedConfigOption || {}
+      const breadCrumbLabel = label
       setBreadCrumbs((existingBreadCrumbs: IBreadcrumbProps[]) => {
         if (!existingBreadCrumbs.map((item: IBreadcrumbProps) => item.text).includes(breadCrumbLabel)) {
           return [
