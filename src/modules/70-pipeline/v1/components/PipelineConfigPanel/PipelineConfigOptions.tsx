@@ -4,7 +4,10 @@ import { FontVariation, FormInput, Layout, Text } from '@harness/uicore'
 import {
   PipelineAtomicEntity,
   PipelineEntity,
-  PipelineEntityGroupings
+  PipelineEntityGroupings,
+  PipelineEntitySubType,
+  Stage,
+  Step
 } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 
 export interface PipelineConfigOptionInterface {
@@ -17,18 +20,6 @@ export interface PipelineConfigOptionInterface {
     nodeView?: React.ReactElement // if a node doesn't have subTypes, then it should necessarily have a nodeView
     canAddNewSubTypes?: boolean
   }
-}
-
-export type PipelineEntitySubType = Stage | Step
-
-export const enum Stage {
-  CI = 'CI',
-  CD = 'CD'
-}
-
-export const enum Step {
-  Run = 'Script',
-  Plugin = 'Plugin'
 }
 
 export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOptionInterface>([
@@ -57,10 +48,10 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
                     key={'name'}
                   />
                   <FormInput.Text
-                    name={'description'}
+                    name={'desc'}
                     label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Description</Text>}
                     placeholder={'stage description'}
-                    key={'description'}
+                    key={'desc'}
                   />
                 </Layout.Vertical>
               )

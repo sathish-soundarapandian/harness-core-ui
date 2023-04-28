@@ -54,7 +54,8 @@ import {
   PipelineEntityToEditorActionsMappingForCodelens,
   PipelineEntityToRegexMapping,
   PipelineEntityGroupings,
-  PipelineEntity
+  PipelineEntity,
+  Stage
 } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import { PluginAddUpdateMetadata, PluginType } from '@common/interfaces/YAMLBuilderProps'
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
@@ -214,11 +215,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           addUpdatePluginIntoExistingYAML(pluginMetadata, isPluginUpdate),
         handlePipelineEntityAddUpdateIntoYAML: ({
           entityFieldValuesFromPanel,
-          entitySelectedFromYAML
+          entitySelectedFromYAML,
+          entitySubType
         }: HandlePipelineEntityAddUpdateFunctionInterface) =>
           handlePipelineEntityAddUpdateIntoYAML({
             entityFieldValuesFromPanel,
-            entitySelectedFromYAML
+            entitySelectedFromYAML,
+            entitySubType
           })
       } as YamlBuilderHandlerBinding),
     [currentYaml]
@@ -1132,7 +1135,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [])
 
   const handlePipelineEntityAddUpdateIntoYAML = useCallback(
-    ({ entityFieldValuesFromPanel, entitySelectedFromYAML }: HandlePipelineEntityAddUpdateFunctionInterface): void => {
+    ({
+      entityFieldValuesFromPanel,
+      entitySelectedFromYAML,
+      entitySubType
+    }: HandlePipelineEntityAddUpdateFunctionInterface): void => {
       const { entityAsObj, entityType } = entitySelectedFromYAML || {}
       const isUpdate = !isEmpty(entitySelectedFromYAML)
       switch (entityType) {
@@ -1148,9 +1155,37 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             },
             isUpdate
           )
+        case PipelineEntityGroupings.Stages:
+          addUpdateStageIntoExistingYAML({
+            stage: entityFieldValuesFromPanel,
+            existingStages: get(entityAsObj, 'stages', []),
+            stageType: entitySubType as Stage
+          })
       }
     },
     [currentCursorPosition, currentYaml, editorRef.current?.editor]
+  )
+
+  const addUpdateStageIntoExistingYAML = useCallback(
+    ({
+      stage,
+      existingStages,
+      stageType
+    }: {
+      stage: Record<string, any>
+      existingStages: Record<string, any>[]
+      stageType: Stage
+    }) => {
+      try {
+        const updatesStages = [{ ...stage, type: stageType }, ...existingStages]
+        const currentPipelineJSON = parse(currentYaml)
+        const updatedYAML = yamlStringify(set(currentPipelineJSON, 'stages', updatesStages))
+        onYamlChange(updatedYAML)
+      } catch (e) {
+        // ignore error
+      }
+    },
+    [currentYaml]
   )
 
   const addUpdatePluginIntoExistingYAML = useCallback(

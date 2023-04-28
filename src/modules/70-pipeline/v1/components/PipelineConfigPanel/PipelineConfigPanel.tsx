@@ -21,14 +21,14 @@ import {
   PipelineAtomicEntity,
   PipelineEntity,
   PipelineEntityGroupings,
-  PipelineEntityGroupingsToAtomicEntityMapping
+  PipelineEntityGroupingsToAtomicEntityMapping,
+  Step,
+  PipelineEntitySubType
 } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 import {
   ConfigOptionsMapWithAdditionalOptions,
   MainConfigOptionsMap,
-  PipelineConfigOptionInterface,
-  Step,
-  PipelineEntitySubType
+  PipelineConfigOptionInterface
 } from './PipelineConfigOptions'
 import { getConfigOptionForPipelineEntity } from './Utils'
 import css from './PipelineConfigPanel.module.scss'
@@ -38,7 +38,8 @@ interface PipelineConfigPanelInterface {
   entitySelectedFromYAML?: EntitySelectionFromYAML
   onAddUpdateEntity?: ({
     entityFieldValuesFromPanel,
-    entitySelectedFromYAML
+    entitySelectedFromYAML,
+    entitySubType
   }: HandlePipelineEntityAddUpdateFunctionInterface) => void
 }
 
@@ -241,7 +242,11 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         initialValues={formInitialValues}
         formName="config-details-form"
         onSubmit={formValues => {
-          onAddUpdateEntity?.({ entityFieldValuesFromPanel: formValues, entitySelectedFromYAML })
+          onAddUpdateEntity?.({
+            entityFieldValuesFromPanel: formValues,
+            entitySelectedFromYAML,
+            entitySubType: pipelineEntitySubType
+          })
         }}
         enableReinitialize={true}
       >

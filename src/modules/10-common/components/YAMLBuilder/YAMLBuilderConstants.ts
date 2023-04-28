@@ -88,6 +88,18 @@ export enum EditorAction {
   Edit = 'EDIT'
 }
 
+export type PipelineEntitySubType = Stage | Step
+
+export const enum Stage {
+  CI = 'CI',
+  CD = 'CD'
+}
+
+export const enum Step {
+  Run = 'Script',
+  Plugin = 'Plugin'
+}
+
 export type PipelineEntity = PipelineAtomicEntity | PipelineEntityGroupings
 
 export const enum PipelineAtomicEntity {

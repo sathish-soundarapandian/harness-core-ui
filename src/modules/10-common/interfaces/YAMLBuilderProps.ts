@@ -12,7 +12,8 @@ import type { Status } from '@common/utils/Constants'
 import type {
   PipelineAtomicEntity,
   EditorAction,
-  PipelineEntity
+  PipelineEntity,
+  PipelineEntitySubType
 } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 
 export interface YamlBuilderHandlerBinding {
@@ -22,13 +23,15 @@ export interface YamlBuilderHandlerBinding {
   addUpdatePluginIntoExistingYAML?: (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean) => void
   handlePipelineEntityAddUpdateIntoYAML?: ({
     entityFieldValuesFromPanel,
-    entitySelectedFromYAML
+    entitySelectedFromYAML,
+    entitySubType
   }: HandlePipelineEntityAddUpdateFunctionInterface) => void
 }
 
 export interface HandlePipelineEntityAddUpdateFunctionInterface {
   entityFieldValuesFromPanel: Record<string, any>
   entitySelectedFromYAML?: EntitySelectionFromYAML
+  entitySubType?: PipelineEntitySubType | PipelineAtomicEntity
 }
 
 export type InvocationMapFunction = (
