@@ -127,7 +127,7 @@ const CIDeveloperCard: React.FC<CIDeveloperCardProps> = ({
         <SliderBar
           min={0}
           max={300}
-          stepSize={50}
+          stepSize={1}
           labelStepSize={50}
           value={selectedNumberOfDevelopers === -1 ? licenseRange.min : selectedNumberOfDevelopers}
           inputValue={
