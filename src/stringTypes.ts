@@ -157,6 +157,7 @@ export interface StringsMap {
   'common.clickToKnowMore': string
   'common.clientId': string
   'common.clientSecret': string
+  'common.cloudSpendsIn': string
   'common.cluster': string
   'common.clusterName': string
   'common.clusters': string

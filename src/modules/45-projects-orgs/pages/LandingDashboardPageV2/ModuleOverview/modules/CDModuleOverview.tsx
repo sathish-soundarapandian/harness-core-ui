@@ -20,6 +20,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
 import { getDateLabelToDisplayText } from '@common/components/TimeRangePicker/TimeRangePicker'
+import { numberFormatter } from '@common/utils/utils'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
@@ -103,11 +104,12 @@ const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
       <ModuleColumnChart
         isExpanded={isExpanded}
         data={deploymentStatsData || []}
-        count={response?.deploymentsStatsSummary?.countAndChangeRate?.count || 0}
+        count={numberFormatter(response?.deploymentsStatsSummary?.countAndChangeRate?.count) || '0'}
         countChangeInfo={{
           countChange: response?.deploymentsStatsSummary?.deploymentRateAndChangeRate?.rate,
           countChangeRate: response?.deploymentsStatsSummary?.deploymentRateAndChangeRate?.rateChangeRate
         }}
+        timeRange={response?.deploymentsStatsSummary?.deploymentStats?.map(stats => stats.time || 0)}
         timeRangeLabel={
           timeRange.type
             ? getString('common.deploymentsIn', {

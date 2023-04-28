@@ -13,6 +13,9 @@ import { GetCCMOverviewQueryParams, useGetCCMOverview } from 'services/ce'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
+import { getDateLabelToDisplayText } from '@common/components/TimeRangePicker/TimeRangePicker'
+import { useStrings } from 'framework/strings'
+import { numberFormatter } from '@common/utils/utils'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
@@ -21,6 +24,7 @@ import ModuleColumnChart from '../../ModuleColumnChart/ModuleColumnChart'
 
 const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmptyState, timeRange }) => {
   const { accountId } = useParams<AccountPathProps>()
+  const { getString } = useStrings()
   const { data: ccmData, loading } = useGetCCMOverview({
     queryParams: {
       accountIdentifier: accountId,
@@ -62,9 +66,25 @@ const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmp
     }
   ]
 
-  console.log('data', data)
-
-  return <ModuleColumnChart count={ccmData?.data?.totalCost || 0} data={data} isExpanded={isExpanded} />
+  return (
+    <ModuleColumnChart
+      count={ccmData?.data?.totalCost ? `$${numberFormatter(ccmData?.data?.totalCost)}` : '$0'}
+      countChangeInfo={{
+        countChange: ccmData?.data?.totalCost,
+        countChangeRate: ccmData?.data?.totalCostTrend
+      }}
+      timeRange={ccmData?.data?.costPerDay?.map(cost => cost.time || 0)}
+      data={data}
+      isExpanded={isExpanded}
+      timeRangeLabel={
+        timeRange.type
+          ? getString('common.cloudSpendsIn', {
+              value: getDateLabelToDisplayText(getString)[timeRange.type]
+            }).toUpperCase()
+          : undefined
+      }
+    />
+  )
 }
 
 export default CEModuleOverview
