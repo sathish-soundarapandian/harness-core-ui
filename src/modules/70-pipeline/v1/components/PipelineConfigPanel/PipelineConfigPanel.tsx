@@ -59,7 +59,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)
         if (
           editorAction &&
-          ![EditorAction.Manage, EditorAction.Add].includes(editorAction) &&
+          ![EditorAction.Manage, EditorAction.Add].includes(editorAction) && // only entity edit should show sub type view
           configOptionForEntityType.drillDown.hasSubTypes
         ) {
           const matchingSubTypeConfigOption = configOptionForEntityType.drillDown.subTypes?.find(
