@@ -14,8 +14,11 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useSourceCodeModal } from '@user-profile/modals/SourceCodeManager/useSourceCodeManager'
 import { useStrings } from 'framework/strings'
 import {
+  DeleteUserSourceCodeManagerQueryParams,
   SourceCodeManagerDTO,
+  UserSourceCodeManagerResponseDTO,
   useDeleteSourceCodeManagers,
+  useDeleteUserSourceCodeManager,
   useGetSourceCodeManagers,
   useGetUserSourceCodeManagers
 } from 'services/cd-ng'
@@ -36,6 +39,22 @@ const RenderColumnName: Renderer<CellProps<SourceCodeManagerDTO>> = ({ row }) =>
       <Icon name={getIconBySCM(data.type as SourceCodeTypes)} size={25} />
       <Text color={Color.BLACK} lineClamp={1}>
         {data.name}
+      </Text>
+    </Layout.Horizontal>
+  )
+}
+
+const RenderColumnSCM: Renderer<CellProps<UserSourceCodeManagerResponseDTO>> = ({ row }) => {
+  const data = row.original
+  return (
+    <Layout.Horizontal
+      padding={{ left: 'small' }}
+      spacing="medium"
+      flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+    >
+      <Icon name={getIconBySCM(data.type as SourceCodeTypes)} size={25} />
+      <Text color={Color.BLACK} lineClamp={1}>
+        {data.userName || data.userEmail}
       </Text>
     </Layout.Horizontal>
   )
@@ -66,33 +85,43 @@ const RenderColumnEdit: Renderer<CellProps<SourceCodeManagerDTO>> = ({ row, colu
 
 const RenderColumnDelete: Renderer<CellProps<SourceCodeManagerDTO>> = ({ row, column }) => {
   const data = row.original
+  const { PIE_GITX_OAUTH } = useFeatureFlags()
   const { showSuccess, showError } = useToaster()
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { mutate: deleteSCM } = useDeleteSourceCodeManagers({ queryParams: { accountIdentifier: accountId } })
+  const { mutate: deleteSCMV2 } = useDeleteUserSourceCodeManager({
+    queryParams: {
+      accountIdentifier: accountId,
+      userIdentifier: data?.userIdentifier || '',
+      type: data?.type as DeleteUserSourceCodeManagerQueryParams['type']
+    }
+  })
 
   const { openDialog } = useConfirmationDialog({
-    contentText: `${getString('userProfile.confirmDelete', { name: data.name })}`,
+    contentText: `${getString('userProfile.confirmDelete', { name: data.name || data.type })}`,
     titleText: getString('userProfile.confirmDeleteTitle'),
     confirmButtonText: getString('delete'),
     cancelButtonText: getString('cancel'),
     onCloseDialog: async (isConfirmed: boolean) => {
       /* istanbul ignore else */ if (isConfirmed) {
         try {
-          const deleted = await deleteSCM(data.name, {
-            headers: { 'content-type': 'application/json' }
-          })
+          const deleted = PIE_GITX_OAUTH
+            ? await deleteSCMV2(undefined, { headers: { 'content-type': 'application/json' } })
+            : await deleteSCM(data.name || data.type || '', {
+                headers: { 'content-type': 'application/json' }
+              })
           /* istanbul ignore else */ if (deleted) {
             showSuccess(
               getString('userProfile.scmDeleteSuccess', {
-                name: data.name
+                name: data.name || data.type
               })
             )
             ;(column as any).reload?.()
           } /* istanbul ignore next */ else {
             showError(
               getString('userProfile.scmDeleteFailure', {
-                name: data.name
+                name: data.name || data.type
               })
             )
           }
@@ -121,8 +150,8 @@ const SourceCodeManagerList: React.FC = () => {
   const { data, loading, refetch } = useGetSourceCodeManagers({ queryParams: { accountIdentifier: accountId } })
   const {
     data: OauthSCMs,
-    loading: loadingOauthSCMs
-    // refetch: refetchOauthSCMs
+    loading: loadingOauthSCMs,
+    refetch: refetchOauthSCMs
   } = useGetUserSourceCodeManagers({
     queryParams: { accountIdentifier: accountId, userIdentifier: currentUserInfo.uuid },
     lazy: !PIE_GITX_OAUTH
@@ -159,11 +188,57 @@ const SourceCodeManagerList: React.FC = () => {
     [refetch]
   )
 
+  const columnsV2: Column<UserSourceCodeManagerResponseDTO>[] = useMemo(
+    () => [
+      {
+        Header: '',
+        id: 'type',
+        accessor: 'type',
+        width: '95%',
+        Cell: RenderColumnSCM
+      },
+      {
+        Header: '',
+        id: 'delete',
+        accessor: 'type',
+        width: '5%',
+        Cell: RenderColumnDelete,
+        reload: refetchOauthSCMs
+      }
+    ],
+    [refetchOauthSCMs]
+  )
+
   const getContent = (): React.ReactElement => {
     if (data?.data?.length) {
       return <Table<SourceCodeManagerDTO> data={data.data} columns={columns} hideHeaders={true} />
     }
-    if (!(loading || loadingOauthSCMs)) {
+    if (!loading) {
+      return (
+        <Layout.Horizontal padding={{ top: 'large' }}>
+          <Button
+            text={getString('userProfile.plusSCM')}
+            data-test="userProfileAddSCM"
+            variation={ButtonVariation.LINK}
+            onClick={openSourceCodeModal}
+          />
+        </Layout.Horizontal>
+      )
+    }
+    return <></>
+  }
+
+  const getContentV2 = (): React.ReactElement => {
+    if (OauthSCMs?.data?.userSourceCodeManagerResponseDTOList?.length) {
+      return (
+        <Table<UserSourceCodeManagerResponseDTO>
+          data={OauthSCMs?.data?.userSourceCodeManagerResponseDTOList}
+          columns={columnsV2}
+          hideHeaders={true}
+        />
+      )
+    }
+    if (!loadingOauthSCMs) {
       return (
         <Layout.Horizontal padding={{ top: 'large' }}>
           <Button
@@ -180,12 +255,12 @@ const SourceCodeManagerList: React.FC = () => {
 
   return (
     <Layout.Vertical spacing="large">
-      {PIE_GITX_OAUTH && <AddSCMOAuth></AddSCMOAuth>}
+      {PIE_GITX_OAUTH && <AddSCMOAuth refetch={refetchOauthSCMs}></AddSCMOAuth>}
 
       <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
         {getString('userProfile.mysourceCodeManagers')}
       </Text>
-      {getContent()}
+      {PIE_GITX_OAUTH ? getContentV2() : getContent()}
     </Layout.Vertical>
   )
 }

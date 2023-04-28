@@ -31,7 +31,7 @@ export interface ConnectViaOAuthProps {
   oAuthSecretIntercepted?: React.MutableRefObject<boolean>
   forceFailOAuthTimeoutId?: NodeJS.Timeout
   setForceFailOAuthTimeoutId: React.Dispatch<React.SetStateAction<NodeJS.Timeout | undefined>>
-  label?: string | JSX.Element
+  labelText?: string | JSX.Element
   orgIdentifier?: string
   projectIdentifier?: string
   isPrivateSecret?: boolean
@@ -52,7 +52,7 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     orgIdentifier,
     projectIdentifier,
     isPrivateSecret,
-    label,
+    labelText,
     hideOauthLinkButton
   } = props
   const { getString } = useStrings()
@@ -181,7 +181,7 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
           <Button
             intent="primary"
             text={
-              label ||
+              labelText ||
               getString(
                 isExistingConnectionHealthy ? 'connectors.relinkToGitProvider' : 'connectors.linkToGitProvider',
                 {

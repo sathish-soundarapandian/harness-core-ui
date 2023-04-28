@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Text, Layout, DropDown, getErrorInfoFromErrorObject, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+//import { useStrings } from 'framework/strings'
 import { ConnectorInfoDTO, useSaveUserSourceCodeManager, UserSourceCodeManagerRequestDTO } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -22,15 +22,15 @@ import {
 import { SourceCodeTypes } from '@user-profile/utils/utils'
 import css from './UserSummary.module.scss'
 
-const AddSCMOAuth: React.FC = () => {
+const AddSCMOAuth: React.FC<{ refetch: any }> = props => {
   const { accountId } = useParams<AccountPathProps>()
   const { currentUserInfo } = useAppStore()
-  const { getString } = useStrings()
+  //const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const [oAuthStatus, setOAuthStatus] = useState<Status>(Status.TO_DO)
   const oAuthSecretIntercepted = useRef<boolean>(false)
   const [forceFailOAuthTimeoutId, setForceFailOAuthTimeoutId] = useState<NodeJS.Timeout>()
-  const [oAuthResponse, setOAuthResponse] = useState<OAuthEventProcessingResponse>()
+  // const [setOAuthResponse] = useState<OAuthEventProcessingResponse>()
   const [gitProviderType, setGitProviderType] = useState<UserSourceCodeManagerRequestDTO['type']>()
 
   const supportedSCMs = [
@@ -47,7 +47,7 @@ const AddSCMOAuth: React.FC = () => {
     { label: 'AWS code commit', value: SourceCodeTypes.AWS_CODE_COMMIT }
   ]
 
-  const { data, loading, mutate: createUserSCM } = useSaveUserSourceCodeManager({})
+  const { loading, mutate: createUserSCM } = useSaveUserSourceCodeManager({})
 
   const handleOAuthServerEvent = useCallback(
     (event: MessageEvent): void => {
@@ -57,7 +57,6 @@ const AddSCMOAuth: React.FC = () => {
         setOAuthStatus,
         oAuthSecretIntercepted,
         onSuccessCallback: ({ accessTokenRef, refreshTokenRef }: OAuthEventProcessingResponse) => {
-          setOAuthResponse({ accessTokenRef, refreshTokenRef })
           if (forceFailOAuthTimeoutId) {
             clearTimeout(forceFailOAuthTimeoutId)
           }
@@ -67,15 +66,19 @@ const AddSCMOAuth: React.FC = () => {
             userIdentifier: currentUserInfo?.uuid,
             authentication: {
               apiAccessDTO: {
-                spec: { tokenRef: accessTokenRef },
+                spec: { tokenRef: accessTokenRef, refreshTokenRef },
                 type: 'OAuth'
               }
             }
-          }).catch(error => {
-            setOAuthStatus(Status.TO_DO)
-            setOAuthResponse(undefined)
-            showError(getErrorInfoFromErrorObject(error))
           })
+            .then(() => {
+              showSuccess(`User SCM for {gitProviderType} created succesfully`)
+              props.refetch()
+            })
+            .catch(error => {
+              setOAuthStatus(Status.TO_DO)
+              showError(getErrorInfoFromErrorObject(error))
+            })
         }
       })
     },
@@ -101,7 +104,7 @@ const AddSCMOAuth: React.FC = () => {
           value={gitProviderType}
           onChange={item => {
             setOAuthStatus(Status.TO_DO)
-            setOAuthResponse(undefined)
+            //setOAuthResponse(undefined)
             setGitProviderType(item?.value as UserSourceCodeManagerRequestDTO['type'])
           }}
           items={supportedSCMs}
@@ -112,7 +115,7 @@ const AddSCMOAuth: React.FC = () => {
         />
         {gitProviderType && (
           <ConnectViaOAuth
-            label={'Connect'}
+            labelText={'Connect'}
             isPrivateSecret={true}
             key={gitProviderType}
             gitProviderType={gitProviderType as ConnectorInfoDTO['type']}
