@@ -193,6 +193,7 @@ export const shouldOpenEvaluationUpdateModal = (
 ): boolean =>
   Boolean(formikValues.evaluationType) &&
   Boolean(evaluationTypesRef?.current) &&
+  !isEmpty(formikValues.serviceLevelObjectivesDetails) &&
   evaluationTypesRef.current !== formikValues.evaluationType
 
 export const RenderOrg: Renderer<CellProps<SLOObjective | SLOConsumptionBreakdown>> = ({ row }) => {

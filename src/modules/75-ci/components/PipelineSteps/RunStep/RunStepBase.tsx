@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 import cx from 'classnames'
 import {
   Text,
@@ -38,7 +39,7 @@ import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidate
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import type { RunStepProps, RunStepData, RunStepDataUI } from './RunStep'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './RunStepFunctionConfigs'
-import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
+import { CIStepOptionalConfig, PathnameParams } from '../CIStep/CIStepOptionalConfig'
 import {
   AllMultiTypeInputTypesForStep,
   useGetPropagatedStageById,
@@ -79,6 +80,10 @@ export const RunStepBase = (
     }
   }, [])
 
+  const pathnameParams = useLocation()?.pathname?.split('/') || []
+
+  const isTemplateStudio = pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO)
+
   return (
     <Formik
       initialValues={getInitialValuesInCorrectFormat<RunStepData, RunStepDataUI>(
@@ -111,7 +116,7 @@ export const RunStepBase = (
           errors,
           validate(
             valuesToValidate,
-            getEditViewValidateFieldsConfig(buildInfrastructureType),
+            getEditViewValidateFieldsConfig(buildInfrastructureType, isTemplateStudio),
             {
               initialValues,
               steps: currentStage?.stage?.spec?.execution?.steps || {},
@@ -151,7 +156,7 @@ export const RunStepBase = (
               CIBuildInfrastructureType.VM,
               CIBuildInfrastructureType.Cloud,
               CIBuildInfrastructureType.Docker
-            ].includes(buildInfrastructureType) ? (
+            ].includes(buildInfrastructureType) && !isTemplateStudio ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -242,7 +247,7 @@ export const RunStepBase = (
                       CIBuildInfrastructureType.VM,
                       CIBuildInfrastructureType.Cloud,
                       CIBuildInfrastructureType.Docker
-                    ].includes(buildInfrastructureType) ? (
+                    ].includes(buildInfrastructureType) || isTemplateStudio ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}

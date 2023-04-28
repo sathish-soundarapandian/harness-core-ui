@@ -11,12 +11,12 @@ import userEvent from '@testing-library/user-event'
 import * as cvServices from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import CompositeSLOConsumption from '../CompositeSLOConsumption'
-import { consumptionTableData } from './CompositeSLOConsumption.mock'
+import { consumptionTableData, requestBasedConsumptionTableData } from './CompositeSLOConsumption.mock'
 
-const Wrapper = () => {
+const Wrapper = ({ isRequestBased }: { isRequestBased?: boolean }) => {
   return (
     <TestWrapper>
-      <CompositeSLOConsumption startTime={0} endTime={0} />
+      <CompositeSLOConsumption startTime={0} endTime={0} isRequestBased={isRequestBased} />
     </TestWrapper>
   )
 }
@@ -77,5 +77,19 @@ describe('validate CompositeSLOConsumption', () => {
     expect(getByText('SLO 1')).toBeInTheDocument()
     expect(getByText('SLO 2')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
+  })
+
+  test('should render CompositeSLOConsumption with request based data', () => {
+    jest.spyOn(cvServices, 'useGetSloConsumptionBreakdownView').mockReturnValue({
+      data: requestBasedConsumptionTableData,
+      loading: false,
+      error: null,
+      refetch: jest.fn
+    } as any)
+    const { getByText } = render(<Wrapper isRequestBased />)
+    expect(getByText('SLO 1')).toBeInTheDocument()
+    expect(getByText('SLO 2')).toBeInTheDocument()
+    expect(getByText('10k')).toBeInTheDocument()
+    expect(getByText('1k')).toBeInTheDocument()
   })
 })

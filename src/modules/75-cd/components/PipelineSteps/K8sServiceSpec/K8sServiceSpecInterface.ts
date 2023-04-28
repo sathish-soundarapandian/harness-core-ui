@@ -14,12 +14,15 @@ import type {
   ManifestConfigWrapper,
   PrimaryArtifact,
   ServiceDefinition,
+  ServiceHook,
+  ServiceHookWrapper,
   ServiceSpec,
   SidecarArtifact
 } from 'services/cd-ng'
 import type { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { ManifestSourceBaseFactory } from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
 import type { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
+import type { ServiceHookSourceBaseFactory } from '@cd/factory/ServiceHookSourceFactory/ServiceHookSourceFactory'
 
 export interface K8SDirectServiceStep extends ServiceSpec {
   stageIndex?: number
@@ -88,4 +91,24 @@ export interface KubernetesManifestsProps {
   allowableTypes: AllowedTypes
   manifest?: ManifestConfig
   manifestPath?: string
+}
+
+export interface KubernetesServiceHooksProps {
+  template: ServiceSpec & {
+    hooks?: ServiceHookWrapper[]
+  }
+  path?: string
+  stepViewType?: StepViewType
+  serviceHookSourceBaseFactory: ServiceHookSourceBaseFactory
+  hooks?: ServiceHookWrapper[]
+  initialValues: K8SDirectServiceStep & {
+    hooks?: ServiceHookWrapper[]
+  }
+  readonly: boolean
+  stageIdentifier: string
+  formik?: any
+  fromTrigger?: boolean
+  allowableTypes: AllowedTypes
+  hookData?: ServiceHook
+  hookPath?: string
 }

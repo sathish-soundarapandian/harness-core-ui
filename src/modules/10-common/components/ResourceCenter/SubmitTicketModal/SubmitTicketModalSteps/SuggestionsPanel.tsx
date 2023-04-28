@@ -1,5 +1,6 @@
-import { Layout, Text } from '@harness/uicore'
 import React from 'react'
+import { Layout, Text } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import css from './SubmitTicketModalSteps.module.scss'
 
 interface SuggestionsPanelProps {
@@ -20,10 +21,11 @@ const SuggestionsCard = (suggestionItem: any): JSX.Element => {
 
 const SuggestionsPanel = (props: SuggestionsPanelProps): JSX.Element => {
   const { data } = props
+  const { getString } = useStrings()
 
   return (
     <div className={css.suggestionsPanel}>
-      <h3> Before you proceed, here are some suggestions that might help...</h3>
+      <h3> {getString('common.resourceCenter.ticketmenu.suggestionsPanel')}</h3>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
         {data.map((result: any) => (
           <SuggestionsCard suggestionItem={result} key={result.uri} />

@@ -6,18 +6,18 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, Text, Container, Formik, Layout, StepProps, FormInput, Label } from '@harness/uicore'
 import { Form } from 'formik'
 import * as Yup from 'yup'
-import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
-import type { ConfigFileWrapper, StoreConfigWrapper } from 'services/cd-ng'
+import { Button, ButtonVariation, Text, Container, Formik, Layout, StepProps, FormInput, Label } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
+
+import type { ConfigFileWrapper, ConnectorConfigDTO, StoreConfigWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { FILE_TYPE_VALUES, prepareConfigFilesValue } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import type { ConfigFileHarnessDataType, HarnessConfigFileLastStepPrevStepData } from '../../ConfigFilesInterface'
 import { MultiConfigSelectField } from './MultiConfigSelectField/MultiConfigSelectField'
-
-import type { ConfigFileHarnessDataType } from '../../ConfigFilesInterface'
 import css from './ConfigFilesType.module.scss'
 
 interface ConfigFilesPropType {
@@ -29,6 +29,7 @@ interface ConfigFilesPropType {
   configFileIndex?: number
   deploymentType?: string
   handleConnectorViewChange?: (status: boolean) => void
+  editConfigFilePrevStepData?: HarnessConfigFileLastStepPrevStepData
 }
 export function HarnessConfigStep({
   stepName = 'step name',
@@ -40,35 +41,39 @@ export function HarnessConfigStep({
   listOfConfigFiles,
   configFileIndex,
   deploymentType,
-  handleConnectorViewChange
-}: StepProps<any> & ConfigFilesPropType): React.ReactElement {
+  handleConnectorViewChange,
+  editConfigFilePrevStepData
+}: StepProps<ConnectorConfigDTO> & ConfigFilesPropType): React.ReactElement {
+  const modifiedPrevStepData = defaultTo(prevStepData, editConfigFilePrevStepData)
+
   const { getString } = useStrings()
-  const isEditState = defaultTo(prevStepData.isEditMode, isEditMode)
-  const fileIndex = defaultTo(prevStepData.configFileIndex, configFileIndex)
+  const isEditState = defaultTo(modifiedPrevStepData?.isEditMode, isEditMode)
+  const fileIndex = defaultTo(modifiedPrevStepData?.configFileIndex, configFileIndex)
 
   const [initialValues, setInitialValues] = useState({
     identifier: '',
     files: [''],
     fileType: FILE_TYPE_VALUES.FILE_STORE,
-    store: ''
+    store: '',
+    secretFiles: undefined
   })
 
   React.useEffect(() => {
     if (!isEditState) {
       setInitialValues({
         ...initialValues,
-        ...prevStepData,
+        ...modifiedPrevStepData,
         secretFiles: undefined
       })
       return
     }
     setInitialValues({
       ...initialValues,
-      ...prevStepData,
-      files: prevStepData?.files?.length > 0 ? prevStepData.files : prevStepData.secretFiles,
+      ...modifiedPrevStepData,
+      files: modifiedPrevStepData?.files?.length > 0 ? modifiedPrevStepData?.files : modifiedPrevStepData?.secretFiles,
       secretFiles: undefined
     })
-  }, [prevStepData])
+  }, [modifiedPrevStepData])
 
   const submitFormData = (formData: ConfigFileHarnessDataType & { store?: string }): void => {
     const { files, secretFiles } = prepareConfigFilesValue(formData)
@@ -126,7 +131,7 @@ export function HarnessConfigStep({
           })}
           onSubmit={formData => {
             submitFormData({
-              ...prevStepData,
+              ...modifiedPrevStepData,
               ...formData
             })
           }}
@@ -190,7 +195,7 @@ export function HarnessConfigStep({
                     variation={ButtonVariation.SECONDARY}
                     onClick={() => {
                       handleConnectorViewChange?.(false)
-                      previousStep?.({ ...prevStepData })
+                      previousStep?.({ ...modifiedPrevStepData })
                     }}
                     margin={{ right: 'medium' }}
                   />

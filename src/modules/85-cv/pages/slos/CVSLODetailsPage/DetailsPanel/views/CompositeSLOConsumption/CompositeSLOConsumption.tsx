@@ -20,9 +20,10 @@ import css from '../../DetailsPanel.module.scss'
 interface CompositeSLOConsumptionProps {
   startTime: number
   endTime: number
+  isRequestBased?: boolean
 }
 
-const CompositeSLOConsumption = ({ startTime, endTime }: CompositeSLOConsumptionProps): JSX.Element => {
+const CompositeSLOConsumption = ({ startTime, endTime, isRequestBased }: CompositeSLOConsumptionProps): JSX.Element => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
     ProjectPathProps & { identifier: string }
@@ -66,7 +67,11 @@ const CompositeSLOConsumption = ({ startTime, endTime }: CompositeSLOConsumption
     )
   } else {
     content = (
-      <TableV2 sortable={true} data={tabelData} columns={getConsumptionTableColums({ getString, isAccountLevel })} />
+      <TableV2
+        sortable={true}
+        data={tabelData}
+        columns={getConsumptionTableColums({ getString, isAccountLevel, isRequestBased })}
+      />
     )
   }
 

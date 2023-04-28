@@ -416,11 +416,12 @@
   }
   .expandIcon {
     position: relative;
-    width: 40px;
     right: 0;
-    left: 90%;
-    top: -50px;
+    left: 96%;
+    top: -30px;
     cursor: pointer;
+    background: var(--grey-50);
+    padding: var(--spacing-xsmall);
   }
   .videoframe {
     cursor: pointer;

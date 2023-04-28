@@ -286,7 +286,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
               ? projectMetadataFetchError?.message
               : getString('pipeline.jiraApprovalStep.issueTypePlaceholder')
           }
-          label={getString('pipeline.jiraApprovalStep.issueType')}
+          label={getString('common.resourceCenter.ticketmenu.issueType')}
           name={`${prefix}spec.issueType`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           useValue

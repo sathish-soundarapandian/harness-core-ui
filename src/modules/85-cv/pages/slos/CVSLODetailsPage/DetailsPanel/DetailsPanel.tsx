@@ -21,6 +21,7 @@ import type { DetailsPanelProps } from './DetailsPanel.types'
 import SLOCardContent from '../../SLOCard/SLOCardContent'
 import CompositeSLOConsumption from './views/CompositeSLOConsumption/CompositeSLOConsumption'
 import { SLOType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.constants'
+import { EvaluationType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { TWENTY_FOUR_HOURS } from './DetailsPanel.constants'
 import DowntimeBanner from './views/DowntimeBanner'
 import { getDownTimeStartTimeAndEndTime } from './DetailsPanel.utils'
@@ -41,6 +42,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
   const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const { sloType } = useQueryParams<{ sloType?: string }>()
   const isCompositeSLO = sloType === SLOType.COMPOSITE
+  const isRequestBased = sloDashboardWidget?.evaluationType === EvaluationType.REQUEST
 
   const {
     currentPeriodStartTime = 0,
@@ -142,7 +144,11 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
             <Container padding={{ bottom: 'xlarge' }} />
             {isCompositeSLO && (
               <>
-                <CompositeSLOConsumption startTime={consumptionStartTime} endTime={consumptionEndTime} />
+                <CompositeSLOConsumption
+                  startTime={consumptionStartTime}
+                  endTime={consumptionEndTime}
+                  isRequestBased={isRequestBased}
+                />
                 <Container padding={{ bottom: 'xlarge' }} />
               </>
             )}

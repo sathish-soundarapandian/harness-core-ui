@@ -246,8 +246,8 @@ featureFlags:
         targetGroup: Target Group is required
 featureFlagDetail:
   variationCount: '{{ count }} variations'
-  serviceDescription: Services this flag is associated with
-  serviceUpdateSuccess: Services updated
+  serviceDescription: Monitored Services this flag is associated with
+  serviceUpdateSuccess: Monitored Services updated
   noServices: 'No Monitored Service available'
   searchService: 'Search for Monitored Service name'
   jiraIssuesTitle: Jira Issues

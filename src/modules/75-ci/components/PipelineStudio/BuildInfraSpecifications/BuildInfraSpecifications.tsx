@@ -2373,7 +2373,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                         {renderInfo(buildInfraType)}
                       </Card>
                       <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">
-                        {getString('auditTrail.Platform')}
+                        {getString('common.resourceCenter.ticketmenu.platform')}
                       </Text>
                       <Card disabled={isReadonly} className={cx(css.sectionCard)}>
                         {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted &&

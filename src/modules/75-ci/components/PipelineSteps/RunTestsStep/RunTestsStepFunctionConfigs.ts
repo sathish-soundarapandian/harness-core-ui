@@ -114,7 +114,8 @@ export const transformValuesFieldsConfig = [
 
 export const getEditViewValidateFieldsConfig = (
   buildInfrastructureType: CIBuildInfrastructureType,
-  isLanguageCsharp: boolean
+  isLanguageCsharp: boolean,
+  isTemplateView: boolean
 ): { name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }[] => [
   {
     name: 'identifier',
@@ -132,21 +133,19 @@ export const getEditViewValidateFieldsConfig = (
     name: 'spec.connectorRef',
     type: ValidationFieldTypes.Text,
     label: 'pipelineSteps.connectorLabel',
-    isRequired: ![
-      CIBuildInfrastructureType.Cloud,
-      CIBuildInfrastructureType.VM,
-      CIBuildInfrastructureType.Docker
-    ].includes(buildInfrastructureType)
+    isRequired:
+      ![CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Docker].includes(
+        buildInfrastructureType
+      ) && !isTemplateView
   },
   {
     name: 'spec.image',
     type: ValidationFieldTypes.Text,
     label: 'imageLabel',
-    isRequired: ![
-      CIBuildInfrastructureType.Cloud,
-      CIBuildInfrastructureType.VM,
-      CIBuildInfrastructureType.Docker
-    ].includes(buildInfrastructureType)
+    isRequired:
+      ![CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Docker].includes(
+        buildInfrastructureType
+      ) && !isTemplateView
   },
   {
     name: 'spec.language',
@@ -235,14 +234,12 @@ export function getInputSetViewValidateFieldsConfig(
     {
       name: 'spec.connectorRef',
       type: ValidationFieldTypes.Text,
-      label: 'pipelineSteps.connectorLabel',
-      isRequired
+      label: 'pipelineSteps.connectorLabel'
     },
     {
       name: 'spec.image',
       type: ValidationFieldTypes.Text,
-      label: 'imageLabel',
-      isRequired
+      label: 'imageLabel'
     },
     {
       name: 'spec.buildEnvironment',

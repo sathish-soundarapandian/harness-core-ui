@@ -314,7 +314,8 @@ export const getValidationSchema = (
           // both filled or both empty. Return false to show error
           (operator && !this.parent.sourceBranchValue) ||
           (operator && this.parent.sourceBranchValue) ||
-          (!this.parent.sourceBranchValue?.trim() && !operator)
+          (!this.parent.sourceBranchValue?.trim() && !operator) ||
+          (!operator && this.parent.sourceBranchValue)
         )
       }
     ),

@@ -1,7 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { FormInput, MultiTypeInputType, SelectOption, useToaster } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import type { FieldMapping } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import { useFormikContext } from 'formik'
+import type {
+  CommonCustomMetricFormikInterface,
+  FieldMapping
+} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { useStrings } from 'framework/strings'
 import { FIELD_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
@@ -18,6 +22,7 @@ export interface CommonHealthSourceFieldProps {
 
 export default function CommonHealthSourceField(props: CommonHealthSourceFieldProps): JSX.Element {
   const { field, isConnectorRuntimeOrExpression, connectorIdentifier, providerType } = props
+  const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
   const { isTemplate, expressions } = useContext(SetupSourceTabsContext)
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [listOptions, setListOptions] = useState<SelectOption[]>([])
@@ -26,6 +31,7 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
   const { label, identifier, placeholder, type, isTemplateSupportEnabled } = field
   const shouldShowTemplatisedComponent = isTemplate && isTemplateSupportEnabled
   const shouldFetchDropdownOptions = !(isTemplate && isTemplateSupportEnabled && isConnectorRuntimeOrExpression)
+  const fieldValue = values?.[identifier] as string
 
   const { mutate: fetchParamValues, loading } = useGetParamValues({
     accountIdentifier: accountId,
@@ -83,11 +89,13 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
             ) : (
               <FormInput.Select
                 label={label}
+                value={fieldValue ? { label: fieldValue, value: fieldValue } : undefined}
                 name={identifier}
                 disabled={loading}
                 placeholder={loading ? getString('loading') : placeholder}
                 items={listOptions}
                 data-testid={identifier}
+                selectProps={{ allowCreatingNewItems: true }}
               />
             )}
           </>

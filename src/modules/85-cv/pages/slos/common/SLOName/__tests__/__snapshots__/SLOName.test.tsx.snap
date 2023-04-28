@@ -204,7 +204,7 @@ exports[`Test SLOName component should render SLOName component 1`] = `
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-medium"
       >
         <button
-          aria-label="cv.monitoredServices.newMonitoredServices"
+          aria-label="common.newMonitoredService"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
           type="button"
         >
@@ -230,7 +230,7 @@ exports[`Test SLOName component should render SLOName component 1`] = `
           <span
             class="bp3-button-text"
           >
-            cv.monitoredServices.newMonitoredServices
+            common.newMonitoredService
           </span>
         </button>
       </div>

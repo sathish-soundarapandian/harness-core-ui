@@ -161,7 +161,7 @@ export const EditServicesModal: FC<EditServicesProps> = ({
           <NoData
             imageURL={NoServices}
             buttonProps={{ icon: 'plus' }}
-            buttonText={noServices ? getString('newService') : undefined}
+            buttonText={noServices ? getString('common.newMonitoredService') : undefined}
             onClick={() =>
               history.push(
                 routes.toCVAddMonitoringServicesSetup({
@@ -390,7 +390,7 @@ const ServicesList: React.FC<ServicesListProps> = props => {
       <Layout.Horizontal flex={{ align: 'center-center' }} margin={{ bottom: 'small' }}>
         <Layout.Vertical margin={{ bottom: 'small' }}>
           <Heading level={5} font={{ variation: FontVariation.H5 }}>
-            {getString('services')}
+            {getString('common.monitoredServices')}
           </Heading>
           <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500}>
             {getString('cf.featureFlagDetail.serviceDescription')}

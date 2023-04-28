@@ -370,7 +370,6 @@ export const getValidationSchema = (
   const TriggerNameIdentifierSchema = NameIdentifierSchema(getString, {
     nameRequiredErrorMsg: getString('triggers.validation.triggerName')
   })
-
   if (triggerType === TriggerTypes.WEBHOOK) {
     return TriggerNameIdentifierSchema.shape({
       event: string().test(
@@ -440,12 +439,14 @@ export const getValidationSchema = (
       sourceBranchOperator: string().test(
         getString('triggers.validation.operator'),
         getString('triggers.validation.operator'),
+
         function (operator) {
           return (
             // both filled or both empty. Return false to show error
             (operator && !this.parent.sourceBranchValue) ||
             (operator && this.parent.sourceBranchValue) ||
-            (!this.parent.sourceBranchValue?.trim() && !operator)
+            (!this.parent.sourceBranchValue?.trim() && !operator) ||
+            (operator !== undefined && this.parent.sourceBranchValue !== undefined)
           )
         }
       ),
@@ -467,7 +468,8 @@ export const getValidationSchema = (
           return (
             (operator && !this.parent.targetBranchValue) ||
             (operator && this.parent.targetBranchValue) ||
-            (!this.parent.targetBranchValue?.trim() && !operator)
+            (!this.parent.targetBranchValue?.trim() && !operator) ||
+            (operator !== undefined && this.parent.sourceBranchValue !== undefined)
           )
         }
       ),
@@ -485,11 +487,13 @@ export const getValidationSchema = (
       changedFilesOperator: string().test(
         getString('triggers.validation.operator'),
         getString('triggers.validation.operator'),
+
         function (operator) {
           return (
             (operator && !this.parent.changedFilesValue) ||
             (operator && this.parent.changedFilesValue) ||
-            (!this.parent.changedFilesValue?.trim() && !operator)
+            (!this.parent.changedFilesValue?.trim() && !operator) ||
+            (operator !== undefined && this.parent.sourceBranchValue !== undefined)
           )
         }
       ),
@@ -511,7 +515,8 @@ export const getValidationSchema = (
           return (
             (operator && !this.parent.tagConditionValue) ||
             (operator && this.parent.tagConditionValue) ||
-            (!this.parent.tagConditionValue?.trim() && !operator)
+            (!this.parent.tagConditionValue?.trim() && !operator) ||
+            (operator !== undefined && this.parent.sourceBranchValue !== undefined)
           )
         }
       ),

@@ -227,7 +227,7 @@ export const CreateK8sDelegateV2 = ({
 
   return (
     <>
-      <Layout.Vertical className={css.marginBottomClass}>
+      <Layout.Vertical>
         <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
           {getString('cd.instructionsDelegate')}
         </Text>

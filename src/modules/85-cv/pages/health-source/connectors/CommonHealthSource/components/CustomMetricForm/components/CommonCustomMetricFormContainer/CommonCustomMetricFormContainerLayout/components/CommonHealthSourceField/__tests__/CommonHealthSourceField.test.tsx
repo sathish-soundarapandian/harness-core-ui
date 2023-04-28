@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult } from '@testing-library/react'
+import { fireEvent, render, RenderResult } from '@testing-library/react'
+import * as Formik from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { FieldMapping } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import type { HealthSourceParamValuesRequest } from 'services/cv'
@@ -31,6 +32,20 @@ const renderComponent = (props: CommonHealthSourceFieldProps, isTemplate?: boole
 }
 
 describe('Test cases for CommonHealthSourceField', () => {
+  const useFormikContextMock = jest.spyOn(Formik, 'useFormikContext')
+
+  const setFieldValueMock = jest.fn()
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    useFormikContextMock.mockReturnValue({
+      isValid: true,
+      setFieldValue: setFieldValueMock,
+      values: {}
+    } as unknown as any)
+  })
+
   const props = {
     field: {
       type: 'Dropdown',
@@ -92,6 +107,23 @@ describe('Test cases for CommonHealthSourceField', () => {
     const inputEl = container.querySelector(`input[name=${props.field.identifier}]`)
     expect(inputEl).toBeInTheDocument()
     expect(inputEl).toHaveAttribute('placeholder', '- Select Log Index -')
+  })
+
+  test('it should show the component with options when fieldType is dropdown and api is success and should be able to select a new option', () => {
+    jest.spyOn(cvServices, 'useGetParamValues').mockImplementation(
+      () =>
+        ({
+          mutate: jest.fn().mockImplementation(() => mockedParamsValues),
+          loading: false
+        } as any)
+    )
+    const { container } = renderComponent(props)
+    const inputEl = container.querySelector(`input[name=${props.field.identifier}]`)
+    expect(inputEl).toBeInTheDocument()
+    expect(inputEl).toHaveAttribute('placeholder', '- Select Log Index -')
+    if (inputEl) {
+      fireEvent.change(inputEl, { target: { value: '*' } })
+    }
   })
 
   test('it should render the component with template support when component is rendered in template mode', () => {

@@ -46,7 +46,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CONNECTOR, {
   attributeRenderer: props => <ConnectorAttributeRenderer {...props} />
 })
 
-const platformLabel = 'auditTrail.Platform'
+const platformLabel = 'common.resourceCenter.ticketmenu.platform'
 AuditTrailFactory.registerResourceHandler('CONNECTOR', {
   moduleIcon: {
     name: 'nav-settings'

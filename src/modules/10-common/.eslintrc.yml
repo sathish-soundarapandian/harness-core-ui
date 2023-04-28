@@ -26,6 +26,7 @@ rules:
             - modules/40-gitsync/*
             - modules/45-dashboards/*
             - modules/45-projects-orgs/*
+            - modules/50-assessments/*
             - modules/60-code/*
             - modules/70-pipeline/*
             - modules/72-freeze-windows/*
@@ -57,6 +58,7 @@ rules:
             - '@gitsync/*'
             - '@dashboards/*'
             - '@projects-orgs/*'
+            - '@assessments/*'
             - '@code/*'
             - '@pipeline/*'
             - '@freeze-windows/*'

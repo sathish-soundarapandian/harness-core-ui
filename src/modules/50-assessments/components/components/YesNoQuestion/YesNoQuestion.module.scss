@@ -1,0 +1,23 @@
+.displayCard {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 32px;
+  border-radius: 100px !important;
+  padding: var(--spacing-xsmall) var(--spacing-medium) !important;
+}
+
+.optionText {
+  color: var(--grey-700) !important;
+  font-weight: 500 !important;
+  line-height: 18px !important;
+}
+
+.selected {
+  background-color: var(--primary-6) !important;
+}
+
+.selectedText {
+  color: var(--white) !important;
+}

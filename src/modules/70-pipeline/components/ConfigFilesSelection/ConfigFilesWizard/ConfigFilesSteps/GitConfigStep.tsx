@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import {
   Layout,
@@ -38,7 +45,7 @@ export function GitConfigStep({
   previousStep,
   context,
   isReadonly = false,
-  editManifestModePrevStepData
+  editConfigFilePrevStepData
 }: StepProps<ConnectorConfigDTO> & GitConfigFileCoreValuesPropType): React.ReactElement {
   const { getString } = useStrings()
   const [initialValues, setInitialValues] = React.useState({
@@ -56,13 +63,13 @@ export function GitConfigStep({
 
   const hideHeaderAndNavBtns = context ? shouldHideHeaderAndNavBtns(context) : false
 
-  const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+  const modifiedPrevStepData = defaultTo(prevStepData, editConfigFilePrevStepData)
 
   const gitConnectionType: string = modifiedPrevStepData?.store === ConfigFilesMap.Git ? 'connectionType' : 'type'
   const connectionType =
     /* istanbul ignore next */
-    modifiedPrevStepData.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-    modifiedPrevStepData.urlType === GitRepoName.Repo
+    modifiedPrevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    modifiedPrevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
@@ -118,7 +125,7 @@ export function GitConfigStep({
         type: selectedConfigFile as any,
         spec: {
           store: {
-            type: modifiedPrevStepData.store,
+            type: modifiedPrevStepData?.store,
             spec: {
               connectorRef: formData?.connectorRef,
               gitFetchType: formData?.gitFetchType,

@@ -31,8 +31,13 @@ import {
   FILE_TYPE_VALUES
 } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { HarnessConfigStep } from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/HarnessConfigStep'
-import type { ConfigFileType } from '@pipeline/components/ConfigFilesSelection/ConfigFilesInterface'
+import type {
+  ConfigFileType,
+  HarnessConfigFileLastStepPrevStepData
+} from '@pipeline/components/ConfigFilesSelection/ConfigFilesInterface'
+import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 import ServiceConfigFileOverridesList from './ServiceConfigFileOverridesList'
 import ServiceConfigFileList from './ServiceConfigFileList'
 import css from '../ServiceManifestOverride/ServiceManifestOverride.module.scss'
@@ -42,6 +47,7 @@ interface ConfigFileDefaultValueType {
   files: string[]
   identifier: string
   fileType: FILE_TYPE_VALUES
+  connectorRef?: string
 }
 interface ServiceConfigFileOverrideProps {
   fileOverrides: ConfigFileWrapper[]
@@ -81,6 +87,8 @@ function ServiceConfigFileOverride({
     PipelinePathProps & EnvironmentPathProps
   >()
 
+  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
+
   const getServiceYaml = useCallback((): NGServiceV2InfoConfig => {
     const serviceSelected = serviceList?.find(serviceObj => serviceObj.service?.identifier === selectedService)
     if (serviceSelected) {
@@ -101,6 +109,27 @@ function ServiceConfigFileOverride({
     const parsedServiceYaml = getServiceYaml()
     return defaultTo(parsedServiceYaml?.serviceDefinition?.type, '') as ServiceDefinition['type']
   }
+
+  const getInitialValues = useCallback((): ConfigFileDefaultValueType => {
+    if (isEditMode) {
+      const initValues = get(fileOverrides[fileIndex], 'configFile.spec.store.spec')
+
+      return {
+        ...initValues,
+        store: fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type,
+        identifier: get(fileOverrides[fileIndex], 'configFile.identifier', ''),
+        files: initValues?.secretFiles?.length ? initValues?.secretFiles : initValues?.files,
+        secretFiles: initValues?.secretFiles,
+        fileType: initValues?.secretFiles?.length ? FILE_TYPE_VALUES.ENCRYPTED : FILE_TYPE_VALUES.FILE_STORE
+      }
+    }
+    return {
+      store: ConfigFilesMap.Harness,
+      files: [''],
+      identifier: '',
+      fileType: FILE_TYPE_VALUES.FILE_STORE
+    }
+  }, [fileIndex, fileOverrides, isEditMode])
 
   const createNewFileOverride = useCallback((): void => {
     setEditIndex(fileOverrides.length)
@@ -128,7 +157,34 @@ function ServiceConfigFileOverride({
     [fileIndex]
   )
 
+  const initialValues = getInitialValues()
+  const initialConnectorRef = initialValues.connectorRef
+
+  const { selectedConnector } = useGetLastStepConnectorValue({
+    initialConnectorRef,
+    isEditMode
+  })
+
+  const prevStepProps = useCallback((): { editConfigFilePrevStepData: ConnectorConfigDTO } => {
+    return {
+      editConfigFilePrevStepData: {
+        ...initialValues,
+        store: initialValues?.store,
+        connectorRef: selectedConnector
+      }
+    }
+  }, [initialValues, selectedConnector])
+
+  const shouldPassPrevStepData = (): boolean => {
+    if (initialValues.store === ConfigFilesMap.Harness) {
+      return isEditMode && !!CDS_SERVICE_CONFIG_LAST_STEP
+    }
+    return isEditMode && !!selectedConnector && !!CDS_SERVICE_CONFIG_LAST_STEP
+  }
+
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
+    // If Git stores are introduced then add if...else condition here
+    // as done in src/modules/70-pipeline/components/ConfigFilesSelection/ConfigFilesListView/ConfigFilesListView.tsx file
     return [
       <HarnessConfigStep
         key="harnessConfigFile"
@@ -138,30 +194,10 @@ function ServiceConfigFileOverride({
         listOfConfigFiles={getServiceConfigFiles()}
         expressions={expressions}
         handleSubmit={handleSubmit}
+        {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessConfigFileLastStepPrevStepData)}
       />
     ]
-  }, [expressions, getServiceConfigFiles, getString, handleSubmit, isEditMode])
-
-  const getInitialValues = useCallback((): ConfigFileDefaultValueType => {
-    if (isEditMode) {
-      const initValues = get(fileOverrides[fileIndex], 'configFile.spec.store.spec')
-
-      return {
-        ...initValues,
-        store: fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type,
-        identifier: get(fileOverrides[fileIndex], 'configFile.identifier', ''),
-        files: initValues?.secretFiles?.length ? initValues?.secretFiles : initValues?.files,
-        secretFiles: initValues?.secretFiles,
-        fileType: initValues?.secretFiles?.length ? FILE_TYPE_VALUES.ENCRYPTED : FILE_TYPE_VALUES.FILE_STORE
-      }
-    }
-    return {
-      store: ConfigFilesMap.Harness,
-      files: [''],
-      identifier: '',
-      fileType: FILE_TYPE_VALUES.FILE_STORE
-    }
-  }, [fileIndex, fileOverrides, isEditMode])
+  }, [expressions, getServiceConfigFiles, getString, handleSubmit, isEditMode, prevStepProps])
 
   const [showModal, hideModal] = useModalHook(() => {
     const onClose = (): void => {
@@ -195,7 +231,7 @@ function ServiceConfigFileOverride({
               )
             }
             lastSteps={getLastSteps()}
-            isNewFile={!isEditMode}
+            isEditMode={isEditMode}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />

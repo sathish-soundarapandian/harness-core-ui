@@ -79,7 +79,7 @@ export const JiraViewDetails = ({ feedback, onHideCallback }: JiraViewDetailsPro
         />
 
         <JiraViewDetailsDisplay
-          label={getString('pipeline.jiraApprovalStep.issueType')}
+          label={getString('common.resourceCenter.ticketmenu.issueType')}
           testId={'jiraDetails_issueType'}
           value={ticketDetails?.issueType}
         />
@@ -99,7 +99,7 @@ export const JiraViewDetails = ({ feedback, onHideCallback }: JiraViewDetailsPro
         />
 
         <JiraViewDetailsDisplay
-          label={getString('cv.logs.jiraFormLable.priority')}
+          label={getString('common.resourceCenter.ticketmenu.priority')}
           testId={'jiraDetails_priority'}
           value={ticketDetails?.priority}
         />

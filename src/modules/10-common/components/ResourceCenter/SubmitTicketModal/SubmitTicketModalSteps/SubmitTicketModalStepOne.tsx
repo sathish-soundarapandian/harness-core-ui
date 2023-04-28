@@ -71,14 +71,22 @@ export const SubmitTicketModalStepOne = (props: StepProps<any> & SubmitTicketMod
         formName="ticketDetailsForm"
         validate={debouncedUpdate}
         validationSchema={Yup.object().shape({
-          subject: Yup.string().required('Ticket Details are required')
+          subject: Yup.string().required(
+            getString('common.validation.fieldIsRequired', {
+              name: getString('common.resourceCenter.ticketmenu.ticketDetails')
+            })
+          )
         })}
         onSubmit={nextStep as () => void}
       >
         {formik => (
           <Form>
             <Layout.Vertical>
-              <FormInput.Text name="subject" label={'What is the problem you are facing?'} className={css.inputWidth} />
+              <FormInput.Text
+                name="subject"
+                label={getString('common.resourceCenter.ticketmenu.ticketSubject')}
+                className={css.inputWidth}
+              />
               {formik.values.subject && resultsSuggestions.length > 0 ? (
                 <SuggestionsPanel data={resultsSuggestions} />
               ) : (

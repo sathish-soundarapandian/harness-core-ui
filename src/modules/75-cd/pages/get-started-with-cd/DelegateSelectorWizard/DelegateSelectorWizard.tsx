@@ -382,7 +382,7 @@ const DelegateSelectorWizardRef = (
           <Container>
             <Text
               font={{ variation: FontVariation.H3, weight: 'semi-bold' }}
-              margin={{ bottom: 'small' }}
+              margin={{ bottom: 'large' }}
               color={Color.GREY_600}
               data-tooltip-id="cdOnboardingEnvironment"
             >
@@ -392,13 +392,11 @@ const DelegateSelectorWizardRef = (
 
             <div className={css.marginBottomClass} />
             <ConnectWithDelegate trackEvent={trackEvent} />
-            {/* <InfoContainer label="cd.getStartedWithCD.delegateDescription" /> */}
           </Container>
           <Layout.Vertical>
-            <div className={css.marginTop} />
+            <div className={css.marginBottomClass} />
             {conditionalContent()}
           </Layout.Vertical>
-
           {delegateName?.current && !isEmpty(delegateData?.delegateType) && (
             <>
               <Container className={css.borderBottomClass} />

@@ -49,6 +49,9 @@ module.exports = {
   '/cv/api': {
     target: targetLocalHost ? 'https://localhost:6060' : `${baseUrl}`
   },
+  '/assessments/api': {
+    target: targetLocalHost ? 'http://localhost:12050' : `${baseUrl}`
+  },
   '/cf/web': {
     pathRewrite: { '^/cf/web': '' },
     target: process.env.FF_UI_URL || 'http://localhost:9292'

@@ -22,7 +22,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String } from 'framework/strings'
 import VariablesPage from './pages/variables/VariablesPage'
 
-const platformLabel = 'auditTrail.Platform'
+const platformLabel = 'common.resourceCenter.ticketmenu.platform'
 AuditTrailFactory.registerResourceHandler('VARIABLE', {
   moduleIcon: {
     name: 'variable'

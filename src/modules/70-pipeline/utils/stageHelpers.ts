@@ -455,6 +455,9 @@ export const isAWSLambdaDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.AwsLambda
 }
 
+export const isServiceHooksAllowed = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.NativeHelm
+}
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',

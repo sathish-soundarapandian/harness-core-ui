@@ -266,12 +266,10 @@ export function BambooArtifact(
         onSubmit={formData => {
           const artifactPaths = formData.spec?.artifactPaths.map((path: MultiSelectOption) => path.value)
           handleSubmit({
-            ...formData,
-            spec: {
-              ...formData.spec,
-              artifactPaths
-            },
-            connectorRef: getConnectorIdValue(prevStepData)
+            connectorRef: getConnectorIdValue(prevStepData),
+
+            ...formData.spec,
+            artifactPaths
           })
         }}
       >

@@ -47,7 +47,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SECRET, {
   staticResourceRenderer: props => <SecretResourceRenderer {...props} />
 })
 
-const platformLabel = 'auditTrail.Platform'
+const platformLabel = 'common.resourceCenter.ticketmenu.platform'
 AuditTrailFactory.registerResourceHandler('SECRET', {
   moduleIcon: {
     name: 'nav-settings'

@@ -497,7 +497,7 @@ exports[`Jira Create fetch projects show error if failed to fetch projects 1`] =
                 class="Tooltip--acenter"
                 data-tooltip-id="jiraCreate_spec.issueType"
               >
-                pipeline.jiraApprovalStep.issueType
+                common.resourceCenter.ticketmenu.issueType
               </span>
                
               <span
@@ -849,7 +849,7 @@ exports[`Jira Create tests Basic snapshot - deploymentform mode: jira-create-dep
             class="Tooltip--acenter"
             data-tooltip-id="stepTestUtilForm_spec.issueType"
           >
-            pipeline.jiraApprovalStep.issueType
+            common.resourceCenter.ticketmenu.issueType
           </span>
            
           <span
@@ -1353,7 +1353,7 @@ exports[`Jira Create tests Basic snapshot - inputset mode: input set with errors
             class="Tooltip--acenter"
             data-tooltip-id="stepTestUtilForm_spec.issueType"
           >
-            pipeline.jiraApprovalStep.issueType
+            common.resourceCenter.ticketmenu.issueType
           </span>
            
           <span
@@ -1731,7 +1731,7 @@ exports[`Jira Create tests Deploymentform readonly mode: jira-create-deploymentf
             class="Tooltip--acenter"
             data-tooltip-id="stepTestUtilForm_spec.issueType"
           >
-            pipeline.jiraApprovalStep.issueType
+            common.resourceCenter.ticketmenu.issueType
           </span>
            
           <span
@@ -2242,7 +2242,7 @@ exports[`Jira Create tests Edit Stage - readonly view: edit-stage-readonly 1`] =
                 class="Tooltip--acenter"
                 data-tooltip-id="jiraCreate_spec.issueType"
               >
-                pipeline.jiraApprovalStep.issueType
+                common.resourceCenter.ticketmenu.issueType
               </span>
                
               <span

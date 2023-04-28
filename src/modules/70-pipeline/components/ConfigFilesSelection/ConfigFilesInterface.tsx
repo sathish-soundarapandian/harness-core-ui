@@ -6,9 +6,10 @@
  */
 
 import type { AllowedTypes, IconName } from '@harness/uicore'
-import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
-import type { ServiceDefinition, StageElementConfig, ConfigFileWrapper } from 'services/cd-ng'
+import type { ServiceDefinition, StageElementConfig, ConfigFileWrapper, ConnectorConfigDTO } from 'services/cd-ng'
+import type { Scope } from '@common/interfaces/SecretsInterface'
+import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
 export interface ConfigFilesSelectionProps {
   isPropagating?: boolean
@@ -42,7 +43,7 @@ export interface ConfigFileHarnessDataType {
   identifier: string
   fileType: string
   files: any[]
-  secretFiles: any[]
+  secretFiles?: any[]
 }
 
 export interface ConfigFileFileStoreNode {
@@ -55,7 +56,26 @@ export interface ConfigInitStepData {
   store: ConfigFileType
   files: ConfigFileFileStoreNode[] | string[] | string
   fileType: string
+  connectorRef?: string
 }
+
+export interface ConfigFileConnectorRefType {
+  label: string
+  value: string
+  scope: Scope
+  live: boolean
+  connector: ConnectorConfigDTO
+}
+
+export interface ConfigFileLastStepPrevStepData {
+  store: ConfigFileType
+  connectorRef: ConfigFileConnectorRefType
+}
+
+export type GitConfigFileLastStepPrevStepData = ConfigInitStepData & ConfigFileLastStepPrevStepData
+
+export type HarnessConfigFileLastStepPrevStepData = ConfigFileHarnessDataType &
+  Omit<ConfigFileLastStepPrevStepData, 'connectorRef'>
 
 export interface GitConfigFileCoreValuesPropType {
   stepName: string
@@ -63,9 +83,9 @@ export interface GitConfigFileCoreValuesPropType {
   allowableTypes: AllowedTypes
   handleSubmit: (data: ConfigFileWrapper) => void
   isReadonly?: boolean
-  editManifestModePrevStepData?: any
   listOfConfigFiles: ConfigFileWrapper[]
   isEditState?: boolean
   context?: any
   selectedConfigFile: string
+  editConfigFilePrevStepData?: GitConfigFileLastStepPrevStepData
 }

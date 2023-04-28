@@ -123,7 +123,7 @@ export const moduleInfoMap: Record<AuditEventDTO['module'], ModuleInfo> = {
     icon: { name: 'pipeline' }
   },
   CORE: {
-    moduleLabel: 'auditTrail.Platform',
+    moduleLabel: 'common.resourceCenter.ticketmenu.platform',
     icon: { name: 'nav-settings' }
   },
   TEMPLATESERVICE: {

@@ -211,7 +211,7 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra Render AWS 
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
                 id="infrastructureDefinition"
               >
-                auditTrail.Platform
+                common.resourceCenter.ticketmenu.platform
               </p>
               <div
                 class="bp3-card bp3-elevation-0 Card--card sectionCard"
@@ -744,7 +744,7 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra initializes
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
                 id="infrastructureDefinition"
               >
-                auditTrail.Platform
+                common.resourceCenter.ticketmenu.platform
               </p>
               <div
                 class="bp3-card bp3-elevation-0 Card--card sectionCard"
@@ -1080,7 +1080,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
                 id="infrastructureDefinition"
               >
-                auditTrail.Platform
+                common.resourceCenter.ticketmenu.platform
               </p>
               <div
                 class="bp3-card bp3-elevation-0 Card--card sectionCard"
@@ -5613,7 +5613,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra able to sel
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
                 id="infrastructureDefinition"
               >
-                auditTrail.Platform
+                common.resourceCenter.ticketmenu.platform
               </p>
               <div
                 class="bp3-card bp3-elevation-0 Card--card sectionCard"
@@ -6214,7 +6214,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra initializes
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
                 id="infrastructureDefinition"
               >
-                auditTrail.Platform
+                common.resourceCenter.ticketmenu.platform
               </p>
               <div
                 class="bp3-card bp3-elevation-0 Card--card sectionCard"

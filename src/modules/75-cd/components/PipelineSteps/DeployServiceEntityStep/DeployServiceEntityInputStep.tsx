@@ -192,10 +192,11 @@ export function DeployServiceEntityInputStep({
     // updated values based on selected services
     const newServicesValues: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
       const svcTemplate = servicesData.find(svcTpl => getScopedValueFromDTO(svcTpl.service) === svcId)?.serviceInputs
-      let serviceInputs = isMultiSvcTemplate
-        ? get(formik.values, `${localPathPrefix}values`)?.find((svc: ServiceYamlV2) => svc.serviceRef === svcId)
-            ?.serviceInputs
-        : get(formik.values, `${localPathPrefix}serviceInputs`)
+      const svcFormikValues = get(formik.values, `${localPathPrefix}values`)
+      let serviceInputs =
+        isMultiSvcTemplate && Array.isArray(svcFormikValues)
+          ? svcFormikValues?.find((svc: ServiceYamlV2) => svc.serviceRef === svcId)?.serviceInputs
+          : get(formik.values, `${localPathPrefix}serviceInputs`)
 
       if (!serviceInputs || isValueRuntimeInput(serviceInputs)) {
         serviceInputs = svcTemplate ? clearRuntimeInput(svcTemplate) : undefined

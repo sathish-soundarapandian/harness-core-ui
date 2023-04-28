@@ -129,7 +129,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.AUTHSETTING, {
   }
 })
 
-const platformLabel = 'auditTrail.Platform'
+const platformLabel = 'common.resourceCenter.ticketmenu.platform'
 AuditTrailFactory.registerResourceHandler('USER_GROUP', {
   moduleIcon: {
     name: 'nav-settings'

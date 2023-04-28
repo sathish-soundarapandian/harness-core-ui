@@ -12,7 +12,12 @@ import { defaultTo, get } from 'lodash-es'
 import { AllowedTypes, Layout } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import type { ApplicationSettingsConfiguration, ConnectionStringsConfiguration, ServiceSpec } from 'services/cd-ng'
+import type {
+  ApplicationSettingsConfiguration,
+  ConnectionStringsConfiguration,
+  ServiceHookWrapper,
+  ServiceSpec
+} from 'services/cd-ng'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -29,25 +34,31 @@ import applicationConfigBaseFactory from '@cd/factory/ApplicationConfigFactory/A
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
 import type { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
+import serviceHookSourceBaseFactory from '@cd/factory/ServiceHookSourceFactory/ServiceHookSourceFactory'
 import type { K8SDirectServiceStep } from '../../K8sServiceSpec/K8sServiceSpecInterface'
 import { KubernetesArtifacts } from '../../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from '../../K8sServiceSpec/KubernetesManifests/KubernetesManifests'
 import PrimaryArtifactRef from '../../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
 import { ConfigFiles } from '../../SshServiceSpec/SshConfigFiles/ConfigFiles'
 import { ApplicationConfigType } from '../../AzureWebAppServiceSpec/AzureWebAppServiceSpecInterface.types'
+import { ServiceHooksConfig } from './RuntimeServiceHookConfig/ServiceHooksConfig'
 import css from './GenericServiceSpec.module.scss'
 
 export interface KubernetesInputSetProps {
-  initialValues: K8SDirectServiceStep
+  initialValues: K8SDirectServiceStep & {
+    hooks?: ServiceHookWrapper[]
+  }
   onUpdate?: ((data: ServiceSpec) => void) | undefined
   stepViewType?: StepViewType
   template?: ServiceSpec & {
     applicationSettings?: ApplicationSettingsConfiguration
     connectionStrings?: ConnectionStringsConfiguration
+    hooks?: ServiceHookWrapper[]
   }
   allValues?: ServiceSpec & {
     applicationSettings?: ApplicationSettingsConfiguration
     connectionStrings?: ConnectionStringsConfiguration
+    hooks?: ServiceHookWrapper[]
   }
   readonly?: boolean
   factory?: AbstractStepFactory
@@ -160,6 +171,16 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
         <ConfigFiles
           configFiles={defaultTo(allValues?.configFiles, initialValues?.configFiles)}
           configFileSourceBaseFactory={configFileSourceBaseFactory}
+          stageIdentifier={stageIdentifier}
+          template={template}
+          {...commonProps}
+        />
+      )}
+
+      {!!template?.hooks?.length && (
+        <ServiceHooksConfig
+          hooks={defaultTo(allValues?.hooks, initialValues?.hooks)}
+          serviceHookSourceBaseFactory={serviceHookSourceBaseFactory}
           stageIdentifier={stageIdentifier}
           template={template}
           {...commonProps}

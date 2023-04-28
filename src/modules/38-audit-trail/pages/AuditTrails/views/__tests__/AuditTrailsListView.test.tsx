@@ -17,7 +17,7 @@ import { data } from './mockData'
 
 AuditTrailFactory.registerResourceHandler('CONNECTOR', {
   moduleIcon: { name: 'nav-settings' },
-  moduleLabel: 'auditTrail.Platform',
+  moduleLabel: 'common.resourceCenter.ticketmenu.platform',
   resourceLabel: 'connector'
 })
 

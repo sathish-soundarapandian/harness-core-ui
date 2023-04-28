@@ -108,16 +108,16 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
               </Text>
             )
           } catch (_) {
-            showSuccess('Ticket Created Successfully')
+            showSuccess(getString('common.resourceCenter.ticketmenu.ticketSuccess'))
           }
 
           onCloseHandler()
         } else {
-          showError('Something went wrong')
+          showError(getString('somethingWentWrong'))
         }
       }
     } catch (_) {
-      showError('Something went wrong')
+      showError(getString('somethingWentWrong'))
     }
   }
 
@@ -128,7 +128,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
     }
   })
   moduleOptions.push({
-    label: 'Platform',
+    label: getString('common.resourceCenter.ticketmenu.platform'),
     value: 'platform'
   })
 
@@ -154,9 +154,21 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
         }}
         formName="ticketDetailsForm"
         validationSchema={Yup.object().shape({
-          issueType: Yup.string().required('Issue Type is required'),
-          priority: Yup.string().required('Priority is required'),
-          ticketDetails: Yup.string().required('Ticket Details is required')
+          issueType: Yup.string().required(
+            getString('common.validation.fieldIsRequired', {
+              name: getString('common.resourceCenter.ticketmenu.issueType')
+            })
+          ),
+          priority: Yup.string().required(
+            getString('common.validation.fieldIsRequired', {
+              name: getString('common.resourceCenter.ticketmenu.priority')
+            })
+          ),
+          ticketDetails: Yup.string().required(
+            getString('common.validation.fieldIsRequired', {
+              name: getString('common.resourceCenter.ticketmenu.ticketDescription')
+            })
+          )
         })}
         onSubmit={handleSubmit}
       >
@@ -165,7 +177,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
             <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
               <FormInput.Text
                 name="subject"
-                label={'What is the problem you are facing?'}
+                label={getString('common.resourceCenter.ticketmenu.ticketSubject')}
                 className={css.inputWidth}
                 disabled
               />
@@ -173,47 +185,47 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
                 name="issueType"
                 className={css.fieldWidth}
                 items={issueTypes}
-                placeholder={'Issue Type'}
-                label={'Issue Type'}
+                placeholder={getString('common.resourceCenter.ticketmenu.issueType')}
+                label={getString('common.resourceCenter.ticketmenu.issueType')}
               />
               <FormInput.Select
                 name="priority"
                 className={css.fieldWidth}
                 items={priorityItems}
-                placeholder={'Priority'}
-                label={'Priority'}
+                placeholder={getString('common.resourceCenter.ticketmenu.priority')}
+                label={getString('common.resourceCenter.ticketmenu.priority')}
               />
               <FormInput.Select
                 name="module"
-                label={'Module'}
+                label={getString('common.moduleLabel')}
                 className={css.fieldWidth}
-                placeholder="Module"
+                placeholder={getString('common.moduleLabel')}
                 items={moduleOptions}
               />
               <FormInput.Select
                 name="component"
-                label={'Component'}
+                label={getString('common.resourceCenter.ticketmenu.component')}
                 className={css.fieldWidth}
-                placeholder="Component"
+                placeholder={getString('common.resourceCenter.ticketmenu.component')}
                 items={getComponentsFromModule(formik.values.module)}
               />
               <FormInput.TextArea
                 name="ticketDetails"
-                label={'Ticket Description'}
+                label={getString('common.resourceCenter.ticketmenu.ticketDescription')}
                 className={css.inputWidth}
-                placeholder="Please add relevant details for the problem"
+                placeholder={getString('common.resourceCenter.ticketmenu.ticketDescriptionPlaceholder')}
               />
               <FormInput.FileInput
                 name="fileData"
-                label={'Attachments'}
-                buttonText={'Upload'}
-                placeholder={'Choose a File'}
+                label={getString('common.resourceCenter.ticketmenu.attachments')}
+                buttonText={getString('upload')}
+                placeholder={getString('common.resourceCenter.ticketmenu.chooseAFile')}
                 className={css.fieldWidth}
               />
               <Layout.Horizontal>
                 <Button
                   variation={ButtonVariation.SECONDARY}
-                  text={'Back'}
+                  text={getString('back')}
                   icon="chevron-left"
                   className={css.backBtn}
                   onClick={backBtnHandler}
@@ -221,7 +233,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
                 <Button
                   variation={ButtonVariation.PRIMARY}
                   type="submit"
-                  text={'Submit'}
+                  text={getString('submit')}
                   rightIcon="chevron-right"
                   className={css.saveBtn}
                 />

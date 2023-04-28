@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import type { FormikProps } from 'formik'
 import { FormInput, Text, Icon, Container, HarnessDocTooltip } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -58,7 +59,7 @@ export const ConditionRow = ({
   name,
   label
 }: {
-  formikProps: any
+  formikProps: FormikProps<any>
   name: string
   label: string
 }): JSX.Element => {
@@ -74,13 +75,22 @@ export const ConditionRow = ({
         {label}
         <HarnessDocTooltip tooltipId={name} useStandAlone={true} />
       </Text>
-      <FormInput.Select
-        style={{ alignSelf: valueError ? 'baseline' : 'center' }}
-        className={css.operatorContainer}
-        items={mockOperators}
-        name={operatorKey}
-        placeholder={getString('pipeline.operatorPlaceholder')}
-      />
+      <div>
+        <FormInput.Select
+          style={{ alignSelf: valueError ? 'baseline' : 'center' }}
+          className={css.operatorContainer}
+          items={mockOperators}
+          name={operatorKey}
+          placeholder={getString('pipeline.operatorPlaceholder')}
+          onChange={() => {
+            /*
+             * Set operatorKey field touched to show error message
+             * By default FormInput.Select does not set field touched on blur
+             */
+            formikProps.setFieldTouched(operatorKey, true, false)
+          }}
+        />
+      </div>
       <FormInput.Text
         name={valueKey}
         style={{ alignSelf: operatorError ? 'baseline' : 'center' }}

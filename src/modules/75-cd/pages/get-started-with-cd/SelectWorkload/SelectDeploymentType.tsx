@@ -63,7 +63,7 @@ const SelectDeploymentTypeRef = (
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const { disableNextBtn, enableNextBtn, onSuccess } = props
-  const { GITOPS_HOSTED, CD_ONBOARDING_HELP_ENABLED } = useFeatureFlags()
+  const { CD_ONBOARDING_HELP_ENABLED } = useFeatureFlags()
   const {
     state: { service: serviceData },
     saveServiceData
@@ -86,15 +86,6 @@ const SelectDeploymentTypeRef = (
       disabled: false
     }
   ]
-
-  if (GITOPS_HOSTED) {
-    ngSupportedDeploymentTypes.push({
-      label: 'pipeline.serviceDeploymentTypes.kubernetesWithGitops',
-      icon: deploymentIconMap[ServiceDeploymentType.KubernetesGitops],
-      value: ServiceDeploymentType.KubernetesGitops,
-      disabled: false
-    })
-  }
 
   useEffect(() => {
     if (formikRef?.current?.values?.selectedDeploymentType) {

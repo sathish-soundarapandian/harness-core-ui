@@ -16,7 +16,8 @@ import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSe
 import {
   getSelectedDeploymentType,
   getVariablesHeaderTooltipId,
-  isOnlyOneManifestAllowedForDeploymentType
+  isOnlyOneManifestAllowedForDeploymentType,
+  isServiceHooksAllowed
 } from '@pipeline/utils/stageHelpers'
 import {
   DeployTabs,
@@ -31,10 +32,11 @@ import {
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
-import { FeatureFlag } from '@common/featureFlags'
+import { getServiceHooksHeaderTooltipId } from '@pipeline/components/ServiceHooks/ServiceHooksHelper'
+import ServiceHooksSelection from '@pipeline/components/ServiceHooks/ServiceHooks'
 import type { KubernetesServiceInputFormProps } from '../../K8sServiceSpec/K8sServiceSpecInterface'
 import { setupMode, isMultiArtifactSourceEnabled } from '../../PipelineStepsUtil'
 import css from './GenericServiceSpec.module.scss'
@@ -55,14 +57,14 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const { NG_SVC_ENV_REDESIGN, CDS_K8S_SERVICE_HOOKS_NG } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
-  const isNewService = isNewServiceEnvEntity(!!isSvcEnvEnabled, stage?.stage as DeploymentStageElementConfig)
+  const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
-    !!isSvcEnvEnabled,
+    !!NG_SVC_ENV_REDESIGN,
     stage?.stage as DeploymentStageElementConfig,
     isServiceEntityPage
   )
@@ -138,6 +140,29 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
               />
             </Card>
           )}
+
+          {(isNewService || isServiceEntityPage) &&
+            isServiceHooksAllowed(selectedDeploymentType) &&
+            CDS_K8S_SERVICE_HOOKS_NG && (
+              <Card className={css.sectionCard} id={getString('pipeline.serviceHooks.label')}>
+                <div
+                  className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+                  data-tooltip-id={getServiceHooksHeaderTooltipId(selectedDeploymentType)}
+                >
+                  {getString('pipeline.serviceHooks.label')}
+                  <HarnessDocTooltip
+                    tooltipId={getServiceHooksHeaderTooltipId(selectedDeploymentType)}
+                    useStandAlone={true}
+                  />
+                </div>
+                <ServiceHooksSelection
+                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                  isPropagating={isPropagating}
+                  deploymentType={selectedDeploymentType}
+                  readonly={!!readonly}
+                />
+              </Card>
+            )}
         </>
       )}
 

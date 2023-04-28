@@ -856,6 +856,7 @@ feature:
 repositoryName: Repository Name
 mostActiveServices: Most active services
 monitoredServices: Monitored Services
+newMonitoredService: New Monitored Service
 allErrors: All Errors
 connectivityErrors: Connectivity Errors
 apply: '{{ $.filters.apply }}'
@@ -964,6 +965,19 @@ resourceCenter:
     submitDesc: 'Get help from our expert system'
     submitTicket: Submit a ticket
     viewTicket: View my ticket
+    ticketSubject: Ticket Subject
+    ticketDetails: Ticket Details
+    ticketIssue: What is the problem you are facing?
+    ticketSuccess: Ticket Created Successfully
+    issueType: Issue Type
+    priority: Priority
+    component: Component
+    ticketDescription: Ticket Description
+    ticketDescriptionPlaceholder: Please add relevant details for the problem
+    attachments: Attachments
+    chooseAFile: Choose a File
+    platform: Platform
+    suggestionsPanel: Before you proceed, here are some suggestions that might help...
   bottomlayout:
     desc: Other useful resources
     docs: Docs

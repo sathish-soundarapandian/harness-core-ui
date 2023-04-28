@@ -18,11 +18,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { AMITagObject, BuildDetails, useListVersionsForAMIArtifact } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
-import {
-  amiFilters,
-  getInSelectOptionForm,
-  isArtifactInMultiService
-} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { amiFilters, isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -94,14 +90,14 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     get(initialValues?.artifacts, `${artifactPath}.spec.tags`, '')
   )
 
-  const tagsValueQueryParamValue = getFinalQueryParamValue(tagsValue) && getInSelectOptionForm(tagsValue)
+  const tagsValueQueryParamValue = getFinalQueryParamValue(tagsValue) && tagsValue
 
   const filterValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.filters`, ''), artifact?.spec?.filters),
     get(initialValues?.artifacts, `${artifactPath}.spec.filters`, '')
   )
 
-  const filterValueQueryParamValue = getFinalQueryParamValue(filterValue) && getInSelectOptionForm(filterValue)
+  const filterValueQueryParamValue = getFinalQueryParamValue(filterValue) && filterValue
 
   const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
 

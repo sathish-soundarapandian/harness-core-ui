@@ -51,7 +51,7 @@ export function ManualInterventionTab(props: ManualInterventionTabProps): React.
   const allowedStrategies =
     allowedStrategiesFromProps ||
     allowedStrategiesAsPerStep(stageType)
-      [StepMode.STEP].filter(st => st !== Strategy.ManualIntervention && st !== Strategy.Retry)
+      [StepMode.STEP].filter(st => st !== Strategy.ManualIntervention)
       .filter(st => PIPELINE_ROLLBACK || st !== Strategy.PipelineRollback) // filter out PipelineRollback unless FF is true
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {

@@ -23,7 +23,7 @@ import type { FormikProps } from 'formik'
 import { useLocation } from 'react-router-dom'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { getCIShellOptions } from '@ci/utils/CIShellOptionsUtils'
-import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepFormikFowardRef, setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
@@ -105,7 +105,7 @@ export const BackgroundStepBase = (
         onChange?.(schemaValues)
         return validate(
           valuesToValidate,
-          getEditViewValidateFieldsConfig(isBuildInfrastructureTypeVM),
+          getEditViewValidateFieldsConfig(isBuildInfrastructureTypeVM, stepViewType === StepViewType.Template),
           {
             initialValues,
             steps: currentStage?.stage?.spec?.execution?.steps || {},
@@ -143,7 +143,7 @@ export const BackgroundStepBase = (
               CIBuildInfrastructureType.VM,
               CIBuildInfrastructureType.Cloud,
               CIBuildInfrastructureType.Docker
-            ].includes(buildInfrastructureType) ? (
+            ].includes(buildInfrastructureType) && stepViewType !== StepViewType.Template ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -264,7 +264,7 @@ export const BackgroundStepBase = (
                 summary={getString('pipeline.additionalConfiguration')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    {isBuildInfrastructureTypeVM ? (
+                    {isBuildInfrastructureTypeVM || stepViewType === StepViewType.Template ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}
