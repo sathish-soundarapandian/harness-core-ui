@@ -36,7 +36,10 @@ import css from './PipelineConfigPanel.module.scss'
 interface PipelineConfigPanelInterface {
   height?: React.CSSProperties['height']
   entitySelectedFromYAML?: EntitySelectionFromYAML
-  onAddUpdateEntity?: ({ entityFieldValues, isPluginUpdate }: HandlePipelineEntityAddUpdateFunctionInterface) => void
+  onAddUpdateEntity?: ({
+    entityFieldValuesFromPanel,
+    entitySelectedFromYAML
+  }: HandlePipelineEntityAddUpdateFunctionInterface) => void
 }
 
 enum PipelineConfigPanelView {
@@ -238,7 +241,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         initialValues={formInitialValues}
         formName="config-details-form"
         onSubmit={formValues => {
-          onAddUpdateEntity?.({ entityFieldValues: formValues, isPluginUpdate: !isEmpty(entitySelectedFromYAML) })
+          onAddUpdateEntity?.({ entityFieldValuesFromPanel: formValues, entitySelectedFromYAML })
         }}
         enableReinitialize={true}
       >
@@ -264,7 +267,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         No layout found for this selection
       </Text>
     )
-  }, [pipelineConfigOption, pipelineEntity, pipelineEntitySubType, entityAsObj])
+  }, [pipelineConfigOption, pipelineEntity, pipelineEntitySubType, entitySelectedFromYAML])
 
   const renderPipelineConfigPanelHeader = useCallback((): React.ReactElement => {
     const { label, drillDown } = pipelineConfigOption || {}

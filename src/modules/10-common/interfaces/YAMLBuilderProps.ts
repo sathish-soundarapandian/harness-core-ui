@@ -21,14 +21,14 @@ export interface YamlBuilderHandlerBinding {
   getYAMLValidationErrorMap: () => Map<number, string>
   addUpdatePluginIntoExistingYAML?: (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean) => void
   handlePipelineEntityAddUpdateIntoYAML?: ({
-    entityFieldValues,
-    isPluginUpdate
+    entityFieldValuesFromPanel,
+    entitySelectedFromYAML
   }: HandlePipelineEntityAddUpdateFunctionInterface) => void
 }
 
 export interface HandlePipelineEntityAddUpdateFunctionInterface {
-  entityFieldValues: Record<string, any>
-  isPluginUpdate: boolean
+  entityFieldValuesFromPanel: Record<string, any>
+  entitySelectedFromYAML?: EntitySelectionFromYAML
 }
 
 export type InvocationMapFunction = (

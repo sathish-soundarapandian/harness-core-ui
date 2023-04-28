@@ -212,10 +212,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         addUpdatePluginIntoExistingYAML: (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean) =>
           addUpdatePluginIntoExistingYAML(pluginMetadata, isPluginUpdate),
         handlePipelineEntityAddUpdateIntoYAML: ({
-          entityFieldValues,
-          isPluginUpdate
+          entityFieldValuesFromPanel,
+          entitySelectedFromYAML
         }: HandlePipelineEntityAddUpdateFunctionInterface) =>
-          handlePipelineEntityAddUpdateIntoYAML({ entityFieldValues, isPluginUpdate })
+          handlePipelineEntityAddUpdateIntoYAML({
+            entityFieldValuesFromPanel,
+            entitySelectedFromYAML
+          })
       } as YamlBuilderHandlerBinding),
     [currentYaml]
   )
@@ -1128,8 +1131,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [])
 
   const handlePipelineEntityAddUpdateIntoYAML = useCallback(
-    ({ entityFieldValues, isPluginUpdate }: HandlePipelineEntityAddUpdateFunctionInterface) => {
-      console.log(entityFieldValues, isPluginUpdate)
+    ({ entityFieldValuesFromPanel, entitySelectedFromYAML }: HandlePipelineEntityAddUpdateFunctionInterface) => {
+      console.log(entityFieldValuesFromPanel, entitySelectedFromYAML)
     },
     []
   )
