@@ -49,7 +49,6 @@
     <!-- newNavContentfulEnvironment -->
     <!-- harnessNameSpacePlaceHolder -->
     <!-- harnessClusterURLPlaceHolder -->
-    <!-- adding bugsnag for SAAS build -->
 
     <% if (!__DEV__) { %>
     <script type="text/javascript">
@@ -144,6 +143,7 @@
       window.HARNESS_ENABLE_APPDY_EUM = 'HARNESS_ENABLE_APPDY_EUM_PLACEHOLDER' === 'true'
       window.HARNESS_ENABLE_CDN = 'HARNESS_ENABLE_CDN_PLACEHOLDER' === 'true'
       window.HARNESS_ENABLE_SABER = 'HARNESS_ENABLE_SABER_PLACEHOLDER' === 'true'
+      window.HARNESS_ENABLE_STATUS_EMBED = 'HARNESS_ENABLE_STATUS_EMBED_PLACEHOLDER' === 'true'
       window.HARNESS_PLG_FF_SDK_KEY = 'HARNESS_PLG_FF_SDK_KEY_PLACEHOLDER'
     </script>
 
@@ -188,6 +188,17 @@
     <script>
       window.resourceBasePath = window.HARNESS_ENABLE_CDN ? '//static.harness.io/ng-static/' : window.NON_CDN_BASE_PATH
     </script>
+
+    <!-- StatusPage Embed -->
+    <script>
+      if (window.HARNESS_ENABLE_STATUS_EMBED) {
+        var e = document.createElement('script')
+        e.setAttribute('type', 'text/javascript')
+        e.setAttribute('src', 'https://status.harness.io/embed/script.js')
+        document.getElementsByTagName('head')[0].appendChild(e)
+      }
+    </script>
+    <!-- End of StatusPage Embed -->
 
     <!-- saberToken -->
     <!-- Saber Feedback button -->
