@@ -430,7 +430,8 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
     isEditMode,
     isNewFile,
     getLastSteps,
-    getInitialValues
+    getInitialValues,
+    handleChangeStore
   ])
 
   const addNewConfigFile = (): void => {

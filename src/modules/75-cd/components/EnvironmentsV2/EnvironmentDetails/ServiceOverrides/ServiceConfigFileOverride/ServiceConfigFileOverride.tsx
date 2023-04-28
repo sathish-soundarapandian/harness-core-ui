@@ -7,12 +7,23 @@
 
 import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { AllowedTypes, Button, ButtonSize, ButtonVariation, Layout, StepProps } from '@harness/uicore'
+import {
+  AllowedTypes,
+  Button,
+  ButtonSize,
+  ButtonVariation,
+  Layout,
+  StepProps,
+  MultiTypeInputType,
+  PageSpinner,
+  IconProps,
+  StepWizard
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import type { EnvironmentPathProps, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import type { EnvironmentPathProps, PipelinePathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -28,15 +39,30 @@ import { ConfigFilesWizard } from '@pipeline/components/ConfigFilesSelection/Con
 import {
   ConfigFileIconByType,
   ConfigFilesMap,
-  FILE_TYPE_VALUES
+  FILE_TYPE_VALUES,
+  ConfigFilesToConnectorMap
 } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
+import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
+import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
+import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useQueryParams } from '@common/hooks'
 import { HarnessConfigStep } from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/HarnessConfigStep'
 import type {
   ConfigFileType,
-  HarnessConfigFileLastStepPrevStepData
+  HarnessConfigFileLastStepPrevStepData,
+  GitConfigFileLastStepPrevStepData
 } from '@pipeline/components/ConfigFilesSelection/ConfigFilesInterface'
+
+import { GitConfigStep } from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/GitConfigStep'
+import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import { getBuildPayload } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 import ServiceConfigFileOverridesList from './ServiceConfigFileOverridesList'
 import ServiceConfigFileList from './ServiceConfigFileList'
@@ -69,23 +95,29 @@ const DIALOG_PROPS: IDialogProps = {
   enforceFocus: false,
   style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
 }
-function ServiceConfigFileOverride({
-  fileOverrides,
-  selectedService,
-  serviceList,
-  isReadonly,
-  expressions,
-  handleConfigFileOverrideSubmit,
-  handleServiceFileDelete,
-  allowableTypes,
-  fromEnvConfigPage
-}: ServiceConfigFileOverrideProps): React.ReactElement {
+function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React.ReactElement {
   const { getString } = useStrings()
   const [fileIndex, setEditIndex] = useState(0)
   const [isEditMode, setIsEditMode] = useState(false)
+  const [isNewFile, setIsNewFile] = useState(true)
+  const [configStore, setConfigStore] = useState<ConfigFileType>('' as ConfigFileType)
+  const [newConnectorView, setNewConnectorView] = useState(false)
+  const {
+    fileOverrides,
+    selectedService,
+    serviceList,
+    isReadonly,
+    expressions,
+    handleConfigFileOverrideSubmit,
+    handleServiceFileDelete,
+    allowableTypes,
+    fromEnvConfigPage
+  } = props
+
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     PipelinePathProps & EnvironmentPathProps
   >()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
 
@@ -113,7 +145,9 @@ function ServiceConfigFileOverride({
   const getInitialValues = useCallback((): ConfigFileDefaultValueType => {
     if (isEditMode) {
       const initValues = get(fileOverrides[fileIndex], 'configFile.spec.store.spec')
-
+      if (fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type) {
+        setConfigStore(fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type)
+      }
       return {
         ...initValues,
         store: fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type,
@@ -124,24 +158,27 @@ function ServiceConfigFileOverride({
       }
     }
     return {
-      store: ConfigFilesMap.Harness,
+      store: configStore,
       files: [''],
       identifier: '',
       fileType: FILE_TYPE_VALUES.FILE_STORE
     }
-  }, [fileIndex, fileOverrides, isEditMode])
+  }, [fileIndex, fileOverrides, isEditMode, configStore])
 
-  const createNewFileOverride = useCallback((): void => {
-    setEditIndex(fileOverrides.length)
+  const createNewFileOverride = () => {
+    // setEditIndex(fileOverrides.length)
+    setIsNewFile(true)
+
     showModal()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileOverrides.length])
+  }
 
   const editFileOverride = useCallback(
     (index: number): void => {
       setEditIndex(index)
       setIsEditMode(true)
       showModal()
+      console.log('index', index)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -160,7 +197,7 @@ function ServiceConfigFileOverride({
   const initialValues = getInitialValues()
   const initialConnectorRef = initialValues.connectorRef
 
-  const { selectedConnector } = useGetLastStepConnectorValue({
+  const { selectedConnector, fetchingConnector } = useGetLastStepConnectorValue({
     initialConnectorRef,
     isEditMode
   })
@@ -182,40 +219,201 @@ function ServiceConfigFileOverride({
     return isEditMode && !!selectedConnector && !!CDS_SERVICE_CONFIG_LAST_STEP
   }
 
-  const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
-    // If Git stores are introduced then add if...else condition here
-    // as done in src/modules/70-pipeline/components/ConfigFilesSelection/ConfigFilesListView/ConfigFilesListView.tsx file
-    return [
-      <HarnessConfigStep
-        key="harnessConfigFile"
-        isEditMode={isEditMode}
-        stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
-        name={getString('pipeline.configFiles.title', { type: 'Details' })}
-        listOfConfigFiles={getServiceConfigFiles()}
-        expressions={expressions}
-        handleSubmit={handleSubmit}
-        {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessConfigFileLastStepPrevStepData)}
-      />
-    ]
-  }, [expressions, getServiceConfigFiles, getString, handleSubmit, isEditMode, prevStepProps])
+  const commonProps = {
+    name: getString('credentials'),
+    onConnectorCreated: noop,
+    isEditMode,
+    setIsEditMode,
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    connectorInfo: undefined,
+    configFileIndex: fileIndex,
+    deploymentType: getDeploymentType()
+  }
+
+  const commonLastStepProps = {
+    handleSubmit,
+    expressions
+  }
+
+  React.useEffect(() => {
+    console.log('selected service', props)
+  }, [props])
+
+  const handleChangeStore = (store: ConfigFileType): void => {
+    setConfigStore(store || '')
+  }
+
+  const handleConnectorViewChange = (isConnectorView: boolean): void => {
+    setNewConnectorView(isConnectorView)
+    setIsEditMode(false)
+  }
+
+  const getIconProps = useCallback((): IconProps => {
+    const iconProps: IconProps = {
+      name: ConfigFileIconByType[selectedService as ConfigFileType]
+    }
+    return iconProps
+  }, [selectedService])
+
+  const getNewConnectorSteps = useCallback((): JSX.Element => {
+    const buildPayload = getBuildPayload(ConfigFilesToConnectorMap[configStore])
+    switch (configStore) {
+      case ConfigFilesToConnectorMap.Harness:
+        return (
+          <HarnessConfigStep
+            {...commonProps}
+            expressions={expressions}
+            stepName={getString('pipeline.configFiles.title')}
+            name={getString('pipeline.configFiles.title')}
+            handleSubmit={handleSubmit}
+            listOfConfigFiles={getServiceConfigFiles()}
+          />
+        )
+      case ConfigFilesToConnectorMap.Git:
+      case ConfigFilesToConnectorMap.Gitlab:
+      case ConfigFilesToConnectorMap.Bitbucket:
+      case ConfigFilesToConnectorMap.Github:
+        return (
+          <StepWizard title={getString('connectors.createNewConnector')}>
+            <ConnectorDetailsStep
+              type={ConfigFilesToConnectorMap[configStore]}
+              name={getString('overview')}
+              isEditMode={isEditMode}
+              gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
+            />
+            <GitDetailsStep
+              type={ConfigFilesToConnectorMap[configStore]}
+              name={getString('details')}
+              isEditMode={isEditMode}
+              connectorInfo={undefined}
+            />
+            {ConfigFilesToConnectorMap[configStore] === Connectors.GIT ? (
+              <StepGitAuthentication {...commonProps} />
+            ) : null}
+            {ConfigFilesToConnectorMap[configStore] === Connectors.GITHUB ? (
+              <StepGithubAuthentication {...commonProps} />
+            ) : null}
+            {ConfigFilesToConnectorMap[configStore] === Connectors.BITBUCKET ? (
+              <StepBitbucketAuthentication {...commonProps} />
+            ) : null}
+            {ConfigFilesToConnectorMap[configStore] === Connectors.GITLAB ? (
+              <StepGitlabAuthentication {...commonProps} identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER} />
+            ) : null}
+            <DelegateSelectorStep
+              name={getString('delegate.DelegateselectionLabel')}
+              isEditMode={isEditMode}
+              setIsEditMode={setIsEditMode}
+              buildPayload={buildPayload}
+              connectorInfo={undefined}
+            />
+            <ConnectorTestConnection
+              name={getString('connectors.stepThreeName')}
+              connectorInfo={undefined}
+              isStep={true}
+              isLastStep={false}
+              type={ConfigFilesToConnectorMap[configStore]}
+            />
+          </StepWizard>
+        )
+      default:
+        return <></>
+    }
+  }, [newConnectorView, configStore, isEditMode])
+
+  const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<any>>> => {
+    const arr: Array<React.ReactElement<StepProps<any>>> = []
+    let configDetailStep = null
+
+    if (isEditMode && fetchingConnector) {
+      configDetailStep = <PageSpinner />
+    } else {
+      switch (configStore) {
+        case ConfigFilesToConnectorMap.Harness:
+          configDetailStep = (
+            <HarnessConfigStep
+              {...commonProps}
+              stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
+              name={getString('pipeline.configFiles.title', { type: 'Details' })}
+              listOfConfigFiles={getServiceConfigFiles()}
+              {...commonLastStepProps}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessConfigFileLastStepPrevStepData)}
+            />
+          )
+          break
+        case ConfigFilesToConnectorMap.Git:
+        case ConfigFilesToConnectorMap.Gitlab:
+        case ConfigFilesToConnectorMap.Bitbucket:
+        case ConfigFilesToConnectorMap.Github:
+          configDetailStep = (
+            <GitConfigStep
+              {...commonProps}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+              stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
+              name={getString('pipeline.configFiles.title', { type: 'Details' })}
+              listOfConfigFiles={getServiceConfigFiles()}
+              selectedConfigFile={configStore}
+              {...commonLastStepProps}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as GitConfigFileLastStepPrevStepData)}
+            />
+          )
+          break
+
+        default:
+          configDetailStep = (
+            <HarnessConfigStep
+              {...commonProps}
+              stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
+              name={getString('pipeline.configFiles.title', { type: 'Details' })}
+              listOfConfigFiles={getServiceConfigFiles()}
+              {...commonLastStepProps}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessConfigFileLastStepPrevStepData)}
+            />
+          )
+          break
+      }
+    }
+
+    arr.push(configDetailStep)
+    return arr
+  }, [selectedService, commonLastStepProps, getString, isEditMode, prevStepProps, getServiceConfigFiles, configStore])
+
+  // const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
+  //   // If Git stores are introduced then add if...else condition here
+  //   // as done in src/modules/70-pipeline/components/ConfigFilesSelection/ConfigFilesListView/ConfigFilesListView.tsx file
+  //   return [
+  //     <HarnessConfigStep
+  //       key="harnessConfigFile"
+  //       isEditMode={isEditMode}
+  //       stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
+  //       name={getString('pipeline.configFiles.title', { type: 'Details' })}
+  //       listOfConfigFiles={getServiceConfigFiles()}
+  //       expressions={expressions}
+  //       handleSubmit={handleSubmit}
+  //       {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessConfigFileLastStepPrevStepData)}
+  //     />
+  //   ]
+  // }, [expressions, getServiceConfigFiles, getString, handleSubmit, isEditMode, prevStepProps])
 
   const [showModal, hideModal] = useModalHook(() => {
     const onClose = (): void => {
+      setIsNewFile(false)
+      setNewConnectorView(false)
       hideModal()
       setEditIndex(0)
       setIsEditMode(false)
+      setConfigStore('' as ConfigFileType)
     }
     return (
       <Dialog onClose={onClose} {...DIALOG_PROPS}>
         <div className={css.createConnectorWizard}>
           <ConfigFilesWizard
-            stores={[ConfigFilesMap.Harness]}
+            stores={[ConfigFilesMap.Harness, ConfigFilesMap.Github]}
             expressions={expressions}
             allowableTypes={allowableTypes}
             isReadonly={isReadonly}
-            iconsProps={{
-              name: ConfigFileIconByType.Harness
-            }}
+            iconsProps={getIconProps()}
             configFileIndex={fileIndex}
             deploymentType={getDeploymentType()}
             initialValues={getInitialValues()}
@@ -231,13 +429,27 @@ function ServiceConfigFileOverride({
               )
             }
             lastSteps={getLastSteps()}
+            newConnectorView={newConnectorView}
             isEditMode={isEditMode}
+            handleStoreChange={handleChangeStore}
+            newConnectorSteps={getNewConnectorSteps()}
+            handleConnectorViewChange={(status: boolean) => handleConnectorViewChange(status)}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
       </Dialog>
     )
-  }, [expressions, allowableTypes, fileIndex, isEditMode, isReadonly])
+  }, [
+    expressions,
+    allowableTypes,
+    fileIndex,
+    isEditMode,
+    isReadonly,
+    getLastSteps,
+    getInitialValues,
+    isNewFile,
+    newConnectorView
+  ])
 
   const addBtnCommonProps = {
     size: ButtonSize.SMALL,
