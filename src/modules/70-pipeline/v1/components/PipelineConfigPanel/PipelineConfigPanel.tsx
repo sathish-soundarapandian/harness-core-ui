@@ -28,7 +28,8 @@ import {
 import {
   ConfigOptionsMapWithAdditionalOptions,
   MainConfigOptionsMap,
-  PipelineConfigOptionInterface
+  PipelineConfigOptionInterface,
+  PipelineConfigOptionSubType
 } from './PipelineConfigOptions'
 import { getConfigOptionForPipelineEntity } from './Utils'
 import css from './PipelineConfigPanel.module.scss'
@@ -245,7 +246,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
           onAddUpdateEntity?.({
             entityFieldValuesFromPanel: formValues,
             entitySelectedFromYAML,
-            entitySubType: pipelineEntitySubType
+            entitySubType: (pipelineConfigOption as PipelineConfigOptionSubType)?.type
           })
         }}
         enableReinitialize={true}
@@ -272,7 +273,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
         No layout found for this selection
       </Text>
     )
-  }, [pipelineConfigOption, pipelineEntity, pipelineEntitySubType, entitySelectedFromYAML])
+  }, [pipelineConfigOption, pipelineEntity, entitySelectedFromYAML])
 
   const renderPipelineConfigPanelHeader = useCallback((): React.ReactElement => {
     const { label, drillDown } = pipelineConfigOption || {}

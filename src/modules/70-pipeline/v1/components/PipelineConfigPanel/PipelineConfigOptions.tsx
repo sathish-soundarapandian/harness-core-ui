@@ -10,13 +10,17 @@ import {
   Step
 } from '@common/components/YAMLBuilder/YAMLBuilderConstants'
 
+export type PipelineConfigOptionSubType = PipelineConfigOptionInterface & {
+  type: PipelineEntitySubType | PipelineAtomicEntity
+}
+
 export interface PipelineConfigOptionInterface {
   label: string
   iconProps: IconProps
   description: string
   drillDown: {
     hasSubTypes: boolean
-    subTypes?: (PipelineConfigOptionInterface & { type: PipelineEntitySubType | PipelineAtomicEntity })[]
+    subTypes?: PipelineConfigOptionSubType[]
     nodeView?: React.ReactElement // if a node doesn't have subTypes, then it should necessarily have a nodeView
     canAddNewSubTypes?: boolean
   }

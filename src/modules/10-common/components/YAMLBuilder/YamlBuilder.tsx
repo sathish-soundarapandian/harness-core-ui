@@ -1177,7 +1177,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       stageType: Stage
     }) => {
       try {
-        const updatesStages = [{ ...stage, type: stageType }, ...existingStages]
+        const updatesStages = [{ ...stage, type: stageType.toLowerCase() }, ...existingStages]
         const currentPipelineJSON = parse(currentYaml)
         const updatedYAML = yamlStringify(set(currentPipelineJSON, 'stages', updatesStages))
         onYamlChange(updatedYAML)
