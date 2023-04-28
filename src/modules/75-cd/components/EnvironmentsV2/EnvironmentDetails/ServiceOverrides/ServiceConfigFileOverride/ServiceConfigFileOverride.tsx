@@ -99,7 +99,6 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
   const { getString } = useStrings()
   const [fileIndex, setEditIndex] = useState(0)
   const [isEditMode, setIsEditMode] = useState(false)
-  const [isNewFile, setIsNewFile] = useState(true)
   const [configStore, setConfigStore] = useState<ConfigFileType>('' as ConfigFileType)
   const [newConnectorView, setNewConnectorView] = useState(false)
   const {
@@ -142,35 +141,9 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
     return defaultTo(parsedServiceYaml?.serviceDefinition?.type, '') as ServiceDefinition['type']
   }
 
-  // const getInitialValues = useCallback((): ConfigFileDefaultValueType => {
-  //   if (isEditMode) {
-  //     const initValues = get(fileOverrides[fileIndex], 'configFile.spec.store.spec')
-  //     if (fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type) {
-  //       setConfigStore(fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type as ConfigFileType)
-  //     }
-  //     return {
-  //       ...initValues,
-  //       store: fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type,
-  //       identifier: get(fileOverrides[fileIndex], 'configFile.identifier', ''),
-  //       files: initValues?.secretFiles?.length ? initValues?.secretFiles : initValues?.files,
-  //       secretFiles: initValues?.secretFiles,
-  //       fileType: initValues?.secretFiles?.length ? FILE_TYPE_VALUES.ENCRYPTED : FILE_TYPE_VALUES.FILE_STORE
-  //     }
-  //   }
-  //   return {
-  //     store: configStore,
-  //     files: [''],
-  //     identifier: '',
-  //     fileType: FILE_TYPE_VALUES.FILE_STORE
-  //   }
-  // }, [fileIndex, fileOverrides, isEditMode, configStore])
-
-  const getInitialValues = (): ConfigFileDefaultValueType => {
+  const getInitialValues = useCallback((): ConfigFileDefaultValueType => {
     if (isEditMode) {
       const initValues = get(fileOverrides[fileIndex], 'configFile.spec.store.spec')
-      if (fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type) {
-        setConfigStore(fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type as ConfigFileType)
-      }
       return {
         ...initValues,
         store: fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type,
@@ -181,16 +154,15 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
       }
     }
     return {
-      store: configStore,
+      store: '' as ConfigFileType,
       files: [''],
       identifier: '',
       fileType: FILE_TYPE_VALUES.FILE_STORE
     }
-  }
+  }, [fileOverrides, fileIndex, isEditMode])
 
-  const createNewFileOverride = () => {
+  const createNewFileOverride = (): void => {
     setEditIndex(fileOverrides.length)
-    setIsNewFile(true)
 
     showModal()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -199,12 +171,14 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
   const editFileOverride = useCallback(
     (index: number): void => {
       setEditIndex(index)
+      if (fileOverrides?.[index]?.configFile?.spec?.store?.type) {
+        setConfigStore(fileOverrides?.[index]?.configFile?.spec?.store?.type as ConfigFileType)
+      }
       setIsEditMode(true)
       showModal()
-      console.log('index', index)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [fileOverrides]
   )
 
   const handleSubmit = useCallback(
@@ -235,12 +209,12 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
     }
   }, [initialValues, selectedConnector])
 
-  const shouldPassPrevStepData = (): boolean => {
+  const shouldPassPrevStepData = useCallback((): boolean => {
     if (initialValues.store === ConfigFilesMap.Harness) {
       return isEditMode && !!CDS_SERVICE_CONFIG_LAST_STEP
     }
     return isEditMode && !!selectedConnector && !!CDS_SERVICE_CONFIG_LAST_STEP
-  }
+  }, [selectedConnector, isEditMode, initialValues?.store])
 
   const commonProps = {
     name: getString('credentials'),
@@ -339,7 +313,8 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
       default:
         return <></>
     }
-  }, [newConnectorView, configStore, isEditMode])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newConnectorView, configStore, isEditMode, getInitialValues])
 
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<any>>> => {
     const arr: Array<React.ReactElement<StepProps<any>>> = []
@@ -396,6 +371,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
 
     arr.push(configDetailStep)
     return arr
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     selectedService,
     getString,
@@ -404,29 +380,13 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
     getServiceConfigFiles,
     configStore,
     fileOverrides,
-    handleSubmit
+    handleSubmit,
+    initialValues,
+    selectedConnector
   ])
-
-  // const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
-  //   // If Git stores are introduced then add if...else condition here
-  //   // as done in src/modules/70-pipeline/components/ConfigFilesSelection/ConfigFilesListView/ConfigFilesListView.tsx file
-  //   return [
-  //     <HarnessConfigStep
-  //       key="harnessConfigFile"
-  //       isEditMode={isEditMode}
-  //       stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
-  //       name={getString('pipeline.configFiles.title', { type: 'Details' })}
-  //       listOfConfigFiles={getServiceConfigFiles()}
-  //       expressions={expressions}
-  //       handleSubmit={handleSubmit}
-  //       {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessConfigFileLastStepPrevStepData)}
-  //     />
-  //   ]
-  // }, [expressions, getServiceConfigFiles, getString, handleSubmit, isEditMode, prevStepProps])
 
   const [showModal, hideModal] = useModalHook(() => {
     const onClose = (): void => {
-      setIsNewFile(false)
       setNewConnectorView(false)
       hideModal()
       setEditIndex(0)
@@ -437,7 +397,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
       <Dialog onClose={onClose} {...DIALOG_PROPS}>
         <div className={css.createConnectorWizard}>
           <ConfigFilesWizard
-            stores={[ConfigFilesMap.Harness, ConfigFilesMap.Github]}
+            stores={[ConfigFilesMap.Harness, ConfigFilesMap.Github, ConfigFilesMap.Git, ConfigFilesMap.Bitbucket]}
             expressions={expressions}
             allowableTypes={allowableTypes}
             isReadonly={isReadonly}
@@ -467,17 +427,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
       </Dialog>
     )
-  }, [
-    expressions,
-    allowableTypes,
-    // fileIndex,
-    isEditMode,
-    isReadonly,
-    getLastSteps,
-    getInitialValues,
-    isNewFile,
-    newConnectorView
-  ])
+  }, [expressions, allowableTypes, fileIndex, isEditMode, isReadonly, initialValues, selectedConnector])
 
   const addBtnCommonProps = {
     size: ButtonSize.SMALL,
@@ -497,10 +447,6 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
     },
     onClick: createNewFileOverride
   }
-
-  React.useEffect(() => {
-    console.log('fileOverrides', fileOverrides)
-  }, [fileOverrides])
 
   return (
     <Layout.Vertical flex={{ alignItems: 'flex-start' }} spacing="medium">
