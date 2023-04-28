@@ -765,6 +765,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         editorRef.current?.editor?.addCommand(
           0,
           () => {
+            currentCursorPosition.current = cursorPosition
             setEditorAction(editorActionToPerform)
             setPluginOpnStatus?.(Status.TO_DO)
             try {
@@ -1177,15 +1178,31 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       stageType: Stage
     }) => {
       try {
-        const updatesStages = [{ ...stage, type: stageType.toLowerCase() }, ...existingStages]
-        const currentPipelineJSON = parse(currentYaml)
-        const updatedYAML = yamlStringify(set(currentPipelineJSON, 'stages', updatesStages))
-        onYamlChange(updatedYAML)
+        const editor = editorRef.current?.editor
+        const { lineNumber: startingLineNum } = currentCursorPosition.current || {}
+        if (editor && startingLineNum && !isEmpty(stage)) {
+          const stageAddedOrUpdated = { ...stage, type: stageType.toLowerCase() }
+          const updatesStages = [stageAddedOrUpdated, ...existingStages]
+          const currentPipelineJSON = parse(currentYaml)
+          const updatedYAML = yamlStringify(set(currentPipelineJSON, 'stages', updatesStages))
+          onYamlChange(updatedYAML)
+          setCurrentYaml(updatedYAML)
+          const noOflinesInserted = countAllKeysInObject(stageAddedOrUpdated)
+          const endingLineNum = startingLineNum + noOflinesInserted > 0 ? startingLineNum + noOflinesInserted : 0
+          // highlight the inserted text
+          highlightInsertedYAML(startingLineNum + 1, endingLineNum)
+
+          const contentInEndingLine = editor.getModel()?.getLineContent(endingLineNum) || ''
+          // Scroll to the end of the inserted text
+          editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineNum })
+          editor.revealLineInCenter(endingLineNum)
+          editor.focus()
+        }
       } catch (e) {
         // ignore error
       }
     },
-    [currentYaml]
+    [currentCursorPosition, currentYaml, editorRef.current?.editor]
   )
 
   const addUpdatePluginIntoExistingYAML = useCallback(

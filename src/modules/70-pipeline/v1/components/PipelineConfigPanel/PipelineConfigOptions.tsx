@@ -66,7 +66,25 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
             type: Stage.CD,
             iconProps: { name: 'cd-main', size: 25 },
             description: 'Add a CD stage',
-            drillDown: { hasSubTypes: false }
+            drillDown: {
+              hasSubTypes: false,
+              nodeView: (
+                <Layout.Vertical padding={{ left: 'xxlarge', right: 'xxlarge', top: 'xlarge' }} spacing="xsmall">
+                  <FormInput.Text
+                    name={'name'}
+                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Name</Text>}
+                    placeholder={'stage name'}
+                    key={'name'}
+                  />
+                  <FormInput.Text
+                    name={'desc'}
+                    label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Description</Text>}
+                    placeholder={'stage description'}
+                    key={'desc'}
+                  />
+                </Layout.Vertical>
+              )
+            }
           }
         ]
       }
