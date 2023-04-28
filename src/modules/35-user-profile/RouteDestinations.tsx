@@ -15,6 +15,7 @@ import { accountPathProps } from '@common/utils/routeUtils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 import UserProfilePage from '@user-profile/pages/UserProfile/UserProfilePage'
+import HealthListingPageRefer from '@user-profile/pages/HealthPage/HealthListing'
 import UserPreferencesPage from '@user-profile/pages/UserPreferences/UserPreferences'
 import UserNav from '@user-profile/navigation/UserNav/UserNav'
 
@@ -31,6 +32,9 @@ export default (
   <>
     <RouteWithLayout sidebarProps={UserProfileSideNavProps} path={routes.toUser({ ...accountPathProps })} exact>
       <RedirectToUserHome />
+    </RouteWithLayout>
+    <RouteWithLayout path={routes.toHealth({ ...accountPathProps })} exact>
+      <HealthListingPageRefer />
     </RouteWithLayout>
     <RouteWithLayout sidebarProps={UserProfileSideNavProps} path={routes.toUserProfile({ ...accountPathProps })} exact>
       <UserProfilePage />

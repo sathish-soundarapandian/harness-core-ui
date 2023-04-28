@@ -4850,7 +4850,10 @@ export interface DelegateFilterProperties {
     [key: string]: string
   }
 }
-
+export interface HealthServices {
+  serviceName?: string
+  status?: string
+}
 export interface DelegateGroupDetails {
   activelyConnected?: boolean
   connectivityStatus?: string
@@ -22102,6 +22105,7 @@ export type GetDelegateGroupsNGV2Props = Omit<
   'path'
 >
 
+
 export const GetDelegateGroupsNGV2 = (props: GetDelegateGroupsNGV2Props) => (
   <Get<RestResponseDelegateGroupListing, unknown, GetDelegateGroupsNGV2QueryParams, void>
     path={`/setup/delegates/ng/v2`}
@@ -23232,6 +23236,12 @@ export type GetUserProps = Omit<GetProps<RestResponseUser, unknown, void, void>,
 
 export const GetUser = (props: GetUserProps) => (
   <Get<RestResponseUser, unknown, void, void> path={`/users/user`} base={getConfig('api')} {...props} />
+)
+export type GetAllHealthProps =  Omit<GetProps<RestResponseString, unknown, void, void>, 'path'>
+
+export const GetAllHealth = (props: GetAllHealthProps) => (
+  <Get<RestResponseString, unknown, void, void> path={`/allhealth`} base={getConfig('api')} {...props} />
+  
 )
 
 export type UseGetUserProps = Omit<UseGetProps<RestResponseUser, unknown, void, void>, 'path'>

@@ -20,6 +20,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
 import css from './MainNav.module.scss'
+import { isOnPrem } from '@common/utils/utils'
 
 const commonLinkProps: Partial<NavLinkProps> = {
   activeClassName: css.active,
@@ -199,6 +200,23 @@ export default function L1Nav(): React.ReactElement {
             </Layout.Vertical>
           </Link>
         </li>
+        {!isOnPrem() && (
+          <li className={css.navItem}>
+            <Link {...commonLinkProps} to={paths.toHealth(params)}>
+              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                <Icon name="sto-color-filled" size={30} />
+                <Text
+                  font={{ weight: 'semi-bold', align: 'center' }}
+                  padding={{ bottom: 'xsmall' }}
+                  color={Color.WHITE}
+                  className={css.text}
+                >
+                  Service Health
+                </Text>
+              </Layout.Vertical>
+            </Link>
+          </li>
+        )}
         <li className={css.navItem}>
           <Link
             className={cx(css.navLink, css.userLink, css.hoverNavLink)}

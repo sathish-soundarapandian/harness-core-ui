@@ -1,0 +1,218 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.listBody {
+  height: 100%;
+}
+
+.healthTabs {
+  display: flex;
+  justify-content: center;
+  background-color: var(--white);
+
+  :global {
+    .bp3-tab-list {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center;
+    }
+    .bp3-tab-panel {
+      margin: 0 !important;
+    }
+  }
+}
+
+.listPage {
+  min-width: 900px;
+}
+
+.view {
+  justify-content: flex-end;
+}
+
+.healthContainer {
+  padding: var(--spacing-large) !important;
+  margin: var(--spacing-large) !important;
+}
+
+.healthTable {
+  padding: var(--spacing-small) var(--spacing-xlarge);
+}
+
+.activity {
+  display: flex;
+  width: 100%;
+  height: 20px;
+}
+
+.connectivity {
+  margin-right: var(--spacing-xsmall) !important;
+  display: flex;
+  > div {
+    width: auto !important;
+  }
+  > span {
+    font-size: x-small;
+    margin: auto var(--spacing-xsmall);
+  }
+}
+
+.search {
+  margin-right: var(--spacing-small) !important;
+}
+
+.successIcon {
+  width: 2%;
+}
+
+.profileContainer {
+  display: flex;
+  padding: var(--spacing-large) !important;
+  margin: var(--spacing-large) !important;
+}
+
+.header {
+  padding: var(--spacing-large) var(--spacing-xlarge) !important;
+  border-bottom: 1px solid var(--grey-200);
+  height: 72px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 !important;
+  background-color: var(--white) !important;
+}
+
+.profileCard {
+  width: 250px;
+  margin-right: var(--spacing-small);
+  height: 296px;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  height: 200px;
+}
+
+.profileContainer {
+  display: flex;
+  padding: var(--spacing-small) !important;
+}
+
+.profileCard {
+  width: 250px;
+  margin-right: var(--spacing-small);
+}
+.overviewCard {
+  width: 500px;
+  margin-right: var(--spacing-large);
+}
+
+.detailsContainer {
+  margin: var(--spacing-small) !important;
+  padding: var(--spacing-small) !important;
+}
+
+.section1 {
+  display: flex;
+}
+
+.profileDetailsContainer {
+  padding: var(--spacing-small) !important;
+  display: flex;
+}
+.overviewCard {
+  margin-right: var(--spacing-small);
+  width: 400px;
+}
+.healthProfilesContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.healthProfileElements {
+  margin: 0 var(--spacing-large) var(--spacing-large) 0;
+}
+
+.healthListContainer {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-xlarge) !important;
+  background: var(--primary-bg) !important;
+}
+
+.healthListHeader {
+  padding: var(--spacing-large) 0 !important;
+  font-weight: 700;
+  font-size: var(--font-size-small);
+  color: var(--grey-800) !important;
+  text-transform: uppercase;
+}
+
+.healthItemContainer {
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: var(--spacing-small);
+  padding: var(--spacing-large) 0 !important;
+}
+
+.healthItemSubcontainer {
+  width: 100% !important;
+  align-items: center;
+}
+
+.emptyStateContainer {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  align-items: center;
+}
+
+.emptyStateText {
+  font-weight: 600;
+  color: var(--grey-600);
+  margin: 40px 0;
+  font-size: var(--font-size-medium);
+}
+
+.groupHostName {
+  font-weight: 400;
+  font-size: var(--font-size-small);
+  color: var(--grey-400);
+}
+
+.troubleshootLink {
+  color: var(--blue-500);
+  margin-left: var(--spacing-large);
+  font-size: x-small;
+}
+
+.itemActionContainer {
+  justify-content: flex-end;
+}
+
+.expandIcon {
+  margin-right: var(--spacing-small) !important;
+}
+
+.instancesContainer {
+  margin: var(--spacing-small) 0 !important;
+  padding-top: var(--spacing-medium) !important;
+}
+
+.podDetailsSeparator {
+  margin: var(--spacing-medium) 80px 0 !important;
+  border-top: solid 1px var(--grey-200);
+}
+.podDetailsContainer {
+  padding-top: var(--spacing-small);
+}
+
+.healthItemIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

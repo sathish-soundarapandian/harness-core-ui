@@ -66,6 +66,7 @@ const routes = {
       })
     }
   ),
+  toHealth: withAccountId(() => '/allhealth'),
   toUser: withAccountId(() => '/user'),
   toSubscriptions: withAccountId(({ moduleCard, tab }: SubscriptionQueryParams) => {
     const url = '/settings/subscriptions'
@@ -1523,6 +1524,7 @@ const routes = {
   ),
   toCustomFolderHome: withAccountId(() => '/dashboards/folders'),
   toViewCustomFolder: withAccountId(({ folderId }: { folderId: string }) => `/dashboards/folder/${folderId}`)
+
 
   /****************** Secret Usage************************************************************************************/
 }
