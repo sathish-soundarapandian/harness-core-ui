@@ -51,7 +51,6 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
   const [breadCrumbs, setBreadCrumbs] = useState<IBreadcrumbProps[]>(initialBreadCrumbs)
 
   useEffect(() => {
-    resetPipelineConfigPanel()
     if (entityType) {
       const configOptionForEntityType = ConfigOptionsMapWithAdditionalOptions.get(entityType)
       if (configOptionForEntityType) {
