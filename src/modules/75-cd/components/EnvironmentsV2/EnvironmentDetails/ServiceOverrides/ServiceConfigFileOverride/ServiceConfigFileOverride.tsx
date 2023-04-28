@@ -142,11 +142,34 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
     return defaultTo(parsedServiceYaml?.serviceDefinition?.type, '') as ServiceDefinition['type']
   }
 
-  const getInitialValues = useCallback((): ConfigFileDefaultValueType => {
+  // const getInitialValues = useCallback((): ConfigFileDefaultValueType => {
+  //   if (isEditMode) {
+  //     const initValues = get(fileOverrides[fileIndex], 'configFile.spec.store.spec')
+  //     if (fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type) {
+  //       setConfigStore(fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type as ConfigFileType)
+  //     }
+  //     return {
+  //       ...initValues,
+  //       store: fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type,
+  //       identifier: get(fileOverrides[fileIndex], 'configFile.identifier', ''),
+  //       files: initValues?.secretFiles?.length ? initValues?.secretFiles : initValues?.files,
+  //       secretFiles: initValues?.secretFiles,
+  //       fileType: initValues?.secretFiles?.length ? FILE_TYPE_VALUES.ENCRYPTED : FILE_TYPE_VALUES.FILE_STORE
+  //     }
+  //   }
+  //   return {
+  //     store: configStore,
+  //     files: [''],
+  //     identifier: '',
+  //     fileType: FILE_TYPE_VALUES.FILE_STORE
+  //   }
+  // }, [fileIndex, fileOverrides, isEditMode, configStore])
+
+  const getInitialValues = (): ConfigFileDefaultValueType => {
     if (isEditMode) {
       const initValues = get(fileOverrides[fileIndex], 'configFile.spec.store.spec')
       if (fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type) {
-        setConfigStore(fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type)
+        setConfigStore(fileOverrides?.[fileIndex]?.configFile?.spec?.store?.type as ConfigFileType)
       }
       return {
         ...initValues,
@@ -163,10 +186,10 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
       identifier: '',
       fileType: FILE_TYPE_VALUES.FILE_STORE
     }
-  }, [fileIndex, fileOverrides, isEditMode, configStore])
+  }
 
   const createNewFileOverride = () => {
-    // setEditIndex(fileOverrides.length)
+    setEditIndex(fileOverrides.length)
     setIsNewFile(true)
 
     showModal()
@@ -237,10 +260,6 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
     expressions
   }
 
-  React.useEffect(() => {
-    console.log('selected service', props)
-  }, [props])
-
   const handleChangeStore = (store: ConfigFileType): void => {
     setConfigStore(store || '')
   }
@@ -268,7 +287,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
             stepName={getString('pipeline.configFiles.title')}
             name={getString('pipeline.configFiles.title')}
             handleSubmit={handleSubmit}
-            listOfConfigFiles={getServiceConfigFiles()}
+            listOfConfigFiles={fileOverrides}
           />
         )
       case ConfigFilesToConnectorMap.Git:
@@ -336,7 +355,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
               {...commonProps}
               stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
               name={getString('pipeline.configFiles.title', { type: 'Details' })}
-              listOfConfigFiles={getServiceConfigFiles()}
+              listOfConfigFiles={fileOverrides}
               {...commonLastStepProps}
               {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessConfigFileLastStepPrevStepData)}
             />
@@ -352,7 +371,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
               allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
               stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
               name={getString('pipeline.configFiles.title', { type: 'Details' })}
-              listOfConfigFiles={getServiceConfigFiles()}
+              listOfConfigFiles={fileOverrides}
               selectedConfigFile={configStore}
               {...commonLastStepProps}
               {...((shouldPassPrevStepData() ? prevStepProps() : {}) as GitConfigFileLastStepPrevStepData)}
@@ -366,7 +385,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
               {...commonProps}
               stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
               name={getString('pipeline.configFiles.title', { type: 'Details' })}
-              listOfConfigFiles={getServiceConfigFiles()}
+              listOfConfigFiles={fileOverrides}
               {...commonLastStepProps}
               {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessConfigFileLastStepPrevStepData)}
             />
@@ -377,7 +396,16 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
 
     arr.push(configDetailStep)
     return arr
-  }, [selectedService, commonLastStepProps, getString, isEditMode, prevStepProps, getServiceConfigFiles, configStore])
+  }, [
+    selectedService,
+    getString,
+    isEditMode,
+    prevStepProps,
+    getServiceConfigFiles,
+    configStore,
+    fileOverrides,
+    handleSubmit
+  ])
 
   // const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
   //   // If Git stores are introduced then add if...else condition here
@@ -442,7 +470,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
   }, [
     expressions,
     allowableTypes,
-    fileIndex,
+    // fileIndex,
     isEditMode,
     isReadonly,
     getLastSteps,
@@ -470,14 +498,20 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
     onClick: createNewFileOverride
   }
 
+  React.useEffect(() => {
+    console.log('fileOverrides', fileOverrides)
+  }, [fileOverrides])
+
   return (
     <Layout.Vertical flex={{ alignItems: 'flex-start' }} spacing="medium">
-      <ServiceConfigFileOverridesList
-        configFileOverrideList={fileOverrides}
-        isReadonly={isReadonly}
-        editFileOverride={editFileOverride}
-        handleServiceFileDelete={handleServiceFileDelete}
-      />
+      {fileOverrides && fileOverrides?.length > 0 && (
+        <ServiceConfigFileOverridesList
+          configFileOverrideList={fileOverrides}
+          isReadonly={isReadonly}
+          editFileOverride={editFileOverride}
+          handleServiceFileDelete={handleServiceFileDelete}
+        />
+      )}
       <RbacButton
         {...addBtnCommonProps}
         icon="plus"
