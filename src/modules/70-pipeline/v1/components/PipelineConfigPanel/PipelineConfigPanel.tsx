@@ -1,8 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { capitalize, get, isEmpty } from 'lodash-es'
 import { Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
-import { Button, ButtonVariation, Container, FontVariation, Icon, Layout, Text, Formik } from '@harness/uicore'
-import type { EntitySelectionFromYAML } from '@common/interfaces/YAMLBuilderProps'
+import {
+  Button,
+  ButtonVariation,
+  Container,
+  FontVariation,
+  Icon,
+  Layout,
+  Text,
+  Formik,
+  FormikForm
+} from '@harness/uicore'
+import type {
+  EntitySelectionFromYAML,
+  HandlePipelineEntityAddUpdateFunctionInterface
+} from '@common/interfaces/YAMLBuilderProps'
 import {
   EditorAction,
   PipelineAtomicEntity,
@@ -23,7 +36,7 @@ import css from './PipelineConfigPanel.module.scss'
 interface PipelineConfigPanelInterface {
   height?: React.CSSProperties['height']
   entitySelectedFromYAML?: EntitySelectionFromYAML
-  onAddUpdateEntity?: (values: Record<string, any>) => void
+  onAddUpdateEntity?: ({ entityFieldValues, isPluginUpdate }: HandlePipelineEntityAddUpdateFunctionInterface) => void
 }
 
 enum PipelineConfigPanelView {
@@ -32,7 +45,7 @@ enum PipelineConfigPanelView {
 }
 
 export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.ReactElement {
-  const { height, entitySelectedFromYAML } = props
+  const { height, entitySelectedFromYAML, onAddUpdateEntity } = props
   const { entityType, entityAsObj, editorAction } = entitySelectedFromYAML || {}
   const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false)
   const [pipelineEntity, setPipelineEntity] = useState<PipelineEntity>()
@@ -224,20 +237,24 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
       <Formik<any>
         initialValues={formInitialValues}
         formName="config-details-form"
-        onSubmit={() => {}}
+        onSubmit={formValues => {
+          onAddUpdateEntity?.({ entityFieldValues: formValues, isPluginUpdate: !isEmpty(entitySelectedFromYAML) })
+        }}
         enableReinitialize={true}
       >
-        <Layout.Vertical spacing="xsmall">
-          {nodeView}
-          <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge' }} spacing="medium">
-            <Button
-              text={isEmpty(formInitialValues) ? 'Add' : 'Update'}
-              variation={ButtonVariation.PRIMARY}
-              type="submit"
-            />
-            <Button text="Cancel" variation={ButtonVariation.SECONDARY} onClick={() => resetPipelineConfigPanel()} />
-          </Layout.Horizontal>
-        </Layout.Vertical>
+        <FormikForm>
+          <Layout.Vertical spacing="xsmall">
+            {nodeView}
+            <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge' }} spacing="medium">
+              <Button
+                text={isEmpty(formInitialValues) ? 'Add' : 'Update'}
+                variation={ButtonVariation.PRIMARY}
+                type="submit"
+              />
+              <Button text="Cancel" variation={ButtonVariation.SECONDARY} onClick={() => resetPipelineConfigPanel()} />
+            </Layout.Horizontal>
+          </Layout.Vertical>
+        </FormikForm>
       </Formik>
     ) : (
       <Text

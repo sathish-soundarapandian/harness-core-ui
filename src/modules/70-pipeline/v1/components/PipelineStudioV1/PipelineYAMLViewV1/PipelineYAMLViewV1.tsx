@@ -149,7 +149,11 @@ function PipelineYAMLViewV1(): React.ReactElement {
         //   pluginAddUpdateOpnStatus={entityAddUpdateOpnStatus}
         // />
         <Container width="24vw">
-          <PipelineConfigPanel height={'calc(100vh - 150px)'} entitySelectedFromYAML={entitySelectedFromYAML} />
+          <PipelineConfigPanel
+            height={'calc(100vh - 150px)'}
+            entitySelectedFromYAML={entitySelectedFromYAML}
+            onAddUpdateEntity={yamlHandler.handlePipelineEntityAddUpdateIntoYAML}
+          />
         </Container>
       ) : null}
     </Layout.Horizontal>

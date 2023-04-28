@@ -43,7 +43,8 @@ import type {
   YamlBuilderProps,
   YamlBuilderHandlerBinding,
   CompletionItemInterface,
-  Theme
+  Theme,
+  HandlePipelineEntityAddUpdateFunctionInterface
 } from '@common/interfaces/YAMLBuilderProps'
 import {
   EditorAction,
@@ -209,7 +210,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         },
         getYAMLValidationErrorMap: () => yamlValidationErrorsRef.current,
         addUpdatePluginIntoExistingYAML: (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean) =>
-          addUpdatePluginIntoExistingYAML(pluginMetadata, isPluginUpdate)
+          addUpdatePluginIntoExistingYAML(pluginMetadata, isPluginUpdate),
+        handlePipelineEntityAddUpdateIntoYAML: ({
+          entityFieldValues,
+          isPluginUpdate
+        }: HandlePipelineEntityAddUpdateFunctionInterface) =>
+          handlePipelineEntityAddUpdateIntoYAML({ entityFieldValues, isPluginUpdate })
       } as YamlBuilderHandlerBinding),
     [currentYaml]
   )
@@ -1120,6 +1126,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       return unSanitizedObj
     }
   }, [])
+
+  const handlePipelineEntityAddUpdateIntoYAML = useCallback(
+    ({ entityFieldValues, isPluginUpdate }: HandlePipelineEntityAddUpdateFunctionInterface) => {
+      console.log(entityFieldValues, isPluginUpdate)
+    },
+    []
+  )
 
   const addUpdatePluginIntoExistingYAML = useCallback(
     (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean): void => {
