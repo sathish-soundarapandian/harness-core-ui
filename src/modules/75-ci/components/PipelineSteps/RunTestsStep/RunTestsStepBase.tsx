@@ -24,7 +24,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
 import { get, merge } from 'lodash-es'
 import cx from 'classnames'
-import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepFormikFowardRef, setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { getCIRunTestsStepShellOptions } from '@ci/utils/CIShellOptionsUtils'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -486,7 +486,8 @@ export const RunTestsStepBase = (
             valuesToValidate,
             getEditViewValidateFieldsConfig(
               buildInfrastructureType,
-              (valuesToValidate?.spec?.language as any)?.value === Language.Csharp
+              (valuesToValidate?.spec?.language as any)?.value === Language.Csharp,
+              stepViewType === StepViewType.Template
             ),
             {
               initialValues,
@@ -534,7 +535,7 @@ export const RunTestsStepBase = (
               CIBuildInfrastructureType.VM,
               CIBuildInfrastructureType.Cloud,
               CIBuildInfrastructureType.Docker
-            ].includes(buildInfrastructureType) ? (
+            ].includes(buildInfrastructureType) && stepViewType !== StepViewType.Template ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -788,7 +789,7 @@ gradle.projectsEvaluated {
                       CIBuildInfrastructureType.VM,
                       CIBuildInfrastructureType.Cloud,
                       CIBuildInfrastructureType.Docker
-                    ].includes(buildInfrastructureType) ? (
+                    ].includes(buildInfrastructureType) || stepViewType === StepViewType.Template ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}

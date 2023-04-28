@@ -19,7 +19,7 @@ import {
 import { Color } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
 import { get, merge } from 'lodash-es'
-import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepFormikFowardRef, setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
@@ -111,7 +111,7 @@ export const RunStepBase = (
           errors,
           validate(
             valuesToValidate,
-            getEditViewValidateFieldsConfig(buildInfrastructureType),
+            getEditViewValidateFieldsConfig(buildInfrastructureType, stepViewType === StepViewType.Template),
             {
               initialValues,
               steps: currentStage?.stage?.spec?.execution?.steps || {},
@@ -151,7 +151,7 @@ export const RunStepBase = (
               CIBuildInfrastructureType.VM,
               CIBuildInfrastructureType.Cloud,
               CIBuildInfrastructureType.Docker
-            ].includes(buildInfrastructureType) ? (
+            ].includes(buildInfrastructureType) && stepViewType !== StepViewType.Template ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -242,7 +242,7 @@ export const RunStepBase = (
                       CIBuildInfrastructureType.VM,
                       CIBuildInfrastructureType.Cloud,
                       CIBuildInfrastructureType.Docker
-                    ].includes(buildInfrastructureType) ? (
+                    ].includes(buildInfrastructureType) || stepViewType === StepViewType.Template ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}
