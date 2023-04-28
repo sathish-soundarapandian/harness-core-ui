@@ -157,6 +157,7 @@ export interface StringsMap {
   'common.clickToKnowMore': string
   'common.clientId': string
   'common.clientSecret': string
+  'common.cloudSpendsIn': string
   'common.cluster': string
   'common.clusterName': string
   'common.clusters': string
@@ -632,7 +633,6 @@ export interface StringsMap {
   'common.moduleList.optimize': string
   'common.moduleList.optimizeProcesses': string
   'common.moduleList.title': string
-  'common.moduleOverviewLabel.ce': string
   'common.moduleOverviewLabel.chaos': string
   'common.moduleOverviewLabel.cv': string
   'common.moduleOverviewLabel.ff': string
