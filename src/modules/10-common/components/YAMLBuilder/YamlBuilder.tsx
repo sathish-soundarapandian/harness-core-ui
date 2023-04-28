@@ -1145,7 +1145,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const isUpdate = !isEmpty(entitySelectedFromYAML)
       switch (entityType) {
         case PipelineAtomicEntity.Step:
-          addUpdatePluginIntoExistingYAML(
+          return addUpdatePluginIntoExistingYAML(
             {
               shouldInsertYAML: true,
               pipelineEntity: PipelineAtomicEntity.Step,
@@ -1156,14 +1156,16 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             },
             isUpdate
           )
+
         case PipelineEntityGroupings.Stages:
-          addUpdateStageIntoExistingYAML({
+          return addUpdateStageIntoExistingYAML({
             stage: entityFieldValuesFromPanel,
             existingStages: get(entityAsObj, 'stages', []),
             stageType: entitySubType as Stage
           })
+
         case PipelineEntityGroupings.Inputs:
-          addUpdateInputIntoExistingYAML({
+          return addUpdateInputIntoExistingYAML({
             input: entityFieldValuesFromPanel,
             existingInputs: get(entityAsObj, 'inputs', {})
           })
