@@ -763,7 +763,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                   selectedPipelineEntity
                 }) || {}
               const numberOfLinesInSelection = yamlStringify(selectedPipelineEntityYAMLAsJSON).split('\n').length
-              if (numberOfLinesInSelection) {
+              if (numberOfLinesInSelection && editorActionToPerform === EditorAction.Edit) {
                 currentCursorPosition.current = cursorPosition
                 /* yamlStringify converts an object to json by adding a "---" at the top and a trailing newline character, hence we need to subtract to 2 to get actual lines in the yaml*/
                 /*
