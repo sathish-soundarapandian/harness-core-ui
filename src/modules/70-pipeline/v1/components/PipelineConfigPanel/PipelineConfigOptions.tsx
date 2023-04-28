@@ -205,20 +205,20 @@ export const MainConfigOptionsMap = new Map<PipelineEntity, PipelineConfigOption
               key={'description'}
             />
             <FormInput.Text
-              name={'defaultValue'}
+              name={'defaul'}
               label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Default Value</Text>}
               placeholder={'input variable default value'}
-              key={'defaultValue'}
+              key={'default'}
             />
-            <FormInput.RadioGroup
+            {/* <FormInput.RadioGroup
               name={'required'}
               label={<Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>Required</Text>}
               items={[
-                { label: 'Yes', value: 'yes' },
-                { label: 'No', value: 'no' }
+                { label: 'Yes', value: 'true' },
+                { label: 'No', value: 'false' }
               ]}
               key={'required'}
-            />
+            /> */}
           </Layout.Vertical>
         ),
         canAddNewSubTypes: true

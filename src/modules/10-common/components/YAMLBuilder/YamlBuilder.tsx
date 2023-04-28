@@ -1162,6 +1162,41 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             existingStages: get(entityAsObj, 'stages', []),
             stageType: entitySubType as Stage
           })
+        case PipelineEntityGroupings.Inputs:
+          addUpdateInputIntoExistingYAML({
+            input: entityFieldValuesFromPanel,
+            existingInputs: get(entityAsObj, 'inputs', {})
+          })
+      }
+    },
+    [currentCursorPosition, currentYaml, editorRef.current?.editor]
+  )
+
+  const addUpdateInputIntoExistingYAML = useCallback(
+    ({ input, existingInputs }: { input: Record<string, any>; existingInputs: Record<string, any> }) => {
+      try {
+        const editor = editorRef.current?.editor
+        const { lineNumber: startingLineNum } = currentCursorPosition.current || {}
+        if (editor && startingLineNum && !isEmpty(input)) {
+          const inputAddedOrUpdated = { [get(input, 'name')]: omit(input, 'name') }
+          const updatedInputs = Object.assign(inputAddedOrUpdated, existingInputs)
+          const currentPipelineJSON = parse(currentYaml)
+          const updatedYAML = yamlStringify(set(currentPipelineJSON, 'inputs', updatedInputs))
+          onYamlChange(updatedYAML)
+          setCurrentYaml(updatedYAML)
+          const noOflinesInserted = countAllKeysInObject(input)
+          const endingLineNum = startingLineNum + noOflinesInserted > 0 ? startingLineNum + noOflinesInserted : 0
+          // highlight the inserted text
+          highlightInsertedYAML(startingLineNum + 1, endingLineNum)
+
+          const contentInEndingLine = editor.getModel()?.getLineContent(endingLineNum) || ''
+          // Scroll to the end of the inserted text
+          editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineNum })
+          editor.revealLineInCenter(endingLineNum)
+          editor.focus()
+        }
+      } catch (e) {
+        // ignore error
       }
     },
     [currentCursorPosition, currentYaml, editorRef.current?.editor]
@@ -1182,9 +1217,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         const { lineNumber: startingLineNum } = currentCursorPosition.current || {}
         if (editor && startingLineNum && !isEmpty(stage)) {
           const stageAddedOrUpdated = { ...stage, type: stageType.toLowerCase() }
-          const updatesStages = [stageAddedOrUpdated, ...existingStages]
+          const updatedStages = [stageAddedOrUpdated, ...existingStages]
           const currentPipelineJSON = parse(currentYaml)
-          const updatedYAML = yamlStringify(set(currentPipelineJSON, 'stages', updatesStages))
+          const updatedYAML = yamlStringify(set(currentPipelineJSON, 'stages', updatedStages))
           onYamlChange(updatedYAML)
           setCurrentYaml(updatedYAML)
           const noOflinesInserted = countAllKeysInObject(stageAddedOrUpdated)
