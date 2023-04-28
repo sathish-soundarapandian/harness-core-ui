@@ -7,43 +7,41 @@
 
 import React from 'react'
 import type { FormikErrors } from 'formik'
-import { get, isEmpty, set } from 'lodash-es'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import { isEmpty } from 'lodash-es'
+import type { IconName } from '@harness/uicore'
 
+import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import type { CloudFunctionExecutionStepInitialValues } from '@pipeline/utils/types'
-import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
-import { NoTrafficShiftExecutionStepEditRef } from '../NoTrafficShiftExecutionStepEdit'
-import { NoTrafficShiftExecutionStepInputSet } from '../NoTrafficShiftExecutionStepInputSet'
+import { GenericExecutionStepEditRef } from '../../../Common/GenericExecutionStep/GenericExecutionStepEdit'
+import { GenericExecutionStepInputSet } from '../../../Common/GenericExecutionStep/GenericExecutionStepInputSet'
+import { validateGenericFields } from '../../../Common/GenericExecutionStep/utils'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-interface DeployCloudFunctionNoTrafficShiftVariableStepProps {
-  initialValues: CloudFunctionExecutionStepInitialValues
+interface DeployCloudFunctionRollbackVariableStepProps {
+  initialValues: StepElementConfig
   stageIdentifier: string
-  onUpdate?(data: CloudFunctionExecutionStepInitialValues): void
+  onUpdate?(data: StepElementConfig): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: CloudFunctionExecutionStepInitialValues
+  variablesData: StepElementConfig
 }
 
-export class DeployCloudFunctionNoTrafficShiftStep extends PipelineStep<CloudFunctionExecutionStepInitialValues> {
-  protected type = StepType.DeployCloudFunctionWithNoTraffic
-  protected stepName = 'Deploy Cloud Function With No Traffic'
-  protected stepIcon: IconName = 'cloud-function-no-traffic-shift'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.DeployCloudFunctionNoTrafficShift'
+export class DeployCloudFunctionRollbackStep extends PipelineStep<StepElementConfig> {
+  protected type = StepType.CloudFunctionRollback
+  protected stepName = 'Cloud Function Rollback'
+  protected stepIcon: IconName = 'cloud-function-rollback'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.DeployCloudFunctionRollback'
   protected isHarnessSpecific = false
-  protected defaultValues: CloudFunctionExecutionStepInitialValues = {
+  protected defaultValues: StepElementConfig = {
     identifier: '',
     name: '',
-    type: StepType.DeployCloudFunctionWithNoTraffic,
+    type: StepType.CloudFunctionRollback,
     timeout: '10m',
-    spec: {
-      updateFieldMask: ''
-    }
+    spec: {}
   }
 
   constructor() {
@@ -52,7 +50,7 @@ export class DeployCloudFunctionNoTrafficShiftStep extends PipelineStep<CloudFun
     this._hasDelegateSelectionVisible = true
   }
 
-  renderStep(props: StepProps<CloudFunctionExecutionStepInitialValues>): JSX.Element {
+  renderStep(props: StepProps<StepElementConfig>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -68,14 +66,14 @@ export class DeployCloudFunctionNoTrafficShiftStep extends PipelineStep<CloudFun
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <NoTrafficShiftExecutionStepInputSet
+        <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
-          inputSetData={inputSetData as InputSetData<CloudFunctionExecutionStepInitialValues>}
+          inputSetData={inputSetData as InputSetData<StepElementConfig>}
           stepViewType={stepViewType}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as DeployCloudFunctionNoTrafficShiftVariableStepProps
+      const { variablesData, metadataMap } = customStepProps as DeployCloudFunctionRollbackVariableStepProps
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
@@ -87,9 +85,9 @@ export class DeployCloudFunctionNoTrafficShiftStep extends PipelineStep<CloudFun
     }
 
     return (
-      <NoTrafficShiftExecutionStepEditRef
-        formikFormName={'deployCloudFunctionWithNoTrafficStep'}
-        initialValues={initialValues as CloudFunctionExecutionStepInitialValues}
+      <GenericExecutionStepEditRef
+        formikFormName={'cloudFunctionRollbackStep'}
+        initialValues={initialValues}
         onUpdate={onUpdate}
         isNewStep={isNewStep}
         allowableTypes={allowableTypes}
@@ -106,27 +104,13 @@ export class DeployCloudFunctionNoTrafficShiftStep extends PipelineStep<CloudFun
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<CloudFunctionExecutionStepInitialValues>): FormikErrors<CloudFunctionExecutionStepInitialValues> {
-    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-
+  }: ValidateInputSetProps<StepElementConfig>): FormikErrors<StepElementConfig> {
     const errors = validateGenericFields({
       data,
       template,
       getString,
       viewType
-    }) as FormikErrors<CloudFunctionExecutionStepInitialValues>
-
-    if (
-      isEmpty(get(data, `spec.updateFieldMask`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `spec.updateFieldMask`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(
-        errors,
-        `spec.updateFieldMask`,
-        getString?.('fieldRequired', { field: getString('cd.steps.googleCloudFunctionCommon.fieldMask') })
-      )
-    }
+    })
 
     if (isEmpty(errors.spec)) {
       delete errors.spec

@@ -16,33 +16,33 @@ import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@p
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import type { CloudFunctionExecutionStepInitialValues } from '@pipeline/utils/types'
-import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
-import { NoTrafficShiftExecutionStepEditRef } from '../NoTrafficShiftExecutionStepEdit'
-import { NoTrafficShiftExecutionStepInputSet } from '../NoTrafficShiftExecutionStepInputSet'
+import type { CloudFunctionTrafficShiftExecutionStepInitialValues } from '@pipeline/utils/types'
+import { validateGenericFields } from '../../../Common/GenericExecutionStep/utils'
+import { TrafficShiftExecutionStepEditRef } from '../../TrafficShiftExecutionStepEdit'
+import { GenericExecutionStepInputSet } from '../../../Common/GenericExecutionStep/GenericExecutionStepInputSet'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-interface DeployCloudFunctionVariableStepProps {
-  initialValues: CloudFunctionExecutionStepInitialValues
+interface DeployCloudFunctionTrafficShiftVariableStepProps {
+  initialValues: CloudFunctionTrafficShiftExecutionStepInitialValues
   stageIdentifier: string
-  onUpdate?(data: CloudFunctionExecutionStepInitialValues): void
+  onUpdate?(data: CloudFunctionTrafficShiftExecutionStepInitialValues): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: CloudFunctionExecutionStepInitialValues
+  variablesData: CloudFunctionTrafficShiftExecutionStepInitialValues
 }
 
-export class DeployCloudFunctionStep extends PipelineStep<CloudFunctionExecutionStepInitialValues> {
-  protected type = StepType.DeployCloudFunction
-  protected stepName = 'Deploy Cloud Function'
-  protected stepIcon: IconName = 'deploy-cloud-function'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.DeployCloudFunction'
+export class DeployCloudFunctionTrafficShiftStep extends PipelineStep<CloudFunctionTrafficShiftExecutionStepInitialValues> {
+  protected type = StepType.CloudFunctionTrafficShift
+  protected stepName = 'Cloud Function Traffic Shift'
+  protected stepIcon: IconName = 'cloud-function-traffic-shift'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.DeployCloudFunctionTrafficShift'
   protected isHarnessSpecific = false
-  protected defaultValues: CloudFunctionExecutionStepInitialValues = {
+  protected defaultValues: CloudFunctionTrafficShiftExecutionStepInitialValues = {
     identifier: '',
     name: '',
-    type: StepType.DeployCloudFunction,
+    type: StepType.CloudFunctionTrafficShift,
     timeout: '10m',
     spec: {
-      updateFieldMask: ''
+      trafficPercent: 0
     }
   }
 
@@ -52,7 +52,7 @@ export class DeployCloudFunctionStep extends PipelineStep<CloudFunctionExecution
     this._hasDelegateSelectionVisible = true
   }
 
-  renderStep(props: StepProps<CloudFunctionExecutionStepInitialValues>): JSX.Element {
+  renderStep(props: StepProps<CloudFunctionTrafficShiftExecutionStepInitialValues>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -68,14 +68,14 @@ export class DeployCloudFunctionStep extends PipelineStep<CloudFunctionExecution
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <NoTrafficShiftExecutionStepInputSet
+        <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
-          inputSetData={inputSetData as InputSetData<CloudFunctionExecutionStepInitialValues>}
+          inputSetData={inputSetData as InputSetData<CloudFunctionTrafficShiftExecutionStepInitialValues>}
           stepViewType={stepViewType}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as DeployCloudFunctionVariableStepProps
+      const { variablesData, metadataMap } = customStepProps as DeployCloudFunctionTrafficShiftVariableStepProps
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
@@ -87,9 +87,9 @@ export class DeployCloudFunctionStep extends PipelineStep<CloudFunctionExecution
     }
 
     return (
-      <NoTrafficShiftExecutionStepEditRef
-        formikFormName={'deployCloudFunctionStep'}
-        initialValues={initialValues as CloudFunctionExecutionStepInitialValues}
+      <TrafficShiftExecutionStepEditRef
+        formikFormName={'cloudFunctionTrafficShiftStep'}
+        initialValues={initialValues as CloudFunctionTrafficShiftExecutionStepInitialValues}
         onUpdate={onUpdate}
         isNewStep={isNewStep}
         allowableTypes={allowableTypes}
@@ -106,7 +106,7 @@ export class DeployCloudFunctionStep extends PipelineStep<CloudFunctionExecution
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<CloudFunctionExecutionStepInitialValues>): FormikErrors<CloudFunctionExecutionStepInitialValues> {
+  }: ValidateInputSetProps<CloudFunctionTrafficShiftExecutionStepInitialValues>): FormikErrors<CloudFunctionTrafficShiftExecutionStepInitialValues> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
 
     const errors = validateGenericFields({
@@ -114,17 +114,17 @@ export class DeployCloudFunctionStep extends PipelineStep<CloudFunctionExecution
       template,
       getString,
       viewType
-    }) as FormikErrors<CloudFunctionExecutionStepInitialValues>
+    }) as FormikErrors<CloudFunctionTrafficShiftExecutionStepInitialValues>
 
     if (
-      isEmpty(get(data, `spec.updateFieldMask`)) &&
+      isEmpty(get(data, `spec.trafficPercent`)) &&
       isRequired &&
-      getMultiTypeFromValue(get(template, `spec.updateFieldMask`)) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue(get(template, `spec.trafficPercent`)) === MultiTypeInputType.RUNTIME
     ) {
       set(
         errors,
-        `spec.updateFieldMask`,
-        getString?.('fieldRequired', { field: getString('cd.steps.googleCloudFunctionCommon.fieldMask') })
+        `spec.trafficPercent`,
+        getString?.('fieldRequired', { field: getString('cd.steps.googleCloudFunctionCommon.trafficPercent') })
       )
     }
 
