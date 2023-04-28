@@ -69,10 +69,14 @@ const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmp
   return (
     <ModuleColumnChart
       count={ccmData?.data?.totalCost ? `$${numberFormatter(ccmData?.data?.totalCost)}` : '$0'}
-      countChangeInfo={{
-        countChange: ccmData?.data?.totalCost,
-        countChangeRate: ccmData?.data?.totalCostTrend
-      }}
+      countChangeInfo={
+        isExpanded
+          ? {
+              countChange: ccmData?.data?.totalCost,
+              countChangeRate: ccmData?.data?.totalCostTrend
+            }
+          : undefined
+      }
       timeRange={ccmData?.data?.costPerDay?.map(cost => cost.time || 0)}
       data={data}
       isExpanded={isExpanded}
