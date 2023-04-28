@@ -29,7 +29,8 @@ import {
   omitBy,
   isUndefined,
   isNull,
-  noop
+  noop,
+  omit
 } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Intent, Popover, PopoverInteractionKind, Position as PopoverPosition } from '@blueprintjs/core'
@@ -923,7 +924,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const contentInEndingLine = editor.getModel()?.getLineContent(endingLineNum) || ''
 
           // highlight the inserted text
-          highlightInsertedYAML(startingLineNum, endingLineNum + 1)
+          highlightInsertedYAML(startingLineNum, endingLineNum)
 
           // Scroll to the end of the inserted text
           editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineNum })
@@ -1131,10 +1132,25 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [])
 
   const handlePipelineEntityAddUpdateIntoYAML = useCallback(
-    ({ entityFieldValuesFromPanel, entitySelectedFromYAML }: HandlePipelineEntityAddUpdateFunctionInterface) => {
-      console.log(entityFieldValuesFromPanel, entitySelectedFromYAML)
+    ({ entityFieldValuesFromPanel, entitySelectedFromYAML }: HandlePipelineEntityAddUpdateFunctionInterface): void => {
+      const { entityAsObj, entityType } = entitySelectedFromYAML || {}
+      const isUpdate = !isEmpty(entitySelectedFromYAML)
+      switch (entityType) {
+        case PipelineAtomicEntity.Step:
+          addUpdatePluginIntoExistingYAML(
+            {
+              shouldInsertYAML: true,
+              pipelineEntity: PipelineAtomicEntity.Step,
+              pluginName: get(entityAsObj, 'name'),
+              pluginData: omit(entityFieldValuesFromPanel, 'uses'),
+              pluginType: get(entityAsObj, 'type'),
+              pluginUses: get(entityFieldValuesFromPanel, 'uses')
+            },
+            isUpdate
+          )
+      }
     },
-    []
+    [currentCursorPosition, currentYaml, editorRef.current?.editor]
   )
 
   const addUpdatePluginIntoExistingYAML = useCallback(
