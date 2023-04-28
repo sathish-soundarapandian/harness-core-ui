@@ -17,6 +17,7 @@ import {
   Step,
   PipelineEntitySubType
 } from './PipelineConfigOptions'
+import { getConfigOptionForPipelineEntity } from './Utils'
 import css from './PipelineConfigPanel.module.scss'
 
 interface PipelineConfigPanelInterface {
@@ -52,7 +53,7 @@ export function PipelineConfigPanel(props: PipelineConfigPanelInterface): React.
 
   useEffect(() => {
     if (entityType) {
-      const configOptionForEntityType = ConfigOptionsMapWithAdditionalOptions.get(entityType)
+      const configOptionForEntityType = getConfigOptionForPipelineEntity(entityType)
       if (configOptionForEntityType) {
         setPipelineEntity(entityType)
         setPipelineConfigPanelView(PipelineConfigPanelView.ConfigureOption)

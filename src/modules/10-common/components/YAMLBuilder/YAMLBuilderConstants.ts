@@ -127,6 +127,12 @@ export const PipelineEntityGroupingsToAtomicEntityMapping = new Map<PipelineEnti
   [PipelineEntityGroupings.Steps, PipelineAtomicEntity.Step]
 ])
 
+export const PipelineAtomicEntityToEntityGroupMapping = new Map<PipelineAtomicEntity, PipelineEntityGroupings>([
+  [PipelineAtomicEntity.Input, PipelineEntityGroupings.Inputs],
+  [PipelineAtomicEntity.Stage, PipelineEntityGroupings.Stages],
+  [PipelineAtomicEntity.Step, PipelineEntityGroupings.Steps]
+])
+
 export const PipelineEntityToEditorActionsMappingForCodelens = new Map<PipelineEntity, EditorAction[]>([
   /* Atomic entities */
   [PipelineAtomicEntity.Stage, [EditorAction.Edit]],
