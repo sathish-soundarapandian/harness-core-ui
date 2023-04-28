@@ -40,6 +40,11 @@
   width: 100% !important;
 }
 
+.validationStatus {
+  padding-right: var(--spacing-large);
+  z-index: 1;
+}
+
 .invalidYaml {
   color: var(--red-600);
   font-weight: bold;

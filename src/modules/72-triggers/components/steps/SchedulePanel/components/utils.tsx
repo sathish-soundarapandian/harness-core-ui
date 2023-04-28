@@ -353,6 +353,11 @@ export const AmPmMap = {
   PM: 'PM'
 }
 
+export enum CronFormat {
+  QUARTZ = 'QUARTZ',
+  UNIX = 'UNIX'
+}
+
 export const getMilitaryHours = ({ hours, amPm }: { hours: string; amPm: string }): string => {
   if (hours === '*') return '*'
   const hoursInt = parseInt(hours)
@@ -376,4 +381,11 @@ export const getBreakdownValues = (cronExpression: string): ExpressionBreakdownI
   }
 }
 
-export const isCronValid = (expression: string): boolean => isValidCron(expression, { alias: true })
+export const isCronValid = (expression: string, isQuartz?: boolean): boolean => {
+  const expLength = expression?.trim().split(' ').length
+
+  if (isQuartz) {
+    return expLength === 6 || expLength === 7
+  }
+  return isValidCron(expression, { alias: true })
+}

@@ -5263,6 +5263,7 @@ export interface StringsMap {
   'triggers.schedulePanel.monthsParentheses': string
   'triggers.schedulePanel.ofEvery': string
   'triggers.schedulePanel.onThe': string
+  'triggers.schedulePanel.quartzExpression': string
   'triggers.schedulePanel.runAt': string
   'triggers.schedulePanel.runDailyAt': string
   'triggers.schedulePanel.runEvery': string
@@ -5270,6 +5271,7 @@ export interface StringsMap {
   'triggers.schedulePanel.runOnSpecificDay': string
   'triggers.schedulePanel.runOnSpecificDayMonth': string
   'triggers.schedulePanel.startingWith': string
+  'triggers.schedulePanel.unixExpression': string
   'triggers.schedulePanel.weeklyTabTitle': string
   'triggers.schedulePanel.yearlyTabTitle': string
   'triggers.scheduledLabel': string
