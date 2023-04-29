@@ -24,8 +24,10 @@ interface DependentFields {
   region?: string
   bucketName?: string
   folderPath?: string
+  helmVersion?: string
 }
 
+const DEFAULT_HELM_VERSION = 'V3'
 export interface HelmChartVersionDataProps {
   modifiedPrevStepData: ConnectorConfigDTO | undefined
   fields: (keyof DependentFields)[]
@@ -35,7 +37,7 @@ export interface HelmChartVersionDataReturnProps {
   chartVersions: SelectOption[]
   loadingChartVersions: boolean
   chartVersionsError: GetDataError<Failure | Error> | null
-  fetchChartVersions: ({ chartName, region, bucketName, folderPath }: DependentFields) => void
+  fetchChartVersions: ({ chartName, region, bucketName, folderPath, helmVersion }: DependentFields) => void
   setLastQueryData: Dispatch<SetStateAction<DependentFields>>
 }
 
@@ -47,7 +49,8 @@ export function useGetHelmChartVersionData(props: HelmChartVersionDataProps): He
     chartName: '',
     bucketName: '',
     folderPath: '',
-    region: ''
+    region: '',
+    helmVersion: DEFAULT_HELM_VERSION
   })
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
 
@@ -66,7 +69,8 @@ export function useGetHelmChartVersionData(props: HelmChartVersionDataProps): He
       region: lastQueryData?.region,
       bucketName: lastQueryData?.bucketName,
       folderPath: lastQueryData.folderPath,
-      storeType: modifiedPrevStepData?.store
+      storeType: modifiedPrevStepData?.store,
+      helmVersion: DEFAULT_HELM_VERSION
     },
     lazy: true,
     debounce: 300
@@ -94,6 +98,7 @@ export function useGetHelmChartVersionData(props: HelmChartVersionDataProps): He
           region: lastQueryData?.region,
           bucketName: lastQueryData?.bucketName,
           folderPath: lastQueryData.folderPath,
+          helmVersion: lastQueryData.helmVersion,
           storeType: modifiedPrevStepData?.store
         }
       })
@@ -105,12 +110,19 @@ export function useGetHelmChartVersionData(props: HelmChartVersionDataProps): He
 
   const canFetchChartVersions = useCallback(
     (dependentFields: DependentFields): boolean => {
-      const { bucketName = '', folderPath = '', chartName = '', region = '' } = dependentFields
+      const {
+        bucketName = '',
+        folderPath = '',
+        chartName = '',
+        region = '',
+        helmVersion = DEFAULT_HELM_VERSION
+      } = dependentFields
       return !!(
         (lastQueryData.bucketName !== bucketName ||
           lastQueryData.folderPath !== folderPath ||
           lastQueryData.region !== region ||
-          lastQueryData.chartName !== chartName) &&
+          lastQueryData.chartName !== chartName ||
+          lastQueryData.helmVersion !== helmVersion) &&
         shouldFetchFieldOptions(
           !isEmpty(modifiedPrevStepData?.identifier)
             ? modifiedPrevStepData
@@ -123,7 +135,7 @@ export function useGetHelmChartVersionData(props: HelmChartVersionDataProps): He
   )
 
   const fetchChartVersions = useCallback(
-    (dependentFields): void => {
+    (dependentFields: DependentFields): void => {
       if (canFetchChartVersions(dependentFields)) {
         setLastQueryData(dependentFields)
       }
