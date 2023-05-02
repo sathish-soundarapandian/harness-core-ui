@@ -107,6 +107,8 @@ describe('Subscriptions Page', () => {
       refetch: jest.fn()
     }
   })
+  jest.useFakeTimers('modern')
+  jest.setSystemTime(new Date('2020-01-19'))
   test('it renders the subscriptions page with no data service table', async () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {

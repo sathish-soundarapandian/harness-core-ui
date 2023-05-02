@@ -1995,7 +1995,7 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                         <p
                           class="StyledProps--font StyledProps--main badgeText"
                         >
-                          Invalid date
+                          Jan 19 2020 12:00:00
                         </p>
                         <p
                           class="StyledProps--font StyledProps--main"
@@ -2667,7 +2667,7 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                             <p
                               class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                             >
-                              common.yearlyPeak
+                              common.monthlyPeak
                             </p>
                             <div
                               class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -2745,7 +2745,7 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                               placeholder="- Select -"
                               style="padding-right: 0px;"
                               type="text"
-                              value="Last 12 Months"
+                              value="January 2020"
                             />
                             <span
                               class="bp3-input-action"
@@ -3441,7 +3441,7 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                         <p
                           class="StyledProps--font StyledProps--main badgeText"
                         >
-                          Invalid date
+                          Jan 19 2020 12:00:00
                         </p>
                         <p
                           class="StyledProps--font StyledProps--main"
@@ -4113,7 +4113,7 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                             <p
                               class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                             >
-                              common.yearlyPeak
+                              common.monthlyPeak
                             </p>
                             <div
                               class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -4191,7 +4191,7 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                               placeholder="- Select -"
                               style="padding-right: 0px;"
                               type="text"
-                              value="Last 12 Months"
+                              value="January 2020"
                             />
                             <span
                               class="bp3-input-action"
@@ -4887,7 +4887,7 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                         <p
                           class="StyledProps--font StyledProps--main badgeText"
                         >
-                          Invalid date
+                          Jan 19 2020 12:00:00
                         </p>
                         <p
                           class="StyledProps--font StyledProps--main"
@@ -5559,7 +5559,7 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                             <p
                               class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                             >
-                              common.yearlyPeak
+                              common.monthlyPeak
                             </p>
                             <div
                               class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -5637,7 +5637,7 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                               placeholder="- Select -"
                               style="padding-right: 0px;"
                               type="text"
-                              value="Last 12 Months"
+                              value="January 2020"
                             />
                             <span
                               class="bp3-input-action"
@@ -6841,7 +6841,7 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
                             <p
                               class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                             >
-                              common.yearlyPeak
+                              common.monthlyPeak
                             </p>
                             <div
                               class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -6919,7 +6919,7 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
                               placeholder="- Select -"
                               style="padding-right: 0px;"
                               type="text"
-                              value="Last 12 Months"
+                              value="January 2020"
                             />
                             <span
                               class="bp3-input-action"
@@ -7630,7 +7630,7 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                         <p
                           class="StyledProps--font StyledProps--main badgeText"
                         >
-                          Invalid date
+                          Jan 19 2020 12:00:00
                         </p>
                         <p
                           class="StyledProps--font StyledProps--main"
@@ -8302,7 +8302,7 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                             <p
                               class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                             >
-                              common.yearlyPeak
+                              common.monthlyPeak
                             </p>
                             <div
                               class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -8380,7 +8380,7 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                               placeholder="- Select -"
                               style="padding-right: 0px;"
                               type="text"
-                              value="Last 12 Months"
+                              value="January 2020"
                             />
                             <span
                               class="bp3-input-action"
