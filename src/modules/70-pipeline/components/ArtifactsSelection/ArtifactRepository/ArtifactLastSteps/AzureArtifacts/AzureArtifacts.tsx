@@ -66,7 +66,8 @@ import css from '../../ArtifactConnector.module.scss'
 
 export const packageTypeOptions: SelectOption[] = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },
-  { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
+  { label: 'NuGet', value: RepositoryFormatTypes.NuGet },
+  { label: 'Universal', value: RepositoryFormatTypes.Upack }
 ]
 
 function FormComponent(

@@ -85,7 +85,8 @@ export enum RepositoryFormatTypes {
   Maven = 'maven',
   NPM = 'npm',
   NuGet = 'nuget',
-  Raw = 'raw'
+  Raw = 'raw',
+  Upack = 'upack'
 }
 
 export const stageGroupTypes = [StageType.PIPELINE, StageType.PIPELINE_ROLLBACK]
