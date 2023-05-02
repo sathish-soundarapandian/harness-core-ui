@@ -161,7 +161,7 @@ export const getSeries = (values: number[], subscriptions: number): any => {
 export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props: ServiceLicenseGraphsProps) => {
   const { getString } = useStrings()
   const currentDate = new Date()
-  const [fetchType, setFetchType] = useState<string>('MONTHLY')
+  const [fetchType, setFetchType] = useState<string>('DAILY')
   const [fromDate, setFromDate] = useState<string>('')
   const [toDate, setToDate] = useState<string>('')
   const [licenseTypeSelected, setLicenseTypeSelected] = useState<string>('')
@@ -185,34 +185,34 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
   })
 
   useEffect(() => {
-    if (filterOptions.length === 4) {
-      return
-    }
     const currentMonth = currentDate.getMonth() + 1
     const currentYear = currentDate.getFullYear()
-    const previousYear = currentDate.getFullYear() - 1
     let formatMonth = false
     if (currentMonth !== 10 && currentMonth !== 11 && currentMonth !== 12) {
       formatMonth = true
     }
-    setFromDate(formatMonth ? `${previousYear}-0${currentMonth}-01` : `${previousYear}-${currentMonth}-01`)
-    setToDate(formatMonth ? `${currentYear}-0${currentMonth}-01` : `${currentYear}-${currentMonth}-01`)
+    setFromDate(formatMonth ? `${currentYear}-0${currentMonth}-01` : `${currentYear}-${currentMonth}-01`)
+    setToDate(formatMonth ? `${currentYear}-0${currentMonth}-31` : `${currentYear}-${currentMonth}-31`)
+
     if (props.licenseType === 'SERVICES') {
       setLicenseTypeSelected(CDLicenseType.SERVICES)
-      refetchServiceInstanceLicenses()
     } else {
       setLicenseTypeSelected(CDLicenseType.SERVICE_INSTANCES)
-      refetchServiceInstanceLicenses()
+    }
+    setSelectedTimePeriod({ label: filterOptions[0].label, value: filterOptions[0].label })
+    if (filterOptions.length === 4) {
+      return
     }
     const last3Months = getLast3Months()
     const updatedData = last3Months.map(v => ({ label: v, value: v }))
 
     filterOptions = [...filterOptions, ...updatedData]
     filterOptions.push(filterOptions.shift() as { label: string; value: string })
+    setSelectedTimePeriod({ label: filterOptions[0].label, value: filterOptions[0].label })
   }, [])
   useEffect(() => {
     refetchServiceInstanceLicenses()
-  }, [fetchType, fromDate, toDate])
+  }, [fetchType, fromDate, toDate, licenseTypeSelected])
   const subscriptions = licenseDataInfo?.workloads || 0
   const valuesArray = Object.values(data?.data?.licenseUsage || {})
   const maxValue = valuesArray.length > 0 ? Math.max(...valuesArray) : 0
@@ -355,7 +355,7 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
                   }
                   setFetchType('DAILY')
                   setFromDate(formatMonth ? `${year3Passed}-0${month3Passed}-01` : `${year3Passed}-${month3Passed}-01`)
-                  setToDate(formatMonth ? `${year3Passed}-0${month3Passed}-01` : `${year3Passed}-${month3Passed}-31`)
+                  setToDate(formatMonth ? `${year3Passed}-0${month3Passed}-31` : `${year3Passed}-${month3Passed}-31`)
                 }
               }}
               items={filterOptions}

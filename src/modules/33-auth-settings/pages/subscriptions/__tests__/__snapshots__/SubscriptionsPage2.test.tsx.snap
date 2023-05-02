@@ -606,7 +606,7 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
                         <p
                           class="StyledProps--font StyledProps--main badgeText"
                         >
-                          Invalid date
+                          Jan 19 2020 12:00:00
                         </p>
                         <p
                           class="StyledProps--font StyledProps--main"
@@ -836,7 +836,7 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
                             <p
                               class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                             >
-                              common.yearlyPeak
+                              common.monthlyPeak
                             </p>
                             <div
                               class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -914,7 +914,7 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
                               placeholder="- Select -"
                               style="padding-right: 0px;"
                               type="text"
-                              value="Last 12 Months"
+                              value="January 2020"
                             />
                             <span
                               class="bp3-input-action"

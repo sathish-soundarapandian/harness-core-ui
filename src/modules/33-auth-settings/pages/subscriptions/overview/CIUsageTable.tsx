@@ -44,7 +44,7 @@ const CIUsageTable: React.FC<CDUsageTableProps> = () => {
   const { accountId } = useParams<AccountPathProps>()
   const { preference: sortingPreference, setPreference: setSortingPreference } = usePreferenceStore<string | undefined>(
     PreferenceScope.USER,
-    'CIUsageTableSortingPreference'
+    'CIUsageTableSortPreference'
   )
   const queryParams = useQueryParams<CiLicenseUsageQueryParams>(queryParamOptions)
   const { page, size } = queryParams
