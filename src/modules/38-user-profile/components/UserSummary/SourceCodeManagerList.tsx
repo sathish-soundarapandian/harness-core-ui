@@ -239,16 +239,7 @@ const SourceCodeManagerList: React.FC = () => {
       )
     }
     if (!loadingOauthSCMs) {
-      return (
-        <Layout.Horizontal padding={{ top: 'large' }}>
-          <Button
-            text={getString('userProfile.plusSCM')}
-            data-test="userProfileAddSCM"
-            variation={ButtonVariation.LINK}
-            onClick={openSourceCodeModal}
-          />
-        </Layout.Horizontal>
-      )
+      return <Text>No SCM has been set up in user profile.</Text>
     }
     return <></>
   }
