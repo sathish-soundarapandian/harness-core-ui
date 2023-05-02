@@ -49,6 +49,7 @@ declare const styles: {
   readonly runModalHeader: string
   readonly runModalHeaderTitle: string
   readonly runModalSubHeading: string
+  readonly runPipelineBranchDetails: string
   readonly runPipelineDialog: string
   readonly secondaryButton: string
   readonly selectedValueProvider: string

@@ -213,6 +213,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
             filePath={pipelineResponse?.data?.gitDetails?.filePath}
             fileUrl={pipelineResponse?.data?.gitDetails?.fileUrl}
             flags={{ readOnly: true }}
+            branchCustomClassName={css.runPipelineBranchDetails}
           />
           {!isEmpty(pipelineResponse?.data?.cacheResponse) && (
             <EntityCachedCopy
