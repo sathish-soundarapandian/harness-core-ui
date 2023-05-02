@@ -18,14 +18,22 @@ import {
   Popover,
   ButtonVariation,
   Utils,
-  useConfirmationDialog
+  useConfirmationDialog,
+  Layout,
+  Icon,
+  Switch
 } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { Menu, MenuItem } from '@blueprintjs/core'
 import { useToaster } from '@common/components'
 import { useStrings, String } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import type { AuthenticationSettingsResponse, SAMLSettings } from 'services/cd-ng'
+import {
+  AuthenticationSettingsResponse,
+  SAMLSettings,
+  useDeleteSamlMetaDataForSamlSSOId,
+  useEnableDisableAuthenticationForSAMLSetting
+} from 'services/cd-ng'
 import { useDeleteSamlMetaData, useUpdateAuthMechanism, useGetSamlLoginTest } from 'services/cd-ng'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -70,11 +78,13 @@ const SAMLProviderV2: React.FC<Props> = ({
       featureName: FeatureIdentifier.SAML_SUPPORT
     }
   })
-  //   const onSuccess = (): void => {
-  //     refetchAuthSettings()
-  //   }
 
   const { openSAMlProvider } = useSAMLProviderModalV2()
+
+  const { mutate: enableDisableSAMLSetting, loading } = useEnableDisableAuthenticationForSAMLSetting({
+    queryParams: { accountIdentifier: accountId, enable: true },
+    samlSSOId: ''
+  })
 
   const {
     data: samlLoginTestData,
@@ -88,7 +98,7 @@ const SAMLProviderV2: React.FC<Props> = ({
     lazy: true
   })
 
-  const { mutate: deleteSamlSettings, loading: deletingSamlSettings } = useDeleteSamlMetaData({
+  const { mutate: deleteSamlSettings, loading: deletingSamlSettings } = useDeleteSamlMetaDataForSamlSSOId({
     queryParams: {
       accountIdentifier: accountId
     }
@@ -115,7 +125,8 @@ const SAMLProviderV2: React.FC<Props> = ({
     onCloseDialog: async isConfirmed => {
       /* istanbul ignore else */ if (isConfirmed) {
         try {
-          const deleted = await deleteSamlSettings('' as any)
+          // add ssoId here.
+          const deleted = await deleteSamlSettings()
           /* istanbul ignore else */ if (deleted) {
             refetchAuthSettings()
             showSuccess(getString('authSettings.samlProviderDeleted'), 5000)
@@ -194,6 +205,14 @@ const SAMLProviderV2: React.FC<Props> = ({
     }
   })
 
+  const handleEnableDisableAuthentication = (e: React.FormEvent<HTMLInputElement>, ssoId?: string): void => {
+    const enable = e.currentTarget.checked
+
+    // enableDisableSAMLSetting('' as any, { samlSSOId: ssoId, enable: enable })
+  }
+
+  const handleDeleteAuthentication = (ssoId: string) => {}
+
   return (
     <Container margin="xlarge" background={Color.WHITE}>
       {samlSettings.length > 0 ? (
@@ -226,29 +245,42 @@ const SAMLProviderV2: React.FC<Props> = ({
             return (
               <Container padding={{ bottom: 'large' }} key={samlSetting.identifier}>
                 <Card className={css.card}>
+                  <Switch
+                    onChange={e => {
+                      handleEnableDisableAuthentication(e, samlSetting.clientId)
+                    }}
+                  />
                   <Text color={Color.GREY_800} font={{ weight: 'bold' }} width="30%">
                     {samlSetting.displayName}
                   </Text>
-                  <Text color={Color.GREY_800} width="70%">
-                    {samlSetting.authorizationEnabled ? (
-                      <span>
-                        {getString('authSettings.authorizationEnabledFor')}
-                        <Text font={{ weight: 'semi-bold' }} color={Color.GREY_800} inline>
-                          {samlSetting.groupMembershipAttr}
-                        </Text>
-                      </span>
-                    ) : (
-                      getString('authSettings.authorizationNotEnabled')
-                    )}
+                  <Text inline width="30%">
+                    <Text inline color={Color.GREY_300} font={FontVariation.SMALL}>
+                      {`${getString('common.friendlyName')}: `}
+                      <Text color={Color.BLACK} font={FontVariation.SMALL} inline>
+                        Test Name
+                      </Text>
+                    </Text>
                   </Text>
-                  <Button
-                    text={getString('test')}
-                    variation={ButtonVariation.SECONDARY}
-                    disabled={!!childWindow || fetchingSamlLoginTestData}
-                    onClick={() => {
-                      getSamlLoginTestData()
-                    }}
-                  />
+                  <Layout.Horizontal width="30%" flex={{ justifyContent: 'flex-start' }}>
+                    <Text font={FontVariation.SMALL} inline margin={{ right: 'small' }}>
+                      {`${getString('typeLabel')}: `}
+                    </Text>
+                    <Icon name="service-okta" margin={{ right: 'small' }} />
+                    <Text inline font={{ variation: FontVariation.BODY }}>
+                      {samlSetting.samlProviderType}
+                    </Text>
+                  </Layout.Horizontal>
+                  <Container width="10%" flex={{ justifyContent: 'flex-end' }}>
+                    <Button
+                      text={getString('test')}
+                      variation={ButtonVariation.SECONDARY}
+                      disabled={!!childWindow || fetchingSamlLoginTestData}
+                      onClick={() => {
+                        getSamlLoginTestData()
+                      }}
+                    />
+                  </Container>
+
                   <Popover
                     interactionKind="click"
                     position="left-top"

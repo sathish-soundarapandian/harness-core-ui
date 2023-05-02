@@ -6490,9 +6490,9 @@ export type GarArtifactSummary = ArtifactSummary & {
 
 export interface GarRequestDTO {
   runtimeInputYaml?: string
-  version?: string
-  versionList?: string[]
-  versionRegex?: string
+  tag?: string
+  tagRegex?: string
+  tagsList?: string[]
 }
 
 export interface GatewayAccountRequestDTO {
@@ -9434,9 +9434,7 @@ export interface InstanceGroupedByArtifact {
   lastDeployedAt?: number
   lastPlanExecutionId?: string
   pipelineIdentifier?: string
-  rollbackStatus?: 'UNAVAILABLE' | 'NOT_STARTED' | 'STARTED' | 'SUCCESS' | 'FAILURE'
   stageNodeExecutionId?: string
-  stageSetupId?: string
 }
 
 export interface InstanceGroupedByArtifactV2 {
@@ -15541,6 +15539,7 @@ export type S3UrlStoreConfig = StoreConfig & {
 }
 
 export type SAMLSettings = NGAuthSettings & {
+  authenticationEnabled?: boolean
   authorizationEnabled?: boolean
   clientId?: string
   clientSecret?: string
@@ -15607,9 +15606,11 @@ export interface SSOConfig {
 }
 
 export interface SSORequest {
+  friendlySamlName?: string
   idpRedirectUrl?: string
   oauthProviderType?: 'AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN'
   oauthProviderTypes?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
+  ssoId?: string
 }
 
 export interface SSOSettings {
@@ -15645,9 +15646,11 @@ export interface SamlLinkGroupRequest {
 
 export type SamlSettings = SSOSettings & {
   accountId: string
+  authenticationEnabled?: boolean
   authorizationEnabled?: boolean
   clientId?: string
   clientSecret?: string[]
+  configuredFromNG?: boolean
   encryptedClientSecret?: string
   entityIdentifier?: string
   friendlySamlName?: string
@@ -18752,6 +18755,8 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 export type ListTagsForAMIArtifactBodyRequestBody = string
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
+
+export type UploadSamlMetaDataRequestBody = void
 
 export interface GetAccountSettingQueryParams {
   accountIdentifier: string
@@ -28826,6 +28831,104 @@ export const getAuthenticationSettingsPromise = (
     signal
   )
 
+export interface EnableDisableAuthenticationForSAMLSettingQueryParams {
+  accountIdentifier: string
+  enable: boolean
+}
+
+export interface EnableDisableAuthenticationForSAMLSettingPathParams {
+  samlSSOId: string
+}
+
+export type EnableDisableAuthenticationForSAMLSettingProps = Omit<
+  MutateProps<
+    RestResponseBoolean,
+    unknown,
+    EnableDisableAuthenticationForSAMLSettingQueryParams,
+    void,
+    EnableDisableAuthenticationForSAMLSettingPathParams
+  >,
+  'path' | 'verb'
+> &
+  EnableDisableAuthenticationForSAMLSettingPathParams
+
+/**
+ * Enables or disables authentication through the given SAML sso id
+ */
+export const EnableDisableAuthenticationForSAMLSetting = ({
+  samlSSOId,
+  ...props
+}: EnableDisableAuthenticationForSAMLSettingProps) => (
+  <Mutate<
+    RestResponseBoolean,
+    unknown,
+    EnableDisableAuthenticationForSAMLSettingQueryParams,
+    void,
+    EnableDisableAuthenticationForSAMLSettingPathParams
+  >
+    verb="PUT"
+    path={`/authentication-settings/authentication/${samlSSOId}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseEnableDisableAuthenticationForSAMLSettingProps = Omit<
+  UseMutateProps<
+    RestResponseBoolean,
+    unknown,
+    EnableDisableAuthenticationForSAMLSettingQueryParams,
+    void,
+    EnableDisableAuthenticationForSAMLSettingPathParams
+  >,
+  'path' | 'verb'
+> &
+  EnableDisableAuthenticationForSAMLSettingPathParams
+
+/**
+ * Enables or disables authentication through the given SAML sso id
+ */
+export const useEnableDisableAuthenticationForSAMLSetting = ({
+  samlSSOId,
+  ...props
+}: UseEnableDisableAuthenticationForSAMLSettingProps) =>
+  useMutate<
+    RestResponseBoolean,
+    unknown,
+    EnableDisableAuthenticationForSAMLSettingQueryParams,
+    void,
+    EnableDisableAuthenticationForSAMLSettingPathParams
+  >(
+    'PUT',
+    (paramsInPath: EnableDisableAuthenticationForSAMLSettingPathParams) =>
+      `/authentication-settings/authentication/${paramsInPath.samlSSOId}`,
+    { base: getConfig('ng/api'), pathParams: { samlSSOId }, ...props }
+  )
+
+/**
+ * Enables or disables authentication through the given SAML sso id
+ */
+export const enableDisableAuthenticationForSAMLSettingPromise = (
+  {
+    samlSSOId,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseBoolean,
+    unknown,
+    EnableDisableAuthenticationForSAMLSettingQueryParams,
+    void,
+    EnableDisableAuthenticationForSAMLSettingPathParams
+  > & { samlSSOId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseBoolean,
+    unknown,
+    EnableDisableAuthenticationForSAMLSettingQueryParams,
+    void,
+    EnableDisableAuthenticationForSAMLSettingPathParams
+  >('PUT', getConfig('ng/api'), `/authentication-settings/authentication/${samlSSOId}`, props, signal)
+
 export interface DeleteSamlMetaDataQueryParams {
   accountIdentifier: string
 }
@@ -28870,6 +28973,57 @@ export const deleteSamlMetaDataPromise = (
   signal?: RequestInit['signal']
 ) =>
   mutateUsingFetch<RestResponseSSOConfig, unknown, DeleteSamlMetaDataQueryParams, void, void>(
+    'DELETE',
+    getConfig('ng/api'),
+    `/authentication-settings/delete-saml-metadata`,
+    props,
+    signal
+  )
+
+export interface DeleteSamlMetaDataForSamlSSOIdQueryParams {
+  accountIdentifier: string
+}
+
+export type DeleteSamlMetaDataForSamlSSOIdProps = Omit<
+  MutateProps<RestResponseSSOConfig, unknown, DeleteSamlMetaDataForSamlSSOIdQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete SAML Config for given SAML sso id
+ */
+export const DeleteSamlMetaDataForSamlSSOId = (props: DeleteSamlMetaDataForSamlSSOIdProps) => (
+  <Mutate<RestResponseSSOConfig, unknown, DeleteSamlMetaDataForSamlSSOIdQueryParams, string, void>
+    verb="DELETE"
+    path={`/authentication-settings/delete-saml-metadata`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteSamlMetaDataForSamlSSOIdProps = Omit<
+  UseMutateProps<RestResponseSSOConfig, unknown, DeleteSamlMetaDataForSamlSSOIdQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete SAML Config for given SAML sso id
+ */
+export const useDeleteSamlMetaDataForSamlSSOId = (props: UseDeleteSamlMetaDataForSamlSSOIdProps) =>
+  useMutate<RestResponseSSOConfig, unknown, DeleteSamlMetaDataForSamlSSOIdQueryParams, string, void>(
+    'DELETE',
+    `/authentication-settings/delete-saml-metadata`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Delete SAML Config for given SAML sso id
+ */
+export const deleteSamlMetaDataForSamlSSOIdPromise = (
+  props: MutateUsingFetchProps<RestResponseSSOConfig, unknown, DeleteSamlMetaDataForSamlSSOIdQueryParams, string, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseSSOConfig, unknown, DeleteSamlMetaDataForSamlSSOIdQueryParams, string, void>(
     'DELETE',
     getConfig('ng/api'),
     `/authentication-settings/delete-saml-metadata`,
@@ -29367,12 +29521,75 @@ export const getSamlLoginTestPromise = (
     signal
   )
 
+export interface GetSamlLoginTestV2QueryParams {
+  accountIdentifier: string
+}
+
+export interface GetSamlLoginTestV2PathParams {
+  samlSSOId: string
+}
+
+export type GetSamlLoginTestV2Props = Omit<
+  GetProps<RestResponseLoginTypeResponse, unknown, GetSamlLoginTestV2QueryParams, GetSamlLoginTestV2PathParams>,
+  'path'
+> &
+  GetSamlLoginTestV2PathParams
+
+/**
+ * Get SAML Login Test
+ */
+export const GetSamlLoginTestV2 = ({ samlSSOId, ...props }: GetSamlLoginTestV2Props) => (
+  <Get<RestResponseLoginTypeResponse, unknown, GetSamlLoginTestV2QueryParams, GetSamlLoginTestV2PathParams>
+    path={`/authentication-settings/saml-login-test/${samlSSOId}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetSamlLoginTestV2Props = Omit<
+  UseGetProps<RestResponseLoginTypeResponse, unknown, GetSamlLoginTestV2QueryParams, GetSamlLoginTestV2PathParams>,
+  'path'
+> &
+  GetSamlLoginTestV2PathParams
+
+/**
+ * Get SAML Login Test
+ */
+export const useGetSamlLoginTestV2 = ({ samlSSOId, ...props }: UseGetSamlLoginTestV2Props) =>
+  useGet<RestResponseLoginTypeResponse, unknown, GetSamlLoginTestV2QueryParams, GetSamlLoginTestV2PathParams>(
+    (paramsInPath: GetSamlLoginTestV2PathParams) =>
+      `/authentication-settings/saml-login-test/${paramsInPath.samlSSOId}`,
+    { base: getConfig('ng/api'), pathParams: { samlSSOId }, ...props }
+  )
+
+/**
+ * Get SAML Login Test
+ */
+export const getSamlLoginTestV2Promise = (
+  {
+    samlSSOId,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseLoginTypeResponse,
+    unknown,
+    GetSamlLoginTestV2QueryParams,
+    GetSamlLoginTestV2PathParams
+  > & { samlSSOId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseLoginTypeResponse, unknown, GetSamlLoginTestV2QueryParams, GetSamlLoginTestV2PathParams>(
+    getConfig('ng/api'),
+    `/authentication-settings/saml-login-test/${samlSSOId}`,
+    props,
+    signal
+  )
+
 export interface UploadSamlMetaDataQueryParams {
   accountId: string
 }
 
 export type UploadSamlMetaDataProps = Omit<
-  MutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, void, void>,
+  MutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -29380,7 +29597,7 @@ export type UploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
-  <Mutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, void, void>
+  <Mutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>
     verb="POST"
     path={`/authentication-settings/saml-metadata-upload`}
     base={getConfig('ng/api')}
@@ -29389,7 +29606,7 @@ export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
 )
 
 export type UseUploadSamlMetaDataProps = Omit<
-  UseMutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, void, void>,
+  UseMutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -29397,7 +29614,7 @@ export type UseUploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const useUploadSamlMetaData = (props: UseUploadSamlMetaDataProps) =>
-  useMutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, void, void>(
+  useMutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
     'POST',
     `/authentication-settings/saml-metadata-upload`,
     { base: getConfig('ng/api'), ...props }
@@ -29407,10 +29624,16 @@ export const useUploadSamlMetaData = (props: UseUploadSamlMetaDataProps) =>
  * Create SAML Config
  */
 export const uploadSamlMetaDataPromise = (
-  props: MutateUsingFetchProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, void, void>,
+  props: MutateUsingFetchProps<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UploadSamlMetaDataRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, void, void>(
+  mutateUsingFetch<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/authentication-settings/saml-metadata-upload`,
@@ -29468,6 +29691,97 @@ export const updateSamlMetaDataPromise = (
     props,
     signal
   )
+
+export interface UpdateSamlMetaDataForSamlSSOIdQueryParams {
+  accountIdentifier: string
+}
+
+export interface UpdateSamlMetaDataForSamlSSOIdPathParams {
+  samlSSOId: string
+}
+
+export type UpdateSamlMetaDataForSamlSSOIdProps = Omit<
+  MutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    UpdateSamlMetaDataForSamlSSOIdQueryParams,
+    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateSamlMetaDataForSamlSSOIdPathParams
+
+/**
+ * Edit SAML Config for given SAML SSO Id
+ */
+export const UpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UpdateSamlMetaDataForSamlSSOIdProps) => (
+  <Mutate<
+    RestResponseSSOConfig,
+    unknown,
+    UpdateSamlMetaDataForSamlSSOIdQueryParams,
+    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdPathParams
+  >
+    verb="PUT"
+    path={`/authentication-settings/saml-metadata-upload/${samlSSOId}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateSamlMetaDataForSamlSSOIdProps = Omit<
+  UseMutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    UpdateSamlMetaDataForSamlSSOIdQueryParams,
+    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateSamlMetaDataForSamlSSOIdPathParams
+
+/**
+ * Edit SAML Config for given SAML SSO Id
+ */
+export const useUpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UseUpdateSamlMetaDataForSamlSSOIdProps) =>
+  useMutate<
+    RestResponseSSOConfig,
+    unknown,
+    UpdateSamlMetaDataForSamlSSOIdQueryParams,
+    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdPathParams
+  >(
+    'PUT',
+    (paramsInPath: UpdateSamlMetaDataForSamlSSOIdPathParams) =>
+      `/authentication-settings/saml-metadata-upload/${paramsInPath.samlSSOId}`,
+    { base: getConfig('ng/api'), pathParams: { samlSSOId }, ...props }
+  )
+
+/**
+ * Edit SAML Config for given SAML SSO Id
+ */
+export const updateSamlMetaDataForSamlSSOIdPromise = (
+  {
+    samlSSOId,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseSSOConfig,
+    unknown,
+    UpdateSamlMetaDataForSamlSSOIdQueryParams,
+    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdPathParams
+  > & { samlSSOId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseSSOConfig,
+    unknown,
+    UpdateSamlMetaDataForSamlSSOIdQueryParams,
+    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdPathParams
+  >('PUT', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload/${samlSSOId}`, props, signal)
 
 export interface SetSessionTimeoutAtAccountLevelQueryParams {
   accountIdentifier: string
