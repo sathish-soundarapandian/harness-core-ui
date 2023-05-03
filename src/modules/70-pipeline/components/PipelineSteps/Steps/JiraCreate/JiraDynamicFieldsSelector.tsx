@@ -211,7 +211,7 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
           </div>
 
           <div className={css.select}>
-            <Text className={css.selectLabel}>{getString('pipeline.jiraApprovalStep.issueType')}</Text>
+            <Text className={css.selectLabel}>{getString('common.resourceCenter.ticketmenu.issueType')}</Text>
             <Select
               value={issueTypeValue}
               items={

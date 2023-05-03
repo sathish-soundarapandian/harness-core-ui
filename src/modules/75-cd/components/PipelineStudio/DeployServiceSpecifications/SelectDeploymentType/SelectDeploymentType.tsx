@@ -27,6 +27,7 @@ import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
+
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useGetCommunity } from '@common/utils/utils'
 import { errorCheck } from '@common/utils/formikHelpers'
@@ -54,8 +55,9 @@ import {
 import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { getGoogleCloudFunctionsEnvOptions } from '@cd/components/PipelineSteps/GoogleCloudFunction/utils/utils'
-import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
-import deployServiceCss from './DeployServiceSpecifications.module.scss'
+import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
+import deployServiceCss from '../DeployServiceSpecifications.module.scss'
+import css from './SelectDeploymentType.module.scss'
 
 const DEPLOYMENT_TYPE_KEY = 'deploymentType'
 
@@ -226,6 +228,12 @@ const CardList = ({ items, isReadonly, selectedValue, onChange }: CardListProps)
   )
 }
 
+interface GoogleCloudFunctionsSpecificPropsType {
+  shouldShowGCFEnvTypeDropdown?: boolean
+  googleCloudFunctionEnvType?: GoogleCloudFunctionsEnvType
+  handleGCFEnvTypeChange?: (selectedEnv: SelectOption, event?: SyntheticEvent<HTMLElement, Event> | undefined) => void
+}
+
 interface SelectServiceDeploymentTypeProps {
   isReadonly: boolean
   shouldShowGitops: boolean
@@ -233,14 +241,12 @@ interface SelectServiceDeploymentTypeProps {
   selectedDeploymentType?: ServiceDeploymentType
   viewContext?: string
   handleGitOpsCheckChanged?: (ev: React.FormEvent<HTMLInputElement>) => void
-  handleGCFEnvTypeChange?: (selectedEnv: SelectOption, event?: SyntheticEvent<HTMLElement, Event> | undefined) => void
   gitOpsEnabled?: boolean
   templateLinkConfig?: TemplateLinkConfig
   onDeploymentTemplateSelect: (template: TemplateSummaryResponse, fromTemplateSelector: boolean) => void
   addOrUpdateTemplate?: () => void | Promise<void>
   templateBarOverrideClassName?: string
-  shouldShowGCFEnvTypeDropdown?: boolean
-  googleCloudFunctionEnvType?: GoogleCloudFunctionsEnvType
+  googleCloudFunctionsSpecificProps?: GoogleCloudFunctionsSpecificPropsType
 }
 
 export default function SelectDeploymentType({
@@ -255,10 +261,11 @@ export default function SelectDeploymentType({
   onDeploymentTemplateSelect,
   addOrUpdateTemplate,
   templateBarOverrideClassName = '',
-  shouldShowGCFEnvTypeDropdown = false,
-  handleGCFEnvTypeChange,
-  googleCloudFunctionEnvType
+  googleCloudFunctionsSpecificProps = {}
 }: SelectServiceDeploymentTypeProps): JSX.Element {
+  const { shouldShowGCFEnvTypeDropdown, googleCloudFunctionEnvType, handleGCFEnvTypeChange } =
+    googleCloudFunctionsSpecificProps
+
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
@@ -381,7 +388,7 @@ export default function SelectDeploymentType({
       )
       return (
         <FormInput.Select
-          className={deployServiceCss.googleCloudFunctionsEnvType}
+          className={css.googleCloudFunctionsEnvType}
           name="environmentType"
           label={getString('cd.steps.googleCloudFunctionCommon.envVersionLabel')}
           items={googleCloudFunctionEnvTypeOptions}

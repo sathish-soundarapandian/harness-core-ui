@@ -28,7 +28,8 @@ import {
 import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
-import { ConnectorConfigDTO, useGetProjects } from 'services/cd-ng'
+import type { StringsMap } from 'framework/strings/StringsContext'
+import { ConnectorConfigDTO, GoogleCloudSourceArtifactConfig, useGetProjects } from 'services/cd-ng'
 import { useMutateAsGet } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -59,16 +60,17 @@ export enum GitRepoName {
   Repo = 'Repo'
 }
 
-export enum FetchType {
-  Branch = 'Branch',
-  Commit = 'Commit',
-  Tag = 'Tag'
+interface FetchType {
+  label: string
+  value: GoogleCloudSourceArtifactConfig['fetchType']
 }
 
-export const fetchTypeList = [
-  { label: 'Latest from Branch', value: FetchType.Branch },
-  { label: 'Specific Commit Id', value: FetchType.Commit },
-  { label: 'Specific Git Tag', value: FetchType.Tag }
+export const getFetchTypeList = (
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
+): FetchType[] => [
+  { label: getString('gitFetchTypes.fromBranch'), value: 'Branch' },
+  { label: getString('common.googleCloudSourceFetchType.specificCommitId'), value: 'Commit' },
+  { label: getString('common.googleCloudSourceFetchType.specificTag'), value: 'Tag' }
 ]
 
 export function GoogleCloudSourceRepositories(
@@ -449,11 +451,11 @@ export function GoogleCloudSourceRepositories(
                   <FormInput.Select
                     name="fetchType"
                     label={getString('pipeline.artifacts.googleCloudSourceRepositories.fetchType')}
-                    items={fetchTypeList}
+                    items={getFetchTypeList(getString)}
                   />
                 </div>
 
-                {formik.values?.fetchType === FetchType.Branch &&
+                {formik.values?.fetchType === 'Branch' &&
                   renderField(
                     formik,
                     'branch',
@@ -461,7 +463,7 @@ export function GoogleCloudSourceRepositories(
                     getString('pipeline.manifestType.branchPlaceholder')
                   )}
 
-                {formik.values?.fetchType === FetchType.Commit &&
+                {formik.values?.fetchType === 'Commit' &&
                   renderField(
                     formik,
                     'commitId',
@@ -469,7 +471,7 @@ export function GoogleCloudSourceRepositories(
                     getString('pipeline.artifacts.googleCloudSourceRepositories.commitIdPlaceholder')
                   )}
 
-                {formik.values?.fetchType === FetchType.Tag &&
+                {formik.values?.fetchType === 'Tag' &&
                   renderField(
                     formik,
                     'tag',

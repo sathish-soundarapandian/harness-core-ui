@@ -8,7 +8,9 @@
 import type { SecondaryEventsResponse } from 'services/cv'
 import downTimeIcon from '@cv/assets/downTime.svg'
 import annotationsIcon from '@cv/assets/annotations.svg'
+import type { UseStringsReturn } from 'framework/strings'
 import errorBudgetResetIcon from '@cv/assets/errorBudgetReset.svg'
+import dataCollectionFailureIcon from '@cv/assets//dataCollectionFailure.svg'
 import { SLO_WIDGETS } from '../TimelineRow/TimelineRow.constants'
 import type { TimelineData } from '../TimelineRow/TimelineRow.types'
 
@@ -23,12 +25,15 @@ export function calculateStartAndEndTimes(
   return [startTime, endTime]
 }
 
-export function generateSLOWidgetsInfo(sloWidgetsData?: SecondaryEventsResponse[]): TimelineData[] {
+export function generateSLOWidgetsInfo(
+  getString: UseStringsReturn['getString'],
+  sloWidgetsData?: SecondaryEventsResponse[]
+): TimelineData[] {
   let sloWidgetsInfo: TimelineData[] = []
   if (Array.isArray(sloWidgetsData) && sloWidgetsData.length) {
     sloWidgetsInfo = sloWidgetsData.map(sloWidgetData => {
       const { startTime, endTime, type } = sloWidgetData
-      let updatedSLOWidgetsInfo = {
+      let updatedSLOWidgetsInfo: TimelineData = {
         ...sloWidgetData,
         startTime: Number(startTime) * 1000,
         endTime: Number(endTime) * 1000,
@@ -66,6 +71,21 @@ export function generateSLOWidgetsInfo(sloWidgetsData?: SecondaryEventsResponse[
               url: errorBudgetResetIcon
             }
           }
+          break
+        case SLO_WIDGETS.DATA_COLLECTION_FAILURE:
+          updatedSLOWidgetsInfo = {
+            ...updatedSLOWidgetsInfo,
+            icon: {
+              ...updatedSLOWidgetsInfo?.icon,
+              url: dataCollectionFailureIcon
+            },
+            tooltip: {
+              ...updatedSLOWidgetsInfo?.tooltip,
+              message: getString('cv.slos.dataCollectionFailure'),
+              sideBorderColor: ''
+            }
+          }
+          break
       }
 
       return updatedSLOWidgetsInfo

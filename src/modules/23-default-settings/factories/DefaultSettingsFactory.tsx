@@ -6,7 +6,7 @@
  */
 
 import type React from 'react'
-import type { IconName } from '@harness/uicore'
+import type { IconName, IconProps } from '@harness/uicore'
 import type { SettingCategory, SettingGroups, YupValidation } from '@default-settings/interfaces/SettingType.types'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { SettingDTO } from 'services/cd-ng'
@@ -37,6 +37,7 @@ export interface GroupedSettingsHandler {
 type SettingsAndGroupDisplayOrderType = SettingGroups | SettingType
 export interface SettingCategoryHandler {
   icon: IconName
+  iconProps?: Partial<IconProps>
   label: keyof StringsMap
   settingsAndGroupDisplayOrder?: SettingsAndGroupDisplayOrderType[]
   modulesWhereCategoryWillBeDisplayed?: Module[]

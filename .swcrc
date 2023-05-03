@@ -29,6 +29,7 @@
       "@connectors/*": ["modules/35-connectors/*"],
       "@user-profile/*": ["modules/38-user-profile/*"],
       "@projects-orgs/*": ["modules/45-projects-orgs/*"],
+      "@assessments/*": ["modules/50-assessments/*"],
       "@delegates/*": ["modules/30-delegates/*"],
       "@dashboards/*": ["modules/45-dashboards/*"],
       "@gitsync/*": ["modules/40-gitsync/*"],

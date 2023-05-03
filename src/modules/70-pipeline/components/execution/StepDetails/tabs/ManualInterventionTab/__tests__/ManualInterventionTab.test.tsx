@@ -48,7 +48,11 @@ const pathParams = {
 }
 
 const AllStrategies = Object.values(Strategy)
-const allowedStrategies = difference(AllStrategies, [Strategy.ManualIntervention, Strategy.Retry])
+const allowedStrategies = difference(AllStrategies, [
+  Strategy.ManualIntervention,
+  Strategy.Retry,
+  Strategy.PipelineRollback
+])
 
 describe('<ManualInterventionTab /> tests', () => {
   beforeEach(() => {

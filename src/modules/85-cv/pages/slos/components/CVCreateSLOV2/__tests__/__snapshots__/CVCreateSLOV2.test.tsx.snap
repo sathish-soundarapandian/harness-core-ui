@@ -572,7 +572,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                       </div>
                     </div>
                     <button
-                      aria-label="cv.monitoredServices.newMonitoredServices"
+                      aria-label="common.newMonitoredService"
                       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                       type="button"
                     >
@@ -598,7 +598,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
                       <span
                         class="bp3-button-text"
                       >
-                        cv.monitoredServices.newMonitoredServices
+                        common.newMonitoredService
                       </span>
                     </button>
                   </div>

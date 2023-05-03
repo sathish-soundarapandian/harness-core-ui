@@ -616,7 +616,7 @@ exports[`Create GCP connector Wizard Should render form 2`] = `
                   <textarea
                     autocomplete="off"
                     class="bp3-input bp3-fill"
-                    maxlength="1024"
+                    maxlength="100000"
                     name="hosts"
                   />
                 </div>
@@ -1293,7 +1293,7 @@ exports[`Create GCP connector Wizard Should render form 4`] = `
                   <textarea
                     autocomplete="off"
                     class="bp3-input bp3-intent-danger bp3-fill"
-                    maxlength="1024"
+                    maxlength="100000"
                     name="hosts"
                   />
                   <div
@@ -1648,7 +1648,7 @@ exports[`Create GCP connector Wizard Should render form 5`] = `
                   <textarea
                     autocomplete="off"
                     class="bp3-input bp3-intent-danger bp3-fill"
-                    maxlength="1024"
+                    maxlength="100000"
                     name="hosts"
                   />
                   <div

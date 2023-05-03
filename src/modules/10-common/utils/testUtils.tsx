@@ -182,6 +182,7 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
                 CHAOS_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
                 STO_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
                 CV_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
+                CET_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
                 updateLicenseStore: () => void 0,
                 ...defaultLicenseStoreValues
               }}

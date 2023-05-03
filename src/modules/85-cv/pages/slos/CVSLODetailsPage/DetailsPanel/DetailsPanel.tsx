@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Card, Container, Heading, Page, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useGetSLODetails, useGetUnavailabilityInstances } from 'services/cv'
+import { useGetSecondaryEvents, useGetSLODetails } from 'services/cv'
 import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getMonitoredServiceIdentifiers } from '@cv/utils/CommonUtils'
@@ -21,8 +21,10 @@ import type { DetailsPanelProps } from './DetailsPanel.types'
 import SLOCardContent from '../../SLOCard/SLOCardContent'
 import CompositeSLOConsumption from './views/CompositeSLOConsumption/CompositeSLOConsumption'
 import { SLOType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.constants'
+import { EvaluationType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { TWENTY_FOUR_HOURS } from './DetailsPanel.constants'
 import DowntimeBanner from './views/DowntimeBanner'
+import { getDownTimeStartTimeAndEndTime } from './DetailsPanel.utils'
 import css from './DetailsPanel.module.scss'
 
 const DetailsPanel: React.FC<DetailsPanelProps> = ({
@@ -40,14 +42,14 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
   const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const { sloType } = useQueryParams<{ sloType?: string }>()
   const isCompositeSLO = sloType === SLOType.COMPOSITE
+  const isRequestBased = sloDashboardWidget?.evaluationType === EvaluationType.REQUEST
 
   const {
     currentPeriodStartTime = 0,
     currentPeriodEndTime = 0,
     monitoredServiceDetails,
     calculatingSLI,
-    recalculatingSLI,
-    sloPerformanceTrend
+    recalculatingSLI
   } = sloDashboardWidget ?? {}
   const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [sliderTimeRange, setSliderTimeRange] = useState<{ startTime: number; endTime: number }>()
@@ -74,31 +76,37 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
     [isAccountLevel, sloDashboardWidget?.monitoredServiceDetails]
   )
 
-  const { data: downtimeInstanceUnavailability, refetch: unavailabilityRefetch } = useGetUnavailabilityInstances({
+  const { downtimeStartTime, downtimeEndTime } = useMemo(
+    () => getDownTimeStartTimeAndEndTime(chartTimeRange, sloDashboardWidget),
+    [chartTimeRange, sloDashboardWidget]
+  )
+
+  const {
+    data: sloWidgetsData,
+    loading: sloWidgetsDataLoading,
+    refetch: fetchSecondaryEvents
+  } = useGetSecondaryEvents({
     identifier,
     lazy: true
   })
 
-  const downtimeStartTime = chartTimeRange?.startTime || sloPerformanceTrend?.at(0)?.timestamp || currentPeriodStartTime
-  const downtimeEndTime = chartTimeRange?.endTime || currentPeriodEndTime
-
   useEffect(() => {
     if (identifier && sloDashboardWidget) {
-      unavailabilityRefetch({
+      fetchSecondaryEvents({
         queryParams: {
+          startTime: downtimeStartTime,
+          endTime: new Date(downtimeEndTime + TWENTY_FOUR_HOURS).getTime(),
           accountId,
           orgIdentifier,
-          projectIdentifier,
-          startTime: downtimeStartTime,
-          endTime: new Date(downtimeEndTime + TWENTY_FOUR_HOURS).getTime()
+          projectIdentifier
         }
       })
     }
-  }, [identifier, downtimeEndTime, downtimeStartTime])
+  }, [identifier, downtimeEndTime, downtimeStartTime, sloDashboardWidget])
 
   const bannerData = useMemo(
-    () => downtimeInstanceUnavailability?.data?.filter(instance => (instance?.startTime || 0) > downtimeEndTime / 1000),
-    [downtimeInstanceUnavailability, downtimeEndTime]
+    () => sloWidgetsData?.data?.filter(instance => (instance?.startTime || 0) > downtimeEndTime / 1000),
+    [sloWidgetsData, downtimeEndTime]
   )
 
   const shouldRenderDowntimeBanner = showDowntimeBanner && !calculatingSLI && !recalculatingSLI
@@ -121,6 +129,9 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
             <ServiceDetails sloDashboardWidget={sloDashboardWidget} />
             <SLOCardContent
               isCardView
+              sloWidgetsData={sloWidgetsData?.data}
+              sloWidgetsDataLoading={sloWidgetsDataLoading}
+              fetchSecondaryEvents={fetchSecondaryEvents}
               chartTimeRange={chartTimeRange}
               setChartTimeRange={setChartTimeRange}
               sliderTimeRange={sliderTimeRange}
@@ -133,7 +144,11 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
             <Container padding={{ bottom: 'xlarge' }} />
             {isCompositeSLO && (
               <>
-                <CompositeSLOConsumption startTime={consumptionStartTime} endTime={consumptionEndTime} />
+                <CompositeSLOConsumption
+                  startTime={consumptionStartTime}
+                  endTime={consumptionEndTime}
+                  isRequestBased={isRequestBased}
+                />
                 <Container padding={{ bottom: 'xlarge' }} />
               </>
             )}

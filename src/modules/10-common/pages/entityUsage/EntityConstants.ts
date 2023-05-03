@@ -11,5 +11,6 @@ export enum EntityType {
   Template = 'Template',
   Service = 'Service',
   Environment = 'Environment',
-  Infrastructure = 'Infrastructure'
+  Infrastructure = 'Infrastructure',
+  Pipelines = 'Pipelines'
 }

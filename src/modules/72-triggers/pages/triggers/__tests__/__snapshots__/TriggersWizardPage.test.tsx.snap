@@ -6720,6 +6720,51 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
                         >
                           <div
                             class="bp3-form-group"
+                          >
+                            <div
+                              class="bp3-form-content"
+                            >
+                              <div
+                                class="StyledProps--main"
+                              >
+                                
+                                <div
+                                  class="RadioButtonGroup--inline"
+                                >
+                                  <label
+                                    class="RadioButton--radio StyledProps--main"
+                                  >
+                                    <input
+                                      class="RadioButton--input"
+                                      name="cronFormat"
+                                      type="radio"
+                                      value="UNIX"
+                                    />
+                                    <span
+                                      class="RadioButton--radioIcon"
+                                    />
+                                    triggers.schedulePanel.unixExpression
+                                  </label>
+                                  <label
+                                    class="RadioButton--radio StyledProps--main"
+                                  >
+                                    <input
+                                      class="RadioButton--input"
+                                      name="cronFormat"
+                                      type="radio"
+                                      value="QUARTZ"
+                                    />
+                                    <span
+                                      class="RadioButton--radioIcon"
+                                    />
+                                    triggers.schedulePanel.quartzExpression
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="bp3-form-group"
                             style="margin: 0px;"
                           >
                             <label

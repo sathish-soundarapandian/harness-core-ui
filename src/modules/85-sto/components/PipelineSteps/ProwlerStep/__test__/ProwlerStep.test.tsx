@@ -104,7 +104,7 @@ describe('Prowler Step', () => {
             access_id: RUNTIME_INPUT_VALUE,
             region: RUNTIME_INPUT_VALUE,
             access_token: RUNTIME_INPUT_VALUE,
-            type: 'aws_account'
+            type: 'aws'
           },
           mode: 'orchestration',
           config: 'default',
@@ -164,7 +164,7 @@ describe('Prowler Step', () => {
             workspace: '~/workspace'
           },
           auth: {
-            type: 'aws_account',
+            type: 'aws',
             access_id: 'access id',
             region: 'auth region',
             access_token: 'token'

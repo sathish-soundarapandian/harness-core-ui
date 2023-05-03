@@ -7,7 +7,11 @@
 
 import React, { useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-
+import cx from 'classnames'
+import { get, set, noop, isArray } from 'lodash-es'
+import produce from 'immer'
+import type { IDialogProps } from '@blueprintjs/core'
+import { Dialog, Classes } from '@blueprintjs/core'
 import {
   Layout,
   Button,
@@ -18,40 +22,38 @@ import {
   StepProps,
   Text,
   Icon,
-  MultiTypeInputType
+  MultiTypeInputType,
+  PageSpinner
 } from '@harness/uicore'
-import type { IDialogProps } from '@blueprintjs/core'
-import { Dialog, Classes } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
-
-import cx from 'classnames'
-import { get, set, noop, isArray } from 'lodash-es'
-import produce from 'immer'
 import { useModalHook } from '@harness/use-modal'
-import type { ConfigFileWrapper, StageElementConfig } from 'services/cd-ng'
-
-import { useQueryParams } from '@common/hooks'
-import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import { useStrings } from 'framework/strings'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
+import type { ConfigFileWrapper, ConnectorConfigDTO, StageElementConfig } from 'services/cd-ng'
+import { useQueryParams } from '@common/hooks'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
-
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
-
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
-
+import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 import { getBuildPayload } from '../../ManifestSelection/Manifesthelper'
-
 import { ConfigFilesWizard } from '../ConfigFilesWizard/ConfigFilesWizard'
-import type { ConfigFilesListViewProps, ConfigFileType, ConfigInitStepData } from '../ConfigFilesInterface'
+import type {
+  ConfigFilesListViewProps,
+  ConfigFileType,
+  ConfigInitStepData,
+  GitConfigFileLastStepPrevStepData,
+  HarnessConfigFileLastStepPrevStepData
+} from '../ConfigFilesInterface'
 import {
   allowedConfigFilesTypes,
   ConfigFileTypeTitle,
@@ -62,9 +64,7 @@ import {
 } from '../ConfigFilesHelper'
 import { HarnessConfigStep } from '../ConfigFilesWizard/ConfigFilesSteps/HarnessConfigStep'
 import { GitConfigStep } from '../ConfigFilesWizard/ConfigFilesSteps/GitConfigStep'
-
 import { LocationValue } from './LocationValue'
-
 import css from '../ConfigFilesSelection.module.scss'
 
 function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
@@ -100,6 +100,7 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
   const [isNewFile, setIsNewFile] = useState(true)
 
   const { expressions } = useVariablesExpression()
+  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
 
   const listOfConfigFiles = React.useMemo(() => {
     if (isPropagating) {
@@ -191,6 +192,32 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
     setEditIndex(0)
     setConfigStore('' as ConfigFileType)
   }
+
+  const initialValues = getInitialValues()
+  const initialConnectorRef = initialValues.connectorRef
+
+  const { selectedConnector, fetchingConnector } = useGetLastStepConnectorValue({
+    initialConnectorRef,
+    isEditMode
+  })
+
+  const prevStepProps = useCallback((): { editConfigFilePrevStepData: ConnectorConfigDTO } => {
+    return {
+      editConfigFilePrevStepData: {
+        ...initialValues,
+        store: initialValues?.store,
+        connectorRef: selectedConnector
+      }
+    }
+  }, [initialValues, selectedConnector])
+
+  const shouldPassPrevStepData = (): boolean => {
+    if (initialValues.store === ConfigFilesMap.Harness) {
+      return isEditMode && !!CDS_SERVICE_CONFIG_LAST_STEP
+    }
+    return isEditMode && !!selectedConnector && !!CDS_SERVICE_CONFIG_LAST_STEP
+  }
+
   const commonLastStepProps = {
     handleSubmit,
     expressions
@@ -199,51 +226,58 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
     const arr: Array<React.ReactElement<StepProps<any>>> = []
     let configDetailStep = null
 
-    switch (configStore) {
-      case ConfigFilesToConnectorMap.Harness:
-        configDetailStep = (
-          <HarnessConfigStep
-            {...commonProps}
-            stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
-            name={getString('pipeline.configFiles.title', { type: 'Details' })}
-            listOfConfigFiles={listOfConfigFiles}
-            {...commonLastStepProps}
-          />
-        )
-        break
-      case ConfigFilesToConnectorMap.Git:
-      case ConfigFilesToConnectorMap.Gitlab:
-      case ConfigFilesToConnectorMap.Bitbucket:
-      case ConfigFilesToConnectorMap.Github:
-        configDetailStep = (
-          <GitConfigStep
-            {...commonProps}
-            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
-            stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
-            name={getString('pipeline.configFiles.title', { type: 'Details' })}
-            listOfConfigFiles={listOfConfigFiles}
-            selectedConfigFile={configStore}
-            {...commonLastStepProps}
-          />
-        )
-        break
+    if (isEditMode && fetchingConnector) {
+      configDetailStep = <PageSpinner />
+    } else {
+      switch (configStore) {
+        case ConfigFilesToConnectorMap.Harness:
+          configDetailStep = (
+            <HarnessConfigStep
+              {...commonProps}
+              stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
+              name={getString('pipeline.configFiles.title', { type: 'Details' })}
+              listOfConfigFiles={listOfConfigFiles}
+              {...commonLastStepProps}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessConfigFileLastStepPrevStepData)}
+            />
+          )
+          break
+        case ConfigFilesToConnectorMap.Git:
+        case ConfigFilesToConnectorMap.Gitlab:
+        case ConfigFilesToConnectorMap.Bitbucket:
+        case ConfigFilesToConnectorMap.Github:
+          configDetailStep = (
+            <GitConfigStep
+              {...commonProps}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+              stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
+              name={getString('pipeline.configFiles.title', { type: 'Details' })}
+              listOfConfigFiles={listOfConfigFiles}
+              selectedConfigFile={configStore}
+              {...commonLastStepProps}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as GitConfigFileLastStepPrevStepData)}
+            />
+          )
+          break
 
-      default:
-        configDetailStep = (
-          <HarnessConfigStep
-            {...commonProps}
-            stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
-            name={getString('pipeline.configFiles.title', { type: 'Details' })}
-            listOfConfigFiles={listOfConfigFiles}
-            {...commonLastStepProps}
-          />
-        )
-        break
+        default:
+          configDetailStep = (
+            <HarnessConfigStep
+              {...commonProps}
+              stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
+              name={getString('pipeline.configFiles.title', { type: 'Details' })}
+              listOfConfigFiles={listOfConfigFiles}
+              {...commonLastStepProps}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessConfigFileLastStepPrevStepData)}
+            />
+          )
+          break
+      }
     }
 
     arr.push(configDetailStep)
     return arr
-  }, [configStore, commonLastStepProps, getString])
+  }, [configStore, commonLastStepProps, getString, isEditMode, prevStepProps])
 
   const getNewConnectorSteps = useCallback((): JSX.Element => {
     const buildPayload = getBuildPayload(ConfigFilesToConnectorMap[configStore])
@@ -394,7 +428,9 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
     expressions,
     allowableTypes,
     isEditMode,
-    isNewFile
+    isNewFile,
+    getLastSteps,
+    getInitialValues
   ])
 
   const addNewConfigFile = (): void => {

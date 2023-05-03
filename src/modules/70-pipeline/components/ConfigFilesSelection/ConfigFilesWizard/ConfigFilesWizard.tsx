@@ -7,11 +7,12 @@
 
 import React from 'react'
 import { StepWizard } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
-import { deploymentTypeIcon, deploymentTypeLabel, ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils'
-import type { ServiceDefinition } from 'services/cd-ng'
-import ConfigFilesStore from './ConfigFilesSteps/ConfigFilesStore'
 
+import { useStrings } from 'framework/strings'
+import type { ServiceDefinition } from 'services/cd-ng'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { deploymentTypeIcon, deploymentTypeLabel, ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils'
+import ConfigFilesStore from './ConfigFilesSteps/ConfigFilesStore'
 import css from './ConfigFilesWizard.module.scss'
 
 interface StepChangeData<SharedObject> {
@@ -31,13 +32,15 @@ export function ConfigFilesWizard(props: any): React.ReactElement {
     firstStep,
     lastSteps,
     deploymentType,
-    isNewFile,
     configFileIndex,
     newConnectorView,
-    newConnectorSteps
+    newConnectorSteps,
+    isEditMode
   } = props
 
   const { getString } = useStrings()
+  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
+
   const onStepChange = (arg: StepChangeData<any>): void => {
     if (arg.prevStepData?.store === 'Harness') {
       handleStoreChange?.(arg.prevStepData?.store)
@@ -45,6 +48,12 @@ export function ConfigFilesWizard(props: any): React.ReactElement {
     }
     if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 1) {
       handleStoreChange?.(arg.prevStepData?.store)
+    }
+  }
+
+  const getInitialStepNumber = (): number | undefined => {
+    if (isEditMode && CDS_SERVICE_CONFIG_LAST_STEP && !firstStep) {
+      return 2
     }
   }
 
@@ -57,6 +66,7 @@ export function ConfigFilesWizard(props: any): React.ReactElement {
       title={`${
         deploymentType && getString(deploymentTypeLabel[deploymentType as ServiceDefinition['type']])
       } ${getString('pipeline.configFiles.title', { type: 'Source' })}`}
+      initialStep={getInitialStepNumber()}
     >
       {firstStep}
       <ConfigFilesStore
@@ -69,7 +79,6 @@ export function ConfigFilesWizard(props: any): React.ReactElement {
         expressions={expressions}
         handleConnectorViewChange={handleConnectorViewChange}
         isReadonly={false}
-        isNewFile={isNewFile}
         configFileIndex={configFileIndex}
       />
       {newConnectorView ? newConnectorSteps : null}

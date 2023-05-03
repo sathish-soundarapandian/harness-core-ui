@@ -72,26 +72,278 @@ exports[`open and close release notes  Modal Rendering should open and close the
         <th
           class="th"
         >
-          Component
+          common.resourceCenter.ticketmenu.component
         </th>
         <th
           class="th"
         >
-          Version
+          version
         </th>
         <th
           class="th"
         >
-          Last Updated
+          lastUpdated
         </th>
         <th
           class="th"
         >
-          Release Notes
+          common.resourceCenter.bottomlayout.releaseNote
         </th>
       </tr>
     </thead>
     <tbody>
+      <tr
+        class="tr"
+      >
+        <td
+          class="td"
+          data-testid="name"
+        />
+        <td
+          class="td"
+          data-testid="version"
+        />
+        <td
+          class="td"
+          data-testid="updated"
+        />
+        <td
+          class="td"
+          data-testid="link"
+        >
+          <a
+            href="undefined"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
+      <tr
+        class="tr"
+      >
+        <td
+          class="td"
+          data-testid="name"
+        />
+        <td
+          class="td"
+          data-testid="version"
+        />
+        <td
+          class="td"
+          data-testid="updated"
+        />
+        <td
+          class="td"
+          data-testid="link"
+        >
+          <a
+            href="undefined"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
+      <tr
+        class="tr"
+      >
+        <td
+          class="td"
+          data-testid="name"
+        />
+        <td
+          class="td"
+          data-testid="version"
+        />
+        <td
+          class="td"
+          data-testid="updated"
+        />
+        <td
+          class="td"
+          data-testid="link"
+        >
+          <a
+            href="undefined"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
+      <tr
+        class="tr"
+      >
+        <td
+          class="td"
+          data-testid="name"
+        />
+        <td
+          class="td"
+          data-testid="version"
+        />
+        <td
+          class="td"
+          data-testid="updated"
+        />
+        <td
+          class="td"
+          data-testid="link"
+        >
+          <a
+            href="undefined"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
+      <tr
+        class="tr"
+      >
+        <td
+          class="td"
+          data-testid="name"
+        />
+        <td
+          class="td"
+          data-testid="version"
+        />
+        <td
+          class="td"
+          data-testid="updated"
+        />
+        <td
+          class="td"
+          data-testid="link"
+        >
+          <a
+            href="undefined"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
+      <tr
+        class="tr"
+      >
+        <td
+          class="td"
+          data-testid="name"
+        />
+        <td
+          class="td"
+          data-testid="version"
+        />
+        <td
+          class="td"
+          data-testid="updated"
+        />
+        <td
+          class="td"
+          data-testid="link"
+        >
+          <a
+            href="undefined"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
+      <tr
+        class="tr"
+      >
+        <td
+          class="td"
+          data-testid="name"
+        />
+        <td
+          class="td"
+          data-testid="version"
+        />
+        <td
+          class="td"
+          data-testid="updated"
+        />
+        <td
+          class="td"
+          data-testid="link"
+        >
+          <a
+            href="undefined"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
+      <tr
+        class="tr"
+      >
+        <td
+          class="td"
+          data-testid="name"
+        />
+        <td
+          class="td"
+          data-testid="version"
+        />
+        <td
+          class="td"
+          data-testid="updated"
+        />
+        <td
+          class="td"
+          data-testid="link"
+        >
+          <a
+            href="undefined"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
+      <tr
+        class="tr"
+      >
+        <td
+          class="td"
+          data-testid="name"
+        />
+        <td
+          class="td"
+          data-testid="version"
+        />
+        <td
+          class="td"
+          data-testid="updated"
+        />
+        <td
+          class="td"
+          data-testid="link"
+        >
+          <a
+            href="undefined"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
       <tr
         class="tr"
       >

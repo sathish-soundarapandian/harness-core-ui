@@ -980,3 +980,31 @@ export function getSyncBody(formData: FormValues, sortedResources: any, data: Ap
 export const getTelemetryDeploymentType = (selectedDeploymentType?: string): DeploymentType => {
   return selectedDeploymentType === ServiceDeploymentType.KubernetesGitops ? DeploymentType.GitOps : DeploymentType.K8s
 }
+
+export type AccordionStatus = 'open' | 'close' | null
+export const getDerivedStateForAccordions = (
+  activeIds: string[],
+  prevActiveIds: string[]
+): { k8sStatus: AccordionStatus; delegateStatus: AccordionStatus } => {
+  const hasK8sInCurrent = activeIds.includes('k8sCluster')
+  const hasDelegateInCurrent = activeIds.includes('delegateInfo')
+  const hasK8sInPrev = prevActiveIds.includes('k8sCluster')
+  const hasDelegateInPrev = prevActiveIds.includes('delegateInfo')
+  let k8sStatus: AccordionStatus = null
+  let delegateStatus: AccordionStatus = null
+  if (hasK8sInPrev && !hasK8sInCurrent) {
+    k8sStatus = 'close'
+  }
+  if (hasK8sInCurrent && !hasK8sInPrev) {
+    k8sStatus = 'open'
+  }
+
+  if (hasDelegateInPrev && !hasDelegateInCurrent) {
+    delegateStatus = 'close'
+  }
+  if (hasDelegateInCurrent && !hasDelegateInPrev) {
+    delegateStatus = 'open'
+  }
+
+  return { k8sStatus, delegateStatus }
+}

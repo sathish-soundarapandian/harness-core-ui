@@ -531,7 +531,11 @@ export function RightBar(): JSX.Element {
                 }
 
                 if (get(draft, 'properties.ci.codebase.sslVerify') !== values.sslVerify) {
-                  set(draft, 'properties.ci.codebase.sslVerify', values.sslVerify)
+                  if (typeof values.sslVerify === 'string' && values.sslVerify === '') {
+                    unset(draft, 'properties.ci.codebase.sslVerify')
+                  } else {
+                    set(draft, 'properties.ci.codebase.sslVerify', values.sslVerify)
+                  }
                 }
 
                 if (get(draft, 'properties.ci.codebase.prCloneStrategy') !== values.prCloneStrategy) {

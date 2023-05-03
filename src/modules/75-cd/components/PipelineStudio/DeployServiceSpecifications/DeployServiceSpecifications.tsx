@@ -47,7 +47,7 @@ import {
   DeployTabs,
   isNewServiceEnvEntity
 } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType'
+import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType/SelectDeploymentType'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { useDeepCompareEffect } from '@common/hooks'
 import {

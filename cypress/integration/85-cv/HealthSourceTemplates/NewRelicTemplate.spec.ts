@@ -220,11 +220,11 @@ describe('Create empty monitored service', () => {
 
     cy.contains('div', 'Query Specifications and mapping').click({ force: true })
     cy.get('span[data-icon="expression-input"]').scrollIntoView().should('have.length', 1)
-    cy.get('span[data-icon="expression-input"]').first().should('be.visible').click()
+    cy.get('span[data-icon="expression-input"]').should('be.visible').click({ force: true })
     cy.get('a.bp3-menu-item').should('have.length', 2).as('valueList')
     cy.get('@valueList').eq(0).should('contain.text', 'Runtime input').as('runtimeValue')
     cy.get('@valueList').eq(1).should('contain.text', 'Expression').as('expressionValue')
-    cy.get('@runtimeValue').click()
+    cy.get('@runtimeValue').click({ force: true })
 
     cy.contains('div', 'Metric values and charts').click({ force: true })
     cy.get('input[name="metricValue"]').should('have.value', '<+input>')

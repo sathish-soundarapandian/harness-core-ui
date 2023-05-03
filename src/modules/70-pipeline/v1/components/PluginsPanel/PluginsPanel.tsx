@@ -477,7 +477,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                       flex={{ justifyContent: 'space-between', alignItems: 'baseline' }}
                       spacing="small"
                     >
-                      <Container className={css.pluginFields}>{renderPluginCongigurationForm()}</Container>
+                      <Container className={css.pluginFields}>{renderPluginConfigurationForm()}</Container>
                       <Layout.Horizontal flex spacing="xlarge">
                         {renderPluginsPanelBtns({
                           shouldRenderUpdateBtn: isPluginUpdateAction && !isEmpty(formFields)
@@ -508,7 +508,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     }
   }, [selectedPlugin, pluginAddUpdateOpnStatus, loading])
 
-  const renderPluginCongigurationFormField = useCallback(
+  const renderPluginConfigurationFormField = useCallback(
     ({ field, index }: { field: Input; index: number }): JSX.Element => {
       const { name, default: defaultValue, secret: isFieldOfSecretType } = field
       if (name) {
@@ -566,20 +566,20 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     []
   )
 
-  const renderPluginCongigurationForm = useCallback((): JSX.Element => {
+  const renderPluginConfigurationForm = useCallback((): JSX.Element => {
     const { inputs: formFields = [] } = selectedPlugin || {}
     if (formFields.length > 0) {
       const partitionedFields = groupBy(formFields, 'required')
       const requiredFields = partitionedFields['true'] || []
       const optionalFields = partitionedFields['false'] || []
       const optionalFieldsSection = optionalFields.map((input: Input, index: number) => {
-        return renderPluginCongigurationFormField({ field: input, index })
+        return renderPluginConfigurationFormField({ field: input, index })
       })
       return (
         <Layout.Vertical height="100%">
           {requiredFields.length > 0 ? (
             requiredFields.map((input: Input, index: number) => {
-              return renderPluginCongigurationFormField({ field: input, index })
+              return renderPluginConfigurationFormField({ field: input, index })
             })
           ) : (
             <></>

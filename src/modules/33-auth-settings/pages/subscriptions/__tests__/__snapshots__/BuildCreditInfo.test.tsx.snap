@@ -1,0 +1,363 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Build Credit Info test  Build Credit Info with emmpty credit data: build credit table with empty credit data 1`] = `
+<div>
+  <div
+    class="bp3-card bp3-elevation-0 Card--card outterCard"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-stretch"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        style="width: 100%;"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <h1
+            class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
+          >
+            common.subscriptions.usage.buildCredits
+          </h1>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical StyledProps--main badgesContainer StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      >
+        <div>
+          <div
+            class="StyledProps--font StyledProps--main summaryCardsContainer"
+          >
+            <div
+              class="StyledProps--font StyledProps--main summaryCard"
+            >
+              <p
+                class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              >
+                common.subscriptions.usage.allCredits
+              </p>
+              <div
+                class="Layout--horizontal StyledProps--main frequencyContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
+                >
+                  0
+                </p>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main summaryCard"
+            >
+              <p
+                class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              >
+                common.plans.subscription
+              </p>
+              <div
+                class="Layout--horizontal StyledProps--main frequencyContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
+                >
+                  0
+                </p>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main summaryCard"
+            >
+              <p
+                class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              >
+                common.nextExpiringDate
+              </p>
+              <div
+                class="Layout--horizontal StyledProps--main frequencyContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
+                >
+                  
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main NoDataCard--noDataCard noDataCardContainer StyledProps--flex StyledProps--flex-align-center-center"
+      >
+        <div
+          class="Layout--vertical Layout--layout-spacing-medium StyledProps--main noDataCard"
+          style="align-items: center; margin-top: -48px; width: 470px;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main NoDataCard--message StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
+          >
+            common.noCreditInfoData
+          </p>
+          <div
+            class="NoDataCard--buttonContainer"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
+<div>
+  <div
+    class="bp3-card bp3-elevation-0 Card--card outterCard"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-stretch"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        style="width: 100%;"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <h1
+            class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
+          >
+            common.subscriptions.usage.buildCredits
+          </h1>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical StyledProps--main badgesContainer StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      >
+        <div>
+          <div
+            class="StyledProps--font StyledProps--main summaryCardsContainer"
+          >
+            <div
+              class="StyledProps--font StyledProps--main summaryCard"
+            >
+              <p
+                class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              >
+                common.subscriptions.usage.allCredits
+              </p>
+              <div
+                class="Layout--horizontal StyledProps--main frequencyContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
+                >
+                  3000
+                </p>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main summaryCard"
+            >
+              <p
+                class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              >
+                common.plans.subscription
+              </p>
+              <div
+                class="Layout--horizontal StyledProps--main frequencyContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
+                >
+                  0
+                </p>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main summaryCard"
+            >
+              <p
+                class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+              >
+                common.nextExpiringDate
+              </p>
+              <div
+                class="Layout--horizontal StyledProps--main frequencyContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
+                >
+                  Jan 15 1970
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="TableV2--table table"
+      >
+        <div
+          class="TableV2--header"
+          role="row"
+        >
+          <div
+            class="TableV2--cell"
+            colspan="1"
+            role="columnheader"
+            style="width: 33%;"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
+                >
+                  common.startDateCredit
+                </p>
+              </div>
+            </p>
+          </div>
+          <div
+            class="TableV2--cell"
+            colspan="1"
+            role="columnheader"
+            style="width: 38%;"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
+                >
+                  common.expiryDateCredit
+                </p>
+              </div>
+            </p>
+          </div>
+          <div
+            class="TableV2--cell"
+            colspan="1"
+            role="columnheader"
+            style="width: 33%;"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
+                >
+                  common.entitlement
+                </p>
+              </div>
+            </p>
+          </div>
+        </div>
+        <div
+          class="TableV2--body"
+        >
+          <div
+            class="TableV2--row TableV2--card"
+            role="row"
+          >
+            <div
+              class="TableV2--cells"
+            >
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 33%;"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  May 23 1970
+                </p>
+              </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 38%;"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  Jan 15 1970
+                </p>
+              </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 33%;"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  1000
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="TableV2--row TableV2--card"
+            role="row"
+          >
+            <div
+              class="TableV2--cells"
+            >
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 33%;"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  May 23 1970
+                </p>
+              </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 38%;"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  Jan 15 1970
+                </p>
+              </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 33%;"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  2000
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

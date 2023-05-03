@@ -203,7 +203,22 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
                   {getString(isRequestBased ? 'cv.errorBudgetRemainingWithRequest' : 'cv.errorBudgetRemainingWithMins')}
                 </Heading>
               )}
-              <ErrorBudgetGauge customChartOptions={gaugeConfig} />
+              {dontShowErrorBudgetRequestOrMinutes ? (
+                <Container background={Color.GREY_100} className={stylesSLOAndSLICard} width={185}>
+                  <Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('cv.errorBudgetRemaining')}</Text>
+                  <Heading
+                    level={2}
+                    color={Color.GREY_800}
+                    font={{ variation: FontVariation.H4 }}
+                    data-testid="sloTargetPercentage"
+                  >
+                    {(Number(serviceLevelObjective.errorBudgetRemainingPercentage) || 0).toFixed(2)}%
+                  </Heading>
+                </Container>
+              ) : (
+                <ErrorBudgetGauge customChartOptions={gaugeConfig} />
+              )}
+
               {!dontShowErrorBudgetRequestOrMinutes && (
                 <Text
                   font={{ variation: FontVariation.SMALL }}

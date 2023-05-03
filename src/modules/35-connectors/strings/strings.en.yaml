@@ -212,6 +212,7 @@ validation:
   privateKey: Private Key is required
 httpHelm:
   httpHelmRepoUrl: 'Helm Repo URL'
+  helmRepoURLValidation: 'The Helm Repository URL can start with an optional oci:// prefix and can contain a valid domain name and an optional port number.'
 ociHelm:
   ociHelmUrl: 'OCI Helm URL'
 jira:

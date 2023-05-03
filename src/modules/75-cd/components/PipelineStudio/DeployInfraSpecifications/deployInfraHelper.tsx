@@ -69,11 +69,14 @@ export const getInfrastructureDefaultValue = (
       const connectorRef = infrastructure?.spec?.connectorRef
       const namespace = infrastructure?.spec?.namespace
       const releaseName = infrastructure?.spec?.releaseName ?? DEFAULT_RELEASE_NAME
+      const provisioner = infrastructure?.spec?.provisioner
+
       return {
         connectorRef,
         namespace,
         releaseName,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.KubernetesGcp:
@@ -82,13 +85,15 @@ export const getInfrastructureDefaultValue = (
       const namespace = infrastructure?.spec?.namespace
       const releaseName = infrastructure?.spec?.releaseName ?? DEFAULT_RELEASE_NAME
       const cluster = infrastructure?.spec?.cluster
+      const provisioner = infrastructure?.spec?.provisioner
 
       return {
         connectorRef,
         namespace,
         releaseName,
         cluster,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
 
@@ -122,6 +127,7 @@ export const getInfrastructureDefaultValue = (
       const cluster = infrastructure?.spec?.cluster
       const namespace = infrastructure?.spec?.namespace
       const releaseName = infrastructure?.spec?.releaseName ?? DEFAULT_RELEASE_NAME
+      const provisioner = infrastructure?.spec?.provisioner
 
       return {
         connectorRef,
@@ -130,7 +136,8 @@ export const getInfrastructureDefaultValue = (
         resourceGroup,
         cluster,
         releaseName,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.AzureWebApp: {

@@ -10,7 +10,6 @@ import { parse } from 'yaml'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorResponse, UserRepoResponse } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
-import { StringUtils } from '@common/exports'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { Connectors } from '@connectors/constants'
 import { GIT_EXTENSION, YAMLVersion } from '@pipeline/utils/CIUtils'
@@ -178,9 +177,6 @@ export const getFullRepoName = (repository: UserRepoResponse): string => {
 
 export const getPayloadForPipelineCreation = ({
   pipelineYaml,
-  pipelineName,
-  isUsingHostedVMsInfra,
-  isUsingAStarterPipeline,
   getString,
   projectIdentifier,
   orgIdentifier,
@@ -188,9 +184,6 @@ export const getPayloadForPipelineCreation = ({
   configuredGitConnector
 }: {
   pipelineYaml: string
-  pipelineName: string
-  isUsingHostedVMsInfra?: boolean
-  isUsingAStarterPipeline: boolean
   getString: UseStringsReturn['getString']
   projectIdentifier: string
   orgIdentifier: string
@@ -199,17 +192,9 @@ export const getPayloadForPipelineCreation = ({
 }): PipelineConfig => {
   const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
   return addDetailsToPipeline({
-    originalPipeline: isUsingHostedVMsInfra
-      ? isUsingAStarterPipeline
-        ? parse(pipelineYaml)
-        : getCloudPipelinePayloadWithCodebase()
-      : isUsingAStarterPipeline
-      ? parse(pipelineYaml)
-      : getPipelinePayloadWithCodebase(),
-    name: `${getString('buildText')} ${isUsingAStarterPipeline ? pipelineName : repository.name}`,
-    identifier: `${getString('buildText')}_${
-      isUsingAStarterPipeline ? StringUtils.getIdentifierFromName(pipelineName) : repository.name?.replace(/-/g, '_')
-    }_${UNIQUE_PIPELINE_ID}`,
+    originalPipeline: parse(pipelineYaml),
+    name: `${getString('buildText')} ${repository.name}`,
+    identifier: `${getString('buildText')}_${repository.name?.replace(/-/g, '_')}_${UNIQUE_PIPELINE_ID}`,
     projectIdentifier,
     orgIdentifier,
     connectorRef: getScopedValueFromDTO(configuredGitConnector),

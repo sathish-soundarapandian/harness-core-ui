@@ -31,7 +31,7 @@ import {
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import { K8SDirectInfrastructure, getConnectorListV2Promise } from 'services/cd-ng'
+import { K8SDirectInfrastructure, getConnectorListV2Promise, ExecutionElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -48,6 +48,8 @@ import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/Depl
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -71,6 +73,7 @@ interface KubernetesInfraSpecEditableProps {
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: K8SDirectInfrastructure
   allowableTypes?: AllowedTypes
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = ({
@@ -113,7 +116,8 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
             namespace: value.namespace === '' ? undefined : value.namespace,
             releaseName: value.releaseName === '' ? undefined : value.releaseName,
             connectorRef: undefined,
-            allowSimultaneousDeployments: value.allowSimultaneousDeployments
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value?.provisioner || undefined
           }
           if (value.connectorRef) {
             data.connectorRef = (value.connectorRef as any)?.value || value.connectorRef
@@ -128,6 +132,9 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
           formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <ProvisionerField name="provisioner" isReadonly />
+              </Layout.Horizontal>
               <Layout.Horizontal spacing="medium" className={css.formRow}>
                 <FormMultiTypeConnectorField
                   name="connectorRef"
@@ -246,7 +253,6 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
                   }
                 />
               </Accordion>
-
               <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }} className={css.lastRow}>
                 <FormInput.CheckBox
                   className={css.simultaneousDeployment}
@@ -271,7 +277,8 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
   readonly = false,
   path,
   allowableTypes,
-  stepViewType
+  stepViewType,
+  provisioner
 }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -281,8 +288,14 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+  const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
   return (
     <Layout.Vertical spacing="small">
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <ProvisionerSelectField name={provisionerName} path={path} provisioners={provisioner} />
+        </div>
+      )}
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField
@@ -373,7 +386,12 @@ const KubernetesDirectType = 'KubernetesDirect'
 export class KubernetesInfraSpec extends PipelineStep<K8SDirectInfrastructureStep> {
   lastFetched: number
   protected type = StepType.KubernetesDirect
-  protected defaultValues: K8SDirectInfrastructure = { connectorRef: '', namespace: '', releaseName: '' }
+  protected defaultValues: K8SDirectInfrastructure = {
+    connectorRef: '',
+    namespace: '',
+    releaseName: '',
+    provisioner: ''
+  }
 
   protected stepIcon: IconName = 'service-kubernetes'
   protected stepName = 'Specify your Kubernetes Connector'

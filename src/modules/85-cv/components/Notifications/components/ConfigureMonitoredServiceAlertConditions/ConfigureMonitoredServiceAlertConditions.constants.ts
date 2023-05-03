@@ -17,7 +17,9 @@ export enum Condition {
 export enum ChangeType {
   DEPLOYMENT = 'Deployment',
   INFRASTRUCTURE = 'Infrastructure',
-  INCIDENT = 'Incident'
+  INCIDENT = 'Alert',
+  FEATURE_FLAG = 'FeatureFlag',
+  CHAOS_EXPERIMENT = 'ChaosExperiment'
 }
 
 export enum EventStatus {
@@ -45,7 +47,9 @@ export const conditionOptions: SelectOption[] = [
 export const changeTypeOptions: SelectOption[] = [
   { label: 'Deployment', value: ChangeType.DEPLOYMENT },
   { label: 'Infrastructure', value: ChangeType.INFRASTRUCTURE },
-  { label: 'Incident', value: ChangeType.INCIDENT }
+  { label: 'Incident', value: ChangeType.INCIDENT },
+  { label: 'Feature Flag', value: ChangeType.FEATURE_FLAG },
+  { label: 'Chaos Experiment', value: ChangeType.CHAOS_EXPERIMENT }
 ]
 
 export const eventStatusOptions: SelectOption[] = [

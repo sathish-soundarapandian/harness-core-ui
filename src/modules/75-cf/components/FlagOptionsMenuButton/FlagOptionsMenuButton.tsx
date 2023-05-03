@@ -7,24 +7,18 @@
 
 import React, { ReactElement } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useToaster } from '@harness/uicore'
-import { useModalHook } from '@harness/use-modal'
-import { Intent } from '@harness/design-system'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import { useStrings, String } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
-import type { DeleteFeatureFlagQueryParams, Feature, GitSyncErrorResponse } from 'services/cf'
+import type { DeleteFeatureFlagQueryParams, Feature } from 'services/cf'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { useConfirmAction } from '@common/hooks'
-import { GitSyncFormValues, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
-import { getErrorMessage, showToaster } from '@cf/utils/CFUtils'
-import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
-import SaveFlagToGitModal from '../SaveFlagToGitModal/SaveFlagToGitModal'
+import type { UseGitSync } from '@cf/hooks/useGitSync'
+import useDeleteFlagModal from '../FlagActivation/hooks/useDeleteFlagModal'
 
 export interface FlagOptionsMenuButtonProps {
   environment?: string
@@ -40,14 +34,10 @@ export interface FlagOptionsMenuButtonProps {
 
 const FlagOptionsMenuButton = (props: FlagOptionsMenuButtonProps): ReactElement => {
   const { environment, flagData, gitSync, deleteFlag, queryParams, refetchFlags } = props
-  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.DELETED_FLAG)
-
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
   const { withActiveEnvironment } = useActiveEnvironment()
   const { getString } = useStrings()
-  const { showError, clear } = useToaster()
-
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
 
   const planEnforcementProps = isPlanEnforcementEnabled
@@ -60,65 +50,13 @@ const FlagOptionsMenuButton = (props: FlagOptionsMenuButtonProps): ReactElement 
       }
     : undefined
 
-  const [showGitModal, hideGitModal] = useModalHook(() => {
-    return (
-      <SaveFlagToGitModal
-        flagName={flagData.name}
-        flagIdentifier={flagData.identifier}
-        gitSyncInitialValues={gitSyncInitialValues}
-        gitSyncValidationSchema={gitSyncValidationSchema}
-        onSubmit={handleDeleteFlag}
-        onClose={() => {
-          hideGitModal()
-        }}
-      />
-    )
-  }, [flagData.name, flagData.identifier, gitSync])
-
-  const confirmDeleteFlag = useConfirmAction({
-    title: getString('cf.featureFlags.deleteFlag'),
-    confirmText: getString('delete'),
-    intent: Intent.DANGER,
-    message: <String useRichText stringID="cf.featureFlags.deleteFlagMessage" vars={{ name: flagData.name }} />,
-    action: async () => {
-      if (gitSync?.isGitSyncEnabled && !gitSync?.isAutoCommitEnabled) {
-        showGitModal()
-      } else {
-        handleDeleteFlag()
-      }
-    }
+  const { confirmDeleteFlag } = useDeleteFlagModal({
+    featureFlag: flagData,
+    gitSync,
+    queryParams,
+    deleteFeatureFlag: deleteFlag,
+    onSuccess: () => refetchFlags?.()
   })
-
-  const handleDeleteFlag = async (gitSyncFormValues?: GitSyncFormValues): Promise<void> => {
-    let commitMsg = ''
-
-    if (gitSync.isGitSyncEnabled) {
-      if (gitSync.isAutoCommitEnabled) {
-        commitMsg = gitSyncInitialValues.gitDetails.commitMsg
-      } else {
-        commitMsg = gitSyncFormValues?.gitDetails.commitMsg || ''
-      }
-    }
-
-    try {
-      clear()
-
-      await deleteFlag(flagData.identifier, { queryParams: { ...queryParams, commitMsg } })
-
-      if (gitSync.isGitSyncEnabled && gitSyncFormValues?.autoCommit) {
-        await gitSync.handleAutoCommit(gitSyncFormValues?.autoCommit)
-      }
-
-      showToaster(getString('cf.messages.flagDeleted'))
-      refetchFlags?.()
-    } catch (error: any) {
-      if (error.status === GIT_SYNC_ERROR_CODE) {
-        gitSync.handleError(error.data as GitSyncErrorResponse)
-      } else {
-        showError(getErrorMessage(error), 0, 'cf.toggle.ff.status.error')
-      }
-    }
-  }
 
   const gotoDetailPage = (): void => {
     history.push(

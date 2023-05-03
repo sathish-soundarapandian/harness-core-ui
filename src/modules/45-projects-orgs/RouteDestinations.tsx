@@ -118,7 +118,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.ORGANIZATION, {
   addResourceModalBody: props => <OrgResourceModalBody {...props} />
 })
 
-const platformLabel = 'auditTrail.Platform'
+const platformLabel = 'common.resourceCenter.ticketmenu.platform'
 AuditTrailFactory.registerResourceHandler('ORGANIZATION', {
   moduleIcon: {
     name: 'nav-settings'

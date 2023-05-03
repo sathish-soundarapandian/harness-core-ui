@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import {
   getMultiTypeFromValue,
   MultiTypeInputType,
@@ -43,8 +43,9 @@ export const Tags = ({ allowableTypes, readonly = false, formik, regions }: Tags
   const tagsType = defaultTo(values?.spec?.configuration?.tags?.type, TemplateTypes.Inline)
 
   useEffect(() => {
-    setFieldValue('spec.configuration.tags.type', tagsType)
-  }, [])
+    if (!isEmpty(values?.spec?.configuration?.tags)) setFieldValue('spec.configuration.tags.type', tagsType)
+  }, [tagsType, values?.spec?.configuration?.tags])
+
   const remoteTagsPath = values?.spec?.configuration?.tags?.spec?.store?.spec?.paths
   /* istanbul ignore next */
   const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {

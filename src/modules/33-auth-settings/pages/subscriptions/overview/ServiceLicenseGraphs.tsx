@@ -47,11 +47,11 @@ let filterOptions = [
 
 export interface SummaryCardData {
   title: string
-  count: number
+  count: number | string
   className: string
 }
 
-export const summaryCardRenderer = (cardData: SummaryCardData): JSX.Element => {
+export const summaryCardRenderer = (cardData: SummaryCardData, isBuildCreditTable?: boolean): JSX.Element => {
   return (
     <Container className={pageCss.summaryCard} key={cardData.title}>
       <Text font={{ size: 'medium' }} color={Color.GREY_700} className={pageCss.cardTitle}>
@@ -59,7 +59,7 @@ export const summaryCardRenderer = (cardData: SummaryCardData): JSX.Element => {
       </Text>
 
       <Layout.Horizontal className={pageCss.frequencyContainer}>
-        <div className={cardData.className}></div>
+        {!isBuildCreditTable ? <div className={cardData.className}></div> : null}
         <Text color={Color.BLACK} font={{ size: 'large', weight: 'bold' }} className={pageCss.frequencyCount}>
           {cardData.count}
         </Text>
@@ -68,10 +68,10 @@ export const summaryCardRenderer = (cardData: SummaryCardData): JSX.Element => {
   )
 }
 
-export const getSummaryCardRenderers = (summaryCardsData: SummaryCardData[]): JSX.Element => {
+export const getSummaryCardRenderers = (summaryCardsData: SummaryCardData[], isBuildCredit?: boolean): JSX.Element => {
   return (
     <Container className={pageCss.summaryCardsContainer}>
-      {summaryCardsData?.map(currData => summaryCardRenderer(currData))}
+      {summaryCardsData?.map(currData => summaryCardRenderer(currData, isBuildCredit))}
     </Container>
   )
 }
@@ -79,7 +79,7 @@ const getLast3Months = () => {
   const today = new Date()
   const last3Months = []
 
-  for (let i = 1; i < 4; i++) {
+  for (let i = 0; i < 3; i++) {
     let month = today.getMonth() - i
     let year = today.getFullYear()
     if (month < 0) {
@@ -101,7 +101,11 @@ const getLast3Months = () => {
   return last3Months
 }
 
-export const getYAxis = (maxValue: number, subscriptions: number): YAxisOptions | YAxisOptions[] | undefined => {
+export const getYAxis = (
+  maxValue: number,
+  subscriptions: number,
+  title: string
+): YAxisOptions | YAxisOptions[] | undefined => {
   return {
     min: 0,
     max: maxValue > subscriptions ? maxValue + 1 : subscriptions + 1,
@@ -122,7 +126,7 @@ export const getYAxis = (maxValue: number, subscriptions: number): YAxisOptions 
       }
     ],
     title: {
-      text: 'Developers'
+      text: title
     }
   }
 }
@@ -157,7 +161,7 @@ export const getSeries = (values: number[], subscriptions: number): any => {
 export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props: ServiceLicenseGraphsProps) => {
   const { getString } = useStrings()
   const currentDate = new Date()
-  const [fetchType, setFetchType] = useState<string>('MONTHLY')
+  const [fetchType, setFetchType] = useState<string>('DAILY')
   const [fromDate, setFromDate] = useState<string>('')
   const [toDate, setToDate] = useState<string>('')
   const [licenseTypeSelected, setLicenseTypeSelected] = useState<string>('')
@@ -183,29 +187,32 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
   useEffect(() => {
     const currentMonth = currentDate.getMonth() + 1
     const currentYear = currentDate.getFullYear()
-    const previousYear = currentDate.getFullYear() - 1
     let formatMonth = false
     if (currentMonth !== 10 && currentMonth !== 11 && currentMonth !== 12) {
       formatMonth = true
     }
-    setFromDate(formatMonth ? `${previousYear}-0${currentMonth}-01` : `${previousYear}-${currentMonth}-01`)
-    setToDate(formatMonth ? `${currentYear}-0${currentMonth}-01` : `${currentYear}-${currentMonth}-01`)
+    setFromDate(formatMonth ? `${currentYear}-0${currentMonth}-01` : `${currentYear}-${currentMonth}-01`)
+    setToDate(formatMonth ? `${currentYear}-0${currentMonth}-31` : `${currentYear}-${currentMonth}-31`)
+
     if (props.licenseType === 'SERVICES') {
       setLicenseTypeSelected(CDLicenseType.SERVICES)
-      refetchServiceInstanceLicenses()
     } else {
       setLicenseTypeSelected(CDLicenseType.SERVICE_INSTANCES)
-      refetchServiceInstanceLicenses()
+    }
+    setSelectedTimePeriod({ label: filterOptions[0].label, value: filterOptions[0].label })
+    if (filterOptions.length === 4) {
+      return
     }
     const last3Months = getLast3Months()
     const updatedData = last3Months.map(v => ({ label: v, value: v }))
 
     filterOptions = [...filterOptions, ...updatedData]
     filterOptions.push(filterOptions.shift() as { label: string; value: string })
+    setSelectedTimePeriod({ label: filterOptions[0].label, value: filterOptions[0].label })
   }, [])
   useEffect(() => {
     refetchServiceInstanceLicenses()
-  }, [fetchType, fromDate, toDate])
+  }, [fetchType, fromDate, toDate, licenseTypeSelected])
   const subscriptions = licenseDataInfo?.workloads || 0
   const valuesArray = Object.values(data?.data?.licenseUsage || {})
   const maxValue = valuesArray.length > 0 ? Math.max(...valuesArray) : 0
@@ -267,7 +274,7 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
         }
       }
     },
-    yAxis: getYAxis(maxValue, subscriptions),
+    yAxis: getYAxis(maxValue, subscriptions, getString('common.subscriptions.usage.services')),
     plotOptions: getPlotOptions(),
     series: getSeries(values, subscriptions)
   }
@@ -292,30 +299,21 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
             <Select
               onChange={selected => {
                 const currentMonth = currentDate.getMonth() + 1
-                const previousMonth = currentDate.getMonth()
                 const currentYear = currentDate.getFullYear()
                 const previousYear = currentDate.getFullYear() - 1
-                let yearPassed = currentYear
+                const yearPassed = currentYear
                 let year2Passed = currentYear
                 let year3Passed = currentYear
-                let monthPassed = previousMonth
-                let month2Passed = previousMonth - 1
-                let month3Passed = previousMonth - 2
+                const monthPassed = currentMonth
+                let month2Passed = currentMonth - 1
+                let month3Passed = currentMonth - 2
                 if (currentMonth === 1) {
-                  yearPassed = previousYear
-                  monthPassed = 12
-                  year2Passed = previousYear
-                  month2Passed = 11
-                  year3Passed = previousYear
-                  month3Passed = 10
-                }
-                if (currentMonth === 2) {
                   year2Passed = previousYear
                   month2Passed = 12
                   year3Passed = previousYear
                   month3Passed = 11
                 }
-                if (currentMonth === 3) {
+                if (currentMonth === 2) {
                   year3Passed = previousYear
                   month3Passed = 12
                 }
@@ -357,7 +355,7 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
                   }
                   setFetchType('DAILY')
                   setFromDate(formatMonth ? `${year3Passed}-0${month3Passed}-01` : `${year3Passed}-${month3Passed}-01`)
-                  setToDate(formatMonth ? `${year3Passed}-0${month3Passed}-01` : `${year3Passed}-${month3Passed}-31`)
+                  setToDate(formatMonth ? `${year3Passed}-0${month3Passed}-31` : `${year3Passed}-${month3Passed}-31`)
                 }
               }}
               items={filterOptions}

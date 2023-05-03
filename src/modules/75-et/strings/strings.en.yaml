@@ -3,5 +3,5 @@ continuous: '{{$.common.purpose.cet.continuous}}'
 nav:
   settings: 'Error Tacking Settings'
 homepage:
-  slogan: 'This is the homepage of Continuous Error Tracking module'
-  learnMore: Learn more about Error Tracking
+  slogan: Find and fix errors faster with full code level visibility and deep context in each stage of your software development.
+  learnMore: Learn more about Continuous Error Tracking

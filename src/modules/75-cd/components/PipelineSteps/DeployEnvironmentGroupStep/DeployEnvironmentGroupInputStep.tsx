@@ -39,8 +39,7 @@ export interface DeployEnvironmentGroupInputStepProps {
 
 export default function DeployEnvironmentGroupInputStep({
   allowableTypes,
-  inputSetData,
-  gitOpsEnabled
+  inputSetData
 }: DeployEnvironmentGroupInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const { showWarning } = useToaster()
@@ -92,7 +91,7 @@ export default function DeployEnvironmentGroupInputStep({
     <>
       {getMultiTypeFromValue(inputSetData?.template?.environmentGroup?.envGroupRef) === MultiTypeInputType.RUNTIME && (
         <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
-          {CDS_OrgAccountLevelServiceEnvEnvGroup && !gitOpsEnabled ? (
+          {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
             <MultiTypeEnvironmentGroupField
               tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
               label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}

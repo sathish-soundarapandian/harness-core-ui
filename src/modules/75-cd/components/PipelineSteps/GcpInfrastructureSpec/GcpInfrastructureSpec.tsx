@@ -29,7 +29,8 @@ import {
   K8sGcpInfrastructure,
   useGetClusterNamesForGcp,
   getClusterNamesForGcpPromise,
-  useGetClusterNamesForGcpInfra
+  useGetClusterNamesForGcpInfra,
+  ExecutionElementConfig
 } from 'services/cd-ng'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -70,6 +71,7 @@ interface GcpInfrastructureSpecEditableProps {
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: K8sGcpInfrastructure
   allowableTypes: AllowedTypes
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps> = ({
@@ -153,7 +155,8 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
             releaseName: value.releaseName === '' ? undefined : value.releaseName,
             connectorRef: undefined,
             cluster: getClusterValue(value.cluster) === '' ? undefined : getClusterValue(value.cluster),
-            allowSimultaneousDeployments: value.allowSimultaneousDeployments
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value?.provisioner || undefined
           }
           /* istanbul ignore else */ if (value.connectorRef) {
             data.connectorRef = (value.connectorRef as any)?.value || /* istanbul ignore next */ value.connectorRef
@@ -193,7 +196,8 @@ const GcpInfrastructureSpecInputForm: React.FC<GcpInfrastructureSpecEditableProp
   onUpdate,
   allowableTypes,
   allValues,
-  stepViewType
+  stepViewType,
+  provisioner
 }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -324,6 +328,7 @@ const GcpInfrastructureSpecInputForm: React.FC<GcpInfrastructureSpecEditableProp
       stepViewType={stepViewType}
       fetchClusters={fetchClusterNames}
       connectorType={'Gcp'}
+      provisioner={provisioner}
     />
   )
 }

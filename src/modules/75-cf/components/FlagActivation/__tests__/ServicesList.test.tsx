@@ -39,7 +39,7 @@ describe('ServiceList', () => {
   const useGetServiceListMock = jest.spyOn(useGetServiceDetailsMock, 'useGetServiceList')
   const usePatchServicesMock = jest.spyOn(cfServiceMock, 'usePatchFeature')
 
-  test('it should display pre-existing services', async () => {
+  test('it should display pre-existing Monitored Services', async () => {
     useGetServiceListMock.mockReturnValue({
       loading: false,
       data: mockServiceList,
@@ -235,7 +235,7 @@ describe('EditServicesModal', () => {
 
     renderComponent()
 
-    expect(screen.getByRole('heading', { name: 'services' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'common.monitoredServices' })).toBeInTheDocument()
     expect(screen.getByText('cf.featureFlagDetail.serviceDescription')).toBeInTheDocument()
 
     userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
@@ -255,7 +255,7 @@ describe('EditServicesModal', () => {
     })
   })
 
-  test('it should show spinner when services are loading', async () => {
+  test('it should show spinner when Monitored Services are loading', async () => {
     useGetServiceListMock.mockReturnValue({
       loading: true,
       data: null,
@@ -269,7 +269,7 @@ describe('EditServicesModal', () => {
     await waitFor(() => expect(screen.getByText(loadingMessage)).toBeInTheDocument())
   })
 
-  test('it should display error message when fail to fetch Services', async () => {
+  test('it should display error message when fail to fetch Monitored Services', async () => {
     const refetch = jest.fn()
 
     useGetServiceListMock.mockReturnValue({
@@ -293,7 +293,7 @@ describe('EditServicesModal', () => {
     await waitFor(() => expect(refetch).toBeCalled())
   })
 
-  test('it should already display existing services as checked in modal', async () => {
+  test('it should already display existing Monitored Services as checked in modal', async () => {
     useGetServiceListMock.mockReturnValue({
       loading: false,
       data: mockServiceList,
@@ -326,7 +326,7 @@ describe('EditServicesModal', () => {
     await waitFor(() => expect(screen.getByText(loadingMessage)).toBeInTheDocument())
   })
 
-  test('it should show only checked services when selecting dropdown', async () => {
+  test('it should show only checked Monitored Services when selecting dropdown', async () => {
     useGetServiceListMock.mockReturnValue({
       loading: false,
       data: mockServiceList,
@@ -416,11 +416,11 @@ describe('EditServicesModal', () => {
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: 'cf.featureFlagDetail.noServices' })).toBeInTheDocument()
       expect(screen.getByTestId('nodata-image')).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: 'newService' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'common.newMonitoredService' })).toBeInTheDocument()
     })
   })
 
-  test('it should render link to take user to create a new Service', async () => {
+  test('it should render link to take user to create a new Monitored Service', async () => {
     useGetServiceListMock.mockReturnValue({
       loading: false,
       data: [],
@@ -431,7 +431,7 @@ describe('EditServicesModal', () => {
     renderComponent()
     userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
-    userEvent.click(await screen.findByRole('button', { name: 'newService' }))
+    userEvent.click(await screen.findByRole('button', { name: 'common.newMonitoredService' }))
 
     expect(screen.getByTestId('location')).toHaveTextContent(
       '/account/dummy/cv/orgs/dummy/projects/dummy/monitoringservices/setup'

@@ -258,3 +258,5 @@ export const ElkAuthType = {
 }
 
 export const CONNECTOR_MODAL_MIN_WIDTH = 1175
+
+export const DEFAULT_PDC_AREA_LENGTH = 100000

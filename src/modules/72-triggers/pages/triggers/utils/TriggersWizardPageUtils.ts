@@ -6,7 +6,7 @@
  */
 
 import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep, omit } from 'lodash-es'
-import { string, array, object, ObjectSchema } from 'yup'
+import { string, array, object, ObjectSchema, ValidationError, TestContext } from 'yup'
 import { parse } from 'yaml'
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
@@ -47,6 +47,7 @@ import type {
   TriggerConfigDTO,
   FlatOnEditValuesInterface
 } from '../interface/TriggersWizardInterface'
+import { CronFormat } from '../views/subviews/CustomTab'
 export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
 export const AwsCodeCommit = 'AwsCodeCommit'
@@ -258,7 +259,7 @@ const checkValidArtifactTrigger = ({ formikValues }: { formikValues: { [key: str
 }
 
 const checkValidCronExpression = ({ formikValues }: { formikValues: { [key: string]: any } }): boolean =>
-  isCronValid(formikValues?.expression || '')
+  isCronValid(formikValues?.expression || '', formikValues?.cronFormat === CronFormat.QUARTZ)
 
 const getPanels = ({
   triggerType,
@@ -346,6 +347,19 @@ export const getWizardMap = ({
   panels: getPanels({ triggerType, getString })
 })
 
+function getCronExpressionValidationError(
+  this: TestContext,
+  isValidCron: boolean,
+  getString: UseStringsReturn['getString']
+): boolean | ValidationError {
+  if (isValidCron) {
+    return true
+  } else {
+    return this.createError({
+      message: getString('triggers.validation.cronExpression')
+    })
+  }
+}
 // requiredFields and checkValidPanel in getPanels() above to render warning icons related to this schema
 export const getValidationSchema = (
   triggerType: NGTriggerSourceV2['type'],
@@ -356,7 +370,6 @@ export const getValidationSchema = (
   const TriggerNameIdentifierSchema = NameIdentifierSchema(getString, {
     nameRequiredErrorMsg: getString('triggers.validation.triggerName')
   })
-
   if (triggerType === TriggerTypes.WEBHOOK) {
     return TriggerNameIdentifierSchema.shape({
       event: string().test(
@@ -426,12 +439,14 @@ export const getValidationSchema = (
       sourceBranchOperator: string().test(
         getString('triggers.validation.operator'),
         getString('triggers.validation.operator'),
+
         function (operator) {
           return (
             // both filled or both empty. Return false to show error
             (operator && !this.parent.sourceBranchValue) ||
             (operator && this.parent.sourceBranchValue) ||
-            (!this.parent.sourceBranchValue?.trim() && !operator)
+            (!this.parent.sourceBranchValue?.trim() && !operator) ||
+            (operator !== undefined && this.parent.sourceBranchValue !== undefined)
           )
         }
       ),
@@ -453,7 +468,8 @@ export const getValidationSchema = (
           return (
             (operator && !this.parent.targetBranchValue) ||
             (operator && this.parent.targetBranchValue) ||
-            (!this.parent.targetBranchValue?.trim() && !operator)
+            (!this.parent.targetBranchValue?.trim() && !operator) ||
+            (operator !== undefined && this.parent.sourceBranchValue !== undefined)
           )
         }
       ),
@@ -471,11 +487,13 @@ export const getValidationSchema = (
       changedFilesOperator: string().test(
         getString('triggers.validation.operator'),
         getString('triggers.validation.operator'),
+
         function (operator) {
           return (
             (operator && !this.parent.changedFilesValue) ||
             (operator && this.parent.changedFilesValue) ||
-            (!this.parent.changedFilesValue?.trim() && !operator)
+            (!this.parent.changedFilesValue?.trim() && !operator) ||
+            (operator !== undefined && this.parent.sourceBranchValue !== undefined)
           )
         }
       ),
@@ -497,7 +515,8 @@ export const getValidationSchema = (
           return (
             (operator && !this.parent.tagConditionValue) ||
             (operator && this.parent.tagConditionValue) ||
-            (!this.parent.tagConditionValue?.trim() && !operator)
+            (!this.parent.tagConditionValue?.trim() && !operator) ||
+            (operator !== undefined && this.parent.sourceBranchValue !== undefined)
           )
         }
       ),
@@ -606,18 +625,36 @@ export const getValidationSchema = (
           }
           return true
         }
+      ),
+      metaDataConditions: array().test(
+        getString('triggers.validation.eventConditions'),
+        getString('triggers.validation.eventConditions'),
+        function (metaDataConditions = []) {
+          if (metaDataConditions.some((metaDataCondition: AddConditionInterface) => isRowUnfilled(metaDataCondition))) {
+            return false
+          }
+          return true
+        }
       )
     })
   } else {
     // Scheduled
     return TriggerNameIdentifierSchema.shape({
-      expression: string().test(
-        getString('triggers.validation.cronExpression'),
-        getString('triggers.validation.cronExpression'),
-        function (expression) {
-          return isCronValid(expression || '')
-        }
-      )
+      expression: string().when('cronFormat', {
+        is: val => val === CronFormat.QUARTZ,
+        then: string().test({
+          test(val: string): boolean | ValidationError {
+            const isValidCron = isCronValid(val || '', true)
+            return getCronExpressionValidationError.call(this, isValidCron, getString)
+          }
+        }),
+        otherwise: string().test({
+          test(val: string): boolean | ValidationError {
+            const isValidCron = isCronValid(val || '', false)
+            return getCronExpressionValidationError.call(this, isValidCron, getString)
+          }
+        })
+      })
     })
   }
 }
@@ -2239,7 +2276,9 @@ export const getArtifactManifestTriggerYaml = ({
     stageId,
     manifestType: onEditManifestType,
     artifactType,
-    pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event)
+    pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
+    metaDataConditions,
+    jexlCondition
   } = val
   const inputSetRefs = get(
     val,
@@ -2304,7 +2343,7 @@ export const getArtifactManifestTriggerYaml = ({
     cloneDeep(
       parse(
         JSON.stringify({
-          spec: { ...selectedArtifact?.spec, store: storeVal }
+          spec: { ...selectedArtifact?.spec, store: storeVal, metaDataConditions, jexlCondition }
         }) || ''
       )
     )

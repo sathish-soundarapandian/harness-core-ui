@@ -261,18 +261,18 @@ describe('Test HostedBuildsUtils methods', () => {
     }
     let createdPipelinePayload = getPayloadForPipelineCreation(args)
     const { name, identifier } = createdPipelinePayload?.pipeline || {}
-    expect(name).toBe('buildText Build Dot Net')
-    expect(identifier).toBe('buildText_Build_Dot_Net_1585699200000')
+    expect(name).toBe('buildText test-repo')
+    expect(identifier).toBe('buildText_test_repo_1585699200000')
     expect(get(createdPipelinePayload, 'pipeline.stages.0.stage.spec.runtime')).not.toBeUndefined()
     expect(get(createdPipelinePayload, 'pipeline.stages.0.stage.spec.platform')).not.toBeUndefined()
 
-    createdPipelinePayload = getPayloadForPipelineCreation({ ...args, isUsingAStarterPipeline: false })
+    createdPipelinePayload = getPayloadForPipelineCreation({ ...args })
     expect(createdPipelinePayload.pipeline?.name).toBe('buildText test-repo')
     expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_test_repo_1585699200000')
 
-    createdPipelinePayload = getPayloadForPipelineCreation({ ...args, isUsingAStarterPipeline: true })
-    expect(createdPipelinePayload.pipeline?.name).toBe('buildText Build Dot Net')
-    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_Build_Dot_Net_1585699200000')
+    createdPipelinePayload = getPayloadForPipelineCreation({ ...args })
+    expect(createdPipelinePayload.pipeline?.name).toBe('buildText test-repo')
+    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_test_repo_1585699200000')
 
     const k8sArgs = {
       ...args,
@@ -292,9 +292,9 @@ describe('Test HostedBuildsUtils methods', () => {
       })
     )
 
-    createdPipelinePayload = getPayloadForPipelineCreation({ ...k8sArgs, isUsingAStarterPipeline: true })
-    expect(createdPipelinePayload.pipeline?.name).toBe('buildText Build Dot Net')
-    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_Build_Dot_Net_1585699200000')
+    createdPipelinePayload = getPayloadForPipelineCreation({ ...k8sArgs })
+    expect(createdPipelinePayload.pipeline?.name).toBe('buildText test-repo')
+    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_test_repo_1585699200000')
     expect(JSON.stringify(get(createdPipelinePayload, 'pipeline.stages.0.stage.spec.infrastructure'))).toBe(
       JSON.stringify({
         type: 'KubernetesHosted',

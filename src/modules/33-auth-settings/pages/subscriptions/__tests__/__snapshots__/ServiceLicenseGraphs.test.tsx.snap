@@ -34,7 +34,7 @@ exports[`Service License Visualisation Graph test cases for api data still loadi
                 <p
                   class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                 >
-                  common.yearlyPeak
+                  common.monthlyPeak
                 </p>
                 <div
                   class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -112,7 +112,7 @@ exports[`Service License Visualisation Graph test cases for api data still loadi
                   placeholder="- Select -"
                   style="padding-right: 0px;"
                   type="text"
-                  value="Last 12 Months"
+                  value="May 2023"
                 />
                 <span
                   class="bp3-input-action"
@@ -258,7 +258,7 @@ exports[`Service License Visualisation Graph test cases it renders the subscript
                 <p
                   class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                 >
-                  common.yearlyPeak
+                  common.monthlyPeak
                 </p>
                 <div
                   class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -336,7 +336,7 @@ exports[`Service License Visualisation Graph test cases it renders the subscript
                   placeholder="- Select -"
                   style="padding-right: 0px;"
                   type="text"
-                  value="Last 12 Months"
+                  value="May 2023"
                 />
                 <span
                   class="bp3-input-action"

@@ -66,6 +66,7 @@ describe('FlagDetailsOptionsMenuButton', () => {
 
       expect(screen.getByText('cf.featureFlags.deleteFlag')).toBeInTheDocument()
       expect(screen.getByText('cf.featureFlags.deleteFlagMessage')).toBeInTheDocument()
+      expect(screen.getByText('cf.featureFlags.deleteFlagWarning')).toBeInTheDocument()
 
       expect(screen.getByRole('button', { name: 'delete' })).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'cancel' })).toBeInTheDocument()

@@ -33,7 +33,6 @@ import {
   getConnectorIdValue,
   getArtifactFormData,
   amiFilters,
-  getInSelectOptionForm,
   shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
@@ -109,8 +108,8 @@ function FormComponent({
     error: versionError
   } = useMutateAsGet(useListVersionsForAMIArtifact, {
     body: {
-      tags: getInSelectOptionForm(get(formik, 'values.spec.tags')),
-      filters: getInSelectOptionForm(get(formik, 'values.spec.filters'))
+      tags: formik?.values?.spec?.tags,
+      filters: formik?.values?.spec?.filters
     },
     requestOptions: {
       headers: {

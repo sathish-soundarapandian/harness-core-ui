@@ -121,7 +121,8 @@ export const K8sAwsInfrastructureSpecEditable: React.FC<K8sAwsInfrastructureSpec
             releaseName: value.releaseName === '' ? undefined : value.releaseName,
             connectorRef: undefined,
             cluster: getClusterValue(value.cluster) === '' ? undefined : getClusterValue(value.cluster),
-            allowSimultaneousDeployments: value.allowSimultaneousDeployments
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value.provisioner || undefined
           }
           /* istanbul ignore else */ if (value.connectorRef) {
             data.connectorRef = (value.connectorRef as any)?.value || /* istanbul ignore next */ value.connectorRef

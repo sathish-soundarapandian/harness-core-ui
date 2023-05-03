@@ -1,0 +1,10 @@
+allowpaths:
+  - /v1/attempt/{assessmentInviteId}
+  - /v1/attempt/{assessmentId}
+  - /v1/attempt/save
+  - /v1/results/{resultCode}
+  - /v1/benchmark/{assessmentId}/{majorVersion}
+  - /v1/assessment/invite
+
+operationIdOverrides:
+  /v1/attempt/{assessmentId}.post: submitAssessmentForUser

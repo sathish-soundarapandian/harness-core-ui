@@ -19,7 +19,6 @@ import {
   PillToggle,
   getErrorInfoFromErrorObject,
   PageError,
-  IconName,
   DropDown,
   SelectOption
 } from '@harness/uicore'
@@ -32,18 +31,25 @@ import { String, useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
+import { useServiceContext } from '@cd/context/ServiceContext'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
 import {
   ArtifactDeploymentDetail,
   ArtifactInstanceDetail,
   EnvironmentGroupInstanceDetail,
   GetArtifactInstanceDetailsQueryParams,
   GetEnvironmentInstanceDetailsQueryParams,
+  NGServiceConfig,
   useGetArtifactInstanceDetails,
   useGetEnvironmentInstanceDetails
 } from 'services/cd-ng'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { supportedDeploymentTypesForPostProdRollback } from './PostProdRollback/PostProdRollbackUtil'
 import { EnvCardViewEmptyState } from './ServiceDetailEmptyStates'
 import ServiceDetailsDialog from './ServiceDetailsDialog'
 import ServiceDetailDriftTable from './ServiceDetailDriftTable'
+import PostProdRollbackDrawer from './PostProdRollback/ServiceDetailPostProdRollback'
 
 import css from './ServiceDetailsSummaryV2.module.scss'
 
@@ -99,6 +105,8 @@ interface EnvCardComponentProps {
     React.SetStateAction<{
       envId?: string
       isEnvGroup: boolean
+      envName?: string
+      isRollbackAllowed?: boolean
     }>
   >
   env?: EnvCardProps
@@ -137,12 +145,28 @@ function EnvCard({
   const { lastDeployedAt: latestTime, artifact: artifactName } = getLatestTimeAndArtifact(
     env?.artifactDeploymentDetails
   )
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false)
 
-  const statusIcon = env?.isRollback
-    ? { icon: 'reset', size: 12, tooltipText: getString('cd.serviceDashboard.triggeredByRollback') }
+  //serviceType
+  const { serviceResponse } = useServiceContext()
+  const serviceDataParse = React.useMemo(
+    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, '')),
+    [serviceResponse?.yaml]
+  )
+  const serviceType = serviceDataParse?.service?.serviceDefinition?.type
+
+  // Allow rollback action or not
+  const showRollbackAction =
+    useFeatureFlag(FeatureFlag.POST_PROD_ROLLBACK) &&
+    serviceType &&
+    supportedDeploymentTypesForPostProdRollback.includes(serviceType)
+
+  const deploymentText = env?.isRollback
+    ? getString('cd.serviceDashboard.rollbacked')
     : env?.isRevert
-    ? { icon: 'hotfix', size: 14, tooltipText: getString('cd.serviceDashboard.deployedByHotfix') }
-    : { icon: '', size: 0 }
+    ? getString('cd.serviceDashboard.hotfixed')
+    : ''
+
   const isDrift = env?.isDrift
   const isEnvGroup = env?.isEnvGroup
 
@@ -154,109 +178,133 @@ function EnvCard({
     return null
   }
   return (
-    <Card
-      className={cx(css.envCards, css.cursor)}
-      onClick={() => {
-        if (selectedEnv?.envId === envId) {
-          setSelectedEnv(undefined)
-          setEnvId(undefined)
-        } else {
-          setSelectedEnv({ envId: envId, isEnvGroup: !!isEnvGroup })
-          setEnvId(isEnvGroup ? envGroupEnvIds : envId)
-        }
-      }}
-      selected={selectedEnv?.envId === envId}
-    >
-      {isEnvGroup && <String tagName="div" className={css.headerTile} stringID="cd.serviceDashboard.envGroupTitle" />}
-      <div className={css.envCardTitle}>
-        <Text
-          font={{ variation: FontVariation.FORM_SUB_SECTION }}
-          color={Color.GREY_600}
-          lineClamp={1}
-          tooltipProps={{ isDark: true }}
-        >
-          {!isEmpty(envName) ? envName : '--'}
-        </Text>
-        {!isEmpty(statusIcon.icon) && (
-          <Popover
-            popoverClassName={css.statusIconPopover}
-            interactionKind="hover"
-            position={Position.TOP}
-            content={
-              <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_100}>
-                {statusIcon.tooltipText}
-              </Text>
-            }
-          >
-            <Container className={css.statusIcon}>
-              <Icon name={statusIcon.icon as IconName} size={statusIcon.size} />
-            </Container>
-          </Popover>
-        )}
-      </div>
-      <div>
-        {env?.environmentTypes?.map((item, index) => (
+    <>
+      <Card
+        className={cx(css.envCards, css.cursor)}
+        onClick={() => {
+          if (selectedEnv?.envId === envId) {
+            setSelectedEnv(undefined)
+            setEnvId(undefined)
+          } else {
+            setSelectedEnv({ envId: envId, isEnvGroup: !!isEnvGroup })
+            setEnvId(isEnvGroup ? envGroupEnvIds : envId)
+          }
+        }}
+        selected={selectedEnv?.envId === envId}
+      >
+        {isEnvGroup && <String tagName="div" className={css.headerTile} stringID="cd.serviceDashboard.envGroupTitle" />}
+        <div className={css.envCardTitle}>
           <Text
-            key={index}
-            className={cx(css.environmentType, {
-              [css.production]: item === EnvironmentType.PRODUCTION
-            })}
-            font={{ size: 'small' }}
-            margin={{ right: 'small' }}
+            font={{ variation: FontVariation.FORM_SUB_SECTION }}
+            color={Color.GREY_600}
+            lineClamp={1}
+            tooltipProps={{ isDark: true }}
           >
-            {item
-              ? getString(item === EnvironmentType.PRODUCTION ? 'cd.serviceDashboard.prod' : 'cd.preProductionType')
-              : '-'}
-          </Text>
-        ))}
-      </div>
-      {!!(latestTime && latestTime !== Number.MIN_SAFE_INTEGER) && (
-        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
-          {getString('pipeline.lastDeployed')} <ReactTimeago date={latestTime} />
-        </Text>
-      )}
-      {env?.count && (
-        <div className={css.instanceCountStyle}>
-          <Icon name="instances" color={Color.GREY_600} />
-          <Text
-            onClick={e => {
-              e.stopPropagation()
-              setEnvFilter({ envId: env.id, isEnvGroup: !!env.isEnvGroup })
-              setIsDetailsDialogOpen(true)
-            }}
-            color={Color.PRIMARY_7}
-            font={{ variation: FontVariation.TINY_SEMI }}
-          >
-            {env.count} {capitalize(getString('pipeline.execution.instances'))}
+            {!isEmpty(envName) ? envName : '--'}
           </Text>
         </div>
-      )}
-      <Container flex={{ justifyContent: 'flex-end' }}>
-        <Popover
-          interactionKind="hover"
-          content={
-            <ServiceDetailDriftTable data={defaultTo(env?.artifactDeploymentDetails, [])} isArtifactView={false} />
-          }
-          disabled={!isDrift}
-          popoverClassName={css.driftPopover}
-          position={Position.BOTTOM}
-          modifiers={{ preventOverflow: { escapeWithReference: true } }}
-        >
-          <Container flex={{ alignItems: 'center' }}>
-            {isDrift && <Icon name="execution-warning" color={Color.RED_700} />}
+        <div>
+          {env?.environmentTypes?.map((item, index) => (
             <Text
-              font={{ variation: FontVariation.CARD_TITLE, weight: 'semi-bold' }}
-              color={isDrift ? Color.RED_700 : Color.GREY_800}
-              lineClamp={1}
-              margin={{ left: 'small' }}
-              tooltipProps={{ isDark: true, disabled: isDrift }}
+              key={index}
+              className={cx(css.environmentType, {
+                [css.production]: item === EnvironmentType.PRODUCTION
+              })}
+              font={{ size: 'small' }}
+              margin={{ right: 'small' }}
             >
-              {artifactName || '-'}
+              {item
+                ? getString(item === EnvironmentType.PRODUCTION ? 'cd.serviceDashboard.prod' : 'cd.preProductionType')
+                : '-'}
             </Text>
-          </Container>
-        </Popover>
-      </Container>
-    </Card>
+          ))}
+        </div>
+        {!!(latestTime && latestTime !== Number.MIN_SAFE_INTEGER) && (
+          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800} className={css.lastDeployedText}>
+            {deploymentText ? (
+              <String
+                useRichText
+                stringID="cd.serviceDashboard.lastDeployedText"
+                vars={{
+                  status: deploymentText
+                }}
+              />
+            ) : (
+              getString('pipeline.lastDeployed')
+            )}
+            <ReactTimeago date={latestTime} />
+          </Text>
+        )}
+        {env?.count && (
+          <div className={css.instanceCountStyle}>
+            <Icon name="instances" color={Color.GREY_600} />
+            <Text
+              onClick={e => {
+                e.stopPropagation()
+                setEnvFilter({
+                  envId: env.id,
+                  isEnvGroup: !!env.isEnvGroup,
+                  envName: env.name,
+                  isRollbackAllowed: showRollbackAction
+                })
+                setIsDetailsDialogOpen(true)
+              }}
+              color={Color.PRIMARY_7}
+              font={{ variation: FontVariation.TINY_SEMI }}
+            >
+              {env.count} {capitalize(getString('pipeline.execution.instances'))}
+            </Text>
+          </div>
+        )}
+        <Container flex>
+          <Popover
+            interactionKind="hover"
+            content={
+              <ServiceDetailDriftTable data={defaultTo(env?.artifactDeploymentDetails, [])} isArtifactView={false} />
+            }
+            disabled={!isDrift}
+            popoverClassName={css.driftPopover}
+            position={Position.BOTTOM}
+            modifiers={{ preventOverflow: { escapeWithReference: true } }}
+          >
+            <Container flex={{ alignItems: 'center' }}>
+              {isDrift && <Icon name="execution-warning" color={Color.RED_700} />}
+              <Text
+                font={{ variation: FontVariation.CARD_TITLE, weight: 'semi-bold' }}
+                color={isDrift ? Color.RED_700 : Color.GREY_800}
+                lineClamp={1}
+                margin={{ left: 'small' }}
+                tooltipProps={{ isDark: true, disabled: isDrift }}
+              >
+                {artifactName || '-'}
+              </Text>
+            </Container>
+          </Popover>
+          {showRollbackAction ? (
+            <Container className={css.rollbackActionIcon}>
+              <Icon
+                name="rollback-service"
+                color={Color.GREY_700}
+                size={14}
+                onClick={e => {
+                  e.stopPropagation()
+                  setDrawerOpen(true)
+                }}
+              />
+            </Container>
+          ) : null}
+        </Container>
+      </Card>
+      {drawerOpen && env?.id ? (
+        <PostProdRollbackDrawer
+          drawerOpen={drawerOpen}
+          isEnvGroup={!!env?.isEnvGroup}
+          setDrawerOpen={setDrawerOpen}
+          entityId={env?.id}
+          entityName={env?.name}
+        />
+      ) : null}
+    </>
   )
 }
 
@@ -422,9 +470,15 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
   const [activeSlide, setActiveSlide] = useState<number>(1)
   const [cardView, setCardView] = useState(CardView.ENV)
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState<boolean>(false)
-  const [envFilter, setEnvFilter] = useState<{ envId?: string; isEnvGroup: boolean }>({
+  const [envFilter, setEnvFilter] = useState<{
+    envId?: string
+    isEnvGroup: boolean
+    envName?: string
+    isRollbackAllowed?: boolean
+  }>({
     envId: undefined,
-    isEnvGroup: false
+    isEnvGroup: false,
+    isRollbackAllowed: false
   })
 
   //artifact state
@@ -491,11 +545,11 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
   const [data, loading, error, refetch, visibleCardCount, cardInfoList] =
     cardView === CardView.ENV
       ? [resData, envLoading, envError, envRefetch, 5, envList]
-      : [artifactCardData, artifactLoading, artifactError, artifactRefetch, 4, artifactList] //todo
+      : [artifactCardData, artifactLoading, artifactError, artifactRefetch, 3, artifactList]
 
   const renderCards = createGroups(cardInfoList, visibleCardCount)
 
-  const artifactSlide = [0, 1, 2, 3]
+  const artifactSlide = [0, 1, 2]
   const envSlide = [0, 1, 2, 3, 4]
 
   const cardSlides =
@@ -608,7 +662,7 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
             iconProps={{ size: 13 }}
             text={getString('cd.environmentDetailPage.viewInTable')}
             onClick={() => {
-              setEnvFilter({ envId: undefined, isEnvGroup: false })
+              setEnvFilter({ envId: undefined, isEnvGroup: false, isRollbackAllowed: false })
               setArtifactFilter(undefined)
               setIsDetailsDialogOpen(true)
               setArtifactFilterApplied(false)
@@ -657,6 +711,7 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
         <EnvCardViewEmptyState message={getString('pipeline.ServiceDetail.envCardEmptyStateMsg')} />
       ) : (
         <Carousel
+          key={cardView}
           previousElement={
             activeSlide > 1 ? (
               <Button

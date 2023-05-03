@@ -197,7 +197,7 @@ export default function JiraCreationForm({ onHideCallback, feedback }: JiraCreat
               )}
               className={css.modalInputElement}
               disabled={!formikProps.values.projectKey || isIssueTypeDropdownDisabled}
-              label={getString('pipeline.jiraApprovalStep.issueType')}
+              label={getString('common.resourceCenter.ticketmenu.issueType')}
               items={getProjectIssueTypesDropdownOptions(jiraIssueTypesData?.ticketTypes)}
             />
 
@@ -207,7 +207,7 @@ export default function JiraCreationForm({ onHideCallback, feedback }: JiraCreat
               disabled={isPriorityDisabled}
               placeholder={getPlaceholderLoadingText(getString, isJiraPrioritiesLoading && !jiraPrioritiesFetchError)}
               className={css.modalInputElement}
-              label={getString('cv.logs.jiraFormLable.priority')}
+              label={getString('common.resourceCenter.ticketmenu.priority')}
               items={getPrioritiesDropdownOptions(prioritiesData?.priorities)}
             />
 

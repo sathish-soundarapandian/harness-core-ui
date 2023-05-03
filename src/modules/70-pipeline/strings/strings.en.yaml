@@ -196,7 +196,6 @@ jiraApprovalStep:
   connectorRef: Jira Connector
   jiraConnectorPlaceholder: Select Jira Connector
   project: Jira Project
-  issueType: Issue Type
   issueTypePlaceholder: Select Issue Type
   issueKey: Issue Key
   issueKeyPlaceholder: Enter Issue Key
@@ -1549,7 +1548,7 @@ configFiles:
   fileType: 'File Type'
   encryptedLocation: 'Secrets Manager Name'
   addConfigFile: Add Config File
-  name: Config File Name,
+  name: Config File Name
   placeholder: Enter Config File Name
   paths: File Path for config files from Git
   error:
@@ -1791,3 +1790,16 @@ templateAlreadyExists:
   title: Template Already Exists
   content: The template with given identifier already exists, if you want to create a new version of this template then use save as new version option from the given template or if you want to create a new Template then use a different identifier.
   confirmation: Save as new version of existing template
+serviceHooks:
+  title: 'Service Hooks {{type}}'
+  store: Service Hooks Store
+  label: Service Hooks
+  preHook: Pre Hook
+  postHook: Post Hook
+  selectActionType: Select action type
+  hookType: Hook Type
+  identifierLabel: Service Hook Identifier
+  addServiceHook: Add Service Hook
+  error:
+    actionsRequired: Actions is required
+    duplicateIdError: 'A Service Hook with same identifier {{ servciceHookIdentifier }} already exists. Please provide a new unique identifier and save again.'

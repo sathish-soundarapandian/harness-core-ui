@@ -105,8 +105,8 @@ function useGenerateToken(hash?: string, parentId?: string, deps?: any[]): Respo
   const [token, setToken] = useState<ResponseString>()
   useDeepCompareEffect(() => {
     if (deps) {
-      const apiKeyName = `codeApiKey_${hash}`
-      const tokenName = `codeToken_${hash}`
+      const apiKeyName = `code_api_key`
+      const tokenName = `code_token_${hash}`
       const apiKeyType = 'USER'
 
       createToken({

@@ -61,7 +61,7 @@ const TestComponent = (): React.ReactElement => {
 describe('open and close release notes  Modal', () => {
   describe('Rendering', () => {
     test('should open and close the release notes modal', async () => {
-      const { container, getByText } = render(
+      const { container, getByText, getAllByText } = render(
         <TestWrapper>
           <TestComponent />
         </TestWrapper>
@@ -72,7 +72,7 @@ describe('open and close release notes  Modal', () => {
       expect(dialog).toMatchSnapshot()
 
       await waitFor(() => {
-        expect(getByText('common.resourceCenter.bottomlayout.releaseNote')).toBeInTheDocument()
+        expect(getAllByText('common.resourceCenter.bottomlayout.releaseNote')[0]).toBeInTheDocument()
         expect(getByText('common.resourceCenter.productUpdates.releaseText')).toBeInTheDocument()
       })
     })

@@ -155,7 +155,9 @@ const getDetailsContent = ({
   conditionsArr,
   jexlCondition,
   cronExpression,
-  pipelineInputSet
+  pipelineInputSet,
+  selectiveStageFF,
+  stagesToExecute
 }: {
   getString: UseStringsReturn['getString']
   conditionsExist: boolean
@@ -163,19 +165,32 @@ const getDetailsContent = ({
   jexlCondition?: string
   cronExpression?: string
   pipelineInputSet?: string
-}): Content[] => [
-  {
-    label: '',
-    value: conditionsExist ? renderConditions({ conditionsArr, jexlCondition, cronExpression, getString }) : undefined,
-    hideOnUndefinedValue: true,
-    type: ContentType.CUSTOM
-  },
-  {
-    label: getString('triggers.pipelineExecutionInput'),
-    value: !isEmpty(pipelineInputSet) ? <pre>{pipelineInputSet}</pre> : undefined,
-    type: ContentType.CUSTOM
+  selectiveStageFF?: boolean
+  stagesToExecute?: string[]
+}): Content[] => {
+  const arr: Content[] = [
+    {
+      label: '',
+      value: conditionsExist
+        ? renderConditions({ conditionsArr, jexlCondition, cronExpression, getString })
+        : undefined,
+      hideOnUndefinedValue: true,
+      type: ContentType.CUSTOM
+    },
+    {
+      label: getString('triggers.pipelineExecutionInput'),
+      value: !isEmpty(pipelineInputSet) ? <pre>{pipelineInputSet}</pre> : undefined,
+      type: ContentType.CUSTOM
+    }
+  ]
+  if (selectiveStageFF) {
+    arr.push({
+      label: getString('triggers.selectStagesToExecute'),
+      value: stagesToExecute?.length ? <p>{stagesToExecute}</p> : <p>{getString('pipeline.allStages')}</p>
+    })
   }
-]
+  return arr
+}
 
 const renderSwitch = ({
   getString,
@@ -360,6 +375,7 @@ export default function TriggersDetailPage(): JSX.Element {
   conditionsArr = conditionsArr.concat(eventConditionsArr)
   const jexlCondition = triggerObj?.source?.spec?.spec?.jexlCondition
   const cronExpression = triggerObj?.source?.spec?.spec?.expression
+  const stagesToExecute = triggerObj?.stagesToExecute
   const conditionsExist = [...conditionsArr, jexlCondition, cronExpression].some(x => !!x)
   const { data: pipeline } = useGetPipelineSummary({
     pipelineIdentifier,
@@ -400,6 +416,8 @@ export default function TriggersDetailPage(): JSX.Element {
       setSelectedView(SelectedView.VISUAL)
     }
   }, [CI_YAML_VERSIONING, module])
+
+  const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
 
   return (
     <>
@@ -495,7 +513,10 @@ export default function TriggersDetailPage(): JSX.Element {
                       conditionsArr,
                       jexlCondition,
                       cronExpression,
-                      pipelineInputSet
+
+                      pipelineInputSet,
+                      selectiveStageFF: CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION,
+                      stagesToExecute
                     })}
                   />
                 )}

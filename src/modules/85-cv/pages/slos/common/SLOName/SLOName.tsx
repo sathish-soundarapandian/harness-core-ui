@@ -195,7 +195,7 @@ const SLOName = <T,>({
             )}
             <RbacButton
               icon="plus"
-              text={getString('cv.monitoredServices.newMonitoredServices')}
+              text={getString('common.newMonitoredService')}
               variation={ButtonVariation.SECONDARY}
               onClick={showModal}
               permission={{

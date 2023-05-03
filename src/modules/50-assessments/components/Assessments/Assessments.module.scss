@@ -1,0 +1,33 @@
+.questionnaireContainer {
+  background-color: var(--grey-100) !important;
+}
+
+.questionnaire {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 65%;
+  height: 85vh;
+  margin-bottom: var(--spacing-medium) !important;
+  overflow-y: scroll !important;
+}
+
+.heading {
+  font-weight: 600 !important;
+  font-size: 24px !important;
+  line-height: 24px !important;
+  color: var(--primary-10) !important;
+}
+
+.modalFooter {
+  width: 100% !important;
+  position: sticky;
+  bottom: 0;
+  background-color: var(--white) !important;
+  z-index: 11;
+  border-radius: 6px !important;
+  box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.04), 0px 16px 24px rgba(96, 97, 112, 0.16);
+  height: 74px;
+  justify-content: flex-end !important;
+  padding-right: var(--spacing-14) !important;
+}

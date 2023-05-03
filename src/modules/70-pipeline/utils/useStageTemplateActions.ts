@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo } from 'lodash-es'
+import { cloneDeep, defaultTo } from 'lodash-es'
 import produce from 'immer'
 import { useCallback, useState } from 'react'
 import type { StageElementConfig } from 'services/cd-ng'
 import { parse } from '@common/utils/YamlHelperMethods'
+import { removeNodeFromPipeline } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { createTemplate, getStageType } from '@pipeline/utils/templateUtils'
 import type { TemplateSummaryResponse } from 'services/template-ng'
@@ -28,9 +29,11 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
       selectionState: { selectedStageId = '' },
       templateTypes,
       gitDetails,
-      storeMetadata
+      storeMetadata,
+      pipeline
     },
     updateStage,
+    updatePipeline,
     getStageFromPipeline
   } = usePipelineContext()
   const { stage } = getStageFromPipeline(selectedStageId)
@@ -71,14 +74,16 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
   )
 
   const removeTemplate = useCallback(async () => {
-    const node = stage?.stage
-    const processNode = produce({} as StageElementConfig, draft => {
-      draft.name = defaultTo(node?.name, '')
-      draft.identifier = defaultTo(node?.identifier, '')
-      draft.type = getStageType(node, templateTypes)
-    })
-    await updateStage(processNode)
-  }, [stage?.stage, templateTypes, updateStage])
+    const stageIdentifierToBeDeleted = stage?.stage?.identifier
+    if (stageIdentifierToBeDeleted) {
+      const clonedPipeline = cloneDeep(pipeline)
+      const stageToBeDelete = getStageFromPipeline(stageIdentifierToBeDeleted, clonedPipeline)
+      const isRemoved = removeNodeFromPipeline(stageToBeDelete, clonedPipeline)
+      if (isRemoved) {
+        await updatePipeline(clonedPipeline)
+      }
+    }
+  }, [stage?.stage, updatePipeline, pipeline])
 
   return { addOrUpdateTemplate, removeTemplate, isTemplateUpdated, setIsTemplateUpdated }
 }

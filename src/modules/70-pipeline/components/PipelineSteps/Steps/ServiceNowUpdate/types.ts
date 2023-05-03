@@ -16,7 +16,6 @@ import type {
   ResponseListServiceNowTicketTypeDTO,
   ResponseListServiceNowTemplate,
   ServiceNowFieldValueNG,
-  GetServiceNowTicketTypesV2QueryParams,
   GetServiceNowTicketTypesQueryParams,
   GetServiceNowIssueCreateMetadataQueryParams,
   GetServiceNowTemplateMetadataQueryParams
@@ -69,25 +68,19 @@ export interface ServiceNowUpdateFormContentInterface {
   allowableTypes: AllowedTypes
   isNewStep?: boolean
   readonly?: boolean
-  getServiceNowTemplateMetaDataQuery: UseGetReturn<
+  serviceNowTemplateMetaDataQuery: UseGetReturn<
     ResponseListServiceNowTemplate,
     Failure | Error,
     GetServiceNowTemplateMetadataQueryParams,
     unknown
   >
-  getServiceNowTicketTypesQuery: UseGetReturn<
+  serviceNowTicketTypesQuery: UseGetReturn<
     ResponseListServiceNowTicketTypeDTO,
     Failure | Error,
     GetServiceNowTicketTypesQueryParams,
     unknown
   >
-  getServiceNowTicketTypesV2Query: UseGetReturn<
-    ResponseListServiceNowTicketTypeDTO,
-    Failure | Error,
-    GetServiceNowTicketTypesV2QueryParams,
-    unknown
-  >
-  getServiceNowIssueCreateMetadataQuery: UseGetReturn<
+  serviceNowIssueCreateMetadataQuery: UseGetReturn<
     ResponseListServiceNowFieldNG,
     Failure | Error,
     GetServiceNowIssueCreateMetadataQueryParams,
@@ -105,19 +98,13 @@ export interface ServiceNowUpdateDeploymentModeProps {
 }
 
 export interface ServiceNowUpdateDeploymentModeFormContentInterface extends ServiceNowUpdateDeploymentModeProps {
-  getServiceNowTicketTypesQuery: UseGetReturn<
+  serviceNowTicketTypesQuery: UseGetReturn<
     ResponseListServiceNowTicketTypeDTO,
     Failure | Error,
     GetServiceNowTicketTypesQueryParams,
     unknown
   >
-  getServiceNowTicketTypesV2Query: UseGetReturn<
-    ResponseListServiceNowTicketTypeDTO,
-    Failure | Error,
-    GetServiceNowTicketTypesV2QueryParams,
-    unknown
-  >
-  getServiceNowIssueCreateMetadataQuery: UseGetReturn<
+  serviceNowIssueCreateMetadataQuery: UseGetReturn<
     ResponseListServiceNowFieldNG,
     Failure | Error,
     GetServiceNowIssueCreateMetadataQueryParams,

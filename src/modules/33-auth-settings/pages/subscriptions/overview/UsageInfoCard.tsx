@@ -13,7 +13,7 @@ import { useStrings } from 'framework/strings'
 import PercentageBar from './PercentageBar'
 import css from './SubscriptionUsageCard.module.scss'
 
-export function getInfoIcon(tooltip: string): React.ReactElement {
+export function getInfoIcon(tooltip: string | undefined): React.ReactElement {
   return (
     <Popover
       popoverClassName={Classes.DARK}
@@ -25,7 +25,7 @@ export function getInfoIcon(tooltip: string): React.ReactElement {
         </Text>
       }
     >
-      <Icon name="info" size={15} />
+      <Icon name="info" size={15} className={css.infoIcon} />
     </Popover>
   )
 }
@@ -70,14 +70,16 @@ const PercentageSubscribedLabel: React.FC<{
 
 interface UsageInfoCardProps {
   subscribed?: number
-  usage: number
+  usage?: number
   leftHeader: string
   tooltip: string
-  rightHeader?: string
-  hasBar: boolean
+  tooltipExpiry?: string
+  rightHeader?: string | JSX.Element
+  hasBar?: boolean
   leftFooter?: string
   rightFooter?: string
   prefix?: string
+  credits?: number
 }
 
 export const ErrorContainer = ({ children }: { children: React.ReactElement }): React.ReactElement => {
@@ -89,11 +91,13 @@ const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
   usage,
   leftHeader,
   tooltip,
+  tooltipExpiry,
   rightHeader,
   hasBar,
   leftFooter,
   rightFooter,
-  prefix
+  prefix,
+  credits
 }) => {
   const { overPercentage, percentage, width, color } = getPercentageBarProps(usage, subscribed)
 
@@ -126,14 +130,31 @@ const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
             </Text>
             {getInfoIcon(tooltip)}
           </Layout.Horizontal>
-          <Text font={{ size: 'small' }} color={Color.GREY_500}>
-            {rightHeader}
-          </Text>
+          {credits ? (
+            <div className={css.expiryTime}>
+              <Text font={{ size: 'small' }} color={Color.ORANGE_700}>
+                {rightHeader}
+                {getInfoIcon(tooltipExpiry)}
+              </Text>
+            </div>
+          ) : (
+            <Text font={{ size: 'small' }} color={Color.GREY_500}>
+              {rightHeader}
+            </Text>
+          )}
         </Layout.Horizontal>
-        <Text font={{ size: 'large', weight: 'bold' }} color={Color.BLACK}>
-          {prefix}
-          {getLabel(usage)}
-        </Text>
+        {credits ? (
+          <div className={css.creditTotal}>
+            <Text font={{ size: 'large', weight: 'bold' }} color={Color.BLACK} className={css.creditTotal}>
+              {credits}
+            </Text>
+          </div>
+        ) : (
+          <Text font={{ size: 'large', weight: 'bold' }} color={Color.BLACK}>
+            {prefix}
+            {getLabel(usage)}
+          </Text>
+        )}
         {hasBar && <PercentageBar width={width} />}
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
           <Text font={{ size: 'xsmall' }}>

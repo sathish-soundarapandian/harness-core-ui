@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 export const consumptionTableData = {
   status: 'SUCCESS',
   data: {
@@ -41,4 +48,23 @@ export const consumptionTableData = {
     empty: false
   },
   correlationId: 'e8ac5983-a81a-4e61-962d-796cfbe25646'
+}
+
+export const requestBasedConsumptionTableData = {
+  ...consumptionTableData,
+  data: {
+    ...consumptionTableData.data,
+    content: [
+      {
+        ...consumptionTableData.data.content[0],
+        errorBudgetBurned: 10000,
+        contributedErrorBudgetBurned: 1000
+      },
+      {
+        ...consumptionTableData.data.content[1],
+        errorBudgetBurned: 500,
+        contributedErrorBudgetBurned: 100
+      }
+    ]
+  }
 }

@@ -142,7 +142,7 @@ const MonitoredService: React.FC = () => {
           <RbacButton
             variation={ButtonVariation.PRIMARY}
             icon="plus"
-            text={getString('cv.monitoredServices.newMonitoredServices')}
+            text={getString('common.newMonitoredService')}
             onClick={() => {
               history.push({
                 pathname: routes.toCVAddMonitoringServicesSetup(pathParams),

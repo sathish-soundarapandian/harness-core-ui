@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { ObjectSchema, string } from 'yup'
+import { ObjectSchema, string, TestContext, ValidationError } from 'yup'
 import { isEmpty } from 'lodash-es'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
-import { isCronValid } from '@triggers/components/steps/SchedulePanel/components/utils'
+import { CronFormat, isCronValid } from '@triggers/components/steps/SchedulePanel/components/utils'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { NGTriggerSourceV2, PipelineInfoConfig } from 'services/pipeline-ng'
 import type { PanelInterface } from '@triggers/components/TabWizard/TabWizard'
@@ -36,6 +36,7 @@ export interface FlatInitialValuesInterface {
   selectedScheduleTab?: string
   pipelineBranchName?: string
   inputSetRefs?: string[]
+  cronFormat?: CronFormat
 }
 
 export interface FlatOnEditValuesInterface {
@@ -65,6 +66,7 @@ export interface FlatOnEditValuesInterface {
   buildOperator?: string
   pipelineBranchName?: string
   inputSetRefs?: string[]
+  cronFormat?: CronFormat
 }
 
 export interface FlatValidScheduleFormikValuesInterface {
@@ -84,6 +86,7 @@ export interface FlatValidScheduleFormikValuesInterface {
   pipelineBranchName?: string
   inputSetRefs?: string[]
   stagesToExecute?: string[]
+  cronFormat: CronFormat
 }
 
 const isIdentifierIllegal = (identifier: string): boolean =>
@@ -93,7 +96,7 @@ const checkValidOverview = ({ formikValues }: { formikValues: { [key: string]: a
   isIdentifierIllegal(formikValues?.identifier) ? false : true
 
 const checkValidCronExpression = ({ formikValues }: { formikValues: { [key: string]: any } }): boolean =>
-  isCronValid(formikValues?.expression || '')
+  isCronValid(formikValues?.expression || '', formikValues?.cronFormat === CronFormat.QUARTZ)
 
 const checkValidPipelineInput = ({ formikErrors }: { formikErrors: { [key: string]: any } }): boolean => {
   if (!isEmpty(formikErrors?.pipeline) || !isEmpty(formikErrors?.stages)) {
@@ -123,6 +126,19 @@ export const getPanels = (getString: UseStringsReturn['getString']): PanelInterf
     }
   ]
 }
+function getCronExpressionValidationError(
+  this: TestContext,
+  isValidCron: boolean,
+  getString: UseStringsReturn['getString']
+): boolean | ValidationError {
+  if (isValidCron) {
+    return true
+  } else {
+    return this.createError({
+      message: getString('triggers.validation.cronExpression')
+    })
+  }
+}
 
 export const getValidationSchema = (
   getString: (key: StringKeys, params?: any) => string
@@ -130,12 +146,20 @@ export const getValidationSchema = (
   return NameIdentifierSchema(getString, {
     nameRequiredErrorMsg: getString('triggers.validation.triggerName')
   }).shape({
-    expression: string().test(
-      getString('triggers.validation.cronExpression'),
-      getString('triggers.validation.cronExpression'),
-      function (expression) {
-        return isCronValid(expression || '')
-      }
-    )
+    expression: string().when('cronFormat', {
+      is: val => val === CronFormat.QUARTZ,
+      then: string().test({
+        test(val: string): boolean | ValidationError {
+          const isValidCron = isCronValid(val || '', true)
+          return getCronExpressionValidationError.call(this, isValidCron, getString)
+        }
+      }),
+      otherwise: string().test({
+        test(val: string): boolean | ValidationError {
+          const isValidCron = isCronValid(val || '', false)
+          return getCronExpressionValidationError.call(this, isValidCron, getString)
+        }
+      })
+    })
   })
 }

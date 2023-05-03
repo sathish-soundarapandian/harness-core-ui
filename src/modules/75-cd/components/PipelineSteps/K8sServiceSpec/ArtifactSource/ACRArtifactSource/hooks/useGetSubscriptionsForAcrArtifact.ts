@@ -4,14 +4,10 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
 import type { GetDataError } from 'restful-react'
-import {
-  ResponseAzureSubscriptionsDTO,
-  useGetAzureSubscriptions,
-  useGetAzureSubscriptionsForAcrArtifact,
-  Failure
-} from 'services/cd-ng'
+
+import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
+import { ResponseAzureSubscriptionsDTO, Failure, useGetAzureSubscriptionsForAcrArtifactWithYaml } from 'services/cd-ng'
 
 export interface Params {
   connectorRef?: string
@@ -21,71 +17,47 @@ export interface Params {
   useArtifactV1Data?: boolean
   serviceId?: string
   subscriptionsFqnPath: string
+  pipelineRuntimeYaml: string
 }
 
 interface ReturnType {
   subscriptionsData: ResponseAzureSubscriptionsDTO | null
-  refetchSubscriptions: (options?: { queryParams: any }) => Promise<void>
+  refetchSubscriptions: any
   loadingSubscriptions: boolean
   subscriptionsError: GetDataError<Failure | Error> | null
 }
 
 export function useGetSubscriptionsForAcrArtifact(params: Params): ReturnType {
-  const {
-    connectorRef,
-    accountId,
-    projectIdentifier,
-    orgIdentifier,
-    useArtifactV1Data,
-    serviceId,
-    subscriptionsFqnPath
-  } = params
+  const { connectorRef, accountId, projectIdentifier, orgIdentifier } = params
 
   const {
-    data: subscriptionsV1Data,
-    refetch: refetchV1Subscriptions,
-    loading: loadingV1Subscriptions,
-    error: subscriptionsV1Error
-  } = useGetAzureSubscriptions({
-    queryParams: {
-      connectorRef,
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
+    data: subscriptionsData,
+    refetch: refetchSubscriptions,
+    loading: loadingSubscriptions,
+    error: subscriptionsError
+  } = useMutateAsGet(useGetAzureSubscriptionsForAcrArtifactWithYaml, {
+    body: params.pipelineRuntimeYaml,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
     },
-    lazy: true,
-    debounce: 300
-  })
-
-  const {
-    data: subscriptionsV2Data,
-    refetch: refetchV2Subscriptions,
-    loading: loadingV2Subscriptions,
-    error: subscriptionsV2Error
-  } = useGetAzureSubscriptionsForAcrArtifact({
     queryParams: {
       connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      serviceId,
-      fqnPath: subscriptionsFqnPath
+
+      fqnPath: params.subscriptionsFqnPath
     },
     lazy: true,
     debounce: 300
   })
 
-  return useArtifactV1Data
-    ? {
-        subscriptionsData: subscriptionsV1Data,
-        refetchSubscriptions: refetchV1Subscriptions,
-        loadingSubscriptions: loadingV1Subscriptions,
-        subscriptionsError: subscriptionsV1Error
-      }
-    : {
-        subscriptionsData: subscriptionsV2Data,
-        refetchSubscriptions: refetchV2Subscriptions,
-        loadingSubscriptions: loadingV2Subscriptions,
-        subscriptionsError: subscriptionsV2Error
-      }
+  return {
+    subscriptionsData: subscriptionsData,
+    refetchSubscriptions: refetchSubscriptions,
+    loadingSubscriptions: loadingSubscriptions,
+    subscriptionsError: subscriptionsError
+  }
 }

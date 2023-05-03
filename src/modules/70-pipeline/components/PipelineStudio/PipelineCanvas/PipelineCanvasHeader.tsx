@@ -51,7 +51,7 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { Pipeline } from '@pipeline/utils/types'
-import type { CacheResponseMetadata, Error } from 'services/pipeline-ng'
+import type { Error } from 'services/pipeline-ng'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useValidateTemplateInputsQuery } from 'services/pipeline-rq'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
@@ -272,11 +272,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     setShouldShowOutOfSyncError(true)
   }
 
-  // Need to show reload option only when we are showing a cached response
-  function showReloadFromGitoption(): boolean {
-    return Boolean(isPipelineRemote && pipelineCacheResponse)
-  }
-
   function handleReloadFromGitClick(): void {
     pipelineCachedCopyRef.current?.showConfirmationModal()
   }
@@ -305,7 +300,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
       <Popover className={Classes.DARK} position={Position.LEFT}>
         <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
         <Menu style={{ backgroundColor: 'unset' }}>
-          {showReloadFromGitoption() ? (
+          {isPipelineRemote ? (
             <RbacMenuItem
               icon="repeat"
               text={getString('common.reloadFromGit')}
@@ -410,11 +405,11 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     readOnly: pipelineIdentifier === DefaultNewPipelineId
                   }}
                 />
-                {!isEmpty(pipelineCacheResponse) && !remoteFetchError && (
+                {!remoteFetchError && (
                   <EntityCachedCopy
                     ref={pipelineCachedCopyRef}
                     reloadContent={getString('common.pipeline')}
-                    cacheResponse={pipelineCacheResponse as CacheResponseMetadata}
+                    cacheResponse={pipelineCacheResponse}
                     reloadFromCache={handleReloadFromCache}
                   />
                 )}

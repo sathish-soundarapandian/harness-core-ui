@@ -28,7 +28,6 @@ export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDe
     deploymentType === ServiceDeploymentType.Kubernetes ||
     deploymentType === ServiceDeploymentType.NativeHelm ||
     deploymentType === ServiceDeploymentType.ECS ||
-    deploymentType === ServiceDeploymentType.TAS ||
     deploymentType === ServiceDeploymentType.AwsLambda
   )
 }

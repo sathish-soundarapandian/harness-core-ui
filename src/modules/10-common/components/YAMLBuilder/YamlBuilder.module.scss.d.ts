@@ -28,5 +28,6 @@ declare const styles: {
   readonly splitPanel: string
   readonly summaryPopover: string
   readonly validationIcon: string
+  readonly validationStatus: string
 }
 export default styles

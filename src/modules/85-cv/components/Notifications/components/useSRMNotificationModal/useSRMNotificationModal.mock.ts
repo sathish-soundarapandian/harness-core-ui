@@ -30,7 +30,7 @@ export const updatedConditions = [
     spec: {
       threshold: '10',
       period: '10m',
-      changeEventTypes: ['Deployment', 'Infrastructure']
+      changeCategories: ['Deployment', 'Infrastructure']
     }
   }
 ]

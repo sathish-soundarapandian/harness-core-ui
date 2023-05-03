@@ -19,7 +19,6 @@ declare const styles: {
   readonly cursorPointer: string
   readonly doubleChevron: string
   readonly gitOpsCheck: string
-  readonly googleCloudFunctionsEnvType: string
   readonly learnMore: string
   readonly left: string
   readonly newText: string

@@ -34,6 +34,8 @@ declare const styles: {
   readonly listFooter: string
   readonly modalClusterList: string
   readonly newAgentButton: string
+  readonly noDataCardContainerConnector: string
+  readonly noDataCardContainerContent: string
   readonly notHealthy: string
   readonly paginationBlock: string
   readonly redStatus: string

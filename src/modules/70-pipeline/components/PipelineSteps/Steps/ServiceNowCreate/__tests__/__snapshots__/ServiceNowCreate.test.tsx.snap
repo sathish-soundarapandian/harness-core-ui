@@ -590,7 +590,7 @@ exports[`ServiceNow Create tests Basic snapshot - inputset mode: input set with 
       </div>
     </div>
     <div
-      class="bp3-form-group bp3-intent-danger deploymentViewMedium"
+      class="bp3-form-group deploymentViewMedium"
     >
       <label
         class="bp3-label"
@@ -620,7 +620,7 @@ exports[`ServiceNow Create tests Basic snapshot - inputset mode: input set with 
               class="bp3-popover-target"
             >
               <div
-                class="bp3-input-group bp3-intent-danger"
+                class="bp3-input-group"
               >
                 <input
                   autocomplete="off"

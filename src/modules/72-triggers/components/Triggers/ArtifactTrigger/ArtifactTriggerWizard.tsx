@@ -468,6 +468,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         pipelineJson = clearRuntimeInput(yamlTemplate)
       }
       const eventConditions = source?.spec?.spec?.eventConditions || []
+      const metaDataConditions = source?.spec?.spec?.metaDataConditions || []
+      const jexlCondition = source?.spec?.spec?.jexlCondition
       const { value: versionValue, operator: versionOperator } =
         eventConditions?.find(
           (eventCondition: AddConditionInterface) => eventCondition.key === EventConditionTypes.VERSION
@@ -499,7 +501,9 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         eventConditions: eventConditions?.filter(
           (eventCondition: AddConditionInterface) =>
             eventCondition.key !== EventConditionTypes.BUILD && eventCondition.key !== EventConditionTypes.VERSION
-        )
+        ),
+        metaDataConditions: metaDataConditions,
+        jexlCondition
       }
       if (type === TriggerTypes.ARTIFACT) {
         delete newOnEditInitialValues['manifestType']

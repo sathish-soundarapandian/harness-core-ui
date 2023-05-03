@@ -419,7 +419,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   connectorRef: value.connectorRef,
                   namespace: value.namespace,
                   releaseName: value.releaseName,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner || undefined
                 },
                 InfraDeploymentType.KubernetesDirect
               )
@@ -444,7 +445,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   cluster: value.cluster,
                   namespace: value.namespace,
                   releaseName: value.releaseName,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner || undefined
                 },
                 InfraDeploymentType.KubernetesGcp
               )
@@ -469,7 +471,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   cluster: value.cluster,
                   namespace: value.namespace,
                   releaseName: value.releaseName,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner || undefined
                 },
                 InfraDeploymentType.KubernetesAws
               )
@@ -497,7 +500,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   cluster: value.cluster,
                   namespace: value.namespace,
                   releaseName: value.releaseName,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner || undefined
                 },
                 InfraDeploymentType.KubernetesAzure
               )

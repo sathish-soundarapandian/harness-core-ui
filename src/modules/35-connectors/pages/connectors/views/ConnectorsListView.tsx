@@ -170,15 +170,6 @@ export const RenderGitDetails: Renderer<CellProps<ConnectorResponse>> = ({ row }
   ) : null
 }
 
-export const RenderColumnActivity: Renderer<CellProps<ConnectorResponse>> = ({ row }) => {
-  const data = row.original
-  return (
-    <Layout.Horizontal spacing="small">
-      <Icon name="activity" />
-      {data.activityDetails?.lastActivityTime ? <ReactTimeago date={data.activityDetails?.lastActivityTime} /> : null}
-    </Layout.Horizontal>
-  )
-}
 export const RenderColumnLastUpdated: Renderer<CellProps<ConnectorResponse>> = ({ row }) => {
   const data = row.original
   return (
@@ -434,7 +425,7 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
         Header: getString('connector').toUpperCase(),
         accessor: row => row.connector?.name,
         id: 'name',
-        width: isGitSyncEnabled ? '19%' : '25%',
+        width: isGitSyncEnabled ? '25%' : '33%',
         Cell: RenderColumnConnector
       },
       {
@@ -452,24 +443,17 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
         Cell: RenderGitDetails
       },
       {
-        Header: getString('lastActivity').toUpperCase(),
-        accessor: 'activityDetails',
-        id: 'activity',
-        width: isGitSyncEnabled ? '10%' : '15%',
-        Cell: RenderColumnActivity
-      },
-      {
         Header: getString('connectivityStatus').toUpperCase(),
         accessor: 'status',
         id: 'status',
-        width: '15%',
+        width: '19%',
         Cell: RenderColumnStatus
       },
       {
         Header: getString('lastUpdated').toUpperCase(),
         accessor: 'lastModifiedAt',
         id: 'lastModifiedAt',
-        width: isGitSyncEnabled ? '6%' : '15%',
+        width: isGitSyncEnabled ? '6%' : '22%',
         Cell: RenderColumnLastUpdated
       },
       {

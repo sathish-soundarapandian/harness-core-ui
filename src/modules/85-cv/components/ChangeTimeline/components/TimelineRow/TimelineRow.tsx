@@ -22,6 +22,7 @@ import DefaultWidget from './components/DefaultWidget/DefaultWidget'
 import WidgetsWithSameStartTime from './components/WidgetsWithSameStartTime/WidgetsWithSameStartTime'
 import { SLO_WIDGETS } from './TimelineRow.constants'
 import ErrorBudgetReset from './components/ErrorBudgetReset/ErrorBudgetReset'
+import DataCollectionFailure from './components/DataCollectionFailure/DataCollectionFailure'
 import css from './TimelineRow.module.scss'
 
 export function TimelineRow(props: TimelineRowProps): JSX.Element {
@@ -84,6 +85,8 @@ export function TimelineRow(props: TimelineRowProps): JSX.Element {
                     )
                   case SLO_WIDGETS.ERROR_BUDGET_RESET:
                     return <ErrorBudgetReset index={index} widget={widget} />
+                  case SLO_WIDGETS.DATA_COLLECTION_FAILURE:
+                    return <DataCollectionFailure index={index} widget={widget} />
                   default:
                     return <DefaultWidget index={index} widget={widget} />
                 }

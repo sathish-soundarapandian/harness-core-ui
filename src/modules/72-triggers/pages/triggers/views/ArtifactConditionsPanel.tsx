@@ -6,12 +6,12 @@
  */
 
 import React from 'react'
-import { HarnessDocTooltip, Layout, Text } from '@harness/uicore'
+import { FormInput, HarnessDocTooltip, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 
-import { ConditionRow } from './AddConditionsSection'
+import AddConditionsSection, { ConditionRow } from './AddConditionsSection'
 import css from './WebhookConditionsPanel.module.scss'
 
 interface WebhookConditionsPanelPropsInterface {
@@ -19,9 +19,9 @@ interface WebhookConditionsPanelPropsInterface {
 }
 
 const ArtifactConditionsPanel: React.FC<WebhookConditionsPanelPropsInterface> = ({ formikProps }): JSX.Element => {
-  const {
-    values: { manifestType }
-  } = formikProps
+  const { values: formikValues, setFieldValue, errors } = formikProps
+  const { manifestType } = formikValues
+
   const { getString } = useStrings()
   const isManifest = !!manifestType
   return (
@@ -53,16 +53,43 @@ const ArtifactConditionsPanel: React.FC<WebhookConditionsPanelPropsInterface> = 
             label={getString('triggers.conditionsPanel.manifestVersion')}
           />
         ) : (
-          <ConditionRow
-            formikProps={formikProps}
-            name="build"
-            label={
-              formikProps.values.selectedArtifact?.spec?.artifactPath
-                ? getString('pipeline.artifactPathLabel')
-                : getString('triggers.conditionsPanel.artifactBuild')
-            }
-          />
+          <>
+            <Text color={Color.BLACK} font={{ weight: 'bold' }}>
+              {getString('triggers.conditionsPanel.eventCondition')}
+            </Text>
+            <ConditionRow
+              formikProps={formikProps}
+              name="build"
+              label={
+                formikProps.values.selectedArtifact?.spec?.artifactPath
+                  ? getString('pipeline.artifactPathLabel')
+                  : getString('triggers.conditionsPanel.artifactBuild')
+              }
+            />
+          </>
         )}
+      </Layout.Vertical>
+      <Layout.Vertical className={css.formContent}>
+        <AddConditionsSection
+          title={getString('triggers.conditionsPanel.metadataConditions')}
+          key="metaDataConditions"
+          fieldId="metaDataConditions"
+          attributePlaceholder="<+trigger.artifact.metadata.field>"
+          formikValues={formikValues}
+          setFieldValue={setFieldValue}
+          errors={errors}
+        />
+      </Layout.Vertical>
+      <Layout.Vertical className={cx(css.formContent, css.marginBottom)}>
+        <Text className={css.sectionHeader}>
+          {getString('triggers.conditionsPanel.jexlCondition')}
+          <HarnessDocTooltip tooltipId="jexlCondition" useStandAlone={true} />
+        </Text>
+        <FormInput.Text
+          style={{ width: '100%', marginBottom: '0' }}
+          name="jexlCondition"
+          placeholder={getString('triggers.conditionsPanel.jexlConditionPlaceholder')}
+        />
       </Layout.Vertical>
     </Layout.Vertical>
   )

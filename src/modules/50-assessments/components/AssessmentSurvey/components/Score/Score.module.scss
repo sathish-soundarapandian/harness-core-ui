@@ -1,0 +1,29 @@
+.lowScore {
+  color: var(--red-500) !important;
+}
+
+.mediumScore {
+  color: var(--yellow-900) !important;
+}
+
+.highScore {
+  color: var(--green-700) !important;
+}
+
+.scoreContainer {
+  box-sizing: border-box;
+  width: 140px;
+  height: 48px;
+  background: #fafcff;
+  border: 1px solid #d9dae5;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scoreText {
+  font-weight: 600 !important;
+  font-size: 20px !important;
+  line-height: 28px !important;
+}

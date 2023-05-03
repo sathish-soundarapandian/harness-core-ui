@@ -10,7 +10,7 @@ import { Classes, Popover, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text, Checkbox } from '@harness/uicore'
 import { get, isEmpty, defaultTo } from 'lodash-es'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type {
   Cell,
@@ -503,57 +503,67 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
   const prOrCommitTitle =
     ciData.ciExecutionInfoDTO?.pullRequest?.title || ciData.ciExecutionInfoDTO?.branch?.commits[0]?.message
 
-  return showCI && prOrCommitTitle && ciData ? (
+  const triggerInfoCellTriggeredBySection = useMemo(() => {
+    return (
+      <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+        {hasparentpipeline ? (
+          <>
+            <Icon name={'chained-pipeline'} size={12} />
+            <Text font={{ size: 'small' }} color={Color.GREY_800} lineClamp={1}>
+              {getString('pipeline.executionTriggeredBy')}
+            </Text>
+            <Link to={toChildExecutionPipelineView} target="_blank" onClick={killEvent}>
+              <Text
+                font={{ variation: FontVariation.SMALL_SEMI }}
+                color={Color.PRIMARY_7}
+                lineClamp={1}
+                className={css.parentPipelineLink}
+              >
+                {`${pipelineIdentifier}`}
+              </Text>
+            </Link>
+          </>
+        ) : (
+          iconName &&
+          typeof getText === 'function' && (
+            <Text font={{ size: 'small' }} icon={iconName} iconProps={{ size: 12 }} color={Color.GREY_800}>
+              {getText(data?.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)}
+              {sourceEventId && sourceEventLink && (
+                <span>
+                  &#40;
+                  <a
+                    target="_blank"
+                    rel="noreferrer"
+                    href={sourceEventLink}
+                    style={{ color: Color.PRIMARY_7 }}
+                    onClick={e => {
+                      e.stopPropagation()
+                    }}
+                  >
+                    {sourceEventId.slice(0, 7)}
+                  </a>
+                  &#41;
+                </span>
+              )}
+            </Text>
+          )
+        )}
+      </Layout.Horizontal>
+    )
+  }, [pipelineIdentifier])
+
+  return showCI && ciData ? (
     <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
       <CITriggerInfo {...(ciData as unknown as CITriggerInfoProps)} />
-      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800} lineClamp={1}>
-        {prOrCommitTitle}
-      </Text>
+      {prOrCommitTitle ? (
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800} lineClamp={1}>
+          {prOrCommitTitle}
+        </Text>
+      ) : (
+        triggerInfoCellTriggeredBySection
+      )}
     </Layout.Vertical>
   ) : (
-    <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-      {hasparentpipeline ? (
-        <>
-          <Icon name={'chained-pipeline'} size={12} />
-          <Text font={{ size: 'small' }} color={Color.GREY_800} lineClamp={1}>
-            {getString('pipeline.executionTriggeredBy')}
-          </Text>
-          <Link to={toChildExecutionPipelineView} target="_blank" onClick={killEvent}>
-            <Text
-              font={{ variation: FontVariation.SMALL_SEMI }}
-              color={Color.PRIMARY_7}
-              lineClamp={1}
-              className={css.parentPipelineLink}
-            >
-              {`${pipelineIdentifier}`}
-            </Text>
-          </Link>
-        </>
-      ) : (
-        iconName &&
-        typeof getText === 'function' && (
-          <Text font={{ size: 'small' }} icon={iconName} iconProps={{ size: 12 }} color={Color.GREY_800}>
-            {getText(data?.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)}
-            {sourceEventId && sourceEventLink && (
-              <span>
-                &#40;
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={sourceEventLink}
-                  style={{ color: Color.PRIMARY_7 }}
-                  onClick={e => {
-                    e.stopPropagation()
-                  }}
-                >
-                  {sourceEventId.slice(0, 7)}
-                </a>
-                &#41;
-              </span>
-            )}
-          </Text>
-        )
-      )}
-    </Layout.Horizontal>
+    triggerInfoCellTriggeredBySection
   )
 }

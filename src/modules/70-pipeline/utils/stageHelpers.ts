@@ -416,6 +416,15 @@ export const isAzureWebAppOrSshWinrmGenericDeploymentType = (
   return false
 }
 
+export const isSshWinRmGenericDeploymentType = (deploymentType: string, repo: string | undefined): boolean => {
+  if (isSSHWinRMDeploymentType(deploymentType)) {
+    // default repository format should be Generic if none is previously selected
+    return repo ? repo === RepositoryFormatTypes.Generic : true
+  }
+
+  return false
+}
+
 export const isTASDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.TAS
 }
@@ -446,6 +455,9 @@ export const isAWSLambdaDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.AwsLambda
 }
 
+export const isServiceHooksAllowed = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.NativeHelm
+}
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',

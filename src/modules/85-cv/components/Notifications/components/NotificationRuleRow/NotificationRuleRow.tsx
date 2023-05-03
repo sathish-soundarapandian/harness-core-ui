@@ -16,14 +16,16 @@ import {
   eventTypeOptions,
   conditionOptions,
   changeTypeOptions,
-  Condition
+  Condition,
+  ChangeType
 } from '../ConfigureMonitoredServiceAlertConditions/ConfigureMonitoredServiceAlertConditions.constants'
 import type { FieldValueType, MoreFieldsType, NotificationRuleRowProps } from './NotificationRuleRow.types'
 import {
   getArrayOrEmpty,
   getValueFromEvent,
   getOptionsWithAllEvents,
-  onConditionChange
+  onConditionChange,
+  getFilteredOptions
 } from './NotificationRuleRow.utils'
 import type { NotificationRule } from '../../NotificationsContainer.types'
 import { defaultOption } from '../../NotificationsContainer.constants'
@@ -38,9 +40,12 @@ const renderConnectedFields = (
     currentField: string,
     moreFields?: MoreFieldsType
   ) => void,
+  isChaosFEEnabled: boolean,
   getString: (key: StringKeys) => string
 ): JSX.Element => {
   const { changeType, duration, id, condition, threshold, eventStatus, eventType } = notificationRule
+  const actualChangeTypeOptions = getFilteredOptions(isChaosFEEnabled, changeTypeOptions, ChangeType.CHAOS_EXPERIMENT)
+
   switch (condition?.value) {
     case Condition.CHANGE_IMPACT:
       return (
@@ -50,7 +55,7 @@ const renderConnectedFields = (
               <Text>{getString('cv.notifications.changeType')}</Text>
               <MultiSelectDropDown
                 value={getArrayOrEmpty(changeType)}
-                items={changeTypeOptions}
+                items={actualChangeTypeOptions}
                 className={css.field}
                 onChange={option => {
                   handleChangeField(notificationRule, option, 'changeType', { threshold: threshold || defaultOption })
@@ -147,7 +152,7 @@ const renderConnectedFields = (
               <Text>{getString('cv.notifications.changeType')}</Text>
               <MultiSelectDropDown
                 value={getArrayOrEmpty(changeType)}
-                items={changeTypeOptions}
+                items={actualChangeTypeOptions}
                 className={css.field}
                 onChange={option => {
                   handleChangeField(notificationRule, option, 'changeType')
@@ -209,10 +214,13 @@ export default function NotificationRuleRow({
 }: NotificationRuleRowProps): JSX.Element {
   const { getString } = useStrings()
   const SRM_CODE_ERROR_NOTIFICATIONS = useFeatureFlag(FeatureFlag.SRM_CODE_ERROR_NOTIFICATIONS)
+  const isChaosFEEnabled = useFeatureFlag(FeatureFlag.SRM_INTERNAL_CHANGE_SOURCE_CE)
 
-  const actualConditionOptions = SRM_CODE_ERROR_NOTIFICATIONS
-    ? conditionOptions
-    : conditionOptions.filter(el => el.value != Condition.CODE_ERRORS)
+  const actualConditionOptions = getFilteredOptions(
+    SRM_CODE_ERROR_NOTIFICATIONS,
+    conditionOptions,
+    Condition.CODE_ERRORS
+  )
 
   return (
     <>
@@ -229,7 +237,7 @@ export default function NotificationRuleRow({
             }}
           />
         </Layout.Vertical>
-        {renderConnectedFields(notificationRule, index, handleChangeField, getString)}
+        {renderConnectedFields(notificationRule, index, handleChangeField, isChaosFEEnabled, getString)}
         {showDeleteNotificationsIcon ? (
           <Container padding={{ top: 'large' }}>
             <Button

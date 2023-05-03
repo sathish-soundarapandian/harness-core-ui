@@ -40,7 +40,7 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { setupMode } from '../PropagateWidget/PropagateWidget'
-import SelectDeploymentType from '../SelectDeploymentType'
+import SelectDeploymentType from '../SelectDeploymentType/SelectDeploymentType'
 import css from './DeployServiceDefinition.module.scss'
 
 function DeployServiceDefinition(): React.ReactElement {
@@ -343,13 +343,16 @@ function DeployServiceDefinition(): React.ReactElement {
         handleGitOpsCheckChanged={handleGitOpsCheckChanged}
         templateLinkConfig={customDeploymentData}
         addOrUpdateTemplate={isServiceEntityModalView ? undefined : addOrUpdateTemplate}
-        shouldShowGCFEnvTypeDropdown={true}
-        googleCloudFunctionEnvType={defaultTo(
-          (stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec as GoogleCloudFunctionsServiceSpec)
-            ?.environmentType as GoogleCloudFunctionsEnvType,
-          (deploymentMetadata as GoogleCloudFunctionDeploymentMetaData)?.environmentType as GoogleCloudFunctionsEnvType
-        )}
-        handleGCFEnvTypeChange={handleGCFEnvTypeChange}
+        googleCloudFunctionsSpecificProps={{
+          shouldShowGCFEnvTypeDropdown: true,
+          googleCloudFunctionEnvType: defaultTo(
+            (stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec as GoogleCloudFunctionsServiceSpec)
+              ?.environmentType as GoogleCloudFunctionsEnvType,
+            (deploymentMetadata as GoogleCloudFunctionDeploymentMetaData)
+              ?.environmentType as GoogleCloudFunctionsEnvType
+          ),
+          handleGCFEnvTypeChange: handleGCFEnvTypeChange
+        }}
       />
       {!!selectedDeploymentType && (
         <Layout.Horizontal>

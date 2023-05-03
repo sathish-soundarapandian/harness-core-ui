@@ -148,5 +148,6 @@ export enum PAGE_NAME {
   SSCAHomePage = 'SSCAHomePage',
   SSCAOverviewPage = 'SSCAOverviewPage',
   IDPAdminPage = 'IDPAdminPage',
-  ETHomePage = 'ETHomePage'
+  ETHomePage = 'ETHomePage',
+  ETTrialPage = 'ETTrialPage'
 }

@@ -134,7 +134,7 @@ export function getStepPaletteModuleInfosFromStage(
       category = 'CustomDeployment'
       break
     case ServiceDeploymentType.Asg:
-      category = 'AutoScalingGroup'
+      category = 'AWS Auto Scaling Group'
       break
     case ServiceDeploymentType.GoogleCloudFunctions: {
       if (environmentType === GoogleCloudFunctionsEnvType.GenOne) {

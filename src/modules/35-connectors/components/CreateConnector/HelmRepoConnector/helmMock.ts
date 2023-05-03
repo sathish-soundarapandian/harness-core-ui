@@ -17,7 +17,7 @@ export const dockerMock: ConnectorInfoDTO = {
   type: 'HttpHelmRepo',
   spec: {
     delegateSelectors: [],
-    helmRepoUrl: 'https://index.docker.io/v2/',
+    helmRepoUrl: 'oci://index.docker.io/v2/',
     auth: { type: 'Anonymous' }
   }
 }
@@ -31,7 +31,7 @@ export const backButtonMock: ConnectorInfoDTO = {
   tags: {},
   type: 'HttpHelmRepo',
   spec: {
-    helmRepoUrl: 'https://index.docker.io/v2/',
+    helmRepoUrl: 'oci://index.docker.io/v2/',
     auth: { type: 'UsernamePassword', spec: { username: 'dev', passwordRef: 'account.b13' } }
   }
 }

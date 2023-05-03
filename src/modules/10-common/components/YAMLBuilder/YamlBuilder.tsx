@@ -638,7 +638,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           <Container padding={{ left: 'small' }}>{renderEditorControls()}</Container>
         </Layout.Horizontal>
         {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
-          <div className={css.flexCenter}>
+          <div className={cx(css.flexCenter, css.validationStatus)}>
             <Popover
               interactionKind={PopoverInteractionKind.HOVER}
               position={PopoverPosition.TOP}
@@ -917,9 +917,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         pluginType === PluginType.Script
           ? sanitizedPluginData
           : {
-              ...(!isEmpty(sanitizedPluginData) ? { with: sanitizedPluginData } : {}),
-              ...(pluginUses ? { uses: pluginUses } : {}),
-              ...(pluginImage ? { image: pluginImage } : {})
+              ...(!isEmpty(sanitizedPluginData) && { with: sanitizedPluginData }),
+              ...(pluginUses && { uses: pluginUses }),
+              ...(pluginImage && { image: pluginImage })
             },
       type: pluginType
     }

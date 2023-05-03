@@ -12,14 +12,12 @@ import { Link, useParams } from 'react-router-dom'
 import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
+import { numberFormatter } from '@common/utils/utils'
 import type { UseStringsReturn } from 'framework/strings'
 import type { SLOConsumptionBreakdown } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getSearchString } from '@cv/utils/CommonUtils'
-import {
-  RenderSLIType,
-  RenderTarget
-} from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/components/AddSlos/components/SLOList.utils'
+import { RenderTarget } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/components/AddSlos/components/SLOList.utils'
 import {
   getProjectAndOrgColumn,
   getColumsForProjectAndAccountLevel
@@ -146,34 +144,20 @@ export const durationAsString = (consumptionMinutes: number): string => {
   return [daysFormatted, hoursFormatted, minutesFormatted, secondsFormatted].join('')
 }
 
-export const RenderErrorBudgetBurned: Renderer<CellProps<any>> = ({ row }) => {
-  const slo = row.original
-  return (
-    <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
-      {durationAsString(slo?.errorBudgetBurned)}
-    </Text>
-  )
-}
-export const RenderContributedErrorBudgetBurned: Renderer<CellProps<any>> = ({ row }) => {
-  const slo = row.original
-  return (
-    <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
-      {durationAsString(slo?.contributedErrorBudgetBurned)}
-    </Text>
-  )
-}
-
 export const getConsumptionTableColums = ({
   getString,
-  isAccountLevel
+  isAccountLevel,
+  isRequestBased
 }: {
   getString: UseStringsReturn['getString']
   isAccountLevel: boolean
+  isRequestBased?: boolean
 }) => {
   const allColumns = [
     {
       accessor: 'sloName',
       Header: getString('cv.slos.sloName').toUpperCase(),
+      width: '15%',
       Cell: RenderSLOName
     },
     ...getProjectAndOrgColumn({ getString }),
@@ -184,14 +168,9 @@ export const getConsumptionTableColums = ({
       Cell: RenderMonitoredService
     },
     {
-      accessor: 'sliType',
-      Header: getString('cv.slos.sliType'),
-      Cell: RenderSLIType
-    },
-    {
       accessor: 'weightagePercentage',
       Header: getString('cv.CompositeSLO.Consumption.AssignedWeightage').toUpperCase(),
-      width: '12%',
+      width: '15%',
       Cell: RenderAssignedWeightage
     },
     {
@@ -208,12 +187,28 @@ export const getConsumptionTableColums = ({
       accessor: 'errorBudgetBurned',
       Header: getString('cv.CompositeSLO.Consumption.ErrorBudgetBurned').toUpperCase(),
       width: '15%',
-      Cell: RenderErrorBudgetBurned
+      Cell: ({ row }: { row: { original: SLOConsumptionBreakdown } }) => {
+        const slo = row.original
+        return (
+          <Text font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+            {isRequestBased ? numberFormatter(slo?.errorBudgetBurned) : durationAsString(slo?.errorBudgetBurned)}
+          </Text>
+        )
+      }
     },
     {
       accessor: 'contributedErrorBudgetBurned',
       Header: getString('cv.CompositeSLO.Consumption.ContributedErrorBudgetBurned').toUpperCase(),
-      Cell: RenderContributedErrorBudgetBurned
+      Cell: ({ row }: { row: { original: SLOConsumptionBreakdown } }) => {
+        const slo = row.original
+        return (
+          <Text font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+            {isRequestBased
+              ? numberFormatter(slo?.contributedErrorBudgetBurned)
+              : durationAsString(slo?.contributedErrorBudgetBurned)}
+          </Text>
+        )
+      }
     }
   ]
 

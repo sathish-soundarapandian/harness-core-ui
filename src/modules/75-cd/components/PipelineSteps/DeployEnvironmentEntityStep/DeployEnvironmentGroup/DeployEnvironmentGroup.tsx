@@ -223,7 +223,7 @@ export default function DeployEnvironmentGroup({
         flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
         className={css.inputField}
       >
-        {CDS_OrgAccountLevelServiceEnvEnvGroup && !gitOpsEnabled ? (
+        {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
           <MultiTypeEnvironmentGroupField
             tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
             label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
@@ -283,7 +283,11 @@ export default function DeployEnvironmentGroup({
       <Layout.Vertical className={css.mainContent} spacing="medium">
         {
           <FormInput.CheckBox
-            label={getString('cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel')}
+            label={
+              gitOpsEnabled
+                ? getString('cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployClusterLabel')
+                : getString('cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel')
+            }
             name="parallel"
           />
         }

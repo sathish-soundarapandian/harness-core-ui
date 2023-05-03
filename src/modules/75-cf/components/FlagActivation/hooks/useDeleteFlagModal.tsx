@@ -6,19 +6,18 @@
  */
 
 import React from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import { useToaster, Text } from '@harness/uicore'
-import { Intent } from '@harness/design-system'
+import { useToaster, Text, Layout } from '@harness/uicore'
+import { FontVariation, Intent } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import { useStrings } from 'framework/strings'
-import routes from '@common/RouteDefinitions'
 import type { DeleteFeatureFlagQueryParams, Feature, GitSyncErrorResponse } from 'services/cf'
-import { useConfirmAction, useQueryParams } from '@common/hooks'
+import { useConfirmAction } from '@common/hooks'
 import { GitSyncFormValues, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
 import { getErrorMessage, showToaster } from '@cf/utils/CFUtils'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import SaveFlagToGitModal from '../../SaveFlagToGitModal/SaveFlagToGitModal'
+import css from '../FlagActivationDetails.module.scss'
 
 interface UseDeleteFlagModalProps {
   featureFlag: Feature
@@ -28,6 +27,7 @@ interface UseDeleteFlagModalProps {
     mutateRequestOptions?: MutateRequestOptions<DeleteFeatureFlagQueryParams, void> | undefined
   ) => void
   queryParams: DeleteFeatureFlagQueryParams
+  onSuccess: () => void
 }
 
 interface UseDeleteFlagModalReturn {
@@ -35,22 +35,11 @@ interface UseDeleteFlagModalReturn {
 }
 
 const useDeleteFlagModal = (props: UseDeleteFlagModalProps): UseDeleteFlagModalReturn => {
-  const { featureFlag, gitSync, queryParams, deleteFeatureFlag } = props
+  const { featureFlag, gitSync, queryParams, deleteFeatureFlag, onSuccess } = props
   const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.DELETED_FLAG)
 
-  const urlQuery: Record<string, string> = useQueryParams()
-  const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
-
-  const { showError } = useToaster()
+  const { showError, clear } = useToaster()
   const { getString } = useStrings()
-  const history = useHistory()
-
-  const featureFlagListURL =
-    routes.toCFFeatureFlags({
-      projectIdentifier: projectIdentifier,
-      orgIdentifier: orgIdentifier,
-      accountId
-    }) + `${urlQuery?.activeEnvironment ? `?activeEnvironment=${urlQuery.activeEnvironment}` : ''}`
 
   const [showGitModal, hideGitModal] = useModalHook(() => {
     return (
@@ -79,13 +68,15 @@ const useDeleteFlagModal = (props: UseDeleteFlagModalProps): UseDeleteFlagModalR
     }
 
     try {
+      clear()
+
       await deleteFeatureFlag(featureFlag.identifier, { queryParams: { ...queryParams, commitMsg } })
 
       if (gitSync.isGitSyncEnabled && gitSyncFormValues?.autoCommit) {
         await gitSync.handleAutoCommit(gitSyncFormValues?.autoCommit)
       }
 
-      history.replace(featureFlagListURL)
+      onSuccess()
       showToaster(getString('cf.messages.flagDeleted'))
     } catch (error: any) {
       if (error.status === GIT_SYNC_ERROR_CODE) {
@@ -100,13 +91,18 @@ const useDeleteFlagModal = (props: UseDeleteFlagModalProps): UseDeleteFlagModalR
     title: getString('cf.featureFlags.deleteFlag'),
     confirmText: getString('delete'),
     message: (
-      <Text>
-        <span
-          dangerouslySetInnerHTML={{
-            __html: getString('cf.featureFlags.deleteFlagMessage', { name: featureFlag.name })
-          }}
-        />
-      </Text>
+      <Layout.Vertical flex={{ justifyContent: 'space-between' }} spacing="large" className={css.deleteFlagModalText}>
+        <Text tag="div" font={{ variation: FontVariation.BODY2 }}>
+          {getString('cf.featureFlags.deleteFlagWarning')}
+        </Text>
+        <Text tag="div">
+          <span
+            dangerouslySetInnerHTML={{
+              __html: getString('cf.featureFlags.deleteFlagMessage', { name: featureFlag.name })
+            }}
+          />
+        </Text>
+      </Layout.Vertical>
     ),
     intent: Intent.DANGER,
     action: async () => {

@@ -73,10 +73,10 @@ function AsgCanaryDeployWidget(
   return (
     <Formik<AsgCanaryDeployData>
       onSubmit={(values: AsgCanaryDeployData) => {
-        onUpdate?.(values)
+        onUpdate && onUpdate(values)
       }}
       validate={(values: AsgCanaryDeployData) => {
-        onChange?.(values)
+        onChange && onChange(values)
       }}
       formName="AsgCanaryDeploy"
       initialValues={initialValues}
@@ -93,7 +93,7 @@ function AsgCanaryDeployWidget(
         setFormikRef(formikRef, formik)
         return (
           <>
-            {stepViewType === StepViewType.Template ? null : (
+            {stepViewType !== StepViewType.Template && (
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormInput.InputWithIdentifier
                   inputLabel={getString('name')}
@@ -129,20 +129,21 @@ function AsgCanaryDeployWidget(
                 allowableTypes={allowableTypes}
                 disabledType
               />
-              {(getMultiTypeFromValue(values?.spec?.instanceSelection?.spec?.count) === MultiTypeInputType.RUNTIME ||
-                getMultiTypeFromValue(values?.spec?.instanceSelection?.spec?.percentage) ===
+              {(getMultiTypeFromValue(get(values, 'spec.instanceSelection.spec.count')) ===
+                MultiTypeInputType.RUNTIME ||
+                getMultiTypeFromValue(get(values, 'spec.instanceSelection.spec.percentage')) ===
                   MultiTypeInputType.RUNTIME) && (
                 <ConfigureOptions
                   value={
-                    (values?.spec?.instanceSelection?.spec?.count as string) ||
-                    (values?.spec?.instanceSelection?.spec?.percentage as string)
+                    get(values, 'spec.instanceSelection.spec.count') ||
+                    get(values, 'spec.instanceSelection.spec.percentage')
                   }
                   type="String"
                   variableName={getString('instanceFieldOptions.instances')}
                   showRequiredField={false}
                   showDefaultField={false}
                   onChange={value => {
-                    setFieldValue('instances', value)
+                    setFieldValue('spec.instanceSelection.spec.count', value)
                   }}
                   isReadonly={readonly}
                 />
@@ -186,8 +187,9 @@ const AsgCanaryDeployInputStep: React.FC<AsgCanaryDeployProps> = ({
           className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
-      {(getMultiTypeFromValue(template?.spec?.instanceSelection?.spec?.count) === MultiTypeInputType.RUNTIME ||
-        getMultiTypeFromValue(template?.spec?.instanceSelection?.spec?.percentage) === MultiTypeInputType.RUNTIME) && (
+      {(getMultiTypeFromValue(get(template, 'spec.instanceSelection.spec.count')) === MultiTypeInputType.RUNTIME ||
+        getMultiTypeFromValue(get(template, 'spec.instanceSelection.spec.percentage')) ===
+          MultiTypeInputType.RUNTIME) && (
         <div className={cx(stepCss.formGroup, { [stepCss.md]: !isTemplateUsageView })}>
           <FormInstanceDropdown
             expressions={expressions}
@@ -248,9 +250,9 @@ export class AsgCanaryDeployStep extends PipelineStep<AsgCanaryDeployData> {
           initialValues={initialValues}
           onUpdate={onUpdate}
           stepViewType={stepViewType}
-          template={inputSetData?.template}
-          readonly={inputSetData?.readonly}
-          path={inputSetData?.path}
+          template={get(inputSetData, 'template')}
+          readonly={get(inputSetData, 'readonly')}
+          path={get(inputSetData, 'path')}
           allowableTypes={allowableTypes}
         />
       )
@@ -289,6 +291,7 @@ export class AsgCanaryDeployStep extends PipelineStep<AsgCanaryDeployData> {
       get(values, 'spec.instanceSelection.type') === InstanceTypes.Instances &&
       has(values, 'spec.instanceSelection.spec.percentage')
     ) {
+      /* istanbul ignore next */
       delete values.spec.instanceSelection.spec?.percentage
     }
 
@@ -296,6 +299,7 @@ export class AsgCanaryDeployStep extends PipelineStep<AsgCanaryDeployData> {
       get(values, 'spec.instanceSelection.type') === InstanceTypes.Percentage &&
       has(values, 'spec.instanceSelection.spec.count')
     ) {
+      /* istanbul ignore next */
       delete values.spec.instanceSelection.spec?.count
     }
 
@@ -311,10 +315,10 @@ export class AsgCanaryDeployStep extends PipelineStep<AsgCanaryDeployData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const errors = { spec: {} } as any
-    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
+    if (getMultiTypeFromValue(get(template, 'timeout')) === MultiTypeInputType.RUNTIME) {
       let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
-      if (isRequired) {
-        timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
+      if (isRequired && getString) {
+        timeoutSchema = timeoutSchema.required(getString('validation.timeout10SecMinimum'))
       }
       const timeout = Yup.object().shape({
         timeout: timeoutSchema
@@ -332,14 +336,16 @@ export class AsgCanaryDeployStep extends PipelineStep<AsgCanaryDeployData> {
       }
     }
     if (
-      getMultiTypeFromValue(template?.spec?.instanceSelection?.spec?.count) === MultiTypeInputType.RUNTIME ||
-      getMultiTypeFromValue(template?.spec?.instanceSelection?.spec?.percentage) === MultiTypeInputType.RUNTIME
+      (getMultiTypeFromValue(get(template, 'spec.instanceSelection.spec.count')) === MultiTypeInputType.RUNTIME ||
+        getMultiTypeFromValue(get(template, 'spec.instanceSelection.spec.percentage')) ===
+          MultiTypeInputType.RUNTIME) &&
+      getString
     ) {
       const instanceSelection = Yup.object().shape({
         instanceSelection: getInstanceDropdownSchema(
           {
             required: true,
-            requiredErrorMessage: getString?.('fieldRequired', { field: 'Instance' })
+            requiredErrorMessage: getString('fieldRequired', { field: 'Instance' })
           },
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           getString!

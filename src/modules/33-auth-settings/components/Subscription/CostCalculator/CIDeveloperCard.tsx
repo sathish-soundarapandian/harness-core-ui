@@ -15,9 +15,9 @@ import SliderBar from './SliderBar'
 import { Item, Header } from './FFDeveloperCard'
 import css from './CostCalculator.module.scss'
 
-const generateRangeArray = (min: number, max: number, stepSize: number): number[] => {
+const generateRangeArray = (min: number, max: number): number[] => {
   const rangeArray = []
-  for (let i = min; i <= max; i += stepSize) {
+  for (let i = min; i <= max; i += 1) {
     rangeArray[i] = i
   }
   return rangeArray
@@ -112,7 +112,7 @@ const CIDeveloperCard: React.FC<CIDeveloperCardProps> = ({
   }, [newPlan])
 
   const rangeArray = React.useMemo((): number[] => {
-    return generateRangeArray(0, 300, 50)
+    return generateRangeArray(0, 300)
   }, [])
   const selectedNumberOfDevelopers = rangeArray.findIndex((num: number) => num === numberOfDevelopers)
   const setValue = (newValue: number): void => {
