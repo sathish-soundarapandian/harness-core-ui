@@ -22,7 +22,6 @@ import { StrategyType, strategyIconMap, stringsMap, Strategy } from '@pipeline/u
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
 import { StepMode } from '@pipeline/utils/stepUtils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import css from './ManualInterventionTab.module.scss'
 
@@ -47,12 +46,11 @@ export function ManualInterventionTab(props: ManualInterventionTabProps): React.
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const { PIPELINE_ROLLBACK } = useFeatureFlags()
   const allowedStrategies =
     allowedStrategiesFromProps ||
-    allowedStrategiesAsPerStep(stageType)
-      [StepMode.STEP].filter(st => st !== Strategy.ManualIntervention)
-      .filter(st => PIPELINE_ROLLBACK || st !== Strategy.PipelineRollback) // filter out PipelineRollback unless FF is true
+    allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
+      st => st !== Strategy.ManualIntervention && st !== Strategy.PipelineRollback
+    )
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
     const interruptType = e.target.value as HandleManualInterventionInterruptQueryParams['interruptType']

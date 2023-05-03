@@ -132,65 +132,74 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
   })
 
+  const hideExecutionActionButtons = React.useMemo(() => {
+    const parentRollbackStageId = get(pipelineExecutionDetail?.rollbackGraph?.pipelineExecutionSummary, [
+      'parentStageInfo',
+      'stagenodeid'
+    ])
+    return !isEmpty(parentRollbackStageId) && parentRollbackStageId === selectedStageId
+  }, [pipelineExecutionDetail?.rollbackGraph?.pipelineExecutionSummary, selectedStageId])
+
   return (
     <div className={css.main}>
       <div className={css.stageDetails}>
         <div className={css.lhs} data-has-sibling={Boolean(stage && stageDetail?.component)}>
           <div className={css.stageTop}>
             <div className={css.stageName}>{stage?.name}</div>
-            {!!pipelineExecutionDetail?.pipelineExecutionSummary?.allowStageExecutions &&
-            isExecutionComplete(stage?.status as ExecutionStatus) ? (
-              <RbacButton
-                icon="repeat"
-                tooltip={getString('pipeline.execution.actions.rerunStage')}
-                onClick={runPipeline}
-                variation={ButtonVariation.ICON}
-                disabled={!canExecute}
-                minimal
-                withoutBoxShadow
-                small
-                tooltipProps={{
-                  isDark: true
-                }}
-              />
-            ) : (
-              <ExecutionActions
-                executionStatus={stageNode?.status as ExecutionStatus}
-                refetch={refetch}
-                source={source}
-                params={{
-                  orgIdentifier: get(
-                    pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary,
-                    'orgIdentifier',
-                    orgIdentifier
-                  ),
-                  pipelineIdentifier,
-                  projectIdentifier: get(
-                    pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary,
-                    'projectIdentifier',
-                    projectIdentifier
-                  ),
-                  accountId,
-                  executionIdentifier: get(
-                    pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary,
-                    'planExecutionId',
-                    executionIdentifier
-                  ),
-                  module,
-                  repoIdentifier: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoIdentifier,
-                  connectorRef: pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef,
-                  repoName: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName,
-                  branch: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch,
-                  storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
-                }}
-                noMenu
-                stageName={stageNode?.name}
-                stageId={stageNode?.uuid}
-                canEdit={canEdit}
-                canExecute={canExecute}
-                modules={pipelineExecutionDetail?.pipelineExecutionSummary?.modules}
-              />
-            )}
+            {!hideExecutionActionButtons &&
+              (!!pipelineExecutionDetail?.pipelineExecutionSummary?.allowStageExecutions &&
+              isExecutionComplete(stage?.status as ExecutionStatus) ? (
+                <RbacButton
+                  icon="repeat"
+                  tooltip={getString('pipeline.execution.actions.rerunStage')}
+                  onClick={runPipeline}
+                  variation={ButtonVariation.ICON}
+                  disabled={!canExecute}
+                  minimal
+                  withoutBoxShadow
+                  small
+                  tooltipProps={{
+                    isDark: true
+                  }}
+                />
+              ) : (
+                <ExecutionActions
+                  executionStatus={stageNode?.status as ExecutionStatus}
+                  refetch={refetch}
+                  source={source}
+                  params={{
+                    orgIdentifier: get(
+                      pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary,
+                      'orgIdentifier',
+                      orgIdentifier
+                    ),
+                    pipelineIdentifier,
+                    projectIdentifier: get(
+                      pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary,
+                      'projectIdentifier',
+                      projectIdentifier
+                    ),
+                    accountId,
+                    executionIdentifier: get(
+                      pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary,
+                      'planExecutionId',
+                      executionIdentifier
+                    ),
+                    module,
+                    repoIdentifier: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoIdentifier,
+                    connectorRef: pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef,
+                    repoName: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName,
+                    branch: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch,
+                    storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
+                  }}
+                  noMenu
+                  stageName={stageNode?.name}
+                  stageId={stageNode?.uuid}
+                  canEdit={canEdit}
+                  canExecute={canExecute}
+                  modules={pipelineExecutionDetail?.pipelineExecutionSummary?.modules}
+                />
+              ))}
           </div>
           {times}
           {/* TODO: Need to uncomment and finish */}
