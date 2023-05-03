@@ -6490,9 +6490,9 @@ export type GarArtifactSummary = ArtifactSummary & {
 
 export interface GarRequestDTO {
   runtimeInputYaml?: string
-  tag?: string
-  tagRegex?: string
-  tagsList?: string[]
+  version?: string
+  versionList?: string[]
+  versionRegex?: string
 }
 
 export interface GatewayAccountRequestDTO {
@@ -9434,7 +9434,9 @@ export interface InstanceGroupedByArtifact {
   lastDeployedAt?: number
   lastPlanExecutionId?: string
   pipelineIdentifier?: string
+  rollbackStatus?: 'UNAVAILABLE' | 'NOT_STARTED' | 'STARTED' | 'SUCCESS' | 'FAILURE'
   stageNodeExecutionId?: string
+  stageSetupId?: string
 }
 
 export interface InstanceGroupedByArtifactV2 {
@@ -28980,57 +28982,6 @@ export const deleteSamlMetaDataPromise = (
     signal
   )
 
-export interface DeleteSamlMetaDataForSamlSSOIdQueryParams {
-  accountIdentifier: string
-}
-
-export type DeleteSamlMetaDataForSamlSSOIdProps = Omit<
-  MutateProps<RestResponseSSOConfig, unknown, DeleteSamlMetaDataForSamlSSOIdQueryParams, string, void>,
-  'path' | 'verb'
->
-
-/**
- * Delete SAML Config for given SAML sso id
- */
-export const DeleteSamlMetaDataForSamlSSOId = (props: DeleteSamlMetaDataForSamlSSOIdProps) => (
-  <Mutate<RestResponseSSOConfig, unknown, DeleteSamlMetaDataForSamlSSOIdQueryParams, string, void>
-    verb="DELETE"
-    path={`/authentication-settings/delete-saml-metadata`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseDeleteSamlMetaDataForSamlSSOIdProps = Omit<
-  UseMutateProps<RestResponseSSOConfig, unknown, DeleteSamlMetaDataForSamlSSOIdQueryParams, string, void>,
-  'path' | 'verb'
->
-
-/**
- * Delete SAML Config for given SAML sso id
- */
-export const useDeleteSamlMetaDataForSamlSSOId = (props: UseDeleteSamlMetaDataForSamlSSOIdProps) =>
-  useMutate<RestResponseSSOConfig, unknown, DeleteSamlMetaDataForSamlSSOIdQueryParams, string, void>(
-    'DELETE',
-    `/authentication-settings/delete-saml-metadata`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Delete SAML Config for given SAML sso id
- */
-export const deleteSamlMetaDataForSamlSSOIdPromise = (
-  props: MutateUsingFetchProps<RestResponseSSOConfig, unknown, DeleteSamlMetaDataForSamlSSOIdQueryParams, string, void>,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<RestResponseSSOConfig, unknown, DeleteSamlMetaDataForSamlSSOIdQueryParams, string, void>(
-    'DELETE',
-    getConfig('ng/api'),
-    `/authentication-settings/delete-saml-metadata`,
-    props,
-    signal
-  )
-
 export interface DeleteLdapSettingsQueryParams {
   accountIdentifier?: string
 }
@@ -29782,6 +29733,97 @@ export const updateSamlMetaDataForSamlSSOIdPromise = (
     UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >('PUT', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload/${samlSSOId}`, props, signal)
+
+export interface DeleteSamlMetaDataForSamlSSOIdQueryParams {
+  accountIdentifier: string
+}
+
+export interface DeleteSamlMetaDataForSamlSSOIdPathParams {
+  samlSSOId: string
+}
+
+export type DeleteSamlMetaDataForSamlSSOIdProps = Omit<
+  MutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    DeleteSamlMetaDataForSamlSSOIdQueryParams,
+    void,
+    DeleteSamlMetaDataForSamlSSOIdPathParams
+  >,
+  'path' | 'verb'
+> &
+  DeleteSamlMetaDataForSamlSSOIdPathParams
+
+/**
+ * Delete SAML Config for given SAML sso id
+ */
+export const DeleteSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: DeleteSamlMetaDataForSamlSSOIdProps) => (
+  <Mutate<
+    RestResponseSSOConfig,
+    unknown,
+    DeleteSamlMetaDataForSamlSSOIdQueryParams,
+    void,
+    DeleteSamlMetaDataForSamlSSOIdPathParams
+  >
+    verb="DELETE"
+    path={`/authentication-settings/saml-metadata/${samlSSOId}/delete`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteSamlMetaDataForSamlSSOIdProps = Omit<
+  UseMutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    DeleteSamlMetaDataForSamlSSOIdQueryParams,
+    void,
+    DeleteSamlMetaDataForSamlSSOIdPathParams
+  >,
+  'path' | 'verb'
+> &
+  DeleteSamlMetaDataForSamlSSOIdPathParams
+
+/**
+ * Delete SAML Config for given SAML sso id
+ */
+export const useDeleteSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UseDeleteSamlMetaDataForSamlSSOIdProps) =>
+  useMutate<
+    RestResponseSSOConfig,
+    unknown,
+    DeleteSamlMetaDataForSamlSSOIdQueryParams,
+    void,
+    DeleteSamlMetaDataForSamlSSOIdPathParams
+  >(
+    'DELETE',
+    (paramsInPath: DeleteSamlMetaDataForSamlSSOIdPathParams) =>
+      `/authentication-settings/saml-metadata/${paramsInPath.samlSSOId}/delete`,
+    { base: getConfig('ng/api'), pathParams: { samlSSOId }, ...props }
+  )
+
+/**
+ * Delete SAML Config for given SAML sso id
+ */
+export const deleteSamlMetaDataForSamlSSOIdPromise = (
+  {
+    samlSSOId,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseSSOConfig,
+    unknown,
+    DeleteSamlMetaDataForSamlSSOIdQueryParams,
+    void,
+    DeleteSamlMetaDataForSamlSSOIdPathParams
+  > & { samlSSOId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseSSOConfig,
+    unknown,
+    DeleteSamlMetaDataForSamlSSOIdQueryParams,
+    void,
+    DeleteSamlMetaDataForSamlSSOIdPathParams
+  >('DELETE', getConfig('ng/api'), `/authentication-settings/saml-metadata/${samlSSOId}/delete`, props, signal)
 
 export interface SetSessionTimeoutAtAccountLevelQueryParams {
   accountIdentifier: string

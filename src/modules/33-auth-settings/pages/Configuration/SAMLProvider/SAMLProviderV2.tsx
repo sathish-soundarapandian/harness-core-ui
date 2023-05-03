@@ -21,7 +21,8 @@ import {
   useConfirmationDialog,
   Layout,
   Icon,
-  Switch
+  Switch,
+  IconName
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Menu, MenuItem } from '@blueprintjs/core'
@@ -31,10 +32,11 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   AuthenticationSettingsResponse,
   SAMLSettings,
+  useEnableDisableAuthenticationForSAMLSetting,
+  useUpdateAuthMechanism,
   useDeleteSamlMetaDataForSamlSSOId,
-  useEnableDisableAuthenticationForSAMLSetting
+  useGetSamlLoginTestV2
 } from 'services/cd-ng'
-import { useDeleteSamlMetaData, useUpdateAuthMechanism, useGetSamlLoginTest } from 'services/cd-ng'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { PermissionRequest } from '@auth-settings/pages/Configuration/Authentication'
@@ -44,6 +46,7 @@ import { FeatureWarningTooltip } from '@common/components/FeatureWarning/Feature
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { AuthenticationMechanisms } from '@rbac/utils/utils'
 import { useSAMLProviderModalV2 } from '@auth-settings/modals/SAMLProvider/useSAMLProviderModalV2'
+import { Providers } from '@auth-settings/modals/SAMLProvider/utils'
 import css from './SAMLProvider.module.scss'
 import cssConfiguration from '@auth-settings/pages/Configuration/Configuration.module.scss'
 
@@ -53,6 +56,13 @@ interface Props {
   permissionRequest: PermissionRequest
   canEdit: boolean
   setUpdating: Dispatch<SetStateAction<boolean>>
+}
+
+const samlIconMap: Record<Providers, IconName> = {
+  [Providers.AZURE]: 'service-azure',
+  [Providers.OKTA]: 'service-okta',
+  [Providers.ONE_LOGIN]: 'service-onelogin',
+  [Providers.OTHER]: 'main-more'
 }
 
 const SAMLProviderV2: React.FC<Props> = ({
@@ -67,41 +77,48 @@ const SAMLProviderV2: React.FC<Props> = ({
   const { showSuccess, showError } = useToaster()
   const { accountId } = useParams<AccountPathProps>()
   const [childWindow, setChildWindow] = React.useState<Window | null>(null)
+  const [samlIDToDelete, setSamlIdToDelete] = React.useState<string | undefined>()
   const samlEnabled = authSettings.authenticationMechanism === AuthenticationMechanisms.SAML
-  let samlSettings = authSettings.ngAuthSettings?.filter(
+  const samlSettings = authSettings.ngAuthSettings?.filter(
     settings => settings.settingsType === AuthenticationMechanisms.SAML
   ) as SAMLSettings[]
+  const enabledSamlProviders = samlSettings.filter(saml => saml.authenticationEnabled)
 
-  samlSettings = [...samlSettings, ...samlSettings]
   const { enabled: featureEnabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.SAML_SUPPORT
     }
   })
 
-  const { openSAMlProvider } = useSAMLProviderModalV2()
+  const onSuccess = (): void => {
+    refetchAuthSettings()
+  }
 
-  const { mutate: enableDisableSAMLSetting, loading } = useEnableDisableAuthenticationForSAMLSetting({
-    queryParams: { accountIdentifier: accountId, enable: true },
-    samlSSOId: ''
+  const { openSAMlProvider } = useSAMLProviderModalV2({
+    onSuccess
   })
+
+  const { mutate: enableDisableSAMLSetting, loading: loadingEnableDiableAuthSettings } =
+    useEnableDisableAuthenticationForSAMLSetting({
+      queryParams: { accountIdentifier: accountId, enable: true },
+      samlSSOId: ''
+    })
 
   const {
     data: samlLoginTestData,
     loading: fetchingSamlLoginTestData,
     error: samlLoginTestDataError,
     refetch: getSamlLoginTestData
-  } = useGetSamlLoginTest({
+  } = useGetSamlLoginTestV2({
     queryParams: {
-      accountId: accountId
+      accountIdentifier: accountId
     },
+    samlSSOId: '',
     lazy: true
   })
 
   const { mutate: deleteSamlSettings, loading: deletingSamlSettings } = useDeleteSamlMetaDataForSamlSSOId({
-    queryParams: {
-      accountIdentifier: accountId
-    }
+    samlSSOId: ''
   })
 
   const { mutate: updateAuthMechanismToSaml, loading: updatingAuthMechanismToSaml } = useUpdateAuthMechanism({
@@ -112,8 +129,8 @@ const SAMLProviderV2: React.FC<Props> = ({
   })
 
   React.useEffect(() => {
-    setUpdating(updatingAuthMechanismToSaml || deletingSamlSettings)
-  }, [updatingAuthMechanismToSaml, deletingSamlSettings, setUpdating])
+    setUpdating(updatingAuthMechanismToSaml || deletingSamlSettings || loadingEnableDiableAuthSettings)
+  }, [updatingAuthMechanismToSaml, deletingSamlSettings, loadingEnableDiableAuthSettings, setUpdating])
 
   const { openDialog: confirmSamlSettingsDelete } = useConfirmationDialog({
     titleText: getString('authSettings.deleteSamlProvider'),
@@ -123,10 +140,12 @@ const SAMLProviderV2: React.FC<Props> = ({
     confirmButtonText: getString('confirm'),
     cancelButtonText: getString('cancel'),
     onCloseDialog: async isConfirmed => {
-      /* istanbul ignore else */ if (isConfirmed) {
+      /* istanbul ignore else */ if (isConfirmed && samlIDToDelete) {
         try {
-          // add ssoId here.
-          const deleted = await deleteSamlSettings()
+          const deleted = await deleteSamlSettings('' as any, {
+            pathParams: { samlSSOId: samlIDToDelete },
+            queryParams: { accountIdentifier: accountId }
+          })
           /* istanbul ignore else */ if (deleted) {
             refetchAuthSettings()
             showSuccess(getString('authSettings.samlProviderDeleted'), 5000)
@@ -135,6 +154,7 @@ const SAMLProviderV2: React.FC<Props> = ({
           /* istanbul ignore next */ showError(getRBACErrorMessage(e), 5000)
         }
       }
+      setSamlIdToDelete(undefined)
     }
   })
 
@@ -175,19 +195,6 @@ const SAMLProviderV2: React.FC<Props> = ({
     titleText: getString('authSettings.enableSamlProvider'),
     contentText: getString('authSettings.enableSamlProviderDescription'),
     confirmButtonText: getString('confirm'),
-    customButtons: (
-      <Container flex width="100%">
-        <Button
-          className={css.leftMarginAuto}
-          variation={ButtonVariation.SECONDARY}
-          text={getString('test')}
-          disabled={!!childWindow || fetchingSamlLoginTestData}
-          onClick={() => {
-            getSamlLoginTestData()
-          }}
-        />
-      </Container>
-    ),
     cancelButtonText: getString('cancel'),
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
@@ -205,13 +212,21 @@ const SAMLProviderV2: React.FC<Props> = ({
     }
   })
 
-  const handleEnableDisableAuthentication = (e: React.FormEvent<HTMLInputElement>, ssoId?: string): void => {
+  const handleEnableDisableAuthentication = async (e: React.FormEvent<HTMLInputElement>, ssoId: string) => {
     const enable = e.currentTarget.checked
 
-    // enableDisableSAMLSetting('' as any, { samlSSOId: ssoId, enable: enable })
+    try {
+      const response = await enableDisableSAMLSetting('' as any, {
+        pathParams: { samlSSOId: ssoId },
+        queryParams: { enable, accountIdentifier: accountId }
+      })
+      if (response) {
+        refetchAuthSettings()
+      }
+    } catch (error) {
+      showError(getRBACErrorMessage(error), 5000)
+    }
   }
-
-  const handleDeleteAuthentication = (ssoId: string) => {}
 
   return (
     <Container margin="xlarge" background={Color.WHITE}>
@@ -235,7 +250,9 @@ const SAMLProviderV2: React.FC<Props> = ({
                   color={Color.GREY_900}
                   label={getString('authSettings.loginViaSAML')}
                   onChange={enableSamlProvide}
-                  disabled={!featureEnabled || !canEdit || updatingAuthMechanismToSaml}
+                  disabled={
+                    !featureEnabled || !canEdit || updatingAuthMechanismToSaml || enabledSamlProviders.length === 0
+                  }
                 />
               </Container>
             </Utils.WrapOptionalTooltip>
@@ -247,8 +264,9 @@ const SAMLProviderV2: React.FC<Props> = ({
                 <Card className={css.card}>
                   <Switch
                     onChange={e => {
-                      handleEnableDisableAuthentication(e, samlSetting.clientId)
+                      handleEnableDisableAuthentication(e, samlSetting.identifier)
                     }}
+                    checked={samlSetting.authenticationEnabled}
                   />
                   <Text color={Color.GREY_800} font={{ weight: 'bold' }} width="30%">
                     {samlSetting.displayName}
@@ -257,7 +275,7 @@ const SAMLProviderV2: React.FC<Props> = ({
                     <Text inline color={Color.GREY_300} font={FontVariation.SMALL}>
                       {`${getString('common.friendlyName')}: `}
                       <Text color={Color.BLACK} font={FontVariation.SMALL} inline>
-                        Test Name
+                        {samlSetting.friendlySamlName}
                       </Text>
                     </Text>
                   </Text>
@@ -265,7 +283,7 @@ const SAMLProviderV2: React.FC<Props> = ({
                     <Text font={FontVariation.SMALL} inline margin={{ right: 'small' }}>
                       {`${getString('typeLabel')}: `}
                     </Text>
-                    <Icon name="service-okta" margin={{ right: 'small' }} />
+                    <Icon name={samlIconMap[samlSetting.samlProviderType as Providers]} margin={{ right: 'small' }} />
                     <Text inline font={{ variation: FontVariation.BODY }}>
                       {samlSetting.samlProviderType}
                     </Text>
@@ -276,7 +294,7 @@ const SAMLProviderV2: React.FC<Props> = ({
                       variation={ButtonVariation.SECONDARY}
                       disabled={!!childWindow || fetchingSamlLoginTestData}
                       onClick={() => {
-                        getSamlLoginTestData()
+                        getSamlLoginTestData({ pathParams: { samlSSOId: samlSetting.identifier } })
                       }}
                     />
                   </Container>
@@ -293,7 +311,10 @@ const SAMLProviderV2: React.FC<Props> = ({
                         />
                         <RbacMenuItem
                           text={getString('delete')}
-                          onClick={confirmSamlSettingsDelete}
+                          onClick={() => {
+                            confirmSamlSettingsDelete()
+                            setSamlIdToDelete(samlSetting.identifier)
+                          }}
                           permission={{
                             ...permissionRequest,
                             permission: PermissionIdentifier.DELETE_AUTHSETTING

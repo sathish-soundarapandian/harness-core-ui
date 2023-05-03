@@ -50,7 +50,7 @@ const handleSuccess = (
   successCallback(isCreate ? createText : updateText, 5000)
 }
 
-const AdditionalFunctions: React.FC<StepProps<FormValues>> = props => {
+const AdditionalFunctions: React.FC<StepProps<FormValues> & { onSubmit: () => void }> = props => {
   const samlProviderType = props.prevStepData?.samlProviderType
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
@@ -96,12 +96,11 @@ const AdditionalFunctions: React.FC<StepProps<FormValues>> = props => {
               getString('authSettings.samlProviderAddedSuccessfully'),
               getString('authSettings.samlProviderUpdatedSuccessfully')
             )
+            props.onSubmit()
           }
         } catch (e) {
           /* istanbul ignore next */ modalErrorHandler?.showDanger(getRBACErrorMessage(e))
         }
-        // const formDataToSubmit = createFormData({ ...props.prevStepData, ...values } as FormValues)
-        // handle submit here
       }}
     >
       {({ values, setFieldValue }) => (

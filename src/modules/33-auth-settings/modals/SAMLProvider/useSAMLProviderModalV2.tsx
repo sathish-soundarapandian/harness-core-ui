@@ -17,12 +17,16 @@ import IdentityProvider from './steps/IdentityProvider'
 import AdditionalFunctions from './steps/AdditionalFunctions'
 import css from './useSAMLProvider.module.scss'
 
+interface Props {
+  onSuccess: () => void
+}
+
 interface UseSAMLProviderReturn {
   openSAMlProvider: (_samlProvider?: SAMLSettings) => void
   closeSAMLProvider: () => void
 }
 
-export const useSAMLProviderModalV2 = (): UseSAMLProviderReturn => {
+export const useSAMLProviderModalV2 = ({ onSuccess }: Props): UseSAMLProviderReturn => {
   const { getString } = useStrings()
   const [samlProvider, setSamlProvider] = React.useState<SAMLSettings>()
   const [showModal, hideModal] = useModalHook(
@@ -45,7 +49,13 @@ export const useSAMLProviderModalV2 = (): UseSAMLProviderReturn => {
             <Overview name={getString('overview')} samlSettings={samlProvider} />
             <SelectProvider name={getString('authSettings.selectProvider')} />
             <IdentityProvider name={getString('authSettings.identityProviderLabel')} samlProvider={samlProvider} />
-            <AdditionalFunctions name={getString('authSettings.additionalFunctions')} />
+            <AdditionalFunctions
+              name={getString('authSettings.additionalFunctions')}
+              onSubmit={() => {
+                onSuccess()
+                hideModal()
+              }}
+            />
           </StepWizard>
         </Container>
         <Button
@@ -54,6 +64,7 @@ export const useSAMLProviderModalV2 = (): UseSAMLProviderReturn => {
           iconProps={{ size: 18 }}
           onClick={() => {
             hideModal()
+            onSuccess()
           }}
           className={css.crossIcon}
         />
