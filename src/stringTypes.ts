@@ -4800,6 +4800,7 @@ export interface StringsMap {
   'pipeline.stepDescription.AppResize': string
   'pipeline.stepDescription.AwsLambdaDeploy': string
   'pipeline.stepDescription.AwsLambdaDeployRollback': string
+  'pipeline.stepDescription.AwsSAMDeploy': string
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string

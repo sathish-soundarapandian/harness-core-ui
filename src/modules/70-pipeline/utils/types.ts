@@ -104,3 +104,11 @@ export interface CloudFunctionTrafficShiftExecutionStepInitialValues extends Ste
     trafficPercent: number
   }
 }
+
+export interface AwsSAMDeployStepInitialValues extends StepElementConfig {
+  spec: {
+    connectorRef: string
+    image: string
+    imagePullPolicy: string
+  }
+}
