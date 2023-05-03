@@ -339,7 +339,8 @@ function HelmWithOCI({
                         !loadingChartVersions &&
                           fetchChartVersions({
                             chartName: formik.values?.chartName,
-                            helmVersion: formik.values?.helmVersion
+                            helmVersion: formik.values?.helmVersion,
+                            folderPath: formik.values?.basePath
                           })
                       }
                     }}

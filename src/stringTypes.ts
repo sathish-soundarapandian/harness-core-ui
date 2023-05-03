@@ -2909,6 +2909,7 @@ export interface StringsMap {
   'connectors.hashiCorpVault.vaultUrl': string
   'connectors.hashicorpVaultDetails': string
   'connectors.helmRepo.helmRepoUrl': string
+  'connectors.httpHelm.helmRepoURLValidation': string
   'connectors.httpHelm.httpHelmRepoUrl': string
   'connectors.ifReq': string
   'connectors.jenkins.bearerTokenRequired': string

@@ -44,7 +44,7 @@ export const isAllowedBambooArtifactDeploymentTypes = (deploymentType: ServiceDe
   ].includes(deploymentType as ServiceDeploymentType)
 
 export const isAllowedAMIDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
-  deploymentType === ServiceDeploymentType.CustomDeployment || deploymentType === ServiceDeploymentType.TAS
+  deploymentType === ServiceDeploymentType.CustomDeployment
 
 export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
   return (
