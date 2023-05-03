@@ -115,11 +115,11 @@ export function TemplateYamlDiffViewWrapper({
           versionLabel: defaultTo(templateResponse?.versionLabel, ''),
           ...getGitQueryParamsWithParentScope({
             storeMetadata: {
-              branch: templateResponse?.gitDetails?.branch,
-              connectorRef: templateResponse?.connectorRef,
-              repoName: templateResponse?.gitDetails?.repoName,
-              filePath: templateResponse?.gitDetails?.filePath,
-              storeType: templateResponse?.storeType
+              branch: defaultTo(templateResponse?.gitDetails?.branch, storeMetadata?.branch),
+              connectorRef: defaultTo(templateResponse?.connectorRef, storeMetadata?.connectorRef),
+              repoName: defaultTo(templateResponse?.gitDetails?.repoName, storeMetadata?.repoName),
+              filePath: defaultTo(templateResponse?.gitDetails?.filePath, storeMetadata?.filePath),
+              storeType: defaultTo(templateResponse?.storeType, storeMetadata?.storeType)
             },
             params
           })
