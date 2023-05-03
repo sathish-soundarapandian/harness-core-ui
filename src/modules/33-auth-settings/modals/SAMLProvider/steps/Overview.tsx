@@ -10,7 +10,7 @@ import css from '../useSAMLProvider.module.scss'
 
 interface OverviewForm {
   displayName: string
-  friendlyName?: string
+  friendlySamlName?: string
 }
 
 interface OverviewProps extends StepProps<FormValues> {
@@ -28,7 +28,7 @@ const Overview: React.FC<OverviewProps> = props => {
       }}
       validationSchema={Yup.object().shape({
         displayName: Yup.string().trim().required(getString('common.validation.nameIsRequired')),
-        friendlyName: Yup.string().trim()
+        friendlySamlName: Yup.string().trim()
       })}
       onSubmit={values => {
         props.nextStep?.({ ...props.prevStepData, ...values } as FormValues)
@@ -47,7 +47,7 @@ const Overview: React.FC<OverviewProps> = props => {
                 />
                 <FormInput.Text
                   placeholder={getString('common.friendlyNamePlaceholder')}
-                  name="friendlyName"
+                  name="friendlySamlName"
                   label={getString('common.friendlyName')}
                   isOptional
                 />

@@ -55,6 +55,7 @@ export const useSAMLProviderModalV2 = ({ onSuccess }: Props): UseSAMLProviderRet
                 onSuccess()
                 hideModal()
               }}
+              samlProvider={samlProvider}
             />
           </StepWizard>
         </Container>

@@ -26,6 +26,7 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Menu, MenuItem } from '@blueprintjs/core'
+import { isNull, omitBy } from 'lodash-es'
 import { useToaster } from '@common/components'
 import { useStrings, String } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -306,7 +307,7 @@ const SAMLProviderV2: React.FC<Props> = ({
                       <Menu>
                         <MenuItem
                           text={getString('edit')}
-                          onClick={() => openSAMlProvider(samlSetting)}
+                          onClick={() => openSAMlProvider(omitBy(samlSetting, isNull) as SAMLSettings)}
                           disabled={!canEdit}
                         />
                         <RbacMenuItem
