@@ -74,7 +74,7 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.MANDATE_CUSTOM_WEBHOOK
 })
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_NODE_EXECUTION_AUDIT_EVENTS, {
-  label: 'defaultSettings.enableNodeExecutionAuditEvents',
+  label: 'defaultSettings.enablePipelineExecutionAuditEvents',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
   yupValidation: Yup.boolean(),
   settingCategory: 'PMS'

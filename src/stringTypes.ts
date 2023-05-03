@@ -1632,7 +1632,7 @@ export interface StringsMap {
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
   'defaultSettings.enableMatrixFieldNames': string
-  'defaultSettings.enableNodeExecutionAuditEvents': string
+  'defaultSettings.enablePipelineExecutionAuditEvents': string
   'defaultSettings.enforceGitExperience': string
   'defaultSettings.harnessDefault': string
   'defaultSettings.inheritedFrom': string
