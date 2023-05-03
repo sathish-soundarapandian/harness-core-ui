@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-
+import { ModuleName } from 'framework/types/ModuleName'
 import CIUsageInfo from '../overview/CIUsageInfo'
 
 jest.mock('@common/hooks/useGetUsageAndLimit', () => {
@@ -41,8 +41,16 @@ const useGetUsageAndLimitReturnMock = {
 describe('CIUsageInfo', () => {
   test('CIUsageInfo', () => {
     const { container } = render(
-      <TestWrapper>
-        <CIUsageInfo />
+      <TestWrapper defaultFeatureFlagValues={{ BUILD_CREDITS_VIEW: true }}>
+        <CIUsageInfo
+          module={ModuleName.CI}
+          licenseData={{
+            accountIdentifier: 'abc',
+            createdAt: 1234567898,
+            edition: 'ENTERPRISE',
+            expiryTime: 1234567898
+          }}
+        />
       </TestWrapper>
     )
 

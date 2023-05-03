@@ -7,6 +7,7 @@
 
 import { StepWizard, ModalDialog } from '@harness/uicore'
 import React from 'react'
+import { useStrings } from 'framework/strings'
 import { SubmitTicketModalStepOne } from './SubmitTicketModalSteps/SubmitTicketModalStepOne'
 import { SubmitTicketModalStepTwo } from './SubmitTicketModalSteps/SubmitTicketModalStepTwo'
 import { useCoveoControllers } from './Controllers/useCoveoControllers'
@@ -19,6 +20,7 @@ interface SubmitTicketModalProps {
 
 export const SubmitTicketModal = ({ isOpen, close }: SubmitTicketModalProps): JSX.Element => {
   const { resultList, searchBox } = useCoveoControllers()
+  const { getString } = useStrings()
 
   return (
     <ModalDialog
@@ -33,7 +35,7 @@ export const SubmitTicketModal = ({ isOpen, close }: SubmitTicketModalProps): JS
         initialStep={1}
         icon="pipeline-deploy"
         iconProps={{ size: 37, className: css.icon }}
-        title={'Submit a Ticket'}
+        title={getString('common.resourceCenter.ticketmenu.submitTicket')}
       >
         <SubmitTicketModalStepOne
           name="Ticket Subject"

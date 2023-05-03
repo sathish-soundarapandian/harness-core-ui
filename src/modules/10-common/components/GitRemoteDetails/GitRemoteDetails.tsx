@@ -19,6 +19,7 @@ export interface GitRemoteDetailsProps {
   fileUrl?: string
   branch?: string
   onBranchChange?: (selectedFilter: { branch: string }, defaultSelected?: boolean) => void
+  branchCustomClassName?: string
 
   flags?: {
     borderless?: boolean
@@ -51,6 +52,7 @@ const GitRemoteDetails = ({
   fileUrl,
   branch = '',
   onBranchChange,
+  branchCustomClassName,
 
   flags: { borderless = true, showRepo = true, showBranch = true, normalInputStyle = false, readOnly = false } = {}
 }: GitRemoteDetailsProps): React.ReactElement => {
@@ -92,7 +94,7 @@ const GitRemoteDetails = ({
       )}
       {showBranch ? (
         readOnly ? (
-          <Text lineClamp={1} className={css.branchDetails}>
+          <Text lineClamp={1} className={cx(css.repoDetails, branchCustomClassName)}>
             {branch}
           </Text>
         ) : (

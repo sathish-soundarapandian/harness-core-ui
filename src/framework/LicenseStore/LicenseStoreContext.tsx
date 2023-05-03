@@ -154,7 +154,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
   }, [])
 
   // 1000 milliseconds * 60 seconds * 1 minute
-  const POLL_VERSION_INTERVAL = 1000 * 60 * 1
+  const POLL_VERSION_INTERVAL = 1000 * 60 * 5
 
   const { requestFeatures } = useFeaturesContext()
 

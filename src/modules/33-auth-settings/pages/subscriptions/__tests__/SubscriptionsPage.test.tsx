@@ -18,7 +18,8 @@ import {
   getOrganizationListPromise,
   getProjectListPromise,
   getAllServicesPromise,
-  useDownloadActiveServiceCSVReport
+  useDownloadActiveServiceCSVReport,
+  useGetCreditsByAccount
 } from 'services/cd-ng'
 import { listActiveDevelopersPromise } from 'services/ci'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
@@ -30,6 +31,7 @@ import serviceMockData from './mocks/serviceMockData.json'
 jest.mock('services/cd-ng')
 jest.mock('services/ci')
 const getOrganizationListPromiseMock = getOrganizationListPromise as jest.MockedFunction<any>
+const useGetCreditsByAccountMock = useGetCreditsByAccount as jest.MockedFunction<any>
 const getListActiveDevelopersPromiseMock = listActiveDevelopersPromise as jest.MockedFunction<any>
 const getProjectListPromiseMock = getProjectListPromise as jest.MockedFunction<any>
 const getServiceListPromiseMock = getAllServicesPromise as jest.MockedFunction<any>
@@ -103,6 +105,16 @@ getProjectListPromiseMock.mockImplementation(() => {
 getServiceListPromiseMock.mockImplementation(() => {
   return serviceListPromiseMock()
 })
+useGetCreditsByAccountMock.mockImplementation(() => {
+  return {
+    creditsData: {
+      data: [
+        { qunatity: 1000, expiryTime: 1682341973607, purchaseTime: 1682341973200 },
+        { qunatity: 2000, expiryTime: 1682341973607, purchaseTime: 1682341972000 }
+      ]
+    }
+  }
+})
 const useSaveFeedbackMock = useSaveFeedback as jest.MockedFunction<any>
 useSaveFeedbackMock.mockImplementation(() => {
   return {
@@ -119,6 +131,7 @@ jest.mock('@common/hooks', () => ({
 moment.now = jest.fn(() => 1482363367071)
 
 const featureFlags = {
+  BUILD_CREDITS_VIEW: true,
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
@@ -134,6 +147,8 @@ describe('Subscriptions Page', () => {
       refetch: jest.fn()
     }
   })
+  jest.useFakeTimers('modern')
+  jest.setSystemTime(new Date('2020-01-19'))
 
   test('it renders the subscriptions page', async () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
@@ -739,6 +754,44 @@ describe('Subscriptions Page', () => {
       )
 
       expect(getByText('common.subscriptions.ccm.cloudSpend')).toBeInTheDocument()
+    })
+
+    test('should render BuildCreditTable', () => {
+      useGetModuleLicenseInfoMock.mockImplementation(() => {
+        return {
+          data: {
+            data: [
+              {
+                edition: Editions.ENTERPRISE,
+                numberOfCommitters: 200,
+                moduleType: 'CI'
+              }
+            ],
+            status: 'SUCCESS'
+          },
+          refetch: jest.fn()
+        }
+      })
+
+      useGetAccountMock.mockImplementation(() => {
+        return {
+          data: {
+            data: {
+              accountId: '123'
+            },
+            status: 'SUCCESS'
+          },
+          refetch: jest.fn()
+        }
+      })
+
+      const { getByText } = render(
+        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CI }}>
+          <SubscriptionsPage />
+        </TestWrapper>
+      )
+
+      expect(getByText('common.subscriptions.ci.developers')).toBeInTheDocument()
     })
 
     test('should render CI details', async () => {

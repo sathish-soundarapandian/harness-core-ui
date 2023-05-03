@@ -10,11 +10,13 @@ import { Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO, CDModuleLicenseDTO } from 'services/cd-ng'
+import { useGetCreditsByAccount } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import SubscriptionDetailsCard from './SubscriptionDetailsCard'
 import type { TrialInformation } from '../SubscriptionsPage'
+import { BuildCreditInfoTable } from './BuildCreditInfoTable'
 import SubscriptionUsageCard from './SubscriptionUsageCard'
 
 import SubscriptionTabPage from './SubscriptionTabPage'
@@ -29,7 +31,11 @@ interface SubscriptionOverviewProps {
 const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const { accountName, licenseData, module, trialInformation, refetchGetLicense } = props
   const enabled = useFeatureFlag(FeatureFlag.VIEW_USAGE_ENABLED)
+  const buildCreditsView = useFeatureFlag(FeatureFlag.BUILD_CREDITS_VIEW)
   const { accountId } = useParams<AccountPathProps>()
+  const { data: creditsData } = useGetCreditsByAccount({
+    accountIdentifier: accountId
+  })
   return (
     <Layout.Vertical spacing="large" width={'90%'}>
       <SubscriptionDetailsCard
@@ -40,7 +46,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         refetchGetLicense={refetchGetLicense}
       />
       {enabled && licenseData && module !== ModuleName.CHAOS && (
-        <SubscriptionUsageCard module={module} licenseData={licenseData} />
+        <SubscriptionUsageCard module={module} licenseData={licenseData} creditsData={creditsData?.data} />
       )}
       <SubscriptionTabPage
         module={module}
@@ -48,6 +54,9 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         accountId={accountId}
         licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType}
       ></SubscriptionTabPage>
+      {buildCreditsView && module === 'CI' ? (
+        <BuildCreditInfoTable data={creditsData?.data || []} licenseData={(licenseData as ModuleLicenseDTO) || ''} />
+      ) : null}
     </Layout.Vertical>
   )
 }

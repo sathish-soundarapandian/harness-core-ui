@@ -47,7 +47,7 @@ export function getNotificationConditions(conditions?: NotificationConditionRow[
           ...(el.duration && el.duration !== defaultOption && { period: `${el.duration}m` }),
           ...(el.changeType &&
             el.changeType !== defaultOption && {
-              changeEventTypes: el.changeType.map((element: { value: ChangeType }) => element.value)
+              changeCategories: el.changeType.map((element: { value: ChangeType }) => element.value)
             }),
           ...(el.eventStatus &&
             el.eventStatus !== defaultOption && {

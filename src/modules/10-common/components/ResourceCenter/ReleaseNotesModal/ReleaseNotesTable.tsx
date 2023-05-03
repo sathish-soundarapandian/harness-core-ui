@@ -12,6 +12,7 @@ import {
   ModuleVersionsResponse,
   useListModuleVersions
 } from 'services/cd-ng-open-api'
+import { useStrings } from 'framework/strings'
 import css from './UseReleaseNotesModal.module.scss'
 
 export interface ModuleVersionTableProps {
@@ -19,6 +20,7 @@ export interface ModuleVersionTableProps {
 }
 
 export const ModuleVersionTable: React.FC<ModuleVersionTableProps> = () => {
+  const { getString } = useStrings()
   const { data } = useListModuleVersions(
     {
       queryParams: {
@@ -27,18 +29,36 @@ export const ModuleVersionTable: React.FC<ModuleVersionTableProps> = () => {
     } || []
   )
 
+  const modulesList = React.useMemo((): ModuleVersionsResponse[] | null => {
+    if (!data) return null
+    const orderedModulesMap = new Map<string, ModuleVersionsResponse>([
+      ['CI', {}],
+      ['CD', {}],
+      ['CE', {}],
+      ['FF', {}],
+      ['SRM', {}],
+      ['SRT', {}],
+      ['CHAOS', {}],
+      ['Platform', {}],
+      ['Delegate', {}]
+    ])
+    data?.forEach((moduleData: ModuleVersionsResponse) => {
+      orderedModulesMap.set(moduleData.name as string, moduleData)
+    })
+    return [...orderedModulesMap.values()]
+  }, [data])
   return (
     <HTMLTable className={css.table} data-testid="release-note-table">
       <thead>
         <tr style={{ backgroundColor: '#E2F5FF' }} data-testid="release-note-table-head">
-          <th className={css.th}>Component</th>
-          <th className={css.th}>Version</th>
-          <th className={css.th}>Last Updated</th>
-          <th className={css.th}>Release Notes</th>
+          <th className={css.th}>{getString('common.resourceCenter.ticketmenu.component')}</th>
+          <th className={css.th}>{getString('version')}</th>
+          <th className={css.th}>{getString('lastUpdated')}</th>
+          <th className={css.th}>{getString('common.resourceCenter.bottomlayout.releaseNote')}</th>
         </tr>
       </thead>
       <tbody>
-        {data?.map((module: ModuleVersionsResponse, i: number) => (
+        {modulesList?.map((module: ModuleVersionsResponse, i: number) => (
           <tr key={`${module?.name}-${i}`} className={css.tr}>
             <td className={css.td} data-testid="name">
               {module?.display_name}

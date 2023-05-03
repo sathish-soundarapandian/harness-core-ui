@@ -85,10 +85,10 @@ export function ActiveDevelopersTableCI({
       },
       {
         Header: NameHeader(getString, 'common.lastBuildDate'),
-        accessor: 'lastBuildDate',
+        accessor: 'lastBuild',
         width: '12%',
         Cell: LastBuildCell,
-        serverSortProps: getServerSortProps('common.lastBuildDate')
+        serverSortProps: getServerSortProps('common.lastBuild')
       }
     ] as unknown as Column<LicenseUsageDTO>[]
   }, [currentOrder, currentSort])

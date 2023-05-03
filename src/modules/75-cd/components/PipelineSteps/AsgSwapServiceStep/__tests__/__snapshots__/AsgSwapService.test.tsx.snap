@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Asg Rolling Rollback Step tests Variables view renders fine 1`] = `
+<div>
+  <div
+    class="variablesListTable variablePaddingL3"
+  />
+</div>
+`;

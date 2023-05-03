@@ -196,7 +196,6 @@ jiraApprovalStep:
   connectorRef: Jira Connector
   jiraConnectorPlaceholder: Select Jira Connector
   project: Jira Project
-  issueType: Issue Type
   issueTypePlaceholder: Select Issue Type
   issueKey: Issue Key
   issueKeyPlaceholder: Enter Issue Key
@@ -1550,7 +1549,7 @@ configFiles:
   fileType: 'File Type'
   encryptedLocation: 'Secrets Manager Name'
   addConfigFile: Add Config File
-  name: Config File Name,
+  name: Config File Name
   placeholder: Enter Config File Name
   paths: File Path for config files from Git
   error:

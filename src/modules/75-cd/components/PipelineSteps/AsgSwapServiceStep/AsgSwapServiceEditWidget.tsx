@@ -44,7 +44,7 @@ export const AsgSwapServiceWidget = (
           setFormikRef(formikRef, formik)
           return (
             <>
-              {stepViewType === StepViewType.Template ? null : (
+              {stepViewType !== StepViewType.Template && (
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
                   <FormInput.InputWithIdentifier
                     inputLabel={getString('name')}

@@ -575,7 +575,8 @@ function HelmWithS3({
                               formik.values?.bucketName
                             ),
                             folderPath: formik.values?.folderPath,
-                            chartName: formik.values?.chartName
+                            chartName: formik.values?.chartName,
+                            helmVersion: formik.values?.helmVersion
                           })
                       }
                     }}

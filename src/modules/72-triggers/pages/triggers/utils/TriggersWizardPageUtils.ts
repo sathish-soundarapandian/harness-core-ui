@@ -625,6 +625,16 @@ export const getValidationSchema = (
           }
           return true
         }
+      ),
+      metaDataConditions: array().test(
+        getString('triggers.validation.eventConditions'),
+        getString('triggers.validation.eventConditions'),
+        function (metaDataConditions = []) {
+          if (metaDataConditions.some((metaDataCondition: AddConditionInterface) => isRowUnfilled(metaDataCondition))) {
+            return false
+          }
+          return true
+        }
       )
     })
   } else {
@@ -2266,7 +2276,9 @@ export const getArtifactManifestTriggerYaml = ({
     stageId,
     manifestType: onEditManifestType,
     artifactType,
-    pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event)
+    pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
+    metaDataConditions,
+    jexlCondition
   } = val
   const inputSetRefs = get(
     val,
@@ -2331,7 +2343,7 @@ export const getArtifactManifestTriggerYaml = ({
     cloneDeep(
       parse(
         JSON.stringify({
-          spec: { ...selectedArtifact?.spec, store: storeVal }
+          spec: { ...selectedArtifact?.spec, store: storeVal, metaDataConditions, jexlCondition }
         }) || ''
       )
     )

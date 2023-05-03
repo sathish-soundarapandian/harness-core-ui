@@ -282,7 +282,7 @@ export const ETNavItem = () => {
             color={Color.WHITE}
             className={css.text}
           >
-            <String stringID="common.purpose.cet.continuous" />
+            <String stringID="common.purpose.errorTracking.title" />
           </Text>
         </Layout.Vertical>
       </Link>

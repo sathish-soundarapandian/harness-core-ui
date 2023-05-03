@@ -102,6 +102,7 @@ export interface FlatOnEditValuesInterface {
     pipeline: PipelineInfoConfig | Record<string, never>
   }
   eventConditions?: AddConditionInterface[]
+  metaDataConditions?: AddConditionInterface[]
   versionValue?: string
   versionOperator?: string
   buildValue?: string

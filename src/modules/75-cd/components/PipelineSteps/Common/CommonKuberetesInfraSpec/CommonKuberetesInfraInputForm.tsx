@@ -15,7 +15,7 @@ import type { GetDataError } from 'restful-react'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
-import type { K8sGcpInfrastructure, Failure } from 'services/cd-ng'
+import type { K8sGcpInfrastructure, Failure, ExecutionElementConfig } from 'services/cd-ng'
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
@@ -31,6 +31,7 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 import css from './CommonKuberetesInfraSpecEditable.module.scss'
@@ -50,6 +51,7 @@ interface CommonKuberetesInfraInputFormProps {
   setClusterOptions: React.Dispatch<React.SetStateAction<SelectOption[]>>
   connectorType: 'Aws' | 'Gcp'
   connectorRef?: string
+  provisioner?: ExecutionElementConfig['steps']
 }
 export function CommonKuberetesInfraInputForm({
   template,
@@ -63,7 +65,8 @@ export function CommonKuberetesInfraInputForm({
   setClusterOptions,
   fetchClusters,
   connectorType,
-  connectorRef
+  connectorRef,
+  provisioner
 }: CommonKuberetesInfraInputFormProps): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -84,6 +87,11 @@ export function CommonKuberetesInfraInputForm({
 
   return (
     <Layout.Vertical spacing="small">
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <ProvisionerSelectField name={`${path}.provisioner`} path={path} provisioners={provisioner} />
+        </div>
+      )}
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField

@@ -5,13 +5,24 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, Dialog, ExpandingSearchInput, ExpandingSearchInputHandle } from '@harness/uicore'
 import React, { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react'
+import {
+  Button,
+  ButtonSize,
+  ButtonVariation,
+  Container,
+  Dialog,
+  ExpandingSearchInput,
+  ExpandingSearchInputHandle,
+  Layout
+} from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
 import ServiceDetailInstanceView, { ServiceDetailInstanceViewProps } from './ServiceDetailsInstanceView'
+import PostProdRollbackDrawer from './PostProdRollback/ServiceDetailPostProdRollback'
 import ServiceDetailsEnvTable from './ServiceDetailsEnvTable'
 import ServiceDetailsArtifactTable from './ServiceDetailsArtifactTable'
 import css from './ServiceDetailsSummaryV2.module.scss'
@@ -23,6 +34,8 @@ interface ServiceDetailsDialogProps {
   envFilter?: {
     envId?: string
     isEnvGroup: boolean
+    envName?: string
+    isRollbackAllowed?: boolean
   }
   artifactFilter?: string
   artifactFilterApplied?: boolean
@@ -31,6 +44,7 @@ interface ServiceDetailsDialogProps {
 export default function ServiceDetailsDialog(props: ServiceDetailsDialogProps): React.ReactElement {
   const { isOpen, setIsOpen, envFilter, artifactFilter, isEnvView, artifactFilterApplied } = props
   const { getString } = useStrings()
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState('')
   const isSearchApplied = useRef<boolean>(!isEmpty(searchTerm))
   const searchRef = useRef({} as ExpandingSearchInputHandle)
@@ -63,6 +77,19 @@ export default function ServiceDetailsDialog(props: ServiceDetailsDialogProps): 
     setSearchTerm('')
   }, [])
 
+  const rollbackAllowed = envFilter?.isRollbackAllowed
+  if (drawerOpen && envFilter?.envId && rollbackAllowed) {
+    return (
+      <PostProdRollbackDrawer
+        drawerOpen={drawerOpen}
+        isEnvGroup={!!envFilter?.isEnvGroup}
+        setDrawerOpen={setDrawerOpen}
+        entityId={envFilter?.envId}
+        entityName={envFilter?.envName}
+      />
+    )
+  }
+
   return (
     <Dialog
       className={cx('padded-dialog', css.dialogBase)}
@@ -75,14 +102,29 @@ export default function ServiceDetailsDialog(props: ServiceDetailsDialogProps): 
     >
       <div className={css.dialogWrap}>
         <Container className={css.detailSummaryView}>
-          <ExpandingSearchInput
-            placeholder={getString('search')}
-            throttle={200}
-            onChange={onSearch}
-            className={css.searchIconStyle}
-            alwaysExpanded
-            ref={searchRef}
-          />
+          <Layout.Horizontal className={cx(css.searchWithRollbackBtn, { [css.noRollbackBtn]: !rollbackAllowed })}>
+            <ExpandingSearchInput
+              placeholder={getString('search')}
+              throttle={200}
+              onChange={onSearch}
+              className={css.searchIconStyle}
+              alwaysExpanded
+              ref={searchRef}
+            />
+            {rollbackAllowed ? (
+              <Button
+                variation={ButtonVariation.SECONDARY}
+                size={ButtonSize.MEDIUM}
+                text={getString('rollbackLabel')}
+                icon="rollback-service"
+                onClick={() => {
+                  setDrawerOpen(true)
+                  setIsOpen(false)
+                }}
+                iconProps={{ size: 13, color: Color.PRIMARY_7 }}
+              />
+            ) : null}
+          </Layout.Horizontal>
           {isEnvView ? (
             <ServiceDetailsEnvTable
               envFilter={envFilter}

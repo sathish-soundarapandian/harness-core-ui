@@ -86,7 +86,7 @@ const ETHomePage: React.FC = () => {
       projectCreateSuccessHandler={projectCreateSuccessHandler}
       subTitle={getString('et.homepage.slogan')}
       documentText={getString('et.homepage.learnMore')}
-      documentURL="https://developer.harness.io/docs/service-reliability-management/continuous-error-tracking/getting-started/cet-overview"
+      documentURL="https://developer.harness.io/docs/category/continuous-error-tracking"
     />
   )
 }

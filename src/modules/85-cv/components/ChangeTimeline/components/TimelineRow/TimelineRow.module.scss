@@ -80,10 +80,11 @@
 .widgetContainer {
   display: flex;
   flex-direction: column;
+  padding: var(--spacing-large) !important;
 }
 
 .widgetTextElements {
-  font-size: var(--font-size-xsmall) !important;
+  font-size: var(--font-size-small) !important;
   color: var(--white) !important;
 }
 

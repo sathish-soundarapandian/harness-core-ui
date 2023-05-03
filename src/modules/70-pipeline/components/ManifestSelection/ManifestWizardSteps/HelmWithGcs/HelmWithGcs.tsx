@@ -450,6 +450,7 @@ function HelmWithGcs({
                           fetchChartVersions({
                             folderPath: formik.values?.folderPath,
                             chartName: formik.values?.chartName,
+                            helmVersion: formik.values?.helmVersion,
                             bucketName: defaultTo(
                               (formik.values?.bucketName as SelectOption)?.value,
                               formik.values?.bucketName

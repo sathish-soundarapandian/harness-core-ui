@@ -9970,7 +9970,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 25%;"
+        style="width: 33%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -10004,24 +10004,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 15%;"
-      >
-        <div
-          class="Text--withDocsTooltip"
-          data-tooltip-id="ConnectorsListViewactivity"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            LASTACTIVITY
-          </p>
-        </div>
-      </div>
-      <div
-        class="TableV2--cell"
-        colspan="1"
-        role="columnheader"
-        style="width: 15%;"
+        style="width: 19%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -10038,7 +10021,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 15%;"
+        style="width: 22%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -10082,7 +10065,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 25%;"
+            style="width: 33%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -10169,32 +10152,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -10223,7 +10181,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 22%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -10248,7 +10206,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 25%;"
+            style="width: 33%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -10361,32 +10319,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -10415,7 +10348,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 22%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -10440,7 +10373,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 25%;"
+            style="width: 33%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -10519,32 +10452,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -10573,7 +10481,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 22%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -10645,7 +10553,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 25%;"
+            style="width: 33%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -10729,32 +10637,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -10823,7 +10706,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 22%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -10895,7 +10778,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 25%;"
+            style="width: 33%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -10979,32 +10862,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -11053,7 +10911,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 22%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -11125,7 +10983,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 25%;"
+            style="width: 33%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -11220,32 +11078,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -11274,7 +11107,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 22%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -11344,7 +11177,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 25%;"
+            style="width: 33%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -11463,32 +11296,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -11537,7 +11345,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 22%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -11772,7 +11580,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 19%;"
+        style="width: 25%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -11823,24 +11631,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 10%;"
-      >
-        <div
-          class="Text--withDocsTooltip"
-          data-tooltip-id="ConnectorsListViewactivity"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            LASTACTIVITY
-          </p>
-        </div>
-      </div>
-      <div
-        class="TableV2--cell"
-        colspan="1"
-        role="columnheader"
-        style="width: 15%;"
+        style="width: 19%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -11901,7 +11692,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 19%;"
+            style="width: 25%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -12034,32 +11825,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 10%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -12160,7 +11926,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 19%;"
+            style="width: 25%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -12319,32 +12085,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 10%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -12445,7 +12186,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 19%;"
+            style="width: 25%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -12529,32 +12270,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 10%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -12608,7 +12324,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 19%;"
+            style="width: 25%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -12697,32 +12413,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 10%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -12816,7 +12507,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 19%;"
+            style="width: 25%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -12905,32 +12596,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 10%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -13004,7 +12670,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 19%;"
+            style="width: 25%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -13104,32 +12770,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 10%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -13181,7 +12822,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 19%;"
+            style="width: 25%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -13305,32 +12946,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 10%;"
-          >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="activity"
-              >
-                <svg
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 0C3.538.036-.035 3.644 0 8.053.036 12.427 3.61 16 8 16h.054c2.133-.018 4.142-.853 5.635-2.382 1.493-1.53 2.329-3.538 2.311-5.671C15.965 3.573 12.391 0 8 0zm5.262 8.836h-1.635a.52.52 0 01-.48-.338l-.836-2.276-1.653 5.245a.49.49 0 01-.462.355H8.16a.51.51 0 01-.462-.302L5.796 7.253l-.907 1.351a.5.5 0 01-.427.232H2.667a.516.516 0 010-1.032h1.511L5.44 5.902a.513.513 0 01.48-.23.488.488 0 01.427.301L8.07 9.867l1.725-5.423a.512.512 0 01.48-.355c.23 0 .426.124.498.338l1.208 3.36h1.28c.285 0 .516.23.516.515a.531.531 0 01-.516.534z"
-                    fill="#1D76FF"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
+            style="width: 19%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"

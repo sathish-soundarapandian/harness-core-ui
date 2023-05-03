@@ -298,7 +298,11 @@ function HelmWithHttp({
                         ) {
                           return
                         }
-                        !loadingChartVersions && fetchChartVersions({ chartName: formik.values?.chartName })
+                        !loadingChartVersions &&
+                          fetchChartVersions({
+                            chartName: formik.values?.chartName,
+                            helmVersion: formik.values?.helmVersion
+                          })
                       }
                     }}
                   />

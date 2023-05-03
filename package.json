@@ -62,7 +62,7 @@
     "@harness/help-panel": "1.14.0",
     "@harness/icons": "1.131.0",
     "@harness/monaco-yaml": "^1.0.0",
-    "@harness/ng-tooltip": "^1.31.113",
+    "@harness/ng-tooltip": "^1.31.115",
     "@harness/telemetry": "^1.0.42",
     "@harness/uicore": "3.129.4",
     "@harness/use-modal": "1.1.0",

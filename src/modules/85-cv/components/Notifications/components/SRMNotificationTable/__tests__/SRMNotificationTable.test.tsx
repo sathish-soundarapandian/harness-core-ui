@@ -36,7 +36,7 @@ const args: SRMNotificationTableProps = {
           {
             type: 'ChangeImpact',
             spec: {
-              changeEventTypes: ['Infrastructure', 'Incident'],
+              changeCategories: ['Infrastructure', 'Alert'],
               threshold: 33,
               period: '60m'
             }
@@ -51,7 +51,7 @@ const args: SRMNotificationTableProps = {
           {
             type: 'ChangeObserved',
             spec: {
-              changeEventTypes: ['Infrastructure', 'Incident']
+              changeCategories: ['Infrastructure', 'Alert']
             }
           },
           {

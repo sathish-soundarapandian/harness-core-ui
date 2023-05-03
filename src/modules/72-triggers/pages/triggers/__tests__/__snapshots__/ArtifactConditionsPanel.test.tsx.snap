@@ -34,6 +34,11 @@ exports[`ArtifactConditionsPanel Triggers tests Initial Render 1`] = `
           <div
             class="Layout--vertical StyledProps--main formContent"
           >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-bold"
+            >
+              triggers.conditionsPanel.eventCondition
+            </p>
             <div
               class="conditionsRow predefinedRows"
             >
@@ -119,6 +124,58 @@ exports[`ArtifactConditionsPanel Triggers tests Initial Render 1`] = `
                       value=""
                     />
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--vertical StyledProps--main formContent"
+          >
+            <section
+              data-name="metaDataConditions"
+            >
+              <p
+                class="StyledProps--font StyledProps--main sectionHeader"
+                data-tooltip-id="metaDataConditions"
+              >
+                triggers.conditionsPanel.metadataConditions
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7"
+                data-name="plusAdd"
+                style="cursor: pointer; width: 43px;"
+              >
+                plusAdd
+              </p>
+            </section>
+          </div>
+          <div
+            class="Layout--vertical StyledProps--main formContent marginBottom"
+          >
+            <p
+              class="StyledProps--font StyledProps--main sectionHeader"
+            >
+              triggers.conditionsPanel.jexlCondition
+            </p>
+            <div
+              class="bp3-form-group"
+              data-id="jexlCondition-2"
+              style="width: 100%; margin-bottom: 0px;"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="jexlCondition"
+                    placeholder="triggers.conditionsPanel.jexlConditionPlaceholder"
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>

@@ -359,6 +359,9 @@ serviceDashboard:
   instancesDetails: Instances Details
   deploymentDetails: Deployment Details
   moreDetails: More Details >
+  lastDeployedText: 'Last <strong>{{ status }}</strong>'
+  rollbacked: Rollbacked
+  hotfixed: Hotfixed
   headers:
     artifactVersion: Artifact Version
     environment: '{{$.environment}}'
@@ -366,6 +369,14 @@ serviceDashboard:
     infras: Infras
     clusters: '{{$.common.clusters}}'
     instances: '{{$.instanceFieldOptions.instances}}'
+    rollbackStatus: Rollback Status
+  postProdRollback:
+    rollbackTitle: Rollback an artifact from which infrastructure?
+    rollbackWarningText: 'Please make sure that you have rollback steps/strategy defined. Otherwise, the rollback would fail. Do you want to proceed with rollback?'
+    rollbackConfirmationTitle: Rollback Infrastructure?
+    rollbackConfirmationText: Please confirm that you've initiated rollback for the following?
+    emptyStateMsg: No Infrastructures available to rollback
+    rollbackTriggedSuccessfully: Rollback is triggered successfully
   pod: pod
   function: function
   deployedAt: Deployed At

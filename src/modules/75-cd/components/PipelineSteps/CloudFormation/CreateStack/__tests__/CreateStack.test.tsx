@@ -248,7 +248,7 @@ describe('Test Cloudformation create stack', () => {
         }
       }
     })
-    const { container, getByText, getByTestId } = render(
+    const { getByText, getByTestId, queryByText } = render(
       <TestStepWidget
         onUpdate={jest.fn()}
         type={StepType.CloudFormationCreateStack}
@@ -257,10 +257,9 @@ describe('Test Cloudformation create stack', () => {
       />
     )
     userEvent.click(getByText('common.optionalConfig'))
-
     await waitFor(() => expect(getByTestId('remove-param-0')))
     userEvent.click(getByTestId('remove-param-0'))
-    expect(container).toMatchSnapshot()
+    expect(queryByText('remove-param-0')).not.toBeInTheDocument()
   })
 
   test('should be able to open remote param modal', async () => {

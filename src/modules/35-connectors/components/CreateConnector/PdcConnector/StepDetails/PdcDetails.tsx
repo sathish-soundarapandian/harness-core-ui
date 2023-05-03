@@ -22,6 +22,7 @@ import {
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
+import { DEFAULT_PDC_AREA_LENGTH } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
 import UploadJSON from '../components/UploadJSON'
 
@@ -149,6 +150,7 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
                 <div className={css.manualHostContainer}>
                   <FormInput.TextArea
                     className={css.textInput}
+                    maxLength={DEFAULT_PDC_AREA_LENGTH}
                     name="hosts"
                     label={
                       <HarnessDocTooltip
@@ -166,6 +168,7 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
                   }}
                   formikProps={formikProps}
                   previousHosts={prevStepData?.spec?.hosts}
+                  maxLength={DEFAULT_PDC_AREA_LENGTH}
                 />
               )}
             </Container>

@@ -864,7 +864,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
             connectorRefWithBlankLabel.connector = connector
             connectorRefWithBlankLabel.connector.identifier = triggerValues.connectorRef
 
-            connectorRefWithBlankLabel.label = '' // will fetch details on useEffect
+            connectorRefWithBlankLabel.label = connectorData.data.connector.name
           }
 
           triggerValues.connectorRef = connectorRefWithBlankLabel
@@ -1097,6 +1097,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         pipelineJson = clearRuntimeInput(yamlTemplate)
       }
       const eventConditions = source?.spec?.spec?.eventConditions || []
+      const metaDataConditions = source?.spec?.spec?.metaDataConditions || []
+      const jexlCondition = source?.spec?.spec?.jexlCondition
       const { value: versionValue, operator: versionOperator } =
         eventConditions?.find(
           (eventCondition: AddConditionInterface) => eventCondition.key === EventConditionTypes.VERSION
@@ -1126,7 +1128,9 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         eventConditions: eventConditions?.filter(
           (eventCondition: AddConditionInterface) =>
             eventCondition.key !== EventConditionTypes.BUILD && eventCondition.key !== EventConditionTypes.VERSION
-        )
+        ),
+        metaDataConditions,
+        jexlCondition
       }
       if (type === TriggerTypes.ARTIFACT) {
         delete newOnEditInitialValues['manifestType']
@@ -1473,7 +1477,6 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     }
     return {}
   }
-
   const [initialValues, setInitialValues] = useState<FlatInitialValuesInterface>(
     Object.assign(getInitialValues(triggerTypeOnNew), onEditInitialValues)
   )
@@ -1562,7 +1565,11 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     currentPipeline
   ])
 
-  const { data: connectorData, refetch: getConnectorDetails } = useGetConnector({
+  const {
+    data: connectorData,
+    refetch: getConnectorDetails,
+    loading: loadingConnector
+  } = useGetConnector({
     identifier: getIdentifierFromValue(
       wizardKey < 1 // wizardKey >1 means we've reset initialValues cause of Yaml Switching (onEdit or new) and should use those formik values instead
         ? onEditInitialValues?.connectorRef?.identifier || ''
@@ -1598,18 +1605,28 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   }
 
   useEffect(() => {
-    if (onEditInitialValues?.connectorRef?.identifier && !isUndefined(connectorScopeParams) && !connectorData) {
+    if (
+      onEditInitialValues?.connectorRef?.identifier &&
+      !isUndefined(connectorScopeParams) &&
+      !connectorData &&
+      !loadingConnector
+    ) {
       getConnectorDetails()
     } else if (
       initialValues?.connectorRef?.value &&
       (!initialValues.connectorRef.label ||
-        (connectorData?.data?.connector?.identifier &&
-          !initialValues?.connectorRef?.identifier?.includes(connectorData?.data?.connector?.identifier)))
+        connectorData?.data?.connector?.identifier !== initialValues.connectorRef?.connector?.identifier) &&
+      !loadingConnector
     ) {
       // need to get label due to switching from yaml to visual
       getConnectorDetails()
     }
-  }, [onEditInitialValues?.connectorRef?.identifier, connectorScopeParams, initialValues?.connectorRef])
+  }, [
+    onEditInitialValues?.connectorRef?.identifier,
+    connectorScopeParams,
+    initialValues?.connectorRef,
+    loadingConnector
+  ])
 
   useEffect(() => {
     if (connectorData?.data?.connector?.name && onEditInitialValues?.connectorRef?.identifier && wizardKey < 1) {

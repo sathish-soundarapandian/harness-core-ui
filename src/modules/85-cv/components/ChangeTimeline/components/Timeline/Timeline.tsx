@@ -31,7 +31,7 @@ export function Timeline(props: TimelineProps): JSX.Element {
     isSLOChartTimeline
   } = props
   const { getString } = useStrings()
-  const sloWidgetsInfo = useMemo(() => generateSLOWidgetsInfo(sloWidgetsData), [sloWidgetsData])
+  const sloWidgetsInfo = useMemo(() => generateSLOWidgetsInfo(getString, sloWidgetsData), [sloWidgetsData])
   const isAnnotationsEnabled = useFeatureFlag(FeatureFlag.SRM_SLO_ANNOTATIONS)
 
   return (

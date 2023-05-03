@@ -43,10 +43,10 @@ export function getCurrentNotification(data: NotificationRuleResponse): SRMNotif
         ...(condition?.spec?.period && {
           duration: condition?.spec?.period?.replace('m', '')
         }),
-        ...(condition?.spec?.changeEventTypes &&
-          condition?.spec?.changeEventTypes.length && {
-            changeType: condition?.spec?.changeEventTypes?.map((changeEventType: string | number | symbol) =>
-              changeTypeOptions.find(changeTypeOption => changeTypeOption.value === changeEventType)
+        ...(condition?.spec?.changeCategories &&
+          condition?.spec?.changeCategories.length && {
+            changeType: condition?.spec?.changeCategories?.map((changeCategory: string | number | symbol) =>
+              changeTypeOptions.find(changeTypeOption => changeTypeOption.value === changeCategory)
             )
           }),
         ...(condition?.spec?.errorTrackingEventStatus &&

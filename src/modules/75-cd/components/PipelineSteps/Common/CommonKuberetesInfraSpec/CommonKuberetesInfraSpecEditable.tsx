@@ -35,6 +35,7 @@ import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils
 
 import { useStrings } from 'framework/strings'
 import type { UseStringsReturn } from 'framework/strings'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -123,6 +124,9 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
 
   return (
     <React.Fragment key={connectorType}>
+      <Layout.Horizontal className={css.formRow} spacing="medium">
+        <ProvisionerField name="provisioner" isReadonly />
+      </Layout.Horizontal>
       <Layout.Horizontal className={css.formRow} spacing="medium">
         <FormMultiTypeConnectorField
           name="connectorRef"

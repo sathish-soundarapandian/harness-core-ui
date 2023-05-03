@@ -1020,6 +1020,9 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
         <div>
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
             <div>
               <button
@@ -1501,6 +1504,9 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
         class="FormikForm--main"
       >
         <div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
@@ -2074,6 +2080,9 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
         class="FormikForm--main"
       >
         <div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >

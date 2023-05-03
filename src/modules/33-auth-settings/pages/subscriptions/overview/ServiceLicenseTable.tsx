@@ -186,7 +186,7 @@ export function ServiceLicenseTable({
   const [selectedService, setSelectedService] = useState<SelectOption | undefined>()
   const activeServiceText = `${totalElements}`
   const [initialContent, setInitialContent] = useState<string>('')
-  const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
+
   const { data: dataInCsv, refetch } = useDownloadActiveServiceCSVReport({
     queryParams: {
       accountIdentifier: accountId
@@ -207,7 +207,7 @@ export function ServiceLicenseTable({
   useEffect(() => {
     refetch()
   }, [refetch])
-  const formattedTime = moment(timeValue).format('MMM DD YYYY hh:mm:ss')
+  const formattedTime = moment(new Date().getTime()).format('MMM DD YYYY hh:mm:ss')
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>

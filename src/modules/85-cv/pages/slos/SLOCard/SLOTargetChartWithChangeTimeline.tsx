@@ -25,7 +25,7 @@ import { SLOTargetChartWithChangeTimelineProps, SLOCardToggleViews } from '../CV
 import { getSLOAndErrorBudgetGraphOptions, getTimeFormatForAnomaliesCard } from '../CVSLOListingPage.utils'
 import AnnotationDetails from './components/AnnotationDetails/AnnotationDetails'
 import { addAnnotationsDrawerOptions } from './SLOCard.constants'
-import { getLeftContainerOffset } from './SLOCardContent.utils'
+import { getLeftContainerOffset, updateDataCollectionFailure } from './SLOCardContent.utils'
 import css from '../CVSLOsListingPage.module.scss'
 
 const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelineProps> = ({
@@ -109,6 +109,16 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
 
   const leftContainerOffset = getLeftContainerOffset(isSLOView, isCardView)
 
+  const dataTimestampList = useMemo(
+    () => (type === SLOCardToggleViews.SLO ? sloPerformanceTrend : errorBudgetBurndown),
+    [errorBudgetBurndown, sloPerformanceTrend, type]
+  )
+
+  const sloWidgetsDataWithUpdatedFailure = updateDataCollectionFailure({
+    dataTimestampList,
+    sloWidgetsData
+  })
+
   return (
     <>
       {isAnnotationsEnabled ? (
@@ -178,7 +188,7 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
           />
         )}
         <ChangeTimeline
-          sloWidgetsData={sloWidgetsData}
+          sloWidgetsData={sloWidgetsDataWithUpdatedFailure}
           sloWidgetsDataLoading={sloWidgetsDataLoading}
           fetchSecondaryEvents={fetchSecondaryEvents}
           selectedTimeRange={{ startTime, endTime }}

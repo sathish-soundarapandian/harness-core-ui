@@ -900,6 +900,8 @@ slos:
   goodRequestMetric: Good request metric
   badRequestMetric: Bad request metric
   validRequestMetric: Valid request metric
+  dataCollectionFailure: SLO data collection failed
+  untilPresent: until present
   sloDetailsChart:
     annotation: Annotation
     editAnnotation: Edit Annotation
@@ -1220,7 +1222,6 @@ logs:
   feedbackUpdatedMessage: Updated event priority feedback will be applied in the next deployment run.
   reasonPlaceholder: Enter the reason for updating the event priority
   jiraFormLable:
-    priority: Priority
     ticketSummary: Ticket Summary
     assignee: Assignee
   jiraDetails:

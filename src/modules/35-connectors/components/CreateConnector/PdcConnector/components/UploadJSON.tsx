@@ -11,6 +11,7 @@ import { Icon, Text, Button, ButtonVariation, FormInput } from '@harness/uicore'
 import { debounce } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'
+import { DEFAULT_PDC_AREA_LENGTH } from '@connectors/constants'
 import type { SelectionType, uploadHostItem } from '../StepDetails/PdcDetails'
 
 import css from './UploadJSON.module.scss'
@@ -23,9 +24,15 @@ interface UploadJSONInterface {
     selectionType: SelectionType
   }>
   previousHosts?: uploadHostItem[] | string
+  maxLength?: number
 }
 
-const UploadJSON = ({ setJsonValue, formikProps, previousHosts }: UploadJSONInterface) => {
+const UploadJSON = ({
+  setJsonValue,
+  formikProps,
+  previousHosts,
+  maxLength = DEFAULT_PDC_AREA_LENGTH
+}: UploadJSONInterface) => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>
@@ -142,6 +149,7 @@ const UploadJSON = ({ setJsonValue, formikProps, previousHosts }: UploadJSONInte
             name="hostsJson"
             onChange={debouncedOnChange}
             label={getString('connectors.pdc.hostsJson')}
+            maxLength={maxLength}
           />
         </>
       )}

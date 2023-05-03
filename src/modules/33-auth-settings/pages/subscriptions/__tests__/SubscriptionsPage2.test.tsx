@@ -17,7 +17,8 @@ import {
   getOrganizationListPromise,
   getProjectListPromise,
   getAllServicesPromise,
-  useDownloadActiveServiceCSVReport
+  useDownloadActiveServiceCSVReport,
+  useGetCreditsByAccount
 } from 'services/cd-ng'
 import { listActiveDevelopersPromise } from 'services/ci'
 import { Editions } from '@common/constants/SubscriptionTypes'
@@ -30,6 +31,7 @@ import serviceMockData from './mocks/serviceMockData.json'
 jest.mock('services/cd-ng')
 jest.mock('services/ci')
 const getOrganizationListPromiseMock = getOrganizationListPromise as jest.MockedFunction<any>
+const useGetCreditsByAccountMock = useGetCreditsByAccount as jest.MockedFunction<any>
 const getListActiveDevelopersPromiseMock = listActiveDevelopersPromise as jest.MockedFunction<any>
 const getProjectListPromiseMock = getProjectListPromise as jest.MockedFunction<any>
 const getServiceListPromiseMock = getAllServicesPromise as jest.MockedFunction<any>
@@ -58,6 +60,9 @@ const serviceListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
     serviceMockData
   })
+})
+useGetCreditsByAccountMock.mockImplementation(() => {
+  return []
 })
 
 useExtendTrialLicenseMock.mockImplementation(() => {
@@ -93,6 +98,7 @@ jest.mock('@common/hooks', () => ({
 moment.now = jest.fn(() => 1482363367071)
 
 const featureFlags = {
+  BUILD_CREDITS_VIEW: true,
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
@@ -107,6 +113,8 @@ describe('Subscriptions Page', () => {
       refetch: jest.fn()
     }
   })
+  jest.useFakeTimers('modern')
+  jest.setSystemTime(new Date('2020-01-19'))
   test('it renders the subscriptions page with no data service table', async () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {

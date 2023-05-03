@@ -50,6 +50,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 
 import {
   ConnectorReferenceDTO,
@@ -64,6 +65,7 @@ import { SelectConfigureOptions } from '@common/components/ConfigureOptions/Sele
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import { getNameSpaceSchema, getReleaseNameSchema, getValue } from '../PipelineStepsUtil'
 import {
   AzureInfrastructureSpecEditableProps,
@@ -97,7 +99,8 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
   onUpdate,
   allowableTypes,
   allValues,
-  stepViewType
+  stepViewType,
+  provisioner
 }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -131,6 +134,10 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
     orgIdentifier,
     projectIdentifier
   }
+
+  const provisionerName = React.useMemo((): string => {
+    return isEmpty(path) ? 'provisioner' : `${path}.provisioner`
+  }, [path])
 
   const resetForm = (parent: string): void => {
     switch (parent) {
@@ -304,6 +311,11 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
 
   return (
     <Layout.Vertical spacing="small">
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <ProvisionerSelectField name={provisionerName} path={path} provisioners={provisioner} />
+        </div>
+      )}
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
           <FormMultiTypeConnectorField
@@ -807,7 +819,8 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                 ? /* istanbul ignore next */ undefined
                 : getValue(value.resourceGroup),
             cluster: getValue(value.cluster) === '' ? /* istanbul ignore next */ undefined : getValue(value.cluster),
-            allowSimultaneousDeployments: value.allowSimultaneousDeployments
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value?.provisioner || undefined
           }
           /* istanbul ignore else */ if (value.connectorRef) {
             data.connectorRef = value.connectorRef?.value || /* istanbul ignore next */ value.connectorRef
@@ -823,6 +836,9 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
           formikRef.current = formik
           return (
             <FormikForm>
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <ProvisionerField name="provisioner" isReadonly />
+              </Layout.Horizontal>
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

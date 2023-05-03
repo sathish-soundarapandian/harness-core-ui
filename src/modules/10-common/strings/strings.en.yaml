@@ -557,10 +557,13 @@ subscriptions:
     serviceLicenses: Service Licenses
     serviceInstances: Service Instances
     cdUsers: Active CD Users
+    buildCredits: Build Credits
     cdSITooltip: Service Instances represent the dynamic instantiation of a service you deploy via Harness. For a service representing a Docker image, Service Instances are the number of pods running with the docker image. For a service that deploys .NET web app, Service Instances are the number of VMs running the web app.
     cdServiceTooltip: A Service is an independent unit of software you deploy through Harness CD pipelines. An Active Service is a service deployed in the last 30 days.
     ciUsers: Active CI Developers
     ciTooltip: A Developer is an active code committer observed in the builds managed by Harness CI over last 30 days.
+    creditTooltip: Free or Paid  Build credits that haven't expired.
+    creditTooltipExpiry: The earliest expiry date on a credit is on {{date}}.
     ffActiveUserTootip: Monthly Active Users (MAUs) are only applicable to client-side applications and are defined as unique end users evaluating flags from client-side SDKs (JavaScript, iOS, Android, C/C++, React, etc) over a 30-day period.
     ffDeveloperTooltip: Developers are Harness Feature Flag users actually engaged with the product to create/edit/delete Feature Flags and/or Targets/Segments.
     ffFFTooltip: Total number of Feature Flags currently
@@ -570,13 +573,15 @@ subscriptions:
     stoScansTooltip: A Security Scan is a pipeline execution that involves a security step.
     monthlyUsers: Monthly Active Users
     activeDevelopers: Active Developers
+    creditsRightHeader: Expires on {{date}}
+    allCredits: Credits
     developers: Developers
     developer: Developer
     cloudSpend: Total Cloud Spend
     ccmUsers: Active CCM Users
     ccmTooltip: Cloud Spend refers to the total spend (dollars) managed and optimized by Harness Cloud Cost Management.
     cetAgents: Active Agents
-    cetAgentToolTip: An Agent refers to a constantly active error tracking component that is integrated with Harness platform for continuous monitoring and analysis.
+    cetAgentToolTip: An agent is an independent unit of software that you install on a host or in a container that tracks for errors continuously and sends the error tracking data to the Harness Platform.
 current: Current
 banners:
   email:
@@ -965,6 +970,19 @@ resourceCenter:
     submitDesc: 'Get help from our expert system'
     submitTicket: Submit a ticket
     viewTicket: View my ticket
+    ticketSubject: Ticket Subject
+    ticketDetails: Ticket Details
+    ticketIssue: What is the problem you are facing?
+    ticketSuccess: Ticket Created Successfully
+    issueType: Issue Type
+    priority: Priority
+    component: Component
+    ticketDescription: Ticket Description
+    ticketDescriptionPlaceholder: Please add relevant details for the problem
+    attachments: Attachments
+    chooseAFile: Choose a File
+    platform: Platform
+    suggestionsPanel: Before you proceed, here are some suggestions that might help...
   bottomlayout:
     desc: Other useful resources
     docs: Docs
@@ -1452,4 +1470,9 @@ googleCloudSourceFetchType:
   specificTag: Specific Tag
 lastBuildDate: LAST BUILD DATE
 noActiveDeveloperData: No active Developer Record found
+nextExpiringDate: Next Expiring Date
+startDateCredit: START DATE
+expiryDateCredit: EXPIRY DATE
+entitlement: ENTITLEMENT
+noCreditInfoData: No Credit Information Found
 readOnlyConnectorWarning: Read-only Vault connector is not allowed for Terraform/Terragrunt Plan steps.

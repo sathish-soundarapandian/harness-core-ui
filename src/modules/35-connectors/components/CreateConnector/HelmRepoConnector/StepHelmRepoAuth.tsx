@@ -53,6 +53,8 @@ const toolTipIds = {
   }
 }
 
+export const OCI_CONNECTOR_URL_REGEX = /^(oci:\/\/)?((?:(?!:\/\/|\s)[\w$\-_.+!*'(),;:@&=])+(?::\d{1,5})?)(\/[^\s]*)?$/
+
 interface StepHelmRepoAuthenticationProps extends ConnectorInfoDTO {
   name: string
   isEditMode?: boolean
@@ -153,7 +155,9 @@ const StepHelmAuthentication: React.FC<StepProps<StepHelmRepoAuthenticationProps
         }}
         formName="helmRepoAuthForm"
         validationSchema={Yup.object().shape({
-          helmRepoUrl: Yup.string().trim().required(getString('validation.helmRepoUrl')),
+          helmRepoUrl: Yup.string()
+            .matches(OCI_CONNECTOR_URL_REGEX, getString('connectors.httpHelm.helmRepoURLValidation'))
+            .required(getString('validation.helmRepoUrl')),
           authType: Yup.string().trim().required(getString('validation.authType')),
           username: Yup.string().when('authType', {
             is: val => val === AuthTypes.USER_PASSWORD,

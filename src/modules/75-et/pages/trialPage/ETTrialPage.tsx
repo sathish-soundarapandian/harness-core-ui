@@ -24,11 +24,7 @@ const ETTrialPage: React.FC = () => {
         <Text padding={{ bottom: 'xxlarge' }} width={500}>
           {getString('et.homepage.slogan')}
         </Text>
-        <a
-          href="https://developer.harness.io/docs/service-reliability-management/continuous-error-tracking/getting-started/cet-overview"
-          rel="noreferrer"
-          target="_blank"
-        >
+        <a href="https://developer.harness.io/docs/category/continuous-error-tracking" rel="noreferrer" target="_blank">
           {getString('et.homepage.learnMore')}
         </a>
         <Button

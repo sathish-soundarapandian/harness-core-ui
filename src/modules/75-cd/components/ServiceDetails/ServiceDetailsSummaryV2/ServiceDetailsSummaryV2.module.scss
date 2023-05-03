@@ -19,15 +19,6 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-
-    .statusIcon {
-      background: var(--grey-100);
-      border: 0.5px solid var(--grey-300);
-      border-radius: 4px;
-      padding: 4px;
-      display: flex;
-      align-items: center;
-    }
   }
 }
 
@@ -387,7 +378,7 @@
 
 .artifactCardGrid {
   display: grid !important;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
 
   :nth-child(1) {
     margin-left: var(--layout-spacing) !important;
@@ -395,7 +386,6 @@
 }
 
 .artifactCards {
-  min-width: 430px;
   height: 200px;
   margin: var(--spacing-6) !important;
   padding: var(--spacing-5) !important;
@@ -509,25 +499,6 @@
   }
 }
 
-.statusIconPopover {
-  :global {
-    .bp3-popover-arrow-fill {
-      fill: var(--primary-9-dark) !important;
-    }
-    .bp3-popover-content {
-      background-color: var(--primary-9-dark) !important;
-      border-radius: 4px !important;
-    }
-  }
-  background-color: var(--primary-9-dark) !important;
-  border-radius: 4px !important;
-
-  p {
-    padding: 12px !important;
-    border-radius: 4px;
-  }
-}
-
 .envGroupStyle {
   font-size: var(--font-size-small) !important;
   color: var(--grey-800) !important;
@@ -558,4 +529,31 @@
     max-height: 400px;
     overflow: auto;
   }
+}
+
+.rollbackActionIcon {
+  background: var(--grey-100) !important;
+  border: 0.5px solid var(--grey-300);
+  border-radius: 4px;
+  padding: var(--spacing-1) !important;
+  display: flex;
+  align-items: center;
+  margin-left: var(--spacing-4) !important;
+  cursor: pointer;
+}
+
+.searchWithRollbackBtn {
+  display: grid !important;
+  grid-template-columns: 1fr 100px;
+  gap: 12px;
+  align-items: center;
+}
+.noRollbackBtn {
+  display: grid !important;
+  grid-template-columns: 1fr;
+}
+
+.lastDeployedText {
+  display: flex;
+  gap: 3px;
 }

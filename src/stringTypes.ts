@@ -276,6 +276,7 @@ export interface StringsMap {
   'common.editYaml': string
   'common.enableGitSyncPipeline': string
   'common.endTime': string
+  'common.entitlement': string
   'common.entityPlaceholderText': string
   'common.entityReferenceSubTitle': string
   'common.entityReferenceTitle': string
@@ -317,6 +318,7 @@ export interface StringsMap {
   'common.expand': string
   'common.expiration': string
   'common.expiryDate': string
+  'common.expiryDateCredit': string
   'common.exploreAllPlans': string
   'common.explorePlans': string
   'common.exploreSaaSPlans': string
@@ -658,12 +660,14 @@ export interface StringsMap {
   'common.newMonitoredService': string
   'common.newName': string
   'common.newVersion': string
+  'common.nextExpiringDate': string
   'common.nextStep': string
   'common.noAPIKeys': string
   'common.noActiveDeveloperData': string
   'common.noActiveServiceData': string
   'common.noAvailableTags': string
   'common.noConnectorAvailable': string
+  'common.noCreditInfoData': string
   'common.noDelegateForTask': string
   'common.noDelegateLogs': string
   'common.noDeployments': string
@@ -890,8 +894,21 @@ export interface StringsMap {
   'common.resourceCenter.productUpdates.releaseText': string
   'common.resourceCenter.productUpdates.title': string
   'common.resourceCenter.productUpdates.whatsnew': string
+  'common.resourceCenter.ticketmenu.attachments': string
+  'common.resourceCenter.ticketmenu.chooseAFile': string
+  'common.resourceCenter.ticketmenu.component': string
+  'common.resourceCenter.ticketmenu.issueType': string
+  'common.resourceCenter.ticketmenu.platform': string
+  'common.resourceCenter.ticketmenu.priority': string
   'common.resourceCenter.ticketmenu.submitDesc': string
   'common.resourceCenter.ticketmenu.submitTicket': string
+  'common.resourceCenter.ticketmenu.suggestionsPanel': string
+  'common.resourceCenter.ticketmenu.ticketDescription': string
+  'common.resourceCenter.ticketmenu.ticketDescriptionPlaceholder': string
+  'common.resourceCenter.ticketmenu.ticketDetails': string
+  'common.resourceCenter.ticketmenu.ticketIssue': string
+  'common.resourceCenter.ticketmenu.ticketSubject': string
+  'common.resourceCenter.ticketmenu.ticketSuccess': string
   'common.resourceCenter.ticketmenu.tickets': string
   'common.resourceCenter.ticketmenu.ticketsDesc': string
   'common.resourceCenter.ticketmenu.title': string
@@ -1056,6 +1073,7 @@ export interface StringsMap {
   'common.stage': string
   'common.stageName': string
   'common.start14dayTrial': string
+  'common.startDateCredit': string
   'common.startFree': string
   'common.startFreePlan': string
   'common.startTrial': string
@@ -1095,6 +1113,8 @@ export interface StringsMap {
   'common.subscriptions.title': string
   'common.subscriptions.trial': string
   'common.subscriptions.usage.activeDevelopers': string
+  'common.subscriptions.usage.allCredits': string
+  'common.subscriptions.usage.buildCredits': string
   'common.subscriptions.usage.ccmTooltip': string
   'common.subscriptions.usage.ccmUsers': string
   'common.subscriptions.usage.cdSITooltip': string
@@ -1105,6 +1125,9 @@ export interface StringsMap {
   'common.subscriptions.usage.ciTooltip': string
   'common.subscriptions.usage.ciUsers': string
   'common.subscriptions.usage.cloudSpend': string
+  'common.subscriptions.usage.creditTooltip': string
+  'common.subscriptions.usage.creditTooltipExpiry': string
+  'common.subscriptions.usage.creditsRightHeader': string
   'common.subscriptions.usage.developer': string
   'common.subscriptions.usage.developers': string
   'common.subscriptions.usage.ffActiveUserTootip': string
@@ -2886,6 +2909,7 @@ export interface StringsMap {
   'connectors.hashiCorpVault.vaultUrl': string
   'connectors.hashicorpVaultDetails': string
   'connectors.helmRepo.helmRepoUrl': string
+  'connectors.httpHelm.helmRepoURLValidation': string
   'connectors.httpHelm.httpHelmRepoUrl': string
   'connectors.ifReq': string
   'connectors.jenkins.bearerTokenRequired': string
@@ -3139,7 +3163,6 @@ export interface StringsMap {
   'connectors.validation.serviceNowUrl': string
   'connectors.validationPath': string
   'connectors.verifyConnection': string
-  'auditTrail.Platform': string
   'auditTrail.actions.added_collaborator': string
   'auditTrail.actions.added_membership': string
   'auditTrail.actions.create_token': string
@@ -4280,7 +4303,6 @@ export interface StringsMap {
   'pipeline.jiraApprovalStep.fetchingProjectsPlaceholder': string
   'pipeline.jiraApprovalStep.issueKey': string
   'pipeline.jiraApprovalStep.issueKeyPlaceholder': string
-  'pipeline.jiraApprovalStep.issueType': string
   'pipeline.jiraApprovalStep.issueTypePlaceholder': string
   'pipeline.jiraApprovalStep.jexlExpressionApprovalCriteria': string
   'pipeline.jiraApprovalStep.jexlExpressionPlaceholder': string
@@ -5251,12 +5273,14 @@ export interface StringsMap {
   'triggers.conditionsPanel.attribute': string
   'triggers.conditionsPanel.branchName': string
   'triggers.conditionsPanel.changedFiles': string
+  'triggers.conditionsPanel.eventCondition': string
   'triggers.conditionsPanel.headerConditions': string
   'triggers.conditionsPanel.jexlCondition': string
   'triggers.conditionsPanel.jexlConditionPlaceholder': string
   'triggers.conditionsPanel.manifestVersion': string
   'triggers.conditionsPanel.matchesValue': string
   'triggers.conditionsPanel.matchesValuePlaceholder': string
+  'triggers.conditionsPanel.metadataConditions': string
   'triggers.conditionsPanel.operator': string
   'triggers.conditionsPanel.payloadConditions': string
   'triggers.conditionsPanel.sourceBranch': string
@@ -6045,17 +6069,20 @@ export interface StringsMap {
   'cd.serviceDashboard.headers.infras': string
   'cd.serviceDashboard.headers.infrastructures': string
   'cd.serviceDashboard.headers.instances': string
+  'cd.serviceDashboard.headers.rollbackStatus': string
   'cd.serviceDashboard.helmChartDetails': string
   'cd.serviceDashboard.helmChartName': string
   'cd.serviceDashboard.helmRopoUrl': string
   'cd.serviceDashboard.helmSubChartPathName': string
   'cd.serviceDashboard.host': string
+  'cd.serviceDashboard.hotfixed': string
   'cd.serviceDashboard.in': string
   'cd.serviceDashboard.instanceCountHistory': string
   'cd.serviceDashboard.instanceDataEmpty': string
   'cd.serviceDashboard.instanceDetails': string
   'cd.serviceDashboard.instanceId': string
   'cd.serviceDashboard.instancesDetails': string
+  'cd.serviceDashboard.lastDeployedText': string
   'cd.serviceDashboard.lastDeployment': string
   'cd.serviceDashboard.lastPipelineExecution': string
   'cd.serviceDashboard.latestVersion': string
@@ -6072,9 +6099,16 @@ export interface StringsMap {
   'cd.serviceDashboard.noServices': string
   'cd.serviceDashboard.nonProd': string
   'cd.serviceDashboard.pod': string
+  'cd.serviceDashboard.postProdRollback.emptyStateMsg': string
+  'cd.serviceDashboard.postProdRollback.rollbackConfirmationText': string
+  'cd.serviceDashboard.postProdRollback.rollbackConfirmationTitle': string
+  'cd.serviceDashboard.postProdRollback.rollbackTitle': string
+  'cd.serviceDashboard.postProdRollback.rollbackTriggedSuccessfully': string
+  'cd.serviceDashboard.postProdRollback.rollbackWarningText': string
   'cd.serviceDashboard.prod': string
   'cd.serviceDashboard.recentDeployments': string
   'cd.serviceDashboard.revision': string
+  'cd.serviceDashboard.rollbacked': string
   'cd.serviceDashboard.runTime': string
   'cd.serviceDashboard.runningServiceInstancesLabel': string
   'cd.serviceDashboard.seeMore': string
@@ -8554,7 +8588,6 @@ export interface StringsMap {
   'cv.logs.jiraDetails.viewInJira': string
   'cv.logs.jiraDetails.viewTicket': string
   'cv.logs.jiraFormLable.assignee': string
-  'cv.logs.jiraFormLable.priority': string
   'cv.logs.jiraFormLable.ticketSummary': string
   'cv.logs.jiraFormValidation.issueType': string
   'cv.logs.jiraFormValidation.ticketSummary': string
@@ -9182,6 +9215,7 @@ export interface StringsMap {
   'cv.slos.createCompositeSLO': string
   'cv.slos.createMonitoredService': string
   'cv.slos.createSLO': string
+  'cv.slos.dataCollectionFailure': string
   'cv.slos.defineSLOSubttitle': string
   'cv.slos.deleteSLO': string
   'cv.slos.errorBudgetPolicySubtitle': string
@@ -9264,6 +9298,7 @@ export interface StringsMap {
   'cv.slos.target': string
   'cv.slos.title': string
   'cv.slos.totalServices': string
+  'cv.slos.untilPresent': string
   'cv.slos.userJourney': string
   'cv.slos.userJourneyCreated': string
   'cv.slos.userJourneyPlaceholder': string

@@ -18,7 +18,7 @@ import css from './EntityCachedCopy.module.scss'
 
 export interface EntityCachedCopyProps {
   reloadContent: string
-  cacheResponse: CacheResponseMetadata
+  cacheResponse?: CacheResponseMetadata
   reloadFromCache: (loadFromCache?: boolean) => void
   fetchError?: GetDataError<Failure | Error> | null
   readonly?: boolean
@@ -59,7 +59,7 @@ function EntityCachedCopyInner(
   const tooltipContent = (
     <div className={css.popover}>
       <span>{getString('pipeline.pipelineCachedCopy.cachedCopyText')}</span>:{' '}
-      {formatDatetoLocale(cacheResponse.lastUpdatedAt)}
+      {cacheResponse?.lastUpdatedAt && formatDatetoLocale(cacheResponse.lastUpdatedAt)}
       {inlineReload && (
         <Icon
           name="refresh"
@@ -94,18 +94,20 @@ function EntityCachedCopyInner(
 
   return (
     <>
-      <div className={cx(css.cachedcopy, className)}>
-        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }} spacing="small">
-          <Button
-            minimal
-            variation={ButtonVariation.ICON}
-            icon={cacheStateToIconMap[cacheResponse.cacheState]}
-            withoutCurrentColor
-            tooltipProps={{ isDark: true, interactionKind: 'hover', position: 'bottom' }}
-            tooltip={tooltipContent}
-          />
-        </Layout.Horizontal>
-      </div>
+      {cacheResponse && (
+        <div className={cx(css.cachedcopy, className)}>
+          <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }} spacing="small">
+            <Button
+              minimal
+              variation={ButtonVariation.ICON}
+              icon={cacheStateToIconMap[cacheResponse.cacheState]}
+              withoutCurrentColor
+              tooltipProps={{ isDark: true, interactionKind: 'hover', position: 'bottom' }}
+              tooltip={tooltipContent}
+            />
+          </Layout.Horizontal>
+        </div>
+      )}
       <ConfirmationDialog
         intent={Intent.WARNING}
         isOpen={isModalOpen}

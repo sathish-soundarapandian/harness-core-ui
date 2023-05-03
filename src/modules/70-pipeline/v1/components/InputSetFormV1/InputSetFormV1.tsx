@@ -474,7 +474,7 @@ function InputSetV1FormWrapper(props: InputSetV1FormWrapperProps): React.ReactEl
   const inputCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
 
   function showReloadFromGitoption(): boolean {
-    return Boolean(inputSet?.storeType === StoreType.REMOTE && inputSet?.cacheResponse)
+    return Boolean(inputSet?.storeType === StoreType.REMOTE)
   }
 
   function handleReloadFromGitClick(): void {
@@ -519,7 +519,7 @@ function InputSetV1FormWrapper(props: InputSetV1FormWrapperProps): React.ReactEl
                     }}
                   />
 
-                  {!loading && inputSet?.cacheResponse && (
+                  {!loading && (
                     <EntityCachedCopy
                       ref={inputCachedCopyRef}
                       reloadContent={getString('inputSets.inputSetLabel')}

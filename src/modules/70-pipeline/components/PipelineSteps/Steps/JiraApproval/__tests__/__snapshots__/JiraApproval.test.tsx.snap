@@ -497,7 +497,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                 class="Tooltip--acenter"
                 data-tooltip-id="jiraApprovalIssueType"
               >
-                pipeline.jiraApprovalStep.issueType (optional)
+                common.resourceCenter.ticketmenu.issueType (optional)
               </span>
                
               <span
@@ -1811,7 +1811,7 @@ exports[`Jira Approval tests Edit stage - readonly: edit stage view readonly 1`]
                 class="Tooltip--acenter"
                 data-tooltip-id="jiraApprovalIssueType"
               >
-                pipeline.jiraApprovalStep.issueType (optional)
+                common.resourceCenter.ticketmenu.issueType (optional)
               </span>
                
               <span

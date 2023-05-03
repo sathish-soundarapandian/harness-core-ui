@@ -3,5 +3,5 @@ continuous: '{{$.common.purpose.cet.continuous}}'
 nav:
   settings: 'Error Tacking Settings'
 homepage:
-  slogan: Enables you to identify, triage, and resolve errors in your service. This helps to implement rapid code changes by ensuring that the code is always in a deployable state.
+  slogan: Find and fix errors faster with full code level visibility and deep context in each stage of your software development.
   learnMore: Learn more about Continuous Error Tracking

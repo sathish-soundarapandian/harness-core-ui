@@ -10,7 +10,8 @@ export const DATE_FORMAT = 'Do MMM hh:mm A'
 export enum SLO_WIDGETS {
   DOWNTIME = 'Downtime',
   ANNOTATION = 'Annotation',
-  ERROR_BUDGET_RESET = 'ErrorBudgetReset'
+  ERROR_BUDGET_RESET = 'ErrorBudgetReset',
+  DATA_COLLECTION_FAILURE = 'DataCollectionFailure'
 }
 
 export const INITIAL_MESSAGE_DETAILS = { message: '', id: '' }

@@ -38,8 +38,10 @@ declare const styles: {
   readonly instanceDetailTitle: string
   readonly instanceDetailView: string
   readonly instanceViewHeader: string
+  readonly lastDeployedText: string
   readonly marginBottom12: string
   readonly nextButton: string
+  readonly noRollbackBtn: string
   readonly openExecBtn: string
   readonly openTaskBannerStyle: string
   readonly openTaskCardStyle: string
@@ -55,13 +57,13 @@ declare const styles: {
   readonly pipelineIdTitle: string
   readonly prevButton: string
   readonly production: string
+  readonly rollbackActionIcon: string
   readonly searchIconStyle: string
+  readonly searchWithRollbackBtn: string
   readonly sectionValue: string
   readonly selected: string
   readonly separatorStyle: string
   readonly slideStyle: string
-  readonly statusIcon: string
-  readonly statusIconPopover: string
   readonly titleStyle: string
   readonly titleText: string
 }

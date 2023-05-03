@@ -21,7 +21,7 @@ exports[`ETTrialPage snapshot test should render properly 1`] = `
         et.homepage.slogan
       </p>
       <a
-        href="https://developer.harness.io/docs/service-reliability-management/continuous-error-tracking/getting-started/cet-overview"
+        href="https://developer.harness.io/docs/category/continuous-error-tracking"
         rel="noreferrer"
         target="_blank"
       >

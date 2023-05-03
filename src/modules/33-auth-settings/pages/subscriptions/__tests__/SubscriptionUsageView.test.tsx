@@ -13,6 +13,7 @@ import SubscriptionUsageView from '../overview/SubscriptionUsageView'
 import { licenseData } from './CDUsageInfo.test'
 
 const featureFlags = {
+  BUILD_CREDITS_VIEW: true,
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,

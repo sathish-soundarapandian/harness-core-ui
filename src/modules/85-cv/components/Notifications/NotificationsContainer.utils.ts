@@ -57,10 +57,10 @@ export function getUpdatedNotificationRules({
 
 export function isNotificationEdited(
   notificationRuleRefs: NotificationRuleRefDTO[],
-  latestNotificationIdentifer: string
+  latestNotificationIdentifier: string
 ): boolean {
   return notificationRuleRefs.some(
-    notificationRuleRef => notificationRuleRef?.notificationRuleRef === latestNotificationIdentifer
+    notificationRuleRef => notificationRuleRef?.notificationRuleRef === latestNotificationIdentifier
   )
 }
 

@@ -450,7 +450,11 @@ export default function WebhookTriggerWizard(
   const [connectorScopeParams, setConnectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
   const [wizardKey, setWizardKey] = useState<number>(0)
 
-  const { data: connectorData, refetch: getConnectorDetails } = useGetConnector({
+  const {
+    data: connectorData,
+    refetch: getConnectorDetails,
+    loading: loadingConnector
+  } = useGetConnector({
     identifier: getIdentifierFromValue(
       wizardKey < 1 // wizardKey >1 means we've reset initialValues cause of Yaml Switching (onEdit or new) and should use those formik values instead
         ? onEditInitialValues?.connectorRef?.identifier || ''
@@ -461,19 +465,29 @@ export default function WebhookTriggerWizard(
   })
 
   useEffect(() => {
-    if (onEditInitialValues?.connectorRef?.identifier && !isUndefined(connectorScopeParams) && !connectorData) {
+    if (
+      onEditInitialValues?.connectorRef?.identifier &&
+      !isUndefined(connectorScopeParams) &&
+      !connectorData &&
+      !loadingConnector
+    ) {
       getConnectorDetails()
     } else if (
       initialValues?.connectorRef?.value &&
       (!initialValues.connectorRef.label ||
-        (connectorData?.data?.connector?.identifier &&
-          !initialValues?.connectorRef?.identifier?.includes(connectorData?.data?.connector?.identifier)))
+        connectorData?.data?.connector?.identifier !== initialValues.connectorRef?.connector?.identifier) &&
+      !loadingConnector
     ) {
       // need to get label due to switching from yaml to visual
       getConnectorDetails()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onEditInitialValues?.connectorRef?.identifier, connectorScopeParams, initialValues?.connectorRef])
+  }, [
+    onEditInitialValues?.connectorRef?.identifier,
+    connectorScopeParams,
+    initialValues?.connectorRef,
+    loadingConnector
+  ])
 
   useEffect(() => {
     if (connectorData?.data?.connector?.name && onEditInitialValues?.connectorRef?.identifier && wizardKey < 1) {
@@ -698,7 +712,7 @@ export default function WebhookTriggerWizard(
             connectorRefWithBlankLabel.connector = connector
             connectorRefWithBlankLabel.connector.identifier = triggerValues.connectorRef
 
-            connectorRefWithBlankLabel.label = '' // will fetch details on useEffect
+            connectorRefWithBlankLabel.label = connectorData.data.connector.name
           }
 
           triggerValues.connectorRef = connectorRefWithBlankLabel
