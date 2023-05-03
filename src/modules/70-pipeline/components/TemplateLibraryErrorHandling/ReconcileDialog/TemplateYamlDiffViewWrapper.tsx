@@ -25,9 +25,11 @@ import { useStrings } from 'framework/strings'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { YamlDiffView } from '@common/components/YamlDiffView/YamlDiffView'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export interface TemplateYamlDiffViewWrapperProps {
   errorNodeSummary?: ErrorNodeSummary
+  storeMetadata?: StoreMetadata
   rootErrorNodeSummary: ErrorNodeSummary
   originalEntityYaml: string
   resolvedTemplateResponses?: TemplateResponse[]
@@ -41,7 +43,8 @@ export function TemplateYamlDiffViewWrapper({
   originalEntityYaml,
   resolvedTemplateResponses = [],
   onUpdate,
-  setYamlDiffLoading
+  setYamlDiffLoading,
+  storeMetadata
 }: TemplateYamlDiffViewWrapperProps): React.ReactElement {
   const { getString } = useStrings()
   const params = useParams<ProjectPathProps>()
@@ -76,11 +79,11 @@ export function TemplateYamlDiffViewWrapper({
           projectIdentifier,
           ...getGitQueryParamsWithParentScope({
             storeMetadata: {
-              branch: templateResponse?.gitDetails?.branch,
-              connectorRef: templateResponse?.connectorRef,
-              repoName: templateResponse?.gitDetails?.repoName,
-              filePath: templateResponse?.gitDetails?.filePath,
-              storeType: templateResponse?.storeType
+              branch: defaultTo(templateResponse?.gitDetails?.branch, storeMetadata?.branch),
+              connectorRef: defaultTo(templateResponse?.connectorRef, storeMetadata?.connectorRef),
+              repoName: defaultTo(templateResponse?.gitDetails?.repoName, storeMetadata?.repoName),
+              filePath: defaultTo(templateResponse?.gitDetails?.filePath, storeMetadata?.filePath),
+              storeType: defaultTo(templateResponse?.storeType, storeMetadata?.storeType)
             },
             params
           })
