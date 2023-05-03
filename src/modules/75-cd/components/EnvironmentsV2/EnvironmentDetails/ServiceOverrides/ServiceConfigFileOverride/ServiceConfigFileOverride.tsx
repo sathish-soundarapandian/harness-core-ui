@@ -66,6 +66,12 @@ import { getBuildPayload } from '@pipeline/components/ManifestSelection/Manifest
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 import ServiceConfigFileOverridesList from './ServiceConfigFileOverridesList'
 import ServiceConfigFileList from './ServiceConfigFileList'
+import {
+  AllowedConfigStoresTypes,
+  OverrideGitStores,
+  getAllowedConfigStores,
+  shouldShowGitConfigStores
+} from './ServiceConfigFileOverrideUtil'
 import css from '../ServiceManifestOverride/ServiceManifestOverride.module.scss'
 
 interface ConfigFileDefaultValueType {
@@ -85,6 +91,7 @@ interface ServiceConfigFileOverrideProps {
   selectedService?: string
   serviceList?: ServiceResponse[]
   fromEnvConfigPage?: boolean
+  serviceType?: string
 }
 const DIALOG_PROPS: IDialogProps = {
   isOpen: true,
@@ -110,7 +117,8 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
     handleConfigFileOverrideSubmit,
     handleServiceFileDelete,
     allowableTypes,
-    fromEnvConfigPage
+    fromEnvConfigPage,
+    serviceType
   } = props
 
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
@@ -118,7 +126,18 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
   >()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
-  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
+  const { CDS_SERVICE_CONFIG_LAST_STEP, CDS_GIT_CONFIG_FILES } = useFeatureFlags()
+
+  const allowedOverrideStoreTypes = React.useMemo((): ConfigFileType[] => {
+    if (serviceType) {
+      return shouldShowGitConfigStores(serviceType as ServiceDefinition['type'])
+        ? [...AllowedConfigStoresTypes, ...OverrideGitStores]
+        : AllowedConfigStoresTypes
+    } else {
+      // Environment Configurations
+      return getAllowedConfigStores({ CDS_GIT_CONFIG_FILES })
+    }
+  }, [CDS_GIT_CONFIG_FILES, serviceType])
 
   const getServiceYaml = useCallback((): NGServiceV2InfoConfig => {
     const serviceSelected = serviceList?.find(serviceObj => serviceObj.service?.identifier === selectedService)
@@ -397,7 +416,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
       <Dialog onClose={onClose} {...DIALOG_PROPS}>
         <div className={css.createConnectorWizard}>
           <ConfigFilesWizard
-            stores={[ConfigFilesMap.Harness, ConfigFilesMap.Github, ConfigFilesMap.Git, ConfigFilesMap.Bitbucket]}
+            stores={allowedOverrideStoreTypes}
             expressions={expressions}
             allowableTypes={allowableTypes}
             isReadonly={isReadonly}

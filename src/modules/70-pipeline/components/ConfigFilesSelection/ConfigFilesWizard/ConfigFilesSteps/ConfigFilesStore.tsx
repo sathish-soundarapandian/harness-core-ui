@@ -78,6 +78,7 @@ function ConfigFileStore({
 
   const { CDS_GIT_CONFIG_FILES } = useFeatureFlags()
 
+  const [isLoadingConnectors, setIsLoadingConnectors] = useState<boolean>(true)
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
 
@@ -105,6 +106,7 @@ function ConfigFileStore({
       return true
     }
     return (
+      !isLoadingConnectors &&
       !!selectedStore &&
       ((getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
         !isEmpty((connectorRefValue as ConnectorSelectedValue)?.connector)) ||
@@ -126,8 +128,17 @@ function ConfigFileStore({
 
   const getInitialValues = useCallback((): any => {
     const initValues = { ...initialValues, ...prevStepData }
+    if (prevStepData) {
+      if (prevStepData?.connectorRef) {
+        initValues.connectorRef = prevStepData?.connectorRef
+      }
+      handleStoreChange(selectedStore)
+    }
+    if (selectedStore !== initValues.store) {
+      initValues.connectorRef = ''
+    }
     return { ...initValues, store: selectedStore }
-  }, [initialValues, prevStepData, selectedStore])
+  }, [handleStoreChange, initialValues, prevStepData, selectedStore])
 
   const supportedConfigFilesStores = useMemo(
     (): Item[] =>
@@ -196,6 +207,9 @@ function ConfigFileStore({
                   >
                     <FormMultiTypeConnectorField
                       key={formik.values.store}
+                      onLoadingFinish={() => {
+                        setIsLoadingConnectors(false)
+                      }}
                       name="connectorRef"
                       label={`${getString(ConfigFileTypeTitle[formik.values.store as ConfigFileType])} ${getString(
                         'connector'
