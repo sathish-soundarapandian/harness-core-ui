@@ -100,9 +100,10 @@ export const handleOAuthEventProcessing = ({
   onSuccessCallback: (response: OAuthEventProcessingResponse) => void
 }): OAuthEventProcessingResponse | undefined => {
   if (oAuthStatus === Status.IN_PROGRESS) {
-    // if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
-    //   return
-    // }
+    // For local dev this condtion of same origin should be skipped
+    if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
+      return
+    }
     if (!event || !event.data) {
       return
     }

@@ -23,14 +23,17 @@ plusSCM: + Add a Source Code Manager
 selectSCM: Select a Source Code Manager
 selectedSCM: Selected Source Code Manager
 editProfile: Edit Profile
+noSCMLabel: No SCM has been set up in user profile.
+connectToGitProviderLabel: Connect to a Git Provider
 scmCreateSuccess: Source Code Manager added successfully
 scmUpdateSuccess: Source Code Manager updated successfully
 scmCreateFail: Could not add your Source Code Manager
 scmUpdateFail: Could not update your Source Code Manager
-scmDeleteSuccess: Source Code Manager "{{ name }}" deleted successfully
-scmDeleteFailure: Could not delete Source Code Manager "{{ name }}"
+scmDeleteSuccess: Source Code Manager deleted successfully
+scmDeleteFailure: Could not delete Source Code Manager
 confirmDeleteTitle: Delete Source Code Manager
 confirmDelete: Are you sure you want to delete the Source Code Manager "{{ name }}"
+confirmDeleteV2: Are you sure you want to delete the Source Code Manager for [{{ type }}]
 userEditSuccess: User details updated successfully
 userEditFail: Could not update user details
 awsCredentials: AWS Credentials

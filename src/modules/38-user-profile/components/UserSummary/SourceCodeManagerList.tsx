@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Text, Layout, Button, Icon, ButtonVariation, useConfirmationDialog } from '@harness/uicore'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
+import { Spinner } from '@blueprintjs/core'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useSourceCodeModal } from '@user-profile/modals/SourceCodeManager/useSourceCodeManager'
 import { useStrings } from 'framework/strings'
@@ -99,7 +100,9 @@ const RenderColumnDelete: Renderer<CellProps<SourceCodeManagerDTO>> = ({ row, co
   })
 
   const { openDialog } = useConfirmationDialog({
-    contentText: `${getString('userProfile.confirmDelete', { name: data.name || data.type })}`,
+    contentText: PIE_GITX_OAUTH
+      ? `${getString('userProfile.confirmDeleteV2', { type: data.type })}`
+      : `${getString('userProfile.confirmDelete', { name: data.name })}`,
     titleText: getString('userProfile.confirmDeleteTitle'),
     confirmButtonText: getString('delete'),
     cancelButtonText: getString('cancel'),
@@ -112,18 +115,10 @@ const RenderColumnDelete: Renderer<CellProps<SourceCodeManagerDTO>> = ({ row, co
                 headers: { 'content-type': 'application/json' }
               })
           /* istanbul ignore else */ if (deleted) {
-            showSuccess(
-              getString('userProfile.scmDeleteSuccess', {
-                name: data.name || data.type
-              })
-            )
+            showSuccess(getString('userProfile.scmDeleteSuccess'))
             ;(column as any).reload?.()
           } /* istanbul ignore next */ else {
-            showError(
-              getString('userProfile.scmDeleteFailure', {
-                name: data.name || data.type
-              })
-            )
+            showError(getString('userProfile.scmDeleteFailure'))
           }
         } /* istanbul ignore next */ catch (err) {
           showError(err?.data?.message || err?.message)
@@ -237,11 +232,9 @@ const SourceCodeManagerList: React.FC = () => {
           hideHeaders={true}
         />
       )
+    } else {
+      return !loadingOauthSCMs ? <Spinner size={24} /> : <Text>{getString('userProfile.noSCMLabel')}</Text>
     }
-    if (!loadingOauthSCMs) {
-      return <Text>No SCM has been set up in user profile.</Text>
-    }
-    return <></>
   }
 
   return (

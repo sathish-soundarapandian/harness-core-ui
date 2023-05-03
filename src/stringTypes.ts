@@ -3225,7 +3225,9 @@ export interface StringsMap {
   'userProfile.changePassword': string
   'userProfile.confirmDelete': string
   'userProfile.confirmDeleteTitle': string
+  'userProfile.confirmDeleteV2': string
   'userProfile.confirmPassword': string
+  'userProfile.connectToGitProviderLabel': string
   'userProfile.currentPassword': string
   'userProfile.editProfile': string
   'userProfile.myGroups': string
@@ -3235,6 +3237,7 @@ export interface StringsMap {
   'userProfile.newPassword': string
   'userProfile.newPasswordShouldMeetTheRequirements': string
   'userProfile.newPasswordShouldNotBeCurrentPassword': string
+  'userProfile.noSCMLabel': string
   'userProfile.passwordChangedSuccessfully': string
   'userProfile.passwordMatch': string
   'userProfile.passwordMustBeBetweenMinAndMax': string

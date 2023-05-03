@@ -8,8 +8,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Text, Layout, DropDown, getErrorInfoFromErrorObject, useToaster } from '@harness/uicore'
-import { Color } from '@harness/design-system'
-//import { useStrings } from 'framework/strings'
+import { FontVariation } from '@harness/design-system'
+import { useStrings } from 'framework/strings'
 import { ConnectorInfoDTO, useSaveUserSourceCodeManager, UserSourceCodeManagerRequestDTO } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -25,26 +25,25 @@ import css from './UserSummary.module.scss'
 const AddSCMOAuth: React.FC<{ refetch: any }> = props => {
   const { accountId } = useParams<AccountPathProps>()
   const { currentUserInfo } = useAppStore()
-  //const { getString } = useStrings()
+  const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const [oAuthStatus, setOAuthStatus] = useState<Status>(Status.TO_DO)
   const oAuthSecretIntercepted = useRef<boolean>(false)
   const [forceFailOAuthTimeoutId, setForceFailOAuthTimeoutId] = useState<NodeJS.Timeout>()
-  // const [setOAuthResponse] = useState<OAuthEventProcessingResponse>()
   const [gitProviderType, setGitProviderType] = useState<UserSourceCodeManagerRequestDTO['type']>()
 
   const supportedSCMs = [
     {
-      label: 'Github',
+      label: getString('common.repo_provider.githubLabel'),
       value: SourceCodeTypes.GITHUB
     },
+    { label: getString('common.repo_provider.gitlabLabel'), value: SourceCodeTypes.GITLAB },
     {
-      label: 'Bitbucket',
+      label: getString('common.repo_provider.bitbucketLabel'),
       value: SourceCodeTypes.BITBUCKET
     },
-    { label: 'Gitlab', value: SourceCodeTypes.GITLAB },
-    { label: 'Azure repository', value: SourceCodeTypes.AZURE_REPO },
-    { label: 'AWS code commit', value: SourceCodeTypes.AWS_CODE_COMMIT }
+    { label: getString('common.repo_provider.azureRepos'), value: SourceCodeTypes.AZURE_REPO },
+    { label: getString('common.repo_provider.awscodecommit'), value: SourceCodeTypes.AWS_CODE_COMMIT }
   ]
 
   const { loading, mutate: createUserSCM } = useSaveUserSourceCodeManager({})
@@ -95,8 +94,8 @@ const AddSCMOAuth: React.FC<{ refetch: any }> = props => {
 
   return (
     <Layout.Vertical spacing="large">
-      <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
-        {'Connect to Git Provider'}
+      <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
+        {getString('userProfile.connectToGitProviderLabel')}
       </Text>
       <Layout.Horizontal spacing="medium">
         <DropDown
