@@ -9,7 +9,7 @@ import React, { FormEvent, useEffect } from 'react'
 import { RadioGroup, Radio } from '@blueprintjs/core'
 
 import { get } from 'lodash-es'
-import { ExpressionInput } from '@harness/uicore'
+import { ExpressionInput, HarnessDocTooltip, Layout } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 
@@ -53,8 +53,14 @@ const UserGroupExpressionInput: React.FC<Extended> = props => {
         }}
         selectedValue={formik?.values['userGroupExpression']}
       >
-        <Radio label={getString('common.individual')} value={ExpressionTypes.Individual} />
-        <Radio label={getString('common.combined')} value={ExpressionTypes.Combined} />
+        <Layout.Horizontal>
+          <Radio label={getString('common.individual')} value={ExpressionTypes.Individual} />
+          <HarnessDocTooltip tooltipId="individual" useStandAlone={true} />
+        </Layout.Horizontal>
+        <Layout.Horizontal>
+          <Radio label={getString('common.combined')} value={ExpressionTypes.Combined} />
+          <HarnessDocTooltip tooltipId="individual" useStandAlone={true} />
+        </Layout.Horizontal>
       </RadioGroup>
 
       {userGroupExpression === ExpressionTypes.Individual ? (
