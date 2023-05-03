@@ -10,5 +10,6 @@ declare const styles: {
   readonly commitMessage: string
   readonly gitSyncForm: string
   readonly migrateResourceForm: string
+  readonly migrateResourceWarning: string
 }
 export default styles

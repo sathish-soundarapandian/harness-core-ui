@@ -8,7 +8,7 @@ mandateAuthorizationForCustomWebhookTriggers: Mandate Authorization for Custom W
 enableForceDelete: Enable Force Delete of Harness Resources
 enableGitCommands: Use Git client for commits
 allowDifferentRepoForInputSets: Allow different repo for Pipeline and InputSets
-enforceGitExperience: Enforce git experience
+enforceGitExperience: Enforce git experience for pipelines
 pipelineTimeout: Pipeline Timeout
 stageTimeout: Stage Timeout
 stepTimeout: Step Timeout
