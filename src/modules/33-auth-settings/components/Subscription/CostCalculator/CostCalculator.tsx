@@ -71,6 +71,7 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
     subscriptionProps.quantities
   )
   const [isPremiumSupported, setIsPremiumSupported] = useState<boolean>(false)
+  const [isFirstSubscriptionDone, setIsFirstSubscriptionDone] = useState<boolean>(false)
   const { data: accountLicensesData } = useGetAccountLicenses({
     queryParams: {
       accountIdentifier: accountId
@@ -153,11 +154,17 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   React.useEffect(() => {
     if (Object.keys(allLicenses).length > 0) {
       const premSupport = allLicenses['CF']?.[0]?.premiumSupport || allLicenses['CI']?.[0]?.premiumSupport || false
+      const isFirstSubDone = allLicenses['CF']?.[0]?.licenseType || allLicenses['CI']?.[0]?.licenseType
+      let isFirstSubBool = false
+      if (isFirstSubDone === 'PAID' && premSupport === false) {
+        isFirstSubBool = true
+      }
       setSubscriptionProps({
         ...subscriptionProps,
         premiumSupport: premSupport
       })
       setIsPremiumSupported(premSupport)
+      setIsFirstSubscriptionDone(isFirstSubBool)
     }
   }, [usageAndLimitInfo.usageData.usage?.ff, usageAndLimitInfo.usageData.usage?.ci, allLicenses])
 
@@ -294,6 +301,7 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
           updateQuantities
         })}
         <PremiumSupport
+          isFirstSubDone={isFirstSubscriptionDone}
           isAlreadyPrime={isPremiumSupported}
           premiumSupport={subscriptionProps.premiumSupport || isPremiumSupported}
           onChange={(value: boolean) => {
@@ -302,7 +310,7 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
               premiumSupport: value
             })
           }}
-          disabled={subscriptionProps.paymentFreq === TimeType.MONTHLY || isPremiumSupported}
+          disabled={isFirstSubscriptionDone || subscriptionProps.paymentFreq === TimeType.MONTHLY || isPremiumSupported}
         />
       </Layout.Vertical>
       <Footer setView={setView} disabled={isEmpty(subscriptionProps.quantities)} />

@@ -95,7 +95,7 @@ const DeveloperSubscriptionInfo: React.FC<DeveloperSubscriptionInfoProps> = ({
         value={<Text font={{ weight: 'bold' }}>{usage}</Text>}
       />
       <Item
-        title={getString('authSettings.recomendation')}
+        title={getString('authSettings.recommendation')}
         value={
           <Text color={Color.PRIMARY_7} font={{ weight: 'bold' }}>
             {recommendedNumber}

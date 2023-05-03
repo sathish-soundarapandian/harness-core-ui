@@ -158,7 +158,7 @@ autoRenewal: Auto renewal on {{date}}
 proRata: Prorated amount covers for {{date}}
 salesTax: Plus sales tax
 unitPrice: Unit Price
-recomendation: Recomendation
+recommendation: Recommendation
 priceBreakdown: Subscription Price Breakdown
 costCalculator:
   tax: Tax
@@ -168,7 +168,7 @@ costCalculator:
   comparePlans: Compare plans
   next: 'Next: Billing information'
   switchTooltip: Switch to Yearly subscription to enable premium support
-  alreadySubscribed: Other subscription on this account already has Premium Support
+  alreadySubscribed: Support plan has been defaulted to the option selected on previous subscriptions, as all subscriptions need to have the same support plan
   premiumSupport: Premier Support
   premSupport:
     title: Add Premier Support
