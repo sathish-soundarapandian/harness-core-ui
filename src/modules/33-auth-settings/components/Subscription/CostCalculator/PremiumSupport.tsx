@@ -38,13 +38,15 @@ interface PremiumSupportProps {
   onChange: (value: boolean) => void
   disabled: boolean
   isAlreadyPrime: boolean
+  isFirstSubDone: boolean
 }
 
 export const PremiumSupport: React.FC<PremiumSupportProps> = ({
   premiumSupport,
   onChange,
   disabled,
-  isAlreadyPrime
+  isAlreadyPrime,
+  isFirstSubDone
 }) => {
   const { getString } = useStrings()
   const checkbox = disabled ? (
@@ -54,7 +56,7 @@ export const PremiumSupport: React.FC<PremiumSupportProps> = ({
       position={Position.BOTTOM}
       content={
         <Text padding={'medium'} color={Color.GREY_100} font={{ size: 'small' }}>
-          {isAlreadyPrime
+          {isAlreadyPrime || isFirstSubDone
             ? getString('authSettings.costCalculator.alreadySubscribed')
             : getString('authSettings.costCalculator.switchTooltip')}
         </Text>

@@ -309,7 +309,7 @@ exports[`useSubscriptionModal render 1`] = `
                       <p
                         class="StyledProps--font StyledProps--main"
                       >
-                        authSettings.recomendation
+                        authSettings.recommendation
                       </p>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
@@ -470,7 +470,7 @@ exports[`useSubscriptionModal render 1`] = `
                       <p
                         class="StyledProps--font StyledProps--main"
                       >
-                        authSettings.recomendation
+                        authSettings.recommendation
                       </p>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
@@ -1278,7 +1278,7 @@ exports[`useSubscriptionModal render CI credit card 1`] = `
                         <p
                           class="StyledProps--font StyledProps--main"
                         >
-                          authSettings.recomendation
+                          authSettings.recommendation
                         </p>
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"

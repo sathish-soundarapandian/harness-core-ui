@@ -2230,7 +2230,7 @@ export interface StringsMap {
   'authSettings.proRata': string
   'authSettings.publicOAuthLoginDisabled': string
   'authSettings.publicOAuthLoginEnabled': string
-  'authSettings.recomendation': string
+  'authSettings.recommendation': string
   'authSettings.restrictUsersToEmailDomains': string
   'authSettings.saas': string
   'authSettings.salesTax': string

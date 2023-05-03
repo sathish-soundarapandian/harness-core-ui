@@ -59,7 +59,7 @@ const DeveloperSubscriptionInfo: React.FC<DeveloperSubscriptionInfoProps> = ({
       </Layout.Horizontal>
       <Layout.Horizontal className={css.subscriptionInfo}>
         <Item
-          title={getString('authSettings.recomendation')}
+          title={getString('authSettings.recommendation')}
           value={
             <Text color={Color.PRIMARY_7} font={{ weight: 'bold' }}>
               {recommendedNumber}
