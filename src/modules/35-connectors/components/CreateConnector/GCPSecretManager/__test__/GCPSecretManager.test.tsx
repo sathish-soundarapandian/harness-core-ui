@@ -9,6 +9,7 @@ import React from 'react'
 import { noop } from 'lodash-es'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import { clickSubmit, fillAtForm, InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import CreateGCPSecretManager from '../CreateGCPSecretManager'
@@ -25,7 +26,9 @@ const commonProps = {
 
 const createConnector = jest.fn()
 const updateConnector = jest.fn()
-
+jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+  PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM: true
+})
 jest.mock('services/cd-ng', () => ({
   useUpdateConnector: jest.fn().mockImplementation(() => ({ mutate: updateConnector })),
   useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector })),
@@ -97,6 +100,7 @@ describe('Create Secret Manager Wizard', () => {
     })
     await waitFor(() => expect(queryByText('connectors.gcpSecretManager.gcpSMSecretFile')).toBeTruthy())
     // step 2 - details  step
+    expect(queryByText('connectors.GCP.delegateOutClusterInfo')).toBeTruthy()
     expect(queryByText('connectors.gcpSecretManager.gcpSMSecretFile')).toBeTruthy()
     await act(async () => {
       fireEvent.click(queryByText('back') as HTMLElement)

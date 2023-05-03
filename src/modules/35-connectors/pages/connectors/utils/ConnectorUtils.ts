@@ -45,7 +45,6 @@ import type { BambooFormInterface } from '@connectors/components/CreateConnector
 import type { AWSBackOffStrategyValues } from '@connectors/components/CreateConnector/AWSConnector/StepBackOffStrategy/StepBackOffStrategy'
 import { AuthTypes, GitAuthTypes, GitAPIAuthTypes, BackOffStrategy } from './ConnectorHelper'
 import { useConnectorWizard } from '../../../components/CreateConnectorWizard/ConnectorWizardContext'
-
 export interface DelegateCardInterface {
   type: string
   info: string
@@ -1142,9 +1141,17 @@ export const setupGCPSecretManagerFormData = async (
     orgIdentifier: connectorInfo.orgIdentifier
   }
   const credentials = await setSecretField(connectorInfoSpec?.credentialsRef, scopeQueryParams)
+  let delegateType = undefined
+  if (credentials) {
+    delegateType = DelegateTypes.DELEGATE_OUT_CLUSTER
+  }
+  if (connectorInfoSpec.assumeCredentialsOnDelegate) {
+    delegateType = DelegateTypes.DELEGATE_IN_CLUSTER
+  }
   return {
     credentialsRef: credentials || undefined,
-
+    assumeCredentialsOnDelegate: connectorInfoSpec.assumeCredentialsOnDelegate,
+    delegateType,
     delegate: connectorInfoSpec?.delegateSelectors || undefined,
     default: connectorInfoSpec?.default || false
   }
@@ -1339,8 +1346,8 @@ export const buildGcpSMPayload = (formData: FormData): ConnectorRequestBody => {
     type: Connectors.GcpSecretManager,
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
-      credentialsRef: formData?.credentialsRef.referenceString,
-
+      credentialsRef: formData?.credentialsRef?.referenceString,
+      assumeCredentialsOnDelegate: formData?.assumeCredentialsOnDelegate,
       default: formData.default
     }
   }

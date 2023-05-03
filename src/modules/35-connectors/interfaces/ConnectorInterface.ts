@@ -84,6 +84,8 @@ export interface AwsKmsConfigFormData {
 export interface GCPSecretManagerFormData {
   credentialsRef?: SecretReference
   default: boolean
+  delegateType?: string
+  assumeCredentialsOnDelegate?: boolean
 }
 
 export interface StepDetailsProps extends ConnectorInfoDTO {
