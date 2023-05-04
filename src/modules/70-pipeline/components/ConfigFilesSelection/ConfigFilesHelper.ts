@@ -45,7 +45,7 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
   ECS: [ConfigFilesMap.Harness],
   CustomDeployment: [ConfigFilesMap.Harness],
   Elastigroup: [ConfigFilesMap.Harness],
-  TAS: [ConfigFilesMap.Harness],
+  TAS: [ConfigFilesMap.Harness, ConfigFilesMap.Github],
   Asg: [ConfigFilesMap.Harness],
   GoogleCloudFunctions: [ConfigFilesMap.Harness],
   AwsLambda: [ConfigFilesMap.Harness],
@@ -91,9 +91,20 @@ export const prepareConfigFilesValue = (formData: ConfigFileHarnessDataType & { 
 }
 
 export const ENABLE_CONFIG_FILES = {
+  Git: 'Git',
+  Github: 'Github',
+  Gitlab: 'Gitlab',
+  Bitbucket: 'Bitbucket',
   Harness: 'Harness'
 }
 
 export const getConfigFilesHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']) => {
   return `${selectedDeploymentType}DeploymentTypeConfigFiles`
 }
+
+export const ConfigStoresBehindFeatureFlag = [
+  ConfigFilesMap.Git,
+  ConfigFilesMap.Github,
+  ConfigFilesMap.Gitlab,
+  ConfigFilesMap.Bitbucket
+]

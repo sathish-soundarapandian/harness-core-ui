@@ -9,17 +9,25 @@
 declare const styles: {
   readonly addFileButton: string
   readonly addNewManifest: string
+  readonly addmarginBottom: string
   readonly addmarginTop: string
+  readonly advancedStepOpen: string
   readonly bp3PopoverTarget: string
-  readonly configFileWizard: string
+  readonly checkbox: string
   readonly configureOptions: string
   readonly connectorContainer: string
-  readonly formGroup: string
+  readonly drag: string
   readonly halfWidth: string
   readonly manifestForm: string
   readonly manifestStepWidth: string
+  readonly marginTop: string
   readonly optionsViewContainer: string
+  readonly pathLabel: string
+  readonly runtimeInput: string
   readonly saveBtn: string
-  readonly subtitle: string
+  readonly text: string
+  readonly tooltip: string
+  readonly tooltipCls: string
+  readonly tooltipContent: string
 }
 export default styles

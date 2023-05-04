@@ -20,3 +20,46 @@
   align-items: center;
   width: 100%;
 }
+
+.optionsViewContainer {
+  margin: var(--spacing-small) 0 0 var(--spacing-small) !important;
+  .manifestForm {
+    min-height: 490px;
+
+    .connectorContainer {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      .bp3-popover-target > button {
+        width: 28px !important;
+      }
+      div.configureOptions {
+        height: fit-content;
+        line-height: 72px;
+      }
+    }
+    .addNewManifest {
+      position: relative;
+      top: 26px;
+      padding-right: 0 !important;
+      justify-content: flex-start;
+    }
+    .manifestStepWidth {
+      width: 100%;
+    }
+  }
+}
+
+.halfWidth {
+  width: 45%;
+}
+.addFileButton {
+  margin-left: 0;
+}
+.addmarginTop {
+  display: flex;
+  align-self: center;
+}
+.saveBtn {
+  position: relative;
+  bottom: 0;
+}

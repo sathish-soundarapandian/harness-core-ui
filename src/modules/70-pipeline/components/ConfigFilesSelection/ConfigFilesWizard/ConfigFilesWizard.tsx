@@ -20,24 +20,31 @@ interface StepChangeData<SharedObject> {
   prevStepData: SharedObject
 }
 
-export function ConfigFilesWizard({
-  handleConnectorViewChange,
-  handleStoreChange,
-  initialValues,
-  stores,
-  expressions,
-  allowableTypes,
-  firstStep,
-  lastSteps,
-  deploymentType,
-  isNewFile,
-  configFileIndex
-}: any): React.ReactElement {
+export function ConfigFilesWizard(props: any): React.ReactElement {
+  const {
+    handleConnectorViewChange,
+    handleStoreChange,
+    initialValues,
+    stores,
+    expressions,
+    allowableTypes,
+    firstStep,
+    lastSteps,
+    deploymentType,
+    isNewFile,
+    configFileIndex,
+    newConnectorView,
+    newConnectorSteps
+  } = props
+
   const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
+    if (arg.prevStepData?.store === 'Harness') {
+      handleStoreChange?.(arg.prevStepData?.store)
+      return
+    }
     if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 1) {
-      handleConnectorViewChange?.(false)
-      handleStoreChange?.()
+      handleStoreChange?.(arg.prevStepData?.store)
     }
   }
 
@@ -65,7 +72,7 @@ export function ConfigFilesWizard({
         isNewFile={isNewFile}
         configFileIndex={configFileIndex}
       />
-
+      {newConnectorView ? newConnectorSteps : null}
       {lastSteps?.length ? lastSteps?.map((step: any) => step) : null}
     </StepWizard>
   )

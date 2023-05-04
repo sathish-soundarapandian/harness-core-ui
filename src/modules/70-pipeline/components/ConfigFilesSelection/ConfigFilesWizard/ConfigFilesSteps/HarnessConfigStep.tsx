@@ -29,6 +29,7 @@ interface ConfigFilesPropType {
   listOfConfigFiles: any[]
   configFileIndex?: number
   deploymentType?: string
+  handleConnectorViewChange?: (status: boolean) => void
 }
 export function HarnessConfigStep({
   stepName = 'step name',
@@ -39,7 +40,8 @@ export function HarnessConfigStep({
   isEditMode,
   listOfConfigFiles,
   configFileIndex,
-  deploymentType
+  deploymentType,
+  handleConnectorViewChange
 }: StepProps<any> & ConfigFilesPropType): React.ReactElement {
   const { getString } = useStrings()
   const isEditState = defaultTo(prevStepData.isEditMode, isEditMode)
@@ -196,7 +198,10 @@ export function HarnessConfigStep({
                     text={getString('back')}
                     icon="chevron-left"
                     variation={ButtonVariation.SECONDARY}
-                    onClick={() => previousStep?.({ ...prevStepData })}
+                    onClick={() => {
+                      handleConnectorViewChange?.(false)
+                      previousStep?.({ ...prevStepData })
+                    }}
                     margin={{ right: 'medium' }}
                   />
                   <Button

@@ -3765,6 +3765,9 @@ export interface StringsMap {
   'pipeline.configFiles.error.identifier': string
   'pipeline.configFiles.fileType': string
   'pipeline.configFiles.identifierLabel': string
+  'pipeline.configFiles.name': string
+  'pipeline.configFiles.paths': string
+  'pipeline.configFiles.placeholder': string
   'pipeline.configFiles.plainText': string
   'pipeline.configFiles.selectFileType': string
   'pipeline.configFiles.source': string

@@ -8,7 +8,7 @@
 import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
-import type { ServiceDefinition, StageElementConfig } from 'services/cd-ng'
+import type { ServiceDefinition, StageElementConfig, ConfigFileWrapper } from 'services/cd-ng'
 
 export interface ConfigFilesSelectionProps {
   isPropagating?: boolean
@@ -55,4 +55,17 @@ export interface ConfigInitStepData {
   store: ConfigFileType
   files: ConfigFileFileStoreNode[] | string[] | string
   fileType: string
+}
+
+export interface GitConfigFileCoreValuesPropType {
+  stepName: string
+  expressions: string[]
+  allowableTypes: AllowedTypes
+  handleSubmit: (data: ConfigFileWrapper) => void
+  isReadonly?: boolean
+  editManifestModePrevStepData?: any
+  listOfConfigFiles: ConfigFileWrapper[]
+  isEditState?: boolean
+  context?: any
+  selectedConfigFile: string
 }

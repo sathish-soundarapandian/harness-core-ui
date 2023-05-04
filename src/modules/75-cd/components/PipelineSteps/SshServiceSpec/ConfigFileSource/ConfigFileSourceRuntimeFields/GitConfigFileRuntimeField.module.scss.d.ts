@@ -7,19 +7,18 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly addFileButton: string
-  readonly addNewManifest: string
-  readonly addmarginTop: string
-  readonly bp3PopoverTarget: string
-  readonly configFileWizard: string
+  readonly accordionSummary: string
   readonly configureOptions: string
-  readonly connectorContainer: string
-  readonly formGroup: string
-  readonly halfWidth: string
-  readonly manifestForm: string
-  readonly manifestStepWidth: string
-  readonly optionsViewContainer: string
-  readonly saveBtn: string
-  readonly subtitle: string
+  readonly fieldAndOptionsWidth: string
+  readonly inputFieldLayout: string
+  readonly inputWidth: string
+  readonly inputheader: string
+  readonly layoutVerticalSpacing: string
+  readonly listLabel: string
+  readonly manifestInfoTooltip: string
+  readonly nopadLeft: string
+  readonly subheading: string
+  readonly tooltip: string
+  readonly verticalSpacingInput: string
 }
 export default styles

@@ -1,4 +1,5 @@
 import { SshConfigFileSource } from '@cd/components/PipelineSteps/SshServiceSpec/ConfigFileSource/SshConfigFileSource/SshConfigFileSource'
+import { GitHubConfigFileSource } from '@cd/components/PipelineSteps/SshServiceSpec/ConfigFileSource/SshConfigFileSource/GithubConfigFileSource'
 
 import type { ConfigFileSourceBase } from './ConfigFileSourceBase'
 
@@ -26,5 +27,6 @@ export class ConfigFileSourceBaseFactory {
 
 const configFileSourceBaseFactory = new ConfigFileSourceBaseFactory()
 configFileSourceBaseFactory.registerConfigFileSource(new SshConfigFileSource())
+configFileSourceBaseFactory.registerConfigFileSource(new GitHubConfigFileSource())
 
 export default configFileSourceBaseFactory

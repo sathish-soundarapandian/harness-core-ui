@@ -82,7 +82,6 @@ const ConfigFileInputField = (props: ConfigFileInputFieldProps): React.ReactElem
 }
 export function ConfigFiles(props: SshWinRmConfigFilesProps): React.ReactElement {
   const { getString } = useStrings()
-
   return (
     <div className={cx(css.nopadLeft, css.accordionSummary)} id={`Stage.${props.stageIdentifier}.Service.ConfigFiles`}>
       {!props.fromTrigger && <div className={css.subheading}> {getString('pipelineSteps.configFiles')}</div>}
