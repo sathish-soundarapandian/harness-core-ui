@@ -149,6 +149,7 @@ const priceData = {
         productId: 'prod_LYCAVe32XXzVlt',
         metaData: {
           type: 'DEVELOPERS'
+          billed:'MONTHLY'
         },
         active: true
       },
@@ -159,7 +160,8 @@ const priceData = {
         lookupKey: 'FF_TEAM_MAU_MONTHLY',
         productId: 'prod_LYCFgTjtkejp0K',
         metaData: {
-          type: 'MAUS'
+          type: 'MAUS',
+          billed:'MONTHLY'
         },
         active: true
       },
@@ -170,7 +172,8 @@ const priceData = {
         lookupKey: 'FF_TEAM_MAU_YEARLY',
         productId: 'prod_LYCFgTjtkejp0K',
         metaData: {
-          type: 'MAUS'
+          type: 'MAUS',
+          billed:'MONTHLY'
         },
         active: true
       }
