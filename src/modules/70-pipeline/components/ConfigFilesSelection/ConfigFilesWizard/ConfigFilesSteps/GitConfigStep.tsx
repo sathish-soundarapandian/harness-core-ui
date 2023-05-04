@@ -46,7 +46,7 @@ export function GitConfigStep({
     branch: undefined,
     commitId: undefined,
     gitFetchType: 'Branch',
-    paths: [''],
+    paths: [{ path: '', uuid: uuid('', nameSpace()) }],
     skipResourceVersioning: false,
     enableDeclarativeRollback: false,
     repoName: '',
@@ -95,14 +95,14 @@ export function GitConfigStep({
         paths:
           typeof modifiedPrevStepData.paths === 'string'
             ? modifiedPrevStepData.paths
-            : removeEmptyFieldsFromStringArray(modifiedPrevStepData.paths)?.map((path: string) => ({
+            : removeEmptyFieldsFromStringArray(modifiedPrevStepData.paths, true)?.map((path: string) => ({
                 path,
                 uuid: uuid(path, nameSpace())
               })),
         valuesPaths:
           typeof modifiedPrevStepData.valuesPaths === 'string'
             ? modifiedPrevStepData.valuesPaths
-            : removeEmptyFieldsFromStringArray(modifiedPrevStepData.valuesPaths)?.map((path: string) => ({
+            : removeEmptyFieldsFromStringArray(modifiedPrevStepData.valuesPaths, true)?.map((path: string) => ({
                 path,
                 uuid: uuid(path, nameSpace())
               }))

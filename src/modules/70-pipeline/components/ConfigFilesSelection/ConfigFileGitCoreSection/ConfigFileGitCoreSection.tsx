@@ -142,18 +142,16 @@ export function ConfigFileGitCoreSection(
           [css.runtimeInput]: getMultiTypeFromValue(formik.values?.paths) === MultiTypeInputType.RUNTIME
         })}
       >
-        {formik.values.paths.length > 0 && (
-          <DragnDropPaths
-            formik={formik}
-            expressions={expressions}
-            allowableTypes={allowableTypes}
-            fieldPath="paths"
-            pathLabel={getString('pipeline.configFiles.paths')}
-            placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-            defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
-            dragDropFieldWidth={filePathFieldWidth}
-          />
-        )}
+        <DragnDropPaths
+          formik={formik}
+          expressions={expressions}
+          allowableTypes={allowableTypes}
+          fieldPath="paths"
+          pathLabel={getString('pipeline.configFiles.paths')}
+          placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+          defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+          dragDropFieldWidth={filePathFieldWidth}
+        />
         {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
           /* istanbul ignore next */
           <ConfigureOptions
