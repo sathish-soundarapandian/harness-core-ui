@@ -32,7 +32,6 @@ noData: 'No data found. Click the button below to create a new item.'
 welcome: 'Welcome to Continuous Integration'
 description: Build, test and push artifacts to repositories.
 createPipeline: '{{ $.common.createPipeline }}'
-annotations: Annotations
 labels: '{{ $.pipelineSteps.labelsLabel }}'
 optimize: '{{ $.common.moduleList.optimize }}'
 remoteCacheImage:
@@ -119,7 +118,6 @@ buildInfra:
     architecture: Achitecture
     isRequiredWhen: '{{field1}} is required in case {{field2}} is provided'
   cloud: Cloud
-  hostNames: Host Names
   info:
     cloud: Choose Cloud to execute the stage in a Harness Hosted environment.
     local1: Choose Local to run builds in your own machine.

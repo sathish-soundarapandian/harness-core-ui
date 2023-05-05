@@ -1529,7 +1529,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             {renderMultiTypeMap({ fieldName: 'labels', stringKey: 'ci.labels' })}
           </Container>
           <Container className={css.bottomMargin7}>
-            {renderMultiTypeMap({ fieldName: 'annotations', stringKey: 'ci.annotations' })}
+            {renderMultiTypeMap({ fieldName: 'annotations', stringKey: 'common.annotations' })}
           </Container>
           {showContainerSecurityContext && renderContainerSecurityContext({ formik })}
           <Container className={css.bottomMargin7}>
@@ -1605,9 +1605,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               }}
               formik={formik}
               multiTypeFieldSelectorProps={{
-                label: (
-                  <Text tooltipProps={{ dataTooltipId: 'hostNames' }}>{getString('ci.buildInfra.hostNames')}</Text>
-                ),
+                label: <Text tooltipProps={{ dataTooltipId: 'hostNames' }}>{getString('common.hostNames')}</Text>,
                 allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
               }}
               configureOptionsProps={{
@@ -1974,12 +1972,12 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                             {renderPropagateKeyValuePairs({
                               keyValue: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
                                 ?.annotations,
-                              stringKey: 'ci.annotations'
+                              stringKey: 'common.annotations'
                             })}
                             {renderPropagateList({
                               value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
                                 ?.hostNames,
-                              stringKey: 'ci.buildInfra.hostNames'
+                              stringKey: 'common.hostNames'
                             })}
                             {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
                               ?.automountServiceAccountToken !== 'undefined' && (

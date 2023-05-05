@@ -41,6 +41,11 @@ import type { CommandFlags } from '@pipeline/components/ManifestSelection/Manife
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { usePrevious } from '@common/hooks/usePrevious'
+import {
+  CustomStepGroupElementConfig,
+  getModifiedFormikValues,
+  StepGroupFormikValues
+} from '@pipeline/components/PipelineSteps/Steps/StepGroupStep/StepGroupUtil'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -184,124 +189,152 @@ const processNodeImpl = (
   data: any,
   trackEvent: TrackEvent
 ): StepElementConfig & TemplateStepNode & StepGroupElementConfig => {
-  return produce(data.stepConfig.node as StepElementConfig & TemplateStepNode & StepGroupElementConfig, node => {
-    // Add/replace values only if they are presented
-    addReplace(item, node)
+  return produce(
+    data.stepConfig.node as StepElementConfig &
+      TemplateStepNode &
+      StepGroupElementConfig &
+      CustomStepGroupElementConfig,
+    node => {
+      // Add/replace values only if they are presented
+      addReplace(item, node)
 
-    // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
-    if (Array.isArray(item.failureStrategies) || isValueRuntimeInput(item.failureStrategies as any)) {
-      node.failureStrategies = item.failureStrategies
+      // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
+      if (Array.isArray(item.failureStrategies) || isValueRuntimeInput(item.failureStrategies as any)) {
+        node.failureStrategies = item.failureStrategies
 
-      if (Array.isArray(item.failureStrategies)) {
-        const telemetryData = item.failureStrategies.map(strategy => ({
-          onError: strategy.onFailure?.errors?.join(', '),
-          action: strategy.onFailure?.action?.type
-        }))
-        telemetryData.length && trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
+        if (Array.isArray(item.failureStrategies)) {
+          const telemetryData = item.failureStrategies.map(strategy => ({
+            onError: strategy.onFailure?.errors?.join(', '),
+            action: strategy.onFailure?.action?.type
+          }))
+          telemetryData.length &&
+            trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
+        }
+      }
+      if (!data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
+        set(node, 'spec.delegateSelectors', item.delegateSelectors)
+      } else if (data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
+        set(node, 'delegateSelectors', item.delegateSelectors)
+      }
+      if ((item as StepElementConfig)?.spec?.commandOptions && item.tab !== TabTypes.Advanced) {
+        set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
+      }
+
+      // Looping strategies which are found in Advanced tab of steps
+      // Step group which has all of its steps as Command steps will have repeat looping strategy as default strategy
+      if (isEmpty(item.strategy)) {
+        delete (node as any).strategy
+      } else {
+        set(node, 'strategy', item.strategy)
+      }
+
+      if (item?.policySets && item.tab === TabTypes.Advanced) {
+        set(node, 'enforce.policySets', item.policySets)
+      }
+
+      if (item.commandFlags && item.tab === TabTypes.Advanced) {
+        const commandFlags = item.commandFlags.map((commandFlag: CommandFlags) =>
+          commandFlag.commandType && commandFlag.flag
+            ? {
+                commandType: commandFlag.commandType,
+                flag: commandFlag.flag
+              }
+            : {}
+        )
+        const filteredCommandFlags = commandFlags.filter((currFlag: CommandFlags) => !isEmpty(currFlag))
+        set(node, 'spec.commandFlags', filteredCommandFlags)
+      }
+
+      // Delete values if they were already added and now removed
+      if (node.timeout && !(item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced) delete node.timeout
+      if (node.description && !(item as StepElementConfig).description && item.tab !== TabTypes.Advanced)
+        delete node.description
+      if (
+        (node as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances &&
+        !(item as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances &&
+        item.tab !== TabTypes.Advanced
+      ) {
+        delete (node as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances
+      }
+      if (
+        (node as ECSRollingDeployStepInitialValues).forceNewDeployment &&
+        !(item as ECSRollingDeployStepInitialValues).forceNewDeployment &&
+        item.tab !== TabTypes.Advanced
+      ) {
+        delete (node as ECSRollingDeployStepInitialValues).forceNewDeployment
+      }
+      if (node.failureStrategies && !item.failureStrategies && item.tab === TabTypes.Advanced)
+        delete node.failureStrategies
+      if (
+        node.enforce?.policySets &&
+        (!item?.policySets || item.policySets?.length === 0) &&
+        item.tab === TabTypes.Advanced
+      ) {
+        delete node.enforce
+      }
+      if (
+        !data.stepConfig?.isStepGroup &&
+        node.spec?.delegateSelectors &&
+        (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
+        item.tab === TabTypes.Advanced
+      ) {
+        delete node.spec.delegateSelectors
+      }
+      if (
+        node.spec?.commandFlags &&
+        (!item.commandFlags || item.commandFlags?.length === 0) &&
+        item.tab === TabTypes.Advanced
+      ) {
+        delete node.spec.commandFlags
+      }
+      if (
+        data.stepConfig?.isStepGroup &&
+        node.delegateSelectors &&
+        (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
+        item.tab === TabTypes.Advanced
+      ) {
+        delete node.delegateSelectors
+      }
+
+      if (
+        node.spec?.commandOptions &&
+        (!(item as StepElementConfig)?.spec?.commandOptions ||
+          (item as StepElementConfig)?.spec?.commandOptions?.length === 0) &&
+        item.tab !== TabTypes.Advanced
+      ) {
+        delete (item as StepElementConfig)?.spec?.commandOptions
+        delete node.spec.commandOptions
+      }
+
+      if (item.template) {
+        node.template = item.template
+      }
+      if ((item as StepElementConfig).spec && item.tab !== TabTypes.Advanced) {
+        node.spec = { ...(item as StepElementConfig).spec }
+      }
+      if (
+        data.stepConfig?.isStepGroup &&
+        (item as CustomStepGroupElementConfig).stepGroupInfra &&
+        (item as CustomStepGroupElementConfig).stepGroupInfra?.type === 'KunernetesDirect'
+      ) {
+        if ((item as CustomStepGroupElementConfig).sharedPaths) {
+          set(node, 'sharedPaths', (item as CustomStepGroupElementConfig).sharedPaths)
+        }
+        if ((item as CustomStepGroupElementConfig).stepGroupInfra) {
+          set(node, 'stepGroupInfra', (item as CustomStepGroupElementConfig).stepGroupInfra)
+        }
+      }
+      if (data.stepConfig?.isStepGroup && (item as StepGroupFormikValues).type === 'KunernetesDirect') {
+        const modifiedValues = getModifiedFormikValues(item as StepGroupFormikValues, true)
+        if ((modifiedValues as CustomStepGroupElementConfig).sharedPaths) {
+          set(node, 'sharedPaths', (modifiedValues as CustomStepGroupElementConfig).sharedPaths)
+        }
+        if ((modifiedValues as CustomStepGroupElementConfig).stepGroupInfra) {
+          set(node, 'stepGroupInfra', (modifiedValues as CustomStepGroupElementConfig).stepGroupInfra)
+        }
       }
     }
-    if (!data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
-      set(node, 'spec.delegateSelectors', item.delegateSelectors)
-    } else if (data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
-      set(node, 'delegateSelectors', item.delegateSelectors)
-    }
-    if ((item as StepElementConfig)?.spec?.commandOptions && item.tab !== TabTypes.Advanced) {
-      set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
-    }
-
-    // Looping strategies which are found in Advanced tab of steps
-    // Step group which has all of its steps as Command steps will have repeat looping strategy as default strategy
-    if (isEmpty(item.strategy)) {
-      delete (node as any).strategy
-    } else {
-      set(node, 'strategy', item.strategy)
-    }
-
-    if (item?.policySets && item.tab === TabTypes.Advanced) {
-      set(node, 'enforce.policySets', item.policySets)
-    }
-
-    if (item.commandFlags && item.tab === TabTypes.Advanced) {
-      const commandFlags = item.commandFlags.map((commandFlag: CommandFlags) =>
-        commandFlag.commandType && commandFlag.flag
-          ? {
-              commandType: commandFlag.commandType,
-              flag: commandFlag.flag
-            }
-          : {}
-      )
-      const filteredCommandFlags = commandFlags.filter((currFlag: CommandFlags) => !isEmpty(currFlag))
-      set(node, 'spec.commandFlags', filteredCommandFlags)
-    }
-
-    // Delete values if they were already added and now removed
-    if (node.timeout && !(item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced) delete node.timeout
-    if (node.description && !(item as StepElementConfig).description && item.tab !== TabTypes.Advanced)
-      delete node.description
-    if (
-      (node as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances &&
-      !(item as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances &&
-      item.tab !== TabTypes.Advanced
-    ) {
-      delete (node as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances
-    }
-    if (
-      (node as ECSRollingDeployStepInitialValues).forceNewDeployment &&
-      !(item as ECSRollingDeployStepInitialValues).forceNewDeployment &&
-      item.tab !== TabTypes.Advanced
-    ) {
-      delete (node as ECSRollingDeployStepInitialValues).forceNewDeployment
-    }
-    if (node.failureStrategies && !item.failureStrategies && item.tab === TabTypes.Advanced)
-      delete node.failureStrategies
-    if (
-      node.enforce?.policySets &&
-      (!item?.policySets || item.policySets?.length === 0) &&
-      item.tab === TabTypes.Advanced
-    ) {
-      delete node.enforce
-    }
-    if (
-      !data.stepConfig?.isStepGroup &&
-      node.spec?.delegateSelectors &&
-      (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
-      item.tab === TabTypes.Advanced
-    ) {
-      delete node.spec.delegateSelectors
-    }
-    if (
-      node.spec?.commandFlags &&
-      (!item.commandFlags || item.commandFlags?.length === 0) &&
-      item.tab === TabTypes.Advanced
-    ) {
-      delete node.spec.commandFlags
-    }
-    if (
-      data.stepConfig?.isStepGroup &&
-      node.delegateSelectors &&
-      (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
-      item.tab === TabTypes.Advanced
-    ) {
-      delete node.delegateSelectors
-    }
-
-    if (
-      node.spec?.commandOptions &&
-      (!(item as StepElementConfig)?.spec?.commandOptions ||
-        (item as StepElementConfig)?.spec?.commandOptions?.length === 0) &&
-      item.tab !== TabTypes.Advanced
-    ) {
-      delete (item as StepElementConfig)?.spec?.commandOptions
-      delete node.spec.commandOptions
-    }
-
-    if (item.template) {
-      node.template = item.template
-    }
-    if ((item as StepElementConfig).spec && item.tab !== TabTypes.Advanced) {
-      node.spec = { ...(item as StepElementConfig).spec }
-    }
-  })
+  )
 }
 
 const updateWithNodeIdentifier = async (

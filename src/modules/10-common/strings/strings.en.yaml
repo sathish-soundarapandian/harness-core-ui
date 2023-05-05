@@ -1477,3 +1477,5 @@ entitlement: ENTITLEMENT
 noCreditInfoData: No Credit Information Found
 readOnlyConnectorWarning: Read-only Vault connector is not allowed for Terraform/Terragrunt Plan steps.
 enabledFlags: ENABLED FLAGS
+annotations: Annotations
+hostNames: Host Names
