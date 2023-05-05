@@ -89,9 +89,10 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
         return <PricePreviewLine {...product} key={product.description} unit={unit} minValue={minValue} />
       })}
       {premiumSupport && <PremiumSupportLine premiumSupportAmount={premiumSupportAmount} />}
+      {!isNil(subscriptionDetails.taxAmount) && (
+        <TaxLine taxAmount={getAmountInCurrency(CurrencyType.USD, subscriptionDetails.taxAmount)} />
+      )}
       {<TotalAmount totalAmount={totalAmount || 0} />}
-      {!isNil(subscriptionDetails.taxAmount) && <TaxLine taxAmount={subscriptionDetails.taxAmount} />}
-
       {isNil(subscriptionDetails.taxAmount) && (
         <Text font={{ size: 'xsmall' }}>{getString('authSettings.salesTax')}</Text>
       )}
