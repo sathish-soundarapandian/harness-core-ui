@@ -104,14 +104,34 @@ export function Nexus3Artifact({
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
-  const { CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN } = useFeatureFlags()
+  // const { CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN  = true} = useFeatureFlags()
+
+  const CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN = true
 
   const [lastQueryData, setLastQueryData] = useState<queryInterface>({ repositoryFormat: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [groupIds, setGroupIds] = useState<SelectOption[]>([])
-  const [artifactIds, setArtifactIds] = useState<SelectOption[]>([])
+  const [groupIds, setGroupIds] = useState<SelectOption[]>([
+    {
+      label: getString('common.loadingFieldOptions', {
+        fieldName: getString('pipeline.artifactsSelection.groupId')
+      }),
+      value: getString('common.loadingFieldOptions', {
+        fieldName: getString('pipeline.artifactsSelection.groupId')
+      })
+    }
+  ])
+  const [artifactIds, setArtifactIds] = useState<SelectOption[]>([
+    {
+      label: getString('common.loadingFieldOptions', {
+        fieldName: getString('pipeline.artifactsSelection.artifactId')
+      }),
+      value: getString('common.loadingFieldOptions', {
+        fieldName: getString('pipeline.artifactsSelection.artifactId')
+      })
+    }
+  ])
 
   // const [repoValue, setRepoValue] = useState('')
   const { AZURE_WEB_APP_NG_NEXUS_PACKAGE } = useFeatureFlags()
@@ -713,13 +733,7 @@ export function Nexus3Artifact({
                           disabled={isReadonly}
                           label={getString('pipeline.artifactsSelection.groupId')}
                           name="spec.groupId"
-                          placeholder={
-                            fetchingGroupIds
-                              ? getString('common.loadingFieldOptions', {
-                                  fieldName: getString('pipeline.artifactsSelection.groupId')
-                                })
-                              : getString('pipeline.artifactsSelection.groupIdPlaceholder')
-                          }
+                          placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
                           useValue
                           multiTypeInputProps={{
                             expressions,
@@ -727,16 +741,13 @@ export function Nexus3Artifact({
                             selectProps: {
                               itemRenderer: (item, props) => itemRenderer(item, props, fetchingGroupIds),
                               items: groupIds,
-                              loadingItems: fetchingGroupIds,
                               allowCreatingNewItems: true,
-                              noResults: !fetchingGroupIds ? (
+                              noResults: (
                                 <NoTagResults
                                   tagError={groupIdError}
-                                  defaultErrorText={
-                                    fetchingGroupIds ? getString('loading') : getString('common.filters.noResultsFound')
-                                  }
+                                  defaultErrorText={getString('common.filters.noResultsFound')}
                                 />
-                              ) : null
+                              )
                             },
 
                             onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
@@ -747,6 +758,16 @@ export function Nexus3Artifact({
                               ) {
                                 return
                               }
+                              setGroupIds([
+                                {
+                                  label: getString('common.loadingFieldOptions', {
+                                    fieldName: getString('pipeline.artifactsSelection.groupId')
+                                  }),
+                                  value: getString('common.loadingFieldOptions', {
+                                    fieldName: getString('pipeline.artifactsSelection.groupId')
+                                  })
+                                }
+                              ])
                               refetchGroupIds({
                                 queryParams: {
                                   ...commonParams,
@@ -811,13 +832,7 @@ export function Nexus3Artifact({
                           useValue
                           label={getString('pipeline.artifactsSelection.artifactId')}
                           name="spec.artifactId"
-                          placeholder={
-                            fetchingArtifactIds
-                              ? getString('common.loadingFieldOptions', {
-                                  fieldName: getString('pipeline.artifactsSelection.artifactId')
-                                })
-                              : getString('pipeline.artifactsSelection.artifactIdPlaceholder')
-                          }
+                          placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
                           multiTypeInputProps={{
                             expressions,
                             allowableTypes,
@@ -825,11 +840,7 @@ export function Nexus3Artifact({
                               noResults: (
                                 <NoTagResults
                                   tagError={artifactIdError}
-                                  defaultErrorText={
-                                    fetchingArtifactIds
-                                      ? getString('loading')
-                                      : getString('common.filters.noResultsFound')
-                                  }
+                                  defaultErrorText={getString('common.filters.noResultsFound')}
                                 />
                               ),
                               itemRenderer: (item, props) => itemRenderer(item, props, fetchingArtifactIds),
@@ -845,7 +856,16 @@ export function Nexus3Artifact({
                               ) {
                                 return
                               }
-
+                              setArtifactIds([
+                                {
+                                  label: getString('common.loadingFieldOptions', {
+                                    fieldName: getString('pipeline.artifactsSelection.artifactId')
+                                  }),
+                                  value: getString('common.loadingFieldOptions', {
+                                    fieldName: getString('pipeline.artifactsSelection.artifactId')
+                                  })
+                                }
+                              ])
                               refetchArtifacts({
                                 queryParams: {
                                   ...commonParams,
