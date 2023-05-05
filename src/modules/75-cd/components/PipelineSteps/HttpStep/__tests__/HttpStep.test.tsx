@@ -6,16 +6,37 @@
  */
 
 import React from 'react'
-import { render, queryByAttribute, fireEvent, act } from '@testing-library/react'
+import { render, queryByAttribute, fireEvent, act, findByText, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import { findDialogContainer } from '@common/utils/testUtils'
+import { mockSecretList } from '@filestore/components/MultiTypeFileSelect/EncryptedSelect/__tests__/mock'
 import { HttpStep } from '../HttpStep'
 import type { HttpStepVariablesViewProps } from '../HttpStepVariablesView'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
-
+jest.mock('services/cd-ng', () => ({
+  listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecretList)),
+  getSecretV2Promise: jest.fn().mockImplementation(() => {
+    return { data: mockSecretList, refetch: jest.fn() }
+  })
+}))
+jest.mock('@common/hooks/useFeatureFlag', () => ({
+  useFeatureFlag: jest.fn(() => true),
+  useFeatureFlags: jest.fn(() => {
+    return { CDS_HTTP_STEP_NG_CERTIFICATE: true }
+  })
+}))
+const selectSecretFromDialog = async (): Promise<void> => {
+  //opening secret dialog
+  const modal = findDialogContainer()
+  const secret = await findByText(modal!, 'selected_secret')
+  fireEvent.click(secret)
+  const applyBtn = await waitFor(() => findByText(modal!, 'entityReference.apply'))
+  fireEvent.click(applyBtn)
+}
 describe('Http Step', () => {
   beforeAll(() => {
     factory.registerStep(new HttpStep())
@@ -39,6 +60,8 @@ describe('Http Step', () => {
         requestBody: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         assertion: RUNTIME_INPUT_VALUE,
+        certificate: RUNTIME_INPUT_VALUE,
+        certificateKey: RUNTIME_INPUT_VALUE,
         headers: [
           {
             key: 'Header',
@@ -105,7 +128,7 @@ describe('Http Step', () => {
   test('form produces correct data for fixed inputs', async () => {
     const onUpdate = jest.fn()
     const ref = React.createRef<StepFormikRef<unknown>>()
-    const { container, getByText, getByTestId } = render(
+    const { container, getByText, getByTestId, getAllByText } = render(
       <TestStepWidget
         initialValues={{}}
         type={StepType.HTTP}
@@ -126,6 +149,12 @@ describe('Http Step', () => {
     fireEvent.click(getByText('common.optionalConfig'))
 
     fireEvent.change(queryByNameAttribute('spec.assertion')!, { target: { value: '${httpResponseBody} == 200' } })
+
+    const secretInputFields = getAllByText('createOrSelectSecret')
+    //click on certificate key input box
+    fireEvent.click(secretInputFields[1]!)
+    await selectSecretFromDialog()
+
     fireEvent.click(getByTestId('add-header'))
     fireEvent.change(queryByNameAttribute('spec.headers[0].key')!, { target: { value: 'Content-Type' } })
     fireEvent.change(queryByNameAttribute('spec.headers[0].value')!, { target: { value: 'application/json' } })
@@ -136,13 +165,22 @@ describe('Http Step', () => {
     fireEvent.change(queryByNameAttribute('spec.outputVariables[0].value')!, { target: { value: 'response.message' } })
 
     await act(() => ref.current?.submitForm()!)
+    // Validating certificateKey provided needs certificate value
+    expect(getByText('pipeline.httpStep.validation.certificate')).toBeTruthy()
 
+    //click on certificate input box
+    fireEvent.click(secretInputFields[0]!)
+    await selectSecretFromDialog()
+
+    await act(() => ref.current?.submitForm()!)
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'My_Http_Step',
       name: 'My Http Step',
       timeout: '10s',
       type: 'Http',
       spec: {
+        certificateKey: 'account.selected_secret',
+        certificate: 'account.selected_secret',
         headers: [
           {
             key: 'Content-Type',

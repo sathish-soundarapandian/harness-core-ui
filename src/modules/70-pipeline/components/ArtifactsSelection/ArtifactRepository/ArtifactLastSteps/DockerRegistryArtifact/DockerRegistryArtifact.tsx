@@ -34,9 +34,9 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import ArtifactDigestField from '../ArtifactImagePathTagView/ArtifactDigestField'
 
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
+import { DockerArtifactDigestField } from './DockerArtifactDigestField'
 import css from '../../ArtifactConnector.module.scss'
 
 export function DockerRegistryArtifact({
@@ -216,13 +216,11 @@ export function DockerRegistryArtifact({
 
               {CD_NG_DOCKER_ARTIFACT_DIGEST ? (
                 <div className={css.imagePathContainer}>
-                  <ArtifactDigestField
-                    selectedArtifact={selectedArtifact as ArtifactType}
+                  <DockerArtifactDigestField
                     formik={formik}
                     expressions={expressions}
                     allowableTypes={allowableTypes}
                     isReadonly={isReadonly}
-                    lastImagePath={lastImagePath}
                     connectorRefValue={getConnectorRefQueryData()}
                     isBuildDetailsLoading={dockerBuildDetailsLoading}
                   />

@@ -239,7 +239,6 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
 
     return (
       <>
-        <HelpPanel referenceId="monitoredServiceDetails" type={HelpPanelType.FLOATING_CONTAINER} />
         <Layout.Horizontal flex={{ alignItems: 'center' }}>
           <ContextMenuActions
             titleText={getString('common.delete', { name: monitoredService.serviceName })}

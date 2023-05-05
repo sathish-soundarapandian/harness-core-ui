@@ -16,7 +16,13 @@ describe('PremiumSupport', () => {
     const onChangeMock = jest.fn()
     const { getByRole } = render(
       <TestWrapper>
-        <PremiumSupport premiumSupport={true} disabled={false} onChange={onChangeMock} isAlreadyPrime={true} />
+        <PremiumSupport
+          premiumSupport={true}
+          disabled={false}
+          onChange={onChangeMock}
+          isAlreadyPrime={true}
+          isFirstSubDone={false}
+        />
       </TestWrapper>
     )
     userEvent.click(getByRole('checkbox'))

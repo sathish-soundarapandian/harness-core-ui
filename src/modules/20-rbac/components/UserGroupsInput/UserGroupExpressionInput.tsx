@@ -59,13 +59,13 @@ const UserGroupExpressionInput: React.FC<Extended> = props => {
         <Radio value={ExpressionTypes.Individual} style={{ display: 'flex' }}>
           <Layout.Horizontal>
             <Text data-tooltip-id="usergroup-individual">{getString('common.individual')}</Text>
-            <HarnessDocTooltip tooltipId="individual" useStandAlone={true} />
+            <HarnessDocTooltip tooltipId="usergroup-individual" useStandAlone={true} />
           </Layout.Horizontal>
         </Radio>
         <Radio value={ExpressionTypes.Combined} style={{ display: 'flex' }}>
           <Layout.Horizontal>
             <Text data-tooltip-id="usergroup-combined">{getString('common.combined')}</Text>
-            <HarnessDocTooltip tooltipId="combined" useStandAlone={true} />
+            <HarnessDocTooltip tooltipId="usergroup-combined" useStandAlone={true} />
           </Layout.Horizontal>
         </Radio>
       </RadioGroup>

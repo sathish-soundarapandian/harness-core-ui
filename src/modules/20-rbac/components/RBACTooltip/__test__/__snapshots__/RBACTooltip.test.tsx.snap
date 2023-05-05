@@ -33,7 +33,7 @@ exports[`RBACTooltip RBACTooltip component - Org scope 1`] = `
       </span>
       "
       <span>
-         rbac.in rbac.org "organization_123"
+        rbac.in rbac.org "organization_123"
       </span>
     </p>
   </div>
@@ -73,7 +73,7 @@ exports[`RBACTooltip RBACTooltip component - Project scope 1`] = `
       </span>
       "
       <span>
-         rbac.in rbac.project "project_123"
+        rbac.in rbac.project "project_123"
       </span>
     </p>
   </div>
@@ -113,7 +113,7 @@ exports[`RBACTooltip RBACTooltip component 1`] = `
       </span>
       "
       <span>
-         rbac.in rbac.accountScope
+        rbac.in rbac.accountScope
       </span>
     </p>
   </div>

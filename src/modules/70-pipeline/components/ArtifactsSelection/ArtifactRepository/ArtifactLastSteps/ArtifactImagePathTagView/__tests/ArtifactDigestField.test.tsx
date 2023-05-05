@@ -14,10 +14,16 @@ import * as cdng from 'services/cd-ng'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import ArtifactDigestField from '../ArtifactDigestField'
+import BaseArtifactDigestField from '../BaseArtifactDigestField'
 
 const props = {
+  data: {},
+  refetch: jest.fn(),
+  error: null,
+  loading: false,
   selectedArtifact: 'DockerRegistry' as ArtifactType,
+  canFetchDigest: true,
+  digestDetails: { errorText: 'No Digest', digestPath: 'digest', formikDigestValueField: 'testValue' },
   formik: {},
   expressions: [''],
   isReadonly: false,
@@ -54,13 +60,26 @@ jest.mock('services/cd-ng', () => ({
       error: null,
       loading: false
     }
+  }),
+  useGetLastSuccessfulBuildForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
+    return {
+      data: {
+        metadata: {
+          SHA: 'test',
+          SHAV2: 'test2'
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
   })
 }))
 describe('ArtifactDigest tests', () => {
   test('initial render', () => {
     const { container } = render(
       <TestWrapper>
-        <ArtifactDigestField {...props} />
+        <BaseArtifactDigestField {...props} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -77,7 +96,7 @@ describe('ArtifactDigest tests', () => {
     }
     const { container } = render(
       <TestWrapper>
-        <ArtifactDigestField {...digestProps} />
+        <BaseArtifactDigestField {...digestProps} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -94,7 +113,7 @@ describe('ArtifactDigest tests', () => {
     }
     const { container } = render(
       <TestWrapper>
-        <ArtifactDigestField {...digestProps} />
+        <BaseArtifactDigestField {...digestProps} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -110,7 +129,7 @@ describe('ArtifactDigest tests', () => {
     })
     const { container } = render(
       <TestWrapper>
-        <ArtifactDigestField {...props} />
+        <BaseArtifactDigestField {...props} />
       </TestWrapper>
     )
 
@@ -123,10 +142,7 @@ describe('ArtifactDigest tests', () => {
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
 
-    const loadingBucketsOption = await findByText(
-      selectListMenu as HTMLElement,
-      'pipeline.artifactsSelection.loadingDigest'
-    )
+    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'No Digest')
     expect(loadingBucketsOption).toBeDefined()
   })
 
@@ -140,7 +156,7 @@ describe('ArtifactDigest tests', () => {
     })
     const { container } = render(
       <TestWrapper>
-        <ArtifactDigestField {...props} />
+        <BaseArtifactDigestField {...props} />
       </TestWrapper>
     )
 
@@ -153,10 +169,7 @@ describe('ArtifactDigest tests', () => {
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
 
-    const loadingBucketsOption = await findByText(
-      selectListMenu as HTMLElement,
-      'pipeline.artifactsSelection.errors.nodigest'
-    )
+    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'No Digest')
     expect(loadingBucketsOption).toBeDefined()
   })
 })

@@ -13,12 +13,7 @@ import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { Status } from '@common/utils/Constants'
-import {
-  MAX_TIMEOUT_OAUTH,
-  OAUTH_REDIRECT_URL_PREFIX
-} from '@connectors/components/CreateConnector/CreateConnectorUtils'
-import { Connectors } from '@connectors/constants'
-
+import { MAX_TIMEOUT_OAUTH, OAUTH_REDIRECT_URL_PREFIX } from '@common/components/ConnectViaOAuth/OAuthUtils'
 import css from './ConnectViaOAuth.module.scss'
 
 export interface ConnectViaOAuthProps {
@@ -31,8 +26,11 @@ export interface ConnectViaOAuthProps {
   oAuthSecretIntercepted?: React.MutableRefObject<boolean>
   forceFailOAuthTimeoutId?: NodeJS.Timeout
   setForceFailOAuthTimeoutId: React.Dispatch<React.SetStateAction<NodeJS.Timeout | undefined>>
-  orgIdentifier: string | undefined
-  projectIdentifier: string | undefined
+  orgIdentifier?: string
+  projectIdentifier?: string
+  labelText?: string | JSX.Element
+  isPrivateSecret?: boolean
+  hideOauthLinkButton?: boolean
 }
 
 export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
@@ -47,7 +45,10 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     forceFailOAuthTimeoutId,
     setForceFailOAuthTimeoutId,
     orgIdentifier,
-    projectIdentifier
+    projectIdentifier,
+    isPrivateSecret,
+    labelText,
+    hideOauthLinkButton
   } = props
   const { getString } = useStrings()
 
@@ -74,8 +75,14 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     try {
       const { headers } = getRequestOptions()
       let oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProviderType.toLowerCase()}&accountId=${accountId}`
-      if (orgIdentifier) oauthRedirectEndpoint += `&orgId=${orgIdentifier}`
-      if (orgIdentifier && projectIdentifier) oauthRedirectEndpoint += `&projectId=${projectIdentifier}`
+
+      if (isPrivateSecret) {
+        oauthRedirectEndpoint += `&isPrivateSecret=true`
+      } else {
+        if (orgIdentifier) oauthRedirectEndpoint += `&orgId=${orgIdentifier}`
+        if (orgIdentifier && projectIdentifier) oauthRedirectEndpoint += `&projectId=${projectIdentifier}`
+      }
+
       const response = await fetch(oauthRedirectEndpoint, {
         headers
       })
@@ -113,7 +120,7 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
   const renderView = useCallback((): JSX.Element => {
     const commonPropsForOAuthConfiguredProperly = {
       iconProps: { size: 24, name: 'success-tick' as IconName },
-      label: getString(isOAuthGettingRelinked ? 'connectors.oAuth.reConfigured' : 'connectors.oAuth.configured'),
+      label: getString(isOAuthGettingRelinked ? 'common.oAuth.reConfigured' : 'common.oAuth.configured'),
       labelProps: { font: { weight: 'semi-bold' as FontWeight }, color: Color.GREEN_800 },
       layoutProps: {
         className: css.oAuthSuccess,
@@ -125,7 +132,7 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
         if (isOAuthAccessRevoked) {
           return renderIconAndLabel({
             iconProps: { size: 20, name: 'danger-icon' },
-            label: getString('connectors.oAuth.accessRevoked'),
+            label: getString('common.oAuth.accessRevoked'),
             labelProps: { font: { variation: FontVariation.BODY } }
           })
         } else if (isExistingConnectionHealthy) {
@@ -137,7 +144,7 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
       case Status.FAILURE:
         return renderIconAndLabel({
           iconProps: { size: 24, name: 'circle-cross', color: Color.RED_500 },
-          label: getString('connectors.oAuth.failed'),
+          label: isPrivateSecret ? getString('common.OAuthTryAgain') : getString('common.oAuth.failed'),
           labelProps: { font: { weight: 'semi-bold' }, color: Color.RED_500 },
           layoutProps: {
             className: css.oAuthFailure,
@@ -152,9 +159,9 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
 
   const getRelinkLabel = useCallback((): string => {
     switch (gitProviderType) {
-      case Connectors.GITHUB:
+      case 'Github':
         return getString('common.repo_provider.githubLabel')
-      case Connectors.GITLAB:
+      case 'Gitlab':
         return getString('common.repo_provider.gitlabLabel')
       default:
         return ''
@@ -165,18 +172,23 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     <>
       <Layout.Vertical spacing="xlarge">
         {renderView()}
-        <Button
-          intent="primary"
-          text={getString(
-            isExistingConnectionHealthy ? 'connectors.relinkToGitProvider' : 'connectors.linkToGitProvider',
-            {
-              gitProvider: getRelinkLabel()
+        {!hideOauthLinkButton && (
+          <Button
+            intent="primary"
+            text={
+              labelText ||
+              getString(
+                isExistingConnectionHealthy ? 'connectors.relinkToGitProvider' : 'connectors.linkToGitProvider',
+                {
+                  gitProvider: getRelinkLabel()
+                }
+              )
             }
-          )}
-          onClick={handleOAuthLinking}
-          variation={ButtonVariation.PRIMARY}
-          className={css.linkToGitBtn}
-        />
+            onClick={handleOAuthLinking}
+            variation={ButtonVariation.PRIMARY}
+            className={css.linkToGitBtn}
+          />
+        )}
       </Layout.Vertical>
     </>
   )

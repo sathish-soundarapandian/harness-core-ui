@@ -13,7 +13,7 @@ import { useLocation, useParams } from 'react-router-dom'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ProjectPathProps, SecretsPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { getModuleIcon } from '@common/utils/utils'
-import { ModuleName } from 'framework/types/ModuleName'
+import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 
 import paths from '@common/RouteDefinitions'
@@ -89,7 +89,7 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
   if (module) {
     let url = paths.toMainDashboard(params)
     let label = getString('common.home')
-    switch (module.toUpperCase() as ModuleName) {
+    switch (moduleToModuleNameMapping[module]) {
       case ModuleName.CD:
         url = paths.toCD(params)
         label = getString('deploymentsText')
@@ -127,6 +127,7 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
         label = getString('common.sscaText')
         break
       case ModuleName.IDP:
+      case ModuleName.IDPAdmin:
         url = paths.toIDP(params)
         label = getString('common.purpose.idp.name')
         break
@@ -142,7 +143,7 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
 
     moduleBreadCrumb = {
       label,
-      iconProps: { name: getModuleIcon(module.toUpperCase() as ModuleName) },
+      iconProps: { name: getModuleIcon(moduleToModuleNameMapping[module]) },
       url: resolveUrl(url)
     }
   }

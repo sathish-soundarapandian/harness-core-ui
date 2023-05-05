@@ -21,7 +21,12 @@ import type { IOptionProps } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { defaultTo, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { useGetTerraformCloudOrganizations, useGetTerraformCloudWorkspaces } from 'services/cd-ng'
+import {
+  OrganizationDTO,
+  useGetTerraformCloudOrganizations,
+  useGetTerraformCloudWorkspaces,
+  WorkspaceDTO
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -60,10 +65,10 @@ export function TerraformCloudRunEdit(
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
-  const terraformConnectorRef = defaultTo(formik?.values.spec?.spec?.connectorRef, '')
+  const terraformConnectorRef = get(formik, 'values.spec.spec.connectorRef', '')
   const terraformOrganization =
-    typeof formik?.values.spec?.spec?.organization === 'object'
-      ? (formik?.values.spec?.spec?.organization as SelectOption).value?.toString()
+    typeof get(formik, 'values.spec.spec.organization') === 'object'
+      ? (get(formik, 'values.spec.spec.organization') as SelectOption).value?.toString()
       : ''
 
   const queryParams = {
@@ -86,14 +91,15 @@ export function TerraformCloudRunEdit(
   })
 
   const organizations: SelectOption[] = useMemo(() => {
+    /* istanbul ignore next */
     if (loadingOrganizations) {
       return [{ label: getString('loading'), value: getString('loading') }]
     }
-    return defaultTo(organizationsData?.data?.organizations, [])?.map(organization => ({
+    return (get(organizationsData, 'data.organizations', []) as OrganizationDTO[]).map(organization => ({
       value: organization?.organizationName,
       label: organization?.organizationName
     }))
-  }, [getString, loadingOrganizations, organizationsData?.data?.organizations])
+  }, [getString, loadingOrganizations, organizationsData])
 
   const {
     data: workspacesData,
@@ -109,14 +115,15 @@ export function TerraformCloudRunEdit(
   })
 
   const workspaces: SelectOption[] = useMemo(() => {
+    /* istanbul ignore next */
     if (loadingWorkspaces) {
       return [{ label: getString('loading'), value: getString('loading') }]
     }
-    return defaultTo(workspacesData?.data?.workspaces, [])?.map(workspace => ({
+    return (get(workspacesData, 'data.workspaces', []) as WorkspaceDTO[]).map(workspace => ({
       value: workspace?.workspaceId,
       label: `${workspace?.workspaceName}: ${workspace?.workspaceId}`
     }))
-  }, [loadingWorkspaces, workspacesData?.data?.workspaces, getString])
+  }, [loadingWorkspaces, workspacesData, getString])
 
   const runTypeOptions = useMemo(
     () => [
@@ -150,7 +157,10 @@ export function TerraformCloudRunEdit(
       {(formikValues: FormikProps<TerraformCloudRunFormData>) => {
         const { values, setFieldValue } = formikValues
         setFormikRef(formikRef, formikValues)
-
+        const runTypeValue = get(values.spec, 'runType')
+        const specValues = values.spec?.spec
+        const { discardPendingRuns, connectorRef, organization, workspace, terraformVersion, provisionerIdentifier } =
+          defaultTo(specValues, {})
         return (
           <FormikForm>
             <NameTimeoutField
@@ -167,7 +177,7 @@ export function TerraformCloudRunEdit(
                 placeholder={getString('pipeline.terraformStep.runTypePlaceholder')}
               />
             </div>
-            {values.spec?.runType !== RunTypes.Apply && (
+            {runTypeValue !== RunTypes.Apply && (
               <>
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
                   <FormMultiTypeCheckboxField
@@ -177,9 +187,9 @@ export function TerraformCloudRunEdit(
                     multiTypeTextbox={{ expressions, allowableTypes }}
                     disabled={readonly}
                   />
-                  {getMultiTypeFromValue(values.spec?.spec?.discardPendingRuns) === MultiTypeInputType.RUNTIME && (
+                  {getMultiTypeFromValue(discardPendingRuns) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
-                      value={(values.spec?.spec?.discardPendingRuns || '') as string}
+                      value={defaultTo(discardPendingRuns, '') as string}
                       type="String"
                       variableName="spec.spec.discardPenidngRuns"
                       showRequiredField={false}
@@ -206,9 +216,9 @@ export function TerraformCloudRunEdit(
                       textAreaProps: { growVertically: true }
                     }}
                   />
-                  {getMultiTypeFromValue(values.spec?.runMessage) === MultiTypeInputType.RUNTIME && (
+                  {getMultiTypeFromValue(get(values.spec, 'runMessage')) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
-                      value={values.spec?.runMessage}
+                      value={get(values.spec, 'runMessage')}
                       type="String"
                       variableName="spec.runMessage"
                       showRequiredField={false}
@@ -233,19 +243,21 @@ export function TerraformCloudRunEdit(
                     gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                     width={372}
                     setRefValue
-                    onChange={type => {
-                      if (type !== MultiTypeInputType.FIXED) {
-                        getMultiTypeFromValue(values.spec?.spec?.organization) !== MultiTypeInputType.RUNTIME &&
-                          setFieldValue('spec.spec.organization', '')
-                        getMultiTypeFromValue(values.spec?.spec?.workspace) !== MultiTypeInputType.RUNTIME &&
-                          setFieldValue('spec.spec.workspace', '')
+                    onChange={
+                      /* istanbul ignore next */ type => {
+                        if (type !== MultiTypeInputType.FIXED) {
+                          getMultiTypeFromValue(organization) !== MultiTypeInputType.RUNTIME &&
+                            setFieldValue('spec.spec.organization', '')
+                          getMultiTypeFromValue(workspace) !== MultiTypeInputType.RUNTIME &&
+                            setFieldValue('spec.spec.workspace', '')
+                        }
                       }
-                    }}
+                    }
                   />
-                  {getMultiTypeFromValue(values.spec?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
+                  {getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
                     <ConnectorConfigureOptions
                       style={{ marginTop: 10 }}
-                      value={values.spec?.spec?.connectorRef as string}
+                      value={connectorRef as string}
                       type="String"
                       variableName="spec.spec.connectorRef"
                       showRequiredField={false}
@@ -277,19 +289,19 @@ export function TerraformCloudRunEdit(
                     }
                     multiTypeInputProps={{
                       onChange: /* istanbul ignore next */ () => {
-                        getMultiTypeFromValue(values.spec?.spec?.workspace) !== MultiTypeInputType.RUNTIME &&
+                        getMultiTypeFromValue(workspace) !== MultiTypeInputType.RUNTIME &&
                           setFieldValue('spec.spec.workspace', '')
                       },
                       expressions,
                       disabled: readonly,
                       onFocus: /* istanbul ignore next */ () => {
-                        if (getMultiTypeFromValue(values.spec?.spec?.organization) === MultiTypeInputType.FIXED) {
+                        if (getMultiTypeFromValue(organization) === MultiTypeInputType.FIXED) {
                           refetchOrganizations({
                             queryParams: {
                               accountIdentifier: accountId,
                               projectIdentifier,
                               orgIdentifier,
-                              connectorRef: getValue(values.spec?.spec?.connectorRef)
+                              connectorRef: getValue(connectorRef)
                             }
                           })
                         }
@@ -301,9 +313,11 @@ export function TerraformCloudRunEdit(
                         noResults: (
                           <Text padding={'small'}>
                             {loadingOrganizations
-                              ? getString('loading')
-                              : get(organizationsError, errorMessage, null) ||
-                                getString('cd.steps.tasInfra.organizationError')}
+                              ? /* istanbul ignore next */ getString('loading')
+                              : defaultTo(
+                                  get(organizationsError, errorMessage, null),
+                                  getString('cd.steps.tasInfra.organizationError')
+                                )}
                           </Text>
                         )
                       },
@@ -311,22 +325,21 @@ export function TerraformCloudRunEdit(
                     }}
                     label={getString(organizationLabel)}
                   />
-                  {getMultiTypeFromValue(getValue(values.spec?.spec?.organization)) === MultiTypeInputType.RUNTIME &&
-                    !readonly && (
-                      <SelectConfigureOptions
-                        value={getValue(values.spec?.spec?.organization)}
-                        type="String"
-                        variableName="spec.spec.organization"
-                        showRequiredField={false}
-                        showDefaultField={false}
-                        onChange={value => {
-                          setFieldValue('spec.spec.organization', value)
-                        }}
-                        isReadonly={readonly}
-                        loading={loadingOrganizations}
-                        options={organizations}
-                      />
-                    )}
+                  {getMultiTypeFromValue(getValue(organization)) === MultiTypeInputType.RUNTIME && !readonly && (
+                    <SelectConfigureOptions
+                      value={getValue(organization)}
+                      type="String"
+                      variableName="spec.spec.organization"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => {
+                        setFieldValue('spec.spec.organization', value)
+                      }}
+                      isReadonly={readonly}
+                      loading={loadingOrganizations}
+                      options={organizations}
+                    />
+                  )}
                 </div>
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
                   <FormInput.MultiTypeInput
@@ -335,21 +348,21 @@ export function TerraformCloudRunEdit(
                     disabled={readonly}
                     placeholder={
                       loadingWorkspaces
-                        ? getString('loading')
+                        ? /* istanbul ignore next */ getString('loading')
                         : getString('pipeline.terraformStep.workspacePlaceholder')
                     }
                     multiTypeInputProps={{
                       expressions,
                       disabled: readonly,
                       onFocus: /* istanbul ignore next */ () => {
-                        if (getMultiTypeFromValue(values.spec?.spec?.workspace) === MultiTypeInputType.FIXED) {
+                        if (getMultiTypeFromValue(specValues.workspace) === MultiTypeInputType.FIXED) {
                           refetchWorkspaces({
                             queryParams: {
                               accountIdentifier: accountId,
                               projectIdentifier,
                               orgIdentifier,
-                              connectorRef: getValue(values.spec?.spec?.connectorRef),
-                              organization: getValue(values.spec?.spec?.organization)
+                              connectorRef: getValue(specValues.connectorRef),
+                              organization: getValue(specValues.organization)
                             }
                           })
                         }
@@ -361,7 +374,7 @@ export function TerraformCloudRunEdit(
                         noResults: (
                           <Text padding={'small'}>
                             {loadingWorkspaces
-                              ? getString('loading')
+                              ? /* istanbul ignore next */ getString('loading')
                               : get(workspacesError, errorMessage, null) ||
                                 getString('pipeline.terraformStep.workspaceError')}
                           </Text>
@@ -371,28 +384,27 @@ export function TerraformCloudRunEdit(
                     }}
                     label={getString(workspaceLabel)}
                   />
-                  {getMultiTypeFromValue(getValue(values.spec?.spec?.workspace)) === MultiTypeInputType.RUNTIME &&
-                    !readonly && (
-                      <SelectConfigureOptions
-                        value={getValue(values.spec?.spec?.workspace)}
-                        type="String"
-                        variableName="spec.spec.workspace"
-                        showRequiredField={false}
-                        showDefaultField={false}
-                        onChange={
-                          /* istanbul ignore next */ value => {
-                            setFieldValue('spec.spec.workspace', value)
-                          }
+                  {getMultiTypeFromValue(getValue(specValues.workspace)) === MultiTypeInputType.RUNTIME && !readonly && (
+                    <SelectConfigureOptions
+                      value={getValue(specValues.workspace)}
+                      type="String"
+                      variableName="spec.spec.workspace"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={
+                        /* istanbul ignore next */ value => {
+                          setFieldValue('spec.spec.workspace', value)
                         }
-                        isReadonly={readonly}
-                        loading={loadingWorkspaces}
-                        options={workspaces}
-                      />
-                    )}
+                      }
+                      isReadonly={readonly}
+                      loading={loadingWorkspaces}
+                      options={workspaces}
+                    />
+                  )}
                 </div>
               </>
             )}
-            {(values.spec?.runType === RunTypes.Plan || values.spec?.runType === RunTypes.PlanOnly) && (
+            {(runTypeValue === RunTypes.Plan || runTypeValue === RunTypes.PlanOnly) && (
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormInput.RadioGroup
                   name="spec.spec.planType"
@@ -404,7 +416,7 @@ export function TerraformCloudRunEdit(
                 />
               </div>
             )}
-            {values.spec?.runType === RunTypes.PlanOnly && (
+            {runTypeValue === RunTypes.PlanOnly && (
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormInput.MultiTextInput
                   name="spec.spec.terraformVersion"
@@ -413,9 +425,9 @@ export function TerraformCloudRunEdit(
                   multiTextInputProps={{ expressions, allowableTypes }}
                   disabled={readonly}
                 />
-                {getMultiTypeFromValue(values.spec?.spec?.terraformVersion) === MultiTypeInputType.RUNTIME && (
+                {getMultiTypeFromValue(terraformVersion) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={values.spec?.spec?.terraformVersion as string}
+                    value={terraformVersion as string}
                     type="String"
                     variableName="spec.spec.terraformVersion"
                     showRequiredField={false}
@@ -429,7 +441,7 @@ export function TerraformCloudRunEdit(
                 )}
               </div>
             )}
-            {values.spec?.runType !== RunTypes.RefreshState && (
+            {runTypeValue !== RunTypes.RefreshState && (
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormInput.MultiTextInput
                   name="spec.spec.provisionerIdentifier"
@@ -438,9 +450,9 @@ export function TerraformCloudRunEdit(
                   multiTextInputProps={{ expressions, allowableTypes }}
                   disabled={readonly}
                 />
-                {getMultiTypeFromValue(values.spec?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
+                {getMultiTypeFromValue(provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={values.spec?.spec?.provisionerIdentifier as string}
+                    value={provisionerIdentifier as string}
                     type="String"
                     variableName="spec.spec.provisionerIdentifier"
                     showRequiredField={false}
@@ -454,7 +466,7 @@ export function TerraformCloudRunEdit(
                 )}
               </div>
             )}
-            {values.spec?.runType !== RunTypes.Apply && (
+            {runTypeValue !== RunTypes.Apply && (
               <Accordion className={stepCss.accordion}>
                 <Accordion.Panel
                   id="optional-config"

@@ -839,6 +839,9 @@ metricsAnalysis:
 slos:
   title: SLOs
   subTitle: Review the status and error budget of all your defined service level objectives
+  sloErrorBanner:
+    Contributing SLO contains errors, which needs to be addressed manually. As a result, the Composite SLO will be put
+    on hold until the issue has been resolved.
   completeTitle: Service Level Objectives (SLOs)
   defineSLOSubttitle: Select the Monitored Service for which you want to define the SLO
   configureSLI: Configure Service Level Indicators (SLIs)
@@ -901,6 +904,7 @@ slos:
   badRequestMetric: Bad request metric
   validRequestMetric: Valid request metric
   dataCollectionFailure: SLO data collection failed
+  simpleSLODeletion: SLO {{ sloName }}  has been deleted, Please remove the deleted SLO
   untilPresent: until present
   sloDetailsChart:
     annotation: Annotation

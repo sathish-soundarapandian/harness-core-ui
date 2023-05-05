@@ -95,7 +95,7 @@ const MAUSubscriptionInfo: React.FC<MAUSubscriptionInfoProps> = ({
         value={<Text font={{ weight: 'bold' }}>{getUnitWithNumbers(usage)}</Text>}
       />
       <Item
-        title={getString('authSettings.recomendation')}
+        title={getString('authSettings.recommendation')}
         value={
           <Text color={Color.PRIMARY_7} font={{ weight: 'bold' }}>
             {getUnitWithNumbers(recommended)}

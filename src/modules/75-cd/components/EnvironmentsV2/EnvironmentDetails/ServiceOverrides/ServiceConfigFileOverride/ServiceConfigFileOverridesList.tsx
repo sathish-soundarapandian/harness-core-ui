@@ -53,100 +53,107 @@ function ServiceConfigFileOverridesList({
               <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
             )}
           </div>
-          {configFileOverrideList?.map(({ configFile }: ConfigFileWrapper, index: number) => {
-            const filesType = configFile?.spec?.store?.spec?.files?.length
-              ? getString('pipeline.configFiles.plainText')
-              : getString('encrypted')
-            const filesLocation = configFile?.spec?.store?.spec?.files?.length
-              ? configFile?.spec?.store?.spec?.files
-              : configFile?.spec?.store?.spec?.secretFiles
+          {configFileOverrideList?.length > 0 &&
+            configFileOverrideList?.map(({ configFile }: ConfigFileWrapper, index: number) => {
+              const isHarnessStore = configFile?.spec.store.type === ConfigFilesMap.Harness
+              const isFileStore = !!configFile?.spec?.store?.spec?.files?.length
+              const filesType = isHarnessStore
+                ? configFile?.spec?.store?.spec?.files?.length
+                  ? getString('pipeline.configFiles.plainText')
+                  : getString('encrypted')
+                : 'Git'
 
-            const isHarnessStore = configFile?.spec.store.type === ConfigFilesMap.Harness
-            const isFileStore = !!configFile?.spec?.store?.spec?.files?.length
+              const pathsLocation = configFile?.spec?.store?.spec?.paths
 
-            return (
-              <div className={css.rowItem} key={`${configFile?.identifier}-${index}`}>
-                <section className={css.configFileList}>
-                  <div className={css.columnId}>
-                    <Text color={Color.BLACK} lineClamp={1} width={150}>
-                      {configFile?.identifier}
-                    </Text>
-                  </div>
-                  <div>{filesType}</div>
-                  <div className={css.columnId}>
-                    <Icon
-                      inline
-                      name={ConfigFileIconByType[configFile?.spec?.store?.type as ConfigFileType]}
-                      size={20}
-                    />
-                    <Text
-                      margin={{ left: 'xsmall' }}
-                      inline
-                      width={150}
-                      className={css.type}
-                      color={Color.BLACK}
-                      lineClamp={1}
-                    >
-                      {getString(ConfigFileTypeTitle[configFile?.spec?.store?.type as ConfigFileType])}
-                    </Text>
-                  </div>
-                  {!isServiceOverride && (
-                    <span>
-                      <Text
-                        lineClamp={1}
-                        width={200}
-                        tooltip={
-                          Array.isArray(filesLocation) ? (
-                            <LocationValue
-                              isTooltip
-                              isHarnessStore={isHarnessStore}
-                              locations={filesLocation}
-                              onClick={openFileStoreModal}
-                              isFileStore={isFileStore}
-                            />
-                          ) : (
-                            filesLocation
-                          )
-                        }
-                      >
-                        {typeof filesLocation === 'string' ? (
-                          filesLocation
-                        ) : (
-                          <LocationValue
-                            isFileStore={isFileStore}
-                            isHarnessStore={isHarnessStore}
-                            locations={filesLocation}
-                            onClick={openFileStoreModal}
-                          />
-                        )}
+              const filesLocation = isHarnessStore
+                ? configFile?.spec?.store?.spec?.files?.length
+                  ? configFile?.spec?.store?.spec?.files
+                  : configFile?.spec?.store?.spec?.secretFiles
+                : pathsLocation
+
+              return (
+                <div className={css.rowItem} key={`${configFile?.identifier}-${index}`}>
+                  <section className={css.configFileList}>
+                    <div className={css.columnId}>
+                      <Text color={Color.BLACK} lineClamp={1} width={150}>
+                        {configFile?.identifier}
                       </Text>
-                    </span>
-                  )}
-                  {!isReadonly && (
-                    <>
-                      {isServiceOverride ? (
-                        <span>
-                          <Button
-                            variation={ButtonVariation.PRIMARY}
-                            rightIcon="chevron-right"
-                            text={getString('common.override')}
-                            onClick={() => editFileOverride(index)}
-                          />
-                        </span>
-                      ) : (
-                        <span>
-                          <Layout.Horizontal>
-                            <Button icon="Edit" onClick={() => editFileOverride(index)} minimal />
-                            <Button icon="main-trash" onClick={() => handleServiceFileDelete?.(index)} minimal />
-                          </Layout.Horizontal>
-                        </span>
-                      )}
-                    </>
-                  )}
-                </section>
-              </div>
-            )
-          })}
+                    </div>
+                    <div>{filesType}</div>
+                    <div className={css.columnId}>
+                      <Icon
+                        inline
+                        name={ConfigFileIconByType[configFile?.spec?.store?.type as ConfigFileType]}
+                        size={20}
+                      />
+                      <Text
+                        margin={{ left: 'xsmall' }}
+                        inline
+                        width={150}
+                        className={css.type}
+                        color={Color.BLACK}
+                        lineClamp={1}
+                      >
+                        {getString(ConfigFileTypeTitle[configFile?.spec?.store?.type as ConfigFileType])}
+                      </Text>
+                    </div>
+                    {!isServiceOverride && (
+                      <span>
+                        <Text
+                          lineClamp={1}
+                          width={200}
+                          tooltip={
+                            Array.isArray(filesLocation) ? (
+                              <LocationValue
+                                isTooltip
+                                isHarnessStore={isHarnessStore}
+                                locations={isHarnessStore ? filesLocation : pathsLocation}
+                                onClick={openFileStoreModal}
+                                isFileStore={isFileStore}
+                              />
+                            ) : (
+                              filesLocation
+                            )
+                          }
+                        >
+                          {typeof filesLocation === 'string' ? (
+                            filesLocation
+                          ) : (
+                            <LocationValue
+                              isFileStore={isFileStore}
+                              isHarnessStore={isHarnessStore}
+                              locations={isHarnessStore ? filesLocation : pathsLocation}
+                              onClick={openFileStoreModal}
+                            />
+                          )}
+                        </Text>
+                      </span>
+                    )}
+                    {!isReadonly && (
+                      <>
+                        {isServiceOverride ? (
+                          <span>
+                            <Button
+                              variation={ButtonVariation.PRIMARY}
+                              rightIcon="chevron-right"
+                              text={getString('common.override')}
+                              onClick={() => editFileOverride(index)}
+                            />
+                          </span>
+                        ) : (
+                          <span>
+                            <Layout.Horizontal>
+                              <Button icon="Edit" onClick={() => editFileOverride(index)} minimal />
+                              <Button icon="main-trash" onClick={() => handleServiceFileDelete?.(index)} minimal />
+                            </Layout.Horizontal>
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </section>
+                </div>
+              )
+            })}
         </>
       )}
     </Layout.Vertical>

@@ -22,6 +22,7 @@ import {
   SidecarArtifact,
   useGetBuildDetailsForGoogleArtifactRegistry,
   useGetBuildDetailsForGoogleArtifactRegistryV2,
+  useGetLastSuccessfulBuildForGoogleArtifactRegistryV2,
   useGetRegionsForGoogleArtifactRegistry
 } from 'services/cd-ng'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -32,6 +33,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -42,6 +44,7 @@ import {
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity
 } from '../artifactSourceUtils'
+import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
@@ -84,7 +87,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     branch
   }
 
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
+
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
+  const versionValue = get(initialValues?.artifacts, `${artifactPath}.spec.version`, '')
 
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
@@ -127,6 +133,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   })
 
   const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+  const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
 
   const {
     data: buildsV2Detail,
@@ -135,7 +142,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     error: fetchingV2BuildsError
   } = useMutateAsGet(useGetBuildDetailsForGoogleArtifactRegistryV2, {
     lazy: true,
-    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    body: pipelineRuntimeYaml,
     requestOptions: {
       headers: {
         'content-type': 'application/json'
@@ -180,6 +187,62 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         error: fetchingV2BuildsError,
         buildsDetail: buildsV2Detail
       }
+  const digestQueryParams = {
+    ...commonParams,
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    package: getFinalQueryParamValue(packageValue),
+    project: getFinalQueryParamValue(projectValue),
+    region: getFinalQueryParamValue(regionValue),
+    repositoryName: getFinalQueryParamValue(repositoryNameValue),
+    tag: getFinalQueryParamValue(versionValue),
+    pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+    fqnPath: getFqnPath(
+      path as string,
+      !!isPropagatedStage,
+      stageIdentifier,
+      defaultTo(
+        isSidecar
+          ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+          : artifactPath,
+        ''
+      ),
+      'digest',
+      serviceIdentifier as string,
+      isMultiService
+    )
+  }
+  const {
+    data: digestData,
+    loading: fetchingDigest,
+    refetch: fetchDigest,
+    error: digestError
+  } = useMutateAsGet(useGetLastSuccessfulBuildForGoogleArtifactRegistryV2, {
+    body: { version: versionValue, runtimeInputYaml: pipelineRuntimeYaml },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      ...digestQueryParams,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'digest',
+        serviceIdentifier as string,
+        isMultiService
+      )
+    },
+    lazy: true
+  })
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
@@ -397,6 +460,22 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               }}
             />
           )}
+
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <div className={css.inputFieldLayout}>
+                <DigestField
+                  {...props}
+                  fetchingDigest={fetchingDigest}
+                  fetchDigestError={digestError}
+                  fetchDigest={fetchDigest}
+                  expressions={expressions}
+                  stageIdentifier={stageIdentifier}
+                  digestData={digestData}
+                />
+              </div>
+            )}
         </Layout.Vertical>
       )}
     </>

@@ -119,6 +119,11 @@ export const RenderTags: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
 
 export const RenderTarget: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
   const slo = row.original
+  const totalRows = 1
+  const indexOfCurrentRow = row.index + 1
+  if (totalRows === indexOfCurrentRow) {
+    return null
+  }
   return (
     <Text
       className={css.titleInSloTable}

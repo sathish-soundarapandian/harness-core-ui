@@ -13,11 +13,11 @@ import { defaultTo, isEmpty, isEqual, isUndefined } from 'lodash-es'
 import type { SLOConsumptionBreakdown, SLOTargetFilterDTO, ServiceLevelIndicatorDTO } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
 import { PeriodLengthTypes, PeriodTypes, SLOObjective, SLOV2Form, SLOV2FormFields } from '../../CVCreateSLOV2.types'
-import { createSloTargetFilterDTO } from './components/AddSlos/AddSLOs.utils'
+import { createSloTargetFilterDTO, getColorProp } from './components/AddSlos/AddSLOs.utils'
 import { MinNumberOfSLO, MaxNumberOfSLO, SLOWeight, WarningModalType } from './CreateCompositeSloForm.constant'
 import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
 import type { UseCreateCompositeSloWarningModalProps } from './useCreateCompositeSloWarningModal'
-import css from './CreateCompositeSloForm.module.scss'
+import { SLOErrorType } from '../../CVCreateSLOV2.constants'
 
 const addSLOError = (formikProps: FormikProps<SLOV2Form>, getString?: UseStringsReturn['getString']) => {
   let errorList: string[] = []
@@ -25,6 +25,9 @@ const addSLOError = (formikProps: FormikProps<SLOV2Form>, getString?: UseStrings
   const sumOfSLOweight = serviceLevelObjectivesDetails?.reduce((total, num) => {
     return num.weightagePercentage + total
   }, 0)
+  const hasDeletedSLO = serviceLevelObjectivesDetails?.some(
+    slo => slo?.sloError?.sloErrorType === SLOErrorType.SimpleSLODeletion
+  )
   if (!serviceLevelObjectivesDetails?.length) {
     errorList = [getString?.('cv.CompositeSLO.AddSLOValidation.minMaxSLOCount') as string]
     return { status: false, errorMessages: errorList }
@@ -36,6 +39,12 @@ const addSLOError = (formikProps: FormikProps<SLOV2Form>, getString?: UseStrings
     return { status: false, errorMessages: errorList }
   } else if (serviceLevelObjectivesDetails?.length > MaxNumberOfSLO) {
     errorList = [getString?.('cv.CompositeSLO.AddSLOValidation.maxSLOCount') as string]
+    return { status: false, errorMessages: errorList }
+  } else if (hasDeletedSLO) {
+    const errorMessage = serviceLevelObjectivesDetails?.find(
+      slo => slo?.sloError?.sloErrorType === SLOErrorType.SimpleSLODeletion
+    )?.sloError?.errorMessage
+    errorList = [errorMessage as string]
     return { status: false, errorMessages: errorList }
   } else {
     const hasInValidValue = serviceLevelObjectivesDetails.some(
@@ -196,34 +205,47 @@ export const shouldOpenEvaluationUpdateModal = (
   !isEmpty(formikValues.serviceLevelObjectivesDetails) &&
   evaluationTypesRef.current !== formikValues.evaluationType
 
-export const RenderOrg: Renderer<CellProps<SLOObjective | SLOConsumptionBreakdown>> = ({ row }) => {
+export const RenderOrg: Renderer<CellProps<SLOObjective & SLOConsumptionBreakdown>> = ({ row }) => {
   const slo = row.original
+  const colorProp = getColorProp(slo.sloError)
   return (
-    <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
-      {slo?.orgName}
+    <Text {...colorProp} lineClamp={1} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+      {slo?.orgName ?? slo?.orgIdentifier}
     </Text>
   )
 }
 
-export const RenderProject: Renderer<CellProps<SLOObjective | SLOConsumptionBreakdown>> = ({ row }) => {
+export const RenderProject: Renderer<CellProps<SLOObjective & SLOConsumptionBreakdown>> = ({ row }) => {
   const slo = row.original
+  const colorProp = getColorProp(slo.sloError)
   return (
-    <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
-      {slo?.projectName}
+    <Text
+      {...colorProp}
+      lineClamp={1}
+      font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+      margin={{ right: 'large' }}
+    >
+      {slo?.projectName ?? slo?.projectIdentifier}
     </Text>
   )
 }
 
-export const getProjectAndOrgColumn = ({ getString }: { getString: UseStringsReturn['getString'] }) => [
+export const getProjectAndOrgColumn = ({
+  getString,
+  isAccountLevel
+}: {
+  getString: UseStringsReturn['getString']
+  isAccountLevel?: boolean
+}) => [
   {
     Header: getString('orgLabel').toUpperCase(),
     Cell: RenderOrg,
-    width: '15%'
+    width: isAccountLevel ? '10%' : '15%'
   },
   {
     Header: getString('projectLabel').toUpperCase(),
     Cell: RenderProject,
-    width: '15%'
+    width: isAccountLevel ? '10%' : '15%'
   }
 ]
 

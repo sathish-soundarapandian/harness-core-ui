@@ -83,5 +83,18 @@ export enum SettingType {
   CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS = 'concurrent_active_pipeline_executions',
   ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY = 'allow_user_to_mark_step_as_failed_explicitly',
   ENABLE_NODE_EXECUTION_AUDIT_EVENTS = 'enable_node_execution_audit_events',
-  ENABLE_MATRIX_FIELD_NAME_SETTING = 'enable_matrix_label_by_name'
+  ENABLE_MATRIX_FIELD_NAME_SETTING = 'enable_matrix_label_by_name',
+  SHOW_ANOMALIES = 'show_anomalies',
+  SHOW_OTHERS = 'show_others',
+  SHOW_UNALLOCATED_CUSTER_COST = 'show_unallocated_cluster_cost',
+  INCLUDE_AWS_DISCOUNTS = 'include_aws_discounts',
+  INCLUDE_AWS_CREDIT = 'include_aws_credit',
+  INCLUDE_AWS_REFUNDS = 'include_aws_refunds',
+  INCLUDE_AWS_TAXES = 'include_aws_taxes',
+  SHOW_AWS_COST_AS = 'show_aws_cost_as',
+  INCLUDE_AZURE_REFUNDS = 'include_azure_refunds',
+  SHOW_AZURE_COST_AS = 'show_azure_cost_as',
+  INCLUDE_GCP_DISCOUNTS = 'include_gcp_discounts',
+  INCLUDE_GCP_TAXES = 'include_gcp_taxes',
+  SHOW_GCP_COST_AS = 'show_gcp_cost_as'
 }

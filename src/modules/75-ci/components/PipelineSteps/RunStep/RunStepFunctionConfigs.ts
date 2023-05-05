@@ -78,7 +78,7 @@ export const transformValuesFieldsConfig = [
 
 export const getEditViewValidateFieldsConfig = (
   buildInfrastructureType: CIBuildInfrastructureType,
-  isTemplateStudio: boolean
+  isTemplateView: boolean
 ): { name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }[] => [
   {
     name: 'identifier',
@@ -99,7 +99,7 @@ export const getEditViewValidateFieldsConfig = (
     isRequired:
       ![CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
         buildInfrastructureType
-      ) && !isTemplateStudio
+      ) && !isTemplateView
   },
   {
     name: 'spec.image',
@@ -108,7 +108,7 @@ export const getEditViewValidateFieldsConfig = (
     isRequired:
       ![CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
         buildInfrastructureType
-      ) && !isTemplateStudio
+      ) && !isTemplateView
   },
   {
     name: 'spec.shell',

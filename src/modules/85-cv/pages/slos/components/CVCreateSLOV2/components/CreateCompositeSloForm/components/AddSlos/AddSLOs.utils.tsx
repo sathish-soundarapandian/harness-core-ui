@@ -8,8 +8,9 @@
 import React from 'react'
 import { cloneDeep, defaultTo } from 'lodash-es'
 import { Text } from '@harness/uicore'
-import type { Renderer, CellProps } from 'react-table'
-import type { SLODashboardApiFilter, SLOTargetFilterDTO } from 'services/cv'
+import { Color } from '@harness/design-system'
+import type { Renderer, CellProps, Row } from 'react-table'
+import type { SLODashboardApiFilter, SLOError, SLOTargetFilterDTO } from 'services/cv'
 import {
   SLOObjective,
   SLOV2Form,
@@ -17,7 +18,7 @@ import {
   PeriodLengthTypes
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { getSLORefIdWithOrgAndProject } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
-import { SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
+import { SLOErrorType, SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import type {
   GetDistributionUpdatedProps,
   ResetOnDeleteProps,
@@ -82,7 +83,13 @@ export const getDistribution = ({
 }
 
 export const RenderName: Renderer<CellProps<SLOObjective>> = ({ row }) => {
-  return <Text>{row.original.name || row.original.serviceLevelObjectiveRef}</Text>
+  const { name, serviceLevelObjectiveRef, sloError } = row.original
+  const colorProp = getColorProp(sloError)
+  return (
+    <Text {...colorProp} lineClamp={1}>
+      {name || serviceLevelObjectiveRef}
+    </Text>
+  )
 }
 
 export const createRequestBodyForSLOHealthListViewV2 = ({ values }: { values: SLOV2Form }): SLODashboardApiFilter => {
@@ -261,4 +268,15 @@ const updateNonManuallyUpdatedSlos = (
       sloList: updatedSLOList
     })
   }
+}
+
+export const getIsLastRow = (row: Row<SLOObjective>, serviceLevelObjectivesDetails: SLOObjective[]): boolean => {
+  const totalRows = serviceLevelObjectivesDetails.length + 1
+  const indexOfCurrentRow = row.index + 1
+  return totalRows === indexOfCurrentRow
+}
+
+export const getColorProp = (sloError?: SLOError) => {
+  const hasDeleteSLO = sloError?.sloErrorType === SLOErrorType.SimpleSLODeletion
+  return hasDeleteSLO ? { color: Color.RED_450 } : {}
 }

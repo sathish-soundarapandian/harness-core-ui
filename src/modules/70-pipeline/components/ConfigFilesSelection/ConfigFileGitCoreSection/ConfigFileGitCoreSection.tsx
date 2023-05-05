@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
@@ -142,18 +149,16 @@ export function ConfigFileGitCoreSection(
           [css.runtimeInput]: getMultiTypeFromValue(formik.values?.paths) === MultiTypeInputType.RUNTIME
         })}
       >
-        {formik.values.paths.length > 0 && (
-          <DragnDropPaths
-            formik={formik}
-            expressions={expressions}
-            allowableTypes={allowableTypes}
-            fieldPath="paths"
-            pathLabel={getString('pipeline.configFiles.paths')}
-            placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-            defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
-            dragDropFieldWidth={filePathFieldWidth}
-          />
-        )}
+        <DragnDropPaths
+          formik={formik}
+          expressions={expressions}
+          allowableTypes={allowableTypes}
+          fieldPath="paths"
+          pathLabel={getString('pipeline.configFiles.paths')}
+          placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+          defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+          dragDropFieldWidth={filePathFieldWidth}
+        />
         {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
           /* istanbul ignore next */
           <ConfigureOptions

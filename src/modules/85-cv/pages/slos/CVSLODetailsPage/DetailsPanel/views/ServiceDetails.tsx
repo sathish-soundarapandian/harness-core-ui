@@ -84,7 +84,7 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
           </Container>
         )}
 
-        {!isCompositeSLO && <KeyValuePair label={Evaluationlabel} value={EvaluationValue} />}
+        {<KeyValuePair label={Evaluationlabel} value={EvaluationValue} />}
         {!isCompositeSLO && sloDashboardWidget?.healthSourceName && (
           <KeyValuePair
             label={getString('pipeline.verification.healthSourceLabel')}

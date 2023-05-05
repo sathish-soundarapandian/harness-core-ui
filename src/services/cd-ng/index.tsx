@@ -1497,8 +1497,29 @@ export type AwsSMCredentialSpecManualConfig = AwsSecretManagerCredentialSpec & {
   secretKey: string
 }
 
-export type AwsSamDeployStepInfo = StepSpecType & {
+export type AwsSamBuildStepInfo = StepSpecType & {
+  buildCommandOptions?: string[]
+  connectorRef?: string
   delegateSelectors?: string[]
+  image?: string
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  samBuildDockerRegistryConnectorRef?: string
+  settings: ParameterFieldMapStringJsonNode
+}
+
+export type AwsSamDeployStepInfo = StepSpecType & {
+  connectorRef?: string
+  delegateSelectors?: string[]
+  deployCommandOptions?: string[]
+  image?: string
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings: ParameterFieldMapStringJsonNode
 }
 
 export type AwsSamDirectoryManifest = ManifestAttributes & {
@@ -2308,6 +2329,14 @@ export interface CcmConnectorFilter {
   awsAccountIds?: string[]
   azureSubscriptionId?: string
   azureTenantId?: string
+  featuresDisabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   featuresEnabled?: (
     | 'BILLING'
     | 'OPTIMIZATION'
@@ -2629,6 +2658,7 @@ export interface ConnectorCatalogueItem {
     | 'Spot'
     | 'Bamboo'
     | 'TerraformCloud'
+    | 'SignalFX'
   )[]
 }
 
@@ -2714,6 +2744,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Spot'
     | 'Bamboo'
     | 'TerraformCloud'
+    | 'SignalFX'
   )[]
 }
 
@@ -2775,6 +2806,7 @@ export interface ConnectorInfoDTO {
     | 'Spot'
     | 'Bamboo'
     | 'TerraformCloud'
+    | 'SignalFX'
 }
 
 export interface ConnectorResponse {
@@ -2853,6 +2885,7 @@ export interface ConnectorTypeStatistics {
     | 'Spot'
     | 'Bamboo'
     | 'TerraformCloud'
+    | 'SignalFX'
 }
 
 export interface ConnectorValidationResult {
@@ -2861,6 +2894,10 @@ export interface ConnectorValidationResult {
   errors?: ErrorDetail[]
   status?: 'SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN'
   testedAt?: number
+}
+
+export interface ContainerResource {
+  limits: Limits
 }
 
 export interface ContextElement {
@@ -4201,6 +4238,7 @@ export interface EntityDetail {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
 }
 
 export interface EntityDetailProtoDTO {
@@ -5802,6 +5840,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
     | 'TERRAFORM_CLOUD_ROLLBACK'
+    | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5893,6 +5932,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
     | 'TERRAFORM_CLOUD_ROLLBACK'
+    | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -6002,6 +6042,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
     | 'TERRAFORM_CLOUD_ROLLBACK'
+    | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -6119,6 +6160,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
     | 'TERRAFORM_CLOUD_ROLLBACK'
+    | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -6837,6 +6879,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   )[]
   moduleType?:
     | 'CD'
@@ -7070,6 +7113,7 @@ export interface GitEntityFilterProperties {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -7380,6 +7424,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -7605,6 +7650,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7951,6 +7997,7 @@ export interface GitSyncEntityDTO {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -8170,6 +8217,7 @@ export interface GitSyncEntityListDTO {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -8406,6 +8454,7 @@ export interface GitSyncErrorDTO {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -10253,6 +10302,11 @@ export interface LicensesWithSummaryDTO {
     | 'IDP'
 }
 
+export interface Limits {
+  cpu?: string
+  memory?: string
+}
+
 export interface LoadBalancer {
   spec?: LoadBalancerSpec
   type: 'AWSLoadBalancerConfig'
@@ -10749,10 +10803,9 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export interface OAuthSettings {
+export type OAuthSettings = NGAuthSettings & {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -11474,6 +11527,22 @@ export interface ParameterFieldBoolean {
   value?: boolean
 }
 
+export interface ParameterFieldMapStringJsonNode {
+  defaultValue?: {
+    [key: string]: JsonNode
+  }
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: {
+    [key: string]: JsonNode
+  }
+}
+
 export interface ParameterFieldMapStringString {
   defaultValue?: {
     [key: string]: string
@@ -12097,6 +12166,7 @@ export interface ReferencedByDTO {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
 }
 
 export interface RefreshResponse {
@@ -13478,6 +13548,7 @@ export interface ResponseListEntityType {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -15490,6 +15561,8 @@ export type SRMModuleLicenseDTO = ModuleLicenseDTO & {
 export interface SSHAuthDTO {
   spec: BaseSSHSpecDTO
   type: 'SSH' | 'Kerberos'
+  useSshClient?: boolean
+  useSshj?: boolean
 }
 
 export type SSHConfigDTO = BaseSSHSpecDTO & {
@@ -16601,6 +16674,12 @@ export interface SidecarArtifactWrapper {
   sidecar?: SidecarArtifact
 }
 
+export type SignalFXConnectorDTO = ConnectorConfigDTO & {
+  apiTokenRef: string
+  delegateSelectors?: string[]
+  url: string
+}
+
 export interface SignupDTO {
   billingFrequency?: 'MONTHLY' | 'YEARLY'
   edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
@@ -16908,6 +16987,7 @@ export interface StepData {
     | 'CloudFunctionRollback'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
+    | 'AwsSamBuild'
     | 'AwsSamRollback'
     | 'AwsLambdaRollback'
     | 'BambooBuild'
@@ -18665,11 +18745,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
+export type DeleteManyFreezesBodyRequestBody = string[]
+
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
-
-export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -19507,6 +19587,7 @@ export interface ListActivitiesQueryParams {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -19718,6 +19799,7 @@ export interface ListActivitiesQueryParams {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -20033,6 +20115,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -20244,6 +20327,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -32075,6 +32159,7 @@ export interface GetConnectorListQueryParams {
     | 'Spot'
     | 'Bamboo'
     | 'TerraformCloud'
+    | 'SignalFX'
   category?:
     | 'CLOUD_PROVIDER'
     | 'SECRET_MANAGER'
@@ -32481,6 +32566,7 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'Spot'
     | 'Bamboo'
     | 'TerraformCloud'
+    | 'SignalFX'
 }
 
 export type GetAllAllowedFieldValuesProps = Omit<
@@ -37704,6 +37790,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
     | 'TERRAFORM_CLOUD_ROLLBACK'
+    | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -37865,6 +37952,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'K8S_DRY_RUN'
       | 'TERRAFORM_CLOUD_RUN'
       | 'TERRAFORM_CLOUD_ROLLBACK'
+      | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
@@ -38110,6 +38198,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -38382,6 +38471,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   searchTerm?: string
 }
 
@@ -41865,6 +41955,7 @@ export interface GetReferencedByQueryParams {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   searchTerm?: string
 }
 
@@ -42321,7 +42412,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -42335,7 +42426,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -42350,7 +42441,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -42364,7 +42455,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -42376,7 +42467,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -42385,7 +42476,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -42948,7 +43039,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -42962,7 +43053,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -42977,7 +43068,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -42991,7 +43082,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -43003,7 +43094,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -43012,7 +43103,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -44551,6 +44642,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -44830,6 +44922,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'DeployCloudFunctionGenOne'
       | 'RollbackCloudFunctionGenOne'
       | 'K8sBlueGreenStageScaleDown'
+      | 'AwsSamBuild'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -51277,6 +51370,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   yamlGroup?: string
 }
 
@@ -51616,6 +51710,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -66565,6 +66660,7 @@ export interface GetYamlSchemaQueryParams {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
   subtype?:
     | 'K8sCluster'
     | 'Git'
@@ -66613,6 +66709,7 @@ export interface GetYamlSchemaQueryParams {
     | 'Spot'
     | 'Bamboo'
     | 'TerraformCloud'
+    | 'SignalFX'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'

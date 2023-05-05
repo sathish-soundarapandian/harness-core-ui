@@ -129,7 +129,10 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
         if (getMultiTypeFromValue(value as string) !== MultiTypeInputType.RUNTIME) {
           return
         }
-        const description = get(allValues, `variables[${index}].description`, '')
+        const description = defaultTo(
+          get(allValues, 'variables', []).find((fVar: AllNGVariables) => variable.name === fVar.name)?.description,
+          ''
+        )
         return (
           <div key={`${variable.name}${index}`} className={css.variableListTable}>
             <Layout.Vertical>

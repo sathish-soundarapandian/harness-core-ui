@@ -52,7 +52,10 @@ export const variableTypes: SelectOption[] = [
 ]
 
 export const processFormData = (values: TerraformCloudRunFormData): TerraformCloudRunFormData => {
-  const targets = values.spec?.spec?.targets as MultiTypeInputType
+  const specValues = values.spec?.spec
+  const { workspace, organization, variables, provisionerIdentifier } = defaultTo(specValues, {})
+
+  const targets = specValues?.targets as MultiTypeInputType
   const targetMap: ListType = []
   if (Array.isArray(targets)) {
     targets.forEach(target => {
@@ -62,7 +65,6 @@ export const processFormData = (values: TerraformCloudRunFormData): TerraformClo
     })
   }
 
-  const variables = values.spec?.spec?.variables
   const varMap: any = []
   if (Array.isArray(variables)) {
     variables.forEach(mapValue => {
@@ -76,13 +78,13 @@ export const processFormData = (values: TerraformCloudRunFormData): TerraformClo
     })
   }
 
-  if (values.spec?.runType === RunTypes.Apply) {
+  if (get(values.spec, 'runType') === RunTypes.Apply) {
     return {
       ...values,
       spec: {
         runType: values.spec?.runType,
         spec: {
-          provisionerIdentifier: values.spec?.spec?.provisionerIdentifier
+          provisionerIdentifier: provisionerIdentifier
         }
       }
     }
@@ -92,9 +94,9 @@ export const processFormData = (values: TerraformCloudRunFormData): TerraformClo
       spec: {
         ...values.spec,
         spec: {
-          ...values.spec.spec,
-          organization: getValue(values.spec?.spec?.organization),
-          workspace: getValue(values.spec?.spec?.workspace),
+          ...specValues,
+          organization: getValue(organization),
+          workspace: getValue(workspace),
           variables: varMap,
           targets: isMultiTypeRuntime(getMultiTypeFromValue(targets)) ? targets : targetMap
         }
@@ -104,50 +106,54 @@ export const processFormData = (values: TerraformCloudRunFormData): TerraformClo
 }
 
 export const processInitialValues = (values: TerraformCloudRunFormData): TerraformCloudRunFormData => {
-  const isVarRunTime = getMultiTypeFromValue(get(values.spec, 'spec.variables') as any) === MultiTypeInputType.RUNTIME
+  const specValues = values.spec?.spec
+  const { workspace, organization, variables, targets, discardPendingRuns, overridePolicies } = defaultTo(
+    specValues,
+    {}
+  )
+  const isVarRunTime = getMultiTypeFromValue(variables as any) === MultiTypeInputType.RUNTIME
   return {
     ...values,
     spec: {
       ...values.spec,
       spec: {
-        ...values.spec.spec,
+        ...specValues,
         organization:
-          values.spec?.spec?.organization &&
-          getMultiTypeFromValue(values.spec?.spec?.organization) === MultiTypeInputType.FIXED
+          organization && getMultiTypeFromValue(organization) === MultiTypeInputType.FIXED
             ? {
-                label: values.spec?.spec?.organization.toString(),
-                value: values.spec?.spec?.organization.toString()
+                label: organization.toString(),
+                value: organization.toString()
               }
-            : values.spec?.spec?.organization,
+            : organization,
         workspace:
-          values.spec?.spec?.workspace &&
-          getMultiTypeFromValue(values.spec?.spec?.workspace) === MultiTypeInputType.FIXED
+          workspace && getMultiTypeFromValue(workspace) === MultiTypeInputType.FIXED
             ? {
-                label: values.spec?.spec?.workspace.toString(),
-                value: values.spec?.spec?.workspace.toString()
+                label: workspace.toString(),
+                value: workspace.toString()
               }
-            : values.spec?.spec?.workspace,
+            : workspace,
         variables: !isVarRunTime
-          ? Array.isArray(values.spec?.spec?.variables)
-            ? values.spec?.spec?.variables.map(variable => ({
+          ? Array.isArray(variables)
+            ? variables.map(variable => ({
                 key: defaultTo(variable.name, ''),
                 value: variable.value,
                 id: uuid()
               }))
             : [{ key: '', value: '', id: uuid() }]
-          : get(values.spec, 'spec.variables'),
-        discardPendingRuns: defaultTo(values.spec?.spec?.discardPendingRuns, false),
-        ...((values.spec?.runTypes === RunTypes.PlanAndApply || values.spec?.runTypes === RunTypes.PlanAndDestroy) && {
-          overridePolicies: defaultTo(values.spec?.spec?.overridePolicies, false)
+          : variables,
+        discardPendingRuns: defaultTo(discardPendingRuns, false),
+        ...((get(values.spec, 'runType') === RunTypes.PlanAndApply ||
+          get(values.spec, 'runType') === RunTypes.PlanAndDestroy) && {
+          overridePolicies: defaultTo(overridePolicies, false)
         }),
-        targets: !(getMultiTypeFromValue(values.spec?.spec?.targets as string) === MultiTypeInputType.RUNTIME)
-          ? Array.isArray(values.spec?.spec?.targets)
-            ? (values.spec?.spec?.targets as string[]).map((target: string) => ({
+        targets: !(getMultiTypeFromValue(targets as string) === MultiTypeInputType.RUNTIME)
+          ? Array.isArray(targets)
+            ? (targets as string[]).map((target: string) => ({
                 value: target,
                 id: uuid()
               }))
             : [{ value: '', id: uuid() }]
-          : values.spec?.spec?.targets
+          : targets
       }
     }
   }
@@ -168,12 +174,12 @@ export function getValidationSchema(
           then: Yup.object().shape({
             connectorRef: getConnectorSchema(getString),
             organization: Yup.lazy((value): Yup.Schema<unknown> => {
-              /* istanbul ignore next */ if (typeof value === 'string') {
+              if (typeof value === 'string') {
                 return Yup.string().required(
                   getString('common.validation.fieldIsRequired', { name: getString(organizationLabel) })
                 )
               }
-              /* istanbul ignore next */ return Yup.object().test({
+              return Yup.object().test({
                 test(valueObj: SelectOption): boolean | Yup.ValidationError {
                   if (isEmpty(valueObj) || isEmpty(valueObj.value)) {
                     return this.createError({
@@ -185,12 +191,12 @@ export function getValidationSchema(
               })
             }),
             workspace: Yup.lazy((value): Yup.Schema<unknown> => {
-              /* istanbul ignore next */ if (typeof value === 'string') {
+              if (typeof value === 'string') {
                 return Yup.string().required(
                   getString('common.validation.fieldIsRequired', { name: getString(workspaceLabel) })
                 )
               }
-              /* istanbul ignore next */ return Yup.object().test({
+              return Yup.object().test({
                 test(valueObj: SelectOption): boolean | Yup.ValidationError {
                   if (isEmpty(valueObj) || isEmpty(valueObj.value)) {
                     return this.createError({
@@ -213,9 +219,7 @@ export function getValidationSchema(
                   regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
                 })
               }
-              /* istanbul ignore next */ return Yup.string().required(
-                getString('common.validation.provisionerIdentifierIsRequired')
-              )
+              return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
             })
           })
         })

@@ -21,7 +21,9 @@ export interface UseModuleInfoReturn {
   module?: Module
 }
 
-const pathToMatch = withAccountId(() => '/:module(ci|cd|cf|cv|ce|sto|chaos|iacm)')({ accountId: ':accountId' })
+const pathToMatch = withAccountId(() => '/:module(ci|cd|cf|cv|ce|sto|chaos|iacm|idp-admin)')({
+  accountId: ':accountId'
+})
 const matchModuleFn = match<ModuleInfo>(pathToMatch, { end: false })
 
 export function useModuleInfo(): UseModuleInfoReturn {

@@ -16,3 +16,17 @@ concurrentActivePipelineExecutions: Concurrent Active Pipeline Executions
 enablePipelineExecutionAuditEvents: Enable Pipeline Execution Audit Events
 allowUserToMarkStepAsFailedExplicitly: Allow users to mark a running Step as failure
 enableMatrixFieldNames: Enable Matrix Labels By Name
+perspectivePreferences: PERSPECTIVES PREFERENCES
+showAnomalies: Show anomalies
+showOthers: Show "others"
+showUnallocatedClusterCost: Show "unallocated" costs on Clusters
+awsIncludeDiscounts: (AWS only) Include Discounts
+awsIncludeCredit: (AWS only) Include Credit
+awsIncludeRefunds: (AWS only) Include Refunds
+awsIncludeTaxes: (AWS only) Include Taxes
+showAwsCostAs: (AWS only) Show costs as
+azureIncludeRefunds: (Azure only) Include Refunds
+showAzureCostAs: (Azure only) Show costs as
+gcpIncludeDiscounts: (GCP only) Include Discounts
+gcpIncludeTaxes: (GCP Only) Include Taxes
+showGcpCostAs: (GCP only) Show costs as

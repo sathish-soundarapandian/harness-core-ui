@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useFormikContext } from 'formik'
+import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import type { GetDataError } from 'restful-react'
@@ -28,28 +29,26 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
+import dataCollectionFailure from '@cv/assets/dataCollectionFailure.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SLOObjective, SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import DataCollectionFailureTooltip from '@cv/pages/slos/common/DataCollectionFailureTooltip/DataCollectionFailureTooltip'
 import {
   getSLORefIdWithOrgAndProject,
   getSLOIdentifierWithOrgAndProject
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
+import { SLOErrorType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import type { ResponsePageSLOHealthListView, ServiceLevelObjectiveDetailsDTO, SLOHealthListView } from 'services/cv'
 import {
   createRequestBodyForSLOHealthListViewV2,
+  getIsLastRow,
   onWeightChange,
   RenderName,
   resetOnDelete,
   resetSLOWeightage
 } from './AddSLOs.utils'
 import { SLOList } from './components/SLOList'
-import {
-  RenderMonitoredService,
-  RenderSLIType,
-  RenderTags,
-  RenderTarget,
-  RenderUserJourney
-} from './components/SLOList.utils'
+import { RenderMonitoredService, RenderTags, RenderUserJourney } from './components/SLOList.utils'
 import { SLOWeight } from '../../CreateCompositeSloForm.constant'
 import { getColumsForProjectAndAccountLevel, getProjectAndOrgColumn } from '../../CreateCompositeSloForm.utils'
 import css from './AddSLOs.module.scss'
@@ -123,7 +122,17 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
   const setServiceLevelObjectivesDetails = (updatedSLODetails: SLOObjective[]): void =>
     formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, updatedSLODetails)
 
-  const RenderWeightInput: Renderer<CellProps<ServiceLevelObjectiveDetailsDTO>> = ({ row }) => {
+  const RenderWeightInput: Renderer<CellProps<SLOObjective>> = ({ row }) => {
+    const { sloError } = row.original
+    const isLastRow = getIsLastRow(row, serviceLevelObjectivesDetails)
+    if (isLastRow) {
+      return (
+        <Layout.Horizontal spacing={'medium'}>
+          <Text>{`${getString('total')} ${getString('cv.CompositeSLO.Weightage').toLowerCase()}`}</Text>
+          <Text intent={showErrorState ? Intent.DANGER : Intent.SUCCESS}>{totalOfSloWeight}</Text>
+        </Layout.Horizontal>
+      )
+    }
     return (
       <Container className={css.weightageInput}>
         <TextInput
@@ -137,6 +146,7 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
               ? Intent.DANGER
               : Intent.PRIMARY
           }
+          disabled={sloError?.sloErrorType === SLOErrorType.SimpleSLODeletion}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             onWeightChange({
               index: row.index,
@@ -174,8 +184,9 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
     )
   }
 
-  const RenderDelete: Renderer<CellProps<ServiceLevelObjectiveDetailsDTO>> = ({ row }) => {
-    const { serviceLevelObjectiveRef } = row.original
+  const RenderDelete: Renderer<CellProps<SLOObjective>> = ({ row }) => {
+    const { serviceLevelObjectiveRef, sloError } = row.original
+    const isLastRow = getIsLastRow(row, serviceLevelObjectivesDetails)
     const { openDialog } = useConfirmationDialog({
       titleText: getString('common.delete', { name: serviceLevelObjectiveRef }),
       contentText: (
@@ -202,16 +213,35 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       }
     })
 
+    if (isLastRow) {
+      return null
+    }
     return (
-      <Icon
-        style={{ cursor: 'pointer', float: 'right' }}
-        padding={'small'}
-        name="main-trash"
-        onClick={e => {
-          e.stopPropagation()
-          openDialog()
-        }}
-      />
+      <Layout.Horizontal spacing={'large'} flex={{ justifyContent: 'flex-end', alignItems: 'center' }}>
+        {sloError?.failedState && (
+          <Text
+            flex
+            tooltip={<DataCollectionFailureTooltip sloError={sloError} />}
+            tooltipProps={{
+              isDark: true,
+              interactionKind: PopoverInteractionKind.HOVER,
+              position: Position.LEFT,
+              usePortal: false
+            }}
+          >
+            <img src={dataCollectionFailure} />
+          </Text>
+        )}
+        <Icon
+          style={{ cursor: 'pointer', float: 'right' }}
+          padding={'small'}
+          name="main-trash"
+          onClick={e => {
+            e.stopPropagation()
+            openDialog()
+          }}
+        />
+      </Layout.Horizontal>
     )
   }
 
@@ -219,20 +249,20 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
     {
       accessor: 'serviceLevelObjectiveRef',
       Header: getString('name'),
-      width: '20%',
+      width: isAccountLevel ? '15%' : '20%',
       Cell: RenderName
     },
-    ...(getProjectAndOrgColumn({ getString }) as Column<SLOObjective>[]),
+    ...(getProjectAndOrgColumn({ getString, isAccountLevel }) as Column<SLOObjective>[]),
     {
       accessor: 'serviceName',
       Header: getString('cv.slos.monitoredService').toUpperCase(),
-      width: '20%',
+      width: isAccountLevel ? '15%' : '20%',
       Cell: RenderMonitoredService
     },
     {
       accessor: 'userJourneyName',
       Header: getString('cv.slos.userJourney').toUpperCase(),
-      width: '20%',
+      width: isAccountLevel ? '15%' : '20%',
       Cell: RenderUserJourney
     },
     {
@@ -241,16 +271,25 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       Cell: RenderTags
     },
     {
-      accessor: 'sliType',
-      Header: getString('cv.slos.sliType').toUpperCase(),
-      width: '10%',
-      Cell: RenderSLIType
-    },
-    {
       accessor: 'sloTargetPercentage',
       Header: getString('cv.slos.target').toUpperCase(),
       width: '10%',
-      Cell: RenderTarget
+      Cell: ({ row }) => {
+        const slo = row.original
+        const isLastRow = getIsLastRow(row, serviceLevelObjectivesDetails)
+        if (isLastRow) {
+          return null
+        }
+        return (
+          <Text
+            lineClamp={1}
+            title={` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
+            font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+          >
+            {` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
+          </Text>
+        )
+      }
     },
     {
       accessor: 'weightagePercentage',
@@ -287,7 +326,7 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
     },
     {
       id: 'deletSLO',
-      width: '5%',
+      width: '15%',
       Cell: RenderDelete,
       disableSortBy: true
     }
@@ -325,19 +364,18 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       />
       {showSLOTableAndMessage && (
         <>
-          <TableV2 sortable columns={filteredColumns} data={serviceLevelObjectivesDetails} minimal />
+          <TableV2
+            className={cx(css.addSlo, {
+              [css.sloTagsAccountlevel]: isAccountLevel,
+              [css.rowFailure]: showErrorState,
+              [css.rowSuccess]: !showErrorState
+            })}
+            sortable
+            columns={filteredColumns}
+            data={[...serviceLevelObjectivesDetails, {}]}
+            minimal
+          />
           <HelpPanel referenceId={'compositeSLOWeightage'} type={HelpPanelType.FLOATING_CONTAINER} />
-          <Container className={cx(css.totalRow, showErrorState ? css.rowFailure : css.rowSuccess)}>
-            {Array(5)
-              .fill(0)
-              .map((_, index) => (
-                <div key={index.toString()}></div>
-              ))}
-            <Layout.Horizontal spacing={'medium'}>
-              <Text>{`${getString('total')} ${getString('cv.CompositeSLO.Weightage').toLowerCase()}`}</Text>
-              <Text intent={showErrorState ? Intent.DANGER : Intent.SUCCESS}>{totalOfSloWeight}</Text>
-            </Layout.Horizontal>
-          </Container>
         </>
       )}
     </Page.Body>

@@ -455,6 +455,7 @@ export default function AddEditServiceOverride({
                             handleServiceFileDelete={index => onServiceOverrideDelete(index, 'configFiles')}
                             isReadonly={isReadonly}
                             expressions={expressions}
+                            serviceType={serviceType}
                           />
                         }
                       />

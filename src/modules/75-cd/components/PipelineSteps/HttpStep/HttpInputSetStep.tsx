@@ -17,6 +17,7 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
@@ -42,6 +43,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { expressions } = useVariablesExpression()
+  const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
 
   return (
     <React.Fragment>
@@ -51,7 +53,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
           name={`${prefix}timeout`}
           multiTypeDurationProps={{
             configureOptionsProps: {
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
             },
             expressions,
             disabled: readonly,
@@ -74,7 +76,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             allowableTypes
           }}
           configureOptionsProps={{
-            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType),
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep,
             allowedValuesType: ALLOWED_VALUES_TYPE.URL
           }}
           fieldPath={'spec.url'}
@@ -95,7 +97,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             disabled: readonly,
             allowableTypes
           }}
-          configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
+          configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep }}
           disabled={readonly}
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
@@ -108,7 +110,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             name={`${prefix}spec.requestBody`}
             multiTypeTextArea={{
               configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
               },
               expressions,
               disabled: readonly,
@@ -128,12 +130,42 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             disabled: readonly,
             allowableTypes
           }}
-          configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
+          configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep }}
           fieldPath={'spec.assertion'}
           template={template}
           className={cx(stepCss.formGroup, stepCss.md)}
         />
       ) : null}
+      {getMultiTypeFromValue(template?.spec?.certificate) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <MultiTypeSecretInput
+            expressions={expressions}
+            allowableTypes={allowableTypes}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+            }}
+            name={`${prefix}spec.certificate`}
+            label={getString('common.certificate')}
+            disabled={readonly}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(template?.spec?.certificateKey) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <MultiTypeSecretInput
+            expressions={expressions}
+            allowableTypes={allowableTypes}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+            }}
+            name={`${prefix}spec.certificateKey`}
+            label={getString('pipeline.utilitiesStep.certificateKey')}
+            disabled={readonly}
+          />
+        </div>
+      )}
       {isArray(template?.spec?.headers) && template?.spec?.headers ? (
         <div className={stepCss.formGroup}>
           <MultiTypeFieldSelector

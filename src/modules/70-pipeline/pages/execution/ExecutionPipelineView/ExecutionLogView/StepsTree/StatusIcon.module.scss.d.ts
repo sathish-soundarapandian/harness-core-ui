@@ -17,6 +17,7 @@ declare const styles: {
   readonly ignorefailed: string
   readonly inputwaiting: string
   readonly interventionwaiting: string
+  readonly pipelinerollback: string
   readonly resourcewaiting: string
   readonly running: string
   readonly statusIcon: string

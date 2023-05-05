@@ -413,7 +413,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                       {plansError
                         ? get(plansError, 'data.message', '')
                         : getString('pipeline.cannotFetchOptions', {
-                            fieldName: getString('pipeline.bamboo.planName')
+                            fieldName: getString('pipeline.bamboo.planKey')
                           })}
                     </Text>
                   ) : null,
@@ -425,7 +425,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                 expressions,
                 allowableTypes
               }}
-              label={getString('pipeline.bamboo.planName')}
+              label={getString('pipeline.bamboo.planKey')}
               name={`${path}.artifacts.${artifactPath}.spec.planKey`}
               fieldPath={`artifacts.${artifactPath}.spec.planKey`}
               template={template}

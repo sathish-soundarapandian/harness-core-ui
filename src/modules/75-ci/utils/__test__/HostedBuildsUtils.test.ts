@@ -10,10 +10,7 @@ import type { ConnectorInfoDTO, UserRepoResponse } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
 import { Connectors } from '@connectors/constants'
 import { YAMLVersion } from '@pipeline/utils/CIUtils'
-import {
-  getBackendServerUrl,
-  isEnvironmentAllowedForOAuth
-} from '@connectors/components/CreateConnector/CreateConnectorUtils'
+import { getBackendServerUrl, isEnvironmentAllowedForOAuth } from '@common/components/ConnectViaOAuth/OAuthUtils'
 import {
   addDetailsToPipeline,
   getFullRepoName,

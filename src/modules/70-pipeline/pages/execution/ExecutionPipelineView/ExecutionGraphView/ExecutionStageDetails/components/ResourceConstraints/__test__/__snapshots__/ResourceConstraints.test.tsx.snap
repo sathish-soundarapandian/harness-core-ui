@@ -13,7 +13,7 @@ exports[`ResourceConstraintTooltip matches snapshot 1`] = `
       >
         pipeline.resourceConstraints.infoText
         <a
-          href="https://docs.harness.io/article/jrzwrdpvm2"
+          href="https://developer.harness.io/docs/continuous-delivery/manage-deployments/deployment-resource-constraints"
           rel="noopener noreferrer"
           target="_blank"
         >

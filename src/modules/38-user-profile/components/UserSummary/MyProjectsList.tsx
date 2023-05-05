@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Text, Layout, Card, Icon, Container, Tag, PageError } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useGetUserProjectInfo } from 'services/cd-ng'
@@ -34,9 +34,7 @@ const MyProjectsList: React.FC = () => {
   return (
     <Layout.Vertical spacing="large" margin={{ bottom: 'medium' }}>
       <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }} spacing="medium">
-        <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.GREY_900}>
-          {getString('userProfile.myProjects')}
-        </Text>
+        <Text font={{ variation: FontVariation.H5 }}>{getString('userProfile.myProjects')}</Text>
         {projects?.data?.totalItems ? <Tag className={css.tagClassName}>{projects.data.totalItems}</Tag> : null}
       </Layout.Horizontal>
       {loading ? (

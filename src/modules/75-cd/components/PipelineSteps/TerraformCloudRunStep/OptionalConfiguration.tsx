@@ -29,9 +29,9 @@ export default function OptionalConfiguration(props: {
   enableOutputVar?: boolean
 }): React.ReactElement {
   const { formik, readonly, allowableTypes } = props
-  const { values } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const runTypeValue = formik.values.spec?.runType
 
   return (
     <>
@@ -57,7 +57,7 @@ export default function OptionalConfiguration(props: {
           />
         </div>
 
-        {values.spec?.runType !== RunTypes.RefreshState && (
+        {runTypeValue !== RunTypes.RefreshState && (
           <div className={cx(stepCss.formGroup)}>
             <MultiTypeList
               name="spec.spec.targets"
@@ -85,7 +85,7 @@ export default function OptionalConfiguration(props: {
           </div>
         )}
 
-        {(values.spec?.runType === RunTypes.Plan || values.spec?.runType === RunTypes.PlanOnly) && (
+        {(runTypeValue === RunTypes.Plan || runTypeValue === RunTypes.PlanOnly) && (
           <div className={cx(stepCss.formGroup, stepCss.lg, css.addMarginTop)}>
             <FormMultiTypeCheckboxField
               formik={formik}
@@ -95,17 +95,15 @@ export default function OptionalConfiguration(props: {
               disabled={readonly}
             />
             {
-              /* istanbul ignore next */ getMultiTypeFromValue(values.spec?.spec?.exportTerraformPlanJson) ===
+              /* istanbul ignore next */ getMultiTypeFromValue(formik.values.spec?.spec?.exportTerraformPlanJson) ===
                 MultiTypeInputType.RUNTIME && (
                 <ConfigureOptions
-                  value={(values.spec.spec?.exportTerraformPlanJson || '') as string}
+                  value={(formik.values.spec.spec?.exportTerraformPlanJson || '') as string}
                   type="String"
                   variableName="spec.spec.exportTerraformPlanJson"
                   showRequiredField={false}
                   showDefaultField={false}
-                  onChange={
-                    /* istanbul ignore next */ value => formik.setFieldValue('spec.spec.exportTerraformPlanJson', value)
-                  }
+                  onChange={value => formik.setFieldValue('spec.spec.exportTerraformPlanJson', value)}
                   style={{ alignSelf: 'center' }}
                   isReadonly={readonly}
                 />
@@ -114,7 +112,7 @@ export default function OptionalConfiguration(props: {
           </div>
         )}
 
-        {(values.spec?.runType === RunTypes.PlanAndApply || values.spec?.runType === RunTypes.PlanAndDestroy) && (
+        {(runTypeValue === RunTypes.PlanAndApply || runTypeValue === RunTypes.PlanAndDestroy) && (
           <div className={cx(stepCss.formGroup, stepCss.lg)}>
             <FormMultiTypeCheckboxField
               formik={formik}
@@ -123,20 +121,21 @@ export default function OptionalConfiguration(props: {
               multiTypeTextbox={{ expressions, allowableTypes }}
               disabled={readonly}
             />
-            {getMultiTypeFromValue(values.spec?.spec?.overridePolicies) === MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                value={(values.spec?.spec?.overridePolicies || '') as string}
-                type="String"
-                variableName="spec.spec.overridePolicies"
-                showRequiredField={false}
-                showDefaultField={false}
-                onChange={
-                  /* istanbul ignore next */ value => formik?.setFieldValue('spec.spec.overridePolicies', value)
-                }
-                style={{ alignSelf: 'center' }}
-                isReadonly={readonly}
-              />
-            )}
+            {
+              /* istanbul ignore next */ getMultiTypeFromValue(formik.values.spec?.spec?.overridePolicies) ===
+                MultiTypeInputType.RUNTIME && (
+                <ConfigureOptions
+                  value={(formik.values.spec?.spec?.overridePolicies || '') as string}
+                  type="String"
+                  variableName="spec.spec.overridePolicies"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  onChange={value => formik?.setFieldValue('spec.spec.overridePolicies', value)}
+                  style={{ alignSelf: 'center' }}
+                  isReadonly={readonly}
+                />
+              )
+            }
           </div>
         )}
       </FormikForm>

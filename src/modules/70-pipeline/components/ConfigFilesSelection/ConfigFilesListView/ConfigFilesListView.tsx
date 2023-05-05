@@ -430,7 +430,8 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
     isEditMode,
     isNewFile,
     getLastSteps,
-    getInitialValues
+    getInitialValues,
+    handleChangeStore
   ])
 
   const addNewConfigFile = (): void => {
@@ -455,7 +456,7 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
         <Layout.Vertical style={{ flexShrink: 'initial' }} width="100%">
           <section>
             {listOfConfigFiles &&
-              listOfConfigFiles.map((data: ConfigFileWrapper, index: number) => {
+              listOfConfigFiles?.map((data: ConfigFileWrapper, index: number) => {
                 const configFile = data['configFile']
                 const filesType = configFile?.spec?.store?.spec?.files?.length
                   ? getString('pipeline.configFiles.plainText')

@@ -74,7 +74,12 @@ export function HttpStepWidget(
               name: Yup.string().required(getString('common.validation.nameIsRequired')),
               value: Yup.string().required(getString('common.validation.valueIsRequired'))
             })
-          )
+          ),
+          certificate: Yup.string().when('certificateKey', {
+            is: val => !!val,
+            then: Yup.string().required(getString('pipeline.httpStep.validation.certificate')),
+            otherwise: Yup.string().notRequired()
+          })
         }),
         ...getNameAndIdentifierSchema(getString, stepViewType)
       })}

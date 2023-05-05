@@ -18,7 +18,7 @@ describe('module overview grid test', () => {
   test('render with emoty data', () => {
     const { container, queryByText } = render(
       <TestWrapper>
-        <ModuleColumnChart isExpanded={false} count={10} data={[]} />
+        <ModuleColumnChart isExpanded={false} count={'10'} data={[]} />
       </TestWrapper>
     )
 
@@ -33,7 +33,7 @@ describe('module overview grid test', () => {
       <TestWrapper>
         <ModuleColumnChart
           isExpanded={false}
-          count={10}
+          count={'10'}
           data={[]}
           countChangeInfo={{ countChange: 19, countChangeRate: 10 }}
         />
@@ -50,7 +50,7 @@ describe('module overview grid test', () => {
       <TestWrapper>
         <ModuleColumnChart
           isExpanded={false}
-          count={10}
+          count={'10'}
           data={[]}
           countChangeInfo={{ countChange: -19, countChangeRate: 10 }}
         />
@@ -65,7 +65,7 @@ describe('module overview grid test', () => {
   test('without count change', () => {
     const { queryByText } = render(
       <TestWrapper>
-        <ModuleColumnChart isExpanded={false} count={10} data={[]} countChangeInfo={{ countChangeRate: 10 }} />
+        <ModuleColumnChart isExpanded={false} count={'10'} data={[]} countChangeInfo={{ countChangeRate: 10 }} />
       </TestWrapper>
     )
 

@@ -28,11 +28,14 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import { SettingType } from '@common/constants/Utils'
 import DefaultSettingsFactory from './factories/DefaultSettingsFactory'
+import { SettingGroups } from './interfaces/SettingType.types'
 import {
   DefaultSettingCheckBoxWithTrueAndFalse,
   DefaultSettingDurationField,
   DefaultSettingNumberTextbox,
-  DefaultSettingRadioBtnWithTrueAndFalse
+  DefaultSettingRadioBtnWithTrueAndFalse,
+  DefaultSettingStringDropDown,
+  DefaultSettingsToggle
 } from './components/ReusableHandlers'
 
 DefaultSettingsFactory.registerCategory('CORE', {
@@ -58,6 +61,135 @@ DefaultSettingsFactory.registerCategory('PMS', {
   icon: 'cog',
   label: 'common.pipeline',
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ci']
+})
+
+DefaultSettingsFactory.registerCategory('CE', {
+  icon: 'ccm-solid',
+  label: 'common.purpose.ce.continuous',
+  modulesWhereCategoryWillBeDisplayed: ['ce']
+})
+
+DefaultSettingsFactory.registerGroupHandler(SettingGroups.PERSPECTIVES_PREFERENCES, {
+  groupName: 'defaultSettings.perspectivePreferences',
+  settingCategory: 'CE',
+  settingsDisplayOrder: [
+    SettingType.SHOW_ANOMALIES,
+    SettingType.SHOW_OTHERS,
+    SettingType.SHOW_UNALLOCATED_CUSTER_COST,
+    SettingType.INCLUDE_AWS_DISCOUNTS,
+    SettingType.INCLUDE_AWS_CREDIT,
+    SettingType.INCLUDE_AWS_REFUNDS,
+    SettingType.INCLUDE_AWS_TAXES,
+    SettingType.SHOW_AWS_COST_AS,
+    SettingType.INCLUDE_AZURE_REFUNDS,
+    SettingType.SHOW_AZURE_COST_AS,
+    SettingType.INCLUDE_GCP_DISCOUNTS,
+    SettingType.SHOW_GCP_COST_AS
+  ]
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.SHOW_ANOMALIES, {
+  label: 'defaultSettings.showAnomalies',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.SHOW_OTHERS, {
+  label: 'defaultSettings.showOthers',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.SHOW_UNALLOCATED_CUSTER_COST, {
+  label: 'defaultSettings.showUnallocatedClusterCost',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.INCLUDE_AWS_DISCOUNTS, {
+  label: 'defaultSettings.awsIncludeDiscounts',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.INCLUDE_AWS_CREDIT, {
+  label: 'defaultSettings.awsIncludeCredit',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.INCLUDE_AWS_REFUNDS, {
+  label: 'defaultSettings.awsIncludeRefunds',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.INCLUDE_AWS_TAXES, {
+  label: 'defaultSettings.awsIncludeTaxes',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.SHOW_AWS_COST_AS, {
+  label: 'defaultSettings.showAwsCostAs',
+  settingRenderer: props => <DefaultSettingStringDropDown {...props} />,
+  yupValidation: Yup.string(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.INCLUDE_AZURE_REFUNDS, {
+  label: 'defaultSettings.azureIncludeRefunds',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.SHOW_AZURE_COST_AS, {
+  label: 'defaultSettings.showAzureCostAs',
+  settingRenderer: props => <DefaultSettingStringDropDown {...props} />,
+  yupValidation: Yup.string(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.INCLUDE_GCP_DISCOUNTS, {
+  label: 'defaultSettings.gcpIncludeDiscounts',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.INCLUDE_GCP_TAXES, {
+  label: 'defaultSettings.gcpIncludeTaxes',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.SHOW_GCP_COST_AS, {
+  label: 'defaultSettings.showGcpCostAs',
+  settingRenderer: props => <DefaultSettingStringDropDown {...props} />,
+  yupValidation: Yup.string(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.PERSPECTIVES_PREFERENCES
 })
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER, {

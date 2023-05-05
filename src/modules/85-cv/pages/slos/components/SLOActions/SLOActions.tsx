@@ -12,8 +12,10 @@ import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { DowntimeStatusDetails, SLOHealthListView } from 'services/cv'
 import downTime from '@cv/assets/downTime.svg'
+import dataCollectionFailure from '@cv/assets/dataCollectionFailure.svg'
 import { DowntimeStatus } from '../../SLODowntimePage/SLODowntimePage.types'
 import DowntimeTooltip from '../../common/DowntimeTooltip/DowntimeTooltip'
+import DataCollectionFailureTooltip from '../../common/DataCollectionFailureTooltip/DataCollectionFailureTooltip'
 import css from './SLOActions.module.scss'
 
 export interface SLOActionsProps {
@@ -23,10 +25,11 @@ export interface SLOActionsProps {
   title: string
   sloType?: SLOHealthListView['sloType']
   downtimeStatusDetails: DowntimeStatusDetails
+  sloError?: SLOHealthListView['sloError']
 }
 
 export default function SLOActions(props: SLOActionsProps): JSX.Element {
-  const { onDelete, onEdit, sloIdentifier, title, sloType, downtimeStatusDetails } = props
+  const { onDelete, onEdit, sloIdentifier, title, sloType, downtimeStatusDetails, sloError } = props
   const { getString } = useStrings()
 
   const { openDialog } = useConfirmationDialog({
@@ -57,6 +60,20 @@ export default function SLOActions(props: SLOActionsProps): JSX.Element {
           }}
         >
           <img className={css.downtimeIcon} src={downTime} />
+        </Text>
+      )}
+      {sloError?.failedState && (
+        <Text
+          flex
+          tooltip={<DataCollectionFailureTooltip sloError={sloError} />}
+          tooltipProps={{
+            isDark: true,
+            interactionKind: PopoverInteractionKind.HOVER,
+            position: Position.BOTTOM_RIGHT,
+            usePortal: false
+          }}
+        >
+          <img className={css.downtimeIcon} src={dataCollectionFailure} />
         </Text>
       )}
       <Icon

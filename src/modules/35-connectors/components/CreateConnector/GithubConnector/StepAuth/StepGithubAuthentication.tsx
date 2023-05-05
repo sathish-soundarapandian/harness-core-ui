@@ -44,10 +44,10 @@ import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { GitAuthTypes, GitAPIAuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
-import { ConnectViaOAuth } from '@connectors/common/ConnectViaOAuth/ConnectViaOAuth'
+import { ConnectViaOAuth } from '@common/components/ConnectViaOAuth/ConnectViaOAuth'
 import { Connectors } from '@connectors/constants'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
-import { handleOAuthEventProcessing, OAuthEventProcessingResponse } from '../../CreateConnectorUtils'
+import { handleOAuthEventProcessing, OAuthEventProcessingResponse } from '@common/components/ConnectViaOAuth/OAuthUtils'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepGithubAuthentication.module.scss'
@@ -366,7 +366,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
       <PageSpinner
         message={
           formikRef.current?.values.authType === GitAuthTypes.OAUTH && oAuthStatus === Status.IN_PROGRESS
-            ? getString('connectors.oAuth.inProgress')
+            ? getString('common.oAuth.inProgress')
             : ''
         }
       />

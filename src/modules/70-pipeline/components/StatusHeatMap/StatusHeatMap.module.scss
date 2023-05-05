@@ -76,5 +76,13 @@
         box-shadow: var(--white) 0px 0px 0px 2px, var(--primary-3) 0px 0px 0px 4px;
       }
     }
+
+    &[data-state='rollback'] {
+      background-color: var(--orange-200);
+      &:hover,
+      &:focus {
+        box-shadow: var(--white) 0px 0px 0px 2px, var(--orange-200) 0px 0px 0px 4px;
+      }
+    }
   }
 }

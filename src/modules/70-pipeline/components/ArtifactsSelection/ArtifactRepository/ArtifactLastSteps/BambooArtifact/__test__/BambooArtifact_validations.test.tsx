@@ -60,8 +60,12 @@ describe('bamboo submit flow', () => {
     fireEvent.click(submitBtn)
     await waitFor(() => {
       expect(bambooProps.handleSubmit).not.toBeCalled()
-      expect(screen.queryByText('common.validation.fieldIsRequired')).toBeInTheDocument()
-      expect(screen.queryByText('pipeline.bambooStep.validations.planName')).toBeInTheDocument()
+      /*
+       * Two error message:
+       * 1: For Artifact Source Identifier
+       * 2: For Plan Key
+       */
+      expect(screen.queryAllByText('common.validation.fieldIsRequired').length).toBe(2)
     })
   })
 
@@ -75,9 +79,12 @@ describe('bamboo submit flow', () => {
     fireEvent.click(submitBtn)
     await waitFor(() => {
       expect(bambooProps.handleSubmit).not.toBeCalled()
-
-      expect(screen.queryByText('common.validation.fieldIsRequired')).toBeInTheDocument()
-      expect(screen.queryByText('pipeline.bambooStep.validations.planName')).toBeInTheDocument()
+      /*
+       * Two error message:
+       * 1: For Artifact Source Identifier
+       * 2: For Plan Key
+       */
+      expect(screen.queryAllByText('common.validation.fieldIsRequired').length).toBe(2)
     })
   })
 })

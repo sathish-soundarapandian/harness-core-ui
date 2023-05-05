@@ -166,7 +166,13 @@ describe('APPROVAL STAGE', () => {
     // By default no input for failure strategy should be present
     cy.get('input[placeholder="Search..."]').should('not.exist')
 
-    // By default the when condition selected should be 'execute this stage if pipeline execution is successful thus far'
+    // By default, no conditions should be selected
+    cy.get('[value="Success"]').should('not.be.checked')
+    cy.get('[value="Failure"]').should('not.be.checked')
+    cy.get('[value="All"]').should('not.be.checked')
+
+    cy.get('[value="Success"]').click({ force: true })
+    // Check if the condition selected is 'execute this stage if pipeline execution is successful thus far'
     cy.get('[value="Success"]').should('be.checked')
   })
 
@@ -186,7 +192,13 @@ describe('APPROVAL STAGE', () => {
     // By default no input for failure strategy should be present
     cy.get('input[placeholder="Search..."]').should('not.exist')
 
-    // By default the when condition selected should be 'execute this stage if pipeline execution is successful thus far'
+    // By default, no conditions should be selected
+    cy.get('[value="Success"]').should('not.be.checked')
+    cy.get('[value="Failure"]').should('not.be.checked')
+    cy.get('[value="All"]').should('not.be.checked')
+
+    cy.get('[value="Success"]').click({ force: true })
+    // Check if the condition selected is 'execute this stage if pipeline execution is successful thus far'
     cy.get('[value="Success"]').should('be.checked')
   })
 
@@ -206,7 +218,13 @@ describe('APPROVAL STAGE', () => {
     // By default no input for failure strategy should be present
     cy.get('input[placeholder="Search..."]').should('not.exist')
 
-    // By default the when condition selected should be 'execute this stage if pipeline execution is successful thus far'
+    // By default, no conditions should be selected
+    cy.get('[value="Success"]').should('not.be.checked')
+    cy.get('[value="Failure"]').should('not.be.checked')
+    cy.get('[value="All"]').should('not.be.checked')
+
+    cy.get('[value="Success"]').click({ force: true })
+    // Check if the condition selected is 'execute this stage if pipeline execution is successful thus far'
     cy.get('[value="Success"]').should('be.checked')
   })
 })

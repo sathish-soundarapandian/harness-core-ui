@@ -10,6 +10,16 @@ exports[`SideNav render properly 1`] = `
     />
     <a
       class="link"
+      href="/account/dummy/ci/orgs/dummy/projects/dummy/dashboard"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        overview
+      </p>
+    </a>
+    <a
+      class="link"
       href="/account/dummy/ci/orgs/dummy/projects/dummy/deployments"
     >
       <p

@@ -361,6 +361,7 @@ export const getStatusProps = (
         secondaryIconStyle.color = 'var(--execution-pipeline-color-orange)'
         break
       case ExecutionStatusEnum.ApprovalWaiting:
+      case ExecutionStatusEnum.InputWaiting:
       case ExecutionStatusEnum.InterventionWaiting:
         secondaryIcon = 'waiting'
         secondaryIconStyle.animation = `${css.fadeIn} 1s`

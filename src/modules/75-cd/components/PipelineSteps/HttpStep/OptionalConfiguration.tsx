@@ -21,7 +21,9 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { useStrings } from 'framework/strings'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { HttpStepFormData, HttpStepHeaderConfig, HttpStepOutputVariable } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './HttpStep.module.scss'
@@ -33,6 +35,7 @@ export default function OptionalConfiguration(props: {
 }): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { CDS_HTTP_STEP_NG_CERTIFICATE } = useFeatureFlags()
   const {
     formik: { values: formValues, setFieldValue },
     readonly,
@@ -63,6 +66,32 @@ export default function OptionalConfiguration(props: {
           />
         )}
       </div>
+      {CDS_HTTP_STEP_NG_CERTIFICATE && (
+        <>
+          <div className={stepCss.formGroup}>
+            <MultiTypeSecretInput
+              name="spec.certificate"
+              label={getString('common.certificate')}
+              expressions={expressions}
+              allowableTypes={allowableTypes}
+              disabled={readonly}
+              enableConfigureOptions={true}
+              isOptional
+            />
+          </div>
+          <div className={stepCss.formGroup}>
+            <MultiTypeSecretInput
+              name="spec.certificateKey"
+              label={getString('pipeline.utilitiesStep.certificateKey')}
+              expressions={expressions}
+              allowableTypes={allowableTypes}
+              disabled={readonly}
+              enableConfigureOptions={true}
+              isOptional
+            />
+          </div>
+        </>
+      )}
       <div className={stepCss.formGroup}>
         <MultiTypeFieldSelector
           name="spec.headers"

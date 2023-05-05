@@ -90,7 +90,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
           class="TableV2--cell TableV2--sortable"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 12%;"
           title="Toggle SortBy"
         >
           <p
@@ -122,7 +122,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
           class="TableV2--cell TableV2--sortable"
           colspan="1"
           role="columnheader"
-          style="width: 150px;"
+          style="width: 10%;"
           title="Toggle SortBy"
         >
           <p
@@ -218,7 +218,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
           class="TableV2--cell TableV2--sortable"
           colspan="1"
           role="columnheader"
-          style="width: 150px;"
+          style="width: 15%;"
           title="Toggle SortBy"
         >
           <p
@@ -245,6 +245,18 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
               />
             </svg>
           </span>
+        </div>
+        <div
+          class="TableV2--cell TableV2--sortable"
+          colspan="1"
+          role="columnheader"
+          style="width: 5%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+             
+          </p>
         </div>
       </div>
       <div
@@ -294,7 +306,8 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
                   </p>
                 </a>
                 <a
-                  href="/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/prommock_gcpl"
+                  href="/account/undefined/cv/orgs//projects//monitoringservices/edit/prommock_gcpl"
+                  target="_blank"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-xsmall"
@@ -308,7 +321,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 12%;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -320,15 +333,8 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 150px;"
-            >
-              <p
-                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
-                title=" 75%"
-              >
-                 75%
-              </p>
-            </div>
+              style="width: 10%;"
+            />
             <div
               class="TableV2--cell"
               role="cell"
@@ -355,7 +361,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 150px;"
+              style="width: 15%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -363,6 +369,11 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
                 18m 
               </p>
             </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 5%;"
+            />
           </div>
         </div>
         <div
@@ -409,7 +420,8 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
                   </p>
                 </a>
                 <a
-                  href="/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/prommock_env"
+                  href="/account/undefined/cv/orgs//projects//monitoringservices/edit/prommock_env"
+                  target="_blank"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-xsmall"
@@ -423,7 +435,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 12%;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -435,7 +447,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 150px;"
+              style="width: 10%;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -470,7 +482,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 150px;"
+              style="width: 15%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -478,6 +490,11 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
                 2h 43m 
               </p>
             </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 5%;"
+            />
           </div>
         </div>
       </div>

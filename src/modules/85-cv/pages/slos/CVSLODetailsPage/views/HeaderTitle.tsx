@@ -6,14 +6,16 @@
  */
 
 import React from 'react'
-import { Classes } from '@blueprintjs/core'
-import { Container, Heading, Layout, Text } from '@harness/uicore'
+import { Classes, Intent } from '@blueprintjs/core'
+import { Container, Heading, Layout, Tag, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { HeaderTitleProps } from '@cv/pages/slos/CVSLODetailsPage/CVSLODetailsPage.types'
+import { SLOType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.constants'
 
-const HeaderTitle: React.FC<HeaderTitleProps> = ({ loading, title, description }) => {
+const HeaderTitle: React.FC<HeaderTitleProps> = ({ loading, title, description, tag }) => {
   const { getString } = useStrings()
+  const isComposite = tag === SLOType.COMPOSITE
 
   if (loading) {
     return (
@@ -29,9 +31,12 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({ loading, title, description }
       <Heading level={3} color={Color.GREY_800} font={{ variation: FontVariation.H5 }}>
         {getString('cv.SLOWithName', { name: title })}
       </Heading>
-      <Text color={Color.GREY_600} font={{ variation: FontVariation.BODY2 }}>
-        {description}
-      </Text>
+      {description && (
+        <Text color={Color.GREY_600} font={{ variation: FontVariation.BODY2 }}>
+          {description}
+        </Text>
+      )}
+      {isComposite && <Tag intent={Intent.PRIMARY}>{tag}</Tag>}
     </Layout.Vertical>
   )
 }

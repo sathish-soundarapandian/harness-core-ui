@@ -10,7 +10,7 @@ import type { ConfigFileSourceRenderProps } from '@cd/factory/ConfigFileSourceFa
 
 import { ConfigFileSourceBase } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBase'
 import { ENABLE_CONFIG_FILES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
-import K8sValuesYamlConfigFileContent from '../ConfigFileSourceRuntimeFields/SshValuesYamlConfigFileContent'
+import K8sValuesYamlConfigFileContent from '../ConfigFileSourceRuntimeFields/ConfigFileSource'
 
 export class K8sConfigFileSource extends ConfigFileSourceBase<ConfigFileSourceRenderProps> {
   protected configFileType = ENABLE_CONFIG_FILES.Harness

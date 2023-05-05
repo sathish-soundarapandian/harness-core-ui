@@ -6,7 +6,7 @@
  */
 
 import React, { FormEvent } from 'react'
-import { Checkbox, FormInput, FormError, Layout, MultiTypeInputType } from '@harness/uicore'
+import { Checkbox, FormInput, FormError, Layout, MultiTypeInputType, Toggle } from '@harness/uicore'
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { useStrings } from 'framework/strings'
@@ -169,5 +169,25 @@ export const DefaultSettingDurationField: React.FC<SettingRendererProps> = ({
         allowableTypes: [MultiTypeInputType.FIXED]
       }}
     />
+  )
+}
+
+export const DefaultSettingsToggle: React.FC<SettingRendererProps> = ({
+  onSettingSelectionChange,
+  settingValue,
+  identifier,
+  errorMessage
+}) => {
+  return (
+    <Layout.Vertical flex={{ alignItems: 'flex-start' }} className={css.settingCheckBoxContainer}>
+      <Toggle
+        label=""
+        checked={settingValue?.value === 'true'}
+        onToggle={checked => {
+          onSettingSelectionChange(checked ? 'true' : 'false')
+        }}
+      />
+      {errorMessage ? <FormError name={identifier} errorMessage={errorMessage} /> : undefined}
+    </Layout.Vertical>
   )
 }

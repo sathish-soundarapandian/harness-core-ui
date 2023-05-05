@@ -50,6 +50,10 @@ const getnoOfExecutionsBeforePipeline = (
   }
   return noOfExecutionsBeforePipeline
 }
+
+const RESOURCE_CONSTRAINTS_URL =
+  'https://developer.harness.io/docs/continuous-delivery/manage-deployments/deployment-resource-constraints'
+
 export default function ResourceConstraintTooltip(props: ResourceConstraintTooltipProps): React.ReactElement {
   const { projectIdentifier, orgIdentifier, accountId, module, source } = useParams<PipelineType<ExecutionPathProps>>()
   const { connectorRef, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
@@ -96,7 +100,7 @@ export default function ResourceConstraintTooltip(props: ResourceConstraintToolt
                   : toLower(getString('executionText')),
               infraEntityText: resourceWaitingText
             })}
-            <a href="https://docs.harness.io/article/jrzwrdpvm2" target="_blank" rel="noopener noreferrer">
+            <a href={RESOURCE_CONSTRAINTS_URL} target="_blank" rel="noopener noreferrer">
               {getString('learnMore')}
             </a>
           </Text>

@@ -34,7 +34,7 @@ describe('Test ConnectViaOAuth component', () => {
   test('Initial render for Github connector', () => {
     const { getByText } = render(<ConnectViaOAuth {...props} />)
     try {
-      expect(getByText('connectors.oAuth.accessRevoked')).not.toBeInTheDocument()
+      expect(getByText('common.oAuth.accessRevoked')).not.toBeInTheDocument()
       expect(getByText('common.repo_provider.githubLabel')).toBeInTheDocument()
     } catch (e) {
       //ignore error
@@ -44,7 +44,7 @@ describe('Test ConnectViaOAuth component', () => {
   test('Initial render for Gitlab connector', () => {
     const { getByText } = render(<ConnectViaOAuth {...Object.assign(props, { gitProviderType: 'Gitlab' })} />)
     try {
-      expect(getByText('connectors.oAuth.accessRevoked')).not.toBeInTheDocument()
+      expect(getByText('common.oAuth.accessRevoked')).not.toBeInTheDocument()
       expect(getByText('common.repo_provider.gitlabLabel')).toBeInTheDocument()
     } catch (e) {
       //ignore error
@@ -55,19 +55,19 @@ describe('Test ConnectViaOAuth component', () => {
     const { getByText } = render(
       <ConnectViaOAuth {...Object.assign(props, { isOAuthAccessRevoked: false, isExistingConnectionHealthy: true })} />
     )
-    expect(getByText('connectors.oAuth.configured')).toBeInTheDocument()
+    expect(getByText('common.oAuth.configured')).toBeInTheDocument()
   })
 
   test('Render when existing token access is revoked', () => {
     const { getByText } = render(
       <ConnectViaOAuth {...Object.assign(props, { isOAuthAccessRevoked: true, isExistingConnectionHealthy: false })} />
     )
-    expect(getByText('connectors.oAuth.accessRevoked')).toBeInTheDocument()
+    expect(getByText('common.oAuth.accessRevoked')).toBeInTheDocument()
   })
 
   test('Render when existing token access is revoked', () => {
     const { getByText } = render(<ConnectViaOAuth {...Object.assign(props, { isOAuthAccessRevoked: true })} />)
-    expect(getByText('connectors.oAuth.accessRevoked')).toBeInTheDocument()
+    expect(getByText('common.oAuth.accessRevoked')).toBeInTheDocument()
   })
 
   test('Render when OAuth is relinking', async () => {
@@ -95,7 +95,7 @@ describe('Test ConnectViaOAuth component', () => {
 
   test('Render when OAuth linking fails', () => {
     const { getByText } = render(<ConnectViaOAuth {...Object.assign(props, { status: Status.FAILURE })} />)
-    expect(getByText('connectors.oAuth.failed')).toBeInTheDocument()
+    expect(getByText('common.oAuth.failed')).toBeInTheDocument()
   })
 
   test('Render when OAuth fails after max timeout', async () => {

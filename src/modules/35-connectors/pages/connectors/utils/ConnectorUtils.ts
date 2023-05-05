@@ -2153,6 +2153,26 @@ export const buildPrometheusPayload = (formData: FormData) => {
   }
 }
 
+export const buildSignalFXPayload = (formData: FormData) => {
+  const { name, identifier, projectIdentifier, orgIdentifier, delegateSelectors, url, apiTokenRef, accountId } =
+    formData
+  return {
+    connector: {
+      name,
+      identifier,
+      type: Connectors.SignalFX,
+      projectIdentifier,
+      orgIdentifier,
+      spec: {
+        delegateSelectors: delegateSelectors || {},
+        url,
+        apiTokenRef: apiTokenRef?.referenceString,
+        accountId
+      }
+    }
+  }
+}
+
 export interface DatadogInitialValue {
   apiKeyRef?: SecretReferenceInterface | void
   applicationKeyRef?: SecretReferenceInterface | void
@@ -2603,6 +2623,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'tas'
     case Connectors.TERRAFORM_CLOUD:
       return 'terraform-cloud'
+    case Connectors.SignalFX:
+      return 'service-signalfx'
     default:
       return 'cog'
   }
@@ -2688,6 +2710,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Tanzu Application Service'
     case Connectors.TERRAFORM_CLOUD:
       return 'Terraform Cloud'
+    case Connectors.SignalFX:
+      return 'SignalFX'
     default:
       return ''
   }

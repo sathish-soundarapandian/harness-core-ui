@@ -210,7 +210,9 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
               <div
                 class="stageName"
               >
-                <div>
+                <div
+                  class="stageUtil"
+                >
                   <span
                     class="bp3-icon StyledProps--main statusIcon running icon"
                     data-icon="spinner"
@@ -444,7 +446,9 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
               <div
                 class="stageName"
               >
-                <div>
+                <div
+                  class="stageUtil"
+                >
                   <span
                     class="bp3-icon StyledProps--main statusIcon running icon"
                     data-icon="spinner"
@@ -502,7 +506,9 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
               <div
                 class="stageName"
               >
-                <div>
+                <div
+                  class="stageUtil"
+                >
                   <span
                     class="bp3-icon StyledProps--main statusIcon notstarted icon"
                     data-icon="pending"
@@ -552,7 +558,9 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
               <div
                 class="stageName"
               >
-                <div>
+                <div
+                  class="stageUtil"
+                >
                   <span
                     class="bp3-icon StyledProps--main statusIcon notstarted icon"
                     data-icon="pending"

@@ -48,18 +48,22 @@ import type { ImagePathProps } from '../../../ArtifactInterface'
 
 import css from '../../ArtifactConnector.module.scss'
 
+interface FormikBambooRegistrySpec extends Omit<BambooRegistrySpec, 'artifactPaths'> {
+  artifactPaths?: SelectOption[]
+}
+
 function FormComponent(
   props: StepProps<ConnectorConfigDTO> &
-    ImagePathProps<BambooRegistrySpec> & { formik: FormikProps<BambooRegistrySpec> }
+    ImagePathProps<BambooRegistrySpec> & { formikProps: FormikProps<FormikBambooRegistrySpec> }
 ): React.ReactElement {
-  const { prevStepData, previousStep, formik } = props
+  const { prevStepData, previousStep, formikProps } = props
 
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
-  const [errText, setPlanErrText] = useState<GetDataError<Failure | Error> | null>(null)
-  const [artifactPaths, setFilePath] = useState<SelectOption[]>([])
+  const [planErrText, setPlanErrText] = useState<GetDataError<Failure | Error> | null>(null)
+  const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -69,7 +73,7 @@ function FormComponent(
   }
 
   const connectorRefValue = getConnectorIdValue(prevStepData)
-  const planNameValue = get(formik.values, 'spec.planKey', '')
+  const planNameValue = formikProps.values.planKey
 
   const {
     data: plansResponse,
@@ -117,13 +121,13 @@ function FormComponent(
           } as MultiSelectOption
         }
       )
-      setFilePath(artifactPathResponseFormatted)
+      setArtifactPaths(artifactPathResponseFormatted)
     }
   }, [artifactPathsResponse])
 
   useEffect(() => {
     if (artifactPathError?.message) {
-      setFilePath([])
+      setArtifactPaths([])
     }
   }, [artifactPathError])
 
@@ -175,8 +179,8 @@ function FormComponent(
       <div className={cx(css.artifactForm)}>
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
-            label={getString('pipeline.bamboo.planName')}
-            name="spec.planKey"
+            label={getString('pipeline.bamboo.planKey')}
+            name="planKey"
             useValue
             selectItems={planDetails}
             placeholder={
@@ -189,14 +193,12 @@ function FormComponent(
             multiTypeInputProps={{
               selectProps: {
                 allowCreatingNewItems: true,
-
                 items: planDetails,
                 loadingItems: loadingPlans,
                 itemRenderer: planPathItemRenderer,
-
                 noResults: (
                   <NoTagResults
-                    tagError={errText}
+                    tagError={planErrText}
                     isServerlessDeploymentTypeSelected={false}
                     defaultErrorText={loadingPlans ? getString('loading') : getString('common.filters.noResultsFound')}
                   />
@@ -205,6 +207,11 @@ function FormComponent(
 
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 onFocus(e, refetchPlans)
+              },
+              onChange: value => {
+                if (planNameValue && planNameValue !== (value as unknown as SelectOption)?.value) {
+                  formikProps.setFieldValue('artifactPaths', [])
+                }
               },
 
               allowableTypes: [MultiTypeInputType.FIXED]
@@ -215,7 +222,7 @@ function FormComponent(
           <FormInput.MultiSelectTypeInput
             selectItems={defaultTo(artifactPaths, [])}
             label={getString('common.artifactPaths')}
-            name="spec.artifactPaths"
+            name="artifactPaths"
             placeholder={fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder')}
             multiSelectTypeInputProps={{
               allowableTypes: [MultiTypeInputType.FIXED]
@@ -247,6 +254,14 @@ export function BambooArtifact(
 ): React.ReactElement {
   const { getString } = useStrings()
   const { handleSubmit, initialValues, prevStepData } = props
+  const getInitialValues = (): FormikBambooRegistrySpec => {
+    const { artifactPaths, ...rest } = initialValues
+    const updatedArtifactPaths = artifactPaths?.map(
+      artifactPath => ({ label: artifactPath, value: artifactPath } as SelectOption)
+    )
+
+    return { artifactPaths: updatedArtifactPaths, ...rest }
+  }
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
@@ -255,26 +270,27 @@ export function BambooArtifact(
       </Text>
 
       <Formik
-        initialValues={initialValues}
+        initialValues={getInitialValues()}
         formName="bambooTriggerForm"
         validationSchema={Yup.object().shape({
-          spec: Yup.object().shape({
-            planKey: Yup.string().required(getString('pipeline.bambooStep.validations.planName')),
-            artifactPaths: Yup.string()
-          })
+          planKey: Yup.string().required(
+            getString('common.validation.fieldIsRequired', {
+              name: getString('pipeline.bamboo.planKey')
+            })
+          ),
+          artifactPaths: Yup.string()
         })}
         onSubmit={formData => {
-          const artifactPaths = formData.spec?.artifactPaths.map((path: MultiSelectOption) => path.value)
+          const artifactPaths = formData.artifactPaths?.map(path => path.value)
           handleSubmit({
-            connectorRef: getConnectorIdValue(prevStepData),
-
-            ...formData.spec,
-            artifactPaths
+            ...formData,
+            artifactPaths,
+            connectorRef: getConnectorIdValue(prevStepData)
           })
         }}
       >
-        {formik => {
-          return <FormComponent {...props} formik={formik} />
+        {formikProps => {
+          return <FormComponent {...props} formikProps={formikProps} />
         }}
       </Formik>
     </Layout.Vertical>

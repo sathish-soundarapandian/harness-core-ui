@@ -45,7 +45,10 @@ export function GitConfigStep({
   previousStep,
   context,
   isReadonly = false,
-  editConfigFilePrevStepData
+  editConfigFilePrevStepData,
+  isEditMode,
+  listOfConfigFiles,
+  configFileIndex
 }: StepProps<ConnectorConfigDTO> & GitConfigFileCoreValuesPropType): React.ReactElement {
   const { getString } = useStrings()
   const [initialValues, setInitialValues] = React.useState({
@@ -53,7 +56,7 @@ export function GitConfigStep({
     branch: undefined,
     commitId: undefined,
     gitFetchType: 'Branch',
-    paths: [''],
+    paths: [{ path: '', uuid: uuid('', nameSpace()) }],
     skipResourceVersioning: false,
     enableDeclarativeRollback: false,
     repoName: '',
@@ -65,6 +68,8 @@ export function GitConfigStep({
 
   const modifiedPrevStepData = defaultTo(prevStepData, editConfigFilePrevStepData)
 
+  const isEditState = defaultTo(modifiedPrevStepData?.isEditMode, isEditMode)
+  const fileIndex = defaultTo(modifiedPrevStepData?.configFileIndex, configFileIndex)
   const gitConnectionType: string = modifiedPrevStepData?.store === ConfigFilesMap.Git ? 'connectionType' : 'type'
   const connectionType =
     /* istanbul ignore next */
@@ -102,14 +107,14 @@ export function GitConfigStep({
         paths:
           typeof modifiedPrevStepData.paths === 'string'
             ? modifiedPrevStepData.paths
-            : removeEmptyFieldsFromStringArray(modifiedPrevStepData.paths)?.map((path: string) => ({
+            : removeEmptyFieldsFromStringArray(modifiedPrevStepData.paths, true)?.map((path: string) => ({
                 path,
                 uuid: uuid(path, nameSpace())
               })),
         valuesPaths:
           typeof modifiedPrevStepData.valuesPaths === 'string'
             ? modifiedPrevStepData.valuesPaths
-            : removeEmptyFieldsFromStringArray(modifiedPrevStepData.valuesPaths)?.map((path: string) => ({
+            : removeEmptyFieldsFromStringArray(modifiedPrevStepData.valuesPaths, true)?.map((path: string) => ({
                 path,
                 uuid: uuid(path, nameSpace())
               }))
@@ -173,6 +178,23 @@ export function GitConfigStep({
       })
     }
   }
+  const identifierValidation = Yup.lazy(value => {
+    return !isEditState
+      ? Yup.mixed()
+          .notOneOf(
+            [...listOfConfigFiles.map(({ configFile }) => configFile?.identifier)],
+            getString('pipeline.configFiles.error.duplicateIdError', { configFileIdentifier: value })
+          )
+          .required(getString('validation.identifierRequired'))
+      : listOfConfigFiles.map(({ configFile }) => configFile?.identifier as string).indexOf(value as any) === fileIndex
+      ? Yup.mixed().required(getString('validation.identifierRequired'))
+      : Yup.mixed()
+          .notOneOf(
+            [...listOfConfigFiles.map(({ configFile }) => configFile?.identifier)],
+            getString('pipeline.configFiles.error.duplicateIdError')
+          )
+          .required(getString('validation.identifierRequired'))
+  })
 
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
@@ -186,6 +208,7 @@ export function GitConfigStep({
         initialValues={getInitialValues()}
         formName="configFileDetails"
         validationSchema={Yup.object().shape({
+          identifier: identifierValidation,
           branch: Yup.string().when('gitFetchType', {
             is: 'Branch',
             then: Yup.string().trim().required(getString('validation.branchName'))

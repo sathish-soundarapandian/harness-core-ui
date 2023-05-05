@@ -19,6 +19,7 @@
   :global {
     .TextInput--main {
       margin-bottom: 0 !important;
+      min-width: 100px;
     }
   }
 }
@@ -32,13 +33,42 @@
 }
 
 .rowSuccess {
-  background: var(--green-100) !important;
+  div[class*='TableV2--row']:last-child {
+    background: var(--green-100) !important;
+  }
 }
 
 .rowFailure {
-  background: var(--red-100) !important;
+  div[class*='TableV2--row']:last-child {
+    background: var(--red-100) !important;
+  }
 }
 
 .noMinHeight {
   min-height: 0px !important;
+}
+
+.addSlo {
+  [role='cell'] {
+    p {
+      font-weight: normal !important;
+      font-size: 13px !important;
+    }
+  }
+  [role='cell']:not(:first-child) {
+    margin-left: var(--spacing-5) !important;
+    padding-right: var(--spacing-5) !important;
+  }
+  div[class*='TableV2--row']:last-child {
+    height: 44px;
+    justify-content: center;
+  }
+}
+
+.sloTagsAccountlevel {
+  div[class*='TableV2--body'] div[class*='TableV2--row'] div[class*='TableV2--cells'] {
+    [role='cell']:nth-child(6) {
+      min-width: 10% !important;
+    }
+  }
 }

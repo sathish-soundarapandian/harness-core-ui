@@ -53,7 +53,7 @@ import {
   OAUTH_REDIRECT_URL_PREFIX,
   OAUTH_PLACEHOLDER_VALUE,
   MAX_TIMEOUT_OAUTH
-} from '@connectors/components/CreateConnector/CreateConnectorUtils'
+} from '@common/components/ConnectViaOAuth/OAuthUtils'
 import { getGitUrl } from '@pipeline/utils/CIUtils'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
 import { StringUtils } from '@common/exports'
@@ -261,7 +261,7 @@ const SelectGitProviderRef = (
             >
               <Icon name={'circle-cross'} size={24} color={Color.RED_500} />
               <Text font={{ weight: 'semi-bold' }} color={Color.RED_500}>
-                {getString('connectors.oAuth.failed')}
+                {getString('common.oAuth.failed')}
               </Text>
             </Layout.Horizontal>
           </Container>
@@ -836,7 +836,7 @@ const SelectGitProviderRef = (
     <>
       <Layout.Vertical width="70%" padding={{ bottom: 'xxlarge' }}>
         {authMethod === GitAuthenticationMethod.OAuth && oAuthStatus === Status.IN_PROGRESS ? (
-          <PageSpinner message={getString('connectors.oAuth.inProgress')} />
+          <PageSpinner message={getString('common.oAuth.inProgress')} />
         ) : null}
         <Formik<SelectGitProviderInterface>
           initialValues={{

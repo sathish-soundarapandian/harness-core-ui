@@ -65,6 +65,7 @@ import CreateAzureArtifactsConnector from '../CreateConnector/AzureArtifactConne
 import TASConnector from '../CreateConnector/TASConnector/TASConnector'
 import TerraformCloudConnector from '../CreateConnector/TerraformCloudConnector/TerraformCloudConnector'
 import CreateBambooConnector from '../CreateConnector/BambooConnector/CreateBambooConnector'
+import CreateSignalFXConnector from '../CreateConnector/SignalFX/CreateSignalFXConnector'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -113,7 +114,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { CVNG_ENABLED, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, CDS_TERRAFORM_CLOUD } = useFeatureFlags()
+  const { CVNG_ENABLED, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, CDS_TERRAFORM_CLOUD, SRM_SPLUNK_SIGNALFX } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -186,6 +187,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return <CreateDynatraceConnector {...commonProps} />
     case Connectors.SUMOLOGIC:
       return <CreateSumoLogicConnector {...commonProps} />
+    case Connectors.SignalFX:
+      return SRM_SPLUNK_SIGNALFX ? <CreateSignalFXConnector {...commonProps} /> : null
     case Connectors.CEAWS:
       return <CENGAwsConnector {...commonProps} />
     case Connectors.CE_GCP:

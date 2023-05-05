@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'
 import { Formik, FormInput, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
-import type { StepElementConfig } from 'services/cd-ng'
+import type { StepElementConfig, TerraformCloudRollbackStepInfo } from 'services/cd-ng'
 import {
   setFormikRef,
   StepFormikFowardRef,
@@ -22,7 +22,6 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { isValueRuntimeInput } from '@common/utils/utils'
-import { FormMultiTypeTextArea } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeCheckboxField, FormMultiTypeTextAreaField } from '@common/components'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -65,6 +64,10 @@ function TerraformCloudRollbackWidget(
       >
         {(formik: FormikProps<TerraformCloudRollbackData>) => {
           const { values, setFieldValue } = formik
+          const { runMessage, provisionerIdentifier, discardPendingRuns, overridePolicies } = defaultTo(
+            values.spec,
+            {} as TerraformCloudRollbackStepInfo
+          )
           setFormikRef(formikRef, formik)
           return (
             <>
@@ -89,9 +92,9 @@ function TerraformCloudRollbackWidget(
                     textAreaProps: { growVertically: true }
                   }}
                 />
-                {getMultiTypeFromValue(values.spec?.runMessage) === MultiTypeInputType.RUNTIME && (
+                {getMultiTypeFromValue(runMessage) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={values.spec?.runMessage as string}
+                    value={runMessage as string}
                     type="String"
                     variableName="spec.runMessage"
                     showRequiredField={false}
@@ -111,9 +114,9 @@ function TerraformCloudRollbackWidget(
                   disabled={readonly}
                   className={css.addMarginTop}
                 />
-                {getMultiTypeFromValue(values.spec.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
+                {getMultiTypeFromValue(provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={values.spec.provisionerIdentifier as string}
+                    value={provisionerIdentifier as string}
                     type="String"
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
@@ -137,14 +140,14 @@ function TerraformCloudRollbackWidget(
                   multiTypeTextbox={{ expressions, allowableTypes }}
                   className={css.addMarginTop}
                 />
-                {getMultiTypeFromValue(values.spec?.discardPendingRuns) === MultiTypeInputType.RUNTIME && (
+                {getMultiTypeFromValue(discardPendingRuns) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={(values.spec?.discardPendingRuns || '') as string}
+                    value={defaultTo(discardPendingRuns, '') as string}
                     type="String"
                     variableName="spec.discardPendingRuns"
                     showRequiredField={false}
                     showDefaultField={false}
-                    onChange={value => setFieldValue('spec.discardPendingRuns', value)}
+                    onChange={/* istanbul ignore next */ value => setFieldValue('spec.discardPendingRuns', value)}
                     style={{ alignSelf: 'center', marginTop: 11 }}
                     className={css.addMarginTop}
                     isReadonly={readonly}
@@ -160,14 +163,14 @@ function TerraformCloudRollbackWidget(
                   multiTypeTextbox={{ expressions, allowableTypes }}
                   className={css.addMarginTop}
                 />
-                {getMultiTypeFromValue(values.spec?.overridePolicies) === MultiTypeInputType.RUNTIME && (
+                {getMultiTypeFromValue(overridePolicies) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={(values.spec?.overridePolicies || '') as string}
+                    value={defaultTo(overridePolicies, '') as string}
                     type="String"
                     variableName="spec.overridePolicies"
                     showRequiredField={false}
                     showDefaultField={false}
-                    onChange={value => setFieldValue('spec.overridePolicies', value)}
+                    onChange={/* istanbul ignore next */ value => setFieldValue('spec.overridePolicies', value)}
                     style={{ alignSelf: 'center', marginTop: 11 }}
                     className={css.addMarginTop}
                     isReadonly={readonly}
@@ -213,7 +216,7 @@ const TerraformCloudRollbackInputStep: React.FC<TerraformCloudRollbackProps> = (
         />
       )}
       {isValueRuntimeInput(template?.spec?.runMessage) && (
-        <FormMultiTypeTextArea
+        <FormMultiTypeTextAreaField
           label={getString('pipeline.terraformStep.messageLabel')}
           name={`${prefix}spec.runMessage`}
           disabled={readonly}

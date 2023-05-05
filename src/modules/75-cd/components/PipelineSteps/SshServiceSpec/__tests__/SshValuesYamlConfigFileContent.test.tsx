@@ -12,7 +12,7 @@ import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
 
-import SshValuesYamlConfigFileContent from '../ConfigFileSource/ConfigFileSourceRuntimeFields/SshValuesYamlConfigFileContent'
+import SshValuesYamlConfigFileContent from '../ConfigFileSource/ConfigFileSourceRuntimeFields/ConfigFileSource'
 
 describe('<SshValuesYamlConfigFileContent /> tests', () => {
   test('render SshValuesYamlConfigFileContent', () => {

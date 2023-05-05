@@ -12,7 +12,6 @@ import cx from 'classnames'
 import { Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
 import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ConfigFile } from 'services/cd-ng'
@@ -22,6 +21,7 @@ import {
   fromPipelineInputTriggerTab,
   getManifestTriggerSetValues
 } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceUtils'
+import ConfigFileSource from '../ConfigFileSource/ConfigFileSourceRuntimeFields/ConfigFileSource'
 import css from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpec.module.scss'
 
 interface ConfigFileInputFieldProps extends SshWinRmConfigFilesProps {
@@ -37,7 +37,6 @@ const ConfigFileInputField = (props: ConfigFileInputFieldProps): React.ReactElem
   const runtimeMode = isTemplatizedView(props.stepViewType)
   const isConfigFileRuntime = runtimeMode && !!get(props.template, 'configFiles', false)
 
-  const configFileSource = configFileSourceBaseFactory.getConfigFileSource(props?.configFile?.spec?.store?.type)
   const configFileDefaultValue = props.configFiles?.find(
     configFileData => configFileData?.configFile?.identifier === props.configFile?.identifier
   )?.configFile as ConfigFile
@@ -56,27 +55,23 @@ const ConfigFileInputField = (props: ConfigFileInputFieldProps): React.ReactElem
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  if (!configFileSource) {
-    return null
+  const commonProps = {
+    projectIdentifier,
+    orgIdentifier,
+    accountId,
+    pipelineIdentifier,
+    repoIdentifier,
+    branch,
+    configFile: configFileDefaultValue,
+    isConfigFileRuntime
   }
+
   return (
     <div key={props.configFile?.identifier}>
       <Text className={css.inputheader} margin={{ top: 'medium' }}>
         {!props.fromTrigger && get(props.configFile, 'identifier', '')}
       </Text>
-      {configFileSource &&
-        configFileSource.renderContent({
-          ...props,
-          isConfigFileRuntime,
-          projectIdentifier,
-          orgIdentifier,
-          accountId,
-          pipelineIdentifier,
-          repoIdentifier,
-          branch,
-          configFile: configFileDefaultValue
-        })}
+      {isConfigFileRuntime && <ConfigFileSource {...props} {...commonProps} />}
     </div>
   )
 }

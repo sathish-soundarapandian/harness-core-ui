@@ -17,6 +17,7 @@ import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtil
 import { getDateLabelToDisplayText } from '@common/components/TimeRangePicker/TimeRangePicker'
 import type { TimeBasedStats } from 'services/dashboard-service'
 import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
+import { numberFormatter } from '@common/utils/utils'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
@@ -99,8 +100,9 @@ const CIModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
       <ModuleColumnChart
         isExpanded={isExpanded}
         data={deploymentStatsData || []}
-        count={totalCount || 0}
+        count={numberFormatter(totalCount) || '0'}
         countChangeInfo={{ countChange: data?.data?.buildRate, countChangeRate: data?.data?.buildRateChangeRate }}
+        timeRange={data?.data?.buildExecutionInfoList?.map(build => build.time || 0)}
         timeRangeLabel={
           timeRange.type
             ? getString('common.buildsIn', {

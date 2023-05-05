@@ -16,6 +16,7 @@ export interface StringsMap {
   'common.HelmChartLabel': string
   'common.ID': string
   'common.My': string
+  'common.OAuthTryAgain': string
   'common.OFF': string
   'common.ON': string
   'common.OverUse': string
@@ -158,6 +159,7 @@ export interface StringsMap {
   'common.clickToKnowMore': string
   'common.clientId': string
   'common.clientSecret': string
+  'common.cloudSpendsIn': string
   'common.cluster': string
   'common.clusterName': string
   'common.clusters': string
@@ -364,6 +366,7 @@ export interface StringsMap {
   'common.filters.unsavedFilter': string
   'common.findOutMore': string
   'common.firstGeneration': string
+  'common.for': string
   'common.forcedDeleteLabel': string
   'common.forcedDeleteWarning': string
   'common.freezeActiveBannerTextPrefix': string
@@ -637,7 +640,6 @@ export interface StringsMap {
   'common.moduleList.optimize': string
   'common.moduleList.optimizeProcesses': string
   'common.moduleList.title': string
-  'common.moduleOverviewLabel.ce': string
   'common.moduleOverviewLabel.chaos': string
   'common.moduleOverviewLabel.cv': string
   'common.moduleOverviewLabel.ff': string
@@ -687,6 +689,15 @@ export interface StringsMap {
   'common.noteAccountSwitch': string
   'common.notification': string
   'common.notificationPreferences': string
+  'common.oAuth.accessRevoked': string
+  'common.oAuth.accessTokenAlredyAdded': string
+  'common.oAuth.accessTokenCreateSuccess': string
+  'common.oAuth.configured': string
+  'common.oAuth.connectToGitProviderLabel': string
+  'common.oAuth.connectToGitProviderPlaceholder': string
+  'common.oAuth.failed': string
+  'common.oAuth.inProgress': string
+  'common.oAuth.reConfigured': string
   'common.oAuthLabel': string
   'common.occurrence.oneTime': string
   'common.occurrence.recurring': string
@@ -1633,19 +1644,33 @@ export interface StringsMap {
   'defaultSettings.allowDifferentRepoForInputSets': string
   'defaultSettings.allowOverrides': string
   'defaultSettings.allowUserToMarkStepAsFailedExplicitly': string
+  'defaultSettings.awsIncludeCredit': string
+  'defaultSettings.awsIncludeDiscounts': string
+  'defaultSettings.awsIncludeRefunds': string
+  'defaultSettings.awsIncludeTaxes': string
+  'defaultSettings.azureIncludeRefunds': string
   'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
   'defaultSettings.enableMatrixFieldNames': string
   'defaultSettings.enablePipelineExecutionAuditEvents': string
   'defaultSettings.enforceGitExperience': string
+  'defaultSettings.gcpIncludeDiscounts': string
+  'defaultSettings.gcpIncludeTaxes': string
   'defaultSettings.harnessDefault': string
   'defaultSettings.inheritedFrom': string
   'defaultSettings.mandateAuthorizationForCustomWebhookTriggers': string
   'defaultSettings.mandateWebhookSecretsGithubTriggers': string
   'defaultSettings.noSettingToDisplay': string
+  'defaultSettings.perspectivePreferences': string
   'defaultSettings.pipelineTimeout': string
   'defaultSettings.restoreToDefault': string
+  'defaultSettings.showAnomalies': string
+  'defaultSettings.showAwsCostAs': string
+  'defaultSettings.showAzureCostAs': string
+  'defaultSettings.showGcpCostAs': string
+  'defaultSettings.showOthers': string
+  'defaultSettings.showUnallocatedClusterCost': string
   'defaultSettings.stageTimeout': string
   'defaultSettings.stepTimeout': string
   'governance.permissions.governancePolicies': string
@@ -2262,7 +2287,7 @@ export interface StringsMap {
   'authSettings.proRata': string
   'authSettings.publicOAuthLoginDisabled': string
   'authSettings.publicOAuthLoginEnabled': string
-  'authSettings.recomendation': string
+  'authSettings.recommendation': string
   'authSettings.restrictUsersToEmailDomains': string
   'authSettings.saas': string
   'authSettings.salesTax': string
@@ -2993,11 +3018,6 @@ export interface StringsMap {
   'connectors.nexus.nexus2Label': string
   'connectors.nexus.nexusLabel': string
   'connectors.nexus.nexusServerUrl': string
-  'connectors.oAuth.accessRevoked': string
-  'connectors.oAuth.configured': string
-  'connectors.oAuth.failed': string
-  'connectors.oAuth.inProgress': string
-  'connectors.oAuth.reConfigured': string
   'connectors.ociHelm.ociHelmUrl': string
   'connectors.optionalAuthentication': string
   'connectors.pagerDutyConnectorDetails': string
@@ -3042,6 +3062,8 @@ export interface StringsMap {
   'connectors.serviceNow.serviceNowViewPermissions': string
   'connectors.serviceNow.usernamePasswordAPIKey': string
   'connectors.showInstructions': string
+  'connectors.signalFXLabel': string
+  'connectors.signalfx.urlValidation': string
   'connectors.specifyArtifactRepo': string
   'connectors.specifyArtifactRepoType': string
   'connectors.splunk.connectorDetailsHeader': string
@@ -3223,6 +3245,9 @@ export interface StringsMap {
   'auditTrail.streamingDestinations': string
   'auditTrail.supplementaryDetails': string
   'auditTrail.yamlDifference': string
+  'userProfile.accessTokenDeleteFailure': string
+  'userProfile.accessTokenDeleteSuccess': string
+  'userProfile.accessTokensForGitProviders': string
   'userProfile.addSCM': string
   'userProfile.awsCredentials': string
   'userProfile.basicInformation': string
@@ -3230,6 +3255,7 @@ export interface StringsMap {
   'userProfile.changePassword': string
   'userProfile.confirmDelete': string
   'userProfile.confirmDeleteTitle': string
+  'userProfile.confirmDeleteV2': string
   'userProfile.confirmPassword': string
   'userProfile.currentPassword': string
   'userProfile.editProfile': string
@@ -3240,6 +3266,7 @@ export interface StringsMap {
   'userProfile.newPassword': string
   'userProfile.newPasswordShouldMeetTheRequirements': string
   'userProfile.newPasswordShouldNotBeCurrentPassword': string
+  'userProfile.noAccessTokenLabel': string
   'userProfile.passwordChangedSuccessfully': string
   'userProfile.passwordMatch': string
   'userProfile.passwordMustBeBetweenMinAndMax': string
@@ -3724,6 +3751,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.feedPlaceholder': string
   'pipeline.artifactsSelection.filePathRegexLabel': string
   'pipeline.artifactsSelection.filePathRegexPlaceholder': string
+  'pipeline.artifactsSelection.garNoDigestErrortest': string
   'pipeline.artifactsSelection.githubPackageRegistryTitle': string
   'pipeline.artifactsSelection.googleArtifactRegistryTitle': string
   'pipeline.artifactsSelection.groupId': string
@@ -3780,6 +3808,7 @@ export interface StringsMap {
   'pipeline.azureWebApp.strategy.basic': string
   'pipeline.azureWebApp.strategy.blueGreen': string
   'pipeline.azureWebApp.strategy.canary': string
+  'pipeline.bamboo.planKey': string
   'pipeline.bamboo.planName': string
   'pipeline.bambooBuilds': string
   'pipeline.bambooStep.addPlanParameters': string
@@ -4223,6 +4252,7 @@ export interface StringsMap {
   'pipeline.gitPullRequestNumber': string
   'pipeline.gitRepo': string
   'pipeline.guidedCDK8sGetStarted': string
+  'pipeline.httpStep.validation.certificate': string
   'pipeline.iacm.resourceStack': string
   'pipeline.iacm.workflow': string
   'pipeline.imagePathHelperText': string
@@ -4658,6 +4688,7 @@ export interface StringsMap {
   'pipeline.replacedExpressions': string
   'pipeline.repositoryPlaceholder': string
   'pipeline.repositoryUrlPlaceholder': string
+  'pipeline.requireInput': string
   'pipeline.requiredToFetch': string
   'pipeline.resilienceTab.title': string
   'pipeline.resourceConstraints.currentlyExecuting': string
@@ -5061,6 +5092,7 @@ export interface StringsMap {
   'pipeline.unsupportedImagesWarning': string
   'pipeline.utilitiesStep.assertion': string
   'pipeline.utilitiesStep.cc': string
+  'pipeline.utilitiesStep.certificateKey': string
   'pipeline.utilitiesStep.requestBody': string
   'pipeline.utilitiesStep.subject': string
   'pipeline.utilitiesStep.to': string
@@ -9248,6 +9280,7 @@ export interface StringsMap {
   'cv.slos.selectMonitoredService': string
   'cv.slos.selectMonitoredServiceForSlo': string
   'cv.slos.setSLOSubtitle': string
+  'cv.slos.simpleSLODeletion': string
   'cv.slos.sli': string
   'cv.slos.sliMetricChartRatioBasedHeader': string
   'cv.slos.sliMetricChartSubHeader': string
@@ -9287,6 +9320,7 @@ export interface StringsMap {
   'cv.slos.sloDetailsChart.startDate': string
   'cv.slos.sloDetailsChart.updateAnnotationMessage': string
   'cv.slos.sloEditWarningMessage': string
+  'cv.slos.sloErrorBanner': string
   'cv.slos.sloFormula.subHeader': string
   'cv.slos.sloFormula.title': string
   'cv.slos.sloName': string

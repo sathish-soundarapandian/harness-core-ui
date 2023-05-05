@@ -246,7 +246,7 @@ describe('Test SelectGitProvider component', () => {
     await act(async () => {
       fireEvent.click(getByText('common.oAuthLabel'))
     })
-    expect(getByText('connectors.oAuth.failed')).toBeInTheDocument()
+    expect(getByText('common.oAuth.failed')).toBeInTheDocument()
   })
 
   test('User selects Gitlab provider and OAuth authentication method', async () => {

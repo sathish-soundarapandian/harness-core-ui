@@ -84,7 +84,7 @@ exports[`SubscriptionDetails render for monthly subscription 1`] = `
             <p
               class="StyledProps--font StyledProps--main"
             >
-              authSettings.recomendation
+              authSettings.recommendation
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
@@ -245,7 +245,7 @@ exports[`SubscriptionDetails render for monthly subscription 1`] = `
             <p
               class="StyledProps--font StyledProps--main"
             >
-              authSettings.recomendation
+              authSettings.recommendation
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
@@ -462,7 +462,7 @@ exports[`SubscriptionDetails render for monthly subscription without usage and l
             <p
               class="StyledProps--font StyledProps--main"
             >
-              authSettings.recomendation
+              authSettings.recommendation
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
@@ -623,7 +623,7 @@ exports[`SubscriptionDetails render for monthly subscription without usage and l
             <p
               class="StyledProps--font StyledProps--main"
             >
-              authSettings.recomendation
+              authSettings.recommendation
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
@@ -840,7 +840,7 @@ exports[`SubscriptionDetails render for yearly subscription: yearly subscription
             <p
               class="StyledProps--font StyledProps--main"
             >
-              authSettings.recomendation
+              authSettings.recommendation
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
@@ -1001,7 +1001,7 @@ exports[`SubscriptionDetails render for yearly subscription: yearly subscription
             <p
               class="StyledProps--font StyledProps--main"
             >
-              authSettings.recomendation
+              authSettings.recommendation
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"

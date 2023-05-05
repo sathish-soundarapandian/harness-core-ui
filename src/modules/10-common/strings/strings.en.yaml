@@ -657,6 +657,7 @@ filters:
 in: in
 on: on
 at: at
+for: for
 moreRefineSearch: '+{{number}} more (refine search)'
 switchAccount: Switch Account
 switchAccountSearch: Search by Account Name
@@ -1064,6 +1065,16 @@ contentRequired: Content is required
 defaultSettings: Default Settings
 freezeWindows: Freeze Windows
 oAuthLabel: OAuth
+oAuth:
+  inProgress: OAuth in progress...
+  failed: Error while authorizing user via OAuth. Please try using an access token instead.
+  configured: OAuth configured successfully
+  reConfigured: OAuth re-configured successfully
+  accessRevoked: Access revoked. Please reconfigure the connection.
+  accessTokenAlredyAdded: Access token for selected git provider is already added.
+  accessTokenCreateSuccess: Access token added successfully.
+  connectToGitProviderLabel: Connect to a Git Provider
+  connectToGitProviderPlaceholder: Select a git Provider
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
 moveEntitytoGit: Move {{resourceType}} To Git
@@ -1257,6 +1268,7 @@ timeRangeLimitWarning:
 viewAll: View all
 lastUpdatedAt: Last updated at
 tryAgain: Try Again
+OAuthTryAgain: Failed to generate OAuth token. Please try again.
 reload: Reload
 plugins: Plugins
 noPluginInputsRequired: No inputs are required for this plugin.
@@ -1301,7 +1313,6 @@ moduleOverviewLabel:
   cv: Manage Service Level Objectives
   ff: Manage Feature Flags
   sto: Manage Security Tests
-  ce: Costs Saved
   chaos: Chaos Expriments
 moduleDetails:
   cd:
@@ -1364,6 +1375,7 @@ moduleDetails:
       title: '{{$.common.sloNoData}}'
       description: A Service Level Objective (SLO) is the sum of a collection of performance metrics (Service Level Indicator or SLI) such as uptime, response time, and error rate that are used to measure the services performance. To create SLO, you’ll need at least one Monitored Service, Health Source and a Metric.
 deploymentsIn: 'Deployments in {{value}}'
+cloudSpendsIn: 'Cloud Spends in {{value}}'
 buildsIn: 'Builds in {{value}}'
 harnessCommunityTitle: See what Harness Community is up to
 seeMore: 'See more'

@@ -8,6 +8,7 @@
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, isObject, merge } from 'lodash-es'
+import produce from 'immer'
 import { isTASDeploymentType, RepositoryFormatTypes, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type {
   ArtifactConfig,
@@ -299,7 +300,24 @@ const getDigestValues = (specValues: any): ImagePathTypes => {
   }
   return values
 }
+const getGarDigestValues = (specValues: GoogleArtifactRegistryInitialValuesType) => {
+  const values = produce(specValues, draft => {
+    if (specValues?.spec?.digest && getMultiTypeFromValue(specValues?.spec?.digest) === MultiTypeInputType.FIXED) {
+      if (getMultiTypeFromValue(specValues?.spec?.digest) === MultiTypeInputType.FIXED) {
+        draft.spec.digest = { label: specValues?.spec?.digest, value: specValues?.spec?.digest } as any
+      } else {
+        draft.spec.digest = specValues?.spec?.digest
+      }
+    }
+  })
+  return values
+}
 
+export interface ArtifactDigestWrapperDetails {
+  errorText: string
+  digestPath: string
+  formikDigestValueField: FormikValues | string
+}
 export type artifactInitialValueTypes =
   | ImagePathTypes
   | GithubPackageRegistryInitialValuesType
@@ -373,6 +391,9 @@ export const getArtifactFormData = (
 
   if (selectedArtifact === ENABLED_ARTIFACT_TYPES.DockerRegistry) {
     values = getDigestValues(values)
+  }
+  if (selectedArtifact === ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry) {
+    values = getGarDigestValues(values as GoogleArtifactRegistryInitialValuesType)
   }
 
   if (isIdentifierAllowed && initialValues?.identifier) {
@@ -716,6 +737,23 @@ export const resetFieldValue = (formik: FormikValues, fieldPath: string, resetVa
   }
 }
 
+export const canFetchGarDigest = (
+  project: string,
+  region: string,
+  repositoryName: string,
+  version: string,
+  packageId: string,
+  connectorRefValue: string
+) => {
+  return (
+    getMultiTypeFromValue(project) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(region) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(repositoryName) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(packageId) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(connectorRefValue) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(version) !== MultiTypeInputType.RUNTIME
+  )
+}
 export const canFetchDigest = (imagePath: string, tag: string, connectorRefValue: string) => {
   return (
     getMultiTypeFromValue(imagePath) !== MultiTypeInputType.RUNTIME &&

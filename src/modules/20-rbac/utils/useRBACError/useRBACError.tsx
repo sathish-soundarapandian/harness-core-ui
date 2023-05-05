@@ -85,7 +85,10 @@ const useRBACError = (): RbacErrorReturn => {
                 {`${getString('rbac.unauthorizedText')} `}
               </Text>
               {(err as AccessControlCheckError)?.failedPermissionChecks?.map((failedPermissionCheck, index) => {
-                const { permission, resourceType, resourceScope } = failedPermissionCheck
+                const { permission, resourceType, resourceScope, resourceIdentifier } = failedPermissionCheck
+                const resourceIdentifierLabel = resourceIdentifier
+                  ? ` ${getString('common.for')} "${resourceIdentifier}" `
+                  : ''
                 if (permission && resourceType && resourceScope) {
                   const resourceTypeHandler = RbacFactory.getResourceTypeHandler(resourceType as ResourceType)
                   const currentScope = getScopeFromDTO(
@@ -113,7 +116,10 @@ const useRBACError = (): RbacErrorReturn => {
                         <span className={css.textToLowercase}>
                           {` ${resourceTypeHandler?.label && getString(resourceTypeHandler?.label)}`}
                         </span>
-                        <span>{` ${getString('rbac.in')} ${getScopeSuffix(currentScope, resourceScope)}`}</span>
+                        <span>{`${resourceIdentifierLabel}${getString('rbac.in')} ${getScopeSuffix(
+                          currentScope,
+                          resourceScope
+                        )}`}</span>
                       </Text>
                     </Layout.Vertical>
                   )
@@ -123,8 +129,9 @@ const useRBACError = (): RbacErrorReturn => {
             </Layout.Vertical>
           )
         } else {
-          const { permission, resourceType, resourceScope } =
+          const { permission, resourceType, resourceScope, resourceIdentifier } =
             (err as AccessControlCheckError)?.failedPermissionChecks?.[0] || {}
+          const resourceIdentifierLabel = resourceIdentifier ? ` on ${resourceIdentifier} ` : ''
           /* istanbul ignore else */
           if (permission && resourceType && resourceScope) {
             const resourceTypeHandler = RbacFactory.getResourceTypeHandler(resourceType as ResourceType)
@@ -147,7 +154,9 @@ const useRBACError = (): RbacErrorReturn => {
                   {`${getString('rbac.youAreNotAuthorizedTo')} `}
                   <span className={css.textToLowercase}>{permissionLabel}</span>
                   <span className={css.textToLowercase}>
-                    {` ${resourceTypeHandler?.label && getString(resourceTypeHandler?.label)}.`}
+                    {` ${
+                      resourceTypeHandler?.label && getString(resourceTypeHandler?.label)
+                    }${resourceIdentifierLabel}.`}
                   </span>
                 </Text>
                 <Text font={{ size: 'small' }} color={Color.GREY_800}>
@@ -157,7 +166,9 @@ const useRBACError = (): RbacErrorReturn => {
                   {'"'}
                   {permissionLabel}
                   <span className={css.textToLowercase}>
-                    {` ${resourceTypeHandler?.label && getString(resourceTypeHandler?.label)}`}
+                    {` ${
+                      resourceTypeHandler?.label && getString(resourceTypeHandler?.label)
+                    }${resourceIdentifierLabel}`}
                   </span>
                   {'"'}
                   <span>{` ${getString('rbac.in')} ${getScopeSuffix(currentScope, resourceScope)}`}</span>

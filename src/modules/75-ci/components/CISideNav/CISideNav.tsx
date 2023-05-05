@@ -27,7 +27,6 @@ import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useQueryParams } from '@common/hooks'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 import { useHostedBuilds } from '@common/hooks/useHostedBuild'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
@@ -63,7 +62,6 @@ export default function CISideNav(): React.ReactElement {
   const history = useHistory()
   const module = 'ci'
   const { updateAppStore, selectedProject } = useAppStore()
-  const { CI_OVERVIEW_PAGE } = useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const { getString } = useStrings()
@@ -231,11 +229,9 @@ export default function CISideNav(): React.ReactElement {
           {isCIGetStartedVisible && (
             <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
           )}
-          {!isCIGetStartedVisible && CI_OVERVIEW_PAGE && (
-            <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module })} />
-          )}
           {!(fetchingPipelines || isCIGetStartedVisible) && (
             <>
+              <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module })} />
               <SidebarLink label={getString('buildsText')} to={routes.toDeployments({ ...params, module })} />
               <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module })} />
               <ProjectSetupMenu module={module} />
