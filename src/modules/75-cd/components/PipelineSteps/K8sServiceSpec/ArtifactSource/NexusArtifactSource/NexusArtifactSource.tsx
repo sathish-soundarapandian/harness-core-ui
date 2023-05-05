@@ -305,8 +305,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const artifactQueryParams: any = {
     ...commonParams,
     connectorRef: getFinalQueryParamValue(connectorRefValue),
-    repository: repositoryValue,
-    groupId: groupIdValue,
+    repository: getFinalQueryParamValue(repositoryValue),
+    groupId: getFinalQueryParamValue(groupIdValue),
     nexusSourceType: 'Nexus3Registry',
     pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
     serviceId,
