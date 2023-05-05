@@ -1275,7 +1275,7 @@ stepDescription:
   TerraformCloudRun: Trigger a run in a Terraform Cloud Workspace.
   TerraformCloudRollback: Trigger a rollback of the latest run on your Terraform Cloud Workspace.
   SscaOrchestration: Orchestrate SBOM generation for your artifacts and repository
-  AwsSAMDeploy: Deploy an AWS SAM function.
+  AwsSamDeploy: Deploy an AWS SAM function.
 
 executionStrategy:
   executionStrategies: Execution Strategies

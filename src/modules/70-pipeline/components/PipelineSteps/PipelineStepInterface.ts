@@ -204,7 +204,7 @@ export enum StepType {
   Metasploit = 'Metasploit',
   Brakeman = 'Brakeman',
   KubernetesAws = 'KubernetesAws',
-  AwsSAMDeploy = 'AwsSAMDeploy'
+  AwsSamDeploy = 'AwsSamDeploy'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

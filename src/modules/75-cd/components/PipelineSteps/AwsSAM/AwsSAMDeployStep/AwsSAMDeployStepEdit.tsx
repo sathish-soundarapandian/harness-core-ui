@@ -23,24 +23,24 @@ import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfi
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import type { AwsSAMDeployStepInitialValues } from '@pipeline/utils/types'
+import type { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export interface AwsSAMDeployStepProps {
-  initialValues: AwsSAMDeployStepInitialValues
-  onUpdate?: (data: AwsSAMDeployStepInitialValues) => void
+export interface AwsSamDeployStepProps {
+  initialValues: AwsSamDeployStepInitialValues
+  onUpdate?: (data: AwsSamDeployStepInitialValues) => void
   stepViewType?: StepViewType
-  onChange?: (data: AwsSAMDeployStepInitialValues) => void
+  onChange?: (data: AwsSamDeployStepInitialValues) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
 }
 
-const AwsSAMDeployStepEdit = (
-  props: AwsSAMDeployStepProps,
-  formikRef: StepFormikFowardRef<AwsSAMDeployStepInitialValues>
+const AwsSamDeployStepEdit = (
+  props: AwsSamDeployStepProps,
+  formikRef: StepFormikFowardRef<AwsSamDeployStepInitialValues>
 ): React.ReactElement => {
   const { initialValues, onUpdate, isNewStep = true, readonly, onChange, allowableTypes, stepViewType } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -50,11 +50,11 @@ const AwsSAMDeployStepEdit = (
 
   return (
     <>
-      <Formik<AwsSAMDeployStepInitialValues>
-        onSubmit={(values: AwsSAMDeployStepInitialValues) => {
+      <Formik<AwsSamDeployStepInitialValues>
+        onSubmit={(values: AwsSamDeployStepInitialValues) => {
           onUpdate?.(values)
         }}
-        formName="AwsSAMDeployStepEdit"
+        formName="AwsSamDeployStepEdit"
         initialValues={initialValues}
         validate={data => {
           onChange?.(data)
@@ -64,7 +64,7 @@ const AwsSAMDeployStepEdit = (
           timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
         })}
       >
-        {(formik: FormikProps<AwsSAMDeployStepInitialValues>) => {
+        {(formik: FormikProps<AwsSamDeployStepInitialValues>) => {
           setFormikRef(formikRef, formik)
 
           return (
@@ -151,4 +151,4 @@ const AwsSAMDeployStepEdit = (
   )
 }
 
-export const AwsSAMDeployStepEditRef = React.forwardRef(AwsSAMDeployStepEdit)
+export const AwsSamDeployStepEditRef = React.forwardRef(AwsSamDeployStepEdit)

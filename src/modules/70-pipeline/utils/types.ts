@@ -105,7 +105,7 @@ export interface CloudFunctionTrafficShiftExecutionStepInitialValues extends Ste
   }
 }
 
-export interface AwsSAMDeployStepInitialValues extends StepElementConfig {
+export interface AwsSamDeployStepInitialValues extends StepElementConfig {
   spec: {
     connectorRef: string
     image: string

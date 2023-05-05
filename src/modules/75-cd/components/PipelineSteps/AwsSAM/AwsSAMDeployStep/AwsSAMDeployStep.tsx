@@ -16,47 +16,47 @@ import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@p
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import type { AwsSAMDeployStepInitialValues } from '@pipeline/utils/types'
+import type { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
 import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
 import { GenericExecutionStepInputSet } from '../../Common/GenericExecutionStep/GenericExecutionStepInputSet'
-import { AwsSAMDeployStepEditRef } from './AwsSAMDeployStepEdit'
+import { AwsSamDeployStepEditRef } from './AwsSAMDeployStepEdit'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-export interface AwsSAMDeployStepEditProps {
-  initialValues: AwsSAMDeployStepInitialValues
-  onUpdate?: (data: AwsSAMDeployStepInitialValues) => void
+export interface AwsSamDeployStepEditProps {
+  initialValues: AwsSamDeployStepInitialValues
+  onUpdate?: (data: AwsSamDeployStepInitialValues) => void
   stepViewType?: StepViewType
-  onChange?: (data: AwsSAMDeployStepInitialValues) => void
+  onChange?: (data: AwsSamDeployStepInitialValues) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
   inputSetData: {
-    template?: AwsSAMDeployStepInitialValues
+    template?: AwsSamDeployStepInitialValues
     path?: string
     readonly?: boolean
   }
 }
 
-export interface AwsSAMDeployVariableStepProps {
-  initialValues: AwsSAMDeployStepInitialValues
+export interface AwsSamDeployVariableStepProps {
+  initialValues: AwsSamDeployStepInitialValues
   stageIdentifier: string
-  onUpdate?(data: AwsSAMDeployStepInitialValues): void
+  onUpdate?(data: AwsSamDeployStepInitialValues): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: AwsSAMDeployStepInitialValues
+  variablesData: AwsSamDeployStepInitialValues
 }
 
-export class AwsSAMDeployStep extends PipelineStep<AwsSAMDeployStepInitialValues> {
-  protected type = StepType.AwsSAMDeploy
+export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues> {
+  protected type = StepType.AwsSamDeploy
   protected stepName = 'AWS Lambda Deploy Step'
   protected stepIcon: IconName = 'aws-lambda-deploy'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsSAMDeploy'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsSamDeploy'
   protected isHarnessSpecific = false
-  protected referenceId = 'AwsSAMDeployStep'
+  protected referenceId = 'AwsSamDeployStep'
 
-  protected defaultValues: AwsSAMDeployStepInitialValues = {
+  protected defaultValues: AwsSamDeployStepInitialValues = {
     identifier: '',
     name: '',
-    type: StepType.AwsSAMDeploy,
+    type: StepType.AwsSamDeploy,
     timeout: '10m',
     spec: {
       connectorRef: '',
@@ -71,7 +71,7 @@ export class AwsSAMDeployStep extends PipelineStep<AwsSAMDeployStepInitialValues
     this._hasDelegateSelectionVisible = true
   }
 
-  renderStep(props: StepProps<AwsSAMDeployStepInitialValues>): JSX.Element {
+  renderStep(props: StepProps<AwsSamDeployStepInitialValues>): JSX.Element {
     const {
       initialValues,
       stepViewType,
@@ -89,11 +89,11 @@ export class AwsSAMDeployStep extends PipelineStep<AwsSAMDeployStepInitialValues
         <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
           stepViewType={stepViewType}
-          inputSetData={inputSetData as InputSetData<AwsSAMDeployStepInitialValues>}
+          inputSetData={inputSetData as InputSetData<AwsSamDeployStepInitialValues>}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as AwsSAMDeployVariableStepProps
+      const { variablesData, metadataMap } = customStepProps as AwsSamDeployVariableStepProps
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
@@ -105,7 +105,7 @@ export class AwsSAMDeployStep extends PipelineStep<AwsSAMDeployStepInitialValues
     }
 
     return (
-      <AwsSAMDeployStepEditRef
+      <AwsSamDeployStepEditRef
         initialValues={initialValues}
         onUpdate={onUpdate}
         onChange={onChange}
@@ -122,13 +122,13 @@ export class AwsSAMDeployStep extends PipelineStep<AwsSAMDeployStepInitialValues
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<AwsSAMDeployStepInitialValues>): FormikErrors<AwsSAMDeployStepInitialValues> {
+  }: ValidateInputSetProps<AwsSamDeployStepInitialValues>): FormikErrors<AwsSamDeployStepInitialValues> {
     const errors = validateGenericFields({
       data,
       template,
       getString,
       viewType
-    }) as FormikErrors<AwsSAMDeployStepInitialValues>
+    }) as FormikErrors<AwsSamDeployStepInitialValues>
 
     if (isEmpty(errors.spec)) {
       delete errors.spec
