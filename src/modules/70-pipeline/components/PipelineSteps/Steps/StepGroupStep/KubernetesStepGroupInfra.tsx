@@ -16,8 +16,6 @@ import {
   Container,
   FormInput,
   getMultiTypeFromValue,
-  Icon,
-  Layout,
   MultiTypeInputType,
   Text
 } from '@harness/uicore'
@@ -36,8 +34,6 @@ import { tolerationsCustomMap } from '@common/utils/ContainerRunStepUtils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { Connectors } from '@connectors/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
-import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import Volumes from '@pipeline/components/Volumes/Volumes'
 import { OsTypes } from '@pipeline/utils/constants'
@@ -443,35 +439,8 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
           gitScope={{ repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }}
           setRefValue
+          width={510}
         />
-
-        {getMultiTypeFromValue(formikRef.values.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
-          <ConnectorConfigureOptions
-            value={defaultTo(formikRef.values.connectorRef as string, '')}
-            type={
-              <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-                <Icon name={getIconByType('K8sCluster')}></Icon>
-                <Text>{getString('connectors.title.k8sCluster')}</Text>
-              </Layout.Horizontal>
-            }
-            variableName="connectorRef"
-            showRequiredField={false}
-            showDefaultField={false}
-            onChange={value => {
-              formikRef.setFieldValue('connectorRef', value)
-            }}
-            isReadonly={readonly}
-            connectorReferenceFieldProps={{
-              accountIdentifier: accountId,
-              projectIdentifier,
-              orgIdentifier,
-              type: 'K8sCluster',
-              label: getString('connectors.title.k8sCluster'),
-              disabled: readonly,
-              gitScope: { repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }
-            }}
-          />
-        )}
       </div>
 
       <div className={cx(stepCss.formGroup)}>

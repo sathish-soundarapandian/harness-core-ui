@@ -98,28 +98,18 @@ function StepGroupStepEdit(
   const { getString } = useStrings()
 
   React.useEffect(() => {
-    if (
-      isContainerBasedExecutionEnabled &&
-      !(formikRef as React.MutableRefObject<FormikProps<StepGroupFormikValues>>)?.current?.values.os &&
-      isNewStep
-    ) {
-      ;(formikRef as React.MutableRefObject<FormikProps<StepGroupFormikValues>>)?.current?.setFieldValue(
-        'os',
-        OsTypes.Linux
-      )
-      ;(formikRef as React.MutableRefObject<FormikProps<StepGroupFormikValues>>)?.current?.setFieldValue(
-        'type',
-        'KunernetesDirect'
-      )
-    } else if (!isContainerBasedExecutionEnabled) {
-      ;(formikRef as React.MutableRefObject<FormikProps<StepGroupFormikValues>>)?.current?.setFieldValue(
-        'os',
-        undefined
-      )
-      ;(formikRef as React.MutableRefObject<FormikProps<StepGroupFormikValues>>)?.current?.setFieldValue(
-        'type',
-        undefined
-      )
+    const formikRefCurrent = (formikRef as React.MutableRefObject<FormikProps<StepGroupFormikValues>>)?.current
+    if (isContainerBasedExecutionEnabled) {
+      formikRefCurrent?.setValues({
+        ...formikRefCurrent.values,
+        type: 'KunernetesDirect',
+        os: OsTypes.Linux
+      })
+    } else {
+      formikRefCurrent?.setValues({
+        identifier: formikRefCurrent.values.identifier,
+        name: formikRefCurrent.values.name
+      })
     }
   }, [isContainerBasedExecutionEnabled, formikRef])
 

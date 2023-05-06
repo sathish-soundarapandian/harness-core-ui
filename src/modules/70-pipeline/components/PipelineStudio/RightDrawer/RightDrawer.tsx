@@ -314,24 +314,26 @@ const processNodeImpl = (
       }
       if (
         data.stepConfig?.isStepGroup &&
-        (item as CustomStepGroupElementConfig).stepGroupInfra &&
-        (item as CustomStepGroupElementConfig).stepGroupInfra?.type === 'KunernetesDirect'
+        (item as CustomStepGroupElementConfig)?.stepGroupInfra &&
+        (item as CustomStepGroupElementConfig)?.stepGroupInfra?.type === 'KunernetesDirect'
       ) {
+        // When container step group and values are already transformed (no direct formik values)
         if ((item as CustomStepGroupElementConfig).sharedPaths) {
-          set(node, 'sharedPaths', (item as CustomStepGroupElementConfig).sharedPaths)
+          set(node, 'sharedPaths', (item as CustomStepGroupElementConfig)?.sharedPaths)
         }
         if ((item as CustomStepGroupElementConfig).stepGroupInfra) {
-          set(node, 'stepGroupInfra', (item as CustomStepGroupElementConfig).stepGroupInfra)
+          set(node, 'stepGroupInfra', (item as CustomStepGroupElementConfig)?.stepGroupInfra)
         }
-      }
-      if (data.stepConfig?.isStepGroup && (item as StepGroupFormikValues).type === 'KunernetesDirect') {
-        const modifiedValues = getModifiedFormikValues(item as StepGroupFormikValues, true)
-        if ((modifiedValues as CustomStepGroupElementConfig).sharedPaths) {
-          set(node, 'sharedPaths', (modifiedValues as CustomStepGroupElementConfig).sharedPaths)
-        }
-        if ((modifiedValues as CustomStepGroupElementConfig).stepGroupInfra) {
-          set(node, 'stepGroupInfra', (modifiedValues as CustomStepGroupElementConfig).stepGroupInfra)
-        }
+      } else if (data.stepConfig?.isStepGroup) {
+        // When it is step group and formik values are directly sent here from Apply Changes
+        const modifiedValues = getModifiedFormikValues(
+          defaultTo(item, {}) as StepGroupFormikValues,
+          (item as StepGroupFormikValues)?.type === 'KunernetesDirect'
+        )
+        set(node, 'identifier', modifiedValues.identifier)
+        set(node, 'name', modifiedValues.name)
+        set(node, 'sharedPaths', modifiedValues.sharedPaths)
+        set(node, 'stepGroupInfra', modifiedValues.stepGroupInfra)
       }
     }
   )
