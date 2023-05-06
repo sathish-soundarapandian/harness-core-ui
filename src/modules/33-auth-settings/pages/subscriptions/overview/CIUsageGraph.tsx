@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { Text, Layout, Card, Heading, PageSpinner, SelectOption } from '@harness/uicore'
+import { Text, Layout, Card, PageSpinner, SelectOption } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { StackedColumnChart } from '@common/components/StackedColumnChart/StackedColumnChart'

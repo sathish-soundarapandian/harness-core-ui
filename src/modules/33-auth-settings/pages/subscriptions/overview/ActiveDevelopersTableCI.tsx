@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import type { Column } from 'react-table'
-import { Text, Layout, Card, Heading, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
+import { Text, Layout, Card, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'

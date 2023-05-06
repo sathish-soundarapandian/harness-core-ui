@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Card, Heading, Color, Layout, Text } from '@harness/uicore'
+import { Card, Heading, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { Tabs } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
