@@ -415,6 +415,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
             }}
             type={Connectors.DOCKER}
             setRefValue
+            width={510}
           />
         </Container>
       </>
