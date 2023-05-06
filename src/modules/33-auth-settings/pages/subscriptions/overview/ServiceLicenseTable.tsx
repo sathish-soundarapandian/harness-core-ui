@@ -212,19 +212,7 @@ export function ServiceLicenseTable({
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-          <Layout.Vertical>
-            <Heading color={Color.BLACK} font={{ size: 'medium' }}>
-              {getString('common.subscriptions.usage.services')}
-            </Heading>
-            <Text
-              color={Color.PRIMARY_7}
-              tooltip={getString('common.subscriptions.usage.cdServiceTooltip')}
-              font={{ size: 'xsmall' }}
-            >
-              {getString('common.whatIsActiveService')}
-            </Text>
-          </Layout.Vertical>
-          <div>
+          <div className={pageCss.exportButtonAlign}>
             {' '}
             <a
               href={`data:text/csv;charset=utf-8,${escape(initialContent || '')}`}
