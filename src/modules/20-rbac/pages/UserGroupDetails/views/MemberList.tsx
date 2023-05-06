@@ -21,7 +21,8 @@ import {
   ListHeader,
   sortByEmail,
   sortByName,
-  SortMethod
+  SortMethod,
+  ExpandingSearchInput
 } from '@harness/uicore'
 import { FontVariation, Intent } from '@harness/design-system'
 import { Classes, Menu, Position, PopoverInteractionKind, MenuItem } from '@blueprintjs/core'
@@ -199,6 +200,7 @@ const MemberList: React.FC<MemberListProps> = ({
   isUserGroupManaged
 }) => {
   const { getString } = useStrings()
+  const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState<number>(0)
   const { accountId, orgIdentifier, projectIdentifier, userGroupIdentifier } = useParams<
     ProjectPathProps & UserGroupPathProps
@@ -208,7 +210,9 @@ const MemberList: React.FC<MemberListProps> = ({
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.UserGroupDetails}`)
 
   const { data, refetch } = useMutateAsGet(useGetUsersInUserGroup, {
-    body: {},
+    body: {
+      searchTerm
+    },
     identifier: userGroupIdentifier,
     queryParams: {
       ...getUserGroupQueryParams(accountId, orgIdentifier, projectIdentifier, parentScope),
@@ -251,9 +255,10 @@ const MemberList: React.FC<MemberListProps> = ({
       }
     ]
   }, [refetch])
-  if (users?.length)
-    return (
-      <Container className={css.memberList}>
+
+  return (
+    <Container className={css.memberList}>
+      <Layout.Horizontal>
         <ListHeader
           selectedSortMethod={sortPreference}
           sortOptions={[...sortByName, ...sortByEmail]}
@@ -263,6 +268,19 @@ const MemberList: React.FC<MemberListProps> = ({
           totalCount={data?.data?.totalItems}
           className={css.listHeader}
         />
+        <ExpandingSearchInput
+          alwaysExpanded
+          width={200}
+          placeholder={getString('search')}
+          throttle={200}
+          autoFocus={false}
+          defaultValue={searchTerm}
+          onChange={(query: string) => {
+            setSearchTerm(query)
+          }}
+        />
+      </Layout.Horizontal>
+      {users?.length ? (
         <TableV2<UserInfo>
           data={users}
           columns={columns}
@@ -275,8 +293,11 @@ const MemberList: React.FC<MemberListProps> = ({
             gotoPage: (pageNumber: number) => setPage(pageNumber)
           }}
         />
-      </Container>
-    )
+      ) : (
+        <Text font={{ variation: FontVariation.BODY }}>{getString('common.filters.noResultsFound')}</Text>
+      )}
+    </Container>
+  )
   return (
     <NoDataCard
       icon="nav-project"
