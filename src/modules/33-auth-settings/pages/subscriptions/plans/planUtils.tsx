@@ -16,6 +16,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { Editions } from '@common/constants/SubscriptionTypes'
 import type { EditionActionDTO } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
+import { ModuleName } from 'framework/types/ModuleName'
 import type { PlansFragment, Maybe } from 'services/common/services'
 import { TimeType } from '@common/constants/SubscriptionTypes'
 import RbacButton from '@rbac/components/Button/Button'
@@ -142,9 +143,10 @@ interface GetBtnsProps {
   isPlanDisabled: boolean
   btnProps?: BtnProps[]
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
+  module?: ModuleName
 }
 
-export function getBtns({ isPlanDisabled, btnProps, getString }: GetBtnsProps): ReactElement {
+export function getBtns({ isPlanDisabled, btnProps, getString, module }: GetBtnsProps): ReactElement {
   if (isPlanDisabled) {
     return <></>
   }
@@ -157,7 +159,7 @@ export function getBtns({ isPlanDisabled, btnProps, getString }: GetBtnsProps): 
     if ((isContactSales || isContactSupport) && length > 1) {
       btns.push(
         <Layout.Horizontal spacing="small" flex={{ alignItems: 'baseline', justifyContent: 'center' }}>
-          <Text>{getString('common.or')}</Text>
+          {module !== ModuleName.CI && <Text>{getString('common.or')}</Text>}
           <Button
             font={{ size: 'small' }}
             key={buttonText}
@@ -174,28 +176,31 @@ export function getBtns({ isPlanDisabled, btnProps, getString }: GetBtnsProps): 
     }
 
     // or else, just a button
-    btns.push(
-      buttonText === 'Upgrade' ? (
-        <RbacButton
-          permission={{
-            permission: PermissionIdentifier.EDIT_LICENSE,
-            resource: {
-              resourceType: ResourceType.LICENSE
-            }
-          }}
-          key={buttonText}
-          onClick={onClick}
-          loading={btnLoading}
-          variation={ButtonVariation.PRIMARY}
-        >
-          {buttonText}
-        </RbacButton>
-      ) : (
-        <Button key={buttonText} onClick={onClick} loading={btnLoading} variation={ButtonVariation.PRIMARY}>
-          {buttonText}
-        </Button>
-      )
-    )
+    {
+      module !== ModuleName.CI &&
+        btns.push(
+          buttonText === 'Upgrade' ? (
+            <RbacButton
+              permission={{
+                permission: PermissionIdentifier.EDIT_LICENSE,
+                resource: {
+                  resourceType: ResourceType.LICENSE
+                }
+              }}
+              key={buttonText}
+              onClick={onClick}
+              loading={btnLoading}
+              variation={ButtonVariation.PRIMARY}
+            >
+              {buttonText}
+            </RbacButton>
+          ) : (
+            <Button key={buttonText} onClick={onClick} loading={btnLoading} variation={ButtonVariation.PRIMARY}>
+              {buttonText}
+            </Button>
+          )
+        )
+    }
   })
 
   return <Layout.Vertical spacing={'small'}>{btns}</Layout.Vertical>
