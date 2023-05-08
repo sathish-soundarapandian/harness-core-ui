@@ -47,7 +47,7 @@ const props = {
       description: 'Start A Trial'
     }
   },
-  module: 'ci' as Module
+  module: 'cd' as Module
 }
 describe('StartTrialTemplate snapshot test', () => {
   beforeEach(() => {
@@ -134,7 +134,7 @@ describe('StartTrialTemplate snapshot test', () => {
           onClick
         }
       },
-      module: 'ci' as Module
+      module: 'cd' as Module
     }
     const { container, getByText } = render(
       <TestWrapper pathParams={{ orgIdentifier: 'dummy' }}>
@@ -179,7 +179,7 @@ describe('StartTrialTemplate snapshot test', () => {
         },
         shouldShowStartTrialModal: true
       },
-      module: 'ci' as Module,
+      module: 'cd' as Module,
       shouldShowStartTrialModal: true
     }
 
@@ -228,7 +228,7 @@ describe('StartTrialTemplate snapshot test', () => {
           onClick: startBtnClickHandlerMock
         }
       },
-      module: 'ci' as Module,
+      module: 'cd' as Module,
       shouldShowStartTrialModal: true
     }
 

@@ -44,7 +44,7 @@ exports[`StartTrialTemplate snapshot test should call prop onClick when there is
           </span>
         </button>
         <a
-          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+          href="/account/undefined/settings/subscriptions?moduleCard=cd&&tab=PLANS"
         >
           common.exploreAllPlans
         </a>
@@ -63,7 +63,7 @@ exports[`StartTrialTemplate snapshot test should call start trial api when click
     <div
       data-testid="location"
     >
-      /account/undefined/ci/home?modal=FREE&experience=FREE
+      /account/undefined/cd/home?modal=FREE&experience=FREE
     </div>
   </div>
 </div>
@@ -113,7 +113,7 @@ exports[`StartTrialTemplate snapshot test should call the start button click han
           </span>
         </button>
         <a
-          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+          href="/account/undefined/settings/subscriptions?moduleCard=cd&&tab=PLANS"
         >
           common.exploreAllPlans
         </a>
@@ -216,7 +216,7 @@ exports[`StartTrialTemplate snapshot test should open the modal when a button is
           </span>
         </button>
         <a
-          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+          href="/account/undefined/settings/subscriptions?moduleCard=cd&&tab=PLANS"
         >
           common.exploreAllPlans
         </a>
@@ -270,7 +270,7 @@ exports[`StartTrialTemplate snapshot test should render start a trial by default
           </span>
         </button>
         <a
-          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+          href="/account/undefined/settings/subscriptions?moduleCard=cd&&tab=PLANS"
         >
           common.exploreAllPlans
         </a>
