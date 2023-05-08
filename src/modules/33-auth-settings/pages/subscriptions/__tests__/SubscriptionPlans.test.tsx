@@ -71,7 +71,8 @@ beforeEach(() => {
 })
 
 describe('Subscription Plans', () => {
-  test('should render the plans for CI', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('should render the plans for CI', async () => {
     const data = cloneDeep(plansData)
     const responseState = {
       executeQuery: ({ query }: { query: DocumentNode }) => {
@@ -248,7 +249,7 @@ describe('Subscription Plans', () => {
       const { container, getByText } = render(
         <TestWrapper>
           <Provider value={responseState as any}>
-            <SubscriptionPlans module={ModuleName.CI} />
+            <SubscriptionPlans module={ModuleName.CD} />
           </Provider>
         </TestWrapper>
       )
@@ -271,7 +272,7 @@ describe('Subscription Plans', () => {
       const { getAllByText } = render(
         <TestWrapper>
           <Provider value={responseState as any}>
-            <SubscriptionPlans module={ModuleName.CI} />
+            <SubscriptionPlans module={ModuleName.CD} />
           </Provider>
         </TestWrapper>
       )

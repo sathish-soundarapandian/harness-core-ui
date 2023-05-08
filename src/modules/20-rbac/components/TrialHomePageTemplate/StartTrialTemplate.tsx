@@ -51,7 +51,7 @@ interface StartTrialProps {
     onClick?: () => void
   }
   shouldShowStartTrialModal?: boolean
-  startTrial: () => Promise<ResponseModuleLicenseDTO>
+  startTrial: () => Promise<ResponseModuleLicenseDTO | undefined>
   module: Module
   loading: boolean
 }
@@ -170,7 +170,10 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
     }
   })
 
-  function handleStartTrial(): Promise<ResponseModuleLicenseDTO> {
+  function handleStartTrial(): Promise<ResponseModuleLicenseDTO | undefined> {
+    if (module === 'ci' && !isFreeEnabled) {
+      return Promise.resolve(undefined)
+    }
     return isFreeEnabled ? startFreePlan() : startTrial(startTrialRequestBody)
   }
 

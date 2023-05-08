@@ -127,7 +127,7 @@ const Plan: React.FC<PlanProps> = ({ plan, timeType, module }) => {
             </Layout.Horizontal>
             {getPriceTips({ timeType, plan, textColorClassName })}
           </Layout.Vertical>
-          {getBtns({ isPlanDisabled, btnProps, getString })}
+          {getBtns({ isPlanDisabled, btnProps, getString, module })}
           <Text color={Color.BLACK} padding="large" className={css.desc}>
             {planProps?.desc}
           </Text>
