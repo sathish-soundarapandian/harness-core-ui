@@ -9,7 +9,7 @@ import React, { useState, useEffect } from 'react'
 import type { Column } from 'react-table'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Text, TableV2, Layout, Card, Heading, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
+import { Text, TableV2, Layout, Card, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
 import { String, useStrings, StringKeys } from 'framework/strings'
@@ -212,19 +212,7 @@ export function ServiceLicenseTable({
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-          <Layout.Vertical>
-            <Heading color={Color.BLACK} font={{ size: 'medium' }}>
-              {getString('common.subscriptions.usage.services')}
-            </Heading>
-            <Text
-              color={Color.PRIMARY_7}
-              tooltip={getString('common.subscriptions.usage.cdServiceTooltip')}
-              font={{ size: 'xsmall' }}
-            >
-              {getString('common.whatIsActiveService')}
-            </Text>
-          </Layout.Vertical>
-          <div>
+          <div className={pageCss.exportButtonAlign}>
             {' '}
             <a
               href={`data:text/csv;charset=utf-8,${escape(initialContent || '')}`}
