@@ -104,9 +104,7 @@ export function Nexus3Artifact({
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
-  // const { CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN  = true} = useFeatureFlags()
-
-  const CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN = true
+  const { CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN } = useFeatureFlags()
 
   const [lastQueryData, setLastQueryData] = useState<queryInterface>({ repositoryFormat: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
