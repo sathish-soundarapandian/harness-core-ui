@@ -62,6 +62,7 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     pipelineExecutionDetail?.pipelineExecutionSummary?.failureInfo?.responseMessages,
     []
   )
+
   const errorMessage =
     responseMessages.length > 0
       ? extractInfo(responseMessages)
@@ -86,6 +87,14 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     [orgIdentifier, projectIdentifier, accountId, pipelineIdentifier]
   )
   const stageNode = find(allNodeMap, node => node.setupId === getNodeId || node?.uuid === getNodeId)
+
+  let waitingStepsCount = 0
+
+  Object.keys(allNodeMap).forEach(key => {
+    if (allNodeMap[key].status === 'InputWaiting') {
+      waitingStepsCount++
+    }
+  })
 
   const times = (
     <div className={css.times}>
@@ -248,6 +257,16 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
           <div className={css.errorMsg}>
             <StrTemplate className={css.errorTitle} stringID="errorSummaryText" tagName="div" />
             <Text lineClamp={1}>{errorMessage}</Text>
+          </div>
+        </div>
+      ) : null}
+
+      {waitingStepsCount ? (
+        <div className={css.waitingMsgWrapper}>
+          <ExecutionStatusLabel status={'InputWaiting' as ExecutionStatus} />
+          <div className={css.errorMsg}>
+            <StrTemplate className={css.inputMessage} stringID="pipeline.requireInput" />
+            <div className={css.waitingCount}>{waitingStepsCount}</div>
           </div>
         </div>
       ) : null}

@@ -62,6 +62,7 @@ export function MultiTypeExecutionCondition(props: MultiTypeExecutionConditionPr
         btnClassName={multiType === MultiTypeInputType.FIXED ? multiBtnCss.multiButtonForFixedType : ''}
         multitypeInputValue={multiType}
         disabled={readonly}
+        expressions={expressions}
       />
     </Container>
   )

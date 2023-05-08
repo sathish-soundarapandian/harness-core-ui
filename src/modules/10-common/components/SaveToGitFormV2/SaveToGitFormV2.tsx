@@ -24,6 +24,8 @@ import {
 import { Color } from '@harness/design-system'
 import type { GitSyncEntityDTO, EntityGitDetails } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import AccessTokenCalloutForCommit from '@common/components/AccessTokenCalloutForCommit/AccessTokenCalloutForCommit'
 import { getEntityNameFromType } from '@common/utils/StringUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { StringsMap } from 'stringTypes'
@@ -79,6 +81,7 @@ export interface SaveToGitFormV2Interface {
 const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = props => {
   const { isEditing = false, resource, disableCreatingNewBranch } = props
   const { getString } = useStrings()
+  const { PIE_GITX_OAUTH } = useFeatureFlags()
   const [isNewBranch, setIsNewBranch] = React.useState(false)
   const formikRef = useRef<FormikContextType<SaveToGitFormV2Interface>>()
   const [targetBranch, setTargetBranch] = useState<string>('')
@@ -155,6 +158,10 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
       >
         {getString('common.git.saveResourceLabel', { resource: props.resource.type })}
       </Text>
+
+      {PIE_GITX_OAUTH ? (
+        <AccessTokenCalloutForCommit connectorIdWithScope={resource?.storeMetadata?.connectorRef || ''} />
+      ) : null}
 
       <Container className={css.modalBody}>
         <Formik<SaveToGitFormV2Interface>

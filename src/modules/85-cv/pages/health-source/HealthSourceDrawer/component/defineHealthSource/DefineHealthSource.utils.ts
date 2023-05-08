@@ -131,6 +131,10 @@ export const getConnectorTypeName = (name: HealthSourceTypes): string => {
     case HealthSourceTypes.SumologicMetrics:
       connectorTypeName = Connectors.SUMOLOGIC
       break
+    case HealthSourceTypes.SignalFX:
+    case HealthSourceTypes.SplunkSignalFXMetrics:
+      connectorTypeName = Connectors.SignalFX
+      break
     default:
       connectorTypeName = name
   }
@@ -275,6 +279,16 @@ export const getFeatureOption = (
           label: HealthSourceProducts[HealthSourceTypes.SumologicLogs].label
         }
       ]
+
+    case HealthSourceTypes.SignalFX: {
+      return [
+        {
+          label: HealthSourceProducts[HealthSourceTypes.SignalFX].label,
+          value: HealthSourceProducts[HealthSourceTypes.SignalFX].value
+        }
+      ]
+    }
+
     default:
       return []
   }
@@ -299,6 +313,8 @@ export function getProductBasedOnType(
       return getFeatureOption(Connectors.PROMETHEUS, getString)[0]
     case HealthSourceTypes.Elk:
       return getFeatureOption(HealthSourceTypes.Elk, getString)[0]
+    case HealthSourceTypes.SplunkSignalFXMetrics:
+      return getFeatureOption(Connectors.SignalFX, getString)[0]
     default:
       return { ...currProduct } as SelectOption
   }

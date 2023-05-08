@@ -6,15 +6,53 @@
  */
 
 import React, { ReactElement } from 'react'
-import { Text, Layout, Container, Switch } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { useParams } from 'react-router-dom'
+import { Text, Layout, Container, Switch, useToaster, ButtonVariation } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
+import { Divider, Intent } from '@blueprintjs/core'
+import { useDeleteGitRepo } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
+import { useConfirmAction } from '@common/hooks'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import css from './GitSyncActions.module.scss'
 
 const SettingsMenu = (): ReactElement => {
-  const { getString } = useStrings()
-  const { isGitSyncPaused, handleGitPause, gitSyncLoading, isAutoCommitEnabled, handleAutoCommit } =
+  const { isGitSyncPaused, handleGitPause, gitSyncLoading, isAutoCommitEnabled, handleAutoCommit, refetchGitRepo } =
     useFFGitSyncContext()
+  const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
+  const { getString } = useStrings()
+  const { clear, showError, showSuccess } = useToaster()
+
+  const { mutate: deleteGitRepo } = useDeleteGitRepo({
+    queryParams: { accountIdentifier, orgIdentifier },
+    identifier: projectIdentifier
+  })
+
+  const resetGitSettings = async (): Promise<void> => {
+    clear()
+    try {
+      await deleteGitRepo()
+      refetchGitRepo()
+      showSuccess(getString('cf.gitSync.resetGitSuccess'))
+    } catch {
+      showError(getString('cf.gitSync.resetGitError'))
+    }
+  }
+
+  const confirmResetGit = useConfirmAction({
+    title: getString('cf.gitSync.resetGitSettings'),
+    confirmText: getString('reset'),
+    message: (
+      <Text font={{ variation: FontVariation.BODY }} className={css.confirmationModalText}>
+        {getString('cf.gitSync.resetGitWarning')}
+      </Text>
+    ),
+    intent: Intent.DANGER,
+    action: resetGitSettings
+  })
 
   return (
     <Layout.Vertical padding="medium" spacing="small" flex={{ alignItems: 'flex-start' }}>
@@ -41,6 +79,21 @@ const SettingsMenu = (): ReactElement => {
           disabled={gitSyncLoading || isGitSyncPaused}
         />
         <Text color={Color.BLACK}>{getString('cf.gitSync.autoCommitStatusLabel')}</Text>
+      </Container>
+      <Container width="100%">
+        <Divider />
+      </Container>
+      <Container>
+        <RbacButton
+          variation={ButtonVariation.SECONDARY}
+          onClick={confirmResetGit}
+          text={getString('cf.gitSync.resetGitSettings')}
+          intent={Intent.DANGER}
+          permission={{
+            permission: PermissionIdentifier.UPDATE_PROJECT,
+            resource: { resourceType: ResourceType.PROJECT, resourceIdentifier: projectIdentifier }
+          }}
+        />
       </Container>
     </Layout.Vertical>
   )

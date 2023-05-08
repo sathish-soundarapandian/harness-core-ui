@@ -50,6 +50,7 @@ const renderComponent = (props?: Partial<UseGitSync>): void => {
           handleError: () => Promise.resolve(undefined),
           handleGitPause: () => Promise.resolve(undefined),
           saveWithGit: () => Promise.resolve(undefined),
+          refetchGitRepo: () => Promise.resolve(undefined),
           isAutoCommitEnabled: false,
           isGitSyncActionsEnabled: true,
           isGitSyncEnabled: true,
@@ -81,6 +82,7 @@ describe('GitSyncActions', () => {
     expect(screen.getByText('cf.gitSync.autoCommitStatusLabel')).toBeInTheDocument()
     expect(screen.getByTestId('auto-commit-switch')).toBeInTheDocument()
     expect(screen.getByTestId('auto-commit-switch')).not.toBeChecked()
+    expect(screen.getByRole('button', { name: 'cf.gitSync.resetGitSettings' })).toBeInTheDocument()
   })
 
   test('it should render correctly when auto commit = TRUE', async () => {
@@ -96,6 +98,7 @@ describe('GitSyncActions', () => {
     expect(screen.getByText('cf.gitSync.autoCommitStatusLabel')).toBeInTheDocument()
     expect(screen.getByTestId('auto-commit-switch')).toBeInTheDocument()
     expect(screen.getByTestId('auto-commit-switch')).toBeChecked()
+    expect(screen.getByRole('button', { name: 'cf.gitSync.resetGitSettings' })).toBeInTheDocument()
   })
 
   test('it should render correctly when gitSyncPaused = FALSE', async () => {
@@ -172,12 +175,6 @@ describe('GitSyncActions', () => {
     expect(handleGitPauseMock).toBeCalledWith(false)
   })
 
-  test('it should show Git sync spinner when loading', async () => {
-    renderComponent({ gitSyncLoading: true })
-
-    expect(screen.getByTestId('git-sync-spinner')).toBeInTheDocument()
-  })
-
   test('it should render the button to Setup Git Sync when isGitSyncActionsEnabled is FALSE', async () => {
     renderComponent({ isGitSyncEnabled: false, isGitSyncActionsEnabled: false })
 
@@ -190,5 +187,23 @@ describe('GitSyncActions', () => {
 
     expect(screen.queryByRole('button', { name: 'cf.featureFlags.setupGitSync' })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'test branch settings' })).toBeInTheDocument()
+  })
+
+  test('it should show confirmation modal on click of Reset Git Settings button', async () => {
+    renderComponent({ isGitSyncEnabled: true })
+
+    const settingsButton = screen.getByRole('button', { name: 'test branch settings' })
+    expect(settingsButton).toBeInTheDocument()
+
+    // open settings menu
+    userEvent.click(settingsButton)
+
+    const resetButton = screen.getByRole('button', { name: 'cf.gitSync.resetGitSettings' })
+    expect(resetButton).toBeInTheDocument()
+
+    userEvent.click(resetButton)
+
+    // confirmation modal
+    expect(screen.getByText('cf.gitSync.resetGitWarning')).toBeInTheDocument()
   })
 })

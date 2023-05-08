@@ -17,11 +17,18 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { ALLOWED_VALUES_TYPE } from '@common/components/ConfigureOptions/constants'
-import type { HttpStepFormData, HttpStepData, HttpStepHeaderConfig, HttpStepOutputVariable } from './types'
+import type {
+  HttpStepFormData,
+  HttpStepData,
+  HttpStepHeaderConfig,
+  HttpStepInputVariable,
+  HttpStepOutputVariable
+} from './types'
 import { httpStepType } from './HttpStepBase'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -42,6 +49,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { expressions } = useVariablesExpression()
+  const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
 
   return (
     <React.Fragment>
@@ -51,7 +59,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
           name={`${prefix}timeout`}
           multiTypeDurationProps={{
             configureOptionsProps: {
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
             },
             expressions,
             disabled: readonly,
@@ -74,7 +82,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             allowableTypes
           }}
           configureOptionsProps={{
-            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType),
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep,
             allowedValuesType: ALLOWED_VALUES_TYPE.URL
           }}
           fieldPath={'spec.url'}
@@ -95,7 +103,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             disabled: readonly,
             allowableTypes
           }}
-          configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
+          configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep }}
           disabled={readonly}
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
@@ -108,7 +116,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             name={`${prefix}spec.requestBody`}
             multiTypeTextArea={{
               configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
               },
               expressions,
               disabled: readonly,
@@ -118,6 +126,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
           />
         </div>
       ) : null}
+
       {getMultiTypeFromValue(template?.spec?.assertion) === MultiTypeInputType.RUNTIME ? (
         <TextFieldInputSetView
           label={getString('assertionLabel')}
@@ -128,12 +137,43 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             disabled: readonly,
             allowableTypes
           }}
-          configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
+          configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep }}
           fieldPath={'spec.assertion'}
           template={template}
           className={cx(stepCss.formGroup, stepCss.md)}
         />
       ) : null}
+      {getMultiTypeFromValue(template?.spec?.certificate) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <MultiTypeSecretInput
+            expressions={expressions}
+            allowableTypes={allowableTypes}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+            }}
+            name={`${prefix}spec.certificate`}
+            label={getString('common.certificate')}
+            disabled={readonly}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(template?.spec?.certificateKey) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <MultiTypeSecretInput
+            expressions={expressions}
+            allowableTypes={allowableTypes}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+            }}
+            name={`${prefix}spec.certificateKey`}
+            label={getString('pipeline.utilitiesStep.certificateKey')}
+            disabled={readonly}
+          />
+        </div>
+      )}
+
       {isArray(template?.spec?.headers) && template?.spec?.headers ? (
         <div className={stepCss.formGroup}>
           <MultiTypeFieldSelector
@@ -141,6 +181,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             label={getString('common.headers')}
             defaultValueToReset={[]}
             disableTypeSelection
+            tooltipProps={{ dataTooltipId: 'httpStepHeaders' }}
           >
             <FieldArray
               name="spec.headers"
@@ -148,8 +189,8 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
                 return (
                   <div className={css.panel}>
                     <div className={css.headerRow}>
-                      <span className={css.label}>Key</span>
-                      <span className={css.label}>Value</span>
+                      <span className={css.label}>{getString('keyLabel')}</span>
+                      <span className={css.label}>{getString('valueLabel')}</span>
                     </div>
                     {template.spec.headers.map(({ key }: HttpStepHeaderConfig, i: number) => (
                       <div className={css.headerRow} key={key}>
@@ -178,12 +219,67 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
           </MultiTypeFieldSelector>
         </div>
       ) : null}
+
+      {isArray(template?.spec?.inputVariables) && template?.spec?.inputVariables ? (
+        <div className={stepCss.formGroup}>
+          <MultiTypeFieldSelector
+            name={`${prefix}spec.inputVariables`}
+            label={getString('common.input')}
+            disableTypeSelection
+            tooltipProps={{ dataTooltipId: 'httpStepInputVariables' }}
+          >
+            <FieldArray
+              name={`${prefix}spec.inputVariables`}
+              render={() => {
+                return (
+                  <div className={css.panel}>
+                    <div className={css.responseMappingRow}>
+                      <span className={css.label}>{getString('variableNameLabel')}</span>
+                      <span className={css.label}>{getString('valueLabel')}</span>
+                    </div>
+                    {((template.spec.inputVariables as HttpStepInputVariable[]) || []).map(
+                      ({ id }: HttpStepInputVariable, i: number) => (
+                        <div className={css.responseMappingRow} key={id}>
+                          <FormInput.Text
+                            name={`${prefix}spec.inputVariables[${i}].name`}
+                            placeholder={getString('name')}
+                            disabled={true}
+                          />
+                          <TextFieldInputSetView
+                            name={`${prefix}spec.inputVariables[${i}].value`}
+                            multiTextInputProps={{
+                              allowableTypes,
+                              expressions,
+                              disabled: readonly,
+                              defaultValueToReset: ''
+                            }}
+                            label=""
+                            placeholder={getString('valueLabel')}
+                            fieldPath={`spec.inputVariables[${i}].value`}
+                            template={template}
+                            enableConfigureOptions
+                            configureOptionsProps={{
+                              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+                            }}
+                          />
+                        </div>
+                      )
+                    )}
+                  </div>
+                )
+              }}
+            />
+          </MultiTypeFieldSelector>
+        </div>
+      ) : null}
+
       {isArray(template?.spec?.outputVariables) && template?.spec?.outputVariables ? (
         <div className={stepCss.formGroup}>
           <MultiTypeFieldSelector
             name={`${prefix}spec.outputVariables`}
             label={getString('outputLabel')}
             disableTypeSelection
+            tooltipProps={{ dataTooltipId: 'httpStepOutputVariables' }}
           >
             <FieldArray
               name={`${prefix}spec.outputVariables`}
@@ -191,8 +287,8 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
                 return (
                   <div className={css.panel}>
                     <div className={css.responseMappingRow}>
-                      <span className={css.label}>Variable Name</span>
-                      <span className={css.label}>Value</span>
+                      <span className={css.label}>{getString('variableNameLabel')}</span>
+                      <span className={css.label}>{getString('valueLabel')}</span>
                     </div>
                     {((template.spec.outputVariables as HttpStepOutputVariable[]) || []).map(
                       ({ id }: HttpStepOutputVariable, i: number) => (
@@ -202,16 +298,22 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
                             placeholder={getString('name')}
                             disabled={true}
                           />
-                          <FormInput.MultiTextInput
+                          <TextFieldInputSetView
                             name={`${prefix}spec.outputVariables[${i}].value`}
-                            placeholder={getString('valueLabel')}
-                            disabled={readonly}
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly
+                              disabled: readonly,
+                              defaultValueToReset: ''
                             }}
                             label=""
+                            placeholder={getString('valueLabel')}
+                            fieldPath={`spec.outputVariables[${i}].value`}
+                            template={template}
+                            enableConfigureOptions
+                            configureOptionsProps={{
+                              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+                            }}
                           />
                         </div>
                       )

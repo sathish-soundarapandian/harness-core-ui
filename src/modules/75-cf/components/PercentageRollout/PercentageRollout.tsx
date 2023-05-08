@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { CSSProperties, FC, useMemo } from 'react'
+import React, { FC, useMemo } from 'react'
 import { Container, FormInput, Layout, SelectOption, Text } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Segment, Variation } from 'services/cf'
-import { CFVariationColors } from '@cf/constants'
+import { CFVariationColorsColorRef } from '@cf/constants'
 import { FeatureFlagBucketBy } from '@cf/utils/CFUtils'
 import DistributionBar, { DistributionSegment } from './DistributionBar'
 
@@ -123,17 +123,25 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
         <div>{total}%</div>
 
         {variations.map((variation, index) => {
-          const iconColor = { '--variationColor': CFVariationColors[index % CFVariationColors.length] } as CSSProperties
-
           return (
-            <div className={css.variationRow} style={iconColor} key={variation.identifier}>
+            <div className={css.variationRow} key={variation.identifier}>
               <FormInput.Text
                 inline
                 name={prefix(`variations[${index}].weight`)}
-                label={variation.name || variation.identifier}
+                aria-label={variation.name || variation.identifier}
                 inputGroup={{ type: 'number', max: 100, min: 0 }}
                 disabled={disabled}
               />
+              <Text
+                padding={{ left: 'medium' }}
+                inline
+                icon="full-circle"
+                iconProps={{ color: CFVariationColorsColorRef[index % CFVariationColorsColorRef.length] }}
+                color={Color.GREY_600}
+                font={{ variation: FontVariation.FORM_INPUT_TEXT }}
+              >
+                {variation.name || variation.identifier}
+              </Text>
             </div>
           )
         })}

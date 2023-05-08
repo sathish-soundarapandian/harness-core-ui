@@ -27,6 +27,7 @@ const mockGitSync: UseGitSync = {
   handleError: jest.fn(),
   saveWithGit: jest.fn(),
   handleAutoCommit: jest.fn(),
+  refetchGitRepo: jest.fn(),
   getGitSyncFormMeta: jest.fn(() => ({
     gitSyncInitialValues: {
       gitDetails: {

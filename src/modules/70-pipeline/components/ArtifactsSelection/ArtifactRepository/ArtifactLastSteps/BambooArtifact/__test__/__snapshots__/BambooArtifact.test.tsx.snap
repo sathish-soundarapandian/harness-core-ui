@@ -76,7 +76,7 @@ exports[`Bamboo Artifact tests onclick of previous button 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.planKey"
                   >
-                    pipeline.bamboo.planName
+                    pipeline.bamboo.planKey
                   </span>
                    
                   <span
@@ -601,7 +601,7 @@ exports[`Bamboo Artifact tests renders fine for the NEW artifact 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.planKey"
                   >
-                    pipeline.bamboo.planName
+                    pipeline.bamboo.planKey
                   </span>
                    
                   <span
@@ -1032,7 +1032,7 @@ exports[`Bamboo Artifact tests renders fine on the edit mode with all fixed valu
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.planKey"
                   >
-                    pipeline.bamboo.planName
+                    pipeline.bamboo.planKey
                   </span>
                    
                   <span
@@ -1529,7 +1529,7 @@ exports[`Bamboo Artifact tests renders fine on the edit mode with runtime values
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.planKey"
                   >
-                    pipeline.bamboo.planName
+                    pipeline.bamboo.planKey
                   </span>
                    
                   <span

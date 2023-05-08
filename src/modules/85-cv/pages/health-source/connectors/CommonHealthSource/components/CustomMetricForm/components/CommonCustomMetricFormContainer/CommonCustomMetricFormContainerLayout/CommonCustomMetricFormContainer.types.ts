@@ -14,3 +14,9 @@ export interface CommonCustomMetricFormContainerProps {
   isConnectorRuntimeOrExpression?: boolean
   healthSourceConfig: HealthSourceConfig
 }
+
+export interface RecordProps {
+  isRecordsLoading?: boolean
+  isQueryRecordsAvailable?: boolean
+  sampleRecords: Record<string, any>[]
+}

@@ -285,7 +285,7 @@ export default function OptionalConfiguration(props: {
   )
 }
 
-function OptionalVariables({
+export function OptionalVariables({
   variablePath,
   allowableTypes,
   readonly

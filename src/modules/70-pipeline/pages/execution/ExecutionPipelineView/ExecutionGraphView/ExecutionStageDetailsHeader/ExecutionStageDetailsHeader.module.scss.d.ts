@@ -10,6 +10,7 @@ declare const styles: {
   readonly errorMsg: string
   readonly errorMsgWrapper: string
   readonly errorTitle: string
+  readonly inputMessage: string
   readonly lhs: string
   readonly main: string
   readonly moreInfo: string
@@ -19,5 +20,7 @@ declare const styles: {
   readonly timeDisplay: string
   readonly timeLabel: string
   readonly times: string
+  readonly waitingCount: string
+  readonly waitingMsgWrapper: string
 }
 export default styles

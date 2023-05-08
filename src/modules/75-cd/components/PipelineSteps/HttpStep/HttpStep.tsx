@@ -124,15 +124,10 @@ export class HttpStep extends PipelineStep<HttpStepData> {
     }
 
     /* istanbul ignore else */
-    if ((isArray(template?.spec?.headers) || isArray(template?.spec?.outputVariables)) && getString) {
+    if (isArray(template?.spec?.headers) && getString) {
       const schema = Yup.object().shape({
         spec: Yup.object().shape({
           headers: Yup.array().of(
-            Yup.object().shape({
-              value: Yup.string().required(getString('common.validation.valueIsRequired'))
-            })
-          ),
-          outputVariables: Yup.array().of(
             Yup.object().shape({
               value: Yup.string().required(getString('common.validation.valueIsRequired'))
             })
@@ -220,6 +215,17 @@ export class HttpStep extends PipelineStep<HttpStepData> {
             : forInpuSet
             ? undefined
             : [],
+        inputVariables:
+          getMultiTypeFromValue(initialValues.spec?.inputVariables as string) === MultiTypeInputType.RUNTIME
+            ? (initialValues.spec?.inputVariables as string)
+            : Array.isArray(initialValues.spec?.inputVariables)
+            ? initialValues.spec.inputVariables.map((variable: StringNGVariable) => ({
+                ...variable,
+                id: uuid()
+              }))
+            : forInpuSet
+            ? undefined
+            : [],
         outputVariables:
           getMultiTypeFromValue(initialValues.spec?.outputVariables as string) === MultiTypeInputType.RUNTIME
             ? (initialValues.spec?.outputVariables as string)
@@ -249,13 +255,17 @@ export class HttpStep extends PipelineStep<HttpStepData> {
                 .filter((variable: HttpStepHeaderConfig) => variable.value)
                 .map(({ id, ...header }: HttpStepHeaderConfig) => header)
             : undefined,
+        inputVariables:
+          getMultiTypeFromValue(data.spec.inputVariables as string) === MultiTypeInputType.RUNTIME
+            ? (data.spec.inputVariables as string)
+            : Array.isArray(data.spec.inputVariables)
+            ? data.spec.inputVariables.map(({ id, ...variable }: HttpStepOutputVariable) => variable)
+            : undefined,
         outputVariables:
           getMultiTypeFromValue(data.spec.outputVariables as string) === MultiTypeInputType.RUNTIME
             ? (data.spec.outputVariables as string)
             : Array.isArray(data.spec.outputVariables)
-            ? data.spec.outputVariables
-                .filter((variable: HttpStepOutputVariable) => variable.value)
-                .map(({ id, ...variable }: HttpStepOutputVariable) => variable)
+            ? data.spec.outputVariables.map(({ id, ...variable }: HttpStepOutputVariable) => variable)
             : undefined
       }
     }

@@ -16,6 +16,7 @@ export interface StringsMap {
   'common.HelmChartLabel': string
   'common.ID': string
   'common.My': string
+  'common.OAuthTryAgain': string
   'common.OFF': string
   'common.ON': string
   'common.OverUse': string
@@ -157,6 +158,7 @@ export interface StringsMap {
   'common.clickToKnowMore': string
   'common.clientId': string
   'common.clientSecret': string
+  'common.cloudSpendsIn': string
   'common.cluster': string
   'common.clusterName': string
   'common.clusters': string
@@ -363,6 +365,7 @@ export interface StringsMap {
   'common.filters.unsavedFilter': string
   'common.findOutMore': string
   'common.firstGeneration': string
+  'common.for': string
   'common.forcedDeleteLabel': string
   'common.forcedDeleteWarning': string
   'common.freezeActiveBannerTextPrefix': string
@@ -635,7 +638,6 @@ export interface StringsMap {
   'common.moduleList.optimize': string
   'common.moduleList.optimizeProcesses': string
   'common.moduleList.title': string
-  'common.moduleOverviewLabel.ce': string
   'common.moduleOverviewLabel.chaos': string
   'common.moduleOverviewLabel.cv': string
   'common.moduleOverviewLabel.ff': string
@@ -686,10 +688,17 @@ export interface StringsMap {
   'common.notification': string
   'common.notificationPreferences': string
   'common.oAuth.accessRevoked': string
+  'common.oAuth.accessTokenAlredyAdded': string
+  'common.oAuth.accessTokenCreateSuccess': string
   'common.oAuth.configured': string
+  'common.oAuth.connectToGitProviderLabel': string
+  'common.oAuth.connectToGitProviderPlaceholder': string
   'common.oAuth.failed': string
+  'common.oAuth.fetchingUserAccessTokens': string
   'common.oAuth.inProgress': string
   'common.oAuth.reConfigured': string
+  'common.oAuth.setUpUserAccessTokenMessage': string
+  'common.oAuth.usingUserAccessTokens': string
   'common.oAuthLabel': string
   'common.occurrence.oneTime': string
   'common.occurrence.recurring': string
@@ -3237,6 +3246,9 @@ export interface StringsMap {
   'auditTrail.streamingDestinations': string
   'auditTrail.supplementaryDetails': string
   'auditTrail.yamlDifference': string
+  'userProfile.accessTokenDeleteFailure': string
+  'userProfile.accessTokenDeleteSuccess': string
+  'userProfile.accessTokensForGitProviders': string
   'userProfile.addSCM': string
   'userProfile.awsCredentials': string
   'userProfile.basicInformation': string
@@ -3244,6 +3256,7 @@ export interface StringsMap {
   'userProfile.changePassword': string
   'userProfile.confirmDelete': string
   'userProfile.confirmDeleteTitle': string
+  'userProfile.confirmDeleteV2': string
   'userProfile.confirmPassword': string
   'userProfile.currentPassword': string
   'userProfile.editProfile': string
@@ -3254,6 +3267,7 @@ export interface StringsMap {
   'userProfile.newPassword': string
   'userProfile.newPasswordShouldMeetTheRequirements': string
   'userProfile.newPasswordShouldNotBeCurrentPassword': string
+  'userProfile.noAccessTokenLabel': string
   'userProfile.passwordChangedSuccessfully': string
   'userProfile.passwordMatch': string
   'userProfile.passwordMustBeBetweenMinAndMax': string
@@ -3795,6 +3809,7 @@ export interface StringsMap {
   'pipeline.azureWebApp.strategy.basic': string
   'pipeline.azureWebApp.strategy.blueGreen': string
   'pipeline.azureWebApp.strategy.canary': string
+  'pipeline.bamboo.planKey': string
   'pipeline.bamboo.planName': string
   'pipeline.bambooBuilds': string
   'pipeline.bambooStep.addPlanParameters': string
@@ -4238,6 +4253,7 @@ export interface StringsMap {
   'pipeline.gitPullRequestNumber': string
   'pipeline.gitRepo': string
   'pipeline.guidedCDK8sGetStarted': string
+  'pipeline.httpStep.validation.certificate': string
   'pipeline.iacm.resourceStack': string
   'pipeline.iacm.workflow': string
   'pipeline.imagePathHelperText': string
@@ -4673,6 +4689,7 @@ export interface StringsMap {
   'pipeline.replacedExpressions': string
   'pipeline.repositoryPlaceholder': string
   'pipeline.repositoryUrlPlaceholder': string
+  'pipeline.requireInput': string
   'pipeline.requiredToFetch': string
   'pipeline.resilienceTab.title': string
   'pipeline.resourceConstraints.currentlyExecuting': string
@@ -5076,6 +5093,7 @@ export interface StringsMap {
   'pipeline.unsupportedImagesWarning': string
   'pipeline.utilitiesStep.assertion': string
   'pipeline.utilitiesStep.cc': string
+  'pipeline.utilitiesStep.certificateKey': string
   'pipeline.utilitiesStep.requestBody': string
   'pipeline.utilitiesStep.subject': string
   'pipeline.utilitiesStep.to': string
@@ -7770,8 +7788,13 @@ export interface StringsMap {
   'cf.gitSync.gitServiceApiError': string
   'cf.gitSync.goToGit': string
   'cf.gitSync.invalidYaml': string
+  'cf.gitSync.resetGitError': string
+  'cf.gitSync.resetGitSettings': string
+  'cf.gitSync.resetGitSuccess': string
+  'cf.gitSync.resetGitWarning': string
   'cf.gitSync.saveFlagToGit': string
   'cf.gitSync.setUpGitConnection': string
+  'cf.gitSync.setUpGitSuccess': string
   'cf.gitSync.syncingPaused': string
   'cf.gitSync.toggleGitSyncPause': string
   'cf.gitSync.turnOffGitAndContinue': string

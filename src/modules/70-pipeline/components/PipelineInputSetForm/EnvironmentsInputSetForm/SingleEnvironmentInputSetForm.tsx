@@ -137,7 +137,12 @@ export default function SingleEnvironmentInputSetForm({
           onUpdate={data => {
             formik.setFieldValue(
               `${path}.environment`,
-              omit(get(data, 'environment'), ['envIdForValues', 'deployToAll'])
+              // only omit 'deployToAll' in case of single infrastructure
+              // as 'deployToAll' would be set to false in that case
+              omit(
+                get(data, 'environment'),
+                deploymentStage?.gitOpsEnabled ? ['envIdForValues'] : ['envIdForValues', 'deployToAll']
+              )
             )
 
             setIsEnvironmentLoading(false)

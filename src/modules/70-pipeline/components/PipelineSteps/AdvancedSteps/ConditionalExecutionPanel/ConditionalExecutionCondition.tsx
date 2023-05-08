@@ -79,7 +79,7 @@ export default function ConditionalExecutionCondition(props: ConditionalExecutio
       <Container padding={{ top: 'small', left: 'large' }}>
         <MultiTypeExecutionCondition
           path={`${path}.condition`}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
           isInputDisabled={isInputDisabled}
           multiType={multiType}
           setMultiType={setMultiType}

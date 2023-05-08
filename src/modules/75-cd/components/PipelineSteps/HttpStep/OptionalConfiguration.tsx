@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { FieldArray, FormikProps } from 'formik'
+import { FieldArray, FormikProps, useFormikContext } from 'formik'
+import { get } from 'lodash-es'
 import {
   AllowedTypes,
   Button,
@@ -21,8 +22,11 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { useStrings } from 'framework/strings'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import type { HttpStepFormData, HttpStepHeaderConfig, HttpStepOutputVariable } from './types'
+import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import type { HttpStepFormData, HttpStepHeaderConfig, HttpStepInputVariable, HttpStepOutputVariable } from './types'
+import { OptionalVariables } from '../ShellScriptStep/OptionalConfiguration'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './HttpStep.module.scss'
 
@@ -33,6 +37,7 @@ export default function OptionalConfiguration(props: {
 }): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { CDS_HTTP_STEP_NG_CERTIFICATE } = useFeatureFlags()
   const {
     formik: { values: formValues, setFieldValue },
     readonly,
@@ -63,6 +68,32 @@ export default function OptionalConfiguration(props: {
           />
         )}
       </div>
+      {CDS_HTTP_STEP_NG_CERTIFICATE && (
+        <>
+          <div className={stepCss.formGroup}>
+            <MultiTypeSecretInput
+              name="spec.certificate"
+              label={getString('common.certificate')}
+              expressions={expressions}
+              allowableTypes={allowableTypes}
+              disabled={readonly}
+              enableConfigureOptions={true}
+              isOptional
+            />
+          </div>
+          <div className={stepCss.formGroup}>
+            <MultiTypeSecretInput
+              name="spec.certificateKey"
+              label={getString('pipeline.utilitiesStep.certificateKey')}
+              expressions={expressions}
+              allowableTypes={allowableTypes}
+              disabled={readonly}
+              enableConfigureOptions={true}
+              isOptional
+            />
+          </div>
+        </>
+      )}
       <div className={stepCss.formGroup}>
         <MultiTypeFieldSelector
           name="spec.headers"
@@ -71,6 +102,7 @@ export default function OptionalConfiguration(props: {
           optionalLabel={getString('common.optionalLabel')}
           defaultValueToReset={[{ name: '', type: 'String', value: '', id: uuid() }]}
           disableTypeSelection
+          tooltipProps={{ dataTooltipId: 'httpStepHeaders' }}
         >
           <FieldArray
             name="spec.headers"
@@ -125,67 +157,100 @@ export default function OptionalConfiguration(props: {
         </MultiTypeFieldSelector>
       </div>
       <div className={stepCss.formGroup}>
-        <MultiTypeFieldSelector
-          name="spec.outputVariables"
-          label={getString('outputLabel')}
-          isOptional
-          optionalLabel={getString('common.optionalLabel')}
-          disableTypeSelection
-        >
-          <FieldArray
-            name="spec.outputVariables"
-            render={({ push, remove }) => {
-              return (
-                <div className={css.panel}>
-                  <div className={css.responseMappingRow}>
-                    <span className={css.label}>Variable Name</span>
-                    <span className={css.label}>Value</span>
-                  </div>
-                  {((formValues.spec.outputVariables as HttpStepOutputVariable[]) || []).map(
-                    ({ id }: HttpStepOutputVariable, i: number) => (
-                      <div className={css.responseMappingRow} key={id}>
-                        <FormInput.Text
-                          name={`spec.outputVariables[${i}].name`}
-                          placeholder={getString('name')}
-                          disabled={readonly}
-                        />
-                        <FormInput.MultiTextInput
-                          name={`spec.outputVariables[${i}].value`}
-                          placeholder={getString('valueLabel')}
-                          disabled={readonly}
-                          multiTextInputProps={{
-                            allowableTypes: allowableTypes,
-                            expressions,
-                            disabled: readonly
-                          }}
-                          label=""
-                        />
-                        <Button
-                          variation={ButtonVariation.ICON}
-                          icon="main-trash"
-                          data-testid={`remove-response-mapping-${i}`}
-                          onClick={() => remove(i)}
-                          disabled={readonly}
-                        />
-                      </div>
-                    )
-                  )}
-                  <Button
-                    icon="plus"
-                    variation={ButtonVariation.LINK}
-                    data-testid="add-response-mapping"
-                    onClick={() => push({ name: '', value: '', type: 'String', id: uuid() })}
-                    disabled={readonly}
-                    className={css.addButton}
-                  >
-                    {getString('add')}
-                  </Button>
-                </div>
-              )
-            }}
-          />
-        </MultiTypeFieldSelector>
+        <InputOutputVariablesFieldSelector
+          fieldName={'spec.inputVariables'}
+          fieldLabel={getString('common.input')}
+          dataTooltipId="httpStepInputVariables"
+          allowableTypes={allowableTypes}
+          readonly={readonly}
+          type="input"
+        />
+      </div>
+      <div className={stepCss.formGroup}>
+        <InputOutputVariablesFieldSelector
+          fieldName={'spec.outputVariables'}
+          fieldLabel={getString('outputLabel')}
+          dataTooltipId="httpStepOutputVariables"
+          allowableTypes={allowableTypes}
+          readonly={readonly}
+          type="output"
+        />
       </div>
     </div>
+  )
+}
+
+function InputOutputVariablesFieldSelector<T extends HttpStepInputVariable | HttpStepOutputVariable>({
+  fieldName,
+  fieldLabel,
+  dataTooltipId,
+  allowableTypes,
+  type,
+  readonly
+}: {
+  fieldName: string
+  fieldLabel: string
+  dataTooltipId: string
+  allowableTypes: AllowedTypes
+  type: 'input' | 'output'
+  readonly?: boolean
+}): React.ReactElement {
+  const { getString } = useStrings()
+  const { values: formValues } = useFormikContext()
+
+  return (
+    <MultiTypeFieldSelector
+      name={fieldName}
+      label={fieldLabel}
+      isOptional
+      optionalLabel={getString('common.optionalLabel')}
+      disableTypeSelection
+      tooltipProps={{ dataTooltipId }}
+    >
+      <FieldArray
+        name={fieldName}
+        render={({ push, remove }) => {
+          return (
+            <div className={css.panel}>
+              <div className={css.responseMappingRow}>
+                <span className={css.label}>Variable Name</span>
+                <span className={css.label}>Value</span>
+              </div>
+              {get(formValues, fieldName, []).map(({ id }: T, i: number) => (
+                <div className={css.responseMappingRow} key={id}>
+                  <FormInput.Text
+                    name={`${fieldName}[${i}].name`}
+                    placeholder={getString('name')}
+                    disabled={readonly}
+                  />
+                  <OptionalVariables
+                    allowableTypes={allowableTypes}
+                    readonly={readonly}
+                    variablePath={`${fieldName}[${i}].value`}
+                  />
+                  <Button
+                    variation={ButtonVariation.ICON}
+                    icon="main-trash"
+                    data-testid={`remove-${type}-response-mapping-${i}`}
+                    onClick={() => remove(i)}
+                    disabled={readonly}
+                  />
+                </div>
+              ))}
+              <Button
+                icon="plus"
+                variation={ButtonVariation.LINK}
+                data-testid={`add-${type}-response-mapping`}
+                onClick={() => push({ name: '', value: '', type: 'String', id: uuid() })}
+                disabled={readonly}
+                className={css.addButton}
+              >
+                {getString('add')}
+              </Button>
+            </div>
+          )
+        }}
+      />
+    </MultiTypeFieldSelector>
   )
 }

@@ -12,7 +12,10 @@ import css from './RequirementCard.module.scss'
 export enum Features {
   VISIBILITY,
   OPTIMIZATION,
-  BILLING
+  BILLING,
+  GOVERNANCE,
+  COMMITMENT_ORCHESTRATOR,
+  CLUSTER_ORCHESTRATOR
 }
 
 export type FeaturesString = keyof typeof Features

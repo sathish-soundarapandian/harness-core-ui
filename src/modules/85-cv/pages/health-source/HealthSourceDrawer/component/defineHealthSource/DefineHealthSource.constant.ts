@@ -57,6 +57,10 @@ export const HEALTHSOURCE_LIST = [
   {
     name: HealthSourceTypes.SumoLogic,
     icon: getConnectorIconByType(Connectors.SUMOLOGIC)
+  },
+  {
+    name: HealthSourceTypes.SignalFX,
+    icon: getConnectorIconByType(Connectors.SignalFX)
   }
 ]
 
@@ -71,6 +75,11 @@ export const DynatraceProductNames = {
 export const SplunkProduct = {
   SPLUNK_LOGS: 'Splunk Cloud Logs',
   SPLUNK_METRICS: 'Splunk Metric'
+}
+
+export const SignalFX = {
+  SIGNALFX_METRICS_DISPLAY_NAME: 'SignalFX Metrics',
+  SIGNALFX_METRICS: 'SplunkSignalFXMetrics'
 }
 
 export const ElkProduct = {

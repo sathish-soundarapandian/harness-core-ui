@@ -123,6 +123,15 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
     }
   }
 
+  const recordProps = useMemo(
+    () => ({
+      isRecordsLoading: fetchingSampleRecordLoading,
+      isQueryRecordsAvailable: isDataAvailableForLogsTable,
+      sampleRecords: records
+    }),
+    [fetchingSampleRecordLoading, isDataAvailableForLogsTable, records]
+  )
+
   return (
     <Container key={values?.identifier} padding={'small'} margin={'small'}>
       {queryField ? (
@@ -142,7 +151,6 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
         query={query}
         dataTooltipId={'healthSourceQuery'}
         isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
-        // Refactor this after passing healthSourceConfig in context
         querySectionTitle={getString(
           healthSourceConfig?.customMetrics?.queryAndRecords?.titleStringKey ||
             'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle'
@@ -180,10 +188,8 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
             continuousVerification: Boolean(continuousVerification)
           }}
           riskProfileResponse={riskProfileResponse}
-          hideCV={healthSourceConfig.customMetrics?.assign?.hideCV}
-          hideServiceIdentifier={healthSourceConfig.customMetrics?.assign?.hideServiceIdentifier}
-          hideSLIAndHealthScore={healthSourceConfig.customMetrics?.assign?.hideSLIAndHealthScore}
-          defaultServiceInstance={healthSourceConfig.customMetrics?.assign?.defaultServiceInstance}
+          healthSourceConfig={healthSourceConfig}
+          recordProps={recordProps}
         />
       )}
     </Container>

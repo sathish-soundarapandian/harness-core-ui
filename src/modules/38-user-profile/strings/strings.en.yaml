@@ -1,4 +1,5 @@
 mysourceCodeManagers: My Source Code Managers
+accessTokensForGitProviders: Access token for Git providers
 basicInformation: Basic Information
 changePassword: Change Password
 passwordReqs: 'Password must meet the requirements.'
@@ -23,14 +24,18 @@ plusSCM: + Add a Source Code Manager
 selectSCM: Select a Source Code Manager
 selectedSCM: Selected Source Code Manager
 editProfile: Edit Profile
+noAccessTokenLabel: No access token for any git provider found for the current user.
 scmCreateSuccess: Source Code Manager added successfully
 scmUpdateSuccess: Source Code Manager updated successfully
 scmCreateFail: Could not add your Source Code Manager
 scmUpdateFail: Could not update your Source Code Manager
 scmDeleteSuccess: Source Code Manager "{{ name }}" deleted successfully
 scmDeleteFailure: Could not delete Source Code Manager "{{ name }}"
+accessTokenDeleteSuccess: Access token deleted successfully
+accessTokenDeleteFailure: Could not delete access token
 confirmDeleteTitle: Delete Source Code Manager
 confirmDelete: Are you sure you want to delete the Source Code Manager "{{ name }}"
+confirmDeleteV2: Are you sure you want to delete the Source Code Manager for [{{ type }}]
 userEditSuccess: User details updated successfully
 userEditFail: Could not update user details
 awsCredentials: AWS Credentials

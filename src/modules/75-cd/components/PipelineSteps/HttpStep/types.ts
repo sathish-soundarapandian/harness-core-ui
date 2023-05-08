@@ -12,6 +12,10 @@ export interface HttpStepHeaderConfig extends HttpHeaderConfig {
   id: string
 }
 
+export interface HttpStepInputVariable extends StringNGVariable {
+  id: string
+}
+
 export interface HttpStepOutputVariable extends StringNGVariable {
   id: string
 }

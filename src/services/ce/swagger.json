@@ -13,10 +13,16 @@
       "name": "bi-dashboards"
     },
     {
+      "name": "budgetGroups"
+    },
+    {
       "name": "budgets"
     },
     {
       "name": "business-mapping"
+    },
+    {
+      "name": "active-spend"
     },
     {
       "name": "testconnection"
@@ -29,6 +35,9 @@
     },
     {
       "name": "notification"
+    },
+    {
+      "name": "overview"
     },
     {
       "name": "license-util"
@@ -55,6 +64,12 @@
       "name": "costdetails"
     },
     {
+      "name": "currency-preference"
+    },
+    {
+      "name": "governance"
+    },
+    {
       "name": "perspective-custom-field"
     },
     {
@@ -71,6 +86,12 @@
     },
     {
       "name": "recommendationoverview"
+    },
+    {
+      "name": "recommendationjira"
+    },
+    {
+      "name": "recommendationignore-list"
     },
     {
       "name": "filters"
@@ -326,6 +347,245 @@
         }
       }
     },
+    "/budgetGroups/summary": {
+      "get": {
+        "tags": ["budgetGroups"],
+        "summary": "Get list of budget and budget group summaries",
+        "description": "",
+        "operationId": "budgetAndBudgetGroupsList",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "budgetGroupId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "showAllEntities",
+            "in": "query",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListBudgetSummary"
+            }
+          }
+        }
+      }
+    },
+    "/budgetGroups/aggregatedAmount": {
+      "post": {
+        "tags": ["budgetGroups"],
+        "summary": "Get aggregated amount for given budget groups/budgets",
+        "description": "",
+        "operationId": "aggregatedAmount",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "areChildEntitiesBudgets",
+            "in": "query",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListValueDataPoint"
+            }
+          }
+        }
+      }
+    },
+    "/budgetGroups/{id}": {
+      "get": {
+        "tags": ["budgetGroups"],
+        "summary": "Get budget group",
+        "description": "",
+        "operationId": "getBudgetGroup",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBudgetGroup"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["budgetGroups"],
+        "summary": "Update budget group",
+        "description": "",
+        "operationId": "updateBudgetGroup",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/BudgetGroup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseString"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["budgetGroups"],
+        "summary": "Delete budget group",
+        "description": "",
+        "operationId": "deleteBudgetGroup",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
+            }
+          }
+        }
+      }
+    },
+    "/budgetGroups": {
+      "get": {
+        "tags": ["budgetGroups"],
+        "summary": "List Budget groups for account",
+        "description": "",
+        "operationId": "listBudgetGroups",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListBudgetGroup"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["budgetGroups"],
+        "summary": "Create budget group",
+        "description": "",
+        "operationId": "createBudgetGroup",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/BudgetGroup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseString"
+            }
+          }
+        }
+      }
+    },
     "/budgets/forecastCost": {
       "get": {
         "tags": ["budgets"],
@@ -412,6 +672,13 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "breakdown",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": ["YEARLY", "MONTHLY"]
           }
         ],
         "responses": {
@@ -560,38 +827,6 @@
         }
       }
     },
-    "/budgets/perspectiveBudgets": {
-      "get": {
-        "tags": ["budgets"],
-        "summary": "List Budgets for Perspective",
-        "description": "",
-        "operationId": "listBudgetsForPerspective",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "perspectiveId",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListBudget"
-            }
-          }
-        }
-      }
-    },
     "/budgets": {
       "get": {
         "tags": ["budgets"],
@@ -645,6 +880,75 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseString"
+            }
+          }
+        }
+      }
+    },
+    "/budgets/perspectiveBudgets": {
+      "get": {
+        "tags": ["budgets"],
+        "summary": "List Budgets for Perspective",
+        "description": "",
+        "operationId": "listBudgetsForPerspective",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "perspectiveId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListBudget"
+            }
+          }
+        }
+      }
+    },
+    "/business-mapping/linkedPerspectives": {
+      "post": {
+        "tags": ["business-mapping"],
+        "summary": "Get related Perspectives given Business Mapping Ids",
+        "description": "",
+        "operationId": "getPerspectivesGivenBusinessMappingIds",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseListLinkedPerspectives"
             }
           }
         }
@@ -704,7 +1008,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/RestResponseString"
+              "$ref": "#/definitions/RestResponseCostCategoryDeleteDTO"
             }
           }
         }
@@ -723,13 +1027,47 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "searchKey",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "sortType",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": ["NAME", "LAST_EDIT"]
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": ["ASCENDING", "DESCENDING"]
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/RestResponseListBusinessMapping"
+              "$ref": "#/definitions/RestResponseBusinessMappingListDTO"
             }
           }
         }
@@ -797,6 +1135,111 @@
         }
       }
     },
+    "/active-spend": {
+      "get": {
+        "tags": ["active-spend"],
+        "summary": "Get Active spend for given time period",
+        "description": "",
+        "operationId": "getActiveSpend",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCostOverviewDTO"
+            }
+          }
+        }
+      }
+    },
+    "/active-spend/forecast": {
+      "get": {
+        "tags": ["active-spend"],
+        "summary": "Get Forecasted spend for the next time period",
+        "description": "",
+        "operationId": "getForecastedSpend",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCostOverviewDTO"
+            }
+          }
+        }
+      }
+    },
+    "/testconnection/firstConnector": {
+      "get": {
+        "tags": ["testconnection"],
+        "summary": "Get connector details",
+        "description": "",
+        "operationId": "get connector details",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCCMConnectorDetails"
+            }
+          }
+        }
+      }
+    },
     "/testconnection": {
       "post": {
         "tags": ["testconnection"],
@@ -825,31 +1268,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseConnectorValidationResult"
-            }
-          }
-        }
-      }
-    },
-    "/testconnection/firstConnector": {
-      "get": {
-        "tags": ["testconnection"],
-        "summary": "Get connector details",
-        "description": "",
-        "operationId": "get connector details",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseCCMConnectorDetails"
             }
           }
         }
@@ -1087,6 +1505,53 @@
         }
       }
     },
+    "/overview": {
+      "get": {
+        "tags": ["overview"],
+        "summary": "Get CCM Overview",
+        "description": "",
+        "operationId": "getCCMOverview",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": ["HOUR", "DAY", "MONTH", "WEEK", "QUARTER", "YEAR"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCcmOverviewDTO"
+            }
+          }
+        }
+      }
+    },
     "/license-util": {
       "get": {
         "tags": ["license-util"],
@@ -1134,6 +1599,89 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseString"
+            }
+          }
+        }
+      }
+    },
+    "/yaml/generate-cost-optimisation-yaml": {
+      "post": {
+        "tags": ["yaml"],
+        "summary": "Get Cost Optimisation Yaml",
+        "description": "",
+        "operationId": "getCostOptimisationYamlTemplate",
+        "produces": ["application/json", "application/yaml"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/yaml/cloudCostCapabilityCheck": {
+      "post": {
+        "tags": ["yaml"],
+        "summary": "check if the existing k8s cloud provider have necessary permissions to enable Cloud Cost Visibility",
+        "description": "",
+        "operationId": "cloudCostCapabilityCheck",
+        "produces": ["application/json", "application/yaml"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/K8sClusterSetupRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseConnectorValidationResult"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -1230,13 +1778,13 @@
         }
       }
     },
-    "/yaml/generate-cost-optimisation-yaml": {
-      "post": {
-        "tags": ["yaml"],
-        "summary": "Get Cost Optimisation Yaml",
+    "/connector/awsaccountconnectiondetail": {
+      "get": {
+        "tags": ["connector"],
+        "summary": "Get Aws account connection details",
         "description": "",
-        "operationId": "getCostOptimisationYamlTemplate",
-        "produces": ["application/json", "application/yaml"],
+        "operationId": "awsaccountconnectiondetail",
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "accountIdentifier",
@@ -1245,69 +1793,17 @@
             "type": "string"
           },
           {
-            "name": "connectorIdentifier",
+            "name": "is_gov",
             "in": "query",
             "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/yaml/cloudCostCapabilityCheck": {
-      "post": {
-        "tags": ["yaml"],
-        "summary": "check if the existing k8s cloud provider have necessary permissions to enable Cloud Cost Visibility",
-        "description": "",
-        "operationId": "cloudCostCapabilityCheck",
-        "produces": ["application/json", "application/yaml"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/K8sClusterSetupRequest"
-            }
+            "type": "boolean"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ResponseConnectorValidationResult"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ResponseAwsAccountConnectionDetail"
             }
           }
         }
@@ -1351,37 +1847,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseString"
-            }
-          }
-        }
-      }
-    },
-    "/connector/awsaccountconnectiondetail": {
-      "get": {
-        "tags": ["connector"],
-        "summary": "Get Aws account connection details",
-        "description": "",
-        "operationId": "awsaccountconnectiondetail",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "is_gov",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseAwsAccountConnectionDetail"
             }
           }
         }
@@ -1695,6 +2160,759 @@
         }
       }
     },
+    "/currency-preference/conversion-factors": {
+      "get": {
+        "tags": ["currency-preference"],
+        "summary": "Get conversion factors for an account",
+        "description": "",
+        "operationId": "getCurrencyConversionFactors",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "destinationCurrency",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "AED",
+              "ARS",
+              "AUD",
+              "BRL",
+              "CAD",
+              "CNY",
+              "EUR",
+              "GBP",
+              "INR",
+              "JPY",
+              "MXN",
+              "NOK",
+              "NZD",
+              "RUB",
+              "SGD",
+              "USD",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCurrencyConversionFactorDTO"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["currency-preference"],
+        "summary": "Create conversion factors for an account",
+        "description": "",
+        "operationId": "createCurrencyConversionFactors",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "destinationCurrency",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "AED",
+              "ARS",
+              "AUD",
+              "BRL",
+              "CAD",
+              "CNY",
+              "EUR",
+              "GBP",
+              "INR",
+              "JPY",
+              "MXN",
+              "NOK",
+              "NZD",
+              "RUB",
+              "SGD",
+              "USD",
+              "NONE"
+            ]
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CurrencyConversionFactorDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
+            }
+          }
+        }
+      }
+    },
+    "/currency-preference/destination-conversion-factor": {
+      "get": {
+        "tags": ["currency-preference"],
+        "summary": "Get destination currency conversion factor for an account",
+        "description": "",
+        "operationId": "getDestinationCurrencyConversionFactor",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cloudServiceProvider",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": ["AWS", "GCP", "AZURE", "K8S"]
+          },
+          {
+            "name": "sourceCurrency",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "AED",
+              "ARS",
+              "AUD",
+              "BRL",
+              "CAD",
+              "CNY",
+              "EUR",
+              "GBP",
+              "INR",
+              "JPY",
+              "MXN",
+              "NOK",
+              "NZD",
+              "RUB",
+              "SGD",
+              "USD",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseDouble"
+            }
+          }
+        }
+      }
+    },
+    "/currency-preference/currencies": {
+      "get": {
+        "tags": ["currency-preference"],
+        "summary": "Get all destination currencies",
+        "description": "",
+        "operationId": "getAllCurrencies",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCurrencyDTO"
+            }
+          }
+        }
+      }
+    },
+    "/governance/enforcement/list": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Get enforcement list",
+        "description": "",
+        "operationId": "getRuleEnforcement",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateRuleEnforcementDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListRuleEnforcement"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/enforcement/count": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Get enforcement count",
+        "description": "",
+        "operationId": "getRuleEnforcementCount",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/EnforcementCountDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseEnforcementCount"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/execution/details": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "execution Detail",
+        "description": "",
+        "operationId": "getExecutionDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ExecutionDetailDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseExecutionDetails"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/enforcement": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Add a new rule Enforcement api",
+        "description": "",
+        "operationId": "addRuleEnforcement",
+        "consumes": ["application/json"],
+        "produces": ["application/json", "text/yaml"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateRuleEnforcementDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRuleEnforcement"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["governance"],
+        "summary": "Update a Rule enforcement",
+        "description": "",
+        "operationId": "updateEnforcement",
+        "consumes": ["application/json"],
+        "produces": ["application/json", "text/yaml"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateRuleEnforcementDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRuleEnforcement"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/enforcement/{enforcementID}": {
+      "delete": {
+        "tags": ["governance"],
+        "summary": "Delete a rule",
+        "description": "",
+        "operationId": "deleteRuleEnforcement",
+        "consumes": ["application/json"],
+        "produces": ["application/json", "text/yaml"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "enforcementID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/execution/list": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Get execution for account",
+        "description": "",
+        "operationId": "getRuleExecutions",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateRuleExecutionFilterDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRuleExecutionList"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/status/{ruleExecutionId}": {
+      "get": {
+        "tags": ["governance"],
+        "summary": "Return logs for a rule execution status",
+        "description": "",
+        "operationId": "getRuleExecutionStatus",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "ruleExecutionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/execution/{ruleExecutionId}": {
+      "get": {
+        "tags": ["governance"],
+        "summary": "Return logs for a rule execution",
+        "description": "",
+        "operationId": "getRuleExecutionDetails",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "ruleExecutionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/execution": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Add a new rule execution api",
+        "description": "",
+        "operationId": "addRuleExecution",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateRuleExecutionDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRuleExecution"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/execution/filter-value": {
+      "get": {
+        "tags": ["governance"],
+        "summary": "get Rule Execution Filter Values",
+        "description": "",
+        "operationId": "getRuleExecutionsFilterValues",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseFilterValues"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/rule": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Add a new rule ",
+        "description": "",
+        "operationId": "CreateNewRule",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateRuleDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRule"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["governance"],
+        "summary": "Update a existing Rule",
+        "description": "",
+        "operationId": "updateRule",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateRuleDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRule"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/governance/rule/list": {
       "post": {
         "tags": ["governance"],
@@ -1717,6 +2935,12 @@
             "schema": {
               "$ref": "#/definitions/ListDTO"
             }
+          },
+          {
+            "name": "RuleNamePattern",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -1724,6 +2948,689 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseRuleList"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/enqueueAdhoc": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Enqueues job for execution",
+        "description": "",
+        "operationId": "enqueueAdhocGovernanceJob",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/GovernanceJobEnqueueDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseGovernanceEnqueueResponseDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/entitySchema": {
+      "get": {
+        "tags": ["governance"],
+        "summary": "Get Schema for entity",
+        "description": "",
+        "operationId": "getSchemaForEntity",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "entityType",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "CreatePR",
+              "GITOPS_MERGE_PR",
+              "Projects",
+              "Pipelines",
+              "PipelineSteps",
+              "Http",
+              "Email",
+              "JiraCreate",
+              "JiraUpdate",
+              "JiraApproval",
+              "HarnessApproval",
+              "CustomApproval",
+              "Barrier",
+              "Queue",
+              "FlagConfiguration",
+              "ShellScript",
+              "K8sCanaryDeploy",
+              "K8sApply",
+              "K8sBlueGreenDeploy",
+              "K8sRollingDeploy",
+              "K8sRollingRollback",
+              "K8sScale",
+              "K8sDelete",
+              "K8sBGSwapServices",
+              "K8sCanaryDelete",
+              "TerraformApply",
+              "TerraformPlan",
+              "TerraformDestroy",
+              "TerraformRollback",
+              "HelmDeploy",
+              "HelmRollback",
+              "Connectors",
+              "Secrets",
+              "Files",
+              "Service",
+              "Environment",
+              "EnvironmentGroup",
+              "InputSets",
+              "CvConfig",
+              "Verify",
+              "Delegates",
+              "DelegateConfigurations",
+              "CvVerificationJob",
+              "IntegrationStage",
+              "IntegrationSteps",
+              "SecurityStage",
+              "SecuritySteps",
+              "CvKubernetesActivitySource",
+              "DeploymentSteps",
+              "DeploymentStage",
+              "ApprovalStage",
+              "PipelineStage",
+              "FeatureFlagStage",
+              "Template",
+              "TemplateStage",
+              "CustomDeployment",
+              "Triggers",
+              "MonitoredService",
+              "GitRepositories",
+              "FeatureFlags",
+              "ServiceNowApproval",
+              "ServiceNowCreate",
+              "ServiceNowUpdate",
+              "ServiceNowImportSet",
+              "GovernancePolicies",
+              "POLICY_STEP",
+              "Run",
+              "RunTests",
+              "Plugin",
+              "RestoreCacheGCS",
+              "RestoreCacheS3",
+              "SaveCacheGCS",
+              "SaveCacheS3",
+              "Security",
+              "AquaTrivy",
+              "AWSECR",
+              "Bandit",
+              "BlackDuck",
+              "Brakeman",
+              "Burp",
+              "Checkmarx",
+              "Clair",
+              "DataTheorem",
+              "DockerContentTrust",
+              "External",
+              "FortifyOnDemand",
+              "Grype",
+              "JfrogXray",
+              "Mend",
+              "Metasploit",
+              "Nessus",
+              "NexusIQ",
+              "Nikto",
+              "Nmap",
+              "Openvas",
+              "Owasp",
+              "PrismaCloud",
+              "Prowler",
+              "Qualys",
+              "Reapsaw",
+              "ShiftLeft",
+              "Sniper",
+              "Snyk",
+              "Sonarqube",
+              "Sysdig",
+              "Tenable",
+              "Veracode",
+              "Zap",
+              "GitClone",
+              "ArtifactoryUpload",
+              "GCSUpload",
+              "S3Upload",
+              "BuildAndPushGCR",
+              "BuildAndPushECR",
+              "BuildAndPushDockerRegistry",
+              "CreateStack",
+              "DeleteStack",
+              "ServerlessAwsLambdaDeploy",
+              "ServerlessAwsLambdaRollback",
+              "CustomStage",
+              "RollbackStack",
+              "Infrastructure",
+              "Command",
+              "StrategyNode",
+              "AZURE_SLOT_DEPLOYMENT_STEP",
+              "AzureTrafficShift",
+              "FetchInstanceScript",
+              "AzureSwapSlot",
+              "AzureWebAppRollback",
+              "JenkinsBuild",
+              "EcsRollingDeploy",
+              "EcsRollingRollback",
+              "EcsCanaryDeploy",
+              "EcsCanaryDelete",
+              "AzureCreateARMResource",
+              "BuildAndPushACR",
+              "AzureCreateBPResource",
+              "AzureARMRollback",
+              "Background",
+              "Wait",
+              "ArtifactSource",
+              "EcsBlueGreenCreateService",
+              "EcsBlueGreenSwapTargetGroups",
+              "EcsBlueGreenRollback",
+              "ShellScriptProvision",
+              "Freeze",
+              "GitOpsUpdateReleaseRepo",
+              "GitOpsFetchLinkedApps",
+              "EcsRunTask",
+              "Chaos",
+              "ElastigroupDeploy",
+              "ElastigroupRollback",
+              "Action",
+              "ElastigroupSetup",
+              "Bitrise",
+              "TerraformPlan",
+              "TerraformApply",
+              "TerraformDestroy",
+              "TerraformRollback",
+              "IACMStage",
+              "IACMStep",
+              "IACM",
+              "Container",
+              "IACM",
+              "IACM",
+              "ElastigroupBGStageSetup",
+              "ElastigroupSwapRoute",
+              "AsgCanaryDeploy",
+              "AsgCanaryDelete",
+              "SwapRoutes",
+              "SwapRollback",
+              "AppResize",
+              "AppRollback",
+              "CanaryAppSetup",
+              "BGAppSetup",
+              "BasicAppSetup",
+              "TanzuCommand",
+              "AsgRollingDeploy",
+              "AsgRollingRollback",
+              "GovernanceRuleAWS",
+              "TasRollingDeploy",
+              "TasRollingRollback",
+              "K8sDryRun",
+              "AsgBlueGreenSwapService",
+              "AsgBlueGreenDeploy",
+              "AsgBlueGreenRollback",
+              "TerraformCloudRun",
+              "TerraformCloudRollback",
+              "DeployCloudFunction",
+              "DeployCloudFunctionWithNoTraffic",
+              "CloudFunctionTrafficShift",
+              "CloudFunctionRollback",
+              "AwsLambdaDeploy",
+              "AwsSamDeploy",
+              "AwsSamRollback",
+              "SscaOrchestration",
+              "AwsLambdaRollback",
+              "GITOPS_SYNC",
+              "BambooBuild",
+              "CdSscaOrchestration",
+              "TasRouteMapping",
+              "AWSSecurityHub",
+              "CustomIngest",
+              "BackstageEnvironmentVariable",
+              "Fossa",
+              "CodeQL",
+              "Gitleaks",
+              "DeployCloudFunctionGenOne",
+              "RollbackCloudFunctionGenOne"
+            ]
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseJsonNode"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/ruleValidate": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Validate a rule",
+        "description": "",
+        "operationId": "ValidateRule",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateRuleDTO"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/ruleClone": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Clone a rule",
+        "description": "",
+        "operationId": "CloneRule",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CloneRuleDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRule"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/rule/{ruleID}": {
+      "delete": {
+        "tags": ["governance"],
+        "summary": "Delete a rule",
+        "description": "",
+        "operationId": "deleteRule",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "ruleID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/ruleSet/list/{id}": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Get rules for pack",
+        "description": "",
+        "operationId": "getRuleSet",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateRuleSetDTO"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListRule"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/ruleSet": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Add a new rule Set",
+        "description": "",
+        "operationId": "addRuleSet",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateRuleSetDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRuleSet"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["governance"],
+        "summary": "Update an existing rule pack",
+        "description": "",
+        "operationId": "updateRuleSet",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateRuleSetDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRuleSet"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/ruleSet/list": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "list all rule packs",
+        "description": "",
+        "operationId": "listRuleSets",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateRuleSetFilterDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRuleSetList"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/ruleSet/{ruleSetId}": {
+      "delete": {
+        "tags": ["governance"],
+        "summary": "Delete a rule set",
+        "description": "",
+        "operationId": "deleteRuleSet",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "ruleSetId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
             }
           },
           "400": {
@@ -2342,12 +4249,12 @@
         }
       }
     },
-    "/perspective/lastMonthCost": {
+    "/perspective/lastYearMonthlyCost": {
       "get": {
         "tags": ["perspective"],
-        "summary": "Get last month cost for perspective",
+        "summary": "Get last twelve month cost for perspective",
         "description": "",
-        "operationId": "getLastMonthCostV2",
+        "operationId": "lastYearMonthlyCost",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -2362,13 +4269,41 @@
             "in": "query",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": ["DAILY", "WEEKLY", "MONTHLY", "QUARTERLY", "YEARLY"]
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": ["SPECIFIED_AMOUNT", "PREVIOUS_MONTH_SPEND", "PREVIOUS_PERIOD_SPEND"]
+          },
+          {
+            "name": "breakdown",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": ["YEARLY", "MONTHLY"]
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ResponseDouble"
+              "$ref": "#/definitions/ResponseListValueDataPoint"
             }
           }
         }
@@ -2408,6 +4343,38 @@
             "required": true,
             "type": "string",
             "enum": ["DAILY", "WEEKLY", "MONTHLY", "QUARTERLY", "YEARLY"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseDouble"
+            }
+          }
+        }
+      }
+    },
+    "/perspective/lastMonthCost": {
+      "get": {
+        "tags": ["perspective"],
+        "summary": "Get last month cost for perspective",
+        "description": "",
+        "operationId": "getLastMonthCostV2",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "perspectiveId",
+            "in": "query",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -2590,38 +4557,6 @@
         }
       }
     },
-    "/recommendation/details/node-pool": {
-      "get": {
-        "tags": ["recommendationdetails"],
-        "summary": "Node pool Recommendation Details",
-        "description": "",
-        "operationId": "nodeRecommendationDetail",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseNodeRecommendationDTO"
-            }
-          }
-        }
-      }
-    },
     "/recommendation/details/workload": {
       "get": {
         "tags": ["recommendationdetails"],
@@ -2661,6 +4596,38 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseWorkloadRecommendationDTO"
+            }
+          }
+        }
+      }
+    },
+    "/recommendation/details/node-pool": {
+      "get": {
+        "tags": ["recommendationdetails"],
+        "summary": "Node pool Recommendation Details",
+        "description": "",
+        "operationId": "nodeRecommendationDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseNodeRecommendationDTO"
             }
           }
         }
@@ -2712,6 +4679,38 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseECSRecommendationDTO"
+            }
+          }
+        }
+      }
+    },
+    "/recommendation/details/ec2-instance": {
+      "get": {
+        "tags": ["recommendationdetails"],
+        "summary": "EC2 Recommendation Details",
+        "description": "",
+        "operationId": "ec2RecommendationDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseEC2RecommendationDTO"
             }
           }
         }
@@ -2785,6 +4784,38 @@
         }
       }
     },
+    "/recommendation/overview/mark-applied": {
+      "post": {
+        "tags": ["recommendationoverview"],
+        "summary": "Mark recommendation as applied",
+        "description": "",
+        "operationId": "markApplied",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "recommendationId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseVoid"
+            }
+          }
+        }
+      }
+    },
     "/recommendation/overview/count": {
       "post": {
         "tags": ["recommendationoverview"],
@@ -2853,6 +4884,134 @@
         }
       }
     },
+    "/recommendation/jira/create": {
+      "post": {
+        "tags": ["recommendationjira"],
+        "summary": "Create jira for recommendation",
+        "description": "",
+        "operationId": "createRecommendationJira",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CCMJiraCreateDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCCMJiraDetails"
+            }
+          }
+        }
+      }
+    },
+    "/recommendation/ignore-list/add": {
+      "post": {
+        "tags": ["recommendationignore-list"],
+        "summary": "Add resources to ignoreList",
+        "description": "",
+        "operationId": "addRecommendationsIgnoreList",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/RecommendationsIgnoreResourcesDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRecommendationsIgnoreList"
+            }
+          }
+        }
+      }
+    },
+    "/recommendation/ignore-list/remove": {
+      "post": {
+        "tags": ["recommendationignore-list"],
+        "summary": "Remove resources from ignoreList",
+        "description": "",
+        "operationId": "removeRecommendationsIgnoreList",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/RecommendationsIgnoreResourcesDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRecommendationsIgnoreList"
+            }
+          }
+        }
+      }
+    },
+    "/recommendation/ignore-list": {
+      "get": {
+        "tags": ["recommendationignore-list"],
+        "summary": "Get resources in ignoreList",
+        "description": "",
+        "operationId": "getRecommendationsIgnoreList",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseRecommendationsIgnoreList"
+            }
+          }
+        }
+      }
+    },
     "/filters/{identifier}": {
       "get": {
         "tags": ["filters"],
@@ -2904,7 +5063,8 @@
               "FileStore",
               "CCMRecommendation",
               "Anomaly",
-              "Environment"
+              "Environment",
+              "RuleExecution"
             ]
           }
         ],
@@ -2979,7 +5139,8 @@
               "FileStore",
               "CCMRecommendation",
               "Anomaly",
-              "Environment"
+              "Environment",
+              "RuleExecution"
             ]
           }
         ],
@@ -3066,7 +5227,8 @@
               "FileStore",
               "CCMRecommendation",
               "Anomaly",
-              "Environment"
+              "Environment",
+              "RuleExecution"
             ]
           }
         ],
@@ -3180,63 +5342,6 @@
         }
       }
     },
-    "/usage/{module}": {
-      "get": {
-        "tags": ["usage"],
-        "summary": "Gets License Usage By Module and Timestamp",
-        "description": "",
-        "operationId": "getLicenseUsage",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "module",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "timestamp",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "CDLicenseType",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseLicenseUsageDTO"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
     "/usage/CD/servicesLicense": {
       "get": {
         "tags": ["usage"],
@@ -3326,6 +5431,184 @@
           }
         }
       }
+    },
+    "/usage/cd/active-services/csv/download": {
+      "get": {
+        "tags": ["usage"],
+        "summary": "Download CSV Active Services report",
+        "description": "",
+        "operationId": "downloadActiveServiceCSVReport",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/usage/{module}": {
+      "get": {
+        "tags": ["usage"],
+        "summary": "Gets License Usage By Module and Timestamp",
+        "description": "",
+        "operationId": "getLicenseUsage",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "module",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "CDLicenseType",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseLicenseUsageDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/usage/cd/active-services": {
+      "post": {
+        "tags": ["usage"],
+        "summary": "List Active Services in CD Module",
+        "description": "",
+        "operationId": "lisCDActiveServices",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 30,
+            "maximum": 50,
+            "format": "int32"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ActiveServicesFilterParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePageActiveServiceDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -3389,6 +5672,12 @@
         "userFeedback": {
           "type": "string",
           "enum": ["TRUE_ANOMALY", "FALSE_ANOMALY", "NOT_RESPONDED"]
+        },
+        "perspectiveId": {
+          "type": "string"
+        },
+        "perspectiveName": {
+          "type": "string"
         }
       }
     },
@@ -3635,7 +5924,8 @@
             "FileStore",
             "CCMRecommendation",
             "Anomaly",
-            "Environment"
+            "Environment",
+            "RuleExecution"
           ]
         }
       }
@@ -3660,6 +5950,8 @@
             "CLUSTER_WORKLOAD",
             "CLUSTER_WORKLOAD_ID",
             "CLUSTER_NODE",
+            "CLUSTER_POD",
+            "CLUSTER_PARENT_INSTANCE_ID",
             "CLUSTER_STORAGE",
             "CLUSTER_APPLICATION",
             "CLUSTER_ENVIRONMENT",
@@ -3711,7 +6003,9 @@
             "TOTAL_COST",
             "IDLE_COST",
             "UNALLOCATED_COST",
-            "ALL"
+            "ALL",
+            "RULE_NAME",
+            "RULE_SET_NAME"
           ]
         }
       }
@@ -3732,6 +6026,8 @@
             "CLUSTER_WORKLOAD",
             "CLUSTER_WORKLOAD_ID",
             "CLUSTER_NODE",
+            "CLUSTER_POD",
+            "CLUSTER_PARENT_INSTANCE_ID",
             "CLUSTER_STORAGE",
             "CLUSTER_APPLICATION",
             "CLUSTER_ENVIRONMENT",
@@ -3783,7 +6079,9 @@
             "TOTAL_COST",
             "IDLE_COST",
             "UNALLOCATED_COST",
-            "ALL"
+            "ALL",
+            "RULE_NAME",
+            "RULE_SET_NAME"
           ]
         }
       }
@@ -3804,6 +6102,8 @@
             "CLUSTER_WORKLOAD",
             "CLUSTER_WORKLOAD_ID",
             "CLUSTER_NODE",
+            "CLUSTER_POD",
+            "CLUSTER_PARENT_INSTANCE_ID",
             "CLUSTER_STORAGE",
             "CLUSTER_APPLICATION",
             "CLUSTER_ENVIRONMENT",
@@ -3855,7 +6155,9 @@
             "TOTAL_COST",
             "IDLE_COST",
             "UNALLOCATED_COST",
-            "ALL"
+            "ALL",
+            "RULE_NAME",
+            "RULE_SET_NAME"
           ]
         },
         "order": {
@@ -4268,87 +6570,6 @@
         }
       }
     },
-    "ResponseDouble": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "number",
-          "format": "double"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "BudgetCostData": {
-      "type": "object",
-      "properties": {
-        "time": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "endTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "actualCost": {
-          "type": "number",
-          "format": "double"
-        },
-        "budgeted": {
-          "type": "number",
-          "format": "double"
-        },
-        "budgetVariance": {
-          "type": "number",
-          "format": "double"
-        },
-        "budgetVariancePercentage": {
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
-    "BudgetData": {
-      "type": "object",
-      "properties": {
-        "costData": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BudgetCostData"
-          }
-        },
-        "forecastCost": {
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
-    "ResponseBudgetData": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/BudgetData"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
     "AlertThreshold": {
       "type": "object",
       "properties": {
@@ -4385,6 +6606,440 @@
         "crossedAt": {
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "BudgetGroupChildEntityDTO": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "proportion": {
+          "type": "number",
+          "format": "double"
+        },
+        "budgetGroup": {
+          "type": "boolean"
+        }
+      }
+    },
+    "BudgetMonthlyBreakdown": {
+      "type": "object",
+      "properties": {
+        "budgetBreakdown": {
+          "type": "string",
+          "enum": ["YEARLY", "MONTHLY"]
+        },
+        "budgetMonthlyAmount": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValueDataPoint"
+          }
+        },
+        "actualMonthlyCost": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "forecastMonthlyCost": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "yearlyLastPeriodCost": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      }
+    },
+    "BudgetSummary": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "perspectiveId": {
+          "type": "string"
+        },
+        "perspectiveName": {
+          "type": "string"
+        },
+        "folderId": {
+          "type": "string"
+        },
+        "budgetAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "actualCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "forecastCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "timeLeft": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timeUnit": {
+          "type": "string"
+        },
+        "timeScope": {
+          "type": "string"
+        },
+        "actualCostAlerts": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "forecastCostAlerts": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "alertThresholds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AlertThreshold"
+          }
+        },
+        "period": {
+          "type": "string",
+          "enum": ["DAILY", "WEEKLY", "MONTHLY", "QUARTERLY", "YEARLY"]
+        },
+        "type": {
+          "type": "string",
+          "enum": ["SPECIFIED_AMOUNT", "PREVIOUS_MONTH_SPEND", "PREVIOUS_PERIOD_SPEND"]
+        },
+        "growthRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "startTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "budgetMonthlyBreakdown": {
+          "$ref": "#/definitions/BudgetMonthlyBreakdown"
+        },
+        "childEntities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BudgetSummary"
+          }
+        },
+        "childEntityProportions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BudgetGroupChildEntityDTO"
+          }
+        },
+        "cascadeType": {
+          "type": "string",
+          "enum": ["EQUAL", "PROPORTIONAL", "NO_CASCADE"]
+        },
+        "parentId": {
+          "type": "string"
+        },
+        "disableCurrencyWarning": {
+          "type": "boolean"
+        },
+        "budgetGroup": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ResponseListBudgetSummary": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BudgetSummary"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ValueDataPoint": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "value": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "ResponseListValueDataPoint": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValueDataPoint"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "BudgetCostData": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "endTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "actualCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "forecastCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "budgeted": {
+          "type": "number",
+          "format": "double"
+        },
+        "budgetVariance": {
+          "type": "number",
+          "format": "double"
+        },
+        "budgetVariancePercentage": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "BudgetGroup": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "budgetGroupMonthlyBreakdown": {
+          "$ref": "#/definitions/BudgetMonthlyBreakdown"
+        },
+        "period": {
+          "type": "string",
+          "enum": ["DAILY", "WEEKLY", "MONTHLY", "QUARTERLY", "YEARLY"]
+        },
+        "budgetGroupAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "actualCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "forecastCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "lastMonthCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "alertThresholds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AlertThreshold"
+          }
+        },
+        "childEntities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BudgetGroupChildEntityDTO"
+          }
+        },
+        "parentBudgetGroupId": {
+          "type": "string"
+        },
+        "cascadeType": {
+          "type": "string",
+          "enum": ["EQUAL", "PROPORTIONAL", "NO_CASCADE"]
+        },
+        "startTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "endTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastUpdatedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "budgetGroupHistory": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/BudgetCostData"
+          }
+        }
+      }
+    },
+    "ResponseBudgetGroup": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/BudgetGroup"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseString": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "string"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseListBudgetGroup": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BudgetGroup"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseDouble": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "number",
+          "format": "double"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "BudgetData": {
+      "type": "object",
+      "properties": {
+        "costData": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BudgetCostData"
+          }
+        },
+        "forecastCost": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "ResponseBudgetData": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/BudgetData"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
         }
       }
     },
@@ -4431,6 +7086,9 @@
           "type": "string",
           "enum": ["SPECIFIED_AMOUNT", "PREVIOUS_MONTH_SPEND", "PREVIOUS_PERIOD_SPEND"]
         },
+        "budgetMonthlyBreakdown": {
+          "$ref": "#/definitions/BudgetMonthlyBreakdown"
+        },
         "budgetAmount": {
           "type": "number",
           "format": "double"
@@ -4473,6 +7131,9 @@
             "type": "string"
           }
         },
+        "parentBudgetGroupId": {
+          "type": "string"
+        },
         "notifyOnSlack": {
           "type": "boolean"
         },
@@ -4491,6 +7152,15 @@
         "lastUpdatedAt": {
           "type": "integer",
           "format": "int64"
+        },
+        "budgetHistory": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/BudgetCostData"
+          }
+        },
+        "disableCurrencyWarning": {
+          "type": "boolean"
         },
         "ngBudget": {
           "type": "boolean"
@@ -4572,24 +7242,6 @@
         }
       }
     },
-    "ResponseString": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "string"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
     "ResponseListBudget": {
       "type": "object",
       "properties": {
@@ -4611,85 +7263,16 @@
         }
       }
     },
-    "BusinessMapping": {
+    "LinkedPerspectives": {
       "type": "object",
       "properties": {
-        "uuid": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 32
-        },
-        "accountId": {
-          "type": "string"
-        },
-        "costTargets": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CostTarget"
+        "perspectiveIdAndName": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
           }
         },
-        "sharedCosts": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SharedCost"
-          }
-        },
-        "unallocatedCost": {
-          "$ref": "#/definitions/UnallocatedCost"
-        },
-        "dataSources": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": ["CLUSTER", "AWS", "GCP", "AZURE", "COMMON", "CUSTOM", "BUSINESS_MAPPING", "LABEL"]
-          }
-        },
-        "createdAt": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "lastUpdatedAt": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "createdBy": {
-          "$ref": "#/definitions/EmbeddedUser"
-        },
-        "lastUpdatedBy": {
-          "$ref": "#/definitions/EmbeddedUser"
-        }
-      }
-    },
-    "CostTarget": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "rules": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ViewRule"
-          }
-        }
-      }
-    },
-    "EmbeddedUser": {
-      "type": "object",
-      "properties": {
-        "uuid": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "externalUserId": {
+        "costCategoryId": {
           "type": "string"
         }
       }
@@ -4977,6 +7560,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
             "CONNECTOR_NOT_FOUND_EXCEPTION",
@@ -5003,7 +7587,9 @@
             "BUCKET_SERVER_ERROR",
             "GIT_SYNC_ERROR",
             "TEMPLATE_EXCEPTION",
+            "TEMPLATE_ALREADY_EXISTS_EXCEPTION",
             "ENTITY_REFERENCE_EXCEPTION",
+            "ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION",
             "INVALID_INPUT_SET",
             "INVALID_OVERLAY_INPUT_SET",
             "RESOURCE_ALREADY_EXISTS",
@@ -5042,7 +7628,23 @@
             "AWS_ECS_CLIENT_ERROR",
             "AWS_STS_ERROR",
             "FREEZE_EXCEPTION",
-            "DELEGATE_TASK_EXPIRED"
+            "DELEGATE_TASK_EXPIRED",
+            "DELEGATE_TASK_VALIDATION_FAILED",
+            "MONGO_EXECUTION_TIMEOUT_EXCEPTION",
+            "DELEGATE_NOT_REGISTERED",
+            "TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE",
+            "APPROVAL_REJECTION",
+            "TERRAGRUNT_EXECUTION_ERROR",
+            "ADFS_ERROR",
+            "TERRAFORM_CLOUD_ERROR",
+            "CLUSTER_CREDENTIALS_NOT_FOUND",
+            "SCM_API_ERROR",
+            "INTERNAL_SERVER_ERROR",
+            "SCM_FORBIDDEN",
+            "AWS_EKS_ERROR",
+            "OPA_POLICY_EVALUATION_ERROR",
+            "USER_MARKED_FAILURE",
+            "SSH_RETRY"
           ]
         },
         "level": {
@@ -5069,7 +7671,10 @@
               "AUTHORIZATION_ERROR",
               "TIMEOUT_ERROR",
               "POLICY_EVALUATION_FAILURE",
-              "EXECUTION_INPUT_TIMEOUT_FAILURE"
+              "INPUT_TIMEOUT_FAILURE",
+              "APPROVAL_REJECTION",
+              "DELEGATE_RESTART",
+              "USER_MARKED_FAILURE"
             ]
           }
         }
@@ -5095,7 +7700,7 @@
         }
       }
     },
-    "RestResponseBusinessMapping": {
+    "RestResponseListLinkedPerspectives": {
       "type": "object",
       "properties": {
         "metaData": {
@@ -5105,49 +7710,16 @@
           }
         },
         "resource": {
-          "$ref": "#/definitions/BusinessMapping"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LinkedPerspectives"
+          }
         },
         "responseMessages": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ResponseMessage"
           }
-        }
-      }
-    },
-    "SharedCost": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "rules": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ViewRule"
-          }
-        },
-        "strategy": {
-          "type": "string",
-          "enum": ["FIXED", "PROPORTIONAL"]
-        },
-        "splits": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SharedCostSplit"
-          }
-        }
-      }
-    },
-    "SharedCostSplit": {
-      "type": "object",
-      "properties": {
-        "costTargetName": {
-          "type": "string"
-        },
-        "percentageContribution": {
-          "type": "number",
-          "format": "double"
         }
       }
     },
@@ -5207,6 +7779,145 @@
         }
       }
     },
+    "BusinessMapping": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "costTargets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CostTarget"
+          }
+        },
+        "sharedCosts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SharedCost"
+          }
+        },
+        "unallocatedCost": {
+          "$ref": "#/definitions/UnallocatedCost"
+        },
+        "dataSources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["CLUSTER", "AWS", "GCP", "AZURE", "COMMON", "CUSTOM", "BUSINESS_MAPPING", "LABEL"]
+          }
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastUpdatedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        },
+        "lastUpdatedBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        }
+      }
+    },
+    "CostTarget": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ViewRule"
+          }
+        }
+      }
+    },
+    "EmbeddedUser": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "externalUserId": {
+          "type": "string"
+        }
+      }
+    },
+    "RestResponseBusinessMapping": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "resource": {
+          "$ref": "#/definitions/BusinessMapping"
+        },
+        "responseMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseMessage"
+          }
+        }
+      }
+    },
+    "SharedCost": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ViewRule"
+          }
+        },
+        "strategy": {
+          "type": "string",
+          "enum": ["EQUAL", "PROPORTIONAL", "FIXED"]
+        },
+        "splits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SharedCostSplit"
+          }
+        }
+      }
+    },
+    "SharedCostSplit": {
+      "type": "object",
+      "properties": {
+        "costTargetName": {
+          "type": "string"
+        },
+        "percentageContribution": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "UnallocatedCost": {
       "type": "object",
       "properties": {
@@ -5219,7 +7930,7 @@
         },
         "sharingStrategy": {
           "type": "string",
-          "enum": ["FIXED", "PROPORTIONAL"]
+          "enum": ["EQUAL", "PROPORTIONAL", "FIXED"]
         },
         "splits": {
           "type": "array",
@@ -5312,7 +8023,22 @@
         }
       }
     },
-    "RestResponseListBusinessMapping": {
+    "BusinessMappingListDTO": {
+      "type": "object",
+      "properties": {
+        "businessMappings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessMapping"
+          }
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "RestResponseBusinessMappingListDTO": {
       "type": "object",
       "properties": {
         "metaData": {
@@ -5322,16 +8048,102 @@
           }
         },
         "resource": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BusinessMapping"
-          }
+          "$ref": "#/definitions/BusinessMappingListDTO"
         },
         "responseMessages": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ResponseMessage"
           }
+        }
+      }
+    },
+    "CostCategoryDeleteDTO": {
+      "type": "object",
+      "properties": {
+        "linkedPerspectives": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "deleted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "RestResponseCostCategoryDeleteDTO": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "resource": {
+          "$ref": "#/definitions/CostCategoryDeleteDTO"
+        },
+        "responseMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseMessage"
+          }
+        }
+      }
+    },
+    "CostOverviewDTO": {
+      "type": "object",
+      "properties": {
+        "statsLabel": {
+          "type": "string"
+        },
+        "statsValue": {
+          "type": "string"
+        },
+        "statsTrend": {
+          "type": "number",
+          "format": "double"
+        },
+        "value": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "ResponseCostOverviewDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/CostOverviewDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CCMConnectorDetails": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "connectorValidationResult": {
+          "$ref": "#/definitions/ConnectorValidationResult"
         }
       }
     },
@@ -5372,6 +8184,24 @@
         "code": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "ResponseCCMConnectorDetails": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/CCMConnectorDetails"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
         }
       }
     },
@@ -5605,6 +8435,9 @@
             "credential": {
               "$ref": "#/definitions/AwsCredential"
             },
+            "awsSdkClientBackOffStrategyOverride": {
+              "$ref": "#/definitions/AwsSdkClientBackoffStrategy"
+            },
             "delegateSelectors": {
               "type": "array",
               "uniqueItems": true,
@@ -5658,6 +8491,74 @@
           "type": "string"
         }
       }
+    },
+    "AwsEqualJitterBackoffStrategy": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AwsSdkClientBackOffStrategySpec"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "baseDelay": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "maxBackoffTime": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "retryCount": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      ]
+    },
+    "AwsFixedDelayBackoffStrategy": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AwsSdkClientBackOffStrategySpec"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "fixedBackoff": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "retryCount": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      ]
+    },
+    "AwsFullJitterBackoffStrategy": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AwsSdkClientBackOffStrategySpec"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "baseDelay": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "maxBackoffTime": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "retryCount": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      ]
     },
     "AwsKmsConnectorCredential": {
       "type": "object",
@@ -5854,6 +8755,22 @@
         }
       ]
     },
+    "AwsSdkClientBackOffStrategySpec": {
+      "type": "object"
+    },
+    "AwsSdkClientBackoffStrategy": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["FixedDelayBackoffStrategy", "EqualJitterBackoffStrategy", "FullJitterBackoffStrategy"]
+        },
+        "spec": {
+          "$ref": "#/definitions/AwsSdkClientBackOffStrategySpec"
+        }
+      }
+    },
     "AwsSecretManagerCredential": {
       "type": "object",
       "required": ["type"],
@@ -5901,6 +8818,66 @@
           }
         }
       ]
+    },
+    "AzureArtifactsAuthentication": {
+      "type": "object",
+      "required": ["spec"],
+      "properties": {
+        "spec": {
+          "$ref": "#/definitions/AzureArtifactsHttpCredentials"
+        }
+      }
+    },
+    "AzureArtifactsConnector": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["auth", "azureArtifactsUrl"],
+          "properties": {
+            "azureArtifactsUrl": {
+              "type": "string"
+            },
+            "auth": {
+              "$ref": "#/definitions/AzureArtifactsAuthentication"
+            },
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "AzureArtifactsHttpCredentials": {
+      "type": "object",
+      "required": ["spec", "type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["PersonalAccessToken"]
+        },
+        "spec": {
+          "$ref": "#/definitions/AzureArtifactsUsernameToken"
+        }
+      }
+    },
+    "AzureArtifactsUsernameToken": {
+      "type": "object",
+      "required": ["tokenRef"],
+      "properties": {
+        "tokenRef": {
+          "type": "string"
+        }
+      }
     },
     "AzureAuthCredentialDTO": {
       "type": "object"
@@ -6020,7 +8997,7 @@
         },
         {
           "type": "object",
-          "required": ["clientId", "secretKey", "subscription", "tenantId", "vaultName"],
+          "required": ["subscription", "vaultName"],
           "properties": {
             "clientId": {
               "type": "string"
@@ -6047,6 +9024,16 @@
               "items": {
                 "type": "string"
               }
+            },
+            "useManagedIdentity": {
+              "type": "boolean"
+            },
+            "azureManagedIdentityType": {
+              "type": "string",
+              "enum": ["SystemAssignedManagedIdentity", "UserAssignedManagedIdentity"]
+            },
+            "managedClientId": {
+              "type": "string"
             },
             "default": {
               "type": "boolean"
@@ -6256,6 +9243,70 @@
         }
       ]
     },
+    "BambooAuthCredentialsDTO": {
+      "type": "object"
+    },
+    "BambooAuthenticationDTO": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["UsernamePassword", "Anonymous", "Bearer Token(HTTP Header)"]
+        },
+        "spec": {
+          "$ref": "#/definitions/BambooAuthCredentialsDTO"
+        }
+      }
+    },
+    "BambooConnectorDTO": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["bambooUrl"],
+          "properties": {
+            "bambooUrl": {
+              "type": "string"
+            },
+            "auth": {
+              "$ref": "#/definitions/BambooAuthenticationDTO"
+            },
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "BambooUserNamePasswordDTO": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BambooAuthCredentialsDTO"
+        },
+        {
+          "type": "object",
+          "required": ["passwordRef"],
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "usernameRef": {
+              "type": "string"
+            },
+            "passwordRef": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
     "BillingExportSpec": {
       "type": "object",
       "required": ["containerName", "directoryName", "reportName", "storageAccountName", "subscriptionId"],
@@ -6456,7 +9507,14 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["BILLING", "OPTIMIZATION", "VISIBILITY"]
+                "enum": [
+                  "BILLING",
+                  "OPTIMIZATION",
+                  "VISIBILITY",
+                  "GOVERNANCE",
+                  "COMMITMENT_ORCHESTRATOR",
+                  "CLUSTER_ORCHESTRATOR"
+                ]
               }
             }
           }
@@ -6476,7 +9534,14 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["BILLING", "OPTIMIZATION", "VISIBILITY"]
+                "enum": [
+                  "BILLING",
+                  "OPTIMIZATION",
+                  "VISIBILITY",
+                  "GOVERNANCE",
+                  "COMMITMENT_ORCHESTRATOR",
+                  "CLUSTER_ORCHESTRATOR"
+                ]
               }
             },
             "tenantId": {
@@ -6508,7 +9573,14 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["BILLING", "OPTIMIZATION", "VISIBILITY"]
+                "enum": [
+                  "BILLING",
+                  "OPTIMIZATION",
+                  "VISIBILITY",
+                  "GOVERNANCE",
+                  "COMMITMENT_ORCHESTRATOR",
+                  "CLUSTER_ORCHESTRATOR"
+                ]
               }
             }
           }
@@ -6626,8 +9698,13 @@
             "Jenkins",
             "OciHelmRepo",
             "CustomSecretManager",
-            "ELK",
-            "GcpSecretManager"
+            "ElasticSearch",
+            "GcpSecretManager",
+            "AzureArtifacts",
+            "Tas",
+            "Spot",
+            "Bamboo",
+            "TerraformCloud"
           ]
         },
         "spec": {
@@ -6976,6 +10053,12 @@
         },
         "repoUrl": {
           "type": "string"
+        },
+        "parentEntityConnectorRef": {
+          "type": "string"
+        },
+        "parentEntityRepoName": {
+          "type": "string"
         }
       }
     },
@@ -7041,7 +10124,14 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["BILLING", "OPTIMIZATION", "VISIBILITY"]
+                "enum": [
+                  "BILLING",
+                  "OPTIMIZATION",
+                  "VISIBILITY",
+                  "GOVERNANCE",
+                  "COMMITMENT_ORCHESTRATOR",
+                  "CLUSTER_ORCHESTRATOR"
+                ]
               }
             },
             "projectId": {
@@ -7287,12 +10377,18 @@
         },
         {
           "type": "object",
-          "required": ["applicationId", "installationId", "privateKeyRef"],
+          "required": ["privateKeyRef"],
           "properties": {
             "installationId": {
               "type": "string"
             },
             "applicationId": {
+              "type": "string"
+            },
+            "installationIdRef": {
+              "type": "string"
+            },
+            "applicationIdRef": {
               "type": "string"
             },
             "privateKeyRef": {
@@ -7839,6 +10935,22 @@
         }
       ]
     },
+    "JiraAuthCredentialsDTO": {
+      "type": "object"
+    },
+    "JiraAuthenticationDTO": {
+      "type": "object",
+      "required": ["spec", "type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["UsernamePassword", "PersonalAccessToken"]
+        },
+        "spec": {
+          "$ref": "#/definitions/JiraAuthCredentialsDTO"
+        }
+      }
+    },
     "JiraConnector": {
       "allOf": [
         {
@@ -7846,7 +10958,7 @@
         },
         {
           "type": "object",
-          "required": ["jiraUrl", "passwordRef"],
+          "required": ["auth", "jiraUrl"],
           "properties": {
             "jiraUrl": {
               "type": "string"
@@ -7866,6 +10978,47 @@
               "items": {
                 "type": "string"
               }
+            },
+            "auth": {
+              "$ref": "#/definitions/JiraAuthenticationDTO"
+            }
+          }
+        }
+      ]
+    },
+    "JiraPATDTO": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/JiraAuthCredentialsDTO"
+        },
+        {
+          "type": "object",
+          "required": ["patRef"],
+          "properties": {
+            "patRef": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "JiraUserNamePasswordDTO": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/JiraAuthCredentialsDTO"
+        },
+        {
+          "type": "object",
+          "required": ["passwordRef"],
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "usernameRef": {
+              "type": "string"
+            },
+            "passwordRef": {
+              "type": "string"
             }
           }
         }
@@ -8324,6 +11477,50 @@
         }
       ]
     },
+    "ServiceNowADFSDTO": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ServiceNowAuthCredentialsDTO"
+        },
+        {
+          "type": "object",
+          "required": ["adfsUrl", "certificateRef", "clientIdRef", "privateKeyRef", "resourceIdRef"],
+          "properties": {
+            "certificateRef": {
+              "type": "string"
+            },
+            "privateKeyRef": {
+              "type": "string"
+            },
+            "clientIdRef": {
+              "type": "string"
+            },
+            "resourceIdRef": {
+              "type": "string"
+            },
+            "adfsUrl": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "ServiceNowAuthCredentialsDTO": {
+      "type": "object"
+    },
+    "ServiceNowAuthenticationDTO": {
+      "type": "object",
+      "required": ["spec", "type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["UsernamePassword", "AdfsClientCredentialsWithCertificate"]
+        },
+        "spec": {
+          "$ref": "#/definitions/ServiceNowAuthCredentialsDTO"
+        }
+      }
+    },
     "ServiceNowConnector": {
       "allOf": [
         {
@@ -8331,7 +11528,7 @@
         },
         {
           "type": "object",
-          "required": ["passwordRef", "serviceNowUrl"],
+          "required": ["auth", "serviceNowUrl"],
           "properties": {
             "serviceNowUrl": {
               "type": "string"
@@ -8351,6 +11548,31 @@
               "items": {
                 "type": "string"
               }
+            },
+            "auth": {
+              "$ref": "#/definitions/ServiceNowAuthenticationDTO"
+            }
+          }
+        }
+      ]
+    },
+    "ServiceNowUserNamePasswordDTO": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ServiceNowAuthCredentialsDTO"
+        },
+        {
+          "type": "object",
+          "required": ["passwordRef"],
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "usernameRef": {
+              "type": "string"
+            },
+            "passwordRef": {
+              "type": "string"
             }
           }
         }
@@ -8388,6 +11610,70 @@
         }
       ]
     },
+    "SpotConnector": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["credential"],
+          "properties": {
+            "credential": {
+              "$ref": "#/definitions/SpotCredential"
+            },
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "SpotCredential": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["PermanentTokenConfig"]
+        },
+        "spec": {
+          "$ref": "#/definitions/SpotCredentialSpec"
+        }
+      }
+    },
+    "SpotCredentialSpec": {
+      "type": "object"
+    },
+    "SpotPermanentTokenConfigSpec": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SpotCredentialSpec"
+        },
+        {
+          "type": "object",
+          "required": ["apiTokenRef"],
+          "properties": {
+            "spotAccountId": {
+              "type": "string"
+            },
+            "spotAccountIdRef": {
+              "type": "string"
+            },
+            "apiTokenRef": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
     "SumoLogicConnectorDTO": {
       "allOf": [
         {
@@ -8417,6 +11703,74 @@
         }
       ]
     },
+    "TasConnector": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["credential"],
+          "properties": {
+            "credential": {
+              "$ref": "#/definitions/TasCredential"
+            },
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "TasCredential": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["ManualConfig"]
+        },
+        "spec": {
+          "$ref": "#/definitions/TasCredentialSpec"
+        }
+      }
+    },
+    "TasCredentialSpec": {
+      "type": "object"
+    },
+    "TasManualDetails": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TasCredentialSpec"
+        },
+        {
+          "type": "object",
+          "required": ["endpointUrl", "passwordRef"],
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "endpointUrl": {
+              "type": "string",
+              "readOnly": true
+            },
+            "usernameRef": {
+              "type": "string"
+            },
+            "passwordRef": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
     "TemplateLinkConfigForCustomSecretManager": {
       "type": "object",
       "required": ["templateRef", "versionLabel"],
@@ -8438,6 +11792,68 @@
           }
         }
       }
+    },
+    "TerraformCloudConnector": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["credential", "terraformCloudUrl"],
+          "properties": {
+            "terraformCloudUrl": {
+              "type": "string"
+            },
+            "credential": {
+              "$ref": "#/definitions/TerraformCloudCredential"
+            },
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "TerraformCloudCredential": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["ApiToken"]
+        },
+        "spec": {
+          "$ref": "#/definitions/TerraformCloudCredentialSpec"
+        }
+      }
+    },
+    "TerraformCloudCredentialSpec": {
+      "type": "object"
+    },
+    "TerraformCloudTokenCredentials": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TerraformCloudCredentialSpec"
+        },
+        {
+          "type": "object",
+          "required": ["apiToken"],
+          "properties": {
+            "apiToken": {
+              "type": "string",
+              "readOnly": true
+            }
+          }
+        }
+      ]
     },
     "VaultConnectorDTO": {
       "allOf": [
@@ -8520,52 +11936,19 @@
             "renewAppRoleToken": {
               "type": "boolean"
             },
-            "default": {
-              "type": "boolean"
-            },
             "accessType": {
               "type": "string",
               "enum": ["APP_ROLE", "TOKEN", "VAULT_AGENT", "AWS_IAM", "K8s_AUTH"]
             },
             "readOnly": {
               "type": "boolean"
+            },
+            "default": {
+              "type": "boolean"
             }
           }
         }
       ]
-    },
-    "CCMConnectorDetails": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "connectorValidationResult": {
-          "$ref": "#/definitions/ConnectorValidationResult"
-        }
-      }
-    },
-    "ResponseCCMConnectorDetails": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/CCMConnectorDetails"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
     },
     "CcmK8sMetaInfo": {
       "type": "object",
@@ -8854,6 +12237,87 @@
     },
     "UserGroup": {
       "type": "object"
+    },
+    "CcmOverviewDTO": {
+      "type": "object",
+      "properties": {
+        "costPerDay": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TimeSeriesDataPoints"
+          }
+        },
+        "totalCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalCostTrend": {
+          "type": "number",
+          "format": "double"
+        },
+        "recommendationsCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "DataPoint": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "$ref": "#/definitions/Reference"
+        },
+        "value": {
+          "$ref": "#/definitions/Number"
+        }
+      }
+    },
+    "Reference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseCcmOverviewDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/CcmOverviewDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "TimeSeriesDataPoints": {
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataPoint"
+          }
+        },
+        "time": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
     },
     "CELicenseUsageDTO": {
       "type": "object",
@@ -9220,6 +12684,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
             "CONNECTOR_NOT_FOUND_EXCEPTION",
@@ -9246,7 +12711,9 @@
             "BUCKET_SERVER_ERROR",
             "GIT_SYNC_ERROR",
             "TEMPLATE_EXCEPTION",
+            "TEMPLATE_ALREADY_EXISTS_EXCEPTION",
             "ENTITY_REFERENCE_EXCEPTION",
+            "ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION",
             "INVALID_INPUT_SET",
             "INVALID_OVERLAY_INPUT_SET",
             "RESOURCE_ALREADY_EXISTS",
@@ -9285,7 +12752,23 @@
             "AWS_ECS_CLIENT_ERROR",
             "AWS_STS_ERROR",
             "FREEZE_EXCEPTION",
-            "DELEGATE_TASK_EXPIRED"
+            "DELEGATE_TASK_EXPIRED",
+            "DELEGATE_TASK_VALIDATION_FAILED",
+            "MONGO_EXECUTION_TIMEOUT_EXCEPTION",
+            "DELEGATE_NOT_REGISTERED",
+            "TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE",
+            "APPROVAL_REJECTION",
+            "TERRAGRUNT_EXECUTION_ERROR",
+            "ADFS_ERROR",
+            "TERRAFORM_CLOUD_ERROR",
+            "CLUSTER_CREDENTIALS_NOT_FOUND",
+            "SCM_API_ERROR",
+            "INTERNAL_SERVER_ERROR",
+            "SCM_FORBIDDEN",
+            "AWS_EKS_ERROR",
+            "OPA_POLICY_EVALUATION_ERROR",
+            "USER_MARKED_FAILURE",
+            "SSH_RETRY"
           ]
         },
         "message": {
@@ -9600,6 +13083,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
             "CONNECTOR_NOT_FOUND_EXCEPTION",
@@ -9626,7 +13110,9 @@
             "BUCKET_SERVER_ERROR",
             "GIT_SYNC_ERROR",
             "TEMPLATE_EXCEPTION",
+            "TEMPLATE_ALREADY_EXISTS_EXCEPTION",
             "ENTITY_REFERENCE_EXCEPTION",
+            "ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION",
             "INVALID_INPUT_SET",
             "INVALID_OVERLAY_INPUT_SET",
             "RESOURCE_ALREADY_EXISTS",
@@ -9665,7 +13151,23 @@
             "AWS_ECS_CLIENT_ERROR",
             "AWS_STS_ERROR",
             "FREEZE_EXCEPTION",
-            "DELEGATE_TASK_EXPIRED"
+            "DELEGATE_TASK_EXPIRED",
+            "DELEGATE_TASK_VALIDATION_FAILED",
+            "MONGO_EXECUTION_TIMEOUT_EXCEPTION",
+            "DELEGATE_NOT_REGISTERED",
+            "TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE",
+            "APPROVAL_REJECTION",
+            "TERRAGRUNT_EXECUTION_ERROR",
+            "ADFS_ERROR",
+            "TERRAFORM_CLOUD_ERROR",
+            "CLUSTER_CREDENTIALS_NOT_FOUND",
+            "SCM_API_ERROR",
+            "INTERNAL_SERVER_ERROR",
+            "SCM_FORBIDDEN",
+            "AWS_EKS_ERROR",
+            "OPA_POLICY_EVALUATION_ERROR",
+            "USER_MARKED_FAILURE",
+            "SSH_RETRY"
           ]
         },
         "message": {
@@ -9925,6 +13427,8 @@
             "CLUSTER_WORKLOAD",
             "CLUSTER_WORKLOAD_ID",
             "CLUSTER_NODE",
+            "CLUSTER_POD",
+            "CLUSTER_PARENT_INSTANCE_ID",
             "CLUSTER_STORAGE",
             "CLUSTER_APPLICATION",
             "CLUSTER_ENVIRONMENT",
@@ -9976,7 +13480,9 @@
             "TOTAL_COST",
             "IDLE_COST",
             "UNALLOCATED_COST",
-            "ALL"
+            "ALL",
+            "RULE_NAME",
+            "RULE_SET_NAME"
           ]
         },
         "operator": {
@@ -10034,6 +13540,8 @@
               "CLUSTER_WORKLOAD",
               "CLUSTER_WORKLOAD_ID",
               "CLUSTER_NODE",
+              "CLUSTER_POD",
+              "CLUSTER_PARENT_INSTANCE_ID",
               "CLUSTER_STORAGE",
               "CLUSTER_APPLICATION",
               "CLUSTER_ENVIRONMENT",
@@ -10085,7 +13593,9 @@
               "TOTAL_COST",
               "IDLE_COST",
               "UNALLOCATED_COST",
-              "ALL"
+              "ALL",
+              "RULE_NAME",
+              "RULE_SET_NAME"
             ]
           }
         },
@@ -10601,6 +14111,8 @@
               "CLUSTER_WORKLOAD",
               "CLUSTER_WORKLOAD_ID",
               "CLUSTER_NODE",
+              "CLUSTER_POD",
+              "CLUSTER_PARENT_INSTANCE_ID",
               "CLUSTER_STORAGE",
               "CLUSTER_APPLICATION",
               "CLUSTER_ENVIRONMENT",
@@ -10652,7 +14164,9 @@
               "TOTAL_COST",
               "IDLE_COST",
               "UNALLOCATED_COST",
-              "ALL"
+              "ALL",
+              "RULE_NAME",
+              "RULE_SET_NAME"
             ]
           }
         },
@@ -10674,17 +14188,6 @@
         },
         "skipRoundOff": {
           "type": "boolean"
-        }
-      }
-    },
-    "DataPoint": {
-      "type": "object",
-      "properties": {
-        "key": {
-          "$ref": "#/definitions/Reference"
-        },
-        "value": {
-          "$ref": "#/definitions/Number"
         }
       }
     },
@@ -10735,20 +14238,6 @@
         }
       }
     },
-    "Reference": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        }
-      }
-    },
     "ResponsePerspectiveTimeSeriesData": {
       "type": "object",
       "properties": {
@@ -10764,21 +14253,6 @@
         },
         "correlationId": {
           "type": "string"
-        }
-      }
-    },
-    "TimeSeriesDataPoints": {
-      "type": "object",
-      "properties": {
-        "values": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DataPoint"
-          }
-        },
-        "time": {
-          "type": "integer",
-          "format": "int64"
         }
       }
     },
@@ -10820,7 +14294,79 @@
         }
       }
     },
-    "ResponseRuleList": {
+    "CurrencyConversionFactorDTO": {
+      "type": "object",
+      "properties": {
+        "currencyConversionFactorDataList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CurrencyConversionFactorData"
+          }
+        }
+      }
+    },
+    "CurrencyConversionFactorData": {
+      "type": "object",
+      "properties": {
+        "cloudServiceProvider": {
+          "type": "string",
+          "enum": ["AWS", "GCP", "AZURE", "K8S"]
+        },
+        "sourceCurrency": {
+          "type": "string",
+          "enum": [
+            "AED",
+            "ARS",
+            "AUD",
+            "BRL",
+            "CAD",
+            "CNY",
+            "EUR",
+            "GBP",
+            "INR",
+            "JPY",
+            "MXN",
+            "NOK",
+            "NZD",
+            "RUB",
+            "SGD",
+            "USD",
+            "NONE"
+          ]
+        },
+        "destinationCurrency": {
+          "type": "string",
+          "enum": [
+            "AED",
+            "ARS",
+            "AUD",
+            "BRL",
+            "CAD",
+            "CNY",
+            "EUR",
+            "GBP",
+            "INR",
+            "JPY",
+            "MXN",
+            "NOK",
+            "NZD",
+            "RUB",
+            "SGD",
+            "USD",
+            "NONE"
+          ]
+        },
+        "conversionFactor": {
+          "type": "number",
+          "format": "double"
+        },
+        "conversionType": {
+          "type": "string",
+          "enum": ["DEFAULT", "CUSTOM"]
+        }
+      }
+    },
+    "ResponseCurrencyConversionFactorDTO": {
       "type": "object",
       "properties": {
         "status": {
@@ -10828,7 +14374,7 @@
           "enum": ["SUCCESS", "FAILURE", "ERROR"]
         },
         "data": {
-          "$ref": "#/definitions/RuleList"
+          "$ref": "#/definitions/CurrencyConversionFactorDTO"
         },
         "metaData": {
           "type": "object"
@@ -10838,18 +14384,613 @@
         }
       }
     },
-    "RuleList": {
+    "CurrencyDTO": {
+      "type": "object",
+      "properties": {
+        "currencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CurrencyData"
+          }
+        }
+      }
+    },
+    "CurrencyData": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string"
+        },
+        "symbol": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseCurrencyDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/CurrencyDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseListRuleEnforcement": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RuleEnforcement"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "RuleEnforcement": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "cloudProvider": {
+          "type": "string",
+          "enum": ["AWS"]
+        },
+        "ruleIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ruleSetIDs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "executionSchedule": {
+          "type": "string"
+        },
+        "executionTimezone": {
+          "type": "string"
+        },
+        "targetAccounts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "targetRegions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isDryRun": {
+          "type": "boolean"
+        },
+        "deleted": {
+          "type": "boolean"
+        },
+        "runCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "isEnabled": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastUpdatedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        },
+        "lastUpdatedBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        }
+      }
+    },
+    "CreateRuleEnforcementDTO": {
+      "type": "object",
+      "properties": {
+        "ruleEnforcement": {
+          "readOnly": true,
+          "$ref": "#/definitions/RuleEnforcement"
+        }
+      }
+    },
+    "EnforcementCount": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "ruleIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "ruleSetIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "ResponseEnforcementCount": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/EnforcementCount"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "EnforcementCountDTO": {
+      "type": "object",
+      "properties": {
+        "enforcementCount": {
+          "readOnly": true,
+          "$ref": "#/definitions/EnforcementCountRequest"
+        }
+      }
+    },
+    "EnforcementCountRequest": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "ruleIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ruleSetIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ExecutionDetails": {
+      "type": "object",
+      "properties": {
+        "enforcementIds": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/definitions/ExecutionEnforcementDetails"
+            }
+          }
+        }
+      }
+    },
+    "ExecutionEnforcementDetails": {
+      "type": "object",
+      "properties": {
+        "enforcementName": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accounts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ruleIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "ruleSetIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ResponseExecutionDetails": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/ExecutionDetails"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ExecutionDetailDTO": {
+      "type": "object",
+      "properties": {
+        "executionDetail": {
+          "readOnly": true,
+          "$ref": "#/definitions/ExecutionDetailRequest"
+        }
+      }
+    },
+    "ExecutionDetailRequest": {
+      "type": "object",
+      "properties": {
+        "enforcementIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ResponseRuleEnforcement": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/RuleEnforcement"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseRuleExecutionList": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/RuleExecutionList"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "RuleExecution": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "jobId": {
+          "type": "string"
+        },
+        "ruleEnforcementIdentifier": {
+          "type": "string"
+        },
+        "ruleEnforcementName": {
+          "type": "string"
+        },
+        "ruleIdentifier": {
+          "type": "string"
+        },
+        "ruleName": {
+          "type": "string"
+        },
+        "rulePackIdentifier": {
+          "type": "string"
+        },
+        "cloudProvider": {
+          "type": "string",
+          "enum": ["AWS"]
+        },
+        "isDryRun": {
+          "type": "boolean"
+        },
+        "targetAccount": {
+          "type": "string"
+        },
+        "targetRegions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "executionLogPath": {
+          "type": "string"
+        },
+        "resourceCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "executionLogBucketType": {
+          "type": "string"
+        },
+        "executionStatus": {
+          "type": "string",
+          "enum": ["FAILED", "ENQUEUED", "SUCCESS"]
+        },
+        "executionCompletedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastUpdatedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "ttl": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "ootb": {
+          "type": "boolean"
+        }
+      }
+    },
+    "RuleExecutionList": {
       "type": "object",
       "properties": {
         "totalItems": {
           "type": "integer",
           "format": "int32"
         },
-        "rules": {
+        "ruleExecution": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Rule"
+            "$ref": "#/definitions/RuleExecution"
           }
+        }
+      }
+    },
+    "CreateRuleExecutionFilterDTO": {
+      "type": "object",
+      "properties": {
+        "policyExecutionFilter": {
+          "readOnly": true,
+          "$ref": "#/definitions/RuleExecutionFilter"
+        }
+      }
+    },
+    "RuleExecutionFilter": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "targetAccount": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "executionStatus": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILED"]
+        },
+        "region": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cloudProvider": {
+          "type": "string",
+          "enum": ["AWS"]
+        },
+        "ruleIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ruleSetIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ruleEnforcementId": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "time": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CCMTimeFilter"
+          }
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ResponseRuleExecution": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/RuleExecution"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CreateRuleExecutionDTO": {
+      "type": "object",
+      "properties": {
+        "RuleExecution": {
+          "readOnly": true,
+          "$ref": "#/definitions/RuleExecution"
+        }
+      }
+    },
+    "FilterValues": {
+      "type": "object",
+      "properties": {
+        "ruleIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "ruleSetIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ResponseFilterValues": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/FilterValues"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseRule": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/Rule"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
         }
       }
     },
@@ -10919,6 +15060,48 @@
         }
       }
     },
+    "CreateRuleDTO": {
+      "type": "object",
+      "properties": {
+        "rule": {
+          "readOnly": true,
+          "$ref": "#/definitions/Rule"
+        }
+      }
+    },
+    "ResponseRuleList": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/RuleList"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "RuleList": {
+      "type": "object",
+      "properties": {
+        "totalItems": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Rule"
+          }
+        }
+      }
+    },
     "GovernanceRuleFilter": {
       "type": "object",
       "properties": {
@@ -10974,6 +15157,301 @@
         "query": {
           "readOnly": true,
           "$ref": "#/definitions/GovernanceRuleFilter"
+        }
+      }
+    },
+    "GovernanceEnqueueResponseDTO": {
+      "type": "object",
+      "properties": {
+        "ruleExecutionId": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ResponseGovernanceEnqueueResponseDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/GovernanceEnqueueResponseDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "GovernanceJobEnqueueDTO": {
+      "type": "object",
+      "properties": {
+        "ruleEnforcementId": {
+          "type": "string"
+        },
+        "roleArn": {
+          "type": "string"
+        },
+        "externalId": {
+          "type": "string"
+        },
+        "ruleCloudProviderType": {
+          "type": "string",
+          "enum": ["AWS"]
+        },
+        "ruleId": {
+          "type": "string"
+        },
+        "policy": {
+          "type": "string"
+        },
+        "targetAccountId": {
+          "type": "string"
+        },
+        "targetRegion": {
+          "type": "string"
+        },
+        "isDryRun": {
+          "type": "boolean"
+        },
+        "isOOTB": {
+          "type": "boolean"
+        }
+      }
+    },
+    "JsonNode": {
+      "type": "object"
+    },
+    "ResponseJsonNode": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/JsonNode"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CloneRuleDTO": {
+      "type": "object",
+      "properties": {
+        "ruleClone": {
+          "readOnly": true,
+          "$ref": "#/definitions/RuleClone"
+        }
+      }
+    },
+    "RuleClone": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseListRule": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Rule"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CreateRuleSetDTO": {
+      "type": "object",
+      "properties": {
+        "ruleSet": {
+          "readOnly": true,
+          "$ref": "#/definitions/RuleSet"
+        }
+      }
+    },
+    "RuleSet": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "cloudProvider": {
+          "type": "string",
+          "enum": ["AWS"]
+        },
+        "rulesIdentifier": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isOOTB": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastUpdatedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        },
+        "lastUpdatedBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        }
+      }
+    },
+    "ResponseRuleSet": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/RuleSet"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseRuleSetList": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/RuleSetList"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "RuleSetList": {
+      "type": "object",
+      "properties": {
+        "totalItems": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ruleSet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RuleSet"
+          }
+        }
+      }
+    },
+    "CreateRuleSetFilterDTO": {
+      "type": "object",
+      "properties": {
+        "ruleSet": {
+          "readOnly": true,
+          "$ref": "#/definitions/RuleSetFilter"
+        }
+      }
+    },
+    "RuleSetFilter": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "isOOTB": {
+          "type": "boolean"
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "string"
+        },
+        "cloudProvider": {
+          "type": "string"
+        },
+        "ruleSetIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "search": {
+          "type": "string"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "orderBy": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CCMSort"
+          }
         }
       }
     },
@@ -11495,6 +15973,210 @@
         }
       }
     },
+    "CCMJiraDetails": {
+      "type": "object",
+      "properties": {
+        "connectorRef": {
+          "type": "string"
+        },
+        "jiraIssue": {
+          "$ref": "#/definitions/JiraIssueNG"
+        }
+      }
+    },
+    "ContainerHistogramDTO": {
+      "type": "object",
+      "properties": {
+        "containerName": {
+          "type": "string"
+        },
+        "cpuHistogram": {
+          "$ref": "#/definitions/HistogramExp"
+        },
+        "memoryHistogram": {
+          "$ref": "#/definitions/HistogramExp"
+        },
+        "containerRecommendation": {
+          "$ref": "#/definitions/ContainerRecommendation"
+        }
+      }
+    },
+    "ContainerRecommendation": {
+      "type": "object",
+      "properties": {
+        "current": {
+          "$ref": "#/definitions/ResourceRequirement"
+        },
+        "burstable": {
+          "$ref": "#/definitions/ResourceRequirement"
+        },
+        "guaranteed": {
+          "$ref": "#/definitions/ResourceRequirement"
+        },
+        "recommended": {
+          "$ref": "#/definitions/ResourceRequirement"
+        },
+        "percentileBased": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ResourceRequirement"
+          }
+        },
+        "lastDayCost": {
+          "$ref": "#/definitions/Cost"
+        },
+        "numDays": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalSamplesCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Cost": {
+      "type": "object",
+      "properties": {
+        "cpu": {
+          "type": "number"
+        },
+        "memory": {
+          "type": "number"
+        }
+      }
+    },
+    "HistogramExp": {
+      "type": "object",
+      "properties": {
+        "firstBucketSize": {
+          "type": "number",
+          "format": "double"
+        },
+        "growthRatio": {
+          "type": "number",
+          "format": "double"
+        },
+        "numBuckets": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "minBucket": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxBucket": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bucketWeights": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "totalWeight": {
+          "type": "number",
+          "format": "double"
+        },
+        "precomputed": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      }
+    },
+    "JiraIssueNG": {
+      "type": "object",
+      "required": ["fields", "id", "key", "restUrl"],
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "restUrl": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "ResourceRequirement": {
+      "type": "object",
+      "properties": {
+        "requests": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "limits": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ResponseWorkloadRecommendationDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/WorkloadRecommendationDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "WorkloadRecommendationDTO": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "containerRecommendations": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ContainerRecommendation"
+          }
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContainerHistogramDTO"
+          }
+        },
+        "lastDayCost": {
+          "$ref": "#/definitions/Cost"
+        },
+        "jiraDetails": {
+          "$ref": "#/definitions/CCMJiraDetails"
+        }
+      }
+    },
     "ClusterRecommendationAccuracy": {
       "type": "object",
       "properties": {
@@ -11592,6 +16274,9 @@
         },
         "totalResourceUsage": {
           "$ref": "#/definitions/TotalResourceUsage"
+        },
+        "jiraDetails": {
+          "$ref": "#/definitions/CCMJiraDetails"
         }
       }
     },
@@ -11657,6 +16342,14 @@
         },
         "zone": {
           "type": "string"
+        },
+        "minCpu": {
+          "type": "number",
+          "format": "double"
+        },
+        "minMem": {
+          "type": "number",
+          "format": "double"
         }
       }
     },
@@ -11786,172 +16479,6 @@
         }
       }
     },
-    "ContainerHistogramDTO": {
-      "type": "object",
-      "properties": {
-        "containerName": {
-          "type": "string"
-        },
-        "cpuHistogram": {
-          "$ref": "#/definitions/HistogramExp"
-        },
-        "memoryHistogram": {
-          "$ref": "#/definitions/HistogramExp"
-        },
-        "containerRecommendation": {
-          "$ref": "#/definitions/ContainerRecommendation"
-        }
-      }
-    },
-    "ContainerRecommendation": {
-      "type": "object",
-      "properties": {
-        "current": {
-          "$ref": "#/definitions/ResourceRequirement"
-        },
-        "burstable": {
-          "$ref": "#/definitions/ResourceRequirement"
-        },
-        "guaranteed": {
-          "$ref": "#/definitions/ResourceRequirement"
-        },
-        "recommended": {
-          "$ref": "#/definitions/ResourceRequirement"
-        },
-        "percentileBased": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/ResourceRequirement"
-          }
-        },
-        "lastDayCost": {
-          "$ref": "#/definitions/Cost"
-        },
-        "numDays": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "totalSamplesCount": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "Cost": {
-      "type": "object",
-      "properties": {
-        "cpu": {
-          "type": "number"
-        },
-        "memory": {
-          "type": "number"
-        }
-      }
-    },
-    "HistogramExp": {
-      "type": "object",
-      "properties": {
-        "firstBucketSize": {
-          "type": "number",
-          "format": "double"
-        },
-        "growthRatio": {
-          "type": "number",
-          "format": "double"
-        },
-        "numBuckets": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "minBucket": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "maxBucket": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "bucketWeights": {
-          "type": "array",
-          "items": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "totalWeight": {
-          "type": "number",
-          "format": "double"
-        },
-        "precomputed": {
-          "type": "array",
-          "items": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      }
-    },
-    "ResourceRequirement": {
-      "type": "object",
-      "properties": {
-        "requests": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "limits": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "empty": {
-          "type": "boolean"
-        }
-      }
-    },
-    "ResponseWorkloadRecommendationDTO": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/WorkloadRecommendationDTO"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "WorkloadRecommendationDTO": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "containerRecommendations": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/ContainerRecommendation"
-          }
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ContainerHistogramDTO"
-          }
-        },
-        "lastDayCost": {
-          "$ref": "#/definitions/Cost"
-        }
-      }
-    },
     "ECSRecommendationDTO": {
       "type": "object",
       "properties": {
@@ -11994,6 +16521,9 @@
         },
         "memoryHistogram": {
           "$ref": "#/definitions/HistogramExp"
+        },
+        "jiraDetails": {
+          "$ref": "#/definitions/CCMJiraDetails"
         }
       }
     },
@@ -12006,6 +16536,76 @@
         },
         "data": {
           "$ref": "#/definitions/ECSRecommendationDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "EC2InstanceDTO": {
+      "type": "object",
+      "properties": {
+        "instanceFamily": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "memory": {
+          "type": "string"
+        },
+        "vcpu": {
+          "type": "string"
+        },
+        "cpuUtilisation": {
+          "type": "string"
+        },
+        "memoryUtilisation": {
+          "type": "string"
+        },
+        "monthlyCost": {
+          "type": "string"
+        }
+      }
+    },
+    "EC2RecommendationDTO": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "awsAccountId": {
+          "type": "string"
+        },
+        "current": {
+          "$ref": "#/definitions/EC2InstanceDTO"
+        },
+        "showTerminated": {
+          "type": "boolean"
+        },
+        "sameFamilyRecommendation": {
+          "$ref": "#/definitions/EC2InstanceDTO"
+        },
+        "crossFamilyRecommendation": {
+          "$ref": "#/definitions/EC2InstanceDTO"
+        },
+        "jiraDetails": {
+          "$ref": "#/definitions/CCMJiraDetails"
+        }
+      }
+    },
+    "ResponseEC2RecommendationDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/EC2RecommendationDTO"
         },
         "metaData": {
           "type": "object"
@@ -12095,7 +16695,8 @@
             "FileStore",
             "CCMRecommendation",
             "Anomaly",
-            "Environment"
+            "Environment",
+            "RuleExecution"
           ]
         }
       }
@@ -12131,7 +16732,14 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["WORKLOAD", "NODE_POOL", "ECS_SERVICE"]
+            "enum": ["WORKLOAD", "NODE_POOL", "ECS_SERVICE", "EC2_INSTANCE"]
+          }
+        },
+        "recommendationStates": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["OPEN", "APPLIED", "IGNORED"]
           }
         }
       }
@@ -12149,6 +16757,27 @@
           "$ref": "#/definitions/CCMRecommendationFilterProperties"
         }
       }
+    },
+    "ResponseVoid": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/Void"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "Void": {
+      "type": "object"
     },
     "ResponseInteger": {
       "type": "object",
@@ -12198,10 +16827,29 @@
         },
         "resourceType": {
           "type": "string",
-          "enum": ["WORKLOAD", "NODE_POOL", "ECS_SERVICE"]
+          "enum": ["WORKLOAD", "NODE_POOL", "ECS_SERVICE", "EC2_INSTANCE"]
+        },
+        "recommendationState": {
+          "type": "string",
+          "enum": ["OPEN", "APPLIED", "IGNORED"]
+        },
+        "jiraConnectorRef": {
+          "type": "string"
+        },
+        "jiraIssueKey": {
+          "type": "string"
+        },
+        "jiraStatus": {
+          "type": "string"
         },
         "recommendationDetails": {
           "$ref": "#/definitions/RecommendationDetailsDTO"
+        },
+        "perspectiveId": {
+          "type": "string"
+        },
+        "perspectiveName": {
+          "type": "string"
         }
       }
     },
@@ -12239,6 +16887,185 @@
         },
         "correlationId": {
           "type": "string"
+        }
+      }
+    },
+    "ResponseCCMJiraDetails": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/CCMJiraDetails"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CCMJiraCreateDTO": {
+      "type": "object",
+      "properties": {
+        "recommendationId": {
+          "type": "string"
+        },
+        "resourceType": {
+          "type": "string",
+          "enum": ["WORKLOAD", "NODE_POOL", "ECS_SERVICE", "EC2_INSTANCE"]
+        },
+        "connectorRef": {
+          "type": "string"
+        },
+        "projectKey": {
+          "type": "string"
+        },
+        "issueType": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "RecommendationEC2InstanceId": {
+      "type": "object",
+      "properties": {
+        "awsAccountId": {
+          "type": "string"
+        },
+        "instanceId": {
+          "type": "string"
+        }
+      }
+    },
+    "RecommendationECSServiceId": {
+      "type": "object",
+      "properties": {
+        "clusterName": {
+          "type": "string"
+        },
+        "ecsServiceName": {
+          "type": "string"
+        }
+      }
+    },
+    "RecommendationNodepoolId": {
+      "type": "object",
+      "properties": {
+        "clusterName": {
+          "type": "string"
+        },
+        "nodepoolName": {
+          "type": "string"
+        }
+      }
+    },
+    "RecommendationWorkloadId": {
+      "type": "object",
+      "properties": {
+        "clusterName": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "workloadName": {
+          "type": "string"
+        }
+      }
+    },
+    "RecommendationsIgnoreList": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "workloadIgnoreList": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/RecommendationWorkloadId"
+          }
+        },
+        "nodepoolIgnoreList": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/RecommendationNodepoolId"
+          }
+        },
+        "ecsServiceIgnoreList": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/RecommendationECSServiceId"
+          }
+        },
+        "ec2InstanceIgnoreList": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/RecommendationEC2InstanceId"
+          }
+        }
+      }
+    },
+    "ResponseRecommendationsIgnoreList": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/RecommendationsIgnoreList"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "RecommendationsIgnoreResourcesDTO": {
+      "type": "object",
+      "properties": {
+        "workloads": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/RecommendationWorkloadId"
+          }
+        },
+        "nodepools": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/RecommendationNodepoolId"
+          }
+        },
+        "ecsServices": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/RecommendationECSServiceId"
+          }
+        },
+        "ec2Instances": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/RecommendationEC2InstanceId"
+          }
         }
       }
     },
@@ -12291,7 +17118,8 @@
             "FileStore",
             "CCMRecommendation",
             "Anomaly",
-            "Environment"
+            "Environment",
+            "RuleExecution"
           ]
         }
       }
@@ -12319,19 +17147,31 @@
       "properties": {
         "totalPages": {
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
-        "totalItems": {
+        "totalElements": {
           "type": "integer",
           "format": "int64"
         },
-        "pageItemCount": {
-          "type": "integer",
-          "format": "int64"
+        "first": {
+          "type": "boolean"
         },
-        "pageSize": {
+        "last": {
+          "type": "boolean"
+        },
+        "pageable": {
+          "$ref": "#/definitions/Pageable"
+        },
+        "numberOfElements": {
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
+        },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
         },
         "content": {
           "type": "array",
@@ -12339,9 +17179,9 @@
             "type": "object"
           }
         },
-        "pageIndex": {
+        "number": {
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
         "empty": {
           "type": "boolean"
@@ -12379,6 +17219,9 @@
         },
         "empty": {
           "type": "boolean"
+        },
+        "pageToken": {
+          "type": "string"
         }
       }
     },
@@ -12391,39 +17234,6 @@
         },
         "data": {
           "$ref": "#/definitions/PageFilterDTO"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "LicenseUsageDTO": {
-      "type": "object",
-      "properties": {
-        "accountIdentifier": {
-          "type": "string"
-        },
-        "module": {
-          "type": "string"
-        },
-        "timestamp": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "ResponseLicenseUsageDTO": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/LicenseUsageDTO"
         },
         "metaData": {
           "type": "object"
@@ -12519,6 +17329,203 @@
         "cdLicenseType": {
           "type": "string",
           "enum": ["SERVICES", "SERVICE_INSTANCES"]
+        }
+      }
+    },
+    "LicenseUsageDTO": {
+      "type": "object",
+      "properties": {
+        "accountIdentifier": {
+          "type": "string"
+        },
+        "module": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ResponseLicenseUsageDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/LicenseUsageDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ActiveServiceDTO": {
+      "type": "object",
+      "required": ["identifier"],
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "orgName": {
+          "type": "string"
+        },
+        "projectName": {
+          "type": "string"
+        },
+        "instanceCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastDeployed": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "licensesConsumed": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "accountIdentifier": {
+          "type": "string"
+        },
+        "module": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "PageActiveServiceDTO": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalElements": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "first": {
+          "type": "boolean"
+        },
+        "last": {
+          "type": "boolean"
+        },
+        "pageable": {
+          "$ref": "#/definitions/Pageable"
+        },
+        "numberOfElements": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActiveServiceDTO"
+          }
+        },
+        "number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Pageable": {
+      "type": "object",
+      "properties": {
+        "paged": {
+          "type": "boolean"
+        },
+        "unpaged": {
+          "type": "boolean"
+        },
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ResponsePageActiveServiceDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/PageActiveServiceDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "Sort": {
+      "type": "object",
+      "properties": {
+        "unsorted": {
+          "type": "boolean"
+        },
+        "sorted": {
+          "type": "boolean"
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ActiveServicesFilterParams": {
+      "type": "object",
+      "properties": {
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "serviceIdentifier": {
+          "type": "string"
         }
       }
     }

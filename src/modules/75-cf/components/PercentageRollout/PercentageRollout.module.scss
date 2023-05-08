@@ -27,21 +27,11 @@
 }
 
 .variationRow {
+  display: flex;
   grid-column: 1;
 
   :global(.bp3-label) {
-    display: flex;
     align-items: center;
-
-    &::before {
-      display: inline-block;
-      border-radius: 50%;
-      content: '';
-      width: 1rem;
-      height: 1rem;
-      margin-right: var(--spacing-small);
-      background-color: var(--variationColor);
-    }
   }
 
   > :global(.bp3-form-group) {
@@ -50,7 +40,6 @@
   }
 
   :global(.bp3-input-group) {
-    display: flex;
     align-items: center;
 
     &::after {

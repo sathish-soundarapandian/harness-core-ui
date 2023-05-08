@@ -37,7 +37,7 @@ interface CloudFeatures {
 
 interface ICard {
   icon: IconName
-  value: 'VISIBILITY' | 'BILLING' | 'OPTIMIZATION'
+  value: 'VISIBILITY' | 'BILLING' | 'OPTIMIZATION' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR' | 'CLUSTER_ORCHESTRATOR'
   prefix: string
   title: string
   features: string[]
