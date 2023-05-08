@@ -171,7 +171,7 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
   })
 
   function handleStartTrial(): Promise<ResponseModuleLicenseDTO | undefined> {
-    if (module === 'ci') {
+    if (module === 'ci' && !isFreeEnabled) {
       return Promise.resolve(undefined)
     }
     return isFreeEnabled ? startFreePlan() : startTrial(startTrialRequestBody)
