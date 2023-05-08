@@ -14,7 +14,8 @@ import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { FeatureActions, Category } from '@common/constants/TrackingConstants'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
+import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 
 export interface CreateFlagButtonProps {
   disabled?: boolean
@@ -24,6 +25,7 @@ export interface CreateFlagButtonProps {
 
 const CreateFlagButton = (props: CreateFlagButtonProps): ReactElement => {
   const { disabled, showModal, isLinkVariation } = props
+  const { activeEnvironment } = useActiveEnvironment()
 
   const { getString } = useStrings()
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
@@ -55,7 +57,9 @@ const CreateFlagButton = (props: CreateFlagButtonProps): ReactElement => {
       margin={isLinkVariation ? { top: 'xlarge' } : {}}
       permission={{
         permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
-        resource: { resourceType: ResourceType.FEATUREFLAG }
+        resource: activeEnvironment
+          ? { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment }
+          : { resourceType: ResourceType.FEATUREFLAG }
       }}
       {...planEnforcementProps}
     />
