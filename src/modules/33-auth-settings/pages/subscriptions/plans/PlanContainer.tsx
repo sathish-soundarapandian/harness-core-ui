@@ -124,7 +124,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
     history.push(routes.toSubscriptions({ accountId, moduleCard: module, tab: 'OVERVIEW' }))
   }
 
-  function startPlanByEdition(edition: Editions): Promise<ResponseModuleLicenseDTO> {
+  function startPlanByEdition(edition: Editions): Promise<ResponseModuleLicenseDTO | undefined> {
     switch (edition) {
       case Editions.FREE: {
         trackEvent(PlanActions.StartFreeClick, { category: Category.SIGNUP, module, plan: edition })
@@ -134,6 +134,9 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       case Editions.TEAM:
       default: {
         trackEvent(TrialActions.StartTrialClick, { category: Category.SIGNUP, module, plan: edition })
+        if (moduleType === ModuleName.CI) {
+          return Promise.resolve(undefined)
+        }
         return startTrial({ moduleType, edition })
       }
     }
