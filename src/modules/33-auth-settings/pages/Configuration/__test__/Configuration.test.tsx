@@ -18,6 +18,9 @@ jest.mock('services/cd-ng', () => ({
   useGetAuthenticationSettings: jest.fn().mockImplementation(() => {
     return { data: mockAuthSettingsResponse, refetch: Promise.resolve(mockAuthSettingsResponse) }
   }),
+  useGetAuthenticationSettingsV2: jest.fn().mockImplementation(() => {
+    return { data: mockAuthSettingsResponse, refetch: Promise.resolve(mockAuthSettingsResponse) }
+  }),
   useUpdateAuthMechanism: jest.fn().mockImplementation(() => {
     return { mutate: () => Promise.resolve(mockResponse) }
   }),

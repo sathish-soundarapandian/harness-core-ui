@@ -307,3 +307,9 @@ billingInfo:
     address: Address is required
     zipCode: Zip is required
     company: Company Name is required
+samlProviderOverview: SAML Provider Overview
+selectProvider: Select Provider
+urlIdentityProvider: URL and Identity Provider
+newSamlProvider: New SAML Provider
+identityProviderLabel: Identity Provider
+additionalFunctions: Additional Functions

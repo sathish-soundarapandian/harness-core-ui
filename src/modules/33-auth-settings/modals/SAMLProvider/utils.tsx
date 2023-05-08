@@ -10,6 +10,7 @@ import { AuthenticationMechanisms } from '@rbac/utils/utils'
 import type { UseStringsReturn } from 'framework/strings'
 export interface FormValues {
   displayName: string
+  friendlySamlName?: string
   authorizationEnabled: boolean
   groupMembershipAttr: string
   entityIdEnabled: boolean
@@ -40,6 +41,10 @@ export const createFormData = (data: FormValues): FormData => {
   formData.set('authorizationEnabled', JSON.stringify(data.authorizationEnabled))
   formData.set('groupMembershipAttr', data.groupMembershipAttr)
   formData.set('ssoSetupType', AuthenticationMechanisms.SAML)
+
+  if (data.friendlySamlName) {
+    formData.set('friendlySamlName', data.friendlySamlName)
+  }
 
   if (data.logoutUrl) {
     formData.set('logoutUrl', data.logoutUrl)
