@@ -42,6 +42,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): React.ReactEleme
     allowedValuesValidator,
     getAllowedValuesCustomComponent,
     className,
+    tagsInputSeparator,
     isReadonly = false
   } = props
   const [input, setInput] = React.useState(value)
@@ -108,6 +109,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): React.ReactEleme
           allowedValuesType={allowedValuesType}
           allowedValuesValidator={allowedValuesValidator}
           getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}
+          tagsInputSeparator={tagsInputSeparator}
         />
       </Dialog>
     </React.Fragment>

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { noop } from 'lodash-es'
+import { isUndefined, noop } from 'lodash-es'
 import { FormikContextType, yupToFormErrors } from 'formik'
 import { FormInput, MultiSelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -24,13 +24,15 @@ export interface AllowedValuesFieldsProps {
   getAllowedValuesCustomComponent?: (
     allowedValuesCustomComponentProps: AllowedValuesCustomComponentProps
   ) => React.ReactElement
+  tagsInputSeparator?: string | RegExp | false
+  variableType: string | JSX.Element
 }
 
 interface RenderFieldProps extends Omit<AllowedValuesFieldsProps, 'showAdvanced'> {
   getString(key: StringKeys, vars?: Record<string, any>): string
 }
 
-interface GetTagProps extends Omit<AllowedValuesFieldsProps, 'showAdvanced' | 'isReadonly'> {
+interface GetTagProps extends Omit<AllowedValuesFieldsProps, 'showAdvanced' | 'isReadonly' | 'variableType'> {
   fieldKey: string
   inputValue: string
   setInputValue: any
@@ -78,9 +80,19 @@ export const RenderField = ({
   allowedValuesValidator,
   isReadonly,
   formik,
-  getAllowedValuesCustomComponent
+  getAllowedValuesCustomComponent,
+  tagsInputSeparator,
+  variableType
 }: RenderFieldProps): React.ReactElement => {
   const [inputValue, setInputValue] = React.useState('')
+
+  // disable values getting splitted on the commas - [default component behaviour is splitting on /[,\n\r]/ i.e. Comma, \n and \r]
+  const disableCommaSeparation = !isUndefined(allowedValuesType)
+    ? allowedValuesType === ALLOWED_VALUES_TYPE.TEXT
+    : typeof variableType === 'string' && variableType === 'String'
+  const separator = !isUndefined(tagsInputSeparator)
+    ? { separator: tagsInputSeparator }
+    : { separator: disableCommaSeparation ? '/[\n\r]/' : undefined }
 
   const extraProps = {
     tagsProps: {}
@@ -123,6 +135,14 @@ export const RenderField = ({
     }
   }
 
+  const tagProps = {
+    ...extraProps,
+    tagsProps: {
+      ...extraProps.tagsProps,
+      ...separator
+    }
+  }
+
   return (
     getAllowedValuesCustomComponent?.({ onChange }) ?? (
       <FormInput.KVTagInput
@@ -130,14 +150,22 @@ export const RenderField = ({
         name="allowedValues"
         isArray={true}
         disabled={isReadonly}
-        {...extraProps}
+        {...tagProps}
       />
     )
   )
 }
 
 export default function AllowedValuesFields(props: AllowedValuesFieldsProps): React.ReactElement {
-  const { isReadonly, allowedValuesType, allowedValuesValidator, formik, getAllowedValuesCustomComponent } = props
+  const {
+    isReadonly,
+    allowedValuesType,
+    allowedValuesValidator,
+    formik,
+    getAllowedValuesCustomComponent,
+    tagsInputSeparator,
+    variableType
+  } = props
   const { getString } = useStrings()
   return (
     <div>
@@ -148,6 +176,8 @@ export default function AllowedValuesFields(props: AllowedValuesFieldsProps): Re
         allowedValuesValidator={allowedValuesValidator}
         getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}
         formik={formik}
+        tagsInputSeparator={tagsInputSeparator}
+        variableType={variableType}
       />
     </div>
   )

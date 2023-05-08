@@ -6,7 +6,14 @@
  */
 
 import React from 'react'
-import { Text, MultiTypeInputType, getMultiTypeFromValue, AllowedTypes, Layout } from '@harness/uicore'
+import {
+  Text,
+  MultiTypeInputType,
+  getMultiTypeFromValue,
+  AllowedTypes,
+  Layout,
+  MultiSelectOption
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { cloneDeep, defaultTo, get, isEmpty } from 'lodash-es'
@@ -23,6 +30,14 @@ import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { CustomDeploymentNGVariable } from 'services/cd-ng'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { getAllowedValuesFromTemplate, shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
+import {
+  MultiSelectVariableAllowedValues,
+  concatValuesWithQuotes,
+  isFixedInput
+} from './MultiSelectVariableAllowedValues/MultiSelectVariableAllowedValues'
 import { VariableType } from './CustomVariableUtils'
 import css from './CustomVariables.module.scss'
 export interface CustomVariablesData {
@@ -81,6 +96,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
   }>()
 
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const multiSelectSupportForAllowedValues = useFeatureFlag(FeatureFlag.PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES)
 
   // this was necessary due to absence of YAML validations in run pipeline form. Add such logic here only when absolutely unavoidable
   React.useEffect(() => {
@@ -125,6 +141,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
         // because the order of the variables might not be the same
         const index = formikVariables.findIndex((fVar: AllNGVariables) => variable.name === fVar.name)
 
+        const selectOpt = defaultTo(getAllowedValuesFromTemplate(template, `variables[${index}].value`), [])
         const value = defaultTo(variable.value, '')
         if (getMultiTypeFromValue(value as string) !== MultiTypeInputType.RUNTIME) {
           return
@@ -133,6 +150,11 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
           get(allValues, 'variables', []).find((fVar: AllNGVariables) => variable.name === fVar.name)?.description,
           ''
         )
+        const allowMultiSelectAllowedValues =
+          multiSelectSupportForAllowedValues &&
+          variable.type === 'String' &&
+          shouldRenderRunTimeInputViewWithAllowedValues(`variables[${index}].value`, template) &&
+          isFixedInput(formik, `${basePath}[${index}].value`)
         return (
           <div key={`${variable.name}${index}`} className={css.variableListTable}>
             <Layout.Vertical>
@@ -178,24 +200,38 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                     templateValue: get(template, `variables[${index}].value`)
                   }}
                 />
+              ) : allowMultiSelectAllowedValues ? (
+                <MultiSelectVariableAllowedValues
+                  name={`${basePath}[${index}].value`}
+                  disabled={inputSetData?.readonly}
+                  allowableTypes={allowableTypes}
+                  selectOption={selectOpt}
+                  onChange={val => {
+                    formik?.setFieldValue(
+                      `${basePath}[${index}].value`,
+                      getMultiTypeFromValue(val) === MultiTypeInputType.FIXED
+                        ? concatValuesWithQuotes(val as MultiSelectOption[])
+                        : val
+                    )
+                  }}
+                  label=""
+                />
               ) : (
-                <>
-                  <TextFieldInputSetView
-                    className="variableInput"
-                    name={`${basePath}[${index}].value`}
-                    multiTextInputProps={{
-                      textProps: { type: variable.type === 'Number' ? 'number' : 'text' },
-                      allowableTypes,
-                      expressions,
-                      defaultValueToReset: ''
-                    }}
-                    label=""
-                    disabled={inputSetData?.readonly}
-                    template={template}
-                    fieldPath={`variables[${index}].value`}
-                    variableNamePath={`${basePath}[${index}].name`}
-                  />
-                </>
+                <TextFieldInputSetView
+                  className="variableInput"
+                  name={`${basePath}[${index}].value`}
+                  multiTextInputProps={{
+                    textProps: { type: variable.type === 'Number' ? 'number' : 'text' },
+                    allowableTypes,
+                    expressions,
+                    defaultValueToReset: ''
+                  }}
+                  label=""
+                  disabled={inputSetData?.readonly}
+                  template={template}
+                  fieldPath={`variables[${index}].value`}
+                  variableNamePath={`${basePath}[${index}].name`}
+                />
               )}
             </div>
           </div>
