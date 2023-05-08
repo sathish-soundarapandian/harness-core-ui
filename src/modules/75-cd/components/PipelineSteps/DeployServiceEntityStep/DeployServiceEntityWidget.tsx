@@ -75,6 +75,8 @@ import { ServiceEntitiesList } from './ServiceEntitiesList/ServiceEntitiesList'
 import { useGetServicesData } from './useGetServicesData'
 import { setupMode } from '../PipelineStepsUtil'
 import css from './DeployServiceEntityStep.module.scss'
+import NewExpressionDropdown from './NewExpressionDropdown'
+import { expressionTrie } from './utils'
 
 export interface DeployServiceEntityWidgetProps extends DeployServiceEntityCustomProps {
   initialValues: DeployServiceEntityData
@@ -729,6 +731,7 @@ export default function DeployServiceEntityWidget({
           )
         }}
       </Formik>
+      <NewExpressionDropdown rootTrieNode={expressionTrie} query="" />
       <ModalDialog
         isOpen={isAddNewModalOpen}
         onClose={closeAddNewModal}
