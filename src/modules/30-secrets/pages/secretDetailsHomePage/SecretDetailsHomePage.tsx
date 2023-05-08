@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom'
-import { Container, Layout, Text, Icon, Tabs, useToaster } from '@harness/uicore'
+import { Container, Layout, Text, Icon, Tabs } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
@@ -19,7 +19,6 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { SettingType } from '@common/constants/Utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import SecretDetails from '../secretDetails/SecretDetails'
@@ -62,22 +61,13 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
   )?.isExact
 
   const [isReference, setIsReference] = useState(Boolean(isReferenceTab))
-  const { showError } = useToaster()
   const { selectedProject } = useAppStore()
-  const { getRBACErrorMessage } = useRBACError()
   const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS } = useFeatureFlags()
-  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+  const { data: forceDeleteSettings } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
     lazy: !NG_SETTINGS
   })
-
-  useEffect(() => {
-    if (forceDeleteSettingsError) {
-      showError(getRBACErrorMessage(forceDeleteSettingsError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceDeleteSettingsError])
 
   const history = useHistory()
   const { loading, data, error, refetch } = useGetSecretV2({

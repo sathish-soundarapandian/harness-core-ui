@@ -240,17 +240,11 @@ export function OverlayInputSetForm({
   })
 
   const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
-  const { data: allowDifferentRepoSettings, error: allowDifferentRepoSettingsError } = useGetSettingValue({
+  const { data: allowDifferentRepoSettings } = useGetSettingValue({
     identifier: SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS,
     queryParams: { accountIdentifier: accountId },
     lazy: !isSettingEnabled
   })
-
-  React.useEffect(() => {
-    if (allowDifferentRepoSettingsError) {
-      showError(getRBACErrorMessage(allowDifferentRepoSettingsError))
-    }
-  }, [allowDifferentRepoSettingsError, getRBACErrorMessage, showError])
 
   const { mutate: createOverlayInputSet, loading: createOverlayInputSetLoading } = useCreateOverlayInputSetForPipeline({
     queryParams: { ...commonQueryParams, branch },

@@ -24,8 +24,7 @@ import {
   Text,
   DropDown,
   Pagination,
-  ExpandingSearchInputHandle,
-  useToaster
+  ExpandingSearchInputHandle
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
@@ -66,28 +65,16 @@ import css from './EnvironmentGroups.module.scss'
 export default function EnvironmentGroupsPage(): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
-  const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
   const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
-  const {
-    data: forceDeleteSettings,
-    loading: forceDeleteSettingsLoading,
-    error: forceDeleteSettingsError
-  } = useGetSettingValue({
+  const { data: forceDeleteSettings, loading: forceDeleteSettingsLoading } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: {
       accountIdentifier: accountId
     },
     lazy: !isSettingsEnabled
   })
-
-  React.useEffect(() => {
-    if (forceDeleteSettingsError) {
-      showError(getRBACErrorMessage(forceDeleteSettingsError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceDeleteSettingsError])
 
   /* #region Sort changes */
   const sortOptions: SelectOption[] = [

@@ -53,20 +53,13 @@ export default function InfrastructureList({
   const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams>()
   const [infraDetailsToBeDeleted, setInfraDetailsToBeDeleted] = React.useState<InfraDetails>()
 
-  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+  const { data: forceDeleteSettings } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: {
       accountIdentifier: accountId
     },
     lazy: !isSettingsEnabled
   })
-
-  React.useEffect(() => {
-    if (forceDeleteSettingsError) {
-      showError(getRBACErrorMessage(forceDeleteSettingsError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceDeleteSettingsError])
 
   const redirectToReferencedBy = (): void => {
     closeReferenceErrorDialog()

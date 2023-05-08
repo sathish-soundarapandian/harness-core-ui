@@ -28,8 +28,6 @@ import type {
   ResponseInputSetTemplateWithReplacedExpressionsResponse
 } from 'services/pipeline-ng'
 import { useGetSettingValue } from 'services/cd-ng'
-import { useToaster } from '@common/exports'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { InputSetGitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { NameIdDescriptionTags } from '@common/components'
@@ -253,8 +251,6 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
-  const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
   const queryParams = useQueryParams<InputSetGitQueryParams>()
   const repoIdentifier = queryParams.repoIdentifier
   const { branch, connectorRef, storeType, repoName } = getInputSetGitDetails(queryParams, {
@@ -276,17 +272,11 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   }, [inputSet?.outdated])
 
   const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
-  const { data: allowDifferentRepoSettings, error: allowDifferentRepoSettingsError } = useGetSettingValue({
+  const { data: allowDifferentRepoSettings } = useGetSettingValue({
     identifier: SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS,
     queryParams: { accountIdentifier: accountId },
     lazy: !isSettingEnabled
   })
-
-  React.useEffect(() => {
-    if (allowDifferentRepoSettingsError) {
-      showError(getRBACErrorMessage(allowDifferentRepoSettingsError))
-    }
-  }, [allowDifferentRepoSettingsError, getRBACErrorMessage, showError])
 
   useEffect(() => {
     // only do this for CI

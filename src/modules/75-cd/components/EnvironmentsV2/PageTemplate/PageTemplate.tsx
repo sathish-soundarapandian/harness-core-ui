@@ -24,9 +24,7 @@ import {
   Pagination,
   SelectOption,
   Text,
-  DropDown,
-  useToaster
-} from '@harness/uicore'
+  DropDown} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
@@ -43,7 +41,6 @@ import { FeatureFlag } from '@common/featureFlags'
 import { SettingType } from '@common/constants/Utils'
 
 import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import { FilterContextProvider } from '@cd/context/FiltersContext'
 
@@ -106,8 +103,6 @@ export default function PageTemplate({
 
   const { view, setView } = usePageStore()
   const { getString } = useStrings()
-  const { getRBACErrorMessage } = useRBACError()
-  const { showError } = useToaster()
 
   const [sort, setSort] = useState<string[]>(defaultSortOption)
   const [sortOption, setSortOption] = useState<SelectOption>(sortOptions[0])
@@ -122,24 +117,13 @@ export default function PageTemplate({
   const hasFilterIdentifier = getHasFilterIdentifier(filterIdentifier)
 
   const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
-  const {
-    data: forceDeleteSettings,
-    loading: forceDeleteSettingsLoading,
-    error: forceDeleteSettingsError
-  } = useGetSettingValue({
+  const { data: forceDeleteSettings, loading: forceDeleteSettingsLoading } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: {
       accountIdentifier: accountId
     },
     lazy: !(isForceDeleteAllowed && isSettingsEnabled)
   })
-
-  React.useEffect(() => {
-    if (forceDeleteSettingsError) {
-      showError(getRBACErrorMessage(forceDeleteSettingsError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceDeleteSettingsError])
 
   const isForceDeleteEnabled = useMemo(
     () => forceDeleteSettings?.data?.value == 'true',

@@ -5,28 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useMemo, useEffect } from 'react'
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { useToaster } from '@harness/uicore'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSettingValue } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SettingType } from '@common/constants/Utils'
-import { getErrorMessage } from '../utils'
 
 const useIsGithubWebhookAuthenticationEnabled = (): {
   isGithubWebhookAuthenticationEnabled: boolean
   isGithubWebhookAuthenticationDataLoading: boolean
 } => {
-  const { showError } = useToaster()
   const { NG_SETTINGS } = useFeatureFlags()
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
-  const {
-    data: projectSettingData,
-    loading: isGithubWebhookAuthenticationDataLoading,
-    error: projectSettingDataError
-  } = useGetSettingValue({
+  const { data: projectSettingData, loading: isGithubWebhookAuthenticationDataLoading } = useGetSettingValue({
     identifier: SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION,
     queryParams: {
       accountIdentifier,
@@ -35,14 +28,6 @@ const useIsGithubWebhookAuthenticationEnabled = (): {
     },
     lazy: !NG_SETTINGS
   })
-
-  useEffect(() => {
-    if (projectSettingDataError) {
-      showError(getErrorMessage(projectSettingDataError))
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectSettingDataError])
 
   const isGithubWebhookAuthenticationEnabled = useMemo(
     () => projectSettingData?.data?.value === 'true',

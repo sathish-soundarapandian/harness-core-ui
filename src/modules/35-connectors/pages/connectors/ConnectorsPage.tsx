@@ -133,18 +133,12 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   useDocumentTitle(getString('connectorsLabel'))
   const { trackEvent } = useTelemetry()
   const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS } = useFeatureFlags()
-  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+  const { data: forceDeleteSettings } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
     lazy: !NG_SETTINGS
   })
 
-  useEffect(() => {
-    if (forceDeleteSettingsError) {
-      showError(getRBACErrorMessage(forceDeleteSettingsError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceDeleteSettingsError])
 
   /* #region Connector CRUD section */
 

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useParams, useHistory, useLocation, useRouteMatch } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import { Menu, Position, Classes, Intent } from '@blueprintjs/core'
@@ -322,25 +322,16 @@ export const RenderColumnAction: Renderer<CellProps<SecretResponseWrapper>> = ({
 }
 const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch }) => {
   const history = useHistory()
-  const { showError } = useToaster()
   const { accountId } = useParams<ProjectPathProps>()
   const data: SecretResponseWrapper[] = useMemo(() => secrets?.content || [], [secrets?.content])
   const { pathname } = useLocation()
   const { getString } = useStrings()
-  const { getRBACErrorMessage } = useRBACError()
   const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS, PL_NEW_PAGE_SIZE } = useFeatureFlags()
-  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+  const { data: forceDeleteSettings } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
     lazy: !NG_SETTINGS
   })
-
-  useEffect(() => {
-    if (forceDeleteSettingsError) {
-      showError(getRBACErrorMessage(forceDeleteSettingsError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceDeleteSettingsError])
 
   const columns: CustomColumn[] = useMemo(
     () => [

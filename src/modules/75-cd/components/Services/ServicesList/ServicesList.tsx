@@ -559,26 +559,17 @@ function ServiceListHeaderCustomPrimary(headerProps: { total?: number }): JSX.El
 export const ServicesList: React.FC<ServicesListProps> = props => {
   const { loading, data, error, refetch, setSavedSortOption, setSort, sort } = props
   const { getString } = useStrings()
-  const { getRBACErrorMessage } = useRBACError()
-  const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const history = useHistory()
 
-  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+  const { data: forceDeleteSettings } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: {
       accountIdentifier: accountId
     },
     lazy: !isSettingsEnabled
   })
-
-  React.useEffect(() => {
-    if (forceDeleteSettingsError) {
-      showError(getRBACErrorMessage(forceDeleteSettingsError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceDeleteSettingsError])
 
   const columns: TableProps<ServiceListItem>['columns'] = useMemo(
     () => {

@@ -64,7 +64,6 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
 
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
   const { fetchDeploymentList } = useServiceStore()
   const history = useHistory()
   const isFreeOrCommunityCD = useGetFreeOrCommunityCD()
@@ -98,20 +97,13 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
     }
   }, [isEdit])
 
-  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+  const { data: forceDeleteSettings } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: {
       accountIdentifier: accountId
     },
     lazy: !isSettingsEnabled
   })
-
-  useEffect(() => {
-    if (forceDeleteSettingsError) {
-      showError(getRBACErrorMessage(forceDeleteSettingsError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceDeleteSettingsError])
 
   const goToServiceDetails = useCallback(
     (selectedService: ServiceResponseDTO): void => {

@@ -79,6 +79,7 @@ const useRBACError = (): RbacErrorReturn => {
         (err as AccessControlCheckError)?.failedPermissionChecks
       ) {
         if (allowMultiple) {
+          debugger
           return (
             <Layout.Vertical>
               <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_800}>
@@ -129,6 +130,7 @@ const useRBACError = (): RbacErrorReturn => {
             </Layout.Vertical>
           )
         } else {
+          debugger
           const { permission, resourceType, resourceScope, resourceIdentifier } =
             (err as AccessControlCheckError)?.failedPermissionChecks?.[0] || {}
           const resourceIdentifierLabel = resourceIdentifier ? ` on ${resourceIdentifier} ` : ''

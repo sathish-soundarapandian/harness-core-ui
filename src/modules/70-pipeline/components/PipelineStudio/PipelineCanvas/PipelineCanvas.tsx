@@ -267,11 +267,7 @@ export function PipelineCanvas({
 
   useSaveTemplateListener()
 
-  const {
-    data: enforceGitXSetting,
-    error: enforceGitXSettingError,
-    loading: loadingSetting
-  } = useGetSettingValue({
+  const { data: enforceGitXSetting, loading: loadingSetting } = useGetSettingValue({
     identifier: SettingType.ENFORCE_GIT_EXPERIENCE,
     queryParams: {
       accountIdentifier: accountId,
@@ -288,14 +284,6 @@ export function PipelineCanvas({
       return defaultTo(storeType, StoreType.INLINE) //Handle rest all use cases
     }
   }
-
-  React.useEffect(() => {
-    if (!loadingSetting) {
-      if (enforceGitXSettingError) {
-        showError(enforceGitXSettingError.message)
-      }
-    }
-  }, [enforceGitXSettingError, showError, loadingSetting])
 
   const dialogWidth = React.useMemo<number | undefined>(() => {
     if (supportingGitSimplification) {

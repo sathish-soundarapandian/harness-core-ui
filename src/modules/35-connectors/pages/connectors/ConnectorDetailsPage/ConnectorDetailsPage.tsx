@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
-import { Layout, Container, Icon, Text, SelectOption, PageSpinner, PageError, useToaster } from '@harness/uicore'
+import { Layout, Container, Icon, Text, SelectOption, PageSpinner, PageError } from '@harness/uicore'
 import { useParams, useHistory } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { Page } from '@common/exports'
@@ -31,7 +31,6 @@ import ScopedTitle from '@common/components/Title/ScopedTitle'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SettingType } from '@common/constants/Utils'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getIconByType } from '../utils/ConnectorUtils'
 import ConnectorPageGitDetails from './ConnectorDetailsPageGitDetails/ConnectorPageGitDetails'
 import RenderConnectorDetailsActiveTab from '../views/RenderConnectorDetailsActiveTab/RenderConnectorDetailsActiveTab'
@@ -258,21 +257,12 @@ const ConnectorDetailsPage: React.FC<ConnectorDetailsPageProps> = props => {
     history.push(routes.toConnectors({ accountId, projectIdentifier, orgIdentifier, module }))
   }
   const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS } = useFeatureFlags()
-  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+  const { data: forceDeleteSettings } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
     lazy: !NG_SETTINGS
   })
 
-  const { getRBACErrorMessage } = useRBACError()
-
-  const { showError } = useToaster()
-  useEffect(() => {
-    if (forceDeleteSettingsError) {
-      showError(getRBACErrorMessage(forceDeleteSettingsError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceDeleteSettingsError])
   return (
     <>
       <Page.Header
