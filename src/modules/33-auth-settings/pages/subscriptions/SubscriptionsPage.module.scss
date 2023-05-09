@@ -178,10 +178,18 @@
   width: 250px;
   margin-left: 50px;
 }
-
+.headerMargin {
+  margin-bottom: 10px !important;
+}
 .fetchButton {
   cursor: pointer;
   margin-bottom: 15px !important;
+}
+.tooltip {
+  width: 10%;
+}
+.exportButtonAlign {
+  margin-left: 90%;
 }
 
 .peakClass {

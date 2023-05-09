@@ -9,50 +9,50 @@ exports[`ConditionalExecution matches snapshot with failure 1`] = `
       class="StyledProps--font StyledProps--main"
     >
       <div
-        class="Layout--horizontal StyledProps--main StyledProps--padding-medium"
+        class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--padding-medium"
+        style="flex: 1;"
       >
         <div
-          class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-right-medium"
-          style="flex: 1;"
+          class="nameAndLabelWrapper"
         >
-          <p
-            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
-            style="--text-line-clamp: 1; width: 300px;"
+          <span
+            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--font-weight-semi-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+            style="--text-line-clamp: 1;"
           />
+        </div>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+        >
           <div
-            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+            class="StyledProps--font StyledProps--main StyledProps--margin-right-small"
           >
-            <div
-              class="StyledProps--font StyledProps--main StyledProps--margin-right-small"
+            <span
+              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
             >
-              <span
-                class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
-              >
-                pipeline.startTime
-                :
-                 
-              </span>
-              <span
-                class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-size-small StyledProps--color StyledProps--color-black"
-              >
-                01/19/1970 05:51 pm
-              </span>
-            </div>
-            <div
-              class="StyledProps--font StyledProps--main"
+              pipeline.startTime
+              :
+               
+            </span>
+            <span
+              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-size-small StyledProps--color StyledProps--color-black"
             >
-              <span
-                class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
-              >
-                pipeline.duration
-                :
-              </span>
-              <span
-                class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-size-small StyledProps--color StyledProps--color-black"
-              >
-                4s
-              </span>
-            </div>
+              01/19/1970 05:51 pm
+            </span>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main"
+          >
+            <span
+              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
+            >
+              pipeline.duration
+              :
+            </span>
+            <span
+              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-size-small StyledProps--color StyledProps--color-black"
+            >
+              4s
+            </span>
           </div>
         </div>
       </div>

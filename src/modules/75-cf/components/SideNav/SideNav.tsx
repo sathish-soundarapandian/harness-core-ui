@@ -34,7 +34,7 @@ export default function CFSideNav(): React.ReactElement {
   const events = useFeatureFlagTelemetry()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
 
-  const { FF_GITSYNC } = useFeatureFlags()
+  const { FF_GITSYNC, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED } = useFeatureFlags()
 
   /* istanbul ignore next */
   const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
@@ -90,17 +90,20 @@ export default function CFSideNav(): React.ReactElement {
                 to={routes.toAccessControl({ ...params, module: 'cf' })}
                 label={getString('accessControl')}
               />
-              {FF_GITSYNC && !isGitSimplificationEnabled && (
+              {((FF_GITSYNC && !isGitSimplificationEnabled) ||
+                (FF_FLAG_SYNC_THROUGH_GITEX_ENABLED && isGitSimplificationEnabled)) && (
                 <>
                   <SidebarLink
                     label={getString('connectorsLabel')}
                     to={routes.toConnectors({ ...params, module: 'cf' })}
                   />
                   <SidebarLink label={getString('common.secrets')} to={routes.toSecrets({ ...params, module: 'cf' })} />
-                  <SidebarLink
-                    label={getString('gitManagement')}
-                    to={routes.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module: 'cf' })}
-                  />
+                  {!FF_FLAG_SYNC_THROUGH_GITEX_ENABLED && (
+                    <SidebarLink
+                      label={getString('gitManagement')}
+                      to={routes.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module: 'cf' })}
+                    />
+                  )}
                 </>
               )}
               <SidebarLink label={getString('common.templates')} to={routes.toTemplates({ ...params, module: 'cf' })} />

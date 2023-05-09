@@ -32,7 +32,7 @@ export interface PermissionRequest {
   }
 }
 
-const Configuration: React.FC = () => {
+const Authentication: React.FC = () => {
   const params = useParams<AccountPathProps>()
   const { accountId } = params
   const { getString } = useStrings()
@@ -123,4 +123,4 @@ const Configuration: React.FC = () => {
   )
 }
 
-export default Configuration
+export default Authentication

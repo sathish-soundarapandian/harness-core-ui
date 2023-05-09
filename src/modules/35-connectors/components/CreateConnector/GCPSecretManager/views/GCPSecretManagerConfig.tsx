@@ -66,7 +66,11 @@ const GCPSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
   React.useEffect(() => {
     if (loadingConnectorSecrets && props.isEditMode) {
       if (props.connectorInfo) {
-        setupGCPSecretManagerFormData(props.connectorInfo, accountId).then(data => {
+        setupGCPSecretManagerFormData(
+          props.connectorInfo,
+          accountId,
+          !!PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM
+        ).then(data => {
           setInitialValues(data as GCPSecretManagerFormData)
           setLoadingConnectorSecrets(false)
         })
@@ -100,7 +104,6 @@ const GCPSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
     })
   })
   const validationSchemaWithoutFeatureFlag = Yup.object().shape({
-    assumeCredentialsOnDelegate: Yup.boolean(),
     credentialsRef: Yup.object().required(getString('connectors.gcpSecretManager.validation.credFileRequired'))
   })
   return loadingConnectorSecrets ? (

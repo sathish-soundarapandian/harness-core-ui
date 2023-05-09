@@ -696,8 +696,11 @@ export interface StringsMap {
   'common.oAuth.connectToGitProviderLabel': string
   'common.oAuth.connectToGitProviderPlaceholder': string
   'common.oAuth.failed': string
+  'common.oAuth.fetchingUserAccessTokens': string
   'common.oAuth.inProgress': string
   'common.oAuth.reConfigured': string
+  'common.oAuth.setUpUserAccessTokenMessage': string
+  'common.oAuth.usingUserAccessTokens': string
   'common.oAuthLabel': string
   'common.occurrence.oneTime': string
   'common.occurrence.recurring': string
@@ -2044,6 +2047,7 @@ export interface StringsMap {
   'authSettings.addSAMLProvider': string
   'authSettings.allowLoginFromTheseDomains': string
   'authSettings.allowUsersWithEmails': string
+  'authSettings.allowlist': string
   'authSettings.atLeastNChars': string
   'authSettings.authenticationSettings': string
   'authSettings.authorizationEnabled': string
@@ -2182,6 +2186,39 @@ export interface StringsMap {
   'authSettings.haveOneSpecialChar': string
   'authSettings.haveOneUppercase': string
   'authSettings.identityProvider': string
+  'authSettings.ipAddress.aPartOfAllowlist': string
+  'authSettings.ipAddress.addIpAddresses': string
+  'authSettings.ipAddress.allowedAsAPartOf': string
+  'authSettings.ipAddress.applicableFor': string
+  'authSettings.ipAddress.check': string
+  'authSettings.ipAddress.checkAnotherIP': string
+  'authSettings.ipAddress.checkIPForAllowlist': string
+  'authSettings.ipAddress.defineRange': string
+  'authSettings.ipAddress.deleteIpAddressDialogContent': string
+  'authSettings.ipAddress.deleteIpAddressDialogTitle': string
+  'authSettings.ipAddress.deleteSuccessful': string
+  'authSettings.ipAddress.duplicateIdError': string
+  'authSettings.ipAddress.errorWhileCreating': string
+  'authSettings.ipAddress.errorWhileDeleting': string
+  'authSettings.ipAddress.errorWhileUpdating': string
+  'authSettings.ipAddress.errorWhileValidating': string
+  'authSettings.ipAddress.inRange': string
+  'authSettings.ipAddress.invalid': string
+  'authSettings.ipAddress.ipAddressCIDR': string
+  'authSettings.ipAddress.ipAllowlistCreated': string
+  'authSettings.ipAddress.ipAllowlistUpdated': string
+  'authSettings.ipAddress.ipInvalid': string
+  'authSettings.ipAddress.ipRequired': string
+  'authSettings.ipAddress.noIPsAllowlisted': string
+  'authSettings.ipAddress.notAPartOfAllowlist': string
+  'authSettings.ipAddress.notInRange': string
+  'authSettings.ipAddress.required': string
+  'authSettings.ipAddress.testIP': string
+  'authSettings.ipAddress.testIPIfInRange': string
+  'authSettings.ipAddress.testIPIfPartOfAllowlist': string
+  'authSettings.ipAddress.useMyCurrentIP': string
+  'authSettings.ipAddress.validateUniqueIdentifierError': string
+  'authSettings.ipAllowlist': string
   'authSettings.keepAtLeastOneProviderEnabled': string
   'authSettings.ldap.addGroupQueryDescription': string
   'authSettings.ldap.addGroupQueryHeading': string
@@ -4039,7 +4076,11 @@ export interface StringsMap {
   'pipeline.execution.actions.downloadLogs': string
   'pipeline.execution.actions.pausePipeline': string
   'pipeline.execution.actions.pauseStage': string
+  'pipeline.execution.actions.reRun': string
+  'pipeline.execution.actions.reRunEntirePipeline': string
   'pipeline.execution.actions.reRunInDebugMode': string
+  'pipeline.execution.actions.reRunLastFailedStage': string
+  'pipeline.execution.actions.reRunSelectedStage': string
   'pipeline.execution.actions.rerunPipeline': string
   'pipeline.execution.actions.rerunStage': string
   'pipeline.execution.actions.resumePipeline': string
@@ -4106,6 +4147,7 @@ export interface StringsMap {
   'pipeline.executionStatus.Error': string
   'pipeline.executionStatus.Expired': string
   'pipeline.executionStatus.Failed': string
+  'pipeline.executionStatus.IgnoreFailed': string
   'pipeline.executionStatus.NotStarted': string
   'pipeline.executionStatus.Paused': string
   'pipeline.executionStatus.Pausing': string
@@ -5392,7 +5434,7 @@ export interface StringsMap {
   'triggers.schedulePanel.weeklyTabTitle': string
   'triggers.schedulePanel.yearlyTabTitle': string
   'triggers.scheduledLabel': string
-  'triggers.selectStagesToExecute': string
+  'triggers.selectPipelineStages': string
   'triggers.showAllTriggers': string
   'triggers.toast.existingTriggerError': string
   'triggers.toast.successfulCreate': string
@@ -7787,8 +7829,13 @@ export interface StringsMap {
   'cf.gitSync.gitServiceApiError': string
   'cf.gitSync.goToGit': string
   'cf.gitSync.invalidYaml': string
+  'cf.gitSync.resetGitError': string
+  'cf.gitSync.resetGitSettings': string
+  'cf.gitSync.resetGitSuccess': string
+  'cf.gitSync.resetGitWarning': string
   'cf.gitSync.saveFlagToGit': string
   'cf.gitSync.setUpGitConnection': string
+  'cf.gitSync.setUpGitSuccess': string
   'cf.gitSync.syncingPaused': string
   'cf.gitSync.toggleGitSyncPause': string
   'cf.gitSync.turnOffGitAndContinue': string
@@ -8286,6 +8333,7 @@ export interface StringsMap {
   'cv.CompositeSLO.AddSLOValidation.minSLOCount': string
   'cv.CompositeSLO.AddSLOValidation.totalSLOWeight': string
   'cv.CompositeSLO.AddSLOValidation.weightMinMax': string
+  'cv.CompositeSLO.ChooseSLOFormula': string
   'cv.CompositeSLO.Consumption.ActualSlo': string
   'cv.CompositeSLO.Consumption.AssignedWeightage': string
   'cv.CompositeSLO.Consumption.ContributedErrorBudgetBurned': string
@@ -8309,6 +8357,11 @@ export interface StringsMap {
   'cv.CompositeSLO.Weightage': string
   'cv.CompositeSLO.compositeSloCreated': string
   'cv.CompositeSLO.compositeSloUpdated': string
+  'cv.CompositeSLO.impactPercentage': string
+  'cv.CompositeSLO.leastPerformance': string
+  'cv.CompositeSLO.leastPerformanceSubText': string
+  'cv.CompositeSLO.weightedAverage': string
+  'cv.CompositeSLO.weightedAverageSubtext': string
   'cv.Dependency.noData': string
   'cv.Dependency.serviceChanges': string
   'cv.Dependency.serviceList': string

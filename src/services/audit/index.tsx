@@ -374,6 +374,8 @@ export interface AccessControlCheckError {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -444,11 +446,11 @@ export interface AuditEventDTO {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   requestMetadata?: RequestMetadata
@@ -525,11 +527,11 @@ export interface AuditFilterProperties {
     | 'CHAOS'
     | 'SRM'
     | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
-    | 'CET'
     | 'GOVERNANCE'
     | 'IDP'
   )[]
@@ -946,6 +948,8 @@ export interface Error {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1320,6 +1324,8 @@ export interface Failure {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1560,6 +1566,7 @@ export interface ResourceDTO {
     | 'NG_ACCOUNT_DETAILS'
     | 'BUDGET_GROUP'
     | 'PIPELINE_EXECUTION'
+    | 'IP_ALLOWLIST_CONFIG'
 }
 
 export interface ResourceFilter {
@@ -2079,6 +2086,8 @@ export interface ResponseMessage {
     | 'SCM_FORBIDDEN'
     | 'AWS_EKS_ERROR'
     | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2093,6 +2102,7 @@ export interface ResponseMessage {
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'DELEGATE_RESTART'
+    | 'USER_MARKED_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -2185,6 +2195,13 @@ export interface ResponseTemplateDTO {
 export interface ResponseYamlDiffRecordDTO {
   correlationId?: string
   data?: YamlDiffRecordDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseZendeskResponseDTO {
+  correlationId?: string
+  data?: ZendeskResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2292,6 +2309,11 @@ export interface YamlDiffRecordDTO {
   oldYaml?: string
 }
 
+export interface ZendeskResponseDTO {
+  code?: number
+  message?: string
+}
+
 export type FilterDTORequestBody = FilterDTO
 
 export type ResourceGroupFilterDTORequestBody = ResourceGroupFilterDTO
@@ -2300,7 +2322,7 @@ export type ResourceGroupRequestRequestBody = ResourceGroupRequest
 
 export type ResourceGroupV2RequestRequestBody = ResourceGroupV2Request
 
-export type InsertOrUpdateTemplateRequestBody = void
+export type PutTemplateRequestBody = void
 
 export interface GetAuditFilterListQueryParams {
   pageIndex?: number
@@ -3706,13 +3728,7 @@ export interface InsertOrUpdateTemplateQueryParams {
 }
 
 export type InsertOrUpdateTemplateProps = Omit<
-  MutateProps<
-    ResponseTemplateDTO,
-    Failure | Error,
-    InsertOrUpdateTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
-    void
-  >,
+  MutateProps<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -3720,13 +3736,7 @@ export type InsertOrUpdateTemplateProps = Omit<
  * Update a template if exists else create
  */
 export const InsertOrUpdateTemplate = (props: InsertOrUpdateTemplateProps) => (
-  <Mutate<
-    ResponseTemplateDTO,
-    Failure | Error,
-    InsertOrUpdateTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
-    void
-  >
+  <Mutate<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>
     verb="PUT"
     path={`/templates/insertOrUpdate`}
     base={getConfig('audit/api')}
@@ -3735,13 +3745,7 @@ export const InsertOrUpdateTemplate = (props: InsertOrUpdateTemplateProps) => (
 )
 
 export type UseInsertOrUpdateTemplateProps = Omit<
-  UseMutateProps<
-    ResponseTemplateDTO,
-    Failure | Error,
-    InsertOrUpdateTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
-    void
-  >,
+  UseMutateProps<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -3749,13 +3753,11 @@ export type UseInsertOrUpdateTemplateProps = Omit<
  * Update a template if exists else create
  */
 export const useInsertOrUpdateTemplate = (props: UseInsertOrUpdateTemplateProps) =>
-  useMutate<
-    ResponseTemplateDTO,
-    Failure | Error,
-    InsertOrUpdateTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
-    void
-  >('PUT', `/templates/insertOrUpdate`, { base: getConfig('audit/api'), ...props })
+  useMutate<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>(
+    'PUT',
+    `/templates/insertOrUpdate`,
+    { base: getConfig('audit/api'), ...props }
+  )
 
 /**
  * Update a template if exists else create
@@ -3765,7 +3767,7 @@ export const insertOrUpdateTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     InsertOrUpdateTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -3774,7 +3776,7 @@ export const insertOrUpdateTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     InsertOrUpdateTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     void
   >('PUT', getConfig('audit/api'), `/templates/insertOrUpdate`, props, signal)
 
@@ -3900,7 +3902,7 @@ export type PutTemplateProps = Omit<
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     PutTemplatePathParams
   >,
   'path' | 'verb'
@@ -3911,13 +3913,7 @@ export type PutTemplateProps = Omit<
  * Update a template
  */
 export const PutTemplate = ({ identifier, ...props }: PutTemplateProps) => (
-  <Mutate<
-    ResponseTemplateDTO,
-    Failure | Error,
-    PutTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
-    PutTemplatePathParams
-  >
+  <Mutate<ResponseTemplateDTO, Failure | Error, PutTemplateQueryParams, PutTemplateRequestBody, PutTemplatePathParams>
     verb="PUT"
     path={`/templates/${identifier}`}
     base={getConfig('audit/api')}
@@ -3930,7 +3926,7 @@ export type UsePutTemplateProps = Omit<
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     PutTemplatePathParams
   >,
   'path' | 'verb'
@@ -3945,7 +3941,7 @@ export const usePutTemplate = ({ identifier, ...props }: UsePutTemplateProps) =>
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     PutTemplatePathParams
   >('PUT', (paramsInPath: PutTemplatePathParams) => `/templates/${paramsInPath.identifier}`, {
     base: getConfig('audit/api'),
@@ -3964,7 +3960,7 @@ export const putTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     PutTemplatePathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -3973,7 +3969,7 @@ export const putTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    InsertOrUpdateTemplateRequestBody,
+    PutTemplateRequestBody,
     PutTemplatePathParams
   >('PUT', getConfig('audit/api'), `/templates/${identifier}`, props, signal)
 
@@ -4461,3 +4457,127 @@ export const updateResourceGroupV2Promise = (
     ResourceGroupV2RequestRequestBody,
     UpdateResourceGroupV2PathParams
   >('PUT', getConfig('audit/api'), `/v2/resourcegroup/${identifier}`, props, signal)
+
+export interface CreateZendeskTicketQueryParams {
+  emailId: string
+  ticketType: 'QUESTION' | 'PROBLEM' | 'FEATURE_REQUEST' | 'OTHER'
+  priority: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT'
+  subject: string
+}
+
+export type CreateZendeskTicketProps = Omit<
+  MutateProps<
+    ResponseZendeskResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateZendeskTicketQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * create zendesk ticket for given user
+ */
+export const CreateZendeskTicket = (props: CreateZendeskTicketProps) => (
+  <Mutate<
+    ResponseZendeskResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateZendeskTicketQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/zendesk`}
+    base={getConfig('audit/api')}
+    {...props}
+  />
+)
+
+export type UseCreateZendeskTicketProps = Omit<
+  UseMutateProps<
+    ResponseZendeskResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateZendeskTicketQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * create zendesk ticket for given user
+ */
+export const useCreateZendeskTicket = (props: UseCreateZendeskTicketProps) =>
+  useMutate<
+    ResponseZendeskResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateZendeskTicketQueryParams,
+    void,
+    void
+  >('POST', `/zendesk`, { base: getConfig('audit/api'), ...props })
+
+/**
+ * create zendesk ticket for given user
+ */
+export const createZendeskTicketPromise = (
+  props: MutateUsingFetchProps<
+    ResponseZendeskResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateZendeskTicketQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseZendeskResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateZendeskTicketQueryParams,
+    void,
+    void
+  >('POST', getConfig('audit/api'), `/zendesk`, props, signal)
+
+export type GetZendeskTokenProps = Omit<
+  GetProps<ResponseZendeskResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+  'path'
+>
+
+/**
+ * get short live token for zendesk
+ */
+export const GetZendeskToken = (props: GetZendeskTokenProps) => (
+  <Get<ResponseZendeskResponseDTO, Failure | AccessControlCheckError | Error, void, void>
+    path={`/zendesk/token`}
+    base={getConfig('audit/api')}
+    {...props}
+  />
+)
+
+export type UseGetZendeskTokenProps = Omit<
+  UseGetProps<ResponseZendeskResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+  'path'
+>
+
+/**
+ * get short live token for zendesk
+ */
+export const useGetZendeskToken = (props: UseGetZendeskTokenProps) =>
+  useGet<ResponseZendeskResponseDTO, Failure | AccessControlCheckError | Error, void, void>(`/zendesk/token`, {
+    base: getConfig('audit/api'),
+    ...props
+  })
+
+/**
+ * get short live token for zendesk
+ */
+export const getZendeskTokenPromise = (
+  props: GetUsingFetchProps<ResponseZendeskResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseZendeskResponseDTO, Failure | AccessControlCheckError | Error, void, void>(
+    getConfig('audit/api'),
+    `/zendesk/token`,
+    props,
+    signal
+  )

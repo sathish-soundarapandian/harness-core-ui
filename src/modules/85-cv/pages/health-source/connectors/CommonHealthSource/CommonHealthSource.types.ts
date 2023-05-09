@@ -32,6 +32,17 @@ export interface FieldMapping {
   isTemplateSupportEnabled: boolean
 }
 
+export type ServiceInstanceType = FieldMapping
+
+export interface AssignSectionType {
+  enabled: boolean
+  defaultServiceInstance?: string
+  hideCV?: boolean
+  hideServiceIdentifier?: boolean
+  hideSLIAndHealthScore?: boolean
+  serviceInstance?: Array<ServiceInstanceType>
+}
+
 export interface HealthSourceConfig {
   addQuery: {
     enableDefaultGroupName?: boolean
@@ -54,13 +65,7 @@ export interface HealthSourceConfig {
       showExactJsonPath?: boolean
       selectOnlyLastKey?: boolean
     }
-    assign?: {
-      enabled: boolean
-      defaultServiceInstance: string
-      hideCV?: boolean
-      hideServiceIdentifier?: boolean
-      hideSLIAndHealthScore?: boolean
-    }
+    assign?: AssignSectionType
   }
   metricPacks?: {
     enabled: boolean

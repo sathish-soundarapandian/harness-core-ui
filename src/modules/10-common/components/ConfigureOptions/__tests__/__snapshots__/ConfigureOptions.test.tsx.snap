@@ -1028,7 +1028,7 @@ exports[`Test ConfigureOptions test allowed advanced values 1`] = `
                           <span
                             class="bp3-text-overflow-ellipsis bp3-fill"
                           >
-                             aws2 : aws3
+                            aws2 : aws3
                           </span>
                           <button
                             class="bp3-tag-remove"
@@ -1062,7 +1062,7 @@ exports[`Test ConfigureOptions test allowed advanced values 1`] = `
                           <span
                             class="bp3-text-overflow-ellipsis bp3-fill"
                           >
-                             aws4)
+                            aws4)
                           </span>
                           <button
                             class="bp3-tag-remove"

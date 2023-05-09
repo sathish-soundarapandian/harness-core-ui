@@ -195,6 +195,7 @@ export const yamlTemplate = `template:
   type: MonitoredService
   projectIdentifier: project1
   orgIdentifier: default
+  tags: {}
   spec:
     serviceRef: <+input>
     environmentRef: <+input>
@@ -234,7 +235,6 @@ export const yamlTemplate = `template:
                 metricThresholds: []
               - identifier: Performance
                 metricThresholds: []
-  tags: {}
 `
 export const templateListValue = {
   status: 'SUCCESS',

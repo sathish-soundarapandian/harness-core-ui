@@ -56,12 +56,6 @@
     font-size: var(--font-size-small);
     column-gap: var(--spacing-5);
 
-    & .startTime {
-      display: flex;
-      align-items: center;
-      column-gap: var(--spacing-3);
-    }
-
     & .startTimeText {
       color: var(--grey-500);
     }
@@ -100,4 +94,10 @@
 }
 .viewLatest {
   cursor: pointer !important;
+}
+
+.startTime {
+  display: flex;
+  align-items: center;
+  column-gap: var(--spacing-3);
 }

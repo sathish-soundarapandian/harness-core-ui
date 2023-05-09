@@ -83,7 +83,8 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
-  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT, PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES: commasInAllowedValues } =
+    useFeatureFlags()
 
   const [selectedVariable, setSelectedVariable] = React.useState<VariableState | null>(null)
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -253,6 +254,9 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                                 isReadonly={readonly}
                                 allowedValuesType={
                                   variable.type === VariableType.Number ? ALLOWED_VALUES_TYPE.NUMBER : undefined
+                                }
+                                tagsInputSeparator={
+                                  commasInAllowedValues && variable.type === 'String' ? '/[\n\r]/' : undefined
                                 }
                               />
                             ))}

@@ -13,7 +13,8 @@ import {
   EvaluationType,
   PeriodLengthTypes,
   PeriodTypes,
-  SLIEventTypes
+  SLIEventTypes,
+  SLOFormulaType
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { KeyValuePair } from '@cv/pages/slos/CVSLODetailsPage/DetailsPanel/views/ServiceDetails'
 import { CreateCompositeSLOSteps } from '../../components/CVCreateSLOV2/components/CreateCompositeSloForm/CreateCompositeSloForm.types'
@@ -131,13 +132,17 @@ export const CreatePreview = ({ id, data }: CreatePreviewProps): JSX.Element => 
       )
     case CreateCompositeSLOSteps.Add_SLOs:
       return (
-        <Layout.Vertical spacing="small">
+        <Layout.Vertical spacing="small" className={css.addSlo}>
           <LabelAndValue
             isLabelHeading={true}
             isValueHeading={true}
             className={css.previewRows}
             label={getString('cv.SLO')}
-            value={getString('cv.CompositeSLO.Weightage')}
+            value={
+              data.sloFormulaType === SLOFormulaType.WEIGHTED_AVERAGE
+                ? getString('cv.CompositeSLO.Weightage')
+                : getString('cv.CompositeSLO.impactPercentage')
+            }
           />
           {data?.serviceLevelObjectivesDetails?.map(slo => {
             const { name, serviceLevelObjectiveRef, weightagePercentage } = slo

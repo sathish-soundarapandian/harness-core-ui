@@ -342,6 +342,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
                 expressions={expressions}
                 stageIdentifier={stageIdentifier}
                 digestData={digestData}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
               />
             )}
         </Layout.Vertical>

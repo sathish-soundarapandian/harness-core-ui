@@ -29,6 +29,7 @@ export interface SeriesConfig {
 export interface TimeseriesRowProps {
   transactionName: React.ReactNode
   metricName?: React.ReactNode
+  metricDeeplinkURL?: string
   seriesData?: Array<SeriesConfig>
   chartOptions?: Highcharts.Options
   withContextMenu?: boolean
@@ -41,9 +42,33 @@ const FONT_SIZE_SMALL: FontProps = {
   size: 'small'
 }
 
+const RenderInfo = ({ property, color }: { property: string | React.ReactNode; color?: string }): JSX.Element => (
+  <Text lineClamp={1} color={color} font={FONT_SIZE_SMALL}>
+    {property}
+  </Text>
+)
+
+const RenderDeeplinkURL = ({
+  metricDeeplinkURL,
+  property
+}: {
+  metricDeeplinkURL: string
+  property: string | React.ReactNode
+}): JSX.Element => (
+  <a href={metricDeeplinkURL} target="_blank" rel="noreferrer">
+    <Container flex={{ justifyContent: 'flex-start' }}>
+      <RenderInfo property={property} color={Color.PRIMARY_7} />
+      <span>
+        <Icon name="share" size={10} padding={{ left: 'xsmall', bottom: 'xsmall' }} color={Color.PRIMARY_7} />
+      </span>
+    </Container>
+  </a>
+)
+
 export default function TimeseriesRow({
   transactionName,
   metricName,
+  metricDeeplinkURL,
   seriesData,
   className,
   chartOptions,
@@ -70,12 +95,12 @@ export default function TimeseriesRow({
     <Container className={classnames(styles.timeseriesRow, className)}>
       <Container className={styles.labels}>
         <div className={styles.metricLablesContainer}>
-          <Text color={Color.BLACK} font={FONT_SIZE_SMALL} lineClamp={1}>
-            {transactionName}
-          </Text>
-          <Text font={FONT_SIZE_SMALL} lineClamp={1}>
-            {metricName}
-          </Text>
+          <RenderInfo property={transactionName} color={Color.BLACK} />
+          {metricDeeplinkURL ? (
+            <RenderDeeplinkURL metricDeeplinkURL={metricDeeplinkURL} property={metricName} />
+          ) : (
+            <RenderInfo property={metricName} />
+          )}
         </div>
         <Container className={styles.icons}>
           {dataSourceType ? <Icon name={getIconBySourceType(dataSourceType)} size={14} /> : null}

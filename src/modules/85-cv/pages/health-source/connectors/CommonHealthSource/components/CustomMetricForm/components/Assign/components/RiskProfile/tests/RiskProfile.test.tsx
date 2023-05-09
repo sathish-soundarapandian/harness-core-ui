@@ -19,6 +19,7 @@ import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/Commo
 import { RiskProfile } from '../RiskProfile'
 import { riskProfileResponse } from '../../../__tests__/AssignQuery.mock'
 import { getRiskCategoryOptionsV2 } from '../RiskProfile.utils'
+import { healthSourceConfigMock } from './RiskProfile.mock'
 
 const showErrorMock = jest.fn()
 
@@ -57,6 +58,10 @@ const WrapperComponent = ({
                   riskProfileResponse={data}
                   serviceInstanceField={serviceInstanceField}
                   continuousVerificationEnabled={continuousVerificationEnabled}
+                  healthSourceConfig={healthSourceConfigMock}
+                  recordProps={{
+                    sampleRecords: []
+                  }}
                 />
               </FormikForm>
             </CommonHealthSourceProvider>

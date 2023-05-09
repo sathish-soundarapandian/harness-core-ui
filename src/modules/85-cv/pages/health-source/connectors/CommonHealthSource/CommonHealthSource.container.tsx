@@ -40,6 +40,7 @@ export default function CommonHealthSourceContainer(props: CommonHealthSourceCon
         healthSourceIdentifier
       }
       const healthSourcePayload = createHealthSourcePayload(defineHealthSourcedata, configureHealthSourceData)
+
       await onSubmit(sourceData, healthSourcePayload)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

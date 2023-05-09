@@ -76,6 +76,7 @@ export const DestinationStep = (props: any) => {
   const [testConnectionErrors, setTestConnectionErrors] = useState<ResponseMessage[]>()
   const [clusterListdata, setClusterListData] = useState<Servicev1Cluster[]>([])
   const [selectedCluster, setSelectedCluster] = useState<Servicev1Cluster>({})
+  const [harnessHostedCluster, setHarnessHostedCluster] = useState<Servicev1Cluster | null>(null)
   const clustersTypes = [
     {
       label: getString('cd.getStartedWithCD.harnessHosted'),
@@ -139,7 +140,11 @@ export const DestinationStep = (props: any) => {
 
   useDeepCompareEffect(() => {
     if (testConnectionData) {
-      if (testConnectionData.cluster?.connectionState?.status === 'Successful') {
+      if (
+        testConnectionData.cluster?.connectionState?.status === 'Successful' ||
+        testConnectionData.cluster?.connectionState?.status === 'Warning' ||
+        testConnectionData.cluster?.connectionState?.status === 'Unknown'
+      ) {
         props?.enableNextBtn()
         setTestConnectionStatus(TestStatus.SUCCESS)
       } else {
@@ -167,6 +172,13 @@ export const DestinationStep = (props: any) => {
   useEffect(() => {
     getClusters({ accountIdentifier: accountId, agentIdentifier: fullAgentName }).then(response => {
       setClusterListData(defaultTo(response?.content, []))
+      const harnessHostedClusterInResponse = response.content?.find(
+        cluster => cluster?.cluster?.name === 'harness-hosted-cluster'
+      )
+      if (harnessHostedClusterInResponse) {
+        setHarnessHostedCluster(harnessHostedClusterInResponse)
+        setSelectedCluster(harnessHostedClusterInResponse)
+      }
     })
   }, [])
 
@@ -318,29 +330,36 @@ export const DestinationStep = (props: any) => {
               variation={ButtonVariation.SECONDARY}
               style={{ marginTop: '20px', width: '250px' }}
               minimal
-              onClick={() => {
-                setTestConnectionStatus(TestStatus.IN_PROGRESS)
-                createHostedCluster()
-                  .then(response => {
-                    if (response?.cluster?.connectionState?.status === 'Successful') {
-                      props?.enableNextBtn()
-                      setSelectedCluster(response)
-                      saveClusterData({ ...data, ...response?.cluster, identifier: response?.identifier })
-                      setTestConnectionStatus(TestStatus.SUCCESS)
-                    } else {
+              onClick={e => {
+                if (harnessHostedCluster && formikRef?.current?.values?.clusterType === 'Cloud') {
+                  setTestConnectionStatus(TestStatus.IN_PROGRESS)
+                  setTestConnectionErrors([])
+                  saveClusterData({ ...data, ...selectedCluster?.cluster, identifier: selectedCluster?.identifier })
+                  refreshConnectionStatus(e)
+                } else {
+                  setTestConnectionStatus(TestStatus.IN_PROGRESS)
+                  createHostedCluster()
+                    .then(response => {
+                      if (response?.cluster?.connectionState?.status === 'Successful') {
+                        props?.enableNextBtn()
+                        setSelectedCluster(response)
+                        saveClusterData({ ...data, ...response?.cluster, identifier: response?.identifier })
+                        setTestConnectionStatus(TestStatus.SUCCESS)
+                      } else {
+                        setTestConnectionStatus(TestStatus.FAILED)
+                        setTestConnectionErrors([
+                          {
+                            level: 'ERROR',
+                            message: (response as any)?.message
+                          }
+                        ])
+                      }
+                    })
+                    .catch(err => {
                       setTestConnectionStatus(TestStatus.FAILED)
-                      setTestConnectionErrors([
-                        {
-                          level: 'ERROR',
-                          message: (response as any)?.message
-                        }
-                      ])
-                    }
-                  })
-                  .catch(err => {
-                    setTestConnectionStatus(TestStatus.FAILED)
-                    setTestConnectionErrors((err?.data as any)?.responseMessages)
-                  })
+                      setTestConnectionErrors((err?.data as any)?.responseMessages)
+                    })
+                }
               }}
             >
               {getString('cd.getStartedWithCD.retryProvisioningHostedCluster')}
@@ -354,35 +373,42 @@ export const DestinationStep = (props: any) => {
               variation={ButtonVariation.SECONDARY}
               style={{ marginTop: '20px', width: '250px' }}
               minimal
-              onClick={() => {
+              onClick={e => {
                 trackEvent(CDOnboardingActions.ConnectToClusterClicked, { deployment_type: DeploymentType.GitOps })
                 setTestConnectionStatus(TestStatus.IN_PROGRESS)
-                createHostedCluster()
-                  .then(response => {
-                    if (response?.cluster?.connectionState?.status === 'Successful') {
-                      props?.enableNextBtn()
-                      setSelectedCluster(response)
-                      saveClusterData({ ...data, ...response?.cluster, identifier: response?.identifier })
-                      setTestConnectionStatus(TestStatus.SUCCESS)
-                      trackEvent(CDOnboardingActions.ClusterCreatedSuccessfully, {
-                        deployment_type: DeploymentType.GitOps
-                      })
-                    } else {
+                if (harnessHostedCluster && formikRef?.current?.values?.clusterType === 'Cloud') {
+                  setTestConnectionStatus(TestStatus.IN_PROGRESS)
+                  setTestConnectionErrors([])
+                  saveClusterData({ ...data, ...selectedCluster?.cluster, identifier: selectedCluster?.identifier })
+                  refreshConnectionStatus(e)
+                } else {
+                  createHostedCluster()
+                    .then(response => {
+                      if (response?.cluster?.connectionState?.status === 'Successful') {
+                        props?.enableNextBtn()
+                        setSelectedCluster(response)
+                        saveClusterData({ ...data, ...response?.cluster, identifier: response?.identifier })
+                        setTestConnectionStatus(TestStatus.SUCCESS)
+                        trackEvent(CDOnboardingActions.ClusterCreatedSuccessfully, {
+                          deployment_type: DeploymentType.GitOps
+                        })
+                      } else {
+                        setTestConnectionStatus(TestStatus.FAILED)
+                        setTestConnectionErrors([
+                          {
+                            level: 'ERROR',
+                            message: (response as any)?.message
+                          }
+                        ])
+                        trackEvent(CDOnboardingActions.ClusterCreateFailure, { deployment_type: DeploymentType.GitOps })
+                      }
+                    })
+                    .catch(err => {
                       setTestConnectionStatus(TestStatus.FAILED)
-                      setTestConnectionErrors([
-                        {
-                          level: 'ERROR',
-                          message: (response as any)?.message
-                        }
-                      ])
+                      setTestConnectionErrors((err?.data as any)?.responseMessages)
                       trackEvent(CDOnboardingActions.ClusterCreateFailure, { deployment_type: DeploymentType.GitOps })
-                    }
-                  })
-                  .catch(err => {
-                    setTestConnectionStatus(TestStatus.FAILED)
-                    setTestConnectionErrors((err?.data as any)?.responseMessages)
-                    trackEvent(CDOnboardingActions.ClusterCreateFailure, { deployment_type: DeploymentType.GitOps })
-                  })
+                    })
+                }
               }}
             >
               {getString('cd.getStartedWithCD.createHostedCluster')}
@@ -466,7 +492,6 @@ export const DestinationStep = (props: any) => {
         const selectedClusterType = formikProps.values.clusterType
         const authType = formikProps.values.authType
         const isNewCluster: boolean | undefined = formikProps.values?.isNewCluster
-
         return (
           <FormikForm>
             <Layout.Vertical>
@@ -696,6 +721,41 @@ export const DestinationStep = (props: any) => {
                   <Layout.Vertical margin={{ top: 'large' }}>
                     <InfoContainer label="cd.getStartedWithCD.managedCluster" />
                     <div className={css.smallMarginBottomClass} />
+                    {harnessHostedCluster && (
+                      <Layout.Vertical margin={{ bottom: 'medium' }}>
+                        <Text
+                          font={{ variation: FontVariation.BODY2 }}
+                          className={moduleCss.text}
+                          margin={{ bottom: 'medium' }}
+                        >
+                          {'You already have 1 harness hosted cluster'}
+                        </Text>
+
+                        <CardSelect
+                          data={[harnessHostedCluster] as Servicev1Cluster[]}
+                          cornerSelected={true}
+                          className={moduleCss.icons}
+                          cardClassName={moduleCss.repositoryListCard}
+                          renderItem={(item: Servicev1Cluster) => (
+                            <>
+                              <Layout.Vertical spacing={'small'} className={moduleCss.repositoryListItem}>
+                                <Layout.Horizontal className={moduleCss.repositoryHeader}>
+                                  <Icon name={'service-github'} size={24} flex className={moduleCss.repositoriesIcon} />
+                                  <Text font={{ variation: FontVariation.BODY2 }} className={moduleCss.text3}>
+                                    {item?.cluster?.name}
+                                  </Text>
+                                </Layout.Horizontal>
+                                <Text font="normal">{item?.cluster?.server}</Text>
+                              </Layout.Vertical>
+                            </>
+                          )}
+                          selected={selectedCluster}
+                          onChange={(item: Servicev1Cluster) => {
+                            setSelectedCluster(item)
+                          }}
+                        />
+                      </Layout.Vertical>
+                    )}
                     <ProvisionCluster />
                   </Layout.Vertical>
                 </Container>

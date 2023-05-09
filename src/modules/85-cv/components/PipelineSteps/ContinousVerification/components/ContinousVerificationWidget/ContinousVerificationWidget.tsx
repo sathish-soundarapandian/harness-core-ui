@@ -19,11 +19,14 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { ModuleName } from 'framework/types/ModuleName'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { ContinousVerificationData } from '../../types'
 import type { ContinousVerificationWidgetProps } from './types'
 import { ContinousVerificationWidgetSections } from './components/ContinousVerificationWidgetSections/ContinousVerificationWidgetSections'
 import { getMonitoredServiceRefFromType, validateMonitoredService } from './ContinousVerificationWidget.utils'
 import { getIsMultiServiceOrEnvs } from '../../utils'
+import { Category, VerifyStepActions } from '../../constants'
 
 /**
  * Spec
@@ -35,6 +38,7 @@ export function ContinousVerificationWidget(
   formikRef: StepFormikFowardRef
 ): JSX.Element {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   const {
     state: {
       selectionState: { selectedStageId }
@@ -108,6 +112,7 @@ export function ContinousVerificationWidget(
   return (
     <Formik<ContinousVerificationData>
       onSubmit={submit => {
+        trackEvent(VerifyStepActions.ApplyChangesVerifyStep, { category: Category.VERIFY_STEP, module: ModuleName.CD })
         onUpdate?.(submit)
       }}
       validate={data => {

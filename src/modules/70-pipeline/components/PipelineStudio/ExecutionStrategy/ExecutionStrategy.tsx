@@ -34,6 +34,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { executionStrategyTypes } from '@pipeline/utils/DeploymentTypeUtils'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import Default from './resources/BlankCanvas.png'
@@ -47,7 +48,7 @@ import AddContinuousVerification from './resources/addContinuousVerification.svg
 import BlueGreen from './resources/Blue-Green-deployment.png'
 import Canary from './resources/Canary-deployment.png'
 import { isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils'
-import { cvLearnMoreHref } from './ExecutionStrategy.constant'
+import { Category, cvLearnMoreHref, VerifyStepActions } from './ExecutionStrategy.constant'
 import Phases from './Phases'
 import css from './ExecutionStrategy.module.scss'
 
@@ -111,6 +112,7 @@ function ExecutionStrategyRef(
   const { getString } = useStrings()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const { accountId } = useParams<AccountPathProps>()
+  const { trackEvent } = useTelemetry()
 
   const [strategiesByDeploymentType, setStrategies] = useState([])
   const [isSubmitDisabled, disableSubmit] = useState(false)
@@ -468,6 +470,12 @@ function ExecutionStrategyRef(
                   variation={ButtonVariation.PRIMARY}
                   text={getString('pipeline.executionStrategy.useStrategy')}
                   onClick={() => {
+                    if (isVerifyEnabled) {
+                      trackEvent(VerifyStepActions.EnableVerifyStep, {
+                        category: Category.EXECUTION_STARTEGY,
+                        module: ModuleName.CD
+                      })
+                    }
                     if (getServiceDefintionType) {
                       refetchStrategyYaml?.()
                     }

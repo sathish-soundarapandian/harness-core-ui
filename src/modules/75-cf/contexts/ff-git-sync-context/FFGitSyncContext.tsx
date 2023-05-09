@@ -39,6 +39,7 @@ export const FFGitSyncContext = React.createContext<UseGitSync>({
   handleError: () => Promise.resolve(undefined),
   handleGitPause: () => Promise.resolve(undefined),
   saveWithGit: () => Promise.resolve(undefined),
+  refetchGitRepo: () => Promise.resolve(undefined),
   isAutoCommitEnabled: false,
   isGitSyncActionsEnabled: false,
   isGitSyncEnabled: false,

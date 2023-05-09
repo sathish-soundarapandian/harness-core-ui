@@ -1135,16 +1135,16 @@ exports[`useSubscriptionModal render CI credit card 1`] = `
                         class="bp3-slider-track"
                       >
                         <div
+                          class="bp3-slider-progress"
+                          style="left: 0.00%; right: 100.00%; top: 0px;"
+                        />
+                        <div
                           class="bp3-slider-progress bp3-intent-primary"
-                          style="left: 0.00%; right: 100.00%; top: 0px;"
+                          style="left: 0.00%; right: 99.67%; top: 0px;"
                         />
                         <div
                           class="bp3-slider-progress"
-                          style="left: 0.00%; right: 100.00%; top: 0px;"
-                        />
-                        <div
-                          class="bp3-slider-progress"
-                          style="left: 0.00%; right: 0.00%; top: 0px;"
+                          style="left: 0.33%; right: 0.00%; top: 0px;"
                         />
                       </div>
                       <div
@@ -1195,13 +1195,13 @@ exports[`useSubscriptionModal render CI credit card 1`] = `
                       </div>
                       <span
                         class="bp3-slider-handle"
-                        style="left: calc(0.00% - 0px);"
+                        style="left: calc(0.33% - 0px);"
                         tabindex="0"
                       >
                         <span
                           class="bp3-slider-label"
                         >
-                          0
+                          1
                         </span>
                       </span>
                     </div>
@@ -1215,7 +1215,7 @@ exports[`useSubscriptionModal render CI credit card 1`] = `
                           class="bp3-input"
                           data-testid="slider-input"
                           type="text"
-                          value="0"
+                          value="1"
                         />
                       </div>
                     </div>
@@ -1283,7 +1283,7 @@ exports[`useSubscriptionModal render CI credit card 1`] = `
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-weight-bold"
                         >
-                          0
+                          1
                         </p>
                       </div>
                     </div>
@@ -1494,7 +1494,7 @@ exports[`useSubscriptionModal render CI credit card 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main"
                 >
-                  0 x $0.00 common.perDeveloper
+                  1 x $0.00 common.perDeveloper
                 </p>
                 0
               </div>

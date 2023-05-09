@@ -996,8 +996,14 @@ CompositeSLO:
   SetTarget: Set SLO Target
   ErrorBudgetPolicy: Error Budget Policy
   Weightage: Weightage
+  impactPercentage: Impact Percentage
   NoData: You don’t have any matching SLOs
   NoDataSuggestion: Try changing the time window or clearing your search input.
+  weightedAverage: Weighted Average
+  weightedAverageSubtext: Use WeightedAverage formula for composite SLOs when SLOs don't impact each other.
+  leastPerformanceSubText: Determine if SLOs are mutually exclusive or inclusive, and use LeastPerformance formula if they depend on each other.
+  leastPerformance: Least Performance
+  ChooseSLOFormula: Choose Computation Formula
   Consumption:
     title: SLO consumption breakdown for the period
     AssignedWeightage: Assigned Weightage

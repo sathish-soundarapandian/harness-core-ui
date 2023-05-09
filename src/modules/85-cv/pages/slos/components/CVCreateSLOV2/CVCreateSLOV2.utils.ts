@@ -40,7 +40,8 @@ import {
   GetMetricRequestValuesBySLIMetricTypeProps,
   EvaluationType,
   GetSimpleSLOCustomErrorProps,
-  GetSimpleSLOCustomErrorValues
+  GetSimpleSLOCustomErrorValues,
+  SLOFormulaType
 } from './CVCreateSLOV2.types'
 import {
   MaxConsecutiveStartTime,
@@ -147,6 +148,7 @@ export const getCompositeSLOFormValue = (serviceLevelObjective: ServiceLevelObje
     ...getSLOCommonFormValues(serviceLevelObjective),
     [SLOV2FormFields.EVALUATION_TYPE]: spec?.evaluationType,
     // Add SLOs
+    [SLOV2FormFields.FORMULA_TYPE]: spec?.sloFormulaType,
     [SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS]: spec?.serviceLevelObjectivesDetails
   }
 }
@@ -194,7 +196,8 @@ export const getSLOV2InitialFormData = (
     }
     return {
       ...defaultValues,
-      ...getCommonInitialFormValue(sloType)
+      ...getCommonInitialFormValue(sloType),
+      [SLOV2FormFields.FORMULA_TYPE]: SLOFormulaType.WEIGHTED_AVERAGE
     }
   }
 }
@@ -428,6 +431,7 @@ export const createSLOV2RequestPayload = (
         spec: { ...getSLOTarget(values) }
       },
       spec: {
+        sloFormulaType: values?.sloFormulaType,
         evaluationType: values?.evaluationType,
         serviceLevelObjectivesDetails: filterServiceLevelObjectivesDetailsFromSLOObjective(
           values.serviceLevelObjectivesDetails

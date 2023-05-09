@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { Layout, PageError, Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { cloneDeep, defaultTo, isEmpty } from 'lodash-es'
-import { Module, ModuleName } from 'framework/types/ModuleName'
+import type { Module, ModuleName } from 'framework/types/ModuleName'
 import {
   RetrieveProductPricesQueryParams,
   useRetrieveProductPrices,
@@ -38,6 +38,15 @@ import CISubutils from '../CISubutils'
 import { Header } from '../Header'
 import css from './CostCalculator.module.scss'
 
+interface Quantities {
+  featureFlag?: {
+    numberOfDevelopers: number
+    numberOfMau: number
+  }
+  ci?: {
+    numberOfDevelopers: number
+  }
+}
 interface CostCalculatorProps {
   module: Module
   setView: (view: SubscribeViews) => void
@@ -71,6 +80,7 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
     subscriptionProps.quantities
   )
   const [isPremiumSupported, setIsPremiumSupported] = useState<boolean>(false)
+  const [isPlanChanged, setIsPlanChanged] = useState<boolean>(false)
   const [isFirstSubscriptionDone, setIsFirstSubscriptionDone] = useState<boolean>(false)
   const { data: accountLicensesData } = useGetAccountLicenses({
     queryParams: {
@@ -209,6 +219,10 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   }
 
   const updateQuantities = ({ maus, devs }: { maus?: number; devs?: number }): void => {
+    if (isPlanChanged) {
+      setIsPlanChanged(false)
+      return
+    }
     switch (module) {
       case 'cf':
         setQuantities((oldData: SubscriptionProps['quantities']) => {
@@ -251,6 +265,43 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
     }
   }
 
+  const handlePlanChange = (passedQuantities: Quantities, value: Editions): Quantities => {
+    switch (module) {
+      case 'cf': {
+        if (value === Editions.ENTERPRISE && subscriptionProps.quantities?.featureFlag?.numberOfMau === 100) {
+          passedQuantities = {
+            featureFlag: {
+              numberOfMau: 1,
+              numberOfDevelopers: subscriptionProps.quantities?.featureFlag?.numberOfDevelopers
+            }
+          }
+          return passedQuantities
+        } else if (value === Editions.TEAM && subscriptionProps.quantities?.featureFlag?.numberOfMau === 1) {
+          passedQuantities = {
+            featureFlag: {
+              numberOfMau: 100,
+              numberOfDevelopers: subscriptionProps.quantities?.featureFlag?.numberOfDevelopers
+            }
+          }
+          return passedQuantities
+        } else {
+          return passedQuantities
+        }
+      }
+
+      case 'ci': {
+        passedQuantities = {
+          ci: {
+            numberOfDevelopers: subscriptionProps.quantities?.ci?.numberOfDevelopers || 1
+          }
+        }
+        return passedQuantities
+      }
+      default:
+        return passedQuantities
+    }
+  }
+
   return (
     <Layout.Vertical className={className}>
       <Header step={0} />
@@ -260,30 +311,9 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
           plan={subscriptionProps.edition}
           module={module}
           setPlan={(value: Editions) => {
+            setIsPlanChanged(true)
             let passedQuantities = {}
-            if (
-              value === Editions.ENTERPRISE &&
-              subscriptionProps.quantities?.featureFlag?.numberOfMau === 100 &&
-              module === ModuleName.CF.toLowerCase()
-            ) {
-              passedQuantities = {
-                featureFlag: {
-                  numberOfMau: 1,
-                  numberOfDevelopers: subscriptionProps.quantities?.featureFlag?.numberOfDevelopers
-                }
-              }
-            } else if (
-              value === Editions.TEAM &&
-              subscriptionProps.quantities?.featureFlag?.numberOfMau === 1 &&
-              module === ModuleName.CF.toLowerCase()
-            ) {
-              passedQuantities = {
-                featureFlag: {
-                  numberOfMau: 100,
-                  numberOfDevelopers: subscriptionProps.quantities?.featureFlag?.numberOfDevelopers
-                }
-              }
-            }
+            passedQuantities = handlePlanChange(passedQuantities, value)
             setSubscriptionProps({
               ...subscriptionProps,
               edition: value,

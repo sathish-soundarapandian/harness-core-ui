@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { defaultTo } from 'lodash-es'
 import { Slider } from '@blueprintjs/core'
 import { DropDown, Layout, TextInput, SelectOption } from '@harness/uicore'
@@ -68,6 +68,11 @@ const SliderBar: React.FC<SliderBarProps> = ({
   unit,
   labelRenderer
 }) => {
+  const [localValue, setLocalValue] = useState<boolean>(false)
+  let passedValue = ''
+  if (!localValue) {
+    passedValue = defaultTo(inputValue, value).toString()
+  }
   const dropdownList = React.useMemo(() => {
     return (
       list?.reduce((accumulator: SelectOption[], current) => {
@@ -83,6 +88,7 @@ const SliderBar: React.FC<SliderBarProps> = ({
     const valueIndex = list?.indexOf(val)
     setValue(valueIndex as number)
   }
+
   return (
     <Layout.Horizontal spacing={'large'}>
       <SliderWrapper
@@ -113,14 +119,16 @@ const SliderBar: React.FC<SliderBarProps> = ({
         <TextInput
           data-testid="slider-input"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            let val = Math.abs(Number(e.target.value))
+            const val = Math.abs(Number(e.target.value))
             const maxValue = Math.abs(Number(max))
             if (val === 0) {
-              val = 1
+              setLocalValue(true)
+            } else {
+              setLocalValue(false)
             }
             return setValue(val > maxValue ? maxValue : val)
           }}
-          value={defaultTo(inputValue, value).toString()}
+          value={passedValue}
           className={css.textInput}
         />
       )}

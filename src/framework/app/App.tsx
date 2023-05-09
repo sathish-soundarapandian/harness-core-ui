@@ -16,6 +16,7 @@ import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
 import { HarnessReactAPIClient as AuditServiceClient } from '@harnessio/react-audit-service-client'
 import { IDPServiceAPIClient } from '@harnessio/react-idp-service-client'
 import { PipelineServiceAPIClient } from '@harnessio/react-pipeline-service-client'
+import { NGManagerServiceAPIClient } from '@harnessio/react-ng-manager-client'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import { debounce } from 'lodash-es'
 import SessionToken, { TokenTimings } from 'framework/utils/SessionToken'
@@ -77,6 +78,32 @@ export const getRequestOptions = (): Partial<RequestInit> => {
   return { headers }
 }
 
+const getNotWhitelistedMessage = (res: any): any => {
+  return res?.responseMessages?.find((message: any) => message?.code === 'NOT_WHITELISTED_IP')
+}
+
+const notifyBugsnag = (
+  errorString: string,
+  metadataString: string,
+  response: any,
+  username: string,
+  accountId: string
+): void => {
+  window.bugsnagClient?.notify?.(
+    new Error(errorString),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function (event: any) {
+      event.severity = 'error'
+      event.setUser(username)
+      event.addMetadata(metadataString, {
+        url: response.url,
+        status: response.status,
+        accountId
+      })
+    }
+  )
+}
+
 export function AppWithAuthentication(props: AppProps): React.ReactElement {
   const { showError } = useToaster()
   const username = SessionToken.username()
@@ -87,6 +114,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   const auditServiceClientObjRef = useRef<AuditServiceClient>()
   const idpServiceClientObjRef = useRef<IDPServiceAPIClient>()
   const pipelineServiceClientObjRef = useRef<PipelineServiceAPIClient>()
+  const ngManagerServiceClientObjRef = useRef<NGManagerServiceAPIClient>()
 
   const getQueryParams = React.useCallback(() => {
     return {
@@ -155,36 +183,40 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          forceLogout()
-          return
+          response
+            .clone()
+            .json()
+            .then(res => {
+              const notWhiteListedMessage = getNotWhitelistedMessage(res)
+              if (notWhiteListedMessage) {
+                const msg = notWhiteListedMessage.message
+                showError(msg)
+                // NG-Auth-UI expects to read "NOT_WHITELISTED_IP_MESSAGE" from session
+                sessionStorage.setItem('NOT_WHITELISTED_IP_MESSAGE', msg)
+              }
+            })
+            .catch(() => {
+              notifyBugsnag('Error handling 401 status code', '401 Details', response, username, accountId)
+            })
+            .finally(() => {
+              forceLogout()
+              return
+            })
+          break
         }
         case 400: {
           response
             .clone()
             .json()
             .then(res => {
-              const notWhiteListedMessage = res?.responseMessages?.find(
-                (message: any) => message?.code === 'NOT_WHITELISTED_IP'
-              )
+              const notWhiteListedMessage = getNotWhitelistedMessage(res)
               if (notWhiteListedMessage) {
                 showError(notWhiteListedMessage.message)
                 forceLogout()
               }
             })
             .catch(() => {
-              window.bugsnagClient?.notify?.(
-                new Error('Error handling 400 status code'),
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                function (event: any) {
-                  event.severity = 'error'
-                  event.setUser(username)
-                  event.addMetadata('400 Details', {
-                    url: response.url,
-                    status: response.status,
-                    accountId
-                  })
-                }
-              )
+              notifyBugsnag('Error handling 400 status code', '400 Details', response, username, accountId)
             })
           return
         }
@@ -210,6 +242,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     auditServiceClientObjRef.current?.updateHeaders(headers)
     idpServiceClientObjRef.current?.updateHeaders(headers)
     pipelineServiceClientObjRef.current?.updateHeaders(headers)
+    ngManagerServiceClientObjRef.current?.updateHeaders(headers)
   }
 
   useEffect(() => {
@@ -240,6 +273,18 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       }
     })
     pipelineServiceClientObjRef.current = new PipelineServiceAPIClient({
+      responseInterceptor: response => {
+        globalResponseHandler(response.clone())
+        return response
+      },
+      urlInterceptor: (url: string) => {
+        return window.getApiBaseUrl(url)
+      },
+      getRequestHeaders: () => {
+        return { token: SessionToken.getToken(), 'Harness-Account': accountId }
+      }
+    })
+    ngManagerServiceClientObjRef.current = new NGManagerServiceAPIClient({
       responseInterceptor: response => {
         globalResponseHandler(response.clone())
         return response

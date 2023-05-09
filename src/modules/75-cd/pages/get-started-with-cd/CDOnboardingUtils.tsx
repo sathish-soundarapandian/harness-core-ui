@@ -784,11 +784,12 @@ export const getOAuthConnectorPayload = ({
   gitProviderType?: ConnectorInfoDTO['type']
 }): ConnectorRequestBody => {
   let updatedConnectorPayload: ConnectorRequestBody = {}
-  updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.name', `${gitProviderType} OAuth`)
+  const connectorName = `${gitProviderType}_${ONBOARDING_PREFIX}`
+  updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.name', connectorName)
   updatedConnectorPayload = set(
     OAuthConnectorPayload,
     'connector.identifier',
-    `${gitProviderType}_OAuth_${new Date().getTime()}`
+    `${StringUtils.getIdentifierFromName(connectorName)}`
   )
   updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.type', gitProviderType)
   switch (gitProviderType) {

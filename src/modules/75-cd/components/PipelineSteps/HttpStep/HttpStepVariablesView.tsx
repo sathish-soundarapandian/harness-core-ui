@@ -21,11 +21,24 @@ export interface HttpStepVariablesViewProps {
 export function HttpStepVariablesView(props: HttpStepVariablesViewProps): React.ReactElement {
   const { variablesData = {} as HttpStepData, originalData = {} as HttpStepData, metadataMap } = props
 
-  const data: Record<string, string> = pick(variablesData.spec, ['method', 'url', 'requestBody', 'assertion'])
+  const data: Record<string, string> = pick(variablesData.spec, [
+    'method',
+    'url',
+    'requestBody',
+    'assertion',
+    'certificate',
+    'certificateKey'
+  ])
 
   if (Array.isArray(variablesData.spec?.headers)) {
     variablesData.spec.headers.forEach((row, i) => {
       data[`headers[${i}].value`] = row.value as string
+    })
+  }
+
+  if (Array.isArray(variablesData.spec?.inputVariables)) {
+    variablesData.spec.inputVariables.forEach((row, i) => {
+      data[`inputVariables[${i}].value`] = row.value as string
     })
   }
 

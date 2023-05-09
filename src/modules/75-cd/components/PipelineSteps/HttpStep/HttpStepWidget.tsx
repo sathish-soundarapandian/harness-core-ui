@@ -69,10 +69,14 @@ export function HttpStepWidget(
               value: Yup.string().required(getString('common.validation.valueIsRequired'))
             })
           ),
+          inputVariables: Yup.array().of(
+            Yup.object().shape({
+              name: Yup.string().required(getString('common.validation.nameIsRequired'))
+            })
+          ),
           outputVariables: Yup.array().of(
             Yup.object().shape({
-              name: Yup.string().required(getString('common.validation.nameIsRequired')),
-              value: Yup.string().required(getString('common.validation.valueIsRequired'))
+              name: Yup.string().required(getString('common.validation.nameIsRequired'))
             })
           ),
           certificate: Yup.string().when('certificateKey', {

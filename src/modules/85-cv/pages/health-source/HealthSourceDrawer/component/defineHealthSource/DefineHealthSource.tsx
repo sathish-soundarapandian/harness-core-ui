@@ -83,6 +83,9 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const { isEdit } = sourceData
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
+
+  const isSignalFXEnabled = useFeatureFlag(FeatureFlag.SRM_SPLUNK_SIGNALFX)
+
   const [productInfo, setProductInfo] = useState<{
     updatedProduct: SelectOption | null
     currentProduct: SelectOption | null
@@ -96,8 +99,12 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
       disabledConnectorsList.push(HealthSourceTypes.ErrorTracking)
     }
 
+    if (!isSignalFXEnabled) {
+      disabledConnectorsList.push(HealthSourceTypes.SignalFX)
+    }
+
     return disabledConnectorsList
-  }, [isErrorTrackingEnabled])
+  }, [isErrorTrackingEnabled, isSignalFXEnabled])
 
   const initialValues = useMemo(() => {
     return getInitialValues(sourceData, getString)
@@ -115,7 +122,9 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   })
   const isCardSelected = useCallback((connectorTypeName, formik) => {
     const { product = {}, sourceType = '' } = formik?.values || {}
+
     const productValue = product.value
+
     if (productValue) {
       const features = getFeatureOption(connectorTypeName, getString, isSplunkMetricEnabled)
       return features.some(el => el?.value === productValue)
@@ -284,6 +293,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         onSubmit={values => {
           onSubmit?.(values)
           let formValues = values
+
           if (sourceData.selectedDashboards && values?.connectorRef !== sourceData?.connectorRef) {
             formValues = { ...values, selectedDashboards: new Map() }
           }

@@ -3,7 +3,7 @@ addNewTrigger: Add New Trigger
 triggersSubLabel: 'All Trigger Types'
 noTriggersFound: 'No Triggers Found'
 newTrigger: + New Trigger
-selectStagesToExecute: Select Stages To Execute
+selectPipelineStages: Pipeline Stages
 newTriggerWithoutPlus: New Trigger
 pipelineExecutionInput: Pipeline Execution Input
 lastActivationDetails: Last Activation Details
@@ -113,7 +113,7 @@ conditionsPanel:
 triggerOverviewPanel:
   title: 'Trigger Overview'
 schedulePanel:
-  currentUTCTime: '{{$.common.currentUTCTime}}'
+  currentUTCTime: 'The Cron expression will be evaluated against UTC time. {{$.common.currentUTCTime}}'
   monthlyTabTitle: '{{$.common.monthly}}'
   yearlyTabTitle: '{{$.common.yearly}}'
   hourlyTabTitle: '{{$.common.hourly}}'

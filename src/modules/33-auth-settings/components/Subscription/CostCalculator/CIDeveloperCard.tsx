@@ -62,7 +62,7 @@ const DeveloperSubscriptionInfo: React.FC<DeveloperSubscriptionInfoProps> = ({
           title={getString('authSettings.recommendation')}
           value={
             <Text color={Color.PRIMARY_7} font={{ weight: 'bold' }}>
-              {recommendedNumber}
+              {usage === 0 ? 1 : recommendedNumber}
             </Text>
           }
         />
@@ -103,12 +103,12 @@ const CIDeveloperCard: React.FC<CIDeveloperCardProps> = ({
   useEffect(() => {
     // TODO: get tier from prices api call
     setLicensesRange({
-      min: 0,
+      min: 1,
       max: 300,
       stepSize: 50,
       labelStepSize: 50
     })
-    setValue(0)
+    setValue(1)
   }, [newPlan])
 
   const rangeArray = React.useMemo((): number[] => {
@@ -127,7 +127,7 @@ const CIDeveloperCard: React.FC<CIDeveloperCardProps> = ({
         <SliderBar
           min={0}
           max={300}
-          stepSize={50}
+          stepSize={1}
           labelStepSize={50}
           value={selectedNumberOfDevelopers === -1 ? licenseRange.min : selectedNumberOfDevelopers}
           inputValue={

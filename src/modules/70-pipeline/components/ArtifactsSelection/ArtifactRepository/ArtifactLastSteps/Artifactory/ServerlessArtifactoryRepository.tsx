@@ -196,9 +196,20 @@ export default function ServerlessArtifactoryRepository(
     </div>
   ))
 
+  const repositoryFormValue = get(formik?.values, fieldName)
+  const [repositoryValue, setRepositoryValue] = React.useState(repositoryFormValue)
+  const [inputKeyCount, setInputKeyCount] = React.useState(0)
+
+  useEffect(() => {
+    if (repositoryValue !== repositoryFormValue) {
+      setRepositoryValue(repositoryFormValue)
+      setInputKeyCount(prevCount => prevCount + 1)
+    }
+  }, [repositoryFormValue])
+
   const getFieldHelperText = () => {
     if (
-      getMultiTypeFromValue(get(formik?.values, fieldName)) === MultiTypeInputType.FIXED &&
+      getMultiTypeFromValue(repositoryValue) === MultiTypeInputType.FIXED &&
       (getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME || connectorRef?.length === 0)
     ) {
       return getString('pipeline.artifactRepositoryDependencyRequired')
@@ -208,11 +219,12 @@ export default function ServerlessArtifactoryRepository(
   return (
     <SelectInputSetView
       className={
-        getMultiTypeFromValue(get(formik?.values, fieldName)) === MultiTypeInputType.RUNTIME
+        getMultiTypeFromValue(repositoryValue) === MultiTypeInputType.RUNTIME
           ? repositoryFieldCss.repositoryFieldContainer
           : css.imagePathContainer
       }
       enableConfigureOptions={false}
+      key={inputKeyCount}
       name={fieldName}
       label={getString('repository')}
       fieldPath={defaultTo(fieldPath, '')} // Only used for Runtime view
@@ -225,7 +237,7 @@ export default function ServerlessArtifactoryRepository(
         expressions,
         allowableTypes,
         selectProps: {
-          defaultSelectedItem: get(formik?.values, fieldName) as SelectOption,
+          defaultSelectedItem: repositoryValue as SelectOption,
           noResults: <NoRepositoryResults error={artifactRepoError} />,
           items: connectorRepos,
           addClearBtn: !isReadonly,

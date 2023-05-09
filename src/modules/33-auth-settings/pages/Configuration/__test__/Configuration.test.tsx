@@ -60,6 +60,7 @@ describe('Configuration', () => {
       <TestWrapper
         path={routes.toAuthenticationSettings({ ...accountPathProps })}
         pathParams={{ accountId: 'testAcc' }}
+        defaultFeatureFlagValues={{ PL_IP_ALLOWLIST_NG: true }}
       >
         <Configuration />
       </TestWrapper>

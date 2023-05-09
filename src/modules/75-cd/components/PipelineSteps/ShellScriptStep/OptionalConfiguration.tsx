@@ -28,6 +28,8 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 
 import {
   scriptInputType,
@@ -91,6 +93,7 @@ export default function OptionalConfiguration(props: {
                           />
                           <OptionalVariables
                             variablePath={`spec.environmentVariables[${i}].value`}
+                            variableTypePath={`spec.environmentVariables[${i}].type`}
                             allowableTypes={allowableTypes}
                             readonly={readonly}
                           />
@@ -165,6 +168,7 @@ export default function OptionalConfiguration(props: {
                               variablePath={`spec.outputVariables[${i}].value`}
                               allowableTypes={allowableTypes}
                               readonly={readonly}
+                              variableTypePath={`spec.outputVariables[${i}].type`}
                             />
 
                             <Button minimal icon="main-trash" onClick={() => remove(i)} disabled={readonly} />
@@ -285,12 +289,14 @@ export default function OptionalConfiguration(props: {
   )
 }
 
-function OptionalVariables({
+export function OptionalVariables({
   variablePath,
   allowableTypes,
-  readonly
+  readonly,
+  variableTypePath
 }: {
   variablePath: string
+  variableTypePath?: string
   allowableTypes: AllowedTypes
   readonly?: boolean
 }): React.ReactElement {
@@ -299,6 +305,8 @@ function OptionalVariables({
 
   const { values: formValues, setFieldValue } = useFormikContext()
   const variableValue = get(formValues, variablePath)
+  const variableType = variableTypePath ? get(formValues, variableTypePath) : undefined
+  const commasInAllowedValues = useFeatureFlag(FeatureFlag.PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES)
 
   return (
     <Layout.Horizontal>
@@ -321,6 +329,7 @@ function OptionalVariables({
           variableName={variablePath}
           onChange={value => setFieldValue(variablePath, value)}
           isReadonly={readonly}
+          tagsInputSeparator={commasInAllowedValues && variableType === 'String' ? '/[\n\r]/' : undefined}
         />
       )}
     </Layout.Horizontal>

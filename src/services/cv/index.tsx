@@ -16,6 +16,23 @@ export interface AbstractAnalysedNode {
   [key: string]: any
 }
 
+export interface ActiveServiceMonitoredDTO {
+  accountIdentifier?: string
+  identifier: string
+  module?: string
+  monitoredServiceCount?: number
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  timestamp?: number
+}
+
+export interface ActiveServiceMonitoredFilterParams {
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceIdentifier?: string
+}
+
 export interface AdditionalInfo {
   type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
 }
@@ -884,9 +901,10 @@ export interface ClusteredLog {
   verificationTaskId?: string
 }
 
-export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
+export interface CompositeServiceLevelObjectiveSpec {
   evaluationType?: 'Window' | 'Request'
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
+  sloFormulaType?: 'WeightedAverage' | 'LeastPerformance'
 }
 
 export interface ConnectorConfigDTO {
@@ -951,6 +969,7 @@ export interface ConnectorInfoDTO {
     | 'Spot'
     | 'Bamboo'
     | 'TerraformCloud'
+    | 'SignalFX'
 }
 
 export interface ControlClusterSummary {
@@ -1147,6 +1166,7 @@ export interface DataCollectionRequest {
     | 'AWS_GENERIC_DATA_COLLECTION_REQUEST'
     | 'SUMOLOGIC_METRIC_SAMPLE_DATA'
     | 'SUMOLOGIC_LOG_SAMPLE_DATA'
+    | 'SIGNALFX_METRIC_SAMPLE_DATA'
 }
 
 export interface DataCollectionTaskDTO {
@@ -1204,9 +1224,16 @@ export interface DatadogDataSet {
   query?: string
 }
 
+export interface DatadogLogHealthSourceQueryDTO {
+  indexes: string[]
+  name: string
+  query: string
+  serviceInstanceIdentifier: string
+}
+
 export type DatadogLogHealthSourceSpec = HealthSourceSpec & {
   feature: string
-  queries: QueryDTO[]
+  queries: DatadogLogHealthSourceQueryDTO[]
 }
 
 export interface DatadogMetricHealthDefinition {
@@ -1479,9 +1506,19 @@ export type ELKConnectorDTO = ConnectorConfigDTO & {
   username?: string
 }
 
+export interface ELKHealthSourceQueryDTO {
+  index: string
+  messageIdentifier: string
+  name: string
+  query: string
+  serviceInstanceIdentifier: string
+  timeStampFormat: string
+  timeStampIdentifier: string
+}
+
 export type ELKHealthSourceSpec = HealthSourceSpec & {
   feature: string
-  queries: QueryDTO[]
+  queries: ELKHealthSourceQueryDTO[]
 }
 
 export interface Edge {
@@ -2407,7 +2444,8 @@ export type GcpManualDetails = GcpCredentialSpec & {
 }
 
 export type GcpSecretManager = ConnectorConfigDTO & {
-  credentialsRef: string
+  assumeCredentialsOnDelegate?: boolean
+  credentialsRef?: string
   default?: boolean
   delegateSelectors?: string[]
 }
@@ -2651,6 +2689,7 @@ export interface HealthSource {
     | 'AwsPrometheus'
     | 'SumologicMetrics'
     | 'SumologicLogs'
+    | 'SplunkSignalFXMetrics'
   version?: 'v2'
 }
 
@@ -2677,6 +2716,7 @@ export interface HealthSourceDTO {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
@@ -2709,6 +2749,7 @@ export interface HealthSourceParamValuesRequest {
     | 'AwsPrometheus'
     | 'SumologicMetrics'
     | 'SumologicLogs'
+    | 'SplunkSignalFXMetrics'
 }
 
 export interface HealthSourceParamValuesResponse {
@@ -2744,6 +2785,7 @@ export interface HealthSourceRecordsRequest {
     | 'AwsPrometheus'
     | 'SumologicMetrics'
     | 'SumologicLogs'
+    | 'SplunkSignalFXMetrics'
   providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -2764,6 +2806,7 @@ export interface HealthSourceRecordsRequest {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
   query: string
   startTime: number
 }
@@ -2789,6 +2832,7 @@ export interface HealthSourceRecordsResponse {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
   rawRecords?: { [key: string]: any }[]
 }
 
@@ -2827,6 +2871,7 @@ export interface HealthSourceV2 {
     | 'AwsPrometheus'
     | 'SumologicMetrics'
     | 'SumologicLogs'
+    | 'SplunkSignalFXMetrics'
 }
 
 export interface HistoricalTrend {
@@ -3439,6 +3484,7 @@ export interface MetricPack {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
   identifier?: string
   lastUpdatedAt?: number
   metrics?: MetricDefinition[]
@@ -3470,6 +3516,7 @@ export interface MetricPackDTO {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
   identifier?: string
   metrics?: MetricDefinitionDTO[]
   orgIdentifier?: string
@@ -3852,6 +3899,20 @@ export interface Page {
   totalPages?: number
 }
 
+export interface PageActiveServiceMonitoredDTO {
+  content?: ActiveServiceMonitoredDTO[]
+  empty?: boolean
+  first?: boolean
+  last?: boolean
+  number?: number
+  numberOfElements?: number
+  pageable?: Pageable
+  size?: number
+  sort?: Sort
+  totalElements?: number
+  totalPages?: number
+}
+
 export interface PageAnalyzedLogDataDTO {
   content?: AnalyzedLogDataDTO[]
   empty?: boolean
@@ -4116,6 +4177,15 @@ export interface PageUserJourneyResponse {
   totalPages?: number
 }
 
+export interface Pageable {
+  offset?: number
+  pageNumber?: number
+  pageSize?: number
+  paged?: boolean
+  sort?: Sort
+  unpaged?: boolean
+}
+
 export type PagerDutyChangeSourceSpec = ChangeSourceSpec & {
   connectorRef?: string
   pagerDutyServiceId?: string
@@ -4272,16 +4342,6 @@ export interface PrometheusSampleData {
 
 export type QuarterlyCalenderSpec = CalenderSpec & { [key: string]: any }
 
-export interface QueryDTO {
-  index: string
-  messageIdentifier: string
-  name: string
-  query: string
-  serviceInstanceIdentifier: string
-  timeStampFormat: string
-  timeStampIdentifier: string
-}
-
 export interface QueryDefinition {
   continuousVerificationEnabled?: boolean
   groupName?: string
@@ -4327,6 +4387,7 @@ export interface QueryRecordsRequest {
     | 'AwsPrometheus'
     | 'SumologicMetrics'
     | 'SumologicLogs'
+    | 'SplunkSignalFXMetrics'
   providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -4347,6 +4408,7 @@ export interface QueryRecordsRequest {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
   query: string
   startTime: number
 }
@@ -4559,13 +4621,6 @@ export interface ResponseListString {
 export interface ResponseListTimeSeriesSampleDTO {
   correlationId?: string
   data?: TimeSeriesSampleDTO[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseListUnavailabilityInstancesResponse {
-  correlationId?: string
-  data?: UnavailabilityInstancesResponse[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4994,6 +5049,13 @@ export interface ResponseMonitoredServiceResponse {
 export interface ResponseObject {
   correlationId?: string
   data?: { [key: string]: any }
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageActiveServiceMonitoredDTO {
+  correlationId?: string
+  data?: PageActiveServiceMonitoredDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -6192,6 +6254,12 @@ export interface ServiceSummaryDetails {
   type?: 'Application' | 'Infrastructure'
 }
 
+export type SignalFXConnectorDTO = ConnectorConfigDTO & {
+  apiTokenRef: string
+  delegateSelectors?: string[]
+  url: string
+}
+
 export type SimpleServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
   healthSourceRef: string
   monitoredServiceRef: string
@@ -6208,6 +6276,12 @@ export interface SloHealthIndicatorDTO {
   serviceLevelObjectiveIdentifier?: string
 }
 
+export interface Sort {
+  empty?: boolean
+  sorted?: boolean
+  unsorted?: boolean
+}
+
 export interface Sources {
   changeSources?: ChangeSourceDTO[]
   healthSources?: HealthSource[]
@@ -6221,9 +6295,15 @@ export type SplunkConnectorDTO = ConnectorConfigDTO & {
   username?: string
 }
 
+export interface SplunkHealthSourceQueryDTO {
+  name: string
+  query: string
+  serviceInstanceIdentifier: string
+}
+
 export type SplunkHealthSourceSpec = HealthSourceSpec & {
   feature: string
-  queries: QueryDTO[]
+  queries: SplunkHealthSourceQueryDTO[]
 }
 
 export interface SplunkMetricDefinition {
@@ -6304,9 +6384,16 @@ export interface StackdriverDefinition {
   sli?: Slidto
 }
 
+export interface StackdriverLogHealthSourceQueryDTO {
+  messageIdentifier: string
+  name: string
+  query: string
+  serviceInstanceIdentifier: string
+}
+
 export type StackdriverLogHealthSourceSpec = HealthSourceSpec & {
   feature: string
-  queries: QueryDTO[]
+  queries: StackdriverLogHealthSourceQueryDTO[]
 }
 
 export type StackdriverMetricHealthSourceSpec = HealthSourceSpec & {
@@ -6538,6 +6625,8 @@ export interface TimeSeriesMetricDataDTO {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
+  deeplinkURL?: string
   environmentIdentifier?: string
   groupName?: string
   metricDataList?: MetricData[]
@@ -6562,6 +6651,7 @@ export interface TimeSeriesMetricDataDTO {
     | 'AwsPrometheus'
     | 'SumologicMetrics'
     | 'SumologicLogs'
+    | 'SplunkSignalFXMetrics'
   monitoredServiceIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -6667,6 +6757,7 @@ export interface TimeSeriesThreshold {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   lastUpdatedAt?: number
   metricGroupName?: string
@@ -6712,6 +6803,7 @@ export interface TimeSeriesThresholdDTO {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
   metricGroupName?: string
   metricName?: string
   metricPackIdentifier?: string
@@ -6775,6 +6867,7 @@ export interface TransactionMetricInfo {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
   nodeRiskCountDTO?: NodeRiskCountDTO
   nodes?: HostData[]
   transactionMetric?: TransactionMetric
@@ -6801,21 +6894,6 @@ export interface TransactionMetricRisk {
 export interface TransactionMetricSums {
   metricSums?: MetricSum[]
   transactionName?: string
-}
-
-export interface UnavailabilityInstancesResponse {
-  endTime?: number
-  entityIdentifier?: string
-  entityType?: 'MaintenanceWindow' | 'Slo' | 'MonitoredService'
-  orgIdentifier?: string
-  projectIdentifier?: string
-  startTime?: number
-  status?:
-    | 'MonitoredServiceDisabled'
-    | 'MaintenanceWindow'
-    | 'DataCollectionFailed'
-    | 'DataRecollectionPassed'
-    | 'DataRestored'
 }
 
 export interface UsageDataDTO {
@@ -7017,7 +7095,7 @@ export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type UpdateMonitoredServiceFromYamlBodyRequestBody = string
+export type SaveMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface SaveAccountLevelAnnotationPathParams {
   accountIdentifier: string
@@ -12506,6 +12584,7 @@ export interface GetMetricPacksQueryParams {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
 }
 
 export type GetMetricPacksProps = Omit<
@@ -12576,6 +12655,7 @@ export interface SaveMetricPacksQueryParams {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
 }
 
 export type SaveMetricPacksProps = Omit<
@@ -13189,7 +13269,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13203,7 +13283,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -13218,7 +13298,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13232,7 +13312,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -13244,7 +13324,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -13253,7 +13333,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 
@@ -15204,6 +15284,7 @@ export interface GetLabelNamesQueryParams {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
 }
 
 export type GetLabelNamesProps = Omit<
@@ -15279,6 +15360,7 @@ export interface GetLabeValuesQueryParams {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
 }
 
 export type GetLabeValuesProps = Omit<
@@ -15354,6 +15436,7 @@ export interface GetMetricNamesQueryParams {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
 }
 
 export type GetMetricNamesProps = Omit<
@@ -15429,6 +15512,7 @@ export interface GetSampleDataQueryParams {
     | 'AWS_PROMETHEUS'
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
 }
 
 export type GetSampleDataProps = Omit<
@@ -15808,93 +15892,6 @@ export const getSecondaryEventsPromise = (
     GetSecondaryEventsQueryParams,
     GetSecondaryEventsPathParams
   >(getConfig('cv/api'), `/slo-dashboard/secondary-events/${identifier}`, props, signal)
-
-export interface GetUnavailabilityInstancesQueryParams {
-  startTime: number
-  endTime: number
-  accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export interface GetUnavailabilityInstancesPathParams {
-  identifier: string
-}
-
-export type GetUnavailabilityInstancesProps = Omit<
-  GetProps<
-    ResponseListUnavailabilityInstancesResponse,
-    unknown,
-    GetUnavailabilityInstancesQueryParams,
-    GetUnavailabilityInstancesPathParams
-  >,
-  'path'
-> &
-  GetUnavailabilityInstancesPathParams
-
-/**
- * Get Unavailability Instances for SLO
- */
-export const GetUnavailabilityInstances = ({ identifier, ...props }: GetUnavailabilityInstancesProps) => (
-  <Get<
-    ResponseListUnavailabilityInstancesResponse,
-    unknown,
-    GetUnavailabilityInstancesQueryParams,
-    GetUnavailabilityInstancesPathParams
-  >
-    path={`/slo-dashboard/unavailable-instances/${identifier}`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseGetUnavailabilityInstancesProps = Omit<
-  UseGetProps<
-    ResponseListUnavailabilityInstancesResponse,
-    unknown,
-    GetUnavailabilityInstancesQueryParams,
-    GetUnavailabilityInstancesPathParams
-  >,
-  'path'
-> &
-  GetUnavailabilityInstancesPathParams
-
-/**
- * Get Unavailability Instances for SLO
- */
-export const useGetUnavailabilityInstances = ({ identifier, ...props }: UseGetUnavailabilityInstancesProps) =>
-  useGet<
-    ResponseListUnavailabilityInstancesResponse,
-    unknown,
-    GetUnavailabilityInstancesQueryParams,
-    GetUnavailabilityInstancesPathParams
-  >(
-    (paramsInPath: GetUnavailabilityInstancesPathParams) =>
-      `/slo-dashboard/unavailable-instances/${paramsInPath.identifier}`,
-    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
-  )
-
-/**
- * Get Unavailability Instances for SLO
- */
-export const getUnavailabilityInstancesPromise = (
-  {
-    identifier,
-    ...props
-  }: GetUsingFetchProps<
-    ResponseListUnavailabilityInstancesResponse,
-    unknown,
-    GetUnavailabilityInstancesQueryParams,
-    GetUnavailabilityInstancesPathParams
-  > & { identifier: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    ResponseListUnavailabilityInstancesResponse,
-    unknown,
-    GetUnavailabilityInstancesQueryParams,
-    GetUnavailabilityInstancesPathParams
-  >(getConfig('cv/api'), `/slo-dashboard/unavailable-instances/${identifier}`, props, signal)
 
 export interface GetSLODetailsQueryParams {
   startTime?: number

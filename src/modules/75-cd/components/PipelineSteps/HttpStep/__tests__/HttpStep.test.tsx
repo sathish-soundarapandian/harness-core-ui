@@ -159,7 +159,12 @@ describe('Http Step', () => {
     fireEvent.change(queryByNameAttribute('spec.headers[0].key')!, { target: { value: 'Content-Type' } })
     fireEvent.change(queryByNameAttribute('spec.headers[0].value')!, { target: { value: 'application/json' } })
 
-    fireEvent.click(getByTestId('add-response-mapping'))
+    fireEvent.click(getByTestId('add-input-response-mapping'))
+
+    fireEvent.change(queryByNameAttribute('spec.inputVariables[0].name')!, { target: { value: 'inputVar' } })
+    fireEvent.change(queryByNameAttribute('spec.inputVariables[0].value')!, { target: { value: 'request.message' } })
+
+    fireEvent.click(getByTestId('add-output-response-mapping'))
 
     fireEvent.change(queryByNameAttribute('spec.outputVariables[0].name')!, { target: { value: 'myVar' } })
     fireEvent.change(queryByNameAttribute('spec.outputVariables[0].value')!, { target: { value: 'response.message' } })
@@ -189,6 +194,13 @@ describe('Http Step', () => {
         ],
         method: 'GET',
         assertion: '${httpResponseBody} == 200',
+        inputVariables: [
+          {
+            name: 'inputVar',
+            type: 'String',
+            value: 'request.message'
+          }
+        ],
         outputVariables: [
           {
             name: 'myVar',

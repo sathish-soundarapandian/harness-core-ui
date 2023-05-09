@@ -5,6 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { HealthSourceConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import { healthSourceConfigMock } from '../components/RiskProfile/tests/RiskProfile.mock'
+
 export const metricPackResponse = {
   data: {
     metaData: {},
@@ -258,3 +261,17 @@ export const riskProfileResponse = {
   error: null,
   absolutePath: '/cv/api/risk-category?routingId=-k53qRQAQ1O7DBLb9ACnjQ'
 }
+
+export const assignSectionConfig = {
+  ...healthSourceConfigMock,
+  customMetrics: {
+    ...healthSourceConfigMock.customMetrics,
+    assign: {
+      enabled: true,
+      hideCV: true,
+      hideServiceIdentifier: true,
+      hideSLIAndHealthScore: true,
+      defaultServiceInstance: '_sourceHost'
+    }
+  }
+} as HealthSourceConfig

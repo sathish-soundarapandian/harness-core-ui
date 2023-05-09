@@ -114,6 +114,23 @@ exports[`Configuration Configuration page 1`] = `
               authentication
             </p>
           </div>
+          <div
+            aria-controls="bp3-tab-panel_configurationTabs_allowlist"
+            aria-disabled="false"
+            aria-expanded="false"
+            aria-selected="false"
+            class="bp3-tab"
+            data-tab-id="allowlist"
+            id="bp3-tab-title_configurationTabs_allowlist"
+            role="tab"
+            tabindex="0"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              authSettings.allowlist
+            </p>
+          </div>
         </div>
         <div
           aria-hidden="false"

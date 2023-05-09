@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { IpAllowlistConfigResponse } from '@harnessio/react-ng-manager-client'
+
 import type { RestResponseBoolean, LoginSettings } from 'services/cd-ng'
 import { InputTypes } from '@common/utils/JestFormHelper'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -281,5 +283,34 @@ export const getGroupQueryFormFieldValues = (wizardDialog: HTMLElement) => [
     type: InputTypes.TEXTFIELD,
     fieldId: 'descriptionAttr',
     value: 'description'
+  }
+]
+
+export const mockIpAllowlistConfigResponse: IpAllowlistConfigResponse[] = [
+  {
+    created: 123,
+    ip_allowlist_config: {
+      identifier: 'Ip_Range_1',
+      name: 'Ip Range 1',
+      ip_address: '192.168.1.1/24',
+      allowed_source_type: ['UI', 'API'],
+      description: 'description 1',
+      tags: { a: 'a', b: 'b' },
+      enabled: false
+    },
+    updated: 123
+  },
+  {
+    created: 123,
+    ip_allowlist_config: {
+      identifier: 'Ip_Range_2',
+      name: 'Ip Range 2',
+      ip_address: '234.55.0.1/32',
+      allowed_source_type: undefined,
+      description: 'description 2',
+      tags: { a: 'a' },
+      enabled: true
+    },
+    updated: 123
   }
 ]

@@ -12,16 +12,31 @@ import type { FormikProps } from 'formik'
 import { defaultTo, isEmpty, isEqual, isUndefined } from 'lodash-es'
 import type { SLOConsumptionBreakdown, SLOTargetFilterDTO, ServiceLevelIndicatorDTO } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
-import { PeriodLengthTypes, PeriodTypes, SLOObjective, SLOV2Form, SLOV2FormFields } from '../../CVCreateSLOV2.types'
+import {
+  PeriodLengthTypes,
+  PeriodTypes,
+  SLOFormulaType,
+  SLOObjective,
+  SLOV2Form,
+  SLOV2FormFields
+} from '../../CVCreateSLOV2.types'
 import { createSloTargetFilterDTO, getColorProp } from './components/AddSlos/AddSLOs.utils'
-import { MinNumberOfSLO, MaxNumberOfSLO, SLOWeight, WarningModalType } from './CreateCompositeSloForm.constant'
+import {
+  MinNumberOfSLO,
+  MaxNumberOfSLO,
+  SLOWeight,
+  WarningModalType,
+  ImpactPercentage
+} from './CreateCompositeSloForm.constant'
 import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
 import type { UseCreateCompositeSloWarningModalProps } from './useCreateCompositeSloWarningModal'
 import { SLOErrorType } from '../../CVCreateSLOV2.constants'
 
 const addSLOError = (formikProps: FormikProps<SLOV2Form>, getString?: UseStringsReturn['getString']) => {
   let errorList: string[] = []
-  const { serviceLevelObjectivesDetails } = formikProps.values
+  const { serviceLevelObjectivesDetails, sloFormulaType } = formikProps.values
+  const isFormulaWeightedAverage = sloFormulaType === SLOFormulaType.WEIGHTED_AVERAGE
+
   const sumOfSLOweight = serviceLevelObjectivesDetails?.reduce((total, num) => {
     return num.weightagePercentage + total
   }, 0)
@@ -31,7 +46,7 @@ const addSLOError = (formikProps: FormikProps<SLOV2Form>, getString?: UseStrings
   if (!serviceLevelObjectivesDetails?.length) {
     errorList = [getString?.('cv.CompositeSLO.AddSLOValidation.minMaxSLOCount') as string]
     return { status: false, errorMessages: errorList }
-  } else if (defaultTo(sumOfSLOweight, 0) !== 100) {
+  } else if (defaultTo(sumOfSLOweight, 0) !== 100 && isFormulaWeightedAverage) {
     errorList = [getString?.('cv.CompositeSLO.AddSLOValidation.totalSLOWeight') as string]
     return { status: false, errorMessages: errorList }
   } else if (serviceLevelObjectivesDetails?.length < MinNumberOfSLO) {
@@ -41,15 +56,21 @@ const addSLOError = (formikProps: FormikProps<SLOV2Form>, getString?: UseStrings
     errorList = [getString?.('cv.CompositeSLO.AddSLOValidation.maxSLOCount') as string]
     return { status: false, errorMessages: errorList }
   } else if (hasDeletedSLO) {
-    const errorMessage = serviceLevelObjectivesDetails?.find(
-      slo => slo?.sloError?.sloErrorType === SLOErrorType.SimpleSLODeletion
-    )?.sloError?.errorMessage
+    const sloName = serviceLevelObjectivesDetails
+      ?.filter(slo => slo?.sloError?.sloErrorType === SLOErrorType.SimpleSLODeletion)
+      .map(slo => slo.sloIdentifier)
+      .join(', ')
+    const errorMessage = getString?.('cv.slos.simpleSLODeletion', { sloName })
     errorList = [errorMessage as string]
     return { status: false, errorMessages: errorList }
   } else {
-    const hasInValidValue = serviceLevelObjectivesDetails.some(
-      slo => slo.weightagePercentage > SLOWeight.MAX || slo.weightagePercentage < SLOWeight.MIN
-    )
+    const hasInValidValue = serviceLevelObjectivesDetails.some(slo => {
+      if (isFormulaWeightedAverage) {
+        return slo.weightagePercentage > SLOWeight.MAX || slo.weightagePercentage < SLOWeight.MIN
+      } else {
+        return slo.weightagePercentage > ImpactPercentage.MAX || slo.weightagePercentage < ImpactPercentage.MIN
+      }
+    })
     errorList = hasInValidValue ? [getString?.('cv.CompositeSLO.AddSLOValidation.weightMinMax') as string] : []
     return { status: !hasInValidValue, errorMessages: errorList }
   }

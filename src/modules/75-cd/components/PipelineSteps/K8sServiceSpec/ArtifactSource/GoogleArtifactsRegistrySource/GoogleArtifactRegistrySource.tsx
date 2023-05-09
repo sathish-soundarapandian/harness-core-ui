@@ -473,6 +473,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   expressions={expressions}
                   stageIdentifier={stageIdentifier}
                   digestData={digestData}
+                  disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
                 />
               </div>
             )}

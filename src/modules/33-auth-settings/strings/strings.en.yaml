@@ -307,3 +307,38 @@ billingInfo:
     address: Address is required
     zipCode: Zip is required
     company: Company Name is required
+allowlist: Allowlist
+ipAllowlist: IP Allowlist
+ipAddress:
+  deleteIpAddressDialogContent: 'Are you sure you want to delete IP Address [{{name}}] from Allowlist?'
+  deleteIpAddressDialogTitle: Delete IP Address
+  deleteSuccessful: 'IP Allowlist [{{name}}] deleted successfully'
+  errorWhileDeleting: 'An error occurred while deleting IP Allowlist [{{name}}]'
+  ipAllowlistCreated: 'IP Allowlist [{{name}}] created successfully'
+  ipAllowlistUpdated: 'IP Allowlist [{{name}}] updated successfully'
+  errorWhileUpdating: 'An error occurred while updating IP Allowlist [{{name}}]'
+  errorWhileCreating: 'An error occurred while creating IP Allowlist [{{name}}]'
+  validateUniqueIdentifierError: 'An error occurred while validating identifier. Please try again.'
+  errorWhileValidating: 'An error occurred while validating IP address'
+  addIpAddresses: Add IP Addresses
+  checkIPForAllowlist: Check any IP for allowlist
+  ipAddressCIDR: IP Address / CIDR
+  required: IP Address / CIDR is required
+  ipRequired: IP Address is required
+  ipInvalid: IP Address must be a valid IP (v4 or v6)
+  invalid: IP Address must be a valid IP (v4 or v6) in CIDR notation
+  applicableFor: 'Applicable For'
+  defineRange: Define Range
+  testIP: Test IP
+  testIPIfInRange: Enter IP to check if it falls in the defined range
+  testIPIfPartOfAllowlist: Enter IP to check if it is a part of allowlist
+  useMyCurrentIP: Use my Current IP Address
+  duplicateIdError: 'Failed to create IP Allowlist: [{{ name }}]. There is already an IP Allowlist with identifier [{{ identifier }}] present or soft deleted. Please provide a new unique identifier.'
+  check: Check
+  checkAnotherIP: Check another IP
+  allowedAsAPartOf: 'Allowed as a part of:'
+  noIPsAllowlisted: No IPs Allowlisted
+  inRange: This IP Address falls in the defined range
+  notInRange: This IP Address does not fall in the defined range
+  aPartOfAllowlist: This IP address is a part of allowlist
+  notAPartOfAllowlist: This IP address is not a part of allowlist

@@ -26,6 +26,7 @@ interface DigestFieldProps extends ArtifactSourceRenderProps {
   fetchDigestError: GetDataError<Failure | Error> | null
   expressions: string[]
   digestData: any
+  disabled?: boolean
 }
 const DigestField = (props: DigestFieldProps): JSX.Element => {
   const {
@@ -40,7 +41,8 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
     fetchDigestError,
     stageIdentifier,
     digestData,
-    template
+    template,
+    disabled
   } = props
 
   const { getString } = useStrings()
@@ -123,6 +125,7 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
       label={getString('pipeline.digest')}
       name={`${path}.artifacts.${artifactPath}.spec.digest`}
       fieldPath={`artifacts.${artifactPath}.spec.digest`}
+      disabled={disabled}
       template={template}
     />
   )

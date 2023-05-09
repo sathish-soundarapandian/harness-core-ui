@@ -12,8 +12,9 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import AssignQuery from '../AssignQuery'
-import { riskProfileResponse } from './AssignQuery.mock'
+import { assignSectionConfig, riskProfileResponse } from './AssignQuery.mock'
 import CommonHealthSourceProvider from '../../CommonHealthSourceContext/CommonHealthSourceContext'
+import { healthSourceConfigMock } from '../components/RiskProfile/tests/RiskProfile.mock'
 
 const WrapperComponent = ({ children }: { children: JSX.Element }) => {
   return (
@@ -35,7 +36,11 @@ describe('Validate AssignQuery', () => {
         >
           <AssignQuery
             values={{ continuousVerification: true, healthScore: true, sli: false }}
+            recordProps={{
+              sampleRecords: []
+            }}
             riskProfileResponse={riskProfileResponse as any}
+            healthSourceConfig={healthSourceConfigMock}
           />
         </Formik>
       </WrapperComponent>
@@ -71,6 +76,10 @@ describe('Validate AssignQuery', () => {
           <AssignQuery
             values={{ continuousVerification: true, healthScore: true, sli: false }}
             riskProfileResponse={riskProfileResponse as any}
+            healthSourceConfig={healthSourceConfigMock}
+            recordProps={{
+              sampleRecords: []
+            }}
           />
         </Formik>
       </WrapperComponent>
@@ -92,6 +101,10 @@ describe('Validate AssignQuery', () => {
           <AssignQuery
             values={{ continuousVerification: true, healthScore: true, sli: false }}
             riskProfileResponse={[] as any}
+            healthSourceConfig={healthSourceConfigMock}
+            recordProps={{
+              sampleRecords: []
+            }}
           />
         </Formik>
       </WrapperComponent>
@@ -109,7 +122,13 @@ describe('Validate AssignQuery', () => {
           onSubmit={jest.fn()}
           formName="runtimeInputsTest"
         >
-          <AssignQuery values={{ continuousVerification: true, healthScore: true, sli: false }} />
+          <AssignQuery
+            values={{ continuousVerification: true, healthScore: true, sli: false }}
+            healthSourceConfig={healthSourceConfigMock}
+            recordProps={{
+              sampleRecords: []
+            }}
+          />
         </Formik>
       </WrapperComponent>
     )
@@ -126,6 +145,10 @@ describe('Validate AssignQuery', () => {
           <AssignQuery
             values={{ continuousVerification: false, healthScore: false, sli: true }}
             riskProfileResponse={riskProfileResponse as any}
+            healthSourceConfig={healthSourceConfigMock}
+            recordProps={{
+              sampleRecords: []
+            }}
           />
         </Formik>
       </WrapperComponent>
@@ -146,9 +169,10 @@ describe('Validate AssignQuery', () => {
             values={{ sli: true }}
             riskProfileResponse={riskProfileResponse as any}
             showOnlySLI
-            hideCV
-            hideSLIAndHealthScore
-            hideServiceIdentifier
+            healthSourceConfig={assignSectionConfig}
+            recordProps={{
+              sampleRecords: []
+            }}
           />
         </Formik>
       </WrapperComponent>

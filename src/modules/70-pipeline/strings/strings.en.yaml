@@ -631,6 +631,10 @@ execution:
     viewCompiledYaml: View Compiled YAML
     compareExecutions: Compare Pipeline Executions
     reRunInDebugMode: Re-run in Debug Mode
+    reRun: Re-run
+    reRunLastFailedStage: From Last Failed Stage
+    reRunSelectedStage: Selected Stage(s)
+    reRunEntirePipeline: Entire Pipeline
   layouts:
     bottom: Align to bottom
     right: Align to right
@@ -667,6 +671,7 @@ barriers:
 executionStatus:
   Failed: FAILED
   Success: SUCCESS
+  IgnoreFailed: SUCCESS (FAILURE IGNORED)
   Aborted: ABORTED
   AbortedByFreeze: ABORTED BY FREEZE
   Error: ERROR

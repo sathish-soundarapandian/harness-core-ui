@@ -1075,6 +1075,9 @@ oAuth:
   accessTokenCreateSuccess: Access token added successfully.
   connectToGitProviderLabel: Connect to a Git Provider
   connectToGitProviderPlaceholder: Select a git Provider
+  fetchingUserAccessTokens: Fetching user access tokens
+  usingUserAccessTokens: Using "{{user}}" credential to make changes to Git.
+  setUpUserAccessTokenMessage: Set up an access token in user profile to use your credentials to connect to {{type}}.
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
 moveEntitytoGit: Move {{resourceType}} To Git

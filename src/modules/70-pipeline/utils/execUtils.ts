@@ -879,28 +879,39 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
           break
         } else {
           const iconData = getIconDataBasedOnType(nodeData)
-
-          items.push({
-            id: nodeData.uuid as string,
-            name: getExecutionNodeName(nodeData),
-            identifier: nodeData.identifier as string,
-            icon: iconData.icon as IconName,
-            type: nodeData.stepType,
-            nodeType: nodeData.stepType,
-            status: nodeData?.status as ExecutionStatus,
-            data: {
-              ...iconData,
+          if (nodeData.stepType === StepNodeType.STEP_GROUP || nodeData?.stepType === StepNodeType.STRATEGY) {
+            processGroupItem({
+              items,
+              id: nodeId,
+              isRollbackNext: isRollback,
+              nodeMap: graph?.nodeMap,
+              nodeAdjacencyListMap,
+              rootNodes: items,
+              isNestedGroup: false
+            })
+          } else {
+            items.push({
+              id: nodeData.uuid as string,
               name: getExecutionNodeName(nodeData),
-              skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
-              when: nodeData.nodeRunInfo,
-              showInLabel:
-                nodeData.stepType === StepNodeType.SERVICE || nodeData.stepType === StepNodeType.INFRASTRUCTURE,
-              identifier: nodeId,
-              status: nodeData.status as ExecutionStatus,
-              type: nodeData?.stepType,
-              data: nodeData
-            }
-          })
+              identifier: nodeData.identifier as string,
+              icon: iconData.icon as IconName,
+              type: nodeData.stepType,
+              nodeType: nodeData.stepType,
+              status: nodeData?.status as ExecutionStatus,
+              data: {
+                ...iconData,
+                name: getExecutionNodeName(nodeData),
+                skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
+                when: nodeData.nodeRunInfo,
+                showInLabel:
+                  nodeData.stepType === StepNodeType.SERVICE || nodeData.stepType === StepNodeType.INFRASTRUCTURE,
+                identifier: nodeId,
+                status: nodeData.status as ExecutionStatus,
+                type: nodeData?.stepType,
+                data: nodeData
+              }
+            })
+          }
         }
       }
       nodeId = nodeAdjacencyListMap[nodeId].nextIds?.[0]

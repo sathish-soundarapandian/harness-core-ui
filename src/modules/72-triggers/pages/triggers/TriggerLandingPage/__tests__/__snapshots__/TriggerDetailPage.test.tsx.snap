@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test Trigger Details Page Test should test snapshot view 1`] = `
+exports[`Test Trigger Detail Page Test should test snapshot view 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge StyledProps--padding-left-xlarge StyledProps--padding-bottom-medium StyledProps--padding-right-xlarge StyledProps--background-primary1"
