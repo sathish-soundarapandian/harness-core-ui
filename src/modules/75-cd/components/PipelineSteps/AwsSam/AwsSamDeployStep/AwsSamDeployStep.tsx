@@ -60,8 +60,7 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
     timeout: '10m',
     spec: {
       connectorRef: '',
-      image: '',
-      imagePullPolicy: ''
+      image: ''
     }
   }
 
@@ -81,10 +80,12 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
       readonly,
       allowableTypes,
       onUpdate,
-      onChange
+      onChange,
+      formikRef
     } = props
 
     if (this.isTemplatizedView(stepViewType)) {
+      // @Todo: Implement Runtime view component and use it here
       return (
         <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
@@ -112,6 +113,7 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
         isNewStep={isNewStep}
         allowableTypes={allowableTypes}
         stepViewType={stepViewType}
+        ref={formikRef}
         readonly={readonly}
       />
     )

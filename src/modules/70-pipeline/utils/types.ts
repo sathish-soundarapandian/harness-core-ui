@@ -109,6 +109,11 @@ export interface AwsSamDeployStepInitialValues extends StepElementConfig {
   spec: {
     connectorRef: string
     image: string
-    imagePullPolicy: string
+    deployCommandOptions?: string[]
+    stackName?: string
+    privileged?: boolean
+    imagePullPolicy?: string
+    runAsUser?: string
+    envVariables?: { [key: string]: string }[]
   }
 }

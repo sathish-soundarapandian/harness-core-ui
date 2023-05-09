@@ -10,9 +10,20 @@ import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { defaultTo } from 'lodash-es'
+import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import type { FormikProps } from 'formik'
-import { AllowedTypes, Formik, FormikForm, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import {
+  Accordion,
+  AllowedTypes,
+  Container,
+  Formik,
+  FormikForm,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@harness/uicore'
 
+import type { StepElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -26,8 +37,21 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import type { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
+import { AwsSamDeployStepOptionalFields } from './AwsSamDeployStepOptionalFields'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
+interface AwsSamDeployStepFormikValues extends StepElementConfig {
+  spec: {
+    connectorRef: string
+    image: string
+    deployCommandOptions?: string[]
+    stackName?: string
+    privileged?: boolean
+    imagePullPolicy?: string
+    runAsUser?: string
+    envVariables?: { key: string; value: string }[]
+  }
+}
 export interface AwsSamDeployStepProps {
   initialValues: AwsSamDeployStepInitialValues
   onUpdate?: (data: AwsSamDeployStepInitialValues) => void
@@ -40,7 +64,7 @@ export interface AwsSamDeployStepProps {
 
 const AwsSamDeployStepEdit = (
   props: AwsSamDeployStepProps,
-  formikRef: StepFormikFowardRef<AwsSamDeployStepInitialValues>
+  formikRef: StepFormikFowardRef<AwsSamDeployStepFormikValues>
 ): React.ReactElement => {
   const { initialValues, onUpdate, isNewStep = true, readonly, onChange, allowableTypes, stepViewType } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -48,14 +72,40 @@ const AwsSamDeployStepEdit = (
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
+  const getInitialValues = (): AwsSamDeployStepFormikValues => {
+    return {
+      ...initialValues,
+      spec: {
+        ...initialValues.spec,
+        envVariables: initialValues.spec?.envVariables?.map(envVar => {
+          const objKey = Object.keys(envVar)[0]
+          return {
+            id: uuid('', nameSpace()),
+            key: objKey,
+            value: envVar[objKey]
+          }
+        })
+      }
+    }
+  }
+
+  const onSubmit = (values: AwsSamDeployStepFormikValues) => {
+    const modifiedValues: AwsSamDeployStepInitialValues = {
+      ...values,
+      spec: {
+        ...values.spec,
+        envVariables: values.spec?.envVariables?.map(envVar => ({ [envVar.key]: envVar.value }))
+      }
+    }
+    onUpdate?.(modifiedValues)
+  }
+
   return (
     <>
-      <Formik<AwsSamDeployStepInitialValues>
-        onSubmit={(values: AwsSamDeployStepInitialValues) => {
-          onUpdate?.(values)
-        }}
+      <Formik<AwsSamDeployStepFormikValues>
+        onSubmit={onSubmit}
         formName="AwsSamDeployStepEdit"
-        initialValues={initialValues}
+        initialValues={getInitialValues()}
         validate={data => {
           onChange?.(data)
         }}
@@ -143,6 +193,24 @@ const AwsSamDeployStepEdit = (
                   />
                 )}
               </div>
+
+              <Accordion className={stepCss.accordion}>
+                <Accordion.Panel
+                  id="aws-sam-deploy-optional-accordion"
+                  data-testid={'aws-sam-deploy-optional-accordion'}
+                  summary={getString('common.optionalConfig')}
+                  details={
+                    <Container margin={{ top: 'medium' }}>
+                      <AwsSamDeployStepOptionalFields
+                        readonly={readonly}
+                        stepViewType={stepViewType}
+                        allowableTypes={allowableTypes}
+                        formik={formik}
+                      />
+                    </Container>
+                  }
+                />
+              </Accordion>
             </FormikForm>
           )
         }}
