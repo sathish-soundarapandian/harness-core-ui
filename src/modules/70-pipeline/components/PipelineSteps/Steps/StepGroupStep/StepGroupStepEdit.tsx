@@ -17,6 +17,7 @@ import { AllowedTypes, Formik, FormikForm, FormInput } from '@harness/uicore'
 import type { EmptyDirYaml, HostPathYaml, PersistentVolumeClaimYaml } from 'services/pipeline-ng'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
 import type { ListUIType } from '@common/components/List/List'
 import type { MapType, MapUIType } from '@common/components/Map/Map'
@@ -96,6 +97,7 @@ function StepGroupStepEdit(
   )
 
   const { getString } = useStrings()
+  const { CDP_AWS_SAM } = useFeatureFlags()
 
   React.useEffect(() => {
     const formikRefCurrent = (formikRef as React.MutableRefObject<FormikProps<StepGroupFormikValues>>)?.current
@@ -298,14 +300,18 @@ function StepGroupStepEdit(
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormInput.InputWithIdentifier inputLabel={getString('name')} isIdentifierEditable={isNewStep} />
               </div>
-              <Switch
-                checked={isContainerBasedExecutionEnabled}
-                label={'Enable container based execution'}
-                onChange={() => setIsContainerBasedExecutionEnabled(!isContainerBasedExecutionEnabled)}
-                disabled={readonly}
-              />
-              {isContainerBasedExecutionEnabled && (
-                <KubernetesStepGroupInfra formikRef={formik} allowableTypes={allowableTypes} readonly={readonly} />
+              {CDP_AWS_SAM && (
+                <>
+                  <Switch
+                    checked={isContainerBasedExecutionEnabled}
+                    label={'Enable container based execution'}
+                    onChange={() => setIsContainerBasedExecutionEnabled(!isContainerBasedExecutionEnabled)}
+                    disabled={readonly}
+                  />
+                  {isContainerBasedExecutionEnabled && (
+                    <KubernetesStepGroupInfra formikRef={formik} allowableTypes={allowableTypes} readonly={readonly} />
+                  )}
+                </>
               )}
             </FormikForm>
           )
