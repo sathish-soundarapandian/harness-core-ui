@@ -42,7 +42,7 @@ export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFi
           font={{ variation: FontVariation.FORM_LABEL, weight: 'semi-bold', size: 'normal' }}
           tooltipProps={{ dataTooltipId: 'awsSamDeployCommandOptions' }}
         >
-          {getString('cd.steps.awsSamDeployStep.awsSamDeployCommandOptions')}
+          {getString('optionalField', { name: getString('cd.steps.awsSamDeployStep.awsSamDeployCommandOptions') })}
         </Text>
         <Container className={stepCss.formGroup}>
           <Container padding={{ top: 'small', bottom: 'small' }}>
@@ -59,10 +59,9 @@ export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFi
       <Container className={stepCss.formGroup}>
         <FormInput.MultiTextInput
           name="spec.stackName"
-          label={getString('cd.cloudFormation.stackName')}
+          label={getString('optionalField', { name: 'cd.cloudFormation.stackName' })}
           placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
           disabled={readonly}
-          isOptional={true}
           multiTextInputProps={{
             expressions,
             disabled: readonly,

@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import cx from 'classnames'
 import * as Yup from 'yup'
 import { defaultTo } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
@@ -132,11 +131,11 @@ const AwsSamDeployStepEdit = (
                 {getString('cd.steps.awsSamDeployStep.containerConfigurationText')}
               </Text>
 
-              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+              <Container className={stepCss.formGroup}>
                 <FormMultiTypeConnectorField
+                  width={510}
                   name="spec.connectorRef"
                   label={getString('pipelineSteps.connectorLabel')}
-                  width={390}
                   placeholder={getString('select')}
                   accountIdentifier={accountId}
                   projectIdentifier={projectIdentifier}
@@ -170,9 +169,9 @@ const AwsSamDeployStepEdit = (
                     }}
                   />
                 )}
-              </div>
+              </Container>
 
-              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+              <Container className={stepCss.formGroup}>
                 <FormInput.MultiTextInput
                   name="spec.image"
                   label={getString('imageLabel')}
@@ -198,7 +197,7 @@ const AwsSamDeployStepEdit = (
                     isReadonly={readonly}
                   />
                 )}
-              </div>
+              </Container>
 
               <Accordion className={stepCss.accordion}>
                 <Accordion.Panel
