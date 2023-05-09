@@ -53,22 +53,24 @@ function GetOverflowRenderer(props: getVisibleItemRendererProps): any {
           style={{ paddingLeft: '5px', paddingRight: '10px' }}
           onClick={() => itemClickHandler(items[0].valueTillHere)}
         />
-        <Popover>
-          <div>...</div>
-          <Menu>
-            {items.map((item, index) => {
-              if (index !== 0) {
-                return (
-                  <Menu.Item
-                    key={index}
-                    text={item.value}
-                    onClick={() => dropDownItemClickHandler(item.valueTillHere)}
-                  />
-                )
-              }
-            })}
-          </Menu>
-        </Popover>
+        {items.length > 1 ? (
+          <Popover>
+            <div>...</div>
+            <Menu>
+              {items.map((item, index) => {
+                if (index !== 0) {
+                  return (
+                    <Menu.Item
+                      key={index}
+                      text={item.value}
+                      onClick={() => dropDownItemClickHandler(item.valueTillHere)}
+                    />
+                  )
+                }
+              })}
+            </Menu>
+          </Popover>
+        ) : null}
       </Layout.Horizontal>
     )
   }
