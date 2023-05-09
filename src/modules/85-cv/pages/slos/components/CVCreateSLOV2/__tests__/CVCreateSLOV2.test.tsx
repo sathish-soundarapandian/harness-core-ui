@@ -28,7 +28,8 @@ import {
   initialData,
   serviceLevelObjectiveV2,
   editFormData,
-  ratioBasedSLO
+  ratioBasedSLO,
+  updateSLOMock
 } from './CVCreateSLOV2.mock'
 import {
   createOptionalConfigPayload,
@@ -471,6 +472,9 @@ describe('CVCreateSloV2', () => {
 
     fireEvent.change(container.querySelector('[name="SLOTargetPercentage"]')!, { target: { value: 99 } })
 
+    userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
+    expect(container.querySelector('input[value="WeightedAverage"]')).toBeChecked()
+
     act(() => {
       userEvent.click(screen.getByText('save'))
     })
@@ -480,6 +484,8 @@ describe('CVCreateSloV2', () => {
     act(() => {
       userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
+
+    expect(updateSLO).toHaveBeenCalledWith(updateSLOMock)
   })
 
   test('Should be able to canel with unsaved changes', async () => {

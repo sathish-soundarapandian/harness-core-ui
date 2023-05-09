@@ -34,7 +34,7 @@ import {
 } from './CreateCompositeSloForm.utils'
 import { AddSLOs } from './components/AddSlos/AddSLOs'
 import { CreateCompositeSLOSteps, CreateCompositeSloFormInterface } from './CreateCompositeSloForm.types'
-import { EvaluationType, SLOV2Form } from '../../CVCreateSLOV2.types'
+import { EvaluationType, SLOFormulaType, SLOV2Form } from '../../CVCreateSLOV2.types'
 import SLOTarget from './components/SLOTarget/SLOTarget'
 import useCreateCompositeSloWarningModal from './useCreateCompositeSloWarningModal'
 import PeriodLength from './components/PeriodLength/PeriodLength'
@@ -59,6 +59,7 @@ export const CreateCompositeSloForm = ({
   const { getString } = useStrings()
   const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
   const formikProps = useFormikContext<SLOV2Form>()
+  const isFormulaWeightedAverage = formikProps?.values?.sloFormulaType === SLOFormulaType.WEIGHTED_AVERAGE
   const [notificationPage, setNotificationPage] = useState(0)
   const [notificationsInTable, setNotificationsInTable] = useState<NotificationRuleResponse[]>([])
   const isStepValid = useCallback(
@@ -191,7 +192,7 @@ export const CreateCompositeSloForm = ({
       }, 0)
       .toFixed(2)
   )
-  const isInValid = totalOfSloWeight > 100 || totalOfSloWeight < 100
+  const isInValid = isFormulaWeightedAverage ? totalOfSloWeight > 100 || totalOfSloWeight < 100 : true
   return (
     <>
       <Page.Body loading={loading} error={error} retryOnError={() => retryOnError()}>

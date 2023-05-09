@@ -8,12 +8,12 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly addSlo: string
-  readonly noMinHeight: string
+  readonly addSloContainer: string
   readonly rowFailure: string
   readonly rowSuccess: string
   readonly sloTableConatiner: string
-  readonly sloTagsAccountlevel: string
   readonly totalRow: string
   readonly weightageInput: string
+  readonly weightageText: string
 }
 export default styles

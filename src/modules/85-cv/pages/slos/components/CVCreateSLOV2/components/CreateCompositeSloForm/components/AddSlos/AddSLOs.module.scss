@@ -15,11 +15,10 @@
 
 .weightageInput {
   display: flex;
-  justify-content: space-between;
   :global {
     .TextInput--main {
       margin-bottom: 0 !important;
-      min-width: 100px;
+      width: 75px;
     }
   }
 }
@@ -44,8 +43,12 @@
   }
 }
 
-.noMinHeight {
+.addSLOContainer {
   min-height: 0px !important;
+
+  label[for='sloFormulaType'] {
+    display: flex;
+  }
 }
 
 .addSlo {
@@ -55,20 +58,13 @@
       font-size: 13px !important;
     }
   }
-  [role='cell']:not(:first-child) {
-    margin-left: var(--spacing-5) !important;
-    padding-right: var(--spacing-5) !important;
-  }
+
   div[class*='TableV2--row']:last-child {
     height: 44px;
     justify-content: center;
   }
 }
 
-.sloTagsAccountlevel {
-  div[class*='TableV2--body'] div[class*='TableV2--row'] div[class*='TableV2--cells'] {
-    [role='cell']:nth-child(6) {
-      min-width: 10% !important;
-    }
-  }
+.weightageText {
+  white-space: nowrap !important;
 }

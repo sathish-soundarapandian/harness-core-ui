@@ -11,6 +11,12 @@ export enum SLOWeight {
   STEP = 0.01
 }
 
+export enum ImpactPercentage {
+  MIN = 0,
+  MAX = 100,
+  STEP = 0.01
+}
+
 export const MinNumberOfSLO = 2
 export const MaxNumberOfSLO = 20
 

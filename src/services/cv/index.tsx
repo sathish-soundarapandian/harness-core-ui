@@ -16,6 +16,23 @@ export interface AbstractAnalysedNode {
   [key: string]: any
 }
 
+export interface ActiveServiceMonitoredDTO {
+  accountIdentifier?: string
+  identifier: string
+  module?: string
+  monitoredServiceCount?: number
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  timestamp?: number
+}
+
+export interface ActiveServiceMonitoredFilterParams {
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceIdentifier?: string
+}
+
 export interface AdditionalInfo {
   type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
 }
@@ -887,6 +904,7 @@ export interface ClusteredLog {
 export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
   evaluationType?: 'Window' | 'Request'
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
+  sloFormulaType?: 'WeightedAverage' | 'LeastPerformance'
 }
 
 export interface ConnectorConfigDTO {
@@ -1206,9 +1224,16 @@ export interface DatadogDataSet {
   query?: string
 }
 
+export interface DatadogLogHealthSourceQueryDTO {
+  indexes: string[]
+  name: string
+  query: string
+  serviceInstanceIdentifier: string
+}
+
 export type DatadogLogHealthSourceSpec = HealthSourceSpec & {
   feature: string
-  queries: QueryDTO[]
+  queries: DatadogLogHealthSourceQueryDTO[]
 }
 
 export interface DatadogMetricHealthDefinition {
@@ -1481,9 +1506,19 @@ export type ELKConnectorDTO = ConnectorConfigDTO & {
   username?: string
 }
 
+export interface ELKHealthSourceQueryDTO {
+  index: string
+  messageIdentifier: string
+  name: string
+  query: string
+  serviceInstanceIdentifier: string
+  timeStampFormat: string
+  timeStampIdentifier: string
+}
+
 export type ELKHealthSourceSpec = HealthSourceSpec & {
   feature: string
-  queries: QueryDTO[]
+  queries: ELKHealthSourceQueryDTO[]
 }
 
 export interface Edge {
@@ -3864,6 +3899,20 @@ export interface Page {
   totalPages?: number
 }
 
+export interface PageActiveServiceMonitoredDTO {
+  content?: ActiveServiceMonitoredDTO[]
+  empty?: boolean
+  first?: boolean
+  last?: boolean
+  number?: number
+  numberOfElements?: number
+  pageable?: Pageable
+  size?: number
+  sort?: Sort
+  totalElements?: number
+  totalPages?: number
+}
+
 export interface PageAnalyzedLogDataDTO {
   content?: AnalyzedLogDataDTO[]
   empty?: boolean
@@ -4128,6 +4177,15 @@ export interface PageUserJourneyResponse {
   totalPages?: number
 }
 
+export interface Pageable {
+  offset?: number
+  pageNumber?: number
+  pageSize?: number
+  paged?: boolean
+  sort?: Sort
+  unpaged?: boolean
+}
+
 export type PagerDutyChangeSourceSpec = ChangeSourceSpec & {
   connectorRef?: string
   pagerDutyServiceId?: string
@@ -4283,16 +4341,6 @@ export interface PrometheusSampleData {
 }
 
 export type QuarterlyCalenderSpec = CalenderSpec & { [key: string]: any }
-
-export interface QueryDTO {
-  index: string
-  messageIdentifier: string
-  name: string
-  query: string
-  serviceInstanceIdentifier: string
-  timeStampFormat: string
-  timeStampIdentifier: string
-}
 
 export interface QueryDefinition {
   continuousVerificationEnabled?: boolean
@@ -5001,6 +5049,13 @@ export interface ResponseMonitoredServiceResponse {
 export interface ResponseObject {
   correlationId?: string
   data?: { [key: string]: any }
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageActiveServiceMonitoredDTO {
+  correlationId?: string
+  data?: PageActiveServiceMonitoredDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -6221,6 +6276,12 @@ export interface SloHealthIndicatorDTO {
   serviceLevelObjectiveIdentifier?: string
 }
 
+export interface Sort {
+  empty?: boolean
+  sorted?: boolean
+  unsorted?: boolean
+}
+
 export interface Sources {
   changeSources?: ChangeSourceDTO[]
   healthSources?: HealthSource[]
@@ -6234,9 +6295,15 @@ export type SplunkConnectorDTO = ConnectorConfigDTO & {
   username?: string
 }
 
+export interface SplunkHealthSourceQueryDTO {
+  name: string
+  query: string
+  serviceInstanceIdentifier: string
+}
+
 export type SplunkHealthSourceSpec = HealthSourceSpec & {
   feature: string
-  queries: QueryDTO[]
+  queries: SplunkHealthSourceQueryDTO[]
 }
 
 export interface SplunkMetricDefinition {
@@ -6317,9 +6384,16 @@ export interface StackdriverDefinition {
   sli?: Slidto
 }
 
+export interface StackdriverLogHealthSourceQueryDTO {
+  messageIdentifier: string
+  name: string
+  query: string
+  serviceInstanceIdentifier: string
+}
+
 export type StackdriverLogHealthSourceSpec = HealthSourceSpec & {
   feature: string
-  queries: QueryDTO[]
+  queries: StackdriverLogHealthSourceQueryDTO[]
 }
 
 export type StackdriverMetricHealthSourceSpec = HealthSourceSpec & {
@@ -6552,6 +6626,7 @@ export interface TimeSeriesMetricDataDTO {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+  deeplinkURL?: string
   environmentIdentifier?: string
   groupName?: string
   metricDataList?: MetricData[]
